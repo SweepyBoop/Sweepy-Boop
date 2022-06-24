@@ -1,0 +1,15 @@
+<Ui>
+	<!-- Libraries -->
+
+	<!-- Core -->
+	<Script file="Core.lua"/>
+
+	<!-- Modules -->
+	<Script file="SpellData.lua"/>
+	<Script file="UtilsWA.lua"/>
+	<Script file="ShieldMeters.lua"/>
+	<Script file="FixBlizzardRaidAggro.lua"/>
+	<Script file="DrinkMacro.lua"/>
+	<Script file="DampenDisplay.lua"/>
+	<Script file="CombatIndicator.lua"/>
+</Ui>
