@@ -31,7 +31,7 @@ BoopUtilsWA = {};
 BoopUtilsWA.Constants = {};
 BoopUtilsWA.Triggers = {};
 
-local isTestMode = true;
+local isTestMode = false;
 
 -- Event name constants
 local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
@@ -44,6 +44,7 @@ local SUBEVENT_CAST = "SPELL_CAST_SUCCESS";
 local SUBEVENT_AURA = "SPELL_AURA_APPLIED";
 local SUBEVENT_AURA_FADE = "SPELL_AURA_REMOVED";
 local SUBEVENT_DMG = "SPELL_DAMAGE";
+local SUBEVENT_CAST_START = "SPELL_CAST_START";
 
 -- With the following helper functions, we can set every trigger to check on the same set of events:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS,ARENA_OPPONENT_UPDATE, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED
@@ -53,7 +54,7 @@ local function shouldClearAll(event)
 end
 
 local function shouldCheckCombatLog(subEvent)
-    return (subEvent == SUBEVENT_CAST) or (subEvent == SUBEVENT_AURA) or (subEvent == SUBEVENT_AURA_FADE) or (subEvent == SUBEVENT_DMG);
+    return (subEvent == SUBEVENT_CAST) or (subEvent == SUBEVENT_AURA) or (subEvent == SUBEVENT_AURA_FADE) or (subEvent == SUBEVENT_DMG) or (subEvent == SUBEVENT_CAST_START);
 end
 
 -- For each spell, trigger 1 = cooldown if we're tracking it; trigger 2 = duration or short 0.5 glow on activation
@@ -64,7 +65,7 @@ local arenaInfo = {
     -- Key: unitId (arena1, arena2, arena3), value: sourceGUID
     GUID = {},
     -- Key: sourceGUID, value: unitId (needed for spells that do not TRACK_UNIT, but we still need the unitId, e.g., cauterize)
-    -- Naturally this should always be available since arenaGUID will always be called first to update this.
+    -- Naturally this should always be available since arenaUnitGUID will always be called first to update this.
     unitId = {},
 
     -- Only supports arena1/2/3 via GetArenaOpponentSpec
@@ -140,7 +141,7 @@ local function updatePlayerInfo()
     arenaInfo.unitRace[unitId] = select(3, UnitRace(unitId));
 end
 
-local function arenaGUID(unitId, index)
+local function arenaUnitGUID(unitId, index)
     if (not arenaInfo.GUID[unitId]) and UnitExists(unitId) then
         local guid = UnitGUID(unitId);
         updateArenaInfo(guid, unitId, index);
@@ -183,7 +184,7 @@ local function isSourceArena(sourceGUID)
     end
 
     for i = 1,3 do
-        if (sourceGUID == arenaGUID("arena"..i, i)) then
+        if (sourceGUID == arenaUnitGUID("arena"..i, i)) then
             return true;
         end
     end
@@ -216,7 +217,7 @@ end
 -- optional params: charges
 local function makeAllState(spellData, spellID, duration, ...)
     local charges, unit = ...;
-    local allstate = {
+    local state = {
         show = true,
         changed = true,
         progressType = "timed",
@@ -230,7 +231,7 @@ local function makeAllState(spellData, spellID, duration, ...)
         autoHide = true,
     };
 
-    return allstate;
+    return state;
 end
 
 -- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
@@ -307,15 +308,14 @@ local function checkResetSpell(allstates, sourceGUID, resetSpells)
         local guid = sourceGUID.."-"..resetSpellID;
         local state = allstates[guid];
         if state then
-            -- Full reset
+            -- Hide if full reset, or after the reduction the cooldown gets reset
             if (amount == RESET_FULL) then
                 state.show = false;
                 state.changed = true;
                 stateChanged = true;
             else
-                -- Reset by a certain amount
-                state.changed = true;
                 state.expirationTime = state.expirationTime - amount;
+                state.changed = true;
                 stateChanged = true;
             end
         end
@@ -327,7 +327,7 @@ end
 -- Check spell cooldown options, including charges and opt_lower_cooldown, and update allstates
 -- guid: sourceGUID-spellID
 -- Return value: whether state changed, remaining charges
-local function Util_CheckCooldownOptions(allstates, guid, spell, spellID, unitTarget)
+local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     -- Spell used again within cooldown timer (allstates[guid] not nil could be a glow timer that's not showing cooldown)
     -- If charge is enabled, put the 2nd charge on cooldown
     if allstates[guid] then
@@ -423,7 +423,7 @@ local durationTrigger = function(category, allstates, event, ...)
             if allstates[guid] then
                 local state = allstates[guid];
                 state.show = false;
-                state.change = true;
+                state.changed = true;
                 return true;
             end
         end
@@ -489,7 +489,7 @@ local function cooldownTrigger(category, allstates, event, ...)
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = sourceGUID.."-"..spellID;
             local unit = arenaInfo.unitId[sourceGUID];
-            return Util_CheckCooldownOptions(allstates, guid, spell, spellID, unit);
+            return checkCooldownOptions(allstates, guid, spell, spellID, unit);
         end
     end
 end
@@ -573,28 +573,30 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
+        local spell = spellData_HOJ;
+
         -- Check if we should disable the cooldown reduction
-        if (spellID == spellData_HOJ.track_cast_start) and (subEvent == "SPELL_CAST_START") then
+        if (spellID == spell.track_cast_start) and (subEvent == SUBEVENT_CAST_START) then
             arenaInfo.defaultHoJCooldown[sourceGUID] = true;
             return;
-        elseif (spellID == spellData_HOJ.track_cast_success) and (subEvent == SUBEVENT_CAST) then
+        elseif (spellID == spell.track_cast_success) and (subEvent == SUBEVENT_CAST) then
             arenaInfo.defaultHoJCooldown[sourceGUID] = true;
             return;
         end
 
         -- start HOJ timer (instant spells do not trigger cast start)
-        if (spellID == spellData_HOJ.spellID) then
-            if isSourceArena(sourceGUID) then
-                allstates[sourceGUID] = makeAllState(spellData_HOJ, spellData_HOJ.spellID, spellData_HOJ.cooldown);
+        if (spellID == spell.spellID) then
+            if checkSpellEnabled(spell, subEvent, sourceGUID) then
+                allstates[sourceGUID] = makeAllState(spell, spellID, spell.cooldown);
                 return true;
             end
         elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) and isSourceArena(sourceGUID) then
             local state = allstates[sourceGUID];
             if (not arenaInfo.defaultHoJCooldown[sourceGUID]) then
                 local cost = GetSpellPowerCost(spellID);
-                if (cost and cost[1] and cost[1].type == spellData_HOJ.powerType) then
+                if (cost and cost[1] and cost[1].type == spell.powerType and cost[1].cost > 0) then
                     state.expirationTime = state.expirationTime - cost[1].cost * 2;
-                    state.change = true;
+                    state.changed = true;
                     return true;
                 end
             end
@@ -623,18 +625,20 @@ BoopUtilsWA.Triggers.CooldownVendetta = function(allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
+        local spell = spellData_Vendetta;
+
         -- start HOJ timer (instant spells do not trigger cast start)
-        if (spellID == spellData_Vendetta.spellID) then
-            if isSourceArena(sourceGUID) then
-                allstates[sourceGUID] = makeAllState(spellData_Vendetta, spellData_Vendetta.spellID, spellData_Vendetta.cooldown);
+        if (spellID == spell.spellID) then
+            if checkSpellEnabled(spell, subEvent, sourceGUID) then
+                allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
                 return true;
             end
-        elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) and isSourceArena(sourceGUID) then
+        elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) then
             local state = allstates[sourceGUID];
             local cost = GetSpellPowerCost(spellID);
-            if (cost and cost[1] and cost[1].type == spellData_Vendetta.powerType) then
+            if (cost and cost[1] and cost[1].type == spell.powerType) then
                 state.expirationTime = state.expirationTime - cost[1].cost / 30;
-                state.change = true;
+                state.changed = true;
                 return true;
             end
         end
@@ -670,7 +674,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 
         local spell = spellData_Combust;
 
-        if (subEvent == SUBEVENT_CAST and spellID == spell.spellID and isSourceArena(sourceGUID)) then
+        if (spellID == spell.spellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, we can just use sourceGUID)
             allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
             return true;
@@ -680,7 +684,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
                 local resets = spell.resets;
                 if resets[spellID] then
                     state.expirationTime = state.expirationTime - resets[spellID];
-                    state.change = true;
+                    state.changed = true;
                     return true;
                 end
             elseif (subEvent == SUBEVENT_DMG) then
@@ -690,7 +694,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
                         local crit = select(21, ...);
                         if crit then
                             state.expirationTime = state.expirationTime - 1;
-                            state.change = true;
+                            state.changed = true;
                             return true;
                         end
                     end
@@ -716,11 +720,11 @@ BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
             if allstates[sourceGUID] then
                 local state = allstates[sourceGUID];
                 state.show = false;
-                state.change = true;
+                state.changed = true;
                 return true;
             end
         else
-            local track = (spellID == spell.spellID) and isSourceArena(sourceGUID);
+            local track = (spellID == spell.spellID) and checkSpellEnabled(spell, subEvent, sourceGUID);
             if track then
                 allstates[sourceGUID] = makeAllState(spell, spellID, spell.duration or glowOnActivationDuration);
                 return true;
@@ -766,13 +770,13 @@ local function baselineCooldownTrigger(baselineSpellID, allstates, event, ...)
             if (not spell) then return end
 
             local guid = UnitGUID(unitTarget).."-"..spellID;
-            return Util_CheckCooldownOptions(allstates, guid, spell, spellID, unitTarget);
+            return checkCooldownOptions(allstates, guid, spell, spellID, unitTarget);
         end
     end
 end
 BoopUtilsWA.Triggers.BaselineCooldown = baselineCooldownTrigger;
 
-local function Util_MakeIconState(spell, spellID, unitTarget)
+local function makeIconState(spell, spellID, unitTarget)
     local state = {
         show = true,
         changed = true,
@@ -809,7 +813,7 @@ local function baselineIconTrigger(baselineSpellID, allstates, event, ...)
             if match then -- class/race matches, show icon if not currently shown
                 local guid = UnitGUID(unitTarget) .. "-" .. baselineSpellID;
                 if (not allstates[guid]) then
-                    allstates[guid] = Util_MakeIconState(spell, baselineSpellID, unitTarget);
+                    allstates[guid] = makeIconState(spell, baselineSpellID, unitTarget);
                     return true;
                 end
             end
