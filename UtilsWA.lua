@@ -31,7 +31,7 @@ BoopUtilsWA = {};
 BoopUtilsWA.Constants = {};
 BoopUtilsWA.Triggers = {};
 
-local isTestMode = false;
+local isTestMode = true;
 
 -- Event name constants
 local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
@@ -307,15 +307,21 @@ local function checkResetSpell(allstates, sourceGUID, resetSpells)
         local guid = sourceGUID.."-"..resetSpellID;
         local state = allstates[guid];
         if state then
-            -- Full reset
+            -- Hide if full reset, or after the reduction the cooldown gets reset
             if (amount == RESET_FULL) then
                 state.show = false;
                 state.changed = true;
                 stateChanged = true;
             else
-                -- Reset by a certain amount
+                local expirationTime = state.expirationTime - amount;
+                -- If after the reduction, the spell comes off cooldown, immediately hide the icon
+                if (GetTime() >= expirationTime) then
+                    state.show = false;
+                else
+                    state.expirationTime = expirationTime;
+                end
+                
                 state.changed = true;
-                state.expirationTime = state.expirationTime - amount;
                 stateChanged = true;
             end
         end
@@ -573,27 +579,38 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
+        local spell = spellData_HOJ;
+
         -- Check if we should disable the cooldown reduction
-        if (spellID == spellData_HOJ.track_cast_start) and (subEvent == "SPELL_CAST_START") then
+        if (spellID == spell.track_cast_start) and (subEvent == "SPELL_CAST_START") then
             arenaInfo.defaultHoJCooldown[sourceGUID] = true;
             return;
-        elseif (spellID == spellData_HOJ.track_cast_success) and (subEvent == SUBEVENT_CAST) then
+        elseif (spellID == spell.track_cast_success) and (subEvent == SUBEVENT_CAST) then
             arenaInfo.defaultHoJCooldown[sourceGUID] = true;
             return;
         end
 
         -- start HOJ timer (instant spells do not trigger cast start)
-        if (spellID == spellData_HOJ.spellID) then
-            if isSourceArena(sourceGUID) then
-                allstates[sourceGUID] = makeAllState(spellData_HOJ, spellData_HOJ.spellID, spellData_HOJ.cooldown);
+        if (spellID == spell.spellID) then
+            if checkSpellEnabled(spell, subEvent, sourceGUID) then
+                print(subEvent);
+                allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
                 return true;
             end
         elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) and isSourceArena(sourceGUID) then
             local state = allstates[sourceGUID];
             if (not arenaInfo.defaultHoJCooldown[sourceGUID]) then
                 local cost = GetSpellPowerCost(spellID);
-                if (cost and cost[1] and cost[1].type == spellData_HOJ.powerType) then
-                    state.expirationTime = state.expirationTime - cost[1].cost * 2;
+                if (cost and cost[1] and cost[1].type == spell.powerType and cost[1].cost > 0) then
+                    local expirationTime = state.expirationTime - cost[1].cost * 2;
+
+                    -- If after the reduction spell comes off cooldown, hide the icon
+                    if (GetTime() >= expirationTime) then
+                        state.show = false;
+                    else
+                        state.expirationTime = expirationTime;
+                    end
+                    
                     state.change = true;
                     return true;
                 end
@@ -720,7 +737,7 @@ BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
                 return true;
             end
         else
-            local track = (spellID == spell.spellID) and isSourceArena(sourceGUID);
+            local track = (spellID == spell.spellID) and checkSpellEnabled(spell, subEvent, sourceGUID);
             if track then
                 allstates[sourceGUID] = makeAllState(spell, spellID, spell.duration or glowOnActivationDuration);
                 return true;
