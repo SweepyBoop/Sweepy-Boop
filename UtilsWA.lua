@@ -24,6 +24,8 @@ local classId = BoopSpellData.ClassId;
 local raceID = BoopSpellData.RaceID;
 local baselineSpells = BoopSpellData.BaselineSpells;
 
+local diminishingReturnSpells = BoopSpellData.DiminishingReturnSpells;
+
 -- Only expose the triggers, make everything else local
 BoopUtilsWA = {};
 
@@ -31,13 +33,14 @@ BoopUtilsWA = {};
 BoopUtilsWA.Constants = {};
 BoopUtilsWA.Triggers = {};
 
-local isTestMode = false;
+local isTestMode = true;
 
 -- Event name constants
 local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
 local EVENT_ARENA_PREP = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
 local EVENT_UNITCAST = "UNIT_SPELLCAST_SUCCEEDED";
 local EVENT_COMBAT = "COMBAT_LOG_EVENT_UNFILTERED";
+local EVENT_GROUP_UPDATE = "GROUP_ROSTER_UPDATE";
 -- Sub event name constants
 local SUBEVENT_CAST = "SPELL_CAST_SUCCESS";
 local SUBEVENT_AURA = "SPELL_AURA_APPLIED";
@@ -45,7 +48,7 @@ local SUBEVENT_AURA_FADE = "SPELL_AURA_REMOVED";
 local SUBEVENT_DMG = "SPELL_DAMAGE";
 local SUBEVENT_CAST_START = "SPELL_CAST_START";
 
--- With the following helper functions, we can set every trigger to check on the same set of events:
+-- With the following helper functions, we can use the same set of events for almost every single trigger:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED
 
 local function shouldClearAll(event)
@@ -62,7 +65,7 @@ end
 
 local arenaInfo = {
     -- Key: unitId (arena1, arena2, arena3), value: sourceGUID
-    GUID = {},
+    unitGUID = {},
     -- Key: sourceGUID, value: unitId (needed for spells that do not TRACK_UNIT, but we still need the unitId, e.g., cauterize)
     -- Naturally this should always be available since arenaUnitGUID will always be called first to update this.
     unitId = {},
@@ -87,7 +90,7 @@ local arenaInfo = {
 };
 
 local function clearArenaInfo(event)
-    arenaInfo.GUID = {};
+    arenaInfo.unitGUID = {};
     arenaInfo.unitId = {};
     arenaInfo.spec = {};
     arenaInfo.unitSpec = {};
@@ -100,8 +103,8 @@ end
 
 -- Make sure you only check "arena"..i unitIds in the following helper functions
 local function updateArenaInfo(sourceGUID, unitId, index)
-    if unitId and (not arenaInfo.GUID[unitId]) then
-        arenaInfo.GUID[unitId] = sourceGUID or UnitGUID(unitId);
+    if unitId and (not arenaInfo.unitGUID[unitId]) then
+        arenaInfo.unitGUID[unitId] = sourceGUID or UnitGUID(unitId);
     end
 
     if sourceGUID and (not arenaInfo.unitId[sourceGUID]) then
@@ -131,7 +134,7 @@ local function updatePlayerInfo()
     local currentSpec = GetSpecialization();
     local specId = GetSpecializationInfo(currentSpec);
 
-    arenaInfo.GUID[unitId] = sourceGUID;
+    arenaInfo.unitGUID[unitId] = sourceGUID;
     arenaInfo.unitId[sourceGUID] = unitId;
 
     arenaInfo.spec[sourceGUID] = specId;
@@ -141,12 +144,12 @@ local function updatePlayerInfo()
 end
 
 local function arenaUnitGUID(unitId, index)
-    if (not arenaInfo.GUID[unitId]) and UnitExists(unitId) then
+    if (not arenaInfo.unitGUID[unitId]) and UnitExists(unitId) then
         local guid = UnitGUID(unitId);
         updateArenaInfo(guid, unitId, index);
     end
 
-    return arenaInfo.GUID[unitId];
+    return arenaInfo.unitGUID[unitId];
 end
 
 -- Call after ensuring unit is arena
@@ -161,6 +164,9 @@ local function unitRace(unitId)
     return arenaInfo.unitRace[unitId];
 end
 
+local MAX_ARENAOPPONENT_SIZE = 3;
+local MAX_PARTY_SIZE = 10;
+
 -- Caller ensures unitId / sourceGUID is not nil
 local function isUnitArena(unitId)
     if isTestMode and unitId == "player" then
@@ -168,7 +174,7 @@ local function isUnitArena(unitId)
         return true;
     end
 
-    for i = 1,3 do
+    for i = 1, MAX_ARENAOPPONENT_SIZE do
         if (unitId == "arena"..i) then
             updateArenaInfo(nil, unitId, i);
             return true;
@@ -182,22 +188,32 @@ local function isSourceArena(sourceGUID)
         return true;
     end
 
-    for i = 1,3 do
+    for i = 1, MAX_ARENAOPPONENT_SIZE do
         if (sourceGUID == arenaUnitGUID("arena"..i, i)) then
             return true;
         end
     end
 end
 
-local function eventHandler(self, event, ...)
-    if shouldClearAll(event) then
-        clearArenaInfo(event);
+-- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
+-- This is only checked for TRACK_PET_AURA spells which is rare.
+local function isSourceArenaPet(sourceGUID)
+    if isTestMode then return true end
+
+    for i = 1, MAX_ARENAOPPONENT_SIZE do
+        if (sourceGUID == UnitGUID("arenapet"..i)) then
+            return true;
+        end
     end
+end
+
+local function arenaOpponentEventHandler(self, event, ...)
+    clearArenaInfo(event);
 end
 local arenaOpponentFrame = CreateFrame('Frame');
 arenaOpponentFrame:RegisterEvent(EVENT_ENTERWORLD);
 arenaOpponentFrame:RegisterEvent(EVENT_ARENA_PREP);
-arenaOpponentFrame:SetScript("OnEvent", eventHandler);
+arenaOpponentFrame:SetScript("OnEvent", arenaOpponentEventHandler);
 
 local defaultIndex = 100;
 
@@ -213,7 +229,7 @@ end
 -- duration can mean different things for different trigger types, e.g.,
 -- OFFENSIVE_AURA = spell.duration, CC = spell.cooldown
 -- optional params: charges
-local function makeAllState(spellData, spellID, duration, ...)
+local function makeTriggerState(spellData, spellID, duration, ...)
     local charges, unit = ...;
     local state = {
         show = true,
@@ -230,18 +246,6 @@ local function makeAllState(spellData, spellID, duration, ...)
     };
 
     return state;
-end
-
--- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
--- This is only checked for TRACK_PET_AURA spells which is rare.
-local function isSourceArenaPet(sourceGUID)
-    if isTestMode then return true end
-
-    for i = 1,3 do
-        if (sourceGUID == UnitGUID("arenapet"..i)) then
-            return true;
-        end
-    end
 end
 
 -- Checck whether spell is enabled for combat log events
@@ -364,7 +368,7 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     end
 
     local cooldown = (arenaInfo.optLowerCooldown[guid] and spell.opt_lower_cooldown) or spell.cooldown;
-    allstates[guid] = makeAllState(spell, spellID, cooldown, charges, unitTarget);
+    allstates[guid] = makeTriggerState(spell, spellID, cooldown, charges, unitTarget);
     return true;
 end
 
@@ -401,7 +405,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if unitSpellEnabled(spell, unitTarget) then
             local guid = UnitGUID(unitTarget).."-"..spellID;
             local duration = spell.duration;
-            allstates[guid] = makeAllState(spell, spellID, spell.duration);
+            allstates[guid] = makeTriggerState(spell, spellID, spell.duration);
             return true;
         end
     elseif (event == EVENT_COMBAT) then
@@ -428,7 +432,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = sourceGUID.."-"..spellID;
             local duration = spell.duration;
-            allstates[guid] = makeAllState(spell, spellID, spell.duration);
+            allstates[guid] = makeTriggerState(spell, spellID, spell.duration);
             return true;
         end
     end
@@ -463,7 +467,7 @@ local function cooldownTrigger(category, allstates, event, ...)
 
         if unitSpellEnabled(spell, unitTarget) then
             local guid = UnitGUID(unitTarget).."-"..spellID;
-            allstates[guid] = makeAllState(spell, spellID, spell.cooldown, nil, unitTarget);
+            allstates[guid] = makeTriggerState(spell, spellID, spell.cooldown, nil, unitTarget);
             return true;
         end
     elseif (event == EVENT_COMBAT) then
@@ -531,7 +535,7 @@ local function glowOnActivationTrigger(category, allstates, event, ...)
 
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = sourceGUID.."-"..spellID;
-            allstates[guid] = makeAllState(spell, spellID, glowOnActivationDuration);
+            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration);
             return true;
         end
     end
@@ -580,7 +584,7 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
         -- start HOJ timer (instant spells do not trigger cast start)
         if (spellID == spell.spellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeAllState(spell, spellID, spell.cooldown);
+                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.cooldown);
                 return true;
             end
         elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) then
@@ -622,7 +626,7 @@ BoopUtilsWA.Triggers.CooldownVendetta = function(allstates, event, ...)
         -- start HOJ timer (instant spells do not trigger cast start)
         if (spellID == spell.spellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
+                allstates[sourceGUID] = makeTriggerState(spell, spell.spellID, spell.cooldown);
                 return true;
             end
         elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) then
@@ -667,7 +671,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 
         if (spellID == spell.spellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, we can just use sourceGUID)
-            allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
+            allstates[sourceGUID] = makeTriggerState(spell, spell.spellID, spell.cooldown);
             return true;
         elseif allstates[sourceGUID] then -- There is a combustion on cooldown, check if we want to reduce it
             local state = allstates[sourceGUID];
@@ -716,7 +720,7 @@ BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
         else
             local track = (spellID == spell.spellID) and checkSpellEnabled(spell, subEvent, sourceGUID);
             if track then
-                allstates[sourceGUID] = makeAllState(spell, spellID, spell.duration or glowOnActivationDuration);
+                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration);
                 return true;
             end
         end
@@ -810,3 +814,126 @@ local function baselineIconTrigger(baselineSpellID, allstates, event, ...)
     end
 end
 BoopUtilsWA.Triggers.BaselineIcon = baselineIconTrigger;
+
+local function offensiveSpellData(spellID)
+    if (spellID == spellData_Combust.spellID) then
+        return spellData_Combust;
+    elseif (spellID == spellData_Vendetta.spellID) then
+        return spellData_Vendetta;
+    else
+        local spell = spellData[spellID];
+        if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_AURA)) then
+            return spell;
+        end
+    end
+end
+
+local function isUnitParty(unitId)
+    if isTestMode and unitId == "player" then
+        return true;
+    end
+
+    return (unitId == "party1") or (unitId == "party2");
+end
+
+-- Really simple trigger, not checking factors such as trackType, aura being dispelled, etc.
+-- Just providing a hint on when party is doing burst
+local function partyBurstTrigger(allstates, event, ...)
+    if shouldClearAll(event) then
+        return clearAllStates(allstates);
+    elseif (event == EVENT_UNITCAST) then
+        local unitTarget, _, spellID = ...;
+        if (not unitTarget) then return end
+
+        if isUnitParty(unitTarget) then
+            local spell = offensiveSpellData(spellID);
+            if (not spell) then return end
+
+            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, nil, unitTarget);
+            return true;
+        end
+    end
+end
+BoopUtilsWA.Triggers.PartyBurst = partyBurstTrigger;
+
+local partyInfo = {
+    -- Convert between unitGUID and unitID
+    unitGUID = {},
+    unitId = {},
+}
+
+local partyInfoFrame = CreateFrame("Frame");
+partyInfoFrame:RegisterEvent(EVENT_ENTERWORLD);
+partyInfoFrame:RegisterEvent(EVENT_GROUP_UPDATE);
+partyInfoFrame:SetScript("OnEvent", function ()
+    partyInfo.unitGUID = {};
+    partyInfo.unitId = {};
+end);
+
+-- Make sure only player/party1/party2 is passed into this
+local function partyUnitGUID(unitId)
+    if (not partyInfo.unitGUID[unitId]) then
+        partyInfo.unitGUID[unitId] = UnitGUID(unitId);
+    end
+
+    return partyInfo.unitGUID[unitId];
+end
+
+-- If unitGUID matches player/party1/party2, cache and return the corresponding unitId; otherwise return nil
+-- The cached unitId can later be used as "unit" in the TSU
+-- Call ensures unitGUID is not nil
+local function partyUnitId(unitGUID)
+    if (unitGUID == partyUnitGUID("player")) then
+        partyInfo.unitId[unitGUID] = "player";
+    elseif (unitGUID == partyUnitGUID("party1")) then
+        partyInfo.unitId[unitGUID] = "party1";
+    elseif (unitGUID == partyUnitGUID("party2")) then
+        partyInfo.unitId[unitGUID] = "party2";
+    end
+
+    -- If unitGUID does not match the above units, no value should be cached and nil will be returned
+    return partyInfo.unitId[unitGUID];
+end
+
+local function validateUnitForDR(partyUnitId, trackUnit)
+    if (not partyUnitId) then return end
+    if (trackUnit == "player") then
+        return (partyUnitId == "player")
+    elseif (trackUnit == "party") then
+        return (partyUnitId ~= "player");
+    end
+end
+
+local durationDR = 15;
+
+if isTestMode then
+    diminishingReturnSpells[774] = "stun"; -- Rejuvenation
+    diminishingReturnSpells[8936] = "incapacitate"; -- Regrowth
+    diminishingReturnSpells[33763] = "disorient"; -- Lifebloom
+end
+
+-- This one only needs to check one event:
+-- COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_REMOVED
+-- trackUnit: player/party
+local function diminishingReturnTrigger(category, trackUnit, allstates, event, ...)
+    local destGUID, _, _, _, spellID = select(8, ...);
+    if (not destGUID) then return end
+    if (diminishingReturnSpells[spellID] == category) then
+        local partyUnitId = partyUnitId(destGUID);
+        if validateUnitForDR(partyUnitId, trackUnit) then
+            local stacksNew = 1 + ((allstates[destGUID] and allstates[destGUID].stacks) or 0);
+            allstates[destGUID] = {
+                show = true,
+                changed = true,
+                progressType = "timed",
+                duration = durationDR,
+                expirationTime = GetTime() + durationDR,
+                stacks = stacksNew,
+                unit = partyUnitId,
+                autoHide = true,
+            };
+            return true;
+        end
+    end
+end
+BoopUtilsWA.Triggers.DR = diminishingReturnTrigger;
