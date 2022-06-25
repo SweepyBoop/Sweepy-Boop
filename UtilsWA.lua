@@ -140,7 +140,7 @@ local function updatePlayerInfo()
     arenaInfo.unitRace[unitId] = select(3, UnitRace(unitId));
 end
 
-local function arenaGUID(unitId, index)
+local function arenaUnitGUID(unitId, index)
     if (not arenaInfo.GUID[unitId]) and UnitExists(unitId) then
         local guid = UnitGUID(unitId);
         updateArenaInfo(guid, unitId, index);
@@ -183,7 +183,7 @@ local function isSourceArena(sourceGUID)
     end
 
     for i = 1,3 do
-        if (sourceGUID == arenaGUID("arena"..i, i)) then
+        if (sourceGUID == arenaUnitGUID("arena"..i, i)) then
             return true;
         end
     end
