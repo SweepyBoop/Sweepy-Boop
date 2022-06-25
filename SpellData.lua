@@ -818,7 +818,7 @@ NS.SpellData = {
 NS.RESET_FULL = 0;
 local RESET_FULL = NS.RESET_FULL;
 
-NS.SpellResets = {
+NS.spellResets = {
     -- Shifting Power
     [314791] = {
         [31661] = 10, -- Dragon's Breath

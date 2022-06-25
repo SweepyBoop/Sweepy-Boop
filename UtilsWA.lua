@@ -20,7 +20,7 @@ local TRACK_UNIT = NS.TRACK_UNIT;
 local spellData = NS.SpellData;
 
 local RESET_FULL = NS.RESET_FULL;
-local spellResets = NS.SpellResets;
+local spellResets = NS.spellResets;
 
 local classId = NS.ClassId;
 local raceID = NS.RaceID;
