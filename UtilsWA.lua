@@ -26,7 +26,7 @@ local classId = NS.ClassId;
 local raceID = NS.RaceID;
 local baselineSpells = NS.BaselineSpells;
 
-local diminishingReturnSpells = NS.DiminishingReturnSpells;
+local diminishingReturnSpells = NS.diminishingReturnSpells;
 
 -- Only expose the triggers, make everything else local
 BoopUtilsWA = {};
@@ -35,7 +35,7 @@ BoopUtilsWA = {};
 BoopUtilsWA.Constants = {};
 BoopUtilsWA.Triggers = {};
 
-local isTestMode = false;
+local isTestMode = true;
 
 -- Event name constants
 local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
@@ -903,10 +903,12 @@ end
 
 local durationDR = 15;
 
+local diminishingReturnCategory = NS.diminishingReturnCategory;
+
 if isTestMode then
-    diminishingReturnSpells[774] = "stun"; -- Rejuvenation
-    diminishingReturnSpells[8936] = "incapacitate"; -- Regrowth
-    diminishingReturnSpells[33763] = "disorient"; -- Lifebloom
+    diminishingReturnSpells[33763] = diminishingReturnCategory.DR_DISORIENT; -- Lifebloom
+    diminishingReturnSpells[8936] = diminishingReturnCategory.DR_STUN; -- Regrowth
+    diminishingReturnSpells[774] = diminishingReturnCategory.DR_INCAPACITATE; -- Rejuvenation
 end
 
 -- This one only needs to check one event:
