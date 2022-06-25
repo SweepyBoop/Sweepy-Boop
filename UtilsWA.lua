@@ -624,16 +624,18 @@ BoopUtilsWA.Triggers.CooldownVendetta = function(allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
+        local spell = spellData_Vendetta;
+
         -- start HOJ timer (instant spells do not trigger cast start)
-        if (spellID == spellData_Vendetta.spellID) then
-            if isSourceArena(sourceGUID) then
-                allstates[sourceGUID] = makeAllState(spellData_Vendetta, spellData_Vendetta.spellID, spellData_Vendetta.cooldown);
+        if (spellID == spell.spellID) then
+            if checkSpellEnabled(spell, subEvent, sourceGUID) then
+                allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
                 return true;
             end
         elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) and isSourceArena(sourceGUID) then
             local state = allstates[sourceGUID];
             local cost = GetSpellPowerCost(spellID);
-            if (cost and cost[1] and cost[1].type == spellData_Vendetta.powerType) then
+            if (cost and cost[1] and cost[1].type == spell.powerType) then
                 state.expirationTime = state.expirationTime - cost[1].cost / 30;
                 state.change = true;
                 return true;
