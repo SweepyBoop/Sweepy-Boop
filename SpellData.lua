@@ -26,6 +26,40 @@ NS.specID = {
 };
 local specID = NS.specID;
 
+NS.ClassId = {
+    Warrior = 1,
+    Paladin = 2,
+    DK = 6,
+    Mage = 8,
+    Druid = 11,
+};
+local classId = NS.ClassId;
+
+NS.RaceID = {
+    Human = 1,
+    Undead = 5,
+};
+local raceID = NS.RaceID;
+
+NS.diminishingReturnCategory = {
+    DR_DISORIENT = "disorient",
+    DR_INCAPACITATE = "incapacitate",
+    DR_SILENCE = "silence",
+    DR_STUN = "stun",
+    DR_ROOT = "root",
+    DR_DISARM = "disarm",
+    DR_TAUNT = "taunt",
+    DR_KNOCKBACK = "knockback",
+};
+local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT;
+local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE;
+local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE;
+local DR_STUN = NS.diminishingReturnCategory.DR_STUN;
+local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT;
+local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM;
+local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
+local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
+
 -- Events (and units) to track
 NS.TRACK_PET = 0; -- SPELL_CAST_SUCCESS & pet GUID
 NS.TRACK_PET_AURA = 1; -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
@@ -39,15 +73,16 @@ local TRACK_AURA_FADE = NS.TRACK_AURA_FADE;
 local TRACK_UNIT = NS.TRACK_UNIT;
 
 -- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED
--- charges: baseline charges
--- opt_charges: optionally multiple charges
--- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind
+-- charges: baseline 2 charges
+-- opt_charges: optionally 2 charges
+-- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
 
 -- TODO: implement spec override, e.g., make outlaw rogue 90s blind baseline
 
--- Wthin the same aura must be the same motion type, e.g., cooldown only, glow and cooldown, glow only
--- Offensive spells are more complex motion types, others are cooldown only
--- Divide offensive to sub categories
+-- Offensive spells are further divided to 3 sub categories:
+-- OFFENSIVE: glow when it's active, show cooldown timer otherwise
+-- OFFENSIVE_AURA: glow when it's active
+-- OFFENSIVE_CD: show cooldown timer
 NS.SpellData = {
     -- General
     -- Offensive
@@ -845,21 +880,6 @@ NS.spellResets = {
     },
 };
 
-NS.ClassId = {
-    Warrior = 1,
-    Paladin = 2,
-    DK = 6,
-    Mage = 8,
-    Druid = 11,
-};
-local classId = NS.ClassId;
-
-NS.RaceID = {
-    Human = 1,
-    Undead = 5,
-};
-local raceID = NS.RaceID;
-
 NS.BaselineSpells = {
     -- Stun breakers
     -- Human racial
@@ -914,25 +934,6 @@ NS.BaselineSpells = {
         index = 4,
     },
 };
-
-NS.diminishingReturnCategory = {
-    DR_DISORIENT = "disorient",
-    DR_INCAPACITATE = "incapacitate",
-    DR_SILENCE = "silence",
-    DR_STUN = "stun",
-    DR_ROOT = "root",
-    DR_DISARM = "disarm",
-    DR_TAUNT = "taunt",
-    DR_KNOCKBACK = "knockback",
-};
-local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT;
-local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE;
-local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE;
-local DR_STUN = NS.diminishingReturnCategory.DR_STUN;
-local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT;
-local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM;
-local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
-local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
 NS.diminishingReturnSpells = {
