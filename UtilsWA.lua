@@ -89,7 +89,10 @@ local arenaInfo = {
     defaultHoJCooldown = {},
 };
 
-local function clearArenaInfo(event)
+local arenaOpponentFrame = CreateFrame('Frame');
+arenaOpponentFrame:RegisterEvent(EVENT_ENTERWORLD);
+arenaOpponentFrame:RegisterEvent(EVENT_ARENA_PREP);
+arenaOpponentFrame:SetScript("OnEvent", function ()
     arenaInfo.unitGUID = {};
     arenaInfo.unitId = {};
     arenaInfo.spec = {};
@@ -99,7 +102,7 @@ local function clearArenaInfo(event)
     arenaInfo.spellChargeExpire = {};
     arenaInfo.optLowerCooldown = {};
     arenaInfo.defaultHoJCooldown = {};
-end
+end);
 
 -- Make sure you only check "arena"..i unitIds in the following helper functions
 local function updateArenaInfo(sourceGUID, unitId, index)
@@ -206,14 +209,6 @@ local function isSourceArenaPet(sourceGUID)
         end
     end
 end
-
-local function arenaOpponentEventHandler(self, event, ...)
-    clearArenaInfo(event);
-end
-local arenaOpponentFrame = CreateFrame('Frame');
-arenaOpponentFrame:RegisterEvent(EVENT_ENTERWORLD);
-arenaOpponentFrame:RegisterEvent(EVENT_ARENA_PREP);
-arenaOpponentFrame:SetScript("OnEvent", arenaOpponentEventHandler);
 
 local defaultIndex = 100;
 
