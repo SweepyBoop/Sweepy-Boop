@@ -33,7 +33,7 @@ BoopUtilsWA = {};
 BoopUtilsWA.Constants = {};
 BoopUtilsWA.Triggers = {};
 
-local isTestMode = true;
+local isTestMode = false;
 
 -- Event name constants
 local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
