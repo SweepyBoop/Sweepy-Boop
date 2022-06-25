@@ -632,7 +632,7 @@ BoopUtilsWA.Triggers.CooldownVendetta = function(allstates, event, ...)
                 allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
                 return true;
             end
-        elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) and isSourceArena(sourceGUID) then
+        elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) then
             local state = allstates[sourceGUID];
             local cost = GetSpellPowerCost(spellID);
             if (cost and cost[1] and cost[1].type == spell.powerType) then
@@ -673,7 +673,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 
         local spell = spellData_Combust;
 
-        if (subEvent == SUBEVENT_CAST and spellID == spell.spellID and isSourceArena(sourceGUID)) then
+        if (spellID == spell.spellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, we can just use sourceGUID)
             allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
             return true;
