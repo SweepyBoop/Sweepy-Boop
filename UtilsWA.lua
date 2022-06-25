@@ -583,7 +583,7 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
                 allstates[sourceGUID] = makeAllState(spell, spellID, spell.cooldown);
                 return true;
             end
-        elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) and isSourceArena(sourceGUID) then
+        elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) then
             local state = allstates[sourceGUID];
             if (not arenaInfo.defaultHoJCooldown[sourceGUID]) then
                 local cost = GetSpellPowerCost(spellID);
