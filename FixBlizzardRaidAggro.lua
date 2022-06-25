@@ -7,7 +7,6 @@ local isTestMode = false;
 
 -- Events to reset the aggro
 local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
-local EVNET_ARENA_OPP = "ARENA_OPPONENT_UPDATE";
 local EVENT_ARENA_PREP = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
 
 -- For raid frames inside arena, checking the first 10 should be more than enough to cover part members (players and pets)
@@ -15,7 +14,7 @@ local MAX_ARENAOPPONENT_SIZE = 3;
 local MAX_RAIDAGGRO_SIZE = 10;
 
 local function shouldClearAggro(event)
-    return (event == EVENT_ENTERWORLD) or (event == EVNET_ARENA_OPP) or (event == EVENT_ARENA_PREP);
+    return (event == EVENT_ENTERWORLD) or (event == EVENT_ARENA_PREP);
 end
 
 local IsUnitArena = function(unitId)
@@ -75,7 +74,6 @@ end
 
 local frame = CreateFrame("Frame");
 frame:RegisterEvent(EVENT_ENTERWORLD);
-frame:RegisterEvent(EVNET_ARENA_OPP);
 frame:RegisterEvent(EVENT_ARENA_PREP);
 frame:RegisterEvent("UNIT_TARGET");
 frame:SetScript("OnEvent", eventHandler);

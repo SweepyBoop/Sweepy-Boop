@@ -35,7 +35,6 @@ local isTestMode = false;
 
 -- Event name constants
 local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
-local EVNET_ARENA_OPP = "ARENA_OPPONENT_UPDATE";
 local EVENT_ARENA_PREP = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
 local EVENT_UNITCAST = "UNIT_SPELLCAST_SUCCEEDED";
 local EVENT_COMBAT = "COMBAT_LOG_EVENT_UNFILTERED";
@@ -47,10 +46,10 @@ local SUBEVENT_DMG = "SPELL_DAMAGE";
 local SUBEVENT_CAST_START = "SPELL_CAST_START";
 
 -- With the following helper functions, we can set every trigger to check on the same set of events:
--- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS,ARENA_OPPONENT_UPDATE, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED
+-- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED
 
 local function shouldClearAll(event)
-    return (event == EVENT_ENTERWORLD) or (event == EVNET_ARENA_OPP) or (event == EVENT_ARENA_PREP);
+    return (event == EVENT_ENTERWORLD) or (event == EVENT_ARENA_PREP);
 end
 
 local function shouldCheckCombatLog(subEvent)
@@ -197,7 +196,6 @@ local function eventHandler(self, event, ...)
 end
 local arenaOpponentFrame = CreateFrame('Frame');
 arenaOpponentFrame:RegisterEvent(EVENT_ENTERWORLD);
-arenaOpponentFrame:RegisterEvent(EVNET_ARENA_OPP);
 arenaOpponentFrame:RegisterEvent(EVENT_ARENA_PREP);
 arenaOpponentFrame:SetScript("OnEvent", eventHandler);
 
@@ -391,7 +389,6 @@ if isTestMode then
 end
 
 -- Duration only trigger for a spell category, used for OFFENSIVE_AURA only for now
--- Events: PLAYER_ENTERING_WORLD, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_SUCCESS, COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_APPLIED, COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_REMOVED
 local durationTrigger = function(category, allstates, event, ...)
     if shouldClearAll(event) then
         return clearAllStates(allstates);
@@ -446,8 +443,6 @@ BoopUtilsWA.Triggers.OffensiveDuration = function (allstates, event, ...)
 end
 
 -- Cooldown trigger for a spell category, used for anything that needs cooldown tracking
--- Events:
--- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS,ARENA_OPPONENT_UPDATE, COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_SUCCESS, COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_APPLIED, COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_REMOVED
 local function cooldownTrigger(category, allstates, event, ...)
     if shouldClearAll(event) then
         return clearAllStates(allstates);
@@ -521,7 +516,6 @@ end
 
 local glowOnActivationDuration = 0.5;
 -- Glow on activation (only for spells without duration)
--- Events: PLAYER_ENTERING_WORLD, COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_SUCCESS, COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_APPLIED, COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_REMOVED
 local function glowOnActivationTrigger(category, allstates, event, ...)
     if shouldClearAll(event) then
         return clearAllStates(allstates);
@@ -552,7 +546,6 @@ BoopUtilsWA.Triggers.InterruptGlowOnActivation = function (allstates, event, ...
 end
 
 -- Cooldown trigger specially made for HOJ, for glow trigger we can use the common one
--- Events: PLAYER_ENTERING_WORLD,COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_SUCCESS,COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_START
 -- Cooldown is reduced by spending holy power
 local spellData_HOJ = {
     spellID = 853,
@@ -605,7 +598,6 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
 end
 
 -- Cooldown trigger specially made for vendetta, for glow trigger we can use the common one
--- Events: PLAYER_ENTERING_WORLD,COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_SUCCESS
 -- Cooldown is reduced by spending holy power
 local spellData_Vendetta = {
     spellID = 79140,
@@ -646,7 +638,6 @@ BoopUtilsWA.Triggers.CooldownVendetta = function(allstates, event, ...)
 end
 
 -- Cooldown trigger specially made for combustion
--- Events: PLAYER_ENTERING_WORLD,COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_SUCCESS,COMBAT_LOG_EVENT_UNFILTERED:SPELL_DAMAGE
 local spellData_Combust = {
     spellID = 190319,
     duration = 14,
@@ -705,7 +696,6 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 end
 
 -- Glow on activation for a specific spell, pass in the special spellID (glow duration = spell.duration or glowOnActivationDuration if that's missing)
--- Events: PLAYER_ENTERING_WORLD, COMBAT_LOG_EVENT_UNFILTERED:SPELL_CAST_SUCCESS, COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_REMOVED
 BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
     if shouldClearAll(event) then
         return clearAllStates(allstates);
@@ -789,7 +779,6 @@ local function makeIconState(spell, spellID, unitTarget)
     return state;
 end
 
--- Events: PLAYER_ENTERING_WORLD, ARENA_OPPONENT_UPDATE, ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED
 local function baselineIconTrigger(baselineSpellID, allstates, event, ...)
     if shouldClearAll(event) or (event == EVENT_ARENA_OPP) or (event == EVENT_ARENA_PREP) then
         return clearAllStates(allstates);
