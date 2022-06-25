@@ -64,7 +64,7 @@ local arenaInfo = {
     -- Key: unitId (arena1, arena2, arena3), value: sourceGUID
     GUID = {},
     -- Key: sourceGUID, value: unitId (needed for spells that do not TRACK_UNIT, but we still need the unitId, e.g., cauterize)
-    -- Naturally this should always be available since arenaGUID will always be called first to update this.
+    -- Naturally this should always be available since arenaUnitGUID will always be called first to update this.
     unitId = {},
 
     -- Only supports arena1/2/3 via GetArenaOpponentSpec
