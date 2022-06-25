@@ -780,7 +780,7 @@ local function makeIconState(spell, spellID, unitTarget)
 end
 
 local function baselineIconTrigger(baselineSpellID, allstates, event, ...)
-    if shouldClearAll(event) or (event == EVENT_ARENA_OPP) or (event == EVENT_ARENA_PREP) then
+    if shouldClearAll(event) then
         return clearAllStates(allstates);
     elseif (event == EVENT_UNITCAST) then
         local unitTarget, _, spellID = ...;
