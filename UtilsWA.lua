@@ -313,14 +313,7 @@ local function checkResetSpell(allstates, sourceGUID, resetSpells)
                 state.changed = true;
                 stateChanged = true;
             else
-                local expirationTime = state.expirationTime - amount;
-                -- If after the reduction, the spell comes off cooldown, immediately hide the icon
-                if (GetTime() >= expirationTime) then
-                    state.show = false;
-                else
-                    state.expirationTime = expirationTime;
-                end
-                
+                state.expirationTime = state.expirationTime - amount;
                 state.changed = true;
                 stateChanged = true;
             end
@@ -593,7 +586,6 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
         -- start HOJ timer (instant spells do not trigger cast start)
         if (spellID == spell.spellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                print(subEvent);
                 allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
                 return true;
             end
@@ -602,15 +594,7 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
             if (not arenaInfo.defaultHoJCooldown[sourceGUID]) then
                 local cost = GetSpellPowerCost(spellID);
                 if (cost and cost[1] and cost[1].type == spell.powerType and cost[1].cost > 0) then
-                    local expirationTime = state.expirationTime - cost[1].cost * 2;
-
-                    -- If after the reduction spell comes off cooldown, hide the icon
-                    if (GetTime() >= expirationTime) then
-                        state.show = false;
-                    else
-                        state.expirationTime = expirationTime;
-                    end
-                    
+                    state.expirationTime = state.expirationTime - cost[1].cost * 2;
                     state.change = true;
                     return true;
                 end
