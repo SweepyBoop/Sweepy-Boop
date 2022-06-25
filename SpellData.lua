@@ -1,5 +1,7 @@
 local _, NS = ...
 
+NS.isTestMode = true;
+
 NS.spellCategory = {
     CC = 1;
     -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
