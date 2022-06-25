@@ -423,7 +423,7 @@ local durationTrigger = function(category, allstates, event, ...)
             if allstates[guid] then
                 local state = allstates[guid];
                 state.show = false;
-                state.change = true;
+                state.changed = true;
                 return true;
             end
         end
@@ -596,7 +596,7 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
                 local cost = GetSpellPowerCost(spellID);
                 if (cost and cost[1] and cost[1].type == spell.powerType and cost[1].cost > 0) then
                     state.expirationTime = state.expirationTime - cost[1].cost * 2;
-                    state.change = true;
+                    state.changed = true;
                     return true;
                 end
             end
@@ -638,7 +638,7 @@ BoopUtilsWA.Triggers.CooldownVendetta = function(allstates, event, ...)
             local cost = GetSpellPowerCost(spellID);
             if (cost and cost[1] and cost[1].type == spell.powerType) then
                 state.expirationTime = state.expirationTime - cost[1].cost / 30;
-                state.change = true;
+                state.changed = true;
                 return true;
             end
         end
@@ -684,7 +684,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
                 local resets = spell.resets;
                 if resets[spellID] then
                     state.expirationTime = state.expirationTime - resets[spellID];
-                    state.change = true;
+                    state.changed = true;
                     return true;
                 end
             elseif (subEvent == SUBEVENT_DMG) then
@@ -694,7 +694,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
                         local crit = select(21, ...);
                         if crit then
                             state.expirationTime = state.expirationTime - 1;
-                            state.change = true;
+                            state.changed = true;
                             return true;
                         end
                     end
@@ -720,7 +720,7 @@ BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
             if allstates[sourceGUID] then
                 local state = allstates[sourceGUID];
                 state.show = false;
-                state.change = true;
+                state.changed = true;
                 return true;
             end
         else
