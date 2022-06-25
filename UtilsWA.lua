@@ -1,30 +1,32 @@
+local _, NS = ...
+
 -- Import spell data
-local CC = BoopSpellData.SpellCategory.CC;
-local OFFENSIVE = BoopSpellData.SpellCategory.OFFENSIVE;
-local OFFENSIVE_AURA = BoopSpellData.SpellCategory.OFFENSIVE_AURA;
-local OFFENSIVE_CD = BoopSpellData.SpellCategory.OFFENSIVE_CD;
-local INTERRUPT = BoopSpellData.SpellCategory.INTERRUPT;
-local DISPEL = BoopSpellData.SpellCategory.DISPEL;
-local DEFENSIVE = BoopSpellData.SpellCategory.DEFENSIVE;
+local CC = NS.spellCategory.CC;
+local OFFENSIVE = NS.spellCategory.OFFENSIVE;
+local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
+local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
+local INTERRUPT = NS.spellCategory.INTERRUPT;
+local DISPEL = NS.spellCategory.DISPEL;
+local DEFENSIVE = NS.spellCategory.DEFENSIVE;
 
-local specID = BoopSpellData.specID;
+local specID = NS.specID;
 
-local TRACK_PET = BoopSpellData.TRACK_PET;
-local TRACK_PET_AURA = BoopSpellData.TRACK_PET_AURA;
-local TRACK_AURA = BoopSpellData.TRACK_AURA;
-local TRACK_AURA_FADE = BoopSpellData.TRACK_AURA_FADE;
-local TRACK_UNIT = BoopSpellData.TRACK_UNIT;
+local TRACK_PET = NS.TRACK_PET;
+local TRACK_PET_AURA = NS.TRACK_PET_AURA;
+local TRACK_AURA = NS.TRACK_AURA;
+local TRACK_AURA_FADE = NS.TRACK_AURA_FADE;
+local TRACK_UNIT = NS.TRACK_UNIT;
 
-local spellData = BoopSpellData.SpellData;
+local spellData = NS.SpellData;
 
-local RESET_FULL = BoopSpellData.RESET_FULL;
-local spellResets = BoopSpellData.SpellResets;
+local RESET_FULL = NS.RESET_FULL;
+local spellResets = NS.SpellResets;
 
-local classId = BoopSpellData.ClassId;
-local raceID = BoopSpellData.RaceID;
-local baselineSpells = BoopSpellData.BaselineSpells;
+local classId = NS.ClassId;
+local raceID = NS.RaceID;
+local baselineSpells = NS.BaselineSpells;
 
-local diminishingReturnSpells = BoopSpellData.DiminishingReturnSpells;
+local diminishingReturnSpells = NS.DiminishingReturnSpells;
 
 -- Only expose the triggers, make everything else local
 BoopUtilsWA = {};

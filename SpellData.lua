@@ -1,6 +1,6 @@
-BoopSpellData = {};
+local _, NS = ...
 
-BoopSpellData.SpellCategory = {
+NS.spellCategory = {
     CC = 1;
     -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
     -- Different from track_* which specifies events to track
@@ -11,32 +11,32 @@ BoopSpellData.SpellCategory = {
     DISPEL = 6;
     DEFENSIVE = 7; -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
 }
-local CC = BoopSpellData.SpellCategory.CC;
-local OFFENSIVE = BoopSpellData.SpellCategory.OFFENSIVE;
-local OFFENSIVE_AURA = BoopSpellData.SpellCategory.OFFENSIVE_AURA;
-local OFFENSIVE_CD = BoopSpellData.SpellCategory.OFFENSIVE_CD;
-local INTERRUPT = BoopSpellData.SpellCategory.INTERRUPT;
-local DISPEL = BoopSpellData.SpellCategory.DISPEL;
-local DEFENSIVE = BoopSpellData.SpellCategory.DEFENSIVE;
+local CC = NS.spellCategory.CC;
+local OFFENSIVE = NS.spellCategory.OFFENSIVE;
+local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
+local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
+local INTERRUPT = NS.spellCategory.INTERRUPT;
+local DISPEL = NS.spellCategory.DISPEL;
+local DEFENSIVE = NS.spellCategory.DEFENSIVE;
 
-BoopSpellData.specID = {
+NS.specID = {
     BALANCE = 102,
     FERAL = 103,
     RET = 70,
 };
-local specID = BoopSpellData.specID;
+local specID = NS.specID;
 
 -- Events (and units) to track
-BoopSpellData.TRACK_PET = 0; -- SPELL_CAST_SUCCESS & pet GUID
-BoopSpellData.TRACK_PET_AURA = 1; -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
-BoopSpellData.TRACK_AURA = 2; -- SPELL_AURA_APPLIED, e.g., chastise
-BoopSpellData.TRACK_AURA_FADE = 3; -- SPELL_AURA_REMOVED, e.g., prot pally silence
-BoopSpellData.TRACK_UNIT = 4; -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
-local TRACK_PET = BoopSpellData.TRACK_PET;
-local TRACK_PET_AURA = BoopSpellData.TRACK_PET_AURA;
-local TRACK_AURA = BoopSpellData.TRACK_AURA;
-local TRACK_AURA_FADE = BoopSpellData.TRACK_AURA_FADE;
-local TRACK_UNIT = BoopSpellData.TRACK_UNIT;
+NS.TRACK_PET = 0; -- SPELL_CAST_SUCCESS & pet GUID
+NS.TRACK_PET_AURA = 1; -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
+NS.TRACK_AURA = 2; -- SPELL_AURA_APPLIED, e.g., chastise
+NS.TRACK_AURA_FADE = 3; -- SPELL_AURA_REMOVED, e.g., prot pally silence
+NS.TRACK_UNIT = 4; -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
+local TRACK_PET = NS.TRACK_PET;
+local TRACK_PET_AURA = NS.TRACK_PET_AURA;
+local TRACK_AURA = NS.TRACK_AURA;
+local TRACK_AURA_FADE = NS.TRACK_AURA_FADE;
+local TRACK_UNIT = NS.TRACK_UNIT;
 
 -- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED
 -- charges: baseline charges
@@ -48,7 +48,7 @@ local TRACK_UNIT = BoopSpellData.TRACK_UNIT;
 -- Wthin the same aura must be the same motion type, e.g., cooldown only, glow and cooldown, glow only
 -- Offensive spells are more complex motion types, others are cooldown only
 -- Divide offensive to sub categories
-BoopSpellData.SpellData = {
+NS.SpellData = {
     -- General
     -- Offensive
     -- Resonator
@@ -815,10 +815,10 @@ BoopSpellData.SpellData = {
     },
 };
 
-BoopSpellData.RESET_FULL = 0;
-local RESET_FULL = BoopSpellData.RESET_FULL;
+NS.RESET_FULL = 0;
+local RESET_FULL = NS.RESET_FULL;
 
-BoopSpellData.SpellResets = {
+NS.SpellResets = {
     -- Shifting Power
     [314791] = {
         [31661] = 10, -- Dragon's Breath
@@ -845,22 +845,22 @@ BoopSpellData.SpellResets = {
     },
 };
 
-BoopSpellData.ClassId = {
+NS.ClassId = {
     Warrior = 1,
     Paladin = 2,
     DK = 6,
     Mage = 8,
     Druid = 11,
 };
-local classId = BoopSpellData.ClassId;
+local classId = NS.ClassId;
 
-BoopSpellData.RaceID = {
+NS.RaceID = {
     Human = 1,
     Undead = 5,
 };
-local raceID = BoopSpellData.RaceID;
+local raceID = NS.RaceID;
 
-BoopSpellData.BaselineSpells = {
+NS.BaselineSpells = {
     -- Stun breakers
     -- Human racial
     [59752] = {
@@ -916,7 +916,7 @@ BoopSpellData.BaselineSpells = {
 };
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
-BoopSpellData.DiminishingReturnSpells = {
+NS.DiminishingReturnSpells = {
     [207167]  = "disorient",       -- Blinding Sleet
     [207685]  = "disorient",       -- Sigil of Misery
     [33786]   = "disorient",       -- Cyclone
