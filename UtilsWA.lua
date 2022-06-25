@@ -327,7 +327,7 @@ end
 -- Check spell cooldown options, including charges and opt_lower_cooldown, and update allstates
 -- guid: sourceGUID-spellID
 -- Return value: whether state changed, remaining charges
-local function Util_CheckCooldownOptions(allstates, guid, spell, spellID, unitTarget)
+local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     -- Spell used again within cooldown timer (allstates[guid] not nil could be a glow timer that's not showing cooldown)
     -- If charge is enabled, put the 2nd charge on cooldown
     if allstates[guid] then
@@ -489,7 +489,7 @@ local function cooldownTrigger(category, allstates, event, ...)
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = sourceGUID.."-"..spellID;
             local unit = arenaInfo.unitId[sourceGUID];
-            return Util_CheckCooldownOptions(allstates, guid, spell, spellID, unit);
+            return checkCooldownOptions(allstates, guid, spell, spellID, unit);
         end
     end
 end
@@ -766,13 +766,13 @@ local function baselineCooldownTrigger(baselineSpellID, allstates, event, ...)
             if (not spell) then return end
 
             local guid = UnitGUID(unitTarget).."-"..spellID;
-            return Util_CheckCooldownOptions(allstates, guid, spell, spellID, unitTarget);
+            return checkCooldownOptions(allstates, guid, spell, spellID, unitTarget);
         end
     end
 end
 BoopUtilsWA.Triggers.BaselineCooldown = baselineCooldownTrigger;
 
-local function Util_MakeIconState(spell, spellID, unitTarget)
+local function makeIconState(spell, spellID, unitTarget)
     local state = {
         show = true,
         changed = true,
@@ -809,7 +809,7 @@ local function baselineIconTrigger(baselineSpellID, allstates, event, ...)
             if match then -- class/race matches, show icon if not currently shown
                 local guid = UnitGUID(unitTarget) .. "-" .. baselineSpellID;
                 if (not allstates[guid]) then
-                    allstates[guid] = Util_MakeIconState(spell, baselineSpellID, unitTarget);
+                    allstates[guid] = makeIconState(spell, baselineSpellID, unitTarget);
                     return true;
                 end
             end
