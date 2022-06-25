@@ -44,6 +44,7 @@ local SUBEVENT_CAST = "SPELL_CAST_SUCCESS";
 local SUBEVENT_AURA = "SPELL_AURA_APPLIED";
 local SUBEVENT_AURA_FADE = "SPELL_AURA_REMOVED";
 local SUBEVENT_DMG = "SPELL_DAMAGE";
+local SUBEVENT_CAST_START = "SPELL_CAST_START";
 
 -- With the following helper functions, we can set every trigger to check on the same set of events:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS,ARENA_OPPONENT_UPDATE, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED
@@ -53,7 +54,7 @@ local function shouldClearAll(event)
 end
 
 local function shouldCheckCombatLog(subEvent)
-    return (subEvent == SUBEVENT_CAST) or (subEvent == SUBEVENT_AURA) or (subEvent == SUBEVENT_AURA_FADE) or (subEvent == SUBEVENT_DMG);
+    return (subEvent == SUBEVENT_CAST) or (subEvent == SUBEVENT_AURA) or (subEvent == SUBEVENT_AURA_FADE) or (subEvent == SUBEVENT_DMG) or (subEvent == SUBEVENT_CAST_START);
 end
 
 -- For each spell, trigger 1 = cooldown if we're tracking it; trigger 2 = duration or short 0.5 glow on activation
@@ -216,7 +217,7 @@ end
 -- optional params: charges
 local function makeAllState(spellData, spellID, duration, ...)
     local charges, unit = ...;
-    local allstate = {
+    local state = {
         show = true,
         changed = true,
         progressType = "timed",
@@ -230,7 +231,7 @@ local function makeAllState(spellData, spellID, duration, ...)
         autoHide = true,
     };
 
-    return allstate;
+    return state;
 end
 
 -- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
@@ -575,7 +576,7 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
         local spell = spellData_HOJ;
 
         -- Check if we should disable the cooldown reduction
-        if (spellID == spell.track_cast_start) and (subEvent == "SPELL_CAST_START") then
+        if (spellID == spell.track_cast_start) and (subEvent == SUBEVENT_CAST_START) then
             arenaInfo.defaultHoJCooldown[sourceGUID] = true;
             return;
         elseif (spellID == spell.track_cast_success) and (subEvent == SUBEVENT_CAST) then
@@ -586,7 +587,7 @@ BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
         -- start HOJ timer (instant spells do not trigger cast start)
         if (spellID == spell.spellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeAllState(spell, spell.spellID, spell.cooldown);
+                allstates[sourceGUID] = makeAllState(spell, spellID, spell.cooldown);
                 return true;
             end
         elseif allstates[sourceGUID] and (subEvent == SUBEVENT_CAST) and isSourceArena(sourceGUID) then
