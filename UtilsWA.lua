@@ -164,20 +164,24 @@ end
 -- guid: sourceGUID-spellID
 -- Return value: whether state changed
 local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
-    -- Spell used again within cooldown timer
-    -- If charge is enabled, put the 2nd charge on cooldown
-    if allstates[guid] then
+    local now = GetTime();
+    -- Check if spell is still on cooldown
+    -- Occasionally this is unexpectedly detected due to marginal error of timers (https://github.com/SweepyBoop/aSweepyBoop/issues/7)
+    -- To reliably detect whether the spell is on cooldown, allow some error margin, e.g.,
+    -- If a spell has 20s cooldown and we press it at time 0, we want to check if he pressed it again before 18.5s (instead of 20)
+    local errorMargin = 1.5;
+    if allstates[guid] and ( now < allstates[guid].expirationTime - errorMargin ) then
         local state = allstates[guid];
         -- Spell has baseline charge, put the charge on cooldown and update available stacks to 0
         if spell.opt_charges and spell.opt_lower_cooldown then
             -- e.g., Double Time
             NS.setArenaOptLowerCooldown(guid, true);
-            NS.setArenaSpellChargeExpire(guid, GetTime() + spell.cooldown);
+            NS.setArenaSpellChargeExpire(guid, now + spell.cooldown);
             state.stacks = 0;
             state.changed = true;
             return true;
         elseif spell.charges or spell.opt_charges then
-            NS.setArenaSpellChargeExpire(guid, GetTime() + spell.cooldown);
+            NS.setArenaSpellChargeExpire(guid, now + spell.cooldown);
             state.stacks = 0;
             state.changed = true;
             return true;
@@ -192,13 +196,13 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     if spell.charges then
         -- When spell has baseline charge, it has available charge if that charge hasn't been used, or has come off cooldown
         local spellChargeExpire = NS.arenaSpellChargeExpire(guid);
-        if (not spellChargeExpire) or (GetTime() >= spellChargeExpire) then
+        if (not spellChargeExpire) or (now >= spellChargeExpire) then
             charges = 1;
         end
     elseif spell.opt_charges then
         -- For optional charge spells, the optional charge must have been used once for us to know it exists, so it cannot be null.
         local spellChargeExpire = NS.arenaSpellChargeExpire(guid);
-        if spellChargeExpire and (GetTime() >= spellChargeExpire) then
+        if spellChargeExpire and (now >= spellChargeExpire) then
             charges = 1;
         end
     end
@@ -278,7 +282,6 @@ local function cooldownTrigger(category, allstates, event, ...)
 
         -- Return if no valid spell
         local spell = spellData[spellID];
-        -- Defensive spells are automatically attached track_unit tag.
         if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
 
         if unitSpellEnabled(spell, unitTarget) then
@@ -338,6 +341,19 @@ local glowOnActivationDuration = 0.75;
 local function glowOnActivationTrigger(category, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
+    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
+        local unitTarget, _, spellID = ...;
+        if (not unitTarget) then return end
+
+        -- Return if no valid spell
+        local spell = spellData[spellID];
+        if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
+
+        if unitSpellEnabled(spell, unitTarget) then
+            local guid = concatGUID(UnitGUID(unitTarget), spellID);
+            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration, nil, unitTarget);
+            return true;
+        end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
         if (not shouldCheckCombatLog(subEvent)) then return end
@@ -362,6 +378,18 @@ end
 
 BoopUtilsWA.Triggers.GlowOnActivationInterrupt = function (allstates, event, ...)
     return glowOnActivationTrigger(INTERRUPT, allstates, event, ...);
+end
+
+BoopUtilsWA.Triggers.GlowOnActivationDispel = function (allstates, event, ...)
+    return glowOnActivationTrigger(DISPEL, allstates, event, ...);
+end
+
+BoopUtilsWA.Triggers.GlowOnActivationDefensive = function (allstates, event, ...)
+    return glowOnActivationTrigger(DEFENSIVE, allstates, event, ...);
+end
+
+BoopUtilsWA.Triggers.GlowOnActivationOffensiveCD = function (allstates, event, ...)
+    return glowOnActivationTrigger(OFFENSIVE_CD, allstates, event, ...);
 end
 
 BoopUtilsWA.Constants.SpellData_HOJ = NS.spellData_HOJ;

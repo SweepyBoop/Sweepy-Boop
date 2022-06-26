@@ -38,6 +38,7 @@ NS.specID = {
     BALANCE = 102,
     FERAL = 103,
     RET = 70,
+    WW = 269,
 };
 local specID = NS.specID;
 
@@ -446,6 +447,7 @@ NS.spellData = {
     [325216] = {
         category = OFFENSIVE_AURA,
         duration = 10,
+        spec = { specID.WW },
     },
     -- Interrupt
     -- Spear hand Strike
@@ -941,7 +943,7 @@ if NS.isTestMode then
     -- Test
     -- Regrowth
     NS.spellData[8936] = {
-        category = OFFENSIVE,
+        category = DEFENSIVE,
         duration = 8,
         cooldown = 120,
         sound = true,
@@ -954,6 +956,28 @@ if NS.isTestMode then
         cooldown = 30,
         sound = true;
         charges = true,
+    };
+    -- Efflorescence
+    NS.spellData[145205] = {
+        category = INTERRUPT,
+        cooldown = 15,
+    };
+    -- Lifebloom
+    NS.spellData[33763] = {
+        category = OFFENSIVE,
+        duration = 8,
+        cooldown = 30,
+        sound = true,
+    };
+    -- Wild Growth
+    NS.spellData[48438] = {
+        category = OFFENSIVE_AURA,
+        duration = 20,
+    };
+    -- Swiftmend
+    NS.spellData[18562] = {
+        category = OFFENSIVE_CD,
+        cooldown = 45,
     };
 end
 
