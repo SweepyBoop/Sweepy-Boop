@@ -38,6 +38,7 @@ NS.specID = {
     BALANCE = 102,
     FERAL = 103,
     RET = 70,
+    WW = 269,
 };
 local specID = NS.specID;
 
@@ -446,6 +447,7 @@ NS.spellData = {
     [325216] = {
         category = OFFENSIVE_AURA,
         duration = 10,
+        spec = { specID.ww },
     },
     -- Interrupt
     -- Spear hand Strike
