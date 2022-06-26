@@ -164,20 +164,24 @@ end
 -- guid: sourceGUID-spellID
 -- Return value: whether state changed
 local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
-    -- Spell used again within cooldown timer
-    -- If charge is enabled, put the 2nd charge on cooldown
-    if allstates[guid] then
+    local now = GetTime();
+    -- Check if spell is still on cooldown
+    -- Occasionally this is unexpectedly detected due to marginal error of timers (https://github.com/SweepyBoop/aSweepyBoop/issues/7)
+    -- To reliably detect whether the spell is on cooldown, allow some error margin, e.g.,
+    -- If a spell has 20s cooldown and we press it at time 0, we want to check if he pressed it again before 18.5s (instead of 20)
+    local errorMargin = 1.5;
+    if allstates[guid] and ( now < allstates[guid].expirationTime - errorMargin ) then
         local state = allstates[guid];
         -- Spell has baseline charge, put the charge on cooldown and update available stacks to 0
         if spell.opt_charges and spell.opt_lower_cooldown then
             -- e.g., Double Time
             NS.setArenaOptLowerCooldown(guid, true);
-            NS.setArenaSpellChargeExpire(guid, GetTime() + spell.cooldown);
+            NS.setArenaSpellChargeExpire(guid, now + spell.cooldown);
             state.stacks = 0;
             state.changed = true;
             return true;
         elseif spell.charges or spell.opt_charges then
-            NS.setArenaSpellChargeExpire(guid, GetTime() + spell.cooldown);
+            NS.setArenaSpellChargeExpire(guid, now + spell.cooldown);
             state.stacks = 0;
             state.changed = true;
             return true;
@@ -192,13 +196,13 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     if spell.charges then
         -- When spell has baseline charge, it has available charge if that charge hasn't been used, or has come off cooldown
         local spellChargeExpire = NS.arenaSpellChargeExpire(guid);
-        if (not spellChargeExpire) or (GetTime() >= spellChargeExpire) then
+        if (not spellChargeExpire) or (now >= spellChargeExpire) then
             charges = 1;
         end
     elseif spell.opt_charges then
         -- For optional charge spells, the optional charge must have been used once for us to know it exists, so it cannot be null.
         local spellChargeExpire = NS.arenaSpellChargeExpire(guid);
-        if spellChargeExpire and (GetTime() >= spellChargeExpire) then
+        if spellChargeExpire and (now >= spellChargeExpire) then
             charges = 1;
         end
     end
