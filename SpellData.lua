@@ -1,6 +1,8 @@
-BoopSpellData = {};
+local _, NS = ...
 
-BoopSpellData.SpellCategory = {
+NS.isTestMode = false;
+
+NS.spellCategory = {
     CC = 1;
     -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
     -- Different from track_* which specifies events to track
@@ -11,44 +13,99 @@ BoopSpellData.SpellCategory = {
     DISPEL = 6;
     DEFENSIVE = 7; -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
 }
-local CC = BoopSpellData.SpellCategory.CC;
-local OFFENSIVE = BoopSpellData.SpellCategory.OFFENSIVE;
-local OFFENSIVE_AURA = BoopSpellData.SpellCategory.OFFENSIVE_AURA;
-local OFFENSIVE_CD = BoopSpellData.SpellCategory.OFFENSIVE_CD;
-local INTERRUPT = BoopSpellData.SpellCategory.INTERRUPT;
-local DISPEL = BoopSpellData.SpellCategory.DISPEL;
-local DEFENSIVE = BoopSpellData.SpellCategory.DEFENSIVE;
+local CC = NS.spellCategory.CC;
+local OFFENSIVE = NS.spellCategory.OFFENSIVE;
+local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
+local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
+local INTERRUPT = NS.spellCategory.INTERRUPT;
+local DISPEL = NS.spellCategory.DISPEL;
+local DEFENSIVE = NS.spellCategory.DEFENSIVE;
 
-BoopSpellData.specID = {
+-- Event name constants
+NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
+NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
+NS.UNIT_SPELLCAST_SUCCEEDED = "UNIT_SPELLCAST_SUCCEEDED";
+NS.COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
+NS.GROUP_ROSTER_UPDATE = "GROUP_ROSTER_UPDATE";
+-- Sub event name constants
+NS.SPELL_CAST_SUCCESS = "SPELL_CAST_SUCCESS";
+NS.SPELL_AURA_APPLIED = "SPELL_AURA_APPLIED";
+NS.SPELL_AURA_REMOVED = "SPELL_AURA_REMOVED";
+NS.SPELL_DAMAGE = "SPELL_DAMAGE";
+NS.SPELL_CAST_START = "SPELL_CAST_START";
+
+NS.specID = {
     BALANCE = 102,
     FERAL = 103,
     RET = 70,
 };
-local specID = BoopSpellData.specID;
+local specID = NS.specID;
+
+NS.classId = {
+    Warrior = 1,
+    Paladin = 2,
+    DK = 6,
+    Mage = 8,
+    Druid = 11,
+};
+local classId = NS.classId;
+
+NS.raceID = {
+    Human = 1,
+    Undead = 5,
+};
+local raceID = NS.raceID;
+
+NS.diminishingReturnCategory = {
+    DR_DISORIENT = "disorient",
+    DR_INCAPACITATE = "incapacitate",
+    DR_SILENCE = "silence",
+    DR_STUN = "stun",
+    DR_ROOT = "root",
+    DR_DISARM = "disarm",
+    DR_TAUNT = "taunt",
+    DR_KNOCKBACK = "knockback",
+};
+local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT;
+local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE;
+local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE;
+local DR_STUN = NS.diminishingReturnCategory.DR_STUN;
+local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT;
+local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM;
+local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
+local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 
 -- Events (and units) to track
-BoopSpellData.TRACK_PET = 0; -- SPELL_CAST_SUCCESS & pet GUID
-BoopSpellData.TRACK_PET_AURA = 1; -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
-BoopSpellData.TRACK_AURA = 2; -- SPELL_AURA_APPLIED, e.g., chastise
-BoopSpellData.TRACK_AURA_FADE = 3; -- SPELL_AURA_REMOVED, e.g., prot pally silence
-BoopSpellData.TRACK_UNIT = 4; -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
-local TRACK_PET = BoopSpellData.TRACK_PET;
-local TRACK_PET_AURA = BoopSpellData.TRACK_PET_AURA;
-local TRACK_AURA = BoopSpellData.TRACK_AURA;
-local TRACK_AURA_FADE = BoopSpellData.TRACK_AURA_FADE;
-local TRACK_UNIT = BoopSpellData.TRACK_UNIT;
+NS.trackType = {
+    -- For pet kicks
+    TRACK_PET = 0, -- SPELL_CAST_SUCCESS & pet GUID
+    TRACK_PET_AURA = 1, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
+
+    TRACK_AURA = 2, -- SPELL_AURA_APPLIED, e.g., chastise
+    TRACK_AURA_FADE = 3, -- SPELL_AURA_REMOVED, e.g., prot pally silence
+    TRACK_UNIT = 4, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
+};
+
+local TRACK_PET = NS.trackType.TRACK_PET;
+local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA;
+local TRACK_AURA = NS.trackType.TRACK_AURA;
+local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE;
+local TRACK_UNIT = NS.trackType.TRACK_UNIT;
+
+NS.defaultIndex = 100;
 
 -- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED
--- charges: baseline charges
--- opt_charges: optionally multiple charges
--- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind
+-- charges: baseline 2 charges
+-- opt_charges: optionally 2 charges
+-- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
 
 -- TODO: implement spec override, e.g., make outlaw rogue 90s blind baseline
 
--- Wthin the same aura must be the same motion type, e.g., cooldown only, glow and cooldown, glow only
--- Offensive spells are more complex motion types, others are cooldown only
--- Divide offensive to sub categories
-BoopSpellData.SpellData = {
+-- Offensive spells are further divided to 3 sub categories:
+-- OFFENSIVE: glow when it's active, show cooldown timer otherwise
+-- OFFENSIVE_AURA: glow when it's active
+-- OFFENSIVE_CD: show cooldown timer
+NS.spellData = {
     -- General
     -- Offensive
     -- Resonator
@@ -278,7 +335,7 @@ BoopSpellData.SpellData = {
     -- Feign Death
     [5348] = {
         category = INTERRUPT,
-        cooldown = 15,
+        cooldown = 25,
     },
     -- Muzzle
     [187707] = {
@@ -815,10 +872,10 @@ BoopSpellData.SpellData = {
     },
 };
 
-BoopSpellData.RESET_FULL = 0;
-local RESET_FULL = BoopSpellData.RESET_FULL;
+NS.RESET_FULL = 0;
+local RESET_FULL = NS.RESET_FULL;
 
-BoopSpellData.SpellResets = {
+NS.spellResets = {
     -- Shifting Power
     [314791] = {
         [31661] = 10, -- Dragon's Breath
@@ -845,22 +902,62 @@ BoopSpellData.SpellResets = {
     },
 };
 
-BoopSpellData.ClassId = {
-    Warrior = 1,
-    Paladin = 2,
-    DK = 6,
-    Mage = 8,
-    Druid = 11,
-};
-local classId = BoopSpellData.ClassId;
+-- Special abilities that need seperate triggers from the generic ones.
+NS.spellData_Combust = {
+    spellID = 190319,
+    duration = 14,
+    cooldown = 120,
+    index = 1,
+    sound = true,
+    dispellable = true,
 
-BoopSpellData.RaceID = {
-    Human = 1,
-    Undead = 5,
-};
-local raceID = BoopSpellData.RaceID;
+    resets = {
+        [133] = 2, -- Pyrokinesis
+        [314791] = 18, -- Shifting Power
+    },
 
-BoopSpellData.BaselineSpells = {
+    -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
+    critResets = { 133, 11366, 108853, "Phoenix Flames" },
+};
+NS.spellData_Vendetta = {
+    spellID = 79140,
+    duration = 20,
+    cooldown = 120,
+    index = 1,
+    sound = true,
+    powerType = Enum.PowerType.Energy,
+};
+NS.spellData_HOJ = {
+    spellID = 853,
+    cooldown = 60,
+    powerType = Enum.PowerType.HolyPower,
+
+    -- Spells that disable the cooldown reduction
+    track_cast_start = 20066,
+    track_cast_success = 115750,
+};
+
+if NS.isTestMode then
+    -- Test
+    -- Regrowth
+    NS.spellData[8936] = {
+        category = OFFENSIVE,
+        duration = 8,
+        cooldown = 120,
+        sound = true,
+        opt_charges = true,
+    };
+    -- Rejuv
+    NS.spellData[774] = {
+        category = CC,
+        duration = 8,
+        cooldown = 30,
+        sound = true;
+        charges = true,
+    };
+end
+
+NS.baselineSpells = {
     -- Stun breakers
     -- Human racial
     [59752] = {
@@ -915,180 +1012,203 @@ BoopSpellData.BaselineSpells = {
     },
 };
 
+if NS.isTestMode then
+    -- Rejuvenation
+    NS.baselineSpells[774] = {
+        class = classId.Druid,
+        cooldown = 60,
+        opt_charges = true,
+        index = 2,
+    };
+    -- Regrowth
+    NS.baselineSpells[8936] = {
+        class = classId.Druid,
+        cooldown = 60,
+        charges = true,
+        index = 1,
+    }
+end
+
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
-BoopSpellData.DiminishingReturnSpells = {
-    [207167]  = "disorient",       -- Blinding Sleet
-    [207685]  = "disorient",       -- Sigil of Misery
-    [33786]   = "disorient",       -- Cyclone
-    [1513]    = "disorient",       -- Scare Beast
-    [31661]   = "disorient",       -- Dragon's Breath
-    [198909]  = "disorient",       -- Song of Chi-ji
-    [202274]  = "disorient",       -- Incendiary Brew
-    [105421]  = "disorient",       -- Blinding Light
-    [10326]   = "disorient",       -- Turn Evil
-    [605]     = "disorient",       -- Mind Control
-    [8122]    = "disorient",       -- Psychic Scream
-    [226943]  = "disorient",       -- Mind Bomb
-    [2094]    = "disorient",       -- Blind
-    [118699]  = "disorient",       -- Fear
-    [5484]    = "disorient",       -- Howl of Terror
-    [261589]  = "disorient",       -- Seduction (Grimoire of Sacrifice)
-    [6358]    = "disorient",       -- Seduction (Succubus)
-    [5246]    = "disorient",       -- Intimidating Shout 1
-    [316593]  = "disorient",       -- Intimidating Shout 2 (TODO: not sure which one is correct in 9.0.1)
-    [316595]  = "disorient",       -- Intimidating Shout 3
-    [331866]  = "disorient",       -- Agent of Chaos (Venthyr Covenant)
+NS.diminishingReturnSpells = {
+    [207167]  = DR_DISORIENT,       -- Blinding Sleet
+    [207685]  = DR_DISORIENT,       -- Sigil of Misery
+    [33786]   = DR_DISORIENT,       -- Cyclone
+    [1513]    = DR_DISORIENT,       -- Scare Beast
+    [31661]   = DR_DISORIENT,       -- Dragon's Breath
+    [198909]  = DR_DISORIENT,       -- Song of Chi-ji
+    [202274]  = DR_DISORIENT,       -- Incendiary Brew
+    [105421]  = DR_DISORIENT,       -- Blinding Light
+    [10326]   = DR_DISORIENT,       -- Turn Evil
+    [605]     = DR_DISORIENT,       -- Mind Control
+    [8122]    = DR_DISORIENT,       -- Psychic Scream
+    [226943]  = DR_DISORIENT,       -- Mind Bomb
+    [2094]    = DR_DISORIENT,       -- Blind
+    [118699]  = DR_DISORIENT,       -- Fear
+    [5484]    = DR_DISORIENT,       -- Howl of Terror
+    [261589]  = DR_DISORIENT,       -- Seduction (Grimoire of Sacrifice)
+    [6358]    = DR_DISORIENT,       -- Seduction (Succubus)
+    [5246]    = DR_DISORIENT,       -- Intimidating Shout 1
+    [316593]  = DR_DISORIENT,       -- Intimidating Shout 2 (TODO: not sure which one is correct in 9.0.1)
+    [316595]  = DR_DISORIENT,       -- Intimidating Shout 3
+    [331866]  = DR_DISORIENT,       -- Agent of Chaos (Venthyr Covenant)
 
-    [217832]  = "incapacitate",    -- Imprison
-    [221527]  = "incapacitate",    -- Imprison (Honor talent)
-    [2637]    = "incapacitate",    -- Hibernate
-    [99]      = "incapacitate",    -- Incapacitating Roar
-    [3355]    = "incapacitate",    -- Freezing Trap
-    [203337]  = "incapacitate",    -- Freezing Trap (Honor talent)
-    [213691]  = "incapacitate",    -- Scatter Shot
-    [118]     = "incapacitate",    -- Polymorph
-    [28271]   = "incapacitate",    -- Polymorph (Turtle)
-    [28272]   = "incapacitate",    -- Polymorph (Pig)
-    [61025]   = "incapacitate",    -- Polymorph (Snake)
-    [61305]   = "incapacitate",    -- Polymorph (Black Cat)
-    [61780]   = "incapacitate",    -- Polymorph (Turkey)
-    [61721]   = "incapacitate",    -- Polymorph (Rabbit)
-    [126819]  = "incapacitate",    -- Polymorph (Porcupine)
-    [161353]  = "incapacitate",    -- Polymorph (Polar Bear Cub)
-    [161354]  = "incapacitate",    -- Polymorph (Monkey)
-    [161355]  = "incapacitate",    -- Polymorph (Penguin)
-    [161372]  = "incapacitate",    -- Polymorph (Peacock)
-    [277787]  = "incapacitate",    -- Polymorph (Baby Direhorn)
-    [277792]  = "incapacitate",    -- Polymorph (Bumblebee)
-    [82691]   = "incapacitate",    -- Ring of Frost
-    [115078]  = "incapacitate",    -- Paralysis
-    [20066]   = "incapacitate",    -- Repentance
-    [9484]    = "incapacitate",    -- Shackle Undead
-    [200196]  = "incapacitate",    -- Holy Word: Chastise
-    [1776]    = "incapacitate",    -- Gouge
-    [6770]    = "incapacitate",    -- Sap
-    [51514]   = "incapacitate",    -- Hex
-    [196942]  = "incapacitate",    -- Hex (Voodoo Totem)
-    [210873]  = "incapacitate",    -- Hex (Raptor)
-    [211004]  = "incapacitate",    -- Hex (Spider)
-    [211010]  = "incapacitate",    -- Hex (Snake)
-    [211015]  = "incapacitate",    -- Hex (Cockroach)
-    [269352]  = "incapacitate",    -- Hex (Skeletal Hatchling)
-    [309328]  = "incapacitate",    -- Hex (Living Honey)
-    [277778]  = "incapacitate",    -- Hex (Zandalari Tendonripper)
-    [277784]  = "incapacitate",    -- Hex (Wicker Mongrel)
-    [197214]  = "incapacitate",    -- Sundering
-    [710]     = "incapacitate",    -- Banish
-    [6789]    = "incapacitate",    -- Mortal Coil
-    [107079]  = "incapacitate",    -- Quaking Palm (Pandaren racial)
+    [217832]  = DR_INCAPACITATE,    -- Imprison
+    [221527]  = DR_INCAPACITATE,    -- Imprison (Honor talent)
+    [2637]    = DR_INCAPACITATE,    -- Hibernate
+    [99]      = DR_INCAPACITATE,    -- Incapacitating Roar
+    [3355]    = DR_INCAPACITATE,    -- Freezing Trap
+    [203337]  = DR_INCAPACITATE,    -- Freezing Trap (Honor talent)
+    [213691]  = DR_INCAPACITATE,    -- Scatter Shot
+    [118]     = DR_INCAPACITATE,    -- Polymorph
+    [28271]   = DR_INCAPACITATE,    -- Polymorph (Turtle)
+    [28272]   = DR_INCAPACITATE,    -- Polymorph (Pig)
+    [61025]   = DR_INCAPACITATE,    -- Polymorph (Snake)
+    [61305]   = DR_INCAPACITATE,    -- Polymorph (Black Cat)
+    [61780]   = DR_INCAPACITATE,    -- Polymorph (Turkey)
+    [61721]   = DR_INCAPACITATE,    -- Polymorph (Rabbit)
+    [126819]  = DR_INCAPACITATE,    -- Polymorph (Porcupine)
+    [161353]  = DR_INCAPACITATE,    -- Polymorph (Polar Bear Cub)
+    [161354]  = DR_INCAPACITATE,    -- Polymorph (Monkey)
+    [161355]  = DR_INCAPACITATE,    -- Polymorph (Penguin)
+    [161372]  = DR_INCAPACITATE,    -- Polymorph (Peacock)
+    [277787]  = DR_INCAPACITATE,    -- Polymorph (Baby Direhorn)
+    [277792]  = DR_INCAPACITATE,    -- Polymorph (Bumblebee)
+    [82691]   = DR_INCAPACITATE,    -- Ring of Frost
+    [115078]  = DR_INCAPACITATE,    -- Paralysis
+    [20066]   = DR_INCAPACITATE,    -- Repentance
+    [9484]    = DR_INCAPACITATE,    -- Shackle Undead
+    [200196]  = DR_INCAPACITATE,    -- Holy Word: Chastise
+    [1776]    = DR_INCAPACITATE,    -- Gouge
+    [6770]    = DR_INCAPACITATE,    -- Sap
+    [51514]   = DR_INCAPACITATE,    -- Hex
+    [196942]  = DR_INCAPACITATE,    -- Hex (Voodoo Totem)
+    [210873]  = DR_INCAPACITATE,    -- Hex (Raptor)
+    [211004]  = DR_INCAPACITATE,    -- Hex (Spider)
+    [211010]  = DR_INCAPACITATE,    -- Hex (Snake)
+    [211015]  = DR_INCAPACITATE,    -- Hex (Cockroach)
+    [269352]  = DR_INCAPACITATE,    -- Hex (Skeletal Hatchling)
+    [309328]  = DR_INCAPACITATE,    -- Hex (Living Honey)
+    [277778]  = DR_INCAPACITATE,    -- Hex (Zandalari Tendonripper)
+    [277784]  = DR_INCAPACITATE,    -- Hex (Wicker Mongrel)
+    [197214]  = DR_INCAPACITATE,    -- Sundering
+    [710]     = DR_INCAPACITATE,    -- Banish
+    [6789]    = DR_INCAPACITATE,    -- Mortal Coil
+    [107079]  = DR_INCAPACITATE,    -- Quaking Palm (Pandaren racial)
 
-    [47476]   = "silence",         -- Strangulate
-    [204490]  = "silence",         -- Sigil of Silence
---      [78675]   = "silence",         -- Solar Beam (doesn't seem to DR)
-    [202933]  = "silence",         -- Spider Sting
-    [356727]  = "silence",         -- Spider Venom
-    [217824]  = "silence",         -- Shield of Virtue
-    [15487]   = "silence",         -- Silence
-    [1330]    = "silence",         -- Garrote
-    [196364]  = "silence",         -- Unstable Affliction Silence Effect
+    [47476]   = DR_SILENCE,         -- Strangulate
+    [204490]  = DR_SILENCE,         -- Sigil of Silence
+--      [78675]   = DR_SILENCE,         -- Solar Beam (doesn't seem to DR)
+    [202933]  = DR_SILENCE,         -- Spider Sting
+    [356727]  = DR_SILENCE,         -- Spider Venom
+    [217824]  = DR_SILENCE,         -- Shield of Virtue
+    [15487]   = DR_SILENCE,         -- Silence
+    [1330]    = DR_SILENCE,         -- Garrote
+    [196364]  = DR_SILENCE,         -- Unstable Affliction Silence Effect
 
-    [210141]  = "stun",            -- Zombie Explosion
-    [334693]  = "stun",            -- Absolute Zero (Breath of Sindragosa)
-    [108194]  = "stun",            -- Asphyxiate (Unholy)
-    [221562]  = "stun",            -- Asphyxiate (Blood)
-    [91800]   = "stun",            -- Gnaw (Ghoul)
-    [91797]   = "stun",            -- Monstrous Blow (Mutated Ghoul)
-    [287254]  = "stun",            -- Dead of Winter
-    [179057]  = "stun",            -- Chaos Nova
-    [205630]  = "stun",            -- Illidan's Grasp (Primary effect)
-    [208618]  = "stun",            -- Illidan's Grasp (Secondary effect)
-    [211881]  = "stun",            -- Fel Eruption
-    [200166]  = "stun",            -- Metamorphosis (PvE stun effect)
-    [203123]  = "stun",            -- Maim
-    [163505]  = "stun",            -- Rake (Prowl)
-    [5211]    = "stun",            -- Mighty Bash
-    [202244]  = "stun",            -- Overrun
-    [325321]  = "stun",            -- Wild Hunt's Charge
-    [357021]  = "stun",            -- Consecutive Concussion
-    [24394]   = "stun",            -- Intimidation
-    [119381]  = "stun",            -- Leg Sweep
-    [202346]  = "stun",            -- Double Barrel
-    [853]     = "stun",            -- Hammer of Justice
-    [255941]  = "stun",            -- Wake of Ashes
-    [64044]   = "stun",            -- Psychic Horror
-    [200200]  = "stun",            -- Holy Word: Chastise Censure
-    [1833]    = "stun",            -- Cheap Shot
-    [408]     = "stun",            -- Kidney Shot
-    [118905]  = "stun",            -- Static Charge (Capacitor Totem)
-    [118345]  = "stun",            -- Pulverize (Primal Earth Elemental)
-    [305485]  = "stun",            -- Lightning Lasso
-    [89766]   = "stun",            -- Axe Toss
-    [171017]  = "stun",            -- Meteor Strike (Infernal)
-    [171018]  = "stun",            -- Meteor Strike (Abyssal)
-    [30283]   = "stun",            -- Shadowfury
-    [46968]   = "stun",            -- Shockwave
-    [132168]  = "stun",            -- Shockwave (Protection)
-    [145047]  = "stun",            -- Shockwave (Proving Grounds PvE)
-    [132169]  = "stun",            -- Storm Bolt
-    [199085]  = "stun",            -- Warpath
-    [20549]   = "stun",            -- War Stomp (Tauren)
-    [255723]  = "stun",            -- Bull Rush (Highmountain Tauren)
-    [287712]  = "stun",            -- Haymaker (Kul Tiran)
+    [210141]  = DR_STUN,            -- Zombie Explosion
+    [334693]  = DR_STUN,            -- Absolute Zero (Breath of Sindragosa)
+    [108194]  = DR_STUN,            -- Asphyxiate (Unholy)
+    [221562]  = DR_STUN,            -- Asphyxiate (Blood)
+    [91800]   = DR_STUN,            -- Gnaw (Ghoul)
+    [91797]   = DR_STUN,            -- Monstrous Blow (Mutated Ghoul)
+    [287254]  = DR_STUN,            -- Dead of Winter
+    [179057]  = DR_STUN,            -- Chaos Nova
+    [205630]  = DR_STUN,            -- Illidan's Grasp (Primary effect)
+    [208618]  = DR_STUN,            -- Illidan's Grasp (Secondary effect)
+    [211881]  = DR_STUN,            -- Fel Eruption
+    [200166]  = DR_STUN,            -- Metamorphosis (PvE stun effect)
+    [203123]  = DR_STUN,            -- Maim
+    [163505]  = DR_STUN,            -- Rake (Prowl)
+    [5211]    = DR_STUN,            -- Mighty Bash
+    [202244]  = DR_STUN,            -- Overrun
+    [325321]  = DR_STUN,            -- Wild Hunt's Charge
+    [357021]  = DR_STUN,            -- Consecutive Concussion
+    [24394]   = DR_STUN,            -- Intimidation
+    [119381]  = DR_STUN,            -- Leg Sweep
+    [202346]  = DR_STUN,            -- Double Barrel
+    [853]     = DR_STUN,            -- Hammer of Justice
+    [255941]  = DR_STUN,            -- Wake of Ashes
+    [64044]   = DR_STUN,            -- Psychic Horror
+    [200200]  = DR_STUN,            -- Holy Word: Chastise Censure
+    [1833]    = DR_STUN,            -- Cheap Shot
+    [408]     = DR_STUN,            -- Kidney Shot
+    [118905]  = DR_STUN,            -- Static Charge (Capacitor Totem)
+    [118345]  = DR_STUN,            -- Pulverize (Primal Earth Elemental)
+    [305485]  = DR_STUN,            -- Lightning Lasso
+    [89766]   = DR_STUN,            -- Axe Toss
+    [171017]  = DR_STUN,            -- Meteor Strike (Infernal)
+    [171018]  = DR_STUN,            -- Meteor Strike (Abyssal)
+    [30283]   = DR_STUN,            -- Shadowfury
+    [46968]   = DR_STUN,            -- Shockwave
+    [132168]  = DR_STUN,            -- Shockwave (Protection)
+    [145047]  = DR_STUN,            -- Shockwave (Proving Grounds PvE)
+    [132169]  = DR_STUN,            -- Storm Bolt
+    [199085]  = DR_STUN,            -- Warpath
+    [20549]   = DR_STUN,            -- War Stomp (Tauren)
+    [255723]  = DR_STUN,            -- Bull Rush (Highmountain Tauren)
+    [287712]  = DR_STUN,            -- Haymaker (Kul Tiran)
 
-    [204085]  = "root",            -- Deathchill (Chains of Ice)
-    [233395]  = "root",            -- Deathchill (Remorseless Winter)
-    [339]     = "root",            -- Entangling Roots
-    [170855]  = "root",            -- Entangling Roots (Nature's Grasp)
-    [102359]  = "root",            -- Mass Entanglement
-    [117526]  = "root",            -- Binding Shot
-    [162480]  = "root",            -- Steel Trap
-    [273909]  = "root",            -- Steelclaw Trap
+    [204085]  = DR_ROOT,            -- Deathchill (Chains of Ice)
+    [233395]  = DR_ROOT,            -- Deathchill (Remorseless Winter)
+    [339]     = DR_ROOT,            -- Entangling Roots
+    [170855]  = DR_ROOT,            -- Entangling Roots (Nature's Grasp)
+    [102359]  = DR_ROOT,            -- Mass Entanglement
+    [117526]  = DR_ROOT,            -- Binding Shot
+    [162480]  = DR_ROOT,            -- Steel Trap
+    [273909]  = DR_ROOT,            -- Steelclaw Trap
 --      [190927]  = "root_harpoon",    -- Harpoon (TODO: confirm)
-    [212638]  = "root",            -- Tracker's Net
-    [201158]  = "root",            -- Super Sticky Tar
-    [122]     = "root",            -- Frost Nova
-    [33395]   = "root",            -- Freeze
-    [198121]  = "root",            -- Frostbite
-    [342375]  = "root",            -- Tormenting Backlash (Torghast PvE)
-    [233582]  = "root",            -- Entrenched in Flame
-    [116706]  = "root",            -- Disable
-    [324382]  = "root",            -- Clash
-    [64695]   = "root",            -- Earthgrab (Totem effect)
-    [285515]  = "root",            -- Surge of Power
-    [39965]   = "root",            -- Frost Grenade (Item)
-    [75148]   = "root",            -- Embersilk Net (Item)
-    [55536]   = "root",            -- Frostweave Net (Item)
-    [268966]  = "root",            -- Hooked Deep Sea Net (Item)
+    [212638]  = DR_ROOT,            -- Tracker's Net
+    [201158]  = DR_ROOT,            -- Super Sticky Tar
+    [122]     = DR_ROOT,            -- Frost Nova
+    [33395]   = DR_ROOT,            -- Freeze
+    [198121]  = DR_ROOT,            -- Frostbite
+    [342375]  = DR_ROOT,            -- Tormenting Backlash (Torghast PvE)
+    [233582]  = DR_ROOT,            -- Entrenched in Flame
+    [116706]  = DR_ROOT,            -- Disable
+    [324382]  = DR_ROOT,            -- Clash
+    [64695]   = DR_ROOT,            -- Earthgrab (Totem effect)
+    [285515]  = DR_ROOT,            -- Surge of Power
+    [39965]   = DR_ROOT,            -- Frost Grenade (Item)
+    [75148]   = DR_ROOT,            -- Embersilk Net (Item)
+    [55536]   = DR_ROOT,            -- Frostweave Net (Item)
+    [268966]  = DR_ROOT,            -- Hooked Deep Sea Net (Item)
 
-    [209749]  = "disarm",          -- Faerie Swarm (Balance Honor Talent)
-    [207777]  = "disarm",          -- Dismantle
-    [233759]  = "disarm",          -- Grapple Weapon
-    [236077]  = "disarm",          -- Disarm
+    [209749]  = DR_DISARM,          -- Faerie Swarm (Balance Honor Talent)
+    [207777]  = DR_DISARM,          -- Dismantle
+    [233759]  = DR_DISARM,          -- Grapple Weapon
+    [236077]  = DR_DISARM,          -- Disarm
 
-    [56222]   = "taunt",           -- Dark Command
-    [51399]   = "taunt",           -- Death Grip
-    [185245]  = "taunt",           -- Torment
-    [6795]    = "taunt",           -- Growl (Druid)
-    [2649]    = "taunt",           -- Growl (Hunter Pet) (TODO: confirm)
-    [20736]   = "taunt",           -- Distracting Shot
-    [116189]  = "taunt",           -- Provoke
-    [118635]  = "taunt",           -- Provoke (Black Ox Statue)
-    [196727]  = "taunt",           -- Provoke (Niuzao)
-    [204079]  = "taunt",           -- Final Stand
-    [62124]   = "taunt",           -- Hand of Reckoning
-    [17735]   = "taunt",           -- Suffering (Voidwalker) (TODO: confirm)
-    [355]     = "taunt",           -- Taunt
+    [56222]   = DR_TAUNT,           -- Dark Command
+    [51399]   = DR_TAUNT,           -- Death Grip
+    [185245]  = DR_TAUNT,           -- Torment
+    [6795]    = DR_TAUNT,           -- Growl (Druid)
+    [2649]    = DR_TAUNT,           -- Growl (Hunter Pet) (TODO: confirm)
+    [20736]   = DR_TAUNT,           -- Distracting Shot
+    [116189]  = DR_TAUNT,           -- Provoke
+    [118635]  = DR_TAUNT,           -- Provoke (Black Ox Statue)
+    [196727]  = DR_TAUNT,           -- Provoke (Niuzao)
+    [204079]  = DR_TAUNT,           -- Final Stand
+    [62124]   = DR_TAUNT,           -- Hand of Reckoning
+    [17735]   = DR_TAUNT,           -- Suffering (Voidwalker) (TODO: confirm)
+    [355]     = DR_TAUNT,           -- Taunt
 
     -- Experimental
-    [108199]  = "knockback",        -- Gorefiend's Grasp
-    [202249]  = "knockback",        -- Overrun
-    [61391]   = "knockback",        -- Typhoon
-    [102793]  = "knockback",        -- Ursol's Vortex
-    [186387]  = "knockback",        -- Bursting Shot
-    [236777]  = "knockback",        -- Hi-Explosive Trap
-    [157981]  = "knockback",        -- Blast Wave
-    [237371]  = "knockback",        -- Ring of Peace
-    [204263]  = "knockback",        -- Shining Force
-    [51490]   = "knockback",        -- Thunderstorm
---      [287712]  = "knockback",        -- Haywire (Kul'Tiran Racial)
+    [108199]  = DR_KNOCKBACK,        -- Gorefiend's Grasp
+    [202249]  = DR_KNOCKBACK,        -- Overrun
+    [61391]   = DR_KNOCKBACK,        -- Typhoon
+    [102793]  = DR_KNOCKBACK,        -- Ursol's Vortex
+    [186387]  = DR_KNOCKBACK,        -- Bursting Shot
+    [236777]  = DR_KNOCKBACK,        -- Hi-Explosive Trap
+    [157981]  = DR_KNOCKBACK,        -- Blast Wave
+    [237371]  = DR_KNOCKBACK,        -- Ring of Peace
+    [204263]  = DR_KNOCKBACK,        -- Shining Force
+    [51490]   = DR_KNOCKBACK,        -- Thunderstorm
+--      [287712]  = DR_KNOCKBACK,        -- Haywire (Kul'Tiran Racial)
 };
+
+if NS.isTestMode then
+    NS.diminishingReturnSpells[33763] = NS.diminishingReturnCategory.DR_DISORIENT; -- Lifebloom
+    NS.diminishingReturnSpells[8936] = NS.diminishingReturnCategory.DR_STUN; -- Regrowth
+    NS.diminishingReturnSpells[774] = NS.diminishingReturnCategory.DR_INCAPACITATE; -- Rejuvenation
+end

@@ -1,14 +1,14 @@
 <Ui>
-	<!-- Libraries -->
-
-	<!-- Core -->
-	<Script file="Core.lua"/>
-
-	<!-- Modules -->
+	<!-- WA/Plater Lib -->
 	<Script file="SpellData.lua"/>
+	<Script file="UnitInfoHelpers.lua"/>
 	<Script file="UtilsWA.lua"/>
-	<Script file="ShieldMeters.lua"/>
+	
 	<Script file="FixBlizzardRaidAggro.lua"/>
+
+	<!-- Misc -->
+	<Script file="Core.lua"/>
+	<Script file="ShieldMeters.lua"/>
 	<Script file="DrinkMacro.lua"/>
 	<Script file="DampenDisplay.lua"/>
 	<Script file="CombatIndicator.lua"/>
