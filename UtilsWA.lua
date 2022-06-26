@@ -543,6 +543,7 @@ local function makeIconState(spell, spellID, unitTarget)
     return state;
 end
 
+-- Baseline icons are blocking each other
 BoopUtilsWA.Triggers.BaselineIcon = function(baselineSpellID, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
@@ -640,6 +641,8 @@ BoopUtilsWA.Triggers.DR = function(category, trackUnit, allstates, event, ...)
     end
 end
 
+-- Do not return values, otherwise WAs might block each other.
+-- Same when calling this from WA, just call the function, instead of return BoopUtilsWA.AttachToArenaFrameByUnitId
 BoopUtilsWA.AttachToArenaFrameByUnitId = function (frames, activeRegions)
     for _, regionData in ipairs(activeRegions) do
         local unitId = regionData.region.state and regionData.region.state.unit
@@ -648,7 +651,6 @@ BoopUtilsWA.AttachToArenaFrameByUnitId = function (frames, activeRegions)
         if frame then
             frames[frame] = frames[frame] or {}
             tinsert(frames[frame], regionData)
-            return;
         end
     end
 end
@@ -660,8 +662,7 @@ BoopUtilsWA.AttachToRaidFrameByUnitId = function (frames, activeRegions)
         local frame = NS.findRaidFrameForUnitId(unitId);
         if frame then
             frames[frame] = frames[frame] or {}
-                    tinsert(frames[frame], regionData) 
-                    return;
+            tinsert(frames[frame], regionData) 
         end
     end
 end
