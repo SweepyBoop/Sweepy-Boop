@@ -447,7 +447,7 @@ NS.spellData = {
     [325216] = {
         category = OFFENSIVE_AURA,
         duration = 10,
-        spec = { specID.ww },
+        spec = { specID.WW },
     },
     -- Interrupt
     -- Spear hand Strike
