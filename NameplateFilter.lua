@@ -2,7 +2,7 @@ BoopNameplateFilter = {};
 
 BoopNameplateFilter.Initialization = function (modTable)
     --insert code here
-    modTable.test = true
+    modTable.test = false
     
     -- Whitelist for non-player units
     local whiteList = {
@@ -131,10 +131,7 @@ BoopNameplateFilter.Initialization = function (modTable)
             unitFrame.castBar:Hide();
             unitFrame.BuffFrame:Hide();
         elseif ( not UnitIsPlayer(unitId) ) then
-            -- By the time nameplate is added, envTable._NpcID is not available.
-            -- So we basically rewrite that logic here to extract the NPC ID.
-            -- This is checked once only per nameplate add so perf is not an issue.
-            local npcID = select(6, strsplit("-", UnitGUID(unitId)));
+            local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
             if (not npcID) or (not showCastNpc[npcID]) then
                 unitFrame.castBar:UnregisterAllEvents();
                 unitFrame.castBar:Hide();
