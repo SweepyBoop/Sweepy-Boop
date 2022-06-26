@@ -278,7 +278,6 @@ local function cooldownTrigger(category, allstates, event, ...)
 
         -- Return if no valid spell
         local spell = spellData[spellID];
-        -- Defensive spells are automatically attached track_unit tag.
         if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
 
         if unitSpellEnabled(spell, unitTarget) then
@@ -338,6 +337,19 @@ local glowOnActivationDuration = 0.75;
 local function glowOnActivationTrigger(category, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
+    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
+        local unitTarget, _, spellID = ...;
+        if (not unitTarget) then return end
+
+        -- Return if no valid spell
+        local spell = spellData[spellID];
+        if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
+
+        if unitSpellEnabled(spell, unitTarget) then
+            local guid = concatGUID(UnitGUID(unitTarget), spellID);
+            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration, nil, unitTarget);
+            return true;
+        end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
         if (not shouldCheckCombatLog(subEvent)) then return end
@@ -362,6 +374,18 @@ end
 
 BoopUtilsWA.Triggers.GlowOnActivationInterrupt = function (allstates, event, ...)
     return glowOnActivationTrigger(INTERRUPT, allstates, event, ...);
+end
+
+BoopUtilsWA.Triggers.GlowOnActivationDispel = function (allstates, event, ...)
+    return glowOnActivationTrigger(DISPEL, allstates, event, ...);
+end
+
+BoopUtilsWA.Triggers.GlowOnActivationDefensive = function (allstates, event, ...)
+    return glowOnActivationTrigger(DEFENSIVE, allstates, event, ...);
+end
+
+BoopUtilsWA.Triggers.GlowOnActivationOffensiveCD = function (allstates, event, ...)
+    return glowOnActivationTrigger(OFFENSIVE_CD, allstates, event, ...);
 end
 
 BoopUtilsWA.Constants.SpellData_HOJ = NS.spellData_HOJ;
