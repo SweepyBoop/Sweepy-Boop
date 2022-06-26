@@ -48,23 +48,33 @@ local eventHandler = function(frame, event, unitTarget)
         -- Upon entering a new zone, clear the aggro highlight
         for i = 1, MAX_RAIDAGGRO_SIZE do
             local frame = _G["CompactRaidFrame"..i];
-            if (not frame) or frame.optionTable.displayAggroHighlight then return end
-            frame.aggroHighlight:Hide();
+            -- Check if the user has Blizzard default highlight on
+            if frame and frame.optionTable.displayAggroHighlight then return end
+
+            if frame then
+                frame.aggroHighlight:Hide();
+            end
         end
     elseif (event == "UNIT_TARGET") and IsUnitArena(unitTarget) then
+        -- Only enable highlight inside an arena
+        if (not IsActiveBattlefieldArena()) then return end
+
         local aggroUnitGUID = getAggroUnitGUID();
         
         for i = 1, MAX_RAIDAGGRO_SIZE do
             local frame = _G["CompactRaidFrame"..i];
-            if (not frame) or frame.optionTable.displayAggroHighlight then return end
+            -- Check if the user has Blizzard default highlight on
+            if frame and frame.optionTable.displayAggroHighlight then return end
+
+            if frame then
+                local showAggro = frame.unit and (UnitGUID(frame.unit) == aggroUnitGUID);
             
-            local showAggro = frame.unit and (UnitGUID(frame.unit) == aggroUnitGUID);
-            
-            if showAggro then
-                frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(3)); -- red
-                frame.aggroHighlight:Show();
-            else
-                frame.aggroHighlight:Hide();
+                if showAggro then
+                    frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(3)); -- red
+                    frame.aggroHighlight:Show();
+                else
+                    frame.aggroHighlight:Hide();
+                end
             end
         end
     end
