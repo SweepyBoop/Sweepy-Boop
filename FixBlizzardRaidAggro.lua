@@ -1,20 +1,18 @@
+local _, NS = ...;
+
 -- IMPORTANT!!!
 -- Make sure you disable Interface -> Raid Profiles -> "Display Aggro Highlight", and do a /reload
 -- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
 
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
-local isTestMode = false;
-
--- Events to reset the aggro
-local EVENT_ENTERWORLD = "PLAYER_ENTERING_WORLD";
-local EVENT_ARENA_PREP = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
+local isTestMode = NS.isTestMode;
 
 -- For raid frames inside arena, checking the first 10 should be more than enough to cover part members (players and pets)
 local MAX_ARENAOPPONENT_SIZE = 3;
 local MAX_RAIDAGGRO_SIZE = 10;
 
 local function shouldClearAggro(event)
-    return (event == EVENT_ENTERWORLD) or (event == EVENT_ARENA_PREP);
+    return (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 end
 
 local IsUnitArena = function(unitId)
@@ -73,8 +71,8 @@ local eventHandler = function(frame, event, unitTarget)
 end
 
 local frame = CreateFrame("Frame");
-frame:RegisterEvent(EVENT_ENTERWORLD);
-frame:RegisterEvent(EVENT_ARENA_PREP);
+frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 frame:RegisterEvent("UNIT_TARGET");
 frame:SetScript("OnEvent", eventHandler);
 

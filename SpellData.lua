@@ -21,6 +21,19 @@ local INTERRUPT = NS.spellCategory.INTERRUPT;
 local DISPEL = NS.spellCategory.DISPEL;
 local DEFENSIVE = NS.spellCategory.DEFENSIVE;
 
+-- Event name constants
+NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
+NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
+NS.UNIT_SPELLCAST_SUCCEEDED = "UNIT_SPELLCAST_SUCCEEDED";
+NS.COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
+NS.GROUP_ROSTER_UPDATE = "GROUP_ROSTER_UPDATE";
+-- Sub event name constants
+NS.SPELL_CAST_SUCCESS = "SPELL_CAST_SUCCESS";
+NS.SPELL_AURA_APPLIED = "SPELL_AURA_APPLIED";
+NS.SPELL_AURA_REMOVED = "SPELL_AURA_REMOVED";
+NS.SPELL_DAMAGE = "SPELL_DAMAGE";
+NS.SPELL_CAST_START = "SPELL_CAST_START";
+
 NS.specID = {
     BALANCE = 102,
     FERAL = 103,
@@ -28,20 +41,20 @@ NS.specID = {
 };
 local specID = NS.specID;
 
-NS.ClassId = {
+NS.classId = {
     Warrior = 1,
     Paladin = 2,
     DK = 6,
     Mage = 8,
     Druid = 11,
 };
-local classId = NS.ClassId;
+local classId = NS.classId;
 
-NS.RaceID = {
+NS.raceID = {
     Human = 1,
     Undead = 5,
 };
-local raceID = NS.RaceID;
+local raceID = NS.raceID;
 
 NS.diminishingReturnCategory = {
     DR_DISORIENT = "disorient",
@@ -63,16 +76,23 @@ local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
 local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 
 -- Events (and units) to track
-NS.TRACK_PET = 0; -- SPELL_CAST_SUCCESS & pet GUID
-NS.TRACK_PET_AURA = 1; -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
-NS.TRACK_AURA = 2; -- SPELL_AURA_APPLIED, e.g., chastise
-NS.TRACK_AURA_FADE = 3; -- SPELL_AURA_REMOVED, e.g., prot pally silence
-NS.TRACK_UNIT = 4; -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
-local TRACK_PET = NS.TRACK_PET;
-local TRACK_PET_AURA = NS.TRACK_PET_AURA;
-local TRACK_AURA = NS.TRACK_AURA;
-local TRACK_AURA_FADE = NS.TRACK_AURA_FADE;
-local TRACK_UNIT = NS.TRACK_UNIT;
+NS.trackType = {
+    -- For pet kicks
+    TRACK_PET = 0, -- SPELL_CAST_SUCCESS & pet GUID
+    TRACK_PET_AURA = 1, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
+
+    TRACK_AURA = 2, -- SPELL_AURA_APPLIED, e.g., chastise
+    TRACK_AURA_FADE = 3, -- SPELL_AURA_REMOVED, e.g., prot pally silence
+    TRACK_UNIT = 4, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
+};
+
+local TRACK_PET = NS.trackType.TRACK_PET;
+local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA;
+local TRACK_AURA = NS.trackType.TRACK_AURA;
+local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE;
+local TRACK_UNIT = NS.trackType.TRACK_UNIT;
+
+NS.defaultIndex = 100;
 
 -- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED
 -- charges: baseline 2 charges
@@ -85,7 +105,7 @@ local TRACK_UNIT = NS.TRACK_UNIT;
 -- OFFENSIVE: glow when it's active, show cooldown timer otherwise
 -- OFFENSIVE_AURA: glow when it's active
 -- OFFENSIVE_CD: show cooldown timer
-NS.SpellData = {
+NS.spellData = {
     -- General
     -- Offensive
     -- Resonator
@@ -882,7 +902,62 @@ NS.spellResets = {
     },
 };
 
-NS.BaselineSpells = {
+-- Special abilities that need seperate triggers from the generic ones.
+NS.spellData_Combust = {
+    spellID = 190319,
+    duration = 14,
+    cooldown = 120,
+    index = 1,
+    sound = true,
+    dispellable = true,
+
+    resets = {
+        [133] = 2, -- Pyrokinesis
+        [314791] = 18, -- Shifting Power
+    },
+
+    -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
+    critResets = { 133, 11366, 108853, "Phoenix Flames" },
+};
+NS.spellData_Vendetta = {
+    spellID = 79140,
+    duration = 20,
+    cooldown = 120,
+    index = 1,
+    sound = true,
+    powerType = Enum.PowerType.Energy,
+};
+NS.spellData_HOJ = {
+    spellID = 853,
+    cooldown = 60,
+    powerType = Enum.PowerType.HolyPower,
+
+    -- Spells that disable the cooldown reduction
+    track_cast_start = 20066,
+    track_cast_success = 115750,
+};
+
+if NS.isTestMode then
+    -- Test
+    -- Regrowth
+    NS.spellData[8936] = {
+        category = OFFENSIVE,
+        duration = 8,
+        cooldown = 120,
+        sound = true,
+        opt_charges = true,
+    };
+    -- Rejuv
+    NS.spellData[774] = {
+        category = CC,
+        duration = 8,
+        cooldown = 30,
+        sound = true;
+        charges = true,
+    };
+end
+
+NS.baselineSpells = {
     -- Stun breakers
     -- Human racial
     [59752] = {
@@ -936,6 +1011,23 @@ NS.BaselineSpells = {
         index = 4,
     },
 };
+
+if NS.isTestMode then
+    -- Rejuvenation
+    NS.baselineSpells[774] = {
+        class = classId.Druid,
+        cooldown = 60,
+        opt_charges = true,
+        index = 2,
+    };
+    -- Regrowth
+    NS.baselineSpells[8936] = {
+        class = classId.Druid,
+        cooldown = 60,
+        charges = true,
+        index = 1,
+    }
+end
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
 NS.diminishingReturnSpells = {
@@ -1114,3 +1206,9 @@ NS.diminishingReturnSpells = {
     [51490]   = DR_KNOCKBACK,        -- Thunderstorm
 --      [287712]  = DR_KNOCKBACK,        -- Haywire (Kul'Tiran Racial)
 };
+
+if NS.isTestMode then
+    NS.diminishingReturnSpells[33763] = NS.diminishingReturnCategory.DR_DISORIENT; -- Lifebloom
+    NS.diminishingReturnSpells[8936] = NS.diminishingReturnCategory.DR_STUN; -- Regrowth
+    NS.diminishingReturnSpells[774] = NS.diminishingReturnCategory.DR_INCAPACITATE; -- Rejuvenation
+end

@@ -28,10 +28,8 @@ local arenaInfo = {
     defaultHoJCooldown = {},
 };
 
-local MAX_ARENAOPPONENT_SIZE = 3;
-local MAX_PARTY_SIZE = 10;
-NS.MAX_ARENAOPPONENT_SIZE = MAX_ARENAOPPONENT_SIZE;
-NS.MAX_PARTY_SIZE = MAX_PARTY_SIZE;
+NS.MAX_ARENA_SIZE = 3;
+NS.MAX_PARTY_SIZE = 10;
 
 local arenaInfoFrame = CreateFrame('Frame');
 arenaInfoFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -48,83 +46,220 @@ arenaInfoFrame:SetScript("OnEvent", function ()
     arenaInfo.defaultHoJCooldown = {};
 end);
 
--- Make sure you only check "arena"..i unitIds in the following helper functions
--- For testing, unitId = "player", index = 0
-local function updateArenaInfo(sourceGUID, unitId, index)
-    if unitId and (not arenaInfo.unitGUID[unitId]) then
-        arenaInfo.unitGUID[unitId] = sourceGUID or UnitGUID(unitId);
+-- For the following helpers, make sure unitId is "arena".i, or "player" for testing
+-- index = 1/2/3 for "arena"..index, or 0 for "player"
+
+local function getSpecForArenaIndex(index)
+    if (index == 0) then
+        local currentSpec = GetSpecialization();
+        return GetSpecializationInfo(currentSpec);
+    else
+        return GetArenaOpponentSpec(index);
+    end
+end
+
+local function updateArenaInfo(unitId, ...)
+    local index = ...;
+
+    if (not arenaInfo.unitGUID[unitId]) then
+        arenaInfo.unitGUID[unitId] = UnitGUID(unitId);
     end
 
-    if sourceGUID and (not arenaInfo.unitId[sourceGUID]) then
-        arenaInfo.unitId[sourceGUID] = unitId;
+    local unitGUID = arenaInfo.unitGUID[unitId];
+    if (not arenaInfo.unitId[unitGUID]) then
+        arenaInfo.unitId[unitGUID] = unitId;
     end
 
-    if index and (not arenaInfo.spec[index]) and sourceGUID then
-        arenaInfo.spec[sourceGUID] = GetArenaOpponentSpec(index);
+    if index and (not arenaInfo.spec[index]) then
+        arenaInfo.spec[unitGUID] = getSpecForArenaIndex(index);
     end
 
     if index and unitId and (not arenaInfo.unitSpec[unitId]) then
-        arenaInfo.unitSpec[unitId] = GetArenaOpponentSpec(index);
+        arenaInfo.unitSpec[unitId] = getSpecForArenaIndex(index);
     end
 
-    if unitId and (not arenaInfo.unitClass[unitId]) then
+    if (not arenaInfo.unitClass[unitId]) then
         arenaInfo.unitClass[unitId] = select(3, UnitClass(unitId));
     end
 
-    if unitId and (not arenaInfo.unitRace[unitId]) then
+    if (not arenaInfo.unitRace[unitId]) then
         arenaInfo.unitRace[unitId] = select(3, UnitRace(unitId));
     end
 end
 
--- This is used for testing only
-local function updatePlayerInfo()
-    local unitId = "player";
-    local sourceGUID = UnitGUID(unitId);
-    local currentSpec = GetSpecialization();
-    local specId = GetSpecializationInfo(currentSpec);
-
-    arenaInfo.unitGUID[unitId] = sourceGUID;
-    arenaInfo.unitId[sourceGUID] = unitId;
-
-    arenaInfo.spec[sourceGUID] = specId;
-    arenaInfo.unitSpec[unitId] = specId;
-    arenaInfo.unitClass[unitId] = select(3, UnitClass(unitId));
-    arenaInfo.unitRace[unitId] = select(3, UnitRace(unitId));
-end
-
--- Only pass in "arena"..i unitIds
 local function arenaUnitGUID(unitId, index)
-    if (not arenaInfo.unitGUID[unitId]) and UnitExists(unitId) then
-        local guid = UnitGUID(unitId);
-        updateArenaInfo(guid, unitId, index);
+    if UnitExists(unitId) then
+        updateArenaInfo(unitId, index);
     end
 
     return arenaInfo.unitGUID[unitId];
 end
 
--- Only pass in "arena"..i unitIds, or "player" for testing
-local function unitClass(unitId)
-    updateArenaInfo(nil, unitId);
+-- This is for finding unitId for triggers that base on COMBAT_LOG events
+-- Since isSourceArena would always be called prior to this, the unitId info should be available
+NS.arenaUnitId = function (sourceGUID)
+    return arenaInfo.unitId[sourceGUID];
+end
+
+-- Make sure this is available when being checked (isSourceArena needs to be called before this)
+NS.arenaSpec = function (sourceGUID)
+    return arenaInfo.spec[sourceGUID];
+end
+
+NS.arenaUnitSpec = function (unitId)
+    updateArenaInfo(unitId);
+    return arenaInfo.unitSpec[unitId];
+end
+
+NS.arenaUnitClass = function(unitId)
+    updateArenaInfo(unitId);
     return arenaInfo.unitClass[unitId];
 end
 
--- Only pass in "arena"..i unitIds, or "player" for testing
-local function unitRace(unitId)
-    updateArenaInfo(nil, unitId);
+NS.arenaUnitRace = function(unitId)
+    updateArenaInfo(unitId);
     return arenaInfo.unitRace[unitId];
 end
 
 -- Caller ensures unitId / sourceGUID is not nil
-local function isUnitArena(unitId)
+NS.isUnitArena = function(unitId)
     if isTestMode and unitId == "player" then
-        updatePlayerInfo();
+        updateArenaInfo(unitId, 0);
         return true;
     end
 
-    for i = 1, MAX_ARENAOPPONENT_SIZE do
+    for i = 1, NS.MAX_ARENA_SIZE do
         if (unitId == "arena"..i) then
-            updateArenaInfo(nil, unitId, i);
+            updateArenaInfo(unitId, i);
             return true;
         end
     end
 end
+
+NS.isSourceArena = function(sourceGUID)
+    if isTestMode and (sourceGUID == arenaUnitGUID("player", 0)) then
+        return true;
+    end
+
+    for i = 1, NS.MAX_ARENA_SIZE do
+        if (sourceGUID == arenaUnitGUID("arena"..i, i)) then
+            return true;
+        end
+    end
+end
+
+-- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
+-- This is only checked for TRACK_PET/TRACK_PET_AURA spells which is rare.
+NS.isSourceArenaPet = function(sourceGUID)
+    if isTestMode then return sourceGUID == UnitGUID("pet") end
+
+    for i = 1, NS.MAX_ARENA_SIZE do
+        if (sourceGUID == UnitGUID("arenapet"..i)) then
+            return true;
+        end
+    end
+end
+
+NS.arenaSpellChargeExpire = function (guid)
+    return arenaInfo.spellChargeExpire[guid];
+end
+NS.setArenaSpellChargeExpire = function (guid, value)
+    arenaInfo.spellChargeExpire[guid] = value;
+end
+
+NS.arenaOptLowerCooldown = function (guid)
+    return arenaInfo.optLowerCooldown[guid];
+end
+NS.setArenaOptLowerCooldown = function (guid, value)
+    arenaInfo.optLowerCooldown[guid] = value;
+end
+
+NS.arenaDefaultHoJCooldown = function (guid)
+    return arenaInfo.defaultHoJCooldown[guid];
+end
+NS.setArenaDefaultHoJCooldown = function (guid, value)
+    arenaInfo.defaultHoJCooldown[guid] = value;
+end
+
+
+
+local partyInfo = {
+    -- Convert between unitGUID and unitID
+    unitGUID = {},
+    unitId = {},
+}
+
+local partyInfoFrame = CreateFrame("Frame");
+partyInfoFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+partyInfoFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
+partyInfoFrame:SetScript("OnEvent", function ()
+    partyInfo.unitGUID = {};
+    partyInfo.unitId = {};
+end);
+
+-- unitId is player/party1/party2
+local function partyUnitGUID(unitId)
+    if (not partyInfo.unitGUID[unitId]) then
+        partyInfo.unitGUID[unitId] = UnitGUID(unitId);
+    end
+
+    return partyInfo.unitGUID[unitId];
+end
+
+-- If unitGUID matches player/party1/party2, cache and return the corresponding unitId; otherwise return nil
+-- The cached unitId can later be used as "unit" in the TSU
+-- Call ensures unitGUID is not nil
+NS.partyUnitId = function(unitGUID)
+    if (unitGUID == partyUnitGUID("player")) then
+        partyInfo.unitId[unitGUID] = "player";
+    elseif (unitGUID == partyUnitGUID("party1")) then
+        partyInfo.unitId[unitGUID] = "party1";
+    elseif (unitGUID == partyUnitGUID("party2")) then
+        partyInfo.unitId[unitGUID] = "party2";
+    end
+
+    -- If unitGUID does not match the above units, no value should be cached and nil will be returned
+    return partyInfo.unitId[unitGUID];
+end
+
+NS.validateUnitForDR = function(partyUnitId, trackUnit)
+    if (not partyUnitId) then return end
+    if (trackUnit == "player") then
+        return (partyUnitId == "player")
+    elseif (trackUnit == "party") then
+        return (partyUnitId ~= "player");
+    end
+end
+
+NS.findArenaFrameForUnitId = function (unitId)
+    if NS.isTestMode and (unitId == "player") then
+        local frame = _G["sArenaEnemyFrame1"];
+        if (not frame) then
+            frame = _G["GladiusEnemyFrame1"];
+        end
+        return frame;
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            if (unitId == "arena"..i) then
+                local frame = _G["sArenaEnemyFrame"..i];
+                if (not frame) then
+                    frame = _G["GladiusEnemyFrame"..i];
+                end
+
+                if frame then
+                    return frame;
+                end
+            end
+        end
+    end
+end
+
+NS.findRaidFrameForUnitId = function (unitId)
+    for i = 1, NS.MAX_PARTY_SIZE do
+        local frame = _G["CompactRaidFrame"..i];
+        if frame and frame.unit and UnitIsUnit(frame.unit, unitId) then
+            return frame;
+        end
+    end
+end
+
