@@ -335,7 +335,7 @@ NS.spellData = {
     -- Feign Death
     [5348] = {
         category = INTERRUPT,
-        cooldown = 15,
+        cooldown = 25,
     },
     -- Muzzle
     [187707] = {

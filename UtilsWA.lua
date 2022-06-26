@@ -31,10 +31,10 @@ local function shouldClearAllStates(event)
 end
 
 local function shouldCheckCombatLog(subEvent)
-    return (subEvent == NS.SPELL_CAST_SUCCESS) 
-        or (subEvent == NS.SPELL_AURA_APPLIED) 
-        or (subEvent == NS.SPELL_AURA_APPLIED_FADE) 
-        or (subEvent == NS.SPELL_DAMAGE) 
+    return (subEvent == NS.SPELL_CAST_SUCCESS)
+        or (subEvent == NS.SPELL_AURA_APPLIED)
+        or (subEvent == NS.SPELL_AURA_APPLIED_FADE)
+        or (subEvent == NS.SPELL_DAMAGE)
         or (subEvent == NS.SPELL_CAST_START);
 end
 
@@ -75,23 +75,8 @@ end
 
 -- Checck whether spell is enabled for combat log events
 local function checkSpellEnabled(spell, subEvent, sourceGUID)
-    -- First check if spell is disabled for current spec
-    if spell.spec and NS.isSourceArena(sourceGUID) then
-        local specEnabled = false;
-        
-        local spec = NS.arenaSpec(sourceGUID);
-        local specs = spell.spec;
-        for i = 1, #specs do
-            if (spec == specs[i]) then
-                specEnabled = true;
-            end
-        end
-
-        if (not specEnabled) then return end
-    end
-
+    -- Check (event & sourceGUID) based on spell tracking type
     local track = false;
-    -- Check (event && sourceGUID) based on spell tracking type
     local trackType = spell.trackType;
     if (trackType == NS.trackType.TRACK_AURA_FADE) and (subEvent == NS.SPELL_AURA_REMOVED) then
         track = NS.isSourceArena(sourceGUID);
@@ -106,12 +91,32 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID)
         track = NS.isSourceArena(sourceGUID);
     end
 
-    return track;
+    if (not track) then return end
+
+    -- Check if spell is disabled for current spec
+    if spell.spec then
+        local specEnabled = false;
+
+        local spec = NS.arenaSpec(sourceGUID);
+        local specs = spell.spec;
+        for i = 1, #specs do
+            if (spec == specs[i]) then
+                specEnabled = true;
+            end
+        end
+
+        if (not specEnabled) then return end
+    end
+
+    return true;
 end
 
 -- Check whether spell is enabled for UNIT_SPELLCAST_ events
 local function unitSpellEnabled(spell, unitId)
-    -- First check if spell is disabled for current spec
+    -- Check if opponent is arena
+    if (not NS.isUnitArena(unitId)) then return end
+
+    -- Check if spell is disabled for current spec
     if spell.spec then
         local specEnabled = false;
 
@@ -126,8 +131,7 @@ local function unitSpellEnabled(spell, unitId)
         if (not specEnabled) then return end
     end
 
-    -- Check if opponent is arena
-    return NS.isUnitArena(unitId);
+    return true;
 end
 
 local function concatGUID(unitGUID, spellID)
@@ -215,7 +219,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.duration) then return end
 
         if unitSpellEnabled(spell, unitTarget) then
-            local guid = UnitGUID(unitTarget).."-"..spellID;
+            local guid = concatGUID(UnitGUID(unitTarget), spellID);
             local duration = spell.duration;
             allstates[guid] = makeTriggerState(spell, spellID, spell.duration);
             return true;
@@ -232,7 +236,7 @@ local durationTrigger = function(category, allstates, event, ...)
 
         -- Check if an aura ended early
         if spell.dispellable and (subEvent == NS.SPELL_AURA_APPLIED_FADE) then
-            local guid = sourceGUID .. "-" .. spellID;
+            local guid = concatGUID(sourceGUID, spellID);
             if allstates[guid] then
                 local state = allstates[guid];
                 state.show = false;
@@ -242,7 +246,7 @@ local durationTrigger = function(category, allstates, event, ...)
         end
 
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
-            local guid = sourceGUID.."-"..spellID;
+            local guid = concatGUID(sourceGUID, spellID);
             local duration = spell.duration;
             allstates[guid] = makeTriggerState(spell, spellID, spell.duration);
             return true;
@@ -276,7 +280,7 @@ local function cooldownTrigger(category, allstates, event, ...)
         local spell = spellData[spellID];
         -- Defensive spells are automatically attached track_unit tag.
         if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
-        
+
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
             allstates[guid] = makeTriggerState(spell, spellID, spell.cooldown, nil, unitTarget);
@@ -662,7 +666,7 @@ BoopUtilsWA.AttachToRaidFrameByUnitId = function (frames, activeRegions)
         local frame = NS.findRaidFrameForUnitId(unitId);
         if frame then
             frames[frame] = frames[frame] or {}
-            tinsert(frames[frame], regionData) 
+            tinsert(frames[frame], regionData)
         end
     end
 end

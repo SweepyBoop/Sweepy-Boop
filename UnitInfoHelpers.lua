@@ -70,7 +70,7 @@ local function updateArenaInfo(unitId, ...)
         arenaInfo.unitId[unitGUID] = unitId;
     end
 
-    if index and (not arenaInfo.spec[index]) then
+    if index and (not arenaInfo.spec[unitId]) then
         arenaInfo.spec[unitGUID] = getSpecForArenaIndex(index);
     end
 
@@ -95,33 +95,24 @@ local function arenaUnitGUID(unitId, index)
     return arenaInfo.unitGUID[unitId];
 end
 
--- This is for finding unitId for triggers that base on COMBAT_LOG events
--- Since isSourceArena would always be called prior to this, the unitId info should be available
-NS.arenaUnitId = function (sourceGUID)
-    return arenaInfo.unitId[sourceGUID];
+-- Caller ensures sourceGUID is not nil
+-- Call this before getting any info based on sourceGUID
+NS.isSourceArena = function(sourceGUID)
+    if isTestMode and (sourceGUID == arenaUnitGUID("player", 0)) then
+        -- updateArenaInfo called by arenaUnitGUID
+        return true;
+    end
+
+    for i = 1, NS.MAX_ARENA_SIZE do
+        if (sourceGUID == arenaUnitGUID("arena"..i, i)) then
+            -- updateArenaInfo called by arenaUnitGUID
+            return true;
+        end
+    end
 end
 
--- Make sure this is available when being checked (isSourceArena needs to be called before this)
-NS.arenaSpec = function (sourceGUID)
-    return arenaInfo.spec[sourceGUID];
-end
-
-NS.arenaUnitSpec = function (unitId)
-    updateArenaInfo(unitId);
-    return arenaInfo.unitSpec[unitId];
-end
-
-NS.arenaUnitClass = function(unitId)
-    updateArenaInfo(unitId);
-    return arenaInfo.unitClass[unitId];
-end
-
-NS.arenaUnitRace = function(unitId)
-    updateArenaInfo(unitId);
-    return arenaInfo.unitRace[unitId];
-end
-
--- Caller ensures unitId / sourceGUID is not nil
+-- Caller ensures unitId is not nil
+-- Call this before getting any info based on unitId
 NS.isUnitArena = function(unitId)
     if isTestMode and unitId == "player" then
         updateArenaInfo(unitId, 0);
@@ -136,16 +127,24 @@ NS.isUnitArena = function(unitId)
     end
 end
 
-NS.isSourceArena = function(sourceGUID)
-    if isTestMode and (sourceGUID == arenaUnitGUID("player", 0)) then
-        return true;
-    end
+NS.arenaUnitId = function (sourceGUID)
+    return arenaInfo.unitId[sourceGUID];
+end
 
-    for i = 1, NS.MAX_ARENA_SIZE do
-        if (sourceGUID == arenaUnitGUID("arena"..i, i)) then
-            return true;
-        end
-    end
+NS.arenaSpec = function (sourceGUID)
+    return arenaInfo.spec[sourceGUID];
+end
+
+NS.arenaUnitSpec = function (unitId)
+    return arenaInfo.unitSpec[unitId];
+end
+
+NS.arenaUnitClass = function(unitId)
+    return arenaInfo.unitClass[unitId];
+end
+
+NS.arenaUnitRace = function(unitId)
+    return arenaInfo.unitRace[unitId];
 end
 
 -- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
