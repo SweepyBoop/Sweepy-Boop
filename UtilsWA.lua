@@ -711,7 +711,7 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
         return clearAllStates(allstates);
     elseif ( event == NS.NAME_PLATE_UNIT_ADDED) then
         local unit = ...;
-        if unit and UnitExists(unit) and unitCanAttack(unit) then
+        if unit and string.sub(unit, 1, 9) == "nameplate" and unitCanAttack(unit) then
             local npcId = select(6, strsplit("-", UnitGUID(unit)));
             if ( not npcId ) or ( not spellData[npcId] ) then return end
             local spell = spellData[npcId];
