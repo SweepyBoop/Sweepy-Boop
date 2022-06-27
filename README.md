@@ -14,7 +14,7 @@ Here are the arena WeakAuras based on this addon:
 - [Arena Enemy Offensive Cooldowns](https://wago.io/EtVxNHjcg)
 - [Arena Enemy Defensive Cooldowns](https://wago.io/ZqFOXpRY-)
 - [Arena Enemy Dispel Cooldowns](https://wago.io/a_AIv4HJp)
-- [Arena Enemy Interrupt (similar as default Omnibar)](https://wago.io/UgjuEm1mk)
+- [Arena Enemy Interrupt Cooldowns (similar as default Omnibar)](https://wago.io/UgjuEm1mk)
 
 - [Mortal Strike Debuff on Team](https://wago.io/pCKbpzW-Q)
 - [Group member stun DR on raid frames](https://wago.io/FUT9JPGxV)
