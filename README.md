@@ -4,7 +4,7 @@ My library addon to support advanced arena cooldown tracking WeakAuras as well a
 All the Weakauras and Plater profiles linked below depend on this library, which means you need to install this addon for them to work 😉
 
 Here is how my UI looks like:
-![image](https://user-images.githubusercontent.com/78008331/175855617-e3244f3b-b542-4962-84ba-13398cf62fa9.png)
+![image](https://user-images.githubusercontent.com/78008331/175856082-319be90f-8967-445b-9373-62e9fcc402cd.png)
 
 
 ## WeakAuras
