@@ -21,7 +21,7 @@ The cooldown tracking WeakAuras come with various advanced features:
   - If a priest casts a second Psychic Scream within 60 sec after the first one, we know they are playing Psychic Voice, thus will adjust the Psychic Scream cooldown for that unit to 30 sec
 
 ## Plater
-- [Plater profile based on this addon](https://wago.io/KnkjLULX7)
+[Plater profile based on this addon](https://wago.io/KnkjLULX7)
 
 The main feature of this profile is called "Nameplate Filtering" inside arenas:
 - For enemy units, only show nameplates of enemy players, primary pets, and high priority non-player units that are whitelisted
