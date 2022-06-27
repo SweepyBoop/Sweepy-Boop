@@ -6,13 +6,4 @@
 	<Script file="NameplateFilter.lua"/>
 	
 	<Script file="FixBlizzardRaidAggro.lua"/>
-
-	<!-- Misc -->
-	<Script file="ShieldMeters.lua"/>
-	<Script file="DrinkMacro.lua"/>
-	<Script file="DampenDisplay.lua"/>
-	<Script file="CombatIndicator.lua"/>
-
-	<!-- UI Personalization -->
-	<Script file="Personalization.lua"/>
 </Ui>
