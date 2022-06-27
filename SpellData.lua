@@ -570,7 +570,7 @@ NS.spellData = {
         cooldown = 45,
     },
     -- Psyfiend
-    [101398] = {
+    ["101398"] = {
         category = OFFENSIVE_PET,
         spellID = 211522,
         duration = 12,
@@ -707,7 +707,7 @@ NS.spellData = {
         duration = 5, -- Normally chained with another instant spell, give 5s reaction time for myself
     },
     -- Vesper Totem
-    [166523] = {
+    ["166523"] = {
         category = OFFENSIVE_PET,
         spellID = 324386,
         duration = 30,
@@ -995,6 +995,14 @@ if NS.isTestMode then
     NS.spellData[18562] = {
         category = OFFENSIVE_CD,
         cooldown = 45,
+    };
+
+    -- Test totem with a mob
+    NS.spellData["178913"] = {
+        category = OFFENSIVE_PET,
+        spellID = 324386,
+        duration = 15,
+        sound = true,
     };
 end
 
