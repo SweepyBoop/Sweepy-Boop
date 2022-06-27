@@ -3,8 +3,6 @@ My personal addon with quality-of-life features, and a library to support advanc
 
 For the WeakAuras and Plater profile to work, you would need to install this addon of course 😉
 
-If you do not want other modules of this addon, e.g., drink macro updater, combat indicator, simply remove those entries in aSweepyBoop.xml (but do keep everything under "WA/Plater Lib").
-
 ## WeakAuras
 Here are the arena WeakAuras based on this addon:
 
@@ -33,3 +31,12 @@ The main feature of this profile is called "Nameplate Filtering" inside arenas:
   - High priority units are generally those you want to target and kill instantly, e.g., Grounding Totem, Psyfiend, War Banner, Tremor Totem (if you are playing a class that has fear spells)
 - If you are playing with friendly nameplates on, party members' nameplates will be reduced to half width, the names on top will be hidden (and raid markers would take that space), and buffs/cast bar will be hidden.
   - The logic behind this is for many players especially healers, they want to be able to track their teammates' positioning easily, with a strong distinction between friendly/enemy units
+
+## Fix Blizzard raid frame aggro highlight
+Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is rather unreliable.
+
+This module fixes that by highlighting the teammate who is targetted by the most enemy players.
+
+For this module to work, disable the following setting under Interface settings so it stops showing PvE threats:
+![image](https://user-images.githubusercontent.com/78008331/175849539-7a7180d4-28f8-4453-b979-d98f56a2623c.png)
+
