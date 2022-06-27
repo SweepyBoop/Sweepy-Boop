@@ -1,5 +1,7 @@
 # aSweepyBoop
-My personal addon with quality-of-life features, and a library to support advanced arena cooldown tracking WeakAuras as well as a clean Plater Nameplate profile
+My personal addon with quality-of-life features, and a library to support advanced arena cooldown tracking WeakAuras as well as a clean Plater Nameplate profile.
+
+For the WeakAuras and Plater profile to work, you would need to install this addon of course :D
 
 ## WeakAuras
 Here are the arena WeakAuras based on this addon:
