@@ -3,20 +3,22 @@ local _, NS = ...
 NS.isTestMode = false;
 
 NS.spellCategory = {
-    CC = 1;
+    CC = 1,
     -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
     -- Different from track_* which specifies events to track
-    OFFENSIVE = 2;
-    OFFENSIVE_AURA = 3;
-    OFFENSIVE_CD = 4;
-    INTERRUPT = 5;
-    DISPEL = 6;
-    DEFENSIVE = 7; -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
+    OFFENSIVE = 2,
+    OFFENSIVE_AURA = 3,
+    OFFENSIVE_CD = 4,
+    OFFENSIVE_PET = 5, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID)
+    INTERRUPT = 6,
+    DISPEL = 7,
+    DEFENSIVE = 8, -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
 }
 local CC = NS.spellCategory.CC;
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
 local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
+local OFFENSIVE_PET = NS.OFFENSIVE_PET;
 local INTERRUPT = NS.spellCategory.INTERRUPT;
 local DISPEL = NS.spellCategory.DISPEL;
 local DEFENSIVE = NS.spellCategory.DEFENSIVE;
@@ -27,6 +29,8 @@ NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
 NS.UNIT_SPELLCAST_SUCCEEDED = "UNIT_SPELLCAST_SUCCEEDED";
 NS.COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
 NS.GROUP_ROSTER_UPDATE = "GROUP_ROSTER_UPDATE";
+NS.NAMEPLATE_UNIT_ADDED = "NAME_PLATE_UNIT_ADDED";
+NS.NAMEPLATE_UNIT_REMOVED = "NAME_PLATE_UNIT_REMOVED";
 -- Sub event name constants
 NS.SPELL_CAST_SUCCESS = "SPELL_CAST_SUCCESS";
 NS.SPELL_AURA_APPLIED = "SPELL_AURA_APPLIED";
@@ -565,6 +569,12 @@ NS.spellData = {
         category = OFFENSIVE_CD,
         cooldown = 45,
     },
+    -- Psyfiend
+    [101398] = {
+        category = OFFENSIVE_PET,
+        spellID = 211522,
+        duration = 12,
+    },
     -- Dispel
     -- MD
     [32375] = {
@@ -695,6 +705,13 @@ NS.spellData = {
     [320125] = {
         category = OFFENSIVE_AURA,
         duration = 5, -- Normally chained with another instant spell, give 5s reaction time for myself
+    },
+    -- Vesper Totem
+    [166523] = {
+        category = OFFENSIVE_PET,
+        spellID = 324386,
+        duration = 30,
+        sound = true,
     },
     -- Defensive
     -- Astral Shift

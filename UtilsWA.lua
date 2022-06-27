@@ -6,6 +6,7 @@ local CC = NS.spellCategory.CC;
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
 local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
+local OFFENSIVE_PET = NS.OFFENSIVE_PET;
 local INTERRUPT = NS.spellCategory.INTERRUPT;
 local DISPEL = NS.spellCategory.DISPEL;
 local DEFENSIVE = NS.spellCategory.DEFENSIVE;
@@ -49,6 +50,11 @@ local function clearAllStates(allstates)
     end
 
     return true
+end
+
+local function unitCanAttack(unitId)
+    -- The result is reversed when player is under mind control
+    return UnitCanAttack(unitId, "player") and ( not UnitIsPossessed("player") );
 end
 
 -- duration can mean different things for different trigger types, e.g.,
@@ -695,6 +701,34 @@ BoopUtilsWA.AttachToRaidFrameByUnitId = function (frames, activeRegions)
         if frame then
             frames[frame] = frames[frame] or {}
             tinsert(frames[frame], regionData)
+        end
+    end
+end
+
+-- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, NAME_PLATE_UNIT_ADDED, NAME_PLATE_UNIT_REMOVED
+BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
+    if shouldClearAllStates(event) then
+        return clearAllStates(allstates);
+    elseif ( event == NS.NAME_PLATE_UNIT_ADDED) then
+        local unit = ...;
+        if unit and UnitExists(unit) and unitCanAttack(unit) then
+            local npcId = select(6, strsplit("-", UnitGUID(unit)));
+            if ( not npcId ) or ( not spellData[npcId] ) then return end
+            local spell = spellData[npcId];
+            if (spell.category ~= OFFENSIVE_PET) then return end
+            -- Based on "nameplate" unitIds, which would trigger nameplate removed event later
+            allstates[unit] = makeTriggerState(spell, spell.spellID, spell.duration);
+            return true;
+        elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then
+            local updated;
+            for _, state in pairs(allstates) do
+                if ( state.unit == unit ) then
+                    state.show = false;
+                    state.changed = true;
+                    updated = true;
+                end
+            end
+            return updated;
         end
     end
 end

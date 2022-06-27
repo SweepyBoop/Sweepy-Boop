@@ -13,7 +13,7 @@ BoopNameplateFilter.Initialization = function (modTable)
         --["Zombie"] = true, -- Reanimation PVP talent, 10% HP, very deadly
 
         -- Priest
-        [101398] = true,
+        [101398] = true, -- Psyfiend
 
         -- Shaman: totems to kill instantly
         ["Grounding Totem"] = true,
