@@ -709,7 +709,7 @@ end
 BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
-    elseif ( event == NS.NAME_PLATE_UNIT_ADDED) then
+    elseif ( event == NS.NAME_PLATE_UNIT_ADDED ) then
         local unit = ...;
         if unit and string.sub(unit, 1, 9) == "nameplate" and unitCanAttack(unit) then
             local npcId = select(6, strsplit("-", UnitGUID(unit)));
@@ -717,18 +717,18 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
             local spell = spellData[npcId];
             if (spell.category ~= OFFENSIVE_PET) then return end
             -- Based on "nameplate" unitIds, which would trigger nameplate removed event later
-            allstates[unit] = makeTriggerState(spell, spell.spellID, spell.duration);
+            allstates[unit] = makeTriggerState(spell, spell.spellID, spell.duration, nil, unit);
             return true;
-        elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then
-            local updated;
-            for _, state in pairs(allstates) do
-                if ( state.unit == unit ) then
-                    state.show = false;
-                    state.changed = true;
-                    updated = true;
-                end
-            end
-            return updated;
         end
+    elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then
+        local updated;
+        for _, state in pairs(allstates) do
+            if ( state.unit == unit ) then
+                state.show = false;
+                state.changed = true;
+                updated = true;
+            end
+        end
+        return updated;
     end
 end
