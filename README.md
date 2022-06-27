@@ -23,3 +23,10 @@ The cooldown tracking WeakAuras come with various advanced features:
 ## Plater
 Here is the Plater Nameplate profile based on this addon:
 - [Plater Profile](https://wago.io/KnkjLULX7)
+
+The main feature of this profile is called "Nameplate Filtering" inside arenas:
+- For enemy units, only show nameplates of enemy players, primary pets, and high priority non-player units that are whitelisted
+  - Primary pet refer to the main warlock pets (i.e., you will not see a horde of wild imps running around), and the main hunter pet (which means for Beast Mastery hunters, you will only see the real pet with 120 focus)
+  - High priority units are generally those you want to target and kill instantly, e.g., Grounding Totem, Psyfiend, War Banner, Tremor Totem (if you are playing a class that has fear spells)
+- If you are playing with friendly nameplates on, party members' nameplates will be reduced to half width, the names on top will be hidden (and raid markers would take that space), and buffs/cast bar will be hidden.
+  - The logic behind this is for many players especially healers, they want to be able to track their teammates' positioning easily, with a strong distinction between friendly/enemy units
