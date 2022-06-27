@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.spellCategory = {
     CC = 1,
@@ -9,7 +9,7 @@ NS.spellCategory = {
     OFFENSIVE = 2,
     OFFENSIVE_AURA = 3,
     OFFENSIVE_CD = 4,
-    OFFENSIVE_PET = 5, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID)
+    OFFENSIVE_PET = 5, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID). NPC ID needs to be string type, since it is compared against a substring of GUID
     INTERRUPT = 6,
     DISPEL = 7,
     DEFENSIVE = 8, -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
