@@ -1,6 +1,7 @@
 # aSweepyBoop
-My personal addon with quality-of-life features, and a library for advanced arena cooldown tracking WeakAuras
+My personal addon with quality-of-life features, and a library for advanced arena cooldown tracking WeakAuras.
 
+## WeakAuras
 Here are the arena WeakAuras set based on this addon:
 
 - Arena Enemy CC Cooldowns: https://wago.io/G3Ai96asn
@@ -13,5 +14,6 @@ Here are the arena WeakAuras set based on this addon:
 - Group member stun DR on raid frames: https://wago.io/FUT9JPGxV
 - Player's own DR timer: https://wago.io/cD-yK8HTF
 
+## Plater
 Here is the Plater Nameplate profile based on this addon:
 - Plater Profile: https://wago.io/KnkjLULX7
