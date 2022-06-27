@@ -41,6 +41,6 @@ Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet th
 
 This module fixes that by highlighting the teammate who is targetted by the most enemy players.
 
-For this module to work, disable the following setting under Interface settings so it stops showing PvE threats:
+For this module to work, disable the following setting under Interface settings so that it stops showing PvE threats:
 ![image](https://user-images.githubusercontent.com/78008331/175849539-7a7180d4-28f8-4453-b979-d98f56a2623c.png)
 
