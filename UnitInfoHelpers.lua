@@ -242,7 +242,7 @@ NS.findArenaFrameForUnitId = function (unitId)
     if NS.isTestMode and (unitId == "player") then
         local frame = _G["sArenaEnemyFrame1"];
         if (not frame) then
-            frame = _G["GladiusEnemyFrame1"];
+            frame = _G["GladiusTrinketFramearena1"];
         end
         return frame;
     else
@@ -250,7 +250,7 @@ NS.findArenaFrameForUnitId = function (unitId)
             if (unitId == "arena"..i) then
                 local frame = _G["sArenaEnemyFrame"..i];
                 if (not frame) then
-                    frame = _G["GladiusEnemyFrame"..i];
+                    frame = _G["GladiusTrinketFramearena"..i];
                 end
 
                 if frame then
