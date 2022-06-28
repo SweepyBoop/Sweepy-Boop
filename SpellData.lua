@@ -84,17 +84,15 @@ local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 -- Avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
 NS.trackType = {
     -- For pet kicks
-    TRACK_PET = 1,
-    TRACK_PET_AURA = 2, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
+    TRACK_PET = 1, -- SPELL_CAST_SUCCESS & pet GUID
 
-    TRACK_AURA = 3,
-    TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
-    TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
-    TRACK_UNIT_PET = 6, -- UNIT_SPELLCAST_SUCCEEDED by arenapet..i
+    TRACK_AURA = 2,
+    TRACK_AURA_FADE = 3, -- SPELL_AURA_REMOVED, e.g., prot pally silence
+    TRACK_UNIT = 4, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
+    TRACK_UNIT_PET = 5, -- UNIT_SPELLCAST_SUCCEEDED by arenapet..i
 };
 
 local TRACK_PET = NS.trackType.TRACK_PET;
-local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA;
 local TRACK_AURA = NS.trackType.TRACK_AURA;
 local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE;
 local TRACK_UNIT = NS.trackType.TRACK_UNIT;
@@ -188,12 +186,6 @@ NS.spellData = {
         cooldown = 30,
         trackType = TRACK_UNIT_PET,
     },
-    -- Shambling Rush
-    --[[ [91807] = {
-        category = INTERRUPT,
-        cooldown = 30,
-        trackType = TRACK_PET_AURA, -- Have to track aura to distinguish between regular Leap and Shambling Rush
-    }, ]]
 
     -- DH
     -- CC
@@ -547,18 +539,6 @@ NS.spellData = {
         category = CC,
         cooldown = 30,
     },
-    -- Holy Word: Chastise
-    --[[ [200196] = {
-        category = CC,
-        cooldown = 30,
-        trackType = TRACK_AURA,
-    }, ]]
-    -- Holy Word: Chastise (Censure)
-    --[[ [200200] = {
-        category = CC,
-        cooldown = 30,
-        trackType = TRACK_AURA, -- Have to track aura to distinguish between the stun and incapaciate
-    }, ]]
     -- Psychic Scream
     [8122] = {
         category = CC,

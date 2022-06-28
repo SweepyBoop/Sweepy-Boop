@@ -156,7 +156,7 @@ NS.arenaUnitRace = function(unitId)
 end
 
 -- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
--- This is only checked for TRACK_PET/TRACK_PET_AURA spells which is rare.
+-- This is only checked for TRACK_PET spells which is rare.
 NS.isSourceArenaPet = function(sourceGUID)
     if isTestMode then return sourceGUID == UnitGUID("pet") end
 
@@ -242,7 +242,7 @@ NS.findArenaFrameForUnitId = function (unitId)
     if NS.isTestMode and (unitId == "player") then
         local frame = _G["sArenaEnemyFrame1"];
         if (not frame) then
-            frame = _G["GladiusEnemyFrame1"];
+            frame = _G["GladiusTrinketFramearena1"];
         end
         return frame;
     else
@@ -250,7 +250,7 @@ NS.findArenaFrameForUnitId = function (unitId)
             if (unitId == "arena"..i) then
                 local frame = _G["sArenaEnemyFrame"..i];
                 if (not frame) then
-                    frame = _G["GladiusEnemyFrame"..i];
+                    frame = _G["GladiusTrinketFramearena"..i];
                 end
 
                 if frame then

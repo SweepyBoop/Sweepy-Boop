@@ -100,8 +100,6 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID)
         track = NS.isSourceArena(sourceGUID);
     elseif (trackType == NS.trackType.TRACK_PET) and (subEvent == NS.SPELL_CAST_SUCCESS) then
         track = NS.isSourceArenaPet(sourceGUID);
-    elseif (trackType == NS.trackType.TRACK_PET_AURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
-        track = NS.isSourceArenaPet(sourceGUID);
     elseif (not trackType) and (subEvent == NS.SPELL_CAST_SUCCESS) then
         -- if trackType is missing, it tracks SPELL_CAST_SUCCESS by default
         track = NS.isSourceArena(sourceGUID);
