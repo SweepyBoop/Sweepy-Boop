@@ -1001,7 +1001,7 @@ if NS.isTestMode then
     NS.spellData[178913] = {
         category = OFFENSIVE_PET,
         spellID = 324386,
-        duration = 15,
+        duration = 60,
         sound = true,
     };
 end

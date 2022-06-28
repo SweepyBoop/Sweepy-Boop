@@ -731,6 +731,7 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
             return true;
         end
     elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then
+        local unit = ...;
         local updated;
         for _, state in pairs(allstates) do
             if ( state.unit == unit ) then
