@@ -610,7 +610,7 @@ NS.spellData = {
     -- Holy Ward
     [213610] = {
         category = INTERRUPT,
-        cooldown = 30,
+        cooldown = 45,
     },
     -- Greater Fade
     [213602] = {
