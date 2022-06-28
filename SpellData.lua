@@ -81,12 +81,13 @@ local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
 local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 
 -- Events (and units) to track
+-- Try to avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
 NS.trackType = {
     -- For pet kicks
     TRACK_PET = 1,
     TRACK_PET_AURA = 2, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
 
-    TRACK_AURA = 3, -- SPELL_AURA_APPLIED, e.g., chastise (wouldn't be able to see if someone tried to CC a player already on full DR, but that's rare in arena...)
+    TRACK_AURA = 3,
     TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
     TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
 };
@@ -183,7 +184,7 @@ NS.spellData = {
     [91807] = {
         category = INTERRUPT,
         cooldown = 30,
-        trackType = TRACK_PET_AURA,
+        trackType = TRACK_PET_AURA, -- Have to track aura to distinguish between regular Leap and Shambling Rush
     },
 
     -- DH
@@ -543,7 +544,7 @@ NS.spellData = {
     [200200] = {
         category = CC,
         cooldown = 30,
-        trackType = TRACK_AURA,
+        trackType = TRACK_AURA, -- Have to track aura to distinguish between the stun and incapaciate
     },
     -- Psychic Scream
     [8122] = {
@@ -775,10 +776,15 @@ NS.spellData = {
         cooldown = 40,
     },
     -- Axe Toss
-    [89766] = {
+    [89766] = { -- Find spellID by "if (unitTarget == "player") or (unitTarget == "pet") then print(spellID) end"
         category = CC,
         cooldown = 30,
-        trackType = TRACK_PET_AURA, -- Spell can be casted by player/pet, this covers both cases.
+        trackType = TRACK_PET,
+    },
+    -- Axe Toss (by player)
+    [119914] = {
+        category = CC,
+        cooldown = 30,
     },
     -- Offensive
     -- Dark Soul: Misery
