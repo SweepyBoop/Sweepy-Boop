@@ -8,12 +8,13 @@ BoopNameplateFilter.Initialization = function (modTable)
     -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
     -- To find the NpcID of a unit, target it and type:
     -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID);
+    -- unitFrame.namePlateNpcId is numeric type, so NPC ID index here should be numeric as well
     local whiteList = {
         -- DK
         --["Zombie"] = true, -- Reanimation PVP talent, 10% HP, very deadly
 
         -- Priest
-        [101398] = true,
+        [101398] = true, -- Psyfiend
 
         -- Shaman: totems to kill instantly
         ["Grounding Totem"] = true,
