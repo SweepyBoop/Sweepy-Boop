@@ -86,7 +86,7 @@ NS.trackType = {
     TRACK_PET = 1,
     TRACK_PET_AURA = 2, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
 
-    TRACK_AURA = 3, -- SPELL_AURA_APPLIED, e.g., chastise
+    TRACK_AURA = 3, -- SPELL_AURA_APPLIED, e.g., chastise (wouldn't be able to see if someone tried to CC a player already on full DR, but that's rare in arena...)
     TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
     TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
 };
@@ -344,6 +344,7 @@ NS.spellData = {
     [5384] = {
         category = INTERRUPT,
         cooldown = 25,
+        trackType = TRACK_UNIT, -- Not triggered by combat log event
     },
     -- Muzzle
     [187707] = {
@@ -772,6 +773,12 @@ NS.spellData = {
     [5484] = {
         category = CC,
         cooldown = 40,
+    },
+    -- Axe Toss
+    [89766] = {
+        category = CC,
+        cooldown = 30,
+        trackType = TRACK_PET_AURA, -- Spell can be casted by player/pet, this covers both cases.
     },
     -- Offensive
     -- Dark Soul: Misery
