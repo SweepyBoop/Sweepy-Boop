@@ -156,7 +156,7 @@ NS.arenaUnitRace = function(unitId)
 end
 
 -- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
--- This is only checked for TRACK_PET/TRACK_PET_AURA spells which is rare.
+-- This is only checked for TRACK_PET spells which is rare.
 NS.isSourceArenaPet = function(sourceGUID)
     if isTestMode then return sourceGUID == UnitGUID("pet") end
 
