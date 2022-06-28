@@ -130,7 +130,8 @@ end
 -- Check whether spell is enabled for UNIT_SPELLCAST_ events
 local function unitSpellEnabled(spell, unitId)
     -- Check if opponent is arena
-    if ( not NS.isUnitArena(unitId) ) and ( not NS.isUnitArenaPet(unitId) ) then return end
+    if ( spell.trackType == NS.TRACK_UNIT ) and ( not NS.isUnitArena(unitId) ) then return end
+    if ( spell.trackType == NS.TRACK_UNIT_PET ) and ( not NS.isUnitArenaPet(unitId) ) then return end
 
     -- Check if spell is disabled for current spec
     if spell.spec then
