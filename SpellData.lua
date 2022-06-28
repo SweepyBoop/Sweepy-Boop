@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.spellCategory = {
     CC = 1,
@@ -83,12 +83,12 @@ local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 -- Events (and units) to track
 NS.trackType = {
     -- For pet kicks
-    TRACK_PET = 0, -- SPELL_CAST_SUCCESS & pet GUID
-    TRACK_PET_AURA = 1, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
+    TRACK_PET = 1,
+    TRACK_PET_AURA = 2, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
 
-    TRACK_AURA = 2, -- SPELL_AURA_APPLIED, e.g., chastise
-    TRACK_AURA_FADE = 3, -- SPELL_AURA_REMOVED, e.g., prot pally silence
-    TRACK_UNIT = 4, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
+    TRACK_AURA = 3, -- SPELL_AURA_APPLIED, e.g., chastise
+    TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
+    TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
 };
 
 local TRACK_PET = NS.trackType.TRACK_PET;
@@ -606,6 +606,17 @@ NS.spellData = {
         category = DEFENSIVE,
         cooldown = 90, -- Assume playing short dispersion
     },
+    -- Interrupt
+    -- Holy Ward
+    [213610] = {
+        category = INTERRUPT,
+        cooldown = 30,
+    },
+    -- Greater Fade
+    [213602] = {
+        category = INTERRUPT,
+        cooldown = 45,
+    },
 
     -- Rogue
     -- CC
@@ -794,11 +805,21 @@ NS.spellData = {
         category = INTERRUPT,
         cooldown = 24,
     },
-    -- Spell Lock
-    [19647] = { -- Found by "if sourceGUID == UnitGUID("pet") then print(spellID) print(subEvent) end"
+    -- Spell Lock (cast by pet)
+    [19647] = { -- Found by "if sourceGUID == UnitGUID("pet") or sourceGUID == UnitGUID("player") then print(subEvent, sourceGUID, spellID) end"
         category = INTERRUPT,
         cooldown = 24,
         trackType = TRACK_PET,
+    },
+    -- Spell Lock (Grimoire of Sacrifice)
+    [132409] = {
+        category = INTERRUPT,
+        cooldown = 24,
+    },
+    -- Spell Lock (Command Demon) - cast by player
+    [119910] = {
+        category = INTERRUPT,
+        cooldown = 24,
     },
     -- Nether Ward
     [212295] = {
