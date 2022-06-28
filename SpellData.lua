@@ -90,6 +90,7 @@ NS.trackType = {
     TRACK_AURA = 3,
     TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
     TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
+    TRACK_UNIT_PET = 6, -- UNIT_SPELLCAST_SUCCEEDED by arenapet..i
 };
 
 local TRACK_PET = NS.trackType.TRACK_PET;
@@ -97,6 +98,7 @@ local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA;
 local TRACK_AURA = NS.trackType.TRACK_AURA;
 local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE;
 local TRACK_UNIT = NS.trackType.TRACK_UNIT;
+local TRACK_UNIT_PET = NS.trackType.TRACK_UNIT_PET;
 
 NS.defaultIndex = 100;
 
@@ -181,11 +183,16 @@ NS.spellData = {
         cooldown = 15,
     },
     -- Shambling Rush
-    [91807] = {
+    [47482] = {
+        category = INTERRUPT,
+        cooldown = 30,
+        trackType = TRACK_UNIT_PET,
+    },
+    --[[ [91807] = {
         category = INTERRUPT,
         cooldown = 30,
         trackType = TRACK_PET_AURA, -- Have to track aura to distinguish between regular Leap and Shambling Rush
-    },
+    }, ]]
 
     -- DH
     -- CC
