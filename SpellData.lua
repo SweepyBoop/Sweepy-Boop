@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.spellCategory = {
     CC = 1,
@@ -81,14 +81,15 @@ local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
 local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 
 -- Events (and units) to track
+-- Try to avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
 NS.trackType = {
     -- For pet kicks
-    TRACK_PET = 0, -- SPELL_CAST_SUCCESS & pet GUID
-    TRACK_PET_AURA = 1, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
+    TRACK_PET = 1,
+    TRACK_PET_AURA = 2, -- SPELL_AURA_APPLIED & pet GUID, e.g., pet kicks
 
-    TRACK_AURA = 2, -- SPELL_AURA_APPLIED, e.g., chastise
-    TRACK_AURA_FADE = 3, -- SPELL_AURA_REMOVED, e.g., prot pally silence
-    TRACK_UNIT = 4, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
+    TRACK_AURA = 3,
+    TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
+    TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
 };
 
 local TRACK_PET = NS.trackType.TRACK_PET;
@@ -183,7 +184,7 @@ NS.spellData = {
     [91807] = {
         category = INTERRUPT,
         cooldown = 30,
-        trackType = TRACK_PET_AURA,
+        trackType = TRACK_PET_AURA, -- Have to track aura to distinguish between regular Leap and Shambling Rush
     },
 
     -- DH
@@ -344,6 +345,7 @@ NS.spellData = {
     [5384] = {
         category = INTERRUPT,
         cooldown = 25,
+        trackType = TRACK_UNIT, -- Not triggered by combat log event
     },
     -- Muzzle
     [187707] = {
@@ -542,7 +544,7 @@ NS.spellData = {
     [200200] = {
         category = CC,
         cooldown = 30,
-        trackType = TRACK_AURA,
+        trackType = TRACK_AURA, -- Have to track aura to distinguish between the stun and incapaciate
     },
     -- Psychic Scream
     [8122] = {
@@ -605,6 +607,17 @@ NS.spellData = {
     [47585] = {
         category = DEFENSIVE,
         cooldown = 90, -- Assume playing short dispersion
+    },
+    -- Interrupt
+    -- Holy Ward
+    [213610] = {
+        category = INTERRUPT,
+        cooldown = 45,
+    },
+    -- Greater Fade
+    [213602] = {
+        category = INTERRUPT,
+        cooldown = 45,
     },
 
     -- Rogue
@@ -762,6 +775,17 @@ NS.spellData = {
         category = CC,
         cooldown = 40,
     },
+    -- Axe Toss
+    [89766] = { -- Find spellID by "if (unitTarget == "player") or (unitTarget == "pet") then print(spellID) end"
+        category = CC,
+        cooldown = 30,
+        trackType = TRACK_PET,
+    },
+    -- Axe Toss (by player)
+    [119914] = {
+        category = CC,
+        cooldown = 30,
+    },
     -- Offensive
     -- Dark Soul: Misery
     [113860] = {
@@ -794,11 +818,21 @@ NS.spellData = {
         category = INTERRUPT,
         cooldown = 24,
     },
-    -- Spell Lock
-    [19647] = { -- Found by "if sourceGUID == UnitGUID("pet") then print(spellID) print(subEvent) end"
+    -- Spell Lock (cast by pet)
+    [19647] = { -- Found by "if sourceGUID == UnitGUID("pet") or sourceGUID == UnitGUID("player") then print(subEvent, sourceGUID, spellID) end"
         category = INTERRUPT,
         cooldown = 24,
         trackType = TRACK_PET,
+    },
+    -- Spell Lock (Grimoire of Sacrifice)
+    [132409] = {
+        category = INTERRUPT,
+        cooldown = 24,
+    },
+    -- Spell Lock (Command Demon) - cast by player
+    [119910] = {
+        category = INTERRUPT,
+        cooldown = 24,
     },
     -- Nether Ward
     [212295] = {
