@@ -181,11 +181,16 @@ NS.spellData = {
         cooldown = 15,
     },
     -- Shambling Rush
-    [91807] = {
+    [47482] = {
+        category = INTERRUPT,
+        cooldown = 30,
+        trackType = TRACK_UNIT,
+    },
+    --[[ [91807] = {
         category = INTERRUPT,
         cooldown = 30,
         trackType = TRACK_PET_AURA, -- Have to track aura to distinguish between regular Leap and Shambling Rush
-    },
+    }, ]]
 
     -- DH
     -- CC
