@@ -128,13 +128,13 @@ NS.spellData = {
         category = CC,
         cooldown = 60,
     },
-    -- Grip (icon is very close to Asphyxiate, so do not track that one...)
+    -- Death Grip (icon is very close to Asphyxiate, so do not track that one...)
     [49576] = {
         category = CC,
         cooldown = 25,
         opt_charges = true,
     },
-    -- Slappy Hands
+    -- Abomination Limb
     [315443] = {
         category = CC,
         cooldown = 120,
@@ -145,23 +145,23 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 12,
     },
-    -- Raise Abom
+    -- Raise Abomination
     [288853] = {
         category = OFFENSIVE_AURA,
         duration = 25,
     },
-    -- Apoc
+    -- Apocalypse
     [275699] = {
         category = OFFENSIVE_AURA,
         duration = 15,
     },
     -- Offensive (Frost)
-    -- Pillar
+    -- Pillar of Frost
     [51271] = {
         category = OFFENSIVE_AURA,
         duration = 12,
     },
-    -- Empower
+    -- Empower Rune Weapon
     [47568] = {
         category = OFFENSIVE_AURA,
         duration = 20,
@@ -174,6 +174,7 @@ NS.spellData = {
         sound = true,
     },
     -- Interrupt
+    -- Mind Freeze
     [47528] = {
         category = INTERRUPT,
         cooldown = 15,
@@ -204,7 +205,7 @@ NS.spellData = {
         cooldown = 90,
         index = 1,
     },
-    -- Meta
+    -- Metamorphosis
     [191427] = {
         category = OFFENSIVE_AURA,
         trackType = TRACK_UNIT,
@@ -216,10 +217,12 @@ NS.spellData = {
         duration = 31, -- 20 baseline, 11 from soulbind
     },
     -- Interrupt
+    -- Disrupt
     [183752] = {
         category = INTERRUPT,
         cooldown = 15,
     },
+    -- Defensive
     -- Netherwalk
     [196555] = {
         category = DEFENSIVE,
@@ -244,7 +247,7 @@ NS.spellData = {
         category = CC,
         cooldown = 20,
     },
-    -- Incap Roar
+    -- Incapacitating Roar
     [99] = {
         category = CC,
         cooldown = 30,
@@ -255,7 +258,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- King of the Jungle
+    -- Incarnation: King of the Jungle
     [102543] = {
         category = OFFENSIVE_AURA,
         duration = 30,
@@ -265,7 +268,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 30,
     },
-    -- Incarnation
+    -- Incarnation: Chosen of Elune
     [102560] = {
         category = OFFENSIVE_AURA,
         duration = 40,
@@ -275,7 +278,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 10,
     },
-    -- Convoke
+    -- Convoke the Spirits
     [323764] = {
         category = OFFENSIVE_CD,
         cooldown = 60,
@@ -338,7 +341,7 @@ NS.spellData = {
     },
     -- Interrupt
     -- Feign Death
-    [5348] = {
+    [5384] = {
         category = INTERRUPT,
         cooldown = 25,
     },
@@ -353,7 +356,7 @@ NS.spellData = {
         cooldown = 24,
     },
     -- Defensive
-    -- Turtle
+    -- Aspect of the Turtle
     [186265] = {
         category = DEFENSIVE,
         trackType = TRACK_UNIT,
@@ -373,7 +376,7 @@ NS.spellData = {
         cooldown = 45,
     },
     -- Offensive
-    -- Necrolord
+    -- Deathborne (Necrolord)
     [324220] = {
         category = OFFENSIVE_AURA,
         duration = 40,
@@ -398,7 +401,7 @@ NS.spellData = {
         dispellable = true,
     },
     -- Interrupt
-    -- CS
+    -- Counterspell
     [2139] = {
         category = INTERRUPT,
         cooldown = 24,
@@ -423,13 +426,13 @@ NS.spellData = {
         category = CC,
         cooldown = 60,
     },
-    -- RoP
+    -- Ring of Peace
     [116844] = {
         category = CC,
         cooldown = 45,
     },
     -- Offensive
-    -- Images (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
+    -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
         category = OFFENSIVE,
         duration = 15,
@@ -442,7 +445,7 @@ NS.spellData = {
         duration = 12,
         cooldown = 90,
     },
-    -- Xuen
+    -- Invoke Xuen, the White Tiger
     [123904] = {
         category = OFFENSIVE_AURA,
         duration = 24,
@@ -454,19 +457,19 @@ NS.spellData = {
         spec = { specID.WW },
     },
     -- Interrupt
-    -- Spear hand Strike
+    -- Spear Hand Strike
     [116705] = {
         category = INTERRUPT,
         cooldown = 15,
     },
     -- Defensive
-    -- Karma
+    -- Touch of Karma
     [122470] = {
         category = DEFENSIVE,
         trackType = TRACK_UNIT,
         cooldown = 90,
     },
-    -- Cacoon
+    -- Life Cacoon
     [116849] = {
         category = DEFENSIVE,
         trackType = TRACK_UNIT,
@@ -481,20 +484,20 @@ NS.spellData = {
 
     -- Paladin
     -- CC
-    -- Silence
+    -- Shield of Virtue
     [215652] = {
         category = CC,
         cooldown = 45,
         trackType = TRACK_AURA_FADE,
     },
-    -- Blind
+    -- Blinding Light
     [115750] = {
         category = CC,
         cooldown = 90,
     };
     -- HOJ has special calculation based on holy power spent and is made into a seperate table
     -- Offensive
-    -- Wing
+    -- Avenging Wrath
     [31884] = {
         category = OFFENSIVE,
         duration = 20,
@@ -521,7 +524,7 @@ NS.spellData = {
         category = DISPEL,
         cooldown = 8,
     },
-    -- Sanct
+    -- Blessing of Sanctuary
     [210256] = {
         category = DISPEL,
         cooldown = 45,
@@ -529,25 +532,25 @@ NS.spellData = {
 
     -- Priest
     -- CC
-    -- Chastise
+    -- Holy Word: Chastise
     [200196] = {
         category = CC,
         cooldown = 30,
         trackType = TRACK_AURA,
     },
-    -- Chastise (Censure)
+    -- Holy Word: Chastise (Censure)
     [200200] = {
         category = CC,
         cooldown = 30,
         trackType = TRACK_AURA,
     },
-    -- Fear
+    -- Psychic Scream
     [8122] = {
         category = CC,
         cooldown = 60,
         opt_lower_cooldown = 30,
     },
-    -- Stun
+    -- Psychic Horror
     [64044] = {
         category = CC,
         cooldown = 45,
@@ -576,7 +579,7 @@ NS.spellData = {
         duration = 12,
     },
     -- Dispel
-    -- MD
+    -- Mass Dispel
     [32375] = {
         category = DISPEL,
         cooldown = 45,
@@ -588,12 +591,12 @@ NS.spellData = {
         opt_charges = true,
     },
     -- Defensive
-    -- PS
+    -- Pain Suppression
     [33206] = {
         category = DEFENSIVE,
         cooldown = 180,
     },
-    -- GS
+    -- Guardian Spirit
     [47788] = {
         category = DEFENSIVE,
         cooldown = 60, -- Assume it didn't proc
@@ -612,7 +615,7 @@ NS.spellData = {
         cooldown = 120,
         opt_lower_cooldown = 90,
     },
-    -- Kidney
+    -- Kidney Shot
     [408] = {
         category = CC,
         cooldown = 20,
@@ -628,7 +631,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Echoing
+    -- Echoing Reprimand
     [323547] = {
         category = OFFENSIVE_AURA,
         duration = 15,
@@ -638,7 +641,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Flag
+    -- Flagellation
     [323654] = {
         category = OFFENSIVE,
         duration = 12,
@@ -664,7 +667,7 @@ NS.spellData = {
         category = DEFENSIVE,
         cooldown = 120,
     },
-    -- Cloak
+    -- Cloak of Shadows
     [31224] = {
         category = DEFENSIVE,
         cooldown = 120,
@@ -677,7 +680,7 @@ NS.spellData = {
 
     -- Shaman
     -- Offensive
-    -- Ascendance
+    -- Ascendance (Enhancement)
     [114051] = {
         category = OFFENSIVE_AURA,
         duration = 15,
@@ -827,7 +830,7 @@ NS.spellData = {
         cooldown = 50,
     },
     -- Offensive
-    -- Banner
+    -- Conqueror's Banner
     [324143] = {
         category = OFFENSIVE,
         duration = 15,
@@ -839,7 +842,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 10,
     },
-    -- Smash
+    -- Colossus Smash
     [167105] = {
         category = OFFENSIVE_AURA,
         duration = 10,
@@ -849,7 +852,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Reckless
+    -- Recklessness
     [1719] = {
         category = OFFENSIVE_AURA,
         cooldown = 90,
