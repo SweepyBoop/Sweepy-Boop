@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = true;
+NS.isTestMode = false;
 
 NS.spellCategory = {
     CC = 1,
@@ -81,7 +81,7 @@ local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
 local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
 
 -- Events (and units) to track
--- Try to avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
+-- Avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
 NS.trackType = {
     -- For pet kicks
     TRACK_PET = 1,
@@ -188,6 +188,7 @@ NS.spellData = {
         cooldown = 30,
         trackType = TRACK_UNIT_PET,
     },
+    -- Shambling Rush
     --[[ [91807] = {
         category = INTERRUPT,
         cooldown = 30,
@@ -542,17 +543,22 @@ NS.spellData = {
     -- Priest
     -- CC
     -- Holy Word: Chastise
-    [200196] = {
+    [88625] = {
+        category = CC,
+        cooldown = 30,
+    },
+    -- Holy Word: Chastise
+    --[[ [200196] = {
         category = CC,
         cooldown = 30,
         trackType = TRACK_AURA,
-    },
+    }, ]]
     -- Holy Word: Chastise (Censure)
-    [200200] = {
+    --[[ [200200] = {
         category = CC,
         cooldown = 30,
         trackType = TRACK_AURA, -- Have to track aura to distinguish between the stun and incapaciate
-    },
+    }, ]]
     -- Psychic Scream
     [8122] = {
         category = CC,
@@ -955,6 +961,7 @@ NS.spellResets = {
     [200183] = {
         [200196] = RESET_FULL,
         [200200] = RESET_FULL,
+        [88625] = RESET_FULL,
     },
 
     -- Vanish (Memory of Invigorating Shadowdust)
