@@ -57,6 +57,16 @@ local function unitCanAttack(unitId)
     return UnitCanAttack(unitId, "player") and ( not UnitIsPossessed("player") );
 end
 
+-- substring of a guid is of string type, need to convert into number so it matches a numeric index
+local function getNpcIdFromGuid (guid)
+	local NpcId = select ( 6, strsplit ( "-", guid ) )
+	if (NpcId) then
+		return tonumber ( NpcId )
+	end
+	
+    return 0
+end
+
 -- duration can mean different things for different trigger types, e.g.,
 -- OFFENSIVE_AURA = spell.duration, CC = spell.cooldown
 -- optional params: charges, unit (for finding the raid/arena frame to attach to)
@@ -711,9 +721,9 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
         return clearAllStates(allstates);
     elseif ( event == NS.NAME_PLATE_UNIT_ADDED ) then
         local unit = ...;
-        if unit and string.sub(unit, 1, 9) == "nameplate" and unitCanAttack(unit) then
-            local npcId = select(6, strsplit("-", UnitGUID(unit)));
-            if ( not npcId ) or ( not spellData[npcId] ) then return end
+        if unit and ( string.sub(unit, 1, 9) == "nameplate" ) and unitCanAttack(unit) then
+            local npcId = getNpcIdFromGuid(UnitGUID(unit));
+            if ( not spellData[npcId] ) then return end
             local spell = spellData[npcId];
             if (spell.category ~= OFFENSIVE_PET) then return end
             -- Based on "nameplate" unitIds, which would trigger nameplate removed event later
