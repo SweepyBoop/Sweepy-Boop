@@ -59,11 +59,11 @@ end
 
 -- substring of a guid is of string type, need to convert into number so it matches a numeric index
 local function getNpcIdFromGuid (guid)
-	local NpcId = select ( 6, strsplit ( "-", guid ) )
-	if (NpcId) then
-		return tonumber ( NpcId )
-	end
-	
+    local NpcId = select ( 6, strsplit ( "-", guid ) )
+    if (NpcId) then
+        return tonumber ( NpcId )
+    end
+
     return 0
 end
 
