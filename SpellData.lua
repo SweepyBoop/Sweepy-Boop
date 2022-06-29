@@ -471,11 +471,11 @@ NS.spellData = {
         trackType = TRACK_UNIT,
         cooldown = 90,
     },
-    -- Life Cacoon
+    -- Life Cocoon
     [116849] = {
         category = DEFENSIVE,
         trackType = TRACK_UNIT,
-        cooldown = 120,
+        cooldown = 75, -- PVP talent Chrysalis
     },
     -- Dispel
     -- Detox
