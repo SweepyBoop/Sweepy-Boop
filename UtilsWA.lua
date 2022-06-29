@@ -100,6 +100,8 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID)
         track = NS.isSourceArena(sourceGUID);
     elseif (trackType == NS.trackType.TRACK_PET) and (subEvent == NS.SPELL_CAST_SUCCESS) then
         track = NS.isSourceArenaPet(sourceGUID);
+    elseif (trackType == NS.trackType.TRACK_PET_AURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
+        track = NS.isSourceArenaPet(sourceGUID);
     elseif (not trackType) and (subEvent == NS.SPELL_CAST_SUCCESS) then
         -- if trackType is missing, it tracks SPELL_CAST_SUCCESS by default
         track = NS.isSourceArena(sourceGUID);
@@ -128,8 +130,7 @@ end
 -- Check whether spell is enabled for UNIT_SPELLCAST_ events
 local function unitSpellEnabled(spell, unitId)
     -- Check if opponent is arena
-    if ( spell.trackType == TRACK_UNIT ) and ( not NS.isUnitArena(unitId) ) then return end
-    if ( spell.trackType == NS.TRACK_UNIT_PET ) and ( not NS.isUnitArenaPet(unitId) ) then return end
+    if (not NS.isUnitArena(unitId)) then return end
 
     -- Check if spell is disabled for current spec
     if spell.spec then

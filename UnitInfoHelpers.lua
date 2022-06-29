@@ -127,14 +127,6 @@ NS.isUnitArena = function(unitId)
     end
 end
 
-NS.isUnitArenaPet = function (unitId)
-    if NS.isTestMode and ( unitId == "pet" ) then
-        return true
-    end
-
-    return ( string.sub(unitId, 1, 8) == "arenapet" );
-end
-
 NS.arenaUnitId = function (sourceGUID)
     return arenaInfo.unitId[sourceGUID];
 end
