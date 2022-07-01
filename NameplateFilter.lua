@@ -43,7 +43,7 @@ local function isArenaPrimaryPet(unitId)
     -- Hunter pet
     local focus = UnitPowerMax(unitId, Enum.PowerType.Focus);
     if focus >= 100 then
-        local maxFocus = 100;
+        local maxFocus = focus;
         for i = 1, NS.MAX_ARENA_SIZE do
             if UnitIsUnit(unitId, "arenapet"..i) and ( GetArenaOpponentSpec(i) == NS.specID.BM ) then
                 maxFocus = 120;
@@ -85,7 +85,7 @@ end
 -- Hide names for party members and non-players that are not whitelisted
 local function updateName(unitFrame, unitId)
     -- If already hidden, avoid additional checks
-    if (not unitFrame.unitName:IsShown()) then return end
+    if ( not unitFrame.unitName:IsShown() ) then return end
 
     if isParty(unitId) then
         unitFrame.unitName:Hide();
@@ -112,7 +112,7 @@ local showCastNpc = {
 };
 
 local function updateCastBar(unitFrame, unitId)
-    if (not unitFrame.castBar:IsShown()) then return end
+    if ( not unitFrame.castBar:IsShown() ) then return end
 
     local hideCast = false;
     if isParty(unitId) then
