@@ -213,7 +213,7 @@ local function updatePartyInfo(unitId)
     end
 
     local guid = partyInfo.unitGUID[unitId];
-    if guid and ( not partyInfo.unitId[guid] ) then
+    if ( not partyInfo.unitId[guid] ) then
         partyInfo.unitId[guid] = unitId;
     end
 end
