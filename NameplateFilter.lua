@@ -1,148 +1,153 @@
+local _, NS = ...
+
 BoopNameplateFilter = {};
+local testMode = false;
+
+-- Whitelist for non-player units, show nameplate if unit name or NpcID matches
+-- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
+-- To find the NpcID of a unit, target it and type:
+-- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID);
+-- unitFrame.namePlateNpcId is numeric type, so NPC ID index here should be numeric as well
+local whiteList = {
+    -- DK
+    --["Zombie"] = true, -- Reanimation PVP talent, 10% HP, very deadly
+
+    -- Priest
+    [101398] = true, -- Psyfiend
+
+    -- Shaman: totems to kill instantly
+    ["Grounding Totem"] = true,
+    ["Spirit Link Totem"] = true,
+    ["Skyfury Totem"] = true,
+    ["Ancestral Protection Totem"] = true, -- LOL
+    ["Capacitor Totem"] = true,
+    ["Earthgrab Totem"] = true, -- Gets you out of stealth
+    -- ["Windfury Totem"] = true,
+    ["Healing Tide Totem"] = true,
+    ["Vesper Totem"] = true, -- One shot
+
+    -- Warrior
+    ["War Banner"] = true,
+
+    -- Seed
+    ["Regenerating Wildseed"] = true,
+};
+
+local function isArenaPrimaryPet(unitId)
+    local isArenaPet = UnitIsUnit(unitId, "arenapet1") or UnitIsUnit(unitId, "arenapet2") or UnitIsUnit(unitId, "arenapet3");
+    if ( not isArenaPet ) then return end
+    -- Warlock pet
+    if UnitPowerMax(unitId, Enum.PowerType.Energy) == 200 then
+        return true;
+    end
+    -- Hunter pet
+    local focus = UnitPowerMax(unitId, Enum.PowerType.Focus);
+    if focus >= 100 then
+        local maxFocus = 100;
+        for i = 1, NS.MAX_ARENA_SIZE do
+            if UnitIsUnit(unitId, "arenapet"..i) and ( GetArenaOpponentSpec(i) == NS.specID.BM ) then
+                maxFocus = 120;
+            end
+        end
+        
+        return ( focus >= maxFocus )
+    end
+end
+
+local function isParty(unitId)
+    if testMode then
+        return UnitIsFriend(unitId, "player")
+    end
+
+    return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
+end
+
+local function shouldShowNameplate(unitId, npcID)
+    if UnitIsPlayer(unitId) then
+        return true;
+    else
+        if isArenaPrimaryPet(unitId) then
+            return true;
+        elseif ( npcID and whiteList[npcID] ) then
+            return true;
+        else
+            whiteList["Tremor Totem"] = NS.partyWithFearSpell();
+            local name = UnitName(unitId);
+            if whiteList[name] then
+                return true;
+            end
+        end
+    end
+
+    return false;
+end
+
+-- Hide names for party members and non-players that are not whitelisted
+local function updateName(unitFrame, unitId)
+    -- If already hidden, avoid additional checks
+    if (not unitFrame.unitName:IsShown()) then return end
+
+    if isParty(unitId) then
+        unitFrame.unitName:Hide();
+    elseif ( not UnitIsPlayer(unitId) ) then
+        local name = UnitName(unitId);
+        local npcID = unitFrame.namePlateNpcId;
+        whiteList["Tremor Totem"] = NS.partyWithFearSpell();
+        if ( not whiteList[name] ) and npcID and ( not whiteList[npcID] ) then
+            unitFrame.unitName:Hide();
+        end
+    end
+end
+
+-- Hide buff frame for party members
+local function updateBuffFrame(unitFrame, unitId)
+    if unitFrame.BuffFrame:IsShown() and isParty(unitId) then
+        unitFrame.BuffFrame:Hide();
+    end
+end
+
+local showCastNpc = {
+    [1863] = true, -- Succubus
+    [61245] = true, -- Capacitor Totem
+};
+
+local function updateCastBar(unitFrame, unitId)
+    if (not unitFrame.castBar:IsShown()) then return end
+
+    local hideCast = false;
+    if isParty(unitId) then
+        hideCast = true;
+    elseif ( not UnitIsPlayer(unitId) ) then
+        local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
+        if ( not npcID ) or ( not showCastNpc[npcID] ) then
+            hideCast = true;
+        end
+    end
+
+    if hideCast then
+        unitFrame.castBar:UnregisterAllEvents();
+        unitFrame.castBar:Hide();
+    end
+end
+
+local function updateFrame(unitFrame, unitId)
+    if isParty(unitId) then
+        -- Smaller party nameplates with no cast bar & buff frame
+        Plater.SetNameplateSize(unitFrame, 50, 13);
+        unitFrame.castBar:UnregisterAllEvents();
+        unitFrame.castBar:Hide();
+        unitFrame.BuffFrame:Hide();
+    elseif ( not UnitIsPlayer(unitId) ) then
+        local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
+        if ( not npcID ) or ( not showCastNpc[npcID] ) then
+            unitFrame.castBar:UnregisterAllEvents();
+            unitFrame.castBar:Hide();
+        end
+    end
+end
 
 BoopNameplateFilter.Initialization = function (modTable)
     --insert code here
-    modTable.test = false;
-
-    -- Whitelist for non-player units, show nameplate if unit name or NpcID matches
-    -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
-    -- To find the NpcID of a unit, target it and type:
-    -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID);
-    -- unitFrame.namePlateNpcId is numeric type, so NPC ID index here should be numeric as well
-    local whiteList = {
-        -- DK
-        --["Zombie"] = true, -- Reanimation PVP talent, 10% HP, very deadly
-
-        -- Priest
-        [101398] = true, -- Psyfiend
-
-        -- Shaman: totems to kill instantly
-        ["Grounding Totem"] = true,
-        ["Spirit Link Totem"] = true,
-        ["Skyfury Totem"] = true,
-        ["Ancestral Protection Totem"] = true, -- LOL
-        ["Capacitor Totem"] = true,
-        ["Earthgrab Totem"] = true, -- Gets you out of stealth
-        -- ["Windfury Totem"] = true,
-        ["Healing Tide Totem"] = true,
-        ["Vesper Totem"] = true, -- One shot
-
-        -- Warrior
-        ["War Banner"] = true,
-
-        -- Seed
-        ["Regenerating Wildseed"] = true,
-    };
-
-    local classID = select(3, UnitClass("player"));
-    whiteList["Tremor Totem"] = ( classID == 1 ) or ( classID == 5 ) or ( classID == 9 );
-
-    local function IsArenaPet(unit)
-        local isPrimaryPet = UnitIsUnit(unit, "arenapet1") or UnitIsUnit(unit, "arenapet2") or UnitIsUnit(unit, "arenapet3");
-        if not isPrimaryPet then
-            return false;
-        elseif UnitPowerMax(unit, 3) == 200 then
-            return true;
-        elseif UnitPowerMax(unit, 2) >= 100 then
-            local maxFocus = 100;
-            if UnitIsUnit(unit, "arenapet1") and GetArenaOpponentSpec(1) == 253 then
-                maxFocus = 120;
-            elseif UnitIsUnit(unit, "arenapet2") and GetArenaOpponentSpec(2) == 253 then
-                maxFocus = 120;
-            elseif UnitIsUnit(unit, "arenapet3") and GetArenaOpponentSpec(3) == 253 then
-                maxFocus = 120;
-            end
-
-            return UnitPowerMax(unit, 2) >= maxFocus;
-        end
-    end
-
-    local function IsParty(unitId)
-        if modTable.test then
-            return UnitIsFriend(unitId, "player");
-        end
-        return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
-    end
-
-    modTable.ShouldShowNameplate = function(unitId, npcID)
-        if UnitIsPlayer(unitId) then
-            return true;
-        else
-            if IsArenaPet(unitId) then
-                return true;
-            else
-                local name = UnitName(unitId);
-                if whiteList[name] or ( npcID and whiteList[npcID] ) then
-                    return true;
-                end
-            end
-        end
-
-        return false;
-    end
-
-    -- Hide names for party members and non-players that are not whitelisted
-    modTable.UpdateName = function(unitFrame, unitId)
-        -- If already hidden, avoid additional checks
-        if (not unitFrame.unitName:IsShown()) then return end
-
-        if IsParty(unitId) then
-            unitFrame.unitName:Hide();
-        elseif (not UnitIsPlayer(unitId)) then
-            local name = UnitName(unitId);
-            local npcID = unitFrame.namePlateNpcId;
-            if (not whiteList[name]) and npcID and (not whiteList[npcID]) then
-                unitFrame.unitName:Hide();
-            end
-        end
-    end
-
-    -- Hide buff frame for party members
-    modTable.UpdateBuffFrame = function (unitFrame, unitId)
-        if unitFrame.BuffFrame:IsShown() and IsParty(unitId) then
-            unitFrame.BuffFrame:Hide();
-        end
-    end
-
-    local showCastNpc = {
-        [1863] = true, -- Succubus
-        [61245] = true, -- Capacitor Totem
-    };
-
-    modTable.UpdateCastBar = function(unitFrame, unitId)
-        if (not unitFrame.castBar:IsShown()) then return end
-
-        local hideCast = false;
-        if IsParty(unitId) then
-            hideCast = true;
-        elseif (not UnitIsPlayer(unitId)) then
-            local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
-            if (not npcID) or (not showCastNpc[npcID]) then
-                hideCast = true;
-            end
-        end
-
-        if hideCast then
-            unitFrame.castBar:UnregisterAllEvents();
-            unitFrame.castBar:Hide();
-        end
-    end
-
-    modTable.UpdateFrame = function(unitFrame, unitId)
-        if IsParty(unitId) then
-            -- Smaller party nameplates with no cast bar & buff frame
-            Plater.SetNameplateSize(unitFrame, 50, 13);
-            unitFrame.castBar:UnregisterAllEvents();
-            unitFrame.castBar:Hide();
-            unitFrame.BuffFrame:Hide();
-        elseif ( not UnitIsPlayer(unitId) ) then
-            local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
-            if (not npcID) or (not showCastNpc[npcID]) then
-                unitFrame.castBar:UnregisterAllEvents();
-                unitFrame.castBar:Hide();
-            end
-        end
-    end
 end
 
 BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable, modTable)
@@ -151,32 +156,32 @@ BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable
     -- A hack to not show any buffs on nameplate (in case mage steals buff from me)
     unitFrame.BuffFrame2:Hide();
 
-    if (not unitId) then return end
-    if (not IsActiveBattlefieldArena()) and (not modTable.test)  then return end
+    if ( not unitId ) then return end
+    if ( not IsActiveBattlefieldArena() ) and ( not testMode )  then return end
 
     -- Check if visible nameplate should be hidden
     -- Each nameplate needs to be hidden once only, to avoid repeated checks
-    if unitFrame:IsShown() and (not modTable.ShouldShowNameplate(unitId, unitFrame.namePlateNpcId)) then
+    if unitFrame:IsShown() and ( not shouldShowNameplate(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame:Hide();
         return;
     end
 
-    modTable.UpdateFrame(unitFrame, unitId);
-    modTable.UpdateName(unitFrame, unitId);
+    updateFrame(unitFrame, unitId);
+    updateName(unitFrame, unitId);
 end
 
 BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTable, modTable)
     --insert code here
 
     -- A hack to not show any buffs on nameplate (in case mage steals buff from me)
-    if (unitFrame.BuffFrame2:IsShown()) then
+    if unitFrame.BuffFrame2:IsShown() then
         unitFrame.BuffFrame2:Hide();
     end
 
-    if (not unitId) then return end
-    if (not IsActiveBattlefieldArena()) and (not modTable.test)  then return end
+    if ( not unitId ) then return end
+    if ( not IsActiveBattlefieldArena() ) and ( not testMode )  then return end
 
-    modTable.UpdateBuffFrame(unitFrame, unitId);
-    modTable.UpdateCastBar(unitFrame, unitId);
-    modTable.UpdateName(unitFrame, unitId);
+    updateBuffFrame(unitFrame, unitId);
+    updateCastBar(unitFrame, unitId);
+    updateName(unitFrame, unitId);
 end
