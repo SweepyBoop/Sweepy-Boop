@@ -33,6 +33,16 @@ local whiteList = {
     ["Regenerating Wildseed"] = true,
 };
 
+local function isInWhiteList(unitId, npcID)
+    whiteList["Tremor Totem"] = NS.partyWithFearSpell();
+    if ( npcID and whiteList[npcID] ) then
+        return true;
+    else
+        local name = UnitName(unitId);
+        return whiteList[name];
+    end
+end
+
 local function isArenaPrimaryPet(unitId)
     local isArenaPet = UnitIsUnit(unitId, "arenapet1") or UnitIsUnit(unitId, "arenapet2") or UnitIsUnit(unitId, "arenapet3");
     if ( not isArenaPet ) then return end
@@ -68,14 +78,8 @@ local function shouldShowNameplate(unitId, npcID)
     else
         if isArenaPrimaryPet(unitId) then
             return true;
-        elseif ( npcID and whiteList[npcID] ) then
-            return true;
         else
-            whiteList["Tremor Totem"] = NS.partyWithFearSpell();
-            local name = UnitName(unitId);
-            if whiteList[name] then
-                return true;
-            end
+            return isInWhiteList(unitId, npcID);
         end
     end
 
@@ -90,10 +94,7 @@ local function updateName(unitFrame, unitId)
     if isParty(unitId) then
         unitFrame.unitName:Hide();
     elseif ( not UnitIsPlayer(unitId) ) then
-        local name = UnitName(unitId);
-        local npcID = unitFrame.namePlateNpcId;
-        whiteList["Tremor Totem"] = NS.partyWithFearSpell();
-        if ( not whiteList[name] ) and npcID and ( not whiteList[npcID] ) then
+        if ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
             unitFrame.unitName:Hide();
         end
     end
