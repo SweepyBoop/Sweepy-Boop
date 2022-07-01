@@ -51,16 +51,16 @@ local function isArenaPrimaryPet(unitId)
         return true;
     end
     -- Hunter pet
-    local focus = UnitPowerMax(unitId, Enum.PowerType.Focus);
-    if focus >= 100 then
-        local maxFocus = focus;
+    local maxFocus = UnitPowerMax(unitId, Enum.PowerType.Focus);
+    if maxFocus >= 100 then
+        -- Check if the hunter is BM
         for i = 1, NS.MAX_ARENA_SIZE do
             if UnitIsUnit(unitId, "arenapet"..i) and ( GetArenaOpponentSpec(i) == NS.specID.BM ) then
-                maxFocus = 120;
+                return ( maxFocus >= 120 );
             end
         end
         
-        return ( focus >= maxFocus )
+        return true;
     end
 end
 
