@@ -202,6 +202,8 @@ end);
 
 -- Update info for this unitId whenever being queried
 local function updatePartyInfo(unitId)
+    if ( not UnitExists(unitId) ) then return end
+
     if ( not partyInfo.unitGUID[unitId] ) then
         partyInfo.unitGUID[unitId] = UnitGUID(unitId);
     end
