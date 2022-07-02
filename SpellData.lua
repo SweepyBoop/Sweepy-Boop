@@ -42,6 +42,7 @@ NS.specID = {
     BALANCE = 102,
     FERAL = 103,
     RET = 70,
+    BM = 253,
     WW = 269,
 };
 local specID = NS.specID;
@@ -49,8 +50,10 @@ local specID = NS.specID;
 NS.classId = {
     Warrior = 1,
     Paladin = 2,
+    Priest = 5,
     DK = 6,
     Mage = 8,
+    Warlock = 9,
     Druid = 11,
 };
 local classId = NS.classId;

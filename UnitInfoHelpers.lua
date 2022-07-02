@@ -58,6 +58,7 @@ local function getSpecForArenaIndex(index)
     end
 end
 
+-- Make sure unitId is valid (player if test is on, arena..i) and exists
 local function updateArenaInfo(unitId, ...)
     local index = ...;
 
@@ -111,6 +112,26 @@ NS.isSourceArena = function(sourceGUID)
     end
 end
 
+NS.arenaUnitId = function (sourceGUID)
+    return arenaInfo.unitId[sourceGUID];
+end
+
+NS.arenaSpec = function (sourceGUID)
+    return arenaInfo.spec[sourceGUID];
+end
+
+-- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
+-- This is only checked for TRACK_PET spells which is rare.
+NS.isSourceArenaPet = function(sourceGUID)
+    if isTestMode then return sourceGUID == UnitGUID("pet") end
+
+    for i = 1, NS.MAX_ARENA_SIZE do
+        if (sourceGUID == UnitGUID("arenapet"..i)) then
+            return true;
+        end
+    end
+end
+
 -- Caller ensures unitId is not nil
 -- Call this before getting any info based on unitId
 NS.isUnitArena = function(unitId)
@@ -127,14 +148,6 @@ NS.isUnitArena = function(unitId)
     end
 end
 
-NS.arenaUnitId = function (sourceGUID)
-    return arenaInfo.unitId[sourceGUID];
-end
-
-NS.arenaSpec = function (sourceGUID)
-    return arenaInfo.spec[sourceGUID];
-end
-
 NS.arenaUnitSpec = function (unitId)
     return arenaInfo.unitSpec[unitId];
 end
@@ -145,18 +158,6 @@ end
 
 NS.arenaUnitRace = function(unitId)
     return arenaInfo.unitRace[unitId];
-end
-
--- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
--- This is only checked for TRACK_PET spells which is rare.
-NS.isSourceArenaPet = function(sourceGUID)
-    if isTestMode then return sourceGUID == UnitGUID("pet") end
-
-    for i = 1, NS.MAX_ARENA_SIZE do
-        if (sourceGUID == UnitGUID("arenapet"..i)) then
-            return true;
-        end
-    end
 end
 
 NS.arenaSpellChargeExpire = function (guid)
@@ -186,6 +187,8 @@ local partyInfo = {
     -- Convert between unitGUID and unitID
     unitGUID = {},
     unitId = {},
+    unitClass = {},
+    partyWithFearSpell = nil;
 }
 
 local partyInfoFrame = CreateFrame("Frame");
@@ -194,31 +197,62 @@ partyInfoFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
 partyInfoFrame:SetScript("OnEvent", function ()
     partyInfo.unitGUID = {};
     partyInfo.unitId = {};
+    partyInfo.unitClass = {};
+    partyInfo.partyWithFearSpell = nil;
 end);
 
--- unitId is player/party1/party2
-local function partyUnitGUID(unitId)
-    if (not partyInfo.unitGUID[unitId]) then
+-- Update info for this unitId whenever being queried
+local function updatePartyInfo(unitId)
+    if ( not UnitExists(unitId) ) then return end
+
+    if ( not partyInfo.unitGUID[unitId] ) then
         partyInfo.unitGUID[unitId] = UnitGUID(unitId);
     end
 
+    if ( not partyInfo.unitClass[unitId] ) then
+        partyInfo.unitClass[unitId] = select(3, UnitClass(unitId));
+    end
+
+    local guid = partyInfo.unitGUID[unitId];
+    if ( not partyInfo.unitId[guid] ) then
+        partyInfo.unitId[guid] = unitId;
+    end
+end
+
+-- unitId must be player/party1/party2
+local function partyUnitGUID(unitId)
+    updatePartyInfo(unitId);
     return partyInfo.unitGUID[unitId];
+end
+
+-- unitId must be player/party1/party2
+local function partyUnitClass(unitId)
+    updatePartyInfo(unitId);
+    return partyInfo.unitClass[unitId];
+end
+
+local function classWithFearSpell(class)
+    local classId = NS.classId;
+    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock );
+end
+
+NS.partyWithFearSpell = function ()
+    if ( partyInfo.partyWithFearSpell == nil ) then
+        partyInfo.partyWithFearSpell = classWithFearSpell(partyUnitClass("player")) or classWithFearSpell(partyUnitClass("party1")) or classWithFearSpell(partyUnitClass("party2"));
+    end
+   
+    return partyInfo.partyWithFearSpell;
 end
 
 -- If unitGUID matches player/party1/party2, cache and return the corresponding unitId; otherwise return nil
 -- The cached unitId can later be used as "unit" in the TSU
 -- Call ensures unitGUID is not nil
 NS.partyUnitId = function(unitGUID)
-    if (unitGUID == partyUnitGUID("player")) then
-        partyInfo.unitId[unitGUID] = "player";
-    elseif (unitGUID == partyUnitGUID("party1")) then
-        partyInfo.unitId[unitGUID] = "party1";
-    elseif (unitGUID == partyUnitGUID("party2")) then
-        partyInfo.unitId[unitGUID] = "party2";
+    if ( unitGUID == partyUnitGUID("player") ) or ( unitGUID == partyUnitGUID("party1") ) or ( unitGUID == partyUnitGUID("party2") ) then
+        return partyInfo.unitId[unitGUID];
     end
 
     -- If unitGUID does not match the above units, no value should be cached and nil will be returned
-    return partyInfo.unitId[unitGUID];
 end
 
 NS.validateUnitForDR = function(partyUnitId, trackUnit)
