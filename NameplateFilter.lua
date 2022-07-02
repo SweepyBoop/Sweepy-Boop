@@ -77,10 +77,8 @@ local function shouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true;
     else
-        if isArenaPrimaryPet(unitId) then
+        if isArenaPrimaryPet(unitId) or isInWhiteList(unitId, npcID) then
             return true;
-        else
-            return isInWhiteList(unitId, npcID);
         end
     end
 
