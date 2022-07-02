@@ -58,6 +58,7 @@ local function getSpecForArenaIndex(index)
     end
 end
 
+-- Make sure unitId is valid (player if test is on, arena..i) and exists
 local function updateArenaInfo(unitId, ...)
     local index = ...;
 
@@ -111,6 +112,26 @@ NS.isSourceArena = function(sourceGUID)
     end
 end
 
+NS.arenaUnitId = function (sourceGUID)
+    return arenaInfo.unitId[sourceGUID];
+end
+
+NS.arenaSpec = function (sourceGUID)
+    return arenaInfo.spec[sourceGUID];
+end
+
+-- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
+-- This is only checked for TRACK_PET spells which is rare.
+NS.isSourceArenaPet = function(sourceGUID)
+    if isTestMode then return sourceGUID == UnitGUID("pet") end
+
+    for i = 1, NS.MAX_ARENA_SIZE do
+        if (sourceGUID == UnitGUID("arenapet"..i)) then
+            return true;
+        end
+    end
+end
+
 -- Caller ensures unitId is not nil
 -- Call this before getting any info based on unitId
 NS.isUnitArena = function(unitId)
@@ -127,14 +148,6 @@ NS.isUnitArena = function(unitId)
     end
 end
 
-NS.arenaUnitId = function (sourceGUID)
-    return arenaInfo.unitId[sourceGUID];
-end
-
-NS.arenaSpec = function (sourceGUID)
-    return arenaInfo.spec[sourceGUID];
-end
-
 NS.arenaUnitSpec = function (unitId)
     return arenaInfo.unitSpec[unitId];
 end
@@ -145,18 +158,6 @@ end
 
 NS.arenaUnitRace = function(unitId)
     return arenaInfo.unitRace[unitId];
-end
-
--- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
--- This is only checked for TRACK_PET spells which is rare.
-NS.isSourceArenaPet = function(sourceGUID)
-    if isTestMode then return sourceGUID == UnitGUID("pet") end
-
-    for i = 1, NS.MAX_ARENA_SIZE do
-        if (sourceGUID == UnitGUID("arenapet"..i)) then
-            return true;
-        end
-    end
 end
 
 NS.arenaSpellChargeExpire = function (guid)
