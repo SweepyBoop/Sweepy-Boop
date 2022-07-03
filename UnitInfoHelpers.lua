@@ -240,6 +240,12 @@ NS.partyWithFearSpell = function ()
             or classWithFearSpell(partyUnitClass("party2"));
     end
 
+    if partyInfo.partyWithFearSpell then
+        print("Tremor Totem nameplate enabled...")
+    else
+        print("Tremor Totem nameplate disabled...")
+    end
+
     return partyInfo.partyWithFearSpell;
 end
 
