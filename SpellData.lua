@@ -935,9 +935,6 @@ if NS.classWithFearSpell(playerClass) then
         category = INTERRUPT,
         cooldown = 60,
     };
-    print("Tremor Totem tracked...");
-else
-    print("Tremor Totem not tracked...")
 end
 
 NS.RESET_FULL = 0;
