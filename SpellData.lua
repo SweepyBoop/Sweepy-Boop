@@ -924,6 +924,19 @@ NS.spellData = {
     },
 };
 
+NS.classWithFearSpell = function(class)
+    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock );
+end
+
+local playerClass = select(3, UnitClass("player"));
+if NS.classWithFearSpell(playerClass) then
+    -- Tremor Totem
+    NS.spellData[8143] = {
+        category = INTERRUPT,
+        cooldown = 60,
+    };
+end
+
 NS.RESET_FULL = 0;
 local RESET_FULL = NS.RESET_FULL;
 

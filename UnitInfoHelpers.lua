@@ -231,16 +231,15 @@ local function partyUnitClass(unitId)
     return partyInfo.unitClass[unitId];
 end
 
-local function classWithFearSpell(class)
-    local classId = NS.classId;
-    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock );
-end
+local classWithFearSpell = NS.classWithFearSpell;
 
 NS.partyWithFearSpell = function ()
     if ( partyInfo.partyWithFearSpell == nil ) then
-        partyInfo.partyWithFearSpell = classWithFearSpell(partyUnitClass("player")) or classWithFearSpell(partyUnitClass("party1")) or classWithFearSpell(partyUnitClass("party2"));
+        partyInfo.partyWithFearSpell = classWithFearSpell(partyUnitClass("player"))
+            or classWithFearSpell(partyUnitClass("party1"))
+            or classWithFearSpell(partyUnitClass("party2"));
     end
-   
+
     return partyInfo.partyWithFearSpell;
 end
 
