@@ -884,7 +884,7 @@ NS.spellData = {
     },
     -- Recklessness
     [1719] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE,
         cooldown = 90,
         duration = 12,
     },
