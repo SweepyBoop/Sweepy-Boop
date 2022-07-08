@@ -670,6 +670,12 @@ NS.spellData = {
         category = INTERRUPT,
         cooldown = 15,
     },
+    -- Shadowstep
+    [36554] = {
+        category = INTERRUPT,
+        cooldown = 30,
+        opt_charges = true,
+    },
     -- Defensive
     -- Evasion
     [5277] = {
