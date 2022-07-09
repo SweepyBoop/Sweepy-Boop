@@ -278,9 +278,7 @@ NS.findArenaFrameForUnitId = function (unitId)
                     frame = _G["GladiusButtonFramearena"..i];
                 end
 
-                if frame then
-                    return frame;
-                end
+                return frame;
             end
         end
     end
