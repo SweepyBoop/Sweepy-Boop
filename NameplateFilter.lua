@@ -132,8 +132,9 @@ end
 
 local function updateFrame(unitFrame, unitId)
     if isParty(unitId) then
-        -- Smaller party nameplates with no cast bar & buff frame
-        Plater.SetNameplateSize(unitFrame, 50, 13);
+        -- No health bar, castBar & BuffFrame
+        -- (raid marker still shows, and is not scaled with distance like Blizzard default raid markers)
+        unitFrame.healthBar:Hide();
         unitFrame.castBar:UnregisterAllEvents();
         unitFrame.castBar:Hide();
         unitFrame.BuffFrame:Hide();
