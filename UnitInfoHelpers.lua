@@ -269,6 +269,7 @@ NS.findArenaFrameForUnitId = function (unitId)
         if ( not frame ) then
             frame = _G["GladiusButtonFramearena1"];
         end
+
         return frame;
     else
         for i = 1, NS.MAX_ARENA_SIZE do
