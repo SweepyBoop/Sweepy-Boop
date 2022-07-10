@@ -649,13 +649,13 @@ end
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
-    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
+    elseif ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
         local unitTarget, _, spellID = ...;
-        if (not unitTarget) then return end
+        if ( not unitTarget ) then return end
 
         if isUnitParty(unitTarget) then
             local spell = getOffensiveSpellDataById(spellID);
-            if (not spell) then return end
+            if ( not spell ) then return end
 
             allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, nil, unitTarget);
             return true;
@@ -668,12 +668,12 @@ end
 -- trackUnit: player/party
 BoopUtilsWA.Triggers.DR = function(category, trackUnit, allstates, event, ...)
     local destGUID, _, _, _, spellID = select(8, ...);
-    if (not destGUID) then return end
-    if (NS.diminishingReturnSpells[spellID] == category) then
+    if ( not destGUID ) then return end
+    if ( NS.diminishingReturnSpells[spellID] == category ) then
         local partyUnitId = NS.partyUnitId(destGUID);
         if NS.validateUnitForDR(partyUnitId, trackUnit) then
             local durationDR = 15;
-            local stacksNew = 1 + ((allstates[destGUID] and allstates[destGUID].stacks) or 0);
+            local stacksNew = 1 + ( (allstates[destGUID] and allstates[destGUID].stacks) or 0 );
             allstates[destGUID] = {
                 show = true,
                 changed = true,
@@ -694,7 +694,7 @@ end
 BoopUtilsWA.AttachToArenaFrameByUnitId = function (frames, activeRegions)
     for _, regionData in ipairs(activeRegions) do
         local unitId = regionData.region.state and regionData.region.state.unit
-        if (not unitId) then return end
+        if ( not unitId ) then return end
         local frame = NS.findArenaFrameForUnitId(unitId);
         if frame then
             frames[frame] = frames[frame] or {}
@@ -706,7 +706,7 @@ end
 BoopUtilsWA.AttachToRaidFrameByUnitId = function (frames, activeRegions)
     for _, regionData in ipairs(activeRegions) do
         local unitId = regionData.region.state and regionData.region.state.unit
-        if (not unitId) then return end
+        if ( not unitId ) then return end
         local frame = NS.findRaidFrameForUnitId(unitId);
         if frame then
             frames[frame] = frames[frame] or {}
