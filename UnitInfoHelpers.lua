@@ -29,7 +29,7 @@ local arenaInfo = {
 };
 
 NS.MAX_ARENA_SIZE = 3;
-NS.MAX_PARTY_SIZE = 10;
+NS.MAX_PARTY_SIZE = 6; -- 3 for players and 3 for pets
 
 local arenaInfoFrame = CreateFrame('Frame');
 arenaInfoFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
