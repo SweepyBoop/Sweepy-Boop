@@ -90,12 +90,8 @@ local function updateName(unitFrame, unitId)
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
 
-    if isParty(unitId) then
+    if ( not UnitIsPlayer(unitId) ) and ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame.unitName:Hide();
-    elseif ( not UnitIsPlayer(unitId) ) then
-        if ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
-            unitFrame.unitName:Hide();
-        end
     end
 end
 
