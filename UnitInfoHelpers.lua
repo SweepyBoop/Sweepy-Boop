@@ -29,7 +29,7 @@ local arenaInfo = {
 };
 
 NS.MAX_ARENA_SIZE = 3;
-NS.MAX_PARTY_SIZE = 10;
+NS.MAX_PARTY_SIZE = 6; -- 3 for players and 3 for pets
 
 local arenaInfoFrame = CreateFrame('Frame');
 arenaInfoFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -266,21 +266,20 @@ end
 NS.findArenaFrameForUnitId = function (unitId)
     if NS.isTestMode and (unitId == "player") then
         local frame = _G["sArenaEnemyFrame1"];
-        if (not frame) then
+        if ( not frame ) then
             frame = _G["GladiusButtonFramearena1"];
         end
+
         return frame;
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            if (unitId == "arena"..i) then
+            if ( unitId == "arena"..i ) then
                 local frame = _G["sArenaEnemyFrame"..i];
-                if (not frame) then
+                if ( not frame ) then
                     frame = _G["GladiusButtonFramearena"..i];
                 end
 
-                if frame then
-                    return frame;
-                end
+                return frame;
             end
         end
     end
@@ -289,7 +288,8 @@ end
 NS.findRaidFrameForUnitId = function (unitId)
     for i = 1, NS.MAX_PARTY_SIZE do
         local frame = _G["CompactRaidFrame"..i];
-        if frame and frame.unit and UnitIsUnit(frame.unit, unitId) then
+        if ( not frame ) then return end
+        if frame.unit and UnitIsUnit(frame.unit, unitId) then
             return frame;
         end
     end
