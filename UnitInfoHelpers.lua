@@ -265,18 +265,18 @@ end
 
 NS.findArenaFrameForUnitId = function (unitId)
     if NS.isTestMode and (unitId == "player") then
-        local frame = _G["sArenaEnemyFrame1"];
+        local frame = _G["GladiusButtonFramearena1"];
         if ( not frame ) then
-            frame = _G["GladiusButtonFramearena1"];
+            frame = _G["sArenaEnemyFrame1"];
         end
 
         return frame;
     else
         for i = 1, NS.MAX_ARENA_SIZE do
             if ( unitId == "arena"..i ) then
-                local frame = _G["sArenaEnemyFrame"..i];
+                local frame = _G["GladiusButtonFramearena"..i];
                 if ( not frame ) then
-                    frame = _G["GladiusButtonFramearena"..i];
+                    frame = _G["sArenaEnemyFrame"..i];
                 end
 
                 return frame;
