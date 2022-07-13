@@ -657,7 +657,9 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
             local spell = getOffensiveSpellDataById(spellID);
             if ( not spell ) then return end
 
-            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, nil, unitTarget);
+            local charges = ( ( unitTarget == "party2" ) and 2 ) or 1;
+
+            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, charges, unitTarget);
             return true;
         end
     end
