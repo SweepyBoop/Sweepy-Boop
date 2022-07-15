@@ -71,7 +71,7 @@ local function updateArenaInfo(unitId, ...)
         arenaInfo.unitId[unitGUID] = unitId;
     end
 
-    if index and (not arenaInfo.spec[unitId]) then
+    if index and (not arenaInfo.spec[unitGUID]) then
         arenaInfo.spec[unitGUID] = getSpecForArenaIndex(index);
     end
 
