@@ -576,6 +576,12 @@ NS.spellData = {
         spellID = 211522,
         duration = 12,
     },
+    -- Boon of the Ascended
+    [325013] = {
+        category = OFFENSIVE,
+        duration = 10,
+        cooldown = 180,
+    },
     -- Dispel
     -- Mass Dispel
     [32375] = {
