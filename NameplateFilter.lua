@@ -89,8 +89,10 @@ end
 local function updateName(unitFrame, unitId)
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
-
-    if ( not UnitIsPlayer(unitId) ) and ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
+    
+    if isParty(unitId) then
+        unitFrame.unitName:Hide();
+    elseif ( not UnitIsPlayer(unitId) ) and ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame.unitName:Hide();
     end
 end
@@ -128,9 +130,8 @@ end
 
 local function updateFrame(unitFrame, unitId)
     if isParty(unitId) then
-        -- No health bar, castBar & BuffFrame
-        -- (raid marker still shows, and is not scaled with distance like Blizzard default raid markers)
-        unitFrame.healthBar:Hide();
+        -- Smaller party nameplates with no cast bar & buff frame
+        Plater.SetNameplateSize(unitFrame, 50, 13);
         unitFrame.castBar:UnregisterAllEvents();
         unitFrame.castBar:Hide();
         unitFrame.BuffFrame:Hide();
