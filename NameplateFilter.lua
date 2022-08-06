@@ -73,6 +73,14 @@ local function isParty(unitId)
     return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
 end
 
+local function isArena(unitId)
+    if testMode then
+        return UnitIsEnemy(unitId, "player")
+    end
+
+    return UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3")
+end
+
 local function shouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true;
@@ -131,10 +139,12 @@ end
 local function updateFrame(unitFrame, unitId)
     if isParty(unitId) then
         -- Smaller party nameplates with no cast bar & buff frame
-        Plater.SetNameplateSize(unitFrame, 50, 13);
+        Plater.SetNameplateSize(unitFrame, 50, 11);
         unitFrame.castBar:UnregisterAllEvents();
         unitFrame.castBar:Hide();
         unitFrame.BuffFrame:Hide();
+    elseif isArena(unitId) then
+        Plater.SetNameplateSize(unitFrame, 116, 15);
     elseif ( not UnitIsPlayer(unitId) ) then
         local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
         if ( not npcID ) or ( not showCastNpc[npcID] ) then
