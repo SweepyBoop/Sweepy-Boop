@@ -139,7 +139,7 @@ end
 local function updateFrame(unitFrame, unitId)
     if isParty(unitId) then
         -- Smaller party nameplates with no cast bar & buff frame
-        Plater.SetNameplateSize(unitFrame, 50, 11);
+        Plater.SetNameplateSize(unitFrame, 50, 13);
         unitFrame.castBar:UnregisterAllEvents();
         unitFrame.castBar:Hide();
         unitFrame.BuffFrame:Hide();
