@@ -81,6 +81,16 @@ local function isArena(unitId)
     return UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3")
 end
 
+local function arenaNumber(unitFrame, unitId)
+    for i = 1, NS.MAX_ARENA_SIZE do
+        if UnitIsUnit(unitId, "arena"..i) then
+            unitFrame.unitName:SetText(i);
+            unitFrame.unitName:SetTextColor(1,1,0) --Yellow
+            return true
+        end
+    end
+end
+
 local function shouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true;
@@ -97,8 +107,13 @@ end
 local function updateName(unitFrame, unitId)
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
-    
-    if isParty(unitId) then
+
+    -- Already arena numbered
+    if string.len(unitFrame.unitName:GetText()) == 1 then return end
+
+    if arenaNumber(unitFrame, unitId) then
+        return true
+    elseif isParty(unitId) then
         unitFrame.unitName:Hide();
     elseif ( not UnitIsPlayer(unitId) ) and ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame.unitName:Hide();
