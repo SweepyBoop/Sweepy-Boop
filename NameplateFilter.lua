@@ -143,8 +143,6 @@ local function updateFrame(unitFrame, unitId)
         unitFrame.castBar:UnregisterAllEvents();
         unitFrame.castBar:Hide();
         unitFrame.BuffFrame:Hide();
-    elseif isArena(unitId) then
-        Plater.SetNameplateSize(unitFrame, 116, 15);
     elseif ( not UnitIsPlayer(unitId) ) then
         local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
         if ( not npcID ) or ( not showCastNpc[npcID] ) then
