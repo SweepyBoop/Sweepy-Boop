@@ -140,8 +140,10 @@ NS.spellData = {
     },
     -- Abomination Limb
     [315443] = {
-        category = CC,
+        category = OFFENSIVE,
         cooldown = 120,
+        duration = 12,
+        index = 1,
     },
     -- Offensive (Unholy)
     -- Unholy Assult
