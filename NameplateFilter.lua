@@ -154,7 +154,7 @@ end
 local function updateFrame(unitFrame, unitId)
     if isParty(unitId) then
         -- Smaller party nameplates with no cast bar & buff frame
-        Plater.SetNameplateSize(unitFrame, 50, 13);
+        Plater.SetNameplateSize(unitFrame, 35, 13);
         unitFrame.castBar:UnregisterAllEvents();
         unitFrame.castBar:Hide();
         unitFrame.BuffFrame:Hide();
@@ -209,7 +209,15 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
 end
 
 BoopNameplateFilter.LoadScreen = function (modTable)
+    local override = false;
     if ( Plater.ZoneInstanceType == "arena" ) then
+        override = true;
+    elseif ( Plater.ZoneInstanceType == "pvp" ) then
+        local maxPlayer = select(5, GetInstanceInfo());
+        override = ( maxPlayer == 6 );
+    end
+
+    if override then
         Plater.db.profile.indicator_anchor.side = Plater.AnchorSides.TOP;
         Plater.db.profile.indicator_anchor.x = 0;
         Plater.db.profile.indicator_anchor.y = 2;
