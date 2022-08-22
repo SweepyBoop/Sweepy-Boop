@@ -167,10 +167,6 @@ local function updateFrame(unitFrame, unitId)
     end
 end
 
-BoopNameplateFilter.Initialization = function (modTable)
-    --insert code here
-end
-
 BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable, modTable)
     --insert code here
 
@@ -210,4 +206,20 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
     updateBuffFrame(unitFrame, unitId);
     updateCastBar(unitFrame, unitId);
     updateName(unitFrame, unitId);
+end
+
+BoopNameplateFilter.LoadScreen = function (modTable)
+    if ( Plater.ZoneInstanceType == "arena" ) then
+        Plater.db.profile.indicator_anchor.side = Plater.AnchorSides.TOP;
+        Plater.db.profile.indicator_anchor.x = 0;
+        Plater.db.profile.indicator_anchor.y = 2;
+        Plater.db.profile.indicator_scale = 3;
+    else
+        Plater.db.profile.indicator_anchor.side = Plater.AnchorSides.LEFT;
+        Plater.db.profile.indicator_anchor.x = -2;
+        Plater.db.profile.indicator_anchor.y = 0;
+        Plater.db.profile.indicator_scale = 1;
+    end
+
+    Plater.UpdateAllPlates()
 end
