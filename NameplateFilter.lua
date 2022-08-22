@@ -202,6 +202,11 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
     if ( not unitId ) then return end
     if ( not IsActiveBattlefieldArena() ) and ( not testMode )  then return end
 
+    -- A hack to hide raid icons (to make room for class icons)
+    if unitFrame.PlaterRaidTargetFrame:IsShown() then
+        unitFrame.PlaterRaidTargetFrame:Hide();
+    end
+
     updateBuffFrame(unitFrame, unitId);
     updateCastBar(unitFrame, unitId);
     updateName(unitFrame, unitId);
