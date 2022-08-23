@@ -222,12 +222,17 @@ BoopNameplateFilter.LoadScreen = function (modTable)
         Plater.db.profile.indicator_anchor.x = 0;
         Plater.db.profile.indicator_anchor.y = 2;
         Plater.db.profile.indicator_scale = 3;
+
+        Plater.db.profile.castbar_icon_size = "same as castbar plus healthbar";
     else
         Plater.db.profile.indicator_anchor.side = Plater.AnchorSides.LEFT;
         Plater.db.profile.indicator_anchor.x = -2;
         Plater.db.profile.indicator_anchor.y = 0;
         Plater.db.profile.indicator_scale = 1;
+
+        Plater.db.profile.castbar_icon_size = "same as castbar";
     end
 
+    Plater.RefreshDBUpvalues()
     Plater.UpdateAllPlates()
 end
