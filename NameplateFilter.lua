@@ -1,7 +1,7 @@
 local _, NS = ...
 
 BoopNameplateFilter = {};
-local testMode = true;
+local testMode = false;
 
 -- Whitelist for non-player units, show nameplate if unit name or NpcID matches
 -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
