@@ -73,12 +73,8 @@ local function isParty(unitId)
     return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
 end
 
-local function isArena(unitId)
-    if testMode then
-        return UnitIsEnemy(unitId, "player")
-    end
-
-    return UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3")
+local function isPartyPet(unitId)
+    return UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2")
 end
 
 local function arenaNumber(unitFrame, unitId)
@@ -95,7 +91,7 @@ local function shouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true;
     else
-        if isArenaPrimaryPet(unitId) or isInWhiteList(unitId, npcID) then
+        if isPartyPet(unitId) or isArenaPrimaryPet(unitId) or isInWhiteList(unitId, npcID) then
             return true;
         end
     end
@@ -113,7 +109,7 @@ local function updateName(unitFrame, unitId)
 
     if arenaNumber(unitFrame, unitId) then
         return true
-    elseif isParty(unitId) then
+    elseif isParty(unitId) or isPartyPet(unitId) then
         unitFrame.unitName:Hide();
     elseif ( not UnitIsPlayer(unitId) ) and ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame.unitName:Hide();
@@ -136,7 +132,7 @@ local function updateCastBar(unitFrame, unitId)
     if ( not unitFrame.castBar:IsShown() ) then return end
 
     local hideCast = false;
-    if isParty(unitId) then
+    if isParty(unitId) or isPartyPet(unitId) then
         hideCast = true;
     elseif ( not UnitIsPlayer(unitId) ) then
         local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
@@ -152,7 +148,7 @@ local function updateCastBar(unitFrame, unitId)
 end
 
 local function updateFrame(unitFrame, unitId)
-    if isParty(unitId) then
+    if isParty(unitId) or isPartyPet(unitId) then
         -- Smaller party nameplates with no cast bar & buff frame
         Plater.SetNameplateSize(unitFrame, 35, 13);
         unitFrame.castBar:UnregisterAllEvents();
