@@ -1,7 +1,7 @@
 local _, NS = ...
 
 BoopNameplateFilter = {};
-local testMode = false;
+local testMode = true;
 
 -- Whitelist for non-player units, show nameplate if unit name or NpcID matches
 -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
@@ -74,7 +74,10 @@ local function isParty(unitId)
 end
 
 local function isPartyPet(unitId)
-    return UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2")
+    if UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
+        -- Only warlock and hunter pets
+        return UnitPowerMax(unitId, Enum.PowerType.Energy) == 200 or UnitPowerMax(unitId, Enum.PowerType.Focus) >= 100
+    end
 end
 
 local function arenaNumber(unitFrame, unitId)
