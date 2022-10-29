@@ -277,7 +277,7 @@ end
 
 NS.findRaidFrameForUnitId = function (unitId)
     for i = 1, NS.MAX_PARTY_SIZE do
-        local frame = _G["CompactRaidFrame"..i];
+        local frame = _G["CompactPartyFrameMember"..i];
         if ( not frame ) then return end
         if frame.unit and UnitIsUnit(frame.unit, unitId) then
             return frame;
