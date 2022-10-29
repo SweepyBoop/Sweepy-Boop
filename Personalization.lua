@@ -10,7 +10,6 @@ FocusFrameToT:SetAlpha(0);
 
 -- Setting CRFSort_Group blocks the action bars when switching map
 local sortFunc = function(t1, t2)
-    print("sortFunc", t1, t2)
     if UnitIsUnit(t1, "party1") then
         return true
     elseif UnitIsUnit(t2, "party1") then
