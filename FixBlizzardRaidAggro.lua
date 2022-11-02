@@ -9,7 +9,7 @@ local isTestMode = NS.isTestMode;
 
 -- For raid frames inside arena, checking the first 10 should be more than enough to cover part members (players and pets)
 local MAX_ARENAOPPONENT_SIZE = 3;
-local MAX_RAIDAGGRO_SIZE = 10;
+local MAX_RAIDAGGRO_SIZE = 6;
 
 local function shouldClearAggro(event)
     return (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
@@ -47,11 +47,11 @@ local eventHandler = function(frame, event, unitTarget)
     if shouldClearAggro(event) then
         -- Upon entering a new zone, clear the aggro highlight
         for i = 1, MAX_RAIDAGGRO_SIZE do
-            local frame = _G["CompactRaidFrame"..i];
+            local frame = _G["CompactPartyFrameMember"..i];
             -- Check if the user has Blizzard default highlight on
             if frame and frame.optionTable.displayAggroHighlight then return end
 
-            if frame then
+            if frame and frame.aggroHighlight:IsShown() then
                 frame.aggroHighlight:Hide();
             end
         end
@@ -62,7 +62,7 @@ local eventHandler = function(frame, event, unitTarget)
         local aggroUnitGUID = getAggroUnitGUID();
         
         for i = 1, MAX_RAIDAGGRO_SIZE do
-            local frame = _G["CompactRaidFrame"..i];
+            local frame = _G["CompactPartyFrameMember"..i];
             -- Check if the user has Blizzard default highlight on
             if frame and frame.optionTable.displayAggroHighlight then return end
 
