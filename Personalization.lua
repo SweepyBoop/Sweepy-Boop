@@ -9,7 +9,7 @@ FocusFrameSpellBar:UnregisterAllEvents();
 FocusFrame:SetAlpha(0);
 
 -- Setting CRFSort_Group blocks the action bars when switching map
--- Easily repro when pressing a-S
+-- Easily repro when pressing a-S, something about ForceTaint_Strong
 local sortFunc = function(t1, t2)
     if UnitIsUnit(t1, "party1") then
         return true
