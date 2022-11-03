@@ -10,7 +10,7 @@ FocusFrame:SetAlpha(0);
 
 -- Setting CRFSort_Group blocks the action bars when switching map
 -- Easily repro when pressing a-S, something about ForceTaint_Strong
-local sortFunc = function(t1, t2)
+local CFRSort_PlayerMiddle = function(t1, t2)
     if UnitIsUnit(t1, "party1") then
         return true
     elseif UnitIsUnit(t2, "party1") then
@@ -24,17 +24,26 @@ local sortFunc = function(t1, t2)
     end
 end
 
-hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function(flowSortFunc)
-	if not CompactPartyFrame then
-		return;
-	end
-	CompactPartyFrame.flowSortFunc = sortFunc;
-	CompactPartyFrame_RefreshMembers();
-end)
+-- https://www.curseforge.com/wow/addons/sortgroup
 
-hooksecurefunc("CompactPartyFrame_Generate", function()
-	local frame = CompactPartyFrame;
-	if frame then
-		frame.flowSortFunc = sortFunc;
+local function ApplySort()
+    --combat status check
+    if not InCombatLockdown() then
+        if IsInGroup() and GetNumGroupMembers() <= 5 and HasLoadedCUFProfiles() then
+            CompactPartyFrame_SetFlowSortFunction(CFRSort_PlayerMiddle);
+        end
     end
-end)
+end
+
+local Main_Frame = CreateFrame('Frame', 'MainPanel', InterfaceOptionsFramePanelContainer);
+Main_Frame:RegisterEvent('GROUP_ROSTER_UPDATE');
+Main_Frame:RegisterEvent('PLAYER_ENTERING_WORLD');
+Main_Frame:SetScript('OnEvent',
+    function(self, event, ...)
+        if event == 'GROUP_ROSTER_UPDATE' then
+            ApplySort()
+        elseif event == 'PLAYER_ENTERING_WORLD' and HasLoadedCUFProfiles() then
+            ApplySort();
+        end
+    end)
+
