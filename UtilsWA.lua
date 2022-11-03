@@ -228,7 +228,6 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     return true;
 end
 
--- Duration only trigger for a spell category, used for OFFENSIVE_AURA only for now
 local durationTrigger = function(category, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
@@ -280,6 +279,36 @@ end
 
 BoopUtilsWA.Triggers.OffensiveDuration = function (allstates, event, ...)
     return durationTrigger(OFFENSIVE, allstates, event, ...);
+end
+
+local function durationWithExtensionTrigger(specialSpellID, allstates, event, ...)
+    if shouldClearAllStates(event) then
+        return clearAllStates(allstates);
+    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
+        if (not shouldCheckCombatLog(subEvent)) then return end
+        if (not sourceGUID) then return end
+        local spell = spellData[specialSpellID]
+
+        -- Check if there is a spell to extend
+        if (spellID ~= specialSpellID) and allstates[sourceGUID] then
+            local cost = GetSpellPowerCost(spellID);
+            if (cost and cost[1] and cost[1].type == spell.extend_power_type) then
+                if spellData[spell].extend_type == "fixed" then
+                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + spell.extend_amount;
+                else
+                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + cost[1].cost * spell.extend_amount;
+                end
+
+                return true
+            end
+        elseif (spellID == specialSpellID) then
+            if checkSpellEnabled(spell, subEvent, sourceGUID) then
+                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration)
+                return true
+            end
+        end
+    end
 end
 
 -- Cooldown trigger for a spell category, used for anything that needs cooldown tracking
