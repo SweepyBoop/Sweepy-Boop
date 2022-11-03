@@ -291,10 +291,10 @@ local function durationWithExtensionTrigger(specialSpellID, allstates, event, ..
         local spell = spellData[specialSpellID]
 
         -- Check if there is a spell to extend
-        if (spellID ~= specialSpellID) and allstates[sourceGUID] then
+        if (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == NS.SPELL_CAST_SUCCESS then
             local cost = GetSpellPowerCost(spellID);
             if (cost and cost[1] and cost[1].type == spell.extend_power_type) then
-                if spellData[spell].extend_type == "fixed" then
+                if spell.extend_type == "fixed" then
                     allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + spell.extend_amount;
                 else
                     allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + cost[1].cost * spell.extend_amount;
@@ -309,6 +309,10 @@ local function durationWithExtensionTrigger(specialSpellID, allstates, event, ..
             end
         end
     end
+end
+
+BoopUtilsWA.Triggers.StormEarthAndFire = function (allstates, event, ...)
+    return durationWithExtensionTrigger(137639, allstates, event, ...)
 end
 
 -- Cooldown trigger for a spell category, used for anything that needs cooldown tracking
