@@ -5,10 +5,11 @@ SetCVar("weatherDensity", 0);
 TargetFrameSpellBar:UnregisterAllEvents();
 FocusFrameSpellBar:UnregisterAllEvents();
 
--- Hide focus frame target of target (takes some space of Omnibar icons)
-FocusFrameToT:SetAlpha(0);
+-- Hide focus frame
+FocusFrame:SetAlpha(0);
 
 -- Setting CRFSort_Group blocks the action bars when switching map
+-- Easily repro when pressing a-S, something about ForceTaint_Strong
 local sortFunc = function(t1, t2)
     if UnitIsUnit(t1, "party1") then
         return true
