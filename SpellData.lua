@@ -985,7 +985,7 @@ NS.spellResets = {
 -- Special abilities that need seperate triggers from the generic ones.
 NS.spellData_Combust = {
     spellID = 190319,
-    duration = 14,
+    duration = 12,
     cooldown = 120,
     index = 1,
     sound = true,
