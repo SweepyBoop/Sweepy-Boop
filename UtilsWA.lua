@@ -537,6 +537,8 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
         return clearAllStates(allstates);
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
+        -- We only care about this one spellID
+        if (spellID ~= specialSpellID) then return end
         if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
@@ -551,7 +553,7 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
                 state.changed = true;
                 return true;
             end
-        elseif (spellID == specialSpellID) and checkSpellEnabled(spell, subEvent, sourceGUID) then
+        elseif checkSpellEnabled(spell, subEvent, sourceGUID) then
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration);
                 return true;
         end

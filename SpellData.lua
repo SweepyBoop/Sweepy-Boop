@@ -375,17 +375,23 @@ NS.spellData = {
         cooldown = 45,
     },
     -- Offensive
-    -- Deathborne (Necrolord)
-    [324220] = {
-        category = OFFENSIVE_AURA,
-        duration = 40,
-        index = 2,
-    },
-    -- Icy Veins
-    [12472] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
+    -- Icy Veins (Skipped, duration unstable)
+    -- Combustion
+    [190319] = {
+        category = OFFENSIVE_SPECIAL,
+        duration = 12,
+        cooldown = 120,
+        index = 1,
+        sound = true,
         dispellable = true,
+    
+        resets = {
+            [133] = 2, -- Pyrokinesis
+            [314791] = 12, -- Shifting Power
+        },
+    
+        -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
+        critResets = { 133, 11366, 108853, "Phoenix Flames" },
     },
     -- Ice Form
     [198144] = {
@@ -913,24 +919,6 @@ NS.spellData = {
         category = DEFENSIVE,
         cooldown = 80, -- Conduit
     },
-};
-
--- Combustion
-NS.spellData[190319] = {
-    category = OFFENSIVE_SPECIAL,
-    duration = 12,
-    cooldown = 120,
-    index = 1,
-    sound = true,
-    dispellable = true,
-
-    resets = {
-        [133] = 2, -- Pyrokinesis
-        [314791] = 12, -- Shifting Power
-    },
-
-    -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
-    critResets = { 133, 11366, 108853, "Phoenix Flames" },
 };
 
 NS.classWithFearSpell = function(class)
