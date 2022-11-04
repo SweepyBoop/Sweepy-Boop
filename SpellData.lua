@@ -141,7 +141,7 @@ NS.spellData = {
         opt_charges = true,
     },
     -- Abomination Limb
-    [315443] = {
+    [383269] = {
         category = OFFENSIVE,
         cooldown = 120,
         duration = 12,
@@ -208,7 +208,7 @@ NS.spellData = {
     },
     -- Offensive
     -- The Hunt
-    [323639] = {
+    [370965] = {
         category = OFFENSIVE_CD,
         cooldown = 90,
         index = 1,
@@ -272,12 +272,12 @@ NS.spellData = {
         duration = 20,
     },
     -- Incarnation: Chosen of Elune
-    [102560] = {
+    [394013] = {
         category = OFFENSIVE_AURA,
         duration = 30,
     },
     -- Convoke the Spirits
-    [323764] = {
+    [391528] = {
         category = OFFENSIVE_CD,
         cooldown = 60,
         spec = { specID.BALANCE, specID.FERAL },
@@ -328,7 +328,7 @@ NS.spellData = {
         duration = 15,
     },
     -- Coordinated Assult
-    [266779] = {
+    [360952] = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
@@ -500,7 +500,7 @@ NS.spellData = {
     };
     -- Offensive
     -- Avenging Wrath
-    [31884] = {
+    [384376] = {
         category = OFFENSIVE,
         duration = 20,
         cooldown = 120,
@@ -509,7 +509,7 @@ NS.spellData = {
         spec = { specID.RET },
     },
     -- Divine Toll
-    [304971] = {
+    [375576] = {
         category = OFFENSIVE_CD,
         spec = { specID.RET },
         cooldown = 50,
@@ -563,7 +563,7 @@ NS.spellData = {
     },
     -- Offensive
     -- Mindgames
-    [323673] = {
+    [375901] = {
         category = OFFENSIVE_CD,
         cooldown = 45,
     },
@@ -572,12 +572,6 @@ NS.spellData = {
         category = OFFENSIVE_PET,
         spellID = 211522,
         duration = 12,
-    },
-    -- Boon of the Ascended
-    [325013] = {
-        category = OFFENSIVE,
-        duration = 10,
-        cooldown = 180,
     },
     -- Dispel
     -- Mass Dispel
@@ -648,15 +642,8 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Flagellation
-    [323654] = {
-        category = OFFENSIVE,
-        duration = 12,
-        cooldown = 90,
-        index = 1,
-    },
     -- Sepsis
-    [328305] = {
+    [385408] = {
         category = OFFENSIVE,
         duration = 10,
         cooldown = 90,
@@ -698,15 +685,9 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 15,
     },
-    -- Chain Harvest
-    [320674] = {
-        category = OFFENSIVE_CD,
-        cooldown = 90,
-    },
     -- Doom Winds
-    [335903] = {
+    [384352] = {
         category = OFFENSIVE,
-        trackType = TRACK_AURA,
         duration = 12,
         cooldown = 60,
         index = 2,
@@ -716,13 +697,6 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 15,
         dispellable = true,
-    },
-    -- Vesper Totem
-    [166523] = {
-        category = OFFENSIVE_PET,
-        spellID = 324386,
-        duration = 30,
-        sound = true,
     },
     -- Defensive
     -- Astral Shift
@@ -849,13 +823,6 @@ NS.spellData = {
         cooldown = 50,
     },
     -- Offensive
-    -- Conqueror's Banner
-    [324143] = {
-        category = OFFENSIVE,
-        duration = 15,
-        cooldown = 120,
-        index = 1,
-    },
     -- Warbreaker
     [262161] = {
         category = OFFENSIVE_AURA,
