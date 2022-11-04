@@ -332,12 +332,6 @@ local function cooldownTrigger(category, allstates, event, ...)
         local unitTarget, _, spellID = ...;
         if (not unitTarget) then return end
 
-        -- Check if this is a reset spell
-        local reset = spellResets[spellID];
-        if reset and checkResetSpell(allstates, UnitGUID(unitTarget), reset) then
-            return true;
-        end
-
         -- Return if no valid spell
         local spell = spellData[spellID];
         if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
@@ -353,7 +347,7 @@ local function cooldownTrigger(category, allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
-        debugSpellID(sourceGUID, subEvent, spellID)
+        --debugSpellID(sourceGUID, subEvent, spellID)
 
         -- Check if this is a reset spell
         local reset = spellResets[spellID];
@@ -364,6 +358,7 @@ local function cooldownTrigger(category, allstates, event, ...)
         -- Return if no valid spell or spell does not track cooldown
         local spell = spellData[spellID];
         if (not spell) or (spell.category ~= category) or (not spell.cooldown) then return end
+        debugSpellID(sourceGUID, subEvent, spellID)
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = concatGUID(sourceGUID, spellID);
             local unit = NS.arenaUnitId(sourceGUID);
@@ -386,14 +381,6 @@ end
 
 BoopUtilsWA.Triggers.CooldownOffensiveCD = function (allstates, event, ...)
     return cooldownTrigger(OFFENSIVE_CD, allstates, event, ...)
-end
-
-BoopUtilsWA.Triggers.CooldownInterrupt = function (allstates, event, ...)
-    return cooldownTrigger(INTERRUPT, allstates, event, ...)
-end
-
-BoopUtilsWA.Triggers.CooldownDispel = function (allstates, event, ...)
-    return cooldownTrigger(DISPEL, allstates, event, ...)
 end
 
 -- Generic cooldown reduction, e.g., by spell power cost
