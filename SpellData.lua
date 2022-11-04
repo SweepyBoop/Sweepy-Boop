@@ -513,7 +513,6 @@ NS.spellData = {
         category = CC,
         cooldown = 90,
     };
-    -- HOJ has special calculation based on holy power spent and is made into a seperate table
     -- Offensive
     -- Avenging Wrath
     [31884] = {
@@ -949,6 +948,25 @@ NS.spellData = {
     },
 };
 
+-- Combustion
+NS.spellData[190319] = {
+    spellID = 190319,
+    category = OFFENSIVE_SPECIAL,
+    duration = 12,
+    cooldown = 120,
+    index = 1,
+    sound = true,
+    dispellable = true,
+
+    resets = {
+        [133] = 2, -- Pyrokinesis
+        [314791] = 12, -- Shifting Power
+    },
+
+    -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
+    critResets = { 133, 11366, 108853, "Phoenix Flames" },
+};
+
 NS.classWithFearSpell = function(class)
     return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock );
 end
@@ -991,34 +1009,6 @@ NS.spellResets = {
         [408] = 20, -- Kidney
         [212182] = 20, -- Smoke Bomb
     },
-};
-
--- Special abilities that need seperate triggers from the generic ones.
-NS.spellData_Combust = {
-    spellID = 190319,
-    duration = 12,
-    cooldown = 120,
-    index = 1,
-    sound = true,
-    dispellable = true,
-
-    resets = {
-        [133] = 2, -- Pyrokinesis
-        [314791] = 12, -- Shifting Power
-    },
-
-    -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
-    critResets = { 133, 11366, 108853, "Phoenix Flames" },
-};
-
-NS.spellData_HOJ = {
-    spellID = 853,
-    cooldown = 60,
-    powerType = Enum.PowerType.HolyPower,
-
-    -- Spells that disable the cooldown reduction
-    track_cast_start = 20066,
-    track_cast_success = 115750,
 };
 
 if NS.isTestMode then

@@ -10,6 +10,7 @@ local OFFENSIVE_PET = NS.OFFENSIVE_PET;
 local INTERRUPT = NS.spellCategory.INTERRUPT;
 local DISPEL = NS.spellCategory.DISPEL;
 local DEFENSIVE = NS.spellCategory.DEFENSIVE;
+local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
 
 local TRACK_UNIT = NS.trackType.TRACK_UNIT;
 
@@ -20,8 +21,6 @@ local spellResets = NS.spellResets;
 local baselineSpells = NS.baselineSpells;
 
 BoopUtilsWA = {};
--- Expose certain special constants, such as HOJ/Combustion spellData
-BoopUtilsWA.Constants = {};
 BoopUtilsWA.Triggers = {};
 
 -- With the following helper functions, we can use the same set of events for almost every single trigger:
@@ -485,49 +484,6 @@ BoopUtilsWA.Triggers.GlowOnActivationOffensiveCD = function (allstates, event, .
     return glowOnActivationTrigger(OFFENSIVE_CD, allstates, event, ...);
 end
 
-BoopUtilsWA.Constants.SpellData_HOJ = NS.spellData_HOJ;
-BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
-        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
-        -- Return if no valid target
-        if (not sourceGUID) then return end
-
-        local spell = NS.spellData_HOJ;
-
-        -- Check if we should disable the cooldown reduction
-        if (spellID == spell.track_cast_start) and (subEvent == NS.SPELL_CAST_START) then
-            NS.setArenaDefaultHoJCooldown(sourceGUID, true);
-            return;
-        elseif (spellID == spell.track_cast_success) and (subEvent == NS.SPELL_CAST_SUCCESS) then
-            NS.setArenaDefaultHoJCooldown(sourceGUID, true);
-            return;
-        end
-
-        -- start HOJ timer
-        if (spellID == spell.spellID) then
-            if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.cooldown);
-                return true;
-            end
-        elseif allstates[sourceGUID] and (subEvent == NS.SPELL_CAST_SUCCESS) then
-            -- Found a HOJ timer, check if we should reduce it based on holy power spent.
-            local state = allstates[sourceGUID];
-            if (not NS.arenaDefaultHoJCooldown(sourceGUID)) then
-                local cost = GetSpellPowerCost(spellID);
-                if (cost and cost[1] and cost[1].type == spell.powerType) then
-                    state.expirationTime = state.expirationTime - cost[1].cost * 2;
-                    state.changed = true;
-                    return true;
-                end
-            end
-        end
-    end
-end
-
-BoopUtilsWA.Constants.SpellData_Combust = NS.spellData_Combust;
 BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
@@ -537,7 +493,7 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
-        local spell = NS.spellData_Combust;
+        local spell = spellData[190319];
 
         if (spellID == spell.spellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, just use sourceGUID)
@@ -570,8 +526,8 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 end
 
 -- Glow for duration (or short glow on activation) for a specific spell
--- pass in the special spellData (glow duration = spell.duration or glowOnActivationDuration if that's missing)
-BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
+-- pass in the special special spellID (glow duration = spell.duration or glowOnActivationDuration if that's missing)
+BoopUtilsWA.Triggers.GlowForSpell = function(specialSpellID, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
@@ -579,6 +535,8 @@ BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
         if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
+
+        local spell = spellData[specialSpellID]
 
         -- Check if an aura ended early
         if spell.dispellable and (subEvent == NS.SPELL_AURA_APPLIED_FADE) then
@@ -596,6 +554,10 @@ BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
             end
         end
     end
+end
+
+BoopUtilsWA.Triggers.DurationCombust = function (allstates, event, ...)
+    return BoopUtilsWA.Triggers.GlowForSpell(190319, allstates, event, ...);
 end
 
 -- Track baseline defensives
@@ -671,13 +633,9 @@ BoopUtilsWA.Triggers.BaselineIcon = function(baselineSpellID, allstates, event, 
 end
 
 local function getOffensiveSpellDataById(spellID)
-    if (spellID == NS.spellData_Combust.spellID) then
-        return NS.spellData_Combust;
-    else
-        local spell = spellData[spellID];
-        if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_AURA)) then
-            return spell;
-        end
+    local spell = spellData[spellID];
+    if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_AURA) or (spell.category == OFFENSIVE_SPECIAL)) then
+        return spell;
     end
 end
 
