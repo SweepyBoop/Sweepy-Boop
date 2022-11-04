@@ -271,7 +271,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Incarnation: Chosen of Elune
+    -- Incarnation: Chosen of Elune (old CD, check in DF)
     [102560] = {
         category = OFFENSIVE,
         duration = 30,
