@@ -393,18 +393,7 @@ NS.spellData = {
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
     },
-    -- Ice Form
-    [198144] = {
-        category = OFFENSIVE_AURA,
-        duration = 12,
-        dispellable = true,
-    },
-    -- Arcane Power
-    [12042] = {
-        category = OFFENSIVE_AURA,
-        duration = 10,
-        dispellable = true,
-    },
+    -- Ice Form (Skipped, duration unstable)
     -- Interrupt
     -- Counterspell
     [2139] = {
