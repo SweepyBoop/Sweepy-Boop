@@ -919,6 +919,24 @@ NS.spellResets = {
         [408] = 20, -- Kidney
         [212182] = 20, -- Smoke Bomb
     },
+
+    -- Mindgames
+    -- Mind Blast
+    [8092] = {
+        [375901] = 0.5,
+    },
+    -- Mind Spike
+    [73510] = {
+        [375901] = 0.5,
+    },
+    -- Smite
+    [585] = {
+        [375901] = 0.5,
+    },
+    -- Holy Fire
+    [14914] = {
+        [375901] = 0.5,
+    },
 };
 
 if NS.isTestMode then
