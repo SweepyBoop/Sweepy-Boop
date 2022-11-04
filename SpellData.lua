@@ -13,7 +13,7 @@ NS.spellCategory = {
     INTERRUPT = 6,
     DISPEL = 7,
     DEFENSIVE = 8, -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
-    SPECIAL = 9,
+    OFFENSIVE_SPECIAL = 9,
 }
 local CC = NS.spellCategory.CC;
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
@@ -23,7 +23,7 @@ local OFFENSIVE_PET = NS.OFFENSIVE_PET;
 local INTERRUPT = NS.spellCategory.INTERRUPT;
 local DISPEL = NS.spellCategory.DISPEL;
 local DEFENSIVE = NS.spellCategory.DEFENSIVE;
-local SPECIAL = NS.spellCategory.SPECIAL;
+local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
@@ -443,7 +443,7 @@ NS.spellData = {
     -- Offensive
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
-        category = SPECIAL,
+        category = OFFENSIVE_SPECIAL,
         duration = 15,
         cooldown = 90,
         charges = true,
@@ -454,7 +454,7 @@ NS.spellData = {
     },
     -- Serenity
     [152173] = {
-        category = SPECIAL,
+        category = OFFENSIVE_SPECIAL,
         duration = 12,
         cooldown = 90,
         extend_power_type = Enum.PowerType.Chi,
