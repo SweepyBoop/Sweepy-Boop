@@ -25,7 +25,7 @@ BoopUtilsWA.Triggers = {};
 
 local function debugSpellID(sourceGUID, event, spellID)
     if NS.isTestMode and NS.isSourceArena(sourceGUID) and (event == NS.SPELL_CAST_SUCCESS or event == NS.UNIT_SPELLCAST_SUCCEEDED) then
-        print(spellID)
+        print(sourceGUID, event, spellID)
     end
 end
 

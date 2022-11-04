@@ -377,6 +377,7 @@ NS.spellData = {
     },
     -- Offensive
     -- Icy Veins (Skipped, duration unstable)
+    -- Ice Form (Skipped, duration unstable)
     -- Combustion
     [190319] = {
         category = OFFENSIVE_SPECIAL,
@@ -394,7 +395,6 @@ NS.spellData = {
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
     },
-    -- Ice Form (Skipped, duration unstable)
     -- Interrupt
     -- Counterspell
     [2139] = {
@@ -648,7 +648,14 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 10,
         cooldown = 90,
-        index = 1,
+        index = 2,
+    },
+    -- Death Mark
+    [360194] = {
+        category = OFFENSIVE,
+        duration = 16,
+        cooldown = 120,
+        index = 2,
     },
     -- Interrupt
     -- Kick
@@ -689,7 +696,7 @@ NS.spellData = {
     -- Doom Winds
     [384352] = {
         category = OFFENSIVE,
-        duration = 12,
+        duration = 8,
         cooldown = 60,
         index = 2,
     },
