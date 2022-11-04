@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = true;
+NS.isTestMode = false;
 
 NS.spellCategory = {
     CC = 1,
@@ -141,7 +141,7 @@ NS.spellData = {
         opt_charges = true,
     },
     -- Abomination Limb
-    [383269] = {
+    [315443] = {
         category = OFFENSIVE,
         cooldown = 120,
         duration = 12,
