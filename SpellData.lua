@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.spellCategory = {
     CC = 1,
@@ -450,7 +450,7 @@ NS.spellData = {
         extend_power_type = Enum.PowerType.Chi,
         extend_amount = 0.4,
         reduce_power_type = Enum.PowerType.Chi,
-        reduce_amount = 1,
+        reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
     },
     -- Serenity
     [152173] = {
@@ -461,7 +461,7 @@ NS.spellData = {
         extend_type = "fixed",
         extend_amount = 0.3,
         reduce_power_type = Enum.PowerType.Chi,
-        reduce_amount = 0.3,
+        reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
@@ -1010,14 +1010,7 @@ NS.spellData_Combust = {
     -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
     critResets = { 133, 11366, 108853, "Phoenix Flames" },
 };
-NS.spellData_Vendetta = {
-    spellID = 79140,
-    duration = 20,
-    cooldown = 120,
-    index = 1,
-    sound = true,
-    powerType = Enum.PowerType.Energy,
-};
+
 NS.spellData_HOJ = {
     spellID = 853,
     cooldown = 60,
