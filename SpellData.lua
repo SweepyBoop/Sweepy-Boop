@@ -272,9 +272,10 @@ NS.spellData = {
         duration = 20,
     },
     -- Incarnation: Chosen of Elune
-    [394013] = {
-        category = OFFENSIVE_AURA,
+    [102560] = {
+        category = OFFENSIVE,
         duration = 30,
+        cooldown = 180,
     },
     -- Convoke the Spirits
     [391528] = {

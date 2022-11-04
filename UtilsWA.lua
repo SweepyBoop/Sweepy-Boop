@@ -23,6 +23,12 @@ local baselineSpells = NS.baselineSpells;
 BoopUtilsWA = {};
 BoopUtilsWA.Triggers = {};
 
+local function debugSpellID(sourceGUID, event, spellID)
+    if NS.isTestMode and NS.isSourceArena(sourceGUID) and (event == NS.SPELL_CAST_SUCCESS or event == NS.UNIT_SPELLCAST_SUCCEEDED) then
+        print(spellID)
+    end
+end
+
 -- With the following helper functions, we can use the same set of events for almost every single trigger:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED
 
@@ -346,6 +352,8 @@ local function cooldownTrigger(category, allstates, event, ...)
         if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
+
+        debugSpellID(sourceGUID, subEvent, spellID)
 
         -- Check if this is a reset spell
         local reset = spellResets[spellID];
