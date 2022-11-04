@@ -1004,7 +1004,7 @@ NS.spellData_Combust = {
 
     resets = {
         [133] = 2, -- Pyrokinesis
-        [314791] = 18, -- Shifting Power
+        [314791] = 12, -- Shifting Power
     },
 
     -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
