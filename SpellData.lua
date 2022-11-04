@@ -7,7 +7,7 @@ NS.spellCategory = {
     -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
     -- Different from track_* which specifies events to track
     OFFENSIVE = 2,
-    OFFENSIVE_AURA = 3,
+    OFFENSIVE_AURA = 3, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
     OFFENSIVE_CD = 4,
     OFFENSIVE_PET = 5, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     INTERRUPT = 6,
@@ -219,11 +219,6 @@ NS.spellData = {
         trackType = TRACK_UNIT,
         duration = 30,
     },
-    -- Demon Soul
-    [347765] = {
-        category = OFFENSIVE_AURA,
-        duration = 31, -- 20 baseline, 11 from soulbind
-    },
     -- Interrupt
     -- Disrupt
     [183752] = {
@@ -266,7 +261,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Incarnation: King of the Jungle
+    -- Incarnation: Avatar of Ashamane
     [102543] = {
         category = OFFENSIVE_AURA,
         duration = 30,
@@ -274,17 +269,12 @@ NS.spellData = {
     -- Celestial Alignment
     [194223] = {
         category = OFFENSIVE_AURA,
-        duration = 30,
+        duration = 20,
     },
     -- Incarnation: Chosen of Elune
     [102560] = {
         category = OFFENSIVE_AURA,
-        duration = 40,
-    },
-    -- Kindred Spirits
-    [338142] = {
-        category = OFFENSIVE_AURA,
-        duration = 10,
+        duration = 30,
     },
     -- Convoke the Spirits
     [323764] = {
@@ -345,7 +335,7 @@ NS.spellData = {
     -- Trueshot
     [288613] = {
         category = OFFENSIVE_AURA,
-        duration = 15,
+        duration = 18,
     },
     -- Interrupt
     -- Feign Death
@@ -469,7 +459,7 @@ NS.spellData = {
         duration = 24,
     },
     -- Bonedust Brew
-    [325216] = {
+    [386276] = {
         category = OFFENSIVE_AURA,
         duration = 10,
         spec = { specID.WW },
@@ -658,11 +648,6 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Echoing Reprimand
-    [323547] = {
-        category = OFFENSIVE_AURA,
-        duration = 15,
-    },
     -- Adrenaline Rush
     [13750] = {
         category = OFFENSIVE_AURA,
@@ -737,11 +722,6 @@ NS.spellData = {
         duration = 15,
         dispellable = true,
     },
-    -- Echoing Shock
-    [320125] = {
-        category = OFFENSIVE_AURA,
-        duration = 5, -- Normally chained with another instant spell, give 5s reaction time for myself
-    },
     -- Vesper Totem
     [166523] = {
         category = OFFENSIVE_PET,
@@ -807,18 +787,8 @@ NS.spellData = {
         cooldown = 30,
     },
     -- Offensive
-    -- Dark Soul: Misery
-    [113860] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
-    },
     -- Summon Darkglare
     [205180] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
-    },
-    -- Dark Soul: Instability
-    [113858] = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
@@ -906,7 +876,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Recklessness
+    -- Recklessness (TODO: write special cooldown trigger)
     [1719] = {
         category = OFFENSIVE,
         cooldown = 90,
