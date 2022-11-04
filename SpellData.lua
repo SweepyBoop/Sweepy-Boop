@@ -876,16 +876,14 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Recklessness (TODO: write special cooldown trigger)
+    -- Recklessness
     [1719] = {
-        category = OFFENSIVE,
+        spellID = 1719,
+        category = OFFENSIVE_SPECIAL,
         cooldown = 90,
-        duration = 12,
-    },
-    -- Siege Breaker
-    [280772] = {
-        category = OFFENSIVE_AURA,
-        duration = 10,
+        duration = 16,
+        reduce_power_type = Enum.PowerType.Rage,
+        reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
     },
     -- Interrupt
     -- Pummel

@@ -428,6 +428,10 @@ BoopUtilsWA.Triggers.SerenityCD = function (allstates, event, ...)
     return cooldownWithReductionTrigger(152173, allstates, event, ...)
 end
 
+BoopUtilsWA.Triggers.RecklessnessCD = function (allstates, event, ...)
+    return cooldownWithReductionTrigger(1719, allstates, event, ...)
+end
+
 local glowOnActivationDuration = 0.75;
 -- Glow on activation (only for spells without duration to get a visual hint, especially when a player uses a 2nd charge)
 local function glowOnActivationTrigger(category, allstates, event, ...)
@@ -527,7 +531,7 @@ end
 
 -- Glow for duration (or short glow on activation) for a specific spell
 -- pass in the special special spellID (glow duration = spell.duration or glowOnActivationDuration if that's missing)
-BoopUtilsWA.Triggers.GlowForSpell = function(specialSpellID, allstates, event, ...)
+local function GlowForSpell (specialSpellID, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
@@ -547,7 +551,7 @@ BoopUtilsWA.Triggers.GlowForSpell = function(specialSpellID, allstates, event, .
                 return true;
             end
         else
-            local track = (spellID == spell.spellID) and checkSpellEnabled(spell, subEvent, sourceGUID);
+            local track = (spellID == specialSpellID) and checkSpellEnabled(spell, subEvent, sourceGUID);
             if track then
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration);
                 return true;
@@ -557,7 +561,11 @@ BoopUtilsWA.Triggers.GlowForSpell = function(specialSpellID, allstates, event, .
 end
 
 BoopUtilsWA.Triggers.DurationCombust = function (allstates, event, ...)
-    return BoopUtilsWA.Triggers.GlowForSpell(190319, allstates, event, ...);
+    return GlowForSpell(190319, allstates, event, ...);
+end
+
+BoopUtilsWA.Triggers.DurationRecklessness = function (allstates, event, ...)
+    return GlowForSpell(1719, allstates, event, ...)
 end
 
 -- Track baseline defensives
