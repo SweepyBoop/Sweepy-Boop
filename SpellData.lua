@@ -500,9 +500,9 @@ NS.spellData = {
     };
     -- Offensive
     -- Avenging Wrath
-    [384376] = {
+    [31884] = {
         category = OFFENSIVE,
-        duration = 20,
+        duration = 25,
         cooldown = 120,
         sound = true,
         index = 1,
@@ -512,7 +512,7 @@ NS.spellData = {
     [375576] = {
         category = OFFENSIVE_CD,
         spec = { specID.RET },
-        cooldown = 50,
+        cooldown = 60,
     },
     -- Interrupt
     -- Rebuke
