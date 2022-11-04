@@ -33,7 +33,7 @@ end
 local function shouldCheckCombatLog(subEvent)
     return (subEvent == NS.SPELL_CAST_SUCCESS)
         or (subEvent == NS.SPELL_AURA_APPLIED)
-        or (subEvent == NS.SPELL_AURA_APPLIED_FADE)
+        or (subEvent == NS.SPELL_AURA_REMOVED)
         or (subEvent == NS.SPELL_DAMAGE)
         or (subEvent == NS.SPELL_CAST_START);
 end
@@ -253,7 +253,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if (not spell) or (spell.category ~= category) or (not spell.duration) then return end
 
         -- Check if an aura ended early
-        if spell.dispellable and (subEvent == NS.SPELL_AURA_APPLIED_FADE) then
+        if spell.dispellable and (subEvent == NS.SPELL_AURA_REMOVED) then
             local guid = concatGUID(sourceGUID, spellID);
             if allstates[guid] then
                 local state = allstates[guid];
@@ -497,11 +497,12 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
-        local spell = spellData[190319];
+        local specialSpellID = 190319
+        local spell = spellData[specialSpellID];
 
-        if (spellID == spell.spellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
+        if (spellID == specialSpellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, just use sourceGUID)
-            allstates[sourceGUID] = makeTriggerState(spell, spell.spellID, spell.cooldown);
+            allstates[sourceGUID] = makeTriggerState(spell, specialSpellID, spell.cooldown);
             return true;
         elseif allstates[sourceGUID] then -- There is a combustion on cooldown, check if we want to reduce it
             local state = allstates[sourceGUID];
@@ -543,25 +544,22 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
         local spell = spellData[specialSpellID]
 
         -- Check if an aura ended early
-        if spell.dispellable and (subEvent == NS.SPELL_AURA_APPLIED_FADE) then
+        if spell.dispellable and (subEvent == NS.SPELL_AURA_REMOVED) then
             if allstates[sourceGUID] then
                 local state = allstates[sourceGUID];
                 state.show = false;
                 state.changed = true;
                 return true;
             end
-        else
-            local track = (spellID == specialSpellID) and checkSpellEnabled(spell, subEvent, sourceGUID);
-            if track then
+        elseif (spellID == specialSpellID) and checkSpellEnabled(spell, subEvent, sourceGUID) then
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration);
                 return true;
-            end
         end
     end
 end
 
 BoopUtilsWA.Triggers.DurationCombust = function (allstates, event, ...)
-    return GlowForSpell(190319, allstates, event, ...);
+    return GlowForSpell(190319, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.DurationRecklessness = function (allstates, event, ...)
@@ -738,7 +736,7 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
             local spell = spellData[npcId];
             if (spell.category ~= OFFENSIVE_PET) then return end
             -- Based on "nameplate" unitIds, which would trigger nameplate removed event later
-            allstates[unit] = makeTriggerState(spell, spell.spellID, spell.duration, nil, unit);
+            allstates[unit] = makeTriggerState(spell, npcId, spell.duration, nil, unit);
             return true;
         end
     elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then

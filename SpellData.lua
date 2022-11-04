@@ -878,7 +878,6 @@ NS.spellData = {
     },
     -- Recklessness
     [1719] = {
-        spellID = 1719,
         category = OFFENSIVE_SPECIAL,
         cooldown = 90,
         duration = 16,
@@ -918,7 +917,6 @@ NS.spellData = {
 
 -- Combustion
 NS.spellData[190319] = {
-    spellID = 190319,
     category = OFFENSIVE_SPECIAL,
     duration = 12,
     cooldown = 120,
