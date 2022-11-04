@@ -364,14 +364,6 @@ local function cooldownTrigger(category, allstates, event, ...)
     end
 end
 
-BoopUtilsWA.Triggers.CooldownCC = function(allstates, event, ...)
-    return cooldownTrigger(CC, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.CooldownDefensive = function(allstates, event, ...)
-    return cooldownTrigger(DEFENSIVE, allstates, event, ...);
-end
-
 BoopUtilsWA.Triggers.CooldownOffensive = function(allstates, event, ...)
     return cooldownTrigger(OFFENSIVE, allstates, event, ...);
 end
@@ -458,22 +450,6 @@ local function glowOnActivationTrigger(category, allstates, event, ...)
             return true;
         end
     end
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationCC = function(allstates, event, ...)
-    return glowOnActivationTrigger(CC, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationInterrupt = function (allstates, event, ...)
-    return glowOnActivationTrigger(INTERRUPT, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationDispel = function (allstates, event, ...)
-    return glowOnActivationTrigger(DISPEL, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationDefensive = function (allstates, event, ...)
-    return glowOnActivationTrigger(DEFENSIVE, allstates, event, ...);
 end
 
 BoopUtilsWA.Triggers.GlowOnActivationOffensiveCD = function (allstates, event, ...)
