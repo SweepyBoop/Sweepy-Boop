@@ -347,8 +347,6 @@ local function cooldownTrigger(category, allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
-        --debugSpellID(sourceGUID, subEvent, spellID)
-
         -- Check if this is a reset spell
         local reset = spellResets[spellID];
         if reset and (subEvent == NS.SPELL_CAST_SUCCESS) then
@@ -358,7 +356,6 @@ local function cooldownTrigger(category, allstates, event, ...)
         -- Return if no valid spell or spell does not track cooldown
         local spell = spellData[spellID];
         if (not spell) or (spell.category ~= category) or (not spell.cooldown) then return end
-        debugSpellID(sourceGUID, subEvent, spellID)
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = concatGUID(sourceGUID, spellID);
             local unit = NS.arenaUnitId(sourceGUID);
