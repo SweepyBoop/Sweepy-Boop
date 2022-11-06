@@ -655,7 +655,7 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 16,
         cooldown = 120,
-        index = 2,
+        index = 1,
     },
     -- Interrupt
     -- Kick
