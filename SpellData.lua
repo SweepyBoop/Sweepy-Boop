@@ -7,12 +7,13 @@ NS.spellCategory = {
     -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
     -- Different from track_* which specifies events to track
     OFFENSIVE = 2,
-    OFFENSIVE_AURA = 3,
+    OFFENSIVE_AURA = 3, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
     OFFENSIVE_CD = 4,
     OFFENSIVE_PET = 5, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     INTERRUPT = 6,
     DISPEL = 7,
     DEFENSIVE = 8, -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
+    OFFENSIVE_SPECIAL = 9,
 }
 local CC = NS.spellCategory.CC;
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
@@ -22,6 +23,7 @@ local OFFENSIVE_PET = NS.OFFENSIVE_PET;
 local INTERRUPT = NS.spellCategory.INTERRUPT;
 local DISPEL = NS.spellCategory.DISPEL;
 local DEFENSIVE = NS.spellCategory.DEFENSIVE;
+local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
@@ -139,7 +141,7 @@ NS.spellData = {
         opt_charges = true,
     },
     -- Abomination Limb
-    [315443] = {
+    [383269] = {
         category = OFFENSIVE,
         cooldown = 120,
         duration = 12,
@@ -206,7 +208,7 @@ NS.spellData = {
     },
     -- Offensive
     -- The Hunt
-    [323639] = {
+    [370965] = {
         category = OFFENSIVE_CD,
         cooldown = 90,
         index = 1,
@@ -216,11 +218,6 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         trackType = TRACK_UNIT,
         duration = 30,
-    },
-    -- Demon Soul
-    [347765] = {
-        category = OFFENSIVE_AURA,
-        duration = 31, -- 20 baseline, 11 from soulbind
     },
     -- Interrupt
     -- Disrupt
@@ -264,7 +261,7 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Incarnation: King of the Jungle
+    -- Incarnation: Avatar of Ashamane
     [102543] = {
         category = OFFENSIVE_AURA,
         duration = 30,
@@ -272,20 +269,16 @@ NS.spellData = {
     -- Celestial Alignment
     [194223] = {
         category = OFFENSIVE_AURA,
-        duration = 30,
+        duration = 20,
     },
-    -- Incarnation: Chosen of Elune
+    -- Incarnation: Chosen of Elune (old CD, check in DF)
     [102560] = {
-        category = OFFENSIVE_AURA,
-        duration = 40,
-    },
-    -- Kindred Spirits
-    [338142] = {
-        category = OFFENSIVE_AURA,
-        duration = 10,
+        category = OFFENSIVE,
+        duration = 30,
+        cooldown = 180,
     },
     -- Convoke the Spirits
-    [323764] = {
+    [391528] = {
         category = OFFENSIVE_CD,
         cooldown = 60,
         spec = { specID.BALANCE, specID.FERAL },
@@ -336,14 +329,14 @@ NS.spellData = {
         duration = 15,
     },
     -- Coordinated Assult
-    [266779] = {
+    [360952] = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
     -- Trueshot
     [288613] = {
         category = OFFENSIVE_AURA,
-        duration = 15,
+        duration = 18,
     },
     -- Interrupt
     -- Feign Death
@@ -383,29 +376,24 @@ NS.spellData = {
         cooldown = 45,
     },
     -- Offensive
-    -- Deathborne (Necrolord)
-    [324220] = {
-        category = OFFENSIVE_AURA,
-        duration = 40,
-        index = 2,
-    },
-    -- Icy Veins
-    [12472] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
-        dispellable = true,
-    },
-    -- Ice Form
-    [198144] = {
-        category = OFFENSIVE_AURA,
+    -- Icy Veins (Skipped, duration unstable)
+    -- Ice Form (Skipped, duration unstable)
+    -- Combustion
+    [190319] = {
+        category = OFFENSIVE_SPECIAL,
         duration = 12,
+        cooldown = 120,
+        index = 1,
+        sound = true,
         dispellable = true,
-    },
-    -- Arcane Power
-    [12042] = {
-        category = OFFENSIVE_AURA,
-        duration = 10,
-        dispellable = true,
+    
+        resets = {
+            [133] = 2, -- Pyrokinesis
+            [314791] = 12, -- Shifting Power
+        },
+    
+        -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
+        critResets = { 133, 11366, 108853, "Phoenix Flames" },
     },
     -- Interrupt
     -- Counterspell
@@ -441,16 +429,25 @@ NS.spellData = {
     -- Offensive
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
-        category = OFFENSIVE,
+        category = OFFENSIVE_SPECIAL,
         duration = 15,
         cooldown = 90,
         charges = true,
+        extend_power_type = Enum.PowerType.Chi,
+        extend_amount = 0.4,
+        reduce_power_type = Enum.PowerType.Chi,
+        reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
     },
     -- Serenity
     [152173] = {
-        category = OFFENSIVE,
+        category = OFFENSIVE_SPECIAL,
         duration = 12,
         cooldown = 90,
+        extend_power_type = Enum.PowerType.Chi,
+        extend_type = "fixed",
+        extend_amount = 0.3,
+        reduce_power_type = Enum.PowerType.Chi,
+        reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
@@ -458,7 +455,7 @@ NS.spellData = {
         duration = 24,
     },
     -- Bonedust Brew
-    [325216] = {
+    [386276] = {
         category = OFFENSIVE_AURA,
         duration = 10,
         spec = { specID.WW },
@@ -502,22 +499,21 @@ NS.spellData = {
         category = CC,
         cooldown = 90,
     };
-    -- HOJ has special calculation based on holy power spent and is made into a seperate table
     -- Offensive
     -- Avenging Wrath
     [31884] = {
         category = OFFENSIVE,
-        duration = 20,
+        duration = 25,
         cooldown = 120,
         sound = true,
         index = 1,
         spec = { specID.RET },
     },
     -- Divine Toll
-    [304971] = {
+    [375576] = {
         category = OFFENSIVE_CD,
         spec = { specID.RET },
-        cooldown = 50,
+        cooldown = 60,
     },
     -- Interrupt
     -- Rebuke
@@ -568,7 +564,7 @@ NS.spellData = {
     },
     -- Offensive
     -- Mindgames
-    [323673] = {
+    [375901] = {
         category = OFFENSIVE_CD,
         cooldown = 45,
     },
@@ -577,12 +573,6 @@ NS.spellData = {
         category = OFFENSIVE_PET,
         spellID = 211522,
         duration = 12,
-    },
-    -- Boon of the Ascended
-    [325013] = {
-        category = OFFENSIVE,
-        duration = 10,
-        cooldown = 180,
     },
     -- Dispel
     -- Mass Dispel
@@ -648,28 +638,23 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Echoing Reprimand
-    [323547] = {
-        category = OFFENSIVE_AURA,
-        duration = 15,
-    },
     -- Adrenaline Rush
     [13750] = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
-    -- Flagellation
-    [323654] = {
-        category = OFFENSIVE,
-        duration = 12,
-        cooldown = 90,
-        index = 1,
-    },
     -- Sepsis
-    [328305] = {
+    [385408] = {
         category = OFFENSIVE,
         duration = 10,
         cooldown = 90,
+        index = 2,
+    },
+    -- Death Mark
+    [360194] = {
+        category = OFFENSIVE,
+        duration = 16,
+        cooldown = 120,
         index = 1,
     },
     -- Interrupt
@@ -708,16 +693,10 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 15,
     },
-    -- Chain Harvest
-    [320674] = {
-        category = OFFENSIVE_CD,
-        cooldown = 90,
-    },
     -- Doom Winds
-    [335903] = {
+    [384352] = {
         category = OFFENSIVE,
-        trackType = TRACK_AURA,
-        duration = 12,
+        duration = 8,
         cooldown = 60,
         index = 2,
     },
@@ -726,18 +705,6 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 15,
         dispellable = true,
-    },
-    -- Echoing Shock
-    [320125] = {
-        category = OFFENSIVE_AURA,
-        duration = 5, -- Normally chained with another instant spell, give 5s reaction time for myself
-    },
-    -- Vesper Totem
-    [166523] = {
-        category = OFFENSIVE_PET,
-        spellID = 324386,
-        duration = 30,
-        sound = true,
     },
     -- Defensive
     -- Astral Shift
@@ -797,18 +764,8 @@ NS.spellData = {
         cooldown = 30,
     },
     -- Offensive
-    -- Dark Soul: Misery
-    [113860] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
-    },
     -- Summon Darkglare
     [205180] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
-    },
-    -- Dark Soul: Instability
-    [113858] = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
@@ -874,13 +831,6 @@ NS.spellData = {
         cooldown = 50,
     },
     -- Offensive
-    -- Conqueror's Banner
-    [324143] = {
-        category = OFFENSIVE,
-        duration = 15,
-        cooldown = 120,
-        index = 1,
-    },
     -- Warbreaker
     [262161] = {
         category = OFFENSIVE_AURA,
@@ -898,14 +848,11 @@ NS.spellData = {
     },
     -- Recklessness
     [1719] = {
-        category = OFFENSIVE,
+        category = OFFENSIVE_SPECIAL,
         cooldown = 90,
-        duration = 12,
-    },
-    -- Siege Breaker
-    [280772] = {
-        category = OFFENSIVE_AURA,
-        duration = 10,
+        duration = 16,
+        reduce_power_type = Enum.PowerType.Rage,
+        reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
     },
     -- Interrupt
     -- Pummel
@@ -980,41 +927,24 @@ NS.spellResets = {
         [408] = 20, -- Kidney
         [212182] = 20, -- Smoke Bomb
     },
-};
 
--- Special abilities that need seperate triggers from the generic ones.
-NS.spellData_Combust = {
-    spellID = 190319,
-    duration = 14,
-    cooldown = 120,
-    index = 1,
-    sound = true,
-    dispellable = true,
-
-    resets = {
-        [133] = 2, -- Pyrokinesis
-        [314791] = 18, -- Shifting Power
+    -- Mindgames
+    -- Mind Blast
+    [8092] = {
+        [375901] = 1,
     },
-
-    -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
-    critResets = { 133, 11366, 108853, "Phoenix Flames" },
-};
-NS.spellData_Vendetta = {
-    spellID = 79140,
-    duration = 20,
-    cooldown = 120,
-    index = 1,
-    sound = true,
-    powerType = Enum.PowerType.Energy,
-};
-NS.spellData_HOJ = {
-    spellID = 853,
-    cooldown = 60,
-    powerType = Enum.PowerType.HolyPower,
-
-    -- Spells that disable the cooldown reduction
-    track_cast_start = 20066,
-    track_cast_success = 115750,
+    -- Mind Spike
+    [73510] = {
+        [375901] = 1,
+    },
+    -- Smite
+    [585] = {
+        [375901] = 1,
+    },
+    -- Holy Fire
+    [14914] = {
+        [375901] = 1,
+    },
 };
 
 if NS.isTestMode then

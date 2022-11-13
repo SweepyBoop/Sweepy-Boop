@@ -10,6 +10,7 @@ local OFFENSIVE_PET = NS.OFFENSIVE_PET;
 local INTERRUPT = NS.spellCategory.INTERRUPT;
 local DISPEL = NS.spellCategory.DISPEL;
 local DEFENSIVE = NS.spellCategory.DEFENSIVE;
+local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
 
 local TRACK_UNIT = NS.trackType.TRACK_UNIT;
 
@@ -20,9 +21,13 @@ local spellResets = NS.spellResets;
 local baselineSpells = NS.baselineSpells;
 
 BoopUtilsWA = {};
--- Expose certain special constants, such as HOJ/Combustion spellData
-BoopUtilsWA.Constants = {};
 BoopUtilsWA.Triggers = {};
+
+local function debugSpellID(sourceGUID, event, spellID)
+    if NS.isTestMode and NS.isSourceArena(sourceGUID) and (event == NS.SPELL_CAST_SUCCESS or event == NS.UNIT_SPELLCAST_SUCCEEDED) then
+        print(sourceGUID, event, spellID)
+    end
+end
 
 -- With the following helper functions, we can use the same set of events for almost every single trigger:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED
@@ -34,7 +39,7 @@ end
 local function shouldCheckCombatLog(subEvent)
     return (subEvent == NS.SPELL_CAST_SUCCESS)
         or (subEvent == NS.SPELL_AURA_APPLIED)
-        or (subEvent == NS.SPELL_AURA_APPLIED_FADE)
+        or (subEvent == NS.SPELL_AURA_REMOVED)
         or (subEvent == NS.SPELL_DAMAGE)
         or (subEvent == NS.SPELL_CAST_START);
 end
@@ -228,7 +233,6 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     return true;
 end
 
--- Duration only trigger for a spell category, used for OFFENSIVE_AURA only for now
 local durationTrigger = function(category, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
@@ -255,7 +259,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if (not spell) or (spell.category ~= category) or (not spell.duration) then return end
 
         -- Check if an aura ended early
-        if spell.dispellable and (subEvent == NS.SPELL_AURA_APPLIED_FADE) then
+        if spell.dispellable and (subEvent == NS.SPELL_AURA_REMOVED) then
             local guid = concatGUID(sourceGUID, spellID);
             if allstates[guid] then
                 local state = allstates[guid];
@@ -282,6 +286,44 @@ BoopUtilsWA.Triggers.OffensiveDuration = function (allstates, event, ...)
     return durationTrigger(OFFENSIVE, allstates, event, ...);
 end
 
+local function durationWithExtensionTrigger(specialSpellID, allstates, event, ...)
+    if shouldClearAllStates(event) then
+        return clearAllStates(allstates);
+    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
+        if (not shouldCheckCombatLog(subEvent)) then return end
+        if (not sourceGUID) then return end
+        local spell = spellData[specialSpellID]
+
+        -- Check if there is a spell to extend
+        if (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == NS.SPELL_CAST_SUCCESS then
+            local cost = GetSpellPowerCost(spellID);
+            if (cost and cost[1] and cost[1].type == spell.extend_power_type) then
+                if spell.extend_type == "fixed" then
+                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + spell.extend_amount;
+                else
+                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + cost[1].cost * spell.extend_amount;
+                end
+
+                return true
+            end
+        elseif (spellID == specialSpellID) then
+            if checkSpellEnabled(spell, subEvent, sourceGUID) then
+                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration)
+                return true
+            end
+        end
+    end
+end
+
+BoopUtilsWA.Triggers.StormEarthAndFire = function (allstates, event, ...)
+    return durationWithExtensionTrigger(137639, allstates, event, ...)
+end
+
+BoopUtilsWA.Triggers.Serenity = function (allstates, event, ...)
+    return durationWithExtensionTrigger(152173, allstates, event, ...)
+end
+
 -- Cooldown trigger for a spell category, used for anything that needs cooldown tracking
 local function cooldownTrigger(category, allstates, event, ...)
     if shouldClearAllStates(event) then
@@ -289,12 +331,6 @@ local function cooldownTrigger(category, allstates, event, ...)
     elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
         local unitTarget, _, spellID = ...;
         if (not unitTarget) then return end
-
-        -- Check if this is a reset spell
-        local reset = spellResets[spellID];
-        if reset and checkResetSpell(allstates, UnitGUID(unitTarget), reset) then
-            return true;
-        end
 
         -- Return if no valid spell
         local spell = spellData[spellID];
@@ -328,14 +364,6 @@ local function cooldownTrigger(category, allstates, event, ...)
     end
 end
 
-BoopUtilsWA.Triggers.CooldownCC = function(allstates, event, ...)
-    return cooldownTrigger(CC, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.CooldownDefensive = function(allstates, event, ...)
-    return cooldownTrigger(DEFENSIVE, allstates, event, ...);
-end
-
 BoopUtilsWA.Triggers.CooldownOffensive = function(allstates, event, ...)
     return cooldownTrigger(OFFENSIVE, allstates, event, ...);
 end
@@ -344,12 +372,48 @@ BoopUtilsWA.Triggers.CooldownOffensiveCD = function (allstates, event, ...)
     return cooldownTrigger(OFFENSIVE_CD, allstates, event, ...)
 end
 
-BoopUtilsWA.Triggers.CooldownInterrupt = function (allstates, event, ...)
-    return cooldownTrigger(INTERRUPT, allstates, event, ...)
+-- Generic cooldown reduction, e.g., by spell power cost
+local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ...)
+    if shouldClearAllStates(event) then
+        return clearAllStates(allstates)
+    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
+        if (not shouldCheckCombatLog(subEvent)) then return end
+        if (not sourceGUID) then return end
+
+        local spell = spellData[specialSpellID]
+
+        -- Check if there is a current spell to reduce
+        if (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == NS.SPELL_CAST_SUCCESS then
+            local cost = GetSpellPowerCost(spellID)
+            if (cost and cost[1] and cost[1].type == spell.reduce_power_type) then
+                if spell.reduce_type == "fixed" then
+                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime - spell.reduce_amount
+                else
+                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime - cost[1].cost * spell.reduce_amount
+                end
+
+                return true
+            end
+        elseif (spellID == specialSpellID) then
+            if checkSpellEnabled(spell, subEvent, sourceGUID) then
+                local unit = NS.arenaUnitId(sourceGUID)
+                return checkCooldownOptions(allstates, sourceGUID, spell, spellID, unit)
+            end
+        end
+    end
 end
 
-BoopUtilsWA.Triggers.CooldownDispel = function (allstates, event, ...)
-    return cooldownTrigger(DISPEL, allstates, event, ...)
+BoopUtilsWA.Triggers.StormEarthAndFireCD = function (allstates, event, ...)
+    return cooldownWithReductionTrigger(137639, allstates, event, ...)
+end
+
+BoopUtilsWA.Triggers.SerenityCD = function (allstates, event, ...)
+    return cooldownWithReductionTrigger(152173, allstates, event, ...)
+end
+
+BoopUtilsWA.Triggers.RecklessnessCD = function (allstates, event, ...)
+    return cooldownWithReductionTrigger(1719, allstates, event, ...)
 end
 
 local glowOnActivationDuration = 0.75;
@@ -388,99 +452,10 @@ local function glowOnActivationTrigger(category, allstates, event, ...)
     end
 end
 
-BoopUtilsWA.Triggers.GlowOnActivationCC = function(allstates, event, ...)
-    return glowOnActivationTrigger(CC, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationInterrupt = function (allstates, event, ...)
-    return glowOnActivationTrigger(INTERRUPT, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationDispel = function (allstates, event, ...)
-    return glowOnActivationTrigger(DISPEL, allstates, event, ...);
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationDefensive = function (allstates, event, ...)
-    return glowOnActivationTrigger(DEFENSIVE, allstates, event, ...);
-end
-
 BoopUtilsWA.Triggers.GlowOnActivationOffensiveCD = function (allstates, event, ...)
     return glowOnActivationTrigger(OFFENSIVE_CD, allstates, event, ...);
 end
 
-BoopUtilsWA.Constants.SpellData_HOJ = NS.spellData_HOJ;
-BoopUtilsWA.Triggers.CooldownHOJ = function(allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
-        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
-        -- Return if no valid target
-        if (not sourceGUID) then return end
-
-        local spell = NS.spellData_HOJ;
-
-        -- Check if we should disable the cooldown reduction
-        if (spellID == spell.track_cast_start) and (subEvent == NS.SPELL_CAST_START) then
-            NS.setArenaDefaultHoJCooldown(sourceGUID, true);
-            return;
-        elseif (spellID == spell.track_cast_success) and (subEvent == NS.SPELL_CAST_SUCCESS) then
-            NS.setArenaDefaultHoJCooldown(sourceGUID, true);
-            return;
-        end
-
-        -- start HOJ timer
-        if (spellID == spell.spellID) then
-            if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.cooldown);
-                return true;
-            end
-        elseif allstates[sourceGUID] and (subEvent == NS.SPELL_CAST_SUCCESS) then
-            -- Found a HOJ timer, check if we should reduce it based on holy power spent.
-            local state = allstates[sourceGUID];
-            if (not NS.arenaDefaultHoJCooldown(sourceGUID)) then
-                local cost = GetSpellPowerCost(spellID);
-                if (cost and cost[1] and cost[1].type == spell.powerType) then
-                    state.expirationTime = state.expirationTime - cost[1].cost * 2;
-                    state.changed = true;
-                    return true;
-                end
-            end
-        end
-    end
-end
-
-BoopUtilsWA.Constants.SpellData_Vendetta = NS.spellData_Vendetta;
-BoopUtilsWA.Triggers.CooldownVendetta = function(allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
-        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
-        -- Return if no valid target
-        if (not sourceGUID) then return end
-
-        local spell = NS.spellData_Vendetta;
-
-        -- start HOJ timer (instant spells do not trigger cast start)
-        if (spellID == spell.spellID) then
-            if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeTriggerState(spell, spell.spellID, spell.cooldown);
-                return true;
-            end
-        elseif allstates[sourceGUID] and (subEvent == NS.SPELL_CAST_SUCCESS) then
-            local state = allstates[sourceGUID];
-            local cost = GetSpellPowerCost(spellID);
-            if (cost and cost[1] and cost[1].type == spell.powerType) then
-                state.expirationTime = state.expirationTime - cost[1].cost / 30;
-                state.changed = true;
-                return true;
-            end
-        end
-    end
-end
-
-BoopUtilsWA.Constants.SpellData_Combust = NS.spellData_Combust;
 BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
@@ -490,11 +465,12 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
-        local spell = NS.spellData_Combust;
+        local specialSpellID = 190319
+        local spell = spellData[specialSpellID];
 
-        if (spellID == spell.spellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
+        if (spellID == specialSpellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, just use sourceGUID)
-            allstates[sourceGUID] = makeTriggerState(spell, spell.spellID, spell.cooldown);
+            allstates[sourceGUID] = makeTriggerState(spell, specialSpellID, spell.cooldown);
             return true;
         elseif allstates[sourceGUID] then -- There is a combustion on cooldown, check if we want to reduce it
             local state = allstates[sourceGUID];
@@ -523,32 +499,41 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 end
 
 -- Glow for duration (or short glow on activation) for a specific spell
--- pass in the special spellData (glow duration = spell.duration or glowOnActivationDuration if that's missing)
-BoopUtilsWA.Triggers.GlowForSpell = function(spell, allstates, event, ...)
+-- pass in the special special spellID (glow duration = spell.duration or glowOnActivationDuration if that's missing)
+local function GlowForSpell (specialSpellID, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates);
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
+        -- We only care about this one spellID
+        if (spellID ~= specialSpellID) then return end
         if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
 
+        local spell = spellData[specialSpellID]
+
         -- Check if an aura ended early
-        if spell.dispellable and (subEvent == NS.SPELL_AURA_APPLIED_FADE) then
+        if spell.dispellable and (subEvent == NS.SPELL_AURA_REMOVED) then
             if allstates[sourceGUID] then
                 local state = allstates[sourceGUID];
                 state.show = false;
                 state.changed = true;
                 return true;
             end
-        else
-            local track = (spellID == spell.spellID) and checkSpellEnabled(spell, subEvent, sourceGUID);
-            if track then
+        elseif checkSpellEnabled(spell, subEvent, sourceGUID) then
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration);
                 return true;
-            end
         end
     end
+end
+
+BoopUtilsWA.Triggers.DurationCombust = function (allstates, event, ...)
+    return GlowForSpell(190319, allstates, event, ...)
+end
+
+BoopUtilsWA.Triggers.DurationRecklessness = function (allstates, event, ...)
+    return GlowForSpell(1719, allstates, event, ...)
 end
 
 -- Track baseline defensives
@@ -624,15 +609,9 @@ BoopUtilsWA.Triggers.BaselineIcon = function(baselineSpellID, allstates, event, 
 end
 
 local function getOffensiveSpellDataById(spellID)
-    if (spellID == NS.spellData_Combust.spellID) then
-        return NS.spellData_Combust;
-    elseif (spellID == NS.spellData_Vendetta.spellID) then
-        return NS.spellData_Vendetta;
-    else
-        local spell = spellData[spellID];
-        if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_AURA)) then
-            return spell;
-        end
+    local spell = spellData[spellID];
+    if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_AURA) or (spell.category == OFFENSIVE_SPECIAL)) then
+        return spell;
     end
 end
 
@@ -727,7 +706,7 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
             local spell = spellData[npcId];
             if (spell.category ~= OFFENSIVE_PET) then return end
             -- Based on "nameplate" unitIds, which would trigger nameplate removed event later
-            allstates[unit] = makeTriggerState(spell, spell.spellID, spell.duration, nil, unit);
+            allstates[unit] = makeTriggerState(spell, npcId, spell.duration, nil, unit);
             return true;
         end
     elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then
