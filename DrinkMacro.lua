@@ -1,3 +1,5 @@
+-- https://github.com/DavidPHH/Drink-Macro-Creator
+
 -- Create a macro for drinks
 local frameDrinkMacro = CreateFrame("Frame");
 local inWorld = false;
