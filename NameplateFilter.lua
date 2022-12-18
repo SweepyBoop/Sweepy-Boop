@@ -166,6 +166,17 @@ local function updateFrame(unitFrame, unitId)
     end
 end
 
+local function fixWidth(unitFrame, unitId)
+    local width = unitFrame:GetSize()
+    if ( width < 50 ) then
+        return
+    end
+
+    if UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
+        Plater.SetNameplateSize(unitFrame, 35, 13);
+    end
+end
+
 BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable, modTable)
     --insert code here
 
@@ -202,6 +213,7 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
         unitFrame.PlaterRaidTargetFrame:Hide();
     end
 
+    fixWidth(unitFrame, unitId)
     updateBuffFrame(unitFrame, unitId);
     updateCastBar(unitFrame, unitId);
     updateName(unitFrame, unitId);
