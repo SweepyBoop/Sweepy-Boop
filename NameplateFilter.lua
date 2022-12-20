@@ -65,15 +65,16 @@ local function isArenaPrimaryPet(unitId)
     end
 end
 
-local function isParty(unitId)
+local function isPartyOrPartyPet(unitId)
     if testMode then
         return UnitIsFriend(unitId, "player")
     end
 
-    return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
+    return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
+        or UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2")
 end
 
-local function isPartyPet(unitId)
+local function isPartyPrimaryPet(unitId)
     if UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
         -- Only warlock and hunter pets
         return UnitPowerMax(unitId, Enum.PowerType.Energy) == 200 or UnitPowerMax(unitId, Enum.PowerType.Focus) >= 100
@@ -94,7 +95,7 @@ local function shouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true;
     else
-        if isPartyPet(unitId) or isArenaPrimaryPet(unitId) or isInWhiteList(unitId, npcID) then
+        if isPartyPrimaryPet(unitId) or isArenaPrimaryPet(unitId) or isInWhiteList(unitId, npcID) then
             return true;
         end
     end
@@ -112,7 +113,7 @@ local function updateName(unitFrame, unitId)
 
     if arenaNumber(unitFrame, unitId) then
         return true
-    elseif isParty(unitId) or isPartyPet(unitId) then
+    elseif isPartyOrPartyPet(unitId) then
         unitFrame.unitName:Hide();
     elseif ( not UnitIsPlayer(unitId) ) and ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame.unitName:Hide();
@@ -121,7 +122,7 @@ end
 
 -- Hide buff frame for party members
 local function updateBuffFrame(unitFrame, unitId)
-    if unitFrame.BuffFrame:IsShown() and isParty(unitId) then
+    if unitFrame.BuffFrame:IsShown() and isPartyOrPartyPet(unitId) then
         unitFrame.BuffFrame:Hide();
     end
 end
@@ -135,7 +136,7 @@ local function updateCastBar(unitFrame, unitId)
     if ( not unitFrame.castBar:IsShown() ) then return end
 
     local hideCast = false;
-    if isParty(unitId) or isPartyPet(unitId) then
+    if isPartyOrPartyPet(unitId) then
         hideCast = true;
     elseif ( not UnitIsPlayer(unitId) ) then
         local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
@@ -151,7 +152,7 @@ local function updateCastBar(unitFrame, unitId)
 end
 
 local function updateFrame(unitFrame, unitId)
-    if isParty(unitId) or isPartyPet(unitId) then
+    if isPartyOrPartyPet(unitId) then
         -- Smaller party nameplates with no cast bar & buff frame
         Plater.SetNameplateSize(unitFrame, 35, 13);
         unitFrame.castBar:UnregisterAllEvents();
@@ -166,13 +167,13 @@ local function updateFrame(unitFrame, unitId)
     end
 end
 
-local function fixWidth(unitFrame, unitId)
+local function updateWidth(unitFrame, unitId)
     local width = unitFrame:GetSize()
     if ( width < 50 ) then
         return
     end
 
-    if UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
+    if isPartyOrPartyPet(unitId) then
         Plater.SetNameplateSize(unitFrame, 35, 13);
     end
 end
@@ -213,7 +214,7 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
         unitFrame.PlaterRaidTargetFrame:Hide();
     end
 
-    fixWidth(unitFrame, unitId)
+    updateWidth(unitFrame, unitId)
     updateBuffFrame(unitFrame, unitId);
     updateCastBar(unitFrame, unitId);
     updateName(unitFrame, unitId);
