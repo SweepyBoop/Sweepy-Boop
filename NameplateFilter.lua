@@ -51,7 +51,7 @@ local function isArenaPrimaryPet(unitId)
         return true;
     end
     -- Hunter pet (Kindred Spirit is a talent now to increase max focus to 120)
-    if ( UnitPowerMax(unitId, Enum.PowerType.Focus) >= 100 ) then -- If a pet has 120 max focus, it's always a primary pet
+    if ( UnitPowerMax(unitId, Enum.PowerType.Focus) >= 100 ) then
         return true;
     end
 end
