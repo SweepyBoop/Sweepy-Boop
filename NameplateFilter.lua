@@ -50,17 +50,8 @@ local function isArenaPrimaryPet(unitId)
     if UnitPowerMax(unitId, Enum.PowerType.Energy) == 200 then
         return true;
     end
-    -- Hunter pet
-    local maxFocus = UnitPowerMax(unitId, Enum.PowerType.Focus);
-    if ( maxFocus == 120 ) then -- If a pet has 120 max focus, it's always a primary pet
-        return true;
-    elseif maxFocus == 100 then -- If a pet has 100 max focus, check if it belongs to a BM hunter
-        for i = 1, NS.MAX_ARENA_SIZE do
-            if UnitIsUnit(unitId, "arenapet"..i) and ( GetArenaOpponentSpec(i) == NS.specID.BM ) then
-                return false;
-            end
-        end
-        
+    -- Hunter pet (Kindred Spirit is a talent now to increase max focus to 120)
+    if ( UnitPowerMax(unitId, Enum.PowerType.Focus) >= 100 ) then
         return true;
     end
 end
