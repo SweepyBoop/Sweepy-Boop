@@ -149,18 +149,23 @@ local function updateFrame(unitFrame, unitId)
         unitFrame.castBar:UnregisterAllEvents();
         unitFrame.castBar:Hide();
         unitFrame.BuffFrame:Hide();
-    elseif ( not UnitIsPlayer(unitId) ) then
-        local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
-        if ( not npcID ) or ( not showCastNpc[npcID] ) then
-            unitFrame.castBar:UnregisterAllEvents();
-            unitFrame.castBar:Hide();
+    else
+        -- Set width different from default 130, so we don't set it again
+        Plater.SetNameplateSize(unitFrame, 132, 13);
+        if ( not UnitIsPlayer(unitId) ) then
+            local npcID = unitFrame.namePlateNpcId; -- select(6, strsplit("-", UnitGUID(unitId)));
+            if ( not npcID ) or ( not showCastNpc[npcID] ) then
+                unitFrame.castBar:UnregisterAllEvents();
+                unitFrame.castBar:Hide();
+            end
         end
     end
 end
 
 local function updateWidth(unitFrame, unitId)
     local width = unitFrame:GetSize()
-    if ( width < 50 ) then
+    -- Already set
+    if ( width ~= 130 ) then
         return
     end
 
