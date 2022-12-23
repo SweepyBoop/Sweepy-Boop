@@ -3,26 +3,17 @@ local _, NS = ...
 NS.isTestMode = true;
 
 NS.spellCategory = {
-    CC = 1,
-    -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
-    -- Different from track_* which specifies events to track
-    OFFENSIVE = 2,
-    OFFENSIVE_AURA = 3, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
-    OFFENSIVE_CD = 4,
-    OFFENSIVE_PET = 5, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
-    INTERRUPT = 6,
-    DISPEL = 7,
-    DEFENSIVE = 8, -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
-    OFFENSIVE_SPECIAL = 9,
+    OFFENSIVE = 1,
+    OFFENSIVE_AURA = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
+    OFFENSIVE_CD = 3,
+    OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
+    OFFENSIVE_SPECIAL = 5,
 }
-local CC = NS.spellCategory.CC;
+
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
 local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
 local OFFENSIVE_PET = NS.OFFENSIVE_PET;
-local INTERRUPT = NS.spellCategory.INTERRUPT;
-local DISPEL = NS.spellCategory.DISPEL;
-local DEFENSIVE = NS.spellCategory.DEFENSIVE;
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
 
 -- Event name constants
