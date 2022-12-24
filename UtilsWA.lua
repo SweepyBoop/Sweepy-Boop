@@ -2,14 +2,10 @@ local _, NS = ...
 local isTestMode = NS.isTestMode;
 
 -- Import spell data
-local CC = NS.spellCategory.CC;
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
 local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
 local OFFENSIVE_PET = NS.OFFENSIVE_PET;
-local INTERRUPT = NS.spellCategory.INTERRUPT;
-local DISPEL = NS.spellCategory.DISPEL;
-local DEFENSIVE = NS.spellCategory.DEFENSIVE;
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
 
 local TRACK_UNIT = NS.trackType.TRACK_UNIT;

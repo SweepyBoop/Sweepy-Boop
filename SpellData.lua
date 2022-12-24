@@ -3,26 +3,17 @@ local _, NS = ...
 NS.isTestMode = false;
 
 NS.spellCategory = {
-    CC = 1,
-    -- OFFENSIVE spells have 3 different motion types (glow then cooldown, glow only, cooldown only)
-    -- Different from track_* which specifies events to track
-    OFFENSIVE = 2,
-    OFFENSIVE_AURA = 3, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
-    OFFENSIVE_CD = 4,
-    OFFENSIVE_PET = 5, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
-    INTERRUPT = 6,
-    DISPEL = 7,
-    DEFENSIVE = 8, -- If trackType ~= TRACK_UNIT, we need to find its unitId to put in allstates, so that it can be attached to the correct arena frame.
-    OFFENSIVE_SPECIAL = 9,
+    OFFENSIVE = 1,
+    OFFENSIVE_AURA = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
+    OFFENSIVE_CD = 3,
+    OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
+    OFFENSIVE_SPECIAL = 5,
 }
-local CC = NS.spellCategory.CC;
+
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
 local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
 local OFFENSIVE_PET = NS.OFFENSIVE_PET;
-local INTERRUPT = NS.spellCategory.INTERRUPT;
-local DISPEL = NS.spellCategory.DISPEL;
-local DEFENSIVE = NS.spellCategory.DEFENSIVE;
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
 
 -- Event name constants
@@ -128,18 +119,6 @@ NS.spellData = {
     },
 
     -- DK
-    -- Crowd Control
-    -- Strangulate
-    [47476] = {
-        category = CC,
-        cooldown = 60,
-    },
-    -- Death Grip (icon is very close to Asphyxiate, so do not track that one...)
-    [49576] = {
-        category = CC,
-        cooldown = 25,
-        opt_charges = true,
-    },
     -- Abomination Limb
     [383269] = {
         category = OFFENSIVE,
@@ -181,31 +160,8 @@ NS.spellData = {
         index = 2,
         sound = true,
     },
-    -- Interrupt
-    -- Mind Freeze
-    [47528] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Shambling Rush
-    [91807] = {
-        category = INTERRUPT,
-        cooldown = 30,
-        trackType = TRACK_PET_AURA,
-    },
 
     -- DH
-    -- CC
-    -- Fel Eruption
-    [211881] = {
-        category = CC,
-        cooldown = 30,
-    },
-    -- Imprison
-    [221527] = {
-        category = CC,
-        cooldown = 45,
-    },
     -- Offensive
     -- The Hunt
     [370965] = {
@@ -219,42 +175,8 @@ NS.spellData = {
         trackType = TRACK_UNIT,
         duration = 30,
     },
-    -- Interrupt
-    -- Disrupt
-    [183752] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Defensive
-    -- Netherwalk
-    [196555] = {
-        category = DEFENSIVE,
-        trackType = TRACK_UNIT,
-        cooldown = 180,
-    },
 
     -- Druid
-    -- CC
-    -- Mighty Bash
-    [5211] = {
-        category = CC,
-        cooldown = 48,
-    },
-    -- Solar Beam
-    [78675] = {
-        category = CC,
-        cooldown = 60,
-    },
-    -- Maim
-    [22570] = {
-        category = CC,
-        cooldown = 20,
-    },
-    -- Incapacitating Roar
-    [99] = {
-        category = CC,
-        cooldown = 30,
-    },
     -- Offensive
     -- Berserk
     [106951] = {
@@ -284,44 +206,8 @@ NS.spellData = {
         spec = { specID.BALANCE, specID.FERAL },
         index = 1,
     },
-    -- Interrupt
-    -- Skull Bash
-    [106839] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Dispel
-    -- Nature's Cure
-    [88423] = {
-        category = DISPEL,
-        cooldown = 8,
-    },
-    -- Defensive
-    -- Ironbark
-    [102342] = {
-        category = DEFENSIVE,
-        trackType = TRACK_UNIT,
-        cooldown = 90,
-    },
-    -- Survival Instincts
-    [61336] = {
-        category = DEFENSIVE,
-        trackType = TRACK_UNIT,
-        cooldown = 180,
-    },
 
     -- Hunter
-    -- CC
-    -- Intimidation
-    [19577] = {
-        category = CC,
-        cooldown = 60,
-    },
-    -- Freezing Trap
-    [187650] = {
-        category = CC,
-        cooldown = 25,
-    },
     -- Offensive
     -- Bestial Wrath
     [19574] = {
@@ -338,43 +224,8 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 18,
     },
-    -- Interrupt
-    -- Feign Death
-    [5384] = {
-        category = INTERRUPT,
-        cooldown = 25,
-        trackType = TRACK_UNIT, -- Not triggered by combat log event
-    },
-    -- Muzzle
-    [187707] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Counter Shot
-    [147362] = {
-        category = INTERRUPT,
-        cooldown = 24,
-    },
-    -- Defensive
-    -- Aspect of the Turtle
-    [186265] = {
-        category = DEFENSIVE,
-        trackType = TRACK_UNIT,
-        cooldown = 180,
-    },
 
     -- Mage
-    -- CC
-    -- Dragon's Breath
-    [31661] = {
-        category = CC,
-        cooldown = 20,
-    },
-    -- Ring of Frost
-    [113724] = {
-        category = CC,
-        cooldown = 45,
-    },
     -- Offensive
     -- Icy Veins (Skipped, duration unstable)
     -- Ice Form (Skipped, duration unstable)
@@ -395,37 +246,8 @@ NS.spellData = {
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
     },
-    -- Interrupt
-    -- Counterspell
-    [2139] = {
-        category = INTERRUPT,
-        cooldown = 24,
-    },
-    -- Defensive
-    -- Cauterize
-    [87024] = {
-        category = DEFENSIVE,
-        cooldown = 300,
-        trackType = TRACK_AURA,
-    },
 
     -- Monk
-    -- CC
-    -- Paralysis
-    [115078] = {
-        category = CC,
-        cooldown = 30,
-    },
-    -- Leg Sweep
-    [119381] = {
-        category = CC,
-        cooldown = 60,
-    },
-    -- Ring of Peace
-    [116844] = {
-        category = CC,
-        cooldown = 45,
-    },
     -- Offensive
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
@@ -460,45 +282,8 @@ NS.spellData = {
         duration = 10,
         spec = { specID.WW },
     },
-    -- Interrupt
-    -- Spear Hand Strike
-    [116705] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Defensive
-    -- Touch of Karma
-    [122470] = {
-        category = DEFENSIVE,
-        trackType = TRACK_UNIT,
-        cooldown = 90,
-    },
-    -- Life Cocoon
-    [116849] = {
-        category = DEFENSIVE,
-        trackType = TRACK_UNIT,
-        cooldown = 75, -- PVP talent Chrysalis
-    },
-    -- Dispel
-    -- Detox
-    [115450] = {
-        category = DISPEL,
-        cooldown = 8,
-    },
 
     -- Paladin
-    -- CC
-    -- Shield of Virtue
-    [215652] = {
-        category = CC,
-        cooldown = 45,
-        trackType = TRACK_AURA_FADE,
-    },
-    -- Blinding Light
-    [115750] = {
-        category = CC,
-        cooldown = 90,
-    };
     -- Offensive
     -- Avenging Wrath
     [31884] = {
@@ -515,53 +300,8 @@ NS.spellData = {
         spec = { specID.RET },
         cooldown = 60,
     },
-    -- Interrupt
-    -- Rebuke
-    [96231] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Dispel
-    -- Cleanse
-    [4987] = {
-        category = DISPEL,
-        cooldown = 8,
-    },
-    -- Blessing of Sanctuary
-    [210256] = {
-        category = DISPEL,
-        cooldown = 45,
-    },
 
     -- Priest
-    -- CC
-    -- Holy Word: Chastise
-    [88625] = {
-        category = CC,
-        cooldown = 30,
-    },
-    -- Psychic Scream
-    [8122] = {
-        category = CC,
-        cooldown = 60,
-        opt_lower_cooldown = 30,
-    },
-    -- Psychic Horror
-    [64044] = {
-        category = CC,
-        cooldown = 45,
-    },
-    -- Silence
-    [15487] = {
-        category = CC,
-        cooldown = 45,
-        opt_lower_cooldown = 30,
-    },
-    -- Mind Bomb
-    [205369] = {
-        category = CC,
-        cooldown = 30,
-    },
     -- Offensive
     -- Mindgames
     [375901] = {
@@ -574,64 +314,8 @@ NS.spellData = {
         spellID = 211522,
         duration = 12,
     },
-    -- Dispel
-    -- Mass Dispel
-    [32375] = {
-        category = DISPEL,
-        cooldown = 45,
-    },
-    -- Purify
-    [527] = {
-        category = DISPEL,
-        cooldown = 8,
-        opt_charges = true,
-    },
-    -- Defensive
-    -- Pain Suppression
-    [33206] = {
-        category = DEFENSIVE,
-        cooldown = 180,
-    },
-    -- Guardian Spirit
-    [47788] = {
-        category = DEFENSIVE,
-        cooldown = 60, -- Assume it didn't proc
-    },
-    -- Dispersion
-    [47585] = {
-        category = DEFENSIVE,
-        cooldown = 90, -- Assume playing short dispersion
-    },
-    -- Interrupt
-    -- Holy Ward
-    [213610] = {
-        category = INTERRUPT,
-        cooldown = 45,
-    },
-    -- Greater Fade
-    [213602] = {
-        category = INTERRUPT,
-        cooldown = 45,
-    },
 
     -- Rogue
-    -- CC
-    -- Blind
-    [2094] = {
-        category = CC,
-        cooldown = 120,
-        opt_lower_cooldown = 90,
-    },
-    -- Kidney Shot
-    [408] = {
-        category = CC,
-        cooldown = 20,
-    },
-    -- Smoke Bomb
-    [212182] = {
-        category = CC,
-        cooldown = 180,
-    },
     -- Offensive
     -- Shadow Blades
     [121471] = {
@@ -657,34 +341,6 @@ NS.spellData = {
         cooldown = 120,
         index = 1,
     },
-    -- Interrupt
-    -- Kick
-    [1766] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Shadowstep
-    [36554] = {
-        category = INTERRUPT,
-        cooldown = 30,
-        opt_charges = true,
-    },
-    -- Defensive
-    -- Evasion
-    [5277] = {
-        category = DEFENSIVE,
-        cooldown = 120,
-    },
-    -- Cloak of Shadows
-    [31224] = {
-        category = DEFENSIVE,
-        cooldown = 120,
-    },
-    -- Vanish
-    [1856] = {
-        category = DEFENSIVE,
-        cooldown = 120,
-    },
 
     -- Shaman
     -- Offensive
@@ -706,63 +362,8 @@ NS.spellData = {
         duration = 15,
         dispellable = true,
     },
-    -- Defensive
-    -- Astral Shift
-    [108271] = {
-        category = DEFENSIVE,
-        cooldown = 90,
-    },
-    -- Spirit Link Totem
-    [98008] = {
-        category = DEFENSIVE,
-        cooldown = 180,
-    },
-    -- Ethereal Form
-    [210918] = {
-        category = DEFENSIVE,
-        cooldown = 45,
-    },
-    -- Interrupt
-    -- Grounding Totem
-    [204336] = {
-        category = INTERRUPT,
-        cooldown = 30,
-    },
-    -- Wind Shear
-    [57994] = {
-        category = INTERRUPT,
-        cooldown = 12,
-    },
-    -- Dispel
-    -- Purify Spirit
-    [77130] = {
-        category = DISPEL,
-        cooldown = 8,
-    },
 
     -- Warlock
-    -- CC
-    -- Mortal Coil
-    [6789] = {
-        category = CC,
-        cooldown = 45,
-    },
-    -- Howl of Terror
-    [5484] = {
-        category = CC,
-        cooldown = 40,
-    },
-    -- Axe Toss
-    [89766] = { -- Find spellID by "if (unitTarget == "player") or (unitTarget == "pet") then print(spellID) end"
-        category = CC,
-        cooldown = 30,
-        trackType = TRACK_PET,
-    },
-    -- Axe Toss (by player)
-    [119914] = {
-        category = CC,
-        cooldown = 30,
-    },
     -- Offensive
     -- Summon Darkglare
     [205180] = {
@@ -779,57 +380,8 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 15,
     },
-    -- Interrupt
-    -- Call Felhunter
-    [212619] = {
-        category = INTERRUPT,
-        cooldown = 24,
-    },
-    -- Spell Lock (cast by pet)
-    [19647] = { -- Found by "if sourceGUID == UnitGUID("pet") or sourceGUID == UnitGUID("player") then print(subEvent, sourceGUID, spellID) end"
-        category = INTERRUPT,
-        cooldown = 24,
-        trackType = TRACK_PET,
-    },
-    -- Spell Lock (Grimoire of Sacrifice)
-    [132409] = {
-        category = INTERRUPT,
-        cooldown = 24,
-    },
-    -- Spell Lock (Command Demon) - cast by player
-    [119910] = {
-        category = INTERRUPT,
-        cooldown = 24,
-    },
-    -- Nether Ward
-    [212295] = {
-        category = INTERRUPT,
-        cooldown = 24,
-    },
-    -- Defensive
-    -- Unending Resolve
-    [104773] = {
-        category = DEFENSIVE,
-        cooldown = 180,
-    },
 
     -- Warrior
-    -- CC
-    -- Storm Bolt
-    [107570] = {
-        category = CC,
-        cooldown = 30,
-    },
-    -- Intimidating Shout
-    [5246] = {
-        category = CC,
-        cooldown = 90,
-    },
-    -- Spear of Bastion
-    [307865] = {
-        category = CC,
-        cooldown = 50,
-    },
     -- Offensive
     -- Warbreaker
     [262161] = {
@@ -854,80 +406,16 @@ NS.spellData = {
         reduce_power_type = Enum.PowerType.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
     },
-    -- Interrupt
-    -- Pummel
-    [6552] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    },
-    -- Spell Reflect
-    [23920] = {
-        category = INTERRUPT,
-        cooldown = 25,
-    },
-    -- Charge
-    [100] = {
-        category = INTERRUPT,
-        cooldown = 20,
-        opt_charges = true,
-        opt_lower_cooldown = 17,
-    },
-    -- Defensive
-    -- Die by the Sword
-    [118038] = {
-        category = DEFENSIVE,
-        cooldown = 80, -- Conduit
-    },
-    -- Enraged Regeneration
-    [184364] = {
-        category = DEFENSIVE,
-        cooldown = 80, -- Conduit
-    },
 };
 
 NS.classWithFearSpell = function(class)
     return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock );
 end
 
-local playerClass = select(3, UnitClass("player"));
-if NS.classWithFearSpell(playerClass) then
-    -- Tremor Totem
-    NS.spellData[8143] = {
-        category = INTERRUPT,
-        cooldown = 60,
-    };
-end
-
 NS.RESET_FULL = 0;
 local RESET_FULL = NS.RESET_FULL;
 
 NS.spellResets = {
-    -- Shifting Power
-    [314791] = {
-        [31661] = 10, -- Dragon's Breath
-        [113724] = 10, -- Ring of Frost
-        [2139] = 10, -- Counterspell
-        [45438] = 10, -- Ice Block
-    },
-    -- Cold Snap
-    [235219] = {
-        [45438] = RESET_FULL,
-    },
-
-    -- Apotheosis
-    [200183] = {
-        [200196] = RESET_FULL,
-        [200200] = RESET_FULL,
-        [88625] = RESET_FULL,
-    },
-
-    -- Vanish (Memory of Invigorating Shadowdust)
-    [1856] = {
-        [2094] = 20, -- Blind
-        [408] = 20, -- Kidney
-        [212182] = 20, -- Smoke Bomb
-    },
-
     -- Mindgames
     -- Mind Blast
     [8092] = {
@@ -949,124 +437,31 @@ NS.spellResets = {
 
 if NS.isTestMode then
     -- Test
-    -- Regrowth
-    NS.spellData[8936] = {
-        category = DEFENSIVE,
-        duration = 8,
-        cooldown = 120,
-        sound = true,
-        opt_charges = true,
-    };
-    -- Rejuv
-    NS.spellData[774] = {
-        category = CC,
-        duration = 8,
-        cooldown = 30,
-        sound = true;
-        charges = true,
-    };
-    -- Efflorescence
-    NS.spellData[145205] = {
-        category = INTERRUPT,
-        cooldown = 15,
-    };
-    -- Lifebloom
-    NS.spellData[33763] = {
+    -- Mark of the Wild
+    NS.spellData[1126] = {
         category = OFFENSIVE,
         duration = 8,
         cooldown = 30,
         sound = true,
     };
-    -- Wild Growth
-    NS.spellData[48438] = {
+    -- Regrowth
+    NS.spellData[8936] = {
         category = OFFENSIVE_AURA,
         duration = 20,
     };
-    -- Swiftmend
-    NS.spellData[18562] = {
+    -- Rejuv
+    NS.spellData[774] = {
         category = OFFENSIVE_CD,
         cooldown = 45,
     };
 
-    -- Test totem with a mob "Grasslands Vombata" outside of Haven in Zereth Mortis
-    NS.spellData[178913] = {
+    -- Test totem with "PvP Training Dummy"
+    NS.spellData[197833] = {
         category = OFFENSIVE_PET,
         spellID = 324386,
         duration = 60,
         sound = true,
     };
-end
-
-NS.baselineSpells = {
-    -- Stun breakers
-    -- Human racial
-    [59752] = {
-        race = raceID.Human,
-        cooldown = 180,
-        index = 1,
-    },
-    -- IBF
-    [48792] = {
-        class = classId.DK,
-        cooldown = 140,
-        index = 2,
-    },
-    -- Bubble
-    [642] = {
-        class = classId.Paladin,
-        cooldown = 210,
-        index = 2,
-    },
-    -- BOP
-    [1022] = {
-        class = classId.Paladin,
-        cooldown = 300,
-        opt_charges = true,
-        index = 2,
-    },
-    -- Block
-    [45438] = {
-        class = classId.Mage,
-        cooldown = 240,
-        index = 2,
-    },
-
-    -- Fear breakers
-    -- Undead
-    [7744] = {
-        race = raceID.Undead,
-        cooldown = 120,
-        index = 3,
-    },
-    -- Lich
-    [49039] = {
-        class = classId.DK,
-        cooldown = 120,
-        index = 4,
-    },
-    -- Berserker
-    [18499] = {
-        class = classId.Warrior,
-        cooldown = 60,
-        index = 4,
-    },
-};
-
-if NS.isTestMode then
-    -- Rejuvenation
-    NS.baselineSpells[774] = {
-        class = classId.Druid,
-        cooldown = 60,
-        opt_charges = true,
-        index = 2,
-    };
-    -- Regrowth
-    NS.baselineSpells[8936] = {
-        class = classId.Druid,
-        cooldown = 60,
-        charges = true,
-        index = 1,
-    }
 end
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
@@ -1248,7 +643,7 @@ NS.diminishingReturnSpells = {
 };
 
 if NS.isTestMode then
-    NS.diminishingReturnSpells[33763] = NS.diminishingReturnCategory.DR_DISORIENT; -- Lifebloom
+    NS.diminishingReturnSpells[1126] = NS.diminishingReturnCategory.DR_DISORIENT; -- Mark of the Wild
     NS.diminishingReturnSpells[8936] = NS.diminishingReturnCategory.DR_STUN; -- Regrowth
     NS.diminishingReturnSpells[774] = NS.diminishingReturnCategory.DR_INCAPACITATE; -- Rejuvenation
 end
