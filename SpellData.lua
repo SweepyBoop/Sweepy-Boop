@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = true;
+NS.isTestMode = false;
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -340,6 +340,17 @@ NS.spellData = {
         duration = 16,
         cooldown = 120,
         index = 1,
+    },
+    -- Exsanguinate
+    [200806] = {
+        category = OFFENSIVE_CD,
+        cooldown = 180,
+        index = 1,
+    },
+    -- Kingsbane
+    [385627] = {
+        category = OFFENSIVE_AURA,
+        duration = 14,
     },
 
     -- Shaman
