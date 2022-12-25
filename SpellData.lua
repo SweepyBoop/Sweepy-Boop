@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -377,6 +377,11 @@ NS.spellData = {
     },
     -- Summon Demonic Tyrant
     [265187] = {
+        category = OFFENSIVE_AURA,
+        duration = 15,
+    },
+    -- Fel Obelisk
+    [353601] = {
         category = OFFENSIVE_AURA,
         duration = 15,
     },
