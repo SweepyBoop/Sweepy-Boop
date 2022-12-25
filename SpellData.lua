@@ -385,6 +385,11 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 15,
     },
+    -- Grimoire: Felguard
+    [111898] = {
+        category = OFFENSIVE_AURA,
+        duration = 17,
+    },
 
     -- Warrior
     -- Offensive
