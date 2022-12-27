@@ -20,6 +20,24 @@ local baselineSpells = NS.baselineSpells;
 BoopUtilsWA = {};
 BoopUtilsWA.Triggers = {};
 
+local WA_GetUnitAura = function(unit, spell, filter)
+    if filter and not filter:upper():find("FUL") then
+        filter = filter.."|HELPFUL"
+    end
+    for i = 1, 255 do
+      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
+      if not name then return end
+      if spell == spellId or spell == name then
+        return UnitAura(unit, i, filter)
+      end
+    end
+end
+
+local WA_GetUnitBuff = function(unit, spell, filter)
+    filter = filter and filter.."|HELPFUL" or "HELPFUL"
+    return WA_GetUnitAura(unit, spell, filter)
+end
+
 local function debugSpellID(sourceGUID, event, spellID)
     if NS.isTestMode and NS.isSourceArena(sourceGUID) and (event == NS.SPELL_CAST_SUCCESS or event == NS.UNIT_SPELLCAST_SUCCEEDED) then
         print(sourceGUID, event, spellID)
@@ -638,6 +656,20 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
             allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, nil, unitTarget);
             return true;
         end
+    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+        local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
+        if ( subEvent ~= NS.SPELL_AURA_APPLIED and subEvent ~= NS.SPELL_AURA_REFRESH ) then return end
+        if ( not destGUID ) or ( not spellData[spellID] ) then return end
+        local spell = spellData[spellID]
+        if ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
+        if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
+        local unitId = NS.arenaUnitId(destGUID)
+        if ( not unitId ) then return end
+        local duration = select(5, WA_GetUnitBuff(unitId, spellID))
+        if ( not duration ) then return end
+
+        allstates[unitId] = makeTriggerState(spell, spellID, duration, nil, unitId)
+        return true
     end
 end
 
@@ -720,24 +752,6 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
         end
         return updated;
     end
-end
-
-local WA_GetUnitAura = function(unit, spell, filter)
-    if filter and not filter:upper():find("FUL") then
-        filter = filter.."|HELPFUL"
-    end
-    for i = 1, 255 do
-      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
-      if not name then return end
-      if spell == spellId or spell == name then
-        return UnitAura(unit, i, filter)
-      end
-    end
-end
-
-local WA_GetUnitBuff = function(unit, spell, filter)
-    filter = filter and filter.."|HELPFUL" or "HELPFUL"
-    return WA_GetUnitAura(unit, spell, filter)
 end
 
 -- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED
