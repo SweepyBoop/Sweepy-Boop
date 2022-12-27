@@ -8,13 +8,15 @@ NS.spellCategory = {
     OFFENSIVE_CD = 3,
     OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     OFFENSIVE_SPECIAL = 5,
+    OFFENSIVE_UNITAURA = 6, -- set combine = true if we want to show one aura for all units.
 }
 
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
 local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
-local OFFENSIVE_PET = NS.OFFENSIVE_PET;
+local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET;
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
+local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA;
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
@@ -28,6 +30,7 @@ NS.NAME_PLATE_UNIT_REMOVED = "NAME_PLATE_UNIT_REMOVED";
 NS.SPELL_CAST_SUCCESS = "SPELL_CAST_SUCCESS";
 NS.SPELL_AURA_APPLIED = "SPELL_AURA_APPLIED";
 NS.SPELL_AURA_REMOVED = "SPELL_AURA_REMOVED";
+NS.SPELL_AURA_REFRESH = "SPELL_AURA_REFRESH";
 NS.SPELL_DAMAGE = "SPELL_DAMAGE";
 NS.SPELL_CAST_START = "SPELL_CAST_START";
 
@@ -206,6 +209,18 @@ NS.spellData = {
         spec = { specID.BALANCE, specID.FERAL },
         index = 1,
     },
+    -- Feral Frenzy
+    [274837] = {
+        category = OFFENSIVE_CD,
+        cooldown = 45,
+    },
+
+    -- Evoker
+    -- Tip the Scales
+    [370553] = {
+        category = OFFENSIVE_CD,
+        cooldown = 120,
+    },
 
     -- Hunter
     -- Offensive
@@ -223,6 +238,12 @@ NS.spellData = {
     [288613] = {
         category = OFFENSIVE_AURA,
         duration = 18,
+    },
+    -- Call of the Wild
+    [359844] = {
+        category = OFFENSIVE,
+        duration = 20,
+        cooldown = 180,
     },
 
     -- Mage
@@ -245,6 +266,19 @@ NS.spellData = {
     
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
+    },
+    -- Icy Veins
+    [12472] = {
+        category = OFFENSIVE_UNITAURA,
+    },
+    -- Ice Form
+    [198144] = {
+        category = OFFENSIVE_UNITAURA,
+    },
+    -- Arcane Surge
+    [365350] = {
+        category = OFFENSIVE_CD,
+        cooldown = 90,
     },
 
     -- Monk
@@ -282,6 +316,10 @@ NS.spellData = {
         duration = 10,
         spec = { specID.WW },
     },
+    -- Dance of Chi-ji
+    [325202] = {
+        category = OFFENSIVE_UNITAURA,
+    },
 
     -- Paladin
     -- Offensive
@@ -300,6 +338,22 @@ NS.spellData = {
         spec = { specID.RET },
         cooldown = 60,
     },
+    -- Blessing of Summer
+    [388007] = {
+        category = OFFENSIVE_UNITAURA,
+        index = 1,
+    },
+    -- Seraphim
+    [152262] = {
+        category = OFFENSIVE_UNITAURA,
+        spec = { specID.RET },
+        combine = true,
+    },
+    -- Final Reckoning
+    [343721] = {
+        category = OFFENSIVE_AURA,
+        duration = 8,
+    },
 
     -- Priest
     -- Offensive
@@ -313,6 +367,11 @@ NS.spellData = {
         category = OFFENSIVE_PET,
         spellID = 211522,
         duration = 12,
+    },
+    -- Power Infusion
+    [10060] = {
+        category = OFFENSIVE_UNITAURA,
+        combine = true,
     },
 
     -- Rogue
@@ -341,6 +400,21 @@ NS.spellData = {
         cooldown = 120,
         index = 1,
     },
+    -- Exsanguinate
+    [200806] = {
+        category = OFFENSIVE_CD,
+        cooldown = 180,
+        index = 1,
+    },
+    -- Kingsbane
+    [385627] = {
+        category = OFFENSIVE_AURA,
+        duration = 14,
+    },
+    -- Echoing Reprimand
+    [323560] = {
+        category = OFFENSIVE_UNITAURA,
+    },
 
     -- Shaman
     -- Offensive
@@ -362,6 +436,11 @@ NS.spellData = {
         duration = 15,
         dispellable = true,
     },
+    -- Skyfury
+    [208963] = {
+        category = OFFENSIVE_UNITAURA,
+        combine = true,
+    },
 
     -- Warlock
     -- Offensive
@@ -379,6 +458,16 @@ NS.spellData = {
     [265187] = {
         category = OFFENSIVE_AURA,
         duration = 15,
+    },
+    -- Fel Obelisk
+    [353601] = {
+        category = OFFENSIVE_AURA,
+        duration = 15,
+    },
+    -- Grimoire: Felguard
+    [111898] = {
+        category = OFFENSIVE_AURA,
+        duration = 17,
     },
 
     -- Warrior
@@ -451,12 +540,16 @@ if NS.isTestMode then
     };
     -- Rejuv
     NS.spellData[774] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE_UNITAURA,
         cooldown = 45,
+    };
+    -- Wild Growth
+    NS.spellData[48438] = {
+        category = OFFENSIVE_UNITAURA,
     };
 
     -- Test totem with "PvP Training Dummy"
-    NS.spellData[197833] = {
+    NS.spellData[188550] = {
         category = OFFENSIVE_PET,
         spellID = 324386,
         duration = 60,
