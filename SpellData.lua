@@ -215,6 +215,12 @@ NS.spellData = {
         cooldown = 45,
     },
 
+    -- Evoker
+    [370553] = {
+        category = OFFENSIVE_CD,
+        cooldown = 120,
+    },
+
     -- Hunter
     -- Offensive
     -- Bestial Wrath
