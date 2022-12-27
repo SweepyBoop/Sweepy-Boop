@@ -216,6 +216,7 @@ NS.spellData = {
     },
 
     -- Evoker
+    -- Tip the Scales
     [370553] = {
         category = OFFENSIVE_CD,
         cooldown = 120,
