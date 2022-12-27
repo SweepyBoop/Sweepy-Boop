@@ -659,8 +659,7 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
         if ( subEvent ~= NS.SPELL_AURA_APPLIED and subEvent ~= NS.SPELL_AURA_REFRESH ) then return end
-        if ( not destGUID ) then return end
-        if ( not spellData[spellID] ) then return end
+        if ( not destGUID ) or ( not spellData[spellID] ) then return end
         local spell = spellData[spellID]
         if ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
         if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
