@@ -209,6 +209,11 @@ NS.spellData = {
         spec = { specID.BALANCE, specID.FERAL },
         index = 1,
     },
+    -- Feral Frenzy
+    [274837] = {
+        category = OFFENSIVE_CD,
+        cooldown = 45,
+    },
 
     -- Hunter
     -- Offensive
