@@ -238,6 +238,12 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 18,
     },
+    -- Call of the Wild
+    [359844] = {
+        category = OFFENSIVE,
+        duration = 20,
+        cooldown = 180,
+    },
 
     -- Mage
     -- Offensive
