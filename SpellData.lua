@@ -8,7 +8,7 @@ NS.spellCategory = {
     OFFENSIVE_CD = 3,
     OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     OFFENSIVE_SPECIAL = 5,
-    OFFENSIVE_UNITAURA = 6,
+    OFFENSIVE_UNITAURA = 6, -- set combine = true if we want to show one aura for all units.
 }
 
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
@@ -249,6 +249,14 @@ NS.spellData = {
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
     },
+    -- Icy Veins
+    [12472] = {
+        category = OFFENSIVE_UNITAURA,
+    },
+    -- Ice Form
+    [198144] = {
+        category = OFFENSIVE_UNITAURA,
+    },
 
     -- Monk
     -- Offensive
@@ -285,6 +293,10 @@ NS.spellData = {
         duration = 10,
         spec = { specID.WW },
     },
+    -- Dance of Chi-ji
+    [325202] = {
+        category = OFFENSIVE_UNITAURA,
+    },
 
     -- Paladin
     -- Offensive
@@ -308,6 +320,17 @@ NS.spellData = {
         category = OFFENSIVE_UNITAURA,
         index = 1,
     },
+    -- Seraphim
+    [152262] = {
+        category = OFFENSIVE_UNITAURA,
+        spec = { specID.RET },
+        combine = true,
+    },
+    -- Final Reckoning
+    [343721] = {
+        category = OFFENSIVE_AURA,
+        duration = 8,
+    },
 
     -- Priest
     -- Offensive
@@ -321,6 +344,11 @@ NS.spellData = {
         category = OFFENSIVE_PET,
         spellID = 211522,
         duration = 12,
+    },
+    -- Power Infusion
+    [10060] = {
+        category = OFFENSIVE_UNITAURA,
+        combine = true,
     },
 
     -- Rogue
@@ -360,6 +388,10 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 14,
     },
+    -- Echoing Reprimand
+    [323560] = {
+        category = OFFENSIVE_UNITAURA,
+    },
 
     -- Shaman
     -- Offensive
@@ -380,6 +412,11 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 15,
         dispellable = true,
+    },
+    -- Skyfury
+    [208963] = {
+        category = OFFENSIVE_UNITAURA,
+        combine = true,
     },
 
     -- Warlock
@@ -480,7 +517,7 @@ if NS.isTestMode then
     };
     -- Rejuv
     NS.spellData[774] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE_UNITAURA,
         cooldown = 45,
     };
     -- Wild Growth
