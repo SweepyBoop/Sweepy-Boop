@@ -257,6 +257,11 @@ NS.spellData = {
     [198144] = {
         category = OFFENSIVE_UNITAURA,
     },
+    -- Arcane Surge
+    [365350] = {
+        category = OFFENSIVE_CD,
+        cooldown = 90,
+    },
 
     -- Monk
     -- Offensive
