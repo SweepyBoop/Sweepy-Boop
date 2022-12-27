@@ -757,11 +757,11 @@ BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
             local duration = select(5, WA_GetUnitBuff(unitId, spellID))
             if ( not duration ) then return end
 
-            local guid = ( spell.combine and concatGUID(destGUID, spellID) ) or spellID
+            local guid = ( spell.combine and spellID ) or concatGUID(destGUID, spellID)
             allstates[guid] = makeTriggerState(spell, spellID, duration)
             return true
         elseif ( subEvent == NS.SPELL_AURA_REMOVED ) then
-            local guid = ( spell.combine and concatGUID(destGUID, spellID) ) or spellID
+            local guid = ( spell.combine and spellID ) or concatGUID(destGUID, spellID)
             if allstates[guid] then
                 allstates[guid].show = false
                 allstates[guid].changed = true
