@@ -752,8 +752,11 @@ BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
 
         if ( subEvent == NS.SPELL_AURA_APPLIED ) or ( subEvent == NS.SPELL_AURA_REFRESH ) then
             if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
+            local unitId = NS.arenaUnitId(destGUID)
+            if ( not unitId ) then return end
+
             local guid = concatGUID(destGUID, spellID)
-            local duration = select(5, WA_GetUnitBuff(NS.arenaUnitId(destGUID), spellID))
+            local duration = select(5, WA_GetUnitBuff(unitId, spellID))
             allstates[guid] = makeTriggerState(spell, spellID, duration)
             return true
         elseif ( subEvent == NS.SPELL_AURA_REMOVED ) then
