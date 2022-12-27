@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -8,13 +8,15 @@ NS.spellCategory = {
     OFFENSIVE_CD = 3,
     OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     OFFENSIVE_SPECIAL = 5,
+    OFFENSIVE_UNITAURA = 6,
 }
 
 local OFFENSIVE = NS.spellCategory.OFFENSIVE;
 local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
-local OFFENSIVE_PET = NS.OFFENSIVE_PET;
+local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET;
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
+local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA;
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
@@ -28,6 +30,7 @@ NS.NAME_PLATE_UNIT_REMOVED = "NAME_PLATE_UNIT_REMOVED";
 NS.SPELL_CAST_SUCCESS = "SPELL_CAST_SUCCESS";
 NS.SPELL_AURA_APPLIED = "SPELL_AURA_APPLIED";
 NS.SPELL_AURA_REMOVED = "SPELL_AURA_REMOVED";
+NS.SPELL_AURA_REFRESH = "SPELL_AURA_REFRESH";
 NS.SPELL_DAMAGE = "SPELL_DAMAGE";
 NS.SPELL_CAST_START = "SPELL_CAST_START";
 
@@ -300,6 +303,11 @@ NS.spellData = {
         spec = { specID.RET },
         cooldown = 60,
     },
+    -- Blessing of Summer
+    [388007] = {
+        category = OFFENSIVE_UNITAURA,
+        index = 1,
+    },
 
     -- Priest
     -- Offensive
@@ -475,9 +483,13 @@ if NS.isTestMode then
         category = OFFENSIVE_CD,
         cooldown = 45,
     };
+    -- Wild Growth
+    NS.spellData[48438] = {
+        category = OFFENSIVE_UNITAURA,
+    };
 
     -- Test totem with "PvP Training Dummy"
-    NS.spellData[197833] = {
+    NS.spellData[188550] = {
         category = OFFENSIVE_PET,
         spellID = 324386,
         duration = 60,

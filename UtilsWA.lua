@@ -7,6 +7,7 @@ local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
 local OFFENSIVE_PET = NS.OFFENSIVE_PET;
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
+local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA;
 
 local TRACK_UNIT = NS.trackType.TRACK_UNIT;
 
@@ -98,6 +99,8 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID)
     if (trackType == NS.trackType.TRACK_AURA_FADE) and (subEvent == NS.SPELL_AURA_REMOVED) then
         track = NS.isSourceArena(sourceGUID);
     elseif (trackType == NS.trackType.TRACK_AURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
+        track = NS.isSourceArena(sourceGUID);
+    elseif (spell.category == OFFENSIVE_UNITAURA) and (subEvent == NS.SPELL_AURA_APPLIED or subEvent == NS.SPELL_AURA_REFRESH) then
         track = NS.isSourceArena(sourceGUID);
     elseif (trackType == NS.trackType.TRACK_PET) and (subEvent == NS.SPELL_CAST_SUCCESS) then
         track = NS.isSourceArenaPet(sourceGUID);
@@ -716,5 +719,50 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
             end
         end
         return updated;
+    end
+end
+
+local WA_GetUnitAura = function(unit, spell, filter)
+    if filter and not filter:upper():find("FUL") then
+        filter = filter.."|HELPFUL"
+    end
+    for i = 1, 255 do
+      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
+      if not name then return end
+      if spell == spellId or spell == name then
+        return UnitAura(unit, i, filter)
+      end
+    end
+end
+
+local WA_GetUnitBuff = function(unit, spell, filter)
+    filter = filter and filter.."|HELPFUL" or "HELPFUL"
+    return WA_GetUnitAura(unit, spell, filter)
+end
+
+-- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED
+BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
+    if shouldClearAllStates(event) then
+        return clearAllStates(allstates)
+    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+        local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
+        if ( not destGUID ) or ( not spellData[spellID] ) then return end
+        local spell = spellData[spellID]
+        if ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
+
+        if ( subEvent == NS.SPELL_AURA_APPLIED ) or ( subEvent == NS.SPELL_AURA_REFRESH ) then
+            if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
+            local guid = concatGUID(destGUID, spellID)
+            local duration = select(5, WA_GetUnitBuff(NS.arenaUnitId(destGUID), spellID))
+            allstates[guid] = makeTriggerState(spell, spellID, duration)
+            return true
+        elseif ( subEvent == NS.SPELL_AURA_REMOVED ) then
+            local guid = concatGUID(destGUID, spellID)
+            if allstates[guid] then
+                allstates[guid].show = false
+                allstates[guid].changed = true
+                return true
+            end
+        end
     end
 end
