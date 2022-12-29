@@ -410,6 +410,7 @@ local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ..
                     allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime - cost[1].cost * spell.reduce_amount
                 end
 
+                allstates[sourceGUID].changed = true
                 return true
             end
         elseif (spellID == specialSpellID) then
