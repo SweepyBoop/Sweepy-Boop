@@ -688,9 +688,7 @@ BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
         if ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) or ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs) then return end
-
-        print(unitTarget, #(updateAuras.updatedAuraInstanceIDs))
-
+        
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
             if spellInfo then
