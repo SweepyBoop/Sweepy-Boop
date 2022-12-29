@@ -118,7 +118,7 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID)
         track = NS.isSourceArena(sourceGUID);
     elseif (trackType == NS.trackType.TRACK_AURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
         track = NS.isSourceArena(sourceGUID);
-    elseif (spell.category == OFFENSIVE_UNITAURA) and (subEvent == NS.SPELL_AURA_APPLIED or subEvent == NS.SPELL_AURA_REFRESH) then
+    elseif (spell.category == OFFENSIVE_UNITAURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
         track = NS.isSourceArena(sourceGUID);
     elseif (trackType == NS.trackType.TRACK_PET) and (subEvent == NS.SPELL_CAST_SUCCESS) then
         track = NS.isSourceArenaPet(sourceGUID);
@@ -553,78 +553,6 @@ BoopUtilsWA.Triggers.DurationRecklessness = function (allstates, event, ...)
     return GlowForSpell(1719, allstates, event, ...)
 end
 
--- Track baseline defensives
-BoopUtilsWA.Triggers.BaselineCooldown = function(baselineSpellID, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
-    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then -- Use UNIT_ events since it's easier to find unitId
-        local unitTarget, _, spellID = ...;
-        if (not unitTarget) then return end
-
-        -- Check if this is a reset spell
-        local reset = spellResets[spellID];
-        if reset then
-            return checkResetSpell(allstates, UnitGUID(unitTarget), reset);
-        end
-
-        -- Return if spellIDs do not match
-        if (spellID ~= baselineSpellID) then return end
-
-        if NS.isUnitArena(unitTarget) then
-            local spell = baselineSpells[spellID];
-            if (not spell) then return end
-
-            local guid = concatGUID(UnitGUID(unitTarget), spellID);
-            return checkCooldownOptions(allstates, guid, spell, spellID, unitTarget);
-        end
-    end
-end
-
-local function makeIconState(spell, spellID, unitTarget)
-    local state = {
-        show = true,
-        changed = true,
-        autoHide = false,
-        icon = select(3, GetSpellInfo(spellID)),
-        unit = unitTarget,
-        index = spell.index,
-    };
-
-    return state;
-end
-
--- Baseline icons are blocking each other
-BoopUtilsWA.Triggers.BaselineIcon = function(baselineSpellID, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
-    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
-        local unitTarget, _, spellID = ...;
-        if (not unitTarget) then return end
-
-        if NS.isUnitArena(unitTarget) then
-            local spell = baselineSpells[baselineSpellID];
-            if (not spell) then return end
-
-            local match;
-            if spell.race then
-                local raceId = NS.arenaUnitRace(unitTarget);
-                match = (raceId == spell.race);
-            elseif spell.class then
-                local classId = NS.arenaUnitClass(unitTarget);
-                match = (classId == spell.class);
-            end
-
-            if match then -- class/race matches, show icon if not currently shown
-                local guid = concatGUID(UnitGUID(unitTarget), baselineSpellID);
-                if (not allstates[guid]) then
-                    allstates[guid] = makeIconState(spell, baselineSpellID, unitTarget);
-                    return true;
-                end
-            end
-        end
-    end
-end
-
 local function getOffensiveSpellDataById(spellID)
     local spell = spellData[spellID];
     if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_AURA) or (spell.category == OFFENSIVE_SPECIAL)) then
@@ -640,7 +568,7 @@ local function isUnitParty(unitId)
     return (unitId == "party1") or (unitId == "party2");
 end
 
--- Really simple trigger, not checking factors such as trackType, aura being dispelled, etc.
+-- Really simple trigger, not checking factors such as trackType, aura being dispelled/extended, etc.
 -- Just providing a hint on when party is doing burst
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     if shouldClearAllStates(event) then
@@ -658,8 +586,7 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
         end
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
-        if ( subEvent ~= NS.SPELL_AURA_APPLIED and subEvent ~= NS.SPELL_AURA_REFRESH ) then return end
-        if ( not destGUID ) or ( not spellData[spellID] ) then return end
+        if ( subEvent ~= NS.SPELL_AURA_APPLIED ) or ( not destGUID ) or ( not spellData[spellID] ) then return end
         local spell = spellData[spellID]
         if ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
         if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
@@ -758,13 +685,33 @@ end
 BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates)
+    elseif ( event == NS.UNIT_AURA ) then
+        local unitTarget, updateAuras = ...
+        if ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) or ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs) then return end
+
+        print(unitTarget, #(updateAuras.updatedAuraInstanceIDs))
+
+        for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
+            local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
+            if spellInfo then
+                local spellID = spellInfo.spellId
+                local spell = spellData[spellID]
+                if ( not spell ) or ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
+                local guid = ( spell.combine and spellID ) or concatGUID(UnitGUID(unitTarget), spellID)
+                if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
+                    allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))
+                    allstates[guid].changed = true
+                    return true
+                end
+            end
+        end
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
         if ( not destGUID ) or ( not spellData[spellID] ) then return end
         local spell = spellData[spellID]
         if ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
 
-        if ( subEvent == NS.SPELL_AURA_APPLIED ) or ( subEvent == NS.SPELL_AURA_REFRESH ) then
+        if ( subEvent == NS.SPELL_AURA_APPLIED ) then
             if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
             local unitId = NS.arenaUnitId(destGUID)
             if ( not unitId ) then return end
