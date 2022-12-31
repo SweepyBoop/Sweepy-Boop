@@ -1,7 +1,7 @@
 local _, NS = ...
 
-BoopNameplateFilter = {};
-local testMode = false;
+BoopNameplateFilter = {}
+local testMode = false
 
 -- Whitelist for non-player units, show nameplate if unit name or NpcID matches
 -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
@@ -22,24 +22,21 @@ local whiteList = {
     ["Ancestral Protection Totem"] = true, -- LOL
     ["Capacitor Totem"] = true,
     ["Earthgrab Totem"] = true, -- Gets you out of stealth
-    -- ["Windfury Totem"] = true,
+    ["Windfury Totem"] = true,
     ["Healing Tide Totem"] = true,
     ["Vesper Totem"] = true, -- One shot
 
     -- Warrior
     ["War Banner"] = true,
-
-    -- Seed
-    ["Regenerating Wildseed"] = true,
-};
+}
 
 local function isInWhiteList(unitId, npcID)
-    whiteList["Tremor Totem"] = NS.partyWithFearSpell();
+    whiteList["Tremor Totem"] = NS.partyWithFearSpell()
     if ( npcID and whiteList[npcID] ) then
-        return true;
+        return true
     else
-        local name = UnitName(unitId);
-        return whiteList[name];
+        local name = UnitName(unitId)
+        return whiteList[name]
     end
 end
 
