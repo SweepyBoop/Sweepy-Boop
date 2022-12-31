@@ -21,10 +21,9 @@ local whiteList = {
     ["Skyfury Totem"] = true,
     ["Ancestral Protection Totem"] = true, -- LOL
     ["Capacitor Totem"] = true,
-    ["Earthgrab Totem"] = true, -- Gets you out of stealth
+    ["Earthgrab Totem"] = true, -- Roots you out of stealth
     ["Windfury Totem"] = true,
     ["Healing Tide Totem"] = true,
-    ["Vesper Totem"] = true, -- One shot
 
     -- Warrior
     ["War Banner"] = true,
