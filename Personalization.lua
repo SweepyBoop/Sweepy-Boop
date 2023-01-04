@@ -51,3 +51,8 @@ Main_Frame:SetScript('OnEvent',
         end
     end)
 
+UIWidgetTopCenterContainerFrame:ClearAllPoints()
+UIWidgetTopCenterContainerFrame:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -25)
+UIWidgetTopCenterContainerFrame.SetPoint = function() end
+
+
