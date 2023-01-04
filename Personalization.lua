@@ -55,4 +55,8 @@ UIWidgetTopCenterContainerFrame:ClearAllPoints()
 UIWidgetTopCenterContainerFrame:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -25)
 UIWidgetTopCenterContainerFrame.SetPoint = function() end
 
+ArenaEnemyMatchFrame1PetFrame:Hide()
+ArenaEnemyMatchFrame2PetFrame:Hide()
+ArenaEnemyMatchFrame3PetFrame:Hide()
+
 
