@@ -140,11 +140,6 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 25,
     },
-    -- Dark Transformation
-    [63560] = {
-        category = OFFENSIVE_AURA,
-        duration = 15,
-    },
     -- Offensive (Frost)
     -- Pillar of Frost
     [51271] = {
