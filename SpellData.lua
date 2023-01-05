@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = false
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -139,6 +139,11 @@ NS.spellData = {
     [288853] = {
         category = OFFENSIVE_AURA,
         duration = 25,
+    },
+    -- Apocalypse
+    [275699] = {
+        category = OFFENSIVE_AURA,
+        duration = 20,
     },
     -- Offensive (Frost)
     -- Pillar of Frost
