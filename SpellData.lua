@@ -123,6 +123,13 @@ NS.spellData = {
         index = 1,
     },
     -- Offensive (Unholy)
+    -- Summon Gargoyle
+    [49206] = {
+        category = OFFENSIVE,
+        cooldown = 180,
+        duration = 25,
+        index = 1,
+    },
     -- Unholy Assult
     [207289] = {
         category = OFFENSIVE_AURA,
