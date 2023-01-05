@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false;
+NS.isTestMode = false
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -113,13 +113,6 @@ NS.defaultIndex = 100;
 NS.spellData = {
     -- General
     -- Offensive
-    -- Resonator
-    [363481] = {
-        category = OFFENSIVE,
-        duration = 4,
-        cooldown = 120,
-        index = 1,
-    },
 
     -- DK
     -- Abomination Limb
@@ -130,20 +123,22 @@ NS.spellData = {
         index = 1,
     },
     -- Offensive (Unholy)
+    -- Summon Gargoyle
+    [49206] = {
+        category = OFFENSIVE,
+        cooldown = 180,
+        duration = 25,
+        index = 1,
+    },
     -- Unholy Assult
     [207289] = {
         category = OFFENSIVE_AURA,
         duration = 12,
     },
-    -- Raise Abomination
-    [288853] = {
+    -- Apocalypse
+    [275699] = {
         category = OFFENSIVE_AURA,
-        duration = 25,
-    },
-    -- Dark Transformation
-    [63560] = {
-        category = OFFENSIVE_AURA,
-        duration = 15,
+        duration = 20,
     },
     -- Offensive (Frost)
     -- Pillar of Frost
