@@ -135,11 +135,6 @@ NS.spellData = {
         category = OFFENSIVE_AURA,
         duration = 12,
     },
-    -- Raise Abomination
-    [288853] = {
-        category = OFFENSIVE_AURA,
-        duration = 25,
-    },
     -- Apocalypse
     [275699] = {
         category = OFFENSIVE_AURA,
