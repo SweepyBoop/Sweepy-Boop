@@ -113,13 +113,6 @@ NS.defaultIndex = 100;
 NS.spellData = {
     -- General
     -- Offensive
-    -- Resonator
-    [363481] = {
-        category = OFFENSIVE,
-        duration = 4,
-        cooldown = 120,
-        index = 1,
-    },
 
     -- DK
     -- Abomination Limb
