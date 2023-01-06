@@ -96,9 +96,8 @@ local eventHandler = function(frame, event, unitTarget)
                 -- 1: 1.00, 1.00, 0.47 (yellow)
                 -- 2: 1.00, 0.60, 0.00 (orange)
                 -- 3: 1.00, 0.00, 0.00 (red)
-                if aggroLevel and aggroLevel > 0 then
-                    local color = (aggroLevel > 1 and 3) or 1
-                    frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(color)) -- red
+                if aggroLevel then
+                    frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(3)) -- red
                     frame.aggroHighlight:Show()
                 else
                     frame.aggroHighlight:Hide()
