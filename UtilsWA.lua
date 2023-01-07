@@ -104,9 +104,9 @@ local function makeTriggerState(spellData, spellID, duration, ...)
         stacks = charges,
         unit = unit,
         autoHide = true,
-    };
+    }
 
-    return state;
+    return state
 end
 
 -- Checck whether spell is enabled for combat log events
@@ -262,7 +262,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
             local duration = spell.duration;
-            allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unitTarget);
+            allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
             return true;
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
@@ -290,7 +290,7 @@ local durationTrigger = function(category, allstates, event, ...)
             local guid = concatGUID(sourceGUID, spellID);
             local duration = spell.duration;
             local unit = NS.arenaUnitId(sourceGUID)
-            allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unit);
+            allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unit)
             return true;
         end
     end
@@ -587,7 +587,7 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
             local spell = getOffensiveSpellDataById(spellID);
             if ( not spell ) then return end
 
-            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, unitTarget);
+            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
             return true;
         end
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
