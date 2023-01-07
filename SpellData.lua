@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false
+NS.isTestMode = true
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -40,6 +40,7 @@ NS.specID = {
     RET = 70,
     BM = 253,
     WW = 269,
+    DEVASTATION = 1467,
 };
 local specID = NS.specID;
 
@@ -214,7 +215,12 @@ NS.spellData = {
     -- Tip the Scales
     [370553] = {
         category = OFFENSIVE_CD,
+        spec = { specID.DEVASTATION },
         cooldown = 120,
+    },
+    -- Dragon Rage
+    [375087] = {
+        category = OFFENSIVE_UNITAURA,
     },
 
     -- Hunter
@@ -284,8 +290,6 @@ NS.spellData = {
         duration = 15,
         cooldown = 90,
         charges = true,
-        extend_power_type = Enum.PowerType.Chi,
-        extend_amount = 0.4,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
     },
@@ -294,9 +298,6 @@ NS.spellData = {
         category = OFFENSIVE_SPECIAL,
         duration = 12,
         cooldown = 90,
-        extend_power_type = Enum.PowerType.Chi,
-        extend_type = "fixed",
-        extend_amount = 0.3,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
     },

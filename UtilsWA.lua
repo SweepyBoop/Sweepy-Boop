@@ -306,26 +306,31 @@ end
 
 local function durationWithExtensionTrigger(specialSpellID, allstates, event, ...)
     if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
+        return clearAllStates(allstates)
+    elseif ( event == NS.UNIT_AURA ) then
+        local unitTarget, updateAuras = ...
+        if ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) or ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs) then return end
+        
+        for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
+            local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
+            if spellInfo then
+                local spellID = spellInfo.spellId
+                if ( spellID ~= specialSpellID ) then return end
+                local guid = UnitGUID(unitTarget)
+                if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
+                    allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))
+                    allstates[guid].changed = true
+                    return true
+                end
+            end
+        end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
         if (not shouldCheckCombatLog(subEvent)) then return end
         if (not sourceGUID) then return end
         local spell = spellData[specialSpellID]
 
-        -- Check if there is a spell to extend
-        if (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == NS.SPELL_CAST_SUCCESS then
-            local cost = GetSpellPowerCost(spellID);
-            if (cost and cost[1] and cost[1].type == spell.extend_power_type) then
-                if spell.extend_type == "fixed" then
-                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + spell.extend_amount;
-                else
-                    allstates[sourceGUID].expirationTime = allstates[sourceGUID].expirationTime + cost[1].cost * spell.extend_amount;
-                end
-
-                return true
-            end
-        elseif (spellID == specialSpellID) then
+        if (spellID == specialSpellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
                 local unitId = NS.arenaUnitId(sourceGUID)
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration, unitId)
