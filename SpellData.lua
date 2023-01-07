@@ -123,6 +123,11 @@ NS.spellData = {
         duration = 12,
         index = 1,
     },
+    -- Empower Rune Weapon
+    [47568] = {
+        category = OFFENSIVE_AURA,
+        duration = 20,
+    },
     -- Offensive (Unholy)
     -- Summon Gargoyle
     [49206] = {
@@ -146,11 +151,6 @@ NS.spellData = {
     [51271] = {
         category = OFFENSIVE_AURA,
         duration = 12,
-    },
-    -- Empower Rune Weapon
-    [47568] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
     },
     -- Chill Streak
     [305392] = {
