@@ -91,7 +91,7 @@ end
 -- OFFENSIVE_AURA = spell.duration, CC = spell.cooldown
 -- optional params: charges, unit (for finding the raid/arena frame to attach to)
 local function makeTriggerState(spellData, spellID, duration, ...)
-    local charges, unit = ...;
+    local unit, charges = ...
     local state = {
         show = true,
         changed = true,
@@ -246,7 +246,7 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     end
 
     local cooldown = (NS.arenaOptLowerCooldown(guid) and spell.opt_lower_cooldown) or spell.cooldown;
-    allstates[guid] = makeTriggerState(spell, spellID, cooldown, charges, unitTarget);
+    allstates[guid] = makeTriggerState(spell, spellID, cooldown, unitTarget, charges)
     return true;
 end
 
@@ -262,7 +262,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
             local duration = spell.duration;
-            allstates[guid] = makeTriggerState(spell, spellID, spell.duration);
+            allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unitTarget);
             return true;
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
@@ -289,7 +289,8 @@ local durationTrigger = function(category, allstates, event, ...)
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = concatGUID(sourceGUID, spellID);
             local duration = spell.duration;
-            allstates[guid] = makeTriggerState(spell, spellID, spell.duration);
+            local unit = NS.arenaUnitId(sourceGUID)
+            allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unit);
             return true;
         end
     end
@@ -326,7 +327,8 @@ local function durationWithExtensionTrigger(specialSpellID, allstates, event, ..
             end
         elseif (spellID == specialSpellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration)
+                local unitId = NS.arenaUnitId(sourceGUID)
+                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration, unitId)
                 return true
             end
         end
@@ -355,7 +357,7 @@ local function cooldownTrigger(category, allstates, event, ...)
 
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
-            allstates[guid] = makeTriggerState(spell, spellID, spell.cooldown, nil, unitTarget);
+            allstates[guid] = makeTriggerState(spell, spellID, spell.cooldown, unitTarget)
             return true;
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
@@ -374,9 +376,9 @@ local function cooldownTrigger(category, allstates, event, ...)
         local spell = spellData[spellID];
         if (not spell) or (spell.category ~= category) or (not spell.cooldown) then return end
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
-            local guid = concatGUID(sourceGUID, spellID);
-            local unit = NS.arenaUnitId(sourceGUID);
-            return checkCooldownOptions(allstates, guid, spell, spellID, unit);
+            local guid = concatGUID(sourceGUID, spellID)
+            local unit = NS.arenaUnitId(sourceGUID)
+            return checkCooldownOptions(allstates, guid, spell, spellID, unit)
         end
     end
 end
@@ -449,7 +451,7 @@ local function glowOnActivationTrigger(category, allstates, event, ...)
 
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
-            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration, nil, unitTarget);
+            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration, unitTarget)
             return true;
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
@@ -463,8 +465,9 @@ local function glowOnActivationTrigger(category, allstates, event, ...)
         if (not spell) or (spell.category ~= category) or (not spell.cooldown) then return end
 
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
-            local guid = concatGUID(sourceGUID, spellID);
-            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration);
+            local guid = concatGUID(sourceGUID, spellID)
+            local unitId = NS.arenaUnitId(sourceGUID)
+            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration, unitId)
             return true;
         end
     end
@@ -488,7 +491,8 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 
         if (spellID == specialSpellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, just use sourceGUID)
-            allstates[sourceGUID] = makeTriggerState(spell, specialSpellID, spell.cooldown);
+            local unitId = NS.arenaUnitId(sourceGUID)
+            allstates[sourceGUID] = makeTriggerState(spell, specialSpellID, spell.cooldown, unitId)
             return true;
         elseif allstates[sourceGUID] then -- There is a combustion on cooldown, check if we want to reduce it
             local state = allstates[sourceGUID];
@@ -540,7 +544,8 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
                 return true;
             end
         elseif checkSpellEnabled(spell, subEvent, sourceGUID) then
-                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration);
+                local unitId = NS.arenaUnitId(sourceGUID)
+                allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration, unitId)
                 return true;
         end
     end
@@ -582,7 +587,7 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
             local spell = getOffensiveSpellDataById(spellID);
             if ( not spell ) then return end
 
-            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, nil, unitTarget);
+            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, unitTarget);
             return true;
         end
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
@@ -596,7 +601,7 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
         local duration = select(5, WA_GetUnitBuff(unitId, spellID))
         if ( not duration ) then return end
 
-        allstates[unitId] = makeTriggerState(spell, spellID, duration, nil, unitId)
+        allstates[unitId] = makeTriggerState(spell, spellID, duration, unitId)
         return true
     end
 end
@@ -665,7 +670,7 @@ BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
             local spell = spellData[npcId];
             if (spell.category ~= OFFENSIVE_PET) then return end
             -- Based on "nameplate" unitIds, which would trigger nameplate removed event later
-            allstates[unit] = makeTriggerState(spell, npcId, spell.duration, nil, unit);
+            allstates[unit] = makeTriggerState(spell, npcId, spell.duration, unit)
             return true;
         end
     elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then
@@ -696,7 +701,7 @@ BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
                 local spellID = spellInfo.spellId
                 local spell = spellData[spellID]
                 if ( not spell ) or ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
-                local guid = ( spell.combine and spellID ) or concatGUID(UnitGUID(unitTarget), spellID)
+                local guid = concatGUID(UnitGUID(unitTarget), spellID)
                 if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
                     allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))
                     allstates[guid].changed = true
@@ -717,11 +722,11 @@ BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
             local duration = select(5, WA_GetUnitBuff(unitId, spellID))
             if ( not duration ) then return end
 
-            local guid = ( spell.combine and spellID ) or concatGUID(destGUID, spellID)
-            allstates[guid] = makeTriggerState(spell, spellID, duration)
+            local guid = concatGUID(destGUID, spellID)
+            allstates[guid] = makeTriggerState(spell, spellID, duration, unitId)
             return true
         elseif ( subEvent == NS.SPELL_AURA_REMOVED ) then
-            local guid = ( spell.combine and spellID ) or concatGUID(destGUID, spellID)
+            local guid = concatGUID(destGUID, spellID)
             if allstates[guid] then
                 allstates[guid].show = false
                 allstates[guid].changed = true

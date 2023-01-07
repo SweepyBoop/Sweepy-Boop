@@ -530,17 +530,18 @@ if NS.isTestMode then
     };
     -- Regrowth
     NS.spellData[8936] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
+        category = OFFENSIVE,
+        duration = 5,
+        cooldown = 120,
     };
     -- Rejuv
     NS.spellData[774] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_CD,
         cooldown = 45,
     };
     -- Wild Growth
     NS.spellData[48438] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_CD,
     };
 
     -- Test totem with "PvP Training Dummy"
