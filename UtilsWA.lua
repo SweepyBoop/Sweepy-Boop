@@ -309,7 +309,7 @@ local function durationWithExtensionTrigger(specialSpellID, allstates, event, ..
         return clearAllStates(allstates)
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
-        if ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) or ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs) then return end
+        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
         
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
@@ -706,7 +706,7 @@ BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
         return clearAllStates(allstates)
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
-        if ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) or ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs) then return end
+        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
         
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
