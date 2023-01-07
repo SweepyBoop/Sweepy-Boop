@@ -21,6 +21,7 @@ local whiteList = {
     ["Earthgrab Totem"] = true, -- Roots you out of stealth
     ["Windfury Totem"] = true,
     ["Healing Tide Totem"] = true,
+    -- Fire Elemental is guardian which does not show nameplates
 
     -- Warlock
     ["Pit Lord"] = true,
