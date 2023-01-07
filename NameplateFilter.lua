@@ -24,6 +24,10 @@ local whiteList = {
     ["Earthgrab Totem"] = true, -- Roots you out of stealth
     ["Windfury Totem"] = true,
     ["Healing Tide Totem"] = true,
+    ["Greater Fire Elemental"] = true, -- Killing it reduces Elemental damage
+
+    -- Warlock
+    ["Pit Lord"] = true,
 
     -- Warrior
     ["War Banner"] = true,

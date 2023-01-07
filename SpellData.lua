@@ -40,6 +40,7 @@ NS.specID = {
     RET = 70,
     BM = 253,
     WW = 269,
+    DEVASTATION = 1467,
 };
 local specID = NS.specID;
 
@@ -122,6 +123,11 @@ NS.spellData = {
         duration = 12,
         index = 1,
     },
+    -- Empower Rune Weapon
+    [47568] = {
+        category = OFFENSIVE_AURA,
+        duration = 20,
+    },
     -- Offensive (Unholy)
     -- Summon Gargoyle
     [49206] = {
@@ -145,11 +151,6 @@ NS.spellData = {
     [51271] = {
         category = OFFENSIVE_AURA,
         duration = 12,
-    },
-    -- Empower Rune Weapon
-    [47568] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
     },
     -- Chill Streak
     [305392] = {
@@ -214,6 +215,13 @@ NS.spellData = {
     -- Tip the Scales
     [370553] = {
         category = OFFENSIVE_CD,
+        spec = { specID.DEVASTATION },
+        cooldown = 120,
+    },
+    -- Dragon Rage
+    [375087] = {
+        category = OFFENSIVE_SPECIAL,
+        duration = 14,
         cooldown = 120,
     },
 
@@ -284,8 +292,6 @@ NS.spellData = {
         duration = 15,
         cooldown = 90,
         charges = true,
-        extend_power_type = Enum.PowerType.Chi,
-        extend_amount = 0.4,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
     },
@@ -294,9 +300,6 @@ NS.spellData = {
         category = OFFENSIVE_SPECIAL,
         duration = 12,
         cooldown = 90,
-        extend_power_type = Enum.PowerType.Chi,
-        extend_type = "fixed",
-        extend_amount = 0.3,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
     },
@@ -399,7 +402,7 @@ NS.spellData = {
     [200806] = {
         category = OFFENSIVE_CD,
         cooldown = 180,
-        index = 1,
+        index = 2,
     },
     -- Kingsbane
     [385627] = {
@@ -436,6 +439,13 @@ NS.spellData = {
         category = OFFENSIVE_UNITAURA,
         combine = true,
     },
+    -- Fire Elemental
+    [198067] = {
+        category = OFFENSIVE,
+        duration = 30,
+        cooldown = 150,
+        index = 1,
+    },
 
     -- Warlock
     -- Offensive
@@ -448,6 +458,12 @@ NS.spellData = {
     [1122] = {
         category = OFFENSIVE_AURA,
         duration = 30,
+    },
+    [267217] = {
+        category = OFFENSIVE,
+        duration = 15, -- Show Pit Lord nameplate
+        cooldown = 180,
+        index = 1,
     },
     -- Summon Demonic Tyrant
     [265187] = {
@@ -530,17 +546,18 @@ if NS.isTestMode then
     };
     -- Regrowth
     NS.spellData[8936] = {
-        category = OFFENSIVE_AURA,
-        duration = 20,
+        category = OFFENSIVE,
+        duration = 5,
+        cooldown = 120,
     };
     -- Rejuv
     NS.spellData[774] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_CD,
         cooldown = 45,
     };
     -- Wild Growth
     NS.spellData[48438] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_CD,
     };
 
     -- Test totem with "PvP Training Dummy"
