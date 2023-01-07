@@ -587,8 +587,7 @@ local function isUnitParty(unitId)
     return (unitId == "party1") or (unitId == "party2");
 end
 
--- Really simple trigger, not checking factors such as trackType, aura being dispelled/extended, etc.
--- Just providing a hint on when party is doing burst
+-- Use premade auras for OFFENSIVE_UNITAURA
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates)
