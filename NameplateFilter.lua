@@ -9,9 +9,6 @@ local testMode = false
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID);
 -- unitFrame.namePlateNpcId is numeric type, so NPC ID index here should be numeric as well
 local whiteList = {
-    -- DK
-    --["Zombie"] = true, -- Reanimation PVP talent, 10% HP, very deadly
-
     -- Priest
     [101398] = true, -- Psyfiend
 
@@ -24,7 +21,6 @@ local whiteList = {
     ["Earthgrab Totem"] = true, -- Roots you out of stealth
     ["Windfury Totem"] = true,
     ["Healing Tide Totem"] = true,
-    ["Greater Fire Elemental"] = true, -- Killing it reduces Elemental damage
 
     -- Warlock
     ["Pit Lord"] = true,
