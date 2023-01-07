@@ -587,35 +587,21 @@ local function isUnitParty(unitId)
     return (unitId == "party1") or (unitId == "party2");
 end
 
--- Really simple trigger, not checking factors such as trackType, aura being dispelled/extended, etc.
--- Just providing a hint on when party is doing burst
+-- Use premade auras for OFFENSIVE_UNITAURA
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
+        return clearAllStates(allstates)
     elseif ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
-        local unitTarget, _, spellID = ...;
+        local unitTarget, _, spellID = ...
         if ( not unitTarget ) then return end
 
         if isUnitParty(unitTarget) then
-            local spell = getOffensiveSpellDataById(spellID);
+            local spell = getOffensiveSpellDataById(spellID)
             if ( not spell ) then return end
 
             allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
-            return true;
+            return true
         end
-    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
-        local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
-        if ( subEvent ~= NS.SPELL_AURA_APPLIED ) or ( not destGUID ) or ( not spellData[spellID] ) then return end
-        local spell = spellData[spellID]
-        if ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
-        if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
-        local unitId = NS.arenaUnitId(destGUID)
-        if ( not unitId ) then return end
-        local duration = select(5, WA_GetUnitBuff(unitId, spellID))
-        if ( not duration ) then return end
-
-        allstates[unitId] = makeTriggerState(spell, spellID, duration, unitId)
-        return true
     end
 end
 
