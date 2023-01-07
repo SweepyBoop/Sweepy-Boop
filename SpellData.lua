@@ -399,7 +399,7 @@ NS.spellData = {
     [200806] = {
         category = OFFENSIVE_CD,
         cooldown = 180,
-        index = 1,
+        index = 2,
     },
     -- Kingsbane
     [385627] = {
