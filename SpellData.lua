@@ -439,6 +439,13 @@ NS.spellData = {
         category = OFFENSIVE_UNITAURA,
         combine = true,
     },
+    -- Fire Elemental
+    [198067] = {
+        category = OFFENSIVE,
+        duration = 30,
+        cooldown = 150,
+        index = 1,
+    },
 
     -- Warlock
     -- Offensive
