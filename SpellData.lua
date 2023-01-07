@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false
+NS.isTestMode = true
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -451,6 +451,12 @@ NS.spellData = {
     [1122] = {
         category = OFFENSIVE_AURA,
         duration = 30,
+    },
+    [267217] = {
+        category = OFFENSIVE,
+        duration = 15, -- Show Pit Lord nameplate
+        cooldown = 180,
+        index = 1,
     },
     -- Summon Demonic Tyrant
     [265187] = {

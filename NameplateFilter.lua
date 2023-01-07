@@ -25,6 +25,9 @@ local whiteList = {
     ["Windfury Totem"] = true,
     ["Healing Tide Totem"] = true,
 
+    -- Warlock
+    ["Pit Lord"] = true,
+
     -- Warrior
     ["War Banner"] = true,
 }
