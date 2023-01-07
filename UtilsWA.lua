@@ -348,6 +348,10 @@ BoopUtilsWA.Triggers.Serenity = function (allstates, event, ...)
     return durationWithExtensionTrigger(152173, allstates, event, ...)
 end
 
+BoopUtilsWA.Triggers.DragonRage = function (allstates, event, ...)
+    return durationWithExtensionTrigger(375087, allstates, event, ...)
+end
+
 -- Cooldown trigger for a spell category, used for anything that needs cooldown tracking
 local function cooldownTrigger(category, allstates, event, ...)
     if shouldClearAllStates(event) then
@@ -408,7 +412,7 @@ local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ..
         local spell = spellData[specialSpellID]
 
         -- Check if there is a current spell to reduce
-        if (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == NS.SPELL_CAST_SUCCESS then
+        if spell.reduce_power_type and (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == NS.SPELL_CAST_SUCCESS then
             local cost = GetSpellPowerCost(spellID)
             if (cost and cost[1] and cost[1].type == spell.reduce_power_type) then
                 if spell.reduce_type == "fixed" then
@@ -439,6 +443,10 @@ end
 
 BoopUtilsWA.Triggers.RecklessnessCD = function (allstates, event, ...)
     return cooldownWithReductionTrigger(1719, allstates, event, ...)
+end
+
+BoopUtilsWA.Triggers.DragonRageCD = function (allstates, event, ...)
+    return cooldownWithReductionTrigger(375087, allstates, event, ...)
 end
 
 local glowOnActivationDuration = 0.75;

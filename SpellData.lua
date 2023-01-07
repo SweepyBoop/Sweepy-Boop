@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = true
+NS.isTestMode = false
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -220,7 +220,9 @@ NS.spellData = {
     },
     -- Dragon Rage
     [375087] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_SPECIAL,
+        duration = 14,
+        cooldown = 120,
     },
 
     -- Hunter
