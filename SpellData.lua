@@ -450,17 +450,20 @@ NS.spellData = {
     },
 
     -- Warlock
-    -- Offensive
+    -- Affliction
     -- Summon Darkglare
     [205180] = {
         category = OFFENSIVE_AURA,
         duration = 20,
     },
+    -- Destruction
     -- Summon Infernal
     [1122] = {
         category = OFFENSIVE_AURA,
         duration = 30,
     },
+    -- Demonology
+    -- Nether Portal
     [267217] = {
         category = OFFENSIVE,
         duration = 15, -- Show Pit Lord nameplate
@@ -481,6 +484,12 @@ NS.spellData = {
     [111898] = {
         category = OFFENSIVE_AURA,
         duration = 17,
+    },
+    -- Gul'dan's Ambition (Pit Lord)
+    [196111] = {
+        category = OFFENSIVE_PET,
+        duration = 10,
+        spellID = 387578,
     },
 
     -- Warrior
