@@ -7,10 +7,6 @@ local _, NS = ...
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
 local isTestMode = false
 
--- For raid frames inside arena, checking the first 10 should be more than enough to cover part members (players and pets)
-local MAX_ARENAOPPONENT_SIZE = 3
-local MAX_RAIDAGGRO_SIZE = 6
-
 local arenaRoles = {}
 
 local function shouldClearAggro(event)
@@ -28,7 +24,7 @@ local IsUnitArena = function(unitId)
             return arenaRoles["player"] == "DAMAGER"
         end
     else
-        for i = 1, MAX_ARENAOPPONENT_SIZE do
+        for i = 1, NS.MAX_ARENA_SIZE do
             if (unitId == "arena"..i) then
                 if ( arenaRoles[i] == nil ) then
                     local specID = GetArenaOpponentSpec(i)
@@ -51,7 +47,7 @@ local function calculateAggro(aggro)
             aggro[guid] = 1
         end
     else
-        for i = 1, MAX_ARENAOPPONENT_SIZE do
+        for i = 1, NS.MAX_ARENA_SIZE do
             if arenaRoles[i] == "DAMAGER" then
                 local guidTarget = UnitGUID("arena" .. i .. "target")
                 if guidTarget then
@@ -69,7 +65,7 @@ local eventHandler = function(frame, event, unitTarget)
         -- Upon entering a new zone, clear the aggro highlight
         arenaRoles = {}
 
-        for i = 1, MAX_RAIDAGGRO_SIZE do
+        for i = 1, NS.MAX_PARTY_SIZE do
             local frame = _G["CompactPartyFrameMember"..i]
             -- Check if the user has Blizzard default highlight on
             if frame and frame.optionTable.displayAggroHighlight then return end
@@ -84,7 +80,7 @@ local eventHandler = function(frame, event, unitTarget)
 
         local aggro = calculateAggro(aggro)
         
-        for i = 1, MAX_RAIDAGGRO_SIZE do
+        for i = 1, NS.MAX_PARTY_SIZE do
             local frame = _G["CompactPartyFrameMember"..i]
             -- Check if the user has Blizzard default highlight on
             if frame and frame.optionTable.displayAggroHighlight then return end
