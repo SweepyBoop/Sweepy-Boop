@@ -43,7 +43,7 @@ end
 local function isArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
-            local class = UnitClass("arena" .. i)
+            local class = select(3, UnitClass("arena" .. i))
             return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
         end
     end
@@ -51,11 +51,11 @@ end
 
 local function isPartyPrimaryPet(unitId)
     if UnitIsUnit(unitId, "pet") then
-        local class = UnitClass("player")
+        local class = select(3, UnitClass("player"))
         return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
     elseif UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
         local partyUnitId = "party" .. string.sub(unitId, -1, -1)
-        local class = UnitClass(partyUnitId)
+        local class = select(3, UnitClass(partyUnitId))
         return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
     end
 end
