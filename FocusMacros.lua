@@ -74,6 +74,10 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
+    if (InCombatLockdown()) then
+        return
+    end
+
     local isArena = IsActiveBattlefieldArena()
     updateMacros(isArena)
 end)
