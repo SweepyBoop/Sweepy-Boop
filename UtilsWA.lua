@@ -449,7 +449,7 @@ BoopUtilsWA.Triggers.DragonRageCD = function (allstates, event, ...)
     return cooldownWithReductionTrigger(375087, allstates, event, ...)
 end
 
-local glowOnActivationDuration = 0.75;
+local glowOnActivationDuration = 3
 -- Glow on activation (only for spells without duration to get a visual hint, especially when a player uses a 2nd charge)
 local function glowOnActivationTrigger(category, allstates, event, ...)
     if shouldClearAllStates(event) then
@@ -657,37 +657,33 @@ BoopUtilsWA.AttachToRaidFrameByUnitId = function (frames, activeRegions)
     end
 end
 
--- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, NAME_PLATE_UNIT_ADDED, NAME_PLATE_UNIT_REMOVED
-BoopUtilsWA.TotemTrigger = function (allstates, event, ...)
+-- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED
+BoopUtilsWA.Triggers.Totem = function (allstates, event, ...)
     if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
-    elseif ( event == NS.NAME_PLATE_UNIT_ADDED ) then
-        local unit = ...;
-        if unit and ( string.sub(unit, 1, 9) == "nameplate" ) and unitCanAttack(unit) then
-            local npcId = getNpcIdFromGuid(UnitGUID(unit));
-            if ( not spellData[npcId] ) then return end
-            local spell = spellData[npcId];
-            if (spell.category ~= OFFENSIVE_PET) then return end
-            -- Based on "nameplate" unitIds, which would trigger nameplate removed event later
-            allstates[unit] = makeTriggerState(spell, npcId, spell.duration, unit)
-            return true;
-        end
-    elseif ( event == NS.NAME_PLATE_UNIT_REMOVED ) then
-        local unit = ...;
-        local updated;
-        for _, state in pairs(allstates) do
-            if ( state.unit == unit ) then
-                state.show = false;
-                state.changed = true;
-                updated = true;
+        return clearAllStates(allstates)
+    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+        local subEvent, _, sourceGUID, _, _, _, destGUID = select(2, ...)
+        if ( subEvent == NS.SPELL_SUMMON ) then
+            if NS.isSourceArena(sourceGUID) then
+                local npcID = getNpcIdFromGuid(destGUID)
+                local spell = spellData[npcID]
+                if ( not spell ) then return end
+                local unitId = NS.arenaUnitId(sourceGUID)
+                allstates[destGUID] = makeTriggerState(spell, spell.spellID, spell.duration, unitId)
+                return true
+            end
+        elseif ( subEvent == NS.UNIT_DIED ) then
+            if allstates[destGUID] then
+                allstates[destGUID].show = false
+                allstates[destGUID].changed = true
+                return true
             end
         end
-        return updated;
     end
 end
 
 -- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED
-BoopUtilsWA.UnitAuraTrigger = function (allstates, event, ...)
+BoopUtilsWA.Triggers.UnitAura = function (allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates)
     elseif ( event == NS.UNIT_AURA ) then
