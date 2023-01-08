@@ -20,12 +20,15 @@ macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@playe
 
 local function getFocusName(isArena)
     if isArena then
-        print("Updating Focus Macros for Arena...")
+        print("Updating Focus Macros for Arena...", NS.MAX_ARENA_SIZE)
         local roles = {}
 
         for i = 1, NS.MAX_ARENA_SIZE do
             local spec = GetArenaOpponentSpec(i)
-            roles[i] = select(5, GetSpecializationInfoByID(specID))
+            if spec then
+                roles[i] = select(5, GetSpecializationInfoByID(spec))
+            end
+            print(roles[i])
             if ( roles[i] == "HEALER" ) then
                 -- Early return if healer is found
                 return "arena" .. i
@@ -38,9 +41,10 @@ local function getFocusName(isArena)
                 return "arena" .. i
             end
         end
-    else
-        return "focus"
     end
+
+    -- Fallback in case no healer/tank found
+    return "focus"
 end
 
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
@@ -49,6 +53,7 @@ local commonSuffix = "] "
 
 local function updateMacros(isArena)
     local focusName = getFocusName(isArena)
+    print(focusName)
     local class = select(3, UnitClass("player"))
     local abilities = classAbilities[class]
 
