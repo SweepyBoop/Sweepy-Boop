@@ -1,6 +1,8 @@
 local _, NS = ...
 
 local classAbilities = {}
+local macroPrefixes = {}
+
 classAbilities[NS.classId.Druid] = {
     "Cyclone",
     "Entangling Roots",
@@ -11,10 +13,14 @@ classAbilities[NS.classId.Druid] = {
     "Moonfire",
     "Rake",
     "Skull Bash",
+    "Wild Charge",
 }
+macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2,stealth, @"
+macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@"
 
 local function getFocusName(isArena)
     if isArena then
+        print("Updating Focus Macros for Arena...")
         local roles = {}
 
         for i = 1, NS.MAX_ARENA_SIZE do
@@ -39,7 +45,6 @@ end
 
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
 local commonPrefix = "#showtooltip\n/cast [@"
-local rakePrefix = "#showtooltip\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2,stealth, @"
 local commonSuffix = "] "
 
 local function updateMacros(isArena)
@@ -50,7 +55,7 @@ local function updateMacros(isArena)
     for i = 1, #(abilities) do
         local ability = abilities[i]
         local macroName = "Focus " .. ability
-        local prefix = ( ( ability == "Rake" ) and rakePrefix ) or commonPrefix
+        local prefix = macroPrefixes[ability] or commonPrefix
         local macroContent = prefix .. focusName .. commonSuffix .. ability
         local iMacro = GetMacroIndexByName(macroName)
         if ( iMacro == 0 ) then
@@ -65,6 +70,7 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
-    updateMacros(IsActiveBattlefieldArena())
+    local isArena = IsActiveBattlefieldArena()
+    updateMacros(isArena)
 end)
 
