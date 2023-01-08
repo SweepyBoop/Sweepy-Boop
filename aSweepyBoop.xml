@@ -13,6 +13,7 @@
 	<!-- Misc -->
 	<!-- <Script file="ShieldMeters.lua"/> -->
 	<Script file="DrinkMacro.lua"/>
+	<Script file="FocusMacros.lua"/>
 	<!-- <Script file="DampenDisplay.lua"/> -->
 	<Script file="CombatIndicator.lua"/>
 </Ui>
