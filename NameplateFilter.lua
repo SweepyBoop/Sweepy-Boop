@@ -6,7 +6,7 @@ local testMode = false
 -- Whitelist for non-player units, show nameplate if unit name or NpcID matches
 -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
 -- To find the NpcID of a unit, target it and type:
--- /run npcID = select(6, strsplit("-", UnitGUID("target"))) print(npcID)
+-- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 -- unitFrame.namePlateNpcId is numeric type, so NPC ID index here should be numeric as well
 local whiteList = {
     -- Priest
