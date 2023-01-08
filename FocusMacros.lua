@@ -45,6 +45,8 @@ local function getFocusName(isArena)
     return "focus"
 end
 
+BoopUtilsGetFocusName = getFocusName
+
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
 local commonPrefix = "#showtooltip\n/cast [@"
 local commonSuffix = "] "
@@ -75,4 +77,3 @@ frame:SetScript("OnEvent", function ()
     local isArena = IsActiveBattlefieldArena()
     updateMacros(isArena)
 end)
-
