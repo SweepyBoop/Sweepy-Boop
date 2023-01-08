@@ -54,7 +54,7 @@ local function isPartyPrimaryPet(unitId)
         local class = UnitClass("player")
         return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
     elseif UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
-        local partyUnitId = string.sub(unitId, 1, 5) .. string.sub(unitId, -1, -1)
+        local partyUnitId = "party" .. string.sub(unitId, -1, -1)
         local class = UnitClass(partyUnitId)
         return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
     end
