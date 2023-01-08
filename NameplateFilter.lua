@@ -3,6 +3,23 @@ local _, NS = ...
 BoopNameplateFilter = {}
 local testMode = false
 
+local cachedClassIds = {}
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
+frame:SetScript("OnEvent", function ()
+    cachedClassIds = {}
+end)
+
+local function getUnitClass(unitId)
+    if ( not cachedClassIds[unitId] ) then
+        cachedClassIds[unitId] = select(3, UnitClass(unitId))
+    end
+
+    return cachedClassIds[unitId]
+end
+
 -- Whitelist for non-player units, show nameplate if unit name or NpcID matches
 -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
 -- To find the NpcID of a unit, target it and type:
@@ -43,7 +60,7 @@ end
 local function isArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
-            local class = select(3, UnitClass("arena" .. i))
+            local class = getUnitClass("arena" .. i)
             return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
         end
     end
@@ -53,13 +70,13 @@ local partyPetSize = 2
 
 local function isPartyPrimaryPet(unitId)
     if UnitIsUnit(unitId, "pet") then
-        local class = select(3, UnitClass("player"))
+        local class = getUnitClass("player")
         return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
     else
         for i = 1, partyPetSize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 local partyUnitId = "party" .. i
-                local class = select(3, UnitClass(partyUnitId))
+                local class = getUnitClass(partyUnitId)
                 return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
             end
         end
