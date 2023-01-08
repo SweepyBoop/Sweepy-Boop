@@ -11,9 +11,6 @@ Here is how my UI looks like:
 Here are the arena WeakAuras based on this addon:
 
 - [Arena Enemy Offensive Cooldowns](https://wago.io/EtVxNHjcg)
-- [Arena Enemy CC Breaks](https://wago.io/ZqFOXpRY-)
-- [Arena Enemy Defensives](https://wago.io/KjyEYfdop)
-
 - [Mortal Strike Debuff on Team](https://wago.io/pCKbpzW-Q)
 - [Player's own DR timer](https://wago.io/cD-yK8HTF)
 
