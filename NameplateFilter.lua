@@ -267,11 +267,11 @@ local borderSize = 2.5
 local borderColor = "white"
 
 BoopNameplateBorder.UpdateBorder = function (unitFrame)
-    if unitFrame.unit and UnitIsUnit ("target", unitFrame.unit) then
-        local r, g, b, a = DetailsFramework:ParseColors (borderColor)
-        unitFrame.healthBar.TargetBorder:SetVertexColor (r, g, b, a)
+    if unitFrame.unit and UnitIsUnit("target", unitFrame.unit) then
+        local r, g, b, a = DetailsFramework:ParseColors(borderColor)
+        unitFrame.healthBar.TargetBorder:SetVertexColor(r, g, b, a)
 
-        unitFrame.healthBar.TargetBorder:SetBorderSizes (borderSize, borderSize, borderSize, borderSize)
+        unitFrame.healthBar.TargetBorder:SetBorderSizes(borderSize, borderSize, borderSize, borderSize)
         unitFrame.healthBar.TargetBorder:UpdateSizes()
         unitFrame.healthBar.TargetBorder:Show()
     else
@@ -280,13 +280,13 @@ BoopNameplateBorder.UpdateBorder = function (unitFrame)
 end
 
 BoopNameplateBorder.Constructor = function (self, unitId, unitFrame, envTable)
-    if (not unitFrame.healthBar.TargetBorder) then
-        unitFrame.healthBar.TargetBorder = CreateFrame ("frame", nil, unitFrame.healthBar, "NamePlateFullBorderTemplate")
+    if ( not unitFrame.healthBar.TargetBorder ) then
+        unitFrame.healthBar.TargetBorder = CreateFrame("frame", nil, unitFrame.healthBar, "NamePlateFullBorderTemplate")
     end
 end
 
 BoopNameplateBorder.Destructor = function (self, unitId, unitFrame, envTable)
-    if (unitFrame.healthBar.TargetBorder) then
+    if unitFrame.healthBar.TargetBorder then
         unitFrame.healthBar.TargetBorder:Hide()
     end
 end
