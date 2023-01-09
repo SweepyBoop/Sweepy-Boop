@@ -362,6 +362,12 @@ NS.spellData = {
         category = OFFENSIVE_CD,
         cooldown = 45,
     },
+    -- Mindbender (Idol of Y'Shaarj)
+    [200174] = {
+        category = OFFENSIVE,
+        duration = 15,
+        cooldown = 60,
+    },
     -- Psyfiend
     [101398] = {
         category = OFFENSIVE_PET,
