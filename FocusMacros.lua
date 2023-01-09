@@ -18,7 +18,9 @@ classAbilities[NS.classId.Druid] = {
 macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2,stealth, @"
 macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@"
 
-local function getFocusName(isArena)
+local function getFocusName()
+    local isArena = IsActiveBattlefieldArena()
+
     if isArena then
         local roles = {}
 
@@ -51,8 +53,8 @@ BoopUtilsGetFocusName = getFocusName
 local commonPrefix = "#showtooltip\n/cast [@"
 local commonSuffix = "] "
 
-local function updateMacros(isArena)
-    local focusName = getFocusName(isArena)
+local function updateMacros()
+    local focusName = getFocusName()
     local class = select(3, UnitClass("player"))
     local abilities = classAbilities[class]
 
@@ -78,6 +80,5 @@ frame:SetScript("OnEvent", function ()
         return
     end
 
-    local isArena = IsActiveBattlefieldArena()
-    updateMacros(isArena)
+    updateMacros()
 end)
