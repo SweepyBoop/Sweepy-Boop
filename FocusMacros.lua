@@ -18,12 +18,7 @@ classAbilities[NS.classId.Druid] = {
 macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2,stealth, @"
 macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@"
 
-local cachedFocusName = nil
-local function getFocusName()
-    if cachedFocusName then
-        return cachedFocusName
-    end
-
+local function getFocusNameInternal()
     local isArena = IsActiveBattlefieldArena()
 
     if isArena then
@@ -36,26 +31,30 @@ local function getFocusName()
             end
             if ( roles[i] == "HEALER" ) then
                 -- Early return if healer is found
-                cachedFocusName = "arena" .. i
-                return cachedFocusName
+                return "arena" .. i
             end
         end
 
         -- Healer is not found, find a tank
         for i = 1, NS.MAX_ARENA_SIZE do
             if ( roles[i] ~= "DAMAGER" ) then
-                cachedFocusName = "arena" .. i
-                return cachedFocusName
+                return "arena" .. i
             end
         end
     end
 
     -- Fallback in case no healer/tank found
-    cachedFocusName = "focus"
-    return cachedFocusName
+    return "focus"
 end
 
-BoopUtilsGetFocusName = getFocusName
+local cachedFocusName = nil
+local function getFocusName()
+    if cachedFocusName == nil then
+        cachedFocusName = getFocusNameInternal()
+    end
+
+    return cachedFocusName
+end
 
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
 local commonPrefix = "#showtooltip\n/cast [@"
