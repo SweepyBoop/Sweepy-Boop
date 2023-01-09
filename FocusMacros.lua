@@ -47,6 +47,8 @@ local function getFocusName()
     return "focus"
 end
 
+BoopUtilsGetFocusName = getFocusName
+
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
 local commonPrefix = "#showtooltip\n/cast [@"
 local commonSuffix = "] "
