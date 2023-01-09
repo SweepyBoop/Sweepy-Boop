@@ -18,7 +18,14 @@ classAbilities[NS.classId.Druid] = {
 macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2,stealth, @"
 macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@"
 
-local function getFocusName(isArena)
+local cachedFocusName = nil
+local function getFocusName()
+    if cachedFocusName then
+        return cachedFocusName
+    end
+
+    local isArena = IsActiveBattlefieldArena()
+
     if isArena then
         local roles = {}
 
@@ -29,20 +36,23 @@ local function getFocusName(isArena)
             end
             if ( roles[i] == "HEALER" ) then
                 -- Early return if healer is found
-                return "arena" .. i
+                cachedFocusName = "arena" .. i
+                return cachedFocusName
             end
         end
 
         -- Healer is not found, find a tank
         for i = 1, NS.MAX_ARENA_SIZE do
             if ( roles[i] ~= "DAMAGER" ) then
-                return "arena" .. i
+                cachedFocusName = "arena" .. i
+                return cachedFocusName
             end
         end
     end
 
     -- Fallback in case no healer/tank found
-    return "focus"
+    cachedFocusName = "focus"
+    return cachedFocusName
 end
 
 BoopUtilsGetFocusName = getFocusName
@@ -51,8 +61,8 @@ BoopUtilsGetFocusName = getFocusName
 local commonPrefix = "#showtooltip\n/cast [@"
 local commonSuffix = "] "
 
-local function updateMacros(isArena)
-    local focusName = getFocusName(isArena)
+local function updateMacros()
+    local focusName = getFocusName()
     local class = select(3, UnitClass("player"))
     local abilities = classAbilities[class]
 
@@ -74,10 +84,11 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
+    cachedFocusName = nil
+
     if (InCombatLockdown()) then
         return
     end
 
-    local isArena = IsActiveBattlefieldArena()
-    updateMacros(isArena)
+    updateMacros()
 end)
