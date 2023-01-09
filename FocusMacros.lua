@@ -18,7 +18,7 @@ classAbilities[NS.classId.Druid] = {
 macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2,stealth, @"
 macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@"
 
-local function getFocusNameInternal()
+local function getFocusName()
     local isArena = IsActiveBattlefieldArena()
 
     if isArena then
@@ -45,15 +45,6 @@ local function getFocusNameInternal()
 
     -- Fallback in case no healer/tank found
     return "focus"
-end
-
-local cachedFocusName = nil
-local function getFocusName()
-    if cachedFocusName == nil then
-        cachedFocusName = getFocusNameInternal()
-    end
-
-    return cachedFocusName
 end
 
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
@@ -83,8 +74,6 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
-    cachedFocusName = nil
-
     if (InCombatLockdown()) then
         return
     end
