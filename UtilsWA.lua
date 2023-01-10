@@ -103,10 +103,10 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID, destoGUID)
     if ( not track ) then return end
 
     -- Validate GUID
-    if ( not spell.trackDest ) then
-        track = NS.isGUIDArena(sourceGUID)
-    else
+    if spell.trackDest then
         track = NS.isGUIDArena(destoGUID)
+    else
+        track = NS.isGUIDArena(sourceGUID)
     end
     if ( not track ) then return end
 

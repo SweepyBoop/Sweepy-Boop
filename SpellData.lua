@@ -5,15 +5,17 @@ NS.isTestMode = true
 NS.spellCategory = {
     OFFENSIVE = 1,
     OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
-    OFFENSIVE_CD = 3,
     OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     OFFENSIVE_SPECIAL = 5,
     OFFENSIVE_UNITAURA = 6, -- This checks destGUID instead of sourceGUID, e.g., Power Infusion can be cast on team members
 }
 
+-- trackEvent: event or combat log subEvent to track
+-- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID
+-- isNpc: spellId is treated as NpcId, provide the spellId in the spell data for finding the spell icon
+
 local OFFENSIVE = NS.spellCategory.OFFENSIVE
 local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
-local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD
 local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
 local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA
@@ -94,7 +96,7 @@ NS.defaultIndex = 100
 -- Offensive spells are further divided to 3 sub categories:
 -- OFFENSIVE: glow when it's active, show cooldown timer otherwise
 -- OFFENSIVE_DURATION: glow when it's active
--- OFFENSIVE_CD: show cooldown timer
+-- OFFENSIVE: show cooldown timer
 NS.spellData = {
     -- General
     -- Offensive
@@ -148,7 +150,7 @@ NS.spellData = {
     -- Offensive
     -- The Hunt
     [370965] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 90,
         index = 1,
     },
@@ -184,21 +186,21 @@ NS.spellData = {
     },
     -- Convoke the Spirits
     [391528] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 60,
         spec = { specID.BALANCE, specID.FERAL },
         index = 1,
     },
     -- Feral Frenzy
     [274837] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 45,
     },
 
     -- Evoker
     -- Tip the Scales
     [370553] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         spec = { specID.DEVASTATION },
         cooldown = 120,
     },
@@ -265,7 +267,7 @@ NS.spellData = {
     },
     -- Arcane Surge
     [365350] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 90,
     },
 
@@ -329,7 +331,7 @@ NS.spellData = {
     },
     -- Divine Toll
     [375576] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         spec = { specID.RET },
         cooldown = 60,
     },
@@ -403,7 +405,7 @@ NS.spellData = {
     },
     -- Exsanguinate
     [200806] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 180,
         index = 2,
     },
@@ -564,12 +566,12 @@ if NS.isTestMode then
     }
     -- Rejuv
     NS.spellData[774] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 45,
     }
     -- Wild Growth
     NS.spellData[48438] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
     }
 
     -- Test totem with "PvP Training Dummy"
