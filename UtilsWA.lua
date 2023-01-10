@@ -393,7 +393,7 @@ BoopUtilsWA.Triggers.CooldownOffensive = function(allstates, event, ...)
 end
 
 -- Generic cooldown reduction, e.g., by spell power cost
-local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ...)
+local function cooldownTriggerSingleSpell(specialSpellID, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
@@ -425,19 +425,19 @@ local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ..
 end
 
 BoopUtilsWA.Triggers.StormEarthAndFireCD = function (allstates, event, ...)
-    return cooldownWithReductionTrigger(137639, allstates, event, ...)
+    return cooldownTriggerSingleSpell(137639, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.SerenityCD = function (allstates, event, ...)
-    return cooldownWithReductionTrigger(152173, allstates, event, ...)
+    return cooldownTriggerSingleSpell(152173, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.RecklessnessCD = function (allstates, event, ...)
-    return cooldownWithReductionTrigger(1719, allstates, event, ...)
+    return cooldownTriggerSingleSpell(1719, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.DragonRageCD = function (allstates, event, ...)
-    return cooldownWithReductionTrigger(375087, allstates, event, ...)
+    return cooldownTriggerSingleSpell(375087, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
