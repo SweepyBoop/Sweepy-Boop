@@ -11,12 +11,12 @@ NS.spellCategory = {
     OFFENSIVE_UNITAURA = 6, -- set combine = true if we want to show one aura for all units.
 }
 
-local OFFENSIVE = NS.spellCategory.OFFENSIVE;
-local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
-local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
-local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET;
-local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
-local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA;
+local OFFENSIVE = NS.spellCategory.OFFENSIVE
+local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA
+local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD
+local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET
+local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
+local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD"
@@ -43,8 +43,8 @@ NS.specID = {
     BM = 253,
     WW = 269,
     DEVASTATION = 1467,
-};
-local specID = NS.specID;
+}
+local specID = NS.specID
 
 NS.classId = {
     Warrior = 1,
@@ -60,8 +60,8 @@ NS.classId = {
     Druid = 11,
     DemonHunter = 12,
     Evoker = 13,
-};
-local classId = NS.classId;
+}
+local classId = NS.classId
 
 NS.diminishingReturnCategory = {
     DR_DISORIENT = "disorient",
@@ -72,15 +72,15 @@ NS.diminishingReturnCategory = {
     DR_DISARM = "disarm",
     DR_TAUNT = "taunt",
     DR_KNOCKBACK = "knockback",
-};
-local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT;
-local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE;
-local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE;
-local DR_STUN = NS.diminishingReturnCategory.DR_STUN;
-local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT;
-local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM;
-local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
-local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
+}
+local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT
+local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE
+local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE
+local DR_STUN = NS.diminishingReturnCategory.DR_STUN
+local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT
+local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM
+local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT
+local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK
 
 -- Events (and units) to track
 -- Avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
@@ -92,15 +92,15 @@ NS.trackType = {
     TRACK_AURA = 3,
     TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
     TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
-};
+}
 
-local TRACK_PET = NS.trackType.TRACK_PET;
-local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA;
-local TRACK_AURA = NS.trackType.TRACK_AURA;
-local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE;
-local TRACK_UNIT = NS.trackType.TRACK_UNIT;
+local TRACK_PET = NS.trackType.TRACK_PET
+local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA
+local TRACK_AURA = NS.trackType.TRACK_AURA
+local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE
+local TRACK_UNIT = NS.trackType.TRACK_UNIT
 
-NS.defaultIndex = 100;
+NS.defaultIndex = 100
 
 -- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED
 -- charges: baseline 2 charges
@@ -531,14 +531,14 @@ NS.spellData = {
         reduce_power_type = Enum.PowerType.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
     },
-};
+}
 
 NS.classWithFearSpell = function(class)
-    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock );
+    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock )
 end
 
-NS.RESET_FULL = 0;
-local RESET_FULL = NS.RESET_FULL;
+NS.RESET_FULL = 0
+local RESET_FULL = NS.RESET_FULL
 
 NS.spellResets = {
     -- Mindgames
@@ -558,7 +558,7 @@ NS.spellResets = {
     [14914] = {
         [375901] = 1,
     },
-};
+}
 
 if NS.isTestMode then
     -- Test
@@ -568,22 +568,22 @@ if NS.isTestMode then
         duration = 8,
         cooldown = 30,
         sound = true,
-    };
+    }
     -- Regrowth
     NS.spellData[8936] = {
         category = OFFENSIVE,
         duration = 5,
         cooldown = 120,
-    };
+    }
     -- Rejuv
     NS.spellData[774] = {
         category = OFFENSIVE_CD,
         cooldown = 45,
-    };
+    }
     -- Wild Growth
     NS.spellData[48438] = {
         category = OFFENSIVE_CD,
-    };
+    }
 
     -- Test totem with "PvP Training Dummy"
     NS.spellData[188550] = {
@@ -591,7 +591,7 @@ if NS.isTestMode then
         spellID = 324386,
         duration = 60,
         sound = true,
-    };
+    }
 end
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
@@ -770,10 +770,10 @@ NS.diminishingReturnSpells = {
     [204263]  = DR_KNOCKBACK,        -- Shining Force
     [51490]   = DR_KNOCKBACK,        -- Thunderstorm
 --      [287712]  = DR_KNOCKBACK,        -- Haywire (Kul'Tiran Racial)
-};
+}
 
 if NS.isTestMode then
-    NS.diminishingReturnSpells[1126] = NS.diminishingReturnCategory.DR_DISORIENT; -- Mark of the Wild
-    NS.diminishingReturnSpells[8936] = NS.diminishingReturnCategory.DR_STUN; -- Regrowth
-    NS.diminishingReturnSpells[774] = NS.diminishingReturnCategory.DR_INCAPACITATE; -- Rejuvenation
+    NS.diminishingReturnSpells[1126] = NS.diminishingReturnCategory.DR_DISORIENT -- Mark of the Wild
+    NS.diminishingReturnSpells[8936] = NS.diminishingReturnCategory.DR_STUN -- Regrowth
+    NS.diminishingReturnSpells[774] = NS.diminishingReturnCategory.DR_INCAPACITATE -- Rejuvenation
 end
