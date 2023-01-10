@@ -402,10 +402,6 @@ BoopUtilsWA.Triggers.CooldownOffensive = function(allstates, event, ...)
     return cooldownTrigger(OFFENSIVE, allstates, event, ...);
 end
 
-BoopUtilsWA.Triggers.CooldownOffensiveCD = function (allstates, event, ...)
-    return cooldownTrigger(OFFENSIVE_CD, allstates, event, ...)
-end
-
 -- Generic cooldown reduction, e.g., by spell power cost
 local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ...)
     if resetAllStates(allstates, event) then
@@ -453,47 +449,6 @@ end
 
 BoopUtilsWA.Triggers.DragonRageCD = function (allstates, event, ...)
     return cooldownWithReductionTrigger(375087, allstates, event, ...)
-end
-
-local glowOnActivationDuration = 3
--- Glow on activation (only for spells without duration to get a visual hint, especially when a player uses a 2nd charge)
-local function glowOnActivationTrigger(category, allstates, event, ...)
-    if resetAllStates(allstates, event) then
-        return true
-    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
-        local unitTarget, _, spellID = ...;
-        if (not unitTarget) then return end
-
-        -- Return if no valid spell
-        local spell = spellData[spellID];
-        if (not spell) or (spell.trackEvent ~= event) or (spell.category ~= category) or (not spell.cooldown) then return end
-
-        if unitSpellEnabled(spell, unitTarget) then
-            local guid = concatGUID(UnitGUID(unitTarget), spellID);
-            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration, unitTarget)
-            return true;
-        end
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
-        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
-        -- Return if no valid target
-        if (not sourceGUID) then return end
-
-        -- Return if no valid spell or spell does not track cooldown
-        local spell = spellData[spellID];
-        if (not spell) or (spell.category ~= category) or (not spell.cooldown) then return end
-
-        if checkSpellEnabled(spell, subEvent, sourceGUID) then
-            local guid = concatGUID(sourceGUID, spellID)
-            local unitId = NS.arenaUnitId(sourceGUID)
-            allstates[guid] = makeTriggerState(spell, spellID, glowOnActivationDuration, unitId)
-            return true;
-        end
-    end
-end
-
-BoopUtilsWA.Triggers.GlowOnActivationOffensiveCD = function (allstates, event, ...)
-    return glowOnActivationTrigger(OFFENSIVE_CD, allstates, event, ...);
 end
 
 BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
@@ -545,7 +500,7 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
-        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
+        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...)
         -- We only care about this one spellID
         if (spellID ~= specialSpellID) then return end
         if (not shouldCheckCombatLog(subEvent)) then return end
@@ -555,17 +510,17 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
         local spell = spellData[specialSpellID]
 
         -- Check if an aura ended early
-        if spell.dispellable and (subEvent == NS.SPELL_AURA_REMOVED) then
+        if (subEvent == NS.SPELL_AURA_REMOVED) then
             if allstates[sourceGUID] then
-                local state = allstates[sourceGUID];
-                state.show = false;
-                state.changed = true;
-                return true;
+                local state = allstates[sourceGUID]
+                state.show = false
+                state.changed = true
+                return true
             end
         elseif checkSpellEnabled(spell, subEvent, sourceGUID) then
                 local unitId = NS.arenaUnitId(sourceGUID)
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration, unitId)
-                return true;
+                return true
         end
     end
 end

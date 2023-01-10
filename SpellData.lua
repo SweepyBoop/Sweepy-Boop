@@ -84,7 +84,6 @@ local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK
 
 NS.defaultIndex = 100
 
--- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED
 -- charges: baseline 2 charges
 -- opt_charges: optionally 2 charges
 -- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
@@ -245,7 +244,6 @@ NS.spellData = {
         cooldown = 120,
         index = 1,
         sound = true,
-        dispellable = true,
     
         resets = {
             [133] = 2, -- Pyrokinesis
@@ -444,7 +442,6 @@ NS.spellData = {
     [191634] = {
         category = OFFENSIVE_DURATION,
         duration = 15,
-        dispellable = true,
     },
     -- Skyfury
     [208963] = {
@@ -564,6 +561,7 @@ if NS.isTestMode then
         category = OFFENSIVE,
         duration = 8,
         cooldown = 30,
+        index = 1,
         sound = true,
     }
     -- Regrowth
