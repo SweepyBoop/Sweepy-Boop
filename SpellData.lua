@@ -155,8 +155,8 @@ NS.spellData = {
     -- Metamorphosis
     [191427] = {
         category = OFFENSIVE_DURATION,
-        trackType = TRACK_UNIT,
-        duration = 30,
+        trackEvent = NS.UNIT_SPELLCAST_SUCCEEDED,
+        duration = 24,
     },
 
     -- Druid

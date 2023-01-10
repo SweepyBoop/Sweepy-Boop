@@ -252,7 +252,7 @@ local durationTrigger = function(category, allstates, event, ...)
         local unitTarget, _, spellID = ...;
         if (not unitTarget) then return end
         local spell = spellData[spellID];
-        if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.duration) then return end
+        if (not spell) or (spell.trackEvent ~= event) or (spell.category ~= category) or (not spell.duration) then return end
 
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
@@ -359,7 +359,7 @@ local function cooldownTrigger(category, allstates, event, ...)
 
         -- Return if no valid spell
         local spell = spellData[spellID];
-        if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
+        if (not spell) or (spell.trackEvent ~= event) or (spell.category ~= category) or (not spell.cooldown) then return end
 
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
@@ -457,7 +457,7 @@ local function glowOnActivationTrigger(category, allstates, event, ...)
 
         -- Return if no valid spell
         local spell = spellData[spellID];
-        if (not spell) or (spell.trackType ~= TRACK_UNIT) or (spell.category ~= category) or (not spell.cooldown) then return end
+        if (not spell) or (spell.trackEvent ~= event) or (spell.category ~= category) or (not spell.cooldown) then return end
 
         if unitSpellEnabled(spell, unitTarget) then
             local guid = concatGUID(UnitGUID(unitTarget), spellID);
