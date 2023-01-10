@@ -1,24 +1,24 @@
 local _, NS = ...
-local isTestMode = NS.isTestMode;
+local isTestMode = NS.isTestMode
 
 -- Import spell data
-local OFFENSIVE = NS.spellCategory.OFFENSIVE;
-local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
-local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
-local OFFENSIVE_PET = NS.OFFENSIVE_PET;
-local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
-local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA;
+local OFFENSIVE = NS.spellCategory.OFFENSIVE
+local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA
+local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD
+local OFFENSIVE_PET = NS.OFFENSIVE_PET
+local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
+local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA
 
-local TRACK_UNIT = NS.trackType.TRACK_UNIT;
+local TRACK_UNIT = NS.trackType.TRACK_UNIT
 
-local spellData = NS.spellData;
+local spellData = NS.spellData
 
-local spellResets = NS.spellResets;
+local spellResets = NS.spellResets
 
-local baselineSpells = NS.baselineSpells;
+local baselineSpells = NS.baselineSpells
 
-BoopUtilsWA = {};
-BoopUtilsWA.Triggers = {};
+BoopUtilsWA = {}
+BoopUtilsWA.Triggers = {}
 
 local WA_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
