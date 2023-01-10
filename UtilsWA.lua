@@ -13,6 +13,8 @@ local spellData = NS.spellData
 
 local spellResets = NS.spellResets
 
+local defaultDuration = 3
+
 BoopUtilsWA = {}
 BoopUtilsWA.Triggers = {}
 
@@ -261,32 +263,34 @@ local durationTrigger = function(category, allstates, event, ...)
             return true;
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
-        local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
+        local subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
         if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
 
         -- Return if no valid spell or spell does not track cooldown
-        local spell = spellData[spellID];
-        if (not spell) or (spell.category ~= category) or (not spell.duration) then return end
+        local spell = spellData[spellID]
+        if (not spell) or (spell.category ~= category) then return end
 
         -- Check if an aura ended early
         if spell.dispellable and (subEvent == NS.SPELL_AURA_REMOVED) then
-            local guid = concatGUID(sourceGUID, spellID);
+            local unitGUID = ( spell.trackDest and destGUID ) or sourceGUID
+            local guid = concatGUID(unitGUID, spellID)
             if allstates[guid] then
-                local state = allstates[guid];
-                state.show = false;
-                state.changed = true;
-                return true;
+                local state = allstates[guid]
+                state.show = false
+                state.changed = true
+                return true
             end
         end
 
-        if checkSpellEnabled(spell, subEvent, sourceGUID) then
-            local guid = concatGUID(sourceGUID, spellID);
-            local duration = spell.duration;
-            local unit = NS.arenaUnitId(sourceGUID)
-            allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unit)
-            return true;
+        if checkSpellEnabled(spell, subEvent, sourceGUID, destGUID) then
+            local unitGUID = ( spell.trackDest and destGUID ) or sourceGUID
+            local guid = concatGUID(unitGUID, spellID)
+            local duration = spell.duration or defaultDuration
+            local unit = NS.arenaUnitId(unitGUID)
+            allstates[guid] = makeTriggerState(spell, spellID, duration, unit)
+            return true
         end
     end
 end
@@ -596,7 +600,7 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
             local spell = getOffensiveSpellDataById(spellID)
             if ( not spell ) then return end
 
-            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
+            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration or defaultDuration, unitTarget)
             return true
         end
     end

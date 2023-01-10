@@ -354,7 +354,7 @@ NS.spellData = {
     -- Offensive
     -- Mindgames
     [375901] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 45,
     },
     -- Mindbender (Idol of Y'Shaarj)

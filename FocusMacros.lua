@@ -57,6 +57,7 @@ local function updateMacros()
     local focusName = getFocusName()
     local class = select(3, UnitClass("player"))
     local abilities = classAbilities[class]
+    if ( not abilities ) then return end
 
     for i = 1, #(abilities) do
         local ability = abilities[i]
