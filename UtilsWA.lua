@@ -15,8 +15,6 @@ local spellData = NS.spellData
 
 local spellResets = NS.spellResets
 
-local baselineSpells = NS.baselineSpells
-
 BoopUtilsWA = {}
 BoopUtilsWA.Triggers = {}
 
