@@ -110,20 +110,20 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID, destGUID)
 
     -- Check if spell is disabled for current spec
     if spell.spec then
-        local specEnabled = false;
+        local specEnabled = false
 
-        local spec = NS.arenaSpec(sourceGUID);
-        local specs = spell.spec;
+        local spec = NS.arenaSpec(sourceGUID)
+        local specs = spell.spec
         for i = 1, #specs do
             if (spec == specs[i]) then
-                specEnabled = true;
+                specEnabled = true
             end
         end
 
         if (not specEnabled) then return end
     end
 
-    return true;
+    return true
 end
 
 -- Check whether spell is enabled for UNIT_SPELLCAST_ events
@@ -249,16 +249,15 @@ local durationTrigger = function(category, allstates, event, ...)
             end
         end
     elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
-        local unitTarget, _, spellID = ...;
+        local unitTarget, _, spellID = ...
         if (not unitTarget) then return end
         local spell = spellData[spellID];
         if (not spell) or (spell.trackEvent ~= event) or (spell.category ~= category) or (not spell.duration) then return end
 
         if unitSpellEnabled(spell, unitTarget) then
-            local guid = concatGUID(UnitGUID(unitTarget), spellID);
-            local duration = spell.duration;
+            local guid = concatGUID(UnitGUID(unitTarget), spellID)
             allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
-            return true;
+            return true
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
@@ -594,7 +593,7 @@ local function isUnitParty(unitId)
     return (unitId == "party1") or (unitId == "party2");
 end
 
--- Use premade auras for OFFENSIVE_UNITAURA
+-- Use premade auras for dynamic auras
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
