@@ -87,12 +87,11 @@ local eventHandler = function(frame, event, unitTarget)
 
             if frame then
                 local guid = UnitGUID(frame.unit)
-                local aggroLevel = guid and aggro[guid]
             
                 -- 1: 1.00, 1.00, 0.47 (yellow)
                 -- 2: 1.00, 0.60, 0.00 (orange)
                 -- 3: 1.00, 0.00, 0.00 (red)
-                if aggroLevel then
+                if guid and aggro[guid] then
                     frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(3)) -- red
                     frame.aggroHighlight:Show()
                 else
