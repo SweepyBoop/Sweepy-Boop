@@ -122,7 +122,7 @@ NS.spellData = {
     -- Unholy Assult
     [207289] = {
         category = OFFENSIVE_DURATION,
-        duration = 12,
+        duration = 20,
     },
     -- Apocalypse
     [275699] = {
