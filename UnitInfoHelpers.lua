@@ -98,7 +98,7 @@ end
 
 -- Caller ensures sourceGUID is not nil
 -- Call this before getting any info based on sourceGUID
-NS.isSourceArena = function(sourceGUID)
+NS.isGUIDArena = function(sourceGUID)
     if isTestMode and (sourceGUID == arenaUnitGUID("player", 0)) then
         -- updateArenaInfo called by arenaUnitGUID
         return true

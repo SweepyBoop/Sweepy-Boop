@@ -82,24 +82,6 @@ local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM
 local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT
 local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK
 
--- Events (and units) to track
--- Avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
-NS.trackType = {
-    -- For pet kicks
-    TRACK_PET = 1, -- SPELL_CAST_SUCCESS & pet GUID
-    TRACK_PET_AURA = 2, -- SPELL_AURA_APPLIED & pet GUID
-
-    TRACK_AURA = 3,
-    TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
-    TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
-}
-
-local TRACK_PET = NS.trackType.TRACK_PET
-local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA
-local TRACK_AURA = NS.trackType.TRACK_AURA
-local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE
-local TRACK_UNIT = NS.trackType.TRACK_UNIT
-
 NS.defaultIndex = 100
 
 -- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED

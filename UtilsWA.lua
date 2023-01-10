@@ -9,8 +9,6 @@ local OFFENSIVE_PET = NS.OFFENSIVE_PET
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
 local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA
 
-local TRACK_UNIT = NS.trackType.TRACK_UNIT
-
 local spellData = NS.spellData
 
 local spellResets = NS.spellResets
@@ -92,26 +90,23 @@ local function makeTriggerState(spellData, spellID, duration, ...)
 end
 
 -- Checck whether spell is enabled for combat log events
-local function checkSpellEnabled(spell, subEvent, sourceGUID)
-    -- Check (event & sourceGUID) based on spell tracking type
-    local track = false;
-    local trackType = spell.trackType;
-    if (trackType == NS.trackType.TRACK_AURA_FADE) and (subEvent == NS.SPELL_AURA_REMOVED) then
-        track = NS.isSourceArena(sourceGUID);
-    elseif (trackType == NS.trackType.TRACK_AURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
-        track = NS.isSourceArena(sourceGUID);
-    elseif (spell.category == OFFENSIVE_UNITAURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
-        track = NS.isSourceArena(sourceGUID);
-    elseif (trackType == NS.trackType.TRACK_PET) and (subEvent == NS.SPELL_CAST_SUCCESS) then
-        track = NS.isSourceArenaPet(sourceGUID);
-    elseif (trackType == NS.trackType.TRACK_PET_AURA) and (subEvent == NS.SPELL_AURA_APPLIED) then
-        track = NS.isSourceArenaPet(sourceGUID);
-    elseif (not trackType) and (subEvent == NS.SPELL_CAST_SUCCESS) then
-        -- if trackType is missing, it tracks SPELL_CAST_SUCCESS by default
-        track = NS.isSourceArena(sourceGUID);
+local function checkSpellEnabled(spell, subEvent, sourceGUID, destoGUID)
+    -- Validate subEvent
+    local track = false
+    if ( not spell.trackEvent ) then
+        track = ( subEvent == NS.SPELL_CAST_SUCCESS )
+    else
+        track = ( spell.trackEvent == subEvent )
     end
+    if ( not track ) then return end
 
-    if (not track) then return end
+    -- Validate GUID
+    if ( not spell.trackDest ) then
+        track = NS.isGUIDArena(sourceGUID)
+    else
+        track = NS.isGUIDArena(destoGUID)
+    end
+    if ( not track ) then return end
 
     -- Check if spell is disabled for current spec
     if spell.spec then
@@ -666,7 +661,7 @@ BoopUtilsWA.Triggers.Totem = function (allstates, event, ...)
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local subEvent, _, sourceGUID, _, _, _, destGUID = select(2, ...)
         if ( subEvent == NS.SPELL_SUMMON ) then
-            if NS.isSourceArena(sourceGUID) then
+            if NS.isGUIDArena(sourceGUID) then
                 local npcID = getNpcIdFromGuid(destGUID)
                 local spell = spellData[npcID]
                 if ( not spell ) then return end
