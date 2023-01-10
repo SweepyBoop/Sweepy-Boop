@@ -72,11 +72,6 @@ local function clearAllStates(allstates)
     return true
 end
 
-local function unitCanAttack(unitId)
-    -- The result is reversed when player is under mind control
-    return UnitCanAttack(unitId, "player") and ( not UnitIsPossessed("player") );
-end
-
 -- substring of a guid is of string type, need to convert into number so it matches a numeric index
 local function getNpcIdFromGuid (guid)
     local NpcId = select ( 6, strsplit ( "-", guid ) )
