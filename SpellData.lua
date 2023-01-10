@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false
+NS.isTestMode = true
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -331,6 +331,7 @@ NS.spellData = {
         sound = true,
         index = 1,
         spec = { specID.RET },
+        extend = true, -- Zelot's Paragon
     },
     -- Crusade
     [231895] = {
@@ -339,6 +340,7 @@ NS.spellData = {
         cooldown = 120,
         index = 1,
         spec = { specID.RET },
+        extend = true, -- Zelot's Paragon
     },
     -- Divine Toll
     [375576] = {
