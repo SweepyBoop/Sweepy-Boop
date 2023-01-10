@@ -8,7 +8,7 @@ NS.spellCategory = {
     OFFENSIVE_CD = 3,
     OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     OFFENSIVE_SPECIAL = 5,
-    OFFENSIVE_UNITAURA = 6, -- set combine = true if we want to show one aura for all units.
+    OFFENSIVE_UNITAURA = 6, -- This checks destGUID instead of sourceGUID, e.g., Power Infusion can be cast on team members
 }
 
 local OFFENSIVE = NS.spellCategory.OFFENSIVE

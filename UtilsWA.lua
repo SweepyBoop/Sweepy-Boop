@@ -45,7 +45,7 @@ local function resetAllStates(allstates, event)
             state.show = false
             state.changed = true
         end
-    
+
         return true
     end
 end
@@ -684,7 +684,7 @@ BoopUtilsWA.Triggers.Totem = function (allstates, event, ...)
     end
 end
 
--- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED
+-- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA
 BoopUtilsWA.Triggers.UnitAura = function (allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
