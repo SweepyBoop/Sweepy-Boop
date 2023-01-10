@@ -225,6 +225,7 @@ NS.spellData = {
         category = OFFENSIVE_SPECIAL,
         duration = 14,
         cooldown = 120,
+        extend = true,
     },
 
     -- Hunter
@@ -296,6 +297,7 @@ NS.spellData = {
         charges = true,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
+        extend = true,
     },
     -- Serenity
     [152173] = {
@@ -304,6 +306,7 @@ NS.spellData = {
         cooldown = 90,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
+        extend = true,
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {

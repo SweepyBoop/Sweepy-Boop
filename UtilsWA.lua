@@ -308,6 +308,8 @@ local function durationTriggerSingleSpell(specialSpellID, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
     elseif ( event == NS.UNIT_AURA ) then
+        if ( not spellData[specialSpellID] ) or ( not spellData[specialSpellID].extend ) then return end
+
         local unitTarget, updateAuras = ...
         if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
 
