@@ -151,7 +151,7 @@ NS.spellData = {
         cooldown = 90,
         index = 1,
     },
-    -- Metamorphosis
+    -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
         category = OFFENSIVE_DURATION,
         trackEvent = NS.UNIT_SPELLCAST_SUCCEEDED,
@@ -175,7 +175,7 @@ NS.spellData = {
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
-    -- Incarnation: Chosen of Elune (old CD, check in DF)
+    -- Incarnation: Chosen of Elune (spellID has not changed in DF)
     [102560] = {
         category = OFFENSIVE,
         duration = 30,

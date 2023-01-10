@@ -48,14 +48,6 @@ local function resetAllStates(allstates, event)
     end
 end
 
-local function shouldCheckCombatLog(subEvent)
-    return (subEvent == NS.SPELL_CAST_SUCCESS)
-        or (subEvent == NS.SPELL_AURA_APPLIED)
-        or (subEvent == NS.SPELL_AURA_REMOVED)
-        or (subEvent == NS.SPELL_DAMAGE)
-        or (subEvent == NS.SPELL_CAST_START)
-end
-
 -- For each spell, trigger 1 = cooldown if we're tracking it; trigger 2 = duration or short 0.5 glow on activation
 -- If we use allstates and trigger 2 lives longer than trigger 1, the positioning gets messed up often (guess it jumps around when the aura state changes)
 -- With trigger 1 longer, trigger 1 will always be priority and the aura state won't change
@@ -332,7 +324,6 @@ local function durationTriggerSingleSpell(specialSpellID, allstates, event, ...)
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
         if (not sourceGUID) then return end
         local spell = spellData[specialSpellID]
 
@@ -377,7 +368,6 @@ local function cooldownTrigger(category, allstates, event, ...)
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
 
@@ -408,7 +398,6 @@ local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ..
         return true
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
         if (not sourceGUID) then return end
 
         local spell = spellData[specialSpellID]
@@ -456,7 +445,6 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
         return true
     else
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID, spellName = select(2, ...);
-        if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
 
@@ -503,7 +491,6 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...)
         -- We only care about this one spellID
         if (spellID ~= specialSpellID) then return end
-        if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
         if (not sourceGUID) then return end
 
