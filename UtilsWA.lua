@@ -92,19 +92,19 @@ local function makeTriggerState(spellData, spellID, duration, ...)
 end
 
 -- Checck whether spell is enabled for combat log events
-local function checkSpellEnabled(spell, subEvent, sourceGUID, destoGUID)
+local function checkSpellEnabled(spell, subEvent, sourceGUID, destGUID)
     -- Validate subEvent
     local track = false
-    if ( not spell.trackEvent ) then
-        track = ( subEvent == NS.SPELL_CAST_SUCCESS )
-    else
+    if spell.trackEvent then
         track = ( spell.trackEvent == subEvent )
+    else
+        track = ( subEvent == NS.SPELL_CAST_SUCCESS )
     end
     if ( not track ) then return end
 
     -- Validate GUID
     if spell.trackDest then
-        track = NS.isGUIDArena(destoGUID)
+        track = NS.isGUIDArena(destGUID)
     else
         track = NS.isGUIDArena(sourceGUID)
     end
@@ -264,16 +264,15 @@ local durationTrigger = function(category, allstates, event, ...)
         end
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
-        if (not shouldCheckCombatLog(subEvent)) then return end
         -- Return if no valid target
-        if (not sourceGUID) then return end
+        if ( not sourceGUID ) then return end
 
         -- Return if no valid spell or spell does not track cooldown
         local spell = spellData[spellID]
-        if (not spell) or (spell.category ~= category) then return end
+        if ( not spell ) or ( spell.category ~= category ) then return end
 
         -- Check if an aura ended early
-        if spell.dispellable and (subEvent == NS.SPELL_AURA_REMOVED) then
+        if (subEvent == NS.SPELL_AURA_REMOVED) then
             local unitGUID = ( spell.trackDest and destGUID ) or sourceGUID
             local guid = concatGUID(unitGUID, spellID)
             if allstates[guid] then
@@ -287,7 +286,16 @@ local durationTrigger = function(category, allstates, event, ...)
         if checkSpellEnabled(spell, subEvent, sourceGUID, destGUID) then
             local unitGUID = ( spell.trackDest and destGUID ) or sourceGUID
             local guid = concatGUID(unitGUID, spellID)
-            local duration = spell.duration or defaultDuration
+
+            local duration
+            if spell.trackEvent == NS.SPELL_AURA_APPLIED then
+                local unitId = NS.arenaUnitId(destGUID)
+                if ( not unitId ) then return end
+                duration = select(5, WA_GetUnitBuff(unitId, spellID))
+            else
+                duration = spell.duration or defaultDuration
+            end
+
             local unit = NS.arenaUnitId(unitGUID)
             allstates[guid] = makeTriggerState(spell, spellID, duration, unit)
             return true
@@ -296,7 +304,7 @@ local durationTrigger = function(category, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.OffensiveGlow = function(allstates, event, ...)
-    return durationTrigger(OFFENSIVE_DURATION, allstates, event, ...);
+    return durationTrigger(OFFENSIVE_DURATION, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.OffensiveDuration = function (allstates, event, ...)
@@ -677,55 +685,6 @@ BoopUtilsWA.Triggers.Totem = function (allstates, event, ...)
             if allstates[destGUID] then
                 allstates[destGUID].show = false
                 allstates[destGUID].changed = true
-                return true
-            end
-        end
-    end
-end
-
--- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA
-BoopUtilsWA.Triggers.UnitAura = function (allstates, event, ...)
-    if resetAllStates(allstates, event) then
-        return true
-    elseif ( event == NS.UNIT_AURA ) then
-        local unitTarget, updateAuras = ...
-        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
-
-        for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
-            local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
-            if spellInfo then
-                local spellID = spellInfo.spellId
-                local spell = spellData[spellID]
-                if ( not spell ) or ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
-                local guid = concatGUID(UnitGUID(unitTarget), spellID)
-                if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
-                    allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))
-                    allstates[guid].changed = true
-                    return true
-                end
-            end
-        end
-    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
-        local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
-        if ( not destGUID ) or ( not spellData[spellID] ) then return end
-        local spell = spellData[spellID]
-        if ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
-
-        if ( subEvent == NS.SPELL_AURA_APPLIED ) then
-            if ( not checkSpellEnabled(spell, subEvent, destGUID) ) then return end
-            local unitId = NS.arenaUnitId(destGUID)
-            if ( not unitId ) then return end
-            local duration = select(5, WA_GetUnitBuff(unitId, spellID))
-            if ( not duration ) then return end
-
-            local guid = concatGUID(destGUID, spellID)
-            allstates[guid] = makeTriggerState(spell, spellID, duration, unitId)
-            return true
-        elseif ( subEvent == NS.SPELL_AURA_REMOVED ) then
-            local guid = concatGUID(destGUID, spellID)
-            if allstates[guid] then
-                allstates[guid].show = false
-                allstates[guid].changed = true
                 return true
             end
         end

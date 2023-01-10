@@ -7,18 +7,16 @@ NS.spellCategory = {
     OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
     OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     OFFENSIVE_SPECIAL = 5,
-    OFFENSIVE_UNITAURA = 6, -- This checks destGUID instead of sourceGUID, e.g., Power Infusion can be cast on team members
 }
 
 -- trackEvent: event or combat log subEvent to track
--- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID
+-- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID (this cannot be set to spells that can only self cast)
 -- isNpc: spellId is treated as NpcId, provide the spellId in the spell data for finding the spell icon
 
 local OFFENSIVE = NS.spellCategory.OFFENSIVE
 local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
 local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
-local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD"
@@ -259,11 +257,15 @@ NS.spellData = {
     },
     -- Icy Veins
     [12472] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        duration = 25,
+        extend = true,
     },
     -- Ice Form
     [198144] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        duration = 12,
+        extend = true,
     },
     -- Arcane Surge
     [365350] = {
@@ -305,7 +307,8 @@ NS.spellData = {
     },
     -- Dance of Chi-ji
     [325202] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
     },
 
     -- Paladin
@@ -337,14 +340,16 @@ NS.spellData = {
     },
     -- Blessing of Summer
     [388007] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackDest = true,
         index = 1,
     },
     -- Seraphim
     [152262] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        duration = 15,
         spec = { specID.RET },
-        combine = true,
     },
     -- Final Reckoning
     [343721] = {
@@ -373,8 +378,9 @@ NS.spellData = {
     },
     -- Power Infusion
     [10060] = {
-        category = OFFENSIVE_UNITAURA,
-        combine = true,
+        category = OFFENSIVE_DURATION,
+        trackDest = true,
+        duration = 20,
     },
 
     -- Rogue
@@ -416,7 +422,8 @@ NS.spellData = {
     },
     -- Echoing Reprimand
     [323560] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
     },
 
     -- Shaman
@@ -441,8 +448,9 @@ NS.spellData = {
     },
     -- Skyfury
     [208963] = {
-        category = OFFENSIVE_UNITAURA,
-        combine = true,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackDest = true,
     },
     -- Fire Elemental
     [198067] = {
