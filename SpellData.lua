@@ -326,6 +326,7 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 25,
         cooldown = 120,
+        sound = true,
         index = 1,
         spec = { specID.RET },
         extend = true, -- Zelot's Paragon
@@ -406,6 +407,7 @@ NS.spellData = {
         duration = 16,
         cooldown = 120,
         index = 1,
+        sound = true,
     },
     -- Exsanguinate
     [200806] = {
