@@ -5,8 +5,8 @@ NS.isTestMode = true
 NS.spellCategory = {
     OFFENSIVE = 1,
     OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
-    OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
-    OFFENSIVE_SPECIAL = 5,
+    OFFENSIVE_PET = 3, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
+    OFFENSIVE_SPECIAL = 4,
 }
 
 -- trackEvent: event or combat log subEvent to track

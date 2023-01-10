@@ -4,10 +4,8 @@ local isTestMode = NS.isTestMode
 -- Import spell data
 local OFFENSIVE = NS.spellCategory.OFFENSIVE
 local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
-local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD
 local OFFENSIVE_PET = NS.OFFENSIVE_PET
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
-local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA
 
 local spellData = NS.spellData
 
@@ -607,6 +605,15 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
         if isUnitParty(unitTarget) then
             local spell = getOffensiveSpellDataById(spellID)
             if ( not spell ) then return end
+
+            local duration
+            if spell.trackEvent == NS.SPELL_AURA_APPLIED then
+                local unitId = NS.arenaUnitId(destGUID)
+                if ( not unitId ) then return end
+                duration = select(5, WA_GetUnitBuff(unitId, spellID))
+            else
+                duration = spell.duration or defaultDuration
+            end
 
             allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration or defaultDuration, unitTarget)
             return true
