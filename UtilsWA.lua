@@ -262,7 +262,7 @@ local durationTrigger = function(category, allstates, event, ...)
             if spellInfo then
                 local spellID = spellInfo.spellId
                 local spell = spellData[spellID]
-                if ( not spell ) or ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
+                if ( not spell ) then return end
                 local guid = concatGUID(UnitGUID(unitTarget), spellID)
                 if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
                     allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))

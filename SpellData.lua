@@ -326,9 +326,17 @@ NS.spellData = {
     -- Avenging Wrath
     [31884] = {
         category = OFFENSIVE,
-        duration = 25,
+        duration = 20,
         cooldown = 120,
         sound = true,
+        index = 1,
+        spec = { specID.RET },
+    },
+    -- Crusade
+    [231895] = {
+        category = OFFENSIVE,
+        duration = 25,
+        cooldown = 120,
         index = 1,
         spec = { specID.RET },
     },
