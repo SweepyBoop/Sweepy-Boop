@@ -36,12 +36,6 @@ local WA_GetUnitBuff = function(unit, spell, filter)
     return WA_GetUnitAura(unit, spell, filter)
 end
 
-local function debugSpellID(sourceGUID, event, spellID)
-    if NS.isTestMode and NS.isSourceArena(sourceGUID) and (event == NS.SPELL_CAST_SUCCESS or event == NS.UNIT_SPELLCAST_SUCCEEDED) then
-        print(sourceGUID, event, spellID)
-    end
-end
-
 -- With the following helper functions, we can use the same set of events for almost every single trigger:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA
 
