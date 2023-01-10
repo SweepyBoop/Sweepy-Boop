@@ -4,7 +4,7 @@ NS.isTestMode = false
 
 NS.spellCategory = {
     OFFENSIVE = 1,
-    OFFENSIVE_AURA = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
+    OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
     OFFENSIVE_CD = 3,
     OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
     OFFENSIVE_SPECIAL = 5,
@@ -12,7 +12,7 @@ NS.spellCategory = {
 }
 
 local OFFENSIVE = NS.spellCategory.OFFENSIVE
-local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA
+local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD
 local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
@@ -111,7 +111,7 @@ NS.defaultIndex = 100
 
 -- Offensive spells are further divided to 3 sub categories:
 -- OFFENSIVE: glow when it's active, show cooldown timer otherwise
--- OFFENSIVE_AURA: glow when it's active
+-- OFFENSIVE_DURATION: glow when it's active
 -- OFFENSIVE_CD: show cooldown timer
 NS.spellData = {
     -- General
@@ -127,7 +127,7 @@ NS.spellData = {
     },
     -- Empower Rune Weapon
     [47568] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Offensive (Unholy)
@@ -140,23 +140,23 @@ NS.spellData = {
     },
     -- Unholy Assult
     [207289] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 12,
     },
     -- Apocalypse
     [275699] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Offensive (Frost)
     -- Pillar of Frost
     [51271] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 12,
     },
     -- Chill Streak
     [305392] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 4,
         index = 2,
         sound = true,
@@ -172,7 +172,7 @@ NS.spellData = {
     },
     -- Metamorphosis
     [191427] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         trackType = TRACK_UNIT,
         duration = 30,
     },
@@ -181,17 +181,17 @@ NS.spellData = {
     -- Offensive
     -- Berserk
     [106951] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Incarnation: Avatar of Ashamane
     [102543] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 30,
     },
     -- Celestial Alignment
     [194223] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Incarnation: Chosen of Elune (old CD, check in DF)
@@ -231,17 +231,17 @@ NS.spellData = {
     -- Offensive
     -- Bestial Wrath
     [19574] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Coordinated Assult
     [360952] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Trueshot
     [288613] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 18,
     },
     -- Call of the Wild
@@ -307,12 +307,12 @@ NS.spellData = {
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 24,
     },
     -- Bonedust Brew
     [386276] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 10,
         spec = { specID.WW },
     },
@@ -359,7 +359,7 @@ NS.spellData = {
     },
     -- Final Reckoning
     [343721] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 8,
     },
 
@@ -392,12 +392,12 @@ NS.spellData = {
     -- Offensive
     -- Shadow Blades
     [121471] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Adrenaline Rush
     [13750] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Sepsis
@@ -422,7 +422,7 @@ NS.spellData = {
     },
     -- Kingsbane
     [385627] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 14,
     },
     -- Echoing Reprimand
@@ -434,7 +434,7 @@ NS.spellData = {
     -- Offensive
     -- Ascendance (Enhancement)
     [114051] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Doom Winds
@@ -446,7 +446,7 @@ NS.spellData = {
     },
     -- Stormkeeper
     [191634] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
         dispellable = true,
     },
@@ -467,13 +467,13 @@ NS.spellData = {
     -- Affliction
     -- Summon Darkglare
     [205180] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Destruction
     -- Summon Infernal
     [1122] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 30,
     },
     -- Demonology
@@ -486,17 +486,17 @@ NS.spellData = {
     },
     -- Summon Demonic Tyrant
     [265187] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Fel Obelisk
     [353601] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Grimoire: Felguard
     [111898] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 17,
     },
     -- Gul'dan's Ambition (Pit Lord)
@@ -510,17 +510,17 @@ NS.spellData = {
     -- Offensive
     -- Warbreaker
     [262161] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Colossus Smash
     [167105] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Avatar
     [107574] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Recklessness

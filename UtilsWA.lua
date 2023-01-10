@@ -3,7 +3,7 @@ local isTestMode = NS.isTestMode
 
 -- Import spell data
 local OFFENSIVE = NS.spellCategory.OFFENSIVE
-local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA
+local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
 local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD
 local OFFENSIVE_PET = NS.OFFENSIVE_PET
 local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
@@ -74,9 +74,6 @@ local function getNpcIdFromGuid (guid)
     return 0
 end
 
--- duration can mean different things for different trigger types, e.g.,
--- OFFENSIVE_AURA = spell.duration, CC = spell.cooldown
--- optional params: charges, unit (for finding the raid/arena frame to attach to)
 local function makeTriggerState(spellData, spellID, duration, ...)
     local unit, charges = ...
     local state = {
@@ -302,7 +299,7 @@ local durationTrigger = function(category, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.OffensiveGlow = function(allstates, event, ...)
-    return durationTrigger(OFFENSIVE_AURA, allstates, event, ...);
+    return durationTrigger(OFFENSIVE_DURATION, allstates, event, ...);
 end
 
 BoopUtilsWA.Triggers.OffensiveDuration = function (allstates, event, ...)
@@ -579,7 +576,7 @@ end
 
 local function getOffensiveSpellDataById(spellID)
     local spell = spellData[spellID];
-    if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_AURA) or (spell.category == OFFENSIVE_SPECIAL)) then
+    if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_DURATION) or (spell.category == OFFENSIVE_SPECIAL)) then
         return spell;
     end
 end
