@@ -39,8 +39,15 @@ end
 -- With the following helper functions, we can use the same set of events for almost every single trigger:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA
 
-local function shouldClearAllStates(event)
-    return (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+local function resetAllStates(allstates, event)
+    if (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS) then
+        for _, state in pairs(allstates) do
+            state.show = false
+            state.changed = true
+        end
+    
+        return true
+    end
 end
 
 local function shouldCheckCombatLog(subEvent)
@@ -48,21 +55,12 @@ local function shouldCheckCombatLog(subEvent)
         or (subEvent == NS.SPELL_AURA_APPLIED)
         or (subEvent == NS.SPELL_AURA_REMOVED)
         or (subEvent == NS.SPELL_DAMAGE)
-        or (subEvent == NS.SPELL_CAST_START);
+        or (subEvent == NS.SPELL_CAST_START)
 end
 
 -- For each spell, trigger 1 = cooldown if we're tracking it; trigger 2 = duration or short 0.5 glow on activation
 -- If we use allstates and trigger 2 lives longer than trigger 1, the positioning gets messed up often (guess it jumps around when the aura state changes)
 -- With trigger 1 longer, trigger 1 will always be priority and the aura state won't change
-
-local function clearAllStates(allstates)
-    for _, state in pairs(allstates) do
-        state.show = false;
-        state.changed = true;
-    end
-
-    return true
-end
 
 -- substring of a guid is of string type, need to convert into number so it matches a numeric index
 local function getNpcIdFromGuid (guid)
@@ -235,8 +233,8 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
 end
 
 local durationTrigger = function(category, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates)
+    if resetAllStates(allstates, event) then
+        return true
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
         if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
@@ -307,8 +305,8 @@ BoopUtilsWA.Triggers.OffensiveDuration = function (allstates, event, ...)
 end
 
 local function durationTriggerSingleSpell(specialSpellID, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates)
+    if resetAllStates(allstates, event) then
+        return true
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
         if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
@@ -356,8 +354,8 @@ end
 
 -- Cooldown trigger for a spell category, used for anything that needs cooldown tracking
 local function cooldownTrigger(category, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
+    if resetAllStates(allstates, event) then
+        return true
     elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
         local unitTarget, _, spellID = ...;
         if (not unitTarget) then return end
@@ -404,8 +402,8 @@ end
 
 -- Generic cooldown reduction, e.g., by spell power cost
 local function cooldownWithReductionTrigger(specialSpellID, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates)
+    if resetAllStates(allstates, event) then
+        return true
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
         if (not shouldCheckCombatLog(subEvent)) then return end
@@ -454,8 +452,8 @@ end
 local glowOnActivationDuration = 3
 -- Glow on activation (only for spells without duration to get a visual hint, especially when a player uses a 2nd charge)
 local function glowOnActivationTrigger(category, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
+    if resetAllStates(allstates, event) then
+        return true
     elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
         local unitTarget, _, spellID = ...;
         if (not unitTarget) then return end
@@ -493,8 +491,8 @@ BoopUtilsWA.Triggers.GlowOnActivationOffensiveCD = function (allstates, event, .
 end
 
 BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
+    if resetAllStates(allstates, event) then
+        return true
     else
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID, spellName = select(2, ...);
         if (not shouldCheckCombatLog(subEvent)) then return end
@@ -538,8 +536,8 @@ end
 -- Glow for duration (or short glow on activation) for a specific spell
 -- pass in the special special spellID (glow duration = spell.duration or glowOnActivationDuration if that's missing)
 local function GlowForSpell (specialSpellID, allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
+    if resetAllStates(allstates, event) then
+        return true
     elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...);
         -- We only care about this one spellID
@@ -591,8 +589,8 @@ end
 
 -- Use premade auras for OFFENSIVE_UNITAURA
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates)
+    if resetAllStates(allstates, event) then
+        return true
     elseif ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
         local unitTarget, _, spellID = ...
         if ( not unitTarget ) then return end
@@ -661,8 +659,8 @@ end
 
 -- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED
 BoopUtilsWA.Triggers.Totem = function (allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates)
+    if resetAllStates(allstates, event) then
+        return true
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local subEvent, _, sourceGUID, _, _, _, destGUID = select(2, ...)
         if ( subEvent == NS.SPELL_SUMMON ) then
@@ -686,8 +684,8 @@ end
 
 -- Events: PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, COMBAT_LOG_EVENT_UNFILTERED
 BoopUtilsWA.Triggers.UnitAura = function (allstates, event, ...)
-    if shouldClearAllStates(event) then
-        return clearAllStates(allstates)
+    if resetAllStates(allstates, event) then
+        return true
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
         if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
