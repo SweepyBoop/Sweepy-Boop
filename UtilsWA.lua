@@ -252,7 +252,25 @@ end
 
 local durationTrigger = function(category, allstates, event, ...)
     if shouldClearAllStates(event) then
-        return clearAllStates(allstates);
+        return clearAllStates(allstates)
+    elseif ( event == NS.UNIT_AURA ) then
+        local unitTarget, updateAuras = ...
+        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
+
+        for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
+            local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
+            if spellInfo then
+                local spellID = spellInfo.spellId
+                local spell = spellData[spellID]
+                if ( not spell ) or ( spell.category ~= OFFENSIVE_UNITAURA ) then return end
+                local guid = concatGUID(UnitGUID(unitTarget), spellID)
+                if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
+                    allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))
+                    allstates[guid].changed = true
+                    return true
+                end
+            end
+        end
     elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
         local unitTarget, _, spellID = ...;
         if (not unitTarget) then return end
@@ -304,13 +322,13 @@ BoopUtilsWA.Triggers.OffensiveDuration = function (allstates, event, ...)
     return durationTrigger(OFFENSIVE, allstates, event, ...);
 end
 
-local function durationWithExtensionTrigger(specialSpellID, allstates, event, ...)
+local function durationTriggerSingleSpell(specialSpellID, allstates, event, ...)
     if shouldClearAllStates(event) then
         return clearAllStates(allstates)
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
         if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
-        
+
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
             if spellInfo then
@@ -341,15 +359,15 @@ local function durationWithExtensionTrigger(specialSpellID, allstates, event, ..
 end
 
 BoopUtilsWA.Triggers.StormEarthAndFire = function (allstates, event, ...)
-    return durationWithExtensionTrigger(137639, allstates, event, ...)
+    return durationTriggerSingleSpell(137639, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.Serenity = function (allstates, event, ...)
-    return durationWithExtensionTrigger(152173, allstates, event, ...)
+    return durationTriggerSingleSpell(152173, allstates, event, ...)
 end
 
 BoopUtilsWA.Triggers.DragonRage = function (allstates, event, ...)
-    return durationWithExtensionTrigger(375087, allstates, event, ...)
+    return durationTriggerSingleSpell(375087, allstates, event, ...)
 end
 
 -- Cooldown trigger for a spell category, used for anything that needs cooldown tracking
@@ -689,7 +707,7 @@ BoopUtilsWA.Triggers.UnitAura = function (allstates, event, ...)
     elseif ( event == NS.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
         if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
-        
+
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
             if spellInfo then
