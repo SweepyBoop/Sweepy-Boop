@@ -4,19 +4,19 @@ NS.isTestMode = false
 
 NS.spellCategory = {
     OFFENSIVE = 1,
-    OFFENSIVE_AURA = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
-    OFFENSIVE_CD = 3,
-    OFFENSIVE_PET = 4, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
-    OFFENSIVE_SPECIAL = 5,
-    OFFENSIVE_UNITAURA = 6, -- set combine = true if we want to show one aura for all units.
+    OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
+    OFFENSIVE_PET = 3, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
+    OFFENSIVE_SPECIAL = 4,
 }
 
-local OFFENSIVE = NS.spellCategory.OFFENSIVE;
-local OFFENSIVE_AURA = NS.spellCategory.OFFENSIVE_AURA;
-local OFFENSIVE_CD = NS.spellCategory.OFFENSIVE_CD;
-local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET;
-local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL;
-local OFFENSIVE_UNITAURA = NS.spellCategory.OFFENSIVE_UNITAURA;
+-- trackEvent: event or combat log subEvent to track
+-- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID (this cannot be set to spells that can only self cast)
+-- isNpc: spellId is treated as NpcId, provide the spellId in the spell data for finding the spell icon
+
+local OFFENSIVE = NS.spellCategory.OFFENSIVE
+local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
+local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET
+local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD"
@@ -43,8 +43,8 @@ NS.specID = {
     BM = 253,
     WW = 269,
     DEVASTATION = 1467,
-};
-local specID = NS.specID;
+}
+local specID = NS.specID
 
 NS.classId = {
     Warrior = 1,
@@ -60,8 +60,8 @@ NS.classId = {
     Druid = 11,
     DemonHunter = 12,
     Evoker = 13,
-};
-local classId = NS.classId;
+}
+local classId = NS.classId
 
 NS.diminishingReturnCategory = {
     DR_DISORIENT = "disorient",
@@ -72,37 +72,18 @@ NS.diminishingReturnCategory = {
     DR_DISARM = "disarm",
     DR_TAUNT = "taunt",
     DR_KNOCKBACK = "knockback",
-};
-local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT;
-local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE;
-local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE;
-local DR_STUN = NS.diminishingReturnCategory.DR_STUN;
-local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT;
-local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM;
-local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT;
-local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK;
+}
+local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT
+local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE
+local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE
+local DR_STUN = NS.diminishingReturnCategory.DR_STUN
+local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT
+local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM
+local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT
+local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK
 
--- Events (and units) to track
--- Avoid tracking aura for CC spells, that way it's hard to see when player avoided a CC spell (shadowmeld, fleshcraft, etc.)
-NS.trackType = {
-    -- For pet kicks
-    TRACK_PET = 1, -- SPELL_CAST_SUCCESS & pet GUID
-    TRACK_PET_AURA = 2, -- SPELL_AURA_APPLIED & pet GUID
+NS.defaultIndex = 100
 
-    TRACK_AURA = 3,
-    TRACK_AURA_FADE = 4, -- SPELL_AURA_REMOVED, e.g., prot pally silence
-    TRACK_UNIT = 5, -- UNIT_SPELLCAST_SUCCEEDED, e.g., meta (combat log triggered by auto proc meta)
-};
-
-local TRACK_PET = NS.trackType.TRACK_PET;
-local TRACK_PET_AURA = NS.trackType.TRACK_PET_AURA;
-local TRACK_AURA = NS.trackType.TRACK_AURA;
-local TRACK_AURA_FADE = NS.trackType.TRACK_AURA_FADE;
-local TRACK_UNIT = NS.trackType.TRACK_UNIT;
-
-NS.defaultIndex = 100;
-
--- dispellable: buff can be dispelled, clear on early SPELL_AURA_REMOVED
 -- charges: baseline 2 charges
 -- opt_charges: optionally 2 charges
 -- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
@@ -111,8 +92,8 @@ NS.defaultIndex = 100;
 
 -- Offensive spells are further divided to 3 sub categories:
 -- OFFENSIVE: glow when it's active, show cooldown timer otherwise
--- OFFENSIVE_AURA: glow when it's active
--- OFFENSIVE_CD: show cooldown timer
+-- OFFENSIVE_DURATION: glow when it's active
+-- OFFENSIVE: show cooldown timer
 NS.spellData = {
     -- General
     -- Offensive
@@ -127,7 +108,7 @@ NS.spellData = {
     },
     -- Empower Rune Weapon
     [47568] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Offensive (Unholy)
@@ -140,23 +121,23 @@ NS.spellData = {
     },
     -- Unholy Assult
     [207289] = {
-        category = OFFENSIVE_AURA,
-        duration = 12,
+        category = OFFENSIVE_DURATION,
+        duration = 20,
     },
     -- Apocalypse
     [275699] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Offensive (Frost)
     -- Pillar of Frost
     [51271] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 12,
     },
     -- Chill Streak
     [305392] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 4,
         index = 2,
         sound = true,
@@ -166,35 +147,35 @@ NS.spellData = {
     -- Offensive
     -- The Hunt
     [370965] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 90,
         index = 1,
     },
-    -- Metamorphosis
+    -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
-        category = OFFENSIVE_AURA,
-        trackType = TRACK_UNIT,
-        duration = 30,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.UNIT_SPELLCAST_SUCCEEDED,
+        duration = 24,
     },
 
     -- Druid
     -- Offensive
     -- Berserk
     [106951] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Incarnation: Avatar of Ashamane
     [102543] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 30,
     },
     -- Celestial Alignment
     [194223] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
-    -- Incarnation: Chosen of Elune (old CD, check in DF)
+    -- Incarnation: Chosen of Elune (spellID has not changed in DF)
     [102560] = {
         category = OFFENSIVE,
         duration = 30,
@@ -202,21 +183,21 @@ NS.spellData = {
     },
     -- Convoke the Spirits
     [391528] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 60,
         spec = { specID.BALANCE, specID.FERAL },
         index = 1,
     },
     -- Feral Frenzy
     [274837] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 45,
     },
 
     -- Evoker
     -- Tip the Scales
     [370553] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         spec = { specID.DEVASTATION },
         cooldown = 120,
     },
@@ -225,23 +206,24 @@ NS.spellData = {
         category = OFFENSIVE_SPECIAL,
         duration = 14,
         cooldown = 120,
+        extend = true,
     },
 
     -- Hunter
     -- Offensive
     -- Bestial Wrath
     [19574] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Coordinated Assult
     [360952] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Trueshot
     [288613] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 18,
     },
     -- Call of the Wild
@@ -262,7 +244,6 @@ NS.spellData = {
         cooldown = 120,
         index = 1,
         sound = true,
-        dispellable = true,
     
         resets = {
             [133] = 2, -- Pyrokinesis
@@ -274,15 +255,19 @@ NS.spellData = {
     },
     -- Icy Veins
     [12472] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        duration = 25,
+        extend = true,
     },
     -- Ice Form
     [198144] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        duration = 12,
+        extend = true,
     },
     -- Arcane Surge
     [365350] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 90,
     },
 
@@ -296,6 +281,7 @@ NS.spellData = {
         charges = true,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
+        extend = true,
     },
     -- Serenity
     [152173] = {
@@ -304,21 +290,23 @@ NS.spellData = {
         cooldown = 90,
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
+        extend = true,
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 24,
     },
     -- Bonedust Brew
     [386276] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 10,
         spec = { specID.WW },
     },
     -- Dance of Chi-ji
     [325202] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
     },
 
     -- Paladin
@@ -331,35 +319,40 @@ NS.spellData = {
         sound = true,
         index = 1,
         spec = { specID.RET },
+        extend = true, -- Zelot's Paragon
     },
     -- Crusade
     [231895] = {
         category = OFFENSIVE,
         duration = 25,
         cooldown = 120,
+        sound = true,
         index = 1,
         spec = { specID.RET },
+        extend = true, -- Zelot's Paragon
     },
     -- Divine Toll
     [375576] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         spec = { specID.RET },
         cooldown = 60,
     },
     -- Blessing of Summer
     [388007] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackDest = true,
         index = 1,
     },
     -- Seraphim
     [152262] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        duration = 15,
         spec = { specID.RET },
-        combine = true,
     },
     -- Final Reckoning
     [343721] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 8,
     },
 
@@ -367,7 +360,7 @@ NS.spellData = {
     -- Offensive
     -- Mindgames
     [375901] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 45,
     },
     -- Mindbender (Idol of Y'Shaarj)
@@ -384,20 +377,21 @@ NS.spellData = {
     },
     -- Power Infusion
     [10060] = {
-        category = OFFENSIVE_UNITAURA,
-        combine = true,
+        category = OFFENSIVE_DURATION,
+        trackDest = true,
+        duration = 20,
     },
 
     -- Rogue
     -- Offensive
     -- Shadow Blades
     [121471] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Adrenaline Rush
     [13750] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Sepsis
@@ -413,28 +407,30 @@ NS.spellData = {
         duration = 16,
         cooldown = 120,
         index = 1,
+        sound = true,
     },
     -- Exsanguinate
     [200806] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 180,
         index = 2,
     },
     -- Kingsbane
     [385627] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 14,
     },
     -- Echoing Reprimand
     [323560] = {
-        category = OFFENSIVE_UNITAURA,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
     },
 
     -- Shaman
     -- Offensive
     -- Ascendance (Enhancement)
     [114051] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Doom Winds
@@ -446,14 +442,14 @@ NS.spellData = {
     },
     -- Stormkeeper
     [191634] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
-        dispellable = true,
     },
     -- Skyfury
     [208963] = {
-        category = OFFENSIVE_UNITAURA,
-        combine = true,
+        category = OFFENSIVE_DURATION,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackDest = true,
     },
     -- Fire Elemental
     [198067] = {
@@ -467,13 +463,13 @@ NS.spellData = {
     -- Affliction
     -- Summon Darkglare
     [205180] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Destruction
     -- Summon Infernal
     [1122] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 30,
     },
     -- Demonology
@@ -486,17 +482,17 @@ NS.spellData = {
     },
     -- Summon Demonic Tyrant
     [265187] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Fel Obelisk
     [353601] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Grimoire: Felguard
     [111898] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 17,
     },
     -- Gul'dan's Ambition (Pit Lord)
@@ -510,17 +506,17 @@ NS.spellData = {
     -- Offensive
     -- Warbreaker
     [262161] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Colossus Smash
     [167105] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Avatar
     [107574] = {
-        category = OFFENSIVE_AURA,
+        category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Recklessness
@@ -531,14 +527,14 @@ NS.spellData = {
         reduce_power_type = Enum.PowerType.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
     },
-};
+}
 
 NS.classWithFearSpell = function(class)
-    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock );
+    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock )
 end
 
-NS.RESET_FULL = 0;
-local RESET_FULL = NS.RESET_FULL;
+NS.RESET_FULL = 0
+local RESET_FULL = NS.RESET_FULL
 
 NS.spellResets = {
     -- Mindgames
@@ -558,7 +554,7 @@ NS.spellResets = {
     [14914] = {
         [375901] = 1,
     },
-};
+}
 
 if NS.isTestMode then
     -- Test
@@ -567,23 +563,24 @@ if NS.isTestMode then
         category = OFFENSIVE,
         duration = 8,
         cooldown = 30,
+        index = 1,
         sound = true,
-    };
+    }
     -- Regrowth
     NS.spellData[8936] = {
         category = OFFENSIVE,
         duration = 5,
         cooldown = 120,
-    };
+    }
     -- Rejuv
     NS.spellData[774] = {
-        category = OFFENSIVE_CD,
+        category = OFFENSIVE,
         cooldown = 45,
-    };
+    }
     -- Wild Growth
     NS.spellData[48438] = {
-        category = OFFENSIVE_CD,
-    };
+        category = OFFENSIVE,
+    }
 
     -- Test totem with "PvP Training Dummy"
     NS.spellData[188550] = {
@@ -591,7 +588,7 @@ if NS.isTestMode then
         spellID = 324386,
         duration = 60,
         sound = true,
-    };
+    }
 end
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
@@ -770,10 +767,10 @@ NS.diminishingReturnSpells = {
     [204263]  = DR_KNOCKBACK,        -- Shining Force
     [51490]   = DR_KNOCKBACK,        -- Thunderstorm
 --      [287712]  = DR_KNOCKBACK,        -- Haywire (Kul'Tiran Racial)
-};
+}
 
 if NS.isTestMode then
-    NS.diminishingReturnSpells[1126] = NS.diminishingReturnCategory.DR_DISORIENT; -- Mark of the Wild
-    NS.diminishingReturnSpells[8936] = NS.diminishingReturnCategory.DR_STUN; -- Regrowth
-    NS.diminishingReturnSpells[774] = NS.diminishingReturnCategory.DR_INCAPACITATE; -- Rejuvenation
+    NS.diminishingReturnSpells[1126] = NS.diminishingReturnCategory.DR_DISORIENT -- Mark of the Wild
+    NS.diminishingReturnSpells[8936] = NS.diminishingReturnCategory.DR_STUN -- Regrowth
+    NS.diminishingReturnSpells[774] = NS.diminishingReturnCategory.DR_INCAPACITATE -- Rejuvenation
 end
