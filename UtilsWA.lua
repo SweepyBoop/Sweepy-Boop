@@ -522,13 +522,6 @@ BoopUtilsWA.Triggers.DurationRecklessness = function (allstates, event, ...)
     return GlowForSpell(1719, allstates, event, ...)
 end
 
-local function getOffensiveSpellDataById(spellID)
-    local spell = spellData[spellID]
-    if spell and ((spell.category == OFFENSIVE) or (spell.category == OFFENSIVE_DURATION) or (spell.category == OFFENSIVE_SPECIAL)) then
-        return spell
-    end
-end
-
 local function isUnitParty(unitId)
     if isTestMode then
         return ( unitId == "player" )
@@ -537,17 +530,16 @@ local function isUnitParty(unitId)
     return (unitId == "party1") or (unitId == "party2")
 end
 
--- Use premade auras for buffs
+-- Use premade auras for buffs (mark spells as trackParty = true if cannot be tracked as premade buff)
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
     elseif ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
         local unitTarget, _, spellID = ...
-        if ( not unitTarget ) then return end
+        if ( not unitTarget ) or ( not spellData[spellID] ) or ( not spellData[spellID].trackParty ) then return end
 
         if isUnitParty(unitTarget) then
-            local spell = getOffensiveSpellDataById(spellID)
-            if ( not spell ) then return end
+            local spell = spellData[spellID]
 
             local duration
             if spell.trackEvent == NS.SPELL_AURA_APPLIED then
