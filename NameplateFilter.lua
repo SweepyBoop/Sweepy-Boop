@@ -1,7 +1,7 @@
 local _, NS = ...
 
 BoopNameplateFilter = {}
-local testMode = true
+local testMode = false
 
 local cachedClassIds = {}
 
