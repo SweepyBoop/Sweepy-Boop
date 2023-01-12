@@ -110,9 +110,9 @@ end
 -- Caller ensures sourceGUID is not nil
 -- Call this before getting any info based on sourceGUID
 NS.isGUIDArena = function(sourceGUID)
-    if isTestMode and (sourceGUID == arenaUnitGUID("player", 0)) then
+    if isTestMode then
         -- updateArenaInfo called by arenaUnitGUID
-        return true
+        return (sourceGUID == arenaUnitGUID("player", 0))
     end
 
     for i = 1, NS.MAX_ARENA_SIZE do
@@ -146,9 +146,13 @@ end
 -- Caller ensures unitId is not nil
 -- Call this before getting any info based on unitId
 NS.isUnitArena = function(unitId)
-    if isTestMode and unitId == "player" then
-        updateArenaInfo(unitId, 0)
-        return true
+    if isTestMode then
+        if ( unitId == "player" ) then
+            updateArenaInfo(unitId, 0)
+            return true
+        else
+            return false
+        end
     end
 
     for i = 1, NS.MAX_ARENA_SIZE do
@@ -275,8 +279,10 @@ NS.validateUnitForDR = function(partyUnitId, trackUnit)
 end
 
 NS.findArenaFrameForUnitId = function (unitId)
-    if NS.isTestMode and (unitId == "player") then
-        return _G["GladiusButtonFramearena1"] or _G["sArenaEnemyFrame1"]
+    if NS.isTestMode then
+        if ( unitId == "player" ) then
+            return _G["GladiusButtonFramearena1"] or _G["sArenaEnemyFrame1"]
+        end
     else
         for i = 1, NS.MAX_ARENA_SIZE do
             if ( unitId == "arena"..i ) then
