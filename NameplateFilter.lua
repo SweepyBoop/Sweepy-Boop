@@ -305,6 +305,8 @@ end
 BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     EnsureClassIcon(unitFrame)
     local icon = unitFrame.FriendlyClassIcon
+    -- We don't have an icon for this nameplate, skip
+    if ( not icon ) then return end
 
     if isPartyOrPartyPet(unitFrame.unit) then
         if UnitIsPlayer(unitFrame.unit) then
