@@ -69,6 +69,7 @@ end
 local partyPetSize = 2
 
 local function isPartyPrimaryPet(unitId)
+    -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
         local class = getUnitClass("player")
         return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
