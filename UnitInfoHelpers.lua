@@ -45,8 +45,6 @@ arenaInfoFrame:SetScript("OnEvent", function (self, event, ...)
     end
 
     if reset then
-        print("Arena Opponents Info Reset")
-
         arenaInfo.unitGUID = {}
         arenaInfo.unitId = {}
         arenaInfo.spec = {}
