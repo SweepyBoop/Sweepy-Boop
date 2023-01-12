@@ -380,7 +380,7 @@ NS.spellData = {
     [10060] = {
         category = OFFENSIVE_DURATION,
         trackDest = true,
-        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess
         duration = 20,
     },
 
