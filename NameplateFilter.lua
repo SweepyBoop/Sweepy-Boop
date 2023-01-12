@@ -281,14 +281,20 @@ local ClassIconOptions = {
 
 local function EnsureClassIcon(unitFrame)
     if (not unitFrame.FriendlyClassIcon) then
-        local _, class = UnitClass(unitFrame.namePlateUnitToken)
-        if class then
+        if isPartyOrPartyPet(unitFrame.unit) then
             unitFrame.FriendlyClassIcon = unitFrame:CreateTexture(nil, 'overlay')
-            local texture = unitFrame.FriendlyClassIcon
-            texture:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
-            texture:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
-            texture:SetSize (ClassIconOptions.Size, ClassIconOptions.Size)
-            Plater.SetAnchor (texture, ClassIconOptions.Anchor)
+            local icon = unitFrame.FriendlyClassIcon
+
+            if UnitIsPlayer(unitFrame.unit) then
+                local class =  select(2, UnitClass(unitFrame.unit))
+                icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
+                icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
+            else
+                icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
+            end
+
+            icon:SetSize (ClassIconOptions.Size, ClassIconOptions.Size)
+            Plater.SetAnchor (icon, ClassIconOptions.Anchor)
         end
     end
 end
@@ -298,8 +304,14 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     local icon = unitFrame.FriendlyClassIcon
 
     if isPartyOrPartyPet(unitFrame.unit) then
-        local _, class =  UnitClass(unitFrame.namePlateUnitToken)
-        icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
+        if UnitIsPlayer(unitFrame.unit) then
+            local class = select(2, UnitClass(unitFrame.unit))
+            icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
+            icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
+        else
+            icon:SetTexture ([[Interface\Icons\inv-stbernarddogpet]])
+        end
+
         icon:Show()
     else
         icon:Hide()
