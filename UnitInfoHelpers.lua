@@ -32,18 +32,31 @@ NS.MAX_ARENA_SIZE = 3
 NS.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 
 local arenaInfoFrame = CreateFrame('Frame')
-arenaInfoFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-arenaInfoFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
-arenaInfoFrame:SetScript("OnEvent", function ()
-    arenaInfo.unitGUID = {}
-    arenaInfo.unitId = {}
-    arenaInfo.spec = {}
-    arenaInfo.unitSpec = {}
-    arenaInfo.unitClass = {}
-    arenaInfo.unitRace = {}
-    arenaInfo.spellChargeExpire = {}
-    arenaInfo.optLowerCooldown = {}
-    arenaInfo.defaultHoJCooldown = {}
+arenaInfoFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
+arenaInfoFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
+arenaInfoFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED)
+arenaInfoFrame:SetScript("OnEvent", function (self, event, ...)
+    local reset = false
+    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
+        reset = true
+    elseif ( event == NS.PLAYER_SPECIALIZATION_CHANGED ) then
+        local unitTarget = ...
+        reset = ( unitTarget == "player" )
+    end
+
+    if reset then
+        print("Arena Opponents Info Reset")
+
+        arenaInfo.unitGUID = {}
+        arenaInfo.unitId = {}
+        arenaInfo.spec = {}
+        arenaInfo.unitSpec = {}
+        arenaInfo.unitClass = {}
+        arenaInfo.unitRace = {}
+        arenaInfo.spellChargeExpire = {}
+        arenaInfo.optLowerCooldown = {}
+        arenaInfo.defaultHoJCooldown = {}
+    end
 end)
 
 -- For the following helpers, make sure unitId is "arena".i, or "player" for testing
