@@ -80,6 +80,7 @@ frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
     if (InCombatLockdown()) then
+        print("Combat Lockdown, skip updating focus macros...")
         return
     end
 
