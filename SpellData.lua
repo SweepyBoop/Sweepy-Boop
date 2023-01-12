@@ -380,7 +380,7 @@ NS.spellData = {
     [10060] = {
         category = OFFENSIVE_DURATION,
         trackDest = true,
-        trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess
+        trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
         duration = 20,
     },
 
