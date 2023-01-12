@@ -235,31 +235,6 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
     updateName(unitFrame, unitId)
 end
 
-BoopNameplateFilter.LoadScreen = function (modTable)
-    local override = false
-    if ( Plater.ZoneInstanceType == "arena" ) then
-        override = true
-    elseif ( Plater.ZoneInstanceType == "pvp" ) then
-        local maxPlayer = select(5, GetInstanceInfo())
-        override = ( maxPlayer == 6 )
-    end
-
-    if override then
-        Plater.db.profile.indicator_anchor.side = Plater.AnchorSides.TOP
-        Plater.db.profile.indicator_anchor.x = 0
-        Plater.db.profile.indicator_anchor.y = 2
-        Plater.db.profile.indicator_scale = 3
-    else
-        Plater.db.profile.indicator_anchor.side = Plater.AnchorSides.LEFT
-        Plater.db.profile.indicator_anchor.x = -2
-        Plater.db.profile.indicator_anchor.y = 0
-        Plater.db.profile.indicator_scale = 1
-    end
-
-    Plater.RefreshDBUpvalues()
-    Plater.UpdateAllPlates()
-end
-
 -- Target Border
 BoopNameplateBorder = {}
 
@@ -290,5 +265,74 @@ BoopNameplateBorder.Destructor = function (self, unitId, unitFrame, envTable)
     if unitFrame.healthBar.TargetBorder then
         unitFrame.healthBar.TargetBorder:Hide()
     end
+end
+
+-- Class icons for friendly players
+BoopNameplateClassIcon = {}
+
+local ClassIconOptions = {
+    PlayerSize = 48,
+    PetSize = 28,
+    Anchor = {
+        side = 8,
+        x = 0,
+        y = 10,
+    }
+}
+
+local function EnsureClassIcon(unitFrame)
+    if (not unitFrame.FriendlyClassIcon) then
+        if isPartyOrPartyPet(unitFrame.unit) then
+            unitFrame.FriendlyClassIcon = unitFrame:CreateTexture(nil, 'overlay')
+            local icon = unitFrame.FriendlyClassIcon
+
+            if UnitIsPlayer(unitFrame.unit) then
+                local class =  select(2, UnitClass(unitFrame.unit))
+                icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
+                icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
+                icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
+            else
+                icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
+                icon:SetTexCoord (0, 1, 0, 1)
+                icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
+            end
+
+            Plater.SetAnchor (icon, ClassIconOptions.Anchor)
+        end
+    end
+end
+
+BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
+    EnsureClassIcon(unitFrame)
+    local icon = unitFrame.FriendlyClassIcon
+    -- We don't have an icon for this nameplate, skip
+    if ( not icon ) then return end
+
+    if isPartyOrPartyPet(unitFrame.unit) then
+        if UnitIsPlayer(unitFrame.unit) then
+            local class = select(2, UnitClass(unitFrame.unit))
+            icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
+            icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
+            icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
+        else
+            icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
+            icon:SetTexCoord (0, 1, 0, 1)
+            icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
+        end
+
+        icon:Show()
+    else
+        icon:Hide()
+    end
+end
+
+BoopNameplateClassIcon.Hide = function (unitFrame)
+    if unitFrame.FriendlyClassIcon then
+        unitFrame.FriendlyClassIcon:Hide()
+    end
+end
+
+BoopNameplateClassIcon.Constructor = function (self, unitId, unitFrame, envTable)
+    EnsureClassIcon(unitFrame)
 end
 
