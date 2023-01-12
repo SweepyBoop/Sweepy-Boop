@@ -270,6 +270,8 @@ local durationTrigger = function(category, allstates, event, ...)
                 state.changed = true
                 return true
             end
+
+            return false
         end
 
         if checkSpellEnabled(spell, subEvent, sourceGUID, destGUID) then
