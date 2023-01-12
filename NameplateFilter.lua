@@ -291,6 +291,7 @@ local function EnsureClassIcon(unitFrame)
                 icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
             else
                 icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
+                icon:SetTexCoord ( 0.85, 0.15, 0.15, 0.85 )
             end
 
             icon:SetSize (ClassIconOptions.Size, ClassIconOptions.Size)
@@ -309,7 +310,8 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
             icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
             icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
         else
-            icon:SetTexture ([[Interface\Icons\inv-stbernarddogpet]])
+            icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
+            icon:SetTexCoord ( 0.85, 0.15, 0.15, 0.85 )
         end
 
         icon:Show()
