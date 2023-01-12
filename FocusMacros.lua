@@ -37,7 +37,7 @@ local function getFocusName()
 
         -- Healer is not found, find a tank
         for i = 1, NS.MAX_ARENA_SIZE do
-            if ( roles[i] ~= "DAMAGER" ) then
+            if roles[i] and ( roles[i] ~= "DAMAGER" ) then
                 return "arena" .. i
             end
         end
@@ -72,16 +72,21 @@ local function updateMacros()
         end
     end
 
-    C_Timer.After(10, function() print("Setting focus to @" .. focusName) end)
+    print("Setting focus to @" .. focusName)
+end
+
+local function TryUpdateMacros()
+    if (InCombatLockdown()) then
+        print("Combat lockdown, waiting for 6s...")
+        C_Timer.After(6, TryUpdateMacros)
+    else
+        updateMacros()
+    end
 end
 
 local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
-    if (InCombatLockdown()) then
-        return
-    end
-
-    updateMacros()
+    TryUpdateMacros()
 end)
