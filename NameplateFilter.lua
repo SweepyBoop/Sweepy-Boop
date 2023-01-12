@@ -280,22 +280,34 @@ local ClassIconOptions = {
     }
 }
 
+local function UpdateIconFile(unitFrame, icon)
+    if UnitIsPlayer(unitFrame.unit) then
+        local class = select(2, UnitClass(unitFrame.unit))
+        if (class == unitFrame.class) then return end
+
+        icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
+        icon:SetTexCoord (unpack(CLASS_ICON_TCOORDS [class]))
+        icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
+
+        unitFrame.class = class
+    else
+        if (unitFrame.class == "PET") then return end
+
+        icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
+        icon:SetTexCoord (0, 1, 0, 1)
+        icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
+
+        unitFrame.class = "PET"
+    end
+end
+
 local function EnsureClassIcon(unitFrame)
     if (not unitFrame.FriendlyClassIcon) then
         if isPartyOrPartyPet(unitFrame.unit) then
             unitFrame.FriendlyClassIcon = unitFrame:CreateTexture(nil, 'overlay')
             local icon = unitFrame.FriendlyClassIcon
 
-            if UnitIsPlayer(unitFrame.unit) then
-                local class =  select(2, UnitClass(unitFrame.unit))
-                icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
-                icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
-                icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
-            else
-                icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
-                icon:SetTexCoord (0, 1, 0, 1)
-                icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
-            end
+            UpdateIconFile(unitFrame, icon)
 
             Plater.SetAnchor (icon, ClassIconOptions.Anchor)
         end
@@ -309,17 +321,7 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     if ( not icon ) then return end
 
     if isPartyOrPartyPet(unitFrame.unit) then
-        if UnitIsPlayer(unitFrame.unit) then
-            local class = select(2, UnitClass(unitFrame.unit))
-            icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
-            icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
-            icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
-        else
-            icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
-            icon:SetTexCoord (0, 1, 0, 1)
-            icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
-        end
-
+        UpdateIconFile(unitFrame, icon)
         icon:Show()
     else
         icon:Hide()
