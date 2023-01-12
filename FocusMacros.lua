@@ -71,6 +71,8 @@ local function updateMacros()
             EditMacro(iMacro, macroName, "INV_MISC_QUESTIONMARK", macroContent)
         end
     end
+
+    C_Timer.After(10, function() print("Setting focus to @" .. focusName) end)
 end
 
 local frame = CreateFrame("Frame")
