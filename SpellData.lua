@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false
+NS.isTestMode = true
 
 NS.spellCategory = {
     OFFENSIVE = 1,
@@ -380,6 +380,7 @@ NS.spellData = {
     [10060] = {
         category = OFFENSIVE_DURATION,
         trackDest = true,
+        trackEvent = NS.SPELL_AURA_APPLIED,
         duration = 20,
     },
 

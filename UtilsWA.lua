@@ -530,8 +530,8 @@ local function getOffensiveSpellDataById(spellID)
 end
 
 local function isUnitParty(unitId)
-    if isTestMode and unitId == "player" then
-        return true
+    if isTestMode then
+        return ( unitId == "player" )
     end
 
     return (unitId == "party1") or (unitId == "party2")
