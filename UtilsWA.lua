@@ -522,30 +522,6 @@ BoopUtilsWA.Triggers.DurationRecklessness = function (allstates, event, ...)
     return GlowForSpell(1719, allstates, event, ...)
 end
 
-local function isUnitParty(unitId)
-    if isTestMode then
-        return ( unitId == "player" )
-    end
-
-    return (unitId == "party1") or (unitId == "party2")
-end
-
--- Use premade auras for buffs (mark spells as trackParty = true if cannot be tracked as premade buff)
-BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
-    if resetAllStates(allstates, event) then
-        return true
-    elseif ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
-        local unitTarget, _, spellID = ...
-        if ( not unitTarget ) or ( not spellData[spellID] ) or ( not spellData[spellID].trackParty ) then return end
-
-        if isUnitParty(unitTarget) then
-            local spell = spellData[spellID]
-            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
-            return true
-        end
-    end
-end
-
 -- This one only needs to check one event:
 -- COMBAT_LOG_EVENT_UNFILTERED:SPELL_AURA_REMOVED
 -- trackUnit: player/party
