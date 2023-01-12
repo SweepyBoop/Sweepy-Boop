@@ -37,7 +37,7 @@ local function getFocusName()
 
         -- Healer is not found, find a tank
         for i = 1, NS.MAX_ARENA_SIZE do
-            if ( roles[i] ~= "DAMAGER" ) then
+            if roles[i] and ( roles[i] ~= "DAMAGER" ) then
                 return "arena" .. i
             end
         end
