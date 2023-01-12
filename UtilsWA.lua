@@ -540,17 +540,7 @@ BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
 
         if isUnitParty(unitTarget) then
             local spell = spellData[spellID]
-
-            local duration
-            if spell.trackEvent == NS.SPELL_AURA_APPLIED then
-                local unitId = NS.arenaUnitId(destGUID)
-                if ( not unitId ) then return end
-                duration = select(5, WA_GetUnitBuff(unitId, spellID))
-            else
-                duration = spell.duration or defaultDuration
-            end
-
-            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration or defaultDuration, unitTarget)
+            allstates[unitTarget] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
             return true
         end
     end
