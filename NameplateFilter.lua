@@ -271,7 +271,8 @@ end
 BoopNameplateClassIcon = {}
 
 local ClassIconOptions = {
-    Size = 48,
+    PlayerSize = 48,
+    PetSize = 28,
     Anchor = {
         side = 8,
         x = 0,
@@ -289,12 +290,13 @@ local function EnsureClassIcon(unitFrame)
                 local class =  select(2, UnitClass(unitFrame.unit))
                 icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
                 icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
+                icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
             else
                 icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
-                icon:SetTexCoord ( 0.85, 0.15, 0.15, 0.85 )
+                icon:SetTexCoord (0, 1, 0, 1)
+                icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
             end
 
-            icon:SetSize (ClassIconOptions.Size, ClassIconOptions.Size)
             Plater.SetAnchor (icon, ClassIconOptions.Anchor)
         end
     end
@@ -309,9 +311,11 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
             local class = select(2, UnitClass(unitFrame.unit))
             icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
             icon:SetTexCoord (unpack (CLASS_ICON_TCOORDS [class]))
+            icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
         else
             icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
-            icon:SetTexCoord ( 0.85, 0.15, 0.15, 0.85 )
+            icon:SetTexCoord (0, 1, 0, 1)
+            icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
         end
 
         icon:Show()
