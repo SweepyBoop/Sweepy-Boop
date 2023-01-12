@@ -123,12 +123,12 @@ NS.isGUIDArena = function(sourceGUID)
     end
 end
 
-NS.arenaUnitId = function (sourceGUID)
-    return arenaInfo.unitId[sourceGUID]
+NS.arenaUnitId = function (unitGUID)
+    return arenaInfo.unitId[unitGUID]
 end
 
-NS.arenaSpec = function (sourceGUID)
-    return arenaInfo.spec[sourceGUID]
+NS.arenaSpec = function (unitGUID)
+    return arenaInfo.spec[unitGUID]
 end
 
 -- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
