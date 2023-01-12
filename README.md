@@ -13,7 +13,6 @@ Here are the arena WeakAuras based on this addon:
 - [Arena Enemy Offensive Cooldowns](https://wago.io/EtVxNHjcg)
 - [Mortal Strike Debuff on Team](https://wago.io/pCKbpzW-Q)
 - [Player's own DR timer](https://wago.io/cD-yK8HTF)
-- [Raid Frame Burst indicator](https://wago.io/L_fN1TT00)
 
 The cooldown tracking WeakAuras come with various advanced features:
 - Cooldown reduction: Hammer of Justice (from Fist of Justice), Combustion (from Pyrokinesis, Kindling, Shifting Power), Vendetta (from Duskwalker's Patch legendary armor) etc.
