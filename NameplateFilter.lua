@@ -1,7 +1,6 @@
 local _, NS = ...
 
 BoopNameplateFilter = {}
-local testMode = false
 
 local cachedClassIds = {}
 
@@ -85,7 +84,8 @@ local function isPartyPrimaryPet(unitId)
 end
 
 local function isPartyOrPartyPet(unitId)
-    if testMode then
+    -- When outside arena, just check if unit is friendly
+    if ( not IsActiveBattlefieldArena() ) then
         return UnitIsFriend(unitId, "player")
     end
 
@@ -107,6 +107,9 @@ local function arenaNumber(unitFrame, unitId)
 end
 
 local function shouldShowNameplate(unitId, npcID)
+    -- Don't filter nameplates when outside arena
+    if ( not IsActiveBattlefieldArena() ) then return true end
+
     if UnitIsPlayer(unitId) then
         return true
     else
@@ -120,6 +123,9 @@ end
 
 -- Hide names for party members and non-players that are not whitelisted
 local function updateName(unitFrame, unitId)
+    -- Keep name unchanged when outside arena
+    if ( not IsActiveBattlefieldArena() ) then return end
+
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
 
@@ -184,12 +190,15 @@ end
 
 local function updateWidth(unitFrame, unitId)
     local width = unitFrame:GetSize()
-    if ( width < 50 ) then
-        return
-    end
 
     if isPartyOrPartyPet(unitId) then
-        Plater.SetNameplateSize(unitFrame, 35, 13)
+        if ( width ~= 35 ) then
+            Plater.SetNameplateSize(unitFrame, 35, 13)
+        end
+    else
+        if ( width ~= 130 ) then
+            Plater.SetNameplateSize(unitFrame, 130, 13)
+        end
     end
 end
 
@@ -200,7 +209,6 @@ BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable
     unitFrame.BuffFrame2:Hide()
 
     if ( not unitId ) then return end
-    if ( not IsActiveBattlefieldArena() ) and ( not testMode )  then return end
 
     -- Check if visible nameplate should be hidden
     -- Each nameplate needs to be hidden once only, to avoid repeated checks
@@ -222,7 +230,6 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
     end
 
     if ( not unitId ) then return end
-    if ( not IsActiveBattlefieldArena() ) and ( not testMode )  then return end
 
     -- A hack to hide raid icons (to make room for class icons)
     if unitFrame.PlaterRaidTargetFrame:IsShown() then
