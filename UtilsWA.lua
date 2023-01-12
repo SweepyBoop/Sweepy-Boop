@@ -537,7 +537,7 @@ local function isUnitParty(unitId)
     return (unitId == "party1") or (unitId == "party2")
 end
 
--- Use premade auras for dynamic auras
+-- Use premade auras for buffs
 BoopUtilsWA.Triggers.PartyBurst = function(allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
