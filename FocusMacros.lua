@@ -72,7 +72,7 @@ local function updateMacros()
         end
     end
 
-    C_Timer.After(10, function() print("Setting focus to @" .. focusName) end)
+    print("Setting focus to @" .. focusName)
 end
 
 local frame = CreateFrame("Frame")
@@ -80,9 +80,13 @@ frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
     if (InCombatLockdown()) then
-        print("Combat Lockdown, skip updating focus macros...")
-        return
+        print("Combat lockdown, waiting for leaving combat...")
+        local pendingUpdate = CreateFrame("Frame")
+        pendingUpdate:RegisterEvent("PLAYER_REGEN_ENABLED")
+        pendingUpdate:SetScript("OnEvent", function ()
+            updateMacros()
+        end)
+    else
+        updateMacros()
     end
-
-    updateMacros()
 end)
