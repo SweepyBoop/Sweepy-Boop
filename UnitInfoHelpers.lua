@@ -131,18 +131,6 @@ NS.arenaSpec = function (unitGUID)
     return arenaInfo.spec[unitGUID]
 end
 
--- For arena pets we cannot reliably cache the GUIDs, since pets can die and players can summon a different pet.
--- This is only checked for TRACK_PET spells which is rare.
-NS.isSourceArenaPet = function(sourceGUID)
-    if isTestMode then return sourceGUID == UnitGUID("pet") end
-
-    for i = 1, NS.MAX_ARENA_SIZE do
-        if (sourceGUID == UnitGUID("arenapet"..i)) then
-            return true
-        end
-    end
-end
-
 -- Caller ensures unitId is not nil
 -- Call this before getting any info based on unitId
 NS.isUnitArena = function(unitId)
