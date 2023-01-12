@@ -6,7 +6,6 @@ local arenaInfo = {
     -- Key: unitId (arena1, arena2, arena3), value: sourceGUID
     unitGUID = {},
     -- Key: sourceGUID, value: unitId
-    -- Naturally this should always be available since arenaUnitGUID will always be called first to update this.
     unitId = {},
 
     -- Only supports arena1/2/3 via GetArenaOpponentSpec
@@ -107,16 +106,15 @@ local function arenaUnitGUID(unitId, index)
     return arenaInfo.unitGUID[unitId]
 end
 
--- Caller ensures sourceGUID is not nil
--- Call this before getting any info based on sourceGUID
-NS.isGUIDArena = function(sourceGUID)
+-- Caller ensures unitGUID is not nil
+NS.isGUIDArena = function(unitGUID)
     if isTestMode then
         -- updateArenaInfo called by arenaUnitGUID
-        return (sourceGUID == arenaUnitGUID("player", 0))
+        return (unitGUID == arenaUnitGUID("player", 0))
     end
 
     for i = 1, NS.MAX_ARENA_SIZE do
-        if (sourceGUID == arenaUnitGUID("arena"..i, i)) then
+        if (unitGUID == arenaUnitGUID("arena"..i, i)) then
             -- updateArenaInfo called by arenaUnitGUID
             return true
         end
@@ -124,10 +122,18 @@ NS.isGUIDArena = function(sourceGUID)
 end
 
 NS.arenaUnitId = function (unitGUID)
+    if ( not arenaInfo.unitId[unitGUID] ) then
+        NS.isGUIDArena(unitGUID)
+    end
+
     return arenaInfo.unitId[unitGUID]
 end
 
 NS.arenaSpec = function (unitGUID)
+    if ( not arenaInfo.spec[unitGUID] ) then
+        NS.isGUIDArena(unitGUID)
+    end
+
     return arenaInfo.spec[unitGUID]
 end
 
