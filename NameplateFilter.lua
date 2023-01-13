@@ -73,7 +73,7 @@ end
 local function IsPartyOrPartyPet(unitId)
     -- When outside arena, just check if unit is friendly
     if ( not IsActiveBattlefieldArena() ) then
-        return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+        return UnitIsFriend(unitId, "player") ~= UnitIsPossessed(unitId)
     end
 
     if UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") then
@@ -135,12 +135,19 @@ local ShowCastNpc = {
 local function UpdateCastBar(unitFrame)
     if ( not unitFrame.castBar:IsShown() ) then return end
 
-    if ( not UnitIsPlayer(unitFrame.unit) ) then
+    local hideCast = false
+    if IsPartyOrPartyPet(unitId) then
+        hideCast = true
+    elseif ( not UnitIsPlayer(unitFrame.unit) ) then
         local npcID = unitFrame.namePlateNpcId -- select(6, strsplit("-", UnitGUID(unitId)))
         if ( not npcID ) or ( not ShowCastNpc[npcID] ) then
-            unitFrame.castBar:UnregisterAllEvents()
-            unitFrame.castBar:Hide()
+            hideCast = true
         end
+    end
+
+    if hideCast then
+        unitFrame.castBar:UnregisterAllEvents()
+        unitFrame.castBar:Hide()
     end
 end
 
