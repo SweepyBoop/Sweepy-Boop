@@ -73,7 +73,7 @@ end
 local function IsPartyOrPartyPet(unitId)
     -- When outside arena, just check if unit is friendly
     if ( not IsActiveBattlefieldArena() ) then
-        return UnitIsFriend(unitId, "player") ~= UnitIsPossessed(unitId)
+        return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
     end
 
     if UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") then
@@ -258,7 +258,7 @@ local function GetNamePlateUnitClass(nameplateUnitToken)
     return select(2, UnitClass(nameplateUnitToken))
 end
 
-BoopNameplateClassIcon.Hide = function (unitFrame)
+local function HideClassIcon (unitFrame)
     if unitFrame.FriendlyClassIcon then
         unitFrame.FriendlyClassIcon.class = nil
         unitFrame.FriendlyClassIcon.isTarget = false
@@ -266,6 +266,7 @@ BoopNameplateClassIcon.Hide = function (unitFrame)
         unitFrame.FriendlyClassIcon:Hide()
     end
 end
+BoopNameplateClassIcon.Hide = HideClassIcon
 
 local function UpdateIcon(unitFrame, icon)
     local isPlayer = UnitIsPlayer(unitFrame.unit)
@@ -305,6 +306,10 @@ local function EnsureClassIcon(unitFrame)
 end
 
 BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
+    if ( not unitFrame.unit ) then
+        HideClassIcon(unitFrame)
+    end
+
     EnsureClassIcon(unitFrame)
     local icon = unitFrame.FriendlyClassIcon
     -- We don't have an icon for this nameplate, skip
@@ -313,7 +318,7 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     if IsPartyOrPartyPet(unitFrame.unit) then
         UpdateIcon(unitFrame, icon)
     else
-        BoopNameplateClassIcon.Hide(unitFrame)
+        HideClassIcon(unitFrame)
     end
 end
 
