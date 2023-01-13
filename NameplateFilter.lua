@@ -3,7 +3,8 @@ local _, NS = ...
 BoopNameplateFilter = {}
 
 local function IsArena()
-    return (  IsActiveBattlefieldArena() )
+    local test = false
+    return IsActiveBattlefieldArena() or test
 end
 
 local function debug(unitId, message)
@@ -54,9 +55,8 @@ local function IsInWhiteList(unitId, npcID)
 end
 
 local function IsPrimaryPetClass(unitId)
-    return true
-    --local class = GetUnitClass(unitId)
-    --return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+    local class = GetUnitClass(unitId)
+    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
 end
 
 local function IsArenaPrimaryPet(unitId)
@@ -116,8 +116,6 @@ local function ShouldShowNameplate(unitId, npcID)
             return true
         end
     end
-
-    debug(unitId, "Party pet hidden!")
 
     return false
 end
