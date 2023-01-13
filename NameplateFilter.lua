@@ -167,6 +167,12 @@ local function UpdateVisibility(unitFrame)
     end
 end
 
+local function UpdateBuffFrame(unitFrame)
+    if unitFrame.BuffFrame:IsShown() and IsPartyOrPartyPet(unitFrame.unit) then
+        unitFrame.BuffFrame:Hide()
+    end
+end
+
 BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable, modTable)
     -- A hack to not show any buffs on nameplate (in case mage steals buff from me)
     unitFrame.BuffFrame2:Hide()
@@ -179,7 +185,8 @@ BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable
     if UpdateVisibility(unitFrame) then
         return
     end
-    
+
+    UpdateBuffFrame(unitFrame)
     UpdateCastBar(unitFrame)
     UpdateName(unitFrame)
 end
@@ -201,6 +208,7 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
         return
     end
 
+    UpdateBuffFrame(unitFrame)
     UpdateCastBar(unitFrame)
     UpdateName(unitFrame)
 end
