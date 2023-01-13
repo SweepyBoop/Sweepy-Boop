@@ -50,11 +50,15 @@ local function IsInWhiteList(unitId, npcID)
     end
 end
 
+local function IsPrimaryPetClass(unitId)
+    local class = GetUnitClass(unitId)
+    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+end
+
 local function IsArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
-            local class = GetUnitClass("arena" .. i)
-            return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+            return IsPrimaryPetClass("arena" .. i)
         end
     end
 end
@@ -64,14 +68,11 @@ local partyPetSize = 2
 local function IsPartyPrimaryPet(unitId)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
-        local class = GetUnitClass("player")
-        return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+        return IsPrimaryPetClass("player")
     else
         for i = 1, partyPetSize do
             if UnitIsUnit(unitId, "partypet" .. i) then
-                local partyUnitId = "party" .. i
-                local class = GetUnitClass(partyUnitId)
-                return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+                return IsPrimaryPetClass("party" .. i)
             end
         end
     end
