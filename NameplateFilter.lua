@@ -279,7 +279,7 @@ BoopNameplateClassIcon = {}
 
 local ClassIconOptions = {
     PlayerSize = 48,
-    PetSize = 28,
+    PetSize = 32,
     Anchor = {
         side = 8,
         x = 0,
