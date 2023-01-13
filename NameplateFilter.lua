@@ -120,6 +120,8 @@ local function ShouldShowNameplate(unitId, npcID)
         end
     end
 
+    debug(unitId, "Party pet hidden!")
+
     return false
 end
 
@@ -170,7 +172,6 @@ local function UpdateVisibility(unitFrame)
     -- Check if visible nameplate should be hidden
     -- Each nameplate needs to be hidden once only, to avoid repeated checks
     if unitFrame:IsShown() and ( not ShouldShowNameplate(unitFrame.unit, unitFrame.namePlateNpcId) ) then
-        debug(unitFrame.unit, "Party pet is hidden!")
         unitFrame:Hide()
         return true
     end
@@ -293,6 +294,7 @@ end
 BoopNameplateClassIcon.Hide = HideClassIcon
 
 local function UpdateIcon(unitFrame, icon)
+    debug(unitFrame.unit, "Show Party Pet")
     local isPlayer = UnitIsPlayer(unitFrame.unit)
     -- Note that NPCs can also return a class
     local class = ( isPlayer and GetNamePlateUnitClass(unitFrame.unit) ) or "PET"
