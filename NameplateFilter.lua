@@ -2,22 +2,8 @@ local _, NS = ...
 
 BoopNameplateFilter = {}
 
-local cachedClassIds = {}
-
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-frame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS")
-frame:SetScript("OnEvent", function ()
-    cachedClassIds = {}
-end)
-
--- Do not use nameplate unitIds
-local function getUnitClass(unitId)
-    if ( not cachedClassIds[unitId] ) then
-        cachedClassIds[unitId] = select(3, UnitClass(unitId))
-    end
-
-    return cachedClassIds[unitId]
+local function GetUnitClass(unitId)
+    return select(3, UnitClass(unitId))
 end
 
 -- Whitelist for non-player units, show nameplate if unit name or NpcID matches
@@ -25,7 +11,7 @@ end
 -- To find the NpcID of a unit, target it and type:
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 -- unitFrame.namePlateNpcId is numeric type, so NPC ID index here should be numeric as well
-local whiteList = {
+local NameplateWhiteList = {
     -- Priest
     [101398] = true, -- Psyfiend
 
@@ -47,20 +33,20 @@ local whiteList = {
     ["War Banner"] = true,
 }
 
-local function isInWhiteList(unitId, npcID)
-    whiteList["Tremor Totem"] = NS.partyWithFearSpell()
-    if ( npcID and whiteList[npcID] ) then
+local function IsInWhiteList(unitId, npcID)
+    NameplateWhiteList["Tremor Totem"] = NS.partyWithFearSpell()
+    if ( npcID and NameplateWhiteList[npcID] ) then
         return true
     else
         local name = UnitName(unitId)
-        return whiteList[name]
+        return NameplateWhiteList[name]
     end
 end
 
-local function isArenaPrimaryPet(unitId)
+local function IsArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
-            local class = getUnitClass("arena" .. i)
+            local class = GetUnitClass("arena" .. i)
             return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
         end
     end
@@ -68,36 +54,36 @@ end
 
 local partyPetSize = 2
 
-local function isPartyPrimaryPet(unitId)
+local function IsPartyPrimaryPet(unitId)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
-        local class = getUnitClass("player")
+        local class = GetUnitClass("player")
         return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
     else
         for i = 1, partyPetSize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 local partyUnitId = "party" .. i
-                local class = getUnitClass(partyUnitId)
+                local class = GetUnitClass(partyUnitId)
                 return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
             end
         end
     end
 end
 
-local function isPartyOrPartyPet(unitId)
+local function IsPartyOrPartyPet(unitId)
     -- When outside arena, just check if unit is friendly
     if ( not IsActiveBattlefieldArena() ) then
-        return UnitIsFriend(unitId, "player") ~= UnitIsPossessed(unitId)
+        return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
     end
 
     if UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") then
         return true
     else
-        return isPartyPrimaryPet(unitId)
+        return IsPartyPrimaryPet(unitId)
     end
 end
 
-local function arenaNumber(unitFrame, unitId)
+local function ArenaNumber(unitFrame, unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arena"..i) then
             unitFrame.unitName:SetText(i)
@@ -107,14 +93,14 @@ local function arenaNumber(unitFrame, unitId)
     end
 end
 
-local function shouldShowNameplate(unitId, npcID)
+local function ShouldShowNameplate(unitId, npcID)
     -- Don't filter nameplates when outside arena
     if ( not IsActiveBattlefieldArena() ) then return true end
 
     if UnitIsPlayer(unitId) then
         return true
     else
-        if isPartyPrimaryPet(unitId) or isArenaPrimaryPet(unitId) or isInWhiteList(unitId, npcID) then
+        if IsPartyPrimaryPet(unitId) or IsArenaPrimaryPet(unitId) or IsInWhiteList(unitId, npcID) then
             return true
         end
     end
@@ -123,7 +109,7 @@ local function shouldShowNameplate(unitId, npcID)
 end
 
 -- Hide names for party members and non-players that are not whitelisted
-local function updateName(unitFrame, unitId)
+local function UpdateName(unitFrame)
     -- Keep name unchanged when outside arena
     if ( not IsActiveBattlefieldArena() ) then return end
 
@@ -133,114 +119,83 @@ local function updateName(unitFrame, unitId)
     -- Already arena numbered
     if string.len(unitFrame.unitName:GetText()) == 1 then return end
 
-    if arenaNumber(unitFrame, unitId) then
+    local unitId = unitFrame.unit
+    if ArenaNumber(unitFrame, unitId) then
         return true
-    elseif isPartyOrPartyPet(unitId) then
-        unitFrame.unitName:Hide()
-    elseif ( not UnitIsPlayer(unitId) ) and ( not isInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
+    elseif ( not UnitIsPlayer(unitId) ) and ( not IsInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame.unitName:Hide()
     end
 end
 
--- Hide buff frame for party members
-local function updateBuffFrame(unitFrame, unitId)
-    if unitFrame.BuffFrame:IsShown() and isPartyOrPartyPet(unitId) then
-        unitFrame.BuffFrame:Hide()
-    end
-end
-
-local showCastNpc = {
+local ShowCastNpc = {
     [1863] = true, -- Succubus
     [61245] = true, -- Capacitor Totem
 }
 
-local function updateCastBar(unitFrame, unitId)
+local function UpdateCastBar(unitFrame)
     if ( not unitFrame.castBar:IsShown() ) then return end
 
-    local hideCast = false
-    if isPartyOrPartyPet(unitId) then
-        hideCast = true
-    elseif ( not UnitIsPlayer(unitId) ) then
+    if ( not UnitIsPlayer(unitFrame.unit) ) then
         local npcID = unitFrame.namePlateNpcId -- select(6, strsplit("-", UnitGUID(unitId)))
-        if ( not npcID ) or ( not showCastNpc[npcID] ) then
-            hideCast = true
-        end
-    end
-
-    if hideCast then
-        unitFrame.castBar:UnregisterAllEvents()
-        unitFrame.castBar:Hide()
-    end
-end
-
-local function updateFrame(unitFrame, unitId)
-    if isPartyOrPartyPet(unitId) then
-        -- Smaller party nameplates with no cast bar & buff frame
-        Plater.SetNameplateSize(unitFrame, 35, 13)
-        unitFrame.castBar:UnregisterAllEvents()
-        unitFrame.castBar:Hide()
-        unitFrame.BuffFrame:Hide()
-    elseif ( not UnitIsPlayer(unitId) ) then
-        local npcID = unitFrame.namePlateNpcId -- select(6, strsplit("-", UnitGUID(unitId)))
-        if ( not npcID ) or ( not showCastNpc[npcID] ) then
+        if ( not npcID ) or ( not ShowCastNpc[npcID] ) then
             unitFrame.castBar:UnregisterAllEvents()
             unitFrame.castBar:Hide()
         end
     end
 end
 
-local function updateWidth(unitFrame, unitId)
-    local width = unitFrame:GetSize()
+local function UpdateVisibility(unitFrame)
+    -- Check if visible nameplate should be hidden
+    -- Each nameplate needs to be hidden once only, to avoid repeated checks
+    if unitFrame:IsShown() and ( not ShouldShowNameplate(unitId, unitFrame.namePlateNpcId) ) then
+        unitFrame:Hide()
+        return true
+    end
 
-    if isPartyOrPartyPet(unitId) then
-        if ( width ~= 35 ) then
-            Plater.SetNameplateSize(unitFrame, 35, 13)
-        end
-    else
-        if ( width ~= 130 ) then
-            Plater.SetNameplateSize(unitFrame, 130, 13)
-        end
+    -- Hide healthBar of party members and pets, but do not hide the entire frame.
+    -- Otherwise class icons will be hidden by its parent unitFrame.
+    if unitFrame.healthBar:IsShown() and IsPartyOrPartyPet(unitFrame.unit) then
+        unitFrame.healthBar:Hide()
+        return true
     end
 end
 
 BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable, modTable)
-    --insert code here
-
     -- A hack to not show any buffs on nameplate (in case mage steals buff from me)
     unitFrame.BuffFrame2:Hide()
 
+    -- A hack to hide raid icons (to make room for class icons)
+    unitFrame.PlaterRaidTargetFrame:Hide()
+
     if ( not unitId ) then return end
 
-    -- Check if visible nameplate should be hidden
-    -- Each nameplate needs to be hidden once only, to avoid repeated checks
-    if unitFrame:IsShown() and ( not shouldShowNameplate(unitId, unitFrame.namePlateNpcId) ) then
-        unitFrame:Hide()
+    if UpdateVisibility(unitFrame) then
         return
     end
-
-    updateFrame(unitFrame, unitId)
-    updateName(unitFrame, unitId)
+    
+    UpdateCastBar(unitFrame)
+    UpdateName(unitFrame)
 end
 
 BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTable, modTable)
-    --insert code here
-
     -- A hack to not show any buffs on nameplate (in case mage steals buff from me)
     if unitFrame.BuffFrame2:IsShown() then
         unitFrame.BuffFrame2:Hide()
     end
-
-    if ( not unitId ) then return end
 
     -- A hack to hide raid icons (to make room for class icons)
     if unitFrame.PlaterRaidTargetFrame:IsShown() then
         unitFrame.PlaterRaidTargetFrame:Hide()
     end
 
-    updateWidth(unitFrame, unitId)
-    updateBuffFrame(unitFrame, unitId)
-    updateCastBar(unitFrame, unitId)
-    updateName(unitFrame, unitId)
+    if ( not unitId ) then return end
+
+    if UpdateVisibility(unitFrame) then
+        return
+    end
+
+    UpdateCastBar(unitFrame)
+    UpdateName(unitFrame)
 end
 
 -- Target Border
@@ -334,7 +289,7 @@ end
 
 local function EnsureClassIcon(unitFrame)
     if (not unitFrame.FriendlyClassIcon) then
-        if isPartyOrPartyPet(unitFrame.unit) then
+        if IsPartyOrPartyPet(unitFrame.unit) then
             unitFrame.FriendlyClassIcon = unitFrame:CreateTexture(nil, 'overlay')
             local icon = unitFrame.FriendlyClassIcon
             Plater.SetAnchor (icon, ClassIconOptions.Anchor)
@@ -348,7 +303,7 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     -- We don't have an icon for this nameplate, skip
     if ( not icon ) then return end
 
-    if isPartyOrPartyPet(unitFrame.unit) then
+    if IsPartyOrPartyPet(unitFrame.unit) then
         UpdateIcon(unitFrame, icon)
     else
         BoopNameplateClassIcon.Hide(unitFrame)
