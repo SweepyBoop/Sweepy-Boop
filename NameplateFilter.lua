@@ -287,13 +287,14 @@ local ClassIconOptions = {
     }
 }
 
+local IconPath = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\warcraftflat\\"
+
 local function UpdateIconFile(unitFrame, icon)
     if UnitIsPlayer(unitFrame.unit) then
         local class = select(2, UnitClass(unitFrame.unit))
         if (class == unitFrame.class) then return end
 
-        icon:SetTexture ([[Interface\TargetingFrame\UI-CLASSES-CIRCLES]])
-        icon:SetTexCoord (unpack(CLASS_ICON_TCOORDS [class]))
+        icon:SetTexture (IconPath .. class)
         icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
 
         unitFrame.class = class
