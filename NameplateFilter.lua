@@ -2,6 +2,13 @@ local _, NS = ...
 
 BoopNameplateFilter = {}
 
+local function IsArena()
+    local isArena = IsActiveBattlefieldArena()
+    local testArena = false
+
+    return isArena or testArena
+end
+
 local function GetUnitClass(unitId)
     return select(3, UnitClass(unitId))
 end
@@ -72,7 +79,7 @@ end
 
 local function IsPartyOrPartyPet(unitId)
     -- When outside arena, just check if unit is friendly
-    if ( not IsActiveBattlefieldArena() ) then
+    if ( not IsArena() ) then
         return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
     end
 
@@ -95,7 +102,7 @@ end
 
 local function ShouldShowNameplate(unitId, npcID)
     -- Don't filter nameplates when outside arena
-    if ( not IsActiveBattlefieldArena() ) then return true end
+    if ( not IsArena() ) then return true end
 
     if UnitIsPlayer(unitId) then
         return true
@@ -111,7 +118,7 @@ end
 -- Hide names for party members and non-players that are not whitelisted
 local function UpdateName(unitFrame)
     -- Keep name unchanged when outside arena
-    if ( not IsActiveBattlefieldArena() ) then return end
+    if ( not IsArena() ) then return end
 
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
