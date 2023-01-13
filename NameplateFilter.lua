@@ -298,11 +298,15 @@ local function UpdateIconFile(unitFrame, icon)
         local iconPath = ( target and IconPathTarget ) or IconPath
         icon:SetTexture(iconPath .. class)
         
-        local iconSize = ( class == "PET" and ClassIconOptions.PetSize ) or ClassIconOptions.PlayerSize
-        icon:SetSize(iconSize, iconSize)
+        local isPet = ( class == "PET" )
+        if ( isPet ~= unitFrame.isPet ) then
+            local iconSize = ( isPet and ClassIconOptions.PetSize ) or ClassIconOptions.PlayerSize
+            icon:SetSize(iconSize, iconSize)
+        end
 
         unitFrame.class = class
         unitFrame.target = target
+        unitFrame.isPet = isPet
     end
 end
 
