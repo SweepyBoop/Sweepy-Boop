@@ -9,6 +9,12 @@ local function IsArena()
     return isArena or testArena
 end
 
+local function debug(unitId, message)
+    if UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
+        print(message)
+    end
+end
+
 local function GetUnitClass(unitId)
     return select(3, UnitClass(unitId))
 end
@@ -51,8 +57,9 @@ local function IsInWhiteList(unitId, npcID)
 end
 
 local function IsPrimaryPetClass(unitId)
-    local class = GetUnitClass(unitId)
-    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+    return true
+    --local class = GetUnitClass(unitId)
+    --return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
 end
 
 local function IsArenaPrimaryPet(unitId)
@@ -80,7 +87,7 @@ end
 
 local function IsPartyOrPartyPet(unitId)
     -- When outside arena, just check if unit is friendly
-    if ( not IsArena() ) then
+    if ( not IsActiveBattlefieldArena() ) then
         return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
     end
 
@@ -103,7 +110,7 @@ end
 
 local function ShouldShowNameplate(unitId, npcID)
     -- Don't filter nameplates when outside arena
-    if ( not IsArena() ) then return true end
+    if ( not IsActiveBattlefieldArena() ) then return true end
 
     if UnitIsPlayer(unitId) then
         return true
@@ -119,7 +126,7 @@ end
 -- Hide names for party members and non-players that are not whitelisted
 local function UpdateName(unitFrame)
     -- Keep name unchanged when outside arena
-    if ( not IsArena() ) then return end
+    if ( not IsActiveBattlefieldArena() ) then return end
 
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
@@ -163,6 +170,7 @@ local function UpdateVisibility(unitFrame)
     -- Check if visible nameplate should be hidden
     -- Each nameplate needs to be hidden once only, to avoid repeated checks
     if unitFrame:IsShown() and ( not ShouldShowNameplate(unitFrame.unit, unitFrame.namePlateNpcId) ) then
+        debug(unitFrame.unit, "Party pet is hidden!")
         unitFrame:Hide()
         return true
     end
