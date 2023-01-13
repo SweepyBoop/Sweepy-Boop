@@ -136,7 +136,7 @@ local function UpdateCastBar(unitFrame)
     if ( not unitFrame.castBar:IsShown() ) then return end
 
     local hideCast = false
-    if IsPartyOrPartyPet(unitId) then
+    if IsPartyOrPartyPet(unitFrame.unit) then
         hideCast = true
     elseif ( not UnitIsPlayer(unitFrame.unit) ) then
         local npcID = unitFrame.namePlateNpcId -- select(6, strsplit("-", UnitGUID(unitId)))
@@ -154,7 +154,7 @@ end
 local function UpdateVisibility(unitFrame)
     -- Check if visible nameplate should be hidden
     -- Each nameplate needs to be hidden once only, to avoid repeated checks
-    if unitFrame:IsShown() and ( not ShouldShowNameplate(unitId, unitFrame.namePlateNpcId) ) then
+    if unitFrame:IsShown() and ( not ShouldShowNameplate(unitFrame.unit, unitFrame.namePlateNpcId) ) then
         unitFrame:Hide()
         return true
     end
