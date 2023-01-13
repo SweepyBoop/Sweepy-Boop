@@ -3,14 +3,11 @@ local _, NS = ...
 BoopNameplateFilter = {}
 
 local function IsArena()
-    local isArena = IsActiveBattlefieldArena()
-    local testArena = false
-
-    return isArena or testArena
+    return (  IsActiveBattlefieldArena() )
 end
 
 local function debug(unitId, message)
-    if UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
+    if UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
         print(message)
     end
 end
@@ -87,7 +84,7 @@ end
 
 local function IsPartyOrPartyPet(unitId)
     -- When outside arena, just check if unit is friendly
-    if ( not IsActiveBattlefieldArena() ) then
+    if ( not IsArena() ) then
         return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
     end
 
@@ -110,7 +107,7 @@ end
 
 local function ShouldShowNameplate(unitId, npcID)
     -- Don't filter nameplates when outside arena
-    if ( not IsActiveBattlefieldArena() ) then return true end
+    if ( not IsArena() ) then return true end
 
     if UnitIsPlayer(unitId) then
         return true
@@ -128,7 +125,7 @@ end
 -- Hide names for party members and non-players that are not whitelisted
 local function UpdateName(unitFrame)
     -- Keep name unchanged when outside arena
-    if ( not IsActiveBattlefieldArena() ) then return end
+    if ( not IsArena() ) then return end
 
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
@@ -287,14 +284,16 @@ local function HideClassIcon (unitFrame)
     if unitFrame.FriendlyClassIcon then
         unitFrame.FriendlyClassIcon.class = nil
         unitFrame.FriendlyClassIcon.isTarget = false
-        unitFrame.FriendlyClassIcon.isPet = false
-        unitFrame.FriendlyClassIcon:Hide()
+        unitFrame.FriendlyClassIcon.isPlayer = false
+
+        if unitFrame.FriendlyClassIcon:IsShown() then
+            unitFrame.FriendlyClassIcon:Hide()
+        end
     end
 end
 BoopNameplateClassIcon.Hide = HideClassIcon
 
 local function UpdateIcon(unitFrame, icon)
-    debug(unitFrame.unit, "Show Party Pet")
     local isPlayer = UnitIsPlayer(unitFrame.unit)
     -- Note that NPCs can also return a class
     local class = ( isPlayer and GetNamePlateUnitClass(unitFrame.unit) ) or "PET"
