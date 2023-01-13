@@ -116,12 +116,12 @@ local function UpdateName(unitFrame)
     -- If already hidden, avoid additional checks
     if ( not unitFrame.unitName:IsShown() ) then return end
 
-    -- Already arena numbered
+    -- Already arena numbered, avoid additional checks
     if string.len(unitFrame.unitName:GetText()) == 1 then return end
 
     local unitId = unitFrame.unit
     if ArenaNumber(unitFrame, unitId) then
-        return true
+        return
     elseif ( not UnitIsPlayer(unitId) ) and ( not IsInWhiteList(unitId, unitFrame.namePlateNpcId) ) then
         unitFrame.unitName:Hide()
     end
