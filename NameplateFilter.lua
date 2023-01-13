@@ -11,6 +11,7 @@ frame:SetScript("OnEvent", function ()
     cachedClassIds = {}
 end)
 
+-- Do not use nameplate unitIds
 local function getUnitClass(unitId)
     if ( not cachedClassIds[unitId] ) then
         cachedClassIds[unitId] = select(3, UnitClass(unitId))
@@ -86,7 +87,7 @@ end
 local function isPartyOrPartyPet(unitId)
     -- When outside arena, just check if unit is friendly
     if ( not IsActiveBattlefieldArena() ) then
-        return UnitIsFriend(unitId, "player")
+        return UnitIsFriend(unitId, "player") ~= UnitIsPossessed(unitId)
     end
 
     if UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") then
@@ -290,23 +291,44 @@ local ClassIconOptions = {
 local IconPath = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\flat\\"
 local IconPathTarget = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\warcraftflat\\"
 
-local function UpdateIconFile(unitFrame, icon)
-    local class = ( UnitIsPlayer(unitFrame.unit) and select(2, UnitClass(unitFrame.unit)) ) or "PET"
-    local target = UnitIsUnit("target", unitFrame.unit)
-    
-    if ( class ~= unitFrame.class ) or ( target ~= unitFrame.target ) then
-        local iconPath = ( target and IconPathTarget ) or IconPath
+-- Locale-independant class names, e.g., "WARRIOR"
+local function GetNamePlateUnitClass(nameplateUnitToken)
+    return select(2, UnitClass(nameplateUnitToken))
+end
+
+BoopNameplateClassIcon.Hide = function (unitFrame)
+    if unitFrame.FriendlyClassIcon then
+        unitFrame.FriendlyClassIcon.class = nil
+        unitFrame.FriendlyClassIcon.isTarget = false
+        unitFrame.FriendlyClassIcon.isPet = false
+        unitFrame.FriendlyClassIcon:Hide()
+    end
+end
+
+local function UpdateIcon(unitFrame, icon)
+    local isPlayer = UnitIsPlayer(unitFrame.unit)
+    -- Note that NPCs can also return a class
+    local class = ( isPlayer and GetNamePlateUnitClass(unitFrame.unit) ) or "PET"
+
+    local isTarget = UnitIsUnit("target", unitFrame.unit)
+
+    if ( class ~= icon.class ) or ( isTarget ~= icon.isTarget ) then
+        local iconPath = ( isTarget and IconPathTarget ) or IconPath
         icon:SetTexture(iconPath .. class)
-        
-        local isPet = ( class == "PET" )
-        if ( isPet ~= unitFrame.isPet ) then
-            local iconSize = ( isPet and ClassIconOptions.PetSize ) or ClassIconOptions.PlayerSize
+
+        if ( isPlayer ~= icon.isPlayer ) then
+            local iconSize = ( isPlayer and ClassIconOptions.PlayerSize ) or ClassIconOptions.PetSize
             icon:SetSize(iconSize, iconSize)
         end
 
-        unitFrame.class = class
-        unitFrame.target = target
-        unitFrame.isPet = isPet
+        icon.class = class
+        icon.isTarget = isTarget
+        icon.isPlayer = isPlayer
+    end
+
+    -- All checks passed, show the class icon if not visible
+    if ( not icon:IsShown() ) then
+        icon:Show()
     end
 end
 
@@ -315,9 +337,6 @@ local function EnsureClassIcon(unitFrame)
         if isPartyOrPartyPet(unitFrame.unit) then
             unitFrame.FriendlyClassIcon = unitFrame:CreateTexture(nil, 'overlay')
             local icon = unitFrame.FriendlyClassIcon
-
-            UpdateIconFile(unitFrame, icon)
-
             Plater.SetAnchor (icon, ClassIconOptions.Anchor)
         end
     end
@@ -330,16 +349,9 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     if ( not icon ) then return end
 
     if isPartyOrPartyPet(unitFrame.unit) then
-        UpdateIconFile(unitFrame, icon)
-        icon:Show()
+        UpdateIcon(unitFrame, icon)
     else
-        icon:Hide()
-    end
-end
-
-BoopNameplateClassIcon.Hide = function (unitFrame)
-    if unitFrame.FriendlyClassIcon then
-        unitFrame.FriendlyClassIcon:Hide()
+        BoopNameplateClassIcon.Hide(unitFrame)
     end
 end
 
