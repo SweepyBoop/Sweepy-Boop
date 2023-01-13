@@ -287,25 +287,22 @@ local ClassIconOptions = {
     }
 }
 
-local IconPath = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\warcraftflat\\"
+local IconPath = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\flat\\"
+local IconPathTarget = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\warcraftflat\\"
 
 local function UpdateIconFile(unitFrame, icon)
-    if UnitIsPlayer(unitFrame.unit) then
-        local class = select(2, UnitClass(unitFrame.unit))
-        if (class == unitFrame.class) then return end
-
-        icon:SetTexture (IconPath .. class)
-        icon:SetSize (ClassIconOptions.PlayerSize, ClassIconOptions.PlayerSize)
+    local class = ( UnitIsPlayer(unitFrame.unit) and select(2, UnitClass(unitFrame.unit)) ) or "PET"
+    local target = UnitIsUnit("target", unitFrame.unit)
+    
+    if ( class ~= unitFrame.class ) or ( target ~= unitFrame.target ) then
+        local iconPath = ( target and IconPathTarget ) or IconPath
+        icon:SetTexture(iconPath .. class)
+        
+        local iconSize = ( class == "PET" and ClassIconOptions.PetSize ) or ClassIconOptions.PlayerSize
+        icon:SetSize(iconSize, iconSize)
 
         unitFrame.class = class
-    else
-        if (unitFrame.class == "PET") then return end
-
-        icon:SetTexture ([[Interface\Icons\inv_stbernarddogpet]])
-        icon:SetTexCoord (0, 1, 0, 1)
-        icon:SetSize (ClassIconOptions.PetSize, ClassIconOptions.PetSize)
-
-        unitFrame.class = "PET"
+        unitFrame.target = target
     end
 end
 
