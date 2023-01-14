@@ -1,5 +1,8 @@
 local _, NS = ...
 
+-- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
+-- To find the NpcID of a unit, target it and type:
+-- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 local NameplateWhiteList = {
     -- Priest
     [101398] = true, -- Psyfiend (have to use NpcID since player pets can have this name)
@@ -30,7 +33,7 @@ local function IsInWhiteList(unitId)
 
     local guid = UnitGUID(unitId)
     local npcID = select(6, strsplit("-", guid))
-    if ( npcID and NameplateWhiteList[npcID] ) then
+    if ( npcID and NameplateWhiteList[tonumber(npcID)] ) then
         return true
     end
 end
@@ -172,7 +175,7 @@ local function ShouldShowNameplate(unitId)
     if ( not UnitIsPlayer(unitId) ) and IsInWhiteList(unitId) then
         -- Reverse if one unit is possessed and the other is not
         local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) )
-        return UnitIsEnemy(unitId) ~= possessedFactor
+        return UnitIsEnemy("player", unitId) ~= possessedFactor
     end
 end
 
