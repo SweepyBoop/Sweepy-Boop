@@ -190,6 +190,7 @@ BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable
     if ( not unitId ) then return end
 
     if UpdateVisibility(unitFrame) then
+        -- Either entire frame is hidden, or healthBar (buff frame, and cast bar) is hidden, skip the rest of the updates
         return
     end
 
@@ -208,6 +209,7 @@ BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTab
     if ( not unitId ) then return end
 
     if UpdateVisibility(unitFrame) then
+        -- Either entire frame is hidden, or healthBar (buff frame, and cast bar) is hidden, skip the rest of the updates
         return
     end
 
