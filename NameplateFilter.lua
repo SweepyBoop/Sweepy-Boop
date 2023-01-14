@@ -56,7 +56,7 @@ end
 
 local function IsPrimaryPetClass(unitId)
     local class = GetUnitClass(unitId)
-    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman )
 end
 
 local function IsArenaPrimaryPet(unitId)
@@ -67,13 +67,12 @@ local function IsArenaPrimaryPet(unitId)
     end
 end
 
-local partyPetSize = 2
-
-local function IsPartyPrimaryPet(unitId)
-    -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
+local function IsPartyPrimaryPet(unitId, isArena)
+    -- We're only checking hunter/warlock pets, which excludes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
         return IsPrimaryPetClass("player")
     else
+        local partyPetSize = ( isArena and 2 ) or 4
         for i = 1, partyPetSize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 return IsPrimaryPetClass("party" .. i)
@@ -83,15 +82,16 @@ local function IsPartyPrimaryPet(unitId)
 end
 
 local function IsPartyOrPartyPet(unitId)
-    -- When outside arena, just check if unit is friendly
-    if ( not IsArena() ) then
-        return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
-    end
+    local isArena = IsArena()
 
-    if UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") then
-        return true
+    if UnitIsPlayer(unitId) then
+        if isArena then
+            return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
+        else
+            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+        end
     else
-        return IsPartyPrimaryPet(unitId)
+        return IsPartyPrimaryPet(unitId, isArena)
     end
 end
 
@@ -112,7 +112,7 @@ local function ShouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true
     else
-        if IsPartyPrimaryPet(unitId) or IsArenaPrimaryPet(unitId) or IsInWhiteList(unitId, npcID) then
+        if IsPartyPrimaryPet(unitId, true) or IsArenaPrimaryPet(unitId) or IsInWhiteList(unitId, npcID) then
             return true
         end
     end
