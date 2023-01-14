@@ -309,11 +309,6 @@ local function UpdateIcon(unitFrame, icon)
         icon.isTarget = isTarget
         icon.isPlayer = isPlayer
     end
-
-    -- All checks passed, show the class icon if not visible
-    if ( not icon:IsShown() ) then
-        icon:Show()
-    end
 end
 
 local function EnsureClassIcon(unitFrame)
@@ -338,6 +333,7 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
 
     if IsPartyOrPartyPet(unitFrame.unit) then
         UpdateIcon(unitFrame, icon)
+        icon:Show()
     else
         HideClassIcon(unitFrame)
     end
