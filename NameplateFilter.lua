@@ -167,7 +167,7 @@ local function UpdateVisibility(unitFrame)
     -- Otherwise class icons will be hidden by its parent unitFrame.
     if unitFrame.healthBar:IsShown() and ShouldHideHealthBar(unitFrame.unit) then
         unitFrame.healthBar:Hide()
-        unitFrame.buffFrame:Hide()
+        unitFrame.BuffFrame:Hide()
         unitFrame.castBar:UnregisterAllEvents()
         unitFrame.castBar:Hide()
         return true
