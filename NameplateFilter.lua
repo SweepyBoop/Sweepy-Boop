@@ -70,7 +70,7 @@ local function IsPartyPrimaryPet(unitId, isArena)
     end
 end
 
-local function IsPartyOrPartyPet(unitId)
+local function ShouldHideHealthBar(unitId)
     local isArena = IsActiveBattlefieldArena()
 
     if UnitIsPlayer(unitId) then
@@ -80,7 +80,11 @@ local function IsPartyOrPartyPet(unitId)
             return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
         end
     else
-        return IsPartyPrimaryPet(unitId, isArena)
+        if isArena then
+            return IsPartyPrimaryPet(unitId, isArena)
+        else
+            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+        end
     end
 end
 
@@ -137,7 +141,7 @@ local function UpdateCastBar(unitFrame)
     if ( not unitFrame.castBar:IsShown() ) then return end
 
     local hideCast = false
-    if IsPartyOrPartyPet(unitFrame.unit) then
+    if ShouldHideHealthBar(unitFrame.unit) then
         hideCast = true
     elseif ( not UnitIsPlayer(unitFrame.unit) ) then
         local npcID = unitFrame.namePlateNpcId -- select(6, strsplit("-", UnitGUID(unitId)))
@@ -162,14 +166,17 @@ local function UpdateVisibility(unitFrame)
 
     -- Hide healthBar of party members and pets, but do not hide the entire frame.
     -- Otherwise class icons will be hidden by its parent unitFrame.
-    if unitFrame.healthBar:IsShown() and IsPartyOrPartyPet(unitFrame.unit) then
+    if unitFrame.healthBar:IsShown() and ShouldHideHealthBar(unitFrame.unit) then
         unitFrame.healthBar:Hide()
+        unitFrame.BuffFrame:Hide()
+        unitFrame.castBar:UnregisterAllEvents()
+        unitFrame.castBar:Hide()
         return true
     end
 end
 
 local function UpdateBuffFrame(unitFrame)
-    if unitFrame.BuffFrame:IsShown() and IsPartyOrPartyPet(unitFrame.unit) then
+    if unitFrame.BuffFrame:IsShown() and ShouldHideHealthBar(unitFrame.unit) then
         unitFrame.BuffFrame:Hide()
     end
 end
@@ -184,6 +191,7 @@ BoopNameplateFilter.NameplateAdded = function (self, unitId, unitFrame, envTable
     if ( not unitId ) then return end
 
     if UpdateVisibility(unitFrame) then
+        -- Either entire frame is hidden, or healthBar (buff frame, and cast bar) is hidden, skip the rest of the updates
         return
     end
 
@@ -194,18 +202,15 @@ end
 
 BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTable, modTable)
     -- A hack to not show any buffs on nameplate (in case mage steals buff from me)
-    if unitFrame.BuffFrame2:IsShown() then
-        unitFrame.BuffFrame2:Hide()
-    end
+    unitFrame.BuffFrame2:Hide()
 
     -- A hack to hide raid icons (to make room for class icons)
-    if unitFrame.PlaterRaidTargetFrame:IsShown() then
-        unitFrame.PlaterRaidTargetFrame:Hide()
-    end
+    unitFrame.PlaterRaidTargetFrame:Hide()
 
     if ( not unitId ) then return end
 
     if UpdateVisibility(unitFrame) then
+        -- Either entire frame is hidden, or healthBar (buff frame, and cast bar) is hidden, skip the rest of the updates
         return
     end
 
@@ -246,8 +251,24 @@ BoopNameplateBorder.Destructor = function (self, unitId, unitFrame, envTable)
     end
 end
 
+
+
 -- Class icons for friendly players
 BoopNameplateClassIcon = {}
+
+local function ShouldCreateIcon(unitId)
+    local isArena = IsActiveBattlefieldArena()
+
+    if UnitIsPlayer(unitId) then
+        if isArena then
+            return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
+        else
+            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+        end
+    else
+        return IsPartyPrimaryPet(unitId, isArena)
+    end
+end
 
 local ClassIconOptions = {
     PlayerSize = 48,
@@ -304,7 +325,7 @@ end
 
 local function EnsureClassIcon(unitFrame)
     if (not unitFrame.FriendlyClassIcon) then
-        if IsPartyOrPartyPet(unitFrame.unit) then
+        if ShouldCreateIcon(unitFrame.unit) then
             unitFrame.FriendlyClassIcon = unitFrame:CreateTexture(nil, 'overlay')
             local icon = unitFrame.FriendlyClassIcon
             Plater.SetAnchor (icon, ClassIconOptions.Anchor)
@@ -322,7 +343,7 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     -- We don't have an icon for this nameplate, skip
     if ( not icon ) then return end
 
-    if IsPartyOrPartyPet(unitFrame.unit) then
+    if ShouldCreateIcon(unitFrame.unit) then
         UpdateIcon(unitFrame, icon)
         icon:Show()
     else
