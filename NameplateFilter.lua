@@ -80,11 +80,7 @@ local function IsPartyOrPartyPet(unitId)
             return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
         end
     else
-        if isArena then
-            return IsPartyPrimaryPet(unitId, isArena)
-        else
-            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
-        end
+        return IsPartyPrimaryPet(unitId, isArena)
     end
 end
 
