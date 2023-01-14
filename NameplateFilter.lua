@@ -246,8 +246,24 @@ BoopNameplateBorder.Destructor = function (self, unitId, unitFrame, envTable)
     end
 end
 
+
+
 -- Class icons for friendly players
 BoopNameplateClassIcon = {}
+
+local function ShouldCreateIcon(unitId)
+    local isArena = IsActiveBattlefieldArena()
+
+    if UnitIsPlayer(unitId) then
+        if isArena then
+            return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
+        else
+            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+        end
+    else
+        return IsPartyPrimaryPet(unitId, isArena)
+    end
+end
 
 local ClassIconOptions = {
     PlayerSize = 48,
@@ -304,7 +320,7 @@ end
 
 local function EnsureClassIcon(unitFrame)
     if (not unitFrame.FriendlyClassIcon) then
-        if IsPartyOrPartyPet(unitFrame.unit) then
+        if ShouldCreateIcon(unitFrame.unit) then
             unitFrame.FriendlyClassIcon = unitFrame:CreateTexture(nil, 'overlay')
             local icon = unitFrame.FriendlyClassIcon
             Plater.SetAnchor (icon, ClassIconOptions.Anchor)
@@ -322,7 +338,7 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
     -- We don't have an icon for this nameplate, skip
     if ( not icon ) then return end
 
-    if IsPartyOrPartyPet(unitFrame.unit) then
+    if ShouldCreateIcon(unitFrame.unit) then
         UpdateIcon(unitFrame, icon)
         icon:Show()
     else
