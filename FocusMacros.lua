@@ -71,13 +71,10 @@ local function updateMacros()
             EditMacro(iMacro, macroName, "INV_MISC_QUESTIONMARK", macroContent)
         end
     end
-
-    print("Setting focus to @" .. focusName)
 end
 
 local function TryUpdateMacros()
     if (InCombatLockdown()) then
-        print("Combat lockdown, waiting for 6s...")
         C_Timer.After(6, TryUpdateMacros)
     else
         updateMacros()
