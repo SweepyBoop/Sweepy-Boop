@@ -91,7 +91,11 @@ local function IsPartyOrPartyPet(unitId)
             return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
         end
     else
-        return IsPartyPrimaryPet(unitId, isArena)
+        if isArena then
+            return IsPartyPrimaryPet(unitId, isArena)
+        else
+            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+        end
     end
 end
 
@@ -281,8 +285,8 @@ end
 local function HideClassIcon (unitFrame)
     if unitFrame.FriendlyClassIcon then
         unitFrame.FriendlyClassIcon.class = nil
-        unitFrame.FriendlyClassIcon.isTarget = false
-        unitFrame.FriendlyClassIcon.isPlayer = false
+        unitFrame.FriendlyClassIcon.isTarget = nil
+        unitFrame.FriendlyClassIcon.isPlayer = nil
 
         if unitFrame.FriendlyClassIcon:IsShown() then
             unitFrame.FriendlyClassIcon:Hide()
