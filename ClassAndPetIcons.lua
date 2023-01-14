@@ -43,7 +43,7 @@ local function IsArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
             local class = GetUnitClass("arena" .. i)
-            return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock )
+            return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman )
         end
     end
 end
@@ -207,12 +207,30 @@ local function UpdateCastBar(frame)
         end
     end
 
-    if showCastBarEx ~= self.showCastBarEx then
+    showCastBarEx = false
+
+    if ( frame.showCastBarEx == nil ) or ( showCastBarEx ~= frame.showCastBarEx ) then
+        print("Update")
         if showCastBarEx then
-            frame.castBar:SetUnit(frame.unit, false, true)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit);
+			frame.castBarelf:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit);
+			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit);
+			frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD");
         else
-            frame.castBar:SetUnit(nil, nil, nil)
+            frame.castBar:UnregisterAllEvents()
         end
+
+        frame.showCastBarEx = showCastBarEx
     end
 end
 
@@ -251,45 +269,3 @@ hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
 
     UpdateHealthBar(frame)
 end)
-
---[[ hooksecurefunc(CastingBarFrame, "SetUnit", function (self, unit, showTradeSkills, showShield)
-    if ( not unit) or ( string.sub(unit, 1, 9) ~= "nameplate" ) then
-        return
-    end
-
-    local showCastBarEx = false
-    if UnitIsPlayer(unit) then
-        showCastBarEx = true
-    else
-        if ( not IsActiveBattlefieldArena() ) then
-            showCastBarEx = true
-        else
-            local guid = UnitGUID(unitId)
-            local npcID = select(6, strsplit("-", guid))
-            showCastBarEx = npcID and ShowCastNpc[npcID]
-        end
-    end
-
-    if showCastBarEx ~= self.showCastBarEx then
-        if showCastBarEx then
-            self:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
-			self:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
-			self:RegisterEvent("PLAYER_ENTERING_WORLD")
-        else
-            self:UnregisterAllEvents()
-        end
-
-        self.showCastBarEx = showCastBarEx
-    end
-end) ]]
