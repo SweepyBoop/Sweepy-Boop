@@ -7,12 +7,6 @@ local function IsArena()
     return IsActiveBattlefieldArena() or test
 end
 
-local function debug(unitId, message)
-    if UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
-        print(unitId, message)
-    end
-end
-
 local function GetUnitClass(unitId)
     return select(3, UnitClass(unitId))
 end
