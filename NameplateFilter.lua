@@ -9,7 +9,7 @@ end
 
 local function debug(unitId, message)
     if UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2") then
-        print(message)
+        print(unitId, message)
     end
 end
 
