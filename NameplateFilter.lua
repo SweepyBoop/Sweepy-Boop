@@ -338,8 +338,3 @@ BoopNameplateClassIcon.UpdateTexture = function (unitFrame)
         HideClassIcon(unitFrame)
     end
 end
-
-BoopNameplateClassIcon.Constructor = function (self, unitId, unitFrame, envTable)
-    EnsureClassIcon(unitFrame)
-end
-
