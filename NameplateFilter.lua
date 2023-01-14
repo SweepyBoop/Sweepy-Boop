@@ -56,12 +56,13 @@ local function IsArenaPrimaryPet(unitId)
     end
 end
 
-local function IsPartyPrimaryPet(unitId, partySize)
+local function IsPartyPrimaryPet(unitId, isArena)
     -- We're only checking hunter/warlock pets, which excludes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
         return IsPrimaryPetClass("player")
     else
-        for i = 1, partySize do
+        local partyPetSize = ( isArena and 2 ) or 4
+        for i = 1, partyPetSize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 return IsPrimaryPetClass("party" .. i)
             end
@@ -80,7 +81,7 @@ local function ShouldHideHealthBar(unitId)
         end
     else
         if isArena then
-            return IsPartyPrimaryPet(unitId, (isArena and 2) or 4)
+            return IsPartyPrimaryPet(unitId, isArena)
         else
             return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
         end
@@ -104,7 +105,7 @@ local function ShouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true
     else
-        if IsPartyPrimaryPet(unitId, 2) or IsArenaPrimaryPet(unitId) or IsInWhiteList(unitId, npcID) then
+        if IsPartyPrimaryPet(unitId, true) or IsArenaPrimaryPet(unitId) or IsInWhiteList(unitId, npcID) then
             return true
         end
     end
@@ -265,7 +266,7 @@ local function ShouldCreateIcon(unitId)
             return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
         end
     else
-        return IsPartyPrimaryPet(unitId, (isArena and 2) or 4)
+        return IsPartyPrimaryPet(unitId, isArena)
     end
 end
 
