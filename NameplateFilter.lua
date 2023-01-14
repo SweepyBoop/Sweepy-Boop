@@ -56,13 +56,12 @@ local function IsArenaPrimaryPet(unitId)
     end
 end
 
-local function IsPartyPrimaryPet(unitId, isArena)
+local function IsPartyPrimaryPet(unitId, partySize)
     -- We're only checking hunter/warlock pets, which excludes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
         return IsPrimaryPetClass("player")
     else
-        local partyPetSize = ( isArena and 2 ) or 4
-        for i = 1, partyPetSize do
+        for i = 1, partySize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 return IsPrimaryPetClass("party" .. i)
             end
@@ -70,7 +69,7 @@ local function IsPartyPrimaryPet(unitId, isArena)
     end
 end
 
-local function IsPartyOrPartyPet(unitId)
+local function ShouldHideHealthBar(unitId)
     local isArena = IsActiveBattlefieldArena()
 
     if UnitIsPlayer(unitId) then
@@ -80,7 +79,11 @@ local function IsPartyOrPartyPet(unitId)
             return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
         end
     else
-        return IsPartyPrimaryPet(unitId, isArena)
+        if isArena then
+            return IsPartyPrimaryPet(unitId, (isArena and 2) or 4)
+        else
+            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+        end
     end
 end
 
@@ -101,7 +104,7 @@ local function ShouldShowNameplate(unitId, npcID)
     if UnitIsPlayer(unitId) then
         return true
     else
-        if IsPartyPrimaryPet(unitId, true) or IsArenaPrimaryPet(unitId) or IsInWhiteList(unitId, npcID) then
+        if IsPartyPrimaryPet(unitId, 2) or IsArenaPrimaryPet(unitId) or IsInWhiteList(unitId, npcID) then
             return true
         end
     end
@@ -137,7 +140,7 @@ local function UpdateCastBar(unitFrame)
     if ( not unitFrame.castBar:IsShown() ) then return end
 
     local hideCast = false
-    if IsPartyOrPartyPet(unitFrame.unit) then
+    if ShouldHideHealthBar(unitFrame.unit) then
         hideCast = true
     elseif ( not UnitIsPlayer(unitFrame.unit) ) then
         local npcID = unitFrame.namePlateNpcId -- select(6, strsplit("-", UnitGUID(unitId)))
@@ -162,14 +165,17 @@ local function UpdateVisibility(unitFrame)
 
     -- Hide healthBar of party members and pets, but do not hide the entire frame.
     -- Otherwise class icons will be hidden by its parent unitFrame.
-    if unitFrame.healthBar:IsShown() and IsPartyOrPartyPet(unitFrame.unit) then
+    if unitFrame.healthBar:IsShown() and ShouldHideHealthBar(unitFrame.unit) then
         unitFrame.healthBar:Hide()
+        unitFrame.buffFrame:Hide()
+        unitFrame.castBar:UnregisterAllEvents()
+        unitFrame.castBar:Hide()
         return true
     end
 end
 
 local function UpdateBuffFrame(unitFrame)
-    if unitFrame.BuffFrame:IsShown() and IsPartyOrPartyPet(unitFrame.unit) then
+    if unitFrame.BuffFrame:IsShown() and ShouldHideHealthBar(unitFrame.unit) then
         unitFrame.BuffFrame:Hide()
     end
 end
@@ -194,14 +200,10 @@ end
 
 BoopNameplateFilter.NameplateUpdated = function (self, unitId, unitFrame, envTable, modTable)
     -- A hack to not show any buffs on nameplate (in case mage steals buff from me)
-    if unitFrame.BuffFrame2:IsShown() then
-        unitFrame.BuffFrame2:Hide()
-    end
+    unitFrame.BuffFrame2:Hide()
 
     -- A hack to hide raid icons (to make room for class icons)
-    if unitFrame.PlaterRaidTargetFrame:IsShown() then
-        unitFrame.PlaterRaidTargetFrame:Hide()
-    end
+    unitFrame.PlaterRaidTargetFrame:Hide()
 
     if ( not unitId ) then return end
 
@@ -261,7 +263,7 @@ local function ShouldCreateIcon(unitId)
             return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
         end
     else
-        return IsPartyPrimaryPet(unitId, isArena)
+        return IsPartyPrimaryPet(unitId, (isArena and 2) or 4)
     end
 end
 
