@@ -123,7 +123,12 @@ local function ShowClassIcon(frame)
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath = ( isTarget and IconPathTarget ) or IconPath
-        icon:SetTexture(iconPath .. class)
+        local iconFile = iconPath .. class
+        if ( not isPlayer ) then -- Select a random catto picture
+            local petNumber = ( UnitIsUnit(frame.unit, "pet") and "") or ( UnitIsUnit(frame.unit, "partypet1") and "1" ) or ( UnitIsUnit(frame.unit, "partypet2") and "2" )
+            iconFile = iconFile .. petNumber
+        end
+        icon:SetTexture(iconFile)
 
         if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) then
             local iconSize = ( isPlayer and ClassIconOptions.PlayerSize ) or ClassIconOptions.PetSize
