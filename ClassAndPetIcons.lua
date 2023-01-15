@@ -83,7 +83,7 @@ local function ShouldMakeIcon(unitId)
 end
 
 local function EnsureClassIcon(frame)
-    local nameplate = C_NamePlate.GetNamePlateForUnit(frame.unit)
+    local nameplate = frame:GetParent()
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
         nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay')
@@ -94,8 +94,7 @@ local function EnsureClassIcon(frame)
 end
 
 local function HideClassIcon(frame)
-    if ( not frame.unit ) or ( string.sub(frame.unit, 1, 9) ~= "nameplate" ) then return end
-    local nameplate = C_NamePlate.GetNamePlateForUnit(frame.unit)
+    local nameplate = frame:GetParent()
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
         nameplate.FriendlyClassIcon:Hide()
@@ -232,10 +231,24 @@ local function UpdateCastBar(frame)
     end
 end
 
+-- Protected nameplates in dungeons and raids
+local restricted = {
+	party = true,
+	raid = true,
+}
+
+local function ShouldUpdateNamePlate(frame)
+    if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
+        -- Check if in restricted areas
+        local instanceType = select(2, IsInInstance())
+        return ( not restricted[instanceType] )
+    end
+end
+
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-    if ( not frame.unit) or ( string.sub(frame.unit, 1, 9) ~= "nameplate" ) then
+    if ( not ShouldUpdateNamePlate(frame) ) then
         return
-     end
+    end
 
     UpdateHealthBar(frame)
     UpdateClassIcon(frame)
@@ -261,7 +274,7 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 end)
 
 hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-    if ( not frame.unit) or ( string.sub(frame.unit, 1, 9) ~= "nameplate" ) then
+    if ( not ShouldUpdateNamePlate(frame) ) then
         return
     end
 
