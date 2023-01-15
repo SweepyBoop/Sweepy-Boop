@@ -126,7 +126,7 @@ local function ShowClassIcon(frame)
         local iconPath = ( isTarget and IconPathTarget ) or IconPath
         icon:SetTexture(iconPath .. class)
 
-        if ( isPlayer ~= icon.isPlayer ) then
+        if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) then
             local iconSize = ( isPlayer and ClassIconOptions.PlayerSize ) or ClassIconOptions.PetSize
             icon:SetSize(iconSize, iconSize)
         end
