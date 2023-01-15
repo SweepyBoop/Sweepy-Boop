@@ -245,7 +245,21 @@ local function ShouldUpdateNamePlate(frame)
     end
 end
 
+local function HideRaidFrameName(frame)
+    -- Check if this is a compact party/raid frame
+    for i = 1, GetNumGroupMembers() do
+        if ( frame == _G["CompactPartyFrameMember" .. i] ) then
+            frame.name:Hide()
+            return true
+        end
+    end
+end
+
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+    if HideRaidFrameName(frame) then
+        return
+    end
+
     if ( not ShouldUpdateNamePlate(frame) ) then
         return
     end
