@@ -209,20 +209,20 @@ local function UpdateCastBar(frame)
 
     if ( frame.showCastBarEx == nil ) or ( showCastBarEx ~= frame.showCastBarEx ) then
         if showCastBarEx then
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit);
-			frame.castBarelf:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit);
-			frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit);
-			frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD");
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
+            frame.castBarelf:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
+            frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD")
         else
             frame.castBar:UnregisterAllEvents()
         end
