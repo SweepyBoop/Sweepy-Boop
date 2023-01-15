@@ -98,11 +98,7 @@ local function HideClassIcon(frame)
     local nameplate = C_NamePlate.GetNamePlateForUnit(frame.unit)
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
-        local icon = nameplate.FriendlyClassIcon
-        icon.class = nil
-        icon.isTarget = nil
-        icon.isPlayer = nil
-        icon:Hide()
+        nameplate.FriendlyClassIcon:Hide()
     end
 end
 
@@ -126,7 +122,7 @@ local function ShowClassIcon(frame)
     local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET"
     local isTarget = UnitIsUnit("target", frame.unit)
 
-    if ( class ~= icon.class ) or ( isTarget ~= icon.isTarget ) then
+    if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath = ( isTarget and IconPathTarget ) or IconPath
         icon:SetTexture(iconPath .. class)
 
