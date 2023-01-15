@@ -247,7 +247,7 @@ end
 
 local function HideRaidFrameName(frame)
     -- Check if this is a compact party/raid frame
-    for i = 1, GetNumGroupMembers() do
+    for i = 1, 5 do
         if ( frame == _G["CompactPartyFrameMember" .. i] ) then
             frame.name:Hide()
             return true
