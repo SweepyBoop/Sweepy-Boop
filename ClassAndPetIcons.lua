@@ -113,6 +113,8 @@ local function GetUnitClassName(unitId)
     return select(2, UnitClass(unitId))
 end
 
+local iconCount = 4
+
 local function ShowClassIcon(frame)
     local icon = EnsureClassIcon(frame)
     if ( not icon ) then return end
@@ -126,7 +128,7 @@ local function ShowClassIcon(frame)
         local iconFile = iconPath .. class
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             local npcID = select(6, strsplit("-", UnitGUID(frame.unit)))
-            local petNumber = math.fmod(tonumber(npcID), 2)
+            local petNumber = math.fmod(tonumber(npcID), iconCount)
             iconFile = iconFile .. petNumber
         end
         icon:SetTexture(iconFile)
