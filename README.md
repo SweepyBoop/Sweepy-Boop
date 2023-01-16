@@ -27,17 +27,6 @@ The cooldown tracking WeakAuras come with various advanced features:
   - If a priest casts a second Psychic Scream within 60 sec after the first one, we know they are playing Psychic Voice, thus will adjust the Psychic Scream cooldown for that unit to 30 sec
   - Detect optional charges for abilities such as DK grip, warrior charge, priest dispel. Once this is detected, if for instance a DK uses his first charge of grip, on the cooldown timer, you can see a charge number 1 meaning he still has one charge of grip available
 
-## Plater
-[Plater profile based on this addon](https://wago.io/KnkjLULX7)
-
-The main feature of this profile is called "Nameplate Filtering" inside arenas:
-- For enemy units, only show nameplates of enemy players, primary pets, and high priority non-player units that are whitelisted
-  - Primary pet refer to the main warlock pets (i.e., you will not see a horde of wild imps running around), and the main hunter pet (which means for Beast Mastery hunters, you will only see the real pet with 120 focus)
-  - High priority units are generally those you want to target and kill instantly, e.g., Grounding Totem, Psyfiend, War Banner, Tremor Totem (if you are playing a class that has fear spells)
-  - The logic behind this is to give players a cleaner view of the surroundings by showing less nameplates, without losing key information such as a Grounding Totem that needs to be killed instantly
-- If you are playing with friendly nameplates on, party members' nameplates will be reduced to half width, the names on top will be hidden (and raid markers, which most arena players use on their teammates, would take the place), and buffs/cast bar will be hidden.
-  - The logic behind this is for many players especially healers, they want to be able to track their teammates' positioning easily, but with a strong distinction between friendly/enemy units
-
 ## Fix Blizzard raid frame aggro highlight
 Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is rather unreliable.
 
