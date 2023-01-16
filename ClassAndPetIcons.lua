@@ -123,7 +123,13 @@ local function ShowClassIcon(frame)
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath = ( isTarget and IconPathTarget ) or IconPath
-        icon:SetTexture(iconPath .. class)
+        local iconFile = iconPath .. class
+        if ( not isPlayer ) then -- Pick a pet icon based on NpcID
+            local npcID = select(6, strsplit("-", UnitGUID(frame.unit)))
+            local petNumber = math.fmod(tonumber(npcID), 2)
+            iconFile = iconFile .. petNumber
+        end
+        icon:SetTexture(iconFile)
 
         if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) then
             local iconSize = ( isPlayer and ClassIconOptions.PlayerSize ) or ClassIconOptions.PetSize
