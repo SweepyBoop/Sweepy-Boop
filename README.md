@@ -4,7 +4,7 @@ My library addon to support advanced arena cooldown tracking WeakAuras as well a
 All the Weakauras and Plater profiles linked below depend on this library, which means you need to install this addon for them to work 😉
 
 Here is how my UI looks like:
-![image](https://user-images.githubusercontent.com/78008331/211183465-ea19a857-5ed4-42b6-acdd-a9702095066b.png)
+![image](https://user-images.githubusercontent.com/78008331/212603812-af58c455-962c-45d2-8dc4-2c82cab7cd53.png)
 
 
 ## WeakAuras
@@ -40,3 +40,7 @@ This module fixes that by highlighting the teammate who is targetted by the most
 For this module to work, disable the following setting under Interface settings so that it stops showing PvE threats:
 ![image](https://user-images.githubusercontent.com/78008331/175849539-7a7180d4-28f8-4453-b979-d98f56a2623c.png)
 
+## Class and pet icons
+For friendly players and their primary pets, place a class (for players) or pet icon on top.
+When selected, show an orange border to highlight.
+This makes it much easier to track where your teammates are duing an arena match.
