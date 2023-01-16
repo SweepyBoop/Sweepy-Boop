@@ -31,3 +31,4 @@ function containerFrame:OnEvent(event, ...)
 
     containerFrame:Show()
 end
+containerFrame:SetScript("OnEvent", containerFrame.OnEvent)
