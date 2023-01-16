@@ -6,6 +6,12 @@ All the Weakauras and Plater profiles linked below depend on this library, which
 Here is how my UI looks like:
 ![image](https://user-images.githubusercontent.com/78008331/212603812-af58c455-962c-45d2-8dc4-2c82cab7cd53.png)
 
+## Class and pet icons
+For friendly players and their primary pets, place a class (for players) or pet icon on top.
+
+When selected, show an orange border to highlight.
+
+This makes it much easier to track where your teammates are duing an arena match.
 
 ## WeakAuras
 Here are the arena WeakAuras based on this addon:
@@ -39,8 +45,3 @@ This module fixes that by highlighting the teammate who is targetted by the most
 
 For this module to work, disable the following setting under Interface settings so that it stops showing PvE threats:
 ![image](https://user-images.githubusercontent.com/78008331/175849539-7a7180d4-28f8-4453-b979-d98f56a2623c.png)
-
-## Class and pet icons
-For friendly players and their primary pets, place a class (for players) or pet icon on top.
-When selected, show an orange border to highlight.
-This makes it much easier to track where your teammates are duing an arena match.
