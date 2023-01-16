@@ -51,7 +51,7 @@ local function calculateAggro(aggro)
             if arenaRoles[i] == "DAMAGER" then
                 local guidTarget = UnitGUID("arena" .. i .. "target")
                 if guidTarget then
-                    aggro[guidTarget] = 1 + (aggro[guidTarget] or 0)
+                    aggro[guidTarget] = true
                 end
             end
         end
