@@ -113,7 +113,7 @@ local function GetUnitClassName(unitId)
     return select(2, UnitClass(unitId))
 end
 
-local iconCount = 4
+local iconCount = 2
 
 local function ShowClassIcon(frame)
     local icon = EnsureClassIcon(frame)
