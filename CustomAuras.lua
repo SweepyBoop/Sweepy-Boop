@@ -60,12 +60,14 @@ local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 15
 local iconPath = "Interface\\Addons\\aSweepyBoop\\AbilityIcons\\"
 
 local playerPortraitStealthAbility = {}
+-- If we use table, then we can't do ipairs to keep the order
+-- If buff has no duration, duration will be false
 playerPortraitStealthAbility[NS.classId.Druid] = {
-    ["Prowl"] = false,
+    "Prowl",
 }
 playerPortraitStealthAbility[NS.classId.Rogue] = {
-    ["Stealth"] = false,
-    ["Subterfuge"] = true,
+    "Stealth",
+    "Subterfuge",
 }
 
 local class = select(3, UnitClass("player"))
@@ -89,7 +91,8 @@ playerPortraitStealthFrame:Hide()
 function playerPortraitStealthFrame:OnEvent(event, unitTarget)
     if ( event == "UNIT_AURA" and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
 
-    for spell, showCooldown in pairs(classStealthAbility) do
+    for i = 1, #classStealthAbility do
+        local spell = classStealthAbility[i]
         local name, _, _, _, duration, expirationTime = select(5, WA_GetUnitBuff("player", spell))
         if ( not name ) then
             playerPortraitStealthFrame:Hide()
@@ -98,7 +101,7 @@ function playerPortraitStealthFrame:OnEvent(event, unitTarget)
 
         playerPortraitStealthTexture:SetTexture(iconPath .. spell)
 
-        if showCooldown then
+        if duration then
             playerPortraitStealthCooldown:SetCooldown(expirationTime - duration, duration)
             playerPortraitStealthCooldown:Show()
         else
