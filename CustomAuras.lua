@@ -82,7 +82,9 @@ local playerPortraitStealthCooldown = CreateFrame("Cooldown", nil, playerPortrai
 playerPortraitStealthCooldown:SetAllPoints()
 
 playerPortraitStealthFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+playerPortraitStealthFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- Between solo shuffle rounds
 playerPortraitStealthFrame:RegisterEvent("UNIT_AURA")
+playerPortraitStealthFrame:Hide()
 
 function playerPortraitStealthFrame:OnEvent(event, unitTarget)
     if ( event == "UNIT_AURA" and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
