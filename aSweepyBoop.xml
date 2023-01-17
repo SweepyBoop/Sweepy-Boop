@@ -43,5 +43,5 @@
 			</AnimationGroup>
 		</Animations>
 	</Frame>
-	<Script file="PersonalAuras.lua"/>
+	<Script file="CustomAuras.lua"/>
 </Ui>
