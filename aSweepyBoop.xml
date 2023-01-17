@@ -18,4 +18,30 @@
 	<Script file="FocusMacros.lua"/>
 	<!-- <Script file="DampenDisplay.lua"/> -->
 	<Script file="CombatIndicator.lua"/>
+
+	<!-- Custom Spell Alert -->
+	<!-- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/SpellActivationOverlay.xml -->
+	<Frame name="CustomSpellActivationOverlayTemplate" virtual="true" inherits="SpellActivationOverlayTemplate">
+		<Animations>
+			<AnimationGroup name="$parentAnimIn" parentKey="animIn">
+				<Alpha fromAlpha="0" toAlpha="0.5" duration="0.2"/>
+				<Scripts>
+					<OnPlay function="SpellActivationOverlayTexture_OnFadeInPlay"/>
+					<OnFinished function="Custom_SpellActivationOverlayTexture_OnFadeInFinished"/>
+				</Scripts>
+			</AnimationGroup>
+			<AnimationGroup name="$parentAnimOut" parentKey="animOut">
+				<Alpha fromAlpha="0.5" toAlpha="0" duration="0.1">
+					<Scripts>
+						<OnFinished function="SpellActivationOverlayTexture_OnFadeOutFinished"/>
+					</Scripts>
+				</Alpha>
+			</AnimationGroup>
+			<AnimationGroup name="$parentPulse" looping="REPEAT" parentKey="pulse">
+				<Scale scaleX="1.08" scaleY="1.08" duration="0.5" smoothing="IN_OUT" order="1"/>
+				<Scale scaleX="0.9259" scaleY="0.9259" duration="0.5" smoothing="IN_OUT" order="2"/>
+			</AnimationGroup>
+		</Animations>
+	</Frame>
+	<Script file="CustomAuras.lua"/>
 </Ui>
