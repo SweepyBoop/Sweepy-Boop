@@ -16,15 +16,16 @@ containerFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 function containerFrame:OnEvent(event, ...)
     local locData = C_LossOfControl.GetActiveLossOfControlData(1)
 
-    if ( not locData ) or ( not locData["displayText"] ) or ( locData["displayType"] == 0 ) then
+    if ( not locData ) or ( not locData.displayText ) or ( locData.displayType == 0 ) then
         containerFrame:Hide()
         return
     end
 
-    texture:SetTexture(locData["iconTexture"])
-    cooldown:SetCooldown(locData["startTime"], locData["duration"])
+    texture:SetTexture(locData.iconTexture)
+    cooldown:SetCooldown(locData.startTime , locData.duration)
 
-    if locData["locType"] == "ROOT" then
+    local locType = locData.locType
+    if ( locType == "ROOT" ) or ( locType == "SCHOOL_INTERRUPT" ) then
         containerFrame:SetAlpha(0.5)
     else
         containerFrame:SetAlpha(1)
