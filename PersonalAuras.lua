@@ -33,7 +33,7 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     frame:SetSize(width, height)
     frame:SetPoint("CENTER", offsetX, offsetY)
     frame.texture:SetTexture(filePath)
-    frame:Hide()
+    frame:Hide() -- Hide initially until aura is detected
 
     frame:RegisterEvent("UNIT_AURA")
     frame:SetScript("OnEvent", function (self, event, unitTarget)
