@@ -91,24 +91,25 @@ playerPortraitStealthFrame:Hide()
 function playerPortraitStealthFrame:OnEvent(event, unitTarget)
     if ( event == "UNIT_AURA" and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
 
-    for i = 1, #classStealthAbility do
+    for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
-        local name, _, _, _, duration, expirationTime = select(5, WA_GetUnitBuff("player", spell))
-        if ( not name ) then
-            playerPortraitStealthFrame:Hide()
+        local name, _, _, _, duration, expirationTime = WA_GetUnitBuff("player", spell)
+        if name then
+            playerPortraitStealthTexture:SetTexture(iconPath .. spell)
+
+            if duration and ( duration ~= 0 ) then
+                playerPortraitStealthCooldown:SetCooldown(expirationTime - duration, duration)
+                playerPortraitStealthCooldown:Show()
+            else
+                playerPortraitStealthCooldown:Hide()
+            end
+
+            playerPortraitStealthFrame:Show()
             return
         end
-
-        playerPortraitStealthTexture:SetTexture(iconPath .. spell)
-
-        if duration then
-            playerPortraitStealthCooldown:SetCooldown(expirationTime - duration, duration)
-            playerPortraitStealthCooldown:Show()
-        else
-            playerPortraitStealthCooldown:Hide()
-        end
-
-        playerPortraitStealthFrame:Show()
     end
+
+    -- No early return means no matching aura
+    playerPortraitStealthFrame:Hide()
 end
 playerPortraitStealthFrame:SetScript("OnEvent", playerPortraitStealthFrame.OnEvent)
