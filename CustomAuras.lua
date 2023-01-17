@@ -74,6 +74,7 @@ local classStealthAbility = playerPortraitStealthAbility[class]
 local playerPortraitStealthFrame = CreateFrame("Frame", nil, PlayerFrame)
 playerPortraitStealthFrame:SetPoint(PlayerFrame.portrait:GetPoint())
 playerPortraitStealthFrame:SetSize(PlayerFrame.portrait:GetSize())
+playerPortraitStealthFrame:SetFrameStrata("HIGH")
 local playerPortraitStealthTexture = playerPortraitStealthFrame:CreateTexture()
 playerPortraitStealthTexture:SetAllPoints()
 
