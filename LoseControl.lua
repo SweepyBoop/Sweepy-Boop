@@ -6,7 +6,8 @@ containerFrame:SetPoint("CENTER")
 local texture = containerFrame:CreateTexture()
 texture:SetAllPoints()
 
-local cooldown = CreateFrame("Cooldown", "myCooldown", containerFrame, "CooldownFrameTemplate")
+-- Assign a name so we can disable it in OmniCC
+local cooldown = CreateFrame("Cooldown", "CustomLoseControlFrame", containerFrame, "CooldownFrameTemplate")
 cooldown:SetHideCountdownNumbers(true)
 cooldown:SetAllPoints()
 
