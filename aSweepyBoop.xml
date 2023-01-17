@@ -9,6 +9,9 @@
 	<Script file="FixBlizzardRaidAggro.lua"/>
 	<Script file="LoseControl.lua"/>
 
+	<!-- Custom Auras -->
+	<Script file="PersonalAuras.lua"/>
+
 	<!-- UI Personalization -->
 	<Script file="Personalization.lua"/>
 
