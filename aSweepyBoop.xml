@@ -8,6 +8,8 @@
 	
 	<Script file="FixBlizzardRaidAggro.lua"/>
 
+	<Script file="LoseControl.lua"/>
+
 	<!-- UI Personalization -->
 	<Script file="Personalization.lua"/>
 
