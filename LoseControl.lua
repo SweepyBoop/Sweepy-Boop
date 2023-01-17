@@ -13,6 +13,7 @@ cooldown:SetAllPoints()
 
 containerFrame:RegisterEvent("LOSS_OF_CONTROL_ADDED")
 containerFrame:RegisterEvent("LOSS_OF_CONTROL_UPDATE")
+containerFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 function containerFrame:OnEvent(event, ...)
     local locData = C_LossOfControl.GetActiveLossOfControlData(1)
