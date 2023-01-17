@@ -22,12 +22,18 @@ local WA_GetUnitBuff = function(unit, spell, filter)
     return WA_GetUnitAura(unit, spell, filter)
 end
 
+function Custom_SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
+    local overlay = animGroup:GetParent()
+	overlay:SetAlpha(0.5)
+	overlay.pulse:Play()
+end
+
 local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
-    local frame = CreateFrame("Frame", nil, UIParent, "SpellActivationOverlayTemplate")
+    local frame = CreateFrame("Frame", nil, UIParent, "CustomSpellActivationOverlayTemplate")
     frame:SetSize(width, height)
     frame:SetPoint("CENTER", offsetX, offsetY)
     frame.texture:SetTexture(filePath)
-    frame.texture:SetAlpha(.25)
+    frame:Hide()
 
     frame:RegisterEvent("UNIT_AURA")
     frame:SetScript("OnEvent", function (self, event, unitTarget)
@@ -35,10 +41,9 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
 
         local duration = select(5, WA_GetUnitBuff("player", buff))
         if duration then
-            print(frame.texture:GetAlpha())
-            frame:Show()
+            self:Show()
         else
-            frame:Hide()
+            self:Hide()
         end
     end)
 
