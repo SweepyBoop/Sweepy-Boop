@@ -75,7 +75,8 @@ local function ShouldMakeIcon(unitId)
         if isArena then
             return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
         else
-            return UnitIsFriend("player", unitId) ~= UnitIsPossessed(unitId)
+            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) )
+            return UnitIsFriend("player", unitId) ~= possessedFactor
         end
     else
         return IsPartyPrimaryPet(unitId, (isArena and 2) or 4)
