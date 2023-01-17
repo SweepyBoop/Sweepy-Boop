@@ -7,6 +7,7 @@ local texture = containerFrame:CreateTexture()
 texture:SetAllPoints()
 
 local cooldown = CreateFrame("Cooldown", "myCooldown", containerFrame, "CooldownFrameTemplate")
+cooldown:SetHideCountdownNumbers(true)
 cooldown:SetAllPoints()
 
 containerFrame:RegisterEvent("LOSS_OF_CONTROL_ADDED")
