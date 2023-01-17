@@ -53,3 +53,56 @@ end
 local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
 local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
 local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 180) -- shadow_of_death.blp
+
+
+
+-- To monitor stealth, value means whether show duration
+local iconPath = "Interface\\Addons\\aSweepyBoop\\AbilityIcons\\"
+
+local playerPortraitStealthAbility = {}
+playerPortraitStealthAbility[NS.classId.Druid] = {
+    ["Prowl"] = false,
+}
+playerPortraitStealthAbility[NS.classId.Rogue] = {
+    ["Stealth"] = false,
+    ["Subterfuge"] = true,
+}
+
+local class = select(3, UnitClass("player"))
+local classStealthAbility = playerPortraitStealthAbility[class]
+
+local playerPortraitStealthFrame = CreateFrame("Frame", nil, PlayerFrame)
+playerPortraitStealthFrame:SetPoint(PlayerFrame.portrait:GetPoint())
+playerPortraitStealthFrame:SetSize(PlayerFrame.portrait:GetSize())
+local playerPortraitStealthTexture = playerPortraitStealthFrame:CreateTexture()
+playerPortraitStealthTexture:SetAllPoints()
+
+local playerPortraitStealthCooldown = CreateFrame("Cooldown", nil, playerPortraitStealthFrame, "CooldownFrameTemplate")
+playerPortraitStealthCooldown:SetAllPoints()
+
+playerPortraitStealthFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+playerPortraitStealthFrame:RegisterEvent("UNIT_AURA")
+
+function playerPortraitStealthFrame:OnEvent(event, unitTarget)
+    if ( event == "UNIT_AURA" and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
+
+    for spell, showCooldown in pairs(classStealthAbility) do
+        local name, _, _, _, duration, expirationTime = select(5, WA_GetUnitBuff("player", spell))
+        if ( not name ) then
+            playerPortraitStealthFrame:Hide()
+            return
+        end
+
+        playerPortraitStealthTexture:SetTexture(iconPath .. spell)
+
+        if showCooldown then
+            playerPortraitStealthCooldown:SetCooldown(expirationTime - duration, duration)
+            playerPortraitStealthCooldown:Show()
+        else
+            playerPortraitStealthCooldown:Hide()
+        end
+
+        playerPortraitStealthFrame:Show()
+    end
+end
+playerPortraitStealthFrame:SetScript("OnEvent", playerPortraitStealthFrame.OnEvent)
