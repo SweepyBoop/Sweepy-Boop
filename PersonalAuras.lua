@@ -29,7 +29,8 @@ function Custom_SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
 end
 
 local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
-    local frame = CreateFrame("Frame", nil, UIParent, "CustomSpellActivationOverlayTemplate")
+    local frame = CreateFrame("Frame", buff, UIParent, "CustomSpellActivationOverlayTemplate")
+    frame.buff = buff
     frame:SetSize(width, height)
     frame:SetPoint("CENTER", offsetX, offsetY)
     frame.texture:SetTexture(filePath)
@@ -38,8 +39,7 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     frame:RegisterEvent("UNIT_AURA")
     frame:SetScript("OnEvent", function (self, event, unitTarget)
         if ( unitTarget ~= "player" ) then return end
-
-        local duration = select(5, WA_GetUnitBuff("player", buff))
+        local duration = select(5, WA_GetUnitBuff("player", self.buff))
         if duration then
             self:Show()
         else
@@ -52,4 +52,4 @@ end
 
 local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
 local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
-local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 175) -- shadow_of_death.blp
+local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 180) -- shadow_of_death.blp
