@@ -25,7 +25,7 @@ function containerFrame:OnEvent(event, ...)
     cooldown:SetCooldown(locData.startTime , locData.duration)
 
     local locType = locData.locType
-    if ( locType == "ROOT" ) or ( locType == "SCHOOL_INTERRUPT" ) then
+    if ( locType == "ROOT" ) or ( locType == "SCHOOL_INTERRUPT" ) or ( locType == "DISARM" ) then
         containerFrame:SetAlpha(0.5)
     else
         containerFrame:SetAlpha(1)
