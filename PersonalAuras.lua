@@ -52,3 +52,4 @@ end
 
 local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
 local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
+local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 175) -- shadow_of_death.blp
