@@ -9,7 +9,7 @@ local isTestMode = false
 
 local arenaRoles = {}
 
-local function shouldClearAggro(event)
+local function ShouldClearAggro(event)
     return (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 end
 
@@ -41,14 +41,15 @@ local function GetArenaRole(unitId)
     return arenaRoles[unitId]
 end
 
-local function calculateAggro(aggro)
+local function CalculateAggro(aggro)
     aggro = {}
 
     if isTestMode then
         if GetArenaRole("player") ~= "DAMAGER" then return end
         local guid = UnitGUID("playertarget")
+        print(guid, UnitGUID("player"))
         if guid then
-            aggro[guid] = 1
+            aggro[guid] = true
         end
     else
         for i = 1, NS.MAX_ARENA_SIZE do
@@ -64,8 +65,8 @@ local function calculateAggro(aggro)
     return aggro
 end
 
-local eventHandler = function(frame, event, unitTarget)
-    if shouldClearAggro(event) then
+local function EventHandler(self, event, unitTarget)
+    if ShouldClearAggro(event) then
         -- Upon entering a new zone, clear the aggro highlight
         arenaRoles = {}
 
@@ -82,7 +83,7 @@ local eventHandler = function(frame, event, unitTarget)
         -- Only enable highlight inside an arena
         if (not IsActiveBattlefieldArena()) and ( not isTestMode ) then return end
 
-        local aggro = calculateAggro(aggro)
+        local aggro = CalculateAggro(aggro)
 
         for i = 1, NS.MAX_PARTY_SIZE do
             local frame = _G["CompactPartyFrameMember"..i]
@@ -110,5 +111,4 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:RegisterEvent("UNIT_TARGET")
-frame:SetScript("OnEvent", eventHandler)
-
+frame:SetScript("OnEvent", EventHandler)
