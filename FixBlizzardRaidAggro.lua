@@ -9,46 +9,51 @@ local isTestMode = false
 
 local arenaRoles = {}
 
-local function shouldClearAggro(event)
+local function ShouldClearAggro(event)
     return (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 end
 
-local IsUnitArena = function(unitId)
+local function IsUnitArena(unitId)
     if isTestMode then
-        if ( unitId == "player" ) then
-            if ( arenaRoles["player"] == nil ) then
-                local currentSpec = GetSpecialization()
-                arenaRoles["player"] = select(5, GetSpecializationInfo(currentSpec))
-            end
-
-            return arenaRoles["player"] == "DAMAGER"
-        end
+        return ( unitId == "player" )
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            if (unitId == "arena"..i) then
-                if ( arenaRoles[i] == nil ) then
-                    local specID = GetArenaOpponentSpec(i)
-                    arenaRoles[i] = select(5, GetSpecializationInfoByID(specID))
-                end
-
-                return arenaRoles[i] == "DAMAGER"
+            if ( unitId == "arena" .. i ) then
+                return true
             end
         end
     end
 end
 
-local function calculateAggro(aggro)
+-- Make sure to only pass "player", "arena".. 1~3
+local function GetArenaRole(unitId)
+    if ( not arenaRoles[unitId] ) then
+        if ( unitId == "player" ) then
+            local currentSpec = GetSpecialization()
+            arenaRoles[unitId] = select(5, GetSpecializationInfo(currentSpec))
+        else
+            local arenaIndex = string.sub(unitId, -1, -1)
+            local specID = GetArenaOpponentSpec(arenaIndex)
+            arenaRoles[unitId] = select(5, GetSpecializationInfoByID(specID))
+        end
+    end
+
+    return arenaRoles[unitId]
+end
+
+local function CalculateAggro(aggro)
     aggro = {}
 
     if isTestMode then
-        if arenaRoles["player"] ~= "DAMAGER" then return end
+        if GetArenaRole("player") ~= "DAMAGER" then return end
         local guid = UnitGUID("playertarget")
+        print(guid, UnitGUID("player"))
         if guid then
-            aggro[guid] = 1
+            aggro[guid] = true
         end
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            if arenaRoles[i] == "DAMAGER" then
+            if GetArenaRole("arena" .. i) == "DAMAGER" then
                 local guidTarget = UnitGUID("arena" .. i .. "target")
                 if guidTarget then
                     aggro[guidTarget] = true
@@ -60,8 +65,8 @@ local function calculateAggro(aggro)
     return aggro
 end
 
-local eventHandler = function(frame, event, unitTarget)
-    if shouldClearAggro(event) then
+local function EventHandler(self, event, unitTarget)
+    if ShouldClearAggro(event) then
         -- Upon entering a new zone, clear the aggro highlight
         arenaRoles = {}
 
@@ -78,8 +83,8 @@ local eventHandler = function(frame, event, unitTarget)
         -- Only enable highlight inside an arena
         if (not IsActiveBattlefieldArena()) and ( not isTestMode ) then return end
 
-        local aggro = calculateAggro(aggro)
-        
+        local aggro = CalculateAggro(aggro)
+
         for i = 1, NS.MAX_PARTY_SIZE do
             local frame = _G["CompactPartyFrameMember"..i]
             -- Check if the user has Blizzard default highlight on
@@ -87,7 +92,7 @@ local eventHandler = function(frame, event, unitTarget)
 
             if frame then
                 local guid = UnitGUID(frame.unit)
-            
+
                 -- 1: 1.00, 1.00, 0.47 (yellow)
                 -- 2: 1.00, 0.60, 0.00 (orange)
                 -- 3: 1.00, 0.00, 0.00 (red)
@@ -106,5 +111,4 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:RegisterEvent("UNIT_TARGET")
-frame:SetScript("OnEvent", eventHandler)
-
+frame:SetScript("OnEvent", EventHandler)
