@@ -56,7 +56,7 @@ local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 15
 
 
 
--- To monitor stealth, value means whether show duration
+-- BigDebuffs player portrait override
 local iconPath = "Interface\\Addons\\aSweepyBoop\\AbilityIcons\\"
 
 local playerPortraitStealthAbility = {}
@@ -73,43 +73,43 @@ playerPortraitStealthAbility[NS.classId.Rogue] = {
 local class = select(3, UnitClass("player"))
 local classStealthAbility = playerPortraitStealthAbility[class]
 
-local playerPortraitStealthFrame = CreateFrame("Frame", nil, PlayerFrame)
-playerPortraitStealthFrame:SetPoint(PlayerFrame.portrait:GetPoint())
-playerPortraitStealthFrame:SetSize(PlayerFrame.portrait:GetSize())
-playerPortraitStealthFrame:SetFrameStrata("HIGH")
-local playerPortraitStealthTexture = playerPortraitStealthFrame:CreateTexture()
-playerPortraitStealthTexture:SetAllPoints()
+local playerPortraitAuraFrame = CreateFrame("Frame", nil, PlayerFrame)
+playerPortraitAuraFrame:SetPoint(PlayerFrame.portrait:GetPoint())
+playerPortraitAuraFrame:SetSize(PlayerFrame.portrait:GetSize())
+playerPortraitAuraFrame:SetFrameStrata("HIGH")
+local playerPortraitAuraTexture = playerPortraitAuraFrame:CreateTexture()
+playerPortraitAuraTexture:SetAllPoints()
 
-local playerPortraitStealthCooldown = CreateFrame("Cooldown", nil, playerPortraitStealthFrame, "CooldownFrameTemplate")
-playerPortraitStealthCooldown:SetAllPoints()
+local playerPortraitAuraCooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
+playerPortraitAuraCooldown:SetAllPoints()
 
-playerPortraitStealthFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-playerPortraitStealthFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- Between solo shuffle rounds
-playerPortraitStealthFrame:RegisterEvent("UNIT_AURA")
-playerPortraitStealthFrame:Hide()
+playerPortraitAuraFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+playerPortraitAuraFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- Between solo shuffle rounds
+playerPortraitAuraFrame:RegisterEvent("UNIT_AURA")
+playerPortraitAuraFrame:Hide()
 
-function playerPortraitStealthFrame:OnEvent(event, unitTarget)
+function playerPortraitAuraFrame:OnEvent(event, unitTarget)
     if ( event == "UNIT_AURA" and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
 
     for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
         local name, _, _, _, duration, expirationTime = WA_GetUnitBuff("player", spell)
         if name then
-            playerPortraitStealthTexture:SetTexture(iconPath .. spell)
+            playerPortraitAuraTexture:SetTexture(iconPath .. spell)
 
             if duration and ( duration ~= 0 ) then
-                playerPortraitStealthCooldown:SetCooldown(expirationTime - duration, duration)
-                playerPortraitStealthCooldown:Show()
+                playerPortraitAuraCooldown:SetCooldown(expirationTime - duration, duration)
+                playerPortraitAuraCooldown:Show()
             else
-                playerPortraitStealthCooldown:Hide()
+                playerPortraitAuraCooldown:Hide()
             end
 
-            playerPortraitStealthFrame:Show()
+            playerPortraitAuraFrame:Show()
             return
         end
     end
 
     -- No early return means no matching aura
-    playerPortraitStealthFrame:Hide()
+    playerPortraitAuraFrame:Hide()
 end
-playerPortraitStealthFrame:SetScript("OnEvent", playerPortraitStealthFrame.OnEvent)
+playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent)
