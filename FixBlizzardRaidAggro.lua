@@ -27,7 +27,7 @@ end
 
 -- Make sure to only pass "player", "arena".. 1~3
 local function GetArenaRole(unitId)
-    if ( not arenaRoles[unitId] ) then
+    if ( not arenaRoles[unitId] ) and UnitExists(unitId) then
         if ( unitId == "player" ) then
             local currentSpec = GetSpecialization()
             arenaRoles[unitId] = select(5, GetSpecializationInfo(currentSpec))
