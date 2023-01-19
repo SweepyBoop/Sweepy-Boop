@@ -27,14 +27,16 @@ end
 
 -- Make sure to only pass "player", "arena".. 1~3
 local function GetArenaRole(unitId)
-    if ( not arenaRoles[unitId] ) and UnitExists(unitId) then
+    if ( not arenaRoles[unitId] ) then
         if ( unitId == "player" ) then
             local currentSpec = GetSpecialization()
             arenaRoles[unitId] = select(5, GetSpecializationInfo(currentSpec))
         else
             local arenaIndex = string.sub(unitId, -1, -1)
             local specID = GetArenaOpponentSpec(arenaIndex)
-            arenaRoles[unitId] = select(5, GetSpecializationInfoByID(specID))
+            if specID then
+                arenaRoles[unitId] = select(5, GetSpecializationInfoByID(specID))
+            end
         end
     end
 
