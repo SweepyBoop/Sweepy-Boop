@@ -16,24 +16,6 @@ local defaultDuration = 3
 BoopUtilsWA = {}
 BoopUtilsWA.Triggers = {}
 
-local WA_GetUnitAura = function(unit, spell, filter)
-    if filter and not filter:upper():find("FUL") then
-        filter = filter.."|HELPFUL"
-    end
-    for i = 1, 255 do
-      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
-      if not name then return end
-      if spell == spellId or spell == name then
-        return UnitAura(unit, i, filter)
-      end
-    end
-end
-
-local WA_GetUnitBuff = function(unit, spell, filter)
-    filter = filter and filter.."|HELPFUL" or "HELPFUL"
-    return WA_GetUnitAura(unit, spell, filter)
-end
-
 -- With the following helper functions, we can use the same set of events for almost every single trigger:
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA
 
@@ -234,7 +216,7 @@ local durationTrigger = function(category, allstates, event, ...)
                 if ( not spell ) or ( not spell.extend ) then return end
                 local guid = concatGUID(UnitGUID(unitTarget), spellID)
                 if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
-                    allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))
+                    allstates[guid].expirationTime = select(6, NS.Util_GetUnitBuff(unitTarget, spellID))
                     allstates[guid].changed = true
                     return true
                 end
@@ -282,7 +264,7 @@ local durationTrigger = function(category, allstates, event, ...)
             if spell.trackEvent == NS.SPELL_AURA_APPLIED then
                 local unitId = NS.arenaUnitId(destGUID)
                 if ( not unitId ) then return end
-                duration = select(5, WA_GetUnitBuff(unitId, spellID))
+                duration = select(5, NS.Util_GetUnitBuff(unitId, spellID))
             else
                 duration = spell.duration or defaultDuration
             end
@@ -318,7 +300,7 @@ local function durationTriggerSingleSpell(specialSpellID, allstates, event, ...)
                 if ( spellID ~= specialSpellID ) then return end
                 local guid = UnitGUID(unitTarget)
                 if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
-                    allstates[guid].expirationTime = select(6, WA_GetUnitBuff(unitTarget, spellID))
+                    allstates[guid].expirationTime = select(6, NS.Util_GetUnitBuff(unitTarget, spellID))
                     allstates[guid].changed = true
                     return true
                 end

@@ -2,6 +2,24 @@ local _, NS = ...
 
 NS.isTestMode = false
 
+NS.Util_GetUnitAura = function(unit, spell, filter)
+    if filter and not filter:upper():find("FUL") then
+        filter = filter.."|HELPFUL"
+    end
+    for i = 1, 255 do
+      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
+      if not name then return end
+      if spell == spellId or spell == name then
+        return UnitAura(unit, i, filter)
+      end
+    end
+end
+
+NS.Util_GetUnitBuff = function(unit, spell, filter)
+    filter = filter and filter.."|HELPFUL" or "HELPFUL"
+    return NS.Util_GetUnitAura(unit, spell, filter)
+end
+
 NS.spellCategory = {
     OFFENSIVE = 1,
     OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.

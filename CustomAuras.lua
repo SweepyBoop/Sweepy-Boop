@@ -4,24 +4,6 @@ local _, NS = ...
 -- https://wow.tools/files/
 -- https://www.townlong-yak.com/framexml/live/Helix/ArtTextureID.lua
 
-local WA_GetUnitAura = function(unit, spell, filter)
-    if filter and not filter:upper():find("FUL") then
-        filter = filter.."|HELPFUL"
-    end
-    for i = 1, 255 do
-      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
-      if not name then return end
-      if spell == spellId or spell == name then
-        return UnitAura(unit, i, filter)
-      end
-    end
-end
-
-local WA_GetUnitBuff = function(unit, spell, filter)
-    filter = filter and filter.."|HELPFUL" or "HELPFUL"
-    return WA_GetUnitAura(unit, spell, filter)
-end
-
 function Custom_SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
     local overlay = animGroup:GetParent()
 	overlay:SetAlpha(0.5)
@@ -39,7 +21,7 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     frame:RegisterEvent("UNIT_AURA")
     frame:SetScript("OnEvent", function (self, event, unitTarget)
         if ( unitTarget ~= "player" ) then return end
-        local duration = select(5, WA_GetUnitBuff("player", self.buff))
+        local duration = select(5, NS.Util_GetUnitBuff("player", self.buff))
         if duration then
             self:Show()
         else
@@ -93,7 +75,7 @@ function playerPortraitAuraFrame:OnEvent(event, unitTarget)
 
     for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
-        local name, _, _, _, duration, expirationTime = WA_GetUnitBuff("player", spell)
+        local name, _, _, _, duration, expirationTime = NS.Util_GetUnitBuff("player", spell)
         if name then
             playerPortraitAuraTexture:SetTexture(iconPath .. spell)
 
