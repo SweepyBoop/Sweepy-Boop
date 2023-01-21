@@ -64,8 +64,9 @@ local function HideHotKeys_MN_ShowAll()
     HideHotKeys_ShowBar("MultiBarLeft", "Name")
 end
 
-local function UpdateHotKeys()
-    if IsActiveBattlefieldArena() then
+local function UpdateHotKeys(show)
+    local showHotKeys = show or IsActiveBattlefieldArena()
+    if showHotKeys then
         HideHotKeys_HK_HideAll()
         HideHotKeys_MN_HideAll()
     else
@@ -77,5 +78,9 @@ end
 local frame = CreateFrame("Frame")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:SetScript("OnEvent", function ()
-    C_Timer.After(5, UpdateHotKeys)
+    if IsActiveBattlefieldArena() then
+        UpdateHotKeys(true)
+    else -- Try again in 5s if IsActiveBattlefieldArena returns false (might happen when just entering arena)
+        C_Timer.After(5, UpdateHotKeys)
+    end
 end)
