@@ -52,8 +52,8 @@ local function HideHotKeys_MN_HideAll()
     HideHotKeys_HideBar("MultiBarRight", "Name")
     HideHotKeys_HideBar("MultiBarLeft", "Name")
 end
-  
-  
+
+
 local function HideHotKeys_MN_ShowAll()
     HideHotKeys_ShowBar("Action", "Name")
     HideHotKeys_ShowBar("PetAction", "Name")
