@@ -64,9 +64,7 @@ local function HideHotKeys_MN_ShowAll()
     HideHotKeys_ShowBar("MultiBarLeft", "Name")
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-frame:SetScript("OnEvent", function ()
+local function UpdateHotKeys()
     if IsActiveBattlefieldArena() then
         HideHotKeys_HK_HideAll()
         HideHotKeys_MN_HideAll()
@@ -74,4 +72,10 @@ frame:SetScript("OnEvent", function ()
         HideHotKeys_HK_ShowAll()
         HideHotKeys_MN_ShowAll()
     end
+end
+
+local frame = CreateFrame("Frame")
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:SetScript("OnEvent", function ()
+    C_Timer.After(5, UpdateHotKeys)
 end)
