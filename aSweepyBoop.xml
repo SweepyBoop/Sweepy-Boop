@@ -11,6 +11,7 @@
 
 	<!-- UI Personalization -->
 	<Script file="Personalization.lua"/>
+	<Script file="HideHotKeys.lua"/>
 
 	<!-- Misc -->
 	<!-- <Script file="ShieldMeters.lua"/> -->
