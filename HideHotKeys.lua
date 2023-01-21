@@ -85,3 +85,5 @@ frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:SetScript("OnEvent", function ()
     HideHotKeys()
 end)
+
+-- TODO: hook up UPDATE_BINDINGS event and rehide keybinds based on current settings
