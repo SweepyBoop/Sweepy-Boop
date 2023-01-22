@@ -22,7 +22,10 @@ function containerFrame:OnEvent(event, ...)
     end
 
     texture:SetTexture(locData.iconTexture)
-    cooldown:SetCooldown(locData.startTime , locData.duration)
+
+    if locData.duration then -- Some auras have no duration, such as solar beam
+        cooldown:SetCooldown(locData.startTime , locData.duration)
+    end
 
     local locType = locData.locType
     if ( locType == "ROOT" ) or ( locType == "SCHOOL_INTERRUPT" ) or ( locType == "DISARM" ) then
