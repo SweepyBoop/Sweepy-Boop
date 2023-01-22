@@ -64,7 +64,7 @@ StatusTrackingBarManager:Hide()
 -- Hide group indicator
 hooksecurefunc("PlayerFrame_UpdateGroupIndicator", function ()
     local groupIndicator = PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.GroupIndicator
-    if IsActiveBattlefieldArena() then
+    if GetNumGroupMembers() <= 5 then
         groupIndicator:Hide()
     end
 end)
