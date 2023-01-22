@@ -30,27 +30,18 @@ end
 
 -- https://www.curseforge.com/wow/addons/sortgroup
 
-local function ApplySort()
-    --combat status check
-    if not InCombatLockdown() then
-        if IsInGroup() and GetNumGroupMembers() <= 5 and HasLoadedCUFProfiles() then
-            CompactPartyFrame_SetFlowSortFunction(CFRSort_PlayerMiddle)
-        end
-    end
-end
+hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function (...)
+    if not CompactPartyFrame then
+		return;
+	end
 
-local Main_Frame = CreateFrame('Frame', 'MainPanel', InterfaceOptionsFramePanelContainer)
-Main_Frame:RegisterEvent('GROUP_ROSTER_UPDATE')
-Main_Frame:RegisterEvent('PLAYER_ENTERING_WORLD')
-Main_Frame:SetScript('OnEvent',
-    function(self, event, ...)
-        if event == 'GROUP_ROSTER_UPDATE' then
-            ApplySort()
-        elseif event == 'PLAYER_ENTERING_WORLD' and HasLoadedCUFProfiles() then
-            ApplySort()
-        end
-    end)
+    CompactPartyFrame.flowSortFunc = CFRSort_PlayerMiddle;
+	CompactPartyFrame_RefreshMembers();
+end)
 
+
+
+-- Move arena scoreboard on screen top
 UIWidgetTopCenterContainerFrame:ClearAllPoints()
 UIWidgetTopCenterContainerFrame:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -25)
 UIWidgetTopCenterContainerFrame.SetPoint = function() end
