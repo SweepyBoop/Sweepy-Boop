@@ -72,6 +72,12 @@ playerPortraitAuraFrame.tex:AddMaskTexture(playerPortraitAuraFrame.mask)
 
 playerPortraitAuraFrame.cooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
 playerPortraitAuraFrame.cooldown:SetAllPoints()
+-- Options copied from BigDebuffs (https://github.com/jordonwow/bigdebuffs/blob/master)
+playerPortraitAuraFrame.cooldown:SetReverse(true)
+playerPortraitAuraFrame.cooldown:SetDrawBling(false)
+playerPortraitAuraFrame.cooldown:SetDrawEdge(false)
+playerPortraitAuraFrame.cooldown:SetSwipeTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall")
+playerPortraitAuraFrame.cooldown:SetSwipeColor(0, 0, 0, 0.6)
 
 playerPortraitAuraFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 playerPortraitAuraFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- Between solo shuffle rounds
