@@ -45,6 +45,8 @@ local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
 playerPortraitStealthAbility[NS.classId.Druid] = {
+    "Refreshment",
+    "Drink",
     "Prowl",
 }
 playerPortraitStealthAbility[NS.classId.Rogue] = {
@@ -59,11 +61,24 @@ local playerPortraitAuraFrame = CreateFrame("Frame", nil, PlayerFrame)
 playerPortraitAuraFrame:SetPoint(PlayerFrame.portrait:GetPoint())
 playerPortraitAuraFrame:SetSize(PlayerFrame.portrait:GetSize())
 playerPortraitAuraFrame:SetFrameStrata("HIGH")
-local playerPortraitAuraTexture = playerPortraitAuraFrame:CreateTexture()
-playerPortraitAuraTexture:SetAllPoints()
+playerPortraitAuraFrame.tex = playerPortraitAuraFrame:CreateTexture()
+playerPortraitAuraFrame.tex:SetAllPoints(playerPortraitAuraFrame)
+playerPortraitAuraFrame.tex:SetTexCoord(0.1, 0.9, 0.1, 0.9) -- To appear naturally as a round button
 
-local playerPortraitAuraCooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
-playerPortraitAuraCooldown:SetAllPoints()
+-- Apply a circle texture mask (https://wowpedia.fandom.com/wiki/UIOBJECT_MaskTexture)
+playerPortraitAuraFrame.mask = playerPortraitAuraFrame:CreateMaskTexture()
+playerPortraitAuraFrame.mask:SetAllPoints(playerPortraitAuraFrame.tex)
+playerPortraitAuraFrame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
+playerPortraitAuraFrame.tex:AddMaskTexture(playerPortraitAuraFrame.mask)
+
+playerPortraitAuraFrame.cooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
+playerPortraitAuraFrame.cooldown:SetAllPoints()
+-- Options copied from BigDebuffs (https://github.com/jordonwow/bigdebuffs/blob/master)
+playerPortraitAuraFrame.cooldown:SetReverse(true)
+playerPortraitAuraFrame.cooldown:SetDrawBling(false)
+playerPortraitAuraFrame.cooldown:SetDrawEdge(false)
+playerPortraitAuraFrame.cooldown:SetSwipeTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall")
+playerPortraitAuraFrame.cooldown:SetSwipeColor(0, 0, 0, 0.6)
 
 playerPortraitAuraFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 playerPortraitAuraFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- Between solo shuffle rounds
@@ -75,15 +90,15 @@ function playerPortraitAuraFrame:OnEvent(event, unitTarget)
 
     for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
-        local name, _, _, _, duration, expirationTime = NS.Util_GetUnitBuff("player", spell)
+        local name, icon, _, _, duration, expirationTime = NS.Util_GetUnitBuff("player", spell)
         if name then
-            playerPortraitAuraTexture:SetTexture(iconPath .. spell)
+            playerPortraitAuraFrame.tex:SetTexture(icon)
 
             if duration and ( duration ~= 0 ) then
-                playerPortraitAuraCooldown:SetCooldown(expirationTime - duration, duration)
-                playerPortraitAuraCooldown:Show()
+                playerPortraitAuraFrame.cooldown:SetCooldown(expirationTime - duration, duration)
+                playerPortraitAuraFrame.cooldown:Show()
             else
-                playerPortraitAuraCooldown:Hide()
+                playerPortraitAuraFrame.cooldown:Hide()
             end
 
             playerPortraitAuraFrame:Show()
