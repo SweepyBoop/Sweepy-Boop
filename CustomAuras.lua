@@ -45,6 +45,7 @@ local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
 playerPortraitStealthAbility[NS.classId.Druid] = {
+    "Refreshment",
     "Drink",
     "Prowl",
 }
