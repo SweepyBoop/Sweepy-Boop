@@ -45,4 +45,6 @@
 		</Animations>
 	</Frame>
 	<Script file="CustomAuras.lua"/>
+
+	<Script file="CustomHealthBar.lua"/>
 </Ui>
