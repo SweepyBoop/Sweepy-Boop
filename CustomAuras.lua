@@ -70,8 +70,8 @@ playerPortraitAuraFrame.mask:SetAllPoints(playerPortraitAuraFrame.tex)
 playerPortraitAuraFrame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
 playerPortraitAuraFrame.tex:AddMaskTexture(playerPortraitAuraFrame.mask)
 
-local playerPortraitAuraCooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
-playerPortraitAuraCooldown:SetAllPoints()
+playerPortraitAuraFrame.cooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
+playerPortraitAuraFrame.cooldown:SetAllPoints()
 
 playerPortraitAuraFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 playerPortraitAuraFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- Between solo shuffle rounds
@@ -88,10 +88,10 @@ function playerPortraitAuraFrame:OnEvent(event, unitTarget)
             playerPortraitAuraFrame.tex:SetTexture(icon)
 
             if duration and ( duration ~= 0 ) then
-                playerPortraitAuraCooldown:SetCooldown(expirationTime - duration, duration)
-                playerPortraitAuraCooldown:Show()
+                playerPortraitAuraFrame.cooldown:SetCooldown(expirationTime - duration, duration)
+                playerPortraitAuraFrame.cooldown:Show()
             else
-                playerPortraitAuraCooldown:Hide()
+                playerPortraitAuraFrame.cooldown:Hide()
             end
 
             playerPortraitAuraFrame:Show()
