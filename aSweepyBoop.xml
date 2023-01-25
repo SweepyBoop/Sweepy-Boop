@@ -3,7 +3,7 @@
 	<Script file="SpellData.lua"/>
 	<Script file="UnitInfoHelpers.lua"/>
 	<Script file="UtilsWA.lua"/>
-	<Script file="NameplateFilter.lua"/>
+	<!-- <Script file="NameplateFilter.lua"/> -->
 
 	<Script file="ClassAndPetIcons.lua"/>
 	<Script file="FixBlizzardRaidAggro.lua"/>
