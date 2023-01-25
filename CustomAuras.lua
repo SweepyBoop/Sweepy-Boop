@@ -1,5 +1,9 @@
 local _, NS = ...
 
+local CreateFrame = CreateFrame;
+local UnitClass = UnitClass;
+local PlayerFrame = PlayerFrame;
+
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/
 -- https://www.townlong-yak.com/framexml/live/Helix/ArtTextureID.lua
@@ -39,8 +43,6 @@ local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 15
 
 
 -- BigDebuffs player portrait override
-local iconPath = "Interface\\Addons\\aSweepyBoop\\AbilityIcons\\"
-
 local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false

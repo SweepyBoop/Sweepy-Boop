@@ -155,7 +155,7 @@ end
 local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     local now = GetTime()
     -- Check if spell is still on cooldown
-    -- Occasionally this is unexpectedly detected due to marginal error of timers (https://github.com/SweepyBoop/aSweepyBoop/issues/7)
+    -- Occasionally this is unexpectedly detected due to marginal error of timers (https://github.com/SweepyBoop/Sweepy-Boop/issues/7)
     -- To reliably detect whether the spell is on cooldown, allow some error margin, e.g.,
     -- If a spell has 20s cooldown and we press it at time 0, we want to check if he pressed it again before 18.5s (instead of 20)
     local errorMargin = 1.5
