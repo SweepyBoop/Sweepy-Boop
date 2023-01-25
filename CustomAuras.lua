@@ -1,5 +1,9 @@
 local _, NS = ...
 
+local CreateFrame = CreateFrame;
+local UnitClass = UnitClass;
+local PlayerFrame = PlayerFrame;
+
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/
 -- https://www.townlong-yak.com/framexml/live/Helix/ArtTextureID.lua
