@@ -2,6 +2,12 @@ local _, NS = ...;
 
 local test = true;
 
+local function IsShamanPrimaryPet(unitId)
+    local unitName = UnitName(unitId);
+    local suffix = string.sub(unitName, -14, -1);
+    return ( suffix == "Fire Elemental" );
+end
+
 local function ShouldShowHealthBar(unit)
     if ( not UnitExists(unit) ) then
         return false
@@ -9,7 +15,7 @@ local function ShouldShowHealthBar(unit)
 
     local partyUnitId = ( unit == "pet" and "player" ) or ( "party" .. string.sub(unit, -1, -1) );
     local class = select(3, UnitClass(partyUnitId));
-    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman );
+    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman and IsShamanPrimaryPet(unit) );
 end
 
 local function CreateHealthBar(index, width, height) -- Create StatusBar with a text overlay
