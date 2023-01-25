@@ -296,3 +296,9 @@ NS.findRaidFrameForUnitId = function (unitId)
     end
 end
 
+NS.IsShamanPrimaryPet = function (unitId)
+    local unitName = UnitName(unitId);
+    local suffix = string.sub(unitName, -14, -1);
+    return ( suffix == "Fire Elemental" );
+end
+

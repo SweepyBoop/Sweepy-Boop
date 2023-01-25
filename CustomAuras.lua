@@ -85,7 +85,7 @@ playerPortraitAuraFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- 
 playerPortraitAuraFrame:RegisterEvent("UNIT_AURA")
 playerPortraitAuraFrame:Hide()
 
-function playerPortraitAuraFrame:OnEvent(event, unitTarget)
+function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
     if ( event == "UNIT_AURA" and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
 
     for i = 1, #(classStealthAbility) do

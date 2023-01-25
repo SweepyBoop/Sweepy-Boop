@@ -3,7 +3,7 @@
 	<Script file="SpellData.lua"/>
 	<Script file="UnitInfoHelpers.lua"/>
 	<Script file="UtilsWA.lua"/>
-	<Script file="NameplateFilter.lua"/>
+	<!-- <Script file="NameplateFilter.lua"/> -->
 
 	<Script file="ClassAndPetIcons.lua"/>
 	<Script file="FixBlizzardRaidAggro.lua"/>
@@ -45,4 +45,6 @@
 		</Animations>
 	</Frame>
 	<Script file="CustomAuras.lua"/>
+
+	<Script file="CustomStatusBar.lua"/>
 </Ui>
