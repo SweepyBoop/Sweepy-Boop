@@ -18,7 +18,7 @@ classAbilities[NS.classId.Druid] = {
 macroPrefixes["Rake"] = "#showtooltip no\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @"
 macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@"
 
-local function getFocusName()
+local function GetFocusName()
     local isArena = IsActiveBattlefieldArena()
 
     if isArena then
@@ -47,14 +47,11 @@ local function getFocusName()
     return "focus"
 end
 
-BoopUtilsGetFocusName = getFocusName
-
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
 local commonPrefix = "#showtooltip\n/cast [@"
 local commonSuffix = "] "
 
-local function updateMacros()
-    local focusName = getFocusName()
+local function updateMacros(focusName)
     local class = select(3, UnitClass("player"))
     local abilities = classAbilities[class]
     if ( not abilities ) then return end
@@ -73,11 +70,55 @@ local function updateMacros()
     end
 end
 
+local function UpdateHighlightBorder(frame, show)
+    if ( not frame.HighlightBorder ) then
+        frame.HighlightBorder = CreateFrame("Frame", nil, frame, "NamePlateFullBorderTemplate");
+        frame.HighlightBorder:SetBorderSizes(5, 5, 5, 5);
+        frame.HighlightBorder:SetVertexColor(1, 0, 0); -- Red
+        frame.HighlightBorder:UpdateSizes();
+        frame.HighlightBorder:Hide();
+    end
+
+    if show then
+        frame.HighlightBorder:Show();
+    else
+        frame.HighlightBorder:Hide();
+    end
+end
+
+local function UpdateArenaFrame(frame, show)
+    UpdateHighlightBorder(frame.HealthBar, show);
+    UpdateHighlightBorder(frame.PowerBar, show);
+end
+
+local test = false;
+local function updateArenaHighlight(focusName)
+    local frameIndex = nil;
+
+    if ( focusName == "focus" ) then
+        if test then
+            frameIndex = 1;
+        end
+    else
+        frameIndex = tonumber(string.sub(focusName, -1, -1));
+    end
+
+    for i = 1, 3 do
+        local sArenaFrame = _G["sArenaEnemyFrame" .. i];
+        if sArenaFrame then
+            UpdateArenaFrame( sArenaFrame, (i == frameIndex) );
+        end
+    end
+end
+
 local function TryUpdateMacros()
     if (InCombatLockdown()) then
-        C_Timer.After(6, TryUpdateMacros)
+        -- Combat locked, wait for 6s to drpo combat
+        C_Timer.After(6, TryUpdateMacros);
     else
-        updateMacros()
+        local focusName = GetFocusName();
+        updateMacros(focusName);
+        updateArenaHighlight(focusName);
     end
 end
 
