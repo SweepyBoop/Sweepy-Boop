@@ -1,9 +1,12 @@
+local _, NS = ...;
+
+local test = false;
+
 local function CreateHealthBar(index, width, height) -- Create StatusBar with a text overlay
     local f = CreateFrame("StatusBar", nil, UIParent);
     f:SetSize(width, height);
 
-    --f.unit = "partypet" .. index;
-    f.unit = "player";
+    f.unit = ( test and "pet" ) or ( "partypet" .. index );
     -- Initialize max health
     f.healthMax = UnitHealthMax(f.unit);
     f:SetMinMaxValues(0, f.healthMax);
@@ -33,19 +36,39 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     f.border.backdropInfo = {
  	    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
         tileEdge = true,
-        tileSize = 8,
-        edgeSize = 8,
+        edgeSize = 16,
     };
     f.border:ApplyBackdrop();
 
-    f:Show(); -- Hide initially
+    f:Hide(); -- Hide initially
     return f;
 end
 
 local pet1 = CreateHealthBar(1, 110, 27);
 local pet2 = CreateHealthBar(2, 110, 27);
 
+local function ShouldShowHealthBar(unit)
+    if ( not UnitExists(unit) ) then
+        return false
+    end
+
+    local partyUnitId = ( test and "player" ) or ( "party" .. string.sub(unit, -1, -1) );
+    local class = select(3, UnitClass(partyUnitId));
+    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman );
+end
+
 local function HealthBarOnEvent(self, event, ...)
+    if ( event == "UNIT_PET" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
+        -- Event is fired for pet dismiss as well
+        if ShouldShowHealthBar(self.unit) then
+            self:Show();
+        else
+            self:Hide();
+        end
+
+        return;
+    end
+
     local unit = ...
     if ( unit ~= self.unit ) then return end
 
@@ -60,6 +83,8 @@ end
 local function RegisterHealthEvents(frame)
     frame:RegisterEvent("UNIT_HEALTH");
     frame:RegisterEvent("UNIT_MAXHEALTH");
+    frame:RegisterEvent("UNIT_PET");
+    frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     frame:SetScript("OnEvent", HealthBarOnEvent);
 end
 
