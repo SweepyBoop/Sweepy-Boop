@@ -14,11 +14,10 @@ end
 
 local function CreateHealthBar(index, width, height) -- Create StatusBar with a text overlay
     local unit = ( index == 0 and "pet" ) or ( "partypet" .. index );
-    if ( not ShouldShowHealthBar(unit) ) then return end
 
     local f = CreateFrame("StatusBar", nil, UIParent);
-    f:SetSize(width, height);
     f.unit = unit;
+    f:SetSize(width, height);
 
     if ( index < 2 ) then
         f:SetPoint("TOPRIGHT", PlayerFrame.portrait, "TOPLEFT", 0, 0);
@@ -58,7 +57,15 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     return f;
 end
 
-local function InitializeHealthBar(frame)
+-- Update when unit changes
+local function UpdateProperties(frame)
+    if ShouldShowHealthBar(frame.unit) then
+        frame:Show();
+    else
+        frame:Hide();
+        return;
+    end
+
     if UnitIsUnit(frame.unit, "target") then
         frame.targetBorder:Show();
     else
@@ -66,9 +73,8 @@ local function InitializeHealthBar(frame)
     end
 
     frame.healthMax = UnitHealthMax(frame.unit);
+    frame:SetMinMaxValues(0, frame.healthMax);
     frame:SetValue(UnitHealth(frame.unit));
-
-    frame:Show();
 end
 
 local function HealthBarOnEvent(self, event, ...)
@@ -84,6 +90,7 @@ local function HealthBarOnEvent(self, event, ...)
     self:SetValue(UnitHealth(unit));
 end
 
+-- Update health values
 local function RegisterHealthEvents(frame)
     frame:RegisterEvent("UNIT_HEALTH");
     frame:RegisterEvent("UNIT_MAXHEALTH");
@@ -106,7 +113,19 @@ local function RegisterHealthEvents(frame)
 end
 
 local testPet = nil; -- Player pet
-local pets = {}; -- partypet .. 1/2
+local partyPets = {}; -- partypet .. 1/2
+
+if test then
+    testPet = CreateHealthBar(0, 110, 27);
+    UpdateProperties(testPet);
+    RegisterHealthEvents(testPet);
+else
+    for i = 1, 2 do
+        partyPets[i] = CreateHealthBar(i, 110, 27);
+        UpdateProperties(partyPets[i]);
+        RegisterHealthEvents(partyPets[i]);
+    end
+end
 
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -114,28 +133,10 @@ refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
 refreshFrame:RegisterEvent("UNIT_PET");
 refreshFrame:SetScript("OnEvent", function ()
     if test then
-        if testPet and ( not UnitExists(testPet.unit) ) then -- Pet died
-            testPet:Hide();
-            testPet = nil;
-        elseif ( not testPet ) or ( not UnitIsUnit(testPet.unit, "pet") ) then -- Pet changed, needs to recreate
-            testPet = CreateHealthBar(0, 110, 27);
-            if testPet then
-                InitializeHealthBar(testPet);
-                RegisterHealthEvents(testPet);
-            end
-        end
+        UpdateProperties(testPet);
     else
         for i = 1, 2 do
-            if pets[i] and ( not UnitExists(pets[i].unit) ) then -- Pet died
-                pets[i]:Hide();
-                pets[i] = nil;
-            elseif ( not pets[i] ) or ( not UnitIsUnit(pets[i].unit, "partypet" .. i) ) then -- Pet changed, needs to recreate
-                pets[i] = CreateHealthBar(i, 110, 27);
-                if pets[i] then
-                    InitializeHealthBar(testPet);
-                    RegisterHealthEvents(testPet);
-                end
-            end
+            UpdateProperties(partyPets[i]);
         end
     end
 end)
@@ -199,25 +200,28 @@ local function InitializeManaBar(frame, powerType)
     end
 end
 
-local druidManaBar = CreateDruidManaBar();
-druidManaBar:SetScript("OnEvent", function(self, event, ...)
-    local unit = ...;
-    if ( unit ~= "player" ) then return end
+local class = select(3, UnitClass("player"));
+if ( class == NS.classId.Druid ) then
+    local druidManaBar = CreateDruidManaBar();
+    druidManaBar:SetScript("OnEvent", function(self, event, ...)
+        local unit = ...;
+        if ( unit ~= "player" ) then return end
 
-    if ( event == "UNIT_POWER_FREQUENT" ) then
-        UpdatePower(self, Enum.PowerType.Mana);
-    elseif ( event == "UNIT_MAXPOWER" ) then
-        UpdatePowerMax(self, Enum.PowerType.Mana);
-    elseif ( event == "UNIT_AURA" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
-        if ShouldShowManaBar(self) then
-            self:Show();
-        else
-            self:Hide();
+        if ( event == "UNIT_POWER_FREQUENT" ) then
+            UpdatePower(self, Enum.PowerType.Mana);
+        elseif ( event == "UNIT_MAXPOWER" ) then
+            UpdatePowerMax(self, Enum.PowerType.Mana);
+        elseif ( event == "UNIT_AURA" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
+            if ShouldShowManaBar(self) then
+                self:Show();
+            else
+                self:Hide();
+            end
         end
-    end
-end);
-InitializeManaBar(druidManaBar, Enum.PowerType.Mana);
-druidManaBar:RegisterEvent("UNIT_POWER_FREQUENT");
-druidManaBar:RegisterEvent("UNIT_MAXPOWER");
-druidManaBar:RegisterEvent("UNIT_AURA");
-druidManaBar:RegisterEvent("PLAYER_ENTERING_WORLD");
+    end);
+    InitializeManaBar(druidManaBar, Enum.PowerType.Mana);
+    druidManaBar:RegisterEvent("UNIT_POWER_FREQUENT");
+    druidManaBar:RegisterEvent("UNIT_MAXPOWER");
+    druidManaBar:RegisterEvent("UNIT_AURA");
+    druidManaBar:RegisterEvent("PLAYER_ENTERING_WORLD");
+end
