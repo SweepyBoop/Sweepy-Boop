@@ -59,15 +59,17 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
 end
 
 local function InitializeHealthBar(frame)
-    if ( not frame.healthMax ) then
-        frame.healthMax = UnitHealthMax(frame.unit);
-    end
-
     if UnitIsUnit(frame.unit, "target") then
         frame.targetBorder:Show();
     else
         frame.targetBorder:Hide();
     end
+
+    if ( not frame.healthMax ) then
+        frame.healthMax = UnitHealthMax(frame.unit);
+    end
+
+    frame:SetValue(UnitHealth(frame.unit));
 
     frame:Show();
 end
@@ -109,7 +111,7 @@ local function RegisterHealthEvents(frame)
 end
 
 local testPet = nil; -- Player pet
-local pets = {};
+local pets = {}; -- partypet .. 1/2
 
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
@@ -142,3 +144,90 @@ refreshFrame:SetScript("OnEvent", function ()
         end
     end
 end)
+
+local function CreateDruidManaBar() -- Create StatusBar with a text overlay
+    local f = CreateFrame("StatusBar", nil, UIParent);
+    f.unit = "player";
+    local playerPortrait = PlayerFrame.portrait;
+    local size = select(1, playerPortrait:GetSize());
+    f:SetSize(size, size / 3);
+    f:SetPoint("TOP", playerPortrait, "BOTTOM", 0, -10);
+
+    f:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar");
+    f:SetStatusBarColor(0, 102/255, 204/255); -- Blue
+
+    f.Text = f:CreateFontString();
+    f.Text:SetFontObject(GameFontNormal);
+    f.Text:SetAllPoints();
+    f.Text:SetJustifyH("CENTER");
+    f.Text:SetJustifyV("CENTER");
+    f.Text:SetTextColor(1, 1, 1);
+
+    f.border = CreateFrame("Frame", nil, f, "NamePlateFullBorderTemplate");
+    f.border:SetBorderSizes(0.5, 0.5, 0.5, 0.5);
+    f.border:UpdateSizes();
+    f.border:Show();
+
+    f:Hide(); -- Hide initially
+    return f;
+end
+
+local function UpdatePower(frame, powerType)
+    local power = UnitPower(frame.unit, powerType or Enum.PowerType.Mana);
+    frame:SetValue(power);
+    local powerPercent = math.floor(power * 100 / frame.powerMax);
+    frame.Text:SetText(powerPercent);
+end
+
+local function UpdatePowerMax(frame, powerType)
+    frame.powerMax = UnitPowerMax(frame.unit, powerType or Enum.PowerType.Mana);
+    frame:SetMinMaxValues(0, frame.powerMax);
+    UpdatePower(frame, powerType);
+end
+
+local function ShouldShowManaBar(frame)
+    local show = NS.Util_GetUnitBuff(frame.unit, "Bear Form");
+    if ( not show ) then
+        show = NS.Util_GetUnitBuff(frame.unit, "Cat Form");
+    end
+
+    return show;
+end
+
+local function InitializeManaBar(frame, powerType)
+    UpdatePowerMax(frame, powerType);
+
+    if ShouldShowManaBar(frame) then
+        frame:Show();
+    else
+        frame:Hide();
+    end
+end
+
+local druidManaBar = CreateDruidManaBar();
+druidManaBar:SetScript("OnEvent", function(self, event, ...)
+    local unit = ...;
+    if ( unit ~= "player" ) then return end
+
+    if ( event == "UNIT_POWER_FREQUENT" ) then
+        UpdatePower(self, Enum.PowerType.Mana);
+    elseif ( event == "UNIT_MAXPOWER" ) then
+        UpdatePowerMax(self, Enum.PowerType.Mana);
+    elseif ( event == "UNIT_AURA" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
+        local show = NS.Util_GetUnitBuff(self.unit, "Bear Form");
+        if ( not show ) then
+            show = NS.Util_GetUnitBuff(self.unit, "Cat Form");
+        end
+
+        if show then
+            self:Show();
+        else
+            self:Hide();
+        end
+    end
+end);
+InitializeManaBar(druidManaBar, Enum.PowerType.Mana);
+druidManaBar:RegisterEvent("UNIT_POWER_FREQUENT");
+druidManaBar:RegisterEvent("UNIT_MAXPOWER");
+druidManaBar:RegisterEvent("UNIT_AURA");
+druidManaBar:RegisterEvent("PLAYER_ENTERING_WORLD");
