@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-local test = true;
+local test = false;
 
 local function ShouldShowHealthBar(unit)
     if ( not UnitExists(unit) ) then
