@@ -42,17 +42,11 @@ local function GetUnitClass(unitId)
     return select(3, UnitClass(unitId))
 end
 
-local function IsShamanPrimaryPet(unitId)
-    local unitName = UnitName(unitId);
-    local suffix = string.sub(unitName, -14, -1);
-    return ( suffix == "Fire Elemental" );
-end
-
 local function IsArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
             local class = GetUnitClass("arena" .. i)
-            return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman and IsShamanPrimaryPet(unitId) )
+            return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman and NS.IsShamanPrimaryPet(unitId) )
         end
     end
 end
