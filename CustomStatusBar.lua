@@ -43,7 +43,7 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     f.border:SetPoint("TOPLEFT", -2, 2);
     f.border:SetPoint("BOTTOMRIGHT", 2, -2);
     f.border.backdropInfo = {
- 	    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+        edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
         tileEdge = true,
         edgeSize = 16,
     };
