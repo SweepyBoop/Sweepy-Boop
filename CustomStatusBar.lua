@@ -96,8 +96,8 @@ end
 
 local function RegisterHealthEvents(frame)
     frame:RegisterEvent("UNIT_HEALTH");
-    frame:RegisterEvent("UNIT_MAXHEALTH");
-    frame:RegisterEvent("UNIT_PET");
+    frame:RegisterEvent("UNIT_MAXHEALTH"); -- not fired on login
+    frame:RegisterEvent("UNIT_PET"); -- unitTarget is the summoner
     frame:RegisterEvent("UNIT_TARGET");
     frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     frame:RegisterEvent("GROUP_ROSTER_UPDATE");
