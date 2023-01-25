@@ -1,5 +1,17 @@
 local _, NS = ...
 
+local UnitName = UnitName;
+local UnitGUID = UnitGUID;
+local UnitIsUnit = UnitIsUnit;
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
+local UnitIsPlayer = UnitIsPlayer;
+local UnitIsPossessed = UnitIsPossessed;
+local UnitIsFriend = UnitIsFriend;
+local UnitClass = UnitClass;
+local UnitCanAttack = UnitCanAttack;
+local UnitIsEnemy = UnitIsEnemy;
+local IsInInstance = IsInInstance;
+
 -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
 -- To find the NpcID of a unit, target it and type:
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
