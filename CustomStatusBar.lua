@@ -65,10 +65,7 @@ local function InitializeHealthBar(frame)
         frame.targetBorder:Hide();
     end
 
-    if ( not frame.healthMax ) then
-        frame.healthMax = UnitHealthMax(frame.unit);
-    end
-
+    frame.healthMax = UnitHealthMax(frame.unit);
     frame:SetValue(UnitHealth(frame.unit));
 
     frame:Show();
