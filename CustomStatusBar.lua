@@ -63,7 +63,7 @@ local function ShouldShowHealthBar(unit)
 end
 
 local function HealthBarOnEvent(self, event, ...)
-    if ( event == "UNIT_PET" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
+    if ( event == "UNIT_PET" ) or ( event == "GROUP_ROSTER_UPDATE" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
         -- Event is fired for pet dismiss as well
         if ShouldShowHealthBar(self.unit) then
             self:Show();
@@ -100,6 +100,7 @@ local function RegisterHealthEvents(frame)
     frame:RegisterEvent("UNIT_PET");
     frame:RegisterEvent("UNIT_TARGET");
     frame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    frame:RegisterEvent("GROUP_ROSTER_UPDATE");
     frame:SetScript("OnEvent", HealthBarOnEvent);
 end
 
