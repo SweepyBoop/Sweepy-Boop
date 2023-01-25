@@ -1,19 +1,28 @@
 local _, NS = ...;
 
-local test = false;
+local test = true;
+
+local function ShouldShowHealthBar(unit)
+    if ( not UnitExists(unit) ) then
+        return false
+    end
+
+    local partyUnitId = ( unit == "pet" and "player" ) or ( "party" .. string.sub(unit, -1, -1) );
+    local class = select(3, UnitClass(partyUnitId));
+    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman );
+end
 
 local function CreateHealthBar(index, width, height) -- Create StatusBar with a text overlay
+    local unit = ( index == 0 and "pet" ) or ( "partypet" .. index );
+    if ( not ShouldShowHealthBar(unit) ) then return end
+
     local f = CreateFrame("StatusBar", nil, UIParent);
     f:SetSize(width, height);
+    f.unit = unit;
 
-    f.unit = ( test and "pet" ) or ( "partypet" .. index );
-    -- Initialize max health
-    f.healthMax = UnitHealthMax(f.unit);
-    f:SetMinMaxValues(0, f.healthMax);
-
-    if ( index == 1 ) then
+    if ( index < 2 ) then
         f:SetPoint("TOPRIGHT", PlayerFrame.portrait, "TOPLEFT", 0, 0);
-    elseif ( index == 2 ) then
+    else
         f:SetPoint("BOTTOMRIGHT", PlayerFrame.portrait, "BOTTOMLEFT", 0, 0);
     end
 
@@ -49,39 +58,23 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     return f;
 end
 
-local pet1 = CreateHealthBar(1, 110, 27);
-local pet2 = CreateHealthBar(2, 110, 27);
-
-local function ShouldShowHealthBar(unit)
-    if ( not UnitExists(unit) ) then
-        return false
+local function InitializeHealthBar(frame)
+    if ( not frame.healthMax ) then
+        frame.healthMax = UnitHealthMax(frame.unit);
     end
 
-    local partyUnitId = ( test and "player" ) or ( "party" .. string.sub(unit, -1, -1) );
-    local class = select(3, UnitClass(partyUnitId));
-    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman );
+    if UnitIsUnit(frame.unit, "target") then
+        frame.targetBorder:Show();
+    else
+        frame.targetBorder:Hide();
+    end
+
+    frame:Show();
 end
 
 local function HealthBarOnEvent(self, event, ...)
-    if ( event == "UNIT_PET" ) or ( event == "GROUP_ROSTER_UPDATE" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
-        -- Event is fired for pet dismiss as well
-        if ShouldShowHealthBar(self.unit) then
-            self:Show();
-        else
-            self:Hide();
-            return;
-        end
-    end
-
-    if ( event == "UNIT_TARGET" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
-        if UnitIsUnit(self.unit, "target") then
-            self.targetBorder:Show();
-        else
-            self.targetBorder:Hide();
-        end
-    end
-
     local unit = ...
+
     if ( unit ~= self.unit ) then return end
 
     if ( event == "UNIT_MAXHEALTH" ) then
@@ -96,13 +89,55 @@ end
 
 local function RegisterHealthEvents(frame)
     frame:RegisterEvent("UNIT_HEALTH");
-    frame:RegisterEvent("UNIT_MAXHEALTH"); -- not fired on login
-    frame:RegisterEvent("UNIT_PET"); -- unitTarget is the summoner
-    frame:RegisterEvent("UNIT_TARGET");
-    frame:RegisterEvent("PLAYER_ENTERING_WORLD");
-    frame:RegisterEvent("GROUP_ROSTER_UPDATE");
+    frame:RegisterEvent("UNIT_MAXHEALTH");
     frame:SetScript("OnEvent", HealthBarOnEvent);
+
+    -- Handle target border with OnUpdate, since OnEvent has a visible latency
+    frame.timeElapsed = 0;
+    frame:SetScript("OnUpdate", function(self, elapsed)
+        frame.timeElapsed = frame.timeElapsed + elapsed;
+        if frame.timeElapsed > 0.05 then
+            if UnitIsUnit(self.unit, "target") then
+                self.targetBorder:Show();
+            else
+                self.targetBorder:Hide();
+            end
+
+            frame.timeElapsed = 0;
+        end
+    end);
 end
 
-RegisterHealthEvents(pet1);
-RegisterHealthEvents(pet2);
+local testPet = nil; -- Player pet
+local pets = {};
+
+local refreshFrame = CreateFrame("Frame");
+refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+refreshFrame:RegisterEvent("UNIT_PET");
+refreshFrame:SetScript("OnEvent", function ()
+    if test then
+        if testPet and ( not UnitExists(testPet.unit) ) then -- Pet died
+            testPet:Hide();
+            testPet = nil;
+        elseif ( not testPet ) or ( not UnitIsUnit(testPet.unit, "pet") ) then -- Pet changed, needs to recreate
+            testPet = CreateHealthBar(0, 110, 27);
+            if testPet then
+                InitializeHealthBar(testPet);
+                RegisterHealthEvents(testPet);
+            end
+        end
+    else
+        for i = 1, 2 do
+            if pets[i] and ( not UnitExists(pets[i].unit) ) then -- Pet died
+                pets[i]:Hide();
+                pets[i] = nil;
+            elseif ( not pets[i] ) or ( not UnitIsUnit(pets[i].unit, "partypet" .. i) ) then -- Pet changed, needs to recreate
+                pets[i] = CreateHealthBar(i, 110, 27);
+                if pets[i] then
+                    InitializeHealthBar(testPet);
+                    RegisterHealthEvents(testPet);
+                end
+            end
+        end
+    end
+end)
