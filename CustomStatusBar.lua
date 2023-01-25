@@ -81,9 +81,7 @@ local function HealthBarOnEvent(self, event, ...)
         self:SetMinMaxValues(0, self.healthMax);
     end
 
-    if ( event == "UNIT_HEALTH" ) or ( event == "UNIT_MAXHEALTH" ) then
-        self:SetValue(UnitHealth(unit));
-    end
+    self:SetValue(UnitHealth(unit));
 end
 
 local function RegisterHealthEvents(frame)
