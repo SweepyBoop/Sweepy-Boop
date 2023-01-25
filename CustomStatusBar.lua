@@ -214,12 +214,7 @@ druidManaBar:SetScript("OnEvent", function(self, event, ...)
     elseif ( event == "UNIT_MAXPOWER" ) then
         UpdatePowerMax(self, Enum.PowerType.Mana);
     elseif ( event == "UNIT_AURA" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
-        local show = NS.Util_GetUnitBuff(self.unit, "Bear Form");
-        if ( not show ) then
-            show = NS.Util_GetUnitBuff(self.unit, "Cat Form");
-        end
-
-        if show then
+        if ShouldShowManaBar(self) then
             self:Show();
         else
             self:Hide();
