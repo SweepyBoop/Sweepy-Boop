@@ -1,3 +1,17 @@
+local _, NS = ...;
+
+local CreateFrame = CreateFrame;
+local UnitLevel = UnitLevel;
+local GetMacroIndexByName = GetMacroIndexByName;
+local GetItemInfo = GetItemInfo;
+local GetItemCount = GetItemCount;
+local CreateMacro = CreateMacro;
+local EditMacro = EditMacro;
+local InCombatLockdown = InCombatLockdown;
+local IsInInstance = IsInInstance;
+local GetTime = GetTime;
+local SendChatMessage = SendChatMessage;
+
 -- https://github.com/DavidPHH/Drink-Macro-Creator
 
 -- Create a macro for drinks
@@ -229,3 +243,26 @@ local function eventHandler(self, event, ...)
 end
 
 frameDrinkMacro:SetScript("OnEvent", eventHandler);
+
+-- Send chat message when drinking
+local drinkBuffs = {
+    "Refreshment",
+    "Drink",
+};
+
+local chatMessage = CreateFrame("Frame");
+chatMessage:RegisterEvent("UNIT_AURA");
+chatMessage:SetScript("OnEvent", function (self, event, ...)
+    local unit = ...;
+    if ( unit == "player" ) then
+        for i = 1, #(drinkBuffs) do
+            local buffName = drinkBuffs[i];
+            local expire = select(6, NS.Util_GetUnitBuff(unit, buffName));
+            if expire and ( expire - GetTime() > 19.5 ) then
+                if IsInInstance() then
+                    pcall(function() SendChatMessage("Drinking. Do not overextend!", "YELL") end)
+                end
+            end
+        end
+    end
+end)
