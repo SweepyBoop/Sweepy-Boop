@@ -280,8 +280,8 @@ local ClassIconOptions = {
     }
 }
 
-local IconPath = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\flat\\"
-local IconPathTarget = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\warcraftflat\\"
+local IconPath = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\flat\\"
+local IconPathTarget = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\warcraftflat\\"
 
 -- Locale-independant class names, e.g., "WARRIOR"
 local function GetNamePlateUnitClass(nameplateUnitToken)

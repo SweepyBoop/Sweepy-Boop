@@ -1,4 +1,4 @@
-# aSweepyBoop
+# SweepyBoop
 My library addon to support advanced arena cooldown tracking WeakAuras as well as a clean Plater Nameplate profile.
 
 All the Weakauras and Plater profiles linked below depend on this library, which means you need to install this addon for them to work 😉

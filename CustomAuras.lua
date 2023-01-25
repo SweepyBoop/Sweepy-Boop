@@ -39,8 +39,6 @@ local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 15
 
 
 -- BigDebuffs player portrait override
-local iconPath = "Interface\\Addons\\aSweepyBoop\\AbilityIcons\\"
-
 local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false

@@ -102,8 +102,8 @@ local function HideClassIcon(frame)
     end
 end
 
-local IconPath = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\flat\\"
-local IconPathTarget = "Interface\\AddOns\\aSweepyBoop\\ClassIcons\\warcraftflat\\"
+local IconPath = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\flat\\"
+local IconPathTarget = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\warcraftflat\\"
 
 local ClassIconOptions = {
     PlayerSize = 48,
