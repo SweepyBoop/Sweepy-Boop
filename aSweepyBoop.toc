@@ -1,5 +1,0 @@
-## Interface: 80000
-## Title: aSweepyBoop
-## Author: Kun
-## Version: 10.0.2
-aSweepyBoop.xml
