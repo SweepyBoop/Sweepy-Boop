@@ -40,6 +40,11 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     };
     f.border:ApplyBackdrop();
 
+    f.targetBorder = CreateFrame("Frame", nil, f, "NamePlateFullBorderTemplate");
+    f.targetBorder:SetBorderSizes(2, 2, 2, 2);
+    f.targetBorder:UpdateSizes();
+    f.targetBorder:Hide();
+
     f:Hide(); -- Hide initially
     return f;
 end
@@ -64,9 +69,16 @@ local function HealthBarOnEvent(self, event, ...)
             self:Show();
         else
             self:Hide();
+            return;
         end
+    end
 
-        return;
+    if ( event == "UNIT_TARGET" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
+        if UnitIsUnit(self.unit, "target") then
+            self.targetBorder:Show();
+        else
+            self.targetBorder:Hide();
+        end
     end
 
     local unit = ...
@@ -77,13 +89,16 @@ local function HealthBarOnEvent(self, event, ...)
         self:SetMinMaxValues(0, self.healthMax);
     end
 
-    self:SetValue(UnitHealth(unit));
+    if ( event == "UNIT_HEALTH" ) or ( event == "UNIT_MAXHEALTH" ) then
+        self:SetValue(UnitHealth(unit));
+    end
 end
 
 local function RegisterHealthEvents(frame)
     frame:RegisterEvent("UNIT_HEALTH");
     frame:RegisterEvent("UNIT_MAXHEALTH");
     frame:RegisterEvent("UNIT_PET");
+    frame:RegisterEvent("UNIT_TARGET");
     frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     frame:SetScript("OnEvent", HealthBarOnEvent);
 end
