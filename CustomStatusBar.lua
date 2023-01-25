@@ -113,6 +113,7 @@ local pets = {};
 
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
 refreshFrame:RegisterEvent("UNIT_PET");
 refreshFrame:SetScript("OnEvent", function ()
     if test then
