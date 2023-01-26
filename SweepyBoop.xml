@@ -3,7 +3,6 @@
 	<Script file="SpellData.lua"/>
 	<Script file="UnitInfoHelpers.lua"/>
 	<Script file="UtilsWA.lua"/>
-	<!-- <Script file="NameplateFilter.lua"/> -->
 
 	<Script file="ClassAndPetIcons.lua"/>
 	<Script file="FixBlizzardRaidAggro.lua"/>
@@ -14,10 +13,8 @@
 	<Script file="HideHotKeys.lua"/>
 
 	<!-- Misc -->
-	<!-- <Script file="ShieldMeters.lua"/> -->
 	<Script file="DrinkMacro.lua"/>
 	<Script file="FocusMacros.lua"/>
-	<!-- <Script file="DampenDisplay.lua"/> -->
 	<Script file="CombatIndicator.lua"/>
 
 	<!-- Custom Spell Alert -->
