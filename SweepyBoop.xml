@@ -1,24 +1,4 @@
 <Ui>
-	<!-- Publish -->
-	<Script file="SpellData.lua"/>
-	<Script file="UnitInfoHelpers.lua"/>
-	<Script file="UtilsWA.lua"/> <!-- TODO: implement without WA -->
-	<Script file="ClassAndPetIcons.lua"/>
-	<Script file="FixBlizzardRaidAggro.lua"/>
-
-
-
-	<!-- Internal -->
-	<!-- UI Personalization -->
-	<Script file="LoseControl.lua"/>
-	<Script file="Personalization.lua"/>
-	<Script file="HideHotKeys.lua"/>
-
-	<!-- Misc -->
-	<Script file="DrinkMacro.lua"/>
-	<Script file="FocusMacros.lua"/>
-	<Script file="CombatIndicator.lua"/>
-
 	<!-- Custom Spell Alert -->
 	<!-- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/SpellActivationOverlay.xml -->
 	<Frame name="CustomSpellActivationOverlayTemplate" virtual="true" inherits="SpellActivationOverlayTemplate">
@@ -43,7 +23,4 @@
 			</AnimationGroup>
 		</Animations>
 	</Frame>
-	<Script file="CustomAuras.lua"/>
-
-	<Script file="CustomStatusBar.lua"/>
 </Ui>

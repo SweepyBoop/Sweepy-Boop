@@ -3,3 +3,29 @@
 ## Author: Kun
 ## Version: @project-version@
 SweepyBoop.xml
+
+# Publish
+SpellData.lua
+UnitInfoHelpers.lua
+# TODO: implement without WA
+UtilsWA.lua
+ClassAndPetIcons.lua
+FixBlizzardRaidAggro.lua
+
+
+
+# Internal
+
+# UI Personalization
+LoseControl.lua
+Personalization.lua
+HideHotKeys.lua
+
+# Misc
+DrinkMacro.lua
+FocusMacros.lua
+CombatIndicator.lua
+
+# Weak Auras equivalent
+CustomAuras.lua
+CustomStatusBar.lua
