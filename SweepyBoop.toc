@@ -17,15 +17,15 @@ FixBlizzardRaidAggro.lua
 # Internal
 
 # UI Personalization
-LoseControl.lua
-Personalization.lua
-HideHotKeys.lua
+Internal\LoseControl.lua
+Internal\Personalization.lua
+Internal\HideHotKeys.lua
 
 # Misc
-DrinkMacro.lua
-FocusMacros.lua
-CombatIndicator.lua
+Internal\DrinkMacro.lua
+Internal\FocusMacros.lua
+Internal\CombatIndicator.lua
 
 # Weak Auras equivalent
-CustomAuras.lua
-CustomStatusBar.lua
+Internal\CustomAuras.lua
+Internal\CustomStatusBar.lua
