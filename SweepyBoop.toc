@@ -14,8 +14,6 @@ FixBlizzardRaidAggro.lua
 
 
 
-# Internal
-
 # UI Personalization
 Internal\LoseControl.lua
 Internal\Personalization.lua
