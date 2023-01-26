@@ -182,12 +182,9 @@ local function UpdatePowerMax(frame, powerType)
 end
 
 local function ShouldShowManaBar(frame)
-    local show = NS.Util_GetUnitBuff(frame.unit, "Bear Form");
-    if ( not show ) then
-        show = NS.Util_GetUnitBuff(frame.unit, "Cat Form");
-    end
+    local form = GetShapeshiftForm();
 
-    return show;
+    return ( form == 1 ) or ( form == 2 );
 end
 
 local function InitializeManaBar(frame, powerType)
@@ -204,6 +201,16 @@ local class = select(3, UnitClass("player"));
 if ( class == NS.classId.Druid ) then
     local druidManaBar = CreateDruidManaBar();
     druidManaBar:SetScript("OnEvent", function(self, event, ...)
+        if ( event == "UPDATE_SHAPESHIFT_FORM" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
+            if ShouldShowManaBar(self) then
+                self:Show();
+            else
+                self:Hide();
+            end
+
+            return;
+        end
+
         local unit = ...;
         if ( unit ~= "player" ) then return end
 
@@ -211,17 +218,11 @@ if ( class == NS.classId.Druid ) then
             UpdatePower(self, Enum.PowerType.Mana);
         elseif ( event == "UNIT_MAXPOWER" ) then
             UpdatePowerMax(self, Enum.PowerType.Mana);
-        elseif ( event == "UNIT_AURA" ) or ( event == "PLAYER_ENTERING_WORLD" ) then
-            if ShouldShowManaBar(self) then
-                self:Show();
-            else
-                self:Hide();
-            end
         end
     end);
     InitializeManaBar(druidManaBar, Enum.PowerType.Mana);
     druidManaBar:RegisterEvent("UNIT_POWER_FREQUENT");
     druidManaBar:RegisterEvent("UNIT_MAXPOWER");
-    druidManaBar:RegisterEvent("UNIT_AURA");
+    druidManaBar:RegisterEvent("UPDATE_SHAPESHIFT_FORM"); -- Fired when the current form changes
     druidManaBar:RegisterEvent("PLAYER_ENTERING_WORLD");
 end
