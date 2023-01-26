@@ -23,8 +23,6 @@ local arenaInfo = {
     spellChargeExpire = {},
     -- Key: sourceGUID-spellID, value: whether lower cooldown has been enabled
     optLowerCooldown = {},
-    -- Key: sourceGUID, value: whether this unit is playing default HOJ (without cd reduction)
-    defaultHoJCooldown = {},
 }
 
 NS.MAX_ARENA_SIZE = 3
@@ -52,7 +50,6 @@ arenaInfoFrame:SetScript("OnEvent", function (self, event, ...)
         arenaInfo.unitRace = {}
         arenaInfo.spellChargeExpire = {}
         arenaInfo.optLowerCooldown = {}
-        arenaInfo.defaultHoJCooldown = {}
     end
 end)
 
@@ -181,13 +178,6 @@ NS.arenaOptLowerCooldown = function (guid)
 end
 NS.setArenaOptLowerCooldown = function (guid, value)
     arenaInfo.optLowerCooldown[guid] = value
-end
-
-NS.arenaDefaultHoJCooldown = function (guid)
-    return arenaInfo.defaultHoJCooldown[guid]
-end
-NS.setArenaDefaultHoJCooldown = function (guid, value)
-    arenaInfo.defaultHoJCooldown[guid] = value
 end
 
 
