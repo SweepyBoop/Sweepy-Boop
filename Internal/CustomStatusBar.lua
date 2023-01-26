@@ -100,7 +100,7 @@ local function RegisterHealthEvents(frame)
     frame.timeElapsed = 0;
     frame:SetScript("OnUpdate", function(self, elapsed)
         frame.timeElapsed = frame.timeElapsed + elapsed;
-        if self:IsShown() and ( frame.timeElapsed > 0.05 ) then
+        if self:IsShown() and ( frame.timeElapsed > 0.067 ) then
             if UnitIsUnit(self.unit, "target") then
                 self.targetBorder:Show();
             else
