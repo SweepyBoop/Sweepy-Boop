@@ -1,14 +1,16 @@
 <Ui>
-	<!-- WA/Plater Lib -->
+	<!-- Publish -->
 	<Script file="SpellData.lua"/>
 	<Script file="UnitInfoHelpers.lua"/>
-	<Script file="UtilsWA.lua"/>
-
+	<Script file="UtilsWA.lua"/> <!-- TODO: implement without WA -->
 	<Script file="ClassAndPetIcons.lua"/>
 	<Script file="FixBlizzardRaidAggro.lua"/>
-	<Script file="LoseControl.lua"/>
 
+
+
+	<!-- Internal -->
 	<!-- UI Personalization -->
+	<Script file="LoseControl.lua"/>
 	<Script file="Personalization.lua"/>
 	<Script file="HideHotKeys.lua"/>
 
