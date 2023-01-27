@@ -20,7 +20,7 @@ NS.CreateIconGroup = function (setPointOptions, growOptions)
 end
 
 local function IconGroup_Position(group)
-    if #(group.active) == 0 then
+    if ( not group ) or ( #(group.active) == 0 ) then
         return;
     end
 
