@@ -268,14 +268,14 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     return frame;
 end
 
-local testGlowingBuffIcon = true;
+local testGlowingBuffIcon = false;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateGlowingBuffIcon(0, 0, "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0);
 
 if ( class == NS.classId.Druid ) then
-    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
+    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
 
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
