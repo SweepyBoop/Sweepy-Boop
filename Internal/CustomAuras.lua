@@ -10,8 +10,8 @@ local PlayerFrame = PlayerFrame;
 
 function Custom_SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
     local overlay = animGroup:GetParent()
-	overlay:SetAlpha(0.5)
-	overlay.pulse:Play()
+    overlay:SetAlpha(0.5)
+    overlay.pulse:Play()
 end
 
 local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
@@ -119,6 +119,37 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent)
 
 
 -- Glowing buff icon
+
+local function ShowOverlayGlow(button)
+    if not button.spellActivationAlert then
+        return;
+    end
+
+    if button.spellActivationAlert.animOut:IsPlaying() then
+        button.spellActivationAlert.animOut:Stop();
+    end
+
+    if not button.spellActivationAlert:IsShown() then
+        button.spellActivationAlert.animIn:Play();
+    end
+end
+
+local function HideOverlayGlow(button)
+    if not button.spellActivationAlert then
+        return;
+    end
+
+    if button.spellActivationAlert.animIn:IsPlaying() then
+        button.spellActivationAlert.animIn:Stop();
+    end
+
+    if button:IsVisible() then
+        button.spellActivationAlert.animOut:Play();
+    else
+        button.spellActivationAlert.animOut:OnFinished();	--We aren't shown anyway, so we'll instantly hide it.
+    end
+end
+
 local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide() -- Hide initially until aura is detected
@@ -137,8 +168,8 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
 
     frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
     frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
-	frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
-	frame.spellActivationAlert:Show();
+    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+    frame.spellActivationAlert:Hide();
 
     frame:RegisterEvent("UNIT_AURA");
     frame:SetScript("OnEvent", function (self, event, ...)
@@ -147,8 +178,10 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
             local duration, expirationTime = select(5, NS.Util_GetUnitBuff(unitTarget, frame.spellID));
             if duration and ( duration ~= 0 ) then
                 self.cooldown:SetCooldown(expirationTime - duration, duration);
+                ShowOverlayGlow(self);
                 self:Show();
             else
+                HideOverlayGlow(self);
                 self:Hide();
             end
         end
@@ -157,5 +190,4 @@ end
 
 if ( class == NS.classId.Druid ) then
     local treeOfLife = CreateGlowingBuffIcon(117679, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
-    local rejuv = CreateGlowingBuffIcon(774, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
 end
