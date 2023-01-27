@@ -198,7 +198,7 @@ end
 
 -- No duration text, only show stacks, and glow when max stacks (if set)
 local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration)
-    local frame = CreateFrame("Frame", nil, UIParent);
+    local frame = CreateFrame("Frame", "CustomAuraFrame" .. spellID, UIParent);
     frame.spellID = spellID;
     frame.maxStacks = maxStacks;
     frame:Hide();
@@ -277,6 +277,7 @@ local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivatio
 
 if ( class == NS.classId.Druid ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
+    local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5, 2, true);
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
 
     if testGlowingBuffIcon then
