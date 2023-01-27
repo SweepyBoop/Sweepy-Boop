@@ -301,6 +301,6 @@ local setPointOptions = {
     offsetY = -38,
 };
 local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT" });
-table.insert(drIconGroup.icons, CreateDRIcon("stun"));
-table.insert(drIconGroup.icons, CreateDRIcon("disorient"));
-table.insert(drIconGroup.icons, CreateDRIcon("incapacitate"));
+NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("stun"));
+NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("disorient"));
+NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("incapacitate"));

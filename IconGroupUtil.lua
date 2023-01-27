@@ -17,6 +17,21 @@ NS.CreateIconGroup = function (setPointOptions, growOptions)
     return f;
 end
 
+local function IconGroup_Position(group)
+    if #(group.active) == 0 then return end
+
+    -- Reposition icons
+    local growDirection = group.growDirection;
+    local growAnchor = group.growAnchor;
+
+    local offset = 0;
+    for _, value in pairs(group.active) do
+        value:SetPoint(growAnchor, group, growAnchor, offset, 0);
+        local iconSize = select(1, value:GetSize());
+        offset = offset + (growDirection == "RIGHT" and iconSize) or (-iconSize);
+    end
+end
+
 -- Insertion sort, find the first icon with a lower priority
 NS.IconGroup_Insert = function (group, icon)
     local active = group.active;
@@ -25,16 +40,7 @@ NS.IconGroup_Insert = function (group, icon)
     table.insert(active, icon);
     table.sort(active, function(a, b) return a.priority < b.priority end);
 
-    -- Reposition icons
-    local growDirection = group.growDirection;
-    local growAnchor = group.growAnchor;
-
-    local offset = 0;
-    for _, value in pairs(active) do
-        value:SetPoint(growAnchor, group, growAnchor, offset, 0);
-        local iconSize = select(1, value:GetSize());
-        offset = offset + (growDirection == "RIGHT" and iconSize) or (-iconSize);
-    end
+    IconGroup_Position(group);
 end
 
 NS.IconGroup_Remove = function (group, icon)
@@ -49,14 +55,11 @@ NS.IconGroup_Remove = function (group, icon)
 
     table.remove(active, index)
 
-    -- Reposition icons
-    local growDirection = group.growDirection;
-    local growAnchor = group.growAnchor;
+    IconGroup_Position(group);
+end
 
-    local offset = 0;
-    for _, value in pairs(active) do
-        value:SetPoint(growAnchor, group, growAnchor, offset, 0);
-        local iconSize = select(1, value:GetSize());
-        offset = offset + (growDirection == "RIGHT" and iconSize) or (-iconSize);
-    end
+NS.IconGroup_CreateIcon = function (group, icon)
+    icon:SetParent(group);
+
+    table.insert(group.icons, icon);
 end
