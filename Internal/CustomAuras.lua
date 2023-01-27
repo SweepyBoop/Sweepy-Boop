@@ -180,8 +180,8 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame:RegisterEvent("UNIT_AURA");
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
-        if ( unitTarget == "player" ) then
-            local duration, expirationTime = select(5, NS.Util_GetUnitBuff(unitTarget, frame.spellID));
+        if ( event == "PLAYER_ENTERING_WORLD" ) or ( unitTarget == "player" ) then
+            local duration, expirationTime = select(5, NS.Util_GetUnitBuff("player", frame.spellID));
             if duration and ( duration ~= 0 ) then
                 self.cooldown:SetCooldown(expirationTime - duration, duration);
                 ShowOverlayGlow(self);
@@ -238,10 +238,11 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     end
 
     frame:RegisterEvent("UNIT_AURA");
+    frame:RegisterEvent("PLAYER_ENTERING_WORLD");
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
-        if ( unitTarget == "player" ) then
-            local name, _, count, _, duration, expirationTime = NS.Util_GetUnitBuff(unitTarget, frame.spellID);
+        if ( event == "PLAYER_ENTERING_WORLD" ) or ( unitTarget == "player" ) then
+            local name, _, count, _, duration, expirationTime = NS.Util_GetUnitBuff("player", frame.spellID);
             if ( not name ) then
                 self:Hide();
                 return;
@@ -271,7 +272,8 @@ end
 local testGlowingBuffIcon = false;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
-local dummy = CreateGlowingBuffIcon(0, 0, "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0);
+--local dummy = CreateGlowingBuffIcon(0, 0, "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0);
+local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 if ( class == NS.classId.Druid ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
