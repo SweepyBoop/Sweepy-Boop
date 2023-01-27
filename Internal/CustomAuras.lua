@@ -164,7 +164,13 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame.texture:SetAllPoints();
 
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+    -- Copied from bigdebuffs options
     frame.cooldown:SetAllPoints();
+    frame.cooldown:SetDrawEdge(false)
+    frame.cooldown:SetAlpha(1)
+    frame.cooldown:SetDrawBling(false)
+    frame.cooldown:SetDrawSwipe(true)
+    frame.cooldown:SetReverse(true)
 
     frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
     frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
@@ -188,6 +194,12 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     end)
 end
 
+local testGlowingBuffIcon = false;
+
 if ( class == NS.classId.Druid ) then
     local treeOfLife = CreateGlowingBuffIcon(117679, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
+    
+    if testGlowingBuffIcon then
+        local test = CreateGlowingBuffIcon(774, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
+    end
 end
