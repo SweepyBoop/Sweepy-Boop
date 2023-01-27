@@ -18,18 +18,25 @@ NS.CreateIconGroup = function (setPointOptions, growOptions)
 end
 
 local function IconGroup_Position(group)
-    if #(group.active) == 0 then return end
+    if #(group.active) == 0 then
+        group:Hide();
+        return;
+    end
 
     -- Reposition icons
     local growDirection = group.growDirection;
     local growAnchor = group.growAnchor;
 
     local offset = 0;
-    for _, value in pairs(group.active) do
-        value:SetPoint(growAnchor, group, growAnchor, offset, 0);
-        local iconSize = select(1, value:GetSize());
-        offset = offset + (growDirection == "RIGHT" and iconSize) or (-iconSize);
+    for _, icon in pairs(group.active) do
+        print(growAnchor, group, offset);
+        icon:SetPoint(growAnchor, group, growAnchor, offset, 0);
+        local iconSize = select(1, icon:GetSize());
+        offset = offset + ( (growDirection == "RIGHT" and iconSize) or (-iconSize) );
     end
+
+    -- Make sure group is shown
+    group:Show();
 end
 
 -- Insertion sort, find the first icon with a lower priority
