@@ -196,6 +196,11 @@ end
 
 local testGlowingBuffIcon = false;
 
+-- No duration text, only show stacks, and glow when max stacks
+local function CreateStackBuffIcon()
+    
+end
+
 if ( class == NS.classId.Druid ) then
     local treeOfLife = CreateGlowingBuffIcon(117679, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
     
