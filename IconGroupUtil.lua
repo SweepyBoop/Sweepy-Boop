@@ -5,6 +5,7 @@ NS.CreateIconGroup = function (setPointOptions, growOptions)
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
     local f = CreateFrame("Frame", nil, UIParent);
+    f:SetSize(1, 1);
     f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
 
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
@@ -29,7 +30,6 @@ local function IconGroup_Position(group)
 
     local offset = 0;
     for _, icon in pairs(group.active) do
-        print(growAnchor, group, offset);
         icon:SetPoint(growAnchor, group, growAnchor, offset, 0);
         local iconSize = select(1, icon:GetSize());
         offset = offset + ( (growDirection == "RIGHT" and iconSize) or (-iconSize) );
