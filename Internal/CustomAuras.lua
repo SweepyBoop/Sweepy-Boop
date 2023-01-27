@@ -36,9 +36,13 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     return frame
 end
 
-local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
-local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
-local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 180) -- shadow_of_death.blp
+local class = select(3, UnitClass("player"));
+
+if ( class == NS.classId.Druid ) then
+    local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
+    local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
+    local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 180) -- shadow_of_death.blp
+end
 
 
 
@@ -56,7 +60,6 @@ playerPortraitStealthAbility[NS.classId.Rogue] = {
     "Subterfuge",
 }
 
-local class = select(3, UnitClass("player"))
 local classStealthAbility = playerPortraitStealthAbility[class]
 
 local playerPortraitAuraFrame = CreateFrame("Frame", nil, PlayerFrame)
