@@ -166,11 +166,11 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     -- Copied from bigdebuffs options
     frame.cooldown:SetAllPoints();
-    frame.cooldown:SetDrawEdge(false)
-    frame.cooldown:SetAlpha(1)
-    frame.cooldown:SetDrawBling(false)
-    frame.cooldown:SetDrawSwipe(true)
-    frame.cooldown:SetReverse(true)
+    frame.cooldown:SetDrawEdge(false);
+    frame.cooldown:SetAlpha(1);
+    frame.cooldown:SetDrawBling(false);
+    frame.cooldown:SetDrawSwipe(true);
+    frame.cooldown:SetReverse(true);
 
     frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
     frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);

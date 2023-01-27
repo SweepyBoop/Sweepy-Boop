@@ -6,6 +6,7 @@ SweepyBoop.xml
 
 # Publish
 SpellData.lua
+IconGroupUtil.lua
 UnitInfoHelpers.lua
 # TODO: implement without WA
 UtilsWA.lua
@@ -23,6 +24,7 @@ Internal\HideHotKeys.lua
 Internal\DrinkMacro.lua
 Internal\FocusMacros.lua
 Internal\CombatIndicator.lua
+Internal\PersonalDR.lua
 
 # Weak Auras equivalent
 Internal\CustomAuras.lua
