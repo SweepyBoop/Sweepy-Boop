@@ -214,12 +214,19 @@ local categoryIcon = {
     ["incapacitate"] = select(3, GetSpellInfo(118)), -- Polymorph
 };
 
+local categoryPriority = {
+    ["stun"] = 1,
+    ["incapacitate"] = 2,
+    ["disorient"] = 3,
+};
+
 local playerGUID = UnitGUID("player");
 
 local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
     f:Hide();
     f.category = category;
+    f.priority = categoryPriority[category];
     f.stacks = 0;
     f:SetSize(28, 28);
 
@@ -272,5 +279,16 @@ local function CreateDRIcon(category)
     return f;
 end
 
-local stun = CreateDRIcon("stun");
-stun:SetPoint("BOTTOMRIGHT", PlayerFrame, "TOPRIGHT", -25, -38);
+local setPointOptions = {
+    point = "BOTTOMRIGHT",
+    relativeTo = _G["PlayerFrame"];
+    relativePoint = "TOPRIGHT",
+    offsetX = -25,
+    offsetY = -38,
+};
+local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT" });
+drIconGroup.icons = {};
+table.insert(drIconGroup.icons, CreateDRIcon("stun"));
+table.insert(drIconGroup.icons, CreateDRIcon("disorient"));
+table.insert(drIconGroup.icons, CreateDRIcon("incapacitate"));
+drIconGroup.active = {};
