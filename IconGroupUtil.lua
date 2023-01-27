@@ -42,7 +42,6 @@ local function IconGroup_Position(group)
     end
 end
 
--- Insertion sort, find the first icon with a lower priority
 NS.IconGroup_Insert = function (group, icon)
     if ( not group ) then return end
 
@@ -56,7 +55,9 @@ NS.IconGroup_Insert = function (group, icon)
 end
 
 NS.IconGroup_Remove = function (group, icon)
-    if ( not group ) then return end
+    if ( not group ) or ( #(group.active) == 0 ) then
+        return;
+    end
 
     local active = group.active;
 
