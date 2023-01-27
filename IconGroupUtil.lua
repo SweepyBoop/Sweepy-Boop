@@ -11,6 +11,7 @@ NS.CreateIconGroup = function (setPointOptions, growOptions)
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
     f.growDirection = growOptions.direction;
     f.growAnchor = growOptions.anchor;
+    f.margin = growOptions.margin;
 
     f.icons = {};
     f.active = {};
@@ -32,7 +33,13 @@ local function IconGroup_Position(group)
     for _, icon in pairs(group.active) do
         icon:SetPoint(growAnchor, group, growAnchor, offset, 0);
         local iconSize = select(1, icon:GetSize());
-        offset = offset + ( (growDirection == "RIGHT" and iconSize) or (-iconSize) );
+
+        -- TODO: support centered horizontal
+        if ( growDirection == "LEFT" ) then
+            offset = offset - iconSize - group.margin;
+        elseif (growDirection == "RIGHT" ) then
+            offset = offset + iconSize + group.margin;
+        end
     end
 
     -- Make sure group is shown

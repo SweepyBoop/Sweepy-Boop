@@ -242,14 +242,15 @@ local function CreateDRIcon(category)
     f.category = category;
     f.priority = categoryPriority[category];
     f.stacks = 0;
-    f:SetSize(28, 28);
+    f:SetSize(27, 27);
 
     f.texture = f:CreateTexture();
     f.texture:SetTexture(categoryIcon[category]);
     f.texture:SetAllPoints();
     
     f.border = CreateFrame("Frame", nil, f, "NamePlateFullBorderTemplate");
-    f.border:SetBorderSizes(3, 3, 3, 3);
+    f.border:SetBorderSizes(2, 2, 2, 2);
+    f.border:UpdateSizes();
 
     f.cooldown = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
@@ -300,7 +301,7 @@ local setPointOptions = {
     offsetX = -25,
     offsetY = -38,
 };
-local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT" });
+local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
 NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("stun"));
 NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("disorient"));
 NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("incapacitate"));
