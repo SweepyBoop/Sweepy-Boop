@@ -48,6 +48,8 @@ end
 
 -- Insertion sort, find the first icon with a lower priority
 NS.IconGroup_Insert = function (group, icon)
+    if ( not group ) then return end
+
     local active = group.active;
 
     -- Insert at the last position, then sort by priority
@@ -58,6 +60,8 @@ NS.IconGroup_Insert = function (group, icon)
 end
 
 NS.IconGroup_Remove = function (group, icon)
+    if ( not group ) then return end
+
     local active = group.active;
 
     local index
@@ -67,9 +71,10 @@ NS.IconGroup_Remove = function (group, icon)
         end
     end
 
-    table.remove(active, index)
-
-    IconGroup_Position(group);
+    if index then
+        table.remove(active, index)
+        IconGroup_Position(group);
+    end
 end
 
 NS.IconGroup_CreateIcon = function (group, icon)
