@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-local test = true;
+local test = false;
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
 local spellList = {
