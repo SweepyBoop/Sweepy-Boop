@@ -222,6 +222,20 @@ local categoryPriority = {
 
 local playerGUID = UnitGUID("player");
 
+local function HideIconDR(icon)
+    icon:Hide();
+
+    local group = icon:GetParent();
+    NS.IconGroup_Remove(group, icon);
+end
+
+local function ShowIconDR(icon)
+    icon:Show();
+
+    local group = icon:GetParent();
+    NS.IconGroup_Insert(group, icon);
+end
+
 local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
     f:Hide();
@@ -248,7 +262,7 @@ local function CreateDRIcon(category)
         local parent = self:GetParent();
         if parent then
             parent.stacks = 0;
-            parent:Hide();
+            HideIconDR(parent);
         end
     end)
 
@@ -272,7 +286,7 @@ local function CreateDRIcon(category)
 
             -- Refresh timer
             self.cooldown:SetCooldown(GetTime(), ( test and 5 ) or 15);
-            self:Show();
+            ShowIconDR(self);
         end
     end)
 
@@ -287,8 +301,6 @@ local setPointOptions = {
     offsetY = -38,
 };
 local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT" });
-drIconGroup.icons = {};
 table.insert(drIconGroup.icons, CreateDRIcon("stun"));
 table.insert(drIconGroup.icons, CreateDRIcon("disorient"));
 table.insert(drIconGroup.icons, CreateDRIcon("incapacitate"));
-drIconGroup.active = {};
