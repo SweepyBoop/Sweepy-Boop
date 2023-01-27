@@ -224,19 +224,11 @@ local categoryPriority = {
 local playerGUID = UnitGUID("player");
 
 local function HideIconDR(icon)
+    icon.stacks = 0;
     icon:Hide();
 
     local group = icon:GetParent();
     NS.IconGroup_Remove(group, icon);
-end
-
-local function ShowIconDR(icon)
-    if ( not icon:IsShown() ) then
-        icon:Show();
-
-        local group = icon:GetParent();
-        NS.IconGroup_Insert(group, icon);
-    end
 end
 
 local function CreateDRIcon(category)
@@ -265,32 +257,7 @@ local function CreateDRIcon(category)
     f.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent then
-            parent.stacks = 0;
             HideIconDR(parent);
-        end
-    end)
-
-    f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-    f:SetScript("OnEvent", function (self, event, ...)
-        local _, subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = CombatLogGetCurrentEventInfo();
-        if ( subEvent == "SPELL_AURA_REMOVED" ) and ( destGUID == playerGUID ) then
-            local category = spellList[spellID];
-            if ( category ~= self.category ) then return end
-
-            self.stacks = self.stacks + 1;
-
-            -- Set border color
-            if self.stacks == 1 then
-                self.border:SetVertexColor(0, 1, 0); -- Green
-            elseif self.stacks == 2 then
-                self.border:SetVertexColor(1, 1, 0); -- Yellow
-            else
-                self.border:SetVertexColor(1, 0, 0); -- Red
-            end
-
-            -- Refresh timer
-            self.cooldown:SetCooldown(GetTime(), 15);
-            ShowIconDR(self);
         end
     end)
 
@@ -306,5 +273,45 @@ local setPointOptions = {
 };
 local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
 NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("stun"));
-NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("disorient"));
 NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("incapacitate"));
+NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("disorient"));
+
+local function ShowIconDR(icon)
+    local firstShow = ( not icon:IsShown() );
+
+    icon.stacks = icon.stacks + 1;
+    -- Set border color
+    if icon.stacks == 1 then
+        icon.border:SetVertexColor(0, 1, 0); -- Green
+    elseif icon.stacks == 2 then
+        icon.border:SetVertexColor(1, 1, 0); -- Yellow
+    else
+        icon.border:SetVertexColor(1, 0, 0); -- Red
+    end
+
+    -- Refresh timer
+    icon.cooldown:SetCooldown(GetTime(), 15);
+
+    icon:Show();
+
+    -- Add to group and position if showing from hidden state
+    if firstShow then
+        local group = icon:GetParent();
+        NS.IconGroup_Insert(group, icon);
+    end
+end
+
+drIconGroup:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+drIconGroup:SetScript("OnEvent", function (self, event, ...)
+    local _, subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = CombatLogGetCurrentEventInfo();
+    if ( subEvent == "SPELL_AURA_REMOVED" ) and ( destGUID == playerGUID ) then
+        local category = spellList[spellID];
+        if ( not category ) then return end
+
+        for i = 1, #(self.icons) do
+            if ( category == self.icons[i].category ) then
+                ShowIconDR(self.icons[i]);
+            end
+        end
+    end
+end)
