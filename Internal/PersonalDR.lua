@@ -220,6 +220,7 @@ local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
     f:Hide();
     f.category = category;
+    f.stacks = 0;
     f:SetSize(28, 28);
 
     f.texture = f:CreateTexture();
@@ -239,6 +240,7 @@ local function CreateDRIcon(category)
     f.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent then
+            parent.stacks = 0;
             parent:Hide();
         end
     end)
@@ -250,12 +252,7 @@ local function CreateDRIcon(category)
             local category = spellList[spellID];
             if ( category ~= self.category ) then return end
 
-            -- If hidden -> visible, set stack to 1
-            if ( not self:IsVisible() ) then
-                self.stacks = 1;
-            else
-                self.stacks = self.stacks + 1;
-            end
+            self.stacks = self.stacks + 1;
 
             -- Set border color
             if self.stacks == 1 then
