@@ -187,7 +187,7 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
                 ShowOverlayGlow(self);
                 self:Show();
             else
-                HideOverlayGlow(self);
+                --HideOverlayGlow(self);
                 self:Hide();
             end
         end
