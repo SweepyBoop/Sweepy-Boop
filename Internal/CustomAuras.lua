@@ -187,7 +187,7 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
                 ShowOverlayGlow(self);
                 self:Show();
             else
-                --HideOverlayGlow(self);
+                HideOverlayGlow(self);
                 self:Hide();
             end
         end
@@ -264,7 +264,7 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     end)
 end
 
-local testGlowingBuffIcon = false;
+local testGlowingBuffIcon = true;
 
 if ( class == NS.classId.Druid ) then
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
