@@ -227,7 +227,7 @@ local function CreateDRIcon(category)
     f.texture:SetAllPoints();
     
     f.border = CreateFrame("Frame", nil, f, "NamePlateFullBorderTemplate");
-    f.border:SetBorderSizes(2, 2, 2, 2);
+    f.border:SetBorderSizes(3, 3, 3, 3);
 
     f.cooldown = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
@@ -236,14 +236,12 @@ local function CreateDRIcon(category)
     f.cooldown:SetDrawBling(false);
     f.cooldown:SetDrawSwipe(true);
     f.cooldown:SetReverse(true);
-    f.cooldown.OnCooldownDone = function (self)
+    f.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
-        print("Cooldown Finish")
         if parent then
-            print("Hide")
             parent:Hide();
         end
-    end
+    end)
 
     f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
     f:SetScript("OnEvent", function (self, event, ...)
@@ -256,7 +254,7 @@ local function CreateDRIcon(category)
             if ( not self:IsVisible() ) then
                 self.stacks = 1;
             else
-                self.stacks = 1
+                self.stacks = self.stacks + 1;
             end
 
             -- Set border color
@@ -269,7 +267,7 @@ local function CreateDRIcon(category)
             end
 
             -- Refresh timer
-            self.cooldown:SetCooldown(GetTime(), 5);
+            self.cooldown:SetCooldown(GetTime(), ( test and 5 ) or 15);
             self:Show();
         end
     end)
