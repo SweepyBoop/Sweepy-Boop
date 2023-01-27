@@ -79,3 +79,6 @@ NS.IconGroup_CreateIcon = function (group, icon)
 
     table.insert(group.icons, icon);
 end
+
+-- TODO: wipe icons (unregister events, hide, set to nil)
+-- TODO: create icons based on class and spec
