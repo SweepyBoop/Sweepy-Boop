@@ -218,8 +218,9 @@ local playerGUID = UnitGUID("player");
 
 local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
-    f.category = category;
     f:Hide();
+    f.category = category;
+    f:SetSize(28, 28);
 
     f.texture = f:CreateTexture();
     f.texture:SetTexture(categoryIcon[category]);
@@ -235,9 +236,11 @@ local function CreateDRIcon(category)
     f.cooldown:SetDrawBling(false);
     f.cooldown:SetDrawSwipe(true);
     f.cooldown:SetReverse(true);
-    f.cooldown.OnHide = function (self)
+    f.cooldown.OnCooldownDone = function (self)
         local parent = self:GetParent();
+        print("Cooldown Finish")
         if parent then
+            print("Hide")
             parent:Hide();
         end
     end
@@ -253,7 +256,7 @@ local function CreateDRIcon(category)
             if ( not self:IsVisible() ) then
                 self.stacks = 1;
             else
-                self.stacks = self.stacks + 1;
+                self.stacks = 1
             end
 
             -- Set border color
@@ -266,7 +269,7 @@ local function CreateDRIcon(category)
             end
 
             -- Refresh timer
-            self.cooldown:SetCooldown(GetTime(), 15);
+            self.cooldown:SetCooldown(GetTime(), 5);
             self:Show();
         end
     end)
