@@ -120,25 +120,16 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent)
 
 -- Glowing buff icon
 
-local function debug(button, message)
-    if ( button.spellID == 117679 ) then
-        print(message)
-    end
-end
-
 local function ShowOverlayGlow(button)
     if not button.spellActivationAlert then
         return;
     end
 
     if button.spellActivationAlert.animOut:IsPlaying() then
-        debug(button, "animOut:Stop")
         button.spellActivationAlert.animOut:Stop();
     end
 
     if not button.spellActivationAlert:IsShown() then
-        debug(button, "animIn:Play")
-        print(button);
         button.spellActivationAlert.animIn:Play();
     end
 end
@@ -149,15 +140,12 @@ local function HideOverlayGlow(button)
     end
 
     if button.spellActivationAlert.animIn:IsPlaying() then
-        debug(button, "animIn:Stop")
         button.spellActivationAlert.animIn:Stop();
     end
 
     if button:IsVisible() then
-        debug(button, "animOut:Play")
         button.spellActivationAlert.animOut:Play();
     else
-        debug(button, "animOut:OnFinished")
         button.spellActivationAlert.animOut:OnFinished();	--We aren't shown anyway, so we'll instantly hide it.
     end
 end
@@ -169,7 +157,7 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame.spellID = spellID;
     frame:SetSize(size, size);
     frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
-    
+
     frame.texture = frame:CreateTexture();
     local icon = select(3, GetSpellInfo(spellID));
     frame.texture:SetTexture(icon);
@@ -282,10 +270,13 @@ end
 
 local testGlowingBuffIcon = true;
 
+-- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
+local dummy = CreateGlowingBuffIcon(0, 0, "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0);
+
 if ( class == NS.classId.Druid ) then
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
-    
+
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
     end
