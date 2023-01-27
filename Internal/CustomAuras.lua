@@ -15,7 +15,7 @@ function Custom_SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
 end
 
 local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
-    local frame = CreateFrame("Frame", buff, UIParent, "CustomSpellActivationOverlayTemplate")
+    local frame = CreateFrame("Frame", nil, UIParent, "CustomSpellActivationOverlayTemplate")
     frame.buff = buff
     frame:SetSize(width, height)
     frame:SetPoint("CENTER", offsetX, offsetY)
@@ -115,3 +115,47 @@ function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
     playerPortraitAuraFrame:Hide()
 end
 playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent)
+
+
+
+-- Glowing buff icon
+local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY)
+    local frame = CreateFrame("Frame", nil, UIParent);
+    frame:Hide() -- Hide initially until aura is detected
+
+    frame.spellID = spellID;
+    frame:SetSize(size, size);
+    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    
+    frame.texture = frame:CreateTexture();
+    local icon = select(3, GetSpellInfo(spellID));
+    frame.texture:SetTexture(icon);
+    frame.texture:SetAllPoints();
+
+    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+    frame.cooldown:SetAllPoints();
+
+    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+	frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+	frame.spellActivationAlert:Show();
+
+    frame:RegisterEvent("UNIT_AURA");
+    frame:SetScript("OnEvent", function (self, event, ...)
+        local unitTarget = ...;
+        if ( unitTarget == "player" ) then
+            local duration, expirationTime = select(5, NS.Util_GetUnitBuff(unitTarget, frame.spellID));
+            if duration and ( duration ~= 0 ) then
+                self.cooldown:SetCooldown(expirationTime - duration, duration);
+                self:Show();
+            else
+                self:Hide();
+            end
+        end
+    end)
+end
+
+if ( class == NS.classId.Druid ) then
+    local treeOfLife = CreateGlowingBuffIcon(117679, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
+    local rejuv = CreateGlowingBuffIcon(774, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
+end
