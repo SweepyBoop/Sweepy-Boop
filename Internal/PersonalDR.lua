@@ -219,7 +219,7 @@ local playerGUID = UnitGUID("player");
 local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
     f.category = category;
-    --f:Hide();
+    f:Hide();
 
     f.texture = f:CreateTexture();
     f.texture:SetTexture(categoryIcon[category]);
@@ -235,13 +235,16 @@ local function CreateDRIcon(category)
     f.cooldown:SetDrawBling(false);
     f.cooldown:SetDrawSwipe(true);
     f.cooldown:SetReverse(true);
+    f.cooldown.OnHide = function (self)
+        local parent = self:GetParent();
+        if parent then
+            parent:Hide();
+        end
+    end
 
     f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
     f:SetScript("OnEvent", function (self, event, ...)
-        local subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = select(2, ...);
-        if ( subEvent ) then
-            print(destGUID, spellID);
-        end
+        local _, subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = CombatLogGetCurrentEventInfo();
         if ( subEvent == "SPELL_AURA_REMOVED" ) and ( destGUID == playerGUID ) then
             local category = spellList[spellID];
             if ( category ~= self.category ) then return end
@@ -273,4 +276,3 @@ end
 
 local stun = CreateDRIcon("stun");
 stun:SetPoint("BOTTOMRIGHT", PlayerFrame, "TOPRIGHT", -25, -38);
-stun:Show();
