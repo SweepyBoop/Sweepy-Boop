@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-local test = false;
+local test = true;
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
 local spellList = {
@@ -206,6 +206,7 @@ if test then
     spellList[1126] = "disorient"; -- Mark of the Wild
     spellList[8936] = "stun"; -- Regrowth
     spellList[774] = "incapacitate"; -- Rejuvenation
+    spellList[168247] = "stun"; -- Wild Growth
 end
 
 local categoryIcon = {
@@ -230,10 +231,12 @@ local function HideIconDR(icon)
 end
 
 local function ShowIconDR(icon)
-    icon:Show();
+    if ( not icon:IsShown() ) then
+        icon:Show();
 
-    local group = icon:GetParent();
-    NS.IconGroup_Insert(group, icon);
+        local group = icon:GetParent();
+        NS.IconGroup_Insert(group, icon);
+    end
 end
 
 local function CreateDRIcon(category)
@@ -286,7 +289,7 @@ local function CreateDRIcon(category)
             end
 
             -- Refresh timer
-            self.cooldown:SetCooldown(GetTime(), ( test and 5 ) or 15);
+            self.cooldown:SetCooldown(GetTime(), 15);
             ShowIconDR(self);
         end
     end)

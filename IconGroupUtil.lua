@@ -21,7 +21,6 @@ end
 
 local function IconGroup_Position(group)
     if #(group.active) == 0 then
-        group:Hide();
         return;
     end
 
@@ -41,9 +40,6 @@ local function IconGroup_Position(group)
             offset = offset + iconSize + group.margin;
         end
     end
-
-    -- Make sure group is shown
-    group:Show();
 end
 
 -- Insertion sort, find the first icon with a lower priority
