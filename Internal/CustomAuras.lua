@@ -196,13 +196,79 @@ end
 
 local testGlowingBuffIcon = false;
 
--- No duration text, only show stacks, and glow when max stacks
-local function CreateStackBuffIcon()
-    
+-- No duration text, only show stacks, and glow when max stacks (if set)
+local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration)
+    local frame = CreateFrame("Frame", nil, UIParent);
+    frame.spellID = spellID;
+    frame.maxStacks = maxStacks;
+    frame:Hide();
+
+    frame.spellID = spellID;
+    frame:SetSize(size, size);
+    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+
+    frame.text = frame:CreateFontString(nil, "ARTWORK");
+    frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
+    frame.text:SetPoint("CENTER", 0, 0);
+
+    frame.texture = frame:CreateTexture();
+    local icon = select(3, GetSpellInfo(spellID));
+    frame.texture:SetTexture(icon);
+    frame.texture:SetAllPoints();
+
+    if duration then
+        frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+        -- Copied from bigdebuffs options
+        frame.cooldown:SetAllPoints();
+        frame.cooldown:SetDrawEdge(false);
+        frame.cooldown:SetAlpha(1);
+        frame.cooldown:SetDrawBling(false);
+        frame.cooldown:SetDrawSwipe(true);
+        frame.cooldown:SetReverse(true);
+
+        -- No numeric display on cooldown
+        frame.cooldown:SetHideCountdownNumbers(true);
+    end
+
+    if maxStacks then
+        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+        frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+        frame.spellActivationAlert:Hide();
+    end
+
+    frame:RegisterEvent("UNIT_AURA");
+    frame:SetScript("OnEvent", function (self, event, ...)
+        local unitTarget = ...;
+        if ( unitTarget == "player" ) then
+            local name, _, count, _, duration, expirationTime = NS.Util_GetUnitBuff(unitTarget, frame.spellID);
+            if ( not name ) then
+                self:Hide();
+                return;
+            end
+
+            if duration and ( duration ~= 0 ) and self.cooldown then
+                self.cooldown:SetCooldown(expirationTime - duration, duration);
+            end
+
+            if ( count > 0 ) then
+                self.text:SetText(count);
+
+                if ( count == self.maxStacks ) then
+                    ShowOverlayGlow(self);
+                else
+                    HideOverlayGlow(self);
+                end
+            end
+
+            self:Show();
+        end
+    end)
 end
 
 if ( class == NS.classId.Druid ) then
-    local treeOfLife = CreateGlowingBuffIcon(117679, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
+    local treeOfLife = CreateGlowingBuffIcon(117679, 40, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
+    local wildSynthesis = CreateStackBuffIcon("Wild Synthesis", 40, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
     
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 40, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
