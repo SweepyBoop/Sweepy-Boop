@@ -51,17 +51,19 @@ local function ApplyFilter()
     PartyFrame:UpdatePaddingAndLayout();
 end
 
-local sortFrame = CreateFrame("Frame");
-sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
-sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-sortFrame:SetScript("OnEvent", function (self, event, ...)
+local function TryApplyFilter()
     if InCombatLockdown() then
         -- If in combat, retry after a few sec
-        C_Timer.After(3, ApplyFilter);
+        C_Timer.After(3, TryApplyFilter);
     else
         ApplyFilter();
     end
-end);
+end
+
+local sortFrame = CreateFrame("Frame");
+sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
+sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+sortFrame:SetScript("OnEvent", TryApplyFilter);
 
 
 
