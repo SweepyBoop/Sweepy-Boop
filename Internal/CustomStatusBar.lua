@@ -48,11 +48,6 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     };
     f.border:ApplyBackdrop();
 
-    f.targetBorder = CreateFrame("Frame", nil, f, "NamePlateFullBorderTemplate");
-    f.targetBorder:SetBorderSizes(2, 2, 2, 2);
-    f.targetBorder:UpdateSizes();
-    f.targetBorder:Hide();
-
     f:Hide(); -- Hide initially
     return f;
 end
@@ -64,12 +59,6 @@ local function UpdateProperties(frame)
     else
         frame:Hide();
         return;
-    end
-
-    if UnitIsUnit(frame.unit, "target") then
-        frame.targetBorder:Show();
-    else
-        frame.targetBorder:Hide();
     end
 
     frame.healthMax = UnitHealthMax(frame.unit);
@@ -95,21 +84,6 @@ local function RegisterHealthEvents(frame)
     frame:RegisterEvent("UNIT_HEALTH");
     frame:RegisterEvent("UNIT_MAXHEALTH");
     frame:SetScript("OnEvent", HealthBarOnEvent);
-
-    -- Handle target border with OnUpdate, since OnEvent has a visible latency
-    frame.timeElapsed = 0;
-    frame:SetScript("OnUpdate", function(self, elapsed)
-        frame.timeElapsed = frame.timeElapsed + elapsed;
-        if self:IsShown() and ( frame.timeElapsed > 0.067 ) then
-            if UnitIsUnit(self.unit, "target") then
-                self.targetBorder:Show();
-            else
-                self.targetBorder:Hide();
-            end
-
-            frame.timeElapsed = 0;
-        end
-    end);
 end
 
 local testPet = nil; -- Player pet
