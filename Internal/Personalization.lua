@@ -14,8 +14,10 @@ FocusFrame:SetAlpha(0)
 local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
 local compactPartyFramePrefix = "CompactPartyFrameMember";
 
-local function ApplyFilter(self, event, ...)
-    print("CompactPartyFrame_RefreshMembers trigger by ", event);
+local function ApplyFilter()
+    if InCombatLockdown() or ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) or ( not IsInGroup() ) or ( GetNumGroupMembers() > 5 ) or ( not HasLoadedCUFProfiles() ) then
+        return;
+    end
 
     if not CompactPartyFrame then
 		return;
@@ -50,10 +52,16 @@ local function ApplyFilter(self, event, ...)
 end
 
 local sortFrame = CreateFrame("Frame");
-sortFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
 sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
 sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-sortFrame:SetScript("OnEvent", ApplyFilter);
+sortFrame:SetScript("OnEvent", function (self, event, ...)
+    if InCombatLockdown() then
+        -- If in combat, retry after a few sec
+        C_Timer.After(3, ApplyFilter);
+    else
+        ApplyFilter();
+    end
+end);
 
 
 
