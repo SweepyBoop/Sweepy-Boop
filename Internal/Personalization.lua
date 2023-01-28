@@ -20,8 +20,8 @@ local function ApplyFilter()
     end
 
     if not CompactPartyFrame then
-		return;
-	end
+        return;
+    end
 
     local units = {};
     for index, token in ipairs(sortGroupFilter) do
