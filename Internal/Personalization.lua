@@ -8,7 +8,54 @@ FocusFrameSpellBar:UnregisterAllEvents()
 -- Hide focus frame
 FocusFrame:SetAlpha(0)
 
--- Setting CRFSort_Group blocks the action bars when switching map
+
+
+-- https://www.curseforge.com/wow/addons/sortgroup
+local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
+local compactPartyFramePrefix = "CompactPartyFrameMember";
+
+local function ApplyFilter(self, event, ...)
+    print("CompactPartyFrame_RefreshMembers trigger by ", event);
+
+    if not CompactPartyFrame then
+		return;
+	end
+
+    local units = {};
+    for index, token in ipairs(sortGroupFilter) do
+        table.insert(units, token);
+    end
+
+    for index, realPartyMemberToken in ipairs(units) do
+        local unitFrame = _G[compactPartyFramePrefix .. index];
+        CompactUnitFrame_ClearWidgetSet(unitFrame);
+        unitFrame:Hide();
+        unitFrame.unitExists = false;
+    end
+
+    local playerDisplayed = false;
+    for index, realPartyMemberToken in ipairs(units) do
+        local unitFrame = _G[compactPartyFramePrefix .. index];
+        local usePlayerOverride = EditModeManagerFrame:ArePartyFramesForcedShown() and
+                                      not UnitExists(realPartyMemberToken);
+        local unitToken = usePlayerOverride and "player" or realPartyMemberToken;
+
+        CompactUnitFrame_SetUnit(unitFrame, unitToken);
+        CompactUnitFrame_SetUpFrame(unitFrame, DefaultCompactUnitFrameSetup);
+        CompactUnitFrame_SetUpdateAllEvent(unitFrame, "GROUP_ROSTER_UPDATE");
+    end
+
+    CompactRaidGroup_UpdateBorder(CompactPartyFrame);
+    PartyFrame:UpdatePaddingAndLayout();
+end
+
+local sortFrame = CreateFrame("Frame");
+sortFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
+sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
+sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+sortFrame:SetScript("OnEvent", ApplyFilter);
+
+--[[ -- Setting CRFSort_Group blocks the action bars when switching map
 -- Easily repro when pressing a-S, something about ForceTaint_Strong
 local CFRSort_PlayerMiddle = function(t1, t2)
     if (not UnitExists(t1)) then
@@ -28,7 +75,7 @@ local CFRSort_PlayerMiddle = function(t1, t2)
     end
 end
 
--- https://www.curseforge.com/wow/addons/sortgroup
+
 
 hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function (...)
     if not CompactPartyFrame then
@@ -37,7 +84,7 @@ hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function (...)
 
     CompactPartyFrame.flowSortFunc = CFRSort_PlayerMiddle;
 	CompactPartyFrame_RefreshMembers();
-end)
+end) ]]
 
 
 
