@@ -5,8 +5,10 @@ local texture = containerFrame:CreateTexture()
 texture:SetAllPoints()
 
 -- Assign a name so we can disable it in OmniCC
+-- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/LossOfControlFrame.xml
 local cooldown = CreateFrame("Cooldown", "CustomLoseControlFrame", containerFrame, "CooldownFrameTemplate")
 cooldown:SetHideCountdownNumbers(true)
+cooldown:SetDrawEdge(true);
 cooldown:SetAllPoints()
 
 containerFrame:RegisterEvent("LOSS_OF_CONTROL_ADDED")
