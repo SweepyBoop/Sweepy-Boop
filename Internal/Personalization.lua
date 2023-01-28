@@ -15,7 +15,7 @@ local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
 local compactPartyFramePrefix = "CompactPartyFrameMember";
 
 local function ApplyFilter()
-    if InCombatLockdown() or ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) or ( not IsInGroup() ) or ( GetNumGroupMembers() > 5 ) or ( not HasLoadedCUFProfiles() ) then
+    if InCombatLockdown() or ( not IsInGroup() ) or ( GetNumGroupMembers() > 5 ) then
         return;
     end
 
@@ -52,6 +52,10 @@ local function ApplyFilter()
 end
 
 local function TryApplyFilter()
+    if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) or ( not HasLoadedCUFProfiles() ) then
+        return;
+    end
+
     if InCombatLockdown() then
         -- If in combat, retry after a few sec
         C_Timer.After(3, TryApplyFilter);
