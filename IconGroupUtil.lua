@@ -43,7 +43,8 @@ local function IconGroup_Position(group)
 end
 
 NS.IconGroup_Insert = function (group, icon)
-    if ( not group ) then return end
+    -- If already showing, do not need to add
+    if ( not group ) or ( icon:IsShown() ) then return end
 
     local active = group.active;
 
@@ -52,9 +53,15 @@ NS.IconGroup_Insert = function (group, icon)
     table.sort(active, function(a, b) return a.priority < b.priority end);
 
     IconGroup_Position(group);
+
+    -- Reposition first, then show, to avoid new icon occluding previously shown ones.
+    icon:Show();
 end
 
 NS.IconGroup_Remove = function (group, icon)
+    -- Hide icon first, then reposition, to avoid occlusion.
+    icon:Hide();
+
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
     end

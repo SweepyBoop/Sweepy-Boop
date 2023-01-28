@@ -225,10 +225,7 @@ local playerGUID = UnitGUID("player");
 
 local function HideIconDR(icon)
     icon.stacks = 0;
-    icon:Hide();
-
-    local group = icon:GetParent();
-    NS.IconGroup_Remove(group, icon);
+    NS.IconGroup_Remove(icon:GetParent(), icon);
 end
 
 local function CreateDRIcon(category)
@@ -277,8 +274,6 @@ NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("incapacitate"));
 NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("disorient"));
 
 local function ShowIconDR(icon)
-    local firstShow = ( not icon:IsShown() );
-
     icon.stacks = icon.stacks + 1;
     -- Set border color
     if icon.stacks == 1 then
@@ -292,13 +287,8 @@ local function ShowIconDR(icon)
     -- Refresh timer
     icon.cooldown:SetCooldown(GetTime(), 15);
 
-    icon:Show();
-
-    -- Add to group and position if showing from hidden state
-    if firstShow then
-        local group = icon:GetParent();
-        NS.IconGroup_Insert(group, icon);
-    end
+    -- Add to the icon group and re-position
+    NS.IconGroup_Insert(icon:GetParent(), icon);
 end
 
 drIconGroup:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
