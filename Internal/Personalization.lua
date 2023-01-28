@@ -55,37 +55,6 @@ sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
 sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 sortFrame:SetScript("OnEvent", ApplyFilter);
 
---[[ -- Setting CRFSort_Group blocks the action bars when switching map
--- Easily repro when pressing a-S, something about ForceTaint_Strong
-local CFRSort_PlayerMiddle = function(t1, t2)
-    if (not UnitExists(t1)) then
-        return false
-    elseif (not UnitExists(t2)) then
-        return true
-    elseif UnitIsUnit(t1, "party1") then
-        return true
-    elseif UnitIsUnit(t2, "party1") then
-        return false
-    elseif UnitIsUnit(t1,"player") then
-        return true
-    elseif UnitIsUnit(t2,"player") then
-        return false
-    else
-        return t1 < t2
-    end
-end
-
-
-
-hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function (...)
-    if not CompactPartyFrame then
-		return;
-	end
-
-    CompactPartyFrame.flowSortFunc = CFRSort_PlayerMiddle;
-	CompactPartyFrame_RefreshMembers();
-end) ]]
-
 
 
 -- Move arena scoreboard on screen top
