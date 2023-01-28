@@ -73,7 +73,7 @@ sortFrame:SetScript("OnEvent", TryApplyFilter);
 
 -- Move arena scoreboard on screen top
 UIWidgetTopCenterContainerFrame:ClearAllPoints()
-UIWidgetTopCenterContainerFrame:SetPoint("TOPRIGHT", Minimap, "BOTTOMRIGHT", 0, -25)
+UIWidgetTopCenterContainerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, -25)
 UIWidgetTopCenterContainerFrame.SetPoint = function() end
 
 ArenaEnemyMatchFrame1PetFrame:SetAlpha(0)
