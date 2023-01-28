@@ -268,11 +268,15 @@ end
 
 local function HideRaidFrameName(frame)
     -- Check if this is a compact party/raid frame
-    for i = 1, 5 do
-        if ( frame == _G["CompactPartyFrameMember" .. i] ) then
-            frame.name:Hide()
-            return true
-        end
+    local frameName = frame:GetName();
+    if ( not frameName ) then return end
+
+    if ( string.sub(frameName, 1, 17) == "CompactPartyFrame" ) then
+        frame.name:Hide()
+        return true;
+    elseif ( string.sub(frameName, 1, 16) == "CompactRaidFrame" ) then
+        -- Don't hide raid names but skip the rest of the logic
+        return true;
     end
 end
 
