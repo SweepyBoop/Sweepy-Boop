@@ -279,7 +279,7 @@ refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
     if test then
         SetupAuraGroup(testGroup, "player");
-    elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) -- This event is only for test mode
+    elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) then -- This event is only for test mode
         for i = 1, NS.MAX_ARENA_SIZE do
             SetupAuraGroup(arenaGroup[i], "arena"..i);
         end
