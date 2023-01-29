@@ -602,7 +602,6 @@ if NS.isTestMode then
     }
     -- Wild Growth
     NS.spellData[48438] = {
-        class = classId.Druid,
         category = OFFENSIVE,
     }
 

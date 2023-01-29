@@ -46,6 +46,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
 
     -- Create duration/cooldown timers as needed
     local spell = frame.spell;
+    print(unit, spellID, spell.cooldown, spell.duration)
     if spell.cooldown then
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
         frame.cooldown:SetAllPoints();
