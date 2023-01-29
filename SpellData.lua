@@ -588,6 +588,15 @@ NS.spellResets = {
     [14914] = {
         [375901] = 1,
     },
+
+    -- Shifting Power
+    [314791] = {
+        [190319] = 12, -- Combustion
+    },
+    -- Fireball
+    [133] = {
+        [190319] = 2, -- Combustion
+    },
 }
 
 if NS.isTestMode then
@@ -634,7 +643,7 @@ if NS.isTestMode then
     
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
-        critResetAmount = 75,
+        critResetAmount = 1,
     }
 
     -- Test totem with "PvP Training Dummy"

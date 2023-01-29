@@ -182,7 +182,7 @@ if test then
 else
     for i = 1, NS.MAX_ARENA_SIZE do
         arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, "arena"..i);
-        SetupAuraGroup()
+        SetupAuraGroup();
     end
 end
 
