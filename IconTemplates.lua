@@ -79,7 +79,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
             local icon = self:GetParent();
             NS.HideOverlayGlow(icon);
             if icon.cooldown then
-                icon.cooldown:SetAlpha(1);
+                icon.cooldown:Show();
             end
         end)
     end
@@ -100,6 +100,21 @@ end
 NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
 
+    -- If there is a cooldown, start the cooldown timer
+    if icon.cooldown then
+        -- Check if using second charge
+        if icon:IsShown() and spell.charges and ( GetTime() >= icon.chargeExpire ) then
+            icon.text:SetText("");
+            icon.chargeExpire = GetTime() + spell.cooldown;
+        else
+            -- Use default charge
+            icon.cooldown:SetCooldown(GetTime(), spell.cooldown);
+            if spell.charges then
+                icon.text:SetText("1");
+            end
+        end
+    end
+
     -- If there is a duration, start the duration timer
     if icon.duration then
         -- Decide duration
@@ -115,24 +130,9 @@ NS.StartWeakAuraIcon = function (icon)
 
         icon.duration:SetCooldown(GetTime(), duration);
         if icon.cooldown then
-            icon.cooldown:SetAlpha(0); -- Hide the cooldown timer until duration is over
+            icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
         end
         NS.ShowOverlayGlow(icon);
-    end
-
-    -- If there is a cooldown, start the cooldown timer
-    if icon.cooldown then
-        -- Check if using second charge
-        if icon:IsShown() and spell.charges and ( GetTime() >= icon.chargeExpire ) then
-            icon.text:SetText("");
-            icon.chargeExpire = GetTime() + spell.cooldown;
-        else
-            -- Use default charge
-            icon.cooldown:SetCooldown(GetTime(), spell.cooldown);
-            if spell.charges then
-                icon.text:SetText("1");
-            end
-        end
     end
 
     if icon.group then
