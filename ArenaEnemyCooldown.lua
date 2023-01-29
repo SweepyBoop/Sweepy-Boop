@@ -22,10 +22,16 @@ local resetByCrit = {
     1459, -- Arcane Intellect (test)
 };
 
-for _, spell in pairs(spellData) do
+for spellID, spell in pairs(spellData) do
+    -- Fill default priority
     spell.priority = spell.index;
     if ( not spell.priority ) then
         spell.priority = 100;
+    end
+
+    -- Validate class, class is allowed to be missing if trackDest (since destGUID can be any class)
+    if ( not spell.class ) and ( not spell.trackDest ) then
+        print("Invalid spellID:", spellID);
     end
 end
 
