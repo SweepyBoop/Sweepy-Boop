@@ -20,11 +20,17 @@ for i = 1, NS.MAX_ARENA_SIZE do
 end
 
 local function SetupAuraGroup(group, unit)
-    NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, 1126, 32, true));
+    local class = select(3, UnitClass(unit));
+    for spellID, spell in pairs(NS.spellData) do
+        if ( spell.class == class ) then
+            NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true));
+        end
+    end
 end
 
 if test then
     local testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions);
+    SetupAuraGroup(testGroup, "player");
 else
 
 end
