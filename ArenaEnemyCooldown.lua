@@ -247,6 +247,7 @@ local function SetupAuraGroup(group, unit)
 
             if enabled then
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                print(unit, spellID);
             end
         end
     end
@@ -262,12 +263,14 @@ end
 local testGroup = nil;
 local arenaGroup = {};
 if test then
-    testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, "player");
-    SetupAuraGroup(testGroup, "player");
+    local unitId = "player";
+    testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, unitId);
+    SetupAuraGroup(testGroup, unitId);
 else
     for i = 1, NS.MAX_ARENA_SIZE do
-        arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, "arena"..i);
-        SetupAuraGroup(arenaGroup[i], "arena"..i);
+        local unitId = "arena" .. i;
+        arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, unitId);
+        SetupAuraGroup(arenaGroup[i], unitId);
     end
 end
 
