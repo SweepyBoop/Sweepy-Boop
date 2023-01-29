@@ -116,7 +116,9 @@ NS.StartWeakAuraIcon = function (icon)
         icon.cooldown:SetCooldown(GetTime(), cooldownDuration);
     end
 
-    NS.IconGroup_Insert(icon:GetParent(), icon);
+    if icon.group then
+        NS.IconGroup_Insert(icon:GetParent(), icon);
+    end
 end
 
 NS.RefreshWeakAuraDuration = function (icon)
