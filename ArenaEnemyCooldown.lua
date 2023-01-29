@@ -224,9 +224,21 @@ local function SetupAuraGroup(group, unit)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
 
-    -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check class and populate icons
-    local class = select(3, UnitClass(unit));
+    -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
+    local class;
+    if ( unit == "player" ) then
+        class = select(3, UnitClass(unit));
+    else
+        -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
+        local index = string.sub(unit, -1, -1);
+        local specID = GetArenaOpponentSpec(index);
+        if specID and ( specID > 0 ) then
+            class = select(6, GetSpecializationInfoByID(specID));
+        end
+    end
     if ( not class ) then return end
+
+    print(class);
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
