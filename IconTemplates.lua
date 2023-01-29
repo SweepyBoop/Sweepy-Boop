@@ -82,22 +82,22 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
             frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, -5);
         end
     end
-    --if spell.duration then
-        frame.duration = CreateFrame("Cooldown", "BoopHideTimerAuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
-        frame.duration:SetAllPoints();
-        frame.duration:SetDrawEdge(false);
-        frame.duration:SetDrawBling(false);
-        frame.duration:SetDrawSwipe(true);
-        frame.duration:SetReverse(true);
-        frame.duration:SetAlpha(0);
+    
+    -- For now, always create a duration timer, if there is no duration, show 3s glow as reminder
+    frame.duration = CreateFrame("Cooldown", "BoopHideTimerAuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
+    frame.duration:SetAllPoints();
+    frame.duration:SetDrawEdge(false);
+    frame.duration:SetDrawBling(false);
+    frame.duration:SetDrawSwipe(true);
+    frame.duration:SetReverse(true);
+    frame.duration:SetAlpha(0);
 
-        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
-        frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
-        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
-        frame.spellActivationAlert:Hide();
+    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+    frame.spellActivationAlert:Hide();
 
-        frame.duration:SetScript("OnCooldownDone", OnDurationTimerFinished);
-    --end
+    frame.duration:SetScript("OnCooldownDone", OnDurationTimerFinished);
 
     return frame;
 end
