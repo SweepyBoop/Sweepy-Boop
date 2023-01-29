@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = true
+NS.isTestMode = false
 
 NS.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
