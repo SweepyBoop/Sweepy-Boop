@@ -424,20 +424,20 @@ NS.spellData = {
     -- Offensive
     -- Mindgames
     [375901] = {
-        class = classId.Priest,
+        class = "PRIEST",
         category = OFFENSIVE,
         cooldown = 45,
     },
     -- Mindbender (Idol of Y'Shaarj)
     [200174] = {
-        class = classId.Priest,
+        class = "PRIEST",
         category = OFFENSIVE,
         duration = 15,
         cooldown = 60,
     },
     -- Psyfiend
     [211522] = {
-        class = classId.Priest,
+        class = "PRIEST",
         category = OFFENSIVE_PET,
         spellID = 211522,
         duration = 12,
@@ -454,19 +454,19 @@ NS.spellData = {
     -- Offensive
     -- Shadow Blades
     [121471] = {
-        class = classId.Rogue,
+        class = "ROGUE",
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Adrenaline Rush
     [13750] = {
-        class = classId.Rogue,
+        class = "ROGUE",
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Sepsis
     [385408] = {
-        class = classId.Rogue,
+        class = "ROGUE",
         category = OFFENSIVE,
         duration = 10,
         cooldown = 90,
@@ -474,7 +474,7 @@ NS.spellData = {
     },
     -- Death Mark
     [360194] = {
-        class = classId.Rogue,
+        class = "ROGUE",
         category = OFFENSIVE,
         duration = 16,
         cooldown = 120,
@@ -483,20 +483,20 @@ NS.spellData = {
     },
     -- Exsanguinate
     [200806] = {
-        class = classId.Rogue,
+        class = "ROGUE",
         category = OFFENSIVE,
         cooldown = 180,
         index = 2,
     },
     -- Kingsbane
     [385627] = {
-        class = classId.Rogue,
+        class = "ROGUE",
         category = OFFENSIVE_DURATION,
         duration = 14,
     },
     -- Echoing Reprimand
     [323560] = {
-        class = classId.Rogue,
+        class = "ROGUE",
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
     },
@@ -505,13 +505,13 @@ NS.spellData = {
     -- Offensive
     -- Ascendance (Enhancement)
     [114051] = {
-        class = classId.Shaman,
+        class = "SHAMAN",
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Doom Winds
     [384352] = {
-        class = classId.Shaman,
+        class = "SHAMAN",
         category = OFFENSIVE,
         duration = 8,
         cooldown = 60,
@@ -519,7 +519,7 @@ NS.spellData = {
     },
     -- Stormkeeper
     [191634] = {
-        class = classId.Shaman,
+        class = "SHAMAN",
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
@@ -532,7 +532,7 @@ NS.spellData = {
     },
     -- Fire Elemental
     [198067] = {
-        class = classId.Shaman,
+        class = "SHAMAN",
         category = OFFENSIVE,
         duration = 30,
         cooldown = 150,
@@ -543,21 +543,21 @@ NS.spellData = {
     -- Affliction
     -- Summon Darkglare
     [205180] = {
-        class = classId.Warlock,
+        class = "WARLOCK",
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Destruction
     -- Summon Infernal
     [1122] = {
-        class = classId.Warlock,
+        class = "WARLOCK",
         category = OFFENSIVE_DURATION,
         duration = 30,
     },
     -- Demonology
     -- Nether Portal
     [267217] = {
-        class = classId.Warlock,
+        class = "WARLOCK",
         category = OFFENSIVE,
         duration = 15, -- Show Pit Lord nameplate
         cooldown = 180,
@@ -565,25 +565,25 @@ NS.spellData = {
     },
     -- Summon Demonic Tyrant
     [265187] = {
-        class = classId.Warlock,
+        class = "WARLOCK",
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Fel Obelisk
     [353601] = {
-        class = classId.Warlock,
+        class = "WARLOCK",
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Grimoire: Felguard
     [111898] = {
-        class = classId.Warlock,
+        class = "WARLOCK",
         category = OFFENSIVE_DURATION,
         duration = 17,
     },
     -- Gul'dan's Ambition (Pit Lord)
     [387578] = {
-        class = classId.Warlock,
+        class = "WARLOCK",
         duration = 10,
     },
 
@@ -591,25 +591,25 @@ NS.spellData = {
     -- Offensive
     -- Warbreaker
     [262161] = {
-        class = classId.Warrior,
+        class = "WARRIOR",
         category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Colossus Smash
     [167105] = {
-        class = classId.Warrior,
+        class = "WARRIOR",
         category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Avatar
     [107574] = {
-        class = classId.Warrior,
+        class = "WARRIOR",
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Recklessness
     [1719] = {
-        class = classId.Warrior,
+        class = "WARRIOR",
         category = OFFENSIVE_SPECIAL,
         cooldown = 90,
         duration = 16,
