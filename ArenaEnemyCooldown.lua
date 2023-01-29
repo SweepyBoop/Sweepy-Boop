@@ -7,6 +7,7 @@ local spellResets = NS.spellResets;
 
 local npcToSpellID = {
     [101398] = 211522,
+    [62982] = 200174,
 };
 
 local resetByPower = {
@@ -110,12 +111,10 @@ local function ProcessCombatLogEvent(self, event, ...)
         end
         return;
     elseif ( subEvent == "SPELL_SUMMON" ) and ( guid == sourceGUID ) then
+        -- We don't actually show the icon from SPELL_SUMMON, just create the mapping of mob GUID -> spellID
         local npcId = NS.GetNpcIdFromGuid(destGUID);
         local summonSpellId = npcToSpellID[npcId];
-        if summonSpellId and self.icons[summonSpellId] then
-            self.npcMap[destGUID] = summonSpellId;
-            NS.StartWeakAuraIcon(self.icons[summonSpellId]);
-        end
+        self.npcMap[destGUID] = summonSpellId;
         return;
     end
         
