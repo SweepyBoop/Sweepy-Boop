@@ -98,10 +98,6 @@ NS.IconGroup_CreateIcon = function (group, icon, index)
     group.icons[index] = icon;
 end
 
-
-
--- TODO: wipe icons (unregister events, hide, set to nil)
--- TODO: create icons based on class and spec
 NS.IconGroup_Wipe = function (group)
     for _, icon in pairs(group.icons) do
         icon.tex:SetAlpha(0);
