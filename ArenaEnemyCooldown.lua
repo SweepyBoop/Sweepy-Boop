@@ -102,7 +102,7 @@ local function ProcessCombatLogEvent(self, event, ...)
     -- Check spell dismiss
     if ( subEvent == "SPELL_AURA_REMOVED" ) or ( subEvent == "UNIT_DIED" ) then
         if self.activeMap[spellId] then
-            NS.ResetWeakAuraCooldown(self.activeMap[spellId]);
+            NS.ResetWeakAuraDuration(self.activeMap[spellId]);
             return;
         end
     elseif ( subEvent == "UNIT_DIED" ) then

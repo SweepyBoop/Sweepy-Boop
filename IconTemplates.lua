@@ -30,6 +30,18 @@ NS.HideOverlayGlow = function (button)
     end
 end
 
+local function OnDurationTimerFinished(self)
+    local icon = self:GetParent();
+    NS.HideOverlayGlow(icon);
+    if icon.cooldown then
+        icon.cooldown:Show();
+    else
+        if icon.group then
+            NS.IconGroup_Remove(icon:GetParent(), icon);
+        end
+    end
+end
+
 NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide();
@@ -54,6 +66,12 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
+        frame.cooldown:SetScript("OnCooldownDone", function (self)
+            local icon = self:GetParent();
+            if icon.group then
+                NS.IconGroup_Remove(icon:GetParent(), icon);
+            end
+        end)
 
         if spell.charges then
             spell.chargeExpire = GetTime(); -- Set charge expirationTime
@@ -76,24 +94,8 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
         frame.spellActivationAlert:Hide();
 
-        frame.duration:SetScript("OnCooldownDone", function (self)
-            local icon = self:GetParent();
-            NS.HideOverlayGlow(icon);
-            if icon.cooldown then
-                icon.cooldown:Show();
-            end
-        end)
+        frame.duration:SetScript("OnCooldownDone", OnDurationTimerFinished);
     end
-
-    -- If there is a cooldown timer, always let it hide the icon.
-    -- Otherwise the icon is duration only, let duration timer hide the icon.
-    frame.hideIconTimer = frame.cooldown or frame.duration;
-    frame.hideIconTimer:SetScript("OnCooldownDone", function (self)
-        local icon = self:GetParent();
-        if icon.group then
-            NS.IconGroup_Remove(icon:GetParent(), icon);
-        end
-    end)
 
     return frame;
 end
@@ -165,4 +167,12 @@ NS.ResetWeakAuraCooldown = function (icon, amount)
             icon.cooldown:SetCooldown(start, duration);
         end
     end
+end
+
+-- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
+NS.ResetWeakAuraDuration = function (icon)
+    if ( not icon.duration ) then return end
+
+    icon.duration:SetCooldown(0, 0);
+    OnDurationTimerFinished(icon.duration);
 end
