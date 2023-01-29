@@ -2,6 +2,14 @@ local _, NS = ...;
 
 local test = true;
 
+local spellData = NS.spellData;
+
+for _, spell in pairs(spellData) do
+    if ( not spell.priority ) then
+        spell.priority = 100;
+    end
+end
+
 local growOptions = {
     direction = "RIGHT",
     anchor = "LEFT",
@@ -41,7 +49,7 @@ local function SetupAuraGroup(group, unit)
 
     local class = select(3, UnitClass(unit));
     -- Pre-populate icons
-    for spellID, spell in pairs(NS.spellData) do
+    for spellID, spell in pairs(spellData) do
         if ( spell.class == class ) then
             NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true), spellID);
         end

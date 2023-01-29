@@ -37,6 +37,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     frame.unit = unit;
     frame.spellID = spellID;
     frame.spell = NS.spellData[spellID];
+    frame.priority = frame.spell.priority;
     frame.group = group;
     frame:SetSize(size, size);
 
