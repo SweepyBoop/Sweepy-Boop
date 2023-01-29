@@ -401,7 +401,6 @@ NS.spellData = {
     },
     -- Blessing of Summer
     [388007] = {
-        class = classId.Paladin,
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
@@ -445,7 +444,6 @@ NS.spellData = {
     },
     -- Power Infusion
     [10060] = {
-        class = classId.Priest,
         category = OFFENSIVE_DURATION,
         trackDest = true,
         trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
@@ -527,7 +525,6 @@ NS.spellData = {
     },
     -- Skyfury
     [208963] = {
-        class = classId.Shaman,
         duration = 15,
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
