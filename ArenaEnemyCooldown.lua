@@ -210,15 +210,45 @@ else
     end
 end
 
+local function GetUnitSpec(unit)
+    if ( unit == "player" ) then
+        local currentSpec = GetSpecialization();
+        return GetSpecializationInfo(currentSpec);
+    else
+        local arenaIndex = string.sub(unit, -1, -1);
+        return GetArenaOpponentSpec(index);
+    end
+end
+
 local function SetupAuraGroup(group, unit)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
 
+    if ( not UnitExists(unit) ) then return end
+
     local class = select(3, UnitClass(unit));
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
-        if ( spell.class == class ) then
-            NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+        -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
+        if ( not spell.class ) or ( spell.class == class ) then
+            local enabled = true;
+            -- Does this spell filter by spec?
+            if spell.spec then
+                local specEnabled = false;
+                local spec = GetUnitSpec(unit);
+                for i = 1, #(spell.spec) do
+                    print(spellID, spec)
+                    if ( spec == spell.spec[i] ) then
+                        specEnabled = true;
+                        break;
+                    end
+                end
+                enabled = specEnabled;
+            end
+
+            if enabled then
+                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+            end
         end
     end
 
@@ -245,6 +275,7 @@ end
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
+refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
     if test then
         SetupAuraGroup(testGroup, "player");
