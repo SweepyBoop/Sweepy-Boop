@@ -258,6 +258,7 @@ NS.spellData = {
     -- Ice Form (Skipped, duration unstable)
     -- Combustion
     [190319] = {
+        class = classId.Mage,
         category = OFFENSIVE_SPECIAL,
         duration = 12,
         cooldown = 120,
@@ -271,6 +272,7 @@ NS.spellData = {
     
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
+        critResetAmount = 20,
     },
     -- Icy Veins
     [12472] = {

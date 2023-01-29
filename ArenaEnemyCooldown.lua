@@ -82,11 +82,17 @@ local function ProcessCombatLogEvent(self, event, ...)
     end
 
     -- Check resets by crit damage (e.g., combustion)
-    if ( subEvent == "SPELL_DAMAGE" ) and ( sourceGUID == guid ) then
+    if ( subEvent == "SPELL_DAMAGE" ) and critical and ( sourceGUID == guid ) then
         for i = 1, #resetByCrit do
             local reset = resetByCrit[i];
             if self.activeMap[reset] then
-                
+                local spells = spellData[reset].critResets;
+                for i = 1, #spells do
+                    if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
+                        NS.ResetWeakAuraCooldown(self.activeMap[reset], spellData[reset].critResetAmount);
+                    end
+                end
+                return;
             end
         end
     end
