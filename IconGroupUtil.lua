@@ -81,10 +81,14 @@ NS.IconGroup_Remove = function (group, icon)
     end
 end
 
-NS.IconGroup_CreateIcon = function (group, icon)
+NS.IconGroup_CreateIcon = function (group, icon, index)
     icon:SetParent(group);
-
-    table.insert(group.icons, icon);
+    
+    if index then
+        group.icons[index] = icon;
+    else
+        table.insert(group.icons, icon);
+    end
 end
 
 
@@ -92,8 +96,7 @@ end
 -- TODO: wipe icons (unregister events, hide, set to nil)
 -- TODO: create icons based on class and spec
 NS.IconGroup_Wipe = function (group)
-    for i = 1, #(group.icons) do
-        local icon = group.icons[i];
+    for _, icon in pairs(group.icons) do
         icon.tex:SetAlpha(0);
         if icon.cooldown then
             icon.cooldown:SetCooldown(0, 0);

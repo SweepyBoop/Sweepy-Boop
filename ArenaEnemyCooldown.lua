@@ -19,13 +19,19 @@ for i = 1, NS.MAX_ARENA_SIZE do
     };
 end
 
-local function ProcessCombatLogEvent()
-    
+local function ProcessCombatLogEvent(self, event, ...)
+    local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, spellSchool, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+    if ( subEvent == "SPELL_CAST_SUCCESS" ) then
+        -- Find the icon to use
+        if self.icons[spellId] then
+            NS.StartWeakAuraIcon(self.icons[spellId]);
+        end
+    end
 end
 
 local function ArenaEventHandler(self, event, ...)
     if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
-        
+        ProcessCombatLogEvent(self, event, ...);
     end
 end
 
@@ -37,7 +43,7 @@ local function SetupAuraGroup(group, unit)
     -- Pre-populate icons
     for spellID, spell in pairs(NS.spellData) do
         if ( spell.class == class ) then
-            NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true));
+            NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true), spellID);
         end
     end
 
