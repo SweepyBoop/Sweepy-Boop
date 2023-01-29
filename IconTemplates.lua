@@ -76,10 +76,10 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
         if spell.charges then
-            spell.chargeExpire = GetTime(); -- Set charge expirationTime
+            frame.cooldown.chargeExpire = GetTime(); -- Set charge expirationTime
             frame.text = frame:CreateFontString(nil, "ARTWORK");
             frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
-            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, -5);
+            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -8, -8);
         end
     end
     
@@ -108,9 +108,9 @@ NS.StartWeakAuraIcon = function (icon)
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
         -- Check if using second charge
-        if icon:IsShown() and spell.charges and ( GetTime() >= icon.chargeExpire ) then
+        if icon:IsShown() and spell.charges and ( GetTime() >= icon.cooldown.chargeExpire ) then
             icon.text:SetText("");
-            icon.chargeExpire = GetTime() + spell.cooldown;
+            icon.cooldown.chargeExpire = GetTime() + spell.cooldown;
         else
             -- Use default charge
             icon.cooldown.start = GetTime();
