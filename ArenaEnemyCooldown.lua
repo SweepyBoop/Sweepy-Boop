@@ -47,8 +47,8 @@ for i = 1, NS.MAX_ARENA_SIZE do
 end
 
 local function ValidateUnit(self)
-     -- Update icon group guid
-     if ( not self.unitGUID ) then
+    -- Update icon group guid
+    if ( not self.unitGUID ) then
         self.unitGUID = UnitGUID(self.unit);
     end
 
