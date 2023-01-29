@@ -79,7 +79,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
             spell.chargeExpire = GetTime(); -- Set charge expirationTime
             frame.text = frame:CreateFontString(nil, "ARTWORK");
             frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
-            frame.text:SetPoint("CENTER", frame, "BOTTOMRIGHT", 0, 0);
+            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -5, -5);
         end
     end
     --if spell.duration then

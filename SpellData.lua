@@ -129,6 +129,7 @@ NS.spellData = {
     -- DK
     -- Abomination Limb
     [383269] = {
+        class = classId.DK,
         category = OFFENSIVE,
         cooldown = 120,
         duration = 12,
@@ -136,12 +137,14 @@ NS.spellData = {
     },
     -- Empower Rune Weapon
     [47568] = {
+        class = classId.DK,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Offensive (Unholy)
     -- Summon Gargoyle
     [49206] = {
+        class = classId.DK,
         category = OFFENSIVE,
         cooldown = 180,
         duration = 25,
@@ -149,22 +152,26 @@ NS.spellData = {
     },
     -- Unholy Assult
     [207289] = {
+        class = classId.DK,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Apocalypse
     [275699] = {
+        class = classId.DK,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Offensive (Frost)
     -- Pillar of Frost
     [51271] = {
+        class = classId.DK,
         category = OFFENSIVE_DURATION,
         duration = 12,
     },
     -- Chill Streak
     [305392] = {
+        class = classId.DK,
         category = OFFENSIVE_DURATION,
         duration = 4,
         index = 2,
@@ -175,12 +182,14 @@ NS.spellData = {
     -- Offensive
     -- The Hunt
     [370965] = {
+        class = classId.DemonHunter,
         category = OFFENSIVE,
         cooldown = 90,
         index = 1,
     },
     -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
+        class = classId.DemonHunter,
         category = OFFENSIVE_DURATION,
         trackEvent = NS.UNIT_SPELLCAST_SUCCEEDED,
         duration = 24,
@@ -190,27 +199,32 @@ NS.spellData = {
     -- Offensive
     -- Berserk
     [106951] = {
+        class = classId.Druid,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Incarnation: Avatar of Ashamane
     [102543] = {
+        class = classId.Druid,
         category = OFFENSIVE_DURATION,
         duration = 30,
     },
     -- Celestial Alignment
     [194223] = {
+        class = classId.Druid,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Incarnation: Chosen of Elune (spellID has not changed in DF)
     [102560] = {
+        class = classId.Druid,
         category = OFFENSIVE,
         duration = 30,
         cooldown = 180,
     },
     -- Convoke the Spirits
     [391528] = {
+        class = classId.Druid,
         category = OFFENSIVE,
         cooldown = 60,
         spec = { specID.BALANCE, specID.FERAL },
@@ -218,6 +232,7 @@ NS.spellData = {
     },
     -- Feral Frenzy
     [274837] = {
+        class = classId.Druid,
         category = OFFENSIVE,
         cooldown = 45,
     },
@@ -225,12 +240,14 @@ NS.spellData = {
     -- Evoker
     -- Tip the Scales
     [370553] = {
+        class = classId.Evoker,
         category = OFFENSIVE,
         spec = { specID.DEVASTATION },
         cooldown = 120,
     },
     -- Dragon Rage
     [375087] = {
+        class = classId.Evoker,
         category = OFFENSIVE_SPECIAL,
         duration = 14,
         cooldown = 120,
@@ -241,21 +258,25 @@ NS.spellData = {
     -- Offensive
     -- Bestial Wrath
     [19574] = {
+        class = classId.Hunter,
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Coordinated Assult
     [360952] = {
+        class = classId.Hunter,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Trueshot
     [288613] = {
+        class = classId.Hunter,
         category = OFFENSIVE_DURATION,
         duration = 18,
     },
     -- Call of the Wild
     [359844] = {
+        class = classId.Hunter,
         category = OFFENSIVE,
         duration = 20,
         cooldown = 180,
@@ -285,18 +306,21 @@ NS.spellData = {
     },
     -- Icy Veins
     [12472] = {
+        class = classId.Mage,
         category = OFFENSIVE_DURATION,
         duration = 25,
         extend = true,
     },
     -- Ice Form
     [198144] = {
+        class = classId.Mage,
         category = OFFENSIVE_DURATION,
         duration = 12,
         extend = true,
     },
     -- Arcane Surge
     [365350] = {
+        class = classId.Mage,
         category = OFFENSIVE,
         cooldown = 90,
     },
@@ -305,6 +329,7 @@ NS.spellData = {
     -- Offensive
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
+        class = classId.Monk,
         category = OFFENSIVE_SPECIAL,
         duration = 15,
         cooldown = 90,
@@ -315,6 +340,7 @@ NS.spellData = {
     },
     -- Serenity
     [152173] = {
+        class = classId.Monk,
         category = OFFENSIVE_SPECIAL,
         duration = 12,
         cooldown = 90,
@@ -324,17 +350,20 @@ NS.spellData = {
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
+        class = classId.Monk,
         category = OFFENSIVE_DURATION,
         duration = 24,
     },
     -- Bonedust Brew
     [386276] = {
+        class = classId.Monk,
         category = OFFENSIVE_DURATION,
         duration = 10,
         spec = { specID.WW },
     },
     -- Dance of Chi-ji
     [325202] = {
+        class = classId.Monk,
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
     },
@@ -343,6 +372,7 @@ NS.spellData = {
     -- Offensive
     -- Avenging Wrath
     [31884] = {
+        class = classId.Paladin,
         category = OFFENSIVE,
         duration = 20,
         cooldown = 120,
@@ -353,6 +383,7 @@ NS.spellData = {
     },
     -- Crusade
     [231895] = {
+        class = classId.Paladin,
         category = OFFENSIVE,
         duration = 25,
         cooldown = 120,
@@ -363,12 +394,14 @@ NS.spellData = {
     },
     -- Divine Toll
     [375576] = {
+        class = classId.Paladin,
         category = OFFENSIVE,
         spec = { specID.RET },
         cooldown = 60,
     },
     -- Blessing of Summer
     [388007] = {
+        class = classId.Paladin,
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
@@ -376,12 +409,14 @@ NS.spellData = {
     },
     -- Seraphim
     [152262] = {
+        class = classId.Paladin,
         category = OFFENSIVE_DURATION,
         duration = 15,
         spec = { specID.RET },
     },
     -- Final Reckoning
     [343721] = {
+        class = classId.Paladin,
         category = OFFENSIVE_DURATION,
         duration = 8,
     },
@@ -410,6 +445,7 @@ NS.spellData = {
     },
     -- Power Infusion
     [10060] = {
+        class = classId.Priest,
         category = OFFENSIVE_DURATION,
         trackDest = true,
         trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
@@ -420,16 +456,19 @@ NS.spellData = {
     -- Offensive
     -- Shadow Blades
     [121471] = {
+        class = classId.Rogue,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Adrenaline Rush
     [13750] = {
+        class = classId.Rogue,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Sepsis
     [385408] = {
+        class = classId.Rogue,
         category = OFFENSIVE,
         duration = 10,
         cooldown = 90,
@@ -437,6 +476,7 @@ NS.spellData = {
     },
     -- Death Mark
     [360194] = {
+        class = classId.Rogue,
         category = OFFENSIVE,
         duration = 16,
         cooldown = 120,
@@ -445,17 +485,20 @@ NS.spellData = {
     },
     -- Exsanguinate
     [200806] = {
+        class = classId.Rogue,
         category = OFFENSIVE,
         cooldown = 180,
         index = 2,
     },
     -- Kingsbane
     [385627] = {
+        class = classId.Rogue,
         category = OFFENSIVE_DURATION,
         duration = 14,
     },
     -- Echoing Reprimand
     [323560] = {
+        class = classId.Rogue,
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
     },
@@ -464,11 +507,13 @@ NS.spellData = {
     -- Offensive
     -- Ascendance (Enhancement)
     [114051] = {
+        class = classId.Shaman,
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Doom Winds
     [384352] = {
+        class = classId.Shaman,
         category = OFFENSIVE,
         duration = 8,
         cooldown = 60,
@@ -476,17 +521,20 @@ NS.spellData = {
     },
     -- Stormkeeper
     [191634] = {
+        class = classId.Shaman,
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Skyfury
     [208963] = {
+        class = classId.Shaman,
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
     },
     -- Fire Elemental
     [198067] = {
+        class = classId.Shaman,
         category = OFFENSIVE,
         duration = 30,
         cooldown = 150,
@@ -497,18 +545,21 @@ NS.spellData = {
     -- Affliction
     -- Summon Darkglare
     [205180] = {
+        class = classId.Warlock,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Destruction
     -- Summon Infernal
     [1122] = {
+        class = classId.Warlock,
         category = OFFENSIVE_DURATION,
         duration = 30,
     },
     -- Demonology
     -- Nether Portal
     [267217] = {
+        class = classId.Warlock,
         category = OFFENSIVE,
         duration = 15, -- Show Pit Lord nameplate
         cooldown = 180,
@@ -516,21 +567,25 @@ NS.spellData = {
     },
     -- Summon Demonic Tyrant
     [265187] = {
+        class = classId.Warlock,
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Fel Obelisk
     [353601] = {
+        class = classId.Warlock,
         category = OFFENSIVE_DURATION,
         duration = 15,
     },
     -- Grimoire: Felguard
     [111898] = {
+        class = classId.Warlock,
         category = OFFENSIVE_DURATION,
         duration = 17,
     },
     -- Gul'dan's Ambition (Pit Lord)
     [196111] = {
+        class = classId.Warlock,
         category = OFFENSIVE_PET,
         duration = 10,
         spellID = 387578,
@@ -540,21 +595,25 @@ NS.spellData = {
     -- Offensive
     -- Warbreaker
     [262161] = {
+        class = classId.Warrior,
         category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Colossus Smash
     [167105] = {
+        class = classId.Warrior,
         category = OFFENSIVE_DURATION,
         duration = 10,
     },
     -- Avatar
     [107574] = {
+        class = classId.Warrior,
         category = OFFENSIVE_DURATION,
         duration = 20,
     },
     -- Recklessness
     [1719] = {
+        class = classId.Warrior,
         category = OFFENSIVE_SPECIAL,
         cooldown = 90,
         duration = 16,
