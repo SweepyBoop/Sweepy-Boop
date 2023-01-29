@@ -83,12 +83,7 @@ end
 
 NS.IconGroup_CreateIcon = function (group, icon, index)
     icon:SetParent(group);
-    
-    if index then
-        group.icons[index] = icon;
-    else
-        table.insert(group.icons, icon);
-    end
+    group.icons[index] = icon;
 end
 
 
