@@ -6,8 +6,8 @@ SweepyBoop.xml
 
 # Publish
 SpellData.lua
-IconGroupUtil.lua
 UnitInfoHelpers.lua
+IconGroupUtil.lua
 # TODO: implement without WA
 UtilsWA.lua
 ClassAndPetIcons.lua
