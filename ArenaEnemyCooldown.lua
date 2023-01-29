@@ -3,8 +3,20 @@ local _, NS = ...;
 local test = true;
 
 local spellData = NS.spellData;
+local spellResets = NS.spellResets;
+
+local resetByPower = {
+    137639, -- Storm, Earth, and Fire
+    152173, -- Serenity
+    1719, -- Recklessness
+};
+
+local resetByCrit = {
+    190319, -- Combustion
+};
 
 for _, spell in pairs(spellData) do
+    spell.priority = spell.index;
     if ( not spell.priority ) then
         spell.priority = 100;
     end
@@ -27,13 +39,83 @@ for i = 1, NS.MAX_ARENA_SIZE do
     };
 end
 
+local function ValidateUnit(self)
+     -- Update icon group guid
+     if ( not self.unitGUID ) then
+        self.unitGUID = UnitGUID(self.unit);
+    end
+
+    -- If unit does not exist, will return nil
+    return self.unitGUID;
+end
+
 local function ProcessCombatLogEvent(self, event, ...)
+    local guid = ValidateUnit(self);
+    if ( not guid ) then
+        return;
+    end
+
     local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, spellSchool, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-    if ( subEvent == "SPELL_CAST_SUCCESS" ) then
-        -- Find the icon to use
-        if self.icons[spellId] then
-            NS.StartWeakAuraIcon(self.icons[spellId]);
+
+    -- Check resets by spell cast
+    if ( subEvent == "SPELL_CAST_SUCCESS" ) and ( sourceGUID == guid ) then
+        -- Check reset by power
+        for i = 1, #resetByPower do
+            local reset = resetByPower[i];
+            if self.activeMap[reset] then
+                local cost = GetSpellPowerCost(spellId);
+                if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
+                    local amount = spellData[reset].reduce_amount * cost[1].cost;
+                    NS.ResetWeakAuraCooldown(self.activeMap[reset], amount);
+                end
+            end
         end
+
+        -- Check regular resets
+        if spellResets[spellId] then
+            for resetSpellID, amount in pairs(spellResets[spellId]) do
+                if self.activeMap[resetSpellID] then
+                    NS.ResetWeakAuraCooldown(self.activeMap[reset], amount);
+                end
+            end
+        end
+    end
+
+    -- Check resets by crit damage (e.g., combustion)
+    if ( subEvent == "SPELL_DAMAGE" ) and ( sourceGUID == guid ) then
+        for i = 1, #resetByCrit do
+            local reset = resetByCrit[i];
+            if self.activeMap[reset] then
+                
+            end
+        end
+    end
+        
+    -- Validate spell
+    if ( not spellData[spellId] ) then return end
+    local spell = spellData[spellId];
+
+    -- Validate unit
+    local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
+    if ( spellGUID ~= guid ) then return end
+
+    -- Check spell dismiss
+    if ( subEvent == "SPELL_AURA_REMOVED" ) or ( subEvent == "UNIT_DIED" ) then
+        if self.activeMap[spellId] then
+            NS.ResetWeakAuraCooldown(self.activeMap[spellId]);
+            return;
+        end
+    elseif ( subEvent == "UNIT_DIED" ) then
+
+    end
+
+    -- Validate subEvent
+    if spell.trackEvent and ( subEvent ~= spell.trackEvent ) then return end
+    if ( not spell.trackEvent ) and ( subEvent ~= "SPELL_CAST_SUCCESS" ) then return end
+
+    -- Find the icon to use
+    if self.icons[spellId] then
+        NS.StartWeakAuraIcon(self.icons[spellId]);
     end
 end
 
@@ -63,7 +145,7 @@ local function SetupAuraGroup(group, unit)
 end
 
 if test then
-    local testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions);
+    local testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, "player");
     SetupAuraGroup(testGroup, "player");
 else
 

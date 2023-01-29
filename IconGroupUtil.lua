@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-NS.CreateIconGroup = function (setPointOptions, growOptions)
+NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
@@ -13,8 +13,11 @@ NS.CreateIconGroup = function (setPointOptions, growOptions)
     f.growAnchor = growOptions.anchor;
     f.margin = growOptions.margin;
 
+    f.unit = unit;
+
     f.icons = {};
     f.active = {};
+    f.activeMap = {}; -- For quick lookup by spellID
 
     return f;
 end
@@ -50,6 +53,10 @@ NS.IconGroup_Insert = function (group, icon)
 
     -- Insert at the last position, then sort by priority
     table.insert(active, icon);
+    if icon.spellID then
+        group.activeMap[icon.spellID] = icon;
+    end
+
     table.sort(active, function(a, b) return a.priority < b.priority end);
 
     IconGroup_Position(group);
@@ -64,6 +71,10 @@ NS.IconGroup_Remove = function (group, icon)
 
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
+    end
+
+    if icon.spellID then
+        group.activeMap[icon.spellID] = nil;
     end
 
     local active = group.active;
@@ -109,4 +120,5 @@ NS.IconGroup_Wipe = function (group)
     
     wipe(group.icons);
     wipe(group.active);
+    wipe(group.activeMap);
 end
