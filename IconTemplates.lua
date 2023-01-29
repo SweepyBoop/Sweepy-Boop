@@ -53,7 +53,13 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
-        frame.cooldown:Hide();
+
+        if spell.charges then
+            spell.chargeExpire = GetTime(); -- Set charge expirationTime
+            frame.text = frame:CreateFontString(nil, "ARTWORK");
+            frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
+            frame.text:SetPoint("CENTER", frame, "BOTTOMRIGHT", 0, 0);
+        end
     end
     if spell.duration then
         -- Assign a framename to hide in OmniCC
@@ -107,13 +113,25 @@ NS.StartWeakAuraIcon = function (icon)
         end
 
         icon.duration:SetCooldown(GetTime(), duration);
+        if icon.cooldown then
+            icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
+        end
         NS.ShowOverlayGlow(icon);
     end
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
-        local cooldownDuration = spell.cooldown;
-        icon.cooldown:SetCooldown(GetTime(), cooldownDuration);
+        -- Check if using second charge
+        if icon:IsShown() and spell.charges and ( GetTime() >= icon.chargeExpire ) then
+            icon.text:SetText("");
+            icon.chargeExpire = GetTime() + spell.cooldown;
+        else
+            -- Use default charge
+            icon.cooldown:SetCooldown(GetTime(), spell.cooldown);
+            if spell.charges then
+                icon.text:SetText("1");
+            end
+        end
     end
 
     if icon.group then
