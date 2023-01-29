@@ -31,7 +31,7 @@ end
 local growOptions = {
     direction = "RIGHT",
     anchor = "LEFT",
-    margin = 5,
+    margin = 3,
 };
 
 local setPointOptions = {};
@@ -57,9 +57,7 @@ end
 
 local function ProcessCombatLogEvent(self, event, ...)
     local guid = ValidateUnit(self);
-    if ( not guid ) then
-        return;
-    end
+    if ( not guid ) then return end
 
     local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, spellSchool, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
 
@@ -145,13 +143,31 @@ local function ProcessCombatLogEvent(self, event, ...)
     end
 end
 
+local function ProcessUnitSpellCast(self, event, ...)
+    local guid = ValidateUnit(self);
+    if ( not guid ) then return end
+
+    local unitTarget, _, spellID = ...;
+    if ( unitTarget == self.unit ) then
+        local spell = NS.spellData[spellID];
+        if ( not spell ) or ( spell.trackEvent ~= "UNIT_SPELLCAST_SUCCEEDED" ) then return end
+        if self.icons[spellID] then
+            NS.StartWeakAuraIcon(self.icons[spellID]);
+        end
+    end
+end
+
+local function ProcessUnitAura(self, event, ...)
+    
+end
+
 local function ArenaEventHandler(self, event, ...)
     if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
         ProcessCombatLogEvent(self, event, ...);
     elseif ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
-        --ProcessUnitSpellCast(self, event, ...);
+        ProcessUnitSpellCast(self, event, ...);
     elseif ( event == "UNIT_AURA" ) then
-        --ProcessUnitAura(self, event, ...);
+        ProcessUnitAura(self, event, ...);
     end
 end
 
