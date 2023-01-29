@@ -237,7 +237,6 @@ local function SetupAuraGroup(group, unit)
                 local specEnabled = false;
                 local spec = GetUnitSpec(unit);
                 for i = 1, #(spell.spec) do
-                    print(spellID, spec)
                     if ( spec == spell.spec[i] ) then
                         specEnabled = true;
                         break;
