@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-local test = true;
+local test = false;
 
 local spellData = NS.spellData;
 local spellResets = NS.spellResets;
