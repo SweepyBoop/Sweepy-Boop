@@ -18,6 +18,7 @@ NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
     f.icons = {};
     f.active = {};
     f.activeMap = {}; -- For quick lookup by spellID
+    f.npcMap = {}; -- Map Npc GUID back to spellID, for processing SPELL_SUMMON / UNIT_DIED
 
     return f;
 end

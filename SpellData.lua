@@ -20,6 +20,15 @@ NS.Util_GetUnitBuff = function(unit, spell, filter)
     return NS.Util_GetUnitAura(unit, spell, filter)
 end
 
+NS.GetNpcIdFromGuid = function (guid)
+    local NpcId = select ( 6, strsplit ( "-", guid ) )
+    if (NpcId) then
+        return tonumber ( NpcId )
+    end
+
+    return 0
+end
+
 NS.spellCategory = {
     OFFENSIVE = 1,
     OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
@@ -391,7 +400,8 @@ NS.spellData = {
         cooldown = 60,
     },
     -- Psyfiend
-    [101398] = {
+    [211522] = {
+        class = classId.Priest,
         category = OFFENSIVE_PET,
         spellID = 211522,
         duration = 12,

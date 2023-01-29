@@ -5,6 +5,10 @@ local test = true;
 local spellData = NS.spellData;
 local spellResets = NS.spellResets;
 
+local npcToSpellID = {
+    [101398] = 211522,
+};
+
 local resetByPower = {
     137639, -- Storm, Earth, and Fire
     152173, -- Serenity
@@ -97,6 +101,23 @@ local function ProcessCombatLogEvent(self, event, ...)
             end
         end
     end
+
+    -- Check summon / dead
+    if ( subEvent == "UNIT_DIED" ) then
+        local summonSpellId = self.npcMap[destGUID];
+        if summonSpellId then
+            NS.ResetWeakAuraDuration(self.activeMap[summonSpellId]);
+        end
+        return;
+    elseif ( subEvent == "SPELL_SUMMON" ) and ( guid == sourceGUID ) then
+        local npcId = NS.GetNpcIdFromGuid(destGUID);
+        local summonSpellId = npcToSpellID[npcId];
+        if summonSpellId then
+            self.npcMap[destGUID] = summonSpellId;
+            NS.StartWeakAuraIcon(self.icons[spellId]);
+        end
+        return;
+    end
         
     -- Validate spell
     if ( not spellData[spellId] ) then return end
@@ -107,13 +128,11 @@ local function ProcessCombatLogEvent(self, event, ...)
     if ( spellGUID ~= guid ) then return end
 
     -- Check spell dismiss
-    if ( subEvent == "SPELL_AURA_REMOVED" ) or ( subEvent == "UNIT_DIED" ) then
+    if ( subEvent == "SPELL_AURA_REMOVED" ) then
         if self.activeMap[spellId] then
             NS.ResetWeakAuraDuration(self.activeMap[spellId]);
             return;
         end
-    elseif ( subEvent == "UNIT_DIED" ) then
-
     end
 
     -- Validate subEvent
@@ -130,9 +149,9 @@ local function ArenaEventHandler(self, event, ...)
     if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
         ProcessCombatLogEvent(self, event, ...);
     elseif ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
-        ProcessUnitSpellCast(self, event, ...);
+        --ProcessUnitSpellCast(self, event, ...);
     elseif ( event == "UNIT_AURA" ) then
-        ProcessUnitAura(self, event, ...);
+        --ProcessUnitAura(self, event, ...);
     end
 end
 
@@ -144,6 +163,7 @@ local function SetupAuraGroup(group, unit)
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
         if ( spell.class == class ) then
+            print("Created: "..spellID)
             NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true), spellID);
         end
     end
