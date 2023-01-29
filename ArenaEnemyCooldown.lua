@@ -174,9 +174,29 @@ local function SetupAuraGroup(group, unit)
     group:SetScript("OnEvent", ArenaEventHandler);
 end
 
+local testGroup = nil;
+local arenaGroup = {};
 if test then
-    local testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, "player");
+    testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, "player");
     SetupAuraGroup(testGroup, "player");
 else
-
+    for i = 1, NS.MAX_ARENA_SIZE do
+        arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, "arena"..i);
+        SetupAuraGroup()
+    end
 end
+
+
+
+local refreshFrame = CreateFrame("Frame");
+refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
+refreshFrame:SetScript("OnEvent", function (self, event, ...)
+    if test then
+        SetupAuraGroup(testGroup, "player");
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            SetupAuraGroup(arenaGroup[i], "arena"..i);
+        end
+    end
+end)

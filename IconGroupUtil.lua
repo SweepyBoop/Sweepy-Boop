@@ -99,6 +99,8 @@ NS.IconGroup_CreateIcon = function (group, icon, index)
 end
 
 NS.IconGroup_Wipe = function (group)
+    if ( not group ) then return end
+
     for _, icon in pairs(group.icons) do
         icon.tex:SetAlpha(0);
         if icon.cooldown then
