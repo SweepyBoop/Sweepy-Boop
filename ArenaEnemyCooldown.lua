@@ -19,13 +19,33 @@ for i = 1, NS.MAX_ARENA_SIZE do
     };
 end
 
+local function ProcessCombatLogEvent()
+    
+end
+
+local function ArenaEventHandler(self, event, ...)
+    if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
+        
+    end
+end
+
 local function SetupAuraGroup(group, unit)
+    -- Clear previous icons
+    NS.IconGroup_Wipe(group);
+
     local class = select(3, UnitClass(unit));
+    -- Pre-populate icons
     for spellID, spell in pairs(NS.spellData) do
         if ( spell.class == class ) then
             NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true));
         end
     end
+
+    -- Register events
+    group:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+    group:RegisterEvent("UNIT_AURA");
+    group:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+    group:SetScript("OnEvent", ArenaEventHandler);
 end
 
 if test then
