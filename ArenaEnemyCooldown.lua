@@ -105,6 +105,7 @@ local function ProcessCombatLogEvent(self, event, ...)
 
     -- Check summon / dead
     if ( subEvent == "UNIT_DIED" ) then
+        -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
         if summonSpellId and self.activeMap[summonSpellId] then
             NS.ResetWeakAuraDuration(self.activeMap[summonSpellId]);
