@@ -46,9 +46,20 @@ local function IconGroup_Position(group)
     end
 end
 
+local function sortFunc(a, b)
+    if ( a.priority ~= b.priority ) then
+        return a.priority < b.priority;
+    else
+        return a.timeStamp < b.timeStamp;
+    end
+end
+
 NS.IconGroup_Insert = function (group, icon)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then return end
+
+    -- Give icon a timeStamp before inserting
+    icon.timeStamp = GetTime();
 
     local active = group.active;
 
@@ -58,7 +69,7 @@ NS.IconGroup_Insert = function (group, icon)
         group.activeMap[icon.spellID] = icon;
     end
 
-    table.sort(active, function(a, b) return a.priority < b.priority end);
+    table.sort(active, sortFunc);
 
     IconGroup_Position(group);
 
