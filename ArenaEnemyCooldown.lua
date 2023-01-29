@@ -81,7 +81,7 @@ local function ProcessCombatLogEvent(self, event, ...)
         if spellResets[spellId] then
             for resetSpellID, amount in pairs(spellResets[spellId]) do
                 if self.activeMap[resetSpellID] then
-                    NS.ResetWeakAuraCooldown(self.activeMap[reset], amount);
+                    NS.ResetWeakAuraCooldown(self.activeMap[resetSpellID], amount);
                 end
             end
         end

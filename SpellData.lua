@@ -390,6 +390,7 @@ NS.spellData = {
     -- Offensive
     -- Mindgames
     [375901] = {
+        class = classId.Priest,
         category = OFFENSIVE,
         cooldown = 45,
     },
