@@ -33,6 +33,11 @@ for spellID, spell in pairs(spellData) do
     if ( not spell.class ) and ( not spell.trackDest ) then
         print("Invalid spellID:", spellID);
     end
+
+    -- Class should be a string of capital letters
+    if spell.class and ( type(spell.cast) ~= "string" ) then
+        print("Invalid class for spellID:", spellID);
+    end
 end
 
 local growOptions = {
