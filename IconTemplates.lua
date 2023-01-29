@@ -14,23 +14,17 @@ NS.ShowOverlayGlow = function (button)
     end
 end
 
-NS.HideOverlayGlow = function (button, finish)
+NS.HideOverlayGlow = function (button)
     if not button.spellActivationAlert then
         return;
     end
-
-    print("Hide glow")
 
     if button.spellActivationAlert.animIn:IsPlaying() then
         button.spellActivationAlert.animIn:Stop();
     end
 
     if button:IsVisible() then
-        print("animOut")
         button.spellActivationAlert.animOut:Play();
-        if finish then
-            button.spellActivationAlert.animOut:OnFinished();
-        end
     else
         button.spellActivationAlert.animOut:OnFinished();	--We aren't shown anyway, so we'll instantly hide it.
     end
@@ -82,10 +76,10 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.spellActivationAlert:Hide();
 
         frame.duration:SetScript("OnCooldownDone", function (self)
-            NS.HideOverlayGlow(self, true);
-            if self.cooldown then
-                print("Show cooldown due to duration finish")
-                self.cooldown:Show();
+            local icon = self:GetParent();
+            NS.HideOverlayGlow(icon);
+            if icon.cooldown then
+                icon.cooldown:SetAlpha(1);
             end
         end)
     end
@@ -94,10 +88,9 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     -- Otherwise the icon is duration only, let duration timer hide the icon.
     frame.hideIconTimer = frame.cooldown or frame.duration;
     frame.hideIconTimer:SetScript("OnCooldownDone", function (self)
-        print("Try hide")
-        if self.group then
-            print("Cooldown finished")
-            NS.IconGroup_Remove(self:GetParent(), self);
+        local icon = self:GetParent();
+        if icon.group then
+            NS.IconGroup_Remove(icon:GetParent(), icon);
         end
     end)
 
@@ -122,8 +115,7 @@ NS.StartWeakAuraIcon = function (icon)
 
         icon.duration:SetCooldown(GetTime(), duration);
         if icon.cooldown then
-            print("Duration hides cooldown")
-            icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
+            icon.cooldown:SetAlpha(0); -- Hide the cooldown timer until duration is over
         end
         NS.ShowOverlayGlow(icon);
     end
