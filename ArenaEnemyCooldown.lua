@@ -67,11 +67,9 @@ local function ValidateUnit(self)
     return self.unitGUID;
 end
 
-local function ProcessCombatLogEvent(self, event, ...)
+local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
     local guid = ValidateUnit(self);
     if ( not guid ) then return end
-
-    local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, spellSchool, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
 
     -- Check resets by spell cast
     if ( subEvent == "SPELL_CAST_SUCCESS" ) and ( sourceGUID == guid ) then
@@ -193,10 +191,8 @@ local function ProcessUnitAura(self, event, ...)
     end
 end
 
-local function ArenaEventHandler(group, event, ...)
-    if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
-        ProcessCombatLogEvent(group, event, ...);
-    elseif ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
+local function ProcessUnitEvent(group, event, ...)
+    if ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
         ProcessUnitSpellCast(group, event, ...);
     elseif ( event == "UNIT_AURA" ) then
         ProcessUnitAura(group, event, ...);
@@ -315,12 +311,21 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
                 SetupAuraGroup(arenaGroup[i], "arena"..i);
             end
         end
-    else
+    elseif ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
+        local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
         if test then
-            ArenaEventHandler(testGroup, event, ...);
+            ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
         else
             for i = 1, NS.MAX_ARENA_SIZE do
-                ArenaEventHandler(arenaGroup[i], event, ...);
+                ProcessCombatLogEvent(arenaGroup[i], event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+            end
+        end
+    else
+        if test then
+            ProcessUnitEvent(testGroup, event, ...);
+        else
+            for i = 1, NS.MAX_ARENA_SIZE do
+                ProcessUnitEvent(arenaGroup[i], event, ...);
             end
         end
     end
