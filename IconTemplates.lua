@@ -30,6 +30,13 @@ NS.HideOverlayGlow = function (button)
     end
 end
 
+local function OnCooldownTimerFinished(self)
+    local icon = self:GetParent();
+    if icon.group then
+        NS.IconGroup_Remove(icon:GetParent(), icon);
+    end
+end
+
 local function OnDurationTimerFinished(self)
     local icon = self:GetParent();
     NS.HideOverlayGlow(icon);
@@ -66,12 +73,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
-        frame.cooldown:SetScript("OnCooldownDone", function (self)
-            local icon = self:GetParent();
-            if icon.group then
-                NS.IconGroup_Remove(icon:GetParent(), icon);
-            end
-        end)
+        frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
         if spell.charges then
             spell.chargeExpire = GetTime(); -- Set charge expirationTime
