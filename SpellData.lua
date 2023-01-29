@@ -584,11 +584,9 @@ NS.spellData = {
         duration = 17,
     },
     -- Gul'dan's Ambition (Pit Lord)
-    [196111] = {
+    [387578] = {
         class = classId.Warlock,
-        category = OFFENSIVE_PET,
         duration = 10,
-        spellID = 387578,
     },
 
     -- Warrior

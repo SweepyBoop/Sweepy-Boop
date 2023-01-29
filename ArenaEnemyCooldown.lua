@@ -6,8 +6,9 @@ local spellData = NS.spellData;
 local spellResets = NS.spellResets;
 
 local npcToSpellID = {
-    [101398] = 211522,
-    [62982] = 200174,
+    [101398] = 211522, -- Psyfiend
+    [62982] = 200174, -- Mindbender
+    [196111] = 387578, -- Gul'dan's Ambition (Pit Lord)
 };
 
 local resetByPower = {
@@ -114,6 +115,11 @@ local function ProcessCombatLogEvent(self, event, ...)
         local npcId = NS.GetNpcIdFromGuid(destGUID);
         local summonSpellId = npcToSpellID[npcId];
         self.npcMap[destGUID] = summonSpellId;
+
+        -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
+        if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) then
+            NS.StartWeakAuraIcon(self.icons[summonSpellId]);
+        end
         return;
     end
         
