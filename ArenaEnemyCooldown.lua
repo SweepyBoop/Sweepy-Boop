@@ -162,7 +162,6 @@ local function SetupAuraGroup(group, unit)
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
         if ( spell.class == class ) then
-            print("Created: "..spellID)
             NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true), spellID);
         end
     end
