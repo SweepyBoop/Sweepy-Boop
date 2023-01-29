@@ -227,7 +227,7 @@ local function SetupAuraGroup(group, unit)
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
     if ( unit == "player" ) then
-        class = select(3, UnitClass(unit));
+        class = select(2, UnitClass(unit));
     else
         -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
         local index = string.sub(unit, -1, -1);
@@ -237,8 +237,6 @@ local function SetupAuraGroup(group, unit)
         end
     end
     if ( not class ) then return end
-
-    print(class);
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
@@ -260,7 +258,7 @@ local function SetupAuraGroup(group, unit)
 
             if enabled then
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
-                print("Populated", unit, spellID)
+                print("Populated", unit, class, spellID)
             end
         end
     end
@@ -284,7 +282,6 @@ else
         local unitId = "arena" .. i;
         arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, unitId);
         SetupAuraGroup(arenaGroup[i], unitId);
-        print("SetupAuraGroup", unitId);
     end
 end
 
@@ -298,7 +295,6 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
         SetupAuraGroup(testGroup, "player");
     elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) then -- This event is only for test mode
         for i = 1, NS.MAX_ARENA_SIZE do
-            print(event, "SetupAuraGroup", "arena"..i);
             SetupAuraGroup(arenaGroup[i], "arena"..i);
         end
     end
