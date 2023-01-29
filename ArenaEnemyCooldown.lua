@@ -224,9 +224,10 @@ local function SetupAuraGroup(group, unit)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
 
-    if ( not UnitExists(unit) ) then return end
-
+    -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check class and populate icons
     local class = select(3, UnitClass(unit));
+    if ( not class ) then return end
+
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
         -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
@@ -247,7 +248,7 @@ local function SetupAuraGroup(group, unit)
 
             if enabled then
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
-                print(unit, spellID);
+                print("Populated", unit, spellID)
             end
         end
     end
@@ -271,6 +272,7 @@ else
         local unitId = "arena" .. i;
         arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, unitId);
         SetupAuraGroup(arenaGroup[i], unitId);
+        print("SetupAuraGroup", unitId);
     end
 end
 
@@ -284,6 +286,7 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
         SetupAuraGroup(testGroup, "player");
     elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) then -- This event is only for test mode
         for i = 1, NS.MAX_ARENA_SIZE do
+            print(event, "SetupAuraGroup", "arena"..i);
             SetupAuraGroup(arenaGroup[i], "arena"..i);
         end
     end
