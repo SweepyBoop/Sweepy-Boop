@@ -105,16 +105,16 @@ local function ProcessCombatLogEvent(self, event, ...)
     -- Check summon / dead
     if ( subEvent == "UNIT_DIED" ) then
         local summonSpellId = self.npcMap[destGUID];
-        if summonSpellId then
+        if summonSpellId and self.activeMap[summonSpellId] then
             NS.ResetWeakAuraDuration(self.activeMap[summonSpellId]);
         end
         return;
     elseif ( subEvent == "SPELL_SUMMON" ) and ( guid == sourceGUID ) then
         local npcId = NS.GetNpcIdFromGuid(destGUID);
         local summonSpellId = npcToSpellID[npcId];
-        if summonSpellId then
+        if summonSpellId and self.icons[summonSpellId] then
             self.npcMap[destGUID] = summonSpellId;
-            NS.StartWeakAuraIcon(self.icons[spellId]);
+            NS.StartWeakAuraIcon(self.icons[summonSpellId]);
         end
         return;
     end
