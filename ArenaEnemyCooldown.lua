@@ -149,7 +149,7 @@ local function ProcessUnitSpellCast(self, event, ...)
 
     local unitTarget, _, spellID = ...;
     if ( unitTarget == self.unit ) then
-        local spell = NS.spellData[spellID];
+        local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= "UNIT_SPELLCAST_SUCCEEDED" ) then return end
         if self.icons[spellID] then
             NS.StartWeakAuraIcon(self.icons[spellID]);
@@ -158,7 +158,22 @@ local function ProcessUnitSpellCast(self, event, ...)
 end
 
 local function ProcessUnitAura(self, event, ...)
-    
+    local guid = ValidateUnit(self);
+    if ( not guid ) then return end
+
+    local unitTarget, updateAuras = ...;
+    -- Only use UNIT_AURA to extend aura
+    if ( unitTarget == self.unit ) and updateAuras and updateAuras.updatedAuraInstanceIDs then
+        for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
+            local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID);
+            if spellInfo then
+                local spellID = spellInfo.spellId
+                local spell = spellData[spellID]
+                if ( not spell ) or ( not spell.extend ) or ( not self.activeMap[spellID] ) then return end
+                NS.RefreshWeakAuraDuration(self.activeMap[spellID]);
+            end
+        end
+    end
 end
 
 local function ArenaEventHandler(self, event, ...)
