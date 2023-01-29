@@ -104,7 +104,7 @@ NS.IconGroup_Remove = function (group, icon)
     end
 end
 
-NS.IconGroup_CreateIcon = function (group, icon, index)
+NS.IconGroup_PopulateIcon = function (group, icon, index)
     icon:SetParent(group);
     group.icons[index] = icon;
 end
@@ -113,17 +113,19 @@ NS.IconGroup_Wipe = function (group)
     if ( not group ) then return end
 
     for _, icon in pairs(group.icons) do
-        icon.tex:SetAlpha(0);
         if icon.cooldown then
             icon.cooldown:SetCooldown(0, 0);
-            icon.cooldown:Hide();
         end
         if icon.spellActivationAlert then
-            icon.spellActivationAlert:Hide();
+            if icon.spellActivationAlert.animIn:IsPlaying() then
+                icon.spellActivationAlert.animIn:Stop();
+            end
+            if icon.spellActivationAlert.animOut:IsPlaying() then
+                icon.spellActivationAlert.animOut:Stop();
+            end
         end
         if icon.duration then
             icon.duration:SetCooldown(0, 0);
-            icon.duration:Hide();
         end
         icon:Hide();
     end
@@ -131,4 +133,5 @@ NS.IconGroup_Wipe = function (group)
     wipe(group.icons);
     wipe(group.active);
     wipe(group.activeMap);
+    wipe(group.npcMap);
 end

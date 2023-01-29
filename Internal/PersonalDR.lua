@@ -269,9 +269,9 @@ local setPointOptions = {
     offsetY = -38,
 };
 local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
-NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
-NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
-NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
+NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
+NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
+NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
 
 local function ShowIconDR(icon)
     icon.stacks = icon.stacks + 1;

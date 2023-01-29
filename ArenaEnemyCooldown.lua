@@ -192,6 +192,24 @@ local function ArenaEventHandler(self, event, ...)
     end
 end
 
+-- Premake all icons (regardless of class)
+local premadeIcons = {};
+if test then
+    local unitId = "player";
+    premadeIcons[unitId] = {};
+    for spellID, spell in pairs(spellData) do
+        premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, 32, true);
+    end
+else
+    for i = 1, NS.MAX_ARENA_SIZE do
+        local unitId = "arena"..i;
+        premadeIcons[unitId] = {};
+        for spellID, spell in pairs(spellData) do
+            premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, 32, true);
+        end
+    end
+end
+
 local function SetupAuraGroup(group, unit)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
@@ -200,7 +218,7 @@ local function SetupAuraGroup(group, unit)
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
         if ( spell.class == class ) then
-            NS.IconGroup_CreateIcon(group, NS.CreateWeakAuraIcon(unit, spellID, 32, true), spellID);
+            NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
         end
     end
 
@@ -211,6 +229,7 @@ local function SetupAuraGroup(group, unit)
     group:SetScript("OnEvent", ArenaEventHandler);
 end
 
+-- Populate icons based on class & spec
 local testGroup = nil;
 local arenaGroup = {};
 if test then
@@ -219,11 +238,9 @@ if test then
 else
     for i = 1, NS.MAX_ARENA_SIZE do
         arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, "arena"..i);
-        SetupAuraGroup();
+        SetupAuraGroup(arenaGroup[i], "arena"..i);
     end
 end
-
-
 
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
