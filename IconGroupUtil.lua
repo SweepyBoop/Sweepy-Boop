@@ -76,12 +76,9 @@ NS.IconGroup_Remove = function (group, icon)
     end
 
     if index then
-        print(index);
         table.remove(active, index)
         IconGroup_Position(group);
     end
-
-    print("IconGroup_Remove")
 end
 
 NS.IconGroup_CreateIcon = function (group, icon, index)
