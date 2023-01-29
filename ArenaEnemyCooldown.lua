@@ -258,7 +258,7 @@ local function SetupAuraGroup(group, unit)
     group:SetScript("OnEvent", ArenaEventHandler);
 end
 
--- Populate icons based on class & spec
+-- Populate icons based on class & spec on login
 local testGroup = nil;
 local arenaGroup = {};
 if test then
@@ -271,6 +271,7 @@ else
     end
 end
 
+-- Refresh icon groups when zone changes, or during test mode when player switches spec
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
@@ -278,7 +279,7 @@ refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
     if test then
         SetupAuraGroup(testGroup, "player");
-    else
+    elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) -- This event is only for test mode
         for i = 1, NS.MAX_ARENA_SIZE do
             SetupAuraGroup(arenaGroup[i], "arena"..i);
         end
