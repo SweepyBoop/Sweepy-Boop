@@ -592,7 +592,7 @@ if NS.isTestMode then
         class = classId.Druid,
         category = OFFENSIVE,
         duration = 5,
-        cooldown = 120,
+        cooldown = 10,
     }
     -- Rejuv
     NS.spellData[774] = {
