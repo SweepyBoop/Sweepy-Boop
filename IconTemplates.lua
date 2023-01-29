@@ -53,6 +53,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
+        frame.cooldown:Hide();
     end
     if spell.duration then
         -- Assign a framename to hide in OmniCC
@@ -62,16 +63,18 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.duration:SetDrawBling(false);
         frame.duration:SetDrawSwipe(true);
         frame.duration:SetReverse(true);
-        frame.duration:Raise(); -- Raise it above cooldown timer (if exists)
+        frame.duration:SetAlpha(0);
 
         frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
         frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
         frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
         frame.spellActivationAlert:Hide();
-        frame.spellActivationAlert:Raise(); -- Raise to front
 
         frame.duration:SetScript("OnCooldownDone", function (self)
             NS.HideOverlayGlow(self);
+            if self.cooldown then
+                self.cooldown:Show();
+            end
         end)
     end
 
@@ -94,7 +97,10 @@ NS.StartWeakAuraIcon = function (icon)
     if icon.duration then
         -- Decide duration
         local duration;
-        if spell.duration == "dynamic" then
+        if ( not spell.duration ) then
+            -- Default glow duration
+            duration = 3;
+        elseif spell.duration == "dynamic" then
             duration = NS.Util_GetUnitBuff(icon.unit, icon.spellID);
         else
             duration = spell.duration;
