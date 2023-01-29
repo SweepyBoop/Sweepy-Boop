@@ -272,7 +272,7 @@ NS.spellData = {
     
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
-        critResetAmount = 20,
+        critResetAmount = 75,
     },
     -- Icy Veins
     [12472] = {
@@ -605,6 +605,24 @@ if NS.isTestMode then
     -- Wild Growth
     NS.spellData[48438] = {
         category = OFFENSIVE,
+    }
+
+    NS.spellData[1459] = {
+        class = classId.Mage,
+        category = OFFENSIVE_SPECIAL,
+        duration = 12,
+        cooldown = 120,
+        index = 1,
+        sound = true,
+    
+        resets = {
+            [133] = 2, -- Pyrokinesis
+            [314791] = 12, -- Shifting Power
+        },
+    
+        -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
+        critResets = { 133, 11366, 108853, "Phoenix Flames" },
+        critResetAmount = 75,
     }
 
     -- Test totem with "PvP Training Dummy"

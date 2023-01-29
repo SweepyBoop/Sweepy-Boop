@@ -13,6 +13,7 @@ local resetByPower = {
 
 local resetByCrit = {
     190319, -- Combustion
+    1459, -- Arcane Intellect (test)
 };
 
 for _, spell in pairs(spellData) do
@@ -128,6 +129,10 @@ end
 local function ArenaEventHandler(self, event, ...)
     if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
         ProcessCombatLogEvent(self, event, ...);
+    elseif ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
+        ProcessUnitSpellCast(self, event, ...);
+    elseif ( event == "UNIT_AURA" ) then
+        ProcessUnitAura(self, event, ...);
     end
 end
 

@@ -162,15 +162,15 @@ NS.ResetWeakAuraCooldown = function (icon, amount)
         icon.cooldown:SetCooldown(0, 0);
         OnCooldownTimerFinished(icon.cooldown);
     else
-        local start, duration = icon.cooldown:GetCooldownTimes(); -- Returned as milliseconds
-        start = start / 1000;
+        local duration = icon.cooldown:GetCooldownDuration(); -- Returned as milliseconds
         duration = duration / 1000 - amount;
+        print(duration);
         -- Check if new duration hides the timer
         if duration <= 0 then
             icon.cooldown:SetCooldown(0, 0);
             OnCooldownTimerFinished(icon.cooldown);
         else
-            icon.cooldown:SetCooldown(start, duration);
+            icon.cooldown:SetCooldownDuration(duration);
         end
     end
 end
