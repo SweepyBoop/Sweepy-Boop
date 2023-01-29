@@ -68,16 +68,16 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size)
         frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
         frame.spellActivationAlert:Hide();
         frame.spellActivationAlert:Raise(); -- Raise to front
+
+        frame.duration:SetScript("OnCooldownDone", function (self)
+            NS.HideOverlayGlow(self);
+        end)
     end
 
     -- If there is a cooldown timer, always let it hide the icon.
     -- Otherwise the icon is duration only, let duration timer hide the icon.
     frame.hideIconTimer = frame.cooldown or frame.duration;
     frame.hideIconTimer:SetScript("OnCooldownDone", function (self)
-        -- Reset spell cast state and remove icon from group
-        if NS.spellCasts[self.unit] and NS.spellCasts[self.unit][spellID] then
-            NS.spellCasts[self.unit][spellID] = nil;
-        end
         NS.IconGroup_Remove(self:GetParent(), self);
     end)
 
@@ -98,11 +98,40 @@ NS.StartWeakAuraIcon = function (icon)
         end
 
         icon.duration:SetCooldown(GetTime(), duration);
+        NS.ShowOverlayGlow(icon);
     end
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
         local cooldownDuration = spell.cooldown;
         icon.cooldown:SetCooldown(GetTime(), cooldownDuration);
+    end
+
+    NS.IconGroup_Insert(icon:GetParent(), icon);
+end
+
+NS.RefreshWeakAuraDuration = function (icon)
+    if ( not icon.duration ) then return end
+
+    -- Get new duration
+    local duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
+    icon.duration:SetCooldown(expirationTime - duration, duration);
+end
+
+NS.ResetWeakAuraCooldown = function (icon, amount)
+    if ( not icon.cooldown ) then return end
+
+    -- Fully reset if amount is not specified
+    if ( not amount ) then
+        icon.cooldown:SetCooldown(0, 0);
+    else
+        local start, duration = icon.cooldown:GetCooldownTimes();
+        duration = duration - amount;
+        -- Check if new duration hides the timer
+        if duration <= 0 then
+            icon.cooldown:SetCooldown(0, 0);
+        else
+            icon.cooldown:SetCooldown(start, duration);
+        end
     end
 end
