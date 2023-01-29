@@ -198,7 +198,7 @@ end
 
 -- No duration text, only show stacks, and glow when max stacks (if set)
 local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration)
-    local frame = CreateFrame("Frame", "CustomAuraFrame" .. spellID, UIParent);
+    local frame = CreateFrame("Frame", "BoopHideTimerCustomAura" .. spellID, UIParent);
     frame.spellID = spellID;
     frame.maxStacks = maxStacks;
     frame:Hide();
