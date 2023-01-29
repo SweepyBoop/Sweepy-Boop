@@ -35,7 +35,7 @@ for spellID, spell in pairs(spellData) do
     end
 
     -- Class should be a string of capital letters
-    if spell.class and ( type(spell.cast) ~= "string" ) then
+    if spell.class and ( type(spell.class) ~= "string" ) then
         print("Invalid class for spellID:", spellID);
     end
 end
