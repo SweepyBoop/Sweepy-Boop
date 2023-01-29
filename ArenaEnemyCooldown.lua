@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-local test = false;
+local test = true;
 
 local spellData = NS.spellData;
 local spellResets = NS.spellResets;
@@ -224,7 +224,9 @@ end
 local function GetUnitSpec(unit)
     if ( unit == "player" ) then
         local currentSpec = GetSpecialization();
-        return GetSpecializationInfo(currentSpec);
+        if currentSpec then
+            return GetSpecializationInfo(currentSpec);
+        end
     else
         local arenaIndex = string.sub(unit, -1, -1);
         return GetArenaOpponentSpec(index);
@@ -258,12 +260,18 @@ local function SetupAuraGroup(group, unit)
             if spell.spec then
                 local specEnabled = false;
                 local spec = GetUnitSpec(unit);
-                for i = 1, #(spell.spec) do
-                    if ( spec == spell.spec[i] ) then
-                        specEnabled = true;
-                        break;
+
+                if ( not spec ) then
+                    specEnabled = true;
+                else
+                    for i = 1, #(spell.spec) do
+                        if ( spec == spell.spec[i] ) then
+                            specEnabled = true;
+                            break;
+                        end
                     end
                 end
+                
                 enabled = specEnabled;
             end
 
