@@ -30,13 +30,14 @@ NS.HideOverlayGlow = function (button)
     end
 end
 
-NS.CreateWeakAuraIcon = function (unit, spellID, size)
+NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide();
 
     frame.unit = unit;
     frame.spellID = spellID;
     frame.spell = NS.spellData[spellID];
+    frame.group = group;
     frame:SetSize(size, size);
 
     frame.tex = frame:CreateTexture();
@@ -78,7 +79,9 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size)
     -- Otherwise the icon is duration only, let duration timer hide the icon.
     frame.hideIconTimer = frame.cooldown or frame.duration;
     frame.hideIconTimer:SetScript("OnCooldownDone", function (self)
-        NS.IconGroup_Remove(self:GetParent(), self);
+        if self.group then
+            NS.IconGroup_Remove(self:GetParent(), self);
+        end
     end)
 
     return frame;
