@@ -528,6 +528,7 @@ NS.spellData = {
     -- Skyfury
     [208963] = {
         class = classId.Shaman,
+        duration = "dynamic",
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
