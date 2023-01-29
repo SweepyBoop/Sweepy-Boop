@@ -26,7 +26,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size)
     end
     if spell.duration then
         -- Assign a framename to hide in OmniCC
-        frame.duration = CreateFrame("Cooldown", "BoopAuraDuration" .. spellID, frame, "CooldownFrameTemplate");
+        frame.duration = CreateFrame("Cooldown", "BoopHideTimerAuraDuration" .. spellID, frame, "CooldownFrameTemplate");
         frame.duration:SetAllPoints();
         frame.duration:SetDrawEdge(false);
         frame.duration:SetDrawBling(false);
