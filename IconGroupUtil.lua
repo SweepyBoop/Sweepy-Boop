@@ -89,8 +89,5 @@ end
 
 
 
--- For arena frame auras
-NS.spellCasts = {};
-
 -- TODO: wipe icons (unregister events, hide, set to nil)
 -- TODO: create icons based on class and spec
