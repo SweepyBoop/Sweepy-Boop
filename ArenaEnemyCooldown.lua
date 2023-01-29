@@ -193,13 +193,13 @@ local function ProcessUnitAura(self, event, ...)
     end
 end
 
-local function ArenaEventHandler(self, event, ...)
+local function ArenaEventHandler(group, event, ...)
     if ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
-        ProcessCombatLogEvent(self, event, ...);
+        ProcessCombatLogEvent(group, event, ...);
     elseif ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
-        ProcessUnitSpellCast(self, event, ...);
+        ProcessUnitSpellCast(group, event, ...);
     elseif ( event == "UNIT_AURA" ) then
-        ProcessUnitAura(self, event, ...);
+        ProcessUnitAura(group, event, ...);
     end
 end
 
@@ -281,12 +281,6 @@ local function SetupAuraGroup(group, unit)
             end
         end
     end
-
-    -- Register events
-    group:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-    group:RegisterEvent("UNIT_AURA");
-    group:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-    group:SetScript("OnEvent", ArenaEventHandler);
 end
 
 -- Populate icons based on class & spec on login
@@ -309,12 +303,25 @@ local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
 refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
+refreshFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+refreshFrame:RegisterEvent("UNIT_AURA");
+refreshFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if test then
-        SetupAuraGroup(testGroup, "player");
-    elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) then -- This event is only for test mode
-        for i = 1, NS.MAX_ARENA_SIZE do
-            SetupAuraGroup(arenaGroup[i], "arena"..i);
+    if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED") then
+        if test then
+            SetupAuraGroup(testGroup, "player");
+        elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) then -- This event is only for test mode
+            for i = 1, NS.MAX_ARENA_SIZE do
+                SetupAuraGroup(arenaGroup[i], "arena"..i);
+            end
+        end
+    else
+        if test then
+            ArenaEventHandler(testGroup, event, ...);
+        else
+            for i = 1, NS.MAX_ARENA_SIZE do
+                ArenaEventHandler(arenaGroup[i], event, ...);
+            end
         end
     end
 end)
