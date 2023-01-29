@@ -91,3 +91,24 @@ end
 
 -- TODO: wipe icons (unregister events, hide, set to nil)
 -- TODO: create icons based on class and spec
+NS.IconGroup_Wipe = function (group)
+    for i = 1, #(group.icons) do
+        local icon = group.icons[i];
+        icon.tex:SetAlpha(0);
+        if icon.cooldown then
+            icon.cooldown:SetCooldown(0, 0);
+            icon.cooldown:Hide();
+        end
+        if icon.spellActivationAlert then
+            icon.spellActivationAlert:Hide();
+        end
+        if icon.duration then
+            icon.duration:SetCooldown(0, 0);
+            icon.duration:Hide();
+        end
+        icon:Hide();
+    end
+    
+    wipe(group.icons);
+    wipe(group.active);
+end
