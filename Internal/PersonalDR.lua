@@ -263,7 +263,7 @@ end
 
 local setPointOptions = {
     point = "BOTTOMRIGHT",
-    relativeTo = _G["PlayerFrame"];
+    relativeTo = _G["PlayerFrame"],
     relativePoint = "TOPRIGHT",
     offsetX = -25,
     offsetY = -38,

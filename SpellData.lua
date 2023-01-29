@@ -1,6 +1,6 @@
 local _, NS = ...
 
-NS.isTestMode = false
+NS.isTestMode = true
 
 NS.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
@@ -580,6 +580,7 @@ if NS.isTestMode then
     -- Test
     -- Mark of the Wild
     NS.spellData[1126] = {
+        class = classId.Druid,
         category = OFFENSIVE,
         duration = 8,
         cooldown = 30,
@@ -588,17 +589,20 @@ if NS.isTestMode then
     }
     -- Regrowth
     NS.spellData[8936] = {
+        class = classId.Druid,
         category = OFFENSIVE,
         duration = 5,
         cooldown = 120,
     }
     -- Rejuv
     NS.spellData[774] = {
+        class = classId.Druid,
         category = OFFENSIVE,
         cooldown = 45,
     }
     -- Wild Growth
     NS.spellData[48438] = {
+        class = classId.Druid,
         category = OFFENSIVE,
     }
 
