@@ -242,7 +242,6 @@ end
 local testGlowingBuffIcon = false;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
---local dummy = CreateGlowingBuffIcon(0, 0, "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0);
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 if ( class == NS.classId.Druid ) then
