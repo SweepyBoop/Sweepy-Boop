@@ -221,6 +221,7 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 30,
         cooldown = 180,
+        index = 2,
     },
     -- Convoke the Spirits
     [391528] = {
@@ -280,6 +281,7 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 20,
         cooldown = 180,
+        index = 1,
     },
 
     -- Mage
@@ -323,6 +325,7 @@ NS.spellData = {
         class = "MAGE",
         category = OFFENSIVE,
         cooldown = 90,
+        index = 1,
     },
 
     -- Monk
@@ -337,6 +340,7 @@ NS.spellData = {
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
         extend = true,
+        index = 1,
     },
     -- Serenity
     [152173] = {
@@ -347,6 +351,7 @@ NS.spellData = {
         reduce_power_type = Enum.PowerType.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
         extend = true,
+        index = 1,
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {

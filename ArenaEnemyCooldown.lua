@@ -26,10 +26,7 @@ local resetByCrit = {
 
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
-    spell.priority = spell.index;
-    if ( not spell.priority ) then
-        spell.priority = 100;
-    end
+    spell.priority = spell.index or 100;
 
     -- Validate class, class is allowed to be missing if trackDest (since destGUID can be any class)
     if ( not spell.class ) and ( not spell.trackDest ) then
