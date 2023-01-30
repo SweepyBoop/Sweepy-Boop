@@ -3,11 +3,11 @@ local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
 local compactPartyFramePrefix = "CompactPartyFrameMember";
 
 local function ApplyFilter()
-    if InCombatLockdown() or ( not IsInGroup() ) or ( GetNumGroupMembers() > 5 ) then
+    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
         return;
     end
 
-    if not CompactPartyFrame then
+    if InCombatLockdown() or ( not IsInGroup() ) or ( GetNumGroupMembers() > 5 ) then
         return;
     end
 
