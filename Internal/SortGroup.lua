@@ -1,4 +1,5 @@
 -- https://www.curseforge.com/wow/addons/sortgroup
+-- https://github.com/Verubato/frame-sort/blob/main
 local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
 local compactPartyFramePrefix = "CompactPartyFrameMember";
 
