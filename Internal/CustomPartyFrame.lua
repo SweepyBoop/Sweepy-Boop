@@ -9,14 +9,14 @@ function CustomCompactPartyFrame_OnLoad(self)
 		unitFrame.isParty = true;
 	end
 	
-	CompactPartyFrame_RefreshMembers();
+	CustomCompactPartyFrame_RefreshMembers();
 	
 	self.title:SetText(PARTY);
 	self.title:Disable();
 end
 
 function CustomCompactPartyFrame_UpdateVisibility()
-	if not CompactPartyFrame then
+	if not CustomCompactPartyFrame then
 		return;
 	end
 	
@@ -27,29 +27,21 @@ function CustomCompactPartyFrame_UpdateVisibility()
 	PartyFrame:UpdatePaddingAndLayout();
 end
 
-function CompactPartyFrame_RefreshMembers()
-	if not CompactPartyFrame then
+function CustomCompactPartyFrame_RefreshMembers()
+	if not CustomCompactPartyFrame then
 		return;
 	end
 
 	local units = {};
 
-	if IsInRaid() then
-		for i=1, MEMBERS_PER_RAID_GROUP do
-			table.insert(units, "raid"..i);
-		end
-	else
-		table.insert(units, "player");
-
-		for i=2, MEMBERS_PER_RAID_GROUP do
-			table.insert(units, "party"..(i-1));
-		end
-	end
-
-	table.sort(units, CompactPartyFrame.flowSortFunc);
+	table.insert(units, "party1");
+    table.insert(units, "player");
+    for i=3, MEMBERS_PER_RAID_GROUP do
+        table.insert(units, "party"..(i-1));
+    end
 
 	for index, realPartyMemberToken in ipairs(units) do
-		local unitFrame = _G["CompactPartyFrameMember"..index];
+		local unitFrame = _G["CustomCompactPartyFrameMember"..index];
 
 		local usePlayerOverride = EditModeManagerFrame:ArePartyFramesForcedShown() and not UnitExists(realPartyMemberToken);
 		local unitToken = usePlayerOverride and "player" or realPartyMemberToken;
@@ -59,7 +51,7 @@ function CompactPartyFrame_RefreshMembers()
 		CompactUnitFrame_SetUpdateAllEvent(unitFrame, "GROUP_ROSTER_UPDATE");
 	end
 
-	CompactRaidGroup_UpdateBorder(CompactPartyFrame);
+	CompactRaidGroup_UpdateBorder(CustomCompactPartyFrame);
 	PartyFrame:UpdatePaddingAndLayout();
 end
 
