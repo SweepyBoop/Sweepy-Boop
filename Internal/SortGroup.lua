@@ -1,5 +1,8 @@
 -- https://www.curseforge.com/wow/addons/sortgroup
 -- https://github.com/Verubato/frame-sort/blob/main
+
+-- Tried both ways, still getting taint when players join/leave, or pet dies during combat
+
 local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
 local compactPartyFramePrefix = "CompactPartyFrameMember";
 
