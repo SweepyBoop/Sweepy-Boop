@@ -1,45 +1,58 @@
 -- https://www.curseforge.com/wow/addons/sortgroup
--- https://github.com/Verubato/frame-sort/tree/main/src
+local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
+local compactPartyFramePrefix = "CompactPartyFrameMember";
 
-local function Compare(leftToken, rightToken)
-    if not UnitExists(leftToken) then return false
-    elseif not UnitExists(rightToken) then return true
-    elseif UnitIsUnit(leftToken, "party1") then return true
-    elseif UnitIsUnit(rightToken, "party1") then return false
-    elseif UnitIsUnit(leftToken, "player") then return true
-    elseif UnitIsUnit(rightToken, "player") then return false
-    else
-        return leftToken < rightToken;
+local function ApplyFilter()
+    if InCombatLockdown() or ( not IsInGroup() ) or ( GetNumGroupMembers() > 5 ) then
+        return;
     end
+
+    if not CompactPartyFrame then
+        return;
+    end
+
+    local units = {};
+    for index, token in ipairs(sortGroupFilter) do
+        table.insert(units, token);
+    end
+
+    for index, realPartyMemberToken in ipairs(units) do
+        local unitFrame = _G[compactPartyFramePrefix .. index];
+        CompactUnitFrame_ClearWidgetSet(unitFrame);
+        unitFrame:Hide();
+        unitFrame.unitExists = false;
+    end
+
+    local playerDisplayed = false;
+    for index, realPartyMemberToken in ipairs(units) do
+        local unitFrame = _G[compactPartyFramePrefix .. index];
+        local usePlayerOverride = EditModeManagerFrame:ArePartyFramesForcedShown() and
+                                      not UnitExists(realPartyMemberToken);
+        local unitToken = usePlayerOverride and "player" or realPartyMemberToken;
+
+        CompactUnitFrame_SetUnit(unitFrame, unitToken);
+        CompactUnitFrame_SetUpFrame(unitFrame, DefaultCompactUnitFrameSetup);
+        CompactUnitFrame_SetUpdateAllEvent(unitFrame, "GROUP_ROSTER_UPDATE");
+    end
+
+    CompactRaidGroup_UpdateBorder(CompactPartyFrame);
+    PartyFrame:UpdatePaddingAndLayout();
 end
 
-local function TrySort()
-    -- nothing to sort if we're not in a group
-    if not IsInGroup() then return false end
-    -- can't make changes during combat
-    if InCombatLockdown() then return false end
-    -- don't try if edit mode is active
-    if EditModeManagerFrame.editModeActive then return false end
+local function TryApplyFilter()
+    if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) or ( not HasLoadedCUFProfiles() ) then
+        return;
+    end
 
-    local maxPartySize = 5;
-    local groupSize = GetNumGroupMembers();
-
-    if groupSize <= maxPartySize then
-        if CompactPartyFrame:IsForbidden() then return false end
-
-        CompactPartyFrame_SetFlowSortFunction(Compare);
-        -- immediately after sorting, unset the sort function
-        -- this might help with avoiding taint issues
-        -- but shouldn't be necessary and can be removed once blizzard fix their side
-        CompactPartyFrame.flowSortFunc = nil;
+    if InCombatLockdown() then
+        -- If in combat, retry after a few sec
+        C_Timer.After(3, TryApplyFilter);
+    else
+        ApplyFilter();
     end
 end
 
 local sortFrame = CreateFrame("Frame");
 sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
 sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
--- Fired after ending combat, as regen rates return to normal.
--- Useful for determining when a player has left combat.
--- This occurs when you are not on the hate list of any NPC, or a few seconds after the latest pvp attack that you were involved with.
-sortFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
-sortFrame:SetScript("OnEvent", TrySort);
+sortFrame:SetScript("OnEvent", TryApplyFilter);
