@@ -120,36 +120,6 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent)
 
 -- Glowing buff icon
 
-local function ShowOverlayGlow(button)
-    if not button.spellActivationAlert then
-        return;
-    end
-
-    if button.spellActivationAlert.animOut:IsPlaying() then
-        button.spellActivationAlert.animOut:Stop();
-    end
-
-    if not button.spellActivationAlert:IsShown() then
-        button.spellActivationAlert.animIn:Play();
-    end
-end
-
-local function HideOverlayGlow(button)
-    if not button.spellActivationAlert then
-        return;
-    end
-
-    if button.spellActivationAlert.animIn:IsPlaying() then
-        button.spellActivationAlert.animIn:Stop();
-    end
-
-    if button:IsVisible() then
-        button.spellActivationAlert.animOut:Play();
-    else
-        button.spellActivationAlert.animOut:OnFinished();	--We aren't shown anyway, so we'll instantly hide it.
-    end
-end
-
 local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide() -- Hide initially until aura is detected
@@ -184,10 +154,10 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
             local duration, expirationTime = select(5, NS.Util_GetUnitBuff("player", frame.spellID));
             if duration and ( duration ~= 0 ) then
                 self.cooldown:SetCooldown(expirationTime - duration, duration);
-                ShowOverlayGlow(self);
+                NS.ShowOverlayGlow(self);
                 self:Show();
             else
-                HideOverlayGlow(self);
+                NS.HideOverlayGlow(self);
                 self:Hide();
             end
         end
@@ -198,7 +168,7 @@ end
 
 -- No duration text, only show stacks, and glow when max stacks (if set)
 local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration)
-    local frame = CreateFrame("Frame", "CustomAuraFrame" .. spellID, UIParent);
+    local frame = CreateFrame("Frame", "BoopHideTimerCustomAura" .. spellID, UIParent);
     frame.spellID = spellID;
     frame.maxStacks = maxStacks;
     frame:Hide();
@@ -256,9 +226,9 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
                 self.text:SetText(count);
 
                 if ( count == self.maxStacks ) then
-                    ShowOverlayGlow(self);
+                    NS.ShowOverlayGlow(self);
                 else
-                    HideOverlayGlow(self);
+                    NS.HideOverlayGlow(self);
                 end
             end
 
@@ -272,7 +242,6 @@ end
 local testGlowingBuffIcon = false;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
---local dummy = CreateGlowingBuffIcon(0, 0, "BOTTOMRIGHT", UIParent, "BOTTOMRIGHT", 0, 0);
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 if ( class == NS.classId.Druid ) then

@@ -6,8 +6,10 @@ SweepyBoop.xml
 
 # Publish
 SpellData.lua
-IconGroupUtil.lua
 UnitInfoHelpers.lua
+IconGroupUtil.lua
+IconTemplates.lua
+ArenaEnemyCooldown.lua
 # TODO: implement without WA
 UtilsWA.lua
 ClassAndPetIcons.lua

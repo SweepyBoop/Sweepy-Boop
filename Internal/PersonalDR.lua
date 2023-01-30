@@ -263,15 +263,15 @@ end
 
 local setPointOptions = {
     point = "BOTTOMRIGHT",
-    relativeTo = _G["PlayerFrame"];
+    relativeTo = _G["PlayerFrame"],
     relativePoint = "TOPRIGHT",
     offsetX = -25,
     offsetY = -38,
 };
 local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
-NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("stun"));
-NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("incapacitate"));
-NS.IconGroup_CreateIcon(drIconGroup, CreateDRIcon("disorient"));
+NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
+NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
+NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
 
 local function ShowIconDR(icon)
     icon.stacks = icon.stacks + 1;
@@ -298,10 +298,9 @@ drIconGroup:SetScript("OnEvent", function (self, event, ...)
         local category = spellList[spellID];
         if ( not category ) then return end
 
-        for i = 1, #(self.icons) do
-            if ( category == self.icons[i].category ) then
-                ShowIconDR(self.icons[i]);
-            end
+        local priority = categoryPriority[category];
+        if priority then
+            ShowIconDR(self.icons[priority]);
         end
     end
 end)
