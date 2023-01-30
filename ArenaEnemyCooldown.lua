@@ -19,7 +19,6 @@ local resetByPower = {
 
 local resetByCrit = {
     190319, -- Combustion
-    1459, -- Arcane Intellect (test)
 };
 
 for spellID, spell in pairs(spellData) do
