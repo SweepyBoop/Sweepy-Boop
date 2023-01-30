@@ -36,6 +36,36 @@ hooksecurefunc("PlayerFrame_UpdatePartyLeader", function ()
     playerFrameTargetContextual.GuideIcon:Hide()
 end)
 
+-- Hide player name and level (if full level)
+PlayerName:Hide();
+
+-- Hide level text when max level
+hooksecurefunc("PlayerFrame_UpdateLevel", function ()
+    if (UnitExists("player")) then
+		local level = UnitLevel(PlayerFrame.unit);
+		local effectiveLevel = UnitEffectiveLevel(PlayerFrame.unit);
+		if (effectiveLevel ~= level) then
+			PlayerLevelText:SetVertexColor(0.1, 1.0, 0.1, 1.0);
+		else
+			PlayerLevelText:SetVertexColor(1.0, 0.82, 0.0, 1.0);
+		end
+
+        if (effectiveLevel ~= 70) then
+		    PlayerLevelText:SetText(effectiveLevel);
+        else
+            PlayerLevelText:SetText("");
+        end
+	end
+end)
+
+-- Hide role icon in arena
+hooksecurefunc("PlayerFrame_UpdateRolesAssigned", function ()
+	local roleIcon = PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.RoleIcon;
+	if IsActiveBattlefieldArena() then
+        roleIcon:SetShown(false);
+    end
+end)
+
 --[[     
 
 Omnibar Profile:
