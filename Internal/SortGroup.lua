@@ -5,6 +5,7 @@ local compactPartyFramePrefix = "CompactPartyFrameMember";
 
 local function ApplyFilter()
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
+        print("CompactPartyFrameMember is forbidden")
         return;
     end
 
