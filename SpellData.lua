@@ -365,12 +365,14 @@ NS.spellData = {
         category = OFFENSIVE_DURATION,
         duration = 10,
         spec = { specID.WW },
+        index = 2,
     },
     -- Dance of Chi-ji
     [325202] = {
         class = "MONK",
         category = OFFENSIVE_DURATION,
         trackEvent = NS.SPELL_AURA_APPLIED,
+        index = 2,
     },
 
     -- Paladin
@@ -432,6 +434,7 @@ NS.spellData = {
         class = "PRIEST",
         category = OFFENSIVE,
         cooldown = 45,
+        index = 1,
     },
     -- Mindbender (Idol of Y'Shaarj)
     [200174] = {
@@ -498,6 +501,7 @@ NS.spellData = {
         class = "ROGUE",
         category = OFFENSIVE_DURATION,
         duration = 14,
+        index = 2,
     },
     -- Echoing Reprimand
     [323560] = {
@@ -620,6 +624,7 @@ NS.spellData = {
         duration = 16,
         reduce_power_type = Enum.PowerType.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
+        index = 1,
     },
 }
 
