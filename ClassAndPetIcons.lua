@@ -231,7 +231,7 @@ local function UpdateCastBar(frame)
     if ( frame.showCastBarEx == nil ) or ( showCastBarEx ~= frame.showCastBarEx ) then
         if showCastBarEx then
             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
-            frame.castBarelf:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
