@@ -1,3 +1,12 @@
+local function Custom_CompactPartyFrame_Generate()
+    local frame = CustomCompactPartyFrame;
+    if not frame then
+        frame = CreateFrame("Frame", "CustomCompactPartyFrame", PartyFrame, "CustomCompactPartyFrameTemplate");
+        CompactRaidGroup_UpdateBorder(frame);
+        frame:RegisterEvent("GROUP_ROSTER_UPDATE");
+    end
+end
+
 function CustomCompactPartyFrame_OnLoad(self)
     self.applyFunc = CompactRaidGroup_ApplyFunctionToAllFrames;
     self.isParty = true;
@@ -14,8 +23,12 @@ function CustomCompactPartyFrame_OnLoad(self)
 end
 
 hooksecurefunc("CompactPartyFrame_UpdateVisibility", function ()
-    if ( not CompactPartyFrame ) or ( not CustomCompactPartyFrame ) then
+    if ( not CompactPartyFrame ) then
         return;
+    end
+
+    if ( not Custom_CompactPartyFrame ) then
+        Custom_CompactPartyFrame_Generate();
     end
     
     local isInArena = IsActiveBattlefieldArena();
@@ -31,8 +44,12 @@ hooksecurefunc("CompactPartyFrame_UpdateVisibility", function ()
 end)
 
 function CustomCompactPartyFrame_RefreshMembers()
-    if not CustomCompactPartyFrame then
+    if not CompactPartyFrame then
         return;
+    end
+
+    if not CustomCompactPartyFrame then
+        Custom_CompactPartyFrame_Generate();
     end
 
     local units = {};
@@ -58,25 +75,17 @@ function CustomCompactPartyFrame_RefreshMembers()
 end
 
 hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function()
-    if not CustomCompactPartyFrame then
+    if not CompactPartyFrame then
         return;
     end
+
+    if not CustomCompactPartyFrame then
+        Custom_CompactPartyFrame_Generate();
+    end
+
     CustomCompactPartyFrame_RefreshMembers();
 end)
-
-local function Custom_CompactPartyFrame_Generate()
-    local frame = CustomCompactPartyFrame;
-    if not frame then
-        frame = CreateFrame("Frame", "CustomCompactPartyFrame", PartyFrame, "CustomCompactPartyFrameTemplate");
-        CompactRaidGroup_UpdateBorder(frame);
-        frame:RegisterEvent("GROUP_ROSTER_UPDATE");
-    end
-end
 
 hooksecurefunc("CompactPartyFrame_Generate", function ()
     Custom_CompactPartyFrame_Generate();
 end)
-
-if ( not CustomCompactPartyFrame ) then
-    Custom_CompactPartyFrame_Generate();
-end
