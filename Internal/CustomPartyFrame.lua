@@ -13,7 +13,7 @@ function CustomCompactPartyFrame_OnLoad(self)
 	self.title:Disable();
 end
 
-hooksecure("CustomCompactPartyFrame_UpdateVisibility", function ()
+hooksecure("CompactPartyFrame_UpdateVisibility", function ()
 	if not CustomCompactPartyFrame then
 		return;
 	end
@@ -59,7 +59,7 @@ hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function()
 	CustomCompactPartyFrame_RefreshMembers();
 end)
 
-hooksecurefunc("CustomCompactPartyFrame_Generate", function ()
+hooksecurefunc("CompactPartyFrame_Generate", function ()
 	local frame = CustomCompactPartyFrame;
 	local didCreate = false;
 	if not frame then
