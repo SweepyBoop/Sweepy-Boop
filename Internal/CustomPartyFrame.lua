@@ -1,5 +1,3 @@
-PartyFrame:Hide();
-
 function CustomCompactPartyFrame_OnLoad(self)
 	self.applyFunc = CompactRaidGroup_ApplyFunctionToAllFrames;
 	self.isParty = true;
