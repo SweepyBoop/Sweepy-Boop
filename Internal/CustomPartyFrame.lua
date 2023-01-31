@@ -5,7 +5,7 @@ function CustomCompactPartyFrame_OnLoad(self)
 	self.isParty = true;
 
 	for i=1, MEMBERS_PER_RAID_GROUP do
-		local unitFrame = _G["CompactPartyFrameMember"..i];
+		local unitFrame = _G["CustomCompactPartyFrameMember"..i];
 		unitFrame.isParty = true;
 	end
 	
@@ -15,17 +15,17 @@ function CustomCompactPartyFrame_OnLoad(self)
 	self.title:Disable();
 end
 
---[[ function CustomCompactPartyFrame_UpdateVisibility()
-	if not CustomCompactPartyFrame then
+hooksecure("CustomCompactPartyFrame_UpdateVisibility", function ()
+	if not CompactPartyFrame then
 		return;
 	end
 	
 	local isInArena = IsActiveBattlefieldArena();
 	local groupFramesShown = (IsInGroup() and (isInArena or not IsInRaid())) or EditModeManagerFrame:ArePartyFramesForcedShown();
 	local showCompactPartyFrame = groupFramesShown and EditModeManagerFrame:UseRaidStylePartyFrames();
-	CompactPartyFrame:SetShown(showCompactPartyFrame);
-	PartyFrame:UpdatePaddingAndLayout();
-end ]]
+	CompactPartyFrame:SetShown(not showCompactPartyFrame);
+	CustomCompactPartyFrame:SetShown(showCompactPartyFrame);
+end)
 
 function CustomCompactPartyFrame_RefreshMembers()
 	if not CustomCompactPartyFrame then
@@ -52,10 +52,16 @@ function CustomCompactPartyFrame_RefreshMembers()
 	end
 
 	CompactRaidGroup_UpdateBorder(CustomCompactPartyFrame);
-	PartyFrame:UpdatePaddingAndLayout();
 end
 
-function CustomCompactPartyFrame_Generate()
+hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function()
+	if not CustomCompactPartyFrame then
+		return;
+	end
+	CustomCompactPartyFrame_RefreshMembers();
+end)
+
+hooksecurefunc("CustomCompactPartyFrame_Generate", function ()
 	local frame = CustomCompactPartyFrame;
 	local didCreate = false;
 	if not frame then
@@ -65,4 +71,4 @@ function CustomCompactPartyFrame_Generate()
 		didCreate = true;
 	end
 	return frame, didCreate;
-end
+end)
