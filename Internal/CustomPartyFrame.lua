@@ -5,6 +5,7 @@ function CustomCompactPartyFrame_OnLoad(self)
     for i=1, MEMBERS_PER_RAID_GROUP do
         local unitFrame = _G["CustomCompactPartyFrameMember"..i];
         unitFrame.isParty = true;
+        print("Set isParty")
     end
     
     CustomCompactPartyFrame_RefreshMembers();
@@ -45,6 +46,7 @@ function CustomCompactPartyFrame_RefreshMembers()
         local unitToken = usePlayerOverride and "player" or realPartyMemberToken;
 
         CompactUnitFrame_SetUnit(unitFrame, unitToken);
+        print("Frame is party: ", unitFrame.isParty);
         CompactUnitFrame_SetUpFrame(unitFrame, DefaultCompactUnitFrameSetup); -- Where is the size for the frame set?
         CompactUnitFrame_SetUpdateAllEvent(unitFrame, "GROUP_ROSTER_UPDATE");
     end
@@ -62,7 +64,7 @@ end)
 local function Custom_CompactPartyFrame_Generate()
     local frame = CustomCompactPartyFrame;
     if not frame then
-        frame = CreateFrame("Frame", "CustomCompactPartyFrame", PartyFrame, "CompactPartyFrameTemplate");
+        frame = CreateFrame("Frame", "CustomCompactPartyFrame", PartyFrame, "CustomCompactPartyFrameTemplate");
         CompactRaidGroup_UpdateBorder(frame);
         frame:RegisterEvent("GROUP_ROSTER_UPDATE");
     end
