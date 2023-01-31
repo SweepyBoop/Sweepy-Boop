@@ -59,7 +59,7 @@ hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function()
 	CustomCompactPartyFrame_RefreshMembers();
 end)
 
-hooksecurefunc("CompactPartyFrame_Generate", function ()
+local function Custom_CompactPartyFrame_Generate()
 	local frame = CustomCompactPartyFrame;
 	local didCreate = false;
 	if not frame then
@@ -69,4 +69,12 @@ hooksecurefunc("CompactPartyFrame_Generate", function ()
 		didCreate = true;
 	end
 	return frame, didCreate;
+end
+
+hooksecurefunc("CompactPartyFrame_Generate", function ()
+	return Custom_CompactPartyFrame_Generate();
 end)
+
+if ( not CustomCompactPartyFrame ) then
+	Custom_CompactPartyFrame_Generate();
+end
