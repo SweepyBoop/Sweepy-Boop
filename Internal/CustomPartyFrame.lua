@@ -1,4 +1,4 @@
-local function Custom_CompactPartyFrame_Generate()
+local function EnsureCustomCompactPartyFrame()
     local frame = CustomCompactPartyFrame;
     if not frame then
         frame = CreateFrame("Frame", "CustomCompactPartyFrame", PartyFrame, "CustomCompactPartyFrameTemplate");
@@ -28,9 +28,7 @@ hooksecurefunc("CompactPartyFrame_UpdateVisibility", function ()
         return;
     end
 
-    if ( not Custom_CompactPartyFrame ) then
-        Custom_CompactPartyFrame_Generate();
-    end
+    EnsureCustomCompactPartyFrame();
     
     local isInArena = IsActiveBattlefieldArena();
     local groupFramesShown = (IsInGroup() and (isInArena or not IsInRaid())) or EditModeManagerFrame:ArePartyFramesForcedShown();
@@ -51,9 +49,7 @@ function CustomCompactPartyFrame_RefreshMembers()
         return;
     end
 
-    if not CustomCompactPartyFrame then
-        Custom_CompactPartyFrame_Generate();
-    end
+    EnsureCustomCompactPartyFrame();
 
     local units = {};
 
@@ -83,13 +79,10 @@ hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function()
         return;
     end
 
-    if not CustomCompactPartyFrame then
-        Custom_CompactPartyFrame_Generate();
-    end
-
+    EnsureCustomCompactPartyFrame();
     CustomCompactPartyFrame_RefreshMembers();
 end)
 
 hooksecurefunc("CompactPartyFrame_Generate", function ()
-    Custom_CompactPartyFrame_Generate();
+    EnsureCustomCompactPartyFrame();
 end)
