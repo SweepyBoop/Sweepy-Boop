@@ -9,7 +9,7 @@ function CustomCompactPartyFrame_OnLoad(self)
 	
 	CustomCompactPartyFrame_RefreshMembers();
 	
-	self.title:SetText(PARTY);
+	self.title:SetText("Custom " .. PARTY);
 	self.title:Disable();
 end
 
