@@ -14,7 +14,7 @@ function CustomCompactPartyFrame_OnLoad(self)
 end
 
 hooksecure("CustomCompactPartyFrame_UpdateVisibility", function ()
-	if not CompactPartyFrame then
+	if not CustomCompactPartyFrame then
 		return;
 	end
 	
