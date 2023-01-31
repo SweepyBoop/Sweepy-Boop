@@ -21,8 +21,13 @@ hooksecurefunc("CompactPartyFrame_UpdateVisibility", function ()
     local isInArena = IsActiveBattlefieldArena();
     local groupFramesShown = (IsInGroup() and (isInArena or not IsInRaid())) or EditModeManagerFrame:ArePartyFramesForcedShown();
     local showCompactPartyFrame = groupFramesShown and EditModeManagerFrame:UseRaidStylePartyFrames();
-    CompactPartyFrame:SetShown(false);
-    CustomCompactPartyFrame:SetShown(showCompactPartyFrame);
+    local editModeActive = EditModeManagerFrame.editModeActive;
+
+    -- Only show the original in edit mode
+    CompactPartyFrame:SetShown(groupFramesShown and editModeActive);
+
+    -- Show custom when not in edit mode
+    CustomCompactPartyFrame:SetShown(showCompactPartyFrame and ( not editModeActive));
 end)
 
 function CustomCompactPartyFrame_RefreshMembers()
