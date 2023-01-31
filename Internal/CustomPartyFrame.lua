@@ -3,6 +3,7 @@ local function Custom_CompactPartyFrame_Generate()
     if not frame then
         frame = CreateFrame("Frame", "CustomCompactPartyFrame", PartyFrame, "CustomCompactPartyFrameTemplate");
         CompactRaidGroup_UpdateBorder(frame);
+        PartyFrame:UpdatePaddingAndLayout();
         frame:RegisterEvent("GROUP_ROSTER_UPDATE");
     end
 end
@@ -41,6 +42,8 @@ hooksecurefunc("CompactPartyFrame_UpdateVisibility", function ()
 
     -- Show custom when not in edit mode
     CustomCompactPartyFrame:SetShown(showCompactPartyFrame and ( not editModeActive));
+
+    PartyFrame:UpdatePaddingAndLayout();
 end)
 
 function CustomCompactPartyFrame_RefreshMembers()
@@ -72,6 +75,7 @@ function CustomCompactPartyFrame_RefreshMembers()
     end
 
     CompactRaidGroup_UpdateBorder(CustomCompactPartyFrame);
+    PartyFrame:UpdatePaddingAndLayout();
 end
 
 hooksecurefunc("CompactPartyFrame_SetFlowSortFunction", function()
