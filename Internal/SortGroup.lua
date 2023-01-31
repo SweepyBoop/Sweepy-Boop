@@ -57,7 +57,7 @@ local function TryApplyFilter()
     end
 end
 
-local sortFrame = CreateFrame("Frame");
+--[[ local sortFrame = CreateFrame("Frame");
 sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
 sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-sortFrame:SetScript("OnEvent", TryApplyFilter);
+sortFrame:SetScript("OnEvent", TryApplyFilter); ]]
