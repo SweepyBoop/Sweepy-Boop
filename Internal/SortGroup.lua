@@ -1,9 +1,9 @@
 -- https://www.curseforge.com/wow/addons/sortgroup
--- https://github.com/Verubato/frame-sort/blob/main
+-- https://github.com/Verubato/frame-sort
 
 -- Tried both ways, still getting taint when players join/leave, or pet dies during combat
 
-local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
+--[[ local sortGroupFilter = {"party1", "player", "party2", "party3", "party4"};
 local compactPartyFramePrefix = "CompactPartyFrameMember";
 
 local function ApplyFilter()
@@ -60,4 +60,26 @@ end
 local sortFrame = CreateFrame("Frame");
 sortFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
 sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-sortFrame:SetScript("OnEvent", TryApplyFilter);
+sortFrame:SetScript("OnEvent", TryApplyFilter); ]]
+
+-- All we need is when there are <= 3 players, sort by party1, player, party2
+
+hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
+    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
+		return;
+	end
+
+    -- nothing to sort if we're not in a group
+    if not IsInGroup() then return end
+    -- can't make changes during combat
+    if InCombatLockdown() then return end
+    -- don't try if edit mode is active
+    if EditModeManagerFrame.editModeActive then return end
+
+    local numGroupMembers = GetNumGroupMembers();
+    if ( numGroupMembers <= 3 ) then
+        CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
+        CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
+        CompactUnitFrame_SetUnit(CompactPartyFrameMember3, "party2");
+    end
+end)
