@@ -24,7 +24,7 @@ Internal\CustomPartyFrame.xml
 Internal\LoseControl.lua
 Internal\Personalization.lua
 Internal\HideHotKeys.lua
-Internal\SortGroup.lua
+# Internal\SortGroup.lua
 
 # Misc
 Internal\DrinkMacro.lua
