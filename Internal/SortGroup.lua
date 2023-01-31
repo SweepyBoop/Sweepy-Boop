@@ -64,6 +64,16 @@ sortFrame:SetScript("OnEvent", TryApplyFilter); ]]
 
 -- All we need is when there are <= 3 players, sort by party1, player, party2
 
+local function TrySort()
+    if InCombatLockdown() then
+        C_Timer.After(3, TrySort);
+    else
+        CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
+        CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
+        CompactUnitFrame_SetUnit(CompactPartyFrameMember3, "party2");
+    end
+end
+
 hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
 		return;
@@ -78,8 +88,6 @@ hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
 
     local numGroupMembers = GetNumGroupMembers();
     if ( numGroupMembers <= 3 ) then
-        CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
-        CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
-        CompactUnitFrame_SetUnit(CompactPartyFrameMember3, "party2");
+        TrySort();
     end
 end)
