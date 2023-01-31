@@ -1,6 +1,5 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-	<Script file="CustomPartyFrame.lua"/>
 	<Frame name="CustomCompactPartyFrameTemplate" inherits="CompactRaidGroupTemplate" hidden="true" virtual="true">
 		<KeyValues>
 			<KeyValue key="layoutIndex" value="1" type="number"/>
@@ -10,4 +9,5 @@
 			<OnEvent function="CustomCompactPartyFrame_RefreshMembers"/>
 		</Scripts>
 	</Frame>
+	<Script file="CustomPartyFrame.lua"/>
 </Ui>
