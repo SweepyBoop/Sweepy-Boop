@@ -68,6 +68,7 @@ local function TrySort()
     if InCombatLockdown() then
         C_Timer.After(3, TrySort);
     else
+        -- This function has side effect and might taint the execution path
         CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
         CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
         CompactUnitFrame_SetUnit(CompactPartyFrameMember3, "party2");
