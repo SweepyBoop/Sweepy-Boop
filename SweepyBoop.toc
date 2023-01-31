@@ -18,8 +18,7 @@ FixBlizzardRaidAggro.lua
 
 
 # Recreate the CompactPartyFrame with our sort func
-Internal\CustomCompactPartyFrame.xml
-Internal\CustomCompactPartyFrame.lua
+Internal\CustomPartyFrame.xml
 
 # UI Personalization
 Internal\LoseControl.lua

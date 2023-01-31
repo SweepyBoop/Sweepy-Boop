@@ -13,7 +13,7 @@ function CustomCompactPartyFrame_OnLoad(self)
 	self.title:Disable();
 end
 
-hooksecure("CompactPartyFrame_UpdateVisibility", function ()
+hooksecurefunc("CompactPartyFrame_UpdateVisibility", function ()
 	if not CustomCompactPartyFrame then
 		return;
 	end
