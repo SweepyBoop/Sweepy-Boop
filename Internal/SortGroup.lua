@@ -81,8 +81,6 @@ hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
 
     -- nothing to sort if we're not in a group
     if not IsInGroup() then return end
-    -- can't make changes during combat
-    if InCombatLockdown() then return end
     -- don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
 
