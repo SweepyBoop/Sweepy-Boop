@@ -15,7 +15,7 @@ function CustomCompactPartyFrame_OnLoad(self)
 	self.title:Disable();
 end
 
-function CustomCompactPartyFrame_UpdateVisibility()
+--[[ function CustomCompactPartyFrame_UpdateVisibility()
 	if not CustomCompactPartyFrame then
 		return;
 	end
@@ -25,7 +25,7 @@ function CustomCompactPartyFrame_UpdateVisibility()
 	local showCompactPartyFrame = groupFramesShown and EditModeManagerFrame:UseRaidStylePartyFrames();
 	CompactPartyFrame:SetShown(showCompactPartyFrame);
 	PartyFrame:UpdatePaddingAndLayout();
-end
+end ]]
 
 function CustomCompactPartyFrame_RefreshMembers()
 	if not CustomCompactPartyFrame then
@@ -55,22 +55,12 @@ function CustomCompactPartyFrame_RefreshMembers()
 	PartyFrame:UpdatePaddingAndLayout();
 end
 
-function CompactPartyFrame_SetFlowSortFunction(flowSortFunc)
-	if not CompactPartyFrame then
-		return;
-	end
-	CompactPartyFrame.flowSortFunc = flowSortFunc;
-	CompactPartyFrame_RefreshMembers();
-end
-
-function CompactPartyFrame_Generate()
-	local frame = CompactPartyFrame;
+function CustomCompactPartyFrame_Generate()
+	local frame = CustomCompactPartyFrame;
 	local didCreate = false;
 	if not frame then
-		frame = CreateFrame("Frame", "CompactPartyFrame", PartyFrame, "CompactPartyFrameTemplate");
-		frame.flowSortFunc = CRFSort_Group;
+		frame = CreateFrame("Frame", "CustomCompactPartyFrame", PartyFrame, "CompactPartyFrameTemplate");
 		CompactRaidGroup_UpdateBorder(frame);
-		PartyFrame:UpdatePaddingAndLayout();
 		frame:RegisterEvent("GROUP_ROSTER_UPDATE");
 		didCreate = true;
 	end
