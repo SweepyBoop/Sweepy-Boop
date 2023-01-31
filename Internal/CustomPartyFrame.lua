@@ -45,7 +45,7 @@ function CustomCompactPartyFrame_RefreshMembers()
         local unitToken = usePlayerOverride and "player" or realPartyMemberToken;
 
         CompactUnitFrame_SetUnit(unitFrame, unitToken);
-        CompactUnitFrame_SetUpFrame(unitFrame, DefaultCompactUnitFrameSetup);
+        CompactUnitFrame_SetUpFrame(unitFrame, DefaultCompactUnitFrameSetup); -- Where is the size for the frame set?
         CompactUnitFrame_SetUpdateAllEvent(unitFrame, "GROUP_ROSTER_UPDATE");
     end
 
