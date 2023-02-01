@@ -112,7 +112,6 @@ local function TrySort()
         local prevFrame;
         for _, value in ipairs(frames) do
             local frame = value.frame;
-            print(frame:GetName(), value.unit);
             frame:ClearAllPoints();
             if ( not prevFrame ) then
                 frame:SetPoint(topPoints.point, topPoints.relativeTo, topPoints.relativePoint, topPoints.offsetX, topPoints.offsetY);
@@ -129,7 +128,7 @@ local function TrySort()
     end
 end
 
-hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
+hooksecurefunc("FlowContainer_DoLayout", function ()
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
 		return;
 	end
