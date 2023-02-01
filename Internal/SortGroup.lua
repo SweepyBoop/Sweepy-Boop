@@ -98,7 +98,8 @@ local function TrySort()
         table.sort(frames, Compare);
 
         local prevFrame;
-        for _, frame in ipairs(frames) do
+        for _, value in ipairs(frames) do
+            local frame = value.frame;
             frame:ClearAllPoints();
             if ( not prevFrame ) then
                 frame:SetPoint(topPoints.point, topPoints.relativeTo, topPoints.relativePoint, topPoints.offsetX, topPoints.offsetY);
@@ -106,7 +107,7 @@ local function TrySort()
                 frame:SetPoint("TOP", prevFrame, "BOTTOM");
             end
 
-            prevFrame = frame.frame;
+            prevFrame = frame;
         end
 
         --CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
@@ -121,7 +122,7 @@ hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
 	end
 
     -- nothing to sort if we're not in a group
-    if not IsInGroup() then return end
+    --if not IsInGroup() then return end
     -- don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
 
