@@ -128,9 +128,28 @@ local function TrySort()
     end
 end
 
-hooksecurefunc("FlowContainer_DoLayout", function (container)
+--[[ hooksecurefunc("FlowContainer_DoLayout", function (container)
     -- Check container is CompactPartyFrame?
-    
+    --print(container:GetName())
+
+    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
+		return;
+	end
+
+    -- nothing to sort if we're not in a group
+    --if not IsInGroup() then return end
+    -- don't try if edit mode is active
+    if EditModeManagerFrame.editModeActive then return end
+
+    local numGroupMembers = GetNumGroupMembers();
+    if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
+        TrySort();
+    end
+end) ]]
+
+hooksecurefunc(CompactRaidFrameContainer, "AddGroups", function ()
+    print("AddGroups");
+
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
 		return;
 	end
@@ -145,3 +164,5 @@ hooksecurefunc("FlowContainer_DoLayout", function (container)
         TrySort();
     end
 end)
+
+-- Possibly only need to hook CompactRaidFrameContainerMixin:LayoutFrames
