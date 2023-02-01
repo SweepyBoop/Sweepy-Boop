@@ -63,15 +63,39 @@ sortFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 sortFrame:SetScript("OnEvent", TryApplyFilter); ]]
 
 -- All we need is when there are <= 3 players, sort by party1, player, party2
+-- Try leveraging SetPoint to modify the positions of CompactPartyFrames
 
 local function TrySort()
     if InCombatLockdown() then
         C_Timer.After(3, TrySort);
     else
         -- This function has side effect and might taint the execution path
-        CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
-        CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
-        CompactUnitFrame_SetUnit(CompactPartyFrameMember3, "party2");
+        local points = {};
+        for i = 1, 3 do
+            local frame = _G["CompactPartyFrameMember"..i];
+            local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint();
+            points[i] = { point = point, relativeTo = relativeTo, relativePoint = relativePoint, offsetX = offsetX, offsetY = offsetY };
+            frame:ClearAllPoints();
+        end
+
+        for i = 1, 3 do
+            local frame = _G["CompactPartyFrameMember"..i];
+            local point;
+            if frame.unit == "party1" then
+                point = points[1];
+            elseif frame.unit == "party2" then
+                point = points[3];
+                point.relativeTo = _G["CompactPartyFrameMember2"];
+            elseif frame.unit == "player" then
+                point = points[2];
+                point.relativeTo = _G["CompactPartyFrameMember1"];
+            end
+            frame:SetPoint(point.point, point.relativeTo, point.relativePoint, point.offsetX, point.offsetY);
+        end
+
+        --CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
+        --CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
+        --CompactUnitFrame_SetUnit(CompactPartyFrameMember3, "party2");
     end
 end
 
@@ -81,7 +105,7 @@ hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
 	end
 
     -- nothing to sort if we're not in a group
-    if not IsInGroup() then return end
+    --if not IsInGroup() then return end
     -- don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
 
