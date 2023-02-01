@@ -78,6 +78,8 @@ local function UpdateProperties(frame)
 end
 
 local function HealthBarOnEvent(self, event, ...)
+    if ( event == "PLAYER_TARGET_CHANGED" ) then
+        if UnitIsUnit(self.unit, "target") then
             self.targetBorder:Show();
         else
             self.targetBorder:Hide();
