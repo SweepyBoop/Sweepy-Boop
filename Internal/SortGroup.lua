@@ -128,7 +128,9 @@ local function TrySort()
     end
 end
 
-hooksecurefunc("FlowContainer_DoLayout", function ()
+hooksecurefunc("FlowContainer_DoLayout", function (container)
+    -- Check container is CompactPartyFrame?
+    
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
 		return;
 	end
