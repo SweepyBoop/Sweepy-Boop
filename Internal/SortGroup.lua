@@ -65,6 +65,20 @@ sortFrame:SetScript("OnEvent", TryApplyFilter); ]]
 -- All we need is when there are <= 3 players, sort by party1, player, party2
 -- Try leveraging SetPoint to modify the positions of CompactPartyFrames
 
+local function Compare(left, right)
+    local leftToken, rightToken = left.unit, right.unit;
+
+    if ( not leftToken ) then return false
+    elseif ( not rightToken ) then return true
+    elseif ( leftToken == "party1" ) then return true
+    elseif ( rightToken == "party1" ) then return false
+    elseif ( leftToken == "player" ) then return true
+    elseif ( rightToken == "player" ) then return false
+    else
+        return leftToken < rightToken;
+    end
+end
+
 local function TrySort()
     if InCombatLockdown() then
         C_Timer.After(3, TrySort);
@@ -78,23 +92,22 @@ local function TrySort()
             if ( relativeTo == CompactPartyFrame ) then
                 topPoints = points;
             end
-            frame[i] = { frame.unit, points };
+            frame[i] = { frame.unit, frame };
         end
 
-        --[[ for i = 1, 3 do
-            local frame = _G["CompactPartyFrameMember"..i];
-            local point;
-            if frame.unit == "party1" then
-                point = points[1];
-            elseif frame.unit == "party2" then
-                point = points[3];
-                point.relativeTo = _G["CompactPartyFrameMember2"];
-            elseif frame.unit == "player" then
-                point = points[2];
-                point.relativeTo = _G["CompactPartyFrameMember1"];
+        table.sort(frames, Compare);
+
+        local prevFrame;
+        for _, frame in ipairs(frames) do
+            frame:ClearAllPoints();
+            if ( not prevFrame ) then
+                frame:SetPoint(topPoints.point, topPoints.relativeTo, topPoints.relativePoint, topPoints.offsetX, topPoints.offsetY);
+            else
+                frame:SetPoint("TOP", prevFrame, "BOTTOM");
             end
-            frame:SetPoint(point.point, point.relativeTo, point.relativePoint, point.offsetX, point.offsetY);
-        end ]]
+
+            prevFrame = frame.frame;
+        end
 
         --CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
         --CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
