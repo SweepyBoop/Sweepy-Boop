@@ -66,7 +66,12 @@ end
 
 -- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
 -- If hooking LayoutFrames is not enough, we might have to hook FlowContainer_DoLayout
-hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
+--hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
+hooksecurefunc("FlowContainer_DoLayout", function(container)
+    if ( container.flowPauseUpdates ) then
+		return;
+	end
+
     if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) then return end
 
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
@@ -80,4 +85,4 @@ hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
     if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
         TrySort();
     end
-end) 
+end)
