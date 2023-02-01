@@ -224,7 +224,7 @@ local function GetUnitSpec(unit)
         end
     else
         local arenaIndex = string.sub(unit, -1, -1);
-        return GetArenaOpponentSpec(index);
+        return GetArenaOpponentSpec(arenaIndex);
     end
 end
 
