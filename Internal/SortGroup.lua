@@ -69,14 +69,14 @@ end
 --hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
 hooksecurefunc("FlowContainer_DoLayout", function(container)
     if ( container.flowPauseUpdates ) then
-		return;
-	end
+        return;
+    end
 
     if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) then return end
 
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
-		return;
-	end
+        return;
+    end
 
     -- Don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
