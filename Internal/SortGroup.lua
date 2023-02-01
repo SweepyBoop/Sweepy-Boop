@@ -67,13 +67,13 @@ end
 -- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
 -- If hooking LayoutFrames is not enough, we might have to hook FlowContainer_DoLayout
 hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
+    if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) then return end
+
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
 		return;
 	end
 
-    -- nothing to sort if we're not in a group
-    --if not IsInGroup() then return end
-    -- don't try if edit mode is active
+    -- Don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
 
     local numGroupMembers = GetNumGroupMembers();
