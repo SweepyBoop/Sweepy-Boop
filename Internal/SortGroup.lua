@@ -126,7 +126,7 @@ hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
     if EditModeManagerFrame.editModeActive then return end
 
     local numGroupMembers = GetNumGroupMembers();
-    if ( numGroupMembers <= 3 ) then
+    if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
         TrySort();
     end
 end)
