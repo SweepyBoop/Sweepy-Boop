@@ -121,7 +121,7 @@ hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
 	end
 
     -- nothing to sort if we're not in a group
-    --if not IsInGroup() then return end
+    if not IsInGroup() then return end
     -- don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
 
