@@ -165,4 +165,22 @@ hooksecurefunc(CompactRaidFrameContainer, "AddGroups", function ()
     end
 end)
 
+hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
+    print("LayoutFrames");
+
+    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
+		return;
+	end
+
+    -- nothing to sort if we're not in a group
+    --if not IsInGroup() then return end
+    -- don't try if edit mode is active
+    if EditModeManagerFrame.editModeActive then return end
+
+    local numGroupMembers = GetNumGroupMembers();
+    if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
+        TrySort();
+    end
+end)
+
 -- Possibly only need to hook CompactRaidFrameContainerMixin:LayoutFrames
