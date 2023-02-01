@@ -69,16 +69,19 @@ local function TrySort()
     if InCombatLockdown() then
         C_Timer.After(3, TrySort);
     else
-        -- This function has side effect and might taint the execution path
-        local points = {};
-        for i = 1, 3 do
+        local topPoints;
+        local frames = {};
+        for i = 1, MEMBERS_PER_RAID_GROUP do
             local frame = _G["CompactPartyFrameMember"..i];
             local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint();
-            points[i] = { point = point, relativeTo = relativeTo, relativePoint = relativePoint, offsetX = offsetX, offsetY = offsetY };
-            frame:ClearAllPoints();
+            local points = { point = point, relativeTo = relativeTo, relativePoint = relativePoint, offsetX = offsetX, offsetY = offsetY };
+            if ( relativeTo == CompactPartyFrame ) then
+                topPoints = points;
+            end
+            frame[i] = { frame.unit, points };
         end
 
-        for i = 1, 3 do
+        --[[ for i = 1, 3 do
             local frame = _G["CompactPartyFrameMember"..i];
             local point;
             if frame.unit == "party1" then
@@ -91,7 +94,7 @@ local function TrySort()
                 point.relativeTo = _G["CompactPartyFrameMember1"];
             end
             frame:SetPoint(point.point, point.relativeTo, point.relativePoint, point.offsetX, point.offsetY);
-        end
+        end ]]
 
         --CompactUnitFrame_SetUnit(CompactPartyFrameMember1, "party1");
         --CompactUnitFrame_SetUnit(CompactPartyFrameMember2, "player");
