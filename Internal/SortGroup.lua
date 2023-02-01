@@ -128,13 +128,15 @@ local function TrySort()
     end
 end
 
---[[ hooksecurefunc("FlowContainer_DoLayout", function (container)
+hooksecurefunc("FlowContainer_DoLayout", function (container)
     -- Check container is CompactPartyFrame?
     --print(container:GetName())
 
-    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
+    if container.flowPauseUpdates or ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
 		return;
 	end
+
+    print(container:GetName())
 
     -- nothing to sort if we're not in a group
     --if not IsInGroup() then return end
@@ -145,9 +147,9 @@ end
     if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
         TrySort();
     end
-end) ]]
+end)
 
-hooksecurefunc(CompactRaidFrameContainer, "AddGroups", function ()
+--[[ hooksecurefunc(CompactRaidFrameContainer, "AddGroups", function ()
     print("AddGroups");
 
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
@@ -181,6 +183,6 @@ hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
     if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
         TrySort();
     end
-end)
+end) ]]
 
 -- Possibly only need to hook CompactRaidFrameContainerMixin:LayoutFrames
