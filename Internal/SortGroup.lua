@@ -92,7 +92,7 @@ local function TrySort()
             if ( relativeTo == CompactPartyFrame ) then
                 topPoints = points;
             end
-            frame[i] = { frame.unit, frame };
+            frames[i] = { unit = frame.unit, frame = frame };
         end
 
         table.sort(frames, Compare);
