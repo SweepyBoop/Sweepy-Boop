@@ -79,6 +79,18 @@ local function Compare(left, right)
     end
 end
 
+local function GetPartyUnitId(unitId)
+    if UnitIsUnit(unitId, "player") then
+        return "player";
+    else
+        for i = 1, (MEMBERS_PER_RAID_GROUP - 1) do
+            if UnitIsUnit(unitId, "party" .. i) then
+                return "party" .. i;
+            end
+        end
+    end
+end
+
 local function TrySort()
     if InCombatLockdown() then
         C_Timer.After(3, TrySort);
@@ -92,7 +104,7 @@ local function TrySort()
             if ( relativeTo == CompactPartyFrame ) then
                 topPoints = points;
             end
-            frames[i] = { unit = frame.unit, frame = frame };
+            frames[i] = { unit = GetPartyUnitId(frame.unit), frame = frame };
         end
 
         table.sort(frames, Compare);
@@ -100,6 +112,7 @@ local function TrySort()
         local prevFrame;
         for _, value in ipairs(frames) do
             local frame = value.frame;
+            print(frame:GetName(), value.unit);
             frame:ClearAllPoints();
             if ( not prevFrame ) then
                 frame:SetPoint(topPoints.point, topPoints.relativeTo, topPoints.relativePoint, topPoints.offsetX, topPoints.offsetY);
