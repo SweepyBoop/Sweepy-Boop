@@ -244,7 +244,8 @@ local function CreateDRIcon(category)
     f.border:SetBorderSizes(2, 2, 2, 2);
     f.border:UpdateSizes();
 
-    f.cooldown = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate");
+    -- Assign frame name BoopHideTimer* to hide timer by OmniCC
+    f.cooldown = CreateFrame("Cooldown", "BoopHideTimerPersonalDR" .. category, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
     f.cooldown:SetDrawEdge(false);
     f.cooldown:SetAlpha(1);
