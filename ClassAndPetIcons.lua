@@ -268,19 +268,17 @@ end
 
 local function ProcessRaidFrameName(frame)
     -- Check if this is a compact party/raid frame
-    local frameName = frame:GetName();
-    if ( not frameName ) then return end
-
-    if ( string.sub(frameName, 1, 17) == "CompactPartyFrame" ) then
+    if ( frame:GetParent() == CompactPartyFrame ) then
         frame.name:Hide()
-        return true;
-    elseif ( string.sub(frameName, 1, 16) == "CompactRaidFrame" ) then
-        -- Don't hide raid names but skip the rest of the logic
-        return true;
+        return true
     end
 end
 
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+    if frame:IsForbidden() then
+        return;
+    end
+
     if ProcessRaidFrameName(frame) then
         return
     end
@@ -313,6 +311,10 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 end)
 
 hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+    if frame:IsForbidden() then
+        return;
+    end
+
     if ( not ShouldUpdateNamePlate(frame) ) then
         return
     end
