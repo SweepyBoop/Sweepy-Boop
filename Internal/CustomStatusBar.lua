@@ -8,8 +8,8 @@ local function ShouldShowHealthBar(unit)
     end
 
     local partyUnitId = ( unit == "pet" and "player" ) or ( "party" .. string.sub(unit, -1, -1) );
-    local class = select(3, UnitClass(partyUnitId));
-    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman and NS.IsShamanPrimaryPet(unit) );
+    local class = select(2, UnitClass(partyUnitId));
+    return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unit) );
 end
 
 local function CreateHealthBar(index, width, height) -- Create StatusBar with a text overlay
@@ -193,8 +193,8 @@ local function InitializeManaBar(frame, powerType)
     end
 end
 
-local class = select(3, UnitClass("player"));
-if ( class == NS.classId.Druid ) then
+local class = select(2, UnitClass("player"));
+if ( class == "DRUID" ) then
     local druidManaBar = CreateDruidManaBar();
     druidManaBar:SetScript("OnEvent", function(self, event, ...)
         if ( event == "UPDATE_SHAPESHIFT_FORM" ) or ( event == "PLAYER_ENTERING_WORLD" ) then

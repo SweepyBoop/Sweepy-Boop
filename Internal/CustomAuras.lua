@@ -36,9 +36,9 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     return frame
 end
 
-local class = select(3, UnitClass("player"));
+local class = select(2, UnitClass("player"));
 
-if ( class == NS.classId.Druid ) then
+if ( class == "DRUID" ) then
     local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
     local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
     local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 180) -- shadow_of_death.blp
@@ -50,12 +50,12 @@ end
 local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
-playerPortraitStealthAbility[NS.classId.Druid] = {
+playerPortraitStealthAbility["DRUID"] = {
     "Refreshment",
     "Drink",
     "Prowl",
 }
-playerPortraitStealthAbility[NS.classId.Rogue] = {
+playerPortraitStealthAbility["ROGUE"] = {
     "Stealth",
     "Subterfuge",
 }
@@ -317,7 +317,7 @@ local testGlowingBuffIcon = false;
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-if ( class == NS.classId.Druid ) then
+if ( class == "DRUID" ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5, 2, true);
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);

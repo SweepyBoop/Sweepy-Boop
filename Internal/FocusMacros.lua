@@ -3,7 +3,7 @@ local _, NS = ...
 local classAbilities = {}
 local macroPrefixes = {}
 
-classAbilities[NS.classId.Druid] = {
+classAbilities["DRUID"] = {
     "Cyclone",
     "Entangling Roots",
     "Hibernate",
@@ -52,7 +52,7 @@ local commonPrefix = "#showtooltip\n/cast [@"
 local commonSuffix = "] "
 
 local function updateMacros(focusName)
-    local class = select(3, UnitClass("player"))
+    local class = select(2, UnitClass("player"))
     local abilities = classAbilities[class]
     if ( not abilities ) then return end
 
