@@ -179,7 +179,8 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     frame:SetFrameStrata("HIGH");
 
     frame.text = frame:CreateFontString(nil, "ARTWORK");
-    frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
+    -- https://wow.tools/files/#search=fonts&page=1&sort=0&desc=asc
+    frame.text:SetFont("Fonts\\2002.ttf", size / 2, "OUTLINE");
     frame.text:SetPoint("CENTER", 0, 0);
 
     frame.texture = frame:CreateTexture();
