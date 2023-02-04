@@ -232,11 +232,11 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
             end
 
             if ( stacks > 0 ) then
-                self.text:SetText(math.min(stacks, self.maxStacks));
-
                 if ( stacks >= self.maxStacks ) then
+                    self.text:SetText("");
                     NS.ShowOverlayGlow(self);
                 else
+                    self.text:SetText(stacks);
                     NS.HideOverlayGlow(self);
                 end
             end
