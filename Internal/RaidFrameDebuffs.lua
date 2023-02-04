@@ -1,12 +1,15 @@
 local _, NS = ...;
+local test = false;
 
 local centerAura = {}; -- Show an important aura at the center of a raid frame
 local topRightAura = {}; -- Show a warning aura to the top right of a raid frame
 
 local centerAuraSpells = {
     102352, -- Cenarion Ward
-    774, -- Test (Rejuv)
 };
+if test then
+    table.insert(centerAuraSpells, 774); -- Rejuv (test)
+end
 
 local topRightSpells = {
     { spellID = 12294 }, -- Sharpen Blade
@@ -14,6 +17,10 @@ local topRightSpells = {
     { spellID = 352998, stacks = 8 }, -- Slaughterhouse
     { spellID = "Thoughtstolen" },
 };
+
+if test then
+    table.insert(topRightSpells, 774); -- Rejuv (test)
+end
 
 local function SetupRaidFrame(frame)
     if ( not centerAura[frame] ) then
@@ -25,7 +32,7 @@ local function SetupRaidFrame(frame)
 
     if ( not topRightAura[frame] ) then
         local topRightSize = 27;
-        topRightAura[frame] = CreateFrame("Frame", nil, frame, "CustomCompactBuffTemplate");
+        topRightAura[frame] = CreateFrame("Frame", nil, frame, "CustomCompactDebuffTemplate");
         topRightAura[frame]:SetSize(topRightSize, topRightSize);
         topRightAura[frame]:SetPoint("TOPLEFT", frame, "TOPRIGHT");
     end
