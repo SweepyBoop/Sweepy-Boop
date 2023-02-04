@@ -167,10 +167,11 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
 end
 
 -- No duration text, only show stacks, and glow when max stacks (if set)
-local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration)
+local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration, stackFunc)
     local frame = CreateFrame("Frame", "BoopHideTimerCustomAura" .. spellID, UIParent);
     frame.spellID = spellID;
     frame.maxStacks = maxStacks;
+    frame.stackFunc = stackFunc;
     frame:Hide();
 
     frame.spellID = spellID;
@@ -212,7 +213,7 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == "PLAYER_ENTERING_WORLD" ) or ( unitTarget == "player" ) then
-            local name, _, count, _, duration, expirationTime = NS.Util_GetUnitBuff("player", frame.spellID);
+            local name, _, count, _, duration, expirationTime, _, _, _, _, _, _, _, _, _, value = NS.Util_GetUnitBuff("player", frame.spellID);
             if ( not name ) then
                 self:Hide();
                 return;
@@ -222,10 +223,17 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
                 self.cooldown:SetCooldown(expirationTime - duration, duration);
             end
 
-            if ( count > 0 ) then
-                self.text:SetText(count);
+            local stacks;
+            if self.stackFunc then
+                stacks = self.stackFunc(count, duration, expirationTime, value);
+            else
+                stacks = count;
+            end
 
-                if ( count == self.maxStacks ) then
+            if ( stacks > 0 ) then
+                self.text:SetText(stacks);
+
+                if ( stacks == self.maxStacks ) then
                     NS.ShowOverlayGlow(self);
                 else
                     NS.HideOverlayGlow(self);
