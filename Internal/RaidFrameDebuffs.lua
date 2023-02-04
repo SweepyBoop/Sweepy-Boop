@@ -3,6 +3,17 @@ local _, NS = ...;
 local centerAura = {}; -- Show an important aura at the center of a raid frame
 local topRightAura = {}; -- Show a warning aura to the top right of a raid frame
 
+local centerAuraSpells = {
+    102352, -- Cenarion Ward
+};
+
+local topRightSpells = {
+    { spellID = 12294 }, -- Sharpen Blade
+    { spellID = 354124 }, -- Hemotoxin
+    { spellID = 352998, stacks = 8 }, -- Slaughterhouse
+    { spellID = "Thoughtstolen" },
+};
+
 local function SetupRaidFrame(frame)
     if ( not centerAura[frame] ) then
         local centerSize = 25;
