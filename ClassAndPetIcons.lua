@@ -38,7 +38,7 @@ local NameplateWhiteList = {
 }
 
 local function IsInWhiteList(unitId)
-    NameplateWhiteList["Tremor Totem"] = NS.partyWithFearSpell()
+    NameplateWhiteList["Tremor Totem"] = NS.PartyWithFearSpell();
 
     local name = UnitName(unitId)
     if NameplateWhiteList[name] then return true end
