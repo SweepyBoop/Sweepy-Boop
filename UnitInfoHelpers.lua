@@ -219,13 +219,7 @@ local function UpdatePartyInfo(unitId)
 end
 
 -- unitId must be player/party1/party2
-local function partyUnitGUID(unitId)
-    UpdatePartyInfo(unitId)
-    return partyInfo.unitGUID[unitId]
-end
-
--- unitId must be player/party1/party2
-local function partyUnitClass(unitId)
+local function PartyUnitClass(unitId)
     UpdatePartyInfo(unitId)
     return partyInfo.unitClass[unitId]
 end
@@ -235,9 +229,9 @@ local ClassWithFearSpell = NS.ClassWithFearSpell
 NS.PartyWithFearSpell = function ()
     if ( partyInfo.partyWithFearSpell == nil ) then
         partyInfo.partyWithFearSpell =
-            ClassWithFearSpell(partyUnitClass("player"))
-            or ClassWithFearSpell(partyUnitClass("party1"))
-            or ClassWithFearSpell(partyUnitClass("party2"))
+            ClassWithFearSpell(PartyUnitClass("player"))
+            or ClassWithFearSpell(PartyUnitClass("party1"))
+            or ClassWithFearSpell(PartyUnitClass("party2"))
     end
 
     return partyInfo.partyWithFearSpell
