@@ -174,7 +174,6 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     frame.stackFunc = stackFunc;
     frame:Hide();
 
-    frame.spellID = spellID;
     frame:SetSize(size, size);
     frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
     frame:SetFrameStrata("HIGH");
@@ -220,12 +219,6 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
                 return;
             end
 
-            -- Used to find spellID of a buff
-            --[[ if frame.spellID == "Protector of the Pack" then
-                local spellID = select(10, NS.Util_GetUnitBuff("player", frame.spellID));
-                print(spellID);
-            end ]]
-
             if duration and ( duration ~= 0 ) and self.cooldown then
                 self.cooldown:SetCooldown(expirationTime - duration, duration);
             end
@@ -254,6 +247,71 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     return frame;
 end
 
+local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowDuration)
+    local frame = CreateFrame("Frame", nil, UIParent);
+    frame.spellID = spellID;
+    frame.glowDuration = glowDuration;
+
+    frame:SetSize(size, size);
+    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    frame:SetFrameStrata("HIGH");
+
+    frame.texture = frame:CreateTexture();
+    local icon = select(3, GetSpellInfo(spellID));
+    frame.texture:SetTexture(icon);
+    frame.texture:SetAllPoints();
+
+    if glowDuration then
+        frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+        -- Copied from bigdebuffs options
+        frame.cooldown:SetAllPoints();
+        frame.cooldown:SetDrawEdge(false);
+        frame.cooldown:SetAlpha(1);
+        frame.cooldown:SetDrawBling(false);
+        frame.cooldown:SetDrawSwipe(true);
+        frame.cooldown:SetReverse(true);
+    end
+
+    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+    frame.spellActivationAlert:Hide();
+
+    frame:RegisterEvent("UNIT_AURA");
+    frame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    frame:SetScript("OnEvent", function (self, event, ...)
+        local unitTarget = ...;
+        if ( event == "PLAYER_ENTERING_WORLD" ) or ( unitTarget == "player" ) then
+            -- Used to find spellID of a buff
+            --[[ local spellID = select(10, NS.Util_GetUnitAura("player", "Well-Honed Instincts", "HARMFUL"));
+            if spellID then print(spellID) end ]]
+
+            local name, _, count, _, duration, expirationTime = NS.Util_GetUnitAura("player", frame.spellID, "HARMFUL");
+            if ( not name ) then
+                self.cooldown:SetCooldown(0, 0);
+                NS.HideOverlayGlow(self);
+                return;
+            end
+
+            local startTime = expirationTime - duration;
+
+            if duration and ( duration ~= 0 ) then
+                self.cooldown:SetCooldown(startTime, duration);
+            end
+
+            local timeElapsed = GetTime() - startTime;
+            if ( timeElapsed <= self.glowDuration ) then
+                NS.ShowOverlayGlow(self);
+            else
+                NS.HideOverlayGlow(self);
+            end
+        end
+    end)
+
+    frame:Show();
+    return frame;
+end
+
 local testGlowingBuffIcon = false;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
@@ -272,6 +330,8 @@ if ( class == NS.classId.Druid ) then
         return percent;
     end
     local protector = CreateStackBuffIcon(378987, 45, "RIGHT", _G["MultiBarBottomLeftButton1"], "LEFT", -5, 0, 100, false, protectorFunc);
+
+    local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarBottomLeftButton12"], "RIGHT", 5, 0, 3);
 
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
