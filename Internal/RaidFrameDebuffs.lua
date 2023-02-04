@@ -1,5 +1,5 @@
 local _, NS = ...;
-local test = false;
+local test = true;
 
 local centerAura = {}; -- Show an important aura at the center of a raid frame
 local topRightAura = {}; -- Show a warning aura to the top right of a raid frame
@@ -8,6 +8,7 @@ local centerAuraSpells = {
     102352, -- Cenarion Ward
 };
 if test then
+    table.insert(centerAuraSpells, 8936); -- Regrowth (test)
     table.insert(centerAuraSpells, 774); -- Rejuv (test)
 end
 
@@ -19,22 +20,33 @@ local topRightSpells = {
 };
 
 if test then
-    table.insert(topRightSpells, 774); -- Rejuv (test)
+    table.insert(topRightSpells, {spellID = 145152, stacks = 2}); -- Bloodtalons (test)
+    table.insert(topRightSpells, {spellID = 774}); -- Rejuv (test)
+end
+
+local function SetAuraFrame(frame)
+    local size = 25;
+    frame:SetSize(size, size);
+    frame.cooldown:SetDrawEdge(false);
+    frame.cooldown:SetAlpha(1);
+    frame.cooldown:SetDrawBling(false);
+    frame.cooldown:SetDrawSwipe(true);
+    frame.cooldown:SetReverse(true);
 end
 
 local function SetupRaidFrame(frame)
     if ( not centerAura[frame] ) then
-        local centerSize = 25;
         centerAura[frame] = CreateFrame("Frame", nil, frame, "CustomCompactAuraTemplate");
-        centerAura[frame]:SetSize(centerSize, centerSize);
+        SetAuraFrame(centerAura[frame]);
         centerAura[frame]:SetPoint("BOTTOM", frame, "CENTER");
+        centerAura[frame]:Hide();
     end
 
     if ( not topRightAura[frame] ) then
-        local topRightSize = 27;
         topRightAura[frame] = CreateFrame("Frame", nil, frame, "CustomCompactDebuffTemplate");
-        topRightAura[frame]:SetSize(topRightSize, topRightSize);
+        SetAuraFrame(topRightAura[frame]);
         topRightAura[frame]:SetPoint("TOPLEFT", frame, "TOPRIGHT");
+        topRightAura[frame]:Hide();
     end
 
     return centerAura[frame], topRightAura[frame];
@@ -58,6 +70,21 @@ local function UpdateRaidFrame(frame)
     end
     if ( not centerSet ) then
         center:Hide();
+    end
+
+    local topRightSet;
+    for _, spell in ipairs(topRightSpells) do
+        local name, icon, count, _, duration, expirationTime = NS.Util_GetUnitBuff(frame.displayedUnit, spell.spellID);
+        if duration and ( ( not spell.count ) or ( count >= spell.count ) ) then
+            topRight.icon:SetTexture(icon);
+            topRight.cooldown:SetCooldown(expirationTime - duration, duration);
+            topRight:Show();
+            topRightSet = true;
+            break;
+        end
+    end
+    if ( not topRightSet ) then
+        topRight:Hide();
     end
 end
 
