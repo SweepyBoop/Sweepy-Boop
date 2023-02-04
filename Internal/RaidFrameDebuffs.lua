@@ -16,7 +16,18 @@ local topRightSpells = {
     { spellID = 12294 }, -- Sharpen Blade
     { spellID = 354124 }, -- Hemotoxin
     { spellID = 352998, stacks = 8 }, -- Slaughterhouse
-    { spellID = "Thoughtstolen" },
+
+    -- Thoughtstolen
+    { spellID = 322459 }, -- Shaman
+    { spellID = 322464 }, -- Mage
+    { spellID = 322442 }, -- Druid
+    { spellID = 322462 }, -- Priest - Holy
+    { spellID = 322457 }, -- Paladin
+    { spellID = 322463 }, -- Warlock
+    { spellID = 322461 }, -- Priest - Discipline
+    { spellID = 322458 }, -- Monk
+    { spellID = 322460 }, -- Priest - Shadow
+    { spellID = 394902 }, -- Evoker
 };
 
 if test then
