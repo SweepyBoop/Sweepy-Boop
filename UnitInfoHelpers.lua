@@ -201,7 +201,7 @@ partyInfoFrame:SetScript("OnEvent", function ()
 end)
 
 -- Update info for this unitId whenever being queried
-local function updatePartyInfo(unitId)
+local function UpdatePartyInfo(unitId)
     if ( not UnitExists(unitId) ) then return end
 
     if ( not partyInfo.unitGUID[unitId] ) then
@@ -209,7 +209,7 @@ local function updatePartyInfo(unitId)
     end
 
     if ( not partyInfo.unitClass[unitId] ) then
-        partyInfo.unitClass[unitId] = select(3, UnitClass(unitId))
+        partyInfo.unitClass[unitId] = select(2, UnitClass(unitId))
     end
 
     local guid = partyInfo.unitGUID[unitId]
@@ -219,71 +219,22 @@ local function updatePartyInfo(unitId)
 end
 
 -- unitId must be player/party1/party2
-local function partyUnitGUID(unitId)
-    updatePartyInfo(unitId)
-    return partyInfo.unitGUID[unitId]
-end
-
--- unitId must be player/party1/party2
-local function partyUnitClass(unitId)
-    updatePartyInfo(unitId)
+local function PartyUnitClass(unitId)
+    UpdatePartyInfo(unitId)
     return partyInfo.unitClass[unitId]
 end
 
-local classWithFearSpell = NS.classWithFearSpell
+local ClassWithFearSpell = NS.ClassWithFearSpell
 
-NS.partyWithFearSpell = function ()
+NS.PartyWithFearSpell = function ()
     if ( partyInfo.partyWithFearSpell == nil ) then
-        partyInfo.partyWithFearSpell = classWithFearSpell(partyUnitClass("player"))
-            or classWithFearSpell(partyUnitClass("party1"))
-            or classWithFearSpell(partyUnitClass("party2"))
+        partyInfo.partyWithFearSpell =
+            ClassWithFearSpell(PartyUnitClass("player"))
+            or ClassWithFearSpell(PartyUnitClass("party1"))
+            or ClassWithFearSpell(PartyUnitClass("party2"))
     end
 
     return partyInfo.partyWithFearSpell
-end
-
--- If unitGUID matches player/party1/party2, cache and return the corresponding unitId; otherwise return nil
--- The cached unitId can later be used as "unit" in the TSU
--- Call ensures unitGUID is not nil
-NS.partyUnitId = function(unitGUID)
-    if ( unitGUID == partyUnitGUID("player") ) or ( unitGUID == partyUnitGUID("party1") ) or ( unitGUID == partyUnitGUID("party2") ) then
-        return partyInfo.unitId[unitGUID]
-    end
-
-    -- If unitGUID does not match the above units, no value should be cached and nil will be returned
-end
-
-NS.validateUnitForDR = function(partyUnitId, trackUnit)
-    if (not partyUnitId) then return end
-    if (trackUnit == "player") then
-        return (partyUnitId == "player")
-    elseif (trackUnit == "party") then
-        return (partyUnitId ~= "player")
-    end
-end
-
-NS.findArenaFrameForUnitId = function (unitId)
-    if NS.isTestMode then
-        if ( unitId == "player" ) then
-            return _G["GladiusButtonFramearena1"] or _G["sArenaEnemyFrame1"]
-        end
-    else
-        for i = 1, NS.MAX_ARENA_SIZE do
-            if ( unitId == "arena"..i ) then
-                return _G["GladiusButtonFramearena"..i] or _G["sArenaEnemyFrame"..i]
-            end
-        end
-    end
-end
-
-NS.findRaidFrameForUnitId = function (unitId)
-    for i = 1, NS.MAX_PARTY_SIZE do
-        local frame = _G["CompactPartyFrameMember"..i]
-        if ( not frame ) then return end
-        if frame.unit and UnitIsUnit(frame.unit, unitId) then
-            return frame
-        end
-    end
 end
 
 NS.IsShamanPrimaryPet = function (unitId)

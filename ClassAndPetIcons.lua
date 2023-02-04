@@ -38,7 +38,7 @@ local NameplateWhiteList = {
 }
 
 local function IsInWhiteList(unitId)
-    NameplateWhiteList["Tremor Totem"] = NS.partyWithFearSpell()
+    NameplateWhiteList["Tremor Totem"] = NS.PartyWithFearSpell();
 
     local name = UnitName(unitId)
     if NameplateWhiteList[name] then return true end
@@ -51,14 +51,14 @@ local function IsInWhiteList(unitId)
 end
 
 local function GetUnitClass(unitId)
-    return select(3, UnitClass(unitId))
+    return select(2, UnitClass(unitId))
 end
 
 local function IsArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
             local class = GetUnitClass("arena" .. i)
-            return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman and NS.IsShamanPrimaryPet(unitId) )
+            return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
         end
     end
 end
@@ -67,14 +67,14 @@ local function IsPartyPrimaryPet(unitId, partySize)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
         local class = GetUnitClass("player")
-        return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman and NS.IsShamanPrimaryPet(unitId) )
+        return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
     else
         local partySize = partySize or 2
         for i = 1, partySize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 local partyUnitId = "party" .. i
                 local class = GetUnitClass(partyUnitId)
-                return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman and NS.IsShamanPrimaryPet(unitId) )
+                return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
             end
         end
     end

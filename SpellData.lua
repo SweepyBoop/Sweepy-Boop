@@ -74,23 +74,6 @@ NS.specID = {
 }
 local specID = NS.specID
 
-NS.classId = {
-    Warrior = 1,
-    Paladin = 2,
-    Hunter = 3,
-    Rogue = 4,
-    Priest = 5,
-    DK = 6,
-    Shaman = 7,
-    Mage = 8,
-    Warlock = 9,
-    Monk = 10,
-    Druid = 11,
-    DemonHunter = 12,
-    Evoker = 13,
-}
-local classId = NS.classId
-
 NS.diminishingReturnCategory = {
     DR_DISORIENT = "disorient",
     DR_INCAPACITATE = "incapacitate",
@@ -628,8 +611,8 @@ NS.spellData = {
     },
 }
 
-NS.classWithFearSpell = function(class)
-    return ( class == classId.Warrior ) or ( class == classId.Priest ) or ( class == classId.Warlock )
+NS.ClassWithFearSpell = function(class)
+    return ( class == "WARRIOR" ) or ( class == "PRIEST" ) or ( class == "WARLOCK" );
 end
 
 NS.RESET_FULL = 0
