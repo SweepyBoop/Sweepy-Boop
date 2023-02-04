@@ -308,7 +308,6 @@ local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, r
         end
     end)
 
-    frame:Show();
     return frame;
 end
 
