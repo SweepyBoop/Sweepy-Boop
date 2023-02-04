@@ -1,5 +1,5 @@
 local _, NS = ...;
-local test = true;
+local test = false;
 
 local centerAura = {}; -- Show an important aura at the center of a raid frame
 local topRightAura = {}; -- Show a warning aura to the top right of a raid frame
