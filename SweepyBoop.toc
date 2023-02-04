@@ -30,3 +30,4 @@ Internal\PersonalDR.lua
 # Weak Auras equivalent
 Internal\CustomAuras.lua
 Internal\CustomStatusBar.lua
+Internal\RaidFrameDebuffs.lua
