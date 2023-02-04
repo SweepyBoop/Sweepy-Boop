@@ -230,13 +230,14 @@ local function partyUnitClass(unitId)
     return partyInfo.unitClass[unitId]
 end
 
-local classWithFearSpell = NS.classWithFearSpell
+local ClassWithFearSpell = NS.ClassWithFearSpell
 
 NS.PartyWithFearSpell = function ()
     if ( partyInfo.partyWithFearSpell == nil ) then
-        partyInfo.partyWithFearSpell = classWithFearSpell(partyUnitClass("player"))
-            or classWithFearSpell(partyUnitClass("party1"))
-            or classWithFearSpell(partyUnitClass("party2"))
+        partyInfo.partyWithFearSpell =
+            ClassWithFearSpell(partyUnitClass("player"))
+            or ClassWithFearSpell(partyUnitClass("party1"))
+            or ClassWithFearSpell(partyUnitClass("party2"))
     end
 
     return partyInfo.partyWithFearSpell

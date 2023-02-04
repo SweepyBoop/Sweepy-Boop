@@ -611,7 +611,7 @@ NS.spellData = {
     },
 }
 
-NS.classWithFearSpell = function(class)
+NS.ClassWithFearSpell = function(class)
     return ( class == "WARRIOR" ) or ( class == "PRIEST" ) or ( class == "WARLOCK" );
 end
 
