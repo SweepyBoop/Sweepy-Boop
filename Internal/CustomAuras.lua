@@ -177,6 +177,7 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     frame.spellID = spellID;
     frame:SetSize(size, size);
     frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    frame:SetFrameStrata("HIGH");
 
     frame.text = frame:CreateFontString(nil, "ARTWORK");
     frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
@@ -219,6 +220,12 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
                 return;
             end
 
+            -- Used to find spellID of a buff
+            --[[ if frame.spellID == "Protector of the Pack" then
+                local spellID = select(10, NS.Util_GetUnitBuff("player", frame.spellID));
+                print(spellID);
+            end ]]
+
             if duration and ( duration ~= 0 ) and self.cooldown then
                 self.cooldown:SetCooldown(expirationTime - duration, duration);
             end
@@ -231,9 +238,9 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
             end
 
             if ( stacks > 0 ) then
-                self.text:SetText(stacks);
+                self.text:SetText(math.min(stacks, self.maxStacks));
 
-                if ( stacks == self.maxStacks ) then
+                if ( stacks >= self.maxStacks ) then
                     NS.ShowOverlayGlow(self);
                 else
                     NS.HideOverlayGlow(self);
@@ -256,6 +263,15 @@ if ( class == NS.classId.Druid ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5, 2, true);
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
+
+    local function protectorFunc(count, duration, expirationTime, value)
+        local currentValue = value or 0;
+        -- 1 intellect = 1 spell power
+        local _, spellPower = UnitStat("player", 4);
+        local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
+        return percent;
+    end
+    local protector = CreateStackBuffIcon(378987, 45, "RIGHT", _G["MultiBarBottomLeftButton1"], "LEFT", -5, 0, 100, false, protectorFunc);
 
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
