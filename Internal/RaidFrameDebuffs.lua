@@ -86,7 +86,7 @@ local function UpdateRaidFrame(frame)
     local topRightSet;
     for _, spell in ipairs(topRightSpells) do
         local name, icon, count, _, duration, expirationTime = NS.Util_GetUnitAura(frame.displayedUnit, spell.spellID, "HARMFUL");
-        if duration and ( ( not spell.count ) or ( count >= spell.count ) ) then
+        if duration and ( ( not spell.stacks ) or ( count >= spell.stacks ) ) then
             topRight.icon:SetTexture(icon);
             topRight.cooldown:SetCooldown(expirationTime - duration, duration);
             topRight:Show();
