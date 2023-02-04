@@ -25,7 +25,7 @@ if test then
 end
 
 local function SetAuraFrame(frame)
-    local size = 25;
+    local size = 22;
     frame:SetSize(size, size);
     frame.cooldown:SetDrawEdge(false);
     frame.cooldown:SetAlpha(1);
@@ -59,8 +59,8 @@ local function UpdateRaidFrame(frame)
 
     local centerSet;
     for _, spell in ipairs(centerAuraSpells) do
-        local name, icon, _, _, duration, expirationTime = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
-        if duration then
+        local name, icon, _, _, duration, expirationTime, source = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
+        if duration and ( source == "player" ) then
             center.icon:SetTexture(icon);
             center.cooldown:SetCooldown(expirationTime - duration, duration);
             center:Show();
@@ -74,7 +74,7 @@ local function UpdateRaidFrame(frame)
 
     local topRightSet;
     for _, spell in ipairs(topRightSpells) do
-        local name, icon, count, _, duration, expirationTime = NS.Util_GetUnitBuff(frame.displayedUnit, spell.spellID);
+        local name, icon, count, _, duration, expirationTime = NS.Util_GetUnitAura(frame.displayedUnit, spell.spellID, "HARMFUL");
         if duration and ( ( not spell.count ) or ( count >= spell.count ) ) then
             topRight.icon:SetTexture(icon);
             topRight.cooldown:SetCooldown(expirationTime - duration, duration);
