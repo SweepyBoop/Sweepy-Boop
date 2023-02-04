@@ -22,9 +22,27 @@
 			</Cooldown>
 		</Frames>
 		<Scripts>
-			<OnClick>
+            <!-- Cannot compile: Unknown script element -->
+			<!-- <OnClick>
                 self:GetParent():Click(...);
-            </OnClick>
+            </OnClick> -->
 		</Scripts>
+	</Button>
+    <Button name="CustomCompactDebuffTemplate" inherits="CustomCompactAuraTemplate" virtual="true">
+		<Layers>
+			<Layer level="OVERLAY">
+				<Texture name="$parentBorder" parentKey="border" file="Interface\Buttons\UI-Debuff-Overlays">
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset x="-1" y="1"/>
+						</Anchor>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset x="1" y="-1"/>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.296875" right="0.5703125" top="0" bottom="0.515625"/>
+				</Texture>	
+			</Layer>
+		</Layers>
 	</Button>
 </Ui>
