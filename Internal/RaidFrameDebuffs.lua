@@ -32,7 +32,7 @@ local topRightSpells = {
 
 if test then
     table.insert(topRightSpells, {spellID = 145152, stacks = 2}); -- Bloodtalons (test)
-    table.insert(topRightSpells, {spellID = 774}); -- Rejuv (test)
+    table.insert(topRightSpells, {spellID = 382912}); -- Well-Honed Instincts (test)
 end
 
 local function SetAuraFrame(frame)
