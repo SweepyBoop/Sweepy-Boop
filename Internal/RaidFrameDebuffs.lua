@@ -3,6 +3,10 @@ local test = false;
 
 local centerAura = {}; -- Show an important aura at the center of a raid frame
 
+-- topRightAura removed since those debuffs are covered by BigDebuffs
+-- Hemotoxin is combined into Shiv debuff
+-- Mortal Strike gives 50% healing reduction baseline
+
 local centerAuraSpells = {
     102352, -- Cenarion Ward
 };
