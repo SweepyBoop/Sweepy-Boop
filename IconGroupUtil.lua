@@ -1,5 +1,10 @@
 local _, NS = ...;
 
+local CreateFrame = CreateFrame;
+local UIParent = UIParent;
+local GetTime = GetTime;
+local wipe = wipe;
+
 NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;

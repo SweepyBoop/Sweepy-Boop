@@ -1,5 +1,10 @@
 local _, NS = ...;
 
+local CreateFrame = CreateFrame;
+local UIParent = UIParent;
+local GetSpellInfo = GetSpellInfo;
+local GetTime = GetTime;
+
 NS.ShowOverlayGlow = function (button)
     if not button.spellActivationAlert then
         return;

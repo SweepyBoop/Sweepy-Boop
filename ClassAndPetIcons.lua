@@ -11,6 +11,9 @@ local UnitClass = UnitClass;
 local UnitCanAttack = UnitCanAttack;
 local UnitIsEnemy = UnitIsEnemy;
 local IsInInstance = IsInInstance;
+local strsplit = strsplit;
+local CompactPartyFrame = CompactPartyFrame;
+local hooksecurefunc = hooksecurefunc;
 
 -- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
 -- To find the NpcID of a unit, target it and type:
