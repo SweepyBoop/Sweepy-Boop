@@ -3,7 +3,7 @@ local _, NS = ...;
 local UnitAura = UnitAura;
 local strsplit = strsplit;
 
-NS.isTestMode = false
+NS.isTestMode = false;
 
 NS.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
@@ -656,6 +656,9 @@ if NS.isTestMode then
     -- Wild Growth
     NS.spellData[48438] = {
         category = OFFENSIVE,
+        duration = 7,
+        trackDest = true,
+        trackEvent = "SPELL_AURA_APPLIED",
     }
 
     NS.spellData[1459] = {
@@ -674,13 +677,5 @@ if NS.isTestMode then
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
         critResetAmount = 1,
-    }
-
-    -- Test totem with "PvP Training Dummy"
-    NS.spellData[188550] = {
-        category = OFFENSIVE_PET,
-        spellID = 324386,
-        duration = 60,
-        sound = true,
     }
 end

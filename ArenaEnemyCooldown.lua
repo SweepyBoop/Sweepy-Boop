@@ -3,7 +3,7 @@ local _, NS = ...;
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-local test = false;
+local test = NS.isTestMode;
 
 local spellData = NS.spellData;
 local spellResets = NS.spellResets;
