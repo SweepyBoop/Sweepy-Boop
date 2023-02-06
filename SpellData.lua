@@ -32,20 +32,14 @@ NS.GetNpcIdFromGuid = function (guid)
     return 0
 end
 
-NS.spellCategory = {
+NS.SPELLCATEGORY = {
     OFFENSIVE = 1,
-    OFFENSIVE_DURATION = 2, -- Exclude spells that have dynamic duration, e.g., icy veins can extend the duration from hitting frozen targets with ice lance.
-    OFFENSIVE_PET = 3, -- e.g., Psyfiend, Vesper Totem (match with NPC ID instead of spellID).
-    OFFENSIVE_SPECIAL = 4,
 }
 
 -- trackEvent: event or combat log subEvent to track
 -- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID (this cannot be set to spells that can only self cast)
 
-local OFFENSIVE = NS.spellCategory.OFFENSIVE
-local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
-local OFFENSIVE_PET = NS.spellCategory.OFFENSIVE_PET
-local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
+local OFFENSIVE = NS.SPELLCATEGORY.OFFENSIVE
 
 -- Event name constants
 NS.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD"
@@ -102,7 +96,7 @@ NS.spellData = {
     -- Empower Rune Weapon
     [47568] = {
         class = "DEATHKNIGHT",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Offensive (Unholy)
@@ -117,26 +111,26 @@ NS.spellData = {
     -- Unholy Assult
     [207289] = {
         class = "DEATHKNIGHT",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Apocalypse
     [275699] = {
         class = "DEATHKNIGHT",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Offensive (Frost)
     -- Pillar of Frost
     [51271] = {
         class = "DEATHKNIGHT",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 12,
     },
     -- Chill Streak
     [305392] = {
         class = "DEATHKNIGHT",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 4,
         index = 2,
         sound = true,
@@ -154,7 +148,7 @@ NS.spellData = {
     -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
         class = "DEMONHUNTER",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         trackEvent = NS.UNIT_SPELLCAST_SUCCEEDED,
         duration = 24,
     },
@@ -164,19 +158,19 @@ NS.spellData = {
     -- Berserk
     [106951] = {
         class = "DRUID",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Incarnation: Avatar of Ashamane
     [102543] = {
         class = "DRUID",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 30,
     },
     -- Celestial Alignment
     [194223] = {
         class = "DRUID",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Incarnation: Chosen of Elune (spellID has not changed in DF)
@@ -213,7 +207,7 @@ NS.spellData = {
     -- Dragon Rage
     [375087] = {
         class = "EVOKER",
-        category = OFFENSIVE_SPECIAL,
+        category = OFFENSIVE,
         duration = 14,
         cooldown = 120,
         extend = true,
@@ -224,19 +218,19 @@ NS.spellData = {
     -- Bestial Wrath
     [19574] = {
         class = "HUNTER",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 15,
     },
     -- Coordinated Assult
     [360952] = {
         class = "HUNTER",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Trueshot
     [288613] = {
         class = "HUNTER",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 18,
     },
     -- Call of the Wild
@@ -255,7 +249,7 @@ NS.spellData = {
     -- Combustion
     [190319] = {
         class = "MAGE",
-        category = OFFENSIVE_SPECIAL,
+        category = OFFENSIVE,
         duration = 12,
         cooldown = 120,
         index = 1,
@@ -273,14 +267,14 @@ NS.spellData = {
     -- Icy Veins
     [12472] = {
         class = "MAGE",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 25,
         extend = true,
     },
     -- Ice Form
     [198144] = {
         class = "MAGE",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 12,
         extend = true,
     },
@@ -297,7 +291,7 @@ NS.spellData = {
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
         class = "MONK",
-        category = OFFENSIVE_SPECIAL,
+        category = OFFENSIVE,
         duration = 15,
         cooldown = 90,
         charges = true,
@@ -309,7 +303,7 @@ NS.spellData = {
     -- Serenity
     [152173] = {
         class = "MONK",
-        category = OFFENSIVE_SPECIAL,
+        category = OFFENSIVE,
         duration = 12,
         cooldown = 90,
         reduce_power_type = Enum.PowerType.Chi,
@@ -320,13 +314,13 @@ NS.spellData = {
     -- Invoke Xuen, the White Tiger
     [123904] = {
         class = "MONK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 24,
     },
     -- Bonedust Brew
     [386276] = {
         class = "MONK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 10,
         spec = { specID.WW },
         index = 2,
@@ -334,7 +328,7 @@ NS.spellData = {
     -- Dance of Chi-ji
     [325202] = {
         class = "MONK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
         index = 2,
     },
@@ -372,7 +366,7 @@ NS.spellData = {
     },
     -- Blessing of Summer
     [388007] = {
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
         index = 1,
@@ -380,14 +374,14 @@ NS.spellData = {
     -- Seraphim
     [152262] = {
         class = "PALADIN",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 15,
         spec = { specID.RET },
     },
     -- Final Reckoning
     [343721] = {
         class = "PALADIN",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 8,
     },
 
@@ -410,13 +404,13 @@ NS.spellData = {
     -- Psyfiend
     [211522] = {
         class = "PRIEST",
-        category = OFFENSIVE_PET,
+        category = OFFENSIVE,
         spellID = 211522,
         duration = 12,
     },
     -- Power Infusion
     [10060] = {
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         trackDest = true,
         trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
         duration = 20,
@@ -427,13 +421,13 @@ NS.spellData = {
     -- Shadow Blades
     [121471] = {
         class = "ROGUE",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Adrenaline Rush
     [13750] = {
         class = "ROGUE",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Sepsis
@@ -463,14 +457,14 @@ NS.spellData = {
     -- Kingsbane
     [385627] = {
         class = "ROGUE",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 14,
         index = 2,
     },
     -- Echoing Reprimand
     [323560] = {
         class = "ROGUE",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
     },
 
@@ -479,7 +473,7 @@ NS.spellData = {
     -- Ascendance (Enhancement)
     [114051] = {
         class = "SHAMAN",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 15,
     },
     -- Doom Winds
@@ -493,13 +487,13 @@ NS.spellData = {
     -- Stormkeeper
     [191634] = {
         class = "SHAMAN",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 15,
     },
     -- Skyfury
     [208963] = {
         duration = 15,
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
     },
@@ -517,14 +511,14 @@ NS.spellData = {
     -- Summon Darkglare
     [205180] = {
         class = "WARLOCK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Destruction
     -- Summon Infernal
     [1122] = {
         class = "WARLOCK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 30,
     },
     -- Demonology
@@ -539,19 +533,19 @@ NS.spellData = {
     -- Summon Demonic Tyrant
     [265187] = {
         class = "WARLOCK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 15,
     },
     -- Fel Obelisk
     [353601] = {
         class = "WARLOCK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 15,
     },
     -- Grimoire: Felguard
     [111898] = {
         class = "WARLOCK",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 17,
     },
     -- Gul'dan's Ambition (Pit Lord)
@@ -565,25 +559,25 @@ NS.spellData = {
     -- Warbreaker
     [262161] = {
         class = "WARRIOR",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 10,
     },
     -- Colossus Smash
     [167105] = {
         class = "WARRIOR",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 10,
     },
     -- Avatar
     [107574] = {
         class = "WARRIOR",
-        category = OFFENSIVE_DURATION,
+        category = OFFENSIVE,
         duration = 20,
     },
     -- Recklessness
     [1719] = {
         class = "WARRIOR",
-        category = OFFENSIVE_SPECIAL,
+        category = OFFENSIVE,
         cooldown = 90,
         duration = 16,
         reduce_power_type = Enum.PowerType.Rage,
@@ -662,7 +656,7 @@ if NS.isTestMode then
 
     NS.spellData[1459] = {
         class = "MAGE",
-        category = OFFENSIVE_SPECIAL,
+        category = OFFENSIVE,
         duration = 12,
         cooldown = 120,
         index = 1,
