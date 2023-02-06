@@ -307,7 +307,7 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         end
 
         -- Update cast bar
-        UpdateCastBar(frame)
+        --UpdateCastBar(frame)
     end
 end)
 
