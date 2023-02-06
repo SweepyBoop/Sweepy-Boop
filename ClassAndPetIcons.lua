@@ -210,43 +210,43 @@ local ShowCastNpc = {
 
 local function UpdateCastBar(frame)
     if ( not frame.unit) or ( string.sub(frame.unit, 1, 9) ~= "nameplate" ) then
-        return
+        return;
     end
 
-    local showCastBarEx = false
+    local showCastBarEx = false;
     if UnitIsPlayer(frame.unit) then
-        showCastBarEx = true
+        showCastBarEx = true;
     else
         if ( not IsActiveBattlefieldArena() ) then
-            showCastBarEx = true
+            showCastBarEx = true;
         else
-            local guid = UnitGUID(frame.unit)
-            local npcID = select(6, strsplit("-", guid))
-            showCastBarEx = npcID and ShowCastNpc[npcID]
+            local guid = UnitGUID(frame.unit);
+            local npcID = select(6, strsplit("-", guid));
+            showCastBarEx = npcID and ShowCastNpc[npcID];
         end
     end
 
     if ( frame.showCastBarEx == nil ) or ( showCastBarEx ~= frame.showCastBarEx ) then
         if showCastBarEx then
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
-            frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD")
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", frame.unit);
+            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", frame.unit);
+            frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD");
         else
-            frame.castBar:UnregisterAllEvents()
+            frame.castBar:UnregisterAllEvents();
         end
 
-        frame.showCastBarEx = showCastBarEx
+        frame.showCastBarEx = showCastBarEx;
     end
 end
 
