@@ -209,6 +209,9 @@ local ShowCastNpc = {
 }
 
 local function UpdateCastBar(frame)
+    -- Already set, skip
+    if ( frame.showCastBarEx ~= nil ) then return end
+
     if ( not frame.unit) or ( string.sub(frame.unit, 1, 9) ~= "nameplate" ) then
         return
     end
@@ -226,30 +229,26 @@ local function UpdateCastBar(frame)
         end
     end
 
-    showCastBarEx = false
-
-    if ( frame.showCastBarEx == nil ) or ( showCastBarEx ~= frame.showCastBarEx ) then
-        if showCastBarEx then
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
-            frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD")
-        else
-            frame.castBar:UnregisterAllEvents()
-        end
-
-        frame.showCastBarEx = showCastBarEx
+    if showCastBarEx then
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", unit)
+        frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", unit)
+        frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD")
+    else
+        frame.castBar:UnregisterAllEvents()
     end
+
+    frame.showCastBarEx = showCastBarEx
 end
 
 -- Protected nameplates in dungeons and raids
