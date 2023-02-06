@@ -41,7 +41,6 @@ NS.spellCategory = {
 
 -- trackEvent: event or combat log subEvent to track
 -- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID (this cannot be set to spells that can only self cast)
--- isNpc: spellId is treated as NpcId, provide the spellId in the spell data for finding the spell icon
 
 local OFFENSIVE = NS.spellCategory.OFFENSIVE
 local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
