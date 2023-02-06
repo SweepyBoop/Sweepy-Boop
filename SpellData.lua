@@ -261,12 +261,12 @@ NS.spellData = {
         cooldown = 120,
         index = 1,
         sound = true,
-    
+
         resets = {
             [133] = 2, -- Pyrokinesis
             [314791] = 12, -- Shifting Power
         },
-    
+
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
         critResetAmount = 75,
@@ -665,12 +665,12 @@ if NS.isTestMode then
         cooldown = 120,
         index = 1,
         sound = true,
-    
+
         resets = {
             [133] = 2, -- Pyrokinesis
             [314791] = 12, -- Shifting Power
         },
-    
+
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
         critResetAmount = 1,
