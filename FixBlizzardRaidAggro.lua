@@ -1,4 +1,13 @@
-local _, NS = ...
+local _, NS = ...;
+
+local GetSpecialization = GetSpecialization;
+local GetSpecializationInfo = GetSpecializationInfo;
+local GetArenaOpponentSpec = GetArenaOpponentSpec;
+local GetSpecializationInfoByID = GetSpecializationInfoByID;
+local UnitGUID = UnitGUID;
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
+local GetThreatStatusColor = GetThreatStatusColor;
+local CreateFrame = CreateFrame;
 
 -- IMPORTANT!!!
 -- Make sure you disable Interface -> Raid Profiles -> "Display Aggro Highlight", and do a /reload
@@ -43,8 +52,8 @@ local function GetArenaRole(unitId)
     return arenaRoles[unitId]
 end
 
-local function CalculateAggro(aggro)
-    aggro = {}
+local function CalculateAggro()
+    local aggro = {}
 
     if isTestMode then
         if GetArenaRole("player") ~= "DAMAGER" then return end
@@ -85,7 +94,7 @@ local function EventHandler(self, event, unitTarget)
         -- Only enable highlight inside an arena
         if (not IsActiveBattlefieldArena()) and ( not isTestMode ) then return end
 
-        local aggro = CalculateAggro(aggro)
+        local aggro = CalculateAggro();
 
         for i = 1, NS.MAX_PARTY_SIZE do
             local frame = _G["CompactPartyFrameMember"..i]
@@ -98,7 +107,7 @@ local function EventHandler(self, event, unitTarget)
                 -- 1: 1.00, 1.00, 0.47 (yellow)
                 -- 2: 1.00, 0.60, 0.00 (orange)
                 -- 3: 1.00, 0.00, 0.00 (red)
-                if guid and aggro[guid] then
+                if aggro and guid and aggro[guid] then
                     frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(3)) -- red
                     frame.aggroHighlight:Show()
                 else
