@@ -226,8 +226,6 @@ local function UpdateCastBar(frame)
         end
     end
 
-    showCastBarEx = false
-
     if ( frame.showCastBarEx == nil ) or ( showCastBarEx ~= frame.showCastBarEx ) then
         if showCastBarEx then
             frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", unit)
