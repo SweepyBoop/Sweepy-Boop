@@ -22,7 +22,7 @@ The cooldown tracking mod comes with various advanced features:
 ## Fix Blizzard raid frame aggro highlight
 Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is rather unreliable.
 
-This module fixes that by highlighting the teammate who is targetted by the most enemy players.
+This module fixes that by highlighting the teammate who is targetted by enemy DPS players.
 
 For this module to work, disable the following setting under Interface settings so that it stops showing PvE threats:
 ![image](https://user-images.githubusercontent.com/78008331/216872796-737ec8a0-336b-4721-a122-bb9daaf70583.png)
