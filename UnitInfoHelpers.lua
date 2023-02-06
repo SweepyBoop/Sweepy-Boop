@@ -6,8 +6,6 @@ local UnitGUID = UnitGUID;
 local UnitClass = UnitClass;
 local UnitName = UnitName;
 
-local isTestMode = NS.isTestMode;
-
 NS.MAX_ARENA_SIZE = 3
 NS.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 
