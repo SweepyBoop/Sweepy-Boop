@@ -15,7 +15,7 @@ I believe this is a great alternative to friendly nameplates, since it's not alw
 
 ## Arena enemy cooldown tracking
 The cooldown tracking mod comes with various advanced features:
-- Shows duration when the cooldown is active with a glow, and shows cooldown timer otherwise (close to tournament UI)
+- Shows duration when the cooldown is active with a glow, and shows cooldown timer otherwise (similar to tournament UI)
 - Sort icons by priority/threat, e.g., on an Assasination Rogue, Deathmark will always show before other icons
 - Cooldown reduction: for instance, Windwalker Monk Storm, Earth, and Fire cooldown reduced by spending Chi, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
 
