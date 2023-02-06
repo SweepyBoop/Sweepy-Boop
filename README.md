@@ -7,9 +7,11 @@ Here is how my UI looks like:
 ## Class and pet icons
 For friendly players and their primary pets, place a class (for players) or pet icon on top.
 
-When selected, show an orange border to highlight.
+When selected, show an orange highlight border.
 
 This makes it much easier to track where your teammates are duing an arena match.
+
+I believe this is a great alternative to friendly nameplates, since it's not always easy to distinguish between enemy/friendly nameplates. Some players use a script to make friendly nameplates shorter, but there is an issue with priest mind control, i.e., friendly nameplates can become default width, or enemy nameplates can become short width after mind control effect.
 
 ## Arena enemy cooldown tracking
 The cooldown tracking mod comes with various advanced features:
