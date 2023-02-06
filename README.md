@@ -20,7 +20,7 @@ The cooldown tracking mod comes with various advanced features:
   - Detect optional charges for abilities such as DK grip, warrior charge, priest dispel. Once this is detected, if for instance a DK uses his first charge of grip, on the cooldown timer, you can see a charge number 1 meaning he still has one charge of grip available
 
 ## Fix Blizzard raid frame aggro highlight
-Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is rather unreliable.
+Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is not very useful.
 
 This module fixes that by highlighting the teammate who is targetted by enemy DPS players.
 
