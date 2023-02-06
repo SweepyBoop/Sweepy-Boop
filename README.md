@@ -13,11 +13,9 @@ This makes it much easier to track where your teammates are duing an arena match
 
 ## Arena enemy cooldown tracking
 The cooldown tracking mod comes with various advanced features:
-- Cooldown reduction: Hammer of Justice (from Fist of Justice), Combustion (from Pyrokinesis, Kindling, Shifting Power), Vendetta (from Duskwalker's Patch legendary armor) etc.
-- Talent memorization such as:
-  - If a paladin casts Repentance or Blinding Light, Fist of Justice cooldown reduction for that player would be suppressed
-  - If a priest casts a second Psychic Scream within 60 sec after the first one, we know they are playing Psychic Voice, thus will adjust the Psychic Scream cooldown for that unit to 30 sec
-  - Detect optional charges for abilities such as DK grip, warrior charge, priest dispel. Once this is detected, if for instance a DK uses his first charge of grip, on the cooldown timer, you can see a charge number 1 meaning he still has one charge of grip available
+- Shows duration when the cooldown is active with a glow, and shows cooldown timer otherwise (close to tournament UI)
+- Sort icons by priority/threat, e.g., on an Assasination Rogue, Deathmark will always show before other icons
+- Cooldown reduction: for instance, Windwalker Monk Storm, Earth, and Fire cooldown reduced by spending Chi, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
 
 ## Fix Blizzard raid frame aggro highlight
 Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is not very useful.
