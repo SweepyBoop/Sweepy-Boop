@@ -77,27 +77,6 @@ NS.specID = {
 }
 local specID = NS.specID
 
-NS.diminishingReturnCategory = {
-    DR_DISORIENT = "disorient",
-    DR_INCAPACITATE = "incapacitate",
-    DR_SILENCE = "silence",
-    DR_STUN = "stun",
-    DR_ROOT = "root",
-    DR_DISARM = "disarm",
-    DR_TAUNT = "taunt",
-    DR_KNOCKBACK = "knockback",
-}
-local DR_DISORIENT = NS.diminishingReturnCategory.DR_DISORIENT
-local DR_INCAPACITATE = NS.diminishingReturnCategory.DR_INCAPACITATE
-local DR_SILENCE = NS.diminishingReturnCategory.DR_SILENCE
-local DR_STUN = NS.diminishingReturnCategory.DR_STUN
-local DR_ROOT = NS.diminishingReturnCategory.DR_ROOT
-local DR_DISARM = NS.diminishingReturnCategory.DR_DISARM
-local DR_TAUNT = NS.diminishingReturnCategory.DR_TAUNT
-local DR_KNOCKBACK = NS.diminishingReturnCategory.DR_KNOCKBACK
-
-NS.defaultIndex = 100
-
 -- charges: baseline 2 charges
 -- opt_charges: optionally 2 charges
 -- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
