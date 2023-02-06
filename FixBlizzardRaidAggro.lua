@@ -14,7 +14,7 @@ local CreateFrame = CreateFrame;
 -- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
 
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
-local isTestMode = false
+local isTestMode = false;
 
 local arenaRoles = {}
 
@@ -58,7 +58,6 @@ local function CalculateAggro()
     if isTestMode then
         if GetArenaRole("player") ~= "DAMAGER" then return end
         local guid = UnitGUID("playertarget")
-        print(guid, UnitGUID("player"))
         if guid then
             aggro[guid] = true
         end
