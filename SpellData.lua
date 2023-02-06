@@ -2,6 +2,7 @@ local _, NS = ...;
 
 local UnitAura = UnitAura;
 local strsplit = strsplit;
+local POWERTYPE = Enum.PowerType;
 
 NS.isTestMode = false;
 
@@ -295,7 +296,7 @@ NS.spellData = {
         duration = 15,
         cooldown = 90,
         charges = true,
-        reduce_power_type = Enum.PowerType.Chi,
+        reduce_power_type = POWERTYPE.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
         extend = true,
         index = 1,
@@ -306,7 +307,7 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 12,
         cooldown = 90,
-        reduce_power_type = Enum.PowerType.Chi,
+        reduce_power_type = POWERTYPE.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
         extend = true,
         index = 1,
@@ -580,7 +581,7 @@ NS.spellData = {
         category = OFFENSIVE,
         cooldown = 90,
         duration = 16,
-        reduce_power_type = Enum.PowerType.Rage,
+        reduce_power_type = POWERTYPE.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
         index = 1,
     },
