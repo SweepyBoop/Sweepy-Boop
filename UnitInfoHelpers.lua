@@ -1,4 +1,10 @@
-local _, NS = ...
+local _, NS = ...;
+
+local CreateFrame = CreateFrame;
+local UnitExists = UnitExists;
+local UnitGUID = UnitGUID;
+local UnitClass = UnitClass;
+local UnitName = UnitName;
 
 local isTestMode = NS.isTestMode;
 
