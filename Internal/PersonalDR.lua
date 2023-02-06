@@ -1,5 +1,12 @@
 local _, NS = ...;
 
+local GetSpellInfo = GetSpellInfo;
+local UnitGUID = UnitGUID;
+local CreateFrame = CreateFrame;
+local UIParent = UIParent;
+local GetTime = GetTime;
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
+
 local test = false;
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua

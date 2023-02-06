@@ -1,3 +1,8 @@
+local CreateFrame = CreateFrame;
+local TargetFrame = TargetFrame;
+local UIParent = UIParent;
+local UnitAffectingCombat = UnitAffectingCombat;
+
 -- Combat indicator
 local targetCombatFrame = CreateFrame('Frame', nil , TargetFrame)
 targetCombatFrame:SetPoint('LEFT', TargetFrame, 'RIGHT', -15, 0)

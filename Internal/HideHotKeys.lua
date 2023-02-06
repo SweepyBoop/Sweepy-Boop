@@ -1,3 +1,8 @@
+local IsActionInRange = IsActionInRange;
+local RANGE_INDICATOR = RANGE_INDICATOR;
+local SlashCmdList = SlashCmdList;
+local CreateFrame = CreateFrame;
+
 local function HideHotKeys_HideBar(b, f)
     for i = 1, 12 do
         local o = _G[b.."Button"..i..f]

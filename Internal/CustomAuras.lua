@@ -3,6 +3,10 @@ local _, NS = ...
 local CreateFrame = CreateFrame;
 local UnitClass = UnitClass;
 local PlayerFrame = PlayerFrame;
+local UIParent = UIParent;
+local GetSpellInfo = GetSpellInfo;
+local GetTime = GetTime;
+local UnitStat = UnitStat;
 
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/

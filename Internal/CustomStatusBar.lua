@@ -1,5 +1,19 @@
 local _, NS = ...;
 
+local UnitExists = UnitExists;
+local UnitClass = UnitClass;
+local CreateFrame = CreateFrame;
+local UIParent = UIParent;
+local PlayerFrame = PlayerFrame;
+local GameFontNormal = GameFontNormal;
+local UnitHealthMax = UnitHealthMax;
+local UnitHealth = UnitHealth;
+local UnitIsUnit = UnitIsUnit;
+local UnitPower = UnitPower;
+local UnitPowerMax = UnitPowerMax;
+local GetShapeshiftForm = GetShapeshiftForm;
+local POWERTYPE = Enum.PowerType;
+
 local test = false;
 
 local function ShouldShowHealthBar(unit)
@@ -165,14 +179,14 @@ local function CreateDruidManaBar() -- Create StatusBar with a text overlay
 end
 
 local function UpdatePower(frame, powerType)
-    local power = UnitPower(frame.unit, powerType or Enum.PowerType.Mana);
+    local power = UnitPower(frame.unit, powerType or POWERTYPE.Mana);
     frame:SetValue(power);
     local powerPercent = math.floor(power * 100 / frame.powerMax);
     frame.Text:SetText(powerPercent);
 end
 
 local function UpdatePowerMax(frame, powerType)
-    frame.powerMax = UnitPowerMax(frame.unit, powerType or Enum.PowerType.Mana);
+    frame.powerMax = UnitPowerMax(frame.unit, powerType or POWERTYPE.Mana);
     frame:SetMinMaxValues(0, frame.powerMax);
     UpdatePower(frame, powerType);
 end
@@ -211,12 +225,12 @@ if ( class == "DRUID" ) then
         if ( unit ~= "player" ) then return end
 
         if ( event == "UNIT_POWER_FREQUENT" ) then
-            UpdatePower(self, Enum.PowerType.Mana);
+            UpdatePower(self, POWERTYPE.Mana);
         elseif ( event == "UNIT_MAXPOWER" ) then
-            UpdatePowerMax(self, Enum.PowerType.Mana);
+            UpdatePowerMax(self, POWERTYPE.Mana);
         end
     end);
-    InitializeManaBar(druidManaBar, Enum.PowerType.Mana);
+    InitializeManaBar(druidManaBar, POWERTYPE.Mana);
     druidManaBar:RegisterEvent("UNIT_POWER_FREQUENT");
     druidManaBar:RegisterEvent("UNIT_MAXPOWER");
     druidManaBar:RegisterEvent("UPDATE_SHAPESHIFT_FORM"); -- Fired when the current form changes

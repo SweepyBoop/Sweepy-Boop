@@ -1,4 +1,10 @@
 local _, NS = ...;
+
+local CreateFrame = CreateFrame;
+local CompactPartyFrame = CompactPartyFrame;
+local hooksecurefunc = hooksecurefunc;
+local UnitIsPlayer = UnitIsPlayer;
+
 local test = false;
 
 local centerAura = {}; -- Show an important aura at the center of a raid frame

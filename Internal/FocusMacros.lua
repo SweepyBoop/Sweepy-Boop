@@ -1,4 +1,15 @@
-local _, NS = ...
+local _, NS = ...;
+
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
+local GetArenaOpponentSpec = GetArenaOpponentSpec;
+local GetSpecializationInfoByID = GetSpecializationInfoByID;
+local UnitClass = UnitClass;
+local GetMacroIndexByName = GetMacroIndexByName;
+local CreateMacro = CreateMacro;
+local EditMacro = EditMacro;
+local CreateFrame = CreateFrame;
+local InCombatLockdown = InCombatLockdown;
+local C_Timer = C_Timer;
 
 local classAbilities = {}
 local macroPrefixes = {}

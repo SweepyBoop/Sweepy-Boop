@@ -5,6 +5,15 @@
 
 -- Try leveraging SetPoint to modify the positions of CompactPartyFrames
 
+local UnitIsUnit = UnitIsUnit;
+local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP;
+local InCombatLockdown = InCombatLockdown;
+local C_Timer = C_Timer;
+local CompactPartyFrame = CompactPartyFrame;
+local hooksecurefunc = hooksecurefunc;
+local EditModeManagerFrame = EditModeManagerFrame;
+local GetNumGroupMembers = GetNumGroupMembers;
+
 local function Compare(left, right)
     local leftToken, rightToken = left.unit, right.unit;
 

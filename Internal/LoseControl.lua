@@ -1,3 +1,5 @@
+local CreateFrame, UIParent, C_LossOfControl = CreateFrame, UIParent, C_LossOfControl;
+
 local containerFrame = CreateFrame("Frame", nil, UIParent)
 containerFrame:SetSize(30, 30)
 containerFrame:SetPoint("CENTER")
