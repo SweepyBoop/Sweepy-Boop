@@ -140,4 +140,5 @@ NS.IconGroup_Wipe = function (group)
     wipe(group.activeMap);
     wipe(group.npcMap);
     group.unitGUID = nil;
+    group.unitGUIDs = {};
 end

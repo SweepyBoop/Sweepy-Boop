@@ -82,18 +82,33 @@ for i = 1, NS.MAX_ARENA_SIZE do
 end
 
 local function ValidateUnit(self)
-    -- Update icon group guid
-    if ( not self.unitGUID ) then
-        self.unitGUID = UnitGUID(self.unit);
-    end
+    -- If unit is specified, this is a group to track a single unit, return unitGUID
+    if self.unit then
+        -- Update icon group guid
+        if ( not self.unitGUID ) then
+            self.unitGUID = UnitGUID(self.unit);
+        end
 
-    -- If unit does not exist, will return nil
-    return self.unitGUID;
+        -- If unit does not exist, will return nil
+        return self.unitGUID;
+    else
+        self.unitGUIDs = self.unitGUIDs or {};
+        for i = 1, NS.MAX_ARENA_SIZE do
+            local unitId = "arena" .. i;
+            -- We only need to cache GUIDs here, info such as specs are taken into account when populating icons
+            if ( not self.unitGUIDs[unitId] ) then
+                self.unitGUIDs[unitId] = UnitGUID(unitId);
+            end
+        end
+
+        return self.unitGUIDs;
+    end
 end
 
 local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
     local guid = ValidateUnit(self);
-    if ( not guid ) then return end
+    -- If this group is tracking a single unit and returning GUID is null, unit doesn't exist and no need to proceed
+    if self.unit and ( not guid ) then return end
 
     -- Check resets by spell cast
     if ( subEvent == "SPELL_CAST_SUCCESS" ) and ( sourceGUID == guid ) then
