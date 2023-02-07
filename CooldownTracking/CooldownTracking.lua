@@ -1,5 +1,5 @@
 local _, NS = ...;
-local test = false;
+local test = true;
 
 local UIParent = UIParent;
 local UnitGUID = UnitGUID;
@@ -152,22 +152,25 @@ premadeIcons[SPELLCATEGORY.DISPEL] = {};
 premadeIcons[SPELLCATEGORY.DEFENSIVE] = {};
 
 -- Populate all icons (regardless of class)
-for category, group in ipairs(premadeIcons) do
+for category, group in pairs(premadeIcons) do
+    print(category, group)
     if test then
         local unitId = "player";
-        for spellID, spell in cooldowns do
+        for spellID, spell in pairs(cooldowns) do
             if ( spell.category ) == category then
-                premadeIcons[category][unitId] = premadeIcons[category][unitId] or {};
-                premadeIcons[category][unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
+                group[unitId] = group[unitId] or {};
+                group[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
+                print(group[unitId][spellID])
             end
         end
     else
-        for spellID, spell in cooldowns do
+        for spellID, spell in pairs(cooldowns) do
             if ( spell.category ) == category then
                 for i = 1, NS.MAX_ARENA_SIZE do
                     local unitId = "arena" .. i;
-                    premadeIcons[category][unitId] = premadeIcons[category][unitId] or {};
-                    premadeIcons[category][unitId] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
+                    group[unitId] = group[unitId] or {};
+                    group[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
+                    print(group[unitId][spellID])
                 end
             end
         end
@@ -175,4 +178,5 @@ for category, group in ipairs(premadeIcons) do
 end
 
 -- Populate icons based on class and spec
-
+local iconGroups = {}; -- Each group tracks all 3 arena opponents
+local defensiveGroups = {}; -- This one needs a group per unit

@@ -52,7 +52,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size)
         charges = spell.charges,
         opt_charges = spell.charges,
     };
-    frame.priority = frame.spell.priority;
+    frame.priority = spell.priority;
 
     frame.icon:SetTexture(select(3, GetSpellInfo(spellID)));
     frame.icon:SetAllPoints();
