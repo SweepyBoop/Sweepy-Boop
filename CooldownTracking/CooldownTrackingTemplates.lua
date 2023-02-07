@@ -62,17 +62,27 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
     frame.icon:SetTexture(select(3, GetSpellInfo(spellID)));
     frame.icon:SetAllPoints();
 
-    -- Set default cooldown
-    frame.cooldown.cooldown = spell.cooldown;
-    -- If baseline charge, set chargeExpire now
-    frame.cooldown.chargeExpire = frame.spellInfo.charges and 0 or nil;
+    frame.dynamic = {};
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
     return frame;
 end
 
 NS.StartCooldownTrackingIcon = function (icon)
-    local spell = icon.spellInfo;
+    local spell = icon.spellInfo; -- static spell info
+    local overrides = icon.overrides; -- spec overrids
+    local dynamic = icon.dynamic; -- dynamic info for current icon
+    
+    -- If spell has baseline charge and chargeExpire not set
+    if spell.charges and ( not dynamic.chargeExpire ) then
+        dynamic.chargeExpire = 0;
+    elseif overrides and overrides.charges and ( not dynamic.chargeExpire ) then
+        dynamic.chargeExpire = 0;
+    end
+
+    -- Check cooldown override
+    dynamic.cooldown = overrides.cooldown or spell.cooldown;
+
     local now = GetTime();
 
     -- Icon is visible now, update opt_charges / opt_lower_cooldown
@@ -80,25 +90,25 @@ NS.StartCooldownTrackingIcon = function (icon)
     if icon:IsShown() then
         -- Spell has opt_lower_cooldown, adjust icon cooldown
         if spell.opt_lower_cooldown then
-            icon.cooldown.cooldown = spell.opt_lower_cooldown;
+            dynamic.cooldown = math.min(spell.opt_lower_cooldown, dynamic.cooldown);
         end
 
         -- Spell has opt_charges, activate that charge and set expirationTime to now (so it can be used in the following logic)
-        if spell.opt_charges and ( not icon.cooldown.chargeExpire ) then
-            icon.cooldown.chargeExpire = 0;
+        if spell.opt_charges and ( not dynamic.chargeExpire ) then
+            dynamic.chargeExpire = 0;
         end
     end
 
     -- Check if should use charge
-    if icon:IsShown() and icon.cooldown.chargeExpire and ( now >= icon.cooldown.chargeExpire ) then
+    if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
         icon.Count:SetText("");
-        icon.cooldown.chargeExpire = now + icon.cooldown.cooldown;
+        dynamic.chargeExpire = now + dynamic.cooldown;
     else
         -- Use default charge
-        icon.cooldown.start = now;
-        icon.cooldown.duration = icon.cooldown.cooldown;
-        icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
-        if icon.cooldown.chargeExpire then
+        dynamic.start = now;
+        dynamic.duration = dynamic.cooldown;
+        icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
+        if dynamic.chargeExpire then
             icon.Count:SetText("#");
         end
     end
