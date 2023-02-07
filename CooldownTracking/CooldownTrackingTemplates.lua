@@ -3,19 +3,30 @@ local _, NS = ...;
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local GetTime = GetTime;
+local GetSpellInfo = GetSpellInfo;
 
 NS.CreateCooldownTrackingIcon = function (spellID, size)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame:Hide();
 
     frame.spellID = spellID;
-    frame.spell = NS.cooldownSpells[spellID];
+    local spell = NS.cooldownSpells[spellID];
+    frame.spellInfo = {
+        cooldown = spell.cooldown,
+        opt_lower_cooldown = spell.opt_lower_cooldown,
+        charges = spell.charges,
+        opt_charges = spell.charges,
+    };
     frame.priority = frame.spell.priority;
 
     frame.icon:SetTexture(select(3, GetSpellInfo(spellID)));
     frame.icon:SetAllPoints();
 
-    frame.duration:SetScript("OnCooldownDone", function(self)
+    -- Set default cooldown
+    frame.cooldown.cooldown = spell.cooldown;
+    -- If baseline charge, set chargeExpire now
+    frame.cooldown.chargeExpire = frame.spellInfo.charges and 0 or nil;
+    frame.cooldown:SetScript("OnCooldownDone", function(self)
         local icon = self:GetParent();
         local group = icon:GetParent();
         NS.IconGroup_Remove(group, icon);
@@ -25,11 +36,25 @@ NS.CreateCooldownTrackingIcon = function (spellID, size)
 end
 
 NS.StartCooldownTrackingIcon = function (icon)
-    local spell = icon.spell;
+    local spell = icon.spellInfo;
     local now = GetTime();
 
-    -- Check if using second charge
-    if icon:IsShown() and spell.charges and ( now >= icon.cooldown.chargeExpire ) then
+    -- Icon is visible now, update opt_charges / opt_lower_cooldown
+    -- Check if using second baseline charge
+    if icon:IsShown() then
+        -- Spell has opt_lower_cooldown, adjust icon cooldown
+        if spell.opt_lower_cooldown then
+            icon.cooldown.cooldown = spell.opt_lower_cooldown;
+        end
+
+        -- Spell has opt_charges, activate that charge and set expirationTime to now (so it can be used in the following logic)
+        if spell.opt_charges and ( not icon.cooldown.chargeExpire ) then
+            icon.cooldown.chargeExpire = 0;
+        end
+    end
+
+    -- Check if should use charge
+    if icon:IsShown() and icon.cooldown.chargeExpire and ( now >= icon.cooldown.chargeExpire ) then
         icon.Count:SetText("");
         icon.cooldown.chargeExpire = now + spell.cooldown;
     else
