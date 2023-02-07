@@ -35,6 +35,12 @@ end
 
 NS.SPELLCATEGORY = {
     OFFENSIVE = 1,
+
+    INTERRUPT = 2,
+    DISRUPT = 3,
+    CROWDCONTROL = 4,
+    DISPEL = 5,
+    DEFENSIVE = 6,
 }
 
 -- trackEvent: event or combat log subEvent to track
