@@ -295,12 +295,20 @@ end
 -- On first login
 RefreshGroups();
 
+local function UpdateAllBorders(group)
+    for i = 1, #(group.active) do
+        CooldownTracking_UpdateBorder(group.active[i]);
+    end
+end
+
 -- Refresh icon groups when zone changes, or during test mode when player switches spec
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
 refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 refreshFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+refreshFrame:RegisterEvent("PLAYER_TARGET_CHANGED");
+refreshFrame:RegisterEvent("PLAYER_FOCUS_CHANGED");
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
     if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED") then
         RefreshGroups();
@@ -313,6 +321,16 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
         for i = 1, NS.MAX_ARENA_SIZE do
             if defensiveGroups[i] then
                 ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+            end
+        end
+    elseif ( event == "PLAYER_TARGET_CHANGED" ) or ( event == "PLAYER_FOCUS_CHANGED" ) then
+        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+            UpdateAllBorders(iconGroups[i]);
+        end
+
+        for i = 1, NS.MAX_ARENA_SIZE do
+            if defensiveGroups[i] then
+                UpdateAllBorders(defensiveGroups[i]);
             end
         end
     end
