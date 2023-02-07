@@ -5,9 +5,20 @@ local UIParent = UIParent;
 local GetTime = GetTime;
 local GetSpellInfo = GetSpellInfo;
 
+local function StartAnimation(icon)
+    icon.flashAnim:Play();
+	icon.newitemglowAnim:Play();
+end
+
+local function StopAnimation(icon)
+    if icon.flashAnim:IsPlaying() then icon.flashAnim:Stop() end
+	if icon.newitemglowAnim:IsPlaying() then icon.newitemglowAnim:Stop() end
+end
+
 local function OnCooldownTimerFinished(self)
     local icon = self:GetParent();
     local group = icon:GetParent();
+    StopAnimation(icon);
     NS.IconGroup_Remove(group, icon);
 end
 
@@ -68,6 +79,8 @@ NS.StartCooldownTrackingIcon = function (icon)
             icon.Count:SetText("#");
         end
     end
+
+    StartAnimation(icon);
 
     NS.IconGroup_Insert(icon:GetParent(), icon);
 end
