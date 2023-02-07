@@ -107,7 +107,8 @@ local function ValidateUnit(self)
     end
 end
 
-local function ProcessCombatLogEventForUnit(self, guid, event, subEvent, sourceGUID, destGUID, spellId, spellName)
+-- Since we're tracking possibly multiple units, things need to be indexed by guid - spellID here
+local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, destGUID, spellId, spellName)
     -- Unit does not exist
     if ( not guid ) then return end
 
@@ -116,11 +117,11 @@ local function ProcessCombatLogEventForUnit(self, guid, event, subEvent, sourceG
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
-            if self.activeMap[reset] then
+            if self.activeMap[guid .. "-" .. reset] then
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == cooldowns[reset].reduce_power_type ) then
                     local amount = cooldowns[reset].reduce_amount * cost[1].cost;
-                    NS.ResetCooldownTrackingCooldown(self.activeMap[reset], amount);
+                    NS.ResetCooldownTrackingCooldown(self.activeMap[guid .. "-" .. reset], amount);
                 end
             end
         end
@@ -128,8 +129,8 @@ local function ProcessCombatLogEventForUnit(self, guid, event, subEvent, sourceG
         -- Check regular resets
         if resets[spellId] then
             for resetSpellID, amount in pairs(resets[spellId]) do
-                if self.activeMap[resetSpellID] then
-                    NS.ResetCooldownTrackingCooldown(self.activeMap[resetSpellID], amount);
+                if self.activeMap[guid .. "-" .. resetSpellID] then
+                    NS.ResetCooldownTrackingCooldown(self.activeMap[guid .. "-" .. resetSpellID], amount);
                 end
             end
         end
@@ -138,6 +139,8 @@ local function ProcessCombatLogEventForUnit(self, guid, event, subEvent, sourceG
     -- Validate spell
     if ( not cooldowns[spellId] ) then return end
     local spell = cooldowns[spellId];
+
+    print(spellId);
 
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
@@ -161,7 +164,7 @@ local function ProcessCombatLogEventForUnit(self, guid, event, subEvent, sourceG
     end
 end
 
-local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName)
+local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName)
     local guid = ValidateUnit(self);
 
     if self.unit then
@@ -293,8 +296,6 @@ refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
 refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
 refreshFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-refreshFrame:RegisterEvent("UNIT_AURA");
-refreshFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
     if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED") then
         RefreshGroups();
