@@ -277,6 +277,31 @@ NS.cooldownSpells = {
     -- Interrupt
     [147362] = {cooldown = 24, class = "HUNTER", category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
     [187707] = {cooldown = 15, class = "HUNTER", category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
+
+    -- Mage
+    -- Interrupt
+    [2139] = {cooldown = 24, class = "MAGE", reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
+    -- Defensive
+    [45438] = {cooldown = 200, class = "MAGE", category = SPELLCATEGORY.DEFENSIVE}, -- Ice Block
+    [87024] = {cooldown = 300, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Cauterize
+    -- Crowd Control
+    [113724] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
+    [31661] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
+    
+    -- Rogue
+    -- Interrupt
+    [1766] = {cooldown = 15, class = "ROGUE", category = SPELLCATEGORY.INTERRUPT}, -- Kick
+    -- Defensive
+    [1856] = {cooldown = {default = 120, [260] = 75}, class = "ROGUE", charges = {[261] = true}, category = SPELLCATEGORY.INTERRUPT}, -- Vanish
+    [31224] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.DEFENSIVE}, -- Cloak of Shadows
+    [5277] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.DEFENSIVE}, -- Evasion
+    -- Crowd Control
+    [408] = {cooldown = 20, class = "ROGUE", category = SPELLCATEGORY.CROWDCONTROL}, -- Kidney Shot
+    [2094] = {cooldown = {default = 120, [260] = 90}, class = "ROGUE", category = SPELLCATEGORY.CROWDCONTROL}, -- Blind
+    [212182] = {cooldown = 180, class = "ROGUE", category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb
+    [359053] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb (Subtlety)
+    -- Disrupt
+    [36554] = {cooldown = 30, class = "ROGUE", charges = {[259] = true, [261] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
 };
 
 if NS.isTestMode then
