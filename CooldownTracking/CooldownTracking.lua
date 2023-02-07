@@ -107,10 +107,9 @@ local function ValidateUnit(self)
     end
 end
 
-local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName)
-    local guid = ValidateUnit(self);
-    -- If this group is tracking a single unit and returning GUID is null, unit doesn't exist and no need to proceed
-    if self.unit and ( not guid ) then return end
+local function ProcessCombatLogEventForUnit(self, guid, event, subEvent, sourceGUID, destGUID, spellId, spellName)
+    -- Unit does not exist
+    if ( not guid ) then return end
 
     -- Check resets by spell cast
     if ( subEvent == "SPELL_CAST_SUCCESS" ) and ( sourceGUID == guid ) then
@@ -159,6 +158,18 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     -- Find the icon to use
     if self.icons[spellId] then
         NS.StartCooldownTrackingIcon(self.icons[spellId]);
+    end
+end
+
+local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName)
+    local guid = ValidateUnit(self);
+
+    if self.unit then
+        ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, destGUID, spellId, spellName);
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            ProcessCombatLogEventForUnit(self, guid[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+        end
     end
 end
 
