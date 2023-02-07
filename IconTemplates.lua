@@ -114,13 +114,14 @@ NS.StartWeakAuraIcon = function (icon)
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
+        local now = GetTime();
         -- Check if using second charge
-        if icon:IsShown() and spell.charges and ( GetTime() >= icon.cooldown.chargeExpire ) then
+        if icon:IsShown() and spell.charges and ( now >= icon.cooldown.chargeExpire ) then
             icon.text:SetText("");
-            icon.cooldown.chargeExpire = GetTime() + spell.cooldown;
+            icon.cooldown.chargeExpire = now + spell.cooldown;
         else
             -- Use default charge
-            icon.cooldown.start = GetTime();
+            icon.cooldown.start = now;
             icon.cooldown.duration = spell.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
             icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
             if spell.charges then
