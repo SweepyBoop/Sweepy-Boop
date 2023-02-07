@@ -53,6 +53,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
         charges = spell.charges,
         opt_charges = spell.charges,
         reduce_on_interrupt = spell.reduce_on_interrupt,
+        trackEvent = spell.trackEvent,
     };
     frame.priority = spell.priority;
 

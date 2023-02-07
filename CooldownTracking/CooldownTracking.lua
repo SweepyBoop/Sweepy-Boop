@@ -257,6 +257,7 @@ local function SetupIconGroupForUnit(group, category, unit)
             if enabled then
                 -- Apply spec override as a table here to premadeIcons[unit][spellID]
                 -- Remember to clean up first
+                -- Basically put everything known based on spec here
 
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
                 --print("Populated", unit, spell.class, spellID)
