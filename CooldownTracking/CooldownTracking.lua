@@ -153,14 +153,12 @@ premadeIcons[SPELLCATEGORY.DEFENSIVE] = {};
 
 -- Populate all icons (regardless of class)
 for category, group in pairs(premadeIcons) do
-    print(category, group)
     if test then
         local unitId = "player";
         for spellID, spell in pairs(cooldowns) do
             if ( spell.category ) == category then
                 group[unitId] = group[unitId] or {};
                 group[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
-                print(group[unitId][spellID])
             end
         end
     else
@@ -170,7 +168,6 @@ for category, group in pairs(premadeIcons) do
                     local unitId = "arena" .. i;
                     group[unitId] = group[unitId] or {};
                     group[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
-                    print(group[unitId][spellID])
                 end
             end
         end
