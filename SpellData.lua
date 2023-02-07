@@ -42,7 +42,6 @@ NS.SPELLCATEGORY = {
     DISPEL = 5,
     DEFENSIVE = 6,
 }
-NS.SPELLCATEGORY_MAX = NS.SPELLCATEGORY.DEFENSIVE;
 
 -- trackEvent: event or combat log subEvent to track
 -- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID (this cannot be set to spells that can only self cast)

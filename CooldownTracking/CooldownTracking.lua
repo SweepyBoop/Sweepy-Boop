@@ -167,7 +167,7 @@ else
 end
 
 -- If unit is not specified, track all 3 arena opponents
-local function SetupIconGroupForUnit(group, unit)
+local function SetupIconGroupForUnit(group, category, unit)
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
     if ( unit == "player" ) then
@@ -185,7 +185,7 @@ local function SetupIconGroupForUnit(group, unit)
     -- Pre-populate icons
     for spellID, spell in pairs(cooldowns) do
         -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
-        if ( not spell.class ) or ( spell.class == class ) then
+        if ( spell.category == category ) and ( ( not spell.class ) or ( spell.class == class ) ) then
             local enabled = true;
             -- Does this spell filter by spec?
             if spell.spec then
@@ -208,21 +208,21 @@ local function SetupIconGroupForUnit(group, unit)
 
             if enabled then
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
-                --print("Populated", unit, spell.class, spellID)
+                print("Populated", unit, spell.class, spellID)
             end
         end
     end
 end
 
 -- If unit is not specified, populate icons for all 3 arena opponents
-local function SetupIconGroup(group, unit)
+local function SetupIconGroup(group, category, unit)
     NS.IconGroup_Wipe(group);
 
     if unit then
-        SetupIconGroupForUnit(group, unit);
+        SetupIconGroupForUnit(group, category, unit);
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            SetupIconGroup(group, "arena"..i);
+            SetupIconGroupForUnit(group, category, "arena"..i);
         end
     end
 end
@@ -236,9 +236,19 @@ iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCA
 iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenter);
 iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenter);
 iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRight);
+
 if test then
+    for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+        SetupIconGroup(iconGroups[i], i, "player");
+    end
+
     defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
+    SetupIconGroup(defensiveGroups[1], SPELLCATEGORY.DEFENSIVE, "player");
 else
+    for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+        SetupIconGroup(iconGroups[i], i); -- Don't specify unit, so it populates icons for all 3 arena opponents
+    end
+
     for i = 1, NS.MAX_ARENA_SIZE do
         defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
     end
