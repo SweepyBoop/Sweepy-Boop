@@ -287,6 +287,8 @@ NS.cooldownSpells = {
     -- Crowd Control
     [113724] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
+    -- Disrupt
+    [30449] = {cooldown = 30, class = "MAGE", specID = {62}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
     
     -- Rogue
     -- Interrupt
@@ -302,6 +304,26 @@ NS.cooldownSpells = {
     [359053] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb (Subtlety)
     -- Disrupt
     [36554] = {cooldown = 30, class = "ROGUE", charges = {[259] = true, [261] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
+
+    -- Monk
+    -- Crowd Control
+    [115078] = {cooldown = 30, class = "MONK", category = SPELLCATEGORY.CROWDCONTROL}, -- Paralysis
+    [119381] = {cooldown = 50, class = "MONK", category = SPELLCATEGORY.CROWDCONTROL}, -- Leg Sweep
+    -- Disrupt
+    [116844] = {cooldown = 45, class = "MONK", category = SPELLCATEGORY.DISRUPT}, -- Ring of Peace
+    -- Interrupt
+    [116705] = {cooldown = 15, class = "MONK", category = SPELLCATEGORY.DISRUPT}, -- Spear Hand Strike
+    -- Defensive
+    [122470] = {cooldown = 90, class = "MONK", category = SPELLCATEGORY.DEFENSIVE}, -- Touch of Karma
+    [116849] = {cooldown = 75, class = "MONK", category = SPELLCATEGORY.DEFENSIVE}, -- Life Cocoon
+
+    -- Evoker
+    -- Defensive
+    [363916] = {cooldown = 90, class = "EVOKER", charges = true, category = SPELLCATEGORY.DEFENSIVE}, -- Obsidian Scales
+    -- Interrupt
+    [351338] = {cooldown = {default = 40, [1467] = 20}, class = "EVOKER", category = SPELLCATEGORY.INTERRUPT}, -- Quell
+    -- Crowd Control
+    [357210] = {cooldown = {default = 120, [1467] = 60}, class = "EVOKER", category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
 };
 
 if NS.isTestMode then
