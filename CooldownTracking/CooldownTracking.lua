@@ -163,6 +163,28 @@ else
     end
 end
 
+-- If unit is not specified, track all 3 arena opponents
+-- Have a function that takes unit arg, and a function to call it to add all 3
+local function SetupIconGroup(group, unit)
+    -- Clear previous icons
+    NS.IconGroup_Wipe(group);
+
+    if unit then
+        local class;
+        if ( unit == "player" ) then
+            class = select(2, UnitClass(unit));
+        else
+            -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
+            local index = string.sub(unit, -1, -1);
+            local specID = GetArenaOpponentSpec(index);
+            if specID and ( specID > 0 ) then
+                class = select(6, GetSpecializationInfoByID(specID));
+            end
+        end
+        if ( not class ) then return end
+    end
+end
+
 -- Populate icons based on class and spec
 local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroups = {}; -- This one needs a group per unit
