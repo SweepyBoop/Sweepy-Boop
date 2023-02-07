@@ -157,7 +157,8 @@ for category, group in ipairs(premadeIcons) do
         local unitId = "player";
         for spellID, spell in cooldowns do
             if ( spell.category ) == category then
-                premadeIcons[category][unitId] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
+                premadeIcons[category][unitId] = premadeIcons[category][unitId] or {};
+                premadeIcons[category][unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
             end
         end
     else
@@ -165,10 +166,13 @@ for category, group in ipairs(premadeIcons) do
             if ( spell.category ) == category then
                 for i = 1, NS.MAX_ARENA_SIZE do
                     local unitId = "arena" .. i;
+                    premadeIcons[category][unitId] = premadeIcons[category][unitId] or {};
                     premadeIcons[category][unitId] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
                 end
             end
         end
     end
 end
+
+-- Populate icons based on class and spec
 

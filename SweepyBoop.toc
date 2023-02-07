@@ -15,6 +15,12 @@ FixBlizzardRaidAggro.lua
 
 
 
+# Simple Omnibar
+CooldownTracking\CooldownTracking.xml
+CooldownTracking\CooldownSpells.lua
+CooldownTracking\CooldownTrackingTemplates.lua
+CooldownTracking\CooldownTracking.lua
+
 # UI Personalization
 Internal\LoseControl.lua
 Internal\Personalization.lua
