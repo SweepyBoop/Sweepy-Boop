@@ -146,4 +146,6 @@ premadeIcons[SPELLCATEGORY.DISRUPT] = {};
 premadeIcons[SPELLCATEGORY.CROWDCONTROL] = {};
 premadeIcons[SPELLCATEGORY.DISPEL] = {};
 premadeIcons[SPELLCATEGORY.DEFENSIVE] = {};
-
+for i = 1, NS.MAX_ARENA_SIZE do
+    premadeIcons[SPELLCATEGORY.DEFENSIVE][i] = {};
+end
