@@ -121,18 +121,20 @@ end
 NS.ResetCooldownTrackingCooldown = function (icon, amount)
     if ( not icon.cooldown ) then return end
 
+    local dynamic = icon.dynamic;
+
     -- Fully set if amount is not specified
     if ( not amount ) then
         icon.cooldown:SetCooldown(0, 0);
         OnCooldownTimerFinished(icon.cooldown);
     else
-        icon.cooldown.duration = icon.cooldown.duration - amount;
+        dynamic.duration = dynamic.duration - amount;
         -- Check if new duration hides the timer
-        if icon.cooldown.duration <= 0 then
+        if dynamic.duration <= 0 then
             icon.cooldown:SetCooldown(0, 0);
             OnCooldownTimerFinished(icon.cooldown);
         else
-            icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
+            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
         end
     end
 end
