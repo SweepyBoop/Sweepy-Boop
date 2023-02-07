@@ -2,7 +2,7 @@
 ..\FrameXML\UI.xsd">
     <Button name="CooldownTrackingButtonTemplate" hidden="true" virtual="true">
 	    <Size>
-	        <AbsDimension x="36" y="36"/>
+	        <AbsDimension x="32" y="32"/>
 	    </Size>
 	    <Anchors>
 	        <Anchor point="CENTER"/>
@@ -37,21 +37,6 @@
 	        	</FontString>
 	        </Layer>
 	        <Layer level="OVERLAY" textureSubLevel="1">
-	            <FontString name="$parentName" parentKey="Name" inherits="OmniBarFont">
-	                <Size>
-	                    <AbsDimension x="36" y="10"/>
-	                </Size>
-	                <FontHeight>
-	                    <AbsValue val="6"/>
-	                </FontHeight>
-	                <Anchors>
-	                    <Anchor point="BOTTOM">
-	                        <Offset>
-	                            <AbsDimension x="0" y="2"/>
-	                        </Offset>
-	                    </Anchor>
-	                </Anchors>
-	            </FontString>
 	            <Texture parentKey="flash" hidden="false" alpha="0" alphaMode="ADD" atlas="bags-glow-flash" useAtlasSize="true">
 	                <Anchors>
 	                    <Anchor point="CENTER"/>

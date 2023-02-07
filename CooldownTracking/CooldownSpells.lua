@@ -52,12 +52,14 @@ NS.cooldownSpells = {
         class = "DEATHKNIGHT",
         category = SPELLCATEGORY.DEFENSIVE,
         cooldown = 120,
+        index = 1,
     },
     -- Lichborne
     [49039] = {
         class = "DEATHKNIGHT",
         category = SPELLCATEGORY.DEFENSIVE,
         cooldown = 120,
+        index = 2,
     },
 
 };
