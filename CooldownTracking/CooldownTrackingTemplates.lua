@@ -4,6 +4,7 @@ local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local GetTime = GetTime;
 local GetSpellInfo = GetSpellInfo;
+local UnitIsUnit = UnitIsUnit;
 
 local function StartAnimation(icon)
     icon.flashAnim:Play();
@@ -22,10 +23,27 @@ local function OnCooldownTimerFinished(self)
     NS.IconGroup_Remove(group, icon);
 end
 
-NS.CreateCooldownTrackingIcon = function (spellID, size)
+function CooldownTracking_UpdateBorder(icon)
+    if UnitIsUnit(icon.unit, "focus") then
+        icon.FocusTexture:SetAlpha(1);
+    else
+        icon.FocusTexture:SetAlpha(0);
+    end
+
+    -- Target highlight overwrites focus highlight
+    if UnitIsUnit(icon.unit, "target") then
+        icon.FocusTexture:SetAlpha(0);
+        icon.TargetTexture:SetAlpha(1);
+    else
+        icon.TargetTexture:SetAlpha(0);
+    end
+end
+
+NS.CreateCooldownTrackingIcon = function (unit, spellID, size)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame:Hide();
 
+    frame.unit = unit;
     frame.spellID = spellID;
     local spell = NS.cooldownSpells[spellID];
     frame.spellInfo = {

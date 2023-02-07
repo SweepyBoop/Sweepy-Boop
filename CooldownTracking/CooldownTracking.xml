@@ -12,6 +12,12 @@
 	            <Alpha childKey="NewItemTexture" smoothing="NONE" duration="1" order="1" fromAlpha="1" toAlpha="0.4"/>
 	            <Alpha childKey="NewItemTexture" smoothing="NONE" duration="1" order="2" fromAlpha="0.4" toAlpha="1"/>
 	            <Alpha childKey="NewItemTexture" smoothing="NONE" duration="1" order="3" fromAlpha="1" toAlpha="0"/>
+                <Scripts>
+	                <OnFinished>
+	                    local icon = self:GetParent()
+	                    CooldownTracking_UpdateBorder(icon)
+	                </OnFinished>
+	            </Scripts>
 	        </AnimationGroup>
 	        <AnimationGroup parentKey="flashAnim" setToFinalAlpha="true">
 	            <Alpha childKey="flash" smoothing="OUT" duration="1" order="1" fromAlpha="1" toAlpha="0"/>
