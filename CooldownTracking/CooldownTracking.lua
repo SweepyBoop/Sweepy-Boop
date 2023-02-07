@@ -7,6 +7,8 @@ local GetSpellPowerCost = GetSpellPowerCost;
 local UnitClass = UnitClass;
 local GetArenaOpponentSpec = GetArenaOpponentSpec;
 local GetSpecializationInfoByID = GetSpecializationInfoByID;
+local CreateFrame = CreateFrame;
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
 
 local cooldowns = NS.cooldownSpells;
 local resets = NS.cooldownResets;
@@ -105,7 +107,7 @@ local function ValidateUnit(self)
     end
 end
 
-local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
+local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName)
     local guid = ValidateUnit(self);
     -- If this group is tracking a single unit and returning GUID is null, unit doesn't exist and no need to proceed
     if self.unit and ( not guid ) then return end
@@ -133,7 +135,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
             end
         end
     end
-        
+
     -- Validate spell
     if ( not cooldowns[spellId] ) then return end
     local spell = cooldowns[spellId];
@@ -217,7 +219,7 @@ local function SetupIconGroupForUnit(group, category, unit)
                         end
                     end
                 end
-                
+
                 enabled = specEnabled;
             end
 
@@ -246,25 +248,55 @@ end
 local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroups = {}; -- This one needs a group per unit
 
--- Create icon groups
+-- Create icon groups (note the category order)
 iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenter);
 iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenter);
 iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenter);
 iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRight);
 
-if test then
-    for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-        SetupIconGroup(iconGroups[i], i, "player");
-    end
+local function RefreshGroups()
+    if test then
+        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+            SetupIconGroup(iconGroups[i], i, "player");
+        end
 
-    defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
-    SetupIconGroup(defensiveGroups[1], SPELLCATEGORY.DEFENSIVE, "player");
-else
-    for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-        SetupIconGroup(iconGroups[i], i); -- Don't specify unit, so it populates icons for all 3 arena opponents
-    end
+        defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
+        SetupIconGroup(defensiveGroups[1], SPELLCATEGORY.DEFENSIVE, "player");
+    else
+        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+            SetupIconGroup(iconGroups[i], i); -- Don't specify unit, so it populates icons for all 3 arena opponents
+        end
 
-    for i = 1, NS.MAX_ARENA_SIZE do
-        defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
+        for i = 1, NS.MAX_ARENA_SIZE do
+            defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
+        end
     end
 end
+
+-- On first login
+RefreshGroups();
+
+-- Refresh icon groups when zone changes, or during test mode when player switches spec
+local refreshFrame = CreateFrame("Frame");
+refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
+refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
+refreshFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+refreshFrame:RegisterEvent("UNIT_AURA");
+refreshFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+refreshFrame:SetScript("OnEvent", function (self, event, ...)
+    if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED") then
+        RefreshGroups();
+    elseif ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
+        local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
+        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+            ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+        end
+        
+        for i = 1, NS.MAX_ARENA_SIZE do
+            if defensiveGroups[i] then
+                ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+            end
+        end
+    end
+end)
