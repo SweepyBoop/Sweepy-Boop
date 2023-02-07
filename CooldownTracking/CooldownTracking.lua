@@ -214,6 +214,7 @@ else
 end
 
 -- If unit is not specified, track all 3 arena opponents
+-- TODO: apply spec override when populating for a group (since we already know the spec here)
 local function SetupIconGroupForUnit(group, category, unit)
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
