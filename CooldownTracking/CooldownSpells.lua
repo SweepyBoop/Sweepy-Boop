@@ -288,7 +288,7 @@ NS.cooldownSpells = {
     [113724] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
     -- Disrupt
-    [30449] = {cooldown = 30, class = "MAGE", specID = {62}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
+    [30449] = {cooldown = 30, class = "MAGE", category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
     
     -- Rogue
     -- Interrupt

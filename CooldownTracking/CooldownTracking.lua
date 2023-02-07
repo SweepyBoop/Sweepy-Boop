@@ -213,6 +213,20 @@ else
     end
 end
 
+local function GetSpecOverrids(spell, spec)
+    local overrides = {};
+
+    if type(spell.cooldown) == "table" then
+        overrides.cooldown = spell.cooldown[spec];
+    end
+
+    if type(spell.charges) == "table" then
+        overrides.charges = spell.charges[spec];
+    end
+
+    return overrides;
+end
+
 -- If unit is not specified, track all 3 arena opponents
 -- TODO: apply spec override when populating for a group (since we already know the spec here)
 local function SetupIconGroupForUnit(group, category, unit)
@@ -235,10 +249,10 @@ local function SetupIconGroupForUnit(group, category, unit)
         -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
         if ( spell.category == category ) and ( ( not spell.class ) or ( spell.class == class ) ) then
             local enabled = true;
+            local spec = NS.GetUnitSpec(unit);
             -- Does this spell filter by spec?
             if spell.spec then
                 local specEnabled = false;
-                local spec = NS.GetUnitSpec(unit);
 
                 if ( not spec ) then
                     specEnabled = true;
@@ -258,6 +272,7 @@ local function SetupIconGroupForUnit(group, category, unit)
                 -- Apply spec override as a table here to premadeIcons[unit][spellID]
                 -- Remember to clean up first
                 -- Basically put everything known based on spec here
+                premadeIcons[unit][spellID].overrides = GetSpecOverrids(spell, spec);
 
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
                 --print("Populated", unit, spell.class, spellID)
