@@ -5,6 +5,12 @@ local UIParent = UIParent;
 local GetTime = GetTime;
 local GetSpellInfo = GetSpellInfo;
 
+local function OnCooldownTimerFinished(self)
+    local icon = self:GetParent();
+    local group = icon:GetParent();
+    NS.IconGroup_Remove(group, icon);
+end
+
 NS.CreateCooldownTrackingIcon = function (spellID, size)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame:Hide();
@@ -26,11 +32,7 @@ NS.CreateCooldownTrackingIcon = function (spellID, size)
     frame.cooldown.cooldown = spell.cooldown;
     -- If baseline charge, set chargeExpire now
     frame.cooldown.chargeExpire = frame.spellInfo.charges and 0 or nil;
-    frame.cooldown:SetScript("OnCooldownDone", function(self)
-        local icon = self:GetParent();
-        local group = icon:GetParent();
-        NS.IconGroup_Remove(group, icon);
-    end);
+    frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
     return frame;
 end
@@ -62,10 +64,29 @@ NS.StartCooldownTrackingIcon = function (icon)
         icon.cooldown.start = now;
         icon.cooldown.duration = spell.cooldown;
         icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
-        if spell.charges then
+        if icon.cooldown.chargeExpire then
             icon.Count:SetText("#");
         end
     end
 
     NS.IconGroup_Insert(icon:GetParent(), icon);
+end
+
+NS.ResetCooldownTrackingCooldown = function (icon, amount)
+    if ( not icon.cooldown ) then return end
+
+    -- Fully set if amount is not specified
+    if ( not amount ) then
+        icon.cooldown:SetCooldown(0, 0);
+        OnCooldownTimerFinished(icon.cooldown);
+    else
+        icon.cooldown.duration = icon.cooldown.duration - amount;
+        -- Check if new duration hides the timer
+        if icon.cooldown.duration <= 0 then
+            icon.cooldown:SetCooldown(0, 0);
+            OnCooldownTimerFinished(icon.cooldown);
+        else
+            icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
+        end
+    end
 end
