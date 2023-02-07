@@ -212,7 +212,71 @@ NS.cooldownSpells = {
         category = SPELLCATEGORY.INTERRUPT,
     },
 
-    
+    -- Druid
+    -- Crowd Control
+    [5211] = {cooldown = 60, class = "DRUID", category = SPELLCATEGORY.CROWDCONTROL}, -- Mighty Bash
+    [22570] = {cooldown = 20, class = "DRUID", category = SPELLCATEGORY.CROWDCONTROL}, -- Maim
+    [99] = {cooldown = 30, class = "DRUID", category = SPELLCATEGORY.CROWDCONTROL}, -- Incapacitating Roar
+    [78675] = {cooldown = 60, class = "DRUID", reduce_on_interrupt = 15, category = SPELLCATEGORY.CROWDCONTROL}, -- Solar Beam
+    -- Interrupt
+    [106839] = {cooldown = 15, class = "DRUID", category = SPELLCATEGORY.INTERRUPT}, -- Skull Bash
+    -- Defensive
+    [61336] = {cooldown = {default = 180, [104] = 120}, class = "DRUID", charges = {[104] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
+    [102342] = {cooldown = 90, class = "DRUID", opt_lower_cd = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
+
+    -- Warrior
+    -- Disrupt
+    [100] = {cooldown = 17, class = "WARRIOR", charges = true, category = SPELLCATEGORY.DISRUPT}, -- Charge
+    [23920] = {cooldown = 25, class = "WARRIOR", category = SPELLCATEGORY.DISRUPT}, -- Spell Reflection
+    -- Interrupt
+    [6552] = {cooldown = 14, class = "WARRIOR", category = SPELLCATEGORY.INTERRUPT}, -- Pummel
+    -- Crowd Control
+    [107570] = {cooldown = 30, class = "WARRIOR", category = SPELLCATEGORY.CROWDCONTROL}, -- Storm Bolt
+    [5246] = {cooldown = 90, class = "WARRIOR", category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidating Shout
+    -- Defensive
+    [118038] = {cooldown = 90, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
+    [184364] = {cooldown = 120, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration
+
+    -- Warlock
+    -- Crowd Control
+    [6789] = {cooldown = 45, class = "WARLOCK", category = SPELLCATEGORY.CROWDCONTROL}, -- Mortal Coil
+    [5484] = {cooldown = 40, class = "WARLOCK", category = SPELLCATEGORY.CROWDCONTROL}, -- Howl of Terror
+    [89766] = {cooldown = 30, class = "WARLOCK", specID = {266}, trackPet = true, category = SPELLCATEGORY.CROWDCONTROL}, -- Axe Toss
+    -- Defensive
+    [104773] = {cooldown = 180, class = "WARLOCK", opt_lower_cd = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Unending Resolve
+    -- Interrupt
+    [119910] = {cooldown = 24, class = "WARLOCK", trackPet = true, category = SPELLCATEGORY.INTERRUPT}, -- Spell Lock (Command Demon)
+        [19647] = {parent = 119910}, -- Spell Lock (Felhunter)
+		[119911] = {parent = 119910}, -- Optical Blast (Command Demon)
+		[115781] = {parent = 119910}, -- Optical Blast (Observer)
+		[132409] = {parent = 119910}, -- Spell Lock (Grimoire of Sacrifice)
+		[171138] = {parent = 119910}, -- Shadow Lock (Doomguard)
+		[171139] = {parent = 119910}, -- Shadow Lock (Grimoire of Sacrifice)
+		[171140] = {parent = 119910}, -- Shadow Lock (Command Demon)
+    [212619] = {cooldown = 60, class = "WARLOCK", category = SPELLCATEGORY.INTERRUPT}, -- Call Felhunter
+    -- Disrupt
+    [212295] = {cooldown = 45, class = "WARLOCK", category = SPELLCATEGORY.DISRUPT}, -- Nether Ward
+
+    -- Shaman
+    -- Interrupt
+    [57994] = {cooldown = 12, class = "SHAMAN", category = SPELLCATEGORY.INTERRUPT}, -- Wind Shear
+    -- Defensive
+    [108271] = {cooldown = 90, class = "SHAMAN", category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
+    [210918] = {cooldown = 60, class = "SHAMAN", category = SPELLCATEGORY.DEFENSIVE}, -- Ethereal Form
+    -- Disrupt
+    [204336] = {cooldown = 30, class = "SHAMAN", category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
+
+    -- Hunter
+    -- Disrupt
+    [5384] = {cooldown = 30, class = "HUNTER", category = SPELLCATEGORY.DISRUPT}, -- Feign Death
+    -- Crowd Control
+    [19577] = {cooldown = 60, class = "HUNTER", category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidation
+    [187650] = {cooldown = 25, class = "HUNTER", category = SPELLCATEGORY.CROWDCONTROL}, -- Freezing Trap
+    -- Defensive
+    [186265] = {cooldown = 180, class = "HUNTER", category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
+    -- Interrupt
+    [147362] = {cooldown = 24, class = "HUNTER", category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
+    [187707] = {cooldown = 15, class = "HUNTER", category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
 };
 
 if NS.isTestMode then
