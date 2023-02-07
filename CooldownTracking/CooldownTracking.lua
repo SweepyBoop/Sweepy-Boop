@@ -1,4 +1,6 @@
 local _, NS = ...;
+local test = false;
+
 local UIParent = UIParent;
 local UnitGUID = UnitGUID;
 local GetSpellPowerCost = GetSpellPowerCost;
@@ -99,7 +101,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == cooldowns[reset].reduce_power_type ) then
                     local amount = cooldowns[reset].reduce_amount * cost[1].cost;
-                    NS.ResetWeakAuraCooldown(self.activeMap[reset], amount);
+                    NS.ResetCooldownTrackingCooldown(self.activeMap[reset], amount);
                 end
             end
         end
@@ -108,7 +110,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
         if resets[spellId] then
             for resetSpellID, amount in pairs(resets[spellId]) do
                 if self.activeMap[resetSpellID] then
-                    NS.ResetWeakAuraCooldown(self.activeMap[resetSpellID], amount);
+                    NS.ResetCooldownTrackingCooldown(self.activeMap[resetSpellID], amount);
                 end
             end
         end
@@ -140,12 +142,33 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     end
 end
 
+local iconSize = 32;
+
 local premadeIcons = {};
 premadeIcons[SPELLCATEGORY.INTERRUPT] = {};
 premadeIcons[SPELLCATEGORY.DISRUPT] = {};
 premadeIcons[SPELLCATEGORY.CROWDCONTROL] = {};
 premadeIcons[SPELLCATEGORY.DISPEL] = {};
 premadeIcons[SPELLCATEGORY.DEFENSIVE] = {};
-for i = 1, NS.MAX_ARENA_SIZE do
-    premadeIcons[SPELLCATEGORY.DEFENSIVE][i] = {};
+
+-- Populate all icons (regardless of class)
+for category, group in ipairs(premadeIcons) do
+    if test then
+        local unitId = "player";
+        for spellID, spell in cooldowns do
+            if ( spell.category ) == category then
+                premadeIcons[category][unitId] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
+            end
+        end
+    else
+        for spellID, spell in cooldowns do
+            if ( spell.category ) == category then
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    local unitId = "arena" .. i;
+                    premadeIcons[category][unitId] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
+                end
+            end
+        end
+    end
 end
+
