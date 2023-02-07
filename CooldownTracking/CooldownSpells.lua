@@ -1,6 +1,7 @@
 local _, NS = ...;
 
 local SPELLCATEGORY = NS.SPELLCATEGORY;
+local POWERTYPE = Enum.PowerType;
 
 NS.cooldownSpells = {
     -- General
@@ -127,6 +128,12 @@ NS.cooldownSpells = {
         category = SPELLCATEGORY.CROWDCONTROL,
         opt_lower_cooldown = 30,
     },
+    -- Psychic Horror
+    [64044] = {
+        cooldown = 45,
+        class = "PRIEST",
+        category = SPELLCATEGORY.CROWDCONTROL,
+    },
     -- Defensive
     -- Void Shift
     [108968] = {
@@ -146,6 +153,12 @@ NS.cooldownSpells = {
         class = "PRIEST",
         category = SPELLCATEGORY.DEFENSIVE,
     },
+    -- Dispersion
+    [47585] = {
+        cooldown = 90,
+        class = "PRIEST",
+        category = SPELLCATEGORY.DEFENSIVE,
+    },
     -- Disrupt
     -- Holy Ward
     [213610] = {
@@ -154,6 +167,52 @@ NS.cooldownSpells = {
         category = SPELLCATEGORY.DISRUPT, 
     },
 
+    -- Paladin
+    -- Defensive
+    -- Divine Shield
+    [642] = {
+        cooldown = 210,
+        class = "PALADIN",
+        category = SPELLCATEGORY.DEFENSIVE,
+    },
+    -- Blessing of Protection
+    [1022] = {
+        cooldown = 240,
+        class = "PALADIN",
+        category = SPELLCATEGORY.DEFENSIVE,
+        opt_charges = true,
+    },
+    -- Crowd Control
+    -- Hammer of Justice
+    [853] = {
+        cooldown = 60,
+        class = "PALADIN",
+        category = SPELLCATEGORY.CROWDCONTROL,
+        reduce_power_type = POWERTYPE.HolyPower;
+        reduce_amount = 2, -- Each holy power spent reduces the cooldown by 2 sec.
+    },
+    -- Blinding Light
+    [115750] = {
+        cooldown = 90,
+        class = "PALADIN",
+        category = SPELLCATEGORY.CROWDCONTROL,
+    },
+    -- Shield of Virtue
+    [215652] = {
+        cooldown = 45,
+        class = "PALADIN",
+        category = SPELLCATEGORY.CROWDCONTROL,
+        trackEvent = "SPELL_AURA_REMOVED",
+    },
+    -- Interrupt
+    -- Rebuke
+    [96231] = {
+        cooldown = 15,
+        class = "PALADIN",
+        category = SPELLCATEGORY.INTERRUPT,
+    },
+
+    
 };
 
 if NS.isTestMode then
