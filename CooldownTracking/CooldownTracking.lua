@@ -4,6 +4,9 @@ local test = true;
 local UIParent = UIParent;
 local UnitGUID = UnitGUID;
 local GetSpellPowerCost = GetSpellPowerCost;
+local UnitClass = UnitClass;
+local GetArenaOpponentSpec = GetArenaOpponentSpec;
+local GetSpecializationInfoByID = GetSpecializationInfoByID;
 
 local cooldowns = NS.cooldownSpells;
 local resets = NS.cooldownResets;
@@ -164,24 +167,63 @@ else
 end
 
 -- If unit is not specified, track all 3 arena opponents
--- Have a function that takes unit arg, and a function to call it to add all 3
+local function SetupIconGroupForUnit(group, unit)
+    -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
+    local class;
+    if ( unit == "player" ) then
+        class = select(2, UnitClass(unit));
+    else
+        -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
+        local index = string.sub(unit, -1, -1);
+        local specID = GetArenaOpponentSpec(index);
+        if specID and ( specID > 0 ) then
+            class = select(6, GetSpecializationInfoByID(specID));
+        end
+    end
+    if ( not class ) then return end
+
+    -- Pre-populate icons
+    for spellID, spell in pairs(cooldowns) do
+        -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
+        if ( not spell.class ) or ( spell.class == class ) then
+            local enabled = true;
+            -- Does this spell filter by spec?
+            if spell.spec then
+                local specEnabled = false;
+                local spec = NS.GetUnitSpec(unit);
+
+                if ( not spec ) then
+                    specEnabled = true;
+                else
+                    for i = 1, #(spell.spec) do
+                        if ( spec == spell.spec[i] ) then
+                            specEnabled = true;
+                            break;
+                        end
+                    end
+                end
+                
+                enabled = specEnabled;
+            end
+
+            if enabled then
+                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                --print("Populated", unit, spell.class, spellID)
+            end
+        end
+    end
+end
+
+-- If unit is not specified, populate icons for all 3 arena opponents
 local function SetupIconGroup(group, unit)
-    -- Clear previous icons
     NS.IconGroup_Wipe(group);
 
     if unit then
-        local class;
-        if ( unit == "player" ) then
-            class = select(2, UnitClass(unit));
-        else
-            -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
-            local index = string.sub(unit, -1, -1);
-            local specID = GetArenaOpponentSpec(index);
-            if specID and ( specID > 0 ) then
-                class = select(6, GetSpecializationInfoByID(specID));
-            end
+        SetupIconGroupForUnit(group, unit);
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            SetupIconGroup(group, "arena"..i);
         end
-        if ( not class ) then return end
     end
 end
 
