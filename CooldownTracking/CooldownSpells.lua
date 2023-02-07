@@ -63,3 +63,7 @@ NS.cooldownSpells = {
     },
 
 };
+
+NS.cooldownResets = {
+
+};

@@ -139,12 +139,13 @@ local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, de
     -- Validate spell
     if ( not cooldowns[spellId] ) then return end
     local spell = cooldowns[spellId];
-
-    print(spellId);
+    print("Validated spell", spellGUID, guid);
 
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
     if ( spellGUID ~= guid ) then return end
+
+    print("Validated unit", spellGUID, guid);
 
     -- Check spell dismiss
     if ( subEvent == "SPELL_AURA_REMOVED" ) then
@@ -263,10 +264,18 @@ local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroups = {}; -- This one needs a group per unit
 
 -- Create icon groups (note the category order)
-iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenter);
-iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenter);
-iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenter);
-iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRight);
+local groupToken = test and "player" or nil;
+iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenter, groupToken);
+iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenter, groupToken);
+iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenter, groupToken);
+iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRight, groupToken);
+if test then
+    defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
+else
+    for i = 1, NS.MAX_ARENA_SIZE do
+        defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
+    end
+end
 
 local function RefreshGroups()
     if test then
@@ -274,7 +283,6 @@ local function RefreshGroups()
             SetupIconGroup(iconGroups[i], i, "player");
         end
 
-        defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
         SetupIconGroup(defensiveGroups[1], SPELLCATEGORY.DEFENSIVE, "player");
     else
         for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
@@ -282,7 +290,7 @@ local function RefreshGroups()
         end
 
         for i = 1, NS.MAX_ARENA_SIZE do
-            defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
+           SetupIconGroup(defensiveGroups[i], "arena" .. i);
         end
     end
 end
