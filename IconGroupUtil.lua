@@ -17,6 +17,8 @@ NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
     f.growDirection = growOptions.direction;
     f.growAnchor = growOptions.anchor;
     f.margin = growOptions.margin;
+    f.columns = growOptions.columns; -- For center alignment only
+    f.growUpward = growOptions.growUpward; -- "UP" or "DOWN"
 
     f.unit = unit;
 
@@ -33,20 +35,44 @@ local function IconGroup_Position(group)
         return;
     end
 
+    local baseIconSize = select(1, group.active[1]:GetSize());
+
     -- Reposition icons
     local growDirection = group.growDirection;
-    local growAnchor = group.growAnchor;
+    local anchor = group.growAnchor;
+    local numActive = #(group.active);
 
-    local offset = 0;
-    for _, icon in pairs(group.active) do
-        icon:SetPoint(growAnchor, group, growAnchor, offset, 0);
-        local iconSize = select(1, icon:GetSize());
+    local count, rows = 0, 1;
+    local grow = group.growUpward;
+    local margin = group.margin;
 
-        -- TODO: support centered horizontal
-        if ( growDirection == "LEFT" ) then
-            offset = offset - iconSize - group.margin;
-        elseif (growDirection == "RIGHT" ) then
-            offset = offset + iconSize + group.margin;
+    for i = 1, numActive do
+        group.active[i]:ClearAllPoints();
+        local columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
+        if ( i == 1 ) then
+            if growDirection == "CENTER" then
+                group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, 0);
+            else
+                group.active[i]:SetPoint(anchor, group, anchor, 0, 0);
+            end
+        else
+            count = count + 1;
+            if count >= columns then
+                if growDirection == "CENTER" then
+                    group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
+                else
+                    group.active[i]:SetPoint(anchor, group, anchor, 0, (baseIconSize+margin)*rows*grow);
+                end
+
+                count = 0;
+                rows = rows + 1;
+            else
+                if growDirection == "LEFT" then
+                    group.active[i]:SetPoint("TOPRIGHT", group.active[i-1], "TOPLEFT", -1 * margin, 0);
+                else
+                    group.active[i]:SetPoint("TOPLEFT", group.active[i-1], "TOPRIGHT", margin, 0);
+                end
+            end
         end
     end
 end
