@@ -88,11 +88,11 @@ NS.StartCooldownTrackingIcon = function (icon)
     -- Check if should use charge
     if icon:IsShown() and icon.cooldown.chargeExpire and ( now >= icon.cooldown.chargeExpire ) then
         icon.Count:SetText("");
-        icon.cooldown.chargeExpire = now + spell.cooldown;
+        icon.cooldown.chargeExpire = now + icon.cooldown.cooldown;
     else
         -- Use default charge
         icon.cooldown.start = now;
-        icon.cooldown.duration = spell.cooldown;
+        icon.cooldown.duration = icon.cooldown.cooldown;
         icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
         if icon.cooldown.chargeExpire then
             icon.Count:SetText("#");
