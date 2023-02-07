@@ -145,31 +145,20 @@ end
 local iconSize = 32;
 
 local premadeIcons = {};
-premadeIcons[SPELLCATEGORY.INTERRUPT] = {};
-premadeIcons[SPELLCATEGORY.DISRUPT] = {};
-premadeIcons[SPELLCATEGORY.CROWDCONTROL] = {};
-premadeIcons[SPELLCATEGORY.DISPEL] = {};
-premadeIcons[SPELLCATEGORY.DEFENSIVE] = {};
 
--- Populate all icons (regardless of class)
-for category, group in pairs(premadeIcons) do
-    if test then
-        local unitId = "player";
+-- Premake all icons (regardless of class and category)
+if test then
+    local unitId = "player";
+    premadeIcons[unitId] = {};
+    for spellID, spell in pairs(cooldowns) do
+        premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID);
+    end
+else
+    for i = 1, NS.MAX_ARENA_SIZE do
+        local unitId = "arena" .. i;
+        premadeIcons[unitId] = {};
         for spellID, spell in pairs(cooldowns) do
-            if ( spell.category ) == category then
-                group[unitId] = group[unitId] or {};
-                group[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
-            end
-        end
-    else
-        for spellID, spell in pairs(cooldowns) do
-            if ( spell.category ) == category then
-                for i = 1, NS.MAX_ARENA_SIZE do
-                    local unitId = "arena" .. i;
-                    group[unitId] = group[unitId] or {};
-                    group[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
-                end
-            end
+            premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID);
         end
     end
 end
@@ -177,3 +166,16 @@ end
 -- Populate icons based on class and spec
 local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroups = {}; -- This one needs a group per unit
+
+-- Create icon groups
+iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenter);
+iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenter);
+iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenter);
+iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRight);
+if test then
+    defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
+else
+    for i = 1, NS.MAX_ARENA_SIZE do
+        defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
+    end
+end

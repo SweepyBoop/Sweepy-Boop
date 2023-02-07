@@ -39,13 +39,14 @@ function CooldownTracking_UpdateBorder(icon)
     end
 end
 
-NS.CreateCooldownTrackingIcon = function (unit, spellID, size)
+NS.CreateCooldownTrackingIcon = function (unit, spellID)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame:Hide();
 
     frame.unit = unit;
     frame.spellID = spellID;
     local spell = NS.cooldownSpells[spellID];
+    frame.category = spell.category;
     frame.spellInfo = {
         cooldown = spell.cooldown,
         opt_lower_cooldown = spell.opt_lower_cooldown,
