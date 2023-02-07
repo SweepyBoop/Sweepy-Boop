@@ -283,6 +283,7 @@ local function SetupAuraGroup(group, unit)
             end
 
             if enabled then
+                premadeIcons[unit][spellID].dynamic = {};
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                 --print("Populated", unit, spell.class, spellID)
             end
