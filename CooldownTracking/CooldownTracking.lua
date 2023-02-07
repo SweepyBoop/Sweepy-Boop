@@ -139,18 +139,15 @@ local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, de
     -- Validate spell
     if ( not cooldowns[spellId] ) then return end
     local spell = cooldowns[spellId];
-    print("Validated spell", spellGUID, guid);
 
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
     if ( spellGUID ~= guid ) then return end
 
-    print("Validated unit", spellGUID, guid);
-
     -- Check spell dismiss
     if ( subEvent == "SPELL_AURA_REMOVED" ) then
-        if self.activeMap[spellId] then
-            NS.ResetCooldownTrackingCooldown(self.activeMap[spellId]);
+        if self.activeMap[guid .. "-" .. spellId] then
+            NS.ResetCooldownTrackingCooldown(self.activeMap[guid .. "-" .. spellId]);
             return;
         end
     end
