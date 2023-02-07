@@ -62,6 +62,98 @@ NS.cooldownSpells = {
         index = 2,
     },
 
+
+    -- Demon Hunter
+    -- Interrupt
+    -- Disrupt
+    [183752] = {
+        class = "DEMONHUNTER",
+        category = SPELLCATEGORY.INTERRUPT,
+        cooldown = 15,
+    },
+    -- Defensive
+    -- Netherwalk
+    [196555] = {
+        cooldown = 180, 
+        class = "DEMONHUNTER", 
+        category = SPELLCATEGORY.DEFENSIVE
+    },
+    -- Crowd Control
+    -- Imprison
+    [217832] = {
+        cooldown = 45, 
+        class = "DEMONHUNTER",
+        category = SPELLCATEGORY.CROWDCONTROL,
+    },
+    -- Imprison (Detainment)
+    [221527] = {
+        cooldown = 45, 
+        class = "DEMONHUNTER",
+        category = SPELLCATEGORY.CROWDCONTROL,
+    },
+
+    -- Priest
+    -- Dispel
+    -- Mass Dispel
+    [32375] = {
+        cooldown = 45,
+        class = "PRIEST",
+        category = SPELLCATEGORY.DISPEL,
+    },
+    -- Purify
+    [527] = {
+        cooldown = 8,
+        class = "PRIEST",
+        category = SPELLCATEGORY.DISPEL,
+        opt_charges = true,
+    },
+    -- Crowd Control
+    -- Psychic Scream
+    [8122] = {
+        cooldown = 30,
+        class = "PRIEST",
+        category = SPELLCATEGORY.CROWDCONTROL,
+    },
+    -- Holy Word: Chastise
+    [88625] = {
+        cooldown = 60,
+        class = "PRIEST",
+        category = SPELLCATEGORY.CROWDCONTROL,
+    },
+    -- Silence
+    [15487] = {
+        cooldown = 45,
+        class = "PRIEST",
+        category = SPELLCATEGORY.CROWDCONTROL,
+        opt_lower_cooldown = 30,
+    },
+    -- Defensive
+    -- Void Shift
+    [108968] = {
+        cooldown = 300,
+        class = "PRIEST",
+        category = SPELLCATEGORY.DEFENSIVE,
+    },
+    -- Pain Suppression
+    [33206] = {
+        cooldown = 180,
+        class = "PRIEST",
+        category = SPELLCATEGORY.DEFENSIVE,
+    },
+    -- Guardian Spirit
+    [47788] = {
+        cooldown = 60, -- Assume it didn't proc
+        class = "PRIEST",
+        category = SPELLCATEGORY.DEFENSIVE,
+    },
+    -- Disrupt
+    -- Holy Ward
+    [213610] = {
+        cooldown = 45,
+        class = "PRIEST",
+        category = SPELLCATEGORY.DISRUPT, 
+    },
+
 };
 
 if NS.isTestMode then
@@ -71,7 +163,6 @@ if NS.isTestMode then
     NS.cooldownSpells[1126] = {
         class = "DRUID",
         category = testCategory,
-        duration = 8,
         cooldown = 30,
         sound = true,
     };
@@ -79,7 +170,6 @@ if NS.isTestMode then
     NS.cooldownSpells[8936] = {
         class = "DRUID",
         category = testCategory,
-        duration = 5,
         cooldown = 10,
     };
     -- Rejuv
