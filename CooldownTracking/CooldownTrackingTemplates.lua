@@ -49,6 +49,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
     frame.spellID = spellID;
     local spell = NS.cooldownSpells[spellID];
     frame.category = spell.category;
+    -- Fill in static info here
     frame.spellInfo = {
         cooldown = spell.cooldown,
         opt_lower_cooldown = spell.opt_lower_cooldown,
@@ -56,6 +57,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
         opt_charges = spell.opt_charges,
         reduce_on_interrupt = spell.reduce_on_interrupt,
         trackEvent = spell.trackEvent,
+        trackPet = spell.trackPet,
     };
     frame.priority = spell.priority;
 
