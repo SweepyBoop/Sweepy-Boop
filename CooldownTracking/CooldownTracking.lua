@@ -30,10 +30,20 @@ for spellID, spell in pairs(cooldowns) do
     end
 end
 
-local growCenter = {
-    diretion = "CENTER",
+local growCenterUp = {
+    direction = "CENTER",
     anchor = "CENTER",
     margin = 3,
+    columns = 6,
+    growUpward = true,
+};
+
+local growCenterDown = {
+    direction = "CENTER",
+    anchor = "CENTER",
+    margin = 3,
+    columns = 6,
+    growUpward = false;
 };
 
 local growRight = {
@@ -42,7 +52,7 @@ local growRight = {
     margin = 3,
 };
 
-local growDispel = {
+local growRightDown = {
     direction = "RIGHT",
     anchor = "LEFT",
     margin = 3,
@@ -245,7 +255,7 @@ local function SetupIconGroupForUnit(group, category, unit)
 
             if enabled then
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
-                print("Populated", unit, spell.class, spellID)
+                --print("Populated", unit, spell.class, spellID)
             end
         end
     end
@@ -270,10 +280,10 @@ local defensiveGroups = {}; -- This one needs a group per unit
 
 -- Create icon groups (note the category order)
 local groupToken = test and "player" or nil;
-iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenter, groupToken);
-iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenter, groupToken);
-iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenter, groupToken);
-iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growDispel, groupToken);
+iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
+iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
+iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenterDown, groupToken);
+iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRightDown, groupToken);
 if test then
     defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
 else
