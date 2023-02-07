@@ -228,7 +228,7 @@ else
     end
 end
 
-local function GetUnitSpec(unit)
+NS.GetUnitSpec = function(unit)
     if ( unit == "player" ) then
         local currentSpec = GetSpecialization();
         if currentSpec then
@@ -266,7 +266,7 @@ local function SetupAuraGroup(group, unit)
             -- Does this spell filter by spec?
             if spell.spec then
                 local specEnabled = false;
-                local spec = GetUnitSpec(unit);
+                local spec = NS.GetUnitSpec(unit);
 
                 if ( not spec ) then
                     specEnabled = true;
