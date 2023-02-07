@@ -135,6 +135,17 @@ local function ValidateUnit(self)
     end
 end
 
+local function IsCastByPet(guid, unitId)
+    local petUnitId;
+    if ( unitId == "player" ) then
+        petUnitId = "pet";
+    else
+        petUnitId = "arenapet" .. string.sub(unitId, -1, -1);
+    end
+
+    return guid == UnitGUID(petUnitId);
+end
+
 -- Since we're tracking possibly multiple units, things need to be indexed by unitId - spellID here
 local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, sourceGUID, destGUID, spellId, spellName)
     -- Unit does not exist
@@ -173,7 +184,14 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
 
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
-    if ( spellGUID ~= guid ) then return end
+    local validateUnit;
+    if spell.trackPet then
+        -- Spell cast by pet or its owner
+        validateUnit = IsCastByPet(spellGUID, unitId) or ( spellGUID == guid );
+    else
+        validateUnit = ( spellGUID == guid );
+    end
+    if ( not validateUnit ) then return end
 
     -- Check spell dismiss
     if ( subEvent == "SPELL_AURA_REMOVED" ) then
