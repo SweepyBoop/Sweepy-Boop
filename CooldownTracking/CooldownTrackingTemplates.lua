@@ -39,6 +39,8 @@ function CooldownTracking_UpdateBorder(icon)
     end
 end
 
+-- Only put static info in this function
+-- An icon for a unit + spellID is only created once per session
 NS.CreateCooldownTrackingIcon = function (unit, spellID)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame:Hide();
@@ -51,7 +53,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
         cooldown = spell.cooldown,
         opt_lower_cooldown = spell.opt_lower_cooldown,
         charges = spell.charges,
-        opt_charges = spell.charges,
+        opt_charges = spell.opt_charges,
         reduce_on_interrupt = spell.reduce_on_interrupt,
         trackEvent = spell.trackEvent,
     };
