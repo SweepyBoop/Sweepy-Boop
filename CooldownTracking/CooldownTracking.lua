@@ -1,5 +1,5 @@
 local _, NS = ...;
-local test = true;
+local test = NS.isTestMode;
 
 local UIParent = UIParent;
 local UnitGUID = UnitGUID;
