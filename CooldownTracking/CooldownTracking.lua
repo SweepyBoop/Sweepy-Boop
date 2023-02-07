@@ -107,8 +107,8 @@ local function ValidateUnit(self)
     end
 end
 
--- Since we're tracking possibly multiple units, things need to be indexed by guid - spellID here
-local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, destGUID, spellId, spellName)
+-- Since we're tracking possibly multiple units, things need to be indexed by unitId - spellID here
+local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, sourceGUID, destGUID, spellId, spellName)
     -- Unit does not exist
     if ( not guid ) then return end
 
@@ -117,11 +117,11 @@ local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, de
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
-            if self.activeMap[guid .. "-" .. reset] then
+            if self.activeMap[unitId .. "-" .. reset] then
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == cooldowns[reset].reduce_power_type ) then
                     local amount = cooldowns[reset].reduce_amount * cost[1].cost;
-                    NS.ResetCooldownTrackingCooldown(self.activeMap[guid .. "-" .. reset], amount);
+                    NS.ResetCooldownTrackingCooldown(self.activeMap[unitId .. "-" .. reset], amount);
                 end
             end
         end
@@ -129,8 +129,8 @@ local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, de
         -- Check regular resets
         if resets[spellId] then
             for resetSpellID, amount in pairs(resets[spellId]) do
-                if self.activeMap[guid .. "-" .. resetSpellID] then
-                    NS.ResetCooldownTrackingCooldown(self.activeMap[guid .. "-" .. resetSpellID], amount);
+                if self.activeMap[unitId .. "-" .. resetSpellID] then
+                    NS.ResetCooldownTrackingCooldown(self.activeMap[unitId .. "-" .. resetSpellID], amount);
                 end
             end
         end
@@ -146,8 +146,8 @@ local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, de
 
     -- Check spell dismiss
     if ( subEvent == "SPELL_AURA_REMOVED" ) then
-        if self.activeMap[guid .. "-" .. spellId] then
-            NS.ResetCooldownTrackingCooldown(self.activeMap[guid .. "-" .. spellId]);
+        if self.activeMap[unitId .. "-" .. spellId] then
+            NS.ResetCooldownTrackingCooldown(self.activeMap[unitId .. "-" .. spellId]);
             return;
         end
     end
@@ -157,8 +157,8 @@ local function ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, de
     if ( not spell.trackEvent ) and ( subEvent ~= "SPELL_CAST_SUCCESS" ) then return end
 
     -- Find the icon to use
-    if self.icons[spellId] then
-        NS.StartCooldownTrackingIcon(self.icons[spellId]);
+    if self.icons[unitId .. "-" .. spellId] then
+        NS.StartCooldownTrackingIcon(self.icons[unitId .. "-" .. spellId]);
     end
 end
 
@@ -166,10 +166,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local guid = ValidateUnit(self);
 
     if self.unit then
-        ProcessCombatLogEventForUnit(self, guid, subEvent, sourceGUID, destGUID, spellId, spellName);
+        ProcessCombatLogEventForUnit(self, self.unit, guid, subEvent, sourceGUID, destGUID, spellId, spellName);
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            ProcessCombatLogEventForUnit(self, guid[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+            ProcessCombatLogEventForUnit(self, "arena"..i, guid[i], subEvent, sourceGUID, destGUID, spellId, spellName);
         end
     end
 end
@@ -236,7 +236,7 @@ local function SetupIconGroupForUnit(group, category, unit)
             end
 
             if enabled then
-                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
                 print("Populated", unit, spell.class, spellID)
             end
         end
