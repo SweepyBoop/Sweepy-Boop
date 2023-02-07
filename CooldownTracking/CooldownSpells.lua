@@ -69,28 +69,28 @@ if NS.isTestMode then
     -- Mark of the Wild
     NS.cooldownSpells[1126] = {
         class = "DRUID",
-        category = SPELLCATEGORY.INTERRUPT,
+        category = SPELLCATEGORY.DISPEL,
         duration = 8,
         cooldown = 30,
-        index = 1,
         sound = true,
     }
     -- Regrowth
     NS.cooldownSpells[8936] = {
         class = "DRUID",
-        category = SPELLCATEGORY.INTERRUPT,
+        category = SPELLCATEGORY.DISPEL,
         duration = 5,
         cooldown = 10,
     }
     -- Rejuv
     NS.cooldownSpells[774] = {
         class = "DRUID",
-        category = SPELLCATEGORY.INTERRUPT,
+        category = SPELLCATEGORY.DISPEL,
         cooldown = 45,
     }
     -- Wild Growth
     NS.cooldownSpells[48438] = {
-        category = SPELLCATEGORY.INTERRUPT,
+        class = "DRUID",
+        category = SPELLCATEGORY.DISPEL,
         cooldown = 7,
     }
 end

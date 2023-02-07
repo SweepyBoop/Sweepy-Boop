@@ -24,15 +24,15 @@ local function OnCooldownTimerFinished(self)
 end
 
 function CooldownTracking_UpdateBorder(icon)
-    if UnitIsUnit(icon.unit, "focus") then
+    --[[ if UnitIsUnit(icon.unit, "focus") then
         icon.FocusTexture:SetAlpha(1);
     else
         icon.FocusTexture:SetAlpha(0);
-    end
+    end ]]
 
     -- Target highlight overwrites focus highlight
     if UnitIsUnit(icon.unit, "target") then
-        icon.FocusTexture:SetAlpha(0);
+        --icon.FocusTexture:SetAlpha(0);
         icon.TargetTexture:SetAlpha(1);
     else
         icon.TargetTexture:SetAlpha(0);

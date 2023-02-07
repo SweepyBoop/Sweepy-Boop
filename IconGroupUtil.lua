@@ -43,7 +43,7 @@ local function IconGroup_Position(group)
     local numActive = #(group.active);
 
     local count, rows = 0, 1;
-    local grow = group.growUpward;
+    local grow = group.growUpward and 1 or -1;
     local margin = group.margin;
 
     for i = 1, numActive do

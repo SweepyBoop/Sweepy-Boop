@@ -42,6 +42,14 @@ local growRight = {
     margin = 3,
 };
 
+local growDispel = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+    columns = 3,
+    growUpward = false,
+};
+
 local setPointOptions = {};
 local SPELLCATEGORY = NS.SPELLCATEGORY;
 setPointOptions[SPELLCATEGORY.INTERRUPT] = {
@@ -265,7 +273,7 @@ local groupToken = test and "player" or nil;
 iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenter, groupToken);
 iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenter, groupToken);
 iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenter, groupToken);
-iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRight, groupToken);
+iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growDispel, groupToken);
 if test then
     defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
 else
