@@ -109,6 +109,8 @@ NS.IconGroup_Remove = function (group, icon)
     end
 end
 
+-- For arena offensive cooldown tracking, index is just spellID since we are always tracking a single unitId
+-- For Omnibar icons, we will use unitId - spellID
 NS.IconGroup_PopulateIcon = function (group, icon, index)
     icon:SetParent(group);
     group.icons[index] = icon;
