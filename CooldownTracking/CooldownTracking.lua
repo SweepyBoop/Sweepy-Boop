@@ -243,13 +243,12 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" );
     end
     if ( not validateSubEvent ) then return end
-
-    -- Passed, couldn't find icon
-    -- Did we not successfully add the icon to group.icons[unitId-spellId]?
-    print("SubEvent validated, trying to find icon", unitId, spellId);
-
+    
     -- Find the icon to use
     local iconId = unitId .. "-" .. spellId;
+     -- Passed, couldn't find icon
+    -- Did we not successfully add the icon to group.icons[unitId-spellId]?
+    print("SubEvent validated, trying to find icon", iconId, self.icons[iconId]);
     if self.icons[iconId] then
         NS.StartCooldownTrackingIcon(self.icons[iconId]);
     end
