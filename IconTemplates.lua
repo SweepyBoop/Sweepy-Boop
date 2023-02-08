@@ -114,11 +114,6 @@ NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
     local dynamic = icon.dynamic;
 
-    -- Initialize charge expire if baseline charge
-    --[[ if spell.charges and ( not dynamic.chargeExpire ) then
-        dynamic.chargeExpire = 0;
-    end ]]
-
     if spell.charges and ( not dynamic.charge ) then
         dynamic.charge = {};
     end
