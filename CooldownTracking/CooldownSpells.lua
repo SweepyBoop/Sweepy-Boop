@@ -297,7 +297,7 @@ NS.cooldownSpells = {
     -- Interrupt
     [1766] = {cooldown = 15, class = "ROGUE", category = SPELLCATEGORY.INTERRUPT}, -- Kick
     -- Defensive
-    [1856] = {cooldown = {default = 120, [260] = 75}, class = "ROGUE", charges = {[261] = true}, category = SPELLCATEGORY.INTERRUPT}, -- Vanish
+    [1856] = {cooldown = {default = 120, [260] = 75}, class = "ROGUE", charges = {[261] = true}, category = SPELLCATEGORY.Defensive}, -- Vanish
     [31224] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.DEFENSIVE}, -- Cloak of Shadows
     [5277] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.DEFENSIVE}, -- Evasion
     -- Crowd Control
@@ -404,8 +404,8 @@ NS.cooldownResets = {
 
     -- Vanish (Memory of Invigorating Shadowdust, Subtlety Rogue)
     [1856] = {
-        { spellID = 2094, amount = 20, specID = {261} }, -- Blind
-        { spellID = 408, amount = 20, specID = {261} }, -- Kidney Shot
+        { spellID = 2094, amount = 60, specID = {261} }, -- Blind
+        { spellID = 408, amount = 60, specID = {261} }, -- Kidney Shot
         { spellID = 212182, amount = 20, specID = {261} }, -- Smoke Bomb
         { spellID = 1766, amount = 20, specID = {261} }, -- Kick
         { spellID = 36554, amount = 20, specID = {261} }, -- Shadowstep

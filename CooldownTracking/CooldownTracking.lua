@@ -264,7 +264,7 @@ local function GetSpecOverrides(spell, spec)
     local overrides = {};
 
     if type(spell.cooldown) == "table" then
-        overrides.cooldown = spell.cooldown[spec];
+        overrides.cooldown = spell.cooldown[spec] or spell.cooldown.default;
     else
         overrides.cooldown = spell.cooldown;
     end
