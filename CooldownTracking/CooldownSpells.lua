@@ -102,6 +102,7 @@ NS.cooldownSpells = {
         cooldown = 8,
         class = "PRIEST",
         category = SPELLCATEGORY.DISPEL,
+        trackEvent = "SPELL_DISPEL",
         opt_charges = true,
     },
     -- Crowd Control
@@ -208,7 +209,7 @@ NS.cooldownSpells = {
         category = SPELLCATEGORY.INTERRUPT,
     },
     -- Dispel
-    [4987] = {cooldown = 8, class = "PALADIN", category = SPELLCATEGORY.DISPEL}, -- Cleanse
+    [4987] = {cooldown = 8, class = "PALADIN", category = SPELLCATEGORY.DISPEL, trackEvent = "SPELL_DISPEL"}, -- Cleanse
     [210256] = {cooldown = 45, class = "PALADIN", category = SPELLCATEGORY.DISPEL}, -- Blessing of Sanctuary
 
     -- Druid
@@ -237,7 +238,7 @@ NS.cooldownSpells = {
     [118038] = {cooldown = 90, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
     [184364] = {cooldown = 120, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration
     -- Dispel
-    [88423] = {cooldown = 8, class = "DRUID", category = SPELLCATEGORY.DISPEL}, -- Nature's Cure
+    [88423] = {cooldown = 8, class = "DRUID", category = SPELLCATEGORY.DISPEL, trackEvent = "SPELL_DISPEL"}, -- Nature's Cure
 
     -- Warlock
     -- Crowd Control
@@ -269,7 +270,7 @@ NS.cooldownSpells = {
     -- Disrupt
     [204336] = {cooldown = 30, class = "SHAMAN", category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
-    [77130] = {cooldown = 8, class = "SHAMAN", category = SPELLCATEGORY.DISPEL}, -- Purify Spirit
+    [77130] = {cooldown = 8, class = "SHAMAN", category = SPELLCATEGORY.DISPEL, trackEvent = "SPELL_DISPEL"}, -- Purify Spirit
 
     -- Hunter
     -- Disrupt
@@ -323,7 +324,7 @@ NS.cooldownSpells = {
     [122470] = {cooldown = 90, class = "MONK", category = SPELLCATEGORY.DEFENSIVE}, -- Touch of Karma
     [116849] = {cooldown = 75, class = "MONK", category = SPELLCATEGORY.DEFENSIVE}, -- Life Cocoon
     -- Dispel
-    [115450] = {cooldown = 8, class = "MONK", category = SPELLCATEGORY.DISPEL}, -- Detox
+    [115450] = {cooldown = 8, class = "MONK", category = SPELLCATEGORY.DISPEL, trackEvent = "SPELL_DISPEL"}, -- Detox
 
     -- Evoker
     -- Defensive
@@ -334,7 +335,7 @@ NS.cooldownSpells = {
     -- Crowd Control
     [357210] = {cooldown = {default = 120, [1467] = 60}, class = "EVOKER", category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
     -- Dispel
-    [360823] = {cooldown = 8, class = "EVOKER", category = SPELLCATEGORY.DISPEL} -- Naturalize
+    [360823] = {cooldown = 8, class = "EVOKER", category = SPELLCATEGORY.DISPEL, trackEvent = "SPELL_DISPEL"} -- Naturalize
 };
 
 local class = select(2, UnitClass("player"));
