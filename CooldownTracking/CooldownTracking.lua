@@ -262,14 +262,22 @@ if test then
     local unitId = "player";
     premadeIcons[unitId] = {};
     for spellID, spell in pairs(cooldowns) do
-        premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID);
+        local size, hideHighlight;
+        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+            size, hideHighlight = 22, true;
+        end
+        premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
     end
 else
     for i = 1, NS.MAX_ARENA_SIZE do
         local unitId = "arena" .. i;
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(cooldowns) do
-            premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID);
+            local size, hideHighlight;
+            if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+                size, hideHighlight = 22, true;
+            end
+            premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
         end
     end
 end
@@ -341,12 +349,7 @@ local function SetupIconGroupForUnit(group, category, unit)
                 -- dynamic info such as chargeExpire, start, duration
                 premadeIcons[unit][spellID].dynamic = {};
                 premadeIcons[unit][spellID].dynamic.spec = spec;
-
-                if ( category == SPELLCATEGORY.DEFENSIVE ) then
-                    NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID, 22, true);
-                else
-                    NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
-                end
+                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
                 --print("Populated", unit, spell.class, spellID)
             end
         end
