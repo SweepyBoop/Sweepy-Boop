@@ -54,6 +54,8 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
     if spell.category == NS.SPELLCATEGORY.DEFENSIVE then
         local smallerScale = 22 / 32;
         frame:SetScale(smallerScale);
+        -- Defensive spells are bound to a single unit, no need to show target highlight
+        frame.TargetTexture:Hide();
     end
     
     -- Fill in static info here
