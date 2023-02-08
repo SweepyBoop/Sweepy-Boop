@@ -164,7 +164,7 @@ NS.StartWeakAuraIcon = function (icon)
     end
 
     if icon.group then
-        NS.IconGroup_Insert(icon:GetParent(), icon);
+        NS.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
     end
 end
 

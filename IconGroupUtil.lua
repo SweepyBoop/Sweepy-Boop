@@ -97,10 +97,8 @@ NS.IconGroup_Insert = function (group, icon, index)
 
     -- Insert at the last position, then sort by priority
     table.insert(active, icon);
-    if icon.spellID then
-        -- Some groups specify pos to be unitId - spellID
-        local pos = index or icon.spellID;
-        group.activeMap[pos] = icon;
+    if index then
+        group.activeMap[index] = icon;
     end
 
     table.sort(active, sortFunc);
