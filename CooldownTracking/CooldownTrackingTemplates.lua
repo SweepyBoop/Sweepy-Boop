@@ -132,10 +132,21 @@ NS.StartCooldownTrackingIcon = function (icon)
     NS.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
 end
 
-NS.ResetCooldownTrackingCooldown = function (icon, amount)
+-- For spells with reduce_on_interrupt, set an internal cooldown so it doesn't reset cd multiple times
+-- This is basically only for solar beam
+NS.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
     if ( not icon.cooldown ) then return end
 
     local dynamic = icon.dynamic;
+    local now = GetTime();
+
+    if internalCooldown then
+        if dynamic.lastRest and ( now < dynamic.lastRest + internalCooldown ) then
+            return;
+        end
+
+        dynamic.lastRest = now;
+    end
 
     -- Fully set if amount is not specified
     if ( not amount ) then

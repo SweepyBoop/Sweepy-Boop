@@ -206,7 +206,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         local icon = self.activeMap[unitId .. "-" .. spellId];
         local amount = icon and icon.spellInfo.reduce_on_interrupt;
         if icon and amount then
-            NS.ResetCooldownTrackingCooldown(icon, amount);
+            NS.ResetCooldownTrackingCooldown(icon, amount, amount);
         end
     end
 
