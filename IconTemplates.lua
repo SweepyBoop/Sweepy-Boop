@@ -124,7 +124,6 @@ NS.StartWeakAuraIcon = function (icon)
         if ( not dynamic.charge ) then
             dynamic.start = now;
             dynamic.duration = spell.cooldown;
-            if ( dynamic.duration == nil ) then print(icon.spellID) end
             icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
         else
             local start, duration;
@@ -143,7 +142,6 @@ NS.StartWeakAuraIcon = function (icon)
             if icon:IsShown() then
                 icon.text:SetText("");
             else
-                if ( duration == nil ) then print(icon.spellID) end
                 icon.cooldown:SetCooldown(start, duration);
                 -- Do we have a charge available after pressing this icon?
                 local charges = ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration )
