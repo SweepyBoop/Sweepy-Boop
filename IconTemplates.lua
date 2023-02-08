@@ -114,43 +114,27 @@ NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
     local dynamic = icon.dynamic;
 
-    if spell.charges and ( not dynamic.charge ) then
-        dynamic.charge = {};
+    -- Initialize charge expire if baseline charge
+    if spell.charges and ( not dynamic.chargeExpire ) then
+        dynamic.chargeExpire = 0;
     end
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
         local now = GetTime();
-        if ( not dynamic.charge ) then
-            dynamic.start = now;
-            dynamic.duration = spell.cooldown;
-            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
+        -- Check if using second charge
+        if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
+            icon.text:SetText("");
+            dynamic.chargeExpire = now + spell.cooldown;
         else
-            local start, duration;
-            -- Check if default is available
-            if ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration ) then
-                dynamic.start = now;
-                dynamic.duration = spell.cooldown;
-                start, duration = dynamic.start, dynamic.duration;
-            else
-                -- Use extra charge
-                dynamic.charge.start = now;
-                dynamic.charge.duration = spell.cooldown;
-                start, duration = dynamic.charge.start, dynamic.charge.duration;
-            end
-
-            if icon:IsShown() then
+            -- Use default (or only) charge
+            dynamic.start = now;
+            dynamic.duration = spell.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
+            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
+            if dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
+                icon.text:SetText("#");
+            elseif icon.text then
                 icon.text:SetText("");
-            else
-                icon.cooldown:SetCooldown(start, duration);
-                -- Do we have a charge available after pressing this icon?
-                local charges = ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration )
-                    or ( not dynamic.charge.start ) or ( now >= dynamic.charge.start + dynamic.charge.duration );
-                if charges then
-                    icon.text:SetText("#");
-                elseif icon.text then
-                    icon.text:SetText("");
-                end
             end
         end
     end
