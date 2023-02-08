@@ -41,7 +41,7 @@ end
 
 -- Only put static info in this function
 -- An icon for a unit + spellID is only created once per session
-NS.CreateCooldownTrackingIcon = function (unit, spellID)
+NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame:Hide();
 
@@ -50,11 +50,12 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
     local spell = NS.cooldownSpells[spellID];
     frame.category = spell.category;
 
-    -- Smaller icon size for defensive spells since it's attached next to racials in sArena
-    if spell.category == NS.SPELLCATEGORY.DEFENSIVE then
-        local smallerScale = 22 / 32;
-        frame:SetScale(smallerScale);
-        -- Defensive spells are bound to a single unit, no need to show target highlight
+    if size then
+        local scale = size / 32;
+        frame:SetScale(scale);
+    end
+
+    if hideHighlight then
         frame.TargetTexture:Hide();
     end
     
