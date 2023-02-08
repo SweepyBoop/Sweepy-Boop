@@ -376,7 +376,7 @@ for spellID, spell in pairs(NS.cooldownSpells) do
     if spell.parent then
         local parent = NS.cooldownSpells[spell.parent];
 
-        spell.cooldown = spell.cooldown or parent.cooldowns;
+        spell.cooldown = spell.cooldown or parent.cooldown;
         spell.class = spell.class or parent.class;
         spell.category = spell.category or parent.category;
         spell.trackPet = parent.trackPet or parent.category;
