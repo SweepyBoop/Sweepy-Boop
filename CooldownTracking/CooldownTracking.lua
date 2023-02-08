@@ -179,11 +179,12 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         -- Check regular resets
         if resets[spellId] then
             for i = 1, #resets[spellId] do
-                local reset = resets[spellId];
+                local reset = resets[spellId][i];
 
                 local spellIdReset;
                 local amount;
                 if type(reset) == "table" and reset.amount then
+                    spellIdReset = reset.spellID;
                     amount = reset.amount;
                 else
                     if type(reset) == "table" then
