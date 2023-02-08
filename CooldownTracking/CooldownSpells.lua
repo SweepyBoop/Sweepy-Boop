@@ -19,6 +19,7 @@ NS.cooldownSpells = {
         class = "DEATHKNIGHT",
         category = SPELLCATEGORY.INTERRUPT,
         cooldown = 30,
+        trackPet = true,
     },
     -- Disrupt
     -- Death Grip
