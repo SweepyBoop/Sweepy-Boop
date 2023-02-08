@@ -405,7 +405,7 @@ local function RefreshGroups()
         end
 
         for i = 1, NS.MAX_ARENA_SIZE do
-           SetupIconGroup(defensiveGroups[i], "arena" .. i);
+           SetupIconGroup(defensiveGroups[i], SPELLCATEGORY.DEFENSIVE, "arena" .. i);
         end
     end
 end
