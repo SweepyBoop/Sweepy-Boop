@@ -199,14 +199,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
                     NS.ResetCooldownTrackingCooldown(icon, amount);
                 end
             end
-
-            for resetSpellID, amount in pairs(resets[spellId]) do
-                local icon = self.activeMap[unitId .. "-" .. resetSpellID];
-                if (icon) then print(amount) end
-                if icon and ShouldResetSpell(resets[spellId], icon) then
-                    NS.ResetCooldownTrackingCooldown(icon, amount);
-                end
-            end
         end
     end
 
