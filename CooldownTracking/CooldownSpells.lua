@@ -2,6 +2,7 @@ local _, NS = ...;
 
 local SPELLCATEGORY = NS.SPELLCATEGORY;
 local POWERTYPE = Enum.PowerType;
+local UnitClass = UnitClass;
 
 NS.cooldownSpells = {
     -- General
@@ -56,14 +57,6 @@ NS.cooldownSpells = {
         cooldown = 120,
         index = 1,
     },
-    -- Lichborne
-    [49039] = {
-        class = "DEATHKNIGHT",
-        category = SPELLCATEGORY.DEFENSIVE,
-        cooldown = 120,
-        index = 2,
-    },
-
 
     -- Demon Hunter
     -- Interrupt
@@ -342,6 +335,23 @@ NS.cooldownSpells = {
     -- Dispel
     [360823] = {cooldown = 8, class = "EVOKER", category = SPELLCATEGORY.DISPEL} -- Naturalize
 };
+
+local class = select(2, UnitClass("player"));
+if ( class == "PRIEST" ) or ( class == "WARLOCK" ) or ( class == "WARRIOR" ) then
+    -- Lichborne
+    NS.cooldownSpells[49039] = {
+        class = "DEATHKNIGHT",
+        category = SPELLCATEGORY.DEFENSIVE,
+        cooldown = 120,
+        index = 2,
+    };
+    -- Tremor Totem
+    NS.cooldownSpells[8143] = {
+        duration = 60,
+        class = "SHAMAN",
+        category = SPELLCATEGORY.DISRUPT,
+    };
+end
 
 for spellID, spell in pairs(NS.cooldownSpells) do
     -- Fill options from parent
