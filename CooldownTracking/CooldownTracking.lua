@@ -378,7 +378,7 @@ refreshFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 refreshFrame:RegisterEvent("PLAYER_TARGET_CHANGED");
 refreshFrame:RegisterEvent("PLAYER_FOCUS_CHANGED");
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED") then
+    if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED" and test ) then
         RefreshGroups();
     elseif ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
         local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
