@@ -54,7 +54,9 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
     if spell.category == NS.SPELLCATEGORY.DEFENSIVE then
         local smallerSize = 22;
         frame:SetSize(smallerSize, smallerSize);
-        frame.cooldown:SetSize(smallerSize, smallerSize);
+    else
+        local defaultSize = 32;
+        frame:SetSize(defaultSize, defaultSize);
     end
     
     -- Fill in static info here
