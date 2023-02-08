@@ -133,6 +133,8 @@ NS.StartCooldownTrackingIcon = function (icon)
 end
 
 NS.ResetCooldownTrackingCooldown = function (icon, amount)
+    print(amount);
+
     if ( not icon.cooldown ) then return end
 
     local dynamic = icon.dynamic;

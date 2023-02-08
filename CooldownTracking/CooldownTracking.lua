@@ -139,7 +139,7 @@ end
 local function ShouldResetSpell(reset, icon)
     local dynamic = icon.dynamic;
     -- Icon spec should be known when populated to a group
-    if ( not dynamic.spec ) then return true end
+    if ( not dynamic.spec ) or ( type(reset) ~= "table" ) then return true end
 
     if reset.specID then
         for i = 1, #(reset.specID) do
@@ -178,8 +178,30 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
 
         -- Check regular resets
         if resets[spellId] then
+            for i = 1, #resets[spellId] do
+                local reset = resets[spellId];
+
+                local spellIdReset;
+                local amount;
+                if type(reset) == "table" and reset.amount then
+                    amount = reset.amount;
+                else
+                    if type(reset) == "table" then
+                        spellIdReset = reset.spellID;
+                    else
+                        spellIdReset = reset;
+                    end
+                end
+
+                local icon = self.activeMap[unitId .. "-" .. spellIdReset];
+                if icon and ShouldResetSpell(reset, icon) then
+                    NS.ResetCooldownTrackingCooldown(icon, amount);
+                end
+            end
+
             for resetSpellID, amount in pairs(resets[spellId]) do
                 local icon = self.activeMap[unitId .. "-" .. resetSpellID];
+                if (icon) then print(amount) end
                 if icon and ShouldResetSpell(resets[spellId], icon) then
                     NS.ResetCooldownTrackingCooldown(icon, amount);
                 end
