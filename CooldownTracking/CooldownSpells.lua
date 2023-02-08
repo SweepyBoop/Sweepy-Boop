@@ -345,26 +345,44 @@ if NS.isTestMode then
     NS.cooldownSpells[1126] = {
         class = "DRUID",
         category = testCategory,
-        cooldown = 30,
+        cooldown = 60,
         sound = true,
     };
     -- Regrowth
     NS.cooldownSpells[8936] = {
         class = "DRUID",
         category = testCategory,
-        cooldown = 10,
+        cooldown = 60,
     };
     -- Rejuv
     NS.cooldownSpells[774] = {
         class = "DRUID",
         category = testCategory,
-        cooldown = 45,
+        cooldown = 60,
     };
     -- Wild Growth
     NS.cooldownSpells[48438] = {
         class = "DRUID",
         category = testCategory,
-        cooldown = 7,
+        cooldown = 60,
+    };
+    -- Nature's Cure
+    NS.cooldownSpells[88423] = {
+        class = "DRUID",
+        category = testCategory,
+        cooldown = 20,
+    };
+    -- Nourish
+    NS.cooldownSpells[50464] = {
+        class = "DRUID",
+        category = testCategory,
+        cooldown = 60,
+    };
+    -- Efflorescence
+    NS.cooldownSpells[145205] = {
+        class = "DRUID",
+        category = testCategory,
+        cooldown = 60,
     };
 end
 
