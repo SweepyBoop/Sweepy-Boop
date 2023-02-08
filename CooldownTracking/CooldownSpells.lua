@@ -237,6 +237,8 @@ NS.cooldownSpells = {
     -- Defensive
     [118038] = {cooldown = 90, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
     [184364] = {cooldown = 120, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration
+    -- Dispel
+    [88423] = {cooldown = 8, class = "DRUID", category = SPELLCATEGORY.DISPEL}, -- Nature's Cure
 
     -- Warlock
     -- Crowd Control
@@ -366,12 +368,6 @@ if NS.isTestMode then
         class = "DRUID",
         category = testCategory,
         cooldown = 60,
-    };
-    -- Nature's Cure
-    NS.cooldownSpells[88423] = {
-        class = "DRUID",
-        category = testCategory,
-        cooldown = 20,
     };
     -- Nourish
     NS.cooldownSpells[50464] = {
