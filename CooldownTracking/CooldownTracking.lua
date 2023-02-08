@@ -28,6 +28,11 @@ for spellID, spell in pairs(cooldowns) do
     if spell.class and ( type(spell.class) ~= "string" ) then
         print("Invalid class for spellID:", spellID);
     end
+
+    -- Validate category
+    if ( not spell.category ) or ( spell.category < 2 ) or ( spell.category > 6 ) then
+        print("Invalid category for spellID:", spellID);
+    end
 end
 
 local growCenterUp = {
