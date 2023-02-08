@@ -124,6 +124,7 @@ NS.StartWeakAuraIcon = function (icon)
         if ( not dynamic.charge ) then
             dynamic.start = now;
             dynamic.duration = spell.cooldown;
+            if ( dynamic.duration == nil ) then print(icon.spellID) end
             icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
         else
             local start, duration;

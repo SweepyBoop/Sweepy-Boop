@@ -112,7 +112,7 @@ NS.StartCooldownTrackingIcon = function (icon)
 
         -- Spell has opt_charges, activate that charge and set expirationTime to now (so it can be used in the following logic)
         if spell.opt_charges and ( not dynamic.charge ) then
-            dynamic = {};
+            dynamic.charge = {};
         end
     end
 
