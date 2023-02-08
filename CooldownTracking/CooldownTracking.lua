@@ -169,11 +169,12 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
-            if self.activeMap[unitId .. "-" .. reset] then
+            local iconId = unitId .. "-" .. reset;
+            if self.activeMap[iconId] then
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == cooldowns[reset].reduce_power_type ) then
                     local amount = cooldowns[reset].reduce_amount * cost[1].cost;
-                    NS.ResetCooldownTrackingCooldown(self.activeMap[unitId .. "-" .. reset], amount);
+                    NS.ResetCooldownTrackingCooldown(self.activeMap[iconId], amount);
                 end
             end
         end
