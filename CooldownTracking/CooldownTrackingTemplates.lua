@@ -93,9 +93,10 @@ NS.StartCooldownTrackingIcon = function (icon)
         dynamic.cooldown = overrides.cooldown;
     end
     
-    -- If spell has baseline charge and chargeExpire not set
-    if dynamic.charges and ( not dynamic.chargeExpire ) then
-        dynamic.chargeExpire = 0;
+    -- If spell has baseline charge and charge not set
+    if dynamic.charges and ( not dynamic.charge ) then
+        print("Init baseline charge")
+        dynamic.charge = {}; -- start and duration like dynamic.start / dynamic.duration
     end
 
     local now = GetTime();
@@ -109,23 +110,46 @@ NS.StartCooldownTrackingIcon = function (icon)
         end
 
         -- Spell has opt_charges, activate that charge and set expirationTime to now (so it can be used in the following logic)
-        if spell.opt_charges and ( not dynamic.chargeExpire ) then
-            dynamic.chargeExpire = 0;
+        if spell.opt_charges and ( not dynamic.charge ) then
+            print("Init opt charge")
+            dynamic = {};
         end
     end
 
-    -- Check if should use charge
-    if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
-        icon.Count:SetText("");
-        dynamic.chargeExpire = now + dynamic.cooldown;
-    else
-        -- Use default charge
+    -- Spell has no charge, just use default
+    if ( not dynamic.charge ) then
         dynamic.start = now;
         dynamic.duration = dynamic.cooldown;
         icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-        if dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
-            icon.Count:SetText("#");
-            icon.Count:SetTextColor(1, 1, 0); -- Yellow
+    else
+        local start, duration;
+        -- Check if default is available
+        if ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration ) then
+            print("Use default")
+            dynamic.start = now;
+            dynamic.duration = dynamic.cooldown;
+            start, duration = dynamic.start, dynamic.duration;
+        else
+            print("Use extra charge")
+            -- Use extra charge
+            dynamic.charge.start = now;
+            dynamic.charge.duration = dynamic.cooldown;
+            start, duration = dynamic.charge.start, dynamic.charge.duration;
+        end
+
+        if icon:IsShown() then
+            icon.Count:SetText("");
+        else
+            icon.cooldown:SetCooldown(start, duration);
+            -- Do we have a charge available after pressing this icon?
+            local charges = ( not dynamic.start) or ( now >= dynamic.start + dynamic.duration )
+                or ( not dynamic.charge.start ) or ( now >= dynamic.charge.start + dynamic.charge.duration );
+            if charges then
+                icon.Count:SetText("#");
+                icon.Count:SetTextColor(1, 1, 0); -- Yellow
+            else
+                icon.Count:SetText("");
+            end
         end
     end
 

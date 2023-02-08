@@ -398,14 +398,14 @@ if NS.isTestMode then
         class = "DRUID",
         category = testCategory,
         cooldown = 12,
-        opt_charges = true,
+        charges = true,
     };
     -- Rejuv
     NS.cooldownSpells[774] = {
         class = "DRUID",
         category = testCategory,
         cooldown = 15,
-        opt_lower_cooldown = 8,
+        opt_charges = true,
     };
     -- Wild Growth
     NS.cooldownSpells[48438] = {
