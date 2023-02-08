@@ -97,7 +97,7 @@ NS.StartCooldownTrackingIcon = function (icon)
     
     -- If spell has baseline charge and charge not set
     if dynamic.charges and ( not dynamic.chargeExpire ) then
-        dynamic.chargeExpire = 0; -- start and duration like dynamic.start / dynamic.duration
+        dynamic.chargeExpire = 0;
     end
 
     local now = GetTime();
