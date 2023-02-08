@@ -192,8 +192,15 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     end
 
     -- Validate subEvent
-    if spell.trackEvent and ( subEvent ~= spell.trackEvent ) then return end
-    if ( not spell.trackEvent ) and ( subEvent ~= "SPELL_CAST_SUCCESS" ) then return end
+    local validateSubEvent;
+    if spell.trackPet then
+        validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" ) or ( subEvent == "SPELL_AURA_APPLIED" );
+    elseif spell.trackEvent then
+        validateSubEvent = ( subEvent == spell.trackEvent );
+    else
+        validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" );
+    end
+    if ( not validateSubEvent ) then return end
 
     -- Find the icon to use
     if self.icons[unitId .. "-" .. spellId] then

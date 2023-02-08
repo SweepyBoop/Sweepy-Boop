@@ -19,7 +19,6 @@ NS.cooldownSpells = {
         class = "DEATHKNIGHT",
         category = SPELLCATEGORY.INTERRUPT,
         cooldown = 30,
-        trackEvent = "SPELL_AURA_APPLIED",
         trackPet = true,
     },
     -- Disrupt
