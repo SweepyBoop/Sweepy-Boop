@@ -52,11 +52,8 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
 
     -- Smaller icon size for defensive spells since it's attached next to racials in sArena
     if spell.category == NS.SPELLCATEGORY.DEFENSIVE then
-        local smallerSize = 22;
-        frame:SetSize(smallerSize, smallerSize);
-    else
-        local defaultSize = 32;
-        frame:SetSize(defaultSize, defaultSize);
+        local smallerScale = 22 / 32;
+        frame:SetScale(smallerScale);
     end
     
     -- Fill in static info here
