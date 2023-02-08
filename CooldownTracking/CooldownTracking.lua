@@ -370,11 +370,11 @@ local function SetupIconGroupForUnit(group, category, unit)
 end
 
 -- If unit is not specified, populate icons for all 3 arena opponents
-local function SetupIconGroup(group, category, unit)
+local function SetupIconGroup(group, category)
     NS.IconGroup_Wipe(group);
 
-    if unit then
-        SetupIconGroupForUnit(group, category, unit);
+    if group.unit then
+        SetupIconGroupForUnit(group, category, group.unit);
     else
         for i = 1, NS.MAX_ARENA_SIZE do
             SetupIconGroupForUnit(group, category, "arena"..i);
@@ -403,17 +403,17 @@ end
 local function RefreshGroups()
     if test then
         for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-            SetupIconGroup(iconGroups[i], i, "player");
+            SetupIconGroup(iconGroups[i], i);
         end
 
-        SetupIconGroup(defensiveGroups[1], SPELLCATEGORY.DEFENSIVE, "player");
+        SetupIconGroup(defensiveGroups[1], SPELLCATEGORY.DEFENSIVE);
     else
         for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
             SetupIconGroup(iconGroups[i], i); -- Don't specify unit, so it populates icons for all 3 arena opponents
         end
 
         for i = 1, NS.MAX_ARENA_SIZE do
-           SetupIconGroup(defensiveGroups[i], SPELLCATEGORY.DEFENSIVE, "arena" .. i);
+           SetupIconGroup(defensiveGroups[i], SPELLCATEGORY.DEFENSIVE);
         end
     end
 end
