@@ -140,7 +140,7 @@ NS.StartCooldownTrackingIcon = function (icon)
         else
             icon.cooldown:SetCooldown(start, duration);
             -- Do we have a charge available after pressing this icon?
-            local charges = ( not dynamic.start) or ( now >= dynamic.start + dynamic.duration )
+            local charges = ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration )
                 or ( not dynamic.charge.start ) or ( now >= dynamic.charge.start + dynamic.charge.duration );
             if charges then
                 icon.Count:SetText("#");
