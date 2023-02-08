@@ -297,7 +297,7 @@ NS.cooldownSpells = {
     -- Interrupt
     [1766] = {cooldown = 15, class = "ROGUE", category = SPELLCATEGORY.INTERRUPT}, -- Kick
     -- Defensive
-    [1856] = {cooldown = {default = 120, [260] = 75}, class = "ROGUE", charges = {[261] = true}, category = SPELLCATEGORY.Defensive}, -- Vanish
+    [1856] = {cooldown = {default = 120, [260] = 75}, class = "ROGUE", charges = {[261] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Vanish
     [31224] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.DEFENSIVE}, -- Cloak of Shadows
     [5277] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.DEFENSIVE}, -- Evasion
     -- Crowd Control
