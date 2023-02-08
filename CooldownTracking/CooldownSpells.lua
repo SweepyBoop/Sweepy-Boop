@@ -326,6 +326,18 @@ NS.cooldownSpells = {
     [357210] = {cooldown = {default = 120, [1467] = 60}, class = "EVOKER", category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
 };
 
+for spellID, spell in pairs(NS.cooldownSpells) do
+    -- Fill options from parent
+    if spell.parent then
+        local parent = NS.cooldownSpells[spell.parent];
+
+        spell.cooldown = spell.cooldown or parent.cooldowns;
+        spell.class = spell.class or parent.class;
+        spell.category = spell.category or parent.category;
+        spell.trackPet = parent.trackPet or parent.category;
+    end
+end
+
 if NS.isTestMode then
     local testCategory = SPELLCATEGORY.INTERRUPT;
     -- Test

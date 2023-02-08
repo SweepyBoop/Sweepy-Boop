@@ -28,16 +28,6 @@ for spellID, spell in pairs(cooldowns) do
     if spell.class and ( type(spell.class) ~= "string" ) then
         print("Invalid class for spellID:", spellID);
     end
-
-    -- Fill options from parent
-    if spell.parent then
-        local parent = spell.parent;
-
-        spell.cooldown = spell.cooldown or parent.cooldowns;
-        spell.class = parent.class;
-        spell.category = spell.category;
-        spell.trackPet = parent.trackPet;
-    end
 end
 
 local growCenterUp = {
