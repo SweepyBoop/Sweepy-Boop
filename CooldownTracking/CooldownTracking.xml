@@ -69,7 +69,7 @@
 	    </Layers>
 	    <Frames>
 	        <Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">
-	            <Size x="36" y="36"/>
+	            <Size x="32" y="32"/>
 	            <Anchors>
 	                <Anchor point="CENTER" x="0" y="-1"/>
 	            </Anchors>

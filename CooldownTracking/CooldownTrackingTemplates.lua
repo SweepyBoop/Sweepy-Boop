@@ -49,6 +49,14 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID)
     frame.spellID = spellID;
     local spell = NS.cooldownSpells[spellID];
     frame.category = spell.category;
+
+    -- Smaller icon size for defensive spells since it's attached next to racials in sArena
+    if spell.category == NS.SPELLCATEGORY.DEFENSIVE then
+        local smallerSize = 22;
+        frame:SetSize(smallerSize, smallerSize);
+        frame.cooldown:SetSize(smallerSize, smallerSize);
+    end
+    
     -- Fill in static info here
     frame.spellInfo = {
         cooldown = spell.cooldown,
