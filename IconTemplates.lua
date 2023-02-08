@@ -131,7 +131,7 @@ NS.StartWeakAuraIcon = function (icon)
             dynamic.start = now;
             dynamic.duration = spell.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
             icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-            if dynamic.chargeExpire then
+            if dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
                 icon.text:SetText("#");
             end
         end
