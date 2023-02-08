@@ -214,9 +214,14 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         end
     end
 
+    -- Passed
+    --print("Process combat log event:", unitId, spellId, guid, sourceGUID, subEvent);
+
     -- Validate spell
     if ( not cooldowns[spellId] ) then return end
     local spell = cooldowns[spellId];
+
+    print("Validating unit");
 
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
@@ -228,6 +233,8 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         validateUnit = ( spellGUID == guid );
     end
     if ( not validateUnit ) then return end
+
+    print("Unit validated");
 
     -- Validate subEvent
     local validateSubEvent;
