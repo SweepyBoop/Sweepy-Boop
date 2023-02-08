@@ -212,6 +212,8 @@ NS.cooldownSpells = {
         class = "PALADIN",
         category = SPELLCATEGORY.INTERRUPT,
     },
+    -- Dispel
+    [4987] = {cooldown = 8, class = "PALADIN", category = SPELLCATEGORY.DISPEL}, -- Cleanse
 
     -- Druid
     -- Crowd Control
@@ -268,6 +270,8 @@ NS.cooldownSpells = {
     [210918] = {cooldown = 60, class = "SHAMAN", category = SPELLCATEGORY.DEFENSIVE}, -- Ethereal Form
     -- Disrupt
     [204336] = {cooldown = 30, class = "SHAMAN", category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
+    -- Dispel
+    [77130] = {cooldown = 8, class = "SHAMAN", category = SPELLCATEGORY.DISPEL}, -- Purify Spirit
 
     -- Hunter
     -- Disrupt
@@ -319,6 +323,8 @@ NS.cooldownSpells = {
     -- Defensive
     [122470] = {cooldown = 90, class = "MONK", category = SPELLCATEGORY.DEFENSIVE}, -- Touch of Karma
     [116849] = {cooldown = 75, class = "MONK", category = SPELLCATEGORY.DEFENSIVE}, -- Life Cocoon
+    -- Dispel
+    [115450] = {cooldown = 8, class = "MONK", category = SPELLCATEGORY.DISPEL}, -- Detox
 
     -- Evoker
     -- Defensive
@@ -327,6 +333,8 @@ NS.cooldownSpells = {
     [351338] = {cooldown = {default = 40, [1467] = 20}, class = "EVOKER", category = SPELLCATEGORY.INTERRUPT}, -- Quell
     -- Crowd Control
     [357210] = {cooldown = {default = 120, [1467] = 60}, class = "EVOKER", category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
+    -- Dispel
+    [360823] = {cooldown = 8, class = "EVOKER", category = SPELLCATEGORY.DISPEL} -- Naturalize
 };
 
 for spellID, spell in pairs(NS.cooldownSpells) do
