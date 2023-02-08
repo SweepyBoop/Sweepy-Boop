@@ -86,7 +86,7 @@ local function sortFunc(a, b)
     end
 end
 
-NS.IconGroup_Insert = function (group, icon)
+NS.IconGroup_Insert = function (group, icon, index)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then return end
 
@@ -98,7 +98,9 @@ NS.IconGroup_Insert = function (group, icon)
     -- Insert at the last position, then sort by priority
     table.insert(active, icon);
     if icon.spellID then
-        group.activeMap[icon.spellID] = icon;
+        -- Some groups specify pos to be unitId - spellID
+        local pos = index or icon.spellID;
+        group.activeMap[pos] = icon;
     end
 
     table.sort(active, sortFunc);

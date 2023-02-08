@@ -195,6 +195,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
                 end
 
                 local icon = self.activeMap[unitId .. "-" .. spellIdReset];
+                if icon then print("Found icon", unitId, spellId) end
                 if icon and ShouldResetSpell(reset, icon) then
                     NS.ResetCooldownTrackingCooldown(icon, amount);
                 end
@@ -217,14 +218,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     end
     if ( not validateUnit ) then return end
 
-    -- Check spell dismiss
-    if ( subEvent == "SPELL_AURA_REMOVED" ) then
-        if self.activeMap[unitId .. "-" .. spellId] then
-            NS.ResetCooldownTrackingCooldown(self.activeMap[unitId .. "-" .. spellId]);
-            return;
-        end
-    end
-
     -- Validate subEvent
     local validateSubEvent;
     if spell.trackPet then
@@ -238,6 +231,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
 
     -- Find the icon to use
     if self.icons[unitId .. "-" .. spellId] then
+        print("Start", unitId, spellId);
         NS.StartCooldownTrackingIcon(self.icons[unitId .. "-" .. spellId]);
     end
 end

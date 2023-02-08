@@ -129,7 +129,7 @@ NS.StartCooldownTrackingIcon = function (icon)
 
     StartAnimation(icon);
 
-    NS.IconGroup_Insert(icon:GetParent(), icon);
+    NS.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
 end
 
 NS.ResetCooldownTrackingCooldown = function (icon, amount)
