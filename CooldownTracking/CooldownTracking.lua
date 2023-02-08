@@ -249,8 +249,9 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     print("SubEvent validated, trying to find icon", unitId, spellId);
 
     -- Find the icon to use
-    if self.icons[unitId .. "-" .. spellId] then
-        NS.StartCooldownTrackingIcon(self.icons[unitId .. "-" .. spellId]);
+    local iconId = unitId .. "-" .. spellId;
+    if self.icons[iconId] then
+        NS.StartCooldownTrackingIcon(self.icons[iconId]);
     end
 end
 
@@ -261,7 +262,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         ProcessCombatLogEventForUnit(self, self.unit, guid, subEvent, sourceGUID, destGUID, spellId, spellName);
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            ProcessCombatLogEventForUnit(self, "arena"..i, guid[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+            local unitId = "arena"..i;
+            ProcessCombatLogEventForUnit(self, unitId, guid[unitId], subEvent, sourceGUID, destGUID, spellId, spellName);
         end
     end
 end
