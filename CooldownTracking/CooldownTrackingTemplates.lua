@@ -81,18 +81,21 @@ end
 
 NS.StartCooldownTrackingIcon = function (icon)
     local spell = icon.spellInfo; -- static spell info
-    local overrides = icon.overrides; -- spec overrids
+    local overrides = icon.overrides; -- spec overrides
     local dynamic = icon.dynamic; -- dynamic info for current icon
+
+    -- Apply overrides if haven't
+    if ( not dynamic.charges ) then
+        dynamic.charges = overrides.charges;
+    end
+    if ( not dynamic.cooldown ) then
+        dynamic.cooldown = overrides.cooldown;
+    end
     
     -- If spell has baseline charge and chargeExpire not set
-    if spell.charges and ( not dynamic.chargeExpire ) then
-        dynamic.chargeExpire = 0;
-    elseif overrides and overrides.charges and ( not dynamic.chargeExpire ) then
+    if dynamic.charges and ( not dynamic.chargeExpire ) then
         dynamic.chargeExpire = 0;
     end
-
-    -- Check cooldown override
-    dynamic.cooldown = overrides.cooldown or spell.cooldown;
 
     local now = GetTime();
 

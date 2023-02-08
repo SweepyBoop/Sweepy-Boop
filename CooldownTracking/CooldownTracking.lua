@@ -241,15 +241,19 @@ else
     end
 end
 
-local function GetSpecOverrids(spell, spec)
+local function GetSpecOverrides(spell, spec)
     local overrides = {};
 
     if type(spell.cooldown) == "table" then
         overrides.cooldown = spell.cooldown[spec];
+    else
+        overrides.cooldown = spell.cooldown;
     end
 
     if type(spell.charges) == "table" then
         overrides.charges = spell.charges[spec];
+    else
+        overrides.charges = spell.charges;
     end
 
     return overrides;
@@ -300,7 +304,7 @@ local function SetupIconGroupForUnit(group, category, unit)
                 -- Apply spec override as a table here to premadeIcons[unit][spellID]
                 -- Remember to clean up first
                 -- Basically put everything known based on spec here
-                premadeIcons[unit][spellID].overrides = GetSpecOverrids(spell, spec);
+                premadeIcons[unit][spellID].overrides = GetSpecOverrides(spell, spec);
                 -- dynamic info such as chargeExpire, start, duration
                 premadeIcons[unit][spellID].dynamic = {};
 
