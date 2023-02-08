@@ -379,7 +379,7 @@ local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroups = {}; -- This one needs a group per unit
 
 -- Create icon groups (note the category order)
-local groupToken = test and "player" or nil;
+local groupToken = ( test and "player" ) or nil;
 iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
 iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
 iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenterDown, groupToken);
