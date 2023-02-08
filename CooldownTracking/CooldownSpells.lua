@@ -76,23 +76,24 @@ NS.cooldownSpells = {
     -- Defensive
     -- Netherwalk
     [196555] = {
-        cooldown = 180, 
-        class = "DEMONHUNTER", 
+        cooldown = 180,
+        class = "DEMONHUNTER",
         category = SPELLCATEGORY.DEFENSIVE
     },
     -- Crowd Control
     -- Imprison
     [217832] = {
-        cooldown = 45, 
+        cooldown = 45,
         class = "DEMONHUNTER",
         category = SPELLCATEGORY.CROWDCONTROL,
     },
     -- Imprison (Detainment)
     [221527] = {
-        cooldown = 45, 
+        cooldown = 45,
         class = "DEMONHUNTER",
         category = SPELLCATEGORY.CROWDCONTROL,
     },
+    [211881] = {cooldown = 30, class = "DEMONHUNTER", category = SPELLCATEGORY.CROWDCONTROL}, -- Fel Eruption
 
     -- Priest
     -- Dispel
@@ -165,7 +166,7 @@ NS.cooldownSpells = {
     [213610] = {
         cooldown = 45,
         class = "PRIEST",
-        category = SPELLCATEGORY.DISRUPT, 
+        category = SPELLCATEGORY.DISRUPT,
     },
 
     -- Paladin
@@ -232,6 +233,7 @@ NS.cooldownSpells = {
     -- Disrupt
     [100] = {cooldown = 17, class = "WARRIOR", charges = true, category = SPELLCATEGORY.DISRUPT}, -- Charge
     [23920] = {cooldown = 25, class = "WARRIOR", category = SPELLCATEGORY.DISRUPT}, -- Spell Reflection
+    [6544] = {cooldown = 30, class = "WARRIOR", category = SPELLCATEGORY.DISRUPT}, -- Heroic Leap
     -- Interrupt
     [6552] = {cooldown = 14, class = "WARRIOR", category = SPELLCATEGORY.INTERRUPT}, -- Pummel
     -- Crowd Control
@@ -269,6 +271,7 @@ NS.cooldownSpells = {
     -- Defensive
     [108271] = {cooldown = 90, class = "SHAMAN", category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
     [210918] = {cooldown = 60, class = "SHAMAN", category = SPELLCATEGORY.DEFENSIVE}, -- Ethereal Form
+    [98008] = {cooldown = 180, class = "SHAMAN", category = SPELLCATEGORY.DEFENSIVE}, -- Spirit Link Totem
     -- Disrupt
     [204336] = {cooldown = 30, class = "SHAMAN", category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
@@ -291,13 +294,13 @@ NS.cooldownSpells = {
     [2139] = {cooldown = 24, class = "MAGE", reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
     -- Defensive
     [45438] = {cooldown = 200, class = "MAGE", category = SPELLCATEGORY.DEFENSIVE}, -- Ice Block
-    [87024] = {cooldown = 300, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Cauterize
+    [87024] = {cooldown = 300, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL, trackEvent = "SPELL_AURA_APPLIED"}, -- Cauterize
     -- Crowd Control
     [113724] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
     -- Disrupt
     [30449] = {cooldown = 30, class = "MAGE", spec = {62}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
-    
+
     -- Rogue
     -- Interrupt
     [1766] = {cooldown = 15, class = "ROGUE", category = SPELLCATEGORY.INTERRUPT}, -- Kick
@@ -312,6 +315,7 @@ NS.cooldownSpells = {
     [359053] = {cooldown = 120, class = "ROGUE", category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb (Subtlety)
     -- Disrupt
     [36554] = {cooldown = 30, class = "ROGUE", charges = {[259] = true, [261] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
+    [195457] = {cooldown = 30, class = "ROGUE", category = SPELLCATEGORY.DISRUPT}, -- Grappling Hook
 
     -- Monk
     -- Crowd Control
@@ -330,6 +334,7 @@ NS.cooldownSpells = {
     -- Evoker
     -- Defensive
     [363916] = {cooldown = 90, class = "EVOKER", charges = true, category = SPELLCATEGORY.DEFENSIVE}, -- Obsidian Scales
+    [370960] = {cooldown = 180, class = "EVOKER", category = SPELLCATEGORY.DEFENSIVE}, -- Emerald Communion
     -- Interrupt
     [351338] = {cooldown = {default = 40, [1467] = 20}, class = "EVOKER", category = SPELLCATEGORY.INTERRUPT}, -- Quell
     -- Crowd Control
