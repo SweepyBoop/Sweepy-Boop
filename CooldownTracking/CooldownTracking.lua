@@ -136,6 +136,24 @@ local function IsCastByPet(guid, unitId)
     return guid == UnitGUID(petUnitId);
 end
 
+local function ShouldResetSpell(reset, icon)
+    local dynamic = icon.dynamic;
+    -- Icon spec should be known when populated to a group
+    if ( not dynamic.spec ) then return true end
+
+    if reset.specID then
+        for i = 1, #(reset.specID) do
+            if ( dynamic.spec == reset.specID[i] ) then
+                return true;
+            end
+        end
+
+        return false;
+    end
+
+    return true;
+end
+
 -- Since we're tracking possibly multiple units, things need to be indexed by unitId - spellID here
 local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, sourceGUID, destGUID, spellId, spellName)
     -- Unit does not exist
@@ -161,8 +179,9 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         -- Check regular resets
         if resets[spellId] then
             for resetSpellID, amount in pairs(resets[spellId]) do
-                if self.activeMap[unitId .. "-" .. resetSpellID] then
-                    NS.ResetCooldownTrackingCooldown(self.activeMap[unitId .. "-" .. resetSpellID], amount);
+                local icon = self.activeMap[unitId .. "-" .. resetSpellID];
+                if icon and ShouldResetSpell(resets[spellId], icon) then
+                    NS.ResetCooldownTrackingCooldown(icon, amount);
                 end
             end
         end
