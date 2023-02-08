@@ -60,6 +60,7 @@
 	                    <Anchor point="CENTER"/>
 	                </Anchors>
 	            </Texture>
+				<!-- We are not setting any focus, so this doesn't do anything -->
 	            <!-- <Texture parentKey="FocusTexture" alpha="0" alphaMode="ADD" atlas="bags-glow-white" useAtlasSize="true">
 	                <Anchors>
 	                    <Anchor point="CENTER"/>
