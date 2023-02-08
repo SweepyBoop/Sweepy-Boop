@@ -214,6 +214,7 @@ NS.cooldownSpells = {
     },
     -- Dispel
     [4987] = {cooldown = 8, class = "PALADIN", category = SPELLCATEGORY.DISPEL}, -- Cleanse
+    [210256] = {cooldown = 45, class = "PALADIN", category = SPELLCATEGORY.DISPEL}, -- Blessing of Sanctuary
 
     -- Druid
     -- Crowd Control
