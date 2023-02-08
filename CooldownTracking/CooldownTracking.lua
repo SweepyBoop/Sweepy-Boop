@@ -307,6 +307,7 @@ local function SetupIconGroupForUnit(group, category, unit)
                 premadeIcons[unit][spellID].overrides = GetSpecOverrides(spell, spec);
                 -- dynamic info such as chargeExpire, start, duration
                 premadeIcons[unit][spellID].dynamic = {};
+                premadeIcons[unit][spellID].dynamic.spec = spec;
 
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
                 --print("Populated", unit, spell.class, spellID)
