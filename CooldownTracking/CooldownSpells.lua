@@ -171,6 +171,7 @@ NS.cooldownSpells = {
         cooldown = 210,
         class = "PALADIN",
         category = SPELLCATEGORY.DEFENSIVE,
+        index = 1,
     },
     -- Blessing of Protection
     [1022] = {
@@ -178,6 +179,7 @@ NS.cooldownSpells = {
         class = "PALADIN",
         category = SPELLCATEGORY.DEFENSIVE,
         opt_charges = true,
+        index = 1,
     },
     -- Crowd Control
     -- Hammer of Justice
@@ -288,8 +290,8 @@ NS.cooldownSpells = {
     -- Interrupt
     [2139] = {cooldown = 24, class = "MAGE", reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
     -- Defensive
-    [45438] = {cooldown = 200, class = "MAGE", category = SPELLCATEGORY.DEFENSIVE}, -- Ice Block
-    [87024] = {cooldown = 300, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL, trackEvent = "SPELL_AURA_APPLIED"}, -- Cauterize
+    [45438] = {cooldown = 200, class = "MAGE", category = SPELLCATEGORY.DEFENSIVE, index = 1}, -- Ice Block
+    [87024] = {cooldown = 300, class = "MAGE", category = SPELLCATEGORY.DEFENSIVE, trackEvent = "SPELL_AURA_APPLIED"}, -- Cauterize
     -- Crowd Control
     [113724] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
@@ -349,9 +351,23 @@ if ( class == "PRIEST" ) or ( class == "WARLOCK" ) or ( class == "WARRIOR" ) the
     };
     -- Tremor Totem
     NS.cooldownSpells[8143] = {
-        duration = 60,
+        cooldown = 60,
         class = "SHAMAN",
         category = SPELLCATEGORY.DISRUPT,
+    };
+    -- Berserker Rage
+    NS.cooldownSpells[18499] = {
+        cooldown = 60,
+        class = "WARRIOR",
+        category = SPELLCATEGORY.DEFENSIVE,
+        index = 2,
+    };
+    -- Berserker Shout
+    NS.cooldownSpells[384100] = {
+        cooldown = 60,
+        class = "WARRIOR",
+        category = SPELLCATEGORY.DEFENSIVE,
+        index = 2,
     };
 end
 
