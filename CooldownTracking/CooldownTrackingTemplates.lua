@@ -73,6 +73,8 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 
     frame.icon:SetTexture(select(3, GetSpellInfo(spellID)));
     frame.icon:SetAllPoints();
+    frame.Count:SetText(""); -- Call this before setting color
+    frame.Count:SetTextColor(1, 1, 0); -- Yellow
 
     frame.dynamic = {};
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
@@ -95,7 +97,6 @@ NS.StartCooldownTrackingIcon = function (icon)
     
     -- If spell has baseline charge and charge not set
     if dynamic.charges and ( not dynamic.charge ) then
-        print("Init baseline charge")
         dynamic.charge = {}; -- start and duration like dynamic.start / dynamic.duration
     end
 
@@ -111,7 +112,6 @@ NS.StartCooldownTrackingIcon = function (icon)
 
         -- Spell has opt_charges, activate that charge and set expirationTime to now (so it can be used in the following logic)
         if spell.opt_charges and ( not dynamic.charge ) then
-            print("Init opt charge")
             dynamic = {};
         end
     end
@@ -125,12 +125,10 @@ NS.StartCooldownTrackingIcon = function (icon)
         local start, duration;
         -- Check if default is available
         if ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration ) then
-            print("Use default")
             dynamic.start = now;
             dynamic.duration = dynamic.cooldown;
             start, duration = dynamic.start, dynamic.duration;
         else
-            print("Use extra charge")
             -- Use extra charge
             dynamic.charge.start = now;
             dynamic.charge.duration = dynamic.cooldown;
@@ -146,7 +144,6 @@ NS.StartCooldownTrackingIcon = function (icon)
                 or ( not dynamic.charge.start ) or ( now >= dynamic.charge.start + dynamic.charge.duration );
             if charges then
                 icon.Count:SetText("#");
-                icon.Count:SetTextColor(1, 1, 0); -- Yellow
             else
                 icon.Count:SetText("");
             end
