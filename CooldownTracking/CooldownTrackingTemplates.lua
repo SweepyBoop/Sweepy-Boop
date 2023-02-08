@@ -119,7 +119,7 @@ NS.StartCooldownTrackingIcon = function (icon)
     end
 
     -- Check if using second charge
-    if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
+    if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire - 1 ) then
         icon.Count:SetText("");
         dynamic.chargeExpire = now + dynamic.cooldown;
     else
@@ -127,7 +127,7 @@ NS.StartCooldownTrackingIcon = function (icon)
         dynamic.start = now;
         dynamic.duration = dynamic.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
         icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-        if dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
+        if dynamic.chargeExpire and ( now >= dynamic.chargeExpire - 1 ) then
             icon.Count:SetText("#");
         else
             icon.Count:SetText("");
@@ -135,17 +135,31 @@ NS.StartCooldownTrackingIcon = function (icon)
     end
 
     --[[ -- Spell has no charge, just use default
-    if ( not dynamic.charge ) then
+    if ( not dynamic.chargeEnabled ) then
         dynamic.start = now;
         dynamic.duration = dynamic.cooldown;
         icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
     else
+        -- Use the one closer to finishing cooldown
+        local useDefault;
+        if ( not dynamic.start ) then
+            useDefault = true;
+        elseif ( not dynamic.start2 ) then
+            useDefault = false;
+        else
+            useDefault = ( dynamic.start + dynamic.duration < dynamic.start2 + dynamic.duration2 );
+        end
+
+        if useDefault then
+            
+        end
+
         local start, duration;
         -- Check if default is available
         if ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration ) then
             dynamic.start = now;
             dynamic.duration = dynamic.cooldown;
-            start, duration = dynamic.start, dynamic.duration;
+            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
         else
             -- Use extra charge
             dynamic.charge.start = now;
