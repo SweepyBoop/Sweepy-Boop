@@ -124,6 +124,7 @@ NS.StartCooldownTrackingIcon = function (icon)
         icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
         if dynamic.chargeExpire then
             icon.Count:SetText("#");
+            icon.Count:SetTextColor(1, 1, 0); -- Yellow
         end
     end
 
