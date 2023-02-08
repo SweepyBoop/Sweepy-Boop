@@ -95,6 +95,7 @@ NS.cooldownSpells = {
         cooldown = 45,
         class = "PRIEST",
         category = SPELLCATEGORY.DISPEL,
+        opt_lower_cooldown = 25,
     },
     -- Purify
     [527] = {
