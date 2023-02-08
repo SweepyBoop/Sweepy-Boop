@@ -247,7 +247,7 @@ NS.cooldownSpells = {
     -- Crowd Control
     [6789] = {cooldown = 45, class = "WARLOCK", category = SPELLCATEGORY.CROWDCONTROL}, -- Mortal Coil
     [5484] = {cooldown = 40, class = "WARLOCK", category = SPELLCATEGORY.CROWDCONTROL}, -- Howl of Terror
-    [89766] = {cooldown = 30, class = "WARLOCK", specID = {266}, trackPet = true, category = SPELLCATEGORY.CROWDCONTROL}, -- Axe Toss
+    [89766] = {cooldown = 30, class = "WARLOCK", trackPet = true, category = SPELLCATEGORY.CROWDCONTROL}, -- Axe Toss
     -- Defensive
     [104773] = {cooldown = 180, class = "WARLOCK", opt_lower_cd = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Unending Resolve
     -- Interrupt
@@ -296,7 +296,7 @@ NS.cooldownSpells = {
     [113724] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = "MAGE", category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
     -- Disrupt
-    [30449] = {cooldown = 30, class = "MAGE", category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
+    [30449] = {cooldown = 30, class = "MAGE", spec = {62}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
     
     -- Rogue
     -- Interrupt

@@ -14,7 +14,7 @@ local cooldowns = NS.cooldownSpells;
 local resets = NS.cooldownResets;
 
 local resetByPower = {
-
+    853,
 };
 
 for spellID, spell in pairs(cooldowns) do
@@ -173,9 +173,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
             end
         end
 
-        -- Check reset by interrupts, Counterspell, solar Beam
-        -- Solar Beam only reduces 15s when interrupting main target, how do we detect it? Cache last reduce time?
-
         -- Check regular resets
         if resets[spellId] then
             for i = 1, #resets[spellId] do
@@ -200,6 +197,16 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
                     NS.ResetCooldownTrackingCooldown(icon, amount);
                 end
             end
+        end
+    end
+
+    -- Check reset by interrupts, Counterspell, solar Beam
+    -- Solar Beam only reduces 15s when interrupting main target, how do we detect it? Cache last reduce time?
+    if ( subEvent == "SPELL_INTERRUPT" ) and ( sourceGUID == guid ) then
+        local icon = self.activeMap[unitId .. "-" .. spellId];
+        local amount = icon and icon.spellInfo.reduce_on_interrupt;
+        if icon and amount then
+            NS.ResetCooldownTrackingCooldown(icon, amount);
         end
     end
 

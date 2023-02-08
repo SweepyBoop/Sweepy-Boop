@@ -68,9 +68,10 @@ NS.SPELL_SUMMON = "SPELL_SUMMON"
 NS.UNIT_DIED = "UNIT_DIED"
 
 NS.specID = {
+    ARCANE = 62,
+    RET = 70,
     BALANCE = 102,
     FERAL = 103,
-    RET = 70,
     BM = 253,
     WW = 269,
     DEVASTATION = 1467,
