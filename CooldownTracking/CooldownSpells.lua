@@ -223,6 +223,8 @@ NS.cooldownSpells = {
     -- Defensive
     [61336] = {cooldown = {default = 180, [104] = 120}, class = "DRUID", charges = {[104] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
     [102342] = {cooldown = 90, class = "DRUID", opt_lower_cd = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
+    -- Dispel
+    [88423] = {cooldown = 8, class = "DRUID", category = SPELLCATEGORY.DISPEL, trackEvent = "SPELL_DISPEL"}, -- Nature's Cure
 
     -- Warrior
     -- Disrupt
@@ -237,8 +239,6 @@ NS.cooldownSpells = {
     -- Defensive
     [118038] = {cooldown = 90, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
     [184364] = {cooldown = 120, class = "WARRIOR", category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration
-    -- Dispel
-    [88423] = {cooldown = 8, class = "DRUID", category = SPELLCATEGORY.DISPEL, trackEvent = "SPELL_DISPEL"}, -- Nature's Cure
 
     -- Warlock
     -- Crowd Control

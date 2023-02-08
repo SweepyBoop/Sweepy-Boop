@@ -355,7 +355,7 @@ local function SetupIconGroupForUnit(group, category, unit)
                 premadeIcons[unit][spellID].dynamic = {};
                 premadeIcons[unit][spellID].dynamic.spec = spec;
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
-                --print("Populated", unit, spell.class, spellID)
+                print("Populated", unit, spell.class, spellID);
             end
         end
     end
