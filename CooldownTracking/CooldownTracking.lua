@@ -221,8 +221,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     if ( not cooldowns[spellId] ) then return end
     local spell = cooldowns[spellId];
 
-    print("Validating unit");
-
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
     local validateUnit;
@@ -234,7 +232,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     end
     if ( not validateUnit ) then return end
 
-    print("Unit validated");
+    print("Unit validated", unitId, spellId);
 
     -- Validate subEvent
     local validateSubEvent;
@@ -246,6 +244,8 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" );
     end
     if ( not validateSubEvent ) then return end
+
+    print("SubEvent validated, trying to find icon", unitId, spellId);
 
     -- Find the icon to use
     if self.icons[unitId .. "-" .. spellId] then
