@@ -232,8 +232,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     end
     if ( not validateUnit ) then return end
 
-    print("Unit validated", unitId, spellId);
-
     -- Validate subEvent
     local validateSubEvent;
     if spell.trackPet then
@@ -245,6 +243,8 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     end
     if ( not validateSubEvent ) then return end
 
+    -- Passed, couldn't find icon
+    -- Did we not successfully add the icon to group.icons[unitId-spellId]?
     print("SubEvent validated, trying to find icon", unitId, spellId);
 
     -- Find the icon to use
