@@ -4,7 +4,7 @@ local UnitAura = UnitAura;
 local strsplit = strsplit;
 local POWERTYPE = Enum.PowerType;
 
-NS.isTestMode = true;
+NS.isTestMode = false;
 
 NS.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
