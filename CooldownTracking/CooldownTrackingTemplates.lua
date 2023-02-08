@@ -77,7 +77,9 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     frame.Count:SetTextColor(1, 1, 0); -- Yellow
 
     frame.dynamic = {};
+    -- Either timer finishing should hide the icon, so we know this spell is available
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
+    frame.cooldown2:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
     return frame;
 end
