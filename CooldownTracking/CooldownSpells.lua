@@ -384,5 +384,33 @@ if NS.isTestMode then
 end
 
 NS.cooldownResets = {
+    -- Shifting Power
+    [314791] = {
+        { spellID = 31661, amount = 12 }, -- Dragon's Breath
+        { spellID = 113724, amount = 12 }, -- Ring of Frost
+        { spellID = 2139, amount = 12 }, -- Counterspell
+        { spellID = 45438, amount = 12 }, -- Ice Block
+    },
+    -- Cold Snap
+    [235219] = { 45438 },
 
+    -- Holy Word: Chastise
+    -- Apotheosis
+    [200183] = { 88625 },
+    -- Smite
+    [585] = { { spellID = 88625, amount = 4 } },
+    -- Holy Fire
+    [14914] = { { spellID = 88625, amount = 4 } },
+
+    -- Vanish (Memory of Invigorating Shadowdust, Subtlety Rogue)
+    [1856] = {
+        { spellID = 2094, amount = 20, specID = {261} }, -- Blind
+        { spellID = 408, amount = 20, specID = {261} }, -- Kidney Shot
+        { spellID = 212182, amount = 20, specID = {261} }, -- Smoke Bomb
+        { spellID = 1766, amount = 20, specID = {261} }, -- Kick
+        { spellID = 36554, amount = 20, specID = {261} }, -- Shadowstep
+    },
+
+    -- Power Word: Shield
+    [17] = { { spellID = 33206, amount = 3 } }, -- Pain Suppression
 };
