@@ -96,8 +96,8 @@ NS.StartCooldownTrackingIcon = function (icon)
     end
     
     -- If spell has baseline charge and charge not set
-    if dynamic.charges and ( not dynamic.charge ) then
-        dynamic.charge = {}; -- start and duration like dynamic.start / dynamic.duration
+    if dynamic.charges and ( not dynamic.chargeExpire ) then
+        dynamic.chargeExpire = 0; -- start and duration like dynamic.start / dynamic.duration
     end
 
     local now = GetTime();
@@ -111,12 +111,28 @@ NS.StartCooldownTrackingIcon = function (icon)
         end
 
         -- Spell has opt_charges, activate that charge and set expirationTime to now (so it can be used in the following logic)
-        if spell.opt_charges and ( not dynamic.charge ) then
-            dynamic.charge = {};
+        if spell.opt_charges and ( not dynamic.chargeExpire ) then
+            dynamic.chargeExpire = 0;
         end
     end
 
-    -- Spell has no charge, just use default
+    -- Check if using second charge
+    if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
+        icon.Count:SetText("");
+        dynamic.chargeExpire = now + dynamic.cooldown;
+    else
+        -- Use default (or only) charge
+        dynamic.start = now;
+        dynamic.duration = dynamic.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
+        icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
+        if dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
+            icon.Count:SetText("#");
+        elseif icon.text then
+            icon.Count:SetText("");
+        end
+    end
+
+    --[[ -- Spell has no charge, just use default
     if ( not dynamic.charge ) then
         dynamic.start = now;
         dynamic.duration = dynamic.cooldown;
@@ -148,7 +164,7 @@ NS.StartCooldownTrackingIcon = function (icon)
                 icon.Count:SetText("");
             end
         end
-    end
+    end ]]
 
     StartAnimation(icon);
 
