@@ -192,7 +192,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
                 end
 
                 local icon = self.activeMap[unitId .. "-" .. spellIdReset];
-                if icon then print("Found icon", unitId, spellId) end
                 if icon and ShouldResetSpell(reset, icon) then
                     NS.ResetCooldownTrackingCooldown(icon, amount);
                 end
@@ -238,7 +237,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
 
     -- Find the icon to use
     if self.icons[unitId .. "-" .. spellId] then
-        print("Start", unitId, spellId);
         NS.StartCooldownTrackingIcon(self.icons[unitId .. "-" .. spellId]);
     end
 end
