@@ -91,7 +91,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
                     local amount = spellData[reset].reduce_amount * cost[1].cost;
-                    NS.ResetWeakAuraCooldown(self.activeMap[reset], amount);
+                    NS.ResetIconCooldown(self.activeMap[reset], amount);
                 end
             end
         end
@@ -100,7 +100,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
         if spellResets[spellId] then
             for resetSpellID, amount in pairs(spellResets[spellId]) do
                 if self.activeMap[resetSpellID] then
-                    NS.ResetWeakAuraCooldown(self.activeMap[resetSpellID], amount);
+                    NS.ResetIconCooldown(self.activeMap[resetSpellID], amount);
                 end
             end
         end
@@ -114,7 +114,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
                 local spells = spellData[reset].critResets;
                 for i = 1, #spells do
                     if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
-                        NS.ResetWeakAuraCooldown(self.activeMap[reset], spellData[reset].critResetAmount);
+                        NS.ResetIconCooldown(self.activeMap[reset], spellData[reset].critResetAmount);
                     end
                 end
                 return;
@@ -288,7 +288,6 @@ local function SetupAuraGroup(group, unit)
             end
 
             if enabled then
-                premadeIcons[unit][spellID].timers = {};
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                 --print("Populated", unit, spell.class, spellID)
             end

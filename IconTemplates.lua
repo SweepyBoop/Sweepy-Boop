@@ -210,7 +210,7 @@ NS.RefreshWeakAuraDuration = function (icon)
     icon.duration:SetCooldown(expirationTime - duration, duration);
 end
 
-NS.ResetWeakAuraCooldown = function (icon, amount)
+NS.ResetIconCooldown = function (icon, amount)
     if ( not icon.cooldown ) then return end
 
     -- Timers are sorted by finish time

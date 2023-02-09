@@ -76,7 +76,6 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     frame.Count:SetText(""); -- Call this before setting color
     frame.Count:SetTextColor(1, 1, 0); -- Yellow
 
-    frame.dynamic = {};
     -- Either timer finishing should hide the icon, so we know this spell is available
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
     frame.cooldown2:SetScript("OnCooldownDone", OnCooldownTimerFinished);
@@ -86,53 +85,28 @@ end
 
 NS.StartCooldownTrackingIcon = function (icon)
     local spell = icon.spellInfo; -- static spell info
-    local overrides = icon.overrides; -- spec overrides
-    local dynamic = icon.dynamic; -- dynamic info for current icon
+    local info = icon.info; -- dynamic info for current icon
+    local timers = icon.timers;
 
-    -- Apply overrides if haven't
-    if ( not dynamic.charges ) then
-        dynamic.charges = overrides.charges;
-    end
-    if ( not dynamic.cooldown ) then
-        dynamic.cooldown = overrides.cooldown;
-    end
-    
-    -- If spell has baseline charge and charge not set
-    if dynamic.charges and ( not dynamic.chargeExpire ) then
-        dynamic.chargeExpire = 0;
+    -- Init default charge
+    if #(timers) == 0 then
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
+    -- Initialize charge expire if baseline charge
+    if info.charges and #(timers) < 2 then
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
+    end
+
+    -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
     local now = GetTime();
+    timers[1].start = now;
+    timers[1].duration = spell.cooldown;
+    timers[1].finish = now + spell.cooldown;
 
-    -- Icon is visible now, update opt_charges / opt_lower_cooldown
-    -- Check if using second baseline charge
-    if icon:IsShown() then
-        -- Spell has opt_lower_cooldown, adjust icon cooldown
-        if spell.opt_lower_cooldown then
-            dynamic.cooldown = math.min(spell.opt_lower_cooldown, dynamic.cooldown);
-        end
-
-        -- Spell has opt_charges, activate that charge and set expirationTime to now (so it can be used in the following logic)
-        if spell.opt_charges and ( not dynamic.chargeExpire ) then
-            dynamic.chargeExpire = 0;
-        end
-    end
-
-    -- Check if using second charge
-    if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire - 1 ) then
-        icon.Count:SetText("");
-        dynamic.chargeExpire = now + dynamic.cooldown;
-    else
-        -- Use default (or only) charge
-        dynamic.start = now;
-        dynamic.duration = dynamic.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
-        icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-        if dynamic.chargeExpire and ( now >= dynamic.chargeExpire - 1 ) then
-            icon.Count:SetText("#");
-        else
-            icon.Count:SetText("");
-        end
-    end
+    -- Sort after changing timers
+    table.sort(timers, NS.TimerCompare);
+    NS.RefreshCooldownTimer(icon.cooldown);
 
     StartAnimation(icon);
 
@@ -142,31 +116,14 @@ end
 -- For spells with reduce_on_interrupt, set an internal cooldown so it doesn't reset cd multiple times
 -- This is basically only for solar beam
 NS.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
-    if ( not icon.cooldown ) then return end
-
-    local dynamic = icon.dynamic;
-    local now = GetTime();
-
     if internalCooldown then
-        if dynamic.lastRest and ( now < dynamic.lastRest + internalCooldown ) then
+        local now = GetTime();
+        if icon.info.lasteReset and ( now < icon.info.lasteReset + internalCooldown ) then
             return;
         end
 
-        dynamic.lastRest = now;
+        icon.info.lasteReset = now;
     end
 
-    -- Fully set if amount is not specified
-    if ( not amount ) then
-        icon.cooldown:SetCooldown(0, 0);
-        OnCooldownTimerFinished(icon.cooldown);
-    else
-        dynamic.duration = dynamic.duration - amount;
-        -- Check if new duration hides the timer
-        if dynamic.duration <= 0 then
-            icon.cooldown:SetCooldown(0, 0);
-            OnCooldownTimerFinished(icon.cooldown);
-        else
-            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-        end
-    end
+    NS.ResetIconCooldown(icon, amount);
 end
