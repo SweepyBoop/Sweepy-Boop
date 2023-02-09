@@ -113,22 +113,16 @@ NS.StartCooldownTrackingIcon = function (icon)
     timers[index].start = now;
     timers[index].duration = spell.cooldown;
     timers[index].finish = now + spell.cooldown;
-    -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finish
-    -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
+    
     if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
+        -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finishes
+        -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
         timers[2].finish = math.huge;
     elseif ( index == 2 ) then
         -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
         timers[2].finish = math.huge;
     end
 
-    -- Sort after changing timers
-    --table.sort(timers, NS.TimerCompare);
-
-    --[[ NS.RefreshCooldownTimer(icon.cooldown);
-
-    -- Sort after changing timers
-    table.sort(timers, NS.TimerCompare); ]]
     NS.RefreshCooldownTimer(icon.cooldown);
 
     StartAnimation(icon);

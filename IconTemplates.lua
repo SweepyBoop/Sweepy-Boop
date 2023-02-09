@@ -38,7 +38,6 @@ end
 -- Call this after modifying timers
 NS.RefreshCooldownTimer = function (self, finish)
     local icon = self:GetParent();
-    -- Timers are sorted by finish time, the first one is either off cooldown, or closest to
     local timers = icon.timers;
     if ( not timers ) then return end
 
@@ -59,7 +58,7 @@ NS.RefreshCooldownTimer = function (self, finish)
         end
     end
 
-    if ( start ~= math.huge) and ( duration ~= math.huge ) then
+    if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
@@ -124,7 +123,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
             frame.Count:SetTextColor(1, 1, 0);
         end
     end
-    
+
     -- For now, always create a duration timer, if there is no duration, show 3s glow as reminder
     frame.duration = CreateFrame("Cooldown", "BoopHideTimerAuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
     frame.duration:SetAllPoints();
@@ -144,10 +143,6 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     return frame;
 end
 
-NS.TimerCompare = function (left, right)
-    return left.finish < right.finish;
-end
-
 NS.CheckTimerToStart = function (timers)
     local index;
 
@@ -165,11 +160,6 @@ NS.CheckTimerToStart = function (timers)
         end
     end
 
-    -- Set active state for timer
-    for i = 1, #(timers) do
-        timers[i].active = ( i == index );
-    end
-
     return index;
 end
 
@@ -185,7 +175,7 @@ NS.StartWeakAuraIcon = function (icon)
     if icon.cooldown then
         -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
         local now = GetTime();
-        
+
         -- Check which one should be used
         local index = NS.CheckTimerToStart(timers);
         timers[index].start = now;
@@ -199,9 +189,6 @@ NS.StartWeakAuraIcon = function (icon)
             -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
             timers[2].finish = math.huge;
         end
-
-        -- Sort after changing timers
-        --table.sort(timers, NS.TimerCompare);
 
         NS.RefreshCooldownTimer(icon.cooldown);
     end
@@ -248,7 +235,6 @@ end
 NS.ResetIconCooldown = function (icon, amount)
     if ( not icon.cooldown ) then return end
 
-    -- Timers are sorted by finish time
     local timers = icon.timers;
     -- Find the first thing that's on cooldown
     local now = GetTime();
@@ -276,8 +262,6 @@ NS.ResetIconCooldown = function (icon, amount)
         end
     end
 
-    -- Sort after updating timers
-    --table.sort(timers, NS.TimerCompare);
     NS.RefreshCooldownTimer(icon.cooldown, finish);
 end
 
