@@ -43,6 +43,7 @@ end
 -- An icon for a unit + spellID is only created once per session
 NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
+    frame.group = true; -- To add itself to parent group
     frame:Hide();
 
     frame.unit = unit;

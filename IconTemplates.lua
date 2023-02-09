@@ -215,32 +215,29 @@ NS.ResetIconCooldown = function (icon, amount)
     local timers = icon.timers;
     -- Find the first thing that's on cooldown
     local now = GetTime();
-    local timer;
+    local index;
     for i = 1, #(timers) do
         if ( now < timers[i].finish ) then
-            timer = timers[i];
+            index = i;
             break;
         end
     end
 
-    if ( not timer ) then return end
+    if ( not index ) then return end
 
     -- Reduce the timer
     if ( not amount ) then
         -- Fully reset if no amount specified
-        timer = { start = 0, duration = 0, finish = 0};
+        timers[index] = { start = 0, duration = 0, finish = 0};
     else
-        timer.duration, timer.finish = (timer.duration - amount), (timer.finish - amount);
-        if ( timer.duration < 0 ) then
-            timer = { start = 0, duration = 0, finish = 0};
+        timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - amount);
+        if ( timers[index].duration < 0 ) then
+            timers[index] = { start = 0, duration = 0, finish = 0};
         end
     end
 
     -- Sort after updating timers
     table.sort(timers, NS.TimerCompare);
-
-    print(timers[1].start, timers[1].duration, timers[1].finish)
-
     NS.RefreshCooldownTimer(icon.cooldown);
 end
 
