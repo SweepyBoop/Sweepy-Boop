@@ -117,10 +117,10 @@ NS.StartCooldownTrackingIcon = function (icon)
     if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
         -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finishes
         -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
-        timers[2] = NS.MakeInfinityCooldown();
+        timers[2].finish = math.huge;
     elseif ( index == 2 ) then
         -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
-        timers[2] = NS.MakeInfinityCooldown();
+        timers[2].finish = math.huge;
     end
 
     NS.RefreshCooldownTimer(icon.cooldown);
