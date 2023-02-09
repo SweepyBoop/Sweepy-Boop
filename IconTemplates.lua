@@ -35,10 +35,36 @@ NS.HideOverlayGlow = function (button)
     end
 end
 
-local function OnCooldownTimerFinished(self)
+-- Call this after modifying timers
+NS.RefreshCooldownTimer = function (self)
     local icon = self:GetParent();
-    if icon.group then
-        NS.IconGroup_Remove(icon:GetParent(), icon);
+    -- Timers are sorted by finish time, the first one is either off cooldown, or closest to
+    local timers = icon.timers;
+    if ( not timers ) then return end
+
+    local now = GetTime();
+    local start, duration, stack;
+    for i = 1, #(timers) do
+        if ( now >= timers[i].finish ) then
+            stack = true;
+        end
+        if ( now < timers[i].finish ) then
+            start, duration = timers[i].start, timers[i].duration;
+            break;
+        end
+    end
+
+    if icon.Count then
+        icon.Count:SetText(stack and "#" or "");
+    end
+
+    if start and duration then
+        icon.cooldown:SetCooldown(start, duration);
+    else
+        -- Nothing is on cooldown, hide the icon
+        if icon.group then
+            NS.IconGroup_Remove(icon:GetParent(), icon);
+        end
     end
 end
 
@@ -79,14 +105,14 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
-        frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
+        frame.cooldown:SetScript("OnCooldownDone", NS.RefreshCooldownTimer);
 
         if spell.charges then
-            frame.text = frame:CreateFontString(nil, "ARTWORK");
-            frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
-            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
-            frame.text:SetText(""); -- Call this before setting font color
-            frame.text:SetTextColor(1, 1, 0);
+            frame.Count = frame:CreateFontString(nil, "ARTWORK");
+            frame.Count:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
+            frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
+            frame.Count:SetText(""); -- Call this before setting font color
+            frame.Count:SetTextColor(1, 1, 0);
         end
     end
     
@@ -132,33 +158,16 @@ NS.StartWeakAuraIcon = function (icon)
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
-        local now = GetTime();
         -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
+        local now = GetTime();
         timers[1].start = now;
         timers[1].duration = spell.cooldown;
         timers[1].finish = now + spell.cooldown;
 
-        -- Sort again after updating timers
+        -- Sort after changing timers
         table.sort(timers, NS.TimerCompare);
 
-        local start, duration, charge;
-        -- Show the first timer that is on cooldown, and while iterating through timers, check if there is one off cooldown (to set the charge text)
-        for i = 1, #(timers) do
-            if now >= timers[i].finish then
-                charge = true;
-            else
-                -- Found the first timer that is on cooldown, use it to update cooldown frame
-                start, duration = timers[i].start, timers[i].duration;
-            end
-        end
-
-        if start and duration then
-            icon.cooldown:SetCooldown(start, duration);
-        end
-
-        if icon.text then
-            icon.text:SetText(charge and "#" or "");
-        end
+        NS.RefreshCooldownTimer(icon.cooldown);
     end
 
     -- If there is a duration, start the duration timer
@@ -241,7 +250,7 @@ NS.ResetWeakAuraCooldown = function (icon, amount)
         icon.cooldown:SetCooldown(start, duration);
     elseif ( not found ) then
         icon.cooldown:SetCooldown(0, 0);
-        OnCooldownTimerFinished(icon.cooldown);
+        NS.RefreshCooldownTimer(icon.cooldown);
     end
 end
 
