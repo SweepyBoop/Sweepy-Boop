@@ -47,19 +47,17 @@ NS.RefreshCooldownTimer = function (self)
     for i = 1, #(timers) do
         if ( now >= timers[i].finish ) then
             stack = true;
-        end
-        if ( now < timers[i].finish ) then
+        else
             start, duration = timers[i].start, timers[i].duration;
             break;
         end
     end
 
-    if icon.Count then
-        icon.Count:SetText(stack and "#" or "");
-    end
-
     if start and duration then
         icon.cooldown:SetCooldown(start, duration);
+        if icon.Count then
+            icon.Count:SetText(stack and "#" or "");
+        end
     else
         -- Nothing is on cooldown, hide the icon
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
@@ -233,6 +231,9 @@ NS.ResetIconCooldown = function (icon, amount)
         timer = { start = 0, duration = 0, finish = 0};
     else
         timer.duration, timer.finish = (timer.duration - amount), (timer.finish - amount);
+        if ( timer.duration < 0 ) then
+            timer = { start = 0, duration = 0, finish = 0};
+        end
     end
 
     -- Sort after updating timers
