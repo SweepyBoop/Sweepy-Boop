@@ -160,8 +160,13 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     end
 
     -- Validate subEvent
-    if spell.trackEvent and ( subEvent ~= spell.trackEvent ) then return end
-    if ( not spell.trackEvent ) and ( subEvent ~= "SPELL_CAST_SUCCESS" ) then return end
+    local validateSubEvent;
+    if spell.trackEvent then
+        validateSubEvent = ( subEvent == spell.trackEvent );
+    else
+        validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" );
+    end
+    if ( not validateSubEvent ) then return end
 
     -- Find the icon to use
     if self.icons[spellId] then
@@ -228,7 +233,7 @@ else
     end
 end
 
-local function GetUnitSpec(unit)
+NS.GetUnitSpec = function(unit)
     if ( unit == "player" ) then
         local currentSpec = GetSpecialization();
         if currentSpec then
@@ -266,7 +271,7 @@ local function SetupAuraGroup(group, unit)
             -- Does this spell filter by spec?
             if spell.spec then
                 local specEnabled = false;
-                local spec = GetUnitSpec(unit);
+                local spec = NS.GetUnitSpec(unit);
 
                 if ( not spec ) then
                     specEnabled = true;
@@ -283,6 +288,7 @@ local function SetupAuraGroup(group, unit)
             end
 
             if enabled then
+                premadeIcons[unit][spellID].dynamic = {};
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                 --print("Populated", unit, spell.class, spellID)
             end

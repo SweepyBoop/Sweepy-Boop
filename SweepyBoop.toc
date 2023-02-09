@@ -9,11 +9,17 @@ SpellData.lua
 UnitInfoHelpers.lua
 IconGroupUtil.lua
 IconTemplates.lua
-ArenaEnemyCooldown.lua
+ArenaEnemyBurst.lua
 ClassAndPetIcons.lua
 FixBlizzardRaidAggro.lua
 
 
+
+# Simple Omnibar
+CooldownTracking\CooldownTracking.xml
+CooldownTracking\CooldownSpells.lua
+CooldownTracking\CooldownTrackingTemplates.lua
+CooldownTracking\CooldownTracking.lua
 
 # UI Personalization
 Internal\LoseControl.lua
@@ -30,5 +36,5 @@ Internal\PersonalDR.lua
 # Weak Auras equivalent
 Internal\CustomAuras.lua
 Internal\CustomStatusBar.lua
-Internal\RaidFrameDebuffs.xml
-Internal\RaidFrameDebuffs.lua
+Internal\RaidFrameAurass.xml
+Internal\RaidFrameAurass.lua

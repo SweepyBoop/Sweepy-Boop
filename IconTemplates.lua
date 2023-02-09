@@ -63,6 +63,8 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     frame.spell = NS.spellData[spellID];
     frame.priority = frame.spell.priority;
     frame.group = group;
+    frame.dynamic = {};
+
     frame:SetSize(size, size);
 
     frame.tex = frame:CreateTexture();
@@ -81,10 +83,9 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
         if spell.charges then
-            frame.cooldown.chargeExpire = GetTime(); -- Set charge expirationTime
             frame.text = frame:CreateFontString(nil, "ARTWORK");
             frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
-            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0);
+            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
             frame.text:SetText(""); -- Call this before setting font color
             frame.text:SetTextColor(1, 1, 0);
         end
@@ -111,20 +112,29 @@ end
 
 NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
+    local dynamic = icon.dynamic;
+
+    -- Initialize charge expire if baseline charge
+    if spell.charges and ( not dynamic.chargeExpire ) then
+        dynamic.chargeExpire = 0;
+    end
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
+        local now = GetTime();
         -- Check if using second charge
-        if icon:IsShown() and spell.charges and ( GetTime() >= icon.cooldown.chargeExpire ) then
+        if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
             icon.text:SetText("");
-            icon.cooldown.chargeExpire = GetTime() + spell.cooldown;
+            dynamic.chargeExpire = now + spell.cooldown;
         else
-            -- Use default charge
-            icon.cooldown.start = GetTime();
-            icon.cooldown.duration = spell.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
-            icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
-            if spell.charges then
+            -- Use default (or only) charge
+            dynamic.start = now;
+            dynamic.duration = spell.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
+            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
+            if dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
                 icon.text:SetText("#");
+            elseif icon.text then
+                icon.text:SetText("");
             end
         end
     end
@@ -156,7 +166,7 @@ NS.StartWeakAuraIcon = function (icon)
     end
 
     if icon.group then
-        NS.IconGroup_Insert(icon:GetParent(), icon);
+        NS.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
     end
 end
 
@@ -171,18 +181,20 @@ end
 NS.ResetWeakAuraCooldown = function (icon, amount)
     if ( not icon.cooldown ) then return end
 
+    local dynamic = icon.dynamic;
+
     -- Fully reset if amount is not specified
     if ( not amount ) then
         icon.cooldown:SetCooldown(0, 0);
         OnCooldownTimerFinished(icon.cooldown);
     else
-        icon.cooldown.duration = icon.cooldown.duration - amount;
+        dynamic.duration = dynamic.duration - amount;
         -- Check if new duration hides the timer
-        if icon.cooldown.duration <= 0 then
+        if dynamic.duration <= 0 then
             icon.cooldown:SetCooldown(0, 0);
             OnCooldownTimerFinished(icon.cooldown);
         else
-            icon.cooldown:SetCooldown(icon.cooldown.start, icon.cooldown.duration);
+            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
         end
     end
 end

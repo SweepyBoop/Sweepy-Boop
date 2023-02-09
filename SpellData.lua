@@ -1,10 +1,10 @@
 local _, NS = ...;
 
+NS.isTestMode = false;
+
 local UnitAura = UnitAura;
 local strsplit = strsplit;
 local POWERTYPE = Enum.PowerType;
-
-NS.isTestMode = false;
 
 NS.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
@@ -35,6 +35,12 @@ end
 
 NS.SPELLCATEGORY = {
     OFFENSIVE = 1,
+
+    INTERRUPT = 2,
+    DISRUPT = 3,
+    CROWDCONTROL = 4,
+    DISPEL = 5,
+    DEFENSIVE = 6,
 }
 
 -- trackEvent: event or combat log subEvent to track
@@ -62,9 +68,10 @@ NS.SPELL_SUMMON = "SPELL_SUMMON"
 NS.UNIT_DIED = "UNIT_DIED"
 
 NS.specID = {
+    ARCANE = 62,
+    RET = 70,
     BALANCE = 102,
     FERAL = 103,
-    RET = 70,
     BM = 253,
     WW = 269,
     DEVASTATION = 1467,
