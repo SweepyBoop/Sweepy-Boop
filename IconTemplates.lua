@@ -161,6 +161,11 @@ NS.CheckTimerToStart = function (timers)
         end
     end
 
+    -- Set active state for timer
+    for i = 1, #(timers) do
+        timers[i].active = ( i == index );
+    end
+
     return index;
 end
 
