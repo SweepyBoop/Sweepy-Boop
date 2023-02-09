@@ -98,11 +98,21 @@ NS.StartCooldownTrackingIcon = function (icon)
         table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
+    if icon:IsShown() then
+        if spell.opt_lower_cooldown then
+            info.cooldown = math.min(info.cooldown, spell.opt_lower_cooldown);
+        end
+
+        if spell.opt_charges and #(timers) < 2 then
+            table.insert(timers, {start = 0, duration = 0, finish = 0});
+        end
+    end
+
     -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
     local now = GetTime();
     timers[1].start = now;
-    timers[1].duration = spell.cooldown;
-    timers[1].finish = now + spell.cooldown;
+    timers[1].duration = info.cooldown;
+    timers[1].finish = now + info.cooldown;
 
     -- Sort after changing timers
     table.sort(timers, NS.TimerCompare);

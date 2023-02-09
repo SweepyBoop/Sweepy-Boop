@@ -239,6 +239,8 @@ NS.ResetIconCooldown = function (icon, amount)
     -- Sort after updating timers
     table.sort(timers, NS.TimerCompare);
 
+    print(timers[1].start, timers[1].duration, timers[1].finish)
+
     NS.RefreshCooldownTimer(icon.cooldown);
 end
 
