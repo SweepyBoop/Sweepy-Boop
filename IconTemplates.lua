@@ -85,7 +85,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         if spell.charges then
             frame.text = frame:CreateFontString(nil, "ARTWORK");
             frame.text:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
-            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 0, 0);
+            frame.text:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
             frame.text:SetText(""); -- Call this before setting font color
             frame.text:SetTextColor(1, 1, 0);
         end
