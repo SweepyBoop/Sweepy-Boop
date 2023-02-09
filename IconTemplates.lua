@@ -62,6 +62,7 @@ NS.RefreshCooldownTimer = function (self)
         icon.cooldown:SetCooldown(start, duration);
     else
         -- Nothing is on cooldown, hide the icon
+        icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
             NS.IconGroup_Remove(icon:GetParent(), icon);
         end
@@ -237,21 +238,7 @@ NS.ResetWeakAuraCooldown = function (icon, amount)
     -- Sort after updating timers
     table.sort(timers, NS.TimerCompare);
 
-    -- Update the cooldown frame, display the first things found on cooldown
-    local start, duration, found;
-    for i = 1, #(timers) do
-        if ( now < timers[i].finish ) then
-            start, duration, found = timers[i].start, timers[i].duration, true;
-            break;
-        end
-    end
-
-    if start and duration then
-        icon.cooldown:SetCooldown(start, duration);
-    elseif ( not found ) then
-        icon.cooldown:SetCooldown(0, 0);
-        NS.RefreshCooldownTimer(icon.cooldown);
-    end
+    NS.RefreshCooldownTimer(icon.cooldown);
 end
 
 -- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
