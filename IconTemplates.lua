@@ -43,7 +43,7 @@ NS.RefreshCooldownTimer = function (self)
     if ( not timers ) then return end
 
     local now = GetTime();
-    local start, duration, stack;
+    local start, duration, stack = math.huge, math.huge, nil;
     for i = 1, #(timers) do
         if ( now >= timers[i].finish ) then
             stack = true;
@@ -55,12 +55,11 @@ NS.RefreshCooldownTimer = function (self)
                 timers[i].finish = now + icon.info.cooldown;
             end
 
-            start, duration = timers[i].start, timers[i].duration;
-            break;
+            start, duration = math.min(start, timers[i].start), math.min(duration, timers[i].duration);
         end
     end
 
-    if start and duration then
+    if ( start ~= math.huge) and ( duration ~= math.huge) then
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
@@ -185,7 +184,7 @@ NS.StartWeakAuraIcon = function (icon)
         timers[index].finish = now + spell.cooldown;
         -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finish
         -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
-        if timers[2] and ( now < timers[2].finish ) then
+        if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
             timers[2].finish = math.huge;
         end
 
