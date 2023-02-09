@@ -48,6 +48,13 @@ NS.RefreshCooldownTimer = function (self)
         if ( now >= timers[i].finish ) then
             stack = true;
         else
+            -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown, so now reset the timer to start from now
+            if timers[i].finish == math.huge then
+                timers[i].start = now;
+                timers[i].duration = icon.info.cooldown;
+                timers[i].finish = now + icon.info.cooldown;
+            end
+
             start, duration = timers[i].start, timers[i].duration;
             break;
         end
@@ -138,33 +145,52 @@ NS.TimerCompare = function (left, right)
     return left.finish < right.finish;
 end
 
+NS.CheckTimerToStart = function (timers)
+    local index;
+
+    if #(timers) < 2 then
+        index = 1;
+    else
+        local now = GetTime();
+        -- Check whatever is off cooldown or closest to
+        if ( now >= timers[1].finish ) then
+            index = 1;
+        elseif ( now >= timers[2].finish ) then
+            index = 2;
+        else
+            index = ( timers[1].finish < timers[2].finish ) and 1 or 2;
+        end
+    end
+
+    return index;
+end
+
 NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
     local timers = icon.timers;
 
-    -- Init default charge
-    if #(timers) == 0 then
-        table.insert(timers, {start = 0, duration = 0, finish = 0});
-    end
-
-    -- Initialize charge expire if baseline charge
     if spell.charges and #(timers) < 2 then
-        table.insert(timers, {start = 0, duration = 0, finish = 0});
+        timers.insert({start = 0, duration = 0, finish = 0});
     end
-
-    -- Sort by finish time after changing timers
-    table.sort(timers, NS.TimerCompare);
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
         -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
         local now = GetTime();
-        timers[1].start = now;
-        timers[1].duration = spell.cooldown;
-        timers[1].finish = now + spell.cooldown;
+        
+        -- Check which one should be used
+        local index = NS.CheckTimerToStart(timers);
+        timers[index].start = now;
+        timers[index].duration = spell.cooldown;
+        timers[index].finish = now + spell.cooldown;
+        -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finish
+        -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
+        if timers[2] and ( now < timers[2].finish ) then
+            timers[2].finish = math.huge;
+        end
 
         -- Sort after changing timers
-        table.sort(timers, NS.TimerCompare);
+        --table.sort(timers, NS.TimerCompare);
 
         NS.RefreshCooldownTimer(icon.cooldown);
     end
@@ -217,7 +243,7 @@ NS.ResetIconCooldown = function (icon, amount)
     local now = GetTime();
     local index;
     for i = 1, #(timers) do
-        if ( now < timers[i].finish ) then
+        if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
             index = i;
             break;
         end
@@ -237,7 +263,7 @@ NS.ResetIconCooldown = function (icon, amount)
     end
 
     -- Sort after updating timers
-    table.sort(timers, NS.TimerCompare);
+    --table.sort(timers, NS.TimerCompare);
     NS.RefreshCooldownTimer(icon.cooldown);
 end
 

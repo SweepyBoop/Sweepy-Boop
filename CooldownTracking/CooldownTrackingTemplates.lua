@@ -109,6 +109,11 @@ NS.StartCooldownTrackingIcon = function (icon)
     timers[1].start = now;
     timers[1].duration = info.cooldown;
     timers[1].finish = now + info.cooldown;
+    -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finish
+    -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
+    if timers[2] and ( now < timers[2].finish ) then
+        timers[2].finish = math.huge;
+    end
 
     -- Sort after changing timers
     table.sort(timers, NS.TimerCompare);
