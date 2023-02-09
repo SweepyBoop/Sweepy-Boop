@@ -17,10 +17,8 @@ local function StopAnimation(icon)
 end
 
 local function OnCooldownTimerFinished(self)
-    local icon = self:GetParent();
-    local group = icon:GetParent();
-    StopAnimation(icon);
-    NS.IconGroup_Remove(group, icon);
+    StopAnimation(self:GetParent());
+    NS.RefreshCooldownTimer(self);
 end
 
 function CooldownTracking_UpdateBorder(icon)
@@ -76,10 +74,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     frame.icon:SetAllPoints();
     frame.Count:SetText(""); -- Call this before setting color
     frame.Count:SetTextColor(1, 1, 0); -- Yellow
-
-    -- Either timer finishing should hide the icon, so we know this spell is available
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
-    frame.cooldown2:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
     return frame;
 end
