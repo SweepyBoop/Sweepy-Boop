@@ -36,7 +36,7 @@ NS.HideOverlayGlow = function (button)
 end
 
 -- Call this after modifying timers
-NS.RefreshCooldownTimer = function (self)
+NS.RefreshCooldownTimer = function (self, finish)
     local icon = self:GetParent();
     -- Timers are sorted by finish time, the first one is either off cooldown, or closest to
     local timers = icon.timers;
@@ -49,7 +49,7 @@ NS.RefreshCooldownTimer = function (self)
             stack = true;
         else
             -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown, so now reset the timer to start from now
-            if timers[i].finish == math.huge then
+            if finish and ( timers[i].finish == math.huge ) then
                 timers[i].start = now;
                 timers[i].duration = icon.info.cooldown;
                 timers[i].finish = now + icon.info.cooldown;
@@ -59,7 +59,7 @@ NS.RefreshCooldownTimer = function (self)
         end
     end
 
-    if ( start ~= math.huge) and ( duration ~= math.huge) then
+    if ( start ~= math.huge) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
@@ -71,6 +71,10 @@ NS.RefreshCooldownTimer = function (self)
             NS.IconGroup_Remove(icon:GetParent(), icon);
         end
     end
+end
+
+NS.FinishCooldownTimer = function (self)
+    NS.RefreshCooldownTimer(self, true);
 end
 
 local function OnDurationTimerFinished(self)
@@ -110,7 +114,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
-        frame.cooldown:SetScript("OnCooldownDone", NS.RefreshCooldownTimer);
+        frame.cooldown:SetScript("OnCooldownDone", NS.FinishCooldownTimer);
 
         if spell.charges then
             frame.Count = frame:CreateFontString(nil, "ARTWORK");
@@ -191,6 +195,9 @@ NS.StartWeakAuraIcon = function (icon)
         -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
         if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
             timers[2].finish = math.huge;
+        elseif ( index == 2 ) then
+            -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
+            timers[2].finish = math.huge;
         end
 
         -- Sort after changing timers
@@ -256,19 +263,22 @@ NS.ResetIconCooldown = function (icon, amount)
     if ( not index ) then return end
 
     -- Reduce the timer
+    local finish;
     if ( not amount ) then
         -- Fully reset if no amount specified
         timers[index] = { start = 0, duration = 0, finish = 0};
+        finish = true;
     else
         timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - amount);
         if ( timers[index].duration < 0 ) then
             timers[index] = { start = 0, duration = 0, finish = 0};
+            finish = true;
         end
     end
 
     -- Sort after updating timers
     --table.sort(timers, NS.TimerCompare);
-    NS.RefreshCooldownTimer(icon.cooldown);
+    NS.RefreshCooldownTimer(icon.cooldown, finish);
 end
 
 -- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
