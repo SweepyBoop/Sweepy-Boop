@@ -163,6 +163,10 @@ NS.CheckTimerToStart = function (timers)
     return index;
 end
 
+NS.MakeInfinityCooldown = function ()
+    return { start = math.huge, duration = math.huge, finish = math.huge };
+end
+
 NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
     local timers = icon.timers;
@@ -184,10 +188,10 @@ NS.StartWeakAuraIcon = function (icon)
         -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finish
         -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
         if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
-            timers[2].finish = math.huge;
+            timers[2] = NS.MakeInfinityCooldown();
         elseif ( index == 2 ) then
             -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
-            timers[2].finish = math.huge;
+            timers[2] = NS.MakeInfinityCooldown();
         end
 
         NS.RefreshCooldownTimer(icon.cooldown);
