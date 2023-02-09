@@ -63,7 +63,6 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     frame.spell = NS.spellData[spellID];
     frame.priority = frame.spell.priority;
     frame.group = group;
-    frame.dynamic = {};
 
     frame:SetSize(size, size);
 
@@ -110,32 +109,55 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     return frame;
 end
 
+NS.TimerCompare = function (left, right)
+    return left.finish < right.finish;
+end
+
 NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
-    local dynamic = icon.dynamic;
+    local timers = icon.timers;
+
+    -- Init default charge
+    if #(timers) == 0 then
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
+    end
 
     -- Initialize charge expire if baseline charge
-    if spell.charges and ( not dynamic.chargeExpire ) then
-        dynamic.chargeExpire = 0;
+    if spell.charges and #(timers) < 2 then
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
+
+    -- Sort by finish time after changing timers
+    table.sort(timers, NS.TimerCompare);
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
         local now = GetTime();
-        -- Check if using second charge
-        if icon:IsShown() and dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
-            icon.text:SetText("");
-            dynamic.chargeExpire = now + spell.cooldown;
-        else
-            -- Use default (or only) charge
-            dynamic.start = now;
-            dynamic.duration = spell.cooldown; -- This is used for cooldown reduction, as Cooldown:GetCooldownDuration is not reliable
-            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-            if dynamic.chargeExpire and ( now >= dynamic.chargeExpire ) then
-                icon.text:SetText("#");
-            elseif icon.text then
-                icon.text:SetText("");
+        -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
+        timers[1].start = now;
+        timers[1].duration = spell.cooldown;
+        timers[1].finish = now + spell.cooldown;
+
+        -- Sort again after updating timers
+        table.sort(timers, NS.TimerCompare);
+
+        local start, duration, charge;
+        -- Show the first timer that is on cooldown, and while iterating through timers, check if there is one off cooldown (to set the charge text)
+        for i = 1, #(timers) do
+            if now >= timers[i].finish then
+                charge = true;
+            else
+                -- Found the first timer that is on cooldown, use it to update cooldown frame
+                start, duration = timers[i].start, timers[i].duration;
             end
+        end
+
+        if start and duration then
+            icon.cooldown:SetCooldown(start, duration);
+        end
+
+        if icon.text then
+            icon.text:SetText(charge and "#" or "");
         end
     end
 
@@ -181,21 +203,45 @@ end
 NS.ResetWeakAuraCooldown = function (icon, amount)
     if ( not icon.cooldown ) then return end
 
-    local dynamic = icon.dynamic;
+    -- Timers are sorted by finish time
+    local timers = icon.timers;
+    -- Find the first thing that's on cooldown
+    local now = GetTime();
+    local timer;
+    for i = 1, #(timers) do
+        if ( now < timers[i].finish ) then
+            timer = timers[i];
+            break;
+        end
+    end
 
-    -- Fully reset if amount is not specified
+    if ( not timer ) then return end
+
+    -- Reduce the timer
     if ( not amount ) then
+        -- Fully reset if no amount specified
+        timer = { start = 0, duration = 0, finish = 0};
+    else
+        timer.duration, timer.finish = (timer.duration - amount), (timer.finish - amount);
+    end
+
+    -- Sort after updating timers
+    table.sort(timers, NS.TimerCompare);
+
+    -- Update the cooldown frame, display the first things found on cooldown
+    local start, duration, found;
+    for i = 1, #(timers) do
+        if ( now < timers[i].finish ) then
+            start, duration, found = timers[i].start, timers[i].duration, true;
+            break;
+        end
+    end
+
+    if start and duration then
+        icon.cooldown:SetCooldown(start, duration);
+    elseif ( not found ) then
         icon.cooldown:SetCooldown(0, 0);
         OnCooldownTimerFinished(icon.cooldown);
-    else
-        dynamic.duration = dynamic.duration - amount;
-        -- Check if new duration hides the timer
-        if dynamic.duration <= 0 then
-            icon.cooldown:SetCooldown(0, 0);
-            OnCooldownTimerFinished(icon.cooldown);
-        else
-            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-        end
     end
 end
 

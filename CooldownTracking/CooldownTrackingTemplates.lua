@@ -134,54 +134,6 @@ NS.StartCooldownTrackingIcon = function (icon)
         end
     end
 
-    --[[ -- Spell has no charge, just use default
-    if ( not dynamic.chargeEnabled ) then
-        dynamic.start = now;
-        dynamic.duration = dynamic.cooldown;
-        icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-    else
-        -- Use the one closer to finishing cooldown
-        local useDefault;
-        if ( not dynamic.start ) then
-            useDefault = true;
-        elseif ( not dynamic.start2 ) then
-            useDefault = false;
-        else
-            useDefault = ( dynamic.start + dynamic.duration < dynamic.start2 + dynamic.duration2 );
-        end
-
-        if useDefault then
-            
-        end
-
-        local start, duration;
-        -- Check if default is available
-        if ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration ) then
-            dynamic.start = now;
-            dynamic.duration = dynamic.cooldown;
-            icon.cooldown:SetCooldown(dynamic.start, dynamic.duration);
-        else
-            -- Use extra charge
-            dynamic.charge.start = now;
-            dynamic.charge.duration = dynamic.cooldown;
-            start, duration = dynamic.charge.start, dynamic.charge.duration;
-        end
-
-        if icon:IsShown() then
-            icon.Count:SetText("");
-        else
-            icon.cooldown:SetCooldown(start, duration);
-            -- Do we have a charge available after pressing this icon?
-            local charges = ( not dynamic.start ) or ( now >= dynamic.start + dynamic.duration )
-                or ( not dynamic.charge.start ) or ( now >= dynamic.charge.start + dynamic.charge.duration );
-            if charges then
-                icon.Count:SetText("#");
-            else
-                icon.Count:SetText("");
-            end
-        end
-    end ]]
-
     StartAnimation(icon);
 
     NS.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
