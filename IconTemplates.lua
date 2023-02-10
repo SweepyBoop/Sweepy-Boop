@@ -98,8 +98,8 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
 
     frame.unit = unit;
     frame.spellID = spellID;
-    frame.spell = NS.spellData[spellID];
-    frame.priority = frame.spell.priority;
+    frame.info = NS.spellData[spellID];
+    frame.priority = frame.info.priority;
     frame.group = group;
 
     frame:SetSize(size, size);
@@ -109,7 +109,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     frame.tex:SetAllPoints();
 
     -- Create duration/cooldown timers as needed
-    local spell = frame.spell;
+    local spell = frame.info;
     if spell.cooldown then
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
         frame.cooldown:SetAllPoints();
@@ -168,7 +168,7 @@ NS.CheckTimerToStart = function (timers)
 end
 
 NS.StartWeakAuraIcon = function (icon)
-    local spell = icon.spell;
+    local spell = icon.info;
     local timers = icon.timers;
 
     if #(timers) == 0 then
