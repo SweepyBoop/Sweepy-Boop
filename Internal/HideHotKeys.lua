@@ -1,3 +1,5 @@
+local _, NS = ...;
+
 local IsActionInRange = IsActionInRange;
 local RANGE_INDICATOR = RANGE_INDICATOR;
 local SlashCmdList = SlashCmdList;
@@ -86,9 +88,7 @@ SLASH_HIDEHOTKEYHHK1 = "/hhk"
 SlashCmdList["HIDEHOTKEYHHK"] = HideHotKeys
 
 local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
+frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:SetScript("OnEvent", function ()
     HideHotKeys()
 end)
-
--- TODO: hook up UPDATE_BINDINGS event and rehide keybinds based on current settings

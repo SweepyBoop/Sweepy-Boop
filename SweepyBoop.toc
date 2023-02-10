@@ -5,6 +5,7 @@
 SweepyBoop.xml
 
 # Publish
+Constants.lua
 SpellData.lua
 UnitInfoHelpers.lua
 IconGroupUtil.lua
@@ -36,5 +37,5 @@ Internal\PersonalDR.lua
 # Weak Auras equivalent
 Internal\CustomAuras.lua
 Internal\CustomStatusBar.lua
-Internal\RaidFrameAurass.xml
-Internal\RaidFrameAurass.lua
+Internal\RaidFrameAuras.xml
+Internal\RaidFrameAuras.lua

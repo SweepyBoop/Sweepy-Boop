@@ -89,13 +89,13 @@ playerPortraitAuraFrame.cooldown:SetDrawEdge(false)
 playerPortraitAuraFrame.cooldown:SetSwipeTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall")
 playerPortraitAuraFrame.cooldown:SetSwipeColor(0, 0, 0, 0.6)
 
-playerPortraitAuraFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-playerPortraitAuraFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS") -- Between solo shuffle rounds
-playerPortraitAuraFrame:RegisterEvent("UNIT_AURA")
-playerPortraitAuraFrame:Hide()
+playerPortraitAuraFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+playerPortraitAuraFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS); -- Between solo shuffle rounds
+playerPortraitAuraFrame:RegisterEvent(NS.UNIT_AURA);
+playerPortraitAuraFrame:Hide();
 
 function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
-    if ( event == "UNIT_AURA" and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
+    if ( event == NS.UNIT_AURA and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
 
     for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
@@ -151,10 +151,10 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
     frame.spellActivationAlert:Hide();
 
-    frame:RegisterEvent("UNIT_AURA");
+    frame:RegisterEvent(NS.UNIT_AURA);
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
-        if ( event == "PLAYER_ENTERING_WORLD" ) or ( unitTarget == "player" ) then
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
             local duration, expirationTime = select(5, NS.Util_GetUnitBuff("player", frame.spellID));
             if duration and ( duration ~= 0 ) then
                 self.cooldown:SetCooldown(expirationTime - duration, duration);
@@ -172,7 +172,7 @@ end
 
 -- No duration text, only show stacks, and glow when max stacks (if set)
 local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration, stackFunc)
-    local frame = CreateFrame("Frame", "BoopHideTimerCustomAura" .. spellID, UIParent);
+    local frame = CreateFrame("Frame", NS.HIDETIMEROMNICC .. "CustomAura" .. spellID, UIParent);
     frame.spellID = spellID;
     frame.maxStacks = maxStacks;
     frame.stackFunc = stackFunc;
@@ -213,11 +213,11 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
         frame.spellActivationAlert:Hide();
     end
 
-    frame:RegisterEvent("UNIT_AURA");
-    frame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    frame:RegisterEvent(NS.UNIT_AURA);
+    frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
-        if ( event == "PLAYER_ENTERING_WORLD" ) or ( unitTarget == "player" ) then
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
             local name, _, count, _, duration, expirationTime, _, _, _, _, _, _, _, _, _, value = NS.Util_GetUnitBuff("player", frame.spellID);
             if ( not name ) then
                 self:Hide();
@@ -282,11 +282,11 @@ local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, r
     frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
     frame.spellActivationAlert:Hide();
 
-    frame:RegisterEvent("UNIT_AURA");
-    frame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    frame:RegisterEvent(NS.UNIT_AURA);
+    frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
-        if ( event == "PLAYER_ENTERING_WORLD" ) or ( unitTarget == "player" ) then
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
             -- Used to find spellID of a buff
             --[[ local spellID = select(10, NS.Util_GetUnitAura("player", "Well-Honed Instincts", "HARMFUL"));
             if spellID then print(spellID) end ]]

@@ -252,7 +252,7 @@ local function CreateDRIcon(category)
     f.border:UpdateSizes();
 
     -- Assign frame name BoopHideTimer* to hide timer by OmniCC
-    f.cooldown = CreateFrame("Cooldown", "BoopHideTimerPersonalDR" .. category, f, "CooldownFrameTemplate");
+    f.cooldown = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "PersonalDR" .. category, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
     f.cooldown:SetDrawEdge(false);
     f.cooldown:SetAlpha(1);
@@ -299,10 +299,10 @@ local function ShowIconDR(icon)
     NS.IconGroup_Insert(icon:GetParent(), icon);
 end
 
-drIconGroup:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+drIconGroup:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 drIconGroup:SetScript("OnEvent", function (self, event, ...)
     local _, subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = CombatLogGetCurrentEventInfo();
-    if ( subEvent == "SPELL_AURA_REMOVED" ) and ( destGUID == playerGUID ) then
+    if ( subEvent == NS.SPELL_AURA_REMOVED ) and ( destGUID == playerGUID ) then
         local category = spellList[spellID];
         if ( not category ) then return end
 

@@ -120,5 +120,5 @@ end
 local frame = CreateFrame("Frame")
 frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
-frame:RegisterEvent("UNIT_TARGET")
+frame:RegisterEvent(NS.UNIT_TARGET)
 frame:SetScript("OnEvent", EventHandler)
