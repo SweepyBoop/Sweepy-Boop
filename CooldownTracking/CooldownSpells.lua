@@ -21,6 +21,7 @@ NS.cooldownSpells = {
         category = SPELLCATEGORY.INTERRUPT,
         cooldown = 30,
         trackPet = true,
+        trackEvent = "SPELL_AURA_APPLIED",
     },
     -- Disrupt
     -- Death Grip
@@ -252,9 +253,10 @@ NS.cooldownSpells = {
     -- Interrupt
     [119910] = {cooldown = 24, class = "WARLOCK", trackPet = true, category = SPELLCATEGORY.INTERRUPT}, -- Spell Lock (Command Demon)
         [19647] = {parent = 119910}, -- Spell Lock (Felhunter)
+        [132409] = {parent = 119910}, -- Spell Lock (Grimoire of Sacrifice)
+
 		[119911] = {parent = 119910}, -- Optical Blast (Command Demon)
 		[115781] = {parent = 119910}, -- Optical Blast (Observer)
-		[132409] = {parent = 119910}, -- Spell Lock (Grimoire of Sacrifice)
 		[171138] = {parent = 119910}, -- Shadow Lock (Doomguard)
 		[171139] = {parent = 119910}, -- Shadow Lock (Grimoire of Sacrifice)
 		[171140] = {parent = 119910}, -- Shadow Lock (Command Demon)

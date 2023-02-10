@@ -235,9 +235,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
 
     -- Validate subEvent
     local validateSubEvent;
-    if spell.trackPet then
-        validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" ) or ( subEvent == "SPELL_AURA_APPLIED" );
-    elseif spell.trackEvent then
+    if spell.trackEvent then
         validateSubEvent = ( subEvent == spell.trackEvent );
     else
         validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" );
