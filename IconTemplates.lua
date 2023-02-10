@@ -248,6 +248,7 @@ NS.ResetIconCooldown = function (icon, amount)
     local now = GetTime();
     local index;
     for i = 1, #(timers) do
+        -- Timer set to inf is hasn't started cooldown progress yet, so we ignore it
         if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
             index = i;
             break;
