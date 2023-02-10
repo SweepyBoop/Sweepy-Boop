@@ -111,8 +111,8 @@ NS.StartCooldownTrackingIcon = function (icon)
     -- Check which one should be used
     local index = NS.CheckTimerToStart(timers);
     timers[index].start = now;
-    timers[index].duration = spell.cooldown;
-    timers[index].finish = now + spell.cooldown;
+    timers[index].duration = info.cooldown;
+    timers[index].finish = timers[index].start + timers[index].duration;
     
     if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
         -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finishes
