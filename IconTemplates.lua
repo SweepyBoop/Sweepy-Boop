@@ -189,8 +189,8 @@ NS.StartWeakAuraIcon = function (icon)
         timers[index].start = now;
         timers[index].duration = spell.cooldown;
         timers[index].finish = now + spell.cooldown;
-        -- If I use timers[1] while timers[2] is already on cooldown, it will make timers[2]'s cooldown progress start after timers[1] finish
-        -- So here we set it to a positive infinity, and while one charge comes back, we'll reset its values
+        -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
+        -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
         if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
             timers[2].finish = math.huge;
         elseif ( index == 2 ) then
