@@ -5,6 +5,7 @@
 SweepyBoop.xml
 
 # Publish
+Constants.lua
 SpellData.lua
 UnitInfoHelpers.lua
 IconGroupUtil.lua
