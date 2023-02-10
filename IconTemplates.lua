@@ -63,7 +63,6 @@ NS.RefreshCooldownTimer = function (self, finish)
     end
 
     if ( start ~= math.huge ) and ( duration ~= math.huge ) then
-        print(now - start, duration);
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
@@ -172,8 +171,12 @@ NS.StartWeakAuraIcon = function (icon)
     local spell = icon.spell;
     local timers = icon.timers;
 
+    if #(timers) == 0 then
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
+    end
+
     if spell.charges and #(timers) < 2 then
-        timers.insert({start = 0, duration = 0, finish = 0});
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
     -- If there is a cooldown, start the cooldown timer
