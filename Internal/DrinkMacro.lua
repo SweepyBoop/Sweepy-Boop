@@ -18,9 +18,9 @@ local SendChatMessage = SendChatMessage;
 local frameDrinkMacro = CreateFrame("Frame");
 local inWorld = false;
 local bestDrink = nil;
-frameDrinkMacro:RegisterEvent("BAG_UPDATE");
-frameDrinkMacro:RegisterEvent("PLAYER_ENTERING_WORLD");
-frameDrinkMacro:RegisterEvent("PLAYER_REGEN_ENABLED");
+frameDrinkMacro:RegisterEvent(NS.BAG_UPDATE);
+frameDrinkMacro:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+frameDrinkMacro:RegisterEvent(NS.PLAYER_REGEN_ENABLED);
 
 local drinks = {
     -- itemID, -- name ............................... (Mana / HP Gain / Buff) [Avg Mana/Second]
@@ -230,14 +230,14 @@ local function eventHandler(self, event, ...)
         return
     end
     -- If not in combat, make a macro or edit existing one
-    if ( event == "PLAYER_ENTERING_WORLD" ) then
+    if ( event == NS.PLAYER_ENTERING_WORLD ) then
         inWorld = true;
         MakeDrinkMacro();
     end
-    if ( event == "BAG_UPDATE" ) and inWorld then
+    if ( event == NS.BAG_UPDATE ) and inWorld then
         MakeDrinkMacro();
     end
-    if ( event == "PLAYER_REGEN_ENABLED" ) and inWorld then -- Exiting combat
+    if ( event == NS.PLAYER_REGEN_ENABLED ) and inWorld then -- Exiting combat
         MakeDrinkMacro();
     end
 end
@@ -251,7 +251,7 @@ local drinkBuffs = {
 };
 
 local chatMessage = CreateFrame("Frame");
-chatMessage:RegisterEvent("UNIT_AURA");
+chatMessage:RegisterEvent(NS.UNIT_AURA);
 chatMessage:SetScript("OnEvent", function (self, event, ...)
     local unit = ...;
     if ( unit == "player" ) then
