@@ -299,6 +299,8 @@ end
 local function GetSpecOverrides(spell, spec)
     local overrides = {};
 
+    overrides.spec = spec;
+
     if type(spell.cooldown) == "table" then
         overrides.cooldown = spell.cooldown[spec] or spell.cooldown.default;
     else
@@ -358,7 +360,6 @@ local function SetupIconGroupForUnit(group, category, unit)
             if enabled then
                 -- Dynamic info for current icon
                 premadeIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
-                premadeIcons[unit][spellID].info.spec = spec;
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
                 --print("Populated", unit, spell.class, spellID);
             end
