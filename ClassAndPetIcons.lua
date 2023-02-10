@@ -206,53 +206,6 @@ local function UpdateHealthBar(frame)
     end
 end
 
-local ShowCastNpc = {
-    [1863] = true, -- Succubus
-    [61245] = true, -- Capacitor Totem
-}
-
-local function UpdateCastBar(frame)
-    if ( not frame.unit) or ( string.sub(frame.unit, 1, 9) ~= "nameplate" ) then
-        return;
-    end
-
-    local showCastBarEx = false;
-    if UnitIsPlayer(frame.unit) then
-        showCastBarEx = true;
-    else
-        if ( not IsActiveBattlefieldArena() ) then
-            showCastBarEx = true;
-        else
-            local guid = UnitGUID(frame.unit);
-            local npcID = select(6, strsplit("-", guid));
-            showCastBarEx = npcID and ShowCastNpc[npcID];
-        end
-    end
-
-    if ( frame.showCastBarEx == nil ) or ( showCastBarEx ~= frame.showCastBarEx ) then
-        if showCastBarEx then
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTED", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_DELAYED", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_START", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_UPDATE", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_CHANNEL_STOP", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_START", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_UPDATE", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_EMPOWER_STOP", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_INTERRUPTIBLE", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_NOT_INTERRUPTIBLE", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_START", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_STOP", frame.unit);
-            frame.castBar:RegisterUnitEvent("UNIT_SPELLCAST_FAILED", frame.unit);
-            frame.castBar:RegisterEvent("PLAYER_ENTERING_WORLD");
-        else
-            frame.castBar:UnregisterAllEvents();
-        end
-
-        frame.showCastBarEx = showCastBarEx;
-    end
-end
-
 -- Protected nameplates in dungeons and raids
 local restricted = {
 	party = true,
