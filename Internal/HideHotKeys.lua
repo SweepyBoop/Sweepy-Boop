@@ -1,3 +1,5 @@
+local _, NS = ...;
+
 local IsActionInRange = IsActionInRange;
 local RANGE_INDICATOR = RANGE_INDICATOR;
 local SlashCmdList = SlashCmdList;
