@@ -1,3 +1,4 @@
+local _, NS = ...;
 local CreateFrame, UIParent, C_LossOfControl = CreateFrame, UIParent, C_LossOfControl;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent)
@@ -8,14 +9,14 @@ texture:SetAllPoints()
 
 -- Assign a name so we can disable it in OmniCC
 -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/LossOfControlFrame.xml
-local cooldown = CreateFrame("Cooldown", "BoopHideTimerLoseControl", containerFrame, "CooldownFrameTemplate")
+local cooldown = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "LoseControl", containerFrame, "CooldownFrameTemplate")
 cooldown:SetHideCountdownNumbers(true)
 cooldown:SetDrawEdge(true);
 cooldown:SetAllPoints()
 
-containerFrame:RegisterEvent("LOSS_OF_CONTROL_ADDED")
-containerFrame:RegisterEvent("LOSS_OF_CONTROL_UPDATE")
-containerFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_ADDED)
+containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_UPDATE)
+containerFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 
 function containerFrame:OnEvent(self, event, ...)
     local locData = C_LossOfControl.GetActiveLossOfControlData(1)
