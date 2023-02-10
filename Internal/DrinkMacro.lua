@@ -250,6 +250,7 @@ local drinkBuffs = {
     "Drink",
 };
 
+local lastSent = 0;
 local chatMessage = CreateFrame("Frame");
 chatMessage:RegisterEvent(NS.UNIT_AURA);
 chatMessage:SetScript("OnEvent", function (self, event, ...)
@@ -258,9 +259,11 @@ chatMessage:SetScript("OnEvent", function (self, event, ...)
         for i = 1, #(drinkBuffs) do
             local buffName = drinkBuffs[i];
             local expire = select(6, NS.Util_GetUnitBuff(unit, buffName));
-            if expire and ( expire - GetTime() > 19.5 ) then
-                if IsInInstance() then
+            if expire and IsInInstance() then
+                local now = GetTime();
+                if ( now > lastSent + 6 ) then
                     pcall(function() SendChatMessage("Drinking. Do not overextend!", "YELL") end)
+                    lastSent = now;
                 end
             end
         end
