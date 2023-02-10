@@ -49,12 +49,15 @@ NS.RefreshCooldownTimer = function (self, finish)
         else
             -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown, so now reset the timer to start from now
             if finish and ( timers[i].finish == math.huge ) then
+                print("Restore timers[2]")
                 timers[i].start = now;
                 timers[i].duration = icon.info.cooldown;
                 timers[i].finish = now + icon.info.cooldown;
             end
 
-            start, duration = math.min(start, timers[i].start), math.min(duration, timers[i].duration);
+            if ( timers[i].start + timers[i].duration < start + duration ) then
+                start, duration = timers[i].start, timers[i].duration;
+            end
         end
     end
 
