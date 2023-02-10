@@ -238,7 +238,12 @@ NS.RefreshWeakAuraDuration = function (icon)
 
     -- Get new duration
     local duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
-    icon.duration:SetCooldown(expirationTime - duration, duration);
+    if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
+        icon.duration:SetCooldown(expirationTime - duration, duration);
+        if icon.cooldown then
+            icon.cooldown:Hide(); -- Duration OnCooldownDone callback will show the cooldown timer
+        end
+    end
 end
 
 NS.ResetIconCooldown = function (icon, amount)
