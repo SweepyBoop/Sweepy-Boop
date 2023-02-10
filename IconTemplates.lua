@@ -53,15 +53,18 @@ NS.RefreshCooldownTimer = function (self, finish)
                 timers[i].start = now;
                 timers[i].duration = icon.info.cooldown;
                 timers[i].finish = now + icon.info.cooldown;
-            end
-
-            if ( timers[i].start + timers[i].duration < start + duration ) then
+                -- We just restored a charge, always show this one in cooldown frame
                 start, duration = timers[i].start, timers[i].duration;
+            else
+                if ( timers[i].start + timers[i].duration < start + duration ) then
+                    start, duration = timers[i].start, timers[i].duration;
+                end
             end
         end
     end
 
     if ( start ~= math.huge ) and ( duration ~= math.huge ) then
+        print(now - start, duration);
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
