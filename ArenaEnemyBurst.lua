@@ -83,7 +83,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     if ( not guid ) then return end
 
     -- Check resets by spell cast
-    if ( subEvent == "SPELL_CAST_SUCCESS" ) and ( sourceGUID == guid ) then
+    if ( subEvent == NS.SPELL_CAST_SUCCESS ) and ( sourceGUID == guid ) then
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
@@ -107,7 +107,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     end
 
     -- Check resets by crit damage (e.g., combustion)
-    if ( subEvent == "SPELL_DAMAGE" ) and critical and ( sourceGUID == guid ) then
+    if ( subEvent == NS.SPELL_DAMAGE ) and critical and ( sourceGUID == guid ) then
         for i = 1, #resetByCrit do
             local reset = resetByCrit[i];
             if self.activeMap[reset] then
@@ -123,14 +123,14 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     end
 
     -- Check summon / dead
-    if ( subEvent == "UNIT_DIED" ) then
+    if ( subEvent == NS.UNIT_DIED ) then
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
         if summonSpellId and self.activeMap[summonSpellId] then
             NS.ResetWeakAuraDuration(self.activeMap[summonSpellId]);
         end
         return;
-    elseif ( subEvent == "SPELL_SUMMON" ) and ( guid == sourceGUID ) then
+    elseif ( subEvent == NS.SPELL_SUMMON ) and ( guid == sourceGUID ) then
         -- We don't actually show the icon from SPELL_SUMMON, just create the mapping of mob GUID -> spellID
         local npcId = NS.GetNpcIdFromGuid(destGUID);
         local summonSpellId = npcToSpellID[npcId];
@@ -152,7 +152,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     if ( spellGUID ~= guid ) then return end
 
     -- Check spell dismiss
-    if ( subEvent == "SPELL_AURA_REMOVED" ) then
+    if ( subEvent == NS.SPELL_AURA_REMOVED ) then
         if self.activeMap[spellId] then
             NS.ResetWeakAuraDuration(self.activeMap[spellId]);
             return;
@@ -164,7 +164,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     if spell.trackEvent then
         validateSubEvent = ( subEvent == spell.trackEvent );
     else
-        validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" );
+        validateSubEvent = ( subEvent == NS.SPELL_CAST_SUCCESS );
     end
     if ( not validateSubEvent ) then return end
 
@@ -181,7 +181,7 @@ local function ProcessUnitSpellCast(self, event, ...)
     local unitTarget, _, spellID = ...;
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
-        if ( not spell ) or ( spell.trackEvent ~= "UNIT_SPELLCAST_SUCCEEDED" ) then return end
+        if ( not spell ) or ( spell.trackEvent ~= NS.UNIT_SPELLCAST_SUCCEEDED ) then return end
         if self.icons[spellID] then
             NS.StartWeakAuraIcon(self.icons[spellID]);
         end
@@ -208,9 +208,9 @@ local function ProcessUnitAura(self, event, ...)
 end
 
 local function ProcessUnitEvent(group, event, ...)
-    if ( event == "UNIT_SPELLCAST_SUCCEEDED" ) then
+    if ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
         ProcessUnitSpellCast(group, event, ...);
-    elseif ( event == "UNIT_AURA" ) then
+    elseif ( event == NS.UNIT_AURA ) then
         ProcessUnitAura(group, event, ...);
     end
 end
@@ -312,22 +312,22 @@ end
 
 -- Refresh icon groups when zone changes, or during test mode when player switches spec
 local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
-refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
-refreshFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-refreshFrame:RegisterEvent("UNIT_AURA");
-refreshFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
+refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
+refreshFrame:RegisterEvent(NS.UNIT_AURA);
+refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED") then
+    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED) then
         if test then
             SetupAuraGroup(testGroup, "player");
-        elseif ( event ~= "PLAYER_SPECIALIZATION_CHANGED" ) then -- This event is only for test mode
+        elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
             for i = 1, NS.MAX_ARENA_SIZE do
                 SetupAuraGroup(arenaGroup[i], "arena"..i);
             end
         end
-    elseif ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
+    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
         if test then
             ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
