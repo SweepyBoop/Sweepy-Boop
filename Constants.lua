@@ -15,7 +15,11 @@ NS.SPECID = {
     RET = 70,
     BALANCE = 102,
     FERAL = 103,
+    GUARDIAN = 104,
     BM = 253,
+    ASSASSIN = 259,
+    OUTLAW = 260,
+    SUBTLETY = 261,
     WW = 269,
     DEVASTATION = 1467,
 };

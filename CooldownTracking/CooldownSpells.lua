@@ -4,6 +4,8 @@ local SPELLCATEGORY = NS.SPELLCATEGORY;
 local POWERTYPE = Enum.PowerType;
 local UnitClass = UnitClass;
 
+local specID = NS.SPECID;
+
 NS.cooldownSpells = {
     -- General
 
@@ -224,7 +226,7 @@ NS.cooldownSpells = {
     -- Interrupt
     [106839] = {cooldown = 15, class = NS.DRUID, category = SPELLCATEGORY.INTERRUPT}, -- Skull Bash
     -- Defensive
-    [61336] = {cooldown = {default = 180, [104] = 120}, class = NS.DRUID, charges = {[104] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
+    [61336] = {cooldown = {default = 180, [specID.GUARDIAN] = 120}, class = NS.DRUID, charges = {[specID.GUARDIAN] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
     [102342] = {cooldown = 90, class = NS.DRUID, opt_lower_cd = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
     -- Dispel
     [88423] = {cooldown = 8, class = NS.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = NS.SPELL_DISPEL}, -- Nature's Cure
@@ -298,22 +300,22 @@ NS.cooldownSpells = {
     [113724] = {cooldown = 45, class = NS.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = NS.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
     -- Disrupt
-    [30449] = {cooldown = 30, class = NS.MAGE, spec = {62}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
+    [30449] = {cooldown = 30, class = NS.MAGE, spec = {specID.ARCANE}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
 
     -- Rogue
     -- Interrupt
     [1766] = {cooldown = 15, class = NS.ROGUE, category = SPELLCATEGORY.INTERRUPT}, -- Kick
     -- Defensive
-    [1856] = {cooldown = {default = 120, [260] = 75}, class = NS.ROGUE, charges = {[261] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Vanish
+    [1856] = {cooldown = {default = 120, [specID.OUTLAW] = 75}, class = NS.ROGUE, charges = {[specID.SUBTLETY] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Vanish
     [31224] = {cooldown = 120, class = NS.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Cloak of Shadows
     [5277] = {cooldown = 120, class = NS.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Evasion
     -- Crowd Control
     [408] = {cooldown = 20, class = NS.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Kidney Shot
-    [2094] = {cooldown = {default = 120, [260] = 90}, class = NS.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Blind
+    [2094] = {cooldown = {default = 120, [specID.OUTLAW] = 90}, class = NS.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Blind
     [212182] = {cooldown = 180, class = NS.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb
     [359053] = {cooldown = 120, class = NS.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb (Subtlety)
     -- Disrupt
-    [36554] = {cooldown = 30, class = NS.ROGUE, charges = {[259] = true, [261] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
+    [36554] = {cooldown = 30, class = NS.ROGUE, charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
     [195457] = {cooldown = 30, class = NS.ROGUE, category = SPELLCATEGORY.DISRUPT}, -- Grappling Hook
 
     -- Monk
@@ -335,9 +337,9 @@ NS.cooldownSpells = {
     [363916] = {cooldown = 90, class = NS.EVOKER, charges = true, category = SPELLCATEGORY.DEFENSIVE}, -- Obsidian Scales
     [370960] = {cooldown = 180, class = NS.EVOKER, category = SPELLCATEGORY.DEFENSIVE}, -- Emerald Communion
     -- Interrupt
-    [351338] = {cooldown = {default = 40, [1467] = 20}, class = NS.EVOKER, category = SPELLCATEGORY.INTERRUPT}, -- Quell
+    [351338] = {cooldown = {default = 40, [specID.DEVASTATION] = 20}, class = NS.EVOKER, category = SPELLCATEGORY.INTERRUPT}, -- Quell
     -- Crowd Control
-    [357210] = {cooldown = {default = 120, [1467] = 60}, class = NS.EVOKER, category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
+    [357210] = {cooldown = {default = 120, [specID.DEVASTATION] = 60}, class = NS.EVOKER, category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
     -- Dispel
     [360823] = {cooldown = 8, class = NS.EVOKER, category = SPELLCATEGORY.DISPEL, trackEvent = NS.SPELL_DISPEL} -- Naturalize
 };
