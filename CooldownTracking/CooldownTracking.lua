@@ -33,6 +33,11 @@ for spellID, spell in pairs(cooldowns) do
     if ( not spell.category ) or ( spell.category < 2 ) or ( spell.category > 6 ) then
         print("Invalid category for spellID:", spellID);
     end
+
+    -- Validate trackEvent
+    if spell.trackEvent and type(spell.trackEvent) ~= "string" then
+        print("Invalid trackEvent for spellID:", spellID);
+    end
 end
 
 local growCenterUp = {
