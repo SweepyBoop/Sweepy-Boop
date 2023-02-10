@@ -81,16 +81,6 @@
 	                <Color r="0" g="0" b="0" a="0.8"/>
 	            </SwipeTexture>
 	        </Cooldown>
-			<Cooldown name="$parentCooldown2" inherits="CooldownFrameTemplate" parentKey="cooldown2" reverse="true" drawBling="false" drawEdge="false" hidden="true">
-	            <Size x="32" y="32"/>
-	            <Anchors>
-	                <Anchor point="CENTER" x="0" y="-1"/>
-	            </Anchors>
-	            <SwipeTexture>
-                    <!-- Set this to 0, 0, 0 for transparent background -->
-	                <Color r="0" g="0" b="0" a="0.8"/>
-	            </SwipeTexture>
-	        </Cooldown>
 	    </Frames>
 	</Button>
 </Ui>

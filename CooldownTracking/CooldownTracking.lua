@@ -142,13 +142,13 @@ local function IsCastByPet(guid, unitId)
 end
 
 local function ShouldResetSpell(reset, icon)
-    local dynamic = icon.dynamic;
+    local info = icon.info;
     -- Icon spec should be known when populated to a group
-    if ( not dynamic.spec ) or ( type(reset) ~= "table" ) then return true end
+    if ( not info.spec ) or ( type(reset) ~= "table" ) then return true end
 
     if reset.specID then
         for i = 1, #(reset.specID) do
-            if ( dynamic.spec == reset.specID[i] ) then
+            if ( info.spec == reset.specID[i] ) then
                 return true;
             end
         end
@@ -299,6 +299,8 @@ end
 local function GetSpecOverrides(spell, spec)
     local overrides = {};
 
+    overrides.spec = spec;
+
     if type(spell.cooldown) == "table" then
         overrides.cooldown = spell.cooldown[spec] or spell.cooldown.default;
     else
@@ -356,13 +358,8 @@ local function SetupIconGroupForUnit(group, category, unit)
             end
 
             if enabled then
-                -- Apply spec override as a table here to premadeIcons[unit][spellID]
-                -- Remember to clean up first
-                -- Basically put everything known based on spec here
-                premadeIcons[unit][spellID].overrides = GetSpecOverrides(spell, spec);
-                -- dynamic info such as chargeExpire, start, duration
-                premadeIcons[unit][spellID].dynamic = {};
-                premadeIcons[unit][spellID].dynamic.spec = spec;
+                -- Dynamic info for current icon
+                premadeIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
                 --print("Populated", unit, spell.class, spellID);
             end
