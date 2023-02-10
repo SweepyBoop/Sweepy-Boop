@@ -170,7 +170,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     if ( not guid ) then return end
 
     -- Check resets by spell cast
-    if ( subEvent == "SPELL_CAST_SUCCESS" ) and ( sourceGUID == guid ) then
+    if ( subEvent == NS.SPELL_CAST_SUCCESS ) and ( sourceGUID == guid ) then
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
@@ -212,7 +212,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
 
     -- Check reset by interrupts, Counterspell, solar Beam
     -- Solar Beam only reduces 15s when interrupting main target, how do we detect it? Cache last reduce time?
-    if ( subEvent == "SPELL_INTERRUPT" ) and ( sourceGUID == guid ) then
+    if ( subEvent == NS.SPELL_INTERRUPT ) and ( sourceGUID == guid ) then
         local icon = self.activeMap[unitId .. "-" .. spellId];
         local amount = icon and icon.spellInfo.reduce_on_interrupt;
         if icon and amount then
@@ -243,7 +243,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     if spell.trackEvent then
         validateSubEvent = ( subEvent == spell.trackEvent );
     else
-        validateSubEvent = ( subEvent == "SPELL_CAST_SUCCESS" );
+        validateSubEvent = ( subEvent == NS.SPELL_CAST_SUCCESS );
     end
     if ( not validateSubEvent ) then return end
     
@@ -430,16 +430,15 @@ end
 
 -- Refresh icon groups when zone changes, or during test mode when player switches spec
 local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-refreshFrame:RegisterEvent("ARENA_PREP_OPPONENT_SPECIALIZATIONS");
-refreshFrame:RegisterEvent("PLAYER_SPECIALIZATION_CHANGED");
-refreshFrame:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-refreshFrame:RegisterEvent("PLAYER_TARGET_CHANGED");
-refreshFrame:RegisterEvent("PLAYER_FOCUS_CHANGED");
+refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
+refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
+refreshFrame:RegisterEvent(NS.PLAYER_TARGET_CHANGED);
 refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if ( event == "PLAYER_ENTERING_WORLD" ) or ( event == "ARENA_PREP_OPPONENT_SPECIALIZATIONS" ) or ( event == "PLAYER_SPECIALIZATION_CHANGED" and test ) then
+    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
         RefreshGroups();
-    elseif ( event == "COMBAT_LOG_EVENT_UNFILTERED" ) then
+    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
         for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
             ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
@@ -450,7 +449,7 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
                 ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
             end
         end
-    elseif ( event == "PLAYER_TARGET_CHANGED" ) or ( event == "PLAYER_FOCUS_CHANGED" ) then
+    elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
         for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
             UpdateAllBorders(iconGroups[i]);
         end
