@@ -304,7 +304,7 @@ NS.spellData = {
         cooldown = 90,
         charges = true,
         reduce_power_type = POWERTYPE.Chi,
-        reduce_amount = 10, -- Every 2 Chi spent reduces the cooldown by 1 sec.
+        reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
         extend = true,
         index = 1,
     },
