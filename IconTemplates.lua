@@ -130,7 +130,7 @@ NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
     end
 
     -- For now, always create a duration timer, if there is no duration, show 3s glow as reminder
-    frame.duration = CreateFrame("Cooldown", "BoopHideTimerAuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
+    frame.duration = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "AuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
     frame.duration:SetAllPoints();
     frame.duration:SetDrawEdge(false);
     frame.duration:SetDrawBling(false);

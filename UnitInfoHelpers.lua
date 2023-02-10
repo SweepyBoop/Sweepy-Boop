@@ -18,8 +18,8 @@ local partyInfo = {
 }
 
 local partyInfoFrame = CreateFrame("Frame")
-partyInfoFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-partyInfoFrame:RegisterEvent("GROUP_ROSTER_UPDATE")
+partyInfoFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
+partyInfoFrame:RegisterEvent(NS.GROUP_ROSTER_UPDATE)
 partyInfoFrame:SetScript("OnEvent", function ()
     partyInfo.unitGUID = {}
     partyInfo.unitId = {}

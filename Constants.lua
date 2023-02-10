@@ -53,3 +53,6 @@ NS.ROGUE = "ROGUE";
 NS.SHAMAN = "SHAMAN";
 NS.WARLOCK = "WARLOCK";
 NS.WARRIOR = "WARRIOR";
+
+-- For hiding timer by OmniCC
+NS.HIDETIMEROMNICC = "BoopHideTimer";
