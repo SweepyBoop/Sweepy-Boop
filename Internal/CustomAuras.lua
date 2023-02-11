@@ -7,10 +7,24 @@ local UIParent = UIParent;
 local GetSpellInfo = GetSpellInfo;
 local GetTime = GetTime;
 local UnitStat = UnitStat;
+local C_UnitAuras = C_UnitAuras;
 
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/
 -- https://www.townlong-yak.com/framexml/live/Helix/ArtTextureID.lua
+
+-- To find the spellID of an aura
+local findSpellId = CreateFrame("Frame");
+findSpellId.enabled = true;
+
+findSpellId.spellName = "Prowl";
+findSpellId:RegisterEvent(NS.UNIT_AURA);
+findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
+    if self.enabled and ( unitTarget == "player" ) then
+        local id = select(10, NS.Util_GetUnitAura("player", self.spellName));
+        if id then print(id) end
+    end
+end)
 
 function Custom_SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
     local overlay = animGroup:GetParent()
@@ -26,11 +40,11 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     frame.texture:SetTexture(filePath)
     frame:Hide() -- Hide initially until aura is detected
 
-    frame:RegisterEvent("UNIT_AURA")
+    frame:RegisterEvent(NS.UNIT_AURA);
     frame:SetScript("OnEvent", function (self, event, unitTarget)
         if ( unitTarget ~= "player" ) then return end
-        local duration = select(5, NS.Util_GetUnitBuff("player", self.buff))
-        if duration then
+        local aura = C_UnitAuras.GetPlayerAuraBySpellID(self.buff);
+        if aura and aura.duration then
             self:Show()
         else
             self:Hide()
@@ -42,10 +56,10 @@ end
 
 local class = select(2, UnitClass("player"));
 
-if ( class == "DRUID" ) then
-    local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
-    local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
-    local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 180) -- shadow_of_death.blp
+if ( class == NS.DRUID ) then
+    local soulOfTheForest = CreateTexture(114108, 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
+    local predatorySwiftness = CreateTexture(69369, 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
+    local apexPredatorsCraving = CreateTexture(391882, 627609, 150, 50, 0, 180) -- shadow_of_death.blp
 end
 
 
@@ -54,12 +68,12 @@ end
 local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
-playerPortraitStealthAbility["DRUID"] = {
+playerPortraitStealthAbility[NS.DRUID] = {
     "Refreshment",
-    "Drink",
-    "Prowl",
+    369162, -- Drink
+    5215, -- Prowl
 }
-playerPortraitStealthAbility["ROGUE"] = {
+playerPortraitStealthAbility[NS.ROGUE] = {
     "Stealth",
     "Subterfuge",
 }
