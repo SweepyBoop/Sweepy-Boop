@@ -17,7 +17,7 @@ local C_UnitAuras = C_UnitAuras;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = true;
 
-findSpellId.spellName = "Prowl";
+findSpellId.spellName = "Subterfuge";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
     if self.enabled and ( unitTarget == "player" ) then
@@ -69,13 +69,13 @@ local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
 playerPortraitStealthAbility[NS.DRUID] = {
-    "Refreshment",
+    167152, -- Refreshment
     369162, -- Drink
     5215, -- Prowl
 }
 playerPortraitStealthAbility[NS.ROGUE] = {
-    "Stealth",
-    "Subterfuge",
+    115191, -- Stealth
+    115192, -- Subterfuge
 }
 
 local classStealthAbility = playerPortraitStealthAbility[class]
@@ -113,12 +113,12 @@ function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
 
     for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
-        local name, icon, _, _, duration, expirationTime = NS.Util_GetUnitBuff("player", spell)
-        if name then
-            playerPortraitAuraFrame.tex:SetTexture(icon)
+        local aura = C_UnitAuras.GetPlayerAuraBySpellID(spell)
+        if aura and aura.name then
+            playerPortraitAuraFrame.tex:SetTexture(aura.icon)
 
-            if duration and ( duration ~= 0 ) then
-                playerPortraitAuraFrame.cooldown:SetCooldown(expirationTime - duration, duration)
+            if aura.duration and ( aura.duration ~= 0 ) then
+                playerPortraitAuraFrame.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
                 playerPortraitAuraFrame.cooldown:Show()
             else
                 playerPortraitAuraFrame.cooldown:Hide()
