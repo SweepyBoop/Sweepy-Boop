@@ -11,6 +11,7 @@ local InCombatLockdown = InCombatLockdown;
 local IsInInstance = IsInInstance;
 local GetTime = GetTime;
 local SendChatMessage = SendChatMessage;
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- https://github.com/DavidPHH/Drink-Macro-Creator
 
@@ -246,8 +247,8 @@ frameDrinkMacro:SetScript("OnEvent", eventHandler);
 
 -- Send chat message when drinking
 local drinkBuffs = {
-    "Refreshment",
-    "Drink",
+    167152, -- Refreshment
+    369162, -- Drink
 };
 
 local lastSent = 0;
@@ -258,8 +259,8 @@ chatMessage:SetScript("OnEvent", function (self, event, ...)
     if ( unit == "player" ) then
         for i = 1, #(drinkBuffs) do
             local buffName = drinkBuffs[i];
-            local expire = select(6, NS.Util_GetUnitBuff(unit, buffName));
-            if expire and IsInInstance() then
+            local aura = GetPlayerAuraBySpellID(buffName);
+            if aura and aura.expirationTime and IsInInstance() then
                 local now = GetTime();
                 if ( now > lastSent + 6 ) then
                     pcall(function() SendChatMessage("Drinking. Do not overextend!", "YELL") end)

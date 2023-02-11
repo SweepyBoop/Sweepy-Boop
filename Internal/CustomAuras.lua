@@ -7,10 +7,24 @@ local UIParent = UIParent;
 local GetSpellInfo = GetSpellInfo;
 local GetTime = GetTime;
 local UnitStat = UnitStat;
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/
 -- https://www.townlong-yak.com/framexml/live/Helix/ArtTextureID.lua
+
+-- To find the spellID of an aura
+local findSpellId = CreateFrame("Frame");
+findSpellId.enabled = false;
+
+findSpellId.spellName = "Subterfuge";
+findSpellId:RegisterEvent(NS.UNIT_AURA);
+findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
+    if self.enabled and ( unitTarget == "player" ) then
+        local id = select(10, NS.Util_GetUnitAura("player", self.spellName));
+        if id then print(id) end
+    end
+end)
 
 function Custom_SpellActivationOverlayTexture_OnFadeInFinished(animGroup)
     local overlay = animGroup:GetParent()
@@ -26,11 +40,11 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     frame.texture:SetTexture(filePath)
     frame:Hide() -- Hide initially until aura is detected
 
-    frame:RegisterEvent("UNIT_AURA")
+    frame:RegisterEvent(NS.UNIT_AURA);
     frame:SetScript("OnEvent", function (self, event, unitTarget)
         if ( unitTarget ~= "player" ) then return end
-        local duration = select(5, NS.Util_GetUnitBuff("player", self.buff))
-        if duration then
+        local aura = GetPlayerAuraBySpellID(self.buff);
+        if aura and aura.duration then
             self:Show()
         else
             self:Hide()
@@ -42,10 +56,10 @@ end
 
 local class = select(2, UnitClass("player"));
 
-if ( class == "DRUID" ) then
-    local soulOfTheForest = CreateTexture("Soul of the Forest", 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
-    local predatorySwiftness = CreateTexture("Predatory Swiftness", 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
-    local apexPredatorsCraving = CreateTexture("Apex Predator's Craving", 627609, 150, 50, 0, 180) -- shadow_of_death.blp
+if ( class == NS.DRUID ) then
+    local soulOfTheForest = CreateTexture(114108, 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
+    local predatorySwiftness = CreateTexture(69369, 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
+    local apexPredatorsCraving = CreateTexture(391882, 627609, 150, 50, 0, 180) -- shadow_of_death.blp
 end
 
 
@@ -54,14 +68,14 @@ end
 local playerPortraitStealthAbility = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
-playerPortraitStealthAbility["DRUID"] = {
-    "Refreshment",
-    "Drink",
-    "Prowl",
+playerPortraitStealthAbility[NS.DRUID] = {
+    167152, -- Refreshment
+    369162, -- Drink
+    5215, -- Prowl
 }
-playerPortraitStealthAbility["ROGUE"] = {
-    "Stealth",
-    "Subterfuge",
+playerPortraitStealthAbility[NS.ROGUE] = {
+    115191, -- Stealth
+    115192, -- Subterfuge
 }
 
 local classStealthAbility = playerPortraitStealthAbility[class]
@@ -99,12 +113,12 @@ function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
 
     for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
-        local name, icon, _, _, duration, expirationTime = NS.Util_GetUnitBuff("player", spell)
-        if name then
-            playerPortraitAuraFrame.tex:SetTexture(icon)
+        local aura = GetPlayerAuraBySpellID(spell)
+        if aura and aura.name then
+            playerPortraitAuraFrame.tex:SetTexture(aura.icon)
 
-            if duration and ( duration ~= 0 ) then
-                playerPortraitAuraFrame.cooldown:SetCooldown(expirationTime - duration, duration)
+            if aura.duration and ( aura.duration ~= 0 ) then
+                playerPortraitAuraFrame.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
                 playerPortraitAuraFrame.cooldown:Show()
             else
                 playerPortraitAuraFrame.cooldown:Hide()
@@ -155,9 +169,9 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            local duration, expirationTime = select(5, NS.Util_GetUnitBuff("player", frame.spellID));
-            if duration and ( duration ~= 0 ) then
-                self.cooldown:SetCooldown(expirationTime - duration, duration);
+            local aura = GetPlayerAuraBySpellID(frame.spellID);
+            if aura and aura.duration and ( aura.duration ~= 0 ) then
+                self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
                 NS.ShowOverlayGlow(self);
                 self:Show();
             else
@@ -218,6 +232,7 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
+            -- GetPlayerAuraBySpellID does not show count and value correctly, so we have to stick with UnitAura here
             local name, _, count, _, duration, expirationTime, _, _, _, _, _, _, _, _, _, value = NS.Util_GetUnitBuff("player", frame.spellID);
             if ( not name ) then
                 self:Hide();
@@ -287,21 +302,17 @@ local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, r
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            -- Used to find spellID of a buff
-            --[[ local spellID = select(10, NS.Util_GetUnitAura("player", "Well-Honed Instincts", "HARMFUL"));
-            if spellID then print(spellID) end ]]
-
-            local name, _, count, _, duration, expirationTime = NS.Util_GetUnitAura("player", frame.spellID, "HARMFUL");
-            if ( not name ) then
+            local aura = GetPlayerAuraBySpellID(frame.spellID);
+            if ( not aura) or ( not aura.name ) then
                 self.cooldown:SetCooldown(0, 0);
                 NS.HideOverlayGlow(self);
                 return;
             end
 
-            local startTime = expirationTime - duration;
+            local startTime = aura.expirationTime - aura.duration;
 
-            if duration and ( duration ~= 0 ) then
-                self.cooldown:SetCooldown(startTime, duration);
+            if aura.duration and ( aura.duration ~= 0 ) then
+                self.cooldown:SetCooldown(startTime, aura.duration);
             end
 
             local timeElapsed = GetTime() - startTime;
