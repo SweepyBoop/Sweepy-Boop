@@ -367,6 +367,7 @@ NS.spellData = {
     -- Mindbender (Idol of Y'Shaarj)
     [200174] = {
         class = NS.PRIEST,
+        spec = { specID.SHADOW },
         category = OFFENSIVE,
         duration = 15,
         cooldown = 60,

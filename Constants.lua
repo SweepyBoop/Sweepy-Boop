@@ -17,6 +17,7 @@ NS.SPECID = {
     FERAL = 103,
     GUARDIAN = 104,
     BM = 253,
+    SHADOW = 258,
     ASSASSIN = 259,
     OUTLAW = 260,
     SUBTLETY = 261,
