@@ -15,7 +15,7 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- To find the spellID of an aura
 local findSpellId = CreateFrame("Frame");
-findSpellId.enabled = true;
+findSpellId.enabled = false;
 
 findSpellId.spellName = "Subterfuge";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
@@ -302,21 +302,17 @@ local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, r
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            -- Used to find spellID of a buff
-            --[[ local spellID = select(10, NS.Util_GetUnitAura("player", "Well-Honed Instincts", "HARMFUL"));
-            if spellID then print(spellID) end ]]
-
-            local name, _, count, _, duration, expirationTime = NS.Util_GetUnitAura("player", frame.spellID, "HARMFUL");
-            if ( not name ) then
+            local aura = GetPlayerAuraBySpellID(frame.spellID);
+            if ( not aura) or ( not aura.name ) then
                 self.cooldown:SetCooldown(0, 0);
                 NS.HideOverlayGlow(self);
                 return;
             end
 
-            local startTime = expirationTime - duration;
+            local startTime = aura.expirationTime - aura.duration;
 
-            if duration and ( duration ~= 0 ) then
-                self.cooldown:SetCooldown(startTime, duration);
+            if aura.duration and ( aura.duration ~= 0 ) then
+                self.cooldown:SetCooldown(startTime, aura.duration);
             end
 
             local timeElapsed = GetTime() - startTime;
