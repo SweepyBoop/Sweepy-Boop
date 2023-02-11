@@ -341,7 +341,10 @@ NS.cooldownSpells = {
     -- Crowd Control
     [357210] = {cooldown = {default = 120, [specID.DEVASTATION] = 60}, class = NS.EVOKER, category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
     -- Dispel
-    [360823] = {cooldown = 8, class = NS.EVOKER, category = SPELLCATEGORY.DISPEL, trackEvent = NS.SPELL_DISPEL} -- Naturalize
+    [360823] = {cooldown = 8, class = NS.EVOKER, category = SPELLCATEGORY.DISPEL, trackEvent = NS.SPELL_DISPEL}, -- Naturalize
+    -- Disrupt
+    -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
+    [382266] = {cooldown = 30, class = NS.EVOKER, category = SPELLCATEGORY.DISRUPT, trackEvent = NS.SPELL_EMPOWER_END},
 };
 
 local class = select(2, UnitClass("player"));
