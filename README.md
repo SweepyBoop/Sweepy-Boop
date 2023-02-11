@@ -16,7 +16,7 @@ I believe this is a great alternative to friendly nameplates, since it's not alw
 To make the most of this module, configure your namd & nameplate settings as follows:
 ![image](https://user-images.githubusercontent.com/78008331/218266525-205733cd-661b-4f48-a000-a2798c22a1c7.png)
 
-## Filter nameplates
+## Nameplate filtering
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
 - For Beast Mastery Hunter pets, only show the primary one, so you know which one to kill
 - For warlocks, only show the pet, not the 1,000 wild imps
