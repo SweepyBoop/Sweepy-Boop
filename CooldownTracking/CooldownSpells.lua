@@ -31,7 +31,7 @@ NS.cooldownSpells = {
         class = NS.DEATHKNIGHT,
         category = SPELLCATEGORY.DISRUPT,
         cooldown = 25,
-        charges = true,
+        opt_charges = true,
     },
     -- Crowd Control
     -- Strangulate
