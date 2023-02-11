@@ -7,7 +7,7 @@ local UIParent = UIParent;
 local GetSpellInfo = GetSpellInfo;
 local GetTime = GetTime;
 local UnitStat = UnitStat;
-local C_UnitAuras = C_UnitAuras;
+local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/
@@ -43,7 +43,7 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
     frame:RegisterEvent(NS.UNIT_AURA);
     frame:SetScript("OnEvent", function (self, event, unitTarget)
         if ( unitTarget ~= "player" ) then return end
-        local aura = C_UnitAuras.GetPlayerAuraBySpellID(self.buff);
+        local aura = GetPlayerAuraBySpellID(self.buff);
         if aura and aura.duration then
             self:Show()
         else
@@ -113,7 +113,7 @@ function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
 
     for i = 1, #(classStealthAbility) do
         local spell = classStealthAbility[i]
-        local aura = C_UnitAuras.GetPlayerAuraBySpellID(spell)
+        local aura = GetPlayerAuraBySpellID(spell)
         if aura and aura.name then
             playerPortraitAuraFrame.tex:SetTexture(aura.icon)
 
@@ -169,7 +169,7 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            local aura = C_UnitAuras.GetPlayerAuraBySpellID(frame.spellID);
+            local aura = GetPlayerAuraBySpellID(frame.spellID);
             if aura and aura.duration and ( aura.duration ~= 0 ) then
                 self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
                 NS.ShowOverlayGlow(self);
@@ -232,6 +232,7 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
+            -- GetPlayerAuraBySpellID does not show count and value correctly, so we have to stick with UnitAura here
             local name, _, count, _, duration, expirationTime, _, _, _, _, _, _, _, _, _, value = NS.Util_GetUnitBuff("player", frame.spellID);
             if ( not name ) then
                 self:Hide();
