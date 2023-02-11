@@ -169,9 +169,9 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            local duration, expirationTime = select(5, NS.Util_GetUnitBuff("player", frame.spellID));
-            if duration and ( duration ~= 0 ) then
-                self.cooldown:SetCooldown(expirationTime - duration, duration);
+            local aura = C_UnitAuras.GetPlayerAuraBySpellID(frame.spellID);
+            if aura and aura.duration and ( aura.duration ~= 0 ) then
+                self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
                 NS.ShowOverlayGlow(self);
                 self:Show();
             else
