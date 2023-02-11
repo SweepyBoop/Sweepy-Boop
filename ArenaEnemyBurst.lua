@@ -123,7 +123,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     end
 
     -- Check summon / dead
-    if ( subEvent == NS.UNIT_DIED ) then
+    if ( subEvent == NS.UNIT_DIED ) or ( subEvent == NS.PARTY_KILL ) then
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
         if summonSpellId and self.activeMap[summonSpellId] then
