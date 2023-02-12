@@ -394,13 +394,6 @@ NS.spellData = {
         duration = 15,
         index = 1,
     },
-    [211336] = {
-        class = NS.PRIEST,
-        category = OFFENSIVE,
-        trackEvent = NS.SPELL_AURA_APPLIED,
-        duration = 15,
-        index = 1,
-    },
 
     -- Rogue
     -- Offensive
