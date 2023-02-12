@@ -1,3 +1,5 @@
+local _, NS = ...;
+
 SetCVar("cameraDistanceMaxZoomFactor", 2.6)
 SetCVar("weatherDensity", 0)
 
@@ -61,6 +63,17 @@ hooksecurefunc("PlayerFrame_UpdateRolesAssigned", function ()
 	local roleIcon = PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.RoleIcon;
 	if IsActiveBattlefieldArena() then
         roleIcon:SetShown(false);
+    end
+end)
+
+-- Hide reputation/XP bar in arena
+local hideXP = CreateFrame("Frame");
+hideXP:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+hideXP:SetScript("OnEvent", function (self, event, ...)
+    if IsActiveBattlefieldArena() then
+        StatusTrackingBarManager:Hide();
+    else
+        StatusTrackingBarManager:Show();
     end
 end)
 
