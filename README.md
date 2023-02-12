@@ -4,7 +4,7 @@ My lightweight addon to support arena plays.
 Here is how my UI looks like:
 ![image](https://user-images.githubusercontent.com/78008331/212603812-af58c455-962c-45d2-8dc4-2c82cab7cd53.png)
 
-### Note
+#### Note
 This is my private version which contains a lot of stuff specifically made for myself (thus most likely not needed by external users of the addon).
 
 If you want to directly download this version, make sure in SweepyBoop.toc, only keep files in the "#Publish" section.
@@ -33,7 +33,7 @@ The cooldown tracking mod comes with various advanced features:
 - Sort icons by priority/threat, e.g., on an Assasination Rogue, Deathmark will always show before other icons
 - Cooldown reduction: for instance, Windwalker Monk Storm, Earth, and Fire cooldown reduced by spending Chi, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
 
-### Note
+#### Note
 Currently this module only supports sArena, since that's what I use.
 
 If you use Gladius and want to use this module, feel free to make a feature request 😊
