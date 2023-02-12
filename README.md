@@ -27,6 +27,7 @@ To make the most of this module, configure your name & nameplate settings as fol
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
 - For Beast Mastery Hunter pets, only show the primary one, so you know which one to kill
 - For warlocks, only show the pet, not the 1,000 wild imps
+
 In short, this module shows the minimal set of unit nameplates that you need to keep an eye on during an arena match.
 
 ## Arena enemy cooldown tracking
