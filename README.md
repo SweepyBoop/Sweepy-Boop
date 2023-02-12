@@ -4,6 +4,11 @@ My lightweight addon to support arena plays.
 Here is how my UI looks like:
 ![image](https://user-images.githubusercontent.com/78008331/212603812-af58c455-962c-45d2-8dc4-2c82cab7cd53.png)
 
+### Note
+This is my private version which contains a lot of stuff specifically made for myself (thus most likely not needed by external users of the addon).
+
+If you want to directly download this version, make sure in SweepyBoop.toc, only keep files in the "#Publish" section.
+
 ## Class and pet icons
 For friendly players and their primary pets, place a class (for players) or pet icon on top.
 
