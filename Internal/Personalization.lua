@@ -69,6 +69,7 @@ end)
 -- Hide reputation/XP bar in arena
 local hideXP = CreateFrame("Frame");
 hideXP:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+hideXP:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 hideXP:SetScript("OnEvent", function (self, event, ...)
     if IsActiveBattlefieldArena() then
         StatusTrackingBarManager:Hide();
