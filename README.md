@@ -5,18 +5,20 @@ Here is how my UI looks like:
 ![image](https://user-images.githubusercontent.com/78008331/212603812-af58c455-962c-45d2-8dc4-2c82cab7cd53.png)
 
 #### Note
-This is my private version which contains a lot of stuff specifically made for myself (thus most likely not needed by external users of the addon).
+This is my private version which includes a lot of stuff specifically made for myself (thus not needed by external users of the addon).
 
-If you want to directly download this version, make sure in SweepyBoop.toc, only keep files in the "#Publish" section.
+If you want to directly download this version, make sure in SweepyBoop.toc, only the keep files in the "#Publish" section.
+
+Currently there is no plan to publish this addon on CurseForge, but I will do so if there are enough number of requests.
 
 ## Class and pet icons
-For friendly players and their primary pets, place a class (for players) or pet icon on top.
+For friendly players and their primary pets, places a class (for players) or pet (for pets) icon on top.
 
-When selected, show an orange highlight border.
+When selected, shows an orange highlight border.
 
-This makes it much easier to track where your teammates are duing an arena match.
+This makes it much easier to track where your teammates are duing an arena match, especially for healers.
 
-I believe this is a great alternative to friendly nameplates, since it's not always easy to distinguish between enemy/friendly nameplates. Some players use a script to make friendly nameplates shorter, but there is an issue with priest mind control, i.e., friendly nameplates can become default width, or enemy nameplates can become short width after mind control effect.
+This is a great alternative to enabling friendly nameplates, since it's not always easy to distinguish between enemy/friendly nameplates. Some players use a script to make friendly nameplates shorter, but then there is the issue with priest mind control, i.e., friendly nameplates can become default width, or enemy nameplates can become shorter width after mind control effect.
 
 To make the most of this module, configure your name & nameplate settings as follows:
 ![image](https://user-images.githubusercontent.com/78008331/218266525-205733cd-661b-4f48-a000-a2798c22a1c7.png)
