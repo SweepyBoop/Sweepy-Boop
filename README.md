@@ -33,6 +33,11 @@ The cooldown tracking mod comes with various advanced features:
 - Sort icons by priority/threat, e.g., on an Assasination Rogue, Deathmark will always show before other icons
 - Cooldown reduction: for instance, Windwalker Monk Storm, Earth, and Fire cooldown reduced by spending Chi, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
 
+### Note
+Currently this module only supports sArena, since that's what I use.
+
+If you use Gladius and want to use this module, feel free to make a feature request 😊
+
 ## Fix Blizzard raid frame aggro highlight
 Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is not very useful.
 
