@@ -17,9 +17,9 @@ local UnitGUID = UnitGUID;
 
 -- To find the spellID of an aura
 local findSpellId = CreateFrame("Frame");
-findSpellId.enabled = true;
+findSpellId.enabled = false;
 
-findSpellId.spellName = "Restitution";
+findSpellId.spellName = "Archbishop Benedictus' Restitution";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)

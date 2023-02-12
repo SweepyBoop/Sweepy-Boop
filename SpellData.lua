@@ -386,8 +386,8 @@ NS.spellData = {
         trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
         duration = 20,
     },
-    -- Restitution Buff (treat as offensive spell with highest priority)
-    [211336] = {
+    -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
+    [211319] = {
         class = NS.PRIEST,
         category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
