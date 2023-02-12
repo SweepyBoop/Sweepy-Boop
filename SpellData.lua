@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-NS.isTestMode = true;
+NS.isTestMode = false;
 
 local UnitAura = UnitAura;
 local strsplit = strsplit;
