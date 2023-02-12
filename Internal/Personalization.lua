@@ -19,8 +19,6 @@ ArenaEnemyMatchFrame1PetFrame:SetAlpha(0)
 ArenaEnemyMatchFrame2PetFrame:SetAlpha(0)
 ArenaEnemyMatchFrame3PetFrame:SetAlpha(0)
 
-StatusTrackingBarManager:Hide()
-
 -- Hide group indicator
 hooksecurefunc("PlayerFrame_UpdateGroupIndicator", function ()
     local groupIndicator = PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.GroupIndicator
