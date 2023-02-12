@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 local UnitAura = UnitAura;
 local strsplit = strsplit;
@@ -385,6 +385,14 @@ NS.spellData = {
         trackDest = true,
         trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
         duration = 20,
+    },
+    -- Restitution Buff (treat as offensive spell with highest priority)
+    [211336] = {
+        class = NS.PRIEST,
+        category = OFFENSIVE,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        duration = 15,
+        index = 1,
     },
 
     -- Rogue

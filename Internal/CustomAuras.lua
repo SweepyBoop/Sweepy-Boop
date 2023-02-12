@@ -8,6 +8,8 @@ local GetSpellInfo = GetSpellInfo;
 local GetTime = GetTime;
 local UnitStat = UnitStat;
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
+local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
+local UnitGUID = UnitGUID;
 
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/
@@ -15,14 +17,23 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- To find the spellID of an aura
 local findSpellId = CreateFrame("Frame");
-findSpellId.enabled = false;
+findSpellId.enabled = true;
 
-findSpellId.spellName = "Subterfuge";
+findSpellId.spellName = "Restitution";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
+findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
-    if self.enabled and ( unitTarget == "player" ) then
+    if ( not self.enabled ) then return end
+
+    if ( event == NS.UNIT_AURA ) and ( unitTarget == "player" ) then
         local id = select(10, NS.Util_GetUnitAura("player", self.spellName));
-        if id then print(id) end
+        if id then print("UNIT_AURA", id) end
+    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+        local _, subEvent, _, sourceGUID = CombatLogGetCurrentEventInfo();
+        if ( subEvent == NS.SPELL_AURA_APPLIED ) and ( sourceGUID == UnitGUID("player") ) then
+            local spellId, spellName = select(12, CombatLogGetCurrentEventInfo());
+            if spellName == self.spellName then print("COMBATLOG", spellId) end
+        end
     end
 end)
 
