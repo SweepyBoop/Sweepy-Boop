@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 local UnitAura = UnitAura;
 local strsplit = strsplit;
@@ -388,6 +388,13 @@ NS.spellData = {
     },
     -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
     [211319] = {
+        class = NS.PRIEST,
+        category = OFFENSIVE,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        duration = 15,
+        index = 1,
+    },
+    [211336] = {
         class = NS.PRIEST,
         category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,

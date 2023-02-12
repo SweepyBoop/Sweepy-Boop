@@ -17,7 +17,7 @@ local UnitGUID = UnitGUID;
 
 -- To find the spellID of an aura
 local findSpellId = CreateFrame("Frame");
-findSpellId.enabled = false;
+findSpellId.enabled = NS.isTestMode;
 
 findSpellId.spellName = 211336;
 findSpellId:RegisterEvent(NS.UNIT_AURA);
