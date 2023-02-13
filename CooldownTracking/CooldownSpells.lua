@@ -322,6 +322,7 @@ NS.cooldownSpells = {
     -- Crowd Control
     [115078] = {cooldown = 30, class = NS.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Paralysis
     [119381] = {cooldown = 50, class = NS.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Leg Sweep
+    [115181] = { cooldown = 30, class = NS.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Breath of Fire (Incendiary Breath)
     -- Disrupt
     [116844] = {cooldown = 45, class = NS.MONK, category = SPELLCATEGORY.DISRUPT}, -- Ring of Peace
     -- Interrupt
