@@ -1,7 +1,5 @@
 local _, NS = ...;
 
-NS.isTestMode = false;
-
 local UnitAura = UnitAura;
 local strsplit = strsplit;
 local POWERTYPE = Enum.PowerType;
