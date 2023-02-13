@@ -125,7 +125,7 @@ end
 local function TryUpdateMacros()
     if (InCombatLockdown()) then
         -- Combat locked, wait for 6s to drpo combat
-        C_Timer.After(6, TryUpdateMacros);
+        C_Timer.After(3, TryUpdateMacros);
     else
         local focusName = GetFocusName();
         updateMacros(focusName);
