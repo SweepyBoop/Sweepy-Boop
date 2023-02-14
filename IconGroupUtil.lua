@@ -91,6 +91,25 @@ local function sortFunc(a, b)
     end
 end
 
+local function CalculateArenaFrameOffsetX(frameName)
+    local offsetX = 0;
+
+    if string.sub(frameName, 1, 7) == "Gladius" then
+        local trinket = _G["GladiusTrinketFramearena1"];
+        if trinket then
+            offsetX = offsetX + select(1, trinket:GetSize());
+        end
+        local racial = _G["GladiusRacialFramearena1"];
+        if racial then
+            offsetX = offsetX + select(1, racial:GetSize());
+        end
+    else
+        
+    end
+
+    return offsetX;
+end
+
 NS.IconGroup_Insert = function (group, icon, index)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then return end
@@ -98,7 +117,8 @@ NS.IconGroup_Insert = function (group, icon, index)
     -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
     if group.setPointOptions then
         local options = group.setPointOptions;
-        group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, options.offsetX, options.offsetY);
+        local offsetX = CalculateArenaFrameOffsetX(options.relativeTo);
+        group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, offsetX, options.offsetY);
     end
 
     -- Give icon a timeStamp before inserting

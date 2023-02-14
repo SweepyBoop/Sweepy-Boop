@@ -64,7 +64,6 @@ for i = 1, NS.MAX_ARENA_SIZE do
         point = "LEFT",
         relativeTo = prefix .. i,
         relativePoint = "RIGHT",
-        offsetX = 37.5,
         offsetY = 0,
     };
 end
