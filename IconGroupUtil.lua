@@ -4,6 +4,7 @@ local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local GetTime = GetTime;
 local wipe = wipe;
+local PlayerFrame = PlayerFrame;
 
 NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
@@ -12,7 +13,7 @@ NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetSize(1, 1);
     -- UIParent is static so we SetPoint right now
-    if relativeTo == UIParent then
+    if ( relativeTo == UIParent ) or ( relativeTo == PlayerFrame ) then
         f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
     else
         f.setPointOptions = setPointOptions;
