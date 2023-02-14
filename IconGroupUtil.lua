@@ -135,10 +135,9 @@ NS.IconGroup_Insert = function (group, icon, index)
     -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
     if group.setPointOptions then
         local options = group.setPointOptions;
-        options.offsetX = options.offsetX or CalculateArenaFrameOffsetX(options.relativeTo);
-        
-        if ( not options.offsetX ) then return end
+        if ( not options.relativeTo ) or ( string.sub(options.relativeTo, 1, 4) == "NONE" ) then return end
 
+        options.offsetX = options.offsetX or CalculateArenaFrameOffsetX(options.relativeTo);
         group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, options.offsetX, options.offsetY);
     end
 
