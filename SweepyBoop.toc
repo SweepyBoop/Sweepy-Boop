@@ -1,5 +1,5 @@
 ## Interface: 100005
-## Title: SweepyBoop
+## Title: SweepyBoop's Arena Helper
 ## Author: Kun
 ## Version: @project-version@
 SweepyBoop.xml
