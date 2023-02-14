@@ -11,7 +11,12 @@ NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
 
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetSize(1, 1);
-    f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    -- UIParent is static so we SetPoint right now
+    if relativeTo == UIParent then
+        f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    else
+        f.setPointOptions = setPointOptions;
+    end
 
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
     f.growDirection = growOptions.direction;
@@ -89,6 +94,12 @@ end
 NS.IconGroup_Insert = function (group, icon, index)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then return end
+
+    -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
+    if group.setPointOptions then
+        local options = group.setPointOptions;
+        group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, options.offsetX, options.offsetY);
+    end
 
     -- Give icon a timeStamp before inserting
     icon.timeStamp = GetTime();
