@@ -40,7 +40,7 @@ local function IconGroup_Position(group)
         return;
     end
 
-    local baseIconSize = select(1, group.active[1]:GetSize());
+    local baseIconSize = group.active[1]:GetWidth();
 
     -- Reposition icons
     local growDirection = group.growDirection;
@@ -95,31 +95,34 @@ local function CalculateArenaFrameOffsetX(frameName)
     local offsetX = 0;
 
     if string.sub(frameName, 1, 7) == "Gladius" then
+        local frame = _G["GladiusButtonFramearena1"];
+        local frameRight = frame:GetRight() * frame:GetEffectiveScale();
         local trinket = _G["GladiusTrinketFramearena1"];
         if trinket then
-            offsetX = offsetX + select(1, trinket:GetSize());
+            offsetX = math.max(0, trinket:GetRight() * trinket:GetEffectiveScale() - frameRight);
         end
         local racial = _G["GladiusRacialFramearena1"];
         if racial then
-            offsetX = offsetX + select(1, racial:GetSize());
+            offsetX = math.max(0, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
         end
     else
-        local frame = _G[frameName];
+        local frame = _G["sArenaEnemyFrame1"];
+        local frameRight = frame:GetRight() * frame:GetEffectiveScale();
         if frame.Trinket then
             local trinket = frame.Trinket;
-            if trinket:GetPoint() and select(4, trinket:GetPoint()) > 0 then
-                offsetX = offsetX + select(1, frame.Trinket:GetSize()) * frame.Trinket:GetScale();
+            if trinket then
+                offsetX = math.max(offsetX, trinket:GetRight() * trinket:GetEffectiveScale() - frameRight);
             end
         end
         if frame.Racial then
             local racial = frame.Racial;
-            if racial:GetPoint() and select(4, racial:GetPoint()) > 0 then
-                offsetX = offsetX + select(1, frame.Racial:GetSize()) * frame.Racial:GetScale();
+            if racial then
+                offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
             end
         end
     end
 
-    return offsetX;
+    return offsetX + 10;
 end
 
 NS.IconGroup_Insert = function (group, icon, index)
