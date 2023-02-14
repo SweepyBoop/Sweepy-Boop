@@ -101,13 +101,13 @@ setPointOptions[SPELLCATEGORY.DISPEL] = {
     offsetY = -165,
 };
 setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
+local prefix = Gladius and "GladiusButtonFramearena" or "sArenaEnemyFrame";
 for i = 1, NS.MAX_ARENA_SIZE do
     setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
         point = "LEFT",
-        relativeTo = _G["sArenaEnemyFrame" .. i],
+        relativeTo = prefix .. i,
         relativePoint = "RIGHT",
-        offsetX = 37.5,
-        offsetY = -30,
+        offsetY = -32,
     };
 end
 
