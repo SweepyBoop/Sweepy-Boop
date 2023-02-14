@@ -120,9 +120,6 @@ local function CalculateArenaFrameOffsetX(frameName)
                 offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
             end
         end
-    else
-        -- No sArena or Gladius, don't show any icons
-        return nil;
     end
 
     return offsetX + 10;
