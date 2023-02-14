@@ -11,7 +11,12 @@ NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
 
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetSize(1, 1);
-    f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    -- UIParent is static so we SetPoint right now
+    if relativeTo == UIParent then
+        f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    else
+        f.setPointOptions = setPointOptions;
+    end
 
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
     f.growDirection = growOptions.direction;
@@ -35,7 +40,7 @@ local function IconGroup_Position(group)
         return;
     end
 
-    local baseIconSize = select(1, group.active[1]:GetSize());
+    local baseIconSize = group.active[1]:GetWidth();
 
     -- Reposition icons
     local growDirection = group.growDirection;
@@ -86,9 +91,56 @@ local function sortFunc(a, b)
     end
 end
 
+local function CalculateArenaFrameOffsetX(frameName)
+    local offsetX = 0;
+
+    if string.sub(frameName, 1, 7) == "Gladius" then
+        local frame = _G["GladiusButtonFramearena1"];
+        local frameRight = frame:GetRight() * frame:GetEffectiveScale();
+        local trinket = _G["GladiusTrinketFramearena1"];
+        if trinket then
+            offsetX = math.max(offsetX, trinket:GetRight() * trinket:GetEffectiveScale() - frameRight);
+        end
+        local racial = _G["GladiusRacialFramearena1"];
+        if racial then
+            offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
+        end
+    elseif string.sub(frameName, 1, 6) == "sArena" then
+        local frame = _G["sArenaEnemyFrame1"];
+        local frameRight = frame:GetRight() * frame:GetEffectiveScale();
+        if frame.Trinket then
+            local trinket = frame.Trinket;
+            if trinket then
+                offsetX = math.max(offsetX, trinket:GetRight() * trinket:GetEffectiveScale() - frameRight);
+            end
+        end
+        if frame.Racial then
+            local racial = frame.Racial;
+            if racial then
+                offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
+            end
+        end
+    else
+        -- No sArena or Gladius, don't show any icons
+        return nil;
+    end
+
+    return offsetX + 10;
+end
+
 NS.IconGroup_Insert = function (group, icon, index)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then return end
+
+    -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
+    if group.setPointOptions then
+        local options = group.setPointOptions;
+        options.offsetX = options.offsetX or CalculateArenaFrameOffsetX(options.relativeTo);
+        
+        if ( not options.offsetX ) then return end
+
+        group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, options.offsetX, options.offsetY);
+    end
 
     -- Give icon a timeStamp before inserting
     icon.timeStamp = GetTime();
