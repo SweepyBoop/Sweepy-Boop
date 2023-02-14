@@ -105,7 +105,7 @@ local function CalculateArenaFrameOffsetX(frameName)
         if racial then
             offsetX = math.max(0, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
         end
-    else
+    elseif string.sub(frameName, 1, 6) == "sArena" then
         local frame = _G["sArenaEnemyFrame1"];
         local frameRight = frame:GetRight() * frame:GetEffectiveScale();
         if frame.Trinket then
@@ -120,6 +120,9 @@ local function CalculateArenaFrameOffsetX(frameName)
                 offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
             end
         end
+    else
+        -- No sArena or Gladius, don't show any icons
+        return nil;
     end
 
     return offsetX + 10;
@@ -133,6 +136,9 @@ NS.IconGroup_Insert = function (group, icon, index)
     if group.setPointOptions then
         local options = group.setPointOptions;
         options.offsetX = options.offsetX or CalculateArenaFrameOffsetX(options.relativeTo);
+        
+        if ( not options.offsetX ) then return end
+
         group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, options.offsetX, options.offsetY);
     end
 
