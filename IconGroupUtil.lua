@@ -104,7 +104,19 @@ local function CalculateArenaFrameOffsetX(frameName)
             offsetX = offsetX + select(1, racial:GetSize());
         end
     else
-        
+        local frame = _G[frameName];
+        if frame.Trinket then
+            local trinket = frame.Trinket;
+            if trinket:GetPoint() and select(4, trinket:GetPoint()) > 0 then
+                offsetX = offsetX + select(1, frame.Trinket:GetSize()) * frame.Trinket:GetScale();
+            end
+        end
+        if frame.Racial then
+            local racial = frame.Racial;
+            if racial:GetPoint() and select(4, racial:GetPoint()) > 0 then
+                offsetX = offsetX + select(1, frame.Racial:GetSize()) * frame.Racial:GetScale();
+            end
+        end
     end
 
     return offsetX;
