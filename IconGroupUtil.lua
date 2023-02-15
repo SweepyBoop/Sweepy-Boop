@@ -92,8 +92,7 @@ local function sortFunc(a, b)
     end
 end
 
--- In some cases, the positioning is still a bit off, add option to adjust positioning
--- Add a slash command to call out test mode which also calls sArena:Test()
+-- TODO: Add a slash command to call out test mode which also calls sArena:Test()
 local function CalculateArenaFrameOffsetX(frameName)
     local offsetX = 0;
 
@@ -125,7 +124,10 @@ local function CalculateArenaFrameOffsetX(frameName)
         end
     end
 
-    return offsetX + 10;
+    -- We got the offsetX by comparing the GetRight values, which are values after all the scaling factors.
+    -- Now revert it to pre-scaling
+    local UIScale = UIParent:GetEffectiveScale();
+    return offsetX / UIScale + 10;
 end
 
 NS.IconGroup_Insert = function (group, icon, index)
