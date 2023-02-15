@@ -66,6 +66,18 @@ hooksecurefunc("PlayerFrame_UpdateRolesAssigned", function ()
     end
 end)
 
+hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+    if frame:IsForbidden() then
+        return;
+    end
+
+    -- Check if this is a compact party/raid frame
+    if ( frame:GetParent() == CompactPartyFrame ) then
+        frame.name:Hide();
+        return true;
+    end
+end)
+
 -- Hide reputation/XP bar in arena
 local hideXP = CreateFrame("Frame");
 hideXP:RegisterEvent(NS.PLAYER_ENTERING_WORLD);

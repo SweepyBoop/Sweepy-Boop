@@ -220,21 +220,9 @@ local function ShouldUpdateNamePlate(frame)
     end
 end
 
-local function ProcessRaidFrameName(frame)
-    -- Check if this is a compact party/raid frame
-    if ( frame:GetParent() == CompactPartyFrame ) then
-        frame.name:Hide()
-        return true
-    end
-end
-
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
     if frame:IsForbidden() then
         return;
-    end
-
-    if ProcessRaidFrameName(frame) then
-        return
     end
 
     if ( not ShouldUpdateNamePlate(frame) ) then
