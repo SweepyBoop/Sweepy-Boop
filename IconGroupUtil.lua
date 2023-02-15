@@ -127,7 +127,7 @@ local function CalculateArenaFrameOffsetX(frameName)
     -- We got the offsetX by comparing the GetRight values, which are values after all the scaling factors.
     -- Now revert it to pre-scaling
     local UIScale = UIParent:GetEffectiveScale();
-    return offsetX / UIScale + 10;
+    return offsetX / UIScale + 5;
 end
 
 NS.IconGroup_Insert = function (group, icon, index)
