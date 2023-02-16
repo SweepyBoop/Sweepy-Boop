@@ -163,6 +163,8 @@ local function ShowClassIcon(frame)
 end
 
 local function UpdateClassIcon(frame)
+    if ( not SweepyBoop.db.profile.classIconsEnabled ) then return end
+
     if ShouldMakeIcon(frame.unit) then
         ShowClassIcon(frame)
     else
@@ -199,6 +201,8 @@ local function ShouldShowNameplate(unitId)
 end
 
 local function UpdateHealthBar(frame)
+    if ( not SweepyBoop.db.profile.nameplateFilterEnabled ) then return end
+
     if ShouldShowNameplate(frame.unit) then
         frame:Show()
     else
@@ -221,8 +225,6 @@ local function ShouldUpdateNamePlate(frame)
 end
 
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-    if ( not SweepyBoop.db.profile.classIconsEnabled ) then return end
-
     if frame:IsForbidden() then
         return;
     end
@@ -236,21 +238,22 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 
     if IsActiveBattlefieldArena() then
         -- Put arena numbers
-        for i = 1, 3 do
-            if UnitIsUnit(frame.unit, "arena" .. i) then
-                frame.name:SetText(i)
-                frame.name:SetTextColor(1,1,0) --Yellow
-                return
+        if SweepyBoop.db.profile.arenaNumbersEnabled then
+            for i = 1, 3 do
+                if UnitIsUnit(frame.unit, "arena" .. i) then
+                    frame.name:SetText(i)
+                    frame.name:SetTextColor(1,1,0) --Yellow
+                    return
+                end
             end
         end
 
         -- Check if name should be hidden
-        if ( not IsInWhiteList(frame.unit) ) then
-            frame.name:SetText("")
+        if SweepyBoop.db.profile.nameplateFilterEnabled then
+            if ( not IsInWhiteList(frame.unit) ) then
+                frame.name:SetText("")
+            end
         end
-
-        -- Update cast bar
-        --UpdateCastBar(frame)
     end
 end)
 
