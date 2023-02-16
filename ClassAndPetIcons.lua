@@ -113,7 +113,8 @@ local function HideClassIcon(frame)
     local nameplate = frame:GetParent()
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
-        nameplate.FriendlyClassIcon:Hide()
+        nameplate.FriendlyClassIcon:Hide();
+        frame:Show();
     end
 end
 
@@ -159,6 +160,8 @@ local function ShowClassIcon(frame)
         icon.isPlayer = isPlayer
     end
 
+    -- Hide healthBar and show class/pet icon instead
+    frame:Hide();
     icon:Show()
 end
 
@@ -233,8 +236,10 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         return
     end
 
-    UpdateHealthBar(frame)
+    -- Class icon mod will hide/show healthBar when showing/hiding class icons
     UpdateClassIcon(frame)
+    -- Nameplate filter mod could overwrite the healthBar visibility afterwards
+    UpdateHealthBar(frame)
 
     if IsActiveBattlefieldArena() then
         -- Put arena numbers
