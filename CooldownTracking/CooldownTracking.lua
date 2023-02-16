@@ -441,7 +441,7 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
 
-        if ( not NS.publish ) then
+        if ( not NS.release ) then
             -- These bars are not for publish audience...
             for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                 ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
@@ -456,7 +456,7 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
             end
         end
     elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
-        if ( not NS.publish ) then
+        if ( not NS.release ) then
             -- These bars are not for publish audience...
             for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                 UpdateAllBorders(iconGroups[i]);
