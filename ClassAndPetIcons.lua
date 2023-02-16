@@ -238,7 +238,7 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 
     -- Class icon mod will hide/show healthBar when showing/hiding class icons
     UpdateClassIcon(frame)
-    -- Nameplate filter mod could overwrite the healthBar visibility afterwards
+    -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
     UpdateHealthBar(frame)
 
     if IsActiveBattlefieldArena() then
