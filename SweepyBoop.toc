@@ -45,7 +45,7 @@ Internal\CombatIndicator.lua
 Internal\PersonalDR.lua
 
 # Weak Auras equivalent
-Internal\SweepyBoop.xml
+Internal\CustomAuras.xml
 Internal\CustomAuras.lua
 Internal\CustomStatusBar.lua
 Internal\RaidFrameAuras.xml
