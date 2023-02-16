@@ -221,6 +221,8 @@ local function ShouldUpdateNamePlate(frame)
 end
 
 hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+    if ( not SweepyBoop.db.profile.classIconsEnabled ) then return end
+
     if frame:IsForbidden() then
         return;
     end
@@ -253,6 +255,8 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
 end)
 
 hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+    if ( not SweepyBoop.db.profile.classIconsEnabled ) then return end
+
     if frame:IsForbidden() then
         return;
     end
