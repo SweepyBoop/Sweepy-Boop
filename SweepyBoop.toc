@@ -24,6 +24,7 @@ IconTemplates.lua
 ArenaEnemyBurst.lua
 ClassAndPetIcons.lua
 FixBlizzardRaidAggro.lua
+Release.lua
 
 
 
