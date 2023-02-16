@@ -1,3 +1,6 @@
+local _, NS = ...;
+NS.exclamation = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
+
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon("SweepyBoop's Arena Helper", "AceConsole-3.0");
 local AC = LibStub("AceConfig-3.0")
 local ACD = LibStub("AceConfigDialog-3.0")
@@ -52,6 +55,29 @@ local options = {
             get = "GetNameplateFilterEnabled",
             set = "SetNameplateFilterEnabled",
         },
+        break2 = {
+			order = 6,
+			type = "header",
+			name = ""
+		},
+        reloadNotice = {
+			order = 7,
+			type = "description",
+			fontSize = "medium",
+			name = NS.exclamation .. "UI must be reloaded for most changes to take effect.",
+		},
+        break3 = {
+			order = 8,
+			type = "header",
+			name = ""
+		},
+        reloadButton = {
+			order = 9,
+			type = "execute",
+			name = "Reload UI",
+			func = ReloadUI,
+			width = 0.6,
+		},
     },
 };
 
