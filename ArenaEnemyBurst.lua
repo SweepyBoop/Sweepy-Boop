@@ -79,6 +79,8 @@ local function ValidateUnit(self)
 end
 
 local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
+    if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
     local guid = ValidateUnit(self);
     if ( not guid ) then return end
 
@@ -208,6 +210,8 @@ local function ProcessUnitAura(self, event, ...)
 end
 
 local function ProcessUnitEvent(group, event, ...)
+    if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
     if ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
         ProcessUnitSpellCast(group, event, ...);
     elseif ( event == NS.UNIT_AURA ) then

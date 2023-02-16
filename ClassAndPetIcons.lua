@@ -113,7 +113,8 @@ local function HideClassIcon(frame)
     local nameplate = frame:GetParent()
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
-        nameplate.FriendlyClassIcon:Hide()
+        nameplate.FriendlyClassIcon:Hide();
+        frame:Show();
     end
 end
 
@@ -159,10 +160,14 @@ local function ShowClassIcon(frame)
         icon.isPlayer = isPlayer
     end
 
+    -- Hide healthBar and show class/pet icon instead
+    frame:Hide();
     icon:Show()
 end
 
 local function UpdateClassIcon(frame)
+    if ( not SweepyBoop.db.profile.classIconsEnabled ) then return end
+
     if ShouldMakeIcon(frame.unit) then
         ShowClassIcon(frame)
     else
@@ -199,6 +204,8 @@ local function ShouldShowNameplate(unitId)
 end
 
 local function UpdateHealthBar(frame)
+    if ( not SweepyBoop.db.profile.nameplateFilterEnabled ) then return end
+
     if ShouldShowNameplate(frame.unit) then
         frame:Show()
     else
@@ -229,30 +236,35 @@ hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         return
     end
 
-    UpdateHealthBar(frame)
+    -- Class icon mod will hide/show healthBar when showing/hiding class icons
     UpdateClassIcon(frame)
+    -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
+    UpdateHealthBar(frame)
 
     if IsActiveBattlefieldArena() then
         -- Put arena numbers
-        for i = 1, 3 do
-            if UnitIsUnit(frame.unit, "arena" .. i) then
-                frame.name:SetText(i)
-                frame.name:SetTextColor(1,1,0) --Yellow
-                return
+        if SweepyBoop.db.profile.arenaNumbersEnabled then
+            for i = 1, 3 do
+                if UnitIsUnit(frame.unit, "arena" .. i) then
+                    frame.name:SetText(i)
+                    frame.name:SetTextColor(1,1,0) --Yellow
+                    return
+                end
             end
         end
 
         -- Check if name should be hidden
-        if ( not IsInWhiteList(frame.unit) ) then
-            frame.name:SetText("")
+        if SweepyBoop.db.profile.nameplateFilterEnabled then
+            if ( not IsInWhiteList(frame.unit) ) then
+                frame.name:SetText("")
+            end
         end
-
-        -- Update cast bar
-        --UpdateCastBar(frame)
     end
 end)
 
 hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+    if ( not SweepyBoop.db.profile.nameplateFilterEnabled ) then return end
+
     if frame:IsForbidden() then
         return;
     end

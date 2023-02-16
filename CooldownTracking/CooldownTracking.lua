@@ -440,23 +440,34 @@ refreshFrame:SetScript("OnEvent", function (self, event, ...)
         RefreshGroups();
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
-        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-            ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+
+        if ( not NS.release ) then
+            -- These bars are not for publish audience...
+            for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+            end
         end
         
-        for i = 1, NS.MAX_ARENA_SIZE do
-            if defensiveGroups[i] then
-                ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+        if SweepyBoop.db.profile.arenaEnemyDefensivesEnabled then
+            for i = 1, NS.MAX_ARENA_SIZE do
+                if defensiveGroups[i] then
+                    ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+                end
             end
         end
     elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
-        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-            UpdateAllBorders(iconGroups[i]);
+        if ( not NS.release ) then
+            -- These bars are not for publish audience...
+            for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                UpdateAllBorders(iconGroups[i]);
+            end
         end
 
-        for i = 1, NS.MAX_ARENA_SIZE do
-            if defensiveGroups[i] then
-                UpdateAllBorders(defensiveGroups[i]);
+        if SweepyBoop.db.profile.arenaEnemyDefensivesEnabled then
+            for i = 1, NS.MAX_ARENA_SIZE do
+                if defensiveGroups[i] then
+                    UpdateAllBorders(defensiveGroups[i]);
+                end
             end
         end
     end
