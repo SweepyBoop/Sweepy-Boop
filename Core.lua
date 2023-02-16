@@ -8,6 +8,8 @@ local options = {
     type = "group",
     args = {
         classIcons = {
+            order = 1,
+            width = "full",
             type = "toggle",
             name = "Class and Pet Icons",
             desc = "Show class and pet icons on friendly players and pets",
@@ -15,6 +17,8 @@ local options = {
             set = "SetClassIconsEnabled",
         },
         arenaEnemyOffensives = {
+            order = 3,
+            width = "full",
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
@@ -22,6 +26,8 @@ local options = {
             set = "SetArenaEnemyOffensivesEnabled",
         },
         arenaEnemyDefensives = {
+            order = 4,
+            width = "full",
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
@@ -29,6 +35,8 @@ local options = {
             set = "SetArenaEnemyDefensivesEnabled",
         },
         arenaNumbers = {
+            order = 2,
+            width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
             desc = "Show arena numbers on top of enemy nameplates",
@@ -36,6 +44,8 @@ local options = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
+            order = 5,
+            width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
             desc = "Only show nameplates of enemy players and important non-player units while inside arena",
