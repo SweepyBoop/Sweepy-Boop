@@ -171,6 +171,9 @@ function SweepyBoop:OnInitialize()
 	AC:RegisterOptionsTable("SweepyBoop_Profiles", profiles)
 	ACD:AddToBlizOptions("SweepyBoop_Profiles", "Profiles", "SweepyBoop's Arena Helper")
 
+    -- Setup nameplate modules
+    self:SetupNameplateModules();
+
     -- Premake & populate icons
     self:PremakeOffensiveIcons();
     self:PopulateOffensiveIcons();
