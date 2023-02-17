@@ -107,7 +107,7 @@ for i = 1, NS.MAX_ARENA_SIZE do
         point = "LEFT",
         relativeTo = prefix .. i,
         relativePoint = "RIGHT",
-        offsetY = -32,
+        offsetY = -SweepyBoop.db.profile.arenaEnemyOffensiveIconSize,
     };
 end
 
@@ -281,7 +281,7 @@ if test then
     for spellID, spell in pairs(cooldowns) do
         local size, hideHighlight;
         if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-            size, hideHighlight = 22, true;
+            size, hideHighlight = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize, true;
         end
         premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
     end
@@ -292,7 +292,7 @@ else
         for spellID, spell in pairs(cooldowns) do
             local size, hideHighlight;
             if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-                size, hideHighlight = 22, true;
+                size, hideHighlight = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize, true;
             end
             premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
         end
