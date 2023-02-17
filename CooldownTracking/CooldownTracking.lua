@@ -419,7 +419,7 @@ local refreshFrame;
 function SweepyBoop:PopulateCooldownTrackingIcons()
     -- Set offsetY based on setting
     for i = 1, NS.MAX_ARENA_SIZE do
-        setPointOptions[SPELLCATEGORY.DEFENSIVE][i].offsetY = -self.db.profile.arenaEnemyOffensiveIconSize;
+        setPointOptions[SPELLCATEGORY.DEFENSIVE][i].offsetY = -self.db.profile.arenaEnemyOffensiveIconSize - 1;
     end
 
     local groupToken = ( test and "player" ) or nil;
