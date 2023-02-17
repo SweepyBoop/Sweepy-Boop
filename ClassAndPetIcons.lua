@@ -1,6 +1,5 @@
 local _, NS = ...
 
-local UnitName = UnitName;
 local UnitGUID = UnitGUID;
 local UnitIsUnit = UnitIsUnit;
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
@@ -43,9 +42,6 @@ local NameplateWhiteList = {
 
 local function IsInWhiteList(unitId)
     NameplateWhiteList["Tremor Totem"] = NS.PartyWithFearSpell();
-
-    local name = UnitName(unitId)
-    if NameplateWhiteList[name] then return true end
 
     local guid = UnitGUID(unitId)
     local npcID = select(6, strsplit("-", guid))
