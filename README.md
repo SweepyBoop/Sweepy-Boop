@@ -21,7 +21,7 @@ This makes it much easier to track where your teammates are duing an arena match
 This is a great alternative to enabling friendly nameplates, since it's not always easy to distinguish between enemy/friendly nameplates. Some players use a script to make friendly nameplates shorter, but then there is the issue with priest mind control, i.e., friendly nameplates can become default width, or enemy nameplates can become shorter width after mind control effect.
 
 To make the most of this module, configure your name & nameplate settings as follows:
-![image](https://user-images.githubusercontent.com/78008331/218266525-205733cd-661b-4f48-a000-a2798c22a1c7.png)
+![Nameplate settings](https://user-images.githubusercontent.com/78008331/219557897-5c1f0d38-9a64-408c-b1b5-6d7f8207899b.png)
 
 ## Nameplate filtering
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
