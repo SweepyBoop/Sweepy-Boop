@@ -51,23 +51,6 @@ for spellID, spell in pairs(spellData) do
     end
 end
 
-local growOptions = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-};
-
-local setPointOptions = {};
-local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-for i = 1, NS.MAX_ARENA_SIZE do
-    setPointOptions[i] = {
-        point = "LEFT",
-        relativeTo = prefix .. i,
-        relativePoint = "RIGHT",
-        offsetY = 0,
-    };
-end
-
 local function ValidateUnit(self)
     -- Update icon group guid
     if ( not self.unitGUID ) then
@@ -305,9 +288,25 @@ end
 local testGroup = nil;
 local arenaGroup = {};
 local refreshFrame;
+local growOptions = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+};
+local setPointOptions = {};
 
 function SweepyBoop:PopulateOffensiveIcons()
     if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    for i = 1, NS.MAX_ARENA_SIZE do
+        setPointOptions[i] = {
+            point = "LEFT",
+            relativeTo = prefix .. i,
+            relativePoint = "RIGHT",
+            offsetY = 0,
+        };
+    end
 
     if test then
         local unitId = "player";
