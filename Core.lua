@@ -171,6 +171,10 @@ function SweepyBoop:OnInitialize()
 	AC:RegisterOptionsTable("SweepyBoop_Profiles", profiles)
 	ACD:AddToBlizOptions("SweepyBoop_Profiles", "Profiles", "SweepyBoop's Arena Helper")
 
+    -- Premake & populate icons
+    self:PremakeOffensiveIcons();
+    self:PopulateOffensiveIcons();
+
     self:RegisterChatCommand("sb", "SlashCommand");
 end
 

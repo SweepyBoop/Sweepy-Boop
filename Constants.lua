@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.SPELLCATEGORY = {
     OFFENSIVE = 1,

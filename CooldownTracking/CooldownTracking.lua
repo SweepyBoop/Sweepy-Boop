@@ -275,26 +275,29 @@ local iconSize = 32;
 local premadeIcons = {};
 
 -- Premake all icons (regardless of class and category)
-if test then
-    local unitId = "player";
-    premadeIcons[unitId] = {};
-    for spellID, spell in pairs(cooldowns) do
-        local size, hideHighlight;
-        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-            size, hideHighlight = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize, true;
-        end
-        premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
-    end
-else
-    for i = 1, NS.MAX_ARENA_SIZE do
-        local unitId = "arena" .. i;
+function SweepyBoop:PremakeCooldownTrackingIcons()
+    local iconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
+    if test then
+        local unitId = "player";
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(cooldowns) do
             local size, hideHighlight;
             if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-                size, hideHighlight = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize, true;
+                size, hideHighlight = iconSize, true;
             end
             premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+        end
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            local unitId = "arena" .. i;
+            premadeIcons[unitId] = {};
+            for spellID, spell in pairs(cooldowns) do
+                local size, hideHighlight;
+                if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+                    size, hideHighlight = iconSize, true;
+                end
+                premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+            end
         end
     end
 end
