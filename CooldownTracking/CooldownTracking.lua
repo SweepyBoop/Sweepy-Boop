@@ -419,8 +419,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
             point = "LEFT",
             relativeTo = prefix .. i,
             relativePoint = "RIGHT",
-            -- The size is after scaling, need to convert it to pre-scaling
-            offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyOffensiveIconSize*0.5 + 1 ) / UIParent:GetEffectiveScale();
+            offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
         };
     end
 
