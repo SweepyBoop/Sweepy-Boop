@@ -275,7 +275,7 @@ local premadeIcons = {};
 
 -- Premake all icons (regardless of class and category)
 function SweepyBoop:PremakeCooldownTrackingIcons()
-    local iconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
+    local iconSize = self.db.profile.arenaEnemyDefensiveIconSize;
     if test then
         local unitId = "player";
         premadeIcons[unitId] = {};
