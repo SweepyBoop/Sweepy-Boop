@@ -34,7 +34,7 @@ local NameplateWhiteList = {
     [61029] = true, -- Greater Fire Elemental
 
     -- Warlock
-    [196111] = true, -- Guardian
+    [196111] = true, -- Pit Lord (Guldan's Ambition)
 
     -- Warrior
     [119052] = true,
