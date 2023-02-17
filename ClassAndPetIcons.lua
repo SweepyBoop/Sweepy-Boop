@@ -1,6 +1,5 @@
 local _, NS = ...
 
-local UnitName = UnitName;
 local UnitGUID = UnitGUID;
 local UnitIsUnit = UnitIsUnit;
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
@@ -15,36 +14,34 @@ local strsplit = strsplit;
 local CompactPartyFrame = CompactPartyFrame;
 local hooksecurefunc = hooksecurefunc;
 
--- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
+-- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
 -- To find the NpcID of a unit, target it and type:
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 local NameplateWhiteList = {
     -- Priest
-    [101398] = true, -- Psyfiend (have to use NpcID since player pets can have this name)
+    [101398] = true, -- Psyfiend
 
     -- Shaman: totems to kill instantly
-    ["Grounding Totem"] = true,
-    ["Spirit Link Totem"] = true,
-    ["Skyfury Totem"] = true,
-    ["Ancestral Protection Totem"] = true, -- LOL
-    ["Capacitor Totem"] = true,
-    ["Earthgrab Totem"] = true, -- Roots you out of stealth
-    ["Windfury Totem"] = true,
-    ["Healing Tide Totem"] = true,
-    ["Greater Fire Elemental"] = true, -- Guardian
+    [5925] = true, -- Grounding Totem
+    [53006] = true, -- Spirit Link Totem
+    [105427] = true, -- Skyfury Totem
+    [104818] = true, -- Ancestral Protection Totem
+    [61245] = true, -- Capacitor Totem
+    [60561] = true, -- Earthgrab Totem
+    [6112] = true, -- Windfury Totem
+    [59764] = true, -- Healing Tide Totem
+    [95061] = true, -- Greater Fire Elemental
+    [61029] = true, -- Primal Fire Elemental
 
     -- Warlock
-    ["Pit Lord"] = true, -- Guardian
+    [196111] = true, -- Pit Lord (Guldan's Ambition)
 
     -- Warrior
-    ["War Banner"] = true,
+    [119052] = true,
 }
 
 local function IsInWhiteList(unitId)
     NameplateWhiteList["Tremor Totem"] = NS.PartyWithFearSpell();
-
-    local name = UnitName(unitId)
-    if NameplateWhiteList[name] then return true end
 
     local guid = UnitGUID(unitId)
     local npcID = select(6, strsplit("-", guid))

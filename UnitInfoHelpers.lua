@@ -4,7 +4,6 @@ local CreateFrame = CreateFrame;
 local UnitExists = UnitExists;
 local UnitGUID = UnitGUID;
 local UnitClass = UnitClass;
-local UnitName = UnitName;
 
 NS.MAX_ARENA_SIZE = 3
 NS.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
@@ -65,8 +64,9 @@ NS.PartyWithFearSpell = function ()
 end
 
 NS.IsShamanPrimaryPet = function (unitId)
-    local unitName = UnitName(unitId);
-    local suffix = string.sub(unitName, -14, -1);
-    return ( suffix == "Fire Elemental" );
+    local unitGUID = UnitGUID(unitId);
+    local npcID = NS.GetNpcIdFromGuid(unitGUID);
+    -- Greater / Primal Fire Elemental
+    return ( npcID == 95061 ) or ( npcID == 61029 );
 end
 
