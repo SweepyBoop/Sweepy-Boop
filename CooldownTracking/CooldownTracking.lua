@@ -12,6 +12,7 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
 
 local cooldowns = NS.cooldownSpells;
 local resets = NS.cooldownResets;
+local SPELLCATEGORY = NS.SPELLCATEGORY;
 
 local resetByPower = {
     853,
@@ -38,77 +39,6 @@ for spellID, spell in pairs(cooldowns) do
     if spell.trackEvent and type(spell.trackEvent) ~= "string" then
         print("Invalid trackEvent for spellID:", spellID);
     end
-end
-
-local growCenterUp = {
-    direction = "CENTER",
-    anchor = "CENTER",
-    margin = 3,
-    columns = 6,
-    growUpward = true,
-};
-
-local growCenterDown = {
-    direction = "CENTER",
-    anchor = "CENTER",
-    margin = 3,
-    columns = 6,
-    growUpward = false;
-};
-
-local growRight = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-};
-
-local growRightDown = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-    columns = 3,
-    growUpward = false,
-};
-
-local setPointOptions = {};
-local SPELLCATEGORY = NS.SPELLCATEGORY;
-setPointOptions[SPELLCATEGORY.INTERRUPT] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 0,
-    offsetY = -167.5,
-};
-setPointOptions[SPELLCATEGORY.DISRUPT] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 0,
-    offsetY = -127.5,
-};
-setPointOptions[SPELLCATEGORY.CROWDCONTROL] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 0,
-    offsetY = -245,
-};
-setPointOptions[SPELLCATEGORY.DISPEL] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 375,
-    offsetY = -165,
-};
-setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
-local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-for i = 1, NS.MAX_ARENA_SIZE do
-    setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
-        point = "LEFT",
-        relativeTo = prefix .. i,
-        relativePoint = "RIGHT",
-        offsetY = -32,
-    };
 end
 
 local function ValidateUnit(self)
@@ -270,31 +200,34 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 end
 
-local iconSize = 32;
-
 local premadeIcons = {};
 
 -- Premake all icons (regardless of class and category)
-if test then
-    local unitId = "player";
-    premadeIcons[unitId] = {};
-    for spellID, spell in pairs(cooldowns) do
-        local size, hideHighlight;
-        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-            size, hideHighlight = 22, true;
-        end
-        premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
-    end
-else
-    for i = 1, NS.MAX_ARENA_SIZE do
-        local unitId = "arena" .. i;
+function SweepyBoop:PremakeCooldownTrackingIcons()
+    if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
+
+    local defensiveIconSize = self.db.profile.arenaEnemyDefensiveIconSize;
+    if test then
+        local unitId = "player";
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(cooldowns) do
             local size, hideHighlight;
             if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-                size, hideHighlight = 22, true;
+                size, hideHighlight = defensiveIconSize, true;
             end
             premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+        end
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            local unitId = "arena" .. i;
+            premadeIcons[unitId] = {};
+            for spellID, spell in pairs(cooldowns) do
+                local size, hideHighlight;
+                if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+                    size, hideHighlight = defensiveIconSize, true;
+                end
+                premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+            end
         end
     end
 end
@@ -387,20 +320,6 @@ end
 local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroups = {}; -- This one needs a group per unit
 
--- Create icon groups (note the category order)
-local groupToken = ( test and "player" ) or nil;
-iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
-iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
-iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenterDown, groupToken);
-iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRightDown, groupToken);
-if test then
-    defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
-else
-    for i = 1, NS.MAX_ARENA_SIZE do
-        defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
-    end
-end
-
 local function RefreshGroups()
     if test then
         for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
@@ -419,56 +338,145 @@ local function RefreshGroups()
     end
 end
 
--- On first login
-RefreshGroups();
-
 local function UpdateAllBorders(group)
     for i = 1, #(group.active) do
         CooldownTracking_UpdateBorder(group.active[i]);
     end
 end
 
--- Refresh icon groups when zone changes, or during test mode when player switches spec
-local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
-refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
-refreshFrame:RegisterEvent(NS.PLAYER_TARGET_CHANGED);
-refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
-        RefreshGroups();
-    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
-        local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
+local growCenterUp = {
+    direction = "CENTER",
+    anchor = "CENTER",
+    margin = 3,
+    columns = 6,
+    growUpward = true,
+};
 
-        if ( not NS.release ) then
-            -- These bars are not for publish audience...
-            for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-                ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
-            end
+local growCenterDown = {
+    direction = "CENTER",
+    anchor = "CENTER",
+    margin = 3,
+    columns = 6,
+    growUpward = false;
+};
+
+local growRight = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+};
+
+local growRightDown = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+    columns = 3,
+    growUpward = false,
+};
+
+local setPointOptions = {};
+
+setPointOptions[SPELLCATEGORY.INTERRUPT] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 0,
+    offsetY = -167.5,
+};
+setPointOptions[SPELLCATEGORY.DISRUPT] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 0,
+    offsetY = -127.5,
+};
+setPointOptions[SPELLCATEGORY.CROWDCONTROL] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 0,
+    offsetY = -245,
+};
+setPointOptions[SPELLCATEGORY.DISPEL] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 375,
+    offsetY = -165,
+};
+
+local refreshFrame;
+
+-- Create icon groups (note the category order)
+function SweepyBoop:PopulateCooldownTrackingIcons()
+    if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
+
+    -- Setup defensive group based on whether Gladius/sArena is loaded and user settings.
+    setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    for i = 1, NS.MAX_ARENA_SIZE do
+        setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
+            point = "LEFT",
+            relativeTo = prefix .. i,
+            relativePoint = "RIGHT",
+            offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
+        };
+    end
+
+    local groupToken = ( test and "player" ) or nil;
+    iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
+    iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
+    iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenterDown, groupToken);
+    iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRightDown, groupToken);
+    if test then
+        defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
         end
-        
-        if SweepyBoop.db.profile.arenaEnemyDefensivesEnabled then
+    end
+
+    -- On first login
+    RefreshGroups();
+
+    -- Refresh icon groups when zone changes, or during test mode when player switches spec
+    refreshFrame = CreateFrame("Frame");
+    refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+    refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
+    refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
+    refreshFrame:RegisterEvent(NS.PLAYER_TARGET_CHANGED);
+    refreshFrame:SetScript("OnEvent", function (frame, event, ...)
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
+            RefreshGroups();
+        elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+            local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
+
+            if ( not NS.release ) then
+                -- These bars are not for publish audience...
+                for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                    ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+                end
+            end
+            
             for i = 1, NS.MAX_ARENA_SIZE do
                 if defensiveGroups[i] then
                     ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
                 end
             end
-        end
-    elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
-        if ( not NS.release ) then
-            -- These bars are not for publish audience...
-            for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-                UpdateAllBorders(iconGroups[i]);
+        elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
+            if ( not NS.release ) then
+                -- These bars are not for publish audience...
+                for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                    UpdateAllBorders(iconGroups[i]);
+                end
             end
-        end
 
-        if SweepyBoop.db.profile.arenaEnemyDefensivesEnabled then
             for i = 1, NS.MAX_ARENA_SIZE do
                 if defensiveGroups[i] then
                     UpdateAllBorders(defensiveGroups[i]);
                 end
             end
         end
-    end
-end)
+    end)
+end

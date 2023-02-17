@@ -225,51 +225,53 @@ local function ShouldUpdateNamePlate(frame)
     end
 end
 
-hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-    if frame:IsForbidden() then
-        return;
-    end
-
-    if ( not ShouldUpdateNamePlate(frame) ) then
-        return
-    end
-
-    -- Class icon mod will hide/show healthBar when showing/hiding class icons
-    UpdateClassIcon(frame)
-    -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
-    UpdateHealthBar(frame)
-
-    if IsActiveBattlefieldArena() then
-        -- Put arena numbers
-        if SweepyBoop.db.profile.arenaNumbersEnabled then
-            for i = 1, 3 do
-                if UnitIsUnit(frame.unit, "arena" .. i) then
-                    frame.name:SetText(i)
-                    frame.name:SetTextColor(1,1,0) --Yellow
-                    return
+function SweepyBoop:SetupNameplateModules()
+    hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+        if frame:IsForbidden() then
+            return;
+        end
+    
+        if ( not ShouldUpdateNamePlate(frame) ) then
+            return
+        end
+    
+        -- Class icon mod will hide/show healthBar when showing/hiding class icons
+        UpdateClassIcon(frame)
+        -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
+        UpdateHealthBar(frame)
+    
+        if IsActiveBattlefieldArena() then
+            -- Put arena numbers
+            if self.db.profile.arenaNumbersEnabled then
+                for i = 1, 3 do
+                    if UnitIsUnit(frame.unit, "arena" .. i) then
+                        frame.name:SetText(i)
+                        frame.name:SetTextColor(1,1,0) --Yellow
+                        return
+                    end
+                end
+            end
+    
+            -- Check if name should be hidden
+            if self.db.profile.nameplateFilterEnabled then
+                if ( not IsInWhiteList(frame.unit) ) then
+                    frame.name:SetText("")
                 end
             end
         end
-
-        -- Check if name should be hidden
-        if SweepyBoop.db.profile.nameplateFilterEnabled then
-            if ( not IsInWhiteList(frame.unit) ) then
-                frame.name:SetText("")
-            end
+    end)
+    
+    hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+        if ( not self.db.profile.nameplateFilterEnabled ) then return end
+    
+        if frame:IsForbidden() then
+            return;
         end
-    end
-end)
-
-hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-    if ( not SweepyBoop.db.profile.nameplateFilterEnabled ) then return end
-
-    if frame:IsForbidden() then
-        return;
-    end
-
-    if ( not ShouldUpdateNamePlate(frame) ) then
-        return
-    end
-
-    UpdateHealthBar(frame)
-end)
+    
+        if ( not ShouldUpdateNamePlate(frame) ) then
+            return
+        end
+    
+        UpdateHealthBar(frame)
+    end)
+end

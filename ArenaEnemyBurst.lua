@@ -51,23 +51,6 @@ for spellID, spell in pairs(spellData) do
     end
 end
 
-local growOptions = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-};
-
-local setPointOptions = {};
-local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-for i = 1, NS.MAX_ARENA_SIZE do
-    setPointOptions[i] = {
-        point = "LEFT",
-        relativeTo = prefix .. i,
-        relativePoint = "RIGHT",
-        offsetY = 0,
-    };
-end
-
 local function ValidateUnit(self)
     -- Update icon group guid
     if ( not self.unitGUID ) then
@@ -79,8 +62,6 @@ local function ValidateUnit(self)
 end
 
 local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
-    if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then return end
-
     local guid = ValidateUnit(self);
     if ( not guid ) then return end
 
@@ -210,8 +191,6 @@ local function ProcessUnitAura(self, event, ...)
 end
 
 local function ProcessUnitEvent(group, event, ...)
-    if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then return end
-
     if ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
         ProcessUnitSpellCast(group, event, ...);
     elseif ( event == NS.UNIT_AURA ) then
@@ -221,21 +200,27 @@ end
 
 -- Premake all icons (regardless of class)
 local premadeIcons = {};
-if test then
-    local unitId = "player";
-    premadeIcons[unitId] = {};
-    for spellID, spell in pairs(spellData) do
-        premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, 32, true);
-    end
-else
-    for i = 1, NS.MAX_ARENA_SIZE do
-        local unitId = "arena"..i;
+function SweepyBoop:PremakeOffensiveIcons()
+    if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
+    local iconSize = self.db.profile.arenaEnemyOffensiveIconSize;
+    if test then
+        local unitId = "player";
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, 32, true);
+            premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, iconSize, true);
+        end
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            local unitId = "arena"..i;
+            premadeIcons[unitId] = {};
+            for spellID, spell in pairs(spellData) do
+                premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, iconSize, true);
+            end
         end
     end
 end
+
 
 NS.GetUnitSpec = function(unit)
     if ( unit == "player" ) then
@@ -302,51 +287,73 @@ end
 -- Populate icons based on class & spec on login
 local testGroup = nil;
 local arenaGroup = {};
-if test then
-    local unitId = "player";
-    testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, unitId);
-    SetupAuraGroup(testGroup, unitId);
-else
-    for i = 1, NS.MAX_ARENA_SIZE do
-        local unitId = "arena" .. i;
-        arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, unitId);
-        SetupAuraGroup(arenaGroup[i], unitId);
-    end
-end
+local refreshFrame;
+local growOptions = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+};
 
--- Refresh icon groups when zone changes, or during test mode when player switches spec
-local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
-refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
-refreshFrame:RegisterEvent(NS.UNIT_AURA);
-refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
-refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED) then
-        if test then
-            SetupAuraGroup(testGroup, "player");
-        elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
-            for i = 1, NS.MAX_ARENA_SIZE do
-                SetupAuraGroup(arenaGroup[i], "arena"..i);
-            end
-        end
-    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
-        local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-        if test then
-            ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-        else
-            for i = 1, NS.MAX_ARENA_SIZE do
-                ProcessCombatLogEvent(arenaGroup[i], event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-            end
-        end
+function SweepyBoop:PopulateOffensiveIcons()
+    if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
+    local setPointOptions = {};
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    for i = 1, NS.MAX_ARENA_SIZE do
+        setPointOptions[i] = {
+            point = "LEFT",
+            relativeTo = prefix .. i,
+            relativePoint = "RIGHT",
+            offsetY = 0,
+        };
+    end
+
+    if test then
+        local unitId = "player";
+        testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, unitId);
+        SetupAuraGroup(testGroup, unitId);
     else
-        if test then
-            ProcessUnitEvent(testGroup, event, ...);
-        else
-            for i = 1, NS.MAX_ARENA_SIZE do
-                ProcessUnitEvent(arenaGroup[i], event, ...);
-            end
+        for i = 1, NS.MAX_ARENA_SIZE do
+            local unitId = "arena" .. i;
+            arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, unitId);
+            SetupAuraGroup(arenaGroup[i], unitId);
         end
     end
-end)
+
+    -- Refresh icon groups when zone changes, or during test mode when player switches spec
+    refreshFrame = CreateFrame("Frame");
+    refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+    refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
+    refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
+    refreshFrame:RegisterEvent(NS.UNIT_AURA);
+    refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
+    refreshFrame:SetScript("OnEvent", function (self, event, ...)
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED) then
+            if test then
+                SetupAuraGroup(testGroup, "player");
+            elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    SetupAuraGroup(arenaGroup[i], "arena"..i);
+                end
+            end
+        elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+            local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+            if test then
+                ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+            else
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    ProcessCombatLogEvent(arenaGroup[i], event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                end
+            end
+        else
+            if test then
+                ProcessUnitEvent(testGroup, event, ...);
+            else
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    ProcessUnitEvent(arenaGroup[i], event, ...);
+                end
+            end
+        end
+    end)
+end

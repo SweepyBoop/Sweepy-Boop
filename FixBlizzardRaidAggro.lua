@@ -14,7 +14,7 @@ local CreateFrame = CreateFrame;
 -- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
 
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
-local isTestMode = false;
+local isTestMode = NS.isTestMode;
 
 local arenaRoles = {}
 
@@ -72,8 +72,6 @@ local function CalculateAggro()
 end
 
 local function EventHandler(self, event, unitTarget)
-    if ( not SweepyBoop.db.profile.raidFrameAggroHighlightEnabled ) then return end
-
     if ShouldClearAggro(event) then
         -- Upon entering a new zone, clear the aggro highlight
         arenaRoles = {}
@@ -115,8 +113,14 @@ local function EventHandler(self, event, unitTarget)
     end
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
-frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
-frame:RegisterEvent(NS.UNIT_TARGET)
-frame:SetScript("OnEvent", EventHandler)
+local frame;
+
+function SweepyBoop:SetupRaidFrameAggroHighlight()
+    if self.db.profile.raidFrameAggroHighlightEnabled then
+        frame = CreateFrame("Frame")
+        frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
+        frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
+        frame:RegisterEvent(NS.UNIT_TARGET)
+        frame:SetScript("OnEvent", EventHandler)
+    end
+end

@@ -37,6 +37,8 @@ function CooldownTracking_UpdateBorder(icon)
     end
 end
 
+local DEFAULT_ICON_SIZE = 32;
+
 -- Only put static info in this function
 -- An icon for a unit + spellID is only created once per session
 NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
@@ -50,7 +52,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     frame.category = spell.category;
 
     if size then
-        local scale = size / 32;
+        local scale = size / DEFAULT_ICON_SIZE;
         frame:SetScale(scale);
     end
 

@@ -56,31 +56,62 @@ local options = {
         },
         arenaEnemyOffensives = {
             order = 6,
-            width = "full",
+            width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
             get = "GetArenaEnemyOffensivesEnabled",
             set = "SetArenaEnemyOffensivesEnabled",
         },
-        arenaEnemyDefensives = {
+        arenaEnemyOffensiveIconSizeSlider = {
             order = 7,
-            width = "full",
+            type = "range",
+            min = 16,
+            max = 64,
+            name = "Icon size",
+            desc = "Size of arena offensive cooldown icons",
+            get = "GetArenaEnemyOffensiveIconSize",
+            set = "SetArenaEnemyOffensiveIconSize",
+        },
+        arenaEnemyDefensives = {
+            order = 8,
+            width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
             get = "GetArenaEnemyDefensivesEnabled",
             set = "SetArenaEnemyDefensivesEnabled",
         },
+        arenaEnemyDefensiveIconSizeSlider = {
+            order = 9,
+            type = "range",
+            min = 16,
+            max = 64,
+            name = "Icon size",
+            desc = "Size of arena defensive cooldown icons",
+            get = "GetArenaEnemyDefensiveIconSize",
+            set = "SetArenaEnemyDefensiveIconSize",
+        },
+        arenaCooldownOffsetXSlider = {
+            order = 10,
+            type = "range",
+            width = 1.5,
+            min = 0,
+            max = 100,
+            name = "Horizontal offset",
+            desc = "Horizontal offset of arena cooldown icon group relative to the right edge of the arena frame",
+            get = "GetArenaCooldownOffsetX",
+            set = "SetArenaCooldownOffsetX",
+        },
 
         -- Raid frame modules
         header3 = {
-            order = 8,
+            order = 11,
             type = "header",
             name = "Raid Frames",
         },
         raidFrameAggroHighlight = {
-            order = 9,
+            order = 12,
             width = "full",
             type = "toggle",
             name = "PvP Aggro Highlight",
@@ -92,23 +123,23 @@ local options = {
         },
 
         break2 = {
-			order = 10,
+			order = 13,
 			type = "header",
 			name = ""
 		},
         reloadNotice = {
-			order = 11,
+			order = 14,
 			type = "description",
 			fontSize = "medium",
 			name = NS.exclamation .. "UI must be reloaded for most changes to take effect.",
 		},
         break3 = {
-			order = 12,
+			order = 15,
 			type = "header",
 			name = ""
 		},
         reloadButton = {
-			order = 13,
+			order = 16,
 			type = "execute",
 			name = "Reload UI",
 			func = ReloadUI,
@@ -120,8 +151,11 @@ local options = {
 local defaults = {
     profile = {
         classIconsEnabled = true,
+        arenaCooldownOffsetX = 5,
         arenaEnemyOffensivesEnabled = true,
+        arenaEnemyOffensiveIconSize = 32,
         arenaEnemyDefensivesEnabled = true,
+        arenaEnemyDefensiveIconSize = 22,
         arenaNumbersEnabled = true,
         nameplateFilterEnabled = true,
         raidFrameAggroHighlightEnabled = true,
@@ -136,6 +170,18 @@ function SweepyBoop:OnInitialize()
     local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
 	AC:RegisterOptionsTable("SweepyBoop_Profiles", profiles)
 	ACD:AddToBlizOptions("SweepyBoop_Profiles", "Profiles", "SweepyBoop's Arena Helper")
+
+    -- Setup nameplate modules
+    self:SetupNameplateModules();
+
+    -- Setup arena enemy cooldown icons
+    self:PremakeOffensiveIcons();
+    self:PopulateOffensiveIcons();
+    self:PremakeCooldownTrackingIcons();
+    self:PopulateCooldownTrackingIcons();
+
+    -- Setup raid frame aggro highlight
+    self:SetupRaidFrameAggroHighlight();
 
     self:RegisterChatCommand("sb", "SlashCommand");
 end
@@ -192,4 +238,28 @@ end
 
 function SweepyBoop:SetRaidFrameAggroHighlightEnabled(info, value)
     self.db.profile.raidFrameAggroHighlightEnabled = value;
+end
+
+function SweepyBoop:GetArenaCooldownOffsetX(info)
+    return self.db.profile.arenaCooldownOffsetX;
+end
+
+function SweepyBoop:SetArenaCooldownOffsetX(info, value)
+    self.db.profile.arenaCooldownOffsetX = value;
+end
+
+function SweepyBoop:GetArenaEnemyOffensiveIconSize(info)
+    return self.db.profile.arenaEnemyOffensiveIconSize;
+end
+
+function SweepyBoop:SetArenaEnemyOffensiveIconSize(info, value)
+    self.db.profile.arenaEnemyOffensiveIconSize = value;
+end
+
+function SweepyBoop:GetArenaEnemyDefensiveIconSize(info)
+    return self.db.profile.arenaEnemyDefensiveIconSize;
+end
+
+function SweepyBoop:SetArenaEnemyDefensiveIconSize(info, value)
+    self.db.profile.arenaEnemyDefensiveIconSize = value;
 end
