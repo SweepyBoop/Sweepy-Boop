@@ -415,7 +415,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
             point = "LEFT",
             relativeTo = prefix .. i,
             relativePoint = "RIGHT",
-            offsetY = -self.db.profile.arenaEnemyOffensiveIconSize - 1;
+            offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize + 1 ) * UIParent:GetEffectiveScale();
         };
     end
 
