@@ -204,6 +204,8 @@ local premadeIcons = {};
 
 -- Premake all icons (regardless of class and category)
 function SweepyBoop:PremakeCooldownTrackingIcons()
+    if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
+
     local defensiveIconSize = self.db.profile.arenaEnemyDefensiveIconSize;
     if test then
         local unitId = "player";
@@ -407,6 +409,8 @@ local refreshFrame;
 
 -- Create icon groups (note the category order)
 function SweepyBoop:PopulateCooldownTrackingIcons()
+    if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
+
     -- Setup defensive group based on whether Gladius/sArena is loaded and user settings.
     setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
@@ -455,11 +459,9 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
                 end
             end
             
-            if self.db.profile.arenaEnemyDefensivesEnabled then
-                for i = 1, NS.MAX_ARENA_SIZE do
-                    if defensiveGroups[i] then
-                        ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
-                    end
+            for i = 1, NS.MAX_ARENA_SIZE do
+                if defensiveGroups[i] then
+                    ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
                 end
             end
         elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
@@ -470,11 +472,9 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
                 end
             end
 
-            if self.db.profile.arenaEnemyDefensivesEnabled then
-                for i = 1, NS.MAX_ARENA_SIZE do
-                    if defensiveGroups[i] then
-                        UpdateAllBorders(defensiveGroups[i]);
-                    end
+            for i = 1, NS.MAX_ARENA_SIZE do
+                if defensiveGroups[i] then
+                    UpdateAllBorders(defensiveGroups[i]);
                 end
             end
         end
