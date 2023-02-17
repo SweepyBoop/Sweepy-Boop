@@ -31,7 +31,8 @@ local NameplateWhiteList = {
     [60561] = true, -- Earthgrab Totem
     [6112] = true, -- Windfury Totem
     [59764] = true, -- Healing Tide Totem
-    [61029] = true, -- Greater Fire Elemental
+    [95061] = true, -- Greater Fire Elemental
+    [61029] = true, -- Primal Fire Elemental
 
     -- Warlock
     [196111] = true, -- Pit Lord (Guldan's Ambition)

@@ -65,8 +65,9 @@ NS.PartyWithFearSpell = function ()
 end
 
 NS.IsShamanPrimaryPet = function (unitId)
-    local unitName = UnitName(unitId);
-    local suffix = string.sub(unitName, -14, -1);
-    return ( suffix == "Fire Elemental" );
+    local unitGUID = UnitGUID(unitId);
+    local npcID = NS.GetNpcIdFromGuid(unitGUID);
+    -- Greater / Primal Fire Elemental
+    return ( npcID == 95061 ) or ( npcID == 61029 );
 end
 
