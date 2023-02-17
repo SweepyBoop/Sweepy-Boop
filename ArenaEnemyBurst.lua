@@ -293,11 +293,11 @@ local growOptions = {
     anchor = "LEFT",
     margin = 3,
 };
-local setPointOptions = {};
 
 function SweepyBoop:PopulateOffensiveIcons()
     if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
 
+    local setPointOptions = {};
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
     for i = 1, NS.MAX_ARENA_SIZE do
         setPointOptions[i] = {
