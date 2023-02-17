@@ -21,8 +21,11 @@ local options = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = "Class & Pet Icons (" .. NS.exclamation .. "Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates)",
-            desc = "Show class and pet icons on friendly players and pets",
+            name = "Class & Pet Icons",
+            desc = "Show class/pet icons on friendly players/pets\n"
+                .. NS.exclamation ..
+                "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
+            descStyle = "inline",
             get = "GetClassIconsEnabled",
             set = "SetClassIconsEnabled",
         },
@@ -80,13 +83,15 @@ local options = {
             order = 9,
             width = "full",
             type = "toggle",
-            name = "PvP Aggro Highlight (" .. NS.exclamation .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames)",
-            desc = "Show aggro highlight on raid frames when targeted by enemy players in arena",
+            name = "PvP Aggro Highlight",
+            desc = "Show aggro highlight on raid frames when targeted by enemy players in arena\n"
+                .. NS.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
+            descStyle = "inline",
             get = "GetRaidFrameAggroHighlightEnabled",
             set = "SetRaidFrameAggroHighlightEnabled",
         },
 
-        break1 = {
+        break2 = {
 			order = 10,
 			type = "header",
 			name = ""
@@ -97,7 +102,7 @@ local options = {
 			fontSize = "medium",
 			name = NS.exclamation .. "UI must be reloaded for most changes to take effect.",
 		},
-        break2 = {
+        break3 = {
 			order = 12,
 			type = "header",
 			name = ""
