@@ -221,18 +221,19 @@ end
 
 -- Premake all icons (regardless of class)
 local premadeIcons = {};
+local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
 if test then
     local unitId = "player";
     premadeIcons[unitId] = {};
     for spellID, spell in pairs(spellData) do
-        premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, 32, true);
+        premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, iconSize, true);
     end
 else
     for i = 1, NS.MAX_ARENA_SIZE do
         local unitId = "arena"..i;
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, 32, true);
+            premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, iconSize, true);
         end
     end
 end
