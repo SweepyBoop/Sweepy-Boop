@@ -15,23 +15,23 @@ local strsplit = strsplit;
 local CompactPartyFrame = CompactPartyFrame;
 local hooksecurefunc = hooksecurefunc;
 
--- Have to use NpcID for unit names with no spaces, since hunters can name their pet Psyfiend, etc.
+-- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
 -- To find the NpcID of a unit, target it and type:
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 local NameplateWhiteList = {
     -- Priest
-    [101398] = true, -- Psyfiend (have to use NpcID since player pets can have this name)
+    [101398] = true, -- Psyfiend
 
     -- Shaman: totems to kill instantly
-    ["Grounding Totem"] = true,
-    ["Spirit Link Totem"] = true,
-    ["Skyfury Totem"] = true,
-    ["Ancestral Protection Totem"] = true, -- LOL
-    ["Capacitor Totem"] = true,
-    ["Earthgrab Totem"] = true, -- Roots you out of stealth
-    ["Windfury Totem"] = true,
-    ["Healing Tide Totem"] = true,
-    ["Greater Fire Elemental"] = true, -- Guardian
+    [5925] = true, -- Grounding Totem
+    ["Spirit Link Totem"] = true, -- Spirit Link Totem
+    [105427] = true, -- "Skyfury Totem"
+    [104818] = true, -- Ancestral Protection Totem
+    [61245] = true, -- Capacitor Totem
+    [60561] = true, -- Earthgrab Totem
+    [6112] = true, -- Windfury Totem
+    [59764] = true, -- Healing Tide Totem
+    [61029] = true, -- Greater Fire Elemental
 
     -- Warlock
     ["Pit Lord"] = true, -- Guardian
