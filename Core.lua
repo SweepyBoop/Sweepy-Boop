@@ -10,35 +10,27 @@ local options = {
     handler = SweepyBoop,
     type = "group",
     args = {
-        classIcons = {
+        header1 = {
             order = 1,
+            type = "header",
+            name = "Nameplates",
+        },
+
+        -- Nameplate modules
+        classIcons = {
+            order = 2,
             width = "full",
             type = "toggle",
-            name = "Class and Pet Icons",
-            desc = "Show class and pet icons on friendly players and pets",
+            name = "Class & Pet Icons",
+            desc = "Show class/pet icons on friendly players/pets\n"
+                .. NS.exclamation ..
+                "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
+            descStyle = "inline",
             get = "GetClassIconsEnabled",
             set = "SetClassIconsEnabled",
         },
-        arenaEnemyOffensives = {
-            order = 3,
-            width = "full",
-            type = "toggle",
-            name = "Arena Enemy Offensive Cooldowns",
-            desc = "Show arena enemy offensive cooldowns next to the arena frames",
-            get = "GetArenaEnemyOffensivesEnabled",
-            set = "SetArenaEnemyOffensivesEnabled",
-        },
-        arenaEnemyDefensives = {
-            order = 4,
-            width = "full",
-            type = "toggle",
-            name = "Arena Enemy Defensive Cooldowns",
-            desc = "Show arena enemy defensive cooldowns next to the arena frames",
-            get = "GetArenaEnemyDefensivesEnabled",
-            set = "SetArenaEnemyDefensivesEnabled",
-        },
         arenaNumbers = {
-            order = 2,
+            order = 3,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
@@ -47,7 +39,7 @@ local options = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
-            order = 5,
+            order = 4,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
@@ -55,24 +47,68 @@ local options = {
             get = "GetNameplateFilterEnabled",
             set = "SetNameplateFilterEnabled",
         },
+
+        -- Arena frame modules
+        header2 = {
+            order = 5,
+            type = "header",
+            name = "Arena Frames",
+        },
+        arenaEnemyOffensives = {
+            order = 6,
+            width = "full",
+            type = "toggle",
+            name = "Arena Enemy Offensive Cooldowns",
+            desc = "Show arena enemy offensive cooldowns next to the arena frames",
+            get = "GetArenaEnemyOffensivesEnabled",
+            set = "SetArenaEnemyOffensivesEnabled",
+        },
+        arenaEnemyDefensives = {
+            order = 7,
+            width = "full",
+            type = "toggle",
+            name = "Arena Enemy Defensive Cooldowns",
+            desc = "Show arena enemy defensive cooldowns next to the arena frames",
+            get = "GetArenaEnemyDefensivesEnabled",
+            set = "SetArenaEnemyDefensivesEnabled",
+        },
+
+        -- Raid frame modules
+        header3 = {
+            order = 8,
+            type = "header",
+            name = "Raid Frames",
+        },
+        raidFrameAggroHighlight = {
+            order = 9,
+            width = "full",
+            type = "toggle",
+            name = "PvP Aggro Highlight",
+            desc = "Show aggro highlight on raid frames when targeted by enemy players in arena\n"
+                .. NS.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
+            descStyle = "inline",
+            get = "GetRaidFrameAggroHighlightEnabled",
+            set = "SetRaidFrameAggroHighlightEnabled",
+        },
+
         break2 = {
-			order = 6,
+			order = 10,
 			type = "header",
 			name = ""
 		},
         reloadNotice = {
-			order = 7,
+			order = 11,
 			type = "description",
 			fontSize = "medium",
 			name = NS.exclamation .. "UI must be reloaded for most changes to take effect.",
 		},
         break3 = {
-			order = 8,
+			order = 12,
 			type = "header",
 			name = ""
 		},
         reloadButton = {
-			order = 9,
+			order = 13,
 			type = "execute",
 			name = "Reload UI",
 			func = ReloadUI,
@@ -88,6 +124,7 @@ local defaults = {
         arenaEnemyDefensivesEnabled = true,
         arenaNumbersEnabled = true,
         nameplateFilterEnabled = true,
+        raidFrameAggroHighlightEnabled = true,
     }
 };
 
@@ -147,4 +184,12 @@ end
 
 function SweepyBoop:SetNameplateFilterEnabled(info, value)
     self.db.profile.nameplateFilterEnabled = value;
+end
+
+function SweepyBoop:GetRaidFrameAggroHighlightEnabled(info)
+    return self.db.profile.raidFrameAggroHighlightEnabled;
+end
+
+function SweepyBoop:SetRaidFrameAggroHighlightEnabled(info, value)
+    self.db.profile.raidFrameAggroHighlightEnabled = value;
 end
