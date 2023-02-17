@@ -37,7 +37,7 @@ local NameplateWhiteList = {
     [196111] = true, -- Pit Lord (Guldan's Ambition)
 
     -- Warrior
-    [119052] = true,
+    [119052] = true, -- War Banner
 }
 
 local function IsInWhiteList(unitId)
