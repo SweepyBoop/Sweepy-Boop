@@ -26,11 +26,7 @@ local function IsUnitArena(unitId)
     if isTestMode then
         return ( unitId == "player" )
     else
-        for i = 1, NS.MAX_ARENA_SIZE do
-            if ( unitId == "arena" .. i ) then
-                return true
-            end
-        end
+        return unitId and string.sub(unitId, 1, 5) == "arena";
     end
 end
 
