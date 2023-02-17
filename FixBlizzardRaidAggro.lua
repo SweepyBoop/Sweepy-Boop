@@ -76,6 +76,8 @@ local function CalculateAggro()
 end
 
 local function EventHandler(self, event, unitTarget)
+    if ( not SweepyBoop.db.profile.raidFrameAggroHighlightEnabled ) then return end
+
     if ShouldClearAggro(event) then
         -- Upon entering a new zone, clear the aggro highlight
         arenaRoles = {}
