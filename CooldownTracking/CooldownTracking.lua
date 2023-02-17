@@ -407,6 +407,14 @@ local function RefreshGroups()
     end
 end
 
+local function UpdateAllBorders(group)
+    for i = 1, #(group.active) do
+        CooldownTracking_UpdateBorder(group.active[i]);
+    end
+end
+
+local refreshFrame;
+
 -- Create icon groups (note the category order)
 function SweepyBoop:PopulateCooldownTrackingIcons()
     -- Set offsetY based on setting
@@ -429,55 +437,49 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
 
     -- On first login
     RefreshGroups();
-end
 
-local function UpdateAllBorders(group)
-    for i = 1, #(group.active) do
-        CooldownTracking_UpdateBorder(group.active[i]);
-    end
-end
+    -- Refresh icon groups when zone changes, or during test mode when player switches spec
+    refreshFrame = CreateFrame("Frame");
+    refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+    refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
+    refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
+    refreshFrame:RegisterEvent(NS.PLAYER_TARGET_CHANGED);
+    refreshFrame:SetScript("OnEvent", function (frame, event, ...)
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
+            RefreshGroups();
+        elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+            local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
 
--- Refresh icon groups when zone changes, or during test mode when player switches spec
-local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
-refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
-refreshFrame:RegisterEvent(NS.PLAYER_TARGET_CHANGED);
-refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
-        RefreshGroups();
-    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
-        local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
-
-        if ( not NS.release ) then
-            -- These bars are not for publish audience...
-            for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-                ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+            if ( not NS.release ) then
+                -- These bars are not for publish audience...
+                for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                    ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+                end
             end
-        end
-        
-        if SweepyBoop.db.profile.arenaEnemyDefensivesEnabled then
-            for i = 1, NS.MAX_ARENA_SIZE do
-                if defensiveGroups[i] then
-                    ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+            
+            if self.db.profile.arenaEnemyDefensivesEnabled then
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    if defensiveGroups[i] then
+                        ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+                    end
+                end
+            end
+        elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
+            if ( not NS.release ) then
+                -- These bars are not for publish audience...
+                for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                    UpdateAllBorders(iconGroups[i]);
+                end
+            end
+
+            if self.db.profile.arenaEnemyDefensivesEnabled then
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    if defensiveGroups[i] then
+                        UpdateAllBorders(defensiveGroups[i]);
+                    end
                 end
             end
         end
-    elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
-        if ( not NS.release ) then
-            -- These bars are not for publish audience...
-            for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-                UpdateAllBorders(iconGroups[i]);
-            end
-        end
-
-        if SweepyBoop.db.profile.arenaEnemyDefensivesEnabled then
-            for i = 1, NS.MAX_ARENA_SIZE do
-                if defensiveGroups[i] then
-                    UpdateAllBorders(defensiveGroups[i]);
-                end
-            end
-        end
-    end
-end)
+    end)
+end
