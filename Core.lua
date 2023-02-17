@@ -174,11 +174,14 @@ function SweepyBoop:OnInitialize()
     -- Setup nameplate modules
     self:SetupNameplateModules();
 
-    -- Premake & populate icons
+    -- Setup arena enemy cooldown icons
     self:PremakeOffensiveIcons();
     self:PopulateOffensiveIcons();
     self:PremakeCooldownTrackingIcons();
     self:PopulateCooldownTrackingIcons();
+
+    -- Setup raid frame aggro highlight
+    self:SetupRaidFrameAggroHighlight();
 
     self:RegisterChatCommand("sb", "SlashCommand");
 end
