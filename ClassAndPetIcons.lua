@@ -24,7 +24,7 @@ local NameplateWhiteList = {
 
     -- Shaman: totems to kill instantly
     [5925] = true, -- Grounding Totem
-    ["Spirit Link Totem"] = true, -- Spirit Link Totem
+    [53006] = true, -- Spirit Link Totem
     [105427] = true, -- "Skyfury Totem"
     [104818] = true, -- Ancestral Protection Totem
     [61245] = true, -- Capacitor Totem
