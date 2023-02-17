@@ -304,8 +304,11 @@ end
 -- Populate icons based on class & spec on login
 local testGroup = nil;
 local arenaGroup = {};
+local refreshFrame;
 
 function SweepyBoop:PopulateOffensiveIcons()
+    if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
     if test then
         local unitId = "player";
         testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, unitId);
@@ -317,41 +320,41 @@ function SweepyBoop:PopulateOffensiveIcons()
             SetupAuraGroup(arenaGroup[i], unitId);
         end
     end
-end
 
--- Refresh icon groups when zone changes, or during test mode when player switches spec
-local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
-refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
-refreshFrame:RegisterEvent(NS.UNIT_AURA);
-refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
-refreshFrame:SetScript("OnEvent", function (self, event, ...)
-    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED) then
-        if test then
-            SetupAuraGroup(testGroup, "player");
-        elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
-            for i = 1, NS.MAX_ARENA_SIZE do
-                SetupAuraGroup(arenaGroup[i], "arena"..i);
+    -- Refresh icon groups when zone changes, or during test mode when player switches spec
+    refreshFrame = CreateFrame("Frame");
+    refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+    refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
+    refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
+    refreshFrame:RegisterEvent(NS.UNIT_AURA);
+    refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
+    refreshFrame:SetScript("OnEvent", function (self, event, ...)
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED) then
+            if test then
+                SetupAuraGroup(testGroup, "player");
+            elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    SetupAuraGroup(arenaGroup[i], "arena"..i);
+                end
             end
-        end
-    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
-        local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-        if test then
-            ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+        elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+            local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+            if test then
+                ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+            else
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    ProcessCombatLogEvent(arenaGroup[i], event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                end
+            end
         else
-            for i = 1, NS.MAX_ARENA_SIZE do
-                ProcessCombatLogEvent(arenaGroup[i], event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+            if test then
+                ProcessUnitEvent(testGroup, event, ...);
+            else
+                for i = 1, NS.MAX_ARENA_SIZE do
+                    ProcessUnitEvent(arenaGroup[i], event, ...);
+                end
             end
         end
-    else
-        if test then
-            ProcessUnitEvent(testGroup, event, ...);
-        else
-            for i = 1, NS.MAX_ARENA_SIZE do
-                ProcessUnitEvent(arenaGroup[i], event, ...);
-            end
-        end
-    end
-end)
+    end)
+end
