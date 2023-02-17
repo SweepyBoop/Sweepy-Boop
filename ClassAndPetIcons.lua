@@ -41,7 +41,8 @@ local NameplateWhiteList = {
 }
 
 local function IsInWhiteList(unitId)
-    NameplateWhiteList["Tremor Totem"] = NS.PartyWithFearSpell();
+    -- Tremor Totem
+    NameplateWhiteList[5913] = NS.PartyWithFearSpell();
 
     local guid = UnitGUID(unitId)
     local npcID = select(6, strsplit("-", guid))
