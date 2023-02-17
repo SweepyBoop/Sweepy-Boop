@@ -174,6 +174,8 @@ function SweepyBoop:OnInitialize()
     -- Premake & populate icons
     self:PremakeOffensiveIcons();
     self:PopulateOffensiveIcons();
+    self:PremakeCooldownTrackingIcons();
+    self:PopulateCooldownTrackingIcons();
 
     self:RegisterChatCommand("sb", "SlashCommand");
 end

@@ -107,7 +107,6 @@ for i = 1, NS.MAX_ARENA_SIZE do
         point = "LEFT",
         relativeTo = prefix .. i,
         relativePoint = "RIGHT",
-        offsetY = -SweepyBoop.db.profile.arenaEnemyOffensiveIconSize,
     };
 end
 
@@ -390,20 +389,6 @@ end
 local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroups = {}; -- This one needs a group per unit
 
--- Create icon groups (note the category order)
-local groupToken = ( test and "player" ) or nil;
-iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
-iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
-iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenterDown, groupToken);
-iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRightDown, groupToken);
-if test then
-    defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
-else
-    for i = 1, NS.MAX_ARENA_SIZE do
-        defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
-    end
-end
-
 local function RefreshGroups()
     if test then
         for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
@@ -422,8 +407,29 @@ local function RefreshGroups()
     end
 end
 
--- On first login
-RefreshGroups();
+-- Create icon groups (note the category order)
+function SweepyBoop:PopulateCooldownTrackingIcons()
+    -- Set offsetY based on setting
+    for i = 1, NS.MAX_ARENA_SIZE do
+        setPointOptions[SPELLCATEGORY.DEFENSIVE][i].offsetY = -self.db.profile.arenaEnemyOffensiveIconSize;
+    end
+
+    local groupToken = ( test and "player" ) or nil;
+    iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
+    iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
+    iconGroups[SPELLCATEGORY.CROWDCONTROL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenterDown, groupToken);
+    iconGroups[SPELLCATEGORY.DISPEL] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRightDown, groupToken);
+    if test then
+        defensiveGroups[1] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            defensiveGroups[i] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
+        end
+    end
+
+    -- On first login
+    RefreshGroups();
+end
 
 local function UpdateAllBorders(group)
     for i = 1, #(group.active) do
