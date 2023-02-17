@@ -284,18 +284,18 @@ local function SetupAuraGroup(group, unit)
     end
 end
 
--- Populate icons based on class & spec on login
-local testGroup = nil;
-local arenaGroup = {};
-local refreshFrame;
-local growOptions = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-};
-
 function SweepyBoop:PopulateOffensiveIcons()
     if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
+    -- Populate icons based on class & spec on login
+    local testGroup = nil;
+    local arenaGroup = {};
+    local refreshFrame;
+    local growOptions = {
+        direction = "RIGHT",
+        anchor = "LEFT",
+        margin = 3,
+    };
 
     local setPointOptions = {};
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
