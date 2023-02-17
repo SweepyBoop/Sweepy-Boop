@@ -34,10 +34,10 @@ local NameplateWhiteList = {
     [61029] = true, -- Greater Fire Elemental
 
     -- Warlock
-    ["Pit Lord"] = true, -- Guardian
+    [196111] = true, -- Guardian
 
     -- Warrior
-    ["War Banner"] = true,
+    [119052] = true,
 }
 
 local function IsInWhiteList(unitId)
