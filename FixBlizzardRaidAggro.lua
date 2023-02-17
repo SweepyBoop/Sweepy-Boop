@@ -115,8 +115,12 @@ local function EventHandler(self, event, unitTarget)
     end
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
-frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
-frame:RegisterEvent(NS.UNIT_TARGET)
-frame:SetScript("OnEvent", EventHandler)
+local frame;
+
+function SweepyBoop:SetupRaidFrameAggroHighlight()
+    frame = CreateFrame("Frame")
+    frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
+    frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
+    frame:RegisterEvent(NS.UNIT_TARGET)
+    frame:SetScript("OnEvent", EventHandler)
+end
