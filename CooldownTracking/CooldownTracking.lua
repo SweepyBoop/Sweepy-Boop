@@ -12,6 +12,7 @@ local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
 
 local cooldowns = NS.cooldownSpells;
 local resets = NS.cooldownResets;
+local SPELLCATEGORY = NS.SPELLCATEGORY;
 
 local resetByPower = {
     853,
@@ -38,76 +39,6 @@ for spellID, spell in pairs(cooldowns) do
     if spell.trackEvent and type(spell.trackEvent) ~= "string" then
         print("Invalid trackEvent for spellID:", spellID);
     end
-end
-
-local growCenterUp = {
-    direction = "CENTER",
-    anchor = "CENTER",
-    margin = 3,
-    columns = 6,
-    growUpward = true,
-};
-
-local growCenterDown = {
-    direction = "CENTER",
-    anchor = "CENTER",
-    margin = 3,
-    columns = 6,
-    growUpward = false;
-};
-
-local growRight = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-};
-
-local growRightDown = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-    columns = 3,
-    growUpward = false,
-};
-
-local setPointOptions = {};
-local SPELLCATEGORY = NS.SPELLCATEGORY;
-setPointOptions[SPELLCATEGORY.INTERRUPT] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 0,
-    offsetY = -167.5,
-};
-setPointOptions[SPELLCATEGORY.DISRUPT] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 0,
-    offsetY = -127.5,
-};
-setPointOptions[SPELLCATEGORY.CROWDCONTROL] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 0,
-    offsetY = -245,
-};
-setPointOptions[SPELLCATEGORY.DISPEL] = {
-    point = "CENTER",
-    relativeTo = UIParent,
-    relativePoint = "CENTER",
-    offsetX = 375,
-    offsetY = -165,
-};
-setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
-local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-for i = 1, NS.MAX_ARENA_SIZE do
-    setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
-        point = "LEFT",
-        relativeTo = prefix .. i,
-        relativePoint = "RIGHT",
-    };
 end
 
 local function ValidateUnit(self)
@@ -413,13 +344,81 @@ local function UpdateAllBorders(group)
     end
 end
 
+local growCenterUp = {
+    direction = "CENTER",
+    anchor = "CENTER",
+    margin = 3,
+    columns = 6,
+    growUpward = true,
+};
+
+local growCenterDown = {
+    direction = "CENTER",
+    anchor = "CENTER",
+    margin = 3,
+    columns = 6,
+    growUpward = false;
+};
+
+local growRight = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+};
+
+local growRightDown = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+    columns = 3,
+    growUpward = false,
+};
+
+local setPointOptions = {};
+
+setPointOptions[SPELLCATEGORY.INTERRUPT] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 0,
+    offsetY = -167.5,
+};
+setPointOptions[SPELLCATEGORY.DISRUPT] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 0,
+    offsetY = -127.5,
+};
+setPointOptions[SPELLCATEGORY.CROWDCONTROL] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 0,
+    offsetY = -245,
+};
+setPointOptions[SPELLCATEGORY.DISPEL] = {
+    point = "CENTER",
+    relativeTo = UIParent,
+    relativePoint = "CENTER",
+    offsetX = 375,
+    offsetY = -165,
+};
+
 local refreshFrame;
 
 -- Create icon groups (note the category order)
 function SweepyBoop:PopulateCooldownTrackingIcons()
-    -- Set offsetY based on setting
+    -- Setup defensive group based on whether Gladius/sArena is loaded and user settings.
+    setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
     for i = 1, NS.MAX_ARENA_SIZE do
-        setPointOptions[SPELLCATEGORY.DEFENSIVE][i].offsetY = -self.db.profile.arenaEnemyOffensiveIconSize - 1;
+        setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
+            point = "LEFT",
+            relativeTo = prefix .. i,
+            relativePoint = "RIGHT",
+            offsetY = -self.db.profile.arenaEnemyOffensiveIconSize - 1;
+        };
     end
 
     local groupToken = ( test and "player" ) or nil;
