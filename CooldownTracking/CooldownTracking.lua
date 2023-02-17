@@ -200,20 +200,18 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 end
 
-local iconSize = 32;
-
 local premadeIcons = {};
 
 -- Premake all icons (regardless of class and category)
 function SweepyBoop:PremakeCooldownTrackingIcons()
-    local iconSize = self.db.profile.arenaEnemyDefensiveIconSize;
+    local defensiveIconSize = self.db.profile.arenaEnemyDefensiveIconSize;
     if test then
         local unitId = "player";
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(cooldowns) do
             local size, hideHighlight;
             if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-                size, hideHighlight = iconSize, true;
+                size, hideHighlight = defensiveIconSize, true;
             end
             premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
         end
@@ -224,7 +222,7 @@ function SweepyBoop:PremakeCooldownTrackingIcons()
             for spellID, spell in pairs(cooldowns) do
                 local size, hideHighlight;
                 if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-                    size, hideHighlight = iconSize, true;
+                    size, hideHighlight = defensiveIconSize, true;
                 end
                 premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
             end
