@@ -99,7 +99,7 @@ local options = {
             min = 0,
             max = 100,
             name = "Horizontal offset",
-            desc = "Horizontal offset of arena cooldown icon group relative to the right edge of the arena frame",
+            desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
             get = "GetArenaCooldownOffsetX",
             set = "SetArenaCooldownOffsetX",
         },
