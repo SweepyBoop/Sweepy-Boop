@@ -26,7 +26,7 @@ ClassAndPetIcons.lua
 FixBlizzardRaidAggro.lua
 Release.lua
 
-# Simple Omnibar
+# Simple Cooldown Tracking
 CooldownTracking\CooldownTracking.xml
 CooldownTracking\CooldownSpells.lua
 CooldownTracking\CooldownTrackingTemplates.lua
