@@ -5,8 +5,8 @@ Here is how my UI looks like:
 ![image](https://user-images.githubusercontent.com/78008331/212603812-af58c455-962c-45d2-8dc4-2c82cab7cd53.png)
 
 Type **/sb** in game to invoke the options panel.
-![Options](https://user-images.githubusercontent.com/78008331/219558070-c82f07b5-bb3e-47e9-84a2-95ed0627033f.png)
-
+Most changes require a UI reload to take effect, and there is a Reload UI button below the settings for convinience.
+![image](https://user-images.githubusercontent.com/78008331/219826235-9a9c1b72-5e5b-4108-9728-576e991f8789.png)
 
 #### Note
 This is my private version which includes a lot of stuff specifically made for myself (thus not needed by external users of the addon).
