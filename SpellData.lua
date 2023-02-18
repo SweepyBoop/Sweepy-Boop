@@ -113,6 +113,13 @@ NS.spellData = {
         cooldown = 90,
         index = 1,
     },
+    -- Essence Break
+    [258860] = {
+        class = NS.DEMONHUNTER,
+        category = OFFENSIVE,
+        duration = 4,
+        index = 2,
+    },
     -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
         class = NS.DEMONHUNTER,
