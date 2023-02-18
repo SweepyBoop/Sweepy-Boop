@@ -194,11 +194,6 @@ function SweepyBoop:OnInitialize()
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     AC:RegisterOptionsTable(addonName, options);
     self.optionsFrame = ACD:AddToBlizOptions(addonName, NS.addonTitle);
-    --ACD:SetDefaultSize(addonName, 600, 800);
-
-    --options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-	--AC:RegisterOptionsTable("SweepyBoop_Profiles", profiles)
-	--ACD:AddToBlizOptions("SweepyBoop_Profiles", "Profiles", "SweepyBoop's Arena Helper")
 
     -- Setup nameplate modules
     self:SetupNameplateModules();
