@@ -1,36 +1,79 @@
-local _, NS = ...;
+local addonName, NS = ...;
+NS.addonTitle = GetAddOnMetadata(addonName, "Title");
 NS.exclamation = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
-SweepyBoop = LibStub("AceAddon-3.0"):NewAddon("SweepyBoop's Arena Helper", "AceConsole-3.0");
+SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
 local AC = LibStub("AceConfig-3.0")
 local ACD = LibStub("AceConfigDialog-3.0")
 
 local options = {
-    name = "SweepyBoop's Arena Helper",
+    name = NS.addonTitle,
     handler = SweepyBoop,
     type = "group",
     args = {
-        header1 = {
-            order = 1,
-            type = "header",
-            name = "Nameplates",
-        },
+        description = {
+			order = 1,
+			type ="description",
+			fontSize = "large",
+            image = "Interface\\Addons\\SweepyBoop\\ClassIcons\\flat\\PET0",
+            imageWidth = 36,
+			imageHeight = 36,
+			name = "A lightweight addon to make your arena gameplay smoother :)"
+		},
+        break1 = {
+			order = 2,
+			type = "header",
+			name = ""
+		},
+        reloadNotice = {
+			order = 3,
+			type = "description",
+			fontSize = "medium",
+			name = NS.exclamation .. "UI must be reloaded for most changes to take effect.",
+		},
+        reloadButton = {
+			order = 4,
+			type = "execute",
+			name = "Reload UI",
+			func = ReloadUI,
+			width = 0.6,
+		},
+        break2 = {
+			order = 5,
+			type = "header",
+			name = ""
+		},
+    },
+};
 
-        -- Nameplate modules
+options.args.NamePlates = {
+    order = 5,
+    type = "group",
+    name = "Nameplates",
+    handler = SweepyBoop,
+    args = {
         classIcons = {
-            order = 2,
+            order = 1,
             width = "full",
             type = "toggle",
             name = "Class & Pet Icons",
-            desc = "Show class/pet icons on friendly players/pets\n"
-                .. NS.exclamation ..
-                "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
-            descStyle = "inline",
+            desc = "Show class/pet icons on friendly players/pets",
             get = "GetClassIconsEnabled",
             set = "SetClassIconsEnabled",
         },
+        description = {
+            order = 2,
+            width = "full",
+            type = "description",
+            name = NS.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
+        },
+        break1 = {
+			order = 3,
+			type = "header",
+			name = ""
+		},
         arenaNumbers = {
-            order = 3,
+            order = 4,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
@@ -39,7 +82,7 @@ local options = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
-            order = 4,
+            order = 5,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
@@ -47,15 +90,17 @@ local options = {
             get = "GetNameplateFilterEnabled",
             set = "SetNameplateFilterEnabled",
         },
+    },
+};
 
-        -- Arena frame modules
-        header2 = {
-            order = 5,
-            type = "header",
-            name = "Arena Frames",
-        },
+options.args.ArenaFrames = {
+    order = 6,
+    type = "group",
+    name = "Arena Frames",
+    handler = SweepyBoop,
+    args = {
         arenaEnemyOffensives = {
-            order = 6,
+            order = 1,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
@@ -64,7 +109,7 @@ local options = {
             set = "SetArenaEnemyOffensivesEnabled",
         },
         arenaEnemyOffensiveIconSizeSlider = {
-            order = 7,
+            order = 2,
             type = "range",
             min = 16,
             max = 64,
@@ -74,7 +119,7 @@ local options = {
             set = "SetArenaEnemyOffensiveIconSize",
         },
         arenaEnemyDefensives = {
-            order = 8,
+            order = 3,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
@@ -83,7 +128,7 @@ local options = {
             set = "SetArenaEnemyDefensivesEnabled",
         },
         arenaEnemyDefensiveIconSizeSlider = {
-            order = 9,
+            order = 4,
             type = "range",
             min = 16,
             max = 64,
@@ -93,7 +138,7 @@ local options = {
             set = "SetArenaEnemyDefensiveIconSize",
         },
         arenaCooldownOffsetXSlider = {
-            order = 10,
+            order = 5,
             type = "range",
             width = 1.5,
             min = 0,
@@ -103,48 +148,30 @@ local options = {
             get = "GetArenaCooldownOffsetX",
             set = "SetArenaCooldownOffsetX",
         },
+    },
+};
 
-        -- Raid frame modules
-        header3 = {
-            order = 11,
-            type = "header",
-            name = "Raid Frames",
-        },
+options.args.RaidFrame = {
+    order = 7,
+    type = "group",
+    name = "Raid Frames",
+    handler = SweepyBoop,
+    args = {
         raidFrameAggroHighlight = {
-            order = 12,
+            order = 1,
             width = "full",
             type = "toggle",
             name = "PvP Aggro Highlight",
-            desc = "Show aggro highlight on raid frames when targeted by enemy players in arena\n"
-                .. NS.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
-            descStyle = "inline",
+            desc = "Show aggro highlight on raid frames when targeted by enemy players in arena",
             get = "GetRaidFrameAggroHighlightEnabled",
             set = "SetRaidFrameAggroHighlightEnabled",
         },
-
-        break2 = {
-			order = 13,
-			type = "header",
-			name = ""
-		},
-        reloadNotice = {
-			order = 14,
-			type = "description",
-			fontSize = "medium",
-			name = NS.exclamation .. "UI must be reloaded for most changes to take effect.",
-		},
-        break3 = {
-			order = 15,
-			type = "header",
-			name = ""
-		},
-        reloadButton = {
-			order = 16,
-			type = "execute",
-			name = "Reload UI",
-			func = ReloadUI,
-			width = 0.6,
-		},
+        description = {
+            order = 2,
+            width = "full",
+            type = "description",
+            name = NS.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
+        },
     },
 };
 
@@ -163,13 +190,15 @@ local defaults = {
 };
 
 function SweepyBoop:OnInitialize()
-    self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true)
-    LibStub("AceConfig-3.0"):RegisterOptionsTable("SweepyBoop's Arena Helper", options);
-    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("SweepyBoop's Arena Helper", "SweepyBoop's Arena Helper");
+    self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
+    options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
+    AC:RegisterOptionsTable(addonName, options);
+    self.optionsFrame = ACD:AddToBlizOptions(addonName, NS.addonTitle);
+    --ACD:SetDefaultSize(addonName, 600, 800);
 
-    local profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
-	AC:RegisterOptionsTable("SweepyBoop_Profiles", profiles)
-	ACD:AddToBlizOptions("SweepyBoop_Profiles", "Profiles", "SweepyBoop's Arena Helper")
+    --options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db)
+	--AC:RegisterOptionsTable("SweepyBoop_Profiles", profiles)
+	--ACD:AddToBlizOptions("SweepyBoop_Profiles", "Profiles", "SweepyBoop's Arena Helper")
 
     -- Setup nameplate modules
     self:SetupNameplateModules();
