@@ -157,7 +157,6 @@ local function ShowClassIcon(frame)
         icon.isPlayer = isPlayer
     end
 
-    -- Hide healthBar and show class/pet icon instead
     icon:Show()
 end
 
