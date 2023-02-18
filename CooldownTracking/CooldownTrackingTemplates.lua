@@ -7,13 +7,13 @@ local GetSpellInfo = GetSpellInfo;
 local UnitIsUnit = UnitIsUnit;
 
 local function StartAnimation(icon)
-    icon.flashAnimation:Play();
-	icon.activationGlowAnim:Play();
+    icon.FlashAnimation:Play();
+	icon.ActivationAnimation:Play();
 end
 
 local function StopAnimation(icon)
-    if icon.flashAnimation:IsPlaying() then icon.flashAnimation:Stop() end
-	if icon.activationGlowAnim:IsPlaying() then icon.activationGlowAnim:Stop() end
+    if icon.FlashAnimation:IsPlaying() then icon.FlashAnimation:Stop() end
+	if icon.ActivationAnimation:IsPlaying() then icon.ActivationAnimation:Stop() end
 end
 
 local function OnCooldownTimerFinished(self)
@@ -23,9 +23,9 @@ end
 
 function CooldownTracking_UpdateBorder(icon)
     if UnitIsUnit(icon.unit, "target") then
-        icon.TargetTexture:SetAlpha(1);
+        icon.TargetHighlight:SetAlpha(1);
     else
-        icon.TargetTexture:SetAlpha(0);
+        icon.TargetHighlight:SetAlpha(0);
     end
 end
 
@@ -49,7 +49,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     end
 
     if hideHighlight then
-        frame.TargetTexture:Hide();
+        frame.TargetHighlight:Hide();
     end
     
     -- Fill in static info here
@@ -64,8 +64,8 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     };
     frame.priority = spell.priority;
 
-    frame.icon:SetTexture(select(3, GetSpellInfo(spellID)));
-    frame.icon:SetAllPoints();
+    frame.Icon:SetTexture(select(3, GetSpellInfo(spellID)));
+    frame.Icon:SetAllPoints();
     frame.Count:SetText(""); -- Call this before setting color
     frame.Count:SetTextColor(1, 1, 0); -- Yellow
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);

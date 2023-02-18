@@ -9,7 +9,7 @@
 	        <Anchor point="CENTER"/>
 	    </Anchors>
 	    <Animations>
-	        <AnimationGroup parentKey="activationGlowAnim" setToFinalAlpha="true">
+	        <AnimationGroup parentKey="ActivationAnimation" setToFinalAlpha="true">
 	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="1" fromAlpha="1" toAlpha="0.4"/>
 	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="2" fromAlpha="0.4" toAlpha="1"/>
 	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="3" fromAlpha="1" toAlpha="0"/>
@@ -20,24 +20,16 @@
 	                </OnFinished>
 	            </Scripts>
 	        </AnimationGroup>
-	        <AnimationGroup parentKey="flashAnimation" setToFinalAlpha="true">
+	        <AnimationGroup parentKey="FlashAnimation" setToFinalAlpha="true">
 	            <Alpha childKey="flash" smoothing="OUT" duration="1" order="1" fromAlpha="1" toAlpha="0"/>
 	        </AnimationGroup>
 	    </Animations>
-	    <NormalTexture name="$parentNormalTexture" parentKey="NormalTexture">
-	        <Anchors>
-	            <Anchor point="TOPLEFT" x="-15" y="15"/>
-	            <Anchor point="BOTTOMRIGHT" x="15" y="-15"/>
-	        </Anchors>
-	    </NormalTexture>
-	    <HighlightTexture/>
-	    <PushedTexture/>
 	    <Layers>
 	        <Layer level="BACKGROUND">
-	            <Texture name="$parentIcon" parentKey="icon"/>
+	            <Texture parentKey="Icon"/>
 	        </Layer>
 	        <Layer level="ARTWORK" textureSubLevel="2">
-	        	<FontString name="$parentCount" inherits="NumberFontNormal" parentKey="Count" justifyH="RIGHT">
+	        	<FontString inherits="NumberFontNormal" parentKey="Count" justifyH="RIGHT">
 	        		<Anchors>
 	        			<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
 	        		</Anchors>
@@ -56,7 +48,7 @@
 	            </Texture>
 	        </Layer>
 	        <Layer level="BACKGROUND" textureSubLevel="-1">
-	            <Texture parentKey="TargetTexture" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
+	            <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
 	                <Anchors>
 	                    <Anchor point="CENTER"/>
 	                </Anchors>
@@ -64,7 +56,7 @@
 	        </Layer>
 	    </Layers>
 	    <Frames>
-	        <Cooldown name="$parentCooldown" inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">
+	        <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">
 	            <Size x="32" y="32"/>
 	            <Anchors>
 	                <Anchor point="CENTER"/>
