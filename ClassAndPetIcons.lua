@@ -108,7 +108,7 @@ local function EnsureClassIcon(frame)
 end
 
 local function HideClassIcon(frame)
-    local nameplate = frame:GetParent()
+    local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
         nameplate.FriendlyClassIcon:Hide();
@@ -166,9 +166,9 @@ local function UpdateClassIcon(frame)
 
     if ShouldMakeIcon(frame.unit) then
         frame:Hide();
-        ShowClassIcon(frame)
+        ShowClassIcon(frame);
     else
-        HideClassIcon(frame)
+        HideClassIcon(frame);
         frame:Show();
     end
 end
@@ -220,8 +220,15 @@ local restricted = {
 local function ShouldUpdateNamePlate(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
-        local instanceType = select(2, IsInInstance())
-        return ( not restricted[instanceType] )
+        local instanceType = select(2, IsInInstance());
+        if restricted[instanceType] then
+            -- In restricted instance, should skip all the nameplate logic
+            -- But if there is a class icon showing, hide it
+            HideClassIcon(frame);
+            return false;
+        end
+
+        return true;
     end
 end
 
@@ -232,7 +239,7 @@ function SweepyBoop:SetupNameplateModules()
         end
     
         if ( not ShouldUpdateNamePlate(frame) ) then
-            return
+            return;
         end
     
         -- Class icon mod will hide/show healthBar when showing/hiding class icons
