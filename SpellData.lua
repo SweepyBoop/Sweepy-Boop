@@ -397,8 +397,8 @@ NS.spellData = {
         class = NS.PRIEST,
         duration = 20,
     },
-    -- Void Eruption
-    [228260] = {
+    -- Voidform
+    [194249] = {
         category = OFFENSIVE,
         class = NS.PRIEST,
         duration = "dynamic",
