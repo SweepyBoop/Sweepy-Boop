@@ -74,7 +74,7 @@ NS.spellData = {
         category = OFFENSIVE,
         cooldown = 180,
         duration = 25,
-        index = 1,
+        index = 2,
     },
     -- Unholy Assult
     [207289] = {
@@ -112,6 +112,13 @@ NS.spellData = {
         category = OFFENSIVE,
         cooldown = 90,
         index = 1,
+    },
+    -- Essence Break
+    [258860] = {
+        class = NS.DEMONHUNTER,
+        category = OFFENSIVE,
+        duration = 4,
+        index = 2,
     },
     -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
@@ -383,6 +390,19 @@ NS.spellData = {
         trackDest = true,
         trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
         duration = 20,
+    },
+    -- Dark Ascension
+    [391109] = {
+        category = OFFENSIVE,
+        class = NS.PRIEST,
+        duration = 20,
+    },
+    -- Voidform
+    [194249] = {
+        category = OFFENSIVE,
+        class = NS.PRIEST,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        duration = NS.DURATION_DYNAMIC,
     },
     -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
     -- Currently lacking the detection of early dismiss (if the priest right clicks the spirit buff)

@@ -12,6 +12,8 @@ NS.SPELLCATEGORY = {
     DEFENSIVE = 6,
 };
 
+NS.DURATION_DYNAMIC = "dynamic";
+
 NS.SPECID = {
     ARCANE = 62,
     RET = 70,

@@ -204,18 +204,21 @@ NS.StartWeakAuraIcon = function (icon)
 
     -- If there is a duration, start the duration timer
     if icon.duration then
+        local startTime = GetTime();
         -- Decide duration
         local duration;
         if ( not spell.duration ) then
             -- Default glow duration
             duration = 3;
-        elseif spell.duration == "dynamic" then
-            duration = NS.Util_GetUnitBuff(icon.unit, icon.spellID);
+        elseif spell.duration == NS.DURATION_DYNAMIC then
+            local expirationTime;
+            duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
+            startTime = expirationTime - duration;
         else
             duration = spell.duration;
         end
 
-        icon.duration:SetCooldown(GetTime(), duration);
+        icon.duration:SetCooldown(startTime, duration);
         if icon.cooldown then
             icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
         end
