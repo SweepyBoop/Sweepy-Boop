@@ -3,8 +3,6 @@ NS.addonTitle = GetAddOnMetadata(addonName, "Title");
 NS.exclamation = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
-local AC = LibStub("AceConfig-3.0")
-local ACD = LibStub("AceConfigDialog-3.0")
 
 local options = {
     name = NS.addonTitle,
@@ -192,8 +190,8 @@ local defaults = {
 function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
-    AC:RegisterOptionsTable(addonName, options);
-    self.optionsFrame = ACD:AddToBlizOptions(addonName, NS.addonTitle);
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
+    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, NS.addonTitle);
 
     -- Setup nameplate modules
     self:SetupNameplateModules();
