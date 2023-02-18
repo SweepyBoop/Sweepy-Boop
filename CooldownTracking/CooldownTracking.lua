@@ -414,12 +414,20 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
     -- Setup defensive group based on whether Gladius/sArena is loaded and user settings.
     setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    local offsetY;
+    if self.db.profile.arenaEnemyOffensivesEnabled then
+        -- Offensive icons enabled, show defensives below them
+        offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
+    else
+        -- Otherwise show at the center
+        offsetY = 0;
+    end
     for i = 1, NS.MAX_ARENA_SIZE do
         setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
             point = "LEFT",
             relativeTo = prefix .. i,
             relativePoint = "RIGHT",
-            offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
+            offsetY = offsetY;
         };
     end
 
