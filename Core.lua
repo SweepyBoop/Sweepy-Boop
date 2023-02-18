@@ -45,7 +45,7 @@ local options = {
 };
 
 options.args.NamePlates = {
-    order = 5,
+    order = 6,
     type = "group",
     name = "Nameplates",
     handler = SweepyBoop,
@@ -92,7 +92,7 @@ options.args.NamePlates = {
 };
 
 options.args.ArenaFrames = {
-    order = 6,
+    order = 7,
     type = "group",
     name = "Arena Frames",
     handler = SweepyBoop,
@@ -150,7 +150,7 @@ options.args.ArenaFrames = {
 };
 
 options.args.RaidFrame = {
-    order = 7,
+    order = 8,
     type = "group",
     name = "Raid Frames",
     handler = SweepyBoop,
