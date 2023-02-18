@@ -402,7 +402,7 @@ NS.spellData = {
         category = OFFENSIVE,
         class = NS.PRIEST,
         trackEvent = NS.SPELL_AURA_APPLIED,
-        duration = "dynamic",
+        duration = NS.DURATION_DYNAMIC,
     },
     -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
     -- Currently lacking the detection of early dismiss (if the priest right clicks the spirit buff)

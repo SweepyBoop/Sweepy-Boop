@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-NS.isTestMode = false;
+NS.isTestMode = true;
 
 NS.SPELLCATEGORY = {
     OFFENSIVE = 1,
@@ -11,6 +11,8 @@ NS.SPELLCATEGORY = {
     DISPEL = 5,
     DEFENSIVE = 6,
 };
+
+NS.DURATION_DYNAMIC = "dynamic";
 
 NS.SPECID = {
     ARCANE = 62,
