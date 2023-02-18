@@ -146,6 +146,7 @@ NS.cooldownSpells = {
         cooldown = 180,
         class = NS.PRIEST,
         category = SPELLCATEGORY.DEFENSIVE,
+        charges = true,
     },
     -- Guardian Spirit
     [47788] = {
