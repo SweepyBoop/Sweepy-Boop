@@ -72,9 +72,9 @@ NS.spellData = {
     [49206] = {
         class = NS.DEATHKNIGHT,
         category = OFFENSIVE,
-        cooldown = 180,
+        --cooldown = 180,
         duration = 25,
-        index = 1,
+        index = 2,
     },
     -- Unholy Assult
     [207289] = {
