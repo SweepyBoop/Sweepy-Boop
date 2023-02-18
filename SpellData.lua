@@ -391,6 +391,18 @@ NS.spellData = {
         trackEvent = NS.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
         duration = 20,
     },
+    -- Dark Ascension
+    [391109] = {
+        category = OFFENSIVE,
+        class = NS.PRIEST,
+        duration = 20,
+    },
+    -- Void Eruption
+    [228260] = {
+        category = OFFENSIVE,
+        class = NS.PRIEST,
+        duration = "dynamic",
+    },
     -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
     -- Currently lacking the detection of early dismiss (if the priest right clicks the spirit buff)
     [211319] = {
