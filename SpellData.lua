@@ -401,6 +401,7 @@ NS.spellData = {
     [194249] = {
         category = OFFENSIVE,
         class = NS.PRIEST,
+        trackEvent = NS.SPELL_AURA_APPLIED,
         duration = "dynamic",
     },
     -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
