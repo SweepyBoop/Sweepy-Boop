@@ -9,7 +9,7 @@
 	        <Anchor point="CENTER"/>
 	    </Anchors>
 	    <Animations>
-	        <AnimationGroup parentKey="newitemglowAnim" setToFinalAlpha="true">
+	        <AnimationGroup parentKey="activationGlowAnim" setToFinalAlpha="true">
 	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="1" fromAlpha="1" toAlpha="0.4"/>
 	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="2" fromAlpha="0.4" toAlpha="1"/>
 	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="3" fromAlpha="1" toAlpha="0"/>
