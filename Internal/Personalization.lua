@@ -1,7 +1,9 @@
 local _, NS = ...;
 
-SetCVar("cameraDistanceMaxZoomFactor", 2.6)
-SetCVar("weatherDensity", 0)
+SetCVar("cameraDistanceMaxZoomFactor", 2.6);
+SetCVar("weatherDensity", 0);
+-- Size of cursor: -1=determine based on system/monitor dpi (default), 0=32x32, 1=48x48, 2=64x64, 3=96x96, 4=128x128
+SetCVar("cursorSizePreferred", 1);
 
 -- Hide target & focus cast bars (duplicate info with sArena cast bars)
 TargetFrameSpellBar:UnregisterAllEvents()
