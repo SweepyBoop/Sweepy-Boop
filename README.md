@@ -6,6 +6,7 @@ Here is how my UI looks like:
 
 Type **/sb** in game to invoke the options panel.
 Most changes require a UI reload to take effect, and there is a Reload UI button below the settings for convinience.
+
 ![image](https://user-images.githubusercontent.com/78008331/219826235-9a9c1b72-5e5b-4108-9728-576e991f8789.png)
 
 #### Note
