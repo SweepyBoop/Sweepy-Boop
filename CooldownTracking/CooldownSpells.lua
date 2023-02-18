@@ -228,6 +228,7 @@ NS.cooldownSpells = {
     -- Defensive
     [61336] = {cooldown = {default = 180, [specID.GUARDIAN] = 120}, class = NS.DRUID, charges = {[specID.GUARDIAN] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
     [102342] = {cooldown = 90, class = NS.DRUID, opt_lower_cd = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
+    [740] = {cooldown = 180, class = NS.DRUID, opt_lower_cd = 120, category = SPELLCATEGORY.DEFENSIVE}, -- Tranquility
     -- Dispel
     [88423] = {cooldown = 8, class = NS.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = NS.SPELL_DISPEL}, -- Nature's Cure
 
