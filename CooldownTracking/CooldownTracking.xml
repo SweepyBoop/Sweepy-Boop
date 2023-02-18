@@ -24,14 +24,6 @@
 	            <Alpha childKey="flash" smoothing="OUT" duration="1" order="1" fromAlpha="1" toAlpha="0"/>
 	        </AnimationGroup>
 	    </Animations>
-	    <NormalTexture name="$parentNormalTexture" parentKey="NormalTexture">
-	        <Anchors>
-	            <Anchor point="TOPLEFT" x="-15" y="15"/>
-	            <Anchor point="BOTTOMRIGHT" x="15" y="-15"/>
-	        </Anchors>
-	    </NormalTexture>
-	    <HighlightTexture/>
-	    <PushedTexture/>
 	    <Layers>
 	        <Layer level="BACKGROUND">
 	            <Texture name="$parentIcon" parentKey="icon"/>
@@ -56,7 +48,7 @@
 	            </Texture>
 	        </Layer>
 	        <Layer level="BACKGROUND" textureSubLevel="-1">
-	            <Texture parentKey="TargetTexture" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
+	            <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
 	                <Anchors>
 	                    <Anchor point="CENTER"/>
 	                </Anchors>

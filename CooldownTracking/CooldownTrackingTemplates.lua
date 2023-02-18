@@ -23,9 +23,9 @@ end
 
 function CooldownTracking_UpdateBorder(icon)
     if UnitIsUnit(icon.unit, "target") then
-        icon.TargetTexture:SetAlpha(1);
+        icon.TargetHighlight:SetAlpha(1);
     else
-        icon.TargetTexture:SetAlpha(0);
+        icon.TargetHighlight:SetAlpha(0);
     end
 end
 
@@ -49,7 +49,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     end
 
     if hideHighlight then
-        frame.TargetTexture:Hide();
+        frame.TargetHighlight:Hide();
     end
     
     -- Fill in static info here
