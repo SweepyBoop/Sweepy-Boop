@@ -112,7 +112,6 @@ local function HideClassIcon(frame)
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
         nameplate.FriendlyClassIcon:Hide();
-        frame:Show();
     end
 end
 
@@ -159,7 +158,6 @@ local function ShowClassIcon(frame)
     end
 
     -- Hide healthBar and show class/pet icon instead
-    frame:Hide();
     icon:Show()
 end
 
@@ -167,9 +165,11 @@ local function UpdateClassIcon(frame)
     if ( not SweepyBoop.db.profile.classIconsEnabled ) then return end
 
     if ShouldMakeIcon(frame.unit) then
+        frame:Hide();
         ShowClassIcon(frame)
     else
         HideClassIcon(frame)
+        frame:Show();
     end
 end
 
