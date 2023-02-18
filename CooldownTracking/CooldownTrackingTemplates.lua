@@ -7,13 +7,13 @@ local GetSpellInfo = GetSpellInfo;
 local UnitIsUnit = UnitIsUnit;
 
 local function StartAnimation(icon)
-    icon.flashAnim:Play();
-	icon.newitemglowAnim:Play();
+    icon.flashAnimation:Play();
+	icon.activationGlowAnim:Play();
 end
 
 local function StopAnimation(icon)
-    if icon.flashAnim:IsPlaying() then icon.flashAnim:Stop() end
-	if icon.newitemglowAnim:IsPlaying() then icon.newitemglowAnim:Stop() end
+    if icon.flashAnimation:IsPlaying() then icon.flashAnimation:Stop() end
+	if icon.activationGlowAnim:IsPlaying() then icon.activationGlowAnim:Stop() end
 end
 
 local function OnCooldownTimerFinished(self)
