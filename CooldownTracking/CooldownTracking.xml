@@ -20,7 +20,7 @@
 	                </OnFinished>
 	            </Scripts>
 	        </AnimationGroup>
-	        <AnimationGroup parentKey="flashAnim" setToFinalAlpha="true">
+	        <AnimationGroup parentKey="flashAnimation" setToFinalAlpha="true">
 	            <Alpha childKey="flash" smoothing="OUT" duration="1" order="1" fromAlpha="1" toAlpha="0"/>
 	        </AnimationGroup>
 	    </Animations>
