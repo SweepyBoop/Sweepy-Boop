@@ -93,7 +93,7 @@ local function OnDurationTimerFinished(self)
     end
 end
 
-NS.CreateWeakAuraIcon = function (unit, spellID, size, group)
+NS.CreateSweepyIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide();
 
@@ -168,7 +168,7 @@ NS.CheckTimerToStart = function (timers)
     return index;
 end
 
-NS.StartWeakAuraIcon = function (icon)
+NS.StartSweepyIcon = function (icon)
     local spell = icon.info;
     local timers = icon.timers;
 
@@ -236,7 +236,7 @@ NS.StartWeakAuraIcon = function (icon)
     end
 end
 
-NS.RefreshWeakAuraDuration = function (icon)
+NS.RefreshSweepyDuration = function (icon)
     if ( not icon.duration ) then return end
 
     -- Get new duration
@@ -284,7 +284,7 @@ NS.ResetIconCooldown = function (icon, amount)
 end
 
 -- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
-NS.ResetWeakAuraDuration = function (icon)
+NS.ResetSweepyDuration = function (icon)
     if ( not icon.duration ) then return end
 
     icon.duration:SetCooldown(0, 0);

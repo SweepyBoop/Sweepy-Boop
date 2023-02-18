@@ -110,7 +110,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
         if summonSpellId and self.activeMap[summonSpellId] then
-            NS.ResetWeakAuraDuration(self.activeMap[summonSpellId]);
+            NS.ResetSweepyDuration(self.activeMap[summonSpellId]);
         end
         return;
     elseif ( subEvent == NS.SPELL_SUMMON ) and ( guid == sourceGUID ) then
@@ -121,7 +121,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
 
         -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
         if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) then
-            NS.StartWeakAuraIcon(self.icons[summonSpellId]);
+            NS.StartSweepyIcon(self.icons[summonSpellId]);
         end
         return;
     end
@@ -137,7 +137,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
     -- Check spell dismiss
     if ( subEvent == NS.SPELL_AURA_REMOVED ) then
         if self.activeMap[spellId] then
-            NS.ResetWeakAuraDuration(self.activeMap[spellId]);
+            NS.ResetSweepyDuration(self.activeMap[spellId]);
             return;
         end
     end
@@ -153,7 +153,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
 
     -- Find the icon to use
     if self.icons[spellId] then
-        NS.StartWeakAuraIcon(self.icons[spellId]);
+        NS.StartSweepyIcon(self.icons[spellId]);
     end
 end
 
@@ -166,7 +166,7 @@ local function ProcessUnitSpellCast(self, event, ...)
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= NS.UNIT_SPELLCAST_SUCCEEDED ) then return end
         if self.icons[spellID] then
-            NS.StartWeakAuraIcon(self.icons[spellID]);
+            NS.StartSweepyIcon(self.icons[spellID]);
         end
     end
 end
@@ -184,7 +184,7 @@ local function ProcessUnitAura(self, event, ...)
                 local spellID = spellInfo.spellId
                 local spell = spellData[spellID]
                 if ( not spell ) or ( not spell.extend ) or ( not self.activeMap[spellID] ) then return end
-                NS.RefreshWeakAuraDuration(self.activeMap[spellID]);
+                NS.RefreshSweepyDuration(self.activeMap[spellID]);
             end
         end
     end
@@ -208,14 +208,14 @@ function SweepyBoop:PremakeOffensiveIcons()
         local unitId = "player";
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, iconSize, true);
+            premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
         end
     else
         for i = 1, NS.MAX_ARENA_SIZE do
             local unitId = "arena"..i;
             premadeIcons[unitId] = {};
             for spellID, spell in pairs(spellData) do
-                premadeIcons[unitId][spellID] = NS.CreateWeakAuraIcon(unitId, spellID, iconSize, true);
+                premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
             end
         end
     end
