@@ -355,7 +355,7 @@ if ( class == "DRUID" ) then
         local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
         return percent;
     end
-    local protector = CreateStackBuffIcon(378987, 45, "RIGHT", _G["MultiBar5Button3"], "LEFT", -5, 0, 100, false, protectorFunc);
+    local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["MultiBar5Button5"], "TOP", 0, 5, 100, false, protectorFunc);
 
     local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBar6Button4"], "RIGHT", 5, 0, 3);
 
