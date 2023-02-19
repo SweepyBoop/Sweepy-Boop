@@ -22,14 +22,6 @@ local function ShouldClearAggro(event)
     return (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 end
 
-local function IsUnitArena(unitId)
-    if isTestMode then
-        return ( unitId == "player" )
-    else
-        return unitId and string.sub(unitId, 1, 5) == "arena";
-    end
-end
-
 -- Make sure to only pass "player", "arena".. 1~3
 local function GetArenaRole(unitId)
     if ( not arenaRoles[unitId] ) then
@@ -85,7 +77,7 @@ local function EventHandler(self, event, unitTarget)
                 frame.aggroHighlight:Hide()
             end
         end
-    elseif (event == "UNIT_TARGET") and IsUnitArena(unitTarget) then
+    elseif (event == "UNIT_TARGET") and unitTarget then
         -- Only enable highlight inside an arena
         if (not IsActiveBattlefieldArena()) and ( not isTestMode ) then return end
 
