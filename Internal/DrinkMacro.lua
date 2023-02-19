@@ -229,7 +229,7 @@ local function SetHealthStone()
     else
         -- No health stone, show tooltip of a class ability
         local class = select(2, UnitClass("player"));
-        healthStone = classSpell[class];
+        healthStone = classSpell[class] or "";
     end
 end
 
