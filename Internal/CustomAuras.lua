@@ -345,7 +345,7 @@ local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivatio
 
 if ( class == "DRUID" ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 50, 3);
-    local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5, 2, true);
+    local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 2, true);
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 5);
 
     local function protectorFunc(count, duration, expirationTime, value)
