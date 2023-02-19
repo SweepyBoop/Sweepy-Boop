@@ -215,6 +215,24 @@ local function SetBestDrink()
     end
 end
 
+local healthStone;
+
+local classSpell = {
+    [NS.DRUID] = "Renewal",
+    [NS.PRIEST] = "Desperate Prayer",
+};
+
+local function SetHealthStone()
+    local itemCount = GetItemCount(5512);
+    if itemCount > 0 then
+        healthStone = "Healthstone";
+    else
+        -- No health stone, show tooltip of a class ability
+        local class = select(2, UnitClass("player"));
+        healthStone = classSpell[class];
+    end
+end
+
 local function MakeDrinkMacro()
     local oldBest = bestDrink; -- Avoids unecessary edits
     SetBestDrink();
@@ -223,6 +241,16 @@ local function MakeDrinkMacro()
         CreateMacro("DrinkMacro", "INV_MISC_QUESTIONMARK", "#showtooltip\n/use "..bestDrink.."\n/cast !Prowl");
     elseif ( oldBest ~= bestDrink ) then
         EditMacro(iMacro, "DrinkMacro", "INV_MISC_QUESTIONMARK", "#showtooltip\n/use "..bestDrink.."\n/cast !Prowl");
+    end
+
+    -- Edit the Warlock Healthstone macro
+    local oldHealthStone = healthStone;
+    SetHealthStone();
+    local index = GetMacroIndexByName("CandyMacro");
+    if ( index == 0 ) and healthStone then
+        CreateMacro("CandyMacro", "INV_MISC_QUESTIONMARK", "#showtooltip " .. healthStone .. "\n/Use Healthstone");
+    elseif ( oldHealthStone ~= healthStone ) then
+        EditMacro(index, "CandyMacro", "INV_MISC_QUESTIONMARK", "#showtooltip " .. healthStone .. "\n/Use Healthstone");
     end
 end
 
