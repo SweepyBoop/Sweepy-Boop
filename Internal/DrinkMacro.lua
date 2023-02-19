@@ -248,9 +248,9 @@ local function MakeDrinkMacro()
     SetHealthStone();
     local index = GetMacroIndexByName("CandyMacro");
     if ( index == 0 ) and healthStone then
-        CreateMacro("CandyMacro", "INV_MISC_QUESTIONMARK", "#showtooltip " .. healthStone .. "\n/Use Healthstone");
+        CreateMacro("CandyMacro", "INV_MISC_QUESTIONMARK", "#showtooltip " .. healthStone .. "\n/use Healthstone");
     elseif ( oldHealthStone ~= healthStone ) then
-        EditMacro(index, "CandyMacro", "INV_MISC_QUESTIONMARK", "#showtooltip " .. healthStone .. "\n/Use Healthstone");
+        EditMacro(index, "CandyMacro", "INV_MISC_QUESTIONMARK", "#showtooltip " .. healthStone .. "\n/use Healthstone");
     end
 end
 
