@@ -39,6 +39,8 @@ local function HideHotKeys_HK_HideAll()
     HideHotKeys_HideBar("MultiBarBottomRight", "HotKey")
     HideHotKeys_HideBar("MultiBarRight", "HotKey")
     HideHotKeys_HideBar("MultiBarLeft", "HotKey")
+    HideHotKeys_HideBar("MultiBar5", "HotKey")
+    HideHotKeys_HideBar("MultiBar6", "HotKey")
 end
 
 local function HideHotKeys_HK_ShowAll()
@@ -49,6 +51,8 @@ local function HideHotKeys_HK_ShowAll()
     HideHotKeys_ShowBar("MultiBarBottomRight", "HotKey")
     HideHotKeys_ShowBar("MultiBarRight", "HotKey")
     HideHotKeys_ShowBar("MultiBarLeft", "HotKey")
+    HideHotKeys_ShowBar("MultiBar5", "HotKey")
+    HideHotKeys_ShowBar("MultiBar6", "HotKey")
 end
 
 local function HideHotKeys_MN_HideAll()
@@ -58,6 +62,8 @@ local function HideHotKeys_MN_HideAll()
     HideHotKeys_HideBar("MultiBarBottomRight", "Name")
     HideHotKeys_HideBar("MultiBarRight", "Name")
     HideHotKeys_HideBar("MultiBarLeft", "Name")
+    HideHotKeys_HideBar("MultiBar5", "Name")
+    HideHotKeys_HideBar("MultiBar6", "Name")
 end
 
 
@@ -69,6 +75,8 @@ local function HideHotKeys_MN_ShowAll()
     HideHotKeys_ShowBar("MultiBarBottomRight", "Name")
     HideHotKeys_ShowBar("MultiBarRight", "Name")
     HideHotKeys_ShowBar("MultiBarLeft", "Name")
+    HideHotKeys_ShowBar("MultiBar5", "Name")
+    HideHotKeys_ShowBar("MultiBar6", "Name")
 end
 
 local function ShowHotKeys()

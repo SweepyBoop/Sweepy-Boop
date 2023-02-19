@@ -344,9 +344,9 @@ local testGlowingBuffIcon = false;
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 if ( class == "DRUID" ) then
-    local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
+    local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5, 2, true);
-    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton2"], "TOP", 0, 50);
+    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 5);
 
     local function protectorFunc(count, duration, expirationTime, value)
         local currentValue = value or 0;
@@ -355,9 +355,9 @@ if ( class == "DRUID" ) then
         local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
         return percent;
     end
-    local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 5, 100, false, protectorFunc);
+    local protector = CreateStackBuffIcon(378987, 45, "RIGHT", _G["MultiBar5Button3"], "LEFT", -5, 0, 100, false, protectorFunc);
 
-    local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarBottomLeftButton12"], "RIGHT", 5, 0, 3);
+    local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBar6Button4"], "RIGHT", 5, 0, 3);
 
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
