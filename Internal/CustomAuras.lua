@@ -19,7 +19,7 @@ local UnitGUID = UnitGUID;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 
-findSpellId.spellName = "Voidform";
+findSpellId.spellName = "Harsh Discipline";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
@@ -343,7 +343,7 @@ local testGlowingBuffIcon = false;
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-if ( class == "DRUID" ) then
+if ( class == NS.DRUID ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 2, true);
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 5);
@@ -362,4 +362,6 @@ if ( class == "DRUID" ) then
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
     end
+elseif ( class == NS.PRIEST ) then
+    local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["ActionButton11"], "TOP", 0, 5, 4);
 end
