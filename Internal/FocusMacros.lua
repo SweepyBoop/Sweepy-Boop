@@ -14,7 +14,7 @@ local C_Timer = C_Timer;
 local classAbilities = {}
 local macroPrefixes = {}
 
-classAbilities["DRUID"] = {
+classAbilities[NS.DRUID] = {
     "Cyclone",
     "Entangling Roots",
     "Hibernate",
@@ -25,9 +25,16 @@ classAbilities["DRUID"] = {
     "Rake",
     "Skull Bash",
     "Wild Charge",
-}
-macroPrefixes["Rake"] = "#showtooltip no\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @"
-macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@"
+};
+macroPrefixes["Rake"] = "#showtooltip no\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
+macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@";
+
+classAbilities[NS.PRIEST] = {
+    "Shadow Word: Pain",
+    "Mind Control",
+    "Mindgames",
+    "Dispel Magic",
+};
 
 local function GetFocusName()
     local isArena = IsActiveBattlefieldArena()
