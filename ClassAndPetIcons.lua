@@ -18,6 +18,9 @@ local hooksecurefunc = hooksecurefunc;
 -- To find the NpcID of a unit, target it and type:
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 local NameplateWhiteList = {
+    -- DK
+    [106041] = true, -- Reanimation
+
     -- Priest
     [101398] = true, -- Psyfiend
 
