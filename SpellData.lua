@@ -1,35 +1,6 @@
 local _, NS = ...;
 
-local UnitAura = UnitAura;
-local strsplit = strsplit;
 local POWERTYPE = Enum.PowerType;
-
-NS.Util_GetUnitAura = function(unit, spell, filter)
-    if filter and not filter:upper():find("FUL") then
-        filter = filter.."|HELPFUL"
-    end
-    for i = 1, 255 do
-      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
-      if not name then return end
-      if spell == spellId or spell == name then
-        return UnitAura(unit, i, filter)
-      end
-    end
-end
-
-NS.Util_GetUnitBuff = function(unit, spell, filter)
-    filter = filter and filter.."|HELPFUL" or "HELPFUL"
-    return NS.Util_GetUnitAura(unit, spell, filter)
-end
-
-NS.GetNpcIdFromGuid = function (guid)
-    local NpcId = select ( 6, strsplit ( "-", guid ) )
-    if (NpcId) then
-        return tonumber ( NpcId )
-    end
-
-    return 0
-end
 
 -- trackEvent: event or combat log subEvent to track
 -- trackDest: track destGUID instead of sourceGUID, otherwise we assume destGUID == sourceGUID (this cannot be set to spells that can only self cast)
@@ -42,12 +13,6 @@ local specID = NS.SPECID
 -- opt_charges: optionally 2 charges
 -- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
 
--- TODO: implement spec override, e.g., make outlaw rogue 90s blind baseline
-
--- Offensive spells are further divided to 3 sub categories:
--- OFFENSIVE: glow when it's active, show cooldown timer otherwise
--- OFFENSIVE_DURATION: glow when it's active
--- OFFENSIVE: show cooldown timer
 NS.spellData = {
     -- General
     -- Offensive

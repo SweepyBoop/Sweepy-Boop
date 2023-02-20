@@ -24,7 +24,6 @@ IconTemplates.lua
 ArenaEnemyBurst.lua
 ClassAndPetIcons.lua
 FixBlizzardRaidAggro.lua
-Release.lua
 
 # Simple Cooldown Tracking
 CooldownTracking\CooldownTracking.xml
