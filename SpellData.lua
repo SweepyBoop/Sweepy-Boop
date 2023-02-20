@@ -39,7 +39,7 @@ NS.spellData = {
         category = OFFENSIVE,
         cooldown = 180,
         duration = 25,
-        index = 2,
+        index = 1,
     },
     -- Unholy Assult
     [207289] = {
