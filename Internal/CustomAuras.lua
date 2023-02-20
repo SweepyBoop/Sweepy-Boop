@@ -209,8 +209,10 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
 
     frame.text = frame:CreateFontString(nil, "ARTWORK");
     -- https://wow.tools/files/#search=fonts&page=1&sort=0&desc=asc
-    frame.text:SetFont("Fonts\\2002.ttf", size / 1.5, "OUTLINE");
+    frame.text:SetFont("Fonts\\2002.ttf", size / 2, "OUTLINE");
     frame.text:SetPoint("CENTER", 0, 0);
+    frame.text:SetText("");
+    frame.text:SetTextColor(1, 1, 0); -- Yellow
 
     frame.texture = frame:CreateTexture();
     local icon = select(3, GetSpellInfo(spellID));
