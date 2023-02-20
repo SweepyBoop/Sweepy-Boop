@@ -42,12 +42,6 @@ local specID = NS.SPECID
 -- opt_charges: optionally 2 charges
 -- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
 
--- TODO: implement spec override, e.g., make outlaw rogue 90s blind baseline
-
--- Offensive spells are further divided to 3 sub categories:
--- OFFENSIVE: glow when it's active, show cooldown timer otherwise
--- OFFENSIVE_DURATION: glow when it's active
--- OFFENSIVE: show cooldown timer
 NS.spellData = {
     -- General
     -- Offensive
