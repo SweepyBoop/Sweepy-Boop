@@ -344,9 +344,9 @@ local testGlowingBuffIcon = false;
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 if ( class == NS.DRUID ) then
-    local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 50, 3);
-    local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 2, true);
-    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBar5Button6"], "TOP", 0, 5);
+    local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["ActionButton10"], "TOP", 0, 50, 3);
+    local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomLeftButton10"], "TOP", 0, 5, 2, true);
+    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["ActionButton10"], "TOP", 0, 5);
 
     local function protectorFunc(count, duration, expirationTime, value)
         local currentValue = value or 0;
@@ -355,13 +355,13 @@ if ( class == NS.DRUID ) then
         local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
         return percent;
     end
-    local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["MultiBar5Button5"], "TOP", 0, 5, 100, false, protectorFunc);
+    local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton9"], "TOP", 0, 5, 100, false, protectorFunc);
 
-    local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBar6Button4"], "RIGHT", 5, 0, 3);
+    local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarRightButton8"], "RIGHT", 5, 0, 3);
 
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
     end
 elseif ( class == NS.PRIEST ) then
-    local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["ActionButton11"], "TOP", 0, 5, 4);
+    local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 4);
 end
