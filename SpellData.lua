@@ -24,7 +24,7 @@ NS.spellData = {
         category = OFFENSIVE,
         cooldown = 120,
         duration = 12,
-        index = 1,
+        index = 2,
     },
     -- Empower Rune Weapon
     [47568] = {
@@ -39,13 +39,19 @@ NS.spellData = {
         category = OFFENSIVE,
         cooldown = 180,
         duration = 25,
-        index = 2,
+        index = 1,
     },
     -- Unholy Assult
     [207289] = {
         class = NS.DEATHKNIGHT,
         category = OFFENSIVE,
         duration = 20,
+    },
+    -- Raise Abomination
+    [288853] = {
+        class = NS.DEATHKNIGHT,
+        category = OFFENSIVE,
+        duration = 25,
     },
     -- Apocalypse
     [275699] = {
@@ -309,7 +315,7 @@ NS.spellData = {
         category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
-        index = 1,
+        index = 2,
     },
     -- Seraphim
     [152262] = {
@@ -398,8 +404,6 @@ NS.spellData = {
         class = NS.ROGUE,
         category = OFFENSIVE,
         duration = 10,
-        cooldown = 90,
-        index = 2,
     },
     -- Death Mark
     [360194] = {
@@ -430,6 +434,22 @@ NS.spellData = {
         category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
     },
+    -- Cold Blood
+    [382245] = {
+        class = NS.ROGUE,
+        category = OFFENSIVE,
+        cooldown = 45,
+        spec = {specID.SUBTLETY},
+        index = 2,
+        trackEvent = NS.SPELL_AURA_REMOVED,
+    },
+    -- Shadow Dance
+    [185313] = {
+        class = NS.ROGUE,
+        category = OFFENSIVE,
+        duration = 8,
+        spec = {specID.SUBTLETY},
+    },
 
     -- Shaman
     -- Offensive
@@ -444,8 +464,28 @@ NS.spellData = {
         class = NS.SHAMAN,
         category = OFFENSIVE,
         duration = 8,
-        cooldown = 60,
+        cooldown = 90,
         index = 2,
+    },
+    -- Feral Spirit
+    [51533] = {
+        class = NS.SHAMAN,
+        category = OFFENSIVE,
+        duration = 15,
+    },
+    -- Bloodlust (Shamanism)
+    [204361] = {
+        category = OFFENSIVE,
+        duration = 10,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackDest = true,
+    },
+    -- Heroism (Shamanism)
+    [204362] = {
+        category = OFFENSIVE,
+        duration = 10,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackDest = true,
     },
     -- Stormkeeper
     [191634] = {
