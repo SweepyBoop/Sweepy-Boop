@@ -1,5 +1,9 @@
 local _, NS = ...;
-local CreateFrame, UIParent, C_LossOfControl = CreateFrame, UIParent, C_LossOfControl;
+local CreateFrame = CreateFrame;
+local UIParent = UIParent;
+local C_LossOfControl = C_LossOfControl;
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
+local SendChatMessage = SendChatMessage;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent)
 containerFrame:SetSize(30, 30)
@@ -40,5 +44,20 @@ function containerFrame:OnEvent(self, event, ...)
     end
 
     containerFrame:Show()
+
+    -- Send notification to group
+    if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) then
+        local sendMsg;
+        if ( locType == "SCHOOL_INTERRUPT" ) then
+            -- Only announce for 6s interrupt
+            sendMsg = locData.duration and ( locData.duration > 5 );
+        elseif ( locType ~= "ROOT" ) and ( locType ~= "DISARM" ) then
+            sendMsg = locData.duration and ( locData.duration > 3.5 );
+        end
+
+        if sendMsg then
+            pcall(function() SendChatMessage("Healer in CC. Use defensives if you need to!", "YELL") end)
+        end
+    end
 end
 containerFrame:SetScript("OnEvent", containerFrame.OnEvent)
