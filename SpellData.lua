@@ -24,7 +24,7 @@ NS.spellData = {
         category = OFFENSIVE,
         cooldown = 120,
         duration = 12,
-        index = 1,
+        index = 2,
     },
     -- Empower Rune Weapon
     [47568] = {
