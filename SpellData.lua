@@ -404,8 +404,6 @@ NS.spellData = {
         class = NS.ROGUE,
         category = OFFENSIVE,
         duration = 10,
-        cooldown = 90,
-        index = 2,
     },
     -- Death Mark
     [360194] = {
