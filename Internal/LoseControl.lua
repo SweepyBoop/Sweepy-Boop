@@ -53,7 +53,7 @@ function containerFrame:OnEvent(event, ...)
             sendMsg = locData.duration and ( locData.duration > 5 );
         elseif ( locType ~= "ROOT" ) and ( locType ~= "DISARM" ) then
             -- Announce CCs longer than 4s (* 0.85 trinket bonus = 3.4s)
-            sendMsg = locData.duration and ( locData.duration > 3.25 );
+            sendMsg = locData.duration and ( locData.duration > 3.3 );
         end
 
         if sendMsg then
