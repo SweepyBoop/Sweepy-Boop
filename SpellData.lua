@@ -434,6 +434,22 @@ NS.spellData = {
         category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
     },
+    -- Cold Blood
+    [382245] = {
+        class = NS.ROGUE,
+        category = OFFENSIVE,
+        cooldown = 45,
+        spec = {specID.SUBTLETY},
+        index = 2,
+        trackEvent = NS.SPELL_AURA_REMOVED,
+    },
+    -- Shadow Dance
+    [185313] = {
+        class = NS.ROGUE,
+        category = OFFENSIVE,
+        duration = 8,
+        spec = {specID.SUBTLETY},
+    },
 
     -- Shaman
     -- Offensive
