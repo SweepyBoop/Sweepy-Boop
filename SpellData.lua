@@ -473,6 +473,13 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 15,
     },
+    -- Bloodlust (Shamanism)
+    [204361] = {
+        category = OFFENSIVE,
+        duration = 10,
+        trackEvent = NS.SPELL_AURA_APPLIED,
+        trackDest = true,
+    },
     -- Stormkeeper
     [191634] = {
         class = NS.SHAMAN,

@@ -19,7 +19,7 @@ local UnitGUID = UnitGUID;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 
-findSpellId.spellName = "Harsh Discipline";
+findSpellId.spellName = "Bloodlust";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
