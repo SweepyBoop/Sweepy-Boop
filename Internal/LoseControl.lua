@@ -2,7 +2,7 @@ local _, NS = ...;
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local C_LossOfControl = C_LossOfControl;
-local IsInInstance = IsInInstance;
+local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
 local SendChatMessage = SendChatMessage;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent)
@@ -46,7 +46,7 @@ function containerFrame:OnEvent(self, event, ...)
     containerFrame:Show()
 
     -- Send notification to group
-    if IsInInstance() and ( event == NS.LOSS_OF_CONTROL_ADDED ) then
+    if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) then
         local sendMsg;
         if ( locType == "SCHOOL_INTERRUPT" ) then
             -- Only announce for 6s interrupt
