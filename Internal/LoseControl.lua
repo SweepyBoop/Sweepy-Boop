@@ -56,7 +56,7 @@ function containerFrame:OnEvent(event, ...)
         end
 
         if sendMsg then
-            pcall(function() SendChatMessage("Healer in CC. Use defensives if you need to!", "YELL") end)
+            pcall(function() SendChatMessage("Healer in CC. Use defensives if you need to!!!", "YELL") end)
         end
     end
 end
