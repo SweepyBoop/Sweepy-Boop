@@ -464,7 +464,7 @@ NS.spellData = {
         class = NS.SHAMAN,
         category = OFFENSIVE,
         duration = 8,
-        cooldown = 60,
+        cooldown = 90,
         index = 2,
     },
     -- Stormkeeper
