@@ -22,7 +22,7 @@ containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_ADDED)
 containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_UPDATE)
 containerFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
 
-function containerFrame:OnEvent(self, event, ...)
+function containerFrame:OnEvent(event, ...)
     local locData = C_LossOfControl.GetActiveLossOfControlData(1)
 
     if ( not locData ) or ( not locData.displayText ) or ( locData.displayType == 0 ) then
