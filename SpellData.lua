@@ -467,6 +467,12 @@ NS.spellData = {
         cooldown = 90,
         index = 2,
     },
+    -- Feral Spirit
+    [51533] = {
+        class = NS.SHAMAN,
+        category = OFFENSIVE,
+        duration = 15,
+    },
     -- Stormkeeper
     [191634] = {
         class = NS.SHAMAN,
