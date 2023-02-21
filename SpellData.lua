@@ -47,6 +47,12 @@ NS.spellData = {
         category = OFFENSIVE,
         duration = 20,
     },
+    -- Raise Abomination
+    [288853] = {
+        class = NS.DEATHKNIGHT,
+        category = OFFENSIVE,
+        duration = 25,
+    },
     -- Apocalypse
     [275699] = {
         class = NS.DEATHKNIGHT,
