@@ -315,7 +315,7 @@ NS.spellData = {
         category = OFFENSIVE,
         trackEvent = NS.SPELL_AURA_APPLIED,
         trackDest = true,
-        index = 1,
+        index = 2,
     },
     -- Seraphim
     [152262] = {
