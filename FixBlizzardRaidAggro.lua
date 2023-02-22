@@ -47,6 +47,10 @@ refreshFrame:SetScript("OnEvent", function ()
 end)
 
 local function ShouldShowAggro(unit)
+    if ( not unit ) then
+        return false;
+    end
+
     local arena = IsActiveBattlefieldArena();
     if ( not arena ) and ( not isTestMode ) then
         return false;
