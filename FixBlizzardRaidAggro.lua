@@ -68,11 +68,15 @@ end
 function SweepyBoop:SetupRaidFrameAggroHighlight()
     if self.db.profile.raidFrameAggroHighlightEnabled then
         hooksecurefunc("CompactUnitFrame_UpdateName", function (frame)
-            if frame:IsForbidden() then
+            if ( not frame ) or frame:IsForbidden() then
                 return;
             end
 
             if ( frame:GetParent() ~= CompactPartyFrame ) then
+                return;
+            end
+
+            if frame.optionTable.displayAggroHighlight then
                 return;
             end
 
