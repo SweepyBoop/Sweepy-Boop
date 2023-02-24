@@ -121,14 +121,25 @@ options.args.ArenaFrames = {
             type = "description",
             name = "   • For sArena, /sarena test",
         },
-        breaker = {
+        breaker1 = {
             order = 5,
+            type = "header",
+            name = "",
+        },
+        description4 = {
+            order = 6,
+            width = "full",
+            type = "description",
+            name = NS.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
+        },
+        breaker2 = {
+            order = 7,
             type = "header",
             name = "",
         },
 
         arenaEnemyOffensives = {
-            order = 6,
+            order = 8,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
@@ -137,7 +148,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensivesEnabled",
         },
         arenaEnemyOffensiveIconSizeSlider = {
-            order = 7,
+            order = 9,
             type = "range",
             min = 16,
             max = 64,
@@ -147,7 +158,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensiveIconSize",
         },
         arenaEnemyDefensives = {
-            order = 8,
+            order = 10,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
@@ -156,7 +167,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensivesEnabled",
         },
         arenaEnemyDefensiveIconSizeSlider = {
-            order = 9,
+            order = 11,
             type = "range",
             min = 16,
             max = 64,
@@ -166,7 +177,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensiveIconSize",
         },
         arenaCooldownOffsetXSlider = {
-            order = 10,
+            order = 12,
             type = "range",
             width = 1.5,
             min = 0,
