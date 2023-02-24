@@ -365,7 +365,7 @@ function SweepyBoop:PopulateOffensiveIcons()
     refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
     refreshFrame:SetScript("OnEvent", function (frame, event, ...)
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
-            -- Internal test mode is disabled, but the player might have pressed "Toggle Test Mode"
+            -- Hide the external "Toggle Test Mode" group
             self:HideTestArenaEnemyBurst();
 
             if test then
