@@ -219,6 +219,14 @@ function SweepyBoop:PremakeOffensiveIcons()
     end
 end
 
+local function RefreshTestIcons()
+    local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
+    local playerUnitId = "player";
+    premadeIcons[playerUnitId] = {};
+    for spellID, spell in pairs(spellData) do
+        premadeIcons[playerUnitId][spellID] = NS.CreateSweepyIcon(playerUnitId, spellID, iconSize, true);
+    end
+end
 
 NS.GetUnitSpec = function(unit)
     if ( unit == "player" ) then
@@ -360,28 +368,28 @@ function SweepyBoop:PopulateOffensiveIcons()
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
-    local shouldShow = ( not testGroup ) or ( not testGroup:IsShown() );
+    local shoudShow = ( not testGroup ) or ( not testGroup:IsShown() );
 
-    if ( not testGroup ) then
-        local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
-        local setPointOptions = {
-            point = "LEFT",
-            relativeTo = relativeTo,
-            relativePoint = "RIGHT",
-            offsetY = 0,
-        };
+    NS.IconGroup_Wipe(testGroup);
+    RefreshTestIcons();
 
-        local unitId = "player";
-        testGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
-        SetupAuraGroup(testGroup, unitId);
-    end
+    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = relativeTo,
+        relativePoint = "RIGHT",
+        offsetY = 0,
+    };
 
-    if shouldShow then
+    local unitId = "player";
+    testGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
+    SetupAuraGroup(testGroup, unitId);
+
+    if shoudShow then
         testGroup:Show();
     else
         testGroup:Hide();
     end
-
 
     local event = NS.COMBAT_LOG_EVENT_UNFILTERED;
     local subEvent = NS.SPELL_AURA_APPLIED;
