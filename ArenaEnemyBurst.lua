@@ -125,7 +125,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
         end
         return;
     end
-        
+
     -- Validate spell
     if ( not spellData[spellId] ) then return end
     local spell = spellData[spellId];
@@ -270,7 +270,7 @@ local function SetupAuraGroup(group, unit)
                         end
                     end
                 end
-                
+
                 enabled = specEnabled;
             end
 
@@ -331,6 +331,9 @@ function SweepyBoop:PopulateOffensiveIcons()
             if test then
                 SetupAuraGroup(testGroup, "player");
             elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
+                -- Internal test mode is disabled, but the player might have pressed "Toggle Test Mode"
+                testGroup = nil;
+
                 for i = 1, NS.MAX_ARENA_SIZE do
                     SetupAuraGroup(arenaGroup[i], "arena"..i);
                 end
@@ -357,6 +360,8 @@ function SweepyBoop:PopulateOffensiveIcons()
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
+    local shouldShow = ( not testGroup ) or ( not testGroup:IsShown() );
+
     if ( not testGroup ) then
         local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
         local setPointOptions = {
@@ -370,6 +375,13 @@ function SweepyBoop:TestArenaEnemyBurst()
         testGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
         SetupAuraGroup(testGroup, unitId);
     end
+
+    if shouldShow then
+        testGroup:Show();
+    else
+        testGroup:Hide();
+    end
+
 
     local event = NS.COMBAT_LOG_EVENT_UNFILTERED;
     local subEvent = NS.SPELL_AURA_APPLIED;
