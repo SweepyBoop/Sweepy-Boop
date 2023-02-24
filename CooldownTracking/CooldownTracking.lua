@@ -179,9 +179,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     
     -- Find the icon to use
     local iconId = unitId .. "-" .. spellId;
-     -- Passed, couldn't find icon
-    -- Did we not successfully add the icon to group.icons[unitId-spellId]?
-    --print("SubEvent validated, trying to find icon", iconId, self.icons[iconId]);
     if self.icons[iconId] then
         NS.StartCooldownTrackingIcon(self.icons[iconId]);
     end
@@ -293,16 +290,14 @@ local function SetupIconGroupForUnit(group, category, unit, testIcons)
                 enabled = specEnabled;
             end
 
-            if enabled then
-                if testIcons then
-                    testIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
-                    NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
-                else
-                    -- Dynamic info for current icon
-                    premadeIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
-                    NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
-                    --print("Populated", unit, spell.class, spellID);
-                end
+            if testIcons then -- For external "Toggle Test Mode" group, no need to filter by class / spec
+                testIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
+                NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
+            elseif enabled then
+                -- Dynamic info for current icon
+                premadeIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
+                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
+                --print("Populated", unit, spell.class, spellID);
             end
         end
     end
