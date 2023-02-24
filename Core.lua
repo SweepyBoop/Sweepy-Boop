@@ -101,7 +101,7 @@ options.args.ArenaFrames = {
             order = 1,
             type = "execute",
             name = "Toggle Test Mode",
-            func = ReloadUI,
+            func = "TestArena",
         },
         description1 = {
             order = 2,
@@ -236,6 +236,10 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAggroHighlight();
 
     self:RegisterChatCommand("sb", "SlashCommand");
+end
+
+function SweepyBoop:TestArena()
+    ReloadUI();
 end
 
 function SweepyBoop:SlashCommand(msg)
