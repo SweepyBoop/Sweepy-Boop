@@ -342,7 +342,7 @@ function SweepyBoop:PopulateOffensiveIcons()
                 SetupAuraGroup(testGroup, "player");
             elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
                 -- Internal test mode is disabled, but the player might have pressed "Toggle Test Mode"
-                testGroup = nil;
+                NS.IconGroup_Wipe(testGroup);
 
                 for i = 1, NS.MAX_ARENA_SIZE do
                     SetupAuraGroup(arenaGroup[i], "arena"..i);
