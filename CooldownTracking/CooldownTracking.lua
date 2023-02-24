@@ -252,6 +252,16 @@ end
 -- If unit is not specified, track all 3 arena opponents
 -- TODO: apply spec override when populating for a group (since we already know the spec here)
 local function SetupIconGroupForUnit(group, category, unit, testIcons)
+    -- For external "Toggle Test Mode" icons, no filtering is needed
+    if testIcons then
+        for spellID, spell in pairs(cooldowns) do
+            testIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
+            NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
+        end
+
+        return;
+    end
+
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
     if ( unit == "player" ) then
@@ -290,10 +300,7 @@ local function SetupIconGroupForUnit(group, category, unit, testIcons)
                 enabled = specEnabled;
             end
 
-            if testIcons then -- For external "Toggle Test Mode" group, no need to filter by class / spec
-                testIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
-                NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
-            elseif enabled then
+            if enabled then
                 -- Dynamic info for current icon
                 premadeIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
