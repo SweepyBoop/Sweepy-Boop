@@ -233,7 +233,18 @@ function SweepyBoop:PremakeCooldownTrackingIcons()
 end
 
 local function RefreshTestIcons()
-    
+    if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then return end
+
+    local defensiveIconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
+    local unitId = "player";
+    premadeIcons[unitId] = {};
+    for spellID, spell in pairs(cooldowns) do
+        local size, hideHighlight;
+        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+            size, hideHighlight = defensiveIconSize, true;
+        end
+        premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+    end
 end
 
 local function GetSpecOverrides(spell, spec)

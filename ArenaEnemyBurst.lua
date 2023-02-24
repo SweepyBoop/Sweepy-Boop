@@ -370,6 +370,8 @@ function SweepyBoop:PopulateOffensiveIcons()
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
+    if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then return end
+
     local shoudShow = ( not testGroup ) or ( not testGroup:IsShown() );
 
     NS.IconGroup_Wipe(testGroup);
