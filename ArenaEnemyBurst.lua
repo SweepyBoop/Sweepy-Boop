@@ -306,7 +306,7 @@ local function RefreshTestMode()
     local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
     local unitId = "player";
     if externalTestIcons[unitId] then
-        local scale = iconSize / 32;
+        local scale = iconSize / NS.DEFAULT_ICON_SIZE;
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
         end

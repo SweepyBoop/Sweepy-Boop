@@ -81,3 +81,5 @@ NS.WARRIOR = "WARRIOR";
 
 -- For hiding timer by OmniCC
 NS.HIDETIMEROMNICC = "BoopHideTimer";
+
+NS.DEFAULT_ICON_SIZE = 32;
