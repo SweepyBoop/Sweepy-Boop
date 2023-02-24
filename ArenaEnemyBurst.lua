@@ -221,15 +221,6 @@ function SweepyBoop:PremakeOffensiveIcons()
     end
 end
 
-local function RefreshTestIcons()
-    local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
-    local playerUnitId = "player";
-    premadeIcons[playerUnitId] = {};
-    for spellID, spell in pairs(spellData) do
-        premadeIcons[playerUnitId][spellID] = NS.CreateSweepyIcon(playerUnitId, spellID, iconSize, true);
-    end
-end
-
 NS.GetUnitSpec = function(unit)
     if ( unit == "player" ) then
         local currentSpec = GetSpecialization();
@@ -242,7 +233,7 @@ NS.GetUnitSpec = function(unit)
     end
 end
 
-local function SetupAuraGroup(group, unit)
+local function SetupAuraGroup(group, unit, testIcons)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
 
@@ -285,7 +276,11 @@ local function SetupAuraGroup(group, unit)
             end
 
             if enabled then
-                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                if testIcons then
+                    NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+                else
+                    NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                end
                 --print("Populated", unit, spell.class, spellID)
             end
         end
@@ -301,6 +296,31 @@ local growOptions = {
     anchor = "LEFT",
     margin = 3,
 };
+
+local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
+local externalTestGroup; -- Icon group for "Toggle Test Mode"
+
+local function RefreshTestMode()
+    NS.IconGroup_Wipe(externalTestGroup);
+
+    local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
+    local unitId = "player";
+    externalTestIcons[unitId] = {};
+    for spellID, spell in pairs(spellData) do
+        externalTestIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+    end
+
+    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = relativeTo,
+        relativePoint = "RIGHT",
+        offsetY = 0,
+    };
+
+    externalTestGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
+    SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
+end
 
 function SweepyBoop:PopulateOffensiveIcons()
     if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
@@ -372,27 +392,14 @@ end
 function SweepyBoop:TestArenaEnemyBurst()
     if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then return end
 
-    local shoudShow = ( not testGroup ) or ( not testGroup:IsShown() );
+    local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
 
-    NS.IconGroup_Wipe(testGroup);
-    RefreshTestIcons();
-
-    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
-    local setPointOptions = {
-        point = "LEFT",
-        relativeTo = relativeTo,
-        relativePoint = "RIGHT",
-        offsetY = 0,
-    };
-
-    local unitId = "player";
-    testGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
-    SetupAuraGroup(testGroup, unitId);
+    RefreshTestMode();
 
     if shoudShow then
-        testGroup:Show();
+        externalTestGroup:Show();
     else
-        testGroup:Hide();
+        externalTestGroup:Hide();
     end
 
     local event = NS.COMBAT_LOG_EVENT_UNFILTERED;
@@ -400,8 +407,8 @@ function SweepyBoop:TestArenaEnemyBurst()
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
-    ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
 
     spellId = 208963; -- Skyfury
-    ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
 end

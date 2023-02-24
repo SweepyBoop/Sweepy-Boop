@@ -510,5 +510,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
 end
 
 function SweepyBoop:TestCooldownTracking()
-    print("TestCooldownTracking");
+    if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then return end
+
+    RefreshTestIcons();
 end
