@@ -239,6 +239,11 @@ function SweepyBoop:OnInitialize()
 end
 
 function SweepyBoop:TestArena()
+    if IsInInstance() then
+        print("Test mode can only be used outside instances");
+        return;
+    end
+
     self:TestArenaEnemyBurst();
     self:TestCooldownTracking();
 end
