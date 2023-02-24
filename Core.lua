@@ -121,25 +121,20 @@ options.args.ArenaFrames = {
             type = "description",
             name = "   • For sArena, /sarena test",
         },
-        breaker1 = {
-            order = 5,
-            type = "header",
-            name = "",
-        },
         description4 = {
-            order = 6,
+            order = 5,
             width = "full",
             type = "description",
             name = NS.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
         },
-        breaker2 = {
-            order = 7,
+        breaker1 = {
+            order = 6,
             type = "header",
             name = "",
         },
 
         arenaEnemyOffensives = {
-            order = 8,
+            order = 7,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
@@ -148,7 +143,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensivesEnabled",
         },
         arenaEnemyOffensiveIconSizeSlider = {
-            order = 9,
+            order = 8,
             type = "range",
             min = 16,
             max = 64,
@@ -158,7 +153,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensiveIconSize",
         },
         arenaEnemyDefensives = {
-            order = 10,
+            order = 9,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
@@ -167,7 +162,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensivesEnabled",
         },
         arenaEnemyDefensiveIconSizeSlider = {
-            order = 11,
+            order = 10,
             type = "range",
             min = 16,
             max = 64,
@@ -177,7 +172,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensiveIconSize",
         },
         arenaCooldownOffsetXSlider = {
-            order = 12,
+            order = 11,
             type = "range",
             width = 1.5,
             min = 0,
@@ -233,6 +228,9 @@ function SweepyBoop:OnInitialize()
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, NS.addonTitle);
+
+    -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
+    self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
 
     -- Setup nameplate modules
     self:SetupNameplateModules();
@@ -352,4 +350,9 @@ end
 
 function SweepyBoop:SetArenaEnemyDefensiveIconSize(info, value)
     self.db.profile.arenaEnemyDefensiveIconSize = value;
+end
+
+function SweepyBoop:RefreshConfig()
+    self:HideTestArenaEnemyBurst();
+    self:HideTestCooldownTracking();
 end
