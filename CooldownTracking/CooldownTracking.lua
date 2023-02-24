@@ -540,7 +540,11 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
 end
 
 function SweepyBoop:TestCooldownTracking()
-    if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then return end
+    if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then
+        -- Module disabled, simply hide test icons
+        NS.IconGroup_Wipe(externalTestGroup);
+        return;
+    end
 
     local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
 
