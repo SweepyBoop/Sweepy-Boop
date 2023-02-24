@@ -421,7 +421,8 @@ function SweepyBoop:TestArenaEnemyBurst()
     local spellId = 10060; -- Power Infusion
     ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
 
-    spellId = 208963; -- Skyfury
+    spellId = 190319; -- Combustion
+    subEvent = NS.SPELL_CAST_SUCCESS;
     ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
 
     if shoudShow then
