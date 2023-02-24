@@ -511,7 +511,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
     refreshFrame:SetScript("OnEvent", function (frame, event, ...)
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
             -- Hide the external "Toggle Test Mode" group
-            NS.IconGroup_Wipe(externalTestGroup);
+            self:HideTestCooldownTracking();
 
             RefreshGroups();
         elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
