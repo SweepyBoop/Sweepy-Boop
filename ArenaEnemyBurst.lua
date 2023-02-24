@@ -305,9 +305,16 @@ local function RefreshTestMode()
 
     local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
     local unitId = "player";
-    externalTestIcons[unitId] = {};
-    for spellID, spell in pairs(spellData) do
-        externalTestIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+    if externalTestIcons[unitId] then
+        local scale = iconSize / 32;
+        for _, icon in pairs(externalTestIcons[unitId]) do
+            icon:SetScale(scale);
+        end
+    else
+        externalTestIcons[unitId] = {};
+        for spellID, spell in pairs(spellData) do
+            externalTestIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+        end
     end
 
     local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";

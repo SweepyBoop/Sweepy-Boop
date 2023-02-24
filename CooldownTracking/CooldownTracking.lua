@@ -422,13 +422,20 @@ local function RefreshTestMode()
 
     local defensiveIconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
     local unitId = "player";
-    externalTestIcons[unitId] = {};
-    for spellID, spell in pairs(cooldowns) do
-        local size, hideHighlight;
-        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-            size, hideHighlight = defensiveIconSize, true;
+    if externalTestIcons[unitId] then
+        local scale = defensiveIconSize / 32;
+        for _, icon in pairs(externalTestIcons[unitId]) do
+            icon:SetScale(scale);
         end
-        externalTestIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+    else
+        externalTestIcons[unitId] = {};
+        for spellID, spell in pairs(cooldowns) do
+            local size, hideHighlight;
+            if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+                size, hideHighlight = defensiveIconSize, true;
+            end
+            externalTestIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+        end
     end
 
     local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
