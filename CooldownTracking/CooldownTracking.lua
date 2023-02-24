@@ -179,9 +179,6 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     
     -- Find the icon to use
     local iconId = unitId .. "-" .. spellId;
-     -- Passed, couldn't find icon
-    -- Did we not successfully add the icon to group.icons[unitId-spellId]?
-    --print("SubEvent validated, trying to find icon", iconId, self.icons[iconId]);
     if self.icons[iconId] then
         NS.StartCooldownTrackingIcon(self.icons[iconId]);
     end
@@ -254,7 +251,17 @@ end
 
 -- If unit is not specified, track all 3 arena opponents
 -- TODO: apply spec override when populating for a group (since we already know the spec here)
-local function SetupIconGroupForUnit(group, category, unit)
+local function SetupIconGroupForUnit(group, category, unit, testIcons)
+    -- For external "Toggle Test Mode" icons, no filtering is needed
+    if testIcons then
+        for spellID, spell in pairs(cooldowns) do
+            testIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
+            NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
+        end
+
+        return;
+    end
+
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
     if ( unit == "player" ) then
@@ -304,16 +311,16 @@ local function SetupIconGroupForUnit(group, category, unit)
 end
 
 -- If unit is not specified, populate icons for all 3 arena opponents
-local function SetupIconGroup(group, category)
+local function SetupIconGroup(group, category, testIcons)
     if ( not group ) then return end
 
     NS.IconGroup_Wipe(group);
 
     if group.unit then
-        SetupIconGroupForUnit(group, category, group.unit);
+        SetupIconGroupForUnit(group, category, group.unit, testIcons);
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            SetupIconGroupForUnit(group, category, "arena"..i);
+            SetupIconGroupForUnit(group, category, "arena"..i, testIcons);
         end
     end
 end
@@ -409,6 +416,50 @@ setPointOptions[SPELLCATEGORY.DISPEL] = {
 
 local refreshFrame;
 
+local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
+local externalTestGroup; -- Icon group for "Toggle Test Mode"
+
+local function RefreshTestMode()
+    NS.IconGroup_Wipe(externalTestGroup);
+
+    local defensiveIconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
+    local unitId = "player";
+    if externalTestIcons[unitId] then
+        local scale = defensiveIconSize / NS.DEFAULT_ICON_SIZE;
+        for _, icon in pairs(externalTestIcons[unitId]) do
+            icon:SetScale(scale);
+        end
+    else
+        externalTestIcons[unitId] = {};
+        for spellID, spell in pairs(cooldowns) do
+            local size, hideHighlight;
+            if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+                size, hideHighlight = defensiveIconSize, true;
+            end
+            externalTestIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+        end
+    end
+
+    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
+    local offsetY;
+    if SweepyBoop.db.profile.arenaEnemyOffensivesEnabled then
+        -- Offensive icons enabled, show defensives below them
+        offsetY = -( SweepyBoop.db.profile.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaEnemyDefensiveIconSize*0.5 + 2 );
+    else
+        -- Otherwise show at the center
+        offsetY = 0;
+    end
+    local setPointOption = {
+        point = "LEFT",
+        relativeTo = relativeTo,
+        relativePoint = "RIGHT",
+        offsetY = offsetY,
+    };
+
+    externalTestGroup = NS.CreateIconGroup(setPointOption, growRight, unitId);
+    SetupIconGroup(externalTestGroup, SPELLCATEGORY.DEFENSIVE, externalTestIcons);
+end
+
 -- Create icon groups (note the category order)
 function SweepyBoop:PopulateCooldownTrackingIcons()
     if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
@@ -419,7 +470,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
     local offsetY;
     if self.db.profile.arenaEnemyOffensivesEnabled then
         -- Offensive icons enabled, show defensives below them
-        offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
+        offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 2 );
     else
         -- Otherwise show at the center
         offsetY = 0;
@@ -461,6 +512,9 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
     refreshFrame:RegisterEvent(NS.PLAYER_TARGET_CHANGED);
     refreshFrame:SetScript("OnEvent", function (frame, event, ...)
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
+            -- Hide the external "Toggle Test Mode" group
+            self:HideTestCooldownTracking();
+
             RefreshGroups();
         elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
             local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
@@ -492,4 +546,39 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
             end
         end
     end)
+end
+
+function SweepyBoop:TestCooldownTracking()
+    if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then
+        -- Module disabled, simply hide test icons
+        self:HideTestCooldownTracking();
+        return;
+    end
+
+    local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
+
+    RefreshTestMode();
+
+    local subEvent = NS.SPELL_CAST_SUCCESS;
+    local sourceGUID = UnitGUID("player");
+    local destGUID = UnitGUID("player");
+    local spellId = 45438; -- Ice Block
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+
+    spellId = 87024; -- Cauterize
+    subEvent = NS.SPELL_AURA_APPLIED;
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+
+    if shoudShow then
+        externalTestGroup:Show();
+    else
+        externalTestGroup:Hide();
+    end
+end
+
+function SweepyBoop:HideTestCooldownTracking()
+    NS.IconGroup_Wipe(externalTestGroup);
+    if externalTestGroup then
+        externalTestGroup:Hide();
+    end
 end

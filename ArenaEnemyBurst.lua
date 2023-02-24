@@ -125,7 +125,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
         end
         return;
     end
-        
+
     -- Validate spell
     if ( not spellData[spellId] ) then return end
     local spell = spellData[spellId];
@@ -221,7 +221,6 @@ function SweepyBoop:PremakeOffensiveIcons()
     end
 end
 
-
 NS.GetUnitSpec = function(unit)
     if ( unit == "player" ) then
         local currentSpec = GetSpecialization();
@@ -234,9 +233,18 @@ NS.GetUnitSpec = function(unit)
     end
 end
 
-local function SetupAuraGroup(group, unit)
+local function SetupAuraGroup(group, unit, testIcons)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
+
+    -- For external "Toggle Test Mode" icons, no filtering is needed
+    if testIcons then
+        for spellID, spell in pairs(spellData) do
+            NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+        end
+
+        return;
+    end
 
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
@@ -272,7 +280,7 @@ local function SetupAuraGroup(group, unit)
                         end
                     end
                 end
-                
+
                 enabled = specEnabled;
             end
 
@@ -293,6 +301,38 @@ local growOptions = {
     anchor = "LEFT",
     margin = 3,
 };
+
+local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
+local externalTestGroup; -- Icon group for "Toggle Test Mode"
+
+local function RefreshTestMode()
+    NS.IconGroup_Wipe(externalTestGroup);
+
+    local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
+    local unitId = "player";
+    if externalTestIcons[unitId] then
+        local scale = iconSize / NS.DEFAULT_ICON_SIZE;
+        for _, icon in pairs(externalTestIcons[unitId]) do
+            icon:SetScale(scale);
+        end
+    else
+        externalTestIcons[unitId] = {};
+        for spellID, spell in pairs(spellData) do
+            externalTestIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+        end
+    end
+
+    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = relativeTo,
+        relativePoint = "RIGHT",
+        offsetY = 0,
+    };
+
+    externalTestGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
+    SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
+end
 
 function SweepyBoop:PopulateOffensiveIcons()
     if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
@@ -328,8 +368,11 @@ function SweepyBoop:PopulateOffensiveIcons()
     refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
     refreshFrame:RegisterEvent(NS.UNIT_AURA);
     refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
-    refreshFrame:SetScript("OnEvent", function (self, event, ...)
-        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED) then
+    refreshFrame:SetScript("OnEvent", function (frame, event, ...)
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
+            -- Hide the external "Toggle Test Mode" group
+            self:HideTestArenaEnemyBurst();
+
             if test then
                 SetupAuraGroup(testGroup, "player");
             elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
@@ -356,4 +399,40 @@ function SweepyBoop:PopulateOffensiveIcons()
             end
         end
     end)
+end
+
+function SweepyBoop:TestArenaEnemyBurst()
+    if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then
+        -- Module disabled, simply hide test icons
+        self:HideTestArenaEnemyBurst();
+        return;
+    end
+
+    local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
+
+    RefreshTestMode();
+
+    local event = NS.COMBAT_LOG_EVENT_UNFILTERED;
+    local subEvent = NS.SPELL_AURA_APPLIED;
+    local sourceGUID = UnitGUID("player");
+    local destGUID = UnitGUID("player");
+    local spellId = 10060; -- Power Infusion
+    ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
+
+    spellId = 190319; -- Combustion
+    subEvent = NS.SPELL_CAST_SUCCESS;
+    ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
+
+    if shoudShow then
+        externalTestGroup:Show();
+    else
+        externalTestGroup:Hide();
+    end
+end
+
+function SweepyBoop:HideTestArenaEnemyBurst()
+    NS.IconGroup_Wipe(externalTestGroup);
+    if externalTestGroup then
+        externalTestGroup:Hide();
+    end
 end

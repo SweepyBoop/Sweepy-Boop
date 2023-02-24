@@ -97,8 +97,44 @@ options.args.ArenaFrames = {
     name = "Arena Frames",
     handler = SweepyBoop,
     args = {
-        arenaEnemyOffensives = {
+        testmode = {
             order = 1,
+            type = "execute",
+            name = "Toggle Test Mode",
+            func = "TestArena",
+        },
+        description1 = {
+            order = 2,
+            width = "full",
+            type = "description",
+            name = NS.exclamation .. "Need to invoke Gladius / sArena test frames first",
+        },
+        description2 = {
+            order = 3,
+            width = "full",
+            type = "description",
+            name = "   • For Gladius: /gladius test3",
+        },
+        description3 = {
+            order = 4,
+            width = "full",
+            type = "description",
+            name = "   • For sArena, /sarena test",
+        },
+        description4 = {
+            order = 5,
+            width = "full",
+            type = "description",
+            name = NS.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
+        },
+        breaker1 = {
+            order = 6,
+            type = "header",
+            name = "",
+        },
+
+        arenaEnemyOffensives = {
+            order = 7,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
@@ -107,7 +143,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensivesEnabled",
         },
         arenaEnemyOffensiveIconSizeSlider = {
-            order = 2,
+            order = 8,
             type = "range",
             min = 16,
             max = 64,
@@ -117,7 +153,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensiveIconSize",
         },
         arenaEnemyDefensives = {
-            order = 3,
+            order = 9,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
@@ -126,7 +162,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensivesEnabled",
         },
         arenaEnemyDefensiveIconSizeSlider = {
-            order = 4,
+            order = 10,
             type = "range",
             min = 16,
             max = 64,
@@ -136,7 +172,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensiveIconSize",
         },
         arenaCooldownOffsetXSlider = {
-            order = 5,
+            order = 11,
             type = "range",
             width = 1.5,
             min = 0,
@@ -180,7 +216,7 @@ local defaults = {
         arenaEnemyOffensivesEnabled = true,
         arenaEnemyOffensiveIconSize = 32,
         arenaEnemyDefensivesEnabled = true,
-        arenaEnemyDefensiveIconSize = 22,
+        arenaEnemyDefensiveIconSize = 25,
         arenaNumbersEnabled = true,
         nameplateFilterEnabled = true,
         raidFrameAggroHighlightEnabled = true,
@@ -192,6 +228,9 @@ function SweepyBoop:OnInitialize()
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, NS.addonTitle);
+
+    -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
+    self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
 
     -- Setup nameplate modules
     self:SetupNameplateModules();
@@ -206,6 +245,33 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAggroHighlight();
 
     self:RegisterChatCommand("sb", "SlashCommand");
+end
+
+function SweepyBoop:TestArena()
+    if IsInInstance() then
+        print("Test mode can only be used outside instances");
+        return;
+    end
+
+    if Gladius then
+        local frame = _G["GladiusButtonFramearena1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+           print("Type \"/gladius test3\" to invoke Gladius test frames");
+           return;
+        end
+    elseif sArena then
+        local frame = _G["sArenaEnemyFrame1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+           print("Type \"/sarena test\" to invoke sArena test frames");
+           return;
+        end
+    else
+        print("No Gladius / sArena detected");
+        return;
+    end
+
+    self:TestArenaEnemyBurst();
+    self:TestCooldownTracking();
 end
 
 function SweepyBoop:SlashCommand(msg)
@@ -284,4 +350,9 @@ end
 
 function SweepyBoop:SetArenaEnemyDefensiveIconSize(info, value)
     self.db.profile.arenaEnemyDefensiveIconSize = value;
+end
+
+function SweepyBoop:RefreshConfig()
+    self:HideTestArenaEnemyBurst();
+    self:HideTestCooldownTracking();
 end
