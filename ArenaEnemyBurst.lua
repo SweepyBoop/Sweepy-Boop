@@ -429,5 +429,7 @@ end
 
 function SweepyBoop:HideTestArenaEnemyBurst()
     NS.IconGroup_Wipe(externalTestGroup);
-    externalTestGroup:Hide();
+    if externalTestGroup then
+        externalTestGroup:Hide();
+    end
 end
