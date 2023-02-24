@@ -432,11 +432,19 @@ local function RefreshTestMode()
     end
 
     local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
+    local offsetY;
+    if SweepyBoop.db.profile.arenaEnemyOffensivesEnabled then
+        -- Offensive icons enabled, show defensives below them
+        offsetY = -( SweepyBoop.db.profile.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
+    else
+        -- Otherwise show at the center
+        offsetY = 0;
+    end
     local setPointOption = {
         point = "LEFT",
         relativeTo = relativeTo,
         relativePoint = "RIGHT",
-        offsetY = 0,
+        offsetY = offsetY,
     };
 
     externalTestGroup = NS.CreateIconGroup(setPointOption, growRight, unitId);
@@ -495,6 +503,9 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
     refreshFrame:RegisterEvent(NS.PLAYER_TARGET_CHANGED);
     refreshFrame:SetScript("OnEvent", function (frame, event, ...)
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
+            -- Hide the external "Toggle Test Mode" group
+            NS.IconGroup_Wipe(externalTestGroup);
+
             RefreshGroups();
         elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
             local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
@@ -535,7 +546,7 @@ function SweepyBoop:TestCooldownTracking()
 
     RefreshTestMode();
 
-    local subEvent = NS.SPELL_AURA_APPLIED;
+    local subEvent = NS.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 102342; -- Ironbark
