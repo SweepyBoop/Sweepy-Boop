@@ -237,6 +237,14 @@ local function SetupAuraGroup(group, unit, testIcons)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
 
+    if testIcons then
+        for spellID, spell in pairs(spellData) do
+            NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+        end
+
+        return;
+    end
+
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
     if ( unit == "player" ) then
@@ -276,11 +284,7 @@ local function SetupAuraGroup(group, unit, testIcons)
             end
 
             if enabled then
-                if testIcons then
-                    NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
-                else
-                    NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
-                end
+                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                 --print("Populated", unit, spell.class, spellID)
             end
         end
