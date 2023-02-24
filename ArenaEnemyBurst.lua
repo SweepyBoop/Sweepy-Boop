@@ -363,7 +363,7 @@ function SweepyBoop:PopulateOffensiveIcons()
     refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
     refreshFrame:RegisterEvent(NS.UNIT_AURA);
     refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
-    refreshFrame:SetScript("OnEvent", function (self, event, ...)
+    refreshFrame:SetScript("OnEvent", function (frame, event, ...)
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED ) then
             -- Internal test mode is disabled, but the player might have pressed "Toggle Test Mode"
             NS.IconGroup_Wipe(externalTestGroup);
