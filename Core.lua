@@ -119,7 +119,7 @@ options.args.ArenaFrames = {
             order = 4,
             width = "full",
             type = "description",
-            name = "   • For sArena, /sarena test",
+            name = "   • For sArena: /sarena test",
         },
         description4 = {
             order = 5,
