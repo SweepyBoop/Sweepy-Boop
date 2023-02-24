@@ -237,6 +237,7 @@ local function SetupAuraGroup(group, unit, testIcons)
     -- Clear previous icons
     NS.IconGroup_Wipe(group);
 
+    -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         for spellID, spell in pairs(spellData) do
             NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
