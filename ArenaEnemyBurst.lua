@@ -205,10 +205,10 @@ function SweepyBoop:PremakeOffensiveIcons()
 
     local iconSize = self.db.profile.arenaEnemyOffensiveIconSize;
     if test then
-        local unitId  = "player";
-        premadeIcons[unitId ] = {};
+        local unitId = "player";
+        premadeIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            premadeIcons[unitId ][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+            premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
         end
     else
         for i = 1, NS.MAX_ARENA_SIZE do
