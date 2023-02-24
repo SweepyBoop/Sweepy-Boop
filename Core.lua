@@ -113,13 +113,13 @@ options.args.ArenaFrames = {
             order = 3,
             width = "full",
             type = "description",
-            name = "   For Gladius: /gladius test3",
+            name = "   • For Gladius: /gladius test3",
         },
         description3 = {
             order = 4,
             width = "full",
             type = "description",
-            name = "   For sArena, /sarena test",
+            name = "   • For sArena, /sarena test",
         },
         breaker = {
             order = 5,
