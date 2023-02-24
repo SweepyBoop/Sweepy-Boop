@@ -565,10 +565,11 @@ function SweepyBoop:TestCooldownTracking()
     local subEvent = NS.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
-    local spellId = 102342; -- Ironbark
+    local spellId = 45438; -- Ice Block
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
-    spellId = 740; -- Tranquility
+    spellId = 87024; -- Cauterize
+    subEvent = NS.SPELL_AURA_APPLIED;
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
     if shoudShow then
