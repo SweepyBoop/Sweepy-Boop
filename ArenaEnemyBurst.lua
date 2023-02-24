@@ -396,12 +396,6 @@ function SweepyBoop:TestArenaEnemyBurst()
 
     RefreshTestMode();
 
-    if shoudShow then
-        externalTestGroup:Show();
-    else
-        externalTestGroup:Hide();
-    end
-
     local event = NS.COMBAT_LOG_EVENT_UNFILTERED;
     local subEvent = NS.SPELL_AURA_APPLIED;
     local sourceGUID = UnitGUID("player");
@@ -411,4 +405,10 @@ function SweepyBoop:TestArenaEnemyBurst()
 
     spellId = 208963; -- Skyfury
     ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
+
+    if shoudShow then
+        externalTestGroup:Show();
+    else
+        externalTestGroup:Hide();
+    end
 end

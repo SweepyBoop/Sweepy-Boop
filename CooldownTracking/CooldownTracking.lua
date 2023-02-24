@@ -232,21 +232,6 @@ function SweepyBoop:PremakeCooldownTrackingIcons()
     end
 end
 
-local function RefreshTestIcons()
-    if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then return end
-
-    local defensiveIconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
-    local unitId = "player";
-    premadeIcons[unitId] = {};
-    for spellID, spell in pairs(cooldowns) do
-        local size, hideHighlight;
-        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-            size, hideHighlight = defensiveIconSize, true;
-        end
-        premadeIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
-    end
-end
-
 local function GetSpecOverrides(spell, spec)
     local overrides = {};
 
@@ -269,7 +254,7 @@ end
 
 -- If unit is not specified, track all 3 arena opponents
 -- TODO: apply spec override when populating for a group (since we already know the spec here)
-local function SetupIconGroupForUnit(group, category, unit)
+local function SetupIconGroupForUnit(group, category, unit, testIcons)
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class;
     if ( unit == "player" ) then
@@ -309,26 +294,31 @@ local function SetupIconGroupForUnit(group, category, unit)
             end
 
             if enabled then
-                -- Dynamic info for current icon
-                premadeIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
-                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
-                --print("Populated", unit, spell.class, spellID);
+                if testIcons then
+                    testIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
+                    NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
+                else
+                    -- Dynamic info for current icon
+                    premadeIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
+                    NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], unit .. "-" .. spellID);
+                    --print("Populated", unit, spell.class, spellID);
+                end
             end
         end
     end
 end
 
 -- If unit is not specified, populate icons for all 3 arena opponents
-local function SetupIconGroup(group, category)
+local function SetupIconGroup(group, category, testIcons)
     if ( not group ) then return end
 
     NS.IconGroup_Wipe(group);
 
     if group.unit then
-        SetupIconGroupForUnit(group, category, group.unit);
+        SetupIconGroupForUnit(group, category, group.unit, testIcons);
     else
         for i = 1, NS.MAX_ARENA_SIZE do
-            SetupIconGroupForUnit(group, category, "arena"..i);
+            SetupIconGroupForUnit(group, category, "arena"..i, testIcons);
         end
     end
 end
@@ -424,6 +414,35 @@ setPointOptions[SPELLCATEGORY.DISPEL] = {
 
 local refreshFrame;
 
+local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
+local externalTestGroup; -- Icon group for "Toggle Test Mode"
+
+local function RefreshTestMode()
+    NS.IconGroup_Wipe(externalTestGroup);
+
+    local defensiveIconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
+    local unitId = "player";
+    externalTestIcons[unitId] = {};
+    for spellID, spell in pairs(cooldowns) do
+        local size, hideHighlight;
+        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+            size, hideHighlight = defensiveIconSize, true;
+        end
+        externalTestIcons[unitId][spellID] = NS.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+    end
+
+    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
+    local setPointOption = {
+        point = "LEFT",
+        relativeTo = relativeTo,
+        relativePoint = "RIGHT",
+        offsetY = 0,
+    };
+
+    externalTestGroup = NS.CreateIconGroup(setPointOption, growRight, unitId);
+    SetupIconGroup(externalTestGroup, SPELLCATEGORY.DEFENSIVE, externalTestIcons);
+end
+
 -- Create icon groups (note the category order)
 function SweepyBoop:PopulateCooldownTrackingIcons()
     if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
@@ -512,5 +531,22 @@ end
 function SweepyBoop:TestCooldownTracking()
     if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then return end
 
-    RefreshTestIcons();
+    local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
+
+    RefreshTestMode();
+
+    local subEvent = NS.SPELL_AURA_APPLIED;
+    local sourceGUID = UnitGUID("player");
+    local destGUID = UnitGUID("player");
+    local spellId = 102342; -- Ironbark
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+
+    spellId = 740; -- Tranquility
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+
+    if shoudShow then
+        externalTestGroup:Show();
+    else
+        externalTestGroup:Hide();
+    end
 end
