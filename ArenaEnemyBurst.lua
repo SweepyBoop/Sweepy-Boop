@@ -204,17 +204,19 @@ function SweepyBoop:PremakeOffensiveIcons()
     if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
 
     local iconSize = self.db.profile.arenaEnemyOffensiveIconSize;
-    local playerUnitId = "player";
-    premadeIcons[playerUnitId] = {};
-    for spellID, spell in pairs(spellData) do
-        premadeIcons[playerUnitId][spellID] = NS.CreateSweepyIcon(playerUnitId, spellID, iconSize, true);
-    end
-
-    for i = 1, NS.MAX_ARENA_SIZE do
-        local unitId = "arena"..i;
-        premadeIcons[unitId] = {};
+    if test then
+        local unitId  = "player";
+        premadeIcons[unitId ] = {};
         for spellID, spell in pairs(spellData) do
-            premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+            premadeIcons[unitId ][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+        end
+    else
+        for i = 1, NS.MAX_ARENA_SIZE do
+            local unitId = "arena"..i;
+            premadeIcons[unitId] = {};
+            for spellID, spell in pairs(spellData) do
+                premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+            end
         end
     end
 end

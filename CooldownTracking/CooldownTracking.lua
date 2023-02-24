@@ -232,6 +232,10 @@ function SweepyBoop:PremakeCooldownTrackingIcons()
     end
 end
 
+local function RefreshTestIcons()
+    
+end
+
 local function GetSpecOverrides(spell, spec)
     local overrides = {};
 
