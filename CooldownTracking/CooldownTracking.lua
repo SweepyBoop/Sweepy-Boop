@@ -442,7 +442,7 @@ local function RefreshTestMode()
     local offsetY;
     if SweepyBoop.db.profile.arenaEnemyOffensivesEnabled then
         -- Offensive icons enabled, show defensives below them
-        offsetY = -( SweepyBoop.db.profile.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
+        offsetY = -( SweepyBoop.db.profile.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaEnemyDefensiveIconSize*0.5 + 2 );
     else
         -- Otherwise show at the center
         offsetY = 0;
@@ -468,7 +468,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
     local offsetY;
     if self.db.profile.arenaEnemyOffensivesEnabled then
         -- Offensive icons enabled, show defensives below them
-        offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 1 );
+        offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 2 );
     else
         -- Otherwise show at the center
         offsetY = 0;
