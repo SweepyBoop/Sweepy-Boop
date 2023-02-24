@@ -204,19 +204,17 @@ function SweepyBoop:PremakeOffensiveIcons()
     if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
 
     local iconSize = self.db.profile.arenaEnemyOffensiveIconSize;
-    if test then
-        local unitId = "player";
+    local playerUnitId = "player";
+    premadeIcons[playerUnitId] = {};
+    for spellID, spell in pairs(spellData) do
+        premadeIcons[playerUnitId][spellID] = NS.CreateSweepyIcon(playerUnitId, spellID, iconSize, true);
+    end
+
+    for i = 1, NS.MAX_ARENA_SIZE do
+        local unitId = "arena"..i;
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
             premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
-        end
-    else
-        for i = 1, NS.MAX_ARENA_SIZE do
-            local unitId = "arena"..i;
-            premadeIcons[unitId] = {};
-            for spellID, spell in pairs(spellData) do
-                premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
-            end
         end
     end
 end
@@ -359,5 +357,27 @@ function SweepyBoop:PopulateOffensiveIcons()
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
-    print("TestArenaEnemyBurst")
+    if ( not testGroup ) then
+        local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
+        local setPointOptions = {
+            point = "LEFT",
+            relativeTo = relativeTo,
+            relativePoint = "RIGHT",
+            offsetY = 0,
+        };
+
+        local unitId = "player";
+        testGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
+        SetupAuraGroup(testGroup, unitId);
+    end
+
+    local event = NS.COMBAT_LOG_EVENT_UNFILTERED;
+    local subEvent = NS.SPELL_AURA_APPLIED;
+    local sourceGUID = UnitGUID("player");
+    local destGUID = UnitGUID("player");
+    local spellId = 10060; -- Power Infusion
+    ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId);
+
+    spellId = 208963; -- Skyfury
+    ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId);
 end
