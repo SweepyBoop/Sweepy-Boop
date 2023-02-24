@@ -244,6 +244,23 @@ function SweepyBoop:TestArena()
         return;
     end
 
+    if Gladius then
+        local frame = _G["GladiusButtonFramearena1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+           print("Type \"/gladius test3\" to invoke Gladius test frames");
+           return;
+        end
+    elseif sArena then
+        local frame = _G["sArenaEnemyFrame1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+           print("Type \"/sarena test\" to invoke sArena test frames");
+           return;
+        end
+    else
+        print("No Gladius / sArena detected");
+        return;
+    end
+
     self:TestArenaEnemyBurst();
     self:TestCooldownTracking();
 end
