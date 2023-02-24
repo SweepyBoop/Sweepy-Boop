@@ -423,7 +423,7 @@ local function RefreshTestMode()
     local defensiveIconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
     local unitId = "player";
     if externalTestIcons[unitId] then
-        local scale = defensiveIconSize / 32;
+        local scale = defensiveIconSize / 25;
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
         end
