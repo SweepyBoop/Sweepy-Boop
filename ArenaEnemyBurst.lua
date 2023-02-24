@@ -403,10 +403,7 @@ end
 function SweepyBoop:TestArenaEnemyBurst()
     if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then
         -- Module disabled, simply hide test icons
-        NS.IconGroup_Wipe(externalTestGroup);
-        if externalTestGroup then
-            externalTestGroup:Hide();
-        end
+        self:HideTestArenaEnemyBurst();
         return;
     end
 
