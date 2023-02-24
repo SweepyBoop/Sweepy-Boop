@@ -239,7 +239,8 @@ function SweepyBoop:OnInitialize()
 end
 
 function SweepyBoop:TestArena()
-    ReloadUI();
+    self:TestArenaEnemyBurst();
+    self:TestCooldownTracking();
 end
 
 function SweepyBoop:SlashCommand(msg)

@@ -493,3 +493,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
         end
     end)
 end
+
+function SweepyBoop:TestCooldownTracking()
+    print("TestCooldownTracking");
+end

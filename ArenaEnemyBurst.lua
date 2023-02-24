@@ -357,3 +357,7 @@ function SweepyBoop:PopulateOffensiveIcons()
         end
     end)
 end
+
+function SweepyBoop:TestArenaEnemyBurst()
+    print("TestArenaEnemyBurst")
+end
