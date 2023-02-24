@@ -107,7 +107,7 @@ options.args.ArenaFrames = {
             order = 2,
             width = "full",
             type = "description",
-            name = NS.exclamation .. "Need to invoke Gladius / sArena test mode first",
+            name = NS.exclamation .. "Need to invoke Gladius / sArena test frames first",
         },
         description2 = {
             order = 3,
