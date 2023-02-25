@@ -8,15 +8,15 @@ local SendChatMessage = SendChatMessage;
 local containerFrame = CreateFrame("Frame", nil, UIParent)
 containerFrame:SetSize(30, 30)
 containerFrame:SetPoint("CENTER")
-local texture = containerFrame:CreateTexture()
-texture:SetAllPoints()
+containerFrame.texture = containerFrame:CreateTexture()
+containerFrame.texture:SetAllPoints()
 
 -- Assign a name so we can disable it in OmniCC
 -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/LossOfControlFrame.xml
-local cooldown = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "LoseControl", containerFrame, "CooldownFrameTemplate")
-cooldown:SetHideCountdownNumbers(true)
-cooldown:SetDrawEdge(true);
-cooldown:SetAllPoints()
+containerFrame.cooldown = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "LoseControl", containerFrame, "CooldownFrameTemplate")
+containerFrame.cooldown:SetHideCountdownNumbers(true)
+containerFrame.cooldown:SetDrawEdge(true);
+containerFrame.cooldown:SetAllPoints()
 
 containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_ADDED)
 containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_UPDATE)
@@ -30,10 +30,10 @@ function containerFrame:OnEvent(event, ...)
         return
     end
 
-    texture:SetTexture(locData.iconTexture)
+    self.texture:SetTexture(locData.iconTexture)
 
     if locData.duration then -- Some auras have no duration, such as solar beam
-        cooldown:SetCooldown(locData.startTime , locData.duration)
+        self.cooldown:SetCooldown(locData.startTime , locData.duration)
     end
 
     local locType = locData.locType
