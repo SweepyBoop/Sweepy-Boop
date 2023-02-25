@@ -92,7 +92,8 @@ local function ShouldMakeIcon(unitId)
             return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
         else
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) )
-            return UnitIsFriend("player", unitId) ~= possessedFactor
+            -- UnitIsFriend does not consider friendly units in duel
+            return UnitCanAttack("player", unitId) == possessedFactor
         end
     else
         return IsPartyPrimaryPet(unitId, (isArena and 2) or 4)
