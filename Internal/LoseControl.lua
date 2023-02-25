@@ -26,7 +26,7 @@ function containerFrame:OnEvent(event, ...)
     local locData = C_LossOfControl.GetActiveLossOfControlData(1)
 
     if ( not locData ) or ( not locData.displayText ) or ( locData.displayType == 0 ) then
-        containerFrame:Hide()
+        self:Hide()
         return
     end
 
@@ -38,12 +38,12 @@ function containerFrame:OnEvent(event, ...)
 
     local locType = locData.locType
     if ( locType == "ROOT" ) or ( locType == "SCHOOL_INTERRUPT" ) or ( locType == "DISARM" ) then
-        containerFrame:SetAlpha(0.5)
+        self:SetAlpha(0.5)
     else
-        containerFrame:SetAlpha(1)
+        self:SetAlpha(1)
     end
 
-    containerFrame:Show()
+    self:Show()
 
     -- Send notification to group
     if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) then
