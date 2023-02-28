@@ -564,12 +564,20 @@ NS.spellData = {
         class = NS.WARRIOR,
         category = OFFENSIVE,
         duration = 10,
+        cooldown = 45,
+        reduce_power_type = POWERTYPE.Rage,
+        reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
+        index = 2,
     },
     -- Colossus Smash
     [167105] = {
         class = NS.WARRIOR,
         category = OFFENSIVE,
         duration = 10,
+        cooldown = 45,
+        reduce_power_type = POWERTYPE.Rage,
+        reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
+        index = 2,
     },
     -- Avatar
     [107574] = {
