@@ -85,12 +85,12 @@ local function IsPartyPrimaryPet(unitId, partySize)
 end
 
 local function ShouldMakeIcon(unitId)
-    local isArena = IsActiveBattlefieldArena();
-
     -- Do not show class icon above the personal resource display
     if UnitIsUnit(unitId, "player") then
         return false;
     end
+
+    local isArena = IsActiveBattlefieldArena();
 
     if UnitIsPlayer(unitId) then
         if isArena then
