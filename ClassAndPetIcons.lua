@@ -85,18 +85,23 @@ local function IsPartyPrimaryPet(unitId, partySize)
 end
 
 local function ShouldMakeIcon(unitId)
-    local isArena = IsActiveBattlefieldArena()
+    -- Do not show class icon above the personal resource display
+    if UnitIsUnit(unitId, "player") then
+        return false;
+    end
+
+    local isArena = IsActiveBattlefieldArena();
 
     if UnitIsPlayer(unitId) then
         if isArena then
-            return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2")
+            return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
         else
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) )
+            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             -- UnitIsFriend does not consider friendly units in duel
-            return UnitCanAttack("player", unitId) == possessedFactor
+            return UnitCanAttack("player", unitId) == possessedFactor;
         end
     else
-        return IsPartyPrimaryPet(unitId, (isArena and 2) or 4)
+        return IsPartyPrimaryPet(unitId, (isArena and 2) or 4);
     end
 end
 
@@ -177,30 +182,35 @@ local function UpdateClassIcon(frame)
 end
 
 local function ShouldShowNameplate(unitId)
+    -- Do not hide personal resource display
+    if UnitIsUnit(unitId, "player") then
+        return true;
+    end
+
     -- When outside arena, show everything hostile
     if ( not IsActiveBattlefieldArena() ) then
-        local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) )
+        local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
         -- UnitIsEnemy will not work here, since it excludes neutral units
-        return UnitCanAttack("player", unitId) ~= possessedFactor
+        return UnitCanAttack("player", unitId) ~= possessedFactor;
     end
 
     -- Show arena 1~3
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arena" .. i) then
-            return true
+            return true;
         end
     end
 
     -- Show arenapet 1~3 but only important ones
     if IsArenaPrimaryPet(unitId) then
-        return true
+        return true;
     end
 
     -- Show whitelisted non-player units
     if ( not UnitIsPlayer(unitId) ) and IsInWhiteList(unitId) then
         -- Reverse if one unit is possessed and the other is not
-        local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) )
-        return UnitIsEnemy("player", unitId) ~= possessedFactor
+        local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
+        return UnitIsEnemy("player", unitId) ~= possessedFactor;
     end
 end
 
