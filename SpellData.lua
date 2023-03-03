@@ -124,7 +124,7 @@ NS.spellData = {
         class = NS.DRUID,
         category = OFFENSIVE,
         duration = 30,
-        cooldown = 180,
+        cooldown = 120,
         index = 2,
     },
     -- Convoke the Spirits
