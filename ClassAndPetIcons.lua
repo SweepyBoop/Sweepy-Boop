@@ -250,16 +250,16 @@ function SweepyBoop:SetupNameplateModules()
         if frame:IsForbidden() then
             return;
         end
-    
+
         if ( not ShouldUpdateNamePlate(frame) ) then
             return;
         end
-    
+
         -- Class icon mod will hide/show healthBar when showing/hiding class icons
         UpdateClassIcon(frame)
         -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
         UpdateHealthBar(frame)
-    
+
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
             if self.db.profile.arenaNumbersEnabled then
@@ -271,7 +271,7 @@ function SweepyBoop:SetupNameplateModules()
                     end
                 end
             end
-    
+
             -- Check if name should be hidden
             if self.db.profile.nameplateFilterEnabled then
                 if ( not IsInWhiteList(frame.unit) ) then
@@ -280,18 +280,18 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
     end)
-    
+
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
         if ( not self.db.profile.nameplateFilterEnabled ) then return end
-    
+
         if frame:IsForbidden() then
             return;
         end
-    
+
         if ( not ShouldUpdateNamePlate(frame) ) then
             return
         end
-    
+
         UpdateHealthBar(frame)
     end)
 end
