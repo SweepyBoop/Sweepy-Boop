@@ -106,11 +106,13 @@ local function ShouldMakeIcon(unitId)
 end
 
 local function EnsureClassIcon(frame)
-    local nameplate = frame:GetParent()
+    local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay')
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, 40)
+        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay');
+        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, 40);
+        nameplate.FriendlyClassIcon:SetAlpha(1);
+        nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
     end
 
     return nameplate.FriendlyClassIcon
