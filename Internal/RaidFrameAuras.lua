@@ -8,6 +8,7 @@ local UnitIsPlayer = UnitIsPlayer;
 local test = false;
 
 local centerAura = {}; -- Show an important aura at the center of a raid frame
+local topRightAura = {};
 
 -- topRightAura removed since those debuffs are covered by BigDebuffs
 -- Hemotoxin is combined into Shiv debuff
@@ -20,6 +21,15 @@ local centerAuraSpells = {
 if test then
     table.insert(centerAuraSpells, 8936); -- Regrowth (test)
     table.insert(centerAuraSpells, 774); -- Rejuv (test)
+end
+
+local topRightAuraSpells = {
+    102352, -- Cenarion Ward
+    194384,  -- Atonement
+};
+if test then
+    table.insert(topRightAuraSpells, 8936); -- Regrowth (test)
+    table.insert(topRightAuraSpells, 774); -- Rejuv (test)
 end
 
 local function SetAuraFrame(frame)
@@ -40,13 +50,20 @@ local function SetupRaidFrame(frame)
         centerAura[frame]:Hide();
     end
 
-    return centerAura[frame];
+    if ( not topRightAura[frame] ) then
+        topRightAura[frame] = CreateFrame("Frame", nil, frame, "CustomCompactAuraTemplate");
+        SetAuraFrame(topRightAura[frame]);
+        topRightAura[frame]:SetPoint("TOPLEFT", frame, "TOPRIGHT");
+        topRightAura[frame]:Hide();
+    end
+
+    return centerAura[frame], topRightAura[frame];
 end
 
 local function UpdateRaidFrame(frame)
     if ( frame:GetParent() ~= CompactPartyFrame ) then return end
 
-    local center = SetupRaidFrame(frame);
+    local center, topRight = SetupRaidFrame(frame);
 
     local centerSet;
     for _, spell in ipairs(centerAuraSpells) do
@@ -62,6 +79,22 @@ local function UpdateRaidFrame(frame)
 
     if ( not centerSet ) then
         center:Hide();
+    end
+
+    local topRightSet;
+    for _, spell in ipairs(topRightAuraSpells) do
+        local name, icon, _, _, duration, expirationTime, source = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
+        if duration then
+            topRight.icon:SetTexture(icon);
+            topRight.cooldown:SetCooldown(expirationTime - duration, duration);
+            topRight:Show();
+            topRightSet = true;
+            break;
+        end
+    end
+
+    if ( not topRightSet ) then
+        topRight:Hide();
     end
 end
 
