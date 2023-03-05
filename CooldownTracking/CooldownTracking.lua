@@ -397,7 +397,7 @@ setPointOptions[SPELLCATEGORY.DISRUPT] = {
     relativeTo = UIParent,
     relativePoint = "CENTER",
     offsetX = 0,
-    offsetY = -127.5,
+    offsetY = -122.5,
 };
 setPointOptions[SPELLCATEGORY.CROWDCONTROL] = {
     point = "CENTER",
