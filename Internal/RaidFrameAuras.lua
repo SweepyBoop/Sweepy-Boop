@@ -15,6 +15,7 @@ local centerAura = {}; -- Show an important aura at the center of a raid frame
 
 local centerAuraSpells = {
     102352, -- Cenarion Ward
+    194384,  -- Atonement
 };
 if test then
     table.insert(centerAuraSpells, 8936); -- Regrowth (test)
