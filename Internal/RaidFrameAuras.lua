@@ -24,8 +24,52 @@ if test then
 end
 
 local topRightAuraSpells = {
-    102352, -- Cenarion Ward
-    194384,  -- Atonement
+    48792, -- Icebound Fortitude
+    51052, -- Anti-Magic Zone
+    48707, -- Anti-Magic Shell
+
+    196555, -- Netherwalk
+    196718, -- Darkness
+    198589, -- Blur
+
+    102342, -- Ironbark
+    61336, -- Survival Instincts
+
+    363916, -- Obsidian Scales
+
+    186265, -- Aspect of the Turtle
+    53480, -- Roar of Sacrifice
+
+    45438, -- Ice Block
+    342245, -- Alter Time
+
+    122470, -- Touch of Karma
+    116849, -- Life Cacoon
+
+    642, -- Divine Shield
+    1022, -- Blessing of Protection
+    184662, -- Shield of Vengeance
+
+    47788, -- Guardian Spirit
+    33206, -- Pain Suppression
+    47585, -- Dispersion
+
+    31224, -- Cloak of Shadows
+    5277, -- Evasion
+    1856, -- Vanish
+
+    108271, -- Astral Shift
+    210918, -- Ethereal Form
+
+    108416, -- Dark Pact
+    104773, -- Unending Resolve
+    212295, -- Nether Ward
+
+    118038, -- Die by the Sword
+    184364, -- Enraged Regeneration
+    97462, -- Rallying Cry
+
+    345231, -- Gladiator's Emblem
 };
 if test then
     table.insert(topRightAuraSpells, 8936); -- Regrowth (test)
