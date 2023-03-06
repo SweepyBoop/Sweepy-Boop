@@ -129,6 +129,18 @@ end
 local IconPath = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\flat\\"
 local IconPathTarget = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\warcraftflat\\"
 
+local function GetIconPath(class, border)
+    if ( class == "PET" ) then
+        local path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\pet";
+        if border then
+            path = path .. "border";
+        end
+        return path .. "\\";
+    else
+        
+    end
+end
+
 local ClassIconOptions = {
     PlayerSize = 48,
     PetSize = 32,
