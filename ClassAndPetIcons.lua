@@ -130,16 +130,24 @@ local IconPath = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\flat\\"
 local IconPathTarget = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\warcraftflat\\"
 
 local function GetIconPath(class, border)
+    local path;
+
     if ( class == "PET" ) then
-        local path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\pet";
-        if border then
-            path = path .. "border";
-        end
-        return path .. "\\";
+        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\pet";
     else
-        local path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
-        
+        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
+        if SweepyBoop.db.profile.classIconStyle == NS.CLASSICONSTYLE.FLAT then
+            path = path .. "flat";
+        else
+            path = path .. "round";
+        end
     end
+
+    if border then
+        path = path .. "border";
+    end
+
+    return path .. "\\";
 end
 
 local ClassIconOptions = {
@@ -162,7 +170,7 @@ local function ShowClassIcon(frame)
     local isTarget = UnitIsUnit("target", frame.unit)
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
-        local iconPath = ( isTarget and IconPathTarget ) or IconPath
+        local iconPath = GetIconPath(class, isTarget);
         local iconFile = iconPath .. class
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             local npcID = select(6, strsplit("-", UnitGUID(frame.unit)))
