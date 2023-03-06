@@ -64,8 +64,14 @@ options.args.NamePlates = {
             get = "GetClassIconsEnabled",
             set = "SetClassIconsEnabled",
         },
-        select = {
+        description = {
             order = 2,
+            width = "full",
+            type = "description",
+            name = NS.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
+        },
+        select = {
+            order = 3,
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
@@ -75,12 +81,6 @@ options.args.NamePlates = {
                 [NS.CLASSICONSTYLE.ROUND] = "Round",
                 [NS.CLASSICONSTYLE.FLAT] = "Flat",
             },
-        },
-        description = {
-            order = 3,
-            width = "full",
-            type = "description",
-            name = NS.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
         break1 = {
 			order = 4,
