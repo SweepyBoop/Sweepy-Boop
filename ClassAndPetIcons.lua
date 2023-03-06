@@ -137,6 +137,7 @@ local function GetIconPath(class, border)
         end
         return path .. "\\";
     else
+        local path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
         
     end
 end

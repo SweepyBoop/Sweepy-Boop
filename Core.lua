@@ -44,6 +44,11 @@ local options = {
     },
 };
 
+NS.CLASSICONSTYLE = {
+    ROUND = 1,
+    FLAT = 2,
+};
+
 options.args.NamePlates = {
     order = 6,
     type = "group",
@@ -59,19 +64,31 @@ options.args.NamePlates = {
             get = "GetClassIconsEnabled",
             set = "SetClassIconsEnabled",
         },
-        description = {
+        select = {
             order = 2,
+            width = "full",
+            type = "select",
+            style = "dropdown",
+            get = "GetClassIconStyle",
+            set = "SetClassIconStyle",
+            values = {
+                [NS.CLASSICONSTYLE.ROUND] = "Round",
+                [NS.CLASSICONSTYLE.FLAT] = "Flat",
+            },
+        },
+        description = {
+            order = 3,
             width = "full",
             type = "description",
             name = NS.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
         break1 = {
-			order = 3,
+			order = 4,
 			type = "header",
 			name = ""
 		},
         arenaNumbers = {
-            order = 4,
+            order = 5,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
@@ -80,7 +97,7 @@ options.args.NamePlates = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
-            order = 5,
+            order = 6,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
@@ -212,6 +229,7 @@ options.args.RaidFrame = {
 local defaults = {
     profile = {
         classIconsEnabled = true,
+        classIconStyle = NS.CLASSICONSTYLE.ROUND,
         arenaCooldownOffsetX = 5,
         arenaEnemyOffensivesEnabled = true,
         arenaEnemyOffensiveIconSize = 32,
@@ -286,6 +304,14 @@ end
 
 function SweepyBoop:SetClassIconsEnabled(info, value)
     self.db.profile.classIconsEnabled = value;
+end
+
+function SweepyBoop:GetClassIconStyle(info)
+    return self.db.profile.classIconStyle;
+end
+
+function SweepyBoop:SetClassIconStyle(info, value)
+    self.db.profile.classIconStyle = value;
 end
 
 function SweepyBoop:GetArenaEnemyOffensivesEnabled(info)
