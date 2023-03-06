@@ -126,16 +126,38 @@ local function HideClassIcon(frame)
     end
 end
 
-local IconPath = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\flat\\"
-local IconPathTarget = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\warcraftflat\\"
+local ClassIconSize = {
+    Round = 64,
+    Flat = 48,
+    Pet = 32,
+};
 
-local ClassIconOptions = {
-    PlayerSize = 48,
-    PetSize = 32,
-}
+local function GetIconOptions(class, border)
+    local path, iconSize;
+
+    if ( class == "PET" ) then
+        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\pet";
+        iconSize = ClassIconSize.Pet;
+    else
+        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
+        if SweepyBoop.db.profile.classIconStyle == NS.CLASSICONSTYLE.FLAT then
+            path = path .. "flat";
+            iconSize = ClassIconSize.Flat;
+        else
+            path = path .. "round";
+            iconSize = ClassIconSize.Round;
+        end
+    end
+
+    if border then
+        path = path .. "border";
+    end
+
+    return path .. "\\", iconSize;
+end
 
 local function GetUnitClassName(unitId)
-    return select(2, UnitClass(unitId))
+    return select(2, UnitClass(unitId));
 end
 
 local iconCount = 4
@@ -149,7 +171,7 @@ local function ShowClassIcon(frame)
     local isTarget = UnitIsUnit("target", frame.unit)
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
-        local iconPath = ( isTarget and IconPathTarget ) or IconPath
+        local iconPath, iconSize = GetIconOptions(class, isTarget);
         local iconFile = iconPath .. class
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             local npcID = select(6, strsplit("-", UnitGUID(frame.unit)))
@@ -159,7 +181,6 @@ local function ShowClassIcon(frame)
         icon:SetTexture(iconFile)
 
         if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) then
-            local iconSize = ( isPlayer and ClassIconOptions.PlayerSize ) or ClassIconOptions.PetSize
             icon:SetSize(iconSize, iconSize)
         end
 
