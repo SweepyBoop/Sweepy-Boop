@@ -45,8 +45,8 @@ local options = {
 };
 
 NS.CLASSICONSTYLE = {
-    ROUND = "Round",
-    FLAT = "Flat",
+    ROUND = 1,
+    FLAT = 2,
 };
 
 options.args.NamePlates = {
@@ -66,13 +66,15 @@ options.args.NamePlates = {
         },
         select = {
             order = 2,
-            width = "full",
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
             get = "GetClassIconStyle",
             set = "SetClassIconStyle",
-            values = NS.CLASSICONSTYLE,
+            values = {
+                [NS.CLASSICONSTYLE.ROUND] = "Round",
+                [NS.CLASSICONSTYLE.FLAT] = "Flat",
+            },
         },
         description = {
             order = 3,

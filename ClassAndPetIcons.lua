@@ -126,8 +126,10 @@ local function HideClassIcon(frame)
     end
 end
 
-local IconPath = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\flat\\"
-local IconPathTarget = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\warcraftflat\\"
+local ClassIconOptions = {
+    PlayerSize = 48,
+    PetSize = 32,
+};
 
 local function GetIconPath(class, border)
     local path;
@@ -150,13 +152,8 @@ local function GetIconPath(class, border)
     return path .. "\\";
 end
 
-local ClassIconOptions = {
-    PlayerSize = 48,
-    PetSize = 32,
-}
-
 local function GetUnitClassName(unitId)
-    return select(2, UnitClass(unitId))
+    return select(2, UnitClass(unitId));
 end
 
 local iconCount = 4
