@@ -5,7 +5,7 @@ local CompactPartyFrame = CompactPartyFrame;
 local hooksecurefunc = hooksecurefunc;
 local UnitIsPlayer = UnitIsPlayer;
 
-local test = false;
+local test = NS.isTestMode;
 
 local centerAura = {}; -- Show an important aura at the center of a raid frame
 local topRightAura = {};
@@ -74,10 +74,11 @@ local topRightAuraSpells = {
 if test then
     table.insert(topRightAuraSpells, 8936); -- Regrowth (test)
     table.insert(topRightAuraSpells, 774); -- Rejuv (test)
+    table.insert(topRightAuraSpells, 194384);  -- Atonement
 end
 
-local function SetAuraFrame(frame, overlayGlow)
-    local size = 22;
+local function SetAuraFrame(frame, buffSize, overlayGlow)
+    local size = buffSize or 22;
     frame:SetSize(size, size);
     frame.cooldown:SetDrawEdge(false);
     frame.cooldown:SetAlpha(1);
@@ -103,7 +104,7 @@ local function SetupRaidFrame(frame)
 
     if ( not topRightAura[frame] ) then
         topRightAura[frame] = CreateFrame("Frame", nil, frame, "CustomCompactAuraTemplate");
-        SetAuraFrame(topRightAura[frame], true);
+        SetAuraFrame(topRightAura[frame], 25, true);
         topRightAura[frame]:SetPoint("TOPLEFT", frame, "TOPRIGHT");
         topRightAura[frame]:Hide();
     end
@@ -117,7 +118,8 @@ local function UpdateRaidFrame(frame)
     local center, topRight = SetupRaidFrame(frame);
 
     local centerSet;
-    for _, spell in ipairs(centerAuraSpells) do
+    for i = 1, #(centerAuraSpells) do
+        local spell = centerAuraSpells[i];
         local name, icon, _, _, duration, expirationTime, source = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
         if duration and ( source == "player" ) then
             center.icon:SetTexture(icon);
@@ -133,7 +135,8 @@ local function UpdateRaidFrame(frame)
     end
 
     local topRightSet;
-    for _, spell in ipairs(topRightAuraSpells) do
+    for i = 1, #(topRightAuraSpells) do
+        local spell = topRightAuraSpells[i];
         local name, icon, _, _, duration, expirationTime, source = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
         if duration then
             topRight.icon:SetTexture(icon);
