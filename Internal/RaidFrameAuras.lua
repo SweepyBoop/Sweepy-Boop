@@ -76,7 +76,7 @@ if test then
     table.insert(topRightAuraSpells, 774); -- Rejuv (test)
 end
 
-local function SetAuraFrame(frame)
+local function SetAuraFrame(frame, overlayGlow)
     local size = 22;
     frame:SetSize(size, size);
     frame.cooldown:SetDrawEdge(false);
@@ -84,6 +84,13 @@ local function SetAuraFrame(frame)
     frame.cooldown:SetDrawBling(false);
     frame.cooldown:SetDrawSwipe(true);
     frame.cooldown:SetReverse(true);
+
+    if overlayGlow then
+        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+        frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+        frame.spellActivationAlert:Hide();
+    end
 end
 
 local function SetupRaidFrame(frame)
@@ -96,7 +103,7 @@ local function SetupRaidFrame(frame)
 
     if ( not topRightAura[frame] ) then
         topRightAura[frame] = CreateFrame("Frame", nil, frame, "CustomCompactAuraTemplate");
-        SetAuraFrame(topRightAura[frame]);
+        SetAuraFrame(topRightAura[frame], true);
         topRightAura[frame]:SetPoint("TOPLEFT", frame, "TOPRIGHT");
         topRightAura[frame]:Hide();
     end
@@ -131,6 +138,7 @@ local function UpdateRaidFrame(frame)
         if duration then
             topRight.icon:SetTexture(icon);
             topRight.cooldown:SetCooldown(expirationTime - duration, duration);
+            NS.ShowOverlayGlow(topRight);
             topRight:Show();
             topRightSet = true;
             break;
@@ -138,6 +146,7 @@ local function UpdateRaidFrame(frame)
     end
 
     if ( not topRightSet ) then
+        NS.HideOverlayGlow(topRight);
         topRight:Hide();
     end
 end
