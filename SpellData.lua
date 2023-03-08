@@ -579,6 +579,14 @@ NS.spellData = {
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
         index = 2,
     },
+    -- Spear of Bastion
+    [376079] = {
+        class = NS.WARRIOR,
+        category = OFFENSIVE,
+        duration = 4,
+        cooldown = 90,
+        index = 2,
+    },
     -- Avatar
     [107574] = {
         class = NS.WARRIOR,
