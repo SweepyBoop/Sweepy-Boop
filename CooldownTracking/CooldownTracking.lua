@@ -484,7 +484,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
         };
     end
 
-    if ( not NS.release ) then
+    if NS.internal then
         local groupToken = ( test and "player" ) or nil;
         iconGroups[SPELLCATEGORY.INTERRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
         iconGroups[SPELLCATEGORY.DISRUPT] = NS.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
@@ -519,7 +519,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
         elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
             local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
 
-            if ( not NS.release ) then
+            if NS.internal then
                 -- These bars are not for publish audience...
                 for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                     ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
@@ -532,7 +532,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
                 end
             end
         elseif ( event == NS.PLAYER_TARGET_CHANGED ) then
-            if ( not NS.release ) then
+            if NS.internal then
                 -- These bars are not for publish audience...
                 for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                     UpdateAllBorders(iconGroups[i]);
