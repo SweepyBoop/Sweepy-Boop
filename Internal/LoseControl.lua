@@ -4,6 +4,7 @@ local UIParent = UIParent;
 local C_LossOfControl = C_LossOfControl;
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
 local SendChatMessage = SendChatMessage;
+local UnitIsGroupLeader = UnitIsGroupLeader;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent)
 containerFrame:SetSize(30, 30)
@@ -57,7 +58,8 @@ function containerFrame:OnEvent(event, ...)
         end
 
         if sendMsg then
-            pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", "YELL") end)
+            local channel = UnitIsGroupLeader("player") and "RAID_WARNING" or "YELL";
+            pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", channel) end)
         end
     end
 end
