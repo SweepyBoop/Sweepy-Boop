@@ -5,6 +5,7 @@ local C_LossOfControl = C_LossOfControl;
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
 local SendChatMessage = SendChatMessage;
 local UnitIsGroupLeader = UnitIsGroupLeader;
+local GetTime = GetTime;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent)
 containerFrame:SetSize(30, 30)
@@ -19,9 +20,10 @@ containerFrame.cooldown:SetHideCountdownNumbers(true)
 containerFrame.cooldown:SetDrawEdge(true);
 containerFrame.cooldown:SetAllPoints()
 
-containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_ADDED)
-containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_UPDATE)
-containerFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
+containerFrame.lastMsgSent = 0;
+containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_ADDED);
+containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_UPDATE);
+containerFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
 
 function containerFrame:OnEvent(event, ...)
     local locData = C_LossOfControl.GetActiveLossOfControlData(1)
@@ -48,6 +50,13 @@ function containerFrame:OnEvent(event, ...)
 
     -- Send notification to group
     if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) then
+        local now = GetTime();
+        if ( now < self.lastMsgSent + 1 ) then
+            -- Don't send more than 1 messages within 1 sec.
+            return;
+        end
+        self.lastMsgSent = now;
+
         local sendMsg;
         if ( locType == "SCHOOL_INTERRUPT" ) then
             -- Only announce for 6s interrupt
