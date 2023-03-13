@@ -329,7 +329,7 @@ local function RefreshTestMode()
         point = "LEFT",
         relativeTo = relativeTo,
         relativePoint = "RIGHT",
-        offsetY = 0,
+        offsetY = SweepyBoop.db.profile.arenaCooldownOffsetY,
     };
 
     externalTestGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
@@ -346,7 +346,7 @@ function SweepyBoop:PopulateOffensiveIcons()
             point = "LEFT",
             relativeTo = prefix .. i,
             relativePoint = "RIGHT",
-            offsetY = 0,
+            offsetY = self.db.profile.arenaCooldownOffsetY,
         };
     end
 
