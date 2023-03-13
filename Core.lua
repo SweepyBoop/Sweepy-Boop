@@ -191,13 +191,22 @@ options.args.ArenaFrames = {
         arenaCooldownOffsetXSlider = {
             order = 11,
             type = "range",
-            width = 1.5,
             min = 0,
             max = 100,
             name = "Horizontal offset",
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
             get = "GetArenaCooldownOffsetX",
             set = "SetArenaCooldownOffsetX",
+        },
+        arenaCooldownOffsetYSlider = {
+            order = 12,
+            type = "range",
+            min = 0,
+            max = 50,
+            name = "Vertical offset",
+            desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
+            get = "GetArenaCooldownOffsetY",
+            set = "SetArenaCooldownOffsetY",
         },
     },
 };
@@ -231,6 +240,7 @@ local defaults = {
         classIconsEnabled = true,
         classIconStyle = NS.CLASSICONSTYLE.ROUND,
         arenaCooldownOffsetX = 5,
+        arenaCooldownOffsetY = 0,
         arenaEnemyOffensivesEnabled = true,
         arenaEnemyOffensiveIconSize = 32,
         arenaEnemyDefensivesEnabled = true,
@@ -360,6 +370,14 @@ end
 
 function SweepyBoop:SetArenaCooldownOffsetX(info, value)
     self.db.profile.arenaCooldownOffsetX = value;
+end
+
+function SweepyBoop:GetArenaCooldownOffsetY(info)
+    return self.db.profile.arenaCooldownOffsetY;
+end
+
+function SweepyBoop:SetArenaCooldownOffsetY(info, value)
+    self.db.profile.arenaCooldownOffsetY = value;
 end
 
 function SweepyBoop:GetArenaEnemyOffensiveIconSize(info)
