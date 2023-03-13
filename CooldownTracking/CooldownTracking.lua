@@ -449,6 +449,7 @@ local function RefreshTestMode()
         -- Otherwise show at the center
         offsetY = 0;
     end
+    offsetY = offsetY + SweepyBoop.db.profile.arenaCooldownOffsetY;
     local setPointOption = {
         point = "LEFT",
         relativeTo = relativeTo,
@@ -475,6 +476,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
         -- Otherwise show at the center
         offsetY = 0;
     end
+    offsetY = offsetY + SweepyBoop.db.profile.arenaCooldownOffsetY;
     for i = 1, NS.MAX_ARENA_SIZE do
         setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
             point = "LEFT",
