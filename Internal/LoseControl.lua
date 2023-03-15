@@ -51,8 +51,8 @@ function containerFrame:OnEvent(event, ...)
     -- Send notification to group
     if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) then
         local now = GetTime();
-        if ( now < self.lastMsgSent + 1 ) then
-            -- Don't send more than 1 messages within 1 sec.
+        if ( now < self.lastMsgSent + 2 ) then
+            -- Don't send more than 1 messages within 2 sec.
             return;
         end
         self.lastMsgSent = now;
