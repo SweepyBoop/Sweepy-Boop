@@ -157,6 +157,7 @@ NS.spellData = {
         duration = 14,
         cooldown = 120,
         extend = true,
+        index = 2,
     },
 
     -- Hunter
