@@ -217,7 +217,7 @@ NS.IconGroup_Wipe = function (group)
         end
         icon:Hide();
     end
-    
+
     wipe(group.icons);
     wipe(group.active);
     wipe(group.activeMap);
