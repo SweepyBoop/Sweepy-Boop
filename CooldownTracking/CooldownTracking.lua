@@ -176,7 +176,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
         validateSubEvent = ( subEvent == NS.SPELL_CAST_SUCCESS );
     end
     if ( not validateSubEvent ) then return end
-    
+
     -- Find the icon to use
     local iconId = unitId .. "-" .. spellId;
     if self.icons[iconId] then
@@ -527,7 +527,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
                     ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
                 end
             end
-            
+
             for i = 1, NS.MAX_ARENA_SIZE do
                 if defensiveGroups[i] then
                     ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);

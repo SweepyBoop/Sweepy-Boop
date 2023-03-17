@@ -49,7 +49,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     if hideHighlight then
         frame.TargetHighlight:Hide();
     end
-    
+
     -- Fill in static info here
     frame.spellInfo = {
         cooldown = spell.cooldown,
@@ -99,13 +99,13 @@ NS.StartCooldownTrackingIcon = function (icon)
     -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
     -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
     local now = GetTime();
-        
+
     -- Check which one should be used
     local index = NS.CheckTimerToStart(timers);
     timers[index].start = now;
     timers[index].duration = info.cooldown;
     timers[index].finish = timers[index].start + timers[index].duration;
-    
+
     if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
         -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
         -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
