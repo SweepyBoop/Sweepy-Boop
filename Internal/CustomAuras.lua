@@ -383,7 +383,7 @@ local teamBuffs = {
     47788, -- Guardian Spirit
     33206, -- Pain Suppression
     198838, -- Earthen Wall Totem
-    3411, -- Intervene
+    147833, -- Intervene
 };
 
 local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, offsetX, offsetY, source)
