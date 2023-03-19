@@ -376,7 +376,7 @@ local teamBuffs = {
     209426, -- Darkness
     102342, -- Ironbark
     53480, -- Roar of Sacrifice
-    116849, -- Life Cacoon
+    116849, -- Life Cocoon
     6940, -- Blessing of Sacrifice
     199448, -- Ultimate Sacrifice
     1022, -- Blessing of Protection
