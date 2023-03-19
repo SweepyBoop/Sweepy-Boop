@@ -345,6 +345,8 @@ local testGlowingBuffIcon = false;
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
+local precongnition = CreateGlowingBuffIcon(377360, 35, "CENTER", UIParent, "CENTER", 0, 100);
+
 if ( class == NS.DRUID ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["ActionButton10"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomLeftButton10"], "TOP", 0, 5, 2, true);
@@ -439,4 +441,4 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
     return frame;
 end
 
-local teamBuffIcon = CreateGlowingTeamBuffs(35, "CENTER", UIParent, "CENTER", 0, 100);
+local teamBuffIcon = CreateGlowingTeamBuffs(35, "CENTER", UIParent, "CENTER", 37, 100);
