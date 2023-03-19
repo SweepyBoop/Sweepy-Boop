@@ -367,3 +367,72 @@ if ( class == NS.DRUID ) then
 elseif ( class == NS.PRIEST ) then
     local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 4);
 end
+
+-- Defensive buffs from teammate
+local teamBuffs = {
+    51052, -- Anti-Magic Zone
+    196718, -- Darkness
+    102342, -- Ironbark
+    53480, -- Roar of Sacrifice
+    116849, -- Life Cacoon
+    6940, -- Blessing of Sacrifice
+    199452, -- Ultimate Sacrifice
+    1022, -- Blessing of Protection
+    47788, -- Guardian Spirit
+    33206, -- Pain Suppression
+    198838, -- Earthen Wall Totem
+    3411, -- Intervene
+};
+
+local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, offsetX, offsetY)
+    local frame = CreateFrame("Frame", nil, UIParent);
+    frame:Hide() -- Hide initially until aura is detected
+
+    frame.spells = teamBuffs;
+    frame:SetSize(size, size);
+    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+
+    frame.texture = frame:CreateTexture();
+    frame.texture:SetAllPoints();
+
+    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+    -- Copied from bigdebuffs options
+    frame.cooldown:SetAllPoints();
+    frame.cooldown:SetDrawEdge(false);
+    frame.cooldown:SetAlpha(1);
+    frame.cooldown:SetDrawBling(false);
+    frame.cooldown:SetDrawSwipe(true);
+    frame.cooldown:SetReverse(true);
+
+    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+    frame.spellActivationAlert:Hide();
+
+    frame:RegisterEvent(NS.UNIT_AURA);
+    frame:SetScript("OnEvent", function (self, event, ...)
+        local unitTarget = ...;
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
+            for i = 1, #(self.spells) do
+                local spell = self.spells[i];
+                local aura = GetPlayerAuraBySpellID(spell);
+                if aura and aura.name then
+                    local icon = select(3, GetSpellInfo(spell));
+                    self.texture:SetTexture(icon);
+
+                    if aura.duration and ( aura.duration ~= 0 ) then
+                        self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
+                    end
+
+                    return;
+                end
+            end
+
+            -- If no early return, no matching aura has been found
+            NS.HideOverlayGlow(self);
+            self:Hide();
+        end
+    end)
+
+    return frame;
+end
