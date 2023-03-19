@@ -19,7 +19,7 @@ local UnitGUID = UnitGUID;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 
-findSpellId.spellName = "Darkness";
+findSpellId.spellName = "Blessing of Sacrifice";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
@@ -419,7 +419,7 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
             for i = 1, #(self.spells) do
                 local spell = self.spells[i];
                 local aura = GetPlayerAuraBySpellID(spell);
-                if aura and aura.name then
+                if aura and aura.name and ( aura.source ~= "player" ) then
                     local icon = select(3, GetSpellInfo(spell));
                     self.texture:SetTexture(icon);
 
