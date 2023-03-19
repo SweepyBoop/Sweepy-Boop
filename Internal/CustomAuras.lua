@@ -378,11 +378,11 @@ local teamBuffs = {
     53480, -- Roar of Sacrifice
     116849, -- Life Cacoon
     6940, -- Blessing of Sacrifice
-    199452, -- Ultimate Sacrifice
+    199448, -- Ultimate Sacrifice
     1022, -- Blessing of Protection
     47788, -- Guardian Spirit
     33206, -- Pain Suppression
-    198838, -- Earthen Wall Totem
+    201633, -- Earthen Wall Totem
     147833, -- Intervene
 };
 
