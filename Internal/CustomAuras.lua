@@ -119,7 +119,7 @@ playerPortraitAuraFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS); -
 playerPortraitAuraFrame:RegisterEvent(NS.UNIT_AURA);
 playerPortraitAuraFrame:Hide();
 
-function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
+function playerPortraitAuraFrame:OnEvent(event, unitTarget)
     if ( event == NS.UNIT_AURA and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
 
     for i = 1, #(classStealthAbility) do
