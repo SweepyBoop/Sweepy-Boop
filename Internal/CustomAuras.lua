@@ -386,11 +386,12 @@ local teamBuffs = {
     3411, -- Intervene
 };
 
-local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, offsetX, offsetY)
+local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, offsetX, offsetY, source)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide() -- Hide initially until aura is detected
 
     frame.spells = teamBuffs;
+    frame.source = source;
     frame:SetSize(size, size);
     frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
 
