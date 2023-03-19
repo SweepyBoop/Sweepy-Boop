@@ -442,4 +442,4 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
     return frame;
 end
 
-local teamBuffIcon = CreateGlowingTeamBuffs(35, "CENTER", UIParent, "CENTER", 37, 100);
+local teamBuffIcon = CreateGlowingTeamBuffs(35, "CENTER", UIParent, "CENTER", 39, 100);
