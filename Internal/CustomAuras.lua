@@ -424,6 +424,7 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
                         self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
                     end
 
+                    NS.ShowOverlayGlow(self);
                     self:Show();
                     return;
                 end
