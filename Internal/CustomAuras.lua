@@ -19,7 +19,7 @@ local UnitGUID = UnitGUID;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 
-findSpellId.spellName = "Atonement";
+findSpellId.spellName = "Ironbark";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
@@ -424,6 +424,7 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
                         self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
                     end
 
+                    self:Show();
                     return;
                 end
             end
@@ -436,3 +437,5 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
 
     return frame;
 end
+
+local teamBuffIcon = CreateGlowingTeamBuffs(35, "CENTER", UIParent, "CENTER", 0, 100);
