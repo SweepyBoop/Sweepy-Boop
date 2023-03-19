@@ -2,7 +2,7 @@
 My lightweight addon to support arena plays.
 
 Here is how my UI looks like:
-![image](https://user-images.githubusercontent.com/78008331/226146607-ed9aa971-ea07-4e52-aea0-3af28c40c1c5.png)
+![image](https://user-images.githubusercontent.com/78008331/226146638-ecd2f9d5-2276-4dbb-925f-157ff4e3a955.png)
 
 Type **/sb** in game to invoke the options panel.
 Most changes require a UI reload to take effect, and there is a Reload UI button below the settings for convinience.
