@@ -19,15 +19,15 @@ local UnitGUID = UnitGUID;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 
-findSpellId.spellName = "Atonement";
+findSpellId.spellName = "Ironbark";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
     if ( not self.enabled ) then return end
 
     if ( event == NS.UNIT_AURA ) and ( unitTarget == "player" ) then
-        local id = select(10, NS.Util_GetUnitAura("player", self.spellName));
-        if id then print("UNIT_AURA", id) end
+        local source, _, _, id = select(7, NS.Util_GetUnitAura("player", self.spellName));
+        if id then print("UNIT_AURA", source, id) end
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local _, subEvent, _, sourceGUID = CombatLogGetCurrentEventInfo();
         if ( subEvent == NS.SPELL_AURA_APPLIED ) and ( sourceGUID == UnitGUID("player") ) then
@@ -119,7 +119,7 @@ playerPortraitAuraFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS); -
 playerPortraitAuraFrame:RegisterEvent(NS.UNIT_AURA);
 playerPortraitAuraFrame:Hide();
 
-function playerPortraitAuraFrame:OnEvent(self, event, unitTarget)
+function playerPortraitAuraFrame:OnEvent(event, unitTarget)
     if ( event == NS.UNIT_AURA and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
 
     for i = 1, #(classStealthAbility) do
@@ -345,6 +345,8 @@ local testGlowingBuffIcon = false;
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
+local precongnition = CreateGlowingBuffIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60);
+
 if ( class == NS.DRUID ) then
     local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["ActionButton10"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomLeftButton10"], "TOP", 0, 5, 2, true);
@@ -367,3 +369,77 @@ if ( class == NS.DRUID ) then
 elseif ( class == NS.PRIEST ) then
     local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 4);
 end
+
+-- Defensive buffs from teammate
+local teamBuffs = {
+    145629, -- Anti-Magic Zone
+    209426, -- Darkness
+    102342, -- Ironbark
+    53480, -- Roar of Sacrifice
+    116849, -- Life Cocoon
+    6940, -- Blessing of Sacrifice
+    199448, -- Ultimate Sacrifice
+    1022, -- Blessing of Protection
+    47788, -- Guardian Spirit
+    33206, -- Pain Suppression
+    201633, -- Earthen Wall Totem
+    147833, -- Intervene
+};
+
+local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, offsetX, offsetY, source)
+    local frame = CreateFrame("Frame", nil, UIParent);
+    frame:Hide() -- Hide initially until aura is detected
+
+    frame.spells = teamBuffs;
+    frame.source = source;
+    frame:SetSize(size, size);
+    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+
+    frame.texture = frame:CreateTexture();
+    frame.texture:SetAllPoints();
+
+    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+    -- Copied from bigdebuffs options
+    frame.cooldown:SetAllPoints();
+    frame.cooldown:SetDrawEdge(false);
+    frame.cooldown:SetAlpha(1);
+    frame.cooldown:SetDrawBling(false);
+    frame.cooldown:SetDrawSwipe(true);
+    frame.cooldown:SetReverse(true);
+
+    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+    frame.spellActivationAlert:Hide();
+
+    frame:RegisterEvent(NS.UNIT_AURA);
+    frame:SetScript("OnEvent", function (self, event, ...)
+        local unitTarget = ...;
+        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
+            for i = 1, #(self.spells) do
+                local spell = self.spells[i];
+                local aura = GetPlayerAuraBySpellID(spell);
+                if aura and aura.name and ( aura.sourceUnit ~= "player" ) then
+                    local icon = select(3, GetSpellInfo(spell));
+                    self.texture:SetTexture(icon);
+
+                    if aura.duration and ( aura.duration ~= 0 ) then
+                        self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
+                    end
+
+                    NS.ShowOverlayGlow(self);
+                    self:Show();
+                    return;
+                end
+            end
+
+            -- If no early return, no matching aura has been found
+            NS.HideOverlayGlow(self);
+            self:Hide();
+        end
+    end)
+
+    return frame;
+end
+
+local teamBuffIcon = CreateGlowingTeamBuffs(35, "CENTER", UIParent, "CENTER", 0, 100);
