@@ -19,7 +19,7 @@ local UnitGUID = UnitGUID;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 
-findSpellId.spellName = "Ironbark";
+findSpellId.spellName = "Anti-Magic Zone";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
@@ -372,7 +372,7 @@ end
 
 -- Defensive buffs from teammate
 local teamBuffs = {
-    51052, -- Anti-Magic Zone
+    145629, -- Anti-Magic Zone
     196718, -- Darkness
     102342, -- Ironbark
     53480, -- Roar of Sacrifice
