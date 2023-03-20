@@ -367,7 +367,7 @@ if ( class == NS.DRUID ) then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
     end
 elseif ( class == NS.PRIEST ) then
-    local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 4);
+    local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50, 4);
 elseif ( class == NS.PALADIN ) then
     local auraOfReckoning = CreateStackBuffIcon(247676, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 100);
     local wing = CreateGlowingBuffIcon(31884, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50);
