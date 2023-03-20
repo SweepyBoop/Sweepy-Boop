@@ -348,9 +348,9 @@ local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivatio
 local precongnition = CreateGlowingBuffIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60);
 
 if ( class == NS.DRUID ) then
-    local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["ActionButton10"], "TOP", 0, 50, 3);
+    local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomLeftButton10"], "TOP", 0, 5, 2, true);
-    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["ActionButton10"], "TOP", 0, 5);
+    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5);
 
     local function protectorFunc(count, duration, expirationTime, value)
         local currentValue = value or 0;
@@ -359,7 +359,7 @@ if ( class == NS.DRUID ) then
         local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
         return percent;
     end
-    local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton9"], "TOP", 0, 5, 100, false, protectorFunc);
+    local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
 
     local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarRightButton8"], "RIGHT", 5, 0, 3);
 
@@ -368,6 +368,9 @@ if ( class == NS.DRUID ) then
     end
 elseif ( class == NS.PRIEST ) then
     local harshDiscipline = CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 4);
+elseif ( class == NS.PALADIN ) then
+    local auraOfReckoning = CreateStackBuffIcon(247676, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 100);
+    local wing = CreateGlowingBuffIcon(31884, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50);
 end
 
 -- Defensive buffs from teammate
