@@ -17,6 +17,8 @@ local topRightAura = {};
 local centerAuraSpells = {
     102352, -- Cenarion Ward
     194384,  -- Atonement
+    53563, -- Beacon of Light
+    156910, -- Beacon of Faith
 };
 if test then
     table.insert(centerAuraSpells, 8936); -- Regrowth (test)
@@ -121,9 +123,13 @@ local function UpdateRaidFrame(frame)
     for i = 1, #(centerAuraSpells) do
         local spell = centerAuraSpells[i];
         local name, icon, _, _, duration, expirationTime, source = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
-        if duration and ( source == "player" ) then
+        if name and ( source == "player" ) then
             center.icon:SetTexture(icon);
-            center.cooldown:SetCooldown(expirationTime - duration, duration);
+
+            if duration and ( duration ~= 0 ) then
+                center.cooldown:SetCooldown(expirationTime - duration, duration);
+            end
+
             center:Show();
             centerSet = true;
             break;
