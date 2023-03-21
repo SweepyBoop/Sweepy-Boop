@@ -13,6 +13,7 @@ local IsInInstance = IsInInstance;
 local strsplit = strsplit;
 local CompactPartyFrame = CompactPartyFrame;
 local hooksecurefunc = hooksecurefunc;
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
 -- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
 -- To find the NpcID of a unit, target it and type:
@@ -130,6 +131,7 @@ local ClassIconSize = {
     Round = 64,
     Flat = 48,
     Pet = 32,
+    Healer = 52,
 };
 
 local function GetIconOptions(class, border)
@@ -142,10 +144,10 @@ local function GetIconOptions(class, border)
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
         if SweepyBoop.db.profile.classIconStyle == NS.CLASSICONSTYLE.FLAT then
             path = path .. "flat";
-            iconSize = ClassIconSize.Flat;
+            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Flat;
         else
             path = path .. "round";
-            iconSize = ClassIconSize.Round;
+            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Round;
         end
     end
 
@@ -163,33 +165,42 @@ end
 local iconCount = 4
 
 local function ShowClassIcon(frame)
-    local icon = EnsureClassIcon(frame)
-    if ( not icon ) then return end
+    local icon = EnsureClassIcon(frame);
+    if ( not icon ) then return end;
 
-    local isPlayer = UnitIsPlayer(frame.unit)
-    local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET"
-    local isTarget = UnitIsUnit("target", frame.unit)
+    local isPlayer = UnitIsPlayer(frame.unit);
+    local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET";
+
+    -- Show dedicated healer icon
+    if SweepyBoop.db.profile.useHealerIcon then
+        -- For player nameplates, check if it's a healer
+        if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
+            class = "HEALER";
+        end
+    end
+
+    local isTarget = UnitIsUnit("target", frame.unit);
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath, iconSize = GetIconOptions(class, isTarget);
         local iconFile = iconPath .. class
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            local npcID = select(6, strsplit("-", UnitGUID(frame.unit)))
-            local petNumber = math.fmod(tonumber(npcID), iconCount)
-            iconFile = iconFile .. petNumber
+            local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
+            local petNumber = math.fmod(tonumber(npcID), iconCount);
+            iconFile = iconFile .. petNumber;
         end
-        icon:SetTexture(iconFile)
+        icon:SetTexture(iconFile);
 
-        if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) then
-            icon:SetSize(iconSize, iconSize)
+        if ( icon.iconSize == nil ) or ( iconSize ~= icon.iconSize ) then
+            icon:SetSize(iconSize, iconSize);
         end
 
-        icon.class = class
-        icon.isTarget = isTarget
-        icon.isPlayer = isPlayer
+        icon.class = class;
+        icon.isTarget = isTarget;
+        icon.iconSize = iconSize;
     end
 
-    icon:Show()
+    icon:Show();
 end
 
 local function UpdateClassIcon(frame)
