@@ -180,7 +180,6 @@ local function ShowClassIcon(frame)
     end
 
     local isTarget = UnitIsUnit("target", frame.unit);
-    local isHealer = ( class == "HEALER" );
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath, iconSize = GetIconOptions(class, isTarget);
@@ -192,14 +191,13 @@ local function ShowClassIcon(frame)
         end
         icon:SetTexture(iconFile);
 
-        if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) or ( icon.isHealer == nil ) or ( isHealer ~= icon.isHealer ) then
+        if ( icon.iconSize == nil ) or ( iconSize ~= icon.iconSize ) then
             icon:SetSize(iconSize, iconSize);
         end
 
         icon.class = class;
         icon.isTarget = isTarget;
-        icon.isPlayer = isPlayer;
-        icon.isHealer = isHealer;
+        icon.iconSize = iconSize;
     end
 
     icon:Show();
