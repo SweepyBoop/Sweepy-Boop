@@ -131,7 +131,7 @@ local ClassIconSize = {
     Round = 64,
     Flat = 48,
     Pet = 32,
-    Healer = 40,
+    Healer = 48,
 };
 
 local function GetIconOptions(class, border)
@@ -199,6 +199,7 @@ local function ShowClassIcon(frame)
         icon.class = class;
         icon.isTarget = isTarget;
         icon.isPlayer = isPlayer;
+        icon.isHealer = isHealer;
     end
 
     icon:Show();
