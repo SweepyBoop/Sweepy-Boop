@@ -131,6 +131,7 @@ local ClassIconSize = {
     Round = 64,
     Flat = 48,
     Pet = 32,
+    Healer = 45,
 };
 
 local function GetIconOptions(class, border)
@@ -143,10 +144,10 @@ local function GetIconOptions(class, border)
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
         if SweepyBoop.db.profile.classIconStyle == NS.CLASSICONSTYLE.FLAT then
             path = path .. "flat";
-            iconSize = ClassIconSize.Flat;
+            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Flat;
         else
             path = path .. "round";
-            iconSize = ClassIconSize.Round;
+            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Round;
         end
     end
 
@@ -172,8 +173,9 @@ local function ShowClassIcon(frame)
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.useHealerIcon then
-        if UnitGroupRolesAssigned(frame.unit) == "HEALER" then
-            class = "healer";
+        -- For player nameplates, check if it's a healer
+        if ( class ~= "PET" ) and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
+            class = "HEALER";
         end
     end
 
