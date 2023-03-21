@@ -13,6 +13,7 @@ local IsInInstance = IsInInstance;
 local strsplit = strsplit;
 local CompactPartyFrame = CompactPartyFrame;
 local hooksecurefunc = hooksecurefunc;
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
 -- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
 -- To find the NpcID of a unit, target it and type:
@@ -168,6 +169,14 @@ local function ShowClassIcon(frame)
 
     local isPlayer = UnitIsPlayer(frame.unit)
     local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET"
+
+    -- Show dedicated healer icon
+    if SweepyBoop.db.profile.useHealerIcon then
+        if UnitGroupRolesAssigned(frame.unit) == "HEALER" then
+            class = "healer";
+        end
+    end
+
     local isTarget = UnitIsUnit("target", frame.unit)
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
