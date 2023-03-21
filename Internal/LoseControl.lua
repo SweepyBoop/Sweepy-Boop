@@ -6,6 +6,7 @@ local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
 local SendChatMessage = SendChatMessage;
 local UnitIsGroupLeader = UnitIsGroupLeader;
 local GetTime = GetTime;
+local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent)
 containerFrame:SetSize(30, 30)
@@ -49,7 +50,7 @@ function containerFrame:OnEvent(event, ...)
     self:Show()
 
     -- Send notification to group
-    if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) then
+    if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) and ( UnitGroupRolesAssigned("player") == "HEALER" ) then
         local now = GetTime();
         if ( now < self.lastMsgSent + 2 ) then
             -- Don't send more than 1 messages within 2 sec.
