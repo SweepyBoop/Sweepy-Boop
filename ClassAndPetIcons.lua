@@ -131,7 +131,7 @@ local ClassIconSize = {
     Round = 64,
     Flat = 48,
     Pet = 32,
-    Healer = 48,
+    Healer = 52,
 };
 
 local function GetIconOptions(class, border)
