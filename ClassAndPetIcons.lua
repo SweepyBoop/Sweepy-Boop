@@ -131,7 +131,7 @@ local ClassIconSize = {
     Round = 64,
     Flat = 48,
     Pet = 32,
-    Healer = 45,
+    Healer = 40,
 };
 
 local function GetIconOptions(class, border)
@@ -165,11 +165,11 @@ end
 local iconCount = 4
 
 local function ShowClassIcon(frame)
-    local icon = EnsureClassIcon(frame)
-    if ( not icon ) then return end
+    local icon = EnsureClassIcon(frame);
+    if ( not icon ) then return end;
 
-    local isPlayer = UnitIsPlayer(frame.unit)
-    local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET"
+    local isPlayer = UnitIsPlayer(frame.unit);
+    local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET";
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.useHealerIcon then
@@ -179,28 +179,29 @@ local function ShowClassIcon(frame)
         end
     end
 
-    local isTarget = UnitIsUnit("target", frame.unit)
+    local isTarget = UnitIsUnit("target", frame.unit);
+    local isHealer = ( class == "HEALER" );
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath, iconSize = GetIconOptions(class, isTarget);
         local iconFile = iconPath .. class
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            local npcID = select(6, strsplit("-", UnitGUID(frame.unit)))
-            local petNumber = math.fmod(tonumber(npcID), iconCount)
-            iconFile = iconFile .. petNumber
+            local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
+            local petNumber = math.fmod(tonumber(npcID), iconCount);
+            iconFile = iconFile .. petNumber;
         end
-        icon:SetTexture(iconFile)
+        icon:SetTexture(iconFile);
 
-        if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) then
-            icon:SetSize(iconSize, iconSize)
+        if ( icon.isPlayer == nil ) or ( isPlayer ~= icon.isPlayer ) or ( icon.isHealer == nil ) or ( isHealer ~= icon.isHealer ) then
+            icon:SetSize(iconSize, iconSize);
         end
 
-        icon.class = class
-        icon.isTarget = isTarget
-        icon.isPlayer = isPlayer
+        icon.class = class;
+        icon.isTarget = isTarget;
+        icon.isPlayer = isPlayer;
     end
 
-    icon:Show()
+    icon:Show();
 end
 
 local function UpdateClassIcon(frame)
