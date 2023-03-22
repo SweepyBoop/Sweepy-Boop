@@ -287,6 +287,8 @@ local function SetupAuraGroup(group, unit, testIcons)
             end
 
             if enabled then
+                -- Reset dynamic info before populating to group
+                premadeIcons[unit][spellID].info = { cooldown = spell.cooldown };
                 NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                 --print("Populated", unit, spell.class, spellID)
             end

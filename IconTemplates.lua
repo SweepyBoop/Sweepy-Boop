@@ -99,8 +99,8 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
 
     frame.unit = unit;
     frame.spellID = spellID;
-    frame.info = NS.spellData[spellID];
-    frame.priority = frame.info.priority;
+    frame.spellInfo = NS.spellData[spellID];
+    frame.priority = frame.spellInfo.priority;
     frame.group = group;
 
     frame:SetSize(size, size);
@@ -110,7 +110,7 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
     frame.tex:SetAllPoints();
 
     -- Create duration/cooldown timers as needed
-    local spell = frame.info;
+    local spell = frame.spellInfo;
     if spell.cooldown then
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
         frame.cooldown:SetAllPoints();
@@ -169,8 +169,9 @@ NS.CheckTimerToStart = function (timers)
 end
 
 NS.StartSweepyIcon = function (icon)
-    local spell = icon.info;
+    local spell = icon.spellInfo;
     local timers = icon.timers;
+    local info = icon.info;
 
     if #(timers) == 0 then
         table.insert(timers, {start = 0, duration = 0, finish = 0});
@@ -182,14 +183,19 @@ NS.StartSweepyIcon = function (icon)
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
+        -- Update opt_lower_cooldown
+        if icon:IsShown() and spell.opt_lower_cooldown then
+            info.cooldown = spell.opt_lower_cooldown;
+        end
+
         -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
         local now = GetTime();
 
         -- Check which one should be used
         local index = NS.CheckTimerToStart(timers);
         timers[index].start = now;
-        timers[index].duration = spell.cooldown;
-        timers[index].finish = now + spell.cooldown;
+        timers[index].duration = info.cooldown;
+        timers[index].finish = now + info.cooldown;
         -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
         -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
         if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
