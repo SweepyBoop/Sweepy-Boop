@@ -327,7 +327,7 @@ NS.spellData = {
     [343721] = {
         class = NS.PALADIN,
         category = OFFENSIVE,
-        duration = 8,
+        duration = 12,
     },
 
     -- Priest
