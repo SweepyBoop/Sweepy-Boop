@@ -51,8 +51,8 @@ NS.RefreshCooldownTimer = function (self, finish)
             -- now resume the timer's cooldown progress
             if finish and ( timers[i].finish == math.huge ) then
                 timers[i].start = now;
-                timers[i].duration = icon.spellInfo.cooldown;
-                timers[i].finish = now + icon.spellInfo.cooldown;
+                timers[i].duration = icon.info.cooldown;
+                timers[i].finish = now + icon.info.cooldown;
                 -- We just restored a charge, always show this one in cooldown frame, and show stack text
                 start, duration, stack = timers[i].start, timers[i].duration, true;
             else
