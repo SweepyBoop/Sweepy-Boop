@@ -286,23 +286,21 @@ NS.spellData = {
     [31884] = {
         class = NS.PALADIN,
         category = OFFENSIVE,
-        duration = 20,
-        cooldown = 120,
+        duration = 23,
+        cooldown = 60, -- Avenging Wrath: Might
         sound = true,
         index = 1,
         spec = { specID.RET },
-        extend = true, -- Zelot's Paragon
     },
     -- Crusade
     [231895] = {
         class = NS.PALADIN,
         category = OFFENSIVE,
-        duration = 25,
+        duration = 30,
         cooldown = 120,
         sound = true,
         index = 1,
         spec = { specID.RET },
-        extend = true, -- Zelot's Paragon
     },
     -- Divine Toll
     [375576] = {
