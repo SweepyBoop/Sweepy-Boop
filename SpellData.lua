@@ -316,13 +316,6 @@ NS.spellData = {
         trackDest = true,
         index = 2,
     },
-    -- Seraphim
-    [152262] = {
-        class = NS.PALADIN,
-        category = OFFENSIVE,
-        duration = 15,
-        spec = { specID.RET },
-    },
     -- Final Reckoning
     [343721] = {
         class = NS.PALADIN,
