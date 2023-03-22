@@ -308,6 +308,7 @@ NS.spellData = {
         category = OFFENSIVE,
         spec = { specID.RET },
         cooldown = 60,
+        opt_lower_cooldown = 45,
     },
     -- Blessing of Summer
     [388007] = {
