@@ -171,11 +171,7 @@ end
 NS.StartSweepyIcon = function (icon)
     local spell = icon.spellInfo;
     local timers = icon.timers;
-
     local info = icon.info;
-    if ( not info.cooldown ) and spell.cooldown then
-        info.cooldown = spell.cooldown;
-    end
 
     if #(timers) == 0 then
         table.insert(timers, {start = 0, duration = 0, finish = 0});
