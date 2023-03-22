@@ -286,23 +286,21 @@ NS.spellData = {
     [31884] = {
         class = NS.PALADIN,
         category = OFFENSIVE,
-        duration = 20,
-        cooldown = 120,
+        duration = 23, -- Baseline: 20s, Divine Wrath: 3s
+        cooldown = 60, -- Avenging Wrath: Might
         sound = true,
         index = 1,
         spec = { specID.RET },
-        extend = true, -- Zelot's Paragon
     },
     -- Crusade
     [231895] = {
         class = NS.PALADIN,
         category = OFFENSIVE,
-        duration = 25,
+        duration = 30, -- Baseline: 27s, Divine Wrath: 3s
         cooldown = 120,
         sound = true,
         index = 1,
         spec = { specID.RET },
-        extend = true, -- Zelot's Paragon
     },
     -- Divine Toll
     [375576] = {
@@ -318,18 +316,11 @@ NS.spellData = {
         trackDest = true,
         index = 2,
     },
-    -- Seraphim
-    [152262] = {
-        class = NS.PALADIN,
-        category = OFFENSIVE,
-        duration = 15,
-        spec = { specID.RET },
-    },
     -- Final Reckoning
     [343721] = {
         class = NS.PALADIN,
         category = OFFENSIVE,
-        duration = 8,
+        duration = 12,
     },
 
     -- Priest
