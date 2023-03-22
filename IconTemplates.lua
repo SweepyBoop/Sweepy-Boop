@@ -51,8 +51,8 @@ NS.RefreshCooldownTimer = function (self, finish)
             -- now resume the timer's cooldown progress
             if finish and ( timers[i].finish == math.huge ) then
                 timers[i].start = now;
-                timers[i].duration = icon.info.cooldown;
-                timers[i].finish = now + icon.info.cooldown;
+                timers[i].duration = icon.spellInfo.cooldown;
+                timers[i].finish = now + icon.spellInfo.cooldown;
                 -- We just restored a charge, always show this one in cooldown frame, and show stack text
                 start, duration, stack = timers[i].start, timers[i].duration, true;
             else
@@ -99,8 +99,8 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
 
     frame.unit = unit;
     frame.spellID = spellID;
-    frame.info = NS.spellData[spellID];
-    frame.priority = frame.info.priority;
+    frame.spellInfo = NS.spellData[spellID];
+    frame.priority = frame.spellInfo.priority;
     frame.group = group;
 
     frame:SetSize(size, size);
@@ -110,7 +110,7 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
     frame.tex:SetAllPoints();
 
     -- Create duration/cooldown timers as needed
-    local spell = frame.info;
+    local spell = frame.spellInfo;
     if spell.cooldown then
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
         frame.cooldown:SetAllPoints();
@@ -169,7 +169,7 @@ NS.CheckTimerToStart = function (timers)
 end
 
 NS.StartSweepyIcon = function (icon)
-    local spell = icon.info;
+    local spell = icon.spellInfo;
     local timers = icon.timers;
 
     if #(timers) == 0 then
