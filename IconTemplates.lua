@@ -41,6 +41,20 @@ NS.RefreshCooldownTimer = function (self, finish)
     local timers = icon.timers;
     if ( not timers ) then return end
 
+    -- Simplify logic for single timer
+    if #(timers) < 2 then
+        if finish then
+            icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
+            if icon.group then
+                NS.IconGroup_Remove(icon:GetParent(), icon);
+            end
+        else
+            icon.cooldown:SetCooldown(timers[1].start, timers[1].duration);
+        end
+
+        return;
+    end
+
     local now = GetTime();
     local start, duration, stack = math.huge, math.huge, nil;
     for i = 1, #(timers) do
@@ -63,7 +77,7 @@ NS.RefreshCooldownTimer = function (self, finish)
         end
     end
 
-    if ( start ~= math.huge ) and ( duration ~= math.huge ) then
+    if ( start ~= math.huge ) and ( duration ~= math.huge ) and ( now < start + duration ) then
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
