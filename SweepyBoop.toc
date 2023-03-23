@@ -47,6 +47,7 @@ Internal\DrinkMacro.lua
 Internal\FocusMacros.lua
 Internal\CombatIndicator.lua
 Internal\PersonalDR.lua
+Internal\ArenaSurrender.lua
 
 # Weak Auras equivalent
 Internal\CustomAuras.xml
