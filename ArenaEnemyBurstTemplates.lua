@@ -59,6 +59,80 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
     return frame;
 end
 
+NS.StartSweepyIcon = function (icon)
+    local spell = icon.spellInfo;
+    local timers = icon.timers;
+    local info = icon.info;
+
+    if #(timers) == 0 then
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
+    end
+
+    if spell.charges and #(timers) < 2 then
+        table.insert(timers, {start = 0, duration = 0, finish = 0});
+    end
+
+    -- If there is a cooldown, start the cooldown timer
+    if icon.cooldown then
+        -- Update opt_lower_cooldown
+        if icon:IsShown() and spell.opt_lower_cooldown then
+            info.cooldown = spell.opt_lower_cooldown;
+        end
+
+        -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
+        local now = GetTime();
+
+        -- Check which one should be used
+        local index = NS.CheckTimerToStart(timers);
+        timers[index].start = now;
+        timers[index].duration = info.cooldown;
+        timers[index].finish = now + info.cooldown;
+        -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
+        -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
+        if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
+            timers[2].finish = math.huge;
+        elseif ( index == 2 ) then
+            -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
+            timers[2].finish = math.huge;
+        end
+
+        NS.RefreshCooldownTimer(icon.cooldown);
+    end
+
+    -- If there is a duration, start the duration timer
+    if icon.duration then
+        local startTime = GetTime();
+        -- Decide duration
+        local duration;
+        if ( not spell.duration ) then
+            -- Default glow duration
+            duration = 3;
+        elseif spell.duration == NS.DURATION_DYNAMIC then
+            local expirationTime;
+            duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
+            startTime = expirationTime - duration;
+        else
+            duration = spell.duration;
+        end
+
+        icon.duration:SetCooldown(startTime, duration);
+        if icon.cooldown then
+            icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
+        end
+        NS.ShowOverlayGlow(icon);
+    end
+
+    -- Play sound for spells with highest priority
+    if ( icon.priority == 1 ) then
+        -- https://wowpedia.fandom.com/wiki/API_PlaySound
+        --PlaySoundFile(567721); -- MachineGun
+    end
+
+    if icon.group then
+        NS.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
+    end
+end
+
 -- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
 NS.ResetSweepyDuration = function (icon)
     if ( not icon.duration ) then return end
