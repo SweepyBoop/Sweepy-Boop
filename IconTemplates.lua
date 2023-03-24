@@ -56,34 +56,35 @@ NS.RefreshCooldownTimer = function (self, finish)
     end
 
     local now = GetTime();
-    local start, duration, stack = math.huge, math.huge, nil;
+    if finish then
+        -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown
+        -- now resume the timer's cooldown progress
+        if ( timers[2].finish == math.huge ) then
+            timers[2].start = now;
+            timers[2].duration = icon.info.cooldown;
+            timers[2].finish = now + icon.info.cooldown;
+        end
+
+        -- Reset whichever timer is closer to finish
+        local index = (timers[1].finish <= timers[2].finish) and 1 or 2;
+        timers[index] = { start = 0, duration = 0, finish = 0 };
+    end
+
+    local stack = ( now >= timers[1].finish ) or ( now >= timers[2].finish );
+    -- Show the timer on cooldown; if both on cooldown, show the one closer to finish
+    local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
-        if ( now >= timers[i].finish ) then
-            stack = true;
-        else
-            -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown
-            -- now resume the timer's cooldown progress
-            if finish and ( timers[i].finish == math.huge ) then
-                timers[i].start = now;
-                timers[i].duration = icon.info.cooldown;
-                timers[i].finish = now + icon.info.cooldown;
-                -- We just restored a charge, always show this one in cooldown frame, and show stack text
-                start, duration, stack = timers[i].start, timers[i].duration, true;
-            else
-                if ( timers[i].start + timers[i].duration < start + duration ) then
-                    start, duration = timers[i].start, timers[i].duration;
-                end
-            end
+        if ( timers[i].finish ~= 0 ) and ( timers[i].finish < start + duration ) then
+            start, duration = timers[i].start, timers[i].duration;
         end
     end
 
-    if ( start ~= math.huge ) and ( duration ~= math.huge ) and ( now < start + duration ) then
+    if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
         end
     else
-        -- Nothing is on cooldown, hide the icon
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
             NS.IconGroup_Remove(icon:GetParent(), icon);
@@ -175,7 +176,7 @@ NS.CheckTimerToStart = function (timers)
         elseif ( now >= timers[2].finish ) then
             index = 2;
         else
-            index = ( timers[1].finish < timers[2].finish ) and 1 or 2;
+            index = ( timers[1].finish <= timers[2].finish ) and 1 or 2;
         end
     end
 
