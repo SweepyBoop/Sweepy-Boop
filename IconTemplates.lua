@@ -56,34 +56,37 @@ NS.RefreshCooldownTimer = function (self, finish)
     end
 
     local now = GetTime();
-    local start, duration, stack = math.huge, math.huge, nil;
+    if finish then
+        -- We previously set the finish of this timer to infinity so it will start over when the other timer comes off cooldown
+        -- now restart the timer's cooldown progress
+        if ( timers[2].finish == math.huge ) then
+            timers[2].start = now;
+            timers[2].duration = icon.info.cooldown;
+            timers[2].finish = now + icon.info.cooldown;
+        end
+
+        -- Reset whichever timer is closer to finish
+        -- It's possible this has been done prior to calling this function, but check here to make sure
+        local index = (timers[1].finish <= timers[2].finish) and 1 or 2;
+        timers[index].finish = 0;
+    end
+
+    local stack = ( now >= timers[1].finish ) or ( now >= timers[2].finish );
+    -- Show the timer on cooldown; if both on cooldown, show the one closer to finish
+    -- Exclude paused timers (finish == math.huge)
+    local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
-        if ( now >= timers[i].finish ) then
-            stack = true;
-        else
-            -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown
-            -- now resume the timer's cooldown progress
-            if finish and ( timers[i].finish == math.huge ) then
-                timers[i].start = now;
-                timers[i].duration = icon.info.cooldown;
-                timers[i].finish = now + icon.info.cooldown;
-                -- We just restored a charge, always show this one in cooldown frame, and show stack text
-                start, duration, stack = timers[i].start, timers[i].duration, true;
-            else
-                if ( timers[i].start + timers[i].duration < start + duration ) then
-                    start, duration = timers[i].start, timers[i].duration;
-                end
-            end
+        if ( timers[i].finish ~= 0 ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].start + timers[i].duration ) then
+            start, duration = timers[i].start, timers[i].duration;
         end
     end
 
-    if ( start ~= math.huge ) and ( duration ~= math.huge ) and ( now < start + duration ) then
+    if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetText(stack and "#" or "");
         end
     else
-        -- Nothing is on cooldown, hide the icon
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
             NS.IconGroup_Remove(icon:GetParent(), icon);
@@ -95,7 +98,7 @@ NS.FinishCooldownTimer = function (self)
     NS.RefreshCooldownTimer(self, true);
 end
 
-local function OnDurationTimerFinished(self)
+NS.OnDurationTimerFinished = function(self)
     local icon = self:GetParent();
     NS.HideOverlayGlow(icon);
     if icon.cooldown then
@@ -105,61 +108,6 @@ local function OnDurationTimerFinished(self)
             NS.IconGroup_Remove(icon:GetParent(), icon);
         end
     end
-end
-
-NS.CreateSweepyIcon = function (unit, spellID, size, group)
-    local frame = CreateFrame("Frame", nil, UIParent);
-    frame:Hide();
-
-    frame.unit = unit;
-    frame.spellID = spellID;
-    frame.spellInfo = NS.spellData[spellID];
-    frame.priority = frame.spellInfo.priority;
-    frame.group = group;
-
-    frame:SetSize(size, size);
-
-    frame.tex = frame:CreateTexture();
-    frame.tex:SetTexture(select(3, GetSpellInfo(spellID)));
-    frame.tex:SetAllPoints();
-
-    -- Create duration/cooldown timers as needed
-    local spell = frame.spellInfo;
-    if spell.cooldown then
-        frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-        frame.cooldown:SetAllPoints();
-        frame.cooldown:SetDrawEdge(false);
-        frame.cooldown:SetDrawBling(false);
-        frame.cooldown:SetDrawSwipe(true);
-        frame.cooldown:SetReverse(true);
-        frame.cooldown:SetScript("OnCooldownDone", NS.FinishCooldownTimer);
-
-        if spell.charges then
-            frame.Count = frame:CreateFontString(nil, "ARTWORK");
-            frame.Count:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
-            frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
-            frame.Count:SetText(""); -- Call this before setting font color
-            frame.Count:SetTextColor(1, 1, 0);
-        end
-    end
-
-    -- For now, always create a duration timer, if there is no duration, show 3s glow as reminder
-    frame.duration = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "AuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
-    frame.duration:SetAllPoints();
-    frame.duration:SetDrawEdge(false);
-    frame.duration:SetDrawBling(false);
-    frame.duration:SetDrawSwipe(true);
-    frame.duration:SetReverse(true);
-    frame.duration:SetAlpha(0);
-
-    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
-    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
-    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
-    frame.spellActivationAlert:Hide();
-
-    frame.duration:SetScript("OnCooldownDone", OnDurationTimerFinished);
-
-    return frame;
 end
 
 NS.CheckTimerToStart = function (timers)
@@ -175,98 +123,11 @@ NS.CheckTimerToStart = function (timers)
         elseif ( now >= timers[2].finish ) then
             index = 2;
         else
-            index = ( timers[1].finish < timers[2].finish ) and 1 or 2;
+            index = ( timers[1].finish <= timers[2].finish ) and 1 or 2;
         end
     end
 
     return index;
-end
-
-NS.StartSweepyIcon = function (icon)
-    local spell = icon.spellInfo;
-    local timers = icon.timers;
-    local info = icon.info;
-
-    if #(timers) == 0 then
-        table.insert(timers, {start = 0, duration = 0, finish = 0});
-    end
-
-    if spell.charges and #(timers) < 2 then
-        table.insert(timers, {start = 0, duration = 0, finish = 0});
-    end
-
-    -- If there is a cooldown, start the cooldown timer
-    if icon.cooldown then
-        -- Update opt_lower_cooldown
-        if icon:IsShown() and spell.opt_lower_cooldown then
-            info.cooldown = spell.opt_lower_cooldown;
-        end
-
-        -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
-        local now = GetTime();
-
-        -- Check which one should be used
-        local index = NS.CheckTimerToStart(timers);
-        timers[index].start = now;
-        timers[index].duration = info.cooldown;
-        timers[index].finish = now + info.cooldown;
-        -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
-        -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
-        if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
-            timers[2].finish = math.huge;
-        elseif ( index == 2 ) then
-            -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
-            timers[2].finish = math.huge;
-        end
-
-        NS.RefreshCooldownTimer(icon.cooldown);
-    end
-
-    -- If there is a duration, start the duration timer
-    if icon.duration then
-        local startTime = GetTime();
-        -- Decide duration
-        local duration;
-        if ( not spell.duration ) then
-            -- Default glow duration
-            duration = 3;
-        elseif spell.duration == NS.DURATION_DYNAMIC then
-            local expirationTime;
-            duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
-            startTime = expirationTime - duration;
-        else
-            duration = spell.duration;
-        end
-
-        icon.duration:SetCooldown(startTime, duration);
-        if icon.cooldown then
-            icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
-        end
-        NS.ShowOverlayGlow(icon);
-    end
-
-    -- Play sound for spells with highest priority
-    if ( icon.priority == 1 ) then
-        -- https://wowpedia.fandom.com/wiki/API_PlaySound
-        --PlaySoundFile(567721); -- MachineGun
-    end
-
-    if icon.group then
-        NS.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
-    end
-end
-
-NS.RefreshSweepyDuration = function (icon)
-    if ( not icon.duration ) then return end
-
-    -- Get new duration
-    local duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
-    if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
-        icon.duration:SetCooldown(expirationTime - duration, duration);
-        if icon.cooldown then
-            icon.cooldown:Hide(); -- Duration OnCooldownDone callback will show the cooldown timer
-        end
-    end
 end
 
 NS.ResetIconCooldown = function (icon, amount)
@@ -301,12 +162,4 @@ NS.ResetIconCooldown = function (icon, amount)
     end
 
     NS.RefreshCooldownTimer(icon.cooldown, finish);
-end
-
--- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
-NS.ResetSweepyDuration = function (icon)
-    if ( not icon.duration ) then return end
-
-    icon.duration:SetCooldown(0, 0);
-    OnDurationTimerFinished(icon.duration);
 end
