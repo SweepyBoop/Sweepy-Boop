@@ -60,13 +60,11 @@ NS.RefreshCooldownTimer = function (self, finish)
         -- Reset whichever timer is closer to finish
         -- It's possible this has been done prior to calling this function, but check here to make sure
         local index = (timers[1].finish <= timers[2].finish) and 1 or 2;
-        --print("Reset timers[" .. index .. "]")
         timers[index].finish = 0;
 
         -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown
         -- now resume the timer's cooldown progress
         if ( timers[2].finish == math.huge ) then
-            --print("Refresh timers[2] progress")
             timers[2].start = now;
             timers[2].duration = icon.info.cooldown;
             timers[2].finish = now + icon.info.cooldown;
@@ -78,9 +76,7 @@ NS.RefreshCooldownTimer = function (self, finish)
     -- Exclude paused timers (finish == math.huge)
     local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
-        --print("timers[" .. i .. "]: ", timers[i].start, timers[i].finish)
         if ( timers[i].finish ~= 0 ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].start + timers[i].duration ) then
-            --print("Update cooldown to show timers", i);
             start, duration = timers[i].start, timers[i].duration;
         end
     end

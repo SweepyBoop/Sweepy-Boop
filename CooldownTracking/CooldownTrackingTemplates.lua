@@ -102,7 +102,6 @@ NS.StartCooldownTrackingIcon = function (icon)
 
     -- Check which one should be used
     local index = NS.CheckTimerToStart(timers);
-    --print("Use timers", index)
     timers[index].start = now;
     timers[index].duration = info.cooldown;
     timers[index].finish = timers[index].start + timers[index].duration;
