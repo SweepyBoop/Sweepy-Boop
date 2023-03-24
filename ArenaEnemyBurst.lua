@@ -65,6 +65,12 @@ end
 
 local function ResetSweepyCooldown(icon, amount)
     NS.ResetIconCooldown(icon, amount);
+
+    -- Duration has more than 1s left, hide cooldown
+    -- Duration frame's finish event handler will show the cooldown
+    if icon.duration and icon.duration.finish and ( GetTime() < icon.duration.finish - 1 ) then
+        icon.cooldown:Hide();
+    end
 end
 
 local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
