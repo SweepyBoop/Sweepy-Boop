@@ -57,7 +57,7 @@ NS.RefreshCooldownTimer = function (self, finish)
 
     local now = GetTime();
     if finish then
-        -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown
+        -- We previously set the finish of this timer to infinity so it will start over when the other timer comes off cooldown
         -- now resume the timer's cooldown progress
         if ( timers[2].finish == math.huge ) then
             timers[2].start = now;
