@@ -63,6 +63,16 @@ local function ValidateUnit(self)
     return self.unitGUID;
 end
 
+local function ResetSweepyCooldown(icon, amount)
+    NS.ResetIconCooldown(icon, amount);
+
+    -- Duration has more than 1s left, hide cooldown
+    -- Duration frame's finish event handler will show the cooldown
+    if icon.duration and icon.duration.finish and ( GetTime() < icon.duration.finish - 1 ) then
+        icon.cooldown:Hide();
+    end
+end
+
 local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
     local guid = ValidateUnit(self);
     if ( not guid ) then return end
@@ -76,7 +86,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
                     local amount = spellData[reset].reduce_amount * cost[1].cost;
-                    NS.ResetIconCooldown(self.activeMap[reset], amount);
+                    ResetSweepyCooldown(self.activeMap[reset], amount);
                 end
             end
         end
@@ -85,7 +95,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
         if spellResets[spellId] then
             for resetSpellID, amount in pairs(spellResets[spellId]) do
                 if self.activeMap[resetSpellID] then
-                    NS.ResetIconCooldown(self.activeMap[resetSpellID], amount);
+                    ResetSweepyCooldown(self.activeMap[resetSpellID], amount);
                 end
             end
         end
@@ -99,7 +109,7 @@ local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID
                 local spells = spellData[reset].critResets;
                 for i = 1, #spells do
                     if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
-                        NS.ResetIconCooldown(self.activeMap[reset], spellData[reset].critResetAmount);
+                        ResetSweepyCooldown(self.activeMap[reset], spellData[reset].critResetAmount);
                     end
                 end
                 return;

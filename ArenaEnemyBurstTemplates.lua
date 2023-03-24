@@ -59,6 +59,11 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
     return frame;
 end
 
+local function SetSweepyDuration(icon, startTime, duration)
+    icon.duration:SetCooldown(startTime, duration);
+    icon.duration.finish = startTime + duration;
+end
+
 NS.StartSweepyIcon = function (icon)
     local spell = icon.spellInfo;
     local timers = icon.timers;
@@ -115,7 +120,7 @@ NS.StartSweepyIcon = function (icon)
             duration = spell.duration;
         end
 
-        icon.duration:SetCooldown(startTime, duration);
+        SetSweepyDuration(icon, startTime, duration);
         if icon.cooldown then
             icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
         end
@@ -137,7 +142,7 @@ end
 NS.ResetSweepyDuration = function (icon)
     if ( not icon.duration ) then return end
 
-    icon.duration:SetCooldown(0, 0);
+    SetSweepyDuration(icon, 0, 0);
     NS.OnDurationTimerFinished(icon.duration);
 end
 
@@ -147,7 +152,7 @@ NS.RefreshSweepyDuration = function (icon)
     -- Get new duration
     local duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
     if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
-        icon.duration:SetCooldown(expirationTime - duration, duration);
+        SetSweepyDuration(icon, expirationTime - duration, duration);
         if icon.cooldown then
             icon.cooldown:Hide(); -- Duration OnCooldownDone callback will show the cooldown timer
         end
