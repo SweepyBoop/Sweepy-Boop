@@ -25,6 +25,7 @@ Core.lua
 UnitInfoHelpers.lua
 IconGroupUtil.lua
 IconTemplates.lua
+ArenaEnemyBurstTemplates.lua
 ArenaEnemyBurst.lua
 ClassAndPetIcons.lua
 FixBlizzardRaidAggro.lua
