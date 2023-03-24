@@ -57,11 +57,6 @@ NS.RefreshCooldownTimer = function (self, finish)
 
     local now = GetTime();
     if finish then
-        -- Reset whichever timer is closer to finish
-        -- It's possible this has been done prior to calling this function, but check here to make sure
-        local index = (timers[1].finish <= timers[2].finish) and 1 or 2;
-        timers[index].finish = 0;
-
         -- We previously set the finish of this timer to infinity so it only starts recovering after the other timer comes off cooldown
         -- now resume the timer's cooldown progress
         if ( timers[2].finish == math.huge ) then
@@ -69,6 +64,11 @@ NS.RefreshCooldownTimer = function (self, finish)
             timers[2].duration = icon.info.cooldown;
             timers[2].finish = now + icon.info.cooldown;
         end
+
+        -- Reset whichever timer is closer to finish
+        -- It's possible this has been done prior to calling this function, but check here to make sure
+        local index = (timers[1].finish <= timers[2].finish) and 1 or 2;
+        timers[index].finish = 0;
     end
 
     local stack = ( now >= timers[1].finish ) or ( now >= timers[2].finish );
