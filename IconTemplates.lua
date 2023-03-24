@@ -66,6 +66,7 @@ NS.RefreshCooldownTimer = function (self, finish)
         end
 
         -- Reset whichever timer is closer to finish
+        -- It's possible this has been done prior to calling this function, but check here to make sure
         local index = (timers[1].finish <= timers[2].finish) and 1 or 2;
         timers[index] = { start = 0, duration = 0, finish = 0 };
     end
