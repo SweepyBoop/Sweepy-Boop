@@ -58,13 +58,10 @@ function containerFrame:OnEvent(event, ...)
         end
         self.lastMsgSent = now;
 
+        -- Check remaining time of current CC
         local sendMsg;
-        if ( locType == "SCHOOL_INTERRUPT" ) then
-            -- Only announce for 6s interrupt
-            sendMsg = locData.duration and ( locData.duration > 5 );
-        elseif ( locType ~= "ROOT" ) and ( locType ~= "DISARM" ) then
-            -- Announce CCs longer than 4s (* 0.85 trinket bonus = 3.4s)
-            sendMsg = locData.duration and ( locData.duration > 3.3 );
+        if ( locType ~= "ROOT" ) and ( locType ~= "DISARM" ) and ( locType ~= "SCHOOL_INTERRUPT" ) then
+            sendMsg = locData.duration and ( now < locData.startTime + locData.duration - 3 );
         end
 
         if sendMsg then
