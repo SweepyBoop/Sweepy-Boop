@@ -60,7 +60,7 @@ function containerFrame:OnEvent(event, ...)
         -- Check remaining time of current CC
         local sendMsg;
         if ( locType ~= "ROOT" ) and ( locType ~= "DISARM" ) and ( locType ~= "SCHOOL_INTERRUPT" ) then
-            sendMsg = locData.duration and ( now < locData.startTime + locData.duration - 3 );
+            sendMsg = locData.startTime and locData.duration and ( now < locData.startTime + locData.duration - 3 );
         end
 
         if sendMsg then
