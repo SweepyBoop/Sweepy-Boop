@@ -56,7 +56,6 @@ function containerFrame:OnEvent(event, ...)
             -- Don't send more than 1 messages within 1.5 sec.
             return;
         end
-        self.lastMsgSent = now;
 
         -- Check remaining time of current CC
         local sendMsg;
@@ -67,6 +66,7 @@ function containerFrame:OnEvent(event, ...)
         if sendMsg then
             local channel = UnitIsGroupLeader("player") and "RAID_WARNING" or "YELL";
             pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", channel) end)
+            self.lastMsgSent = now;
         end
     end
 end
