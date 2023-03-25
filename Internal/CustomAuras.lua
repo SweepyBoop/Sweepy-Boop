@@ -107,7 +107,6 @@ playerPortraitAuraFrame.tex:AddMaskTexture(playerPortraitAuraFrame.mask)
 
 playerPortraitAuraFrame.cooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
 playerPortraitAuraFrame.cooldown:SetAllPoints()
--- Options copied from BigDebuffs (https://github.com/jordonwow/bigdebuffs/blob/master)
 playerPortraitAuraFrame.cooldown:SetReverse(true)
 playerPortraitAuraFrame.cooldown:SetDrawBling(false)
 playerPortraitAuraFrame.cooldown:SetDrawEdge(false)
@@ -163,7 +162,6 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame.texture:SetAllPoints();
 
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-    -- Copied from bigdebuffs options
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(false);
     frame.cooldown:SetAlpha(1);
@@ -221,7 +219,6 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
 
     if duration then
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-        -- Copied from bigdebuffs options
         frame.cooldown:SetAllPoints();
         frame.cooldown:SetDrawEdge(false);
         frame.cooldown:SetAlpha(1);
@@ -296,7 +293,6 @@ local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, r
 
     if glowDuration then
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-        -- Copied from bigdebuffs options
         frame.cooldown:SetAllPoints();
         frame.cooldown:SetDrawEdge(false);
         frame.cooldown:SetAlpha(1);
@@ -402,7 +398,6 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
     frame.texture:SetAllPoints();
 
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-    -- Copied from bigdebuffs options
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(false);
     frame.cooldown:SetAlpha(1);
