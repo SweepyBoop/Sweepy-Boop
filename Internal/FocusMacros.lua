@@ -36,6 +36,14 @@ classAbilities[NS.PRIEST] = {
     "Dispel Magic",
 };
 
+classAbilities[NS.PALADIN] = {
+    "Hammer of Justice",
+    "Repentance",
+    "Hand of Reckoning",
+    "Judgment",
+    "Rebuke",
+};
+
 local function GetFocusName()
     local isArena = IsActiveBattlefieldArena()
 
