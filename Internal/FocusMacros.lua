@@ -50,6 +50,7 @@ classAbilities[NS.SHAMAN] = {
     "Purge",
     "Lightning Lasso",
     "Unlease Shield",
+    "Frost Shock",
     "Flame Shock", -- To keep healer in combat
 }
 
