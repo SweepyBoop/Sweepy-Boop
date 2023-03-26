@@ -7,6 +7,7 @@ local UnitIsPlayer = UnitIsPlayer;
 local UnitExists = UnitExists;
 local TargetFrame = TargetFrame;
 local PlayerFrame = PlayerFrame;
+local TargetFrameToT = TargetFrameToT;
 
 local frame = CreateFrame("FRAME");
 frame:RegisterEvent("GROUP_ROSTER_UPDATE");
@@ -28,6 +29,18 @@ local function UnitFrameLoad()
             TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar.lockColor = true;
         else
             TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar:SetStatusBarColor(0, 1, 0);
+        end
+    end
+
+    if UnitExists("targettarget") then
+        local totColors = UnitIsPlayer("targettarget") and Player_CheckColor("targettarget");
+
+        if totColors then
+            TargetFrameToT.HealthBar:SetStatusBarDesaturated(true);
+            TargetFrameToT.HealthBar:SetStatusBarColor(totColors.r, totColors.g, totColors.b);
+            TargetFrameToT.HealthBar.lockColor = true;
+        else
+            TargetFrameToT.HealthBar:SetStatusBarColor(0, 1, 0);
         end
     end
 end
