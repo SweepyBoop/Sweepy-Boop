@@ -18,7 +18,7 @@ local function Player_CheckColor(unit)
     return RAID_CLASS_COLORS[select(2, UnitClass(unit))];
 end
 
-local function UnitFrameLoad(self, event, ...)
+local function UnitFrameLoad()
     local targetColors;
     if UnitIsPlayer("target") then
         targetColors = Player_CheckColor("target");
