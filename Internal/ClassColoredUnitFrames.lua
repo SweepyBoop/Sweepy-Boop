@@ -7,7 +7,6 @@ local UnitIsPlayer = UnitIsPlayer;
 local UnitExists = UnitExists;
 local TargetFrame = TargetFrame;
 local PlayerFrame = PlayerFrame;
-local TargetFrameNameBackground = TargetFrameNameBackground;
 
 local frame = CreateFrame("FRAME");
 frame:RegisterEvent("GROUP_ROSTER_UPDATE");
@@ -51,4 +50,3 @@ local function eventHandler(self, event, arg1, ...)
 end
 
 frame:SetScript("OnEvent", eventHandler);
-TargetFrameNameBackground:SetTexture("Interface\\TargetingFrame\\UI-StatusBar");
