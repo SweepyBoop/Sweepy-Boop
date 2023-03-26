@@ -367,6 +367,7 @@ elseif ( class == NS.PRIEST ) then
 elseif ( class == NS.PALADIN ) then
     local auraOfReckoning = CreateStackBuffIcon(247676, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 100);
     local wing = CreateGlowingBuffIcon(31884, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50);
+    local meleeWing = CreateGlowingBuffIcon(216331, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50);
 end
 
 -- Defensive buffs from teammate
