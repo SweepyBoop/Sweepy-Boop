@@ -54,6 +54,8 @@ end
 local function eventHandler(self, event, arg1, ...)
     if event == "ADDON_LOADED" and ( arg1 == addonName ) then
         PlayerFrameLoad();
+        -- Remove target frame name background
+        TargetFrame.TargetFrameContent.TargetFrameContentMain.ReputationColor:SetTexture(nil);
     elseif event ~= "ADDON_LOADED" then
         UnitFrameLoad();
     end
