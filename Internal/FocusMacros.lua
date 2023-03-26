@@ -44,6 +44,16 @@ classAbilities[NS.PALADIN] = {
     "Rebuke",
 };
 
+classAbilities[NS.SHAMAN] = {
+    "Wind Shear",
+    "Hex",
+    "Purge",
+    "Lightning Lasso",
+    "Unlease Shield",
+    "Frost Shock",
+    "Flame Shock", -- To keep healer in combat
+}
+
 local function GetFocusName()
     local isArena = IsActiveBattlefieldArena()
 
