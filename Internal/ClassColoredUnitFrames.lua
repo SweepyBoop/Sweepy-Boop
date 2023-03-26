@@ -19,12 +19,9 @@ local function Player_CheckColor(unit)
 end
 
 local function UnitFrameLoad()
-    local targetColors;
-    if UnitIsPlayer("target") then
-        targetColors = Player_CheckColor("target");
-    end
-
     if UnitExists("target") then
+        local targetColors = UnitIsPlayer("target") and Player_CheckColor("target");
+
         if targetColors then
             TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar:SetStatusBarDesaturated(true);
             TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar:SetStatusBarColor(targetColors.r, targetColors.g, targetColors.b);
