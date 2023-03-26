@@ -7,8 +7,6 @@ local UnitIsPlayer = UnitIsPlayer;
 local UnitExists = UnitExists;
 local TargetFrame = TargetFrame;
 local PlayerFrame = PlayerFrame;
-local PlayerHitIndicator = PlayerHitIndicator;
-local PetHitIndicator = PetHitIndicator;
 
 local frame = CreateFrame("FRAME");
 frame:RegisterEvent("GROUP_ROSTER_UPDATE");
