@@ -220,6 +220,7 @@ local healthStone;
 local classSpell = {
     [NS.DRUID] = "Renewal",
     [NS.PRIEST] = "Desperate Prayer",
+    [NS.PALADIN] = "Divine Protection",
 };
 
 local function SetHealthStone()
