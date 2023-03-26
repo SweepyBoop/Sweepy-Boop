@@ -49,7 +49,6 @@ Internal\FocusMacros.lua
 Internal\CombatIndicator.lua
 Internal\PersonalDR.lua
 Internal\ArenaSurrender.lua
-Internal\ClassColoredUnitFrames.lua
 
 # Weak Auras equivalent
 Internal\CustomAuras.xml
