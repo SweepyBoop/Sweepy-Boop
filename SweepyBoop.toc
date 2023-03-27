@@ -17,7 +17,7 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 # Constants
 Constants.lua
-SpellData.lua
+CooldownTracking\SpellData.lua
 CooldownTracking\CooldownSpells.lua
 
 # Publish
@@ -25,8 +25,6 @@ Core.lua
 UnitInfoHelpers.lua
 IconGroupUtil.lua
 IconTemplates.lua
-ArenaEnemyBurstTemplates.lua
-ArenaEnemyBurst.lua
 ClassAndPetIcons.lua
 FixBlizzardRaidAggro.lua
 
@@ -34,6 +32,8 @@ FixBlizzardRaidAggro.lua
 CooldownTracking\CooldownTracking.xml
 CooldownTracking\CooldownTrackingTemplates.lua
 CooldownTracking\CooldownTracking.lua
+CooldownTracking\ArenaEnemyBurstTemplates.lua
+CooldownTracking\ArenaEnemyBurst.lua
 
 
 
