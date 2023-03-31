@@ -176,15 +176,15 @@ NS.IconGroup_Remove = function (group, icon)
 
     local active = group.active;
 
-    local index
+    local index;
     for key, value in pairs(active) do
         if ( value == icon ) then
-            index = key
+            index = key;
         end
     end
 
     if index then
-        table.remove(active, index)
+        table.remove(active, index);
         IconGroup_Position(group);
     end
 end
