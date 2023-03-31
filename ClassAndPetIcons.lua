@@ -183,7 +183,7 @@ local function ShowClassIcon(frame)
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath, iconSize = GetIconOptions(class, isTarget);
-        local iconFile = iconPath .. class
+        local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
             local petNumber = math.fmod(tonumber(npcID), iconCount);
@@ -252,9 +252,9 @@ local function UpdateHealthBar(frame)
     if ( not SweepyBoop.db.profile.nameplateFilterEnabled ) then return end
 
     if ShouldShowNameplate(frame.unit) then
-        frame:Show()
+        frame:Show();
     else
-        frame:Hide()
+        frame:Hide();
     end
 end
 
@@ -290,18 +290,18 @@ function SweepyBoop:SetupNameplateModules()
         end
 
         -- Class icon mod will hide/show healthBar when showing/hiding class icons
-        UpdateClassIcon(frame)
+        UpdateClassIcon(frame);
         -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
-        UpdateHealthBar(frame)
+        UpdateHealthBar(frame);
 
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
             if self.db.profile.arenaNumbersEnabled then
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i)
-                        frame.name:SetTextColor(1,1,0) --Yellow
-                        return
+                        frame.name:SetText(i);
+                        frame.name:SetTextColor(1,1,0); --Yellow
+                        return;
                     end
                 end
             end
@@ -309,7 +309,7 @@ function SweepyBoop:SetupNameplateModules()
             -- Check if name should be hidden
             if self.db.profile.nameplateFilterEnabled then
                 if ( not IsInWhiteList(frame.unit) ) then
-                    frame.name:SetText("")
+                    frame.name:SetText("");
                 end
             end
         end
@@ -323,9 +323,9 @@ function SweepyBoop:SetupNameplateModules()
         end
 
         if ( not ShouldUpdateNamePlate(frame) ) then
-            return
+            return;
         end
 
-        UpdateHealthBar(frame)
+        UpdateHealthBar(frame);
     end)
 end
