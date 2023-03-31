@@ -48,21 +48,21 @@ local function IsInWhiteList(unitId)
     -- Tremor Totem
     NameplateWhiteList[5913] = NS.PartyWithFearSpell();
 
-    local guid = UnitGUID(unitId)
-    local npcID = select(6, strsplit("-", guid))
+    local guid = UnitGUID(unitId);
+    local npcID = select(6, strsplit("-", guid));
     if ( npcID and NameplateWhiteList[tonumber(npcID)] ) then
-        return true
+        return true;
     end
 end
 
 local function GetUnitClass(unitId)
-    return select(2, UnitClass(unitId))
+    return select(2, UnitClass(unitId));
 end
 
 local function IsArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
-            local class = GetUnitClass("arena" .. i)
+            local class = GetUnitClass("arena" .. i);
             return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
         end
     end
@@ -71,14 +71,14 @@ end
 local function IsPartyPrimaryPet(unitId, partySize)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
-        local class = GetUnitClass("player")
+        local class = GetUnitClass("player");
         return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
     else
-        local partySize = partySize or 2
+        local partySize = partySize or 2;
         for i = 1, partySize do
             if UnitIsUnit(unitId, "partypet" .. i) then
-                local partyUnitId = "party" .. i
-                local class = GetUnitClass(partyUnitId)
+                local partyUnitId = "party" .. i;
+                local class = GetUnitClass(partyUnitId);
                 return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
             end
         end
@@ -183,7 +183,7 @@ local function ShowClassIcon(frame)
 
     if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
         local iconPath, iconSize = GetIconOptions(class, isTarget);
-        local iconFile = iconPath .. class
+        local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
             local petNumber = math.fmod(tonumber(npcID), iconCount);
@@ -252,9 +252,9 @@ local function UpdateHealthBar(frame)
     if ( not SweepyBoop.db.profile.nameplateFilterEnabled ) then return end
 
     if ShouldShowNameplate(frame.unit) then
-        frame:Show()
+        frame:Show();
     else
-        frame:Hide()
+        frame:Hide();
     end
 end
 
@@ -290,18 +290,18 @@ function SweepyBoop:SetupNameplateModules()
         end
 
         -- Class icon mod will hide/show healthBar when showing/hiding class icons
-        UpdateClassIcon(frame)
+        UpdateClassIcon(frame);
         -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
-        UpdateHealthBar(frame)
+        UpdateHealthBar(frame);
 
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
             if self.db.profile.arenaNumbersEnabled then
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i)
-                        frame.name:SetTextColor(1,1,0) --Yellow
-                        return
+                        frame.name:SetText(i);
+                        frame.name:SetTextColor(1,1,0); --Yellow
+                        return;
                     end
                 end
             end
@@ -309,7 +309,7 @@ function SweepyBoop:SetupNameplateModules()
             -- Check if name should be hidden
             if self.db.profile.nameplateFilterEnabled then
                 if ( not IsInWhiteList(frame.unit) ) then
-                    frame.name:SetText("")
+                    frame.name:SetText("");
                 end
             end
         end
@@ -323,9 +323,9 @@ function SweepyBoop:SetupNameplateModules()
         end
 
         if ( not ShouldUpdateNamePlate(frame) ) then
-            return
+            return;
         end
 
-        UpdateHealthBar(frame)
+        UpdateHealthBar(frame);
     end)
 end

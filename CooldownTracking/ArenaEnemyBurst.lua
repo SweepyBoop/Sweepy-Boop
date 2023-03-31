@@ -11,6 +11,9 @@ local GetArenaOpponentSpec = GetArenaOpponentSpec;
 local UnitClass = UnitClass;
 local GetSpecializationInfoByID = GetSpecializationInfoByID;
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
+local GetTime = GetTime;
+local Gladius = Gladius;
+local sArena = sArena;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
@@ -252,6 +255,7 @@ local function SetupAuraGroup(group, unit, testIcons)
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         for spellID, spell in pairs(spellData) do
+            testIcons[unit][spellID].info = { cooldown = spell.cooldown };
             NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
         end
 
