@@ -255,6 +255,7 @@ local function SetupAuraGroup(group, unit, testIcons)
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         for spellID, spell in pairs(spellData) do
+            testIcons[unit][spellID].info = { cooldown = spell.cooldown };
             NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
         end
 
