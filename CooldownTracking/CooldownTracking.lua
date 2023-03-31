@@ -9,6 +9,8 @@ local GetArenaOpponentSpec = GetArenaOpponentSpec;
 local GetSpecializationInfoByID = GetSpecializationInfoByID;
 local CreateFrame = CreateFrame;
 local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
+local Gladius = Gladius;
+local sArena = sArena;
 
 local cooldowns = NS.cooldownSpells;
 local resets = NS.cooldownResets;
@@ -255,7 +257,7 @@ local function SetupIconGroupForUnit(group, category, unit, testIcons)
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         for spellID, spell in pairs(cooldowns) do
-            testIcons[unit][spellID].info = GetSpecOverrides(spell, spec);
+            testIcons[unit][spellID].info = GetSpecOverrides(spell);
             NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
         end
 
