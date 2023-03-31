@@ -48,21 +48,21 @@ local function IsInWhiteList(unitId)
     -- Tremor Totem
     NameplateWhiteList[5913] = NS.PartyWithFearSpell();
 
-    local guid = UnitGUID(unitId)
-    local npcID = select(6, strsplit("-", guid))
+    local guid = UnitGUID(unitId);
+    local npcID = select(6, strsplit("-", guid));
     if ( npcID and NameplateWhiteList[tonumber(npcID)] ) then
-        return true
+        return true;
     end
 end
 
 local function GetUnitClass(unitId)
-    return select(2, UnitClass(unitId))
+    return select(2, UnitClass(unitId));
 end
 
 local function IsArenaPrimaryPet(unitId)
     for i = 1, NS.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
-            local class = GetUnitClass("arena" .. i)
+            local class = GetUnitClass("arena" .. i);
             return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
         end
     end
@@ -71,14 +71,14 @@ end
 local function IsPartyPrimaryPet(unitId, partySize)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
-        local class = GetUnitClass("player")
+        local class = GetUnitClass("player");
         return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
     else
-        local partySize = partySize or 2
+        local partySize = partySize or 2;
         for i = 1, partySize do
             if UnitIsUnit(unitId, "partypet" .. i) then
-                local partyUnitId = "party" .. i
-                local class = GetUnitClass(partyUnitId)
+                local partyUnitId = "party" .. i;
+                local class = GetUnitClass(partyUnitId);
                 return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
             end
         end
