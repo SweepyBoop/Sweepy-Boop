@@ -65,7 +65,7 @@ function containerFrame:OnEvent(event, ...)
 
         if sendMsg then
             local channel = UnitIsGroupLeader("player") and "RAID_WARNING" or "YELL";
-            pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", channel) end)
+            pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", "YELL") end)
             self.lastMsgSent = now;
         end
     end
