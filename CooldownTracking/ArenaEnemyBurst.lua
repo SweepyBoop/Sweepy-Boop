@@ -76,7 +76,7 @@ local function ResetSweepyCooldown(icon, amount)
     end
 end
 
-local function ProcessCombatLogEvent(self, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
+local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
     local guid = ValidateUnit(self);
     if ( not guid ) then return end
 
@@ -401,10 +401,10 @@ function SweepyBoop:PopulateOffensiveIcons()
         elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
             local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
             if test then
-                ProcessCombatLogEvent(testGroup, event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                ProcessCombatLogEvent(testGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
             else
                 for i = 1, NS.MAX_ARENA_SIZE do
-                    ProcessCombatLogEvent(arenaGroup[i], event, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    ProcessCombatLogEvent(arenaGroup[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                 end
             end
         else
@@ -430,16 +430,15 @@ function SweepyBoop:TestArenaEnemyBurst()
 
     RefreshTestMode();
 
-    local event = NS.COMBAT_LOG_EVENT_UNFILTERED;
     local subEvent = NS.SPELL_AURA_APPLIED;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
-    ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
     spellId = 190319; -- Combustion
     subEvent = NS.SPELL_CAST_SUCCESS;
-    ProcessCombatLogEvent(externalTestGroup, event, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
     if shoudShow then
         externalTestGroup:Show();
