@@ -14,11 +14,6 @@ FocusFrame:SetAlpha(0)
 
 
 
--- Move arena scoreboard on screen top
-UIWidgetTopCenterContainerFrame:ClearAllPoints()
-UIWidgetTopCenterContainerFrame:SetPoint("TOP", Minimap, "BOTTOM", 0, -25)
-UIWidgetTopCenterContainerFrame.SetPoint = function() end
-
 ArenaEnemyMatchFrame1PetFrame:SetAlpha(0)
 ArenaEnemyMatchFrame2PetFrame:SetAlpha(0)
 ArenaEnemyMatchFrame3PetFrame:SetAlpha(0)
