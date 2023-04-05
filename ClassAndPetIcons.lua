@@ -5,13 +5,11 @@ local UnitIsUnit = UnitIsUnit;
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
 local UnitIsPlayer = UnitIsPlayer;
 local UnitIsPossessed = UnitIsPossessed;
-local UnitIsFriend = UnitIsFriend;
 local UnitClass = UnitClass;
 local UnitCanAttack = UnitCanAttack;
 local UnitIsEnemy = UnitIsEnemy;
 local IsInInstance = IsInInstance;
 local strsplit = strsplit;
-local CompactPartyFrame = CompactPartyFrame;
 local hooksecurefunc = hooksecurefunc;
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
