@@ -381,7 +381,7 @@ if ( class == NS.PRIEST ) or ( class == NS.WARLOCK ) or ( class == NS.WARRIOR ) 
     };
 end
 
-for spellID, spell in pairs(NS.cooldownSpells) do
+for _, spell in pairs(NS.cooldownSpells) do
     -- Fill options from parent
     if spell.parent then
         local parent = NS.cooldownSpells[spell.parent];
