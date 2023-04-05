@@ -11,7 +11,7 @@ local IsInInstance = IsInInstance;
 -- Show dampen %
 local frame = CreateFrame('Frame', nil , UIParent);
 frame:SetSize(200, 12);
-frame:SetPoint('TOP', UIWidgetTopCenterContainerFrame, 'BOTTOM', 0, -2);
+frame:SetPoint('TOP', UIWidgetTopCenterContainerFrame, 'BOTTOM', 0, -5);
 frame.text = frame:CreateFontString(nil, 'BACKGROUND');
 frame.text:SetFontObject(GameFontNormalSmall);
 frame.text:SetAllPoints();
