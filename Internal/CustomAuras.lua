@@ -387,6 +387,7 @@ local teamDefensiveBuffs = {
     199448, -- Ultimate Sacrifice
     1022, -- Blessing of Protection
 
+    81782, -- Power Word: Barrier
     47788, -- Guardian Spirit
     33206, -- Pain Suppression
 
@@ -426,6 +427,7 @@ local personalDefensiveBuffs = {
     1022, -- Blessing of Protection
     498, -- Divine Protection
 
+    81782, -- Power Word: Barrier
     47585, -- Dispersion
     47788, -- Guardian Spirit
     33206, -- Pain Suppression
