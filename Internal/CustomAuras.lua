@@ -422,8 +422,6 @@ local personalDefensiveBuffs = {
     125174, -- Touch of Karma
 
     642, -- Divine Shield
-    6940, -- Blessing of Sacrifice
-    199448, -- Ultimate Sacrifice
     1022, -- Blessing of Protection
     498, -- Divine Protection
 
