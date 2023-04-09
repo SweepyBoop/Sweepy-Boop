@@ -7,6 +7,12 @@ local UnitIsPlayer = UnitIsPlayer;
 
 local test = NS.isTestMode;
 
+local function ConvertToSet(list)
+    local set = {};
+    for _, l in ipairs(list) do set[l] = true end
+    return set;
+end
+
 local centerAura = {}; -- Show an important aura at the center of a raid frame
 local topRightAura = {};
 
@@ -24,6 +30,7 @@ if test then
     table.insert(centerAuraSpells, 8936); -- Regrowth (test)
     table.insert(centerAuraSpells, 774); -- Rejuv (test)
 end
+local centerSpellSet = ConvertToSet(centerAuraSpells);
 
 local topRightAuraSpells = {
     48792, -- Icebound Fortitude
@@ -78,6 +85,7 @@ if test then
     table.insert(topRightAuraSpells, 774); -- Rejuv (test)
     table.insert(topRightAuraSpells, 194384);  -- Atonement
 end
+local topRightSpellSet = ConvertToSet(topRightAuraSpells);
 
 local function SetAuraFrame(frame, buffSize, overlayGlow)
     local size = buffSize or 22;
@@ -119,24 +127,16 @@ local function UpdateRaidFrame(frame)
 
     local center, topRight = SetupRaidFrame(frame);
 
-    local centerSet;
-    for i = 1, #(centerAuraSpells) do
-        local spell = centerAuraSpells[i];
-        local name, icon, _, _, duration, expirationTime, source = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
-        if name and ( source == "player" ) then
-            center.icon:SetTexture(icon);
+    local name, icon, _, _, duration, expirationTime = NS.Util_GetFirstUnitBuff(frame.displayedUnit, centerSpellSet, nil, "player");
+    if name then
+        center.icon:SetTexture(icon);
 
-            if duration and ( duration ~= 0 ) then
-                center.cooldown:SetCooldown(expirationTime - duration, duration);
-            end
-
-            center:Show();
-            centerSet = true;
-            break;
+        if duration and ( duration ~= 0 ) then
+            center.cooldown:SetCooldown(expirationTime - duration, duration);
         end
-    end
 
-    if ( not centerSet ) then
+        center:Show();
+    else
         center:Hide();
     end
 

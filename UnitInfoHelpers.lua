@@ -10,20 +10,41 @@ local UnitClass = UnitClass;
 
 NS.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
-        filter = filter.."|HELPFUL"
+        filter = filter.."|HELPFUL";
     end
+
     for i = 1, 255 do
-      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter)
+      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter);
       if not name then return end
       if spell == spellId or spell == name then
-        return UnitAura(unit, i, filter)
+        return UnitAura(unit, i, filter);
       end
     end
 end
 
+NS.Util_GetFirstUnitAura = function (unit, spells, filter, source)
+    if filter and not filter:upper():find("FUL") then
+        filter = filter.."|HELPFUL";
+    end
+
+    for i = 1, 255 do
+        local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter);
+        if name and spells[spellId] then
+            if ( not source ) or ( unit == source ) then
+                return UnitAura(unit, i, filter);
+            end
+        end
+    end
+end
+
 NS.Util_GetUnitBuff = function(unit, spell, filter)
-    filter = filter and filter.."|HELPFUL" or "HELPFUL"
-    return NS.Util_GetUnitAura(unit, spell, filter)
+    filter = filter and filter.."|HELPFUL" or "HELPFUL";
+    return NS.Util_GetUnitAura(unit, spell, filter);
+end
+
+NS.Util_GetFirstUnitBuff = function (unit, spells, filter, source)
+    filter = filter and filter.."|HELPFUL" or "HELPFUL";
+    return NS.Util_GetFirstUnitAura(unit, spells, filter, source);
 end
 
 NS.GetNpcIdFromGuid = function (guid)
