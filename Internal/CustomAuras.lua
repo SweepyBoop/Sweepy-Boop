@@ -372,28 +372,96 @@ elseif ( class == NS.PALADIN ) then
     local meleeWing = CreateGlowingBuffIcon(216331, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50);
 end
 
--- Defensive buffs from teammate
-local teamBuffs = {
+-- Defensive buffs
+local teamDefensiveBuffs = {
     145629, -- Anti-Magic Zone
+
     209426, -- Darkness
+
     102342, -- Ironbark
     53480, -- Roar of Sacrifice
+
     116849, -- Life Cocoon
+
     6940, -- Blessing of Sacrifice
     199448, -- Ultimate Sacrifice
     1022, -- Blessing of Protection
+
+    81782, -- Power Word: Barrier
     47788, -- Guardian Spirit
     33206, -- Pain Suppression
+
     201633, -- Earthen Wall Totem
+
     147833, -- Intervene
+    97463, -- Rallying Cry
+};
+local personalDefensiveBuffs = {
+    145629, -- Anti-Magic Zone
+    48707, -- Anti-Magic Shell
+    48792, -- Icebound Fortitude
+
+    209426, -- Darkness
+    212800, -- Blur
+    196555, -- Netherwalk
+
+    102342, -- Ironbark
+    61336, -- Survival Instincts
+    22812, -- Barkskin
+
+    363916, -- Obsidian Scales
+
+    53480, -- Roar of Sacrifice
+    186265, -- Aspect of the Turtle
+
+    45438, -- Ice Block
+    342246, -- Alter Time (Arcane)
+    110909, -- Alter Time (Fire/Frost)
+
+    116849, -- Life Cocoon
+    125174, -- Touch of Karma
+
+    642, -- Divine Shield
+    6940, -- Blessing of Sacrifice
+    199448, -- Ultimate Sacrifice
+    1022, -- Blessing of Protection
+    498, -- Divine Protection
+
+    81782, -- Power Word: Barrier
+    47585, -- Dispersion
+    47788, -- Guardian Spirit
+    33206, -- Pain Suppression
+
+    5277, -- Evasion
+    31224, -- Cloak of Shadows
+
+    108271, -- Astral Shift
+    210918, -- Ethereal Form
+    201633, -- Earthen Wall Totem
+
+    104773, -- Unending Resolve
+    108416, -- Dark Pact
+    212295, -- Nether Ward
+
+    118038, -- Die by the Sword
+    184364, -- Enraged Regeneration
+    97463, -- Rallying Cry
 };
 
-local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, offsetX, offsetY, source)
+local function ShouldDisplayDefensiveBuff(icon, aura)
+    if icon.external then
+        return aura.sourceUnit ~= "player";
+    else
+        return aura.sourceUnit == "player";
+    end
+end
+
+local function CreateGlowingDefensiveBuffs(spells, size, point, relativeTo, relativePoint, offsetX, offsetY, external)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide() -- Hide initially until aura is detected
 
-    frame.spells = teamBuffs;
-    frame.source = source;
+    frame.spells = spells;
+    frame.external = external;
     frame:SetSize(size, size);
     frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
 
@@ -420,7 +488,7 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
             for i = 1, #(self.spells) do
                 local spell = self.spells[i];
                 local aura = GetPlayerAuraBySpellID(spell);
-                if aura and aura.name and ( aura.sourceUnit ~= "player" ) then
+                if aura and aura.name and ShouldDisplayDefensiveBuff(self, aura) then
                     local icon = select(3, GetSpellInfo(spell));
                     self.texture:SetTexture(icon);
 
@@ -443,4 +511,7 @@ local function CreateGlowingTeamBuffs(size, point, relativeTo, relativePoint, of
     return frame;
 end
 
-local teamBuffIcon = CreateGlowingTeamBuffs(35, "CENTER", UIParent, "CENTER", 0, 100);
+local teamBuffIcon = CreateGlowingDefensiveBuffs(teamDefensiveBuffs, 35, "CENTER", UIParent, "CENTER", 0, 100, true);
+local selfBuffIcon = CreateGlowingDefensiveBuffs(personalDefensiveBuffs, 35, "CENTER", UIParent, "CENTER", 0, 100, false);
+teamBuffIcon:Raise();
+selfBuffIcon:Lower();
