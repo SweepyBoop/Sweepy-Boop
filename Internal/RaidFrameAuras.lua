@@ -127,36 +127,32 @@ local function UpdateRaidFrame(frame)
 
     local center, topRight = SetupRaidFrame(frame);
 
-    local name, icon, _, _, duration, expirationTime = NS.Util_GetFirstUnitBuff(frame.displayedUnit, centerSpellSet, nil, "player");
-    if name then
-        center.icon:SetTexture(icon);
+    do
+        local name, icon, _, _, duration, expirationTime = NS.Util_GetFirstUnitBuff(frame.displayedUnit, centerSpellSet, nil, "player");
+        if name then
+            center.icon:SetTexture(icon);
 
-        if duration and ( duration ~= 0 ) then
-            center.cooldown:SetCooldown(expirationTime - duration, duration);
+            if duration and ( duration ~= 0 ) then
+                center.cooldown:SetCooldown(expirationTime - duration, duration);
+            end
+
+            center:Show();
+        else
+            center:Hide();
         end
-
-        center:Show();
-    else
-        center:Hide();
     end
 
-    local topRightSet;
-    for i = 1, #(topRightAuraSpells) do
-        local spell = topRightAuraSpells[i];
-        local name, icon, _, _, duration, expirationTime, source = NS.Util_GetUnitBuff(frame.displayedUnit, spell);
-        if duration then
+    do
+        local name, icon, _, _, duration, expirationTime = NS.Util_GetFirstUnitBuff(frame.displayedUnit, topRightSpellSet);
+        if name and duration then
             topRight.icon:SetTexture(icon);
             topRight.cooldown:SetCooldown(expirationTime - duration, duration);
             NS.ShowOverlayGlow(topRight);
             topRight:Show();
-            topRightSet = true;
-            break;
+        else
+            NS.HideOverlayGlow(topRight);
+            topRight:Hide();
         end
-    end
-
-    if ( not topRightSet ) then
-        NS.HideOverlayGlow(topRight);
-        topRight:Hide();
     end
 end
 
