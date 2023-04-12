@@ -37,6 +37,8 @@ local NameplateWhiteList = {
 
     -- Warlock
     [196111] = true, -- Pit Lord (Guldan's Ambition)
+    [179193] = true, -- Fel Obelisk
+    [135002] = true, -- Demonic Tyrant
 
     -- Warrior
     [119052] = true, -- War Banner
