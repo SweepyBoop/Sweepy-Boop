@@ -9,7 +9,9 @@ local test = NS.isTestMode;
 
 local function ConvertToSet(list)
     local set = {};
-    for _, l in ipairs(list) do set[l] = true end
+    for i = 1, #(list) do
+        set[list[i]] = true;
+    end
     return set;
 end
 
