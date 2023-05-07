@@ -82,8 +82,7 @@ local function SortFrames()
     -- Don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
 
-    local numGroupMembers = GetNumGroupMembers();
-    if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
+    if ( GetNumGroupMembers() <= MEMBERS_PER_RAID_GROUP ) then
         TrySort();
     end
 end
@@ -101,7 +100,7 @@ end)
 
 -- Between solo shuffle rounds, raid frames can be reused, i.e., use the same frame for a different unit id.
 local refresh = CreateFrame("Frame");
-refresh:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+refresh:RegisterEvent(NS.GROUP_ROSTER_UPDATE);
 refresh:SetScript("OnEvent", function ()
     SortFrames();
 end)
