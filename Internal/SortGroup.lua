@@ -46,7 +46,7 @@ end
 
 local function TrySort()
     if InCombatLockdown() then
-        C_Timer.After(1.5, TrySort);
+        C_Timer.After(1, TrySort);
     else
         local frames = {};
         for i = 1, MEMBERS_PER_RAID_GROUP do
@@ -59,7 +59,7 @@ local function TrySort()
 
         local prevFrame;
         for _, value in ipairs(frames) do
-            print(value.unit, value.frame:GetName());
+            --print(value.unit, value.frame:GetName());
 
             local frame = value.frame;
             frame:ClearAllPoints();
@@ -71,7 +71,7 @@ local function TrySort()
 
             prevFrame = frame;
         end
-        print("\n");
+        --print("\n");
     end
 end
 
@@ -102,5 +102,5 @@ hooksecurefunc("FlowContainer_DoLayout", function(container)
 end)
 
 hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
-    print("CompactPartyFrame_RefreshMembers");
+    --print("CompactPartyFrame_RefreshMembers");
 end)
