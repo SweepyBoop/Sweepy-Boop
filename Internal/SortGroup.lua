@@ -42,7 +42,7 @@ local function GetPartyUnitId(unitId)
         end
     end
 
-    print("Invalid party unitId", unitId);
+    return "party9";
 end
 
 local function TrySort()
