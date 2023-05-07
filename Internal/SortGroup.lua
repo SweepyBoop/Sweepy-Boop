@@ -90,12 +90,6 @@ local function SortFrames()
     end
 end
 
-local function UpdateLayoutFuncOverride(frame)
-    if ( frame == CompactPartyFrame ) then
-        TrySort();
-    end
-end
-
 -- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
 -- If hooking LayoutFrames is not enough, we might have to hook FlowContainer_DoLayout
 --hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
@@ -109,7 +103,9 @@ end)
 
 hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
     -- This will likely reset the positions of compact party frames
-    UpdateLayoutFuncOverride(frame);
+    if ( frame == CompactPartyFrame ) then
+        TrySort();
+    end
 end)
 
 --[[ hooksecurefunc("CompactRaidGroup_UpdateBorder", function (frame)
