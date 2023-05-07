@@ -20,9 +20,7 @@ local GetNumGroupMembers = GetNumGroupMembers;
 local function Compare(left, right)
     local leftToken, rightToken = left.unit, right.unit;
 
-    if ( not leftToken ) then return false
-    elseif ( not rightToken ) then return true
-    elseif ( leftToken == "party1" ) then return true
+    if ( leftToken == "party1" ) then return true
     elseif ( rightToken == "party1" ) then return false
     elseif ( leftToken == "player" ) then return true
     elseif ( rightToken == "player" ) then return false
@@ -60,6 +58,8 @@ local function TrySort()
 
         local prevFrame;
         for _, value in ipairs(frames) do
+            print(value.unit);
+
             local frame = value.frame;
             frame:ClearAllPoints();
             if ( not prevFrame ) then
@@ -70,6 +70,7 @@ local function TrySort()
 
             prevFrame = frame;
         end
+        print("\n");
     end
 end
 
