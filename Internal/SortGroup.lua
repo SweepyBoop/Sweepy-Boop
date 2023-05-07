@@ -45,9 +45,9 @@ local function GetPartyUnitId(unitId)
 end
 
 local function TrySort()
-    if InCombatLockdown() then
+    --[[ if InCombatLockdown() then
         C_Timer.After(1, TrySort);
-    else
+    else ]]
         local frames = {};
         for i = 1, MEMBERS_PER_RAID_GROUP do
             local frame = _G["CompactPartyFrameMember"..i];
@@ -72,7 +72,7 @@ local function TrySort()
             prevFrame = frame;
         end
         --print("\n");
-    end
+    --end
 end
 
 local function SortFrames()
@@ -116,4 +116,3 @@ end)
     UpdateLayoutFuncOverride(frame);
 end)
  ]]
- 
