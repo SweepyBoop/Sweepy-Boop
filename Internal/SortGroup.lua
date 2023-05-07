@@ -101,6 +101,7 @@ hooksecurefunc("FlowContainer_DoLayout", function(container)
     SortFrames();
 end)
 
-hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
+hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
+    -- This will likely reset the positions of compact party frames
     SortFrames();
 end)
