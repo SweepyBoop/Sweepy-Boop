@@ -59,7 +59,7 @@ local function TrySort()
 
         local prevFrame;
         for _, value in ipairs(frames) do
-            print(value.unit);
+            print(value.unit, value.frame:GetName());
 
             local frame = value.frame;
             frame:ClearAllPoints();
