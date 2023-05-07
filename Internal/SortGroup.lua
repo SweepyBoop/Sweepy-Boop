@@ -97,10 +97,3 @@ hooksecurefunc("FlowContainer_DoLayout", function(container)
 
     SortFrames();
 end)
-
--- Between solo shuffle rounds, raid frames can be reused, i.e., use the same frame for a different unit id.
-local refresh = CreateFrame("Frame");
-refresh:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-refresh:SetScript("OnEvent", function ()
-    SortFrames();
-end)
