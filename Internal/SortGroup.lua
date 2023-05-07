@@ -102,5 +102,5 @@ hooksecurefunc("FlowContainer_DoLayout", function(container)
 end)
 
 hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
-    --print("CompactPartyFrame_RefreshMembers");
+    SortFrames();
 end)
