@@ -5,6 +5,8 @@
 
 -- Try leveraging SetPoint to modify the positions of CompactPartyFrames
 
+local _, NS = ...;
+
 local UnitIsUnit = UnitIsUnit;
 local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP;
 local InCombatLockdown = InCombatLockdown;
@@ -14,6 +16,7 @@ local CompactPartyFrameTitle = CompactPartyFrameTitle;
 local hooksecurefunc = hooksecurefunc;
 local EditModeManagerFrame = EditModeManagerFrame;
 local GetNumGroupMembers = GetNumGroupMembers;
+local CreateFrame = CreateFrame;
 
 local function Compare(left, right)
     local leftToken, rightToken = left.unit, right.unit;
@@ -69,14 +72,7 @@ local function TrySort()
     end
 end
 
--- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
--- If hooking LayoutFrames is not enough, we might have to hook FlowContainer_DoLayout
---hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
-hooksecurefunc("FlowContainer_DoLayout", function(container)
-    if ( container.flowPauseUpdates ) then
-        return;
-    end
-
+local function SortFrames()
     if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) then return end
 
     if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
@@ -90,4 +86,22 @@ hooksecurefunc("FlowContainer_DoLayout", function(container)
     if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
         TrySort();
     end
+end
+
+-- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
+-- If hooking LayoutFrames is not enough, we might have to hook FlowContainer_DoLayout
+--hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
+hooksecurefunc("FlowContainer_DoLayout", function(container)
+    if ( container.flowPauseUpdates ) then
+        return;
+    end
+
+    SortFrames();
+end)
+
+-- Between solo shuffle rounds, raid frames can be reused, i.e., use the same frame for a different unit id.
+local refresh = CreateFrame("Frame");
+refresh:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+refresh:SetScript("OnEvent", function ()
+    SortFrames();
 end)
