@@ -41,6 +41,8 @@ local function GetPartyUnitId(unitId)
             end
         end
     end
+
+    print("Invalid party unitId", unitId);
 end
 
 local function TrySort()
