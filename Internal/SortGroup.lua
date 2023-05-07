@@ -56,7 +56,6 @@ local function TrySort()
         local prevFrame;
         for _, value in ipairs(frames) do
             local frame = value.frame;
-            print(value.unit, value.frame)
             frame:ClearAllPoints();
             if ( not prevFrame ) then
                 frame:SetPoint("TOP", CompactPartyFrame, "TOP");
