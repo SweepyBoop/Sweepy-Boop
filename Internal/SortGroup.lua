@@ -16,7 +16,6 @@ local CompactPartyFrameTitle = CompactPartyFrameTitle;
 local hooksecurefunc = hooksecurefunc;
 local EditModeManagerFrame = EditModeManagerFrame;
 local GetNumGroupMembers = GetNumGroupMembers;
-local CreateFrame = CreateFrame;
 
 local function Compare(left, right)
     local leftToken, rightToken = left.unit, right.unit;
