@@ -42,9 +42,9 @@ local function GetPartyUnitId(unitId)
 end
 
 local function TrySort()
-    --if InCombatLockdown() then
-    --    C_Timer.After(3, TrySort);
-    --else
+    if InCombatLockdown() then
+        C_Timer.After(1.5, TrySort);
+    else
         local frames = {};
         for i = 1, MEMBERS_PER_RAID_GROUP do
             local frame = _G["CompactPartyFrameMember"..i];
@@ -66,7 +66,7 @@ local function TrySort()
 
             prevFrame = frame;
         end
-    --end
+    end
 end
 
 -- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
