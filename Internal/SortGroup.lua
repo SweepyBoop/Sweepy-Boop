@@ -5,21 +5,23 @@
 
 -- Try leveraging SetPoint to modify the positions of CompactPartyFrames
 
+local _, NS = ...;
+
 local UnitIsUnit = UnitIsUnit;
 local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP;
 local InCombatLockdown = InCombatLockdown;
 local C_Timer = C_Timer;
 local CompactPartyFrame = CompactPartyFrame;
+local CompactPartyFrameTitle = CompactPartyFrameTitle;
 local hooksecurefunc = hooksecurefunc;
 local EditModeManagerFrame = EditModeManagerFrame;
 local GetNumGroupMembers = GetNumGroupMembers;
+local IsInGroup = IsInGroup;
 
 local function Compare(left, right)
     local leftToken, rightToken = left.unit, right.unit;
 
-    if ( not leftToken ) then return false
-    elseif ( not rightToken ) then return true
-    elseif ( leftToken == "party1" ) then return true
+    if ( leftToken == "party1" ) then return true
     elseif ( rightToken == "party1" ) then return false
     elseif ( leftToken == "player" ) then return true
     elseif ( rightToken == "player" ) then return false
@@ -38,38 +40,53 @@ local function GetPartyUnitId(unitId)
             end
         end
     end
+
+    return unitId;
 end
 
 local function TrySort()
     if InCombatLockdown() then
-        C_Timer.After(3, TrySort);
+        C_Timer.After(1, TrySort);
     else
-        local topPoints;
         local frames = {};
         for i = 1, MEMBERS_PER_RAID_GROUP do
             local frame = _G["CompactPartyFrameMember"..i];
-            local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint();
-            local points = { point = point, relativeTo = relativeTo, relativePoint = relativePoint, offsetX = offsetX, offsetY = offsetY };
-            if ( relativeTo == CompactPartyFrame ) then
-                topPoints = points;
-            end
-            frames[i] = { unit = GetPartyUnitId(frame.unit), frame = frame };
+            local unit = GetPartyUnitId(frame.unit);
+            frames[i] = { unit = unit, frame = frame };
         end
 
         table.sort(frames, Compare);
 
         local prevFrame;
         for _, value in ipairs(frames) do
+            --print(value.unit, value.frame:GetName());
+
             local frame = value.frame;
             frame:ClearAllPoints();
             if ( not prevFrame ) then
-                frame:SetPoint(topPoints.point, topPoints.relativeTo, topPoints.relativePoint, topPoints.offsetX, topPoints.offsetY);
+                frame:SetPoint("TOP", CompactPartyFrameTitle, "BOTTOM");
             else
                 frame:SetPoint("TOP", prevFrame, "BOTTOM");
             end
 
             prevFrame = frame;
         end
+        --print("\n");
+    end
+end
+
+local function SortFrames()
+    if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) then return end
+
+    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
+        return;
+    end
+
+    -- Don't try if edit mode is active
+    if EditModeManagerFrame.editModeActive then return end
+
+    if IsInGroup() and ( GetNumGroupMembers() <= MEMBERS_PER_RAID_GROUP ) then
+        TrySort();
     end
 end
 
@@ -81,17 +98,9 @@ hooksecurefunc("FlowContainer_DoLayout", function(container)
         return;
     end
 
-    if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) then return end
+    SortFrames();
+end)
 
-    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
-        return;
-    end
-
-    -- Don't try if edit mode is active
-    if EditModeManagerFrame.editModeActive then return end
-
-    local numGroupMembers = GetNumGroupMembers();
-    if ( numGroupMembers <= MEMBERS_PER_RAID_GROUP ) then
-        TrySort();
-    end
+hooksecurefunc("CompactPartyFrame_RefreshMembers", function ()
+    SortFrames();
 end)
