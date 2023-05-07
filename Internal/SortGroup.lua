@@ -16,6 +16,7 @@ local CompactPartyFrameTitle = CompactPartyFrameTitle;
 local hooksecurefunc = hooksecurefunc;
 local EditModeManagerFrame = EditModeManagerFrame;
 local GetNumGroupMembers = GetNumGroupMembers;
+local IsInGroup = IsInGroup;
 
 local function Compare(left, right)
     local leftToken, rightToken = left.unit, right.unit;
@@ -84,7 +85,7 @@ local function SortFrames()
     -- Don't try if edit mode is active
     if EditModeManagerFrame.editModeActive then return end
 
-    if ( GetNumGroupMembers() <= MEMBERS_PER_RAID_GROUP ) then
+    if IsInGroup() and ( GetNumGroupMembers() <= MEMBERS_PER_RAID_GROUP ) then
         TrySort();
     end
 end
