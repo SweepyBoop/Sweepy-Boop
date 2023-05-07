@@ -41,7 +41,7 @@ local function GetPartyUnitId(unitId)
         end
     end
 
-    return "party9";
+    return unitId;
 end
 
 local function TrySort()
