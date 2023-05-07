@@ -38,6 +38,8 @@ local function GetPartyUnitId(unitId)
             end
         end
     end
+
+    return unitId;
 end
 
 local function TrySort()
