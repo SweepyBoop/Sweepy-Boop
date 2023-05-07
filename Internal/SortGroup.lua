@@ -10,6 +10,7 @@ local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP;
 local InCombatLockdown = InCombatLockdown;
 local C_Timer = C_Timer;
 local CompactPartyFrame = CompactPartyFrame;
+local CompactPartyFrameTitle = CompactPartyFrameTitle;
 local hooksecurefunc = hooksecurefunc;
 local EditModeManagerFrame = EditModeManagerFrame;
 local GetNumGroupMembers = GetNumGroupMembers;
@@ -38,24 +39,17 @@ local function GetPartyUnitId(unitId)
             end
         end
     end
-
-    return unitId;
 end
 
 local function TrySort()
-    if InCombatLockdown() then
-        C_Timer.After(3, TrySort);
-    else
-        local topPoints;
+    --if InCombatLockdown() then
+    --    C_Timer.After(3, TrySort);
+    --else
         local frames = {};
         for i = 1, MEMBERS_PER_RAID_GROUP do
             local frame = _G["CompactPartyFrameMember"..i];
-            local point, relativeTo, relativePoint, offsetX, offsetY = frame:GetPoint();
-            local points = { point = point, relativeTo = relativeTo, relativePoint = relativePoint, offsetX = offsetX, offsetY = offsetY };
-            if ( relativeTo == CompactPartyFrame ) then
-                topPoints = points;
-            end
-            frames[i] = { unit = GetPartyUnitId(frame.unit), frame = frame };
+            local unit = GetPartyUnitId(frame.unit);
+            frames[i] = { unit = unit, frame = frame };
         end
 
         table.sort(frames, Compare);
@@ -63,16 +57,17 @@ local function TrySort()
         local prevFrame;
         for _, value in ipairs(frames) do
             local frame = value.frame;
+            print(value.unit, value.frame)
             frame:ClearAllPoints();
             if ( not prevFrame ) then
-                frame:SetPoint(topPoints.point, topPoints.relativeTo, topPoints.relativePoint, topPoints.offsetX, topPoints.offsetY);
+                frame:SetPoint("TOP", CompactPartyFrameTitle, "BOTTOM");
             else
                 frame:SetPoint("TOP", prevFrame, "BOTTOM");
             end
 
             prevFrame = frame;
         end
-    end
+    --end
 end
 
 -- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
