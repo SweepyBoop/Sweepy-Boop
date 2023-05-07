@@ -14,9 +14,6 @@ local C_Timer = C_Timer;
 local CompactPartyFrame = CompactPartyFrame;
 local CompactPartyFrameTitle = CompactPartyFrameTitle;
 local hooksecurefunc = hooksecurefunc;
-local EditModeManagerFrame = EditModeManagerFrame;
-local GetNumGroupMembers = GetNumGroupMembers;
-local IsInGroup = IsInGroup;
 
 local function Compare(left, right)
     local leftToken, rightToken = left.unit, right.unit;
