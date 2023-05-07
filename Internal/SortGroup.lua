@@ -45,9 +45,9 @@ local function GetPartyUnitId(unitId)
 end
 
 local function TrySort()
-    --[[ if InCombatLockdown() then
+    if InCombatLockdown() then
         C_Timer.After(1, TrySort);
-    else ]]
+    else
         local frames = {};
         for i = 1, MEMBERS_PER_RAID_GROUP do
             local frame = _G["CompactPartyFrameMember"..i];
@@ -72,34 +72,8 @@ local function TrySort()
             prevFrame = frame;
         end
         --print("\n");
-    --end
-end
-
-local function SortFrames()
-    if ( not EditModeManagerFrame:UseRaidStylePartyFrames() ) then return end
-
-    if ( not CompactPartyFrame ) or CompactPartyFrame:IsForbidden() then
-        return;
-    end
-
-    -- Don't try if edit mode is active
-    if EditModeManagerFrame.editModeActive then return end
-
-    if IsInGroup() and ( GetNumGroupMembers() <= MEMBERS_PER_RAID_GROUP ) then
-        TrySort();
     end
 end
-
--- This function calls FlowContainer_DoLayout, but hooking FlowContainer_DoLayout means our function will get called quite a lot
--- If hooking LayoutFrames is not enough, we might have to hook FlowContainer_DoLayout
---hooksecurefunc(CompactRaidFrameContainer, "LayoutFrames", function ()
-hooksecurefunc("FlowContainer_DoLayout", function(container)
-    --[[ if ( container.flowPauseUpdates ) then
-        return;
-    end
-
-    SortFrames(); ]]
-end)
 
 hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
     -- This will likely reset the positions of compact party frames
@@ -107,8 +81,3 @@ hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
         TrySort();
     end
 end)
-
---[[ hooksecurefunc("CompactRaidGroup_UpdateBorder", function (frame)
-    UpdateLayoutFuncOverride(frame);
-end)
- ]]
