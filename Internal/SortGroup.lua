@@ -10,7 +10,6 @@ local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP;
 local InCombatLockdown = InCombatLockdown;
 local C_Timer = C_Timer;
 local CompactPartyFrame = CompactPartyFrame;
-local CompactPartyFrameTitle = CompactPartyFrameTitle;
 local hooksecurefunc = hooksecurefunc;
 local EditModeManagerFrame = EditModeManagerFrame;
 local GetNumGroupMembers = GetNumGroupMembers;
@@ -60,7 +59,7 @@ local function TrySort()
             print(value.unit, value.frame)
             frame:ClearAllPoints();
             if ( not prevFrame ) then
-                frame:SetPoint("TOP", CompactPartyFrameTitle, "BOTTOM");
+                frame:SetPoint("TOP", CompactPartyFrame, "TOP");
             else
                 frame:SetPoint("TOP", prevFrame, "BOTTOM");
             end
