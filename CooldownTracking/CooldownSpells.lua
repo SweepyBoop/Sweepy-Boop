@@ -50,7 +50,7 @@ NS.cooldownSpells = {
     [221562] = {
         class = NS.DEATHKNIGHT,
         category = SPELLCATEGORY.CROWDCONTROL,
-        cooldown = 60,
+        cooldown = 45,
     },
     -- Defensive
     -- Icebound Fortitude
