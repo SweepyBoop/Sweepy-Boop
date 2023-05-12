@@ -50,7 +50,7 @@ NS.cooldownSpells = {
     [221562] = {
         class = NS.DEATHKNIGHT,
         category = SPELLCATEGORY.CROWDCONTROL,
-        cooldown = 60,
+        cooldown = 45,
     },
     -- Defensive
     -- Icebound Fortitude
@@ -167,6 +167,12 @@ NS.cooldownSpells = {
         class = NS.PRIEST,
         category = SPELLCATEGORY.DISRUPT,
     },
+    -- Fade (Phase Shift)
+    [408558] = {
+        cooldown = 20, -- 30s with talents to reduce cooldown by 10s
+        class = NS.PRIEST,
+        category = SPELLCATEGORY.DISRUPT,
+    },
 
     -- Paladin
     -- Defensive
@@ -275,6 +281,7 @@ NS.cooldownSpells = {
     [108271] = {cooldown = 90, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
     [210918] = {cooldown = 60, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Ethereal Form
     [98008] = {cooldown = 180, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Spirit Link Totem
+    [409293] = {cooldown = 120, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Burrow
     -- Disrupt
     [204336] = {cooldown = 30, class = NS.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
@@ -287,7 +294,7 @@ NS.cooldownSpells = {
     [19577] = {cooldown = 60, class = NS.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidation
     [187650] = {cooldown = 25, class = NS.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Freezing Trap
     -- Defensive
-    [186265] = {cooldown = 180, class = NS.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
+    [186265] = {cooldown = 144, class = NS.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
     -- Interrupt
     [147362] = {cooldown = 24, class = NS.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
     [187707] = {cooldown = 15, class = NS.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
