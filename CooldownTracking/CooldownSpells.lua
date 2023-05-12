@@ -288,7 +288,7 @@ NS.cooldownSpells = {
     [19577] = {cooldown = 60, class = NS.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidation
     [187650] = {cooldown = 25, class = NS.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Freezing Trap
     -- Defensive
-    [186265] = {cooldown = 180, class = NS.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
+    [186265] = {cooldown = 144, class = NS.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
     -- Interrupt
     [147362] = {cooldown = 24, class = NS.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
     [187707] = {cooldown = 15, class = NS.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
