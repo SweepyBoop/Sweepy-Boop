@@ -275,6 +275,7 @@ NS.cooldownSpells = {
     [108271] = {cooldown = 90, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
     [210918] = {cooldown = 60, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Ethereal Form
     [98008] = {cooldown = 180, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Spirit Link Totem
+    [409293] = {cooldown = 120, class = NS.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Burrow
     -- Disrupt
     [204336] = {cooldown = 30, class = NS.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
