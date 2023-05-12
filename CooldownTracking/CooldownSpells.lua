@@ -169,9 +169,11 @@ NS.cooldownSpells = {
     },
     -- Fade (Phase Shift)
     [408558] = {
-        cooldown = 20, -- 30s with talents to reduce cooldown by 10s
+        cooldown = 30,
+        opt_lower_cooldown = 20,
         class = NS.PRIEST,
         category = SPELLCATEGORY.DISRUPT,
+        trackEvent = NS.SPELL_AURA_APPLIED,
     },
 
     -- Paladin
@@ -234,8 +236,8 @@ NS.cooldownSpells = {
     [106839] = {cooldown = 15, class = NS.DRUID, category = SPELLCATEGORY.INTERRUPT}, -- Skull Bash
     -- Defensive
     [61336] = {cooldown = {default = 180, [specID.GUARDIAN] = 120}, class = NS.DRUID, charges = {[specID.GUARDIAN] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
-    [102342] = {cooldown = 90, class = NS.DRUID, opt_lower_cd = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
-    [740] = {cooldown = 180, class = NS.DRUID, opt_lower_cd = 120, category = SPELLCATEGORY.DEFENSIVE, index = 1}, -- Tranquility
+    [102342] = {cooldown = 90, class = NS.DRUID, opt_lower_cooldown = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
+    [740] = {cooldown = 180, class = NS.DRUID, opt_lower_cooldown = 120, category = SPELLCATEGORY.DEFENSIVE, index = 1}, -- Tranquility
     -- Dispel
     [88423] = {cooldown = 8, class = NS.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = NS.SPELL_DISPEL}, -- Nature's Cure
 
@@ -259,7 +261,7 @@ NS.cooldownSpells = {
     [5484] = {cooldown = 40, class = NS.WARLOCK, category = SPELLCATEGORY.CROWDCONTROL}, -- Howl of Terror
     [89766] = {cooldown = 30, class = NS.WARLOCK, trackPet = true, category = SPELLCATEGORY.CROWDCONTROL}, -- Axe Toss
     -- Defensive
-    [104773] = {cooldown = 180, class = NS.WARLOCK, opt_lower_cd = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Unending Resolve
+    [104773] = {cooldown = 180, class = NS.WARLOCK, opt_lower_cooldown = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Unending Resolve
     -- Interrupt
     [119910] = {cooldown = 24, class = NS.WARLOCK, trackPet = true, category = SPELLCATEGORY.INTERRUPT}, -- Spell Lock (Command Demon)
         [19647] = {parent = 119910}, -- Spell Lock (Felhunter)
