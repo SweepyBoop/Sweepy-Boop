@@ -167,6 +167,12 @@ NS.cooldownSpells = {
         class = NS.PRIEST,
         category = SPELLCATEGORY.DISRUPT,
     },
+    -- Fade (Phase Shift)
+    [408558] = {
+        cooldown = 20, -- 30s with talents to reduce cooldown by 10s
+        class = NS.PRIEST,
+        category = SPELLCATEGORY.DISRUPT,
+    },
 
     -- Paladin
     -- Defensive
