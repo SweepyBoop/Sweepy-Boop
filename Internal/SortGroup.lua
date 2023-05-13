@@ -43,9 +43,11 @@ local function GetPartyUnitId(unitId)
     return unitId;
 end
 
+local sortPending = false;
+
 local function TrySort()
     if InCombatLockdown() then
-        C_Timer.After(1, TrySort);
+        sortPending = true;
     else
         local frames = {};
         for i = 1, MEMBERS_PER_RAID_GROUP do
@@ -101,6 +103,9 @@ end
 local function OnEvent(_, event)
     if event == "PLAYER_REGEN_ENABLED" then
         ResumeUpdates();
+        if sortPending then
+            TrySort();
+        end
     elseif event == "PLAYER_REGEN_DISABLED" then
         PauseUpdates();
     elseif "GROUP_ROSTER_UPDATE" and InCombatLockdown() then
