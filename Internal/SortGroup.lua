@@ -71,6 +71,8 @@ local function TrySort()
 
         prevFrame = frame;
     end
+
+    sortPending = false;
 end
 
 hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
