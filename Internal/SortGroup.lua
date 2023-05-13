@@ -74,42 +74,56 @@ local function TrySort()
 end
 
 hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
-    -- This will likely reset the positions of compact party frames
     if ( frame == CompactPartyFrame ) then
         TrySort();
     end
 end)
 
+local function RegisterEventEx(frame, event)
+    if ( not frame:RegisterEvent(event) ) then
+        print("Failed to register event", event, "to", frame:GetName());
+    end
+end
+
+local function UnregisterEventEx(frame, event)
+    if ( not frame:UnregisterEvent(event) ) then
+        print("Failed to unregister event", event, "from", frame:GetName());
+    end
+end
+
 local function PauseUpdates()
-    if CompactRaidFrameContainer and not CompactRaidFrameContainer:UnregisterEvent("GROUP_ROSTER_UPDATE") then
-        print("Failed to unregister event GROUP_ROSTER_UPDATE from CompactRaidFrameContainer.");
+    if CompactRaidFrameContainer then
+        UnregisterEventEx(CompactRaidFrameContainer, NS.GROUP_ROSTER_UPDATE);
+        UnregisterEventEx(CompactRaidFrameContainer, NS.UNIT_PET);
     end
 
-    if CompactPartyFrame and not CompactPartyFrame:UnregisterEvent("GROUP_ROSTER_UPDATE") then
-        print("Failed to register event GROUP_ROSTER_UPDATE from CompactPartyFrame.");
+    if CompactPartyFrame then
+        UnregisterEventEx(CompactPartyFrame, NS.GROUP_ROSTER_UPDATE);
+        UnregisterEventEx(CompactPartyFrame, NS.UNIT_PET);
     end
 end
 
 local function ResumeUpdates()
-    if CompactRaidFrameContainer and not CompactRaidFrameContainer:RegisterEvent("GROUP_ROSTER_UPDATE") then
-        print("Failed to register event GROUP_ROSTER_UPDATE to CompactRaidFrameContainer.");
+    if CompactRaidFrameContainer then
+        RegisterEventEx(CompactRaidFrameContainer, NS.GROUP_ROSTER_UPDATE);
+        RegisterEventEx(CompactRaidFrameContainer, NS.UNIT_PET);
     end
 
-    if CompactPartyFrame and not CompactPartyFrame:RegisterEvent("GROUP_ROSTER_UPDATE") then
-        print("Failed to register event GROUP_ROSTER_UPDATE to CompactPartyFrame.");
+    if CompactPartyFrame then
+        RegisterEventEx(CompactPartyFrame, NS.GROUP_ROSTER_UPDATE);
+        RegisterEventEx(CompactPartyFrame, NS.UNIT_PET);
+    end
+
+    if sortPending then
+        TrySort();
     end
 end
 
 local function OnEvent(_, event)
     if event == "PLAYER_REGEN_ENABLED" then
         ResumeUpdates();
-        if sortPending then
-            TrySort();
-        end
     elseif event == "PLAYER_REGEN_DISABLED" then
         PauseUpdates();
-    elseif "GROUP_ROSTER_UPDATE" and InCombatLockdown() then
-        --print("Blocked raid frame update during combat.");
     end
 end
 
@@ -118,4 +132,3 @@ local combatBlockingFrame = CreateFrame("Frame");
 combatBlockingFrame:HookScript("OnEvent", OnEvent);
 combatBlockingFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
 combatBlockingFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
-combatBlockingFrame:RegisterEvent("GROUP_ROSTER_UPDATE");
