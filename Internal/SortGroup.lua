@@ -48,28 +48,28 @@ local sortPending = false;
 local function TrySort()
     if InCombatLockdown() then
         sortPending = true;
-    else
-        local frames = {};
-        for i = 1, MEMBERS_PER_RAID_GROUP do
-            local frame = _G["CompactPartyFrameMember"..i];
-            local unit = GetPartyUnitId(frame.unit);
-            frames[i] = { unit = unit, frame = frame };
+    end
+
+    local frames = {};
+    for i = 1, MEMBERS_PER_RAID_GROUP do
+        local frame = _G["CompactPartyFrameMember"..i];
+        local unit = GetPartyUnitId(frame.unit);
+        frames[i] = { unit = unit, frame = frame };
+    end
+
+    table.sort(frames, Compare);
+
+    local prevFrame;
+    for _, value in ipairs(frames) do
+        local frame = value.frame;
+        frame:ClearAllPoints();
+        if ( not prevFrame ) then
+            frame:SetPoint("TOP", CompactPartyFrameTitle, "BOTTOM");
+        else
+            frame:SetPoint("TOP", prevFrame, "BOTTOM");
         end
 
-        table.sort(frames, Compare);
-
-        local prevFrame;
-        for _, value in ipairs(frames) do
-            local frame = value.frame;
-            frame:ClearAllPoints();
-            if ( not prevFrame ) then
-                frame:SetPoint("TOP", CompactPartyFrameTitle, "BOTTOM");
-            else
-                frame:SetPoint("TOP", prevFrame, "BOTTOM");
-            end
-
-            prevFrame = frame;
-        end
+        prevFrame = frame;
     end
 end
 
@@ -124,6 +124,8 @@ local function OnEvent(_, event)
         ResumeUpdates();
     elseif event == "PLAYER_REGEN_DISABLED" then
         PauseUpdates();
+    else
+        print(event);
     end
 end
 
