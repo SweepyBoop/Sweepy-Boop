@@ -124,8 +124,6 @@ local function OnEvent(_, event)
         ResumeUpdates();
     elseif event == "PLAYER_REGEN_DISABLED" then
         PauseUpdates();
-    else
-        print(event);
     end
 end
 
