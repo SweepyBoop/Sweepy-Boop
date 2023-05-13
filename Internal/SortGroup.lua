@@ -58,8 +58,6 @@ local function TrySort()
 
         local prevFrame;
         for _, value in ipairs(frames) do
-            --print(value.unit, value.frame:GetName());
-
             local frame = value.frame;
             frame:ClearAllPoints();
             if ( not prevFrame ) then
@@ -70,7 +68,6 @@ local function TrySort()
 
             prevFrame = frame;
         end
-        --print("\n");
     end
 end
 
@@ -83,21 +80,21 @@ end)
 
 local function PauseUpdates()
     if CompactRaidFrameContainer and not CompactRaidFrameContainer:UnregisterEvent("GROUP_ROSTER_UPDATE") then
-        NS:Warning("Failed to unregister event GROUP_ROSTER_UPDATE from CompactRaidFrameContainer.")
+        NS:Warning("Failed to unregister event GROUP_ROSTER_UPDATE from CompactRaidFrameContainer.");
     end
 
     if CompactPartyFrame and not CompactPartyFrame:UnregisterEvent("GROUP_ROSTER_UPDATE") then
-        NS:Warning("Failed to register event GROUP_ROSTER_UPDATE from CompactPartyFrame.")
+        NS:Warning("Failed to register event GROUP_ROSTER_UPDATE from CompactPartyFrame.");
     end
 end
 
 local function ResumeUpdates()
     if CompactRaidFrameContainer and not CompactRaidFrameContainer:RegisterEvent("GROUP_ROSTER_UPDATE") then
-        NS:Warning("Failed to register event GROUP_ROSTER_UPDATE to CompactRaidFrameContainer.")
+        NS:Warning("Failed to register event GROUP_ROSTER_UPDATE to CompactRaidFrameContainer.");
     end
 
     if CompactPartyFrame and not CompactPartyFrame:RegisterEvent("GROUP_ROSTER_UPDATE") then
-        NS:Warning("Failed to register event GROUP_ROSTER_UPDATE to CompactPartyFrame.")
+        NS:Warning("Failed to register event GROUP_ROSTER_UPDATE to CompactPartyFrame.");
     end
 end
 
@@ -107,7 +104,7 @@ local function OnEvent(_, event)
     elseif event == "PLAYER_REGEN_DISABLED" then
         PauseUpdates();
     elseif "GROUP_ROSTER_UPDATE" and InCombatLockdown() then
-        NS:Debug("Blocked raid frame update during combat.")
+        NS:Debug("Blocked raid frame update during combat.");
     end
 end
 
