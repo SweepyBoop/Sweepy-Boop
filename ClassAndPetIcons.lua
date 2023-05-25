@@ -20,6 +20,15 @@ local NameplateWhiteList = {
     -- DK
     [106041] = true, -- Reanimation
 
+    -- DH - Fodder demons
+    [169421] = true, -- Felguard
+    [169425] = true, -- Felhound
+    [168932] = true, -- Doomguard
+    [169426] = true, -- Infernal
+    [169429] = true, -- Shivarra
+    [169428] = true, -- Wrathguard
+    [169430] = true, -- Urzul
+
     -- Priest
     [101398] = true, -- Psyfiend
 
@@ -34,6 +43,8 @@ local NameplateWhiteList = {
     [59764] = true, -- Healing Tide Totem
     [95061] = true, -- Greater Fire Elemental
     [61029] = true, -- Primal Fire Elemental
+    [204331] = true, -- Counterstrike Totem
+    [5394] = true, -- Healing Stream Totem
 
     -- Warlock
     [196111] = true, -- Pit Lord (Guldan's Ambition)
