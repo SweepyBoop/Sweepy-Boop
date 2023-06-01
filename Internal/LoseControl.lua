@@ -52,8 +52,8 @@ function containerFrame:OnEvent(event, ...)
     -- Send notification to group
     if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) and ( UnitGroupRolesAssigned("player") == "HEALER" ) then
         local now = GetTime();
-        if ( now < self.lastMsgSent + 3) then
-            -- Don't send more than one messages within 3 sec.
+        if ( now < self.lastMsgSent + 1.5) then
+            -- Don't send more than one messages within 1.5 sec.
             return;
         end
 
@@ -64,7 +64,8 @@ function containerFrame:OnEvent(event, ...)
         end
 
         if sendMsg then
-            local channel = UnitIsGroupLeader("player") and "RAID_WARNING" or "YELL";
+            --local channel = UnitIsGroupLeader("player") and "RAID_WARNING" or "YELL";
+            local channel = "YELL";
             pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", channel) end)
             self.lastMsgSent = now;
         end
