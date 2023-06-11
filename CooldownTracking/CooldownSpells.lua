@@ -467,11 +467,11 @@ NS.cooldownResets = {
 
     -- Vanish (Memory of Invigorating Shadowdust, Subtlety Rogue)
     [1856] = {
-        { spellID = 2094, amount = 30, specID = {specID.SUBTLETY} }, -- Blind
-        { spellID = 408, amount = 30, specID = {specID.SUBTLETY} }, -- Kidney Shot
-        { spellID = 212182, amount = 30, specID = {specID.SUBTLETY} }, -- Smoke Bomb
-        { spellID = 1766, amount = 30, specID = {specID.SUBTLETY} }, -- Kick
-        { spellID = 36554, amount = 30, specID = {specID.SUBTLETY} }, -- Shadowstep
+        { spellID = 2094, amount = 15, specID = {specID.SUBTLETY} }, -- Blind
+        { spellID = 408, amount = 15, specID = {specID.SUBTLETY} }, -- Kidney Shot
+        { spellID = 212182, amount = 15, specID = {specID.SUBTLETY} }, -- Smoke Bomb
+        { spellID = 1766, amount = 15, specID = {specID.SUBTLETY} }, -- Kick
+        { spellID = 36554, amount = 15, specID = {specID.SUBTLETY} }, -- Shadowstep
     },
 
     -- Power Word: Shield
