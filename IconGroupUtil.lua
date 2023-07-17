@@ -204,13 +204,13 @@ NS.IconGroup_Wipe = function (group)
         if icon.cooldown then
             icon.cooldown:SetCooldown(0, 0);
         end
-        if icon.spellActivationAlert then
-            if icon.spellActivationAlert.animIn:IsPlaying() then
-                icon.spellActivationAlert.animIn:Stop();
+        if icon.SpellActivationAlert then
+            if icon.SpellActivationAlert.ProcStartAnim:IsPlaying() then
+                icon.SpellActivationAlert.ProcStartAnim:Stop();
             end
-            if icon.spellActivationAlert.animOut:IsPlaying() then
-                icon.spellActivationAlert.animOut:Stop();
-            end
+            if icon:IsVisible() then
+                icon.SpellActivationAlert:Hide();
+           end
         end
         if icon.duration then
             icon.duration:SetCooldown(0, 0);
