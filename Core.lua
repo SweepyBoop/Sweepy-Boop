@@ -91,13 +91,23 @@ options.args.NamePlates = {
             get = "GetHealerIconEnabled",
             set = "SetHealerIconEnabled",
         },
+        iconScale = {
+            order = 5,
+            width = "full",
+            type = "range",
+            min = 50,
+            max = 200,
+            desc = "Icon scale (%)",
+            get = "GetClassIconScale",
+            set = "SetClassIconScale",
+        },
         break1 = {
-			order = 5,
+			order = 6,
 			type = "header",
 			name = ""
 		},
         arenaNumbers = {
-            order = 6,
+            order = 7,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
@@ -106,7 +116,7 @@ options.args.NamePlates = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
-            order = 7,
+            order = 8,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
@@ -248,6 +258,7 @@ local defaults = {
     profile = {
         classIconsEnabled = true,
         classIconStyle = NS.CLASSICONSTYLE.ROUND,
+        classIconScale = 100,
         useHealerIcon = true,
         arenaCooldownOffsetX = 5,
         arenaCooldownOffsetY = 0,
@@ -340,6 +351,14 @@ end
 
 function SweepyBoop:SetHealerIconEnabled(info, value)
     self.db.profile.useHealerIcon = value;
+end
+
+function SweepyBoop:GetClassIconScale(info)
+    return self.db.profile.classIconScale;
+end
+
+function SweepyBoop:SetClassIconScale(info, value)
+    self.db.profile.classIconScale = value;
 end
 
 function SweepyBoop:GetArenaEnemyOffensivesEnabled(info)

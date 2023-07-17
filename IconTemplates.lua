@@ -5,34 +5,43 @@ local UIParent = UIParent;
 local GetSpellInfo = GetSpellInfo;
 local GetTime = GetTime;
 
+local function SetupOverlayGlow(button)
+    -- If we already have a SpellActivationAlert then just early return. We should already be setup
+	if button.SpellActivationAlert then
+		return;
+	end
+
+	button.SpellActivationAlert = CreateFrame("Frame", nil, button, "ActionBarButtonSpellActivationAlert");
+
+	--Make the height/width available before the next frame:
+	local frameWidth, frameHeight = button:GetSize();
+	button.SpellActivationAlert:SetSize(frameWidth * 1.4, frameHeight * 1.4);
+	button.SpellActivationAlert:SetPoint("CENTER", button, "CENTER", 0, 0);
+	button.SpellActivationAlert:Hide();
+end
+
 NS.ShowOverlayGlow = function (button)
-    if not button.spellActivationAlert then
-        return;
-    end
+    SetupOverlayGlow(button);
 
-    if button.spellActivationAlert.animOut:IsPlaying() then
-        button.spellActivationAlert.animOut:Stop();
-    end
+	if not button.SpellActivationAlert:IsShown() then
+		button.SpellActivationAlert:Show();
+		button.SpellActivationAlert.ProcStartAnim:Play();
 
-    if not button.spellActivationAlert:IsShown() then
-        button.spellActivationAlert.animIn:Play();
-    end
+	end
 end
 
 NS.HideOverlayGlow = function (button)
-    if not button.spellActivationAlert then
-        return;
-    end
+    if not button.SpellActivationAlert then
+		return;
+	end
 
-    if button.spellActivationAlert.animIn:IsPlaying() then
-        button.spellActivationAlert.animIn:Stop();
-    end
+	if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
+		button.SpellActivationAlert.ProcStartAnim:Stop();
+	end
 
-    if button:IsVisible() then
-        button.spellActivationAlert.animOut:Play();
-    else
-        button.spellActivationAlert.animOut:OnFinished();	--We aren't shown anyway, so we'll instantly hide it.
-    end
+	if button:IsVisible() then
+ 		button.SpellActivationAlert:Hide();
+	end
 end
 
 -- Call this after modifying timers
