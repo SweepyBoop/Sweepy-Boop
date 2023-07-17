@@ -207,9 +207,15 @@ local function ShowClassIcon(frame)
             icon:SetSize(iconSize, iconSize);
         end
 
+        local scale = SweepyBoop.db.profile.classIconScale / 100;
+        if ( icon.iconScale == nil ) or ( scale ~= icon.iconScale ) then
+            icon:SetScale(scale);
+        end
+
         icon.class = class;
         icon.isTarget = isTarget;
         icon.iconSize = iconSize;
+        icon.iconScale = scale;
     end
 
     icon:Show();

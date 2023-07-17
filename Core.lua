@@ -93,11 +93,11 @@ options.args.NamePlates = {
         },
         iconScale = {
             order = 5,
-            width = "full",
+            --width = "full",
             type = "range",
             min = 50,
             max = 200,
-            desc = "Icon scale (%)",
+            name = "Icon scale (%)",
             get = "GetClassIconScale",
             set = "SetClassIconScale",
         },
