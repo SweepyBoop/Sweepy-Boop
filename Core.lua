@@ -1,3 +1,8 @@
+-- Ensure GetAddOnMetadata is defined
+if not GetAddOnMetadata then
+    GetAddOnMetadata = C_AddOns.GetAddOnMetadata
+end
+
 local addonName, NS = ...;
 NS.addonTitle = GetAddOnMetadata(addonName, "Title");
 NS.exclamation = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
