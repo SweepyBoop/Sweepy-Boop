@@ -2,7 +2,7 @@ local _, NS = ...;
 
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
-local GetSpellInfo = GetSpellInfo;
+local GetSpellInfo = C_Spell.GetSpellInfo;
 local GetTime = GetTime;
 
 local function SetupOverlayGlow(button)

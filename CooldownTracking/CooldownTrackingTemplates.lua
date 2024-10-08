@@ -3,7 +3,7 @@ local _, NS = ...;
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local GetTime = GetTime;
-local GetSpellInfo = GetSpellInfo;
+local GetSpellInfo = C_Spell.GetSpellInfo;
 local UnitIsUnit = UnitIsUnit;
 
 local function StartAnimation(icon)
