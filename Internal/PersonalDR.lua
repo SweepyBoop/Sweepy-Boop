@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-local GetSpellInfo = GetSpellInfo;
+local GetSpellInfo = C_Spell.GetSpellInfo;
 local UnitGUID = UnitGUID;
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
