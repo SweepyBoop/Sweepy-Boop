@@ -292,8 +292,6 @@ function SweepyBoop:OnInitialize()
 
     -- Setup raid frame aggro highlight
     self:SetupRaidFrameAggroHighlight();
-
-    self:RegisterChatCommand("sb", "SlashCommand");
 end
 
 function SweepyBoop:TestArena()
@@ -321,12 +319,6 @@ function SweepyBoop:TestArena()
 
     self:TestArenaEnemyBurst();
     self:TestCooldownTracking();
-end
-
-function SweepyBoop:SlashCommand(msg)
-    if not msg or msg:trim() == "" then
-        InterfaceOptionsFrame_OpenToCategory(self.optionsFrame);
-    end
 end
 
 function SweepyBoop:GetClassIconsEnabled(info)
@@ -436,4 +428,14 @@ end
 function SweepyBoop:RefreshConfig()
     self:HideTestArenaEnemyBurst();
     self:HideTestCooldownTracking();
+end
+
+SLASH_SweepyBoop1 = "/sb"
+SlashCmdList.SweepyBoop = function(msg)
+    if Settings and Settings.OpenToCategory then
+        Settings.OpenToCategory(addonName)
+    else
+        InterfaceOptionsFrame_OpenToCategory(addonName)
+        InterfaceOptionsFrame_OpenToCategory(addonName)
+    end
 end
