@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 110005
 ## Title: SweepyBoop's Arena Helper
 ## Author: Kun
 ## Version: @project-version@
