@@ -76,6 +76,12 @@ NS.cooldownSpells = {
         class = NS.DEMONHUNTER,
         category = SPELLCATEGORY.DEFENSIVE
     },
+    -- Darkness
+    [196718] = {
+        cooldown = 180,
+        class = NS.DEMONHUNTER,
+        category = SPELLCATEGORY.DEFENSIVE
+    },
     -- Crowd Control
     -- Imprison
     [217832] = {

@@ -26,12 +26,6 @@ NS.spellData = {
         duration = 12,
         index = 2,
     },
-    -- Empower Rune Weapon
-    [47568] = {
-        class = NS.DEATHKNIGHT,
-        category = OFFENSIVE,
-        duration = 20,
-    },
     -- Offensive (Unholy)
     -- Summon Gargoyle
     [49206] = {
@@ -60,6 +54,12 @@ NS.spellData = {
         duration = 20,
     },
     -- Offensive (Frost)
+    -- Empower Rune Weapon
+    [47568] = {
+        class = NS.DEATHKNIGHT,
+        category = OFFENSIVE,
+        duration = 20,
+    },
     -- Pillar of Frost
     [51271] = {
         class = NS.DEATHKNIGHT,
