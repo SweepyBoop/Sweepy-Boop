@@ -74,6 +74,12 @@ NS.spellData = {
         index = 2,
         sound = true,
     },
+    -- Remorseless Winter
+    [196770] = {
+        class = NS.DEATHKNIGHT,
+        category = OFFENSIVE,
+        duration = 20,
+    },
 
     -- DH
     -- Offensive
