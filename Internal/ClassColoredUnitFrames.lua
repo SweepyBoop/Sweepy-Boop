@@ -24,11 +24,11 @@ local function UnitFrameLoad()
         local targetColors = UnitIsPlayer("target") and Player_CheckColor("target");
 
         if targetColors then
-            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar:SetStatusBarDesaturated(true);
-            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar:SetStatusBarColor(targetColors.r, targetColors.g, targetColors.b);
-            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar.lockColor = true;
+            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar:SetStatusBarDesaturated(true);
+            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar:SetStatusBarColor(targetColors.r, targetColors.g, targetColors.b);
+            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar.lockColor = true;
         else
-            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBar:SetStatusBarColor(0, 1, 0);
+            TargetFrame.TargetFrameContent.TargetFrameContentMain.HealthBarsContainer.HealthBar:SetStatusBarColor(0, 1, 0);
         end
     end
 
