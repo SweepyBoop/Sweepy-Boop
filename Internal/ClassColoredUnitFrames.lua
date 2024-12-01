@@ -47,8 +47,8 @@ end
 
 local function PlayerFrameLoad()
     local colors = RAID_CLASS_COLORS[select(2, UnitClass("player"))];
-    PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarArea.HealthBar:SetStatusBarDesaturated(true);
-    PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarArea.HealthBar:SetStatusBarColor(colors.r, colors.g, colors.b);
+    PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarsContainer.HealthBar:SetStatusBarDesaturated(true);
+    PlayerFrame.PlayerFrameContent.PlayerFrameContentMain.HealthBarsContainer.HealthBar:SetStatusBarColor(colors.r, colors.g, colors.b);
 end
 
 local function eventHandler(self, event, arg1, ...)
