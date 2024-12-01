@@ -14,7 +14,7 @@ NS.Util_GetUnitAura = function(unit, spell, filter)
     end
 
     for i = 1, 255 do
-      local name, _, _, _, _, _, _, _, _, spellId = UnitAura(unit, i, filter);
+      local name, _, _, _, _, _, _, _, _, spellId = AuraUtil.UnpackAuraData(UnitAura(unit, i, filter));
       if not name then return end
       if spell == spellId or spell == name then
         return UnitAura(unit, i, filter);
@@ -28,7 +28,7 @@ NS.Util_GetFirstUnitAura = function (unit, spells, filter, sourceUnit)
     end
 
     for i = 1, 255 do
-        local name, _, _, _, _, _, source, _, _, spellId = UnitAura(unit, i, filter);
+        local name, _, _, _, _, _, source, _, _, spellId = AuraUtil.UnpackAuraData(UnitAura(unit, i, filter));
         if name and spells[spellId] then
             if ( not sourceUnit ) or ( source == sourceUnit ) then
                 return UnitAura(unit, i, filter);
