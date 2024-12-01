@@ -432,10 +432,5 @@ end
 
 SLASH_SweepyBoop1 = "/sb"
 SlashCmdList.SweepyBoop = function(msg)
-    if Settings and Settings.OpenToCategory then
-        Settings.OpenToCategory(addonName)
-    else
-        InterfaceOptionsFrame_OpenToCategory(addonName)
-        InterfaceOptionsFrame_OpenToCategory(addonName)
-    end
+    LibStub("AceConfigDialog-3.0"):Open(addonName)
 end
