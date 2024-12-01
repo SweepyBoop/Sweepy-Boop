@@ -115,7 +115,7 @@ NS.StartSweepyIcon = function (icon)
             duration = 3;
         elseif spell.duration == NS.DURATION_DYNAMIC then
             local expirationTime;
-            duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
+            duration, expirationTime = select(5, AuraUtil.UnpackAuraData(NS.Util_GetUnitBuff(icon.unit, icon.spellID)));
             startTime = expirationTime - duration;
         else
             duration = spell.duration;
@@ -151,7 +151,7 @@ NS.RefreshSweepyDuration = function (icon)
     if ( not icon.duration ) then return end
 
     -- Get new duration
-    local duration, expirationTime = select(5, NS.Util_GetUnitBuff(icon.unit, icon.spellID));
+    duration, expirationTime = select(5, AuraUtil.UnpackAuraData(NS.Util_GetUnitBuff(icon.unit, icon.spellID)));
     if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
         SetSweepyDuration(icon, expirationTime - duration, duration);
         if icon.cooldown then
