@@ -303,8 +303,9 @@ function SweepyBoop:TestArena()
     if Gladius then
         local frame = _G["GladiusButtonFramearena1"];
         if ( not frame ) or ( not frame:IsShown() ) then
-           print("Type \"/gladius test3\" to invoke Gladius test frames");
-           return;
+            if SlashCmdList["GLADIUS"] then
+                SlashCmdList["GLADIUS"]("test 3")
+            end
         end
     elseif sArena then
         local frame = _G["sArenaEnemyFrame1"];
