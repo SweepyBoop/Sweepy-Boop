@@ -46,7 +46,7 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     f.Text:SetFontObject(GameFontNormal);
     f.Text:SetPoint("LEFT", 10, 0);
     f.Text:SetJustifyH("LEFT");
-    f.Text:SetJustifyV("CENTER");
+    f.Text:SetJustifyV("MIDDLE");
     f.Text:SetText(index);
     f.Text:SetTextColor(1, 1, 1);
 
@@ -166,7 +166,7 @@ local function CreateDruidManaBar() -- Create StatusBar with a text overlay
     f.Text:SetFontObject(GameFontNormal);
     f.Text:SetAllPoints();
     f.Text:SetJustifyH("CENTER");
-    f.Text:SetJustifyV("CENTER");
+    f.Text:SetJustifyV("MIDDLE");
     f.Text:SetTextColor(1, 1, 1);
 
     f.border = CreateFrame("Frame", nil, f, "NamePlateFullBorderTemplate");
