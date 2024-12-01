@@ -1,6 +1,6 @@
 local _, NS = ...;
 
-local UnitAura = UnitAura;
+local UnitAura = C_UnitAuras.GetAuraDataByIndex;
 local strsplit = strsplit;
 
 local CreateFrame = CreateFrame;

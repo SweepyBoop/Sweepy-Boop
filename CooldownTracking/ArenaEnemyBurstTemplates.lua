@@ -2,6 +2,7 @@ local _, NS = ...;
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local GetSpellInfo = C_Spell.GetSpellInfo;
+local GetSpellTexture = C_Spell.GetSpellTexture;
 local GetTime = GetTime;
 
 NS.CreateSweepyIcon = function (unit, spellID, size, group)
@@ -17,7 +18,7 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
     frame:SetSize(size, size);
 
     frame.tex = frame:CreateTexture();
-    frame.tex:SetTexture(select(3, GetSpellInfo(spellID)));
+    frame.tex:SetTexture(GetSpellTexture(spellID));
     frame.tex:SetAllPoints();
 
     -- Create duration/cooldown timers as needed

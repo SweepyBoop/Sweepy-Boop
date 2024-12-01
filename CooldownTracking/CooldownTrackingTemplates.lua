@@ -4,6 +4,7 @@ local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local GetTime = GetTime;
 local GetSpellInfo = C_Spell.GetSpellInfo;
+local GetSpellTexture = C_Spell.GetSpellTexture;
 local UnitIsUnit = UnitIsUnit;
 
 local function StartAnimation(icon)
@@ -62,7 +63,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     };
     frame.priority = spell.priority;
 
-    frame.Icon:SetTexture(select(3, GetSpellInfo(spellID)));
+    frame.Icon:SetTexture(GetSpellTexture(spellID));
     frame.Icon:SetAllPoints();
     frame.Count:SetText(""); -- Call this before setting color
     frame.Count:SetTextColor(1, 1, 0); -- Yellow
