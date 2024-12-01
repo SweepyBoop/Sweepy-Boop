@@ -5,6 +5,7 @@ local UnitClass = UnitClass;
 local PlayerFrame = PlayerFrame;
 local UIParent = UIParent;
 local GetSpellInfo = C_Spell.GetSpellInfo;
+local GetSpellTexture = C_Spell.GetSpellTexture;
 local GetTime = GetTime;
 local UnitStat = UnitStat;
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
@@ -157,7 +158,7 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
 
     frame.texture = frame:CreateTexture();
-    local icon = select(3, GetSpellInfo(spellID));
+    local icon = GetSpellTexture(spellID);
     frame.texture:SetTexture(icon);
     frame.texture:SetAllPoints();
 
@@ -213,7 +214,7 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
     frame.text:SetTextColor(1, 1, 0); -- Yellow
 
     frame.texture = frame:CreateTexture();
-    local icon = select(3, GetSpellInfo(spellID));
+    local icon = GetSpellTexture(spellID);
     frame.texture:SetTexture(icon);
     frame.texture:SetAllPoints();
 
@@ -243,7 +244,7 @@ local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoi
         local unitTarget = ...;
         if ( event == NS.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
             -- GetPlayerAuraBySpellID does not show count and value correctly, so we have to stick with UnitAura here
-            local name, _, count, _, duration, expirationTime, _, _, _, _, _, _, _, _, _, value = NS.Util_GetUnitBuff("player", frame.spellID);
+            local name, _, count, _, duration, expirationTime, _, _, _, _, _, _, _, _, _, value = AuraUtil.UnpackAuraData(NS.Util_GetUnitBuff("player", frame.spellID));
             if ( not name ) then
                 self:Hide();
                 return;
@@ -287,7 +288,7 @@ local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, r
     frame:SetFrameStrata("HIGH");
 
     frame.texture = frame:CreateTexture();
-    local icon = select(3, GetSpellInfo(spellID));
+    local icon = GetSpellTexture(spellID);
     frame.texture:SetTexture(icon);
     frame.texture:SetAllPoints();
 
@@ -487,7 +488,7 @@ local function CreateGlowingDefensiveBuffs(spells, size, point, relativeTo, rela
                 local spell = self.spells[i];
                 local aura = GetPlayerAuraBySpellID(spell);
                 if aura and aura.name and ShouldDisplayDefensiveBuff(self, aura) then
-                    local icon = select(3, GetSpellInfo(spell));
+                    local icon = GetSpellTexture(spell);
                     self.texture:SetTexture(icon);
 
                     if aura.duration and ( aura.duration ~= 0 ) then
