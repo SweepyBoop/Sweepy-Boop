@@ -309,8 +309,7 @@ function SweepyBoop:TestArena()
     elseif sArena then
         local frame = _G["sArenaEnemyFrame1"];
         if ( not frame ) or ( not frame:IsShown() ) then
-           print("Type \"/sarena test\" to invoke sArena test frames");
-           return;
+           sArena:Test();
         end
     else
         print("No Gladius / sArena detected");
