@@ -143,34 +143,16 @@ options.args.ArenaFrames = {
             order = 2,
             width = "full",
             type = "description",
-            name = NS.exclamation .. "Need to invoke Gladius / sArena test frames first",
-        },
-        description2 = {
-            order = 3,
-            width = "full",
-            type = "description",
-            name = "   • For Gladius: /gladius test3",
-        },
-        description3 = {
-            order = 4,
-            width = "full",
-            type = "description",
-            name = "   • For sArena: /sarena test",
-        },
-        description4 = {
-            order = 5,
-            width = "full",
-            type = "description",
             name = NS.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
         },
         breaker1 = {
-            order = 6,
+            order = 3,
             type = "header",
             name = "",
         },
 
         arenaEnemyOffensives = {
-            order = 7,
+            order = 4,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
@@ -179,7 +161,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensivesEnabled",
         },
         arenaEnemyOffensiveIconSizeSlider = {
-            order = 8,
+            order = 5,
             type = "range",
             min = 16,
             max = 64,
@@ -189,7 +171,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyOffensiveIconSize",
         },
         arenaEnemyDefensives = {
-            order = 9,
+            order = 6,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
@@ -198,7 +180,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensivesEnabled",
         },
         arenaEnemyDefensiveIconSizeSlider = {
-            order = 10,
+            order = 7,
             type = "range",
             min = 16,
             max = 64,
@@ -208,7 +190,7 @@ options.args.ArenaFrames = {
             set = "SetArenaEnemyDefensiveIconSize",
         },
         arenaCooldownOffsetXSlider = {
-            order = 11,
+            order = 8,
             type = "range",
             min = -750,
             max = 750,
@@ -218,7 +200,7 @@ options.args.ArenaFrames = {
             set = "SetArenaCooldownOffsetX",
         },
         arenaCooldownOffsetYSlider = {
-            order = 12,
+            order = 9,
             type = "range",
             min = -150,
             max = 150,
