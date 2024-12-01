@@ -1,7 +1,6 @@
 <Ui>
 	<!-- Custom Spell Alert -->
-	<!-- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/SpellActivationOverlay.xml -->
-	<!-- Removed in 11.0 -->
+	<!-- https://github.com/tomrus88/BlizzardInterfaceCode/blob/fb8b912961872d9b23bbd58a458167b6bbde3c59/Interface/AddOns/Blizzard_FrameXML/SpellActivationOverlay.xml -->
 
 	<!-- https://github.com/ennvina/spellactivationoverlay -->
 	<Frame name="CustomSpellActivationOverlayTemplate" virtual="true" inherits="SpellActivationOverlayTemplate">
