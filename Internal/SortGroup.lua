@@ -76,7 +76,7 @@ local function TrySort()
 end
 
 hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
-    if ( frame == CompactPartyFrame ) then
+    if ( frame == CompactPartyFrame ) and IsInGroup() then
         TrySort();
     end
 end)

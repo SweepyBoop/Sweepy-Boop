@@ -218,7 +218,7 @@ end
 local healthStone;
 
 local classSpell = {
-    [NS.DRUID] = "Renewal",
+    [NS.DRUID] = "Frenzied Regeneration",
     [NS.PRIEST] = "Desperate Prayer",
     [NS.PALADIN] = "Divine Protection",
 };
