@@ -20,15 +20,15 @@ local UnitGUID = UnitGUID;
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 
-findSpellId.spellName = "Ironbark";
+findSpellId.spellName = "Reforestation";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
     if ( not self.enabled ) then return end
 
     if ( event == NS.UNIT_AURA ) and ( unitTarget == "player" ) then
-        local source, _, _, id = select(7, NS.Util_GetUnitAura("player", self.spellName));
-        if id then print("UNIT_AURA", source, id) end
+        local auraData = NS.Util_GetUnitAura("player", self.spellName);
+        if auraData and auraData.spellId then print("UNIT_AURA", auraData.sourceUnit, auraData.spellId) end
     elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
         local _, subEvent, _, sourceGUID = CombatLogGetCurrentEventInfo();
         if ( subEvent == NS.SPELL_AURA_APPLIED ) and ( sourceGUID == UnitGUID("player") ) then
@@ -345,11 +345,11 @@ local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivatio
 local precongnition = CreateGlowingBuffIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60);
 
 if ( class == NS.DRUID ) then
-    local wildSynthesis = CreateStackBuffIcon(400534, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
+    local reforestation = CreateStackBuffIcon(392360, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5, 2, true);
-    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
-    local berserk = CreateGlowingBuffIcon(106951, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
-    local kingofJungle = CreateGlowingBuffIcon(102543, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
+    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5);
+    local berserk = CreateGlowingBuffIcon(106951, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50);
+    local kingofJungle = CreateGlowingBuffIcon(102543, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50);
 
     local function protectorFunc(count, duration, expirationTime, value)
         local currentValue = value or 0;

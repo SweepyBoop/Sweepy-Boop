@@ -409,7 +409,7 @@ for _, spell in pairs(NS.cooldownSpells) do
 end
 
 if NS.isTestMode then
-    local testCategory = SPELLCATEGORY.INTERRUPT;
+    local testCategory = SPELLCATEGORY.CROWDCONTROL;
     -- Test
     -- Mark of the Wild
     NS.cooldownSpells[1126] = {

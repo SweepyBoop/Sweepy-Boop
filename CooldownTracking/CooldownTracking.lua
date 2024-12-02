@@ -406,7 +406,7 @@ setPointOptions[SPELLCATEGORY.CROWDCONTROL] = {
     relativeTo = UIParent,
     relativePoint = "CENTER",
     offsetX = 0,
-    offsetY = -245,
+    offsetY = -275,
 };
 setPointOptions[SPELLCATEGORY.DISPEL] = {
     point = "CENTER",
