@@ -67,16 +67,16 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     f.targetBorder:UpdateSizes();
     f.targetBorder:Hide();
 
-    f:Hide(); -- Hide initially
+    f:SetAlpha(0); -- Hide initially
     return f;
 end
 
 -- Update when unit changes
 local function UpdateProperties(frame)
     if ShouldShowHealthBar(frame.unit) then
-        frame:Show();
+        frame:SetAlpha(1);
     else
-        frame:Hide();
+        frame:SetAlpha(0);
         return;
     end
 
@@ -174,7 +174,7 @@ local function CreateDruidManaBar() -- Create StatusBar with a text overlay
     f.border:UpdateSizes();
     f.border:Show();
 
-    f:Hide(); -- Hide initially
+    f:SetAlpha(0); -- Hide initially
     return f;
 end
 
@@ -201,9 +201,9 @@ local function InitializeManaBar(frame, powerType)
     UpdatePowerMax(frame, powerType);
 
     if ShouldShowManaBar(frame) then
-        frame:Show();
+        frame:SetAlpha(1);
     else
-        frame:Hide();
+        frame:SetAlpha(0);
     end
 end
 
@@ -213,9 +213,9 @@ if ( class == NS.DRUID ) then
     druidManaBar:SetScript("OnEvent", function(self, event, ...)
         if ( event == NS.UPDATE_SHAPESHIFT_FORM ) or ( event == NS.PLAYER_ENTERING_WORLD ) then
             if ShouldShowManaBar(self) then
-                self:Show();
+                self:SetAlpha(1);
             else
-                self:Hide();
+                self:SetAlpha(0);
             end
 
             return;
