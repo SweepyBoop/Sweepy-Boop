@@ -76,7 +76,7 @@ local function TrySort()
 end
 
 hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
-    if ( frame == CompactPartyFrame ) and IsInGroup() then
+    if ( frame == CompactPartyFrame ) and IsInGroup() and ( not EditModeManagerFrame.editModeActive ) then
         TrySort();
     end
 end)
