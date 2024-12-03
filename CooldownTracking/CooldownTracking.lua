@@ -3,7 +3,7 @@ local test = NS.isTestMode;
 
 local UIParent = UIParent;
 local UnitGUID = UnitGUID;
-local GetSpellPowerCost = GetSpellPowerCost;
+local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
 local UnitClass = UnitClass;
 local GetArenaOpponentSpec = GetArenaOpponentSpec;
 local GetSpecializationInfoByID = GetSpecializationInfoByID;
