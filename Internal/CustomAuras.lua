@@ -19,8 +19,9 @@ local UnitGUID = UnitGUID;
 -- To find the spellID of an aura
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
+--findSpellId.enabled = true;
 
-findSpellId.spellName = "Reforestation";
+findSpellId.spellName = "Blooming Infusion";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
@@ -44,12 +45,15 @@ function SpellActivationOverlayFadeInAnimMixin:CustomOnFinished(animGroup)
 	overlay.pulse:Play();
 end
 
-local function CreateTexture(buff, filePath, width, height, offsetX, offsetY)
+local function CreateTexture(buff, filePath, width, height, offsetX, offsetY, rotate)
     local frame = CreateFrame("Frame", nil, UIParent, "CustomSpellActivationOverlayTemplate")
     frame.buff = buff
     frame:SetSize(width, height)
     frame:SetPoint("CENTER", offsetX, offsetY)
     frame.texture:SetTexture(filePath)
+    if rotate then
+        frame.texture:SetRotation(rotate)
+    end
     frame:Hide() -- Hide initially until aura is detected
 
     frame:RegisterEvent(NS.UNIT_AURA);
@@ -70,6 +74,8 @@ local class = select(2, UnitClass("player"));
 
 if ( class == NS.DRUID ) then
     local soulOfTheForest = CreateTexture(114108, 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
+    local bloomingInfusionDamage = CreateTexture(429474, 450915, 100, 100, -100, 150) -- Eclipse_Sun.blp
+    local bloomingInfusionHeal = CreateTexture(429438, 450914, 100, 100, 100, 150, math.pi) -- Eclipse_Moon.blp
     local predatorySwiftness = CreateTexture(69369, 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
     local apexPredatorsCraving = CreateTexture(391882, 627609, 150, 50, 0, 180) -- shadow_of_death.blp
 end
