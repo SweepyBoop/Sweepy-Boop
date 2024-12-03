@@ -101,13 +101,22 @@ options.args.NamePlates = {
             get = "GetClassIconScale",
             set = "SetClassIconScale",
         },
+        iconOffset = {
+            order = 6,
+            type = "range",
+            min = 0,
+            max = 150,
+            name = "Icon offset",
+            get = "GetClassIconOffset",
+            set = "SetClassIconOffset",
+        },
         break1 = {
-			order = 6,
+			order = 7,
 			type = "header",
 			name = ""
 		},
         arenaNumbers = {
-            order = 7,
+            order = 8,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
@@ -116,7 +125,7 @@ options.args.NamePlates = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
-            order = 8,
+            order = 9,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
@@ -241,6 +250,7 @@ local defaults = {
         classIconsEnabled = true,
         classIconStyle = NS.CLASSICONSTYLE.ROUND,
         classIconScale = 100,
+        classIconOffset = 40,
         useHealerIcon = true,
         arenaCooldownOffsetX = 5,
         arenaCooldownOffsetY = 0,
@@ -333,6 +343,14 @@ end
 
 function SweepyBoop:SetClassIconScale(info, value)
     self.db.profile.classIconScale = value;
+end
+
+function SweepyBoop:GetClassIconOffset(info)
+    return self.db.profile.classIconOffset;
+end
+
+function SweepyBoop:SetClassIconOffset(info, value)
+    self.db.profile.classIconOffset = value;
 end
 
 function SweepyBoop:GetArenaEnemyOffensivesEnabled(info)

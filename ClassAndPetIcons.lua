@@ -123,7 +123,7 @@ local function EnsureClassIcon(frame)
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
         nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay');
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, 40);
+        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
     end
