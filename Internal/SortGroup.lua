@@ -48,6 +48,7 @@ local sortPending = false;
 local function TrySort()
     if InCombatLockdown() then
         sortPending = true;
+        return;
     end
 
     local frames = {};
@@ -76,6 +77,8 @@ local function TrySort()
 end
 
 local function OnEvent(_, event)
+    if (not IsInGroup()) then return end
+    -- Do we need to skip when EditModeManagerFrame.editModeActive is true?
     if (event == NS.PLAYER_REGEN_ENABLED) and sortPending then
         TrySort();
     else
