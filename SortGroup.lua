@@ -19,7 +19,11 @@ local CreateFrame = CreateFrame;
 
 local function Compare_Top(left, right)
     local leftToken, rightToken = left.unit, right.unit;
-    if (leftToken == "player") then return true
+
+    if ( not UnitExists(leftToken) ) then return false
+    elseif ( not UnitExists(rightToken) ) then return true
+
+    elseif (leftToken == "player") then return true
     elseif (rightToken == "player") then return false
     else
         return leftToken < rightToken;
@@ -28,7 +32,10 @@ end
 
 local function Compare_Bottom(left, right)
     local leftToken, rightToken = left.unit, right.unit;
-    if (leftToken == "player") then return false
+    if ( not UnitExists(leftToken) ) then return false
+    elseif ( not UnitExists(rightToken) ) then return true
+
+    elseif (leftToken == "player") then return false
     elseif (rightToken == "player") then return true
     else
         return leftToken < rightToken;
@@ -38,7 +45,10 @@ end
 local function Compare_Mid(left, right)
     local leftToken, rightToken = left.unit, right.unit;
 
-    if ( leftToken == "party1" ) then return true
+    if ( not UnitExists(leftToken) ) then return false
+    elseif ( not UnitExists(rightToken) ) then return true
+
+    elseif ( leftToken == "party1" ) then return true
     elseif ( rightToken == "party1" ) then return false
     elseif ( leftToken == "player" ) then return true
     elseif ( rightToken == "player" ) then return false
