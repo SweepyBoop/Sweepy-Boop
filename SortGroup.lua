@@ -113,8 +113,8 @@ end
 local function OnEvent(_, event)
     if (SweepyBoop.db.profile.raidFrameSortOrder == NS.RaidFrameSortOrder.Disabled) then return end
     if ( not IsActiveBattlefieldArena() ) then return end -- only sort in arena
-
     if (not IsInGroup()) then return end
+    
     -- Do we need to skip when EditModeManagerFrame.editModeActive is true?
     if (event == NS.PLAYER_REGEN_ENABLED) and sortPending then
         TrySort();
