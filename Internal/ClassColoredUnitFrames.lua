@@ -61,4 +61,4 @@ local function eventHandler(self, event, arg1, ...)
     end
 end
 
-frame:SetScript("OnEvent", eventHandler);
+--frame:SetScript("OnEvent", eventHandler);
