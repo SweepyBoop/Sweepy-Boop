@@ -27,6 +27,7 @@ UnitInfoHelpers.lua
 IconGroupUtil.lua
 IconTemplates.lua
 ClassAndPetIcons.lua
+SortGroup.lua
 FixBlizzardRaidAggro.lua
 
 # Simple Cooldown Tracking
@@ -42,7 +43,6 @@ CooldownTracking\ArenaEnemyBurst.lua
 Internal\LoseControl.lua
 Internal\Personalization.lua
 Internal\HideHotKeys.lua
-Internal\SortGroup.lua
 
 # Misc
 Internal\DrinkMacro.lua

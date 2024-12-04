@@ -17,7 +17,25 @@ local CompactRaidFrameContainer = CompactRaidFrameContainer;
 local hooksecurefunc = hooksecurefunc;
 local CreateFrame = CreateFrame;
 
-local function Compare(left, right)
+local function Compare_Top(left, right)
+    local leftToken, rightToken = left.unit, right.unit;
+    if (leftToken == "player") then return true
+    elseif (rightToken == "player") then return false
+    else
+        return leftToken < rightToken;
+    end
+end
+
+local function Compare_Bottom(left, right)
+    local leftToken, rightToken = left.unit, right.unit;
+    if (leftToken == "player") then return false
+    elseif (rightToken == "player") then return true
+    else
+        return leftToken < rightToken;
+    end
+end
+
+local function Compare_Mid(left, right)
     local leftToken, rightToken = left.unit, right.unit;
 
     if ( leftToken == "party1" ) then return true
@@ -28,6 +46,12 @@ local function Compare(left, right)
         return leftToken < rightToken;
     end
 end
+
+local sortFunctions = {
+    PlayerTop = Compare_Top,
+    PlayerBottom = Compare_Bottom,
+    PlayerMiddle = Compare_Mid,
+};
 
 local function GetPartyUnitId(unitId)
     if UnitIsUnit(unitId, "player") then
@@ -58,7 +82,7 @@ local function TrySort()
         frames[i] = { unit = unit, frame = frame };
     end
 
-    table.sort(frames, Compare);
+    table.sort(frames, sortFunctions[SweepyBoop.db.profile.raidFrameSortOrder]);
 
     local prevFrame;
     for _, value in ipairs(frames) do
@@ -77,6 +101,9 @@ local function TrySort()
 end
 
 local function OnEvent(_, event)
+    if (SweepyBoop.db.profile.raidFrameSortOrder == NS.RaidFrameSortOrder.Disabled) then return end
+    if ( not IsActiveBattlefieldArena() ) then return end -- only sort in arena
+
     if (not IsInGroup()) then return end
     -- Do we need to skip when EditModeManagerFrame.editModeActive is true?
     if (event == NS.PLAYER_REGEN_ENABLED) and sortPending then
