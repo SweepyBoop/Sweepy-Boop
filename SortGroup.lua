@@ -17,7 +17,25 @@ local CompactRaidFrameContainer = CompactRaidFrameContainer;
 local hooksecurefunc = hooksecurefunc;
 local CreateFrame = CreateFrame;
 
-local function Compare(left, right)
+local function Compare_Top(left, right)
+    local leftToken, rightToken = left.unit, right.unit;
+    if (leftToken == "player") then return true
+    elseif (rightToken == "player") then return false
+    else
+        return leftToken < rightToken;
+    end
+end
+
+local function Compare_Bottom(left, right)
+    local leftToken, rightToken = left.unit, right.unit;
+    if (leftToken == "player") then return false
+    elseif (rightToken == "player") then return true
+    else
+        return leftToken < rightToken;
+    end
+end
+
+local function Compare_Mid(left, right)
     local leftToken, rightToken = left.unit, right.unit;
 
     if ( leftToken == "party1" ) then return true
@@ -28,6 +46,12 @@ local function Compare(left, right)
         return leftToken < rightToken;
     end
 end
+
+local sortFunctions = {
+    PlayerTop = Compare_Top,
+    PlayerBottom = Compare_Bottom,
+    PlayerMiddle = Compare_Mid,
+};
 
 local function GetPartyUnitId(unitId)
     if UnitIsUnit(unitId, "player") then
@@ -48,6 +72,7 @@ local sortPending = false;
 local function TrySort()
     if InCombatLockdown() then
         sortPending = true;
+        return;
     end
 
     local frames = {};
@@ -57,7 +82,7 @@ local function TrySort()
         frames[i] = { unit = unit, frame = frame };
     end
 
-    table.sort(frames, Compare);
+    table.sort(frames, sortFunctions[SweepyBoop.db.profile.raidFrameSortOrder]);
 
     local prevFrame;
     for _, value in ipairs(frames) do
@@ -75,62 +100,22 @@ local function TrySort()
     sortPending = false;
 end
 
-hooksecurefunc("CompactRaidGroup_UpdateLayout", function (frame)
-    if ( frame == CompactPartyFrame ) and IsInGroup() and ( not EditModeManagerFrame.editModeActive ) then
-        TrySort();
-    end
-end)
-
-local function RegisterEventEx(frame, event)
-    if ( not frame:RegisterEvent(event) ) then
-        print("Failed to register event", event, "to", frame:GetName());
-    end
-end
-
-local function UnregisterEventEx(frame, event)
-    if ( not frame:UnregisterEvent(event) ) then
-        print("Failed to unregister event", event, "from", frame:GetName());
-    end
-end
-
-local function PauseUpdates()
-    if CompactRaidFrameContainer then
-        UnregisterEventEx(CompactRaidFrameContainer, NS.GROUP_ROSTER_UPDATE);
-        UnregisterEventEx(CompactRaidFrameContainer, NS.UNIT_PET);
-    end
-
-    if CompactPartyFrame then
-        UnregisterEventEx(CompactPartyFrame, NS.GROUP_ROSTER_UPDATE);
-        UnregisterEventEx(CompactPartyFrame, NS.UNIT_PET);
-    end
-end
-
-local function ResumeUpdates()
-    if CompactRaidFrameContainer then
-        RegisterEventEx(CompactRaidFrameContainer, NS.GROUP_ROSTER_UPDATE);
-        RegisterEventEx(CompactRaidFrameContainer, NS.UNIT_PET);
-    end
-
-    if CompactPartyFrame then
-        RegisterEventEx(CompactPartyFrame, NS.GROUP_ROSTER_UPDATE);
-        RegisterEventEx(CompactPartyFrame, NS.UNIT_PET);
-    end
-
-    if sortPending then
-        TrySort();
-    end
-end
-
 local function OnEvent(_, event)
-    if event == "PLAYER_REGEN_ENABLED" then
-        ResumeUpdates();
-    elseif event == "PLAYER_REGEN_DISABLED" then
-        PauseUpdates();
+    if (SweepyBoop.db.profile.raidFrameSortOrder == NS.RaidFrameSortOrder.Disabled) then return end
+    if ( not IsActiveBattlefieldArena() ) then return end -- only sort in arena
+
+    if (not IsInGroup()) then return end
+    -- Do we need to skip when EditModeManagerFrame.editModeActive is true?
+    if (event == NS.PLAYER_REGEN_ENABLED) and sortPending then
+        TrySort();
+    else
+        TrySort();
     end
 end
 
--- Combat blocking: pause updates when entering combat, and resume when leaving combat
-local combatBlockingFrame = CreateFrame("Frame");
-combatBlockingFrame:HookScript("OnEvent", OnEvent);
-combatBlockingFrame:RegisterEvent("PLAYER_REGEN_ENABLED");
-combatBlockingFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
+local eventFrame = CreateFrame("Frame");
+eventFrame:HookScript("OnEvent", OnEvent);
+eventFrame:RegisterEvent(NS.GROUP_ROSTER_UPDATE);
+eventFrame:RegisterEvent(NS.UNIT_PET);
+eventFrame:RegisterEvent(NS.PLAYER_REGEN_ENABLED);
+eventFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);

@@ -227,8 +227,26 @@ options.args.RaidFrame = {
     name = "Raid Frames",
     handler = SweepyBoop,
     args = {
-        raidFrameAggroHighlight = {
+        sortGroup = {
             order = 1,
+            type = "select",
+            values = NS.RaidFrameSortOrder,
+            name = "Sort raid frames inside arena",
+            desc = "Customize the sort order of raid frames inside arena",
+            descStyle = "inline",
+            get = "GetRaidFrameSortOrder",
+            set = "SetRaidFrameSortOrder",
+            style = "radio",
+        },
+
+        breaker1 = {
+            order = 2,
+            type = "header",
+            name = "",
+        },
+
+        raidFrameAggroHighlight = {
+            order = 3,
             width = "full",
             type = "toggle",
             name = "PvP Aggro Highlight",
@@ -237,7 +255,7 @@ options.args.RaidFrame = {
             set = "SetRaidFrameAggroHighlightEnabled",
         },
         description = {
-            order = 2,
+            order = 4,
             width = "full",
             type = "description",
             name = NS.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
@@ -260,6 +278,7 @@ local defaults = {
         arenaEnemyDefensiveIconSize = 25,
         arenaNumbersEnabled = true,
         nameplateFilterEnabled = true,
+        raidFrameSortOrder = NS.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
     }
 };
@@ -383,6 +402,14 @@ end
 
 function SweepyBoop:SetNameplateFilterEnabled(info, value)
     self.db.profile.nameplateFilterEnabled = value;
+end
+
+function SweepyBoop:GetRaidFrameSortOrder(info)
+    return self.db.profile.raidFrameSortOrder;
+end
+
+function SweepyBoop:SetRaidFrameSortOrder(info, value)
+    self.db.profile.raidFrameSortOrder = value;
 end
 
 function SweepyBoop:GetRaidFrameAggroHighlightEnabled(info)

@@ -83,3 +83,10 @@ NS.WARRIOR = "WARRIOR";
 NS.HIDETIMEROMNICC = "BoopHideTimer";
 
 NS.DEFAULT_ICON_SIZE = 32;
+
+NS.RaidFrameSortOrder = {
+    Disabled = "Disabled",
+    PlayerTop = "Player on top",
+    PlayerBottom = "Player at bottom",
+    PlayerMiddle = "Player in the middle",
+};
