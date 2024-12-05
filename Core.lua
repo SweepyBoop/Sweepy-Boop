@@ -263,6 +263,47 @@ options.args.RaidFrame = {
     },
 };
 
+options.args.Misc = {
+    order = 9,
+    type = "group",
+    name = "Misc",
+    handler = SweepyBoop,
+    args = {
+        description1 = {
+            order = 1,
+            width = "full",
+            type = "description",
+            fontSize = "medium",
+            name = "Type /afk to surrender arena",
+        },
+        surrender = {
+            order = 2,
+            width = "full",
+            type = "toggle",
+            name = "Enable",
+            get = "GetArenaSurrenderEnabled",
+            set = "SetArenaSurrenderEnabled",
+        },
+        skipConfirm = {
+            order = 3,
+            width = "full",
+            type = "toggle",
+            name = "Leave arena directly if unable to surrender",
+            get = "GetSkipLeaveArenaConfirmationEnabled",
+            set = "SetSkipLeaveArenaConfirmationEnabled",
+            disabled = function()
+                return ( not SweepyBoop:GetArenaSurrenderEnabled() );
+            end,
+        },
+        description2 = {
+            order = 4,
+            width = "full",
+            type = "description",
+            name = NS.exclamation .. NS.exclamation .. NS.exclamation ..  "Leaving arena without entering combat results in deserter status",
+        },
+    },
+};
+
 local defaults = {
     profile = {
         classIconsEnabled = true,
@@ -280,6 +321,8 @@ local defaults = {
         nameplateFilterEnabled = true,
         raidFrameSortOrder = NS.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
+        arenaSurrenderEnabled = true,
+        skipLeaveArenaConfirmation = false,
     }
 };
 
@@ -450,6 +493,22 @@ end
 
 function SweepyBoop:SetArenaEnemyDefensiveIconSize(info, value)
     self.db.profile.arenaEnemyDefensiveIconSize = value;
+end
+
+function SweepyBoop:GetArenaSurrenderEnabled(info)
+    return self.db.profile.arenaSurrenderEnabled;
+end
+
+function SweepyBoop:SetArenaSurrenderEnabled(info, value)
+    self.db.profile.arenaSurrenderEnabled = value;
+end
+
+function SweepyBoop:GetSkipLeaveArenaConfirmationEnabled(info)
+    return self.db.profile.skipLeaveArenaConfirmation;
+end
+
+function SweepyBoop:SetSkipLeaveArenaConfirmationEnabled(info, value)
+    self.db.profile.skipLeaveArenaConfirmation = value;
 end
 
 function SweepyBoop:RefreshConfig()
