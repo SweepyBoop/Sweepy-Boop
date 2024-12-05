@@ -289,7 +289,7 @@ options.args.Misc = {
             type = "toggle",
             name = "Leave arena directly if unable to surrender",
             get = "GetSkipLeaveArenaConfirmationEnabled",
-            set = "GetSkipLeaveArenaConfirmationEnabled",
+            set = "SetSkipLeaveArenaConfirmationEnabled",
             disabled = function()
                 return ( not SweepyBoop:GetArenaSurrenderEnabled() );
             end,
