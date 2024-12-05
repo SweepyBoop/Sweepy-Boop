@@ -1,10 +1,11 @@
+local _, NS = ...;
+
 SlashCmdList["CHAT_AFK"] = function(msg)
-	if IsActiveBattlefieldArena() then
+	if IsActiveBattlefieldArena() and SweepyBoop.db.profile.arenaSurrenderEnabled then
 		if CanSurrenderArena() then
-			print("Successfully surrendered arena.")
 			SurrenderArena();
 		else
-			print("Failed to surrender arena. Partners still alive.")
+			ConfirmSurrenderArena();
 		end
 	else
 		SendChatMessage(msg, "AFK");

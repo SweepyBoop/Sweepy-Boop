@@ -263,6 +263,28 @@ options.args.RaidFrame = {
     },
 };
 
+options.args.Misc = {
+    order = 9,
+    type = "group",
+    name = "Misc",
+    handler = SweepyBoop,
+    args = {
+        description = {
+            order = 1,
+            type ="description",
+            name = "Surrender if applicable; if no teammates are dead a confirmation prompt will be shown",
+        },
+        surrender = {
+            order = 2,
+            width = "full",
+            type = "toggle",
+            name = "Type /afk to surrender arena",
+            get = "GetArenaSurrenderEnabled",
+            set = "SetArenaSurrenderEnabled",
+        },
+    },
+};
+
 local defaults = {
     profile = {
         classIconsEnabled = true,
@@ -280,6 +302,7 @@ local defaults = {
         nameplateFilterEnabled = true,
         raidFrameSortOrder = NS.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
+        arenaSurrenderEnabled = true,
     }
 };
 
@@ -450,6 +473,14 @@ end
 
 function SweepyBoop:SetArenaEnemyDefensiveIconSize(info, value)
     self.db.profile.arenaEnemyDefensiveIconSize = value;
+end
+
+function SweepyBoop:GetArenaSurrenderEnabled(info)
+    return self.db.profile.arenaSurrenderEnabled;
+end
+
+function SweepyBoop:SetArenaSurrenderEnabled(info, value)
+    self.db.profile.arenaSurrenderEnabled = value;
 end
 
 function SweepyBoop:RefreshConfig()
