@@ -5,7 +5,7 @@ SlashCmdList["CHAT_AFK"] = function(msg)
 		if CanSurrenderArena() then
 			SurrenderArena();
 		else
-			ConfirmSurrenderArena();
+			ConfirmOrLeaveBattlefield();
 		end
 	else
 		SendChatMessage(msg, "AFK");

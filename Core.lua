@@ -269,18 +269,36 @@ options.args.Misc = {
     name = "Misc",
     handler = SweepyBoop,
     args = {
-        surrender = {
+        description = {
             order = 1,
             width = "full",
-            type = "toggle",
+            type = "description",
             name = "Type /afk to surrender arena",
+        },
+        surrender = {
+            order = 2,
+            width = "full",
+            type = "toggle",
+            name = "Enable",
             get = "GetArenaSurrenderEnabled",
             set = "SetArenaSurrenderEnabled",
         },
+        skipConfirm = {
+            order = 3,
+            width = "full",
+            type = "toggle",
+            name = "Leave arena directly if unable to surrender",
+            get = "GetSkipLeaveArenaConfirmationEnabled",
+            set = "GetSkipLeaveArenaConfirmationEnabled",
+            disabled = function()
+                return ( not SweepyBoop:GetArenaSurrenderEnabled() );
+            end,
+        },
         description = {
-            order = 2,
-            type ="description",
-            name = "Surrender if applicable; if no teammates are dead a confirmation prompt will be shown",
+            order = 4,
+            width = "full",
+            type = "description",
+            name = NS.exclamation ..  "Leaving arena without entering combat results in deserter status",
         },
     },
 };
@@ -303,6 +321,7 @@ local defaults = {
         raidFrameSortOrder = NS.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
+        skipLeaveArenaConfirmation = false,
     }
 };
 
@@ -481,6 +500,14 @@ end
 
 function SweepyBoop:SetArenaSurrenderEnabled(info, value)
     self.db.profile.arenaSurrenderEnabled = value;
+end
+
+function SweepyBoop:GetSkipLeaveArenaConfirmationEnabled(info)
+    return self.db.profile.skipLeaveArenaConfirmation;
+end
+
+function SweepyBoop:SetSkipLeaveArenaConfirmationEnabled(info, value)
+    self.db.profile.skipLeaveArenaConfirmation = value;
 end
 
 function SweepyBoop:RefreshConfig()
