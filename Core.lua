@@ -269,18 +269,18 @@ options.args.Misc = {
     name = "Misc",
     handler = SweepyBoop,
     args = {
-        description = {
-            order = 1,
-            type ="description",
-            name = "Surrender if applicable; if no teammates are dead a confirmation prompt will be shown",
-        },
         surrender = {
-            order = 2,
+            order = 1,
             width = "full",
             type = "toggle",
             name = "Type /afk to surrender arena",
             get = "GetArenaSurrenderEnabled",
             set = "SetArenaSurrenderEnabled",
+        },
+        description = {
+            order = 2,
+            type ="description",
+            name = "Surrender if applicable; if no teammates are dead a confirmation prompt will be shown",
         },
     },
 };
