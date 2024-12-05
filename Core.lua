@@ -269,10 +269,11 @@ options.args.Misc = {
     name = "Misc",
     handler = SweepyBoop,
     args = {
-        description = {
+        description1 = {
             order = 1,
             width = "full",
             type = "description",
+            fontSize = "medium",
             name = "Type /afk to surrender arena",
         },
         surrender = {
@@ -294,7 +295,7 @@ options.args.Misc = {
                 return ( not SweepyBoop:GetArenaSurrenderEnabled() );
             end,
         },
-        description = {
+        description2 = {
             order = 4,
             width = "full",
             type = "description",
