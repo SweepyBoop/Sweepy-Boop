@@ -299,7 +299,7 @@ options.args.Misc = {
             order = 4,
             width = "full",
             type = "description",
-            name = NS.exclamation ..  "Leaving arena without entering combat results in deserter status",
+            name = NS.exclamation .. NS.exclamation .. NS.exclamation ..  "Leaving arena without entering combat results in deserter status",
         },
     },
 };
