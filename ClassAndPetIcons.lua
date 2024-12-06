@@ -243,11 +243,15 @@ local function ShouldShowNameplate(unitId)
         return true;
     end
 
-    -- When outside arena, show everything hostile
+    -- When outside arena
     if ( not IsActiveBattlefieldArena() ) then
-        local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-        -- UnitIsEnemy will not work here, since it excludes neutral units
-        return UnitCanAttack("player", unitId) ~= possessedFactor;
+        if SweepyBoop.db.profile.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
+            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
+            -- UnitIsEnemy will not work here, since it excludes neutral units
+            return UnitCanAttack("player", unitId) ~= possessedFactor;
+        else -- Otherwise just show everything
+            return true;
+        end
     end
 
     -- Show arena 1~3
