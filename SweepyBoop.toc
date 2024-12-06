@@ -18,7 +18,7 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 # Constants
 Constants.lua
-CooldownTracking\SpellData.lua
+CooldownTracking\ArenaEnemyBurstSpells.lua
 CooldownTracking\CooldownSpells.lua
 
 # Publish
