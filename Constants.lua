@@ -102,8 +102,8 @@ NS.PETICONSTYLE = {
 };
 
 NS.SELECTIONBORDERSTYLE = {
-    ARCANE = 1,
-    FIRE = 2,
+    FIRE = 1,
+    ARCANE = 2,
     AIR = 3,
     MECHANICAL = 4,
 };
