@@ -126,6 +126,11 @@ local function EnsureClassIcon(frame)
         nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
+
+        nameplate.FriendlyClassIconBorder = nameplate:CreateTexture(nil, "ARTWORK");
+        nameplate.FriendlyClassIconBorder:SetPoint("CENTER", nameplate.FriendlyClassIcon);
+        nameplate.FriendlyClassIconBorder:SetTexture("interface\\unitpowerbaralt\\arcane_circular_frame");
+        --nameplate.FriendlyClassIconBorder:SetColorTexture(1, 1, 0, 1);
     end
 
     return nameplate.FriendlyClassIcon
