@@ -54,7 +54,17 @@ local NameplateWhiteList = {
 
     -- Warrior
     [119052] = true, -- War Banner
-}
+};
+
+-- https://www.wowinterface.com/downloads/info14110-BLPConverter.html
+local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
+local selectionBorderSuffix = "_circular_frame";
+local selectionBorder = {
+    [NS.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
+    [NS.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
+    [NS.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
+    [NS.SELECTIONBORDERSTYLE.MECHANICAL] = selectionBorderPrefix .. "mechanical" .. selectionBorderSuffix,
+};
 
 local function IsInWhiteList(unitId)
     -- Tremor Totem
@@ -122,10 +132,15 @@ local function EnsureClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay');
+        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 0);
         nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
+        -- Can we leverage SetTexCoord to get round icons without making them
+
+        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 1); -- higher subLevel to appear on top of the icon
+        nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
+        nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.classIconSelectionBorderStyle]);
     end
 
     return nameplate.FriendlyClassIcon
@@ -140,13 +155,12 @@ local function HideClassIcon(frame)
 end
 
 local ClassIconSize = {
-    Round = 64,
-    Flat = 48,
-    Pet = 32,
+    Player = 64,
+    Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
     Healer = 52,
 };
 
-local function GetIconOptions(class, border)
+local function GetIconOptions(class)
     local path, iconSize;
 
     if ( class == "PET" ) then
@@ -156,15 +170,10 @@ local function GetIconOptions(class, border)
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
         if SweepyBoop.db.profile.classIconStyle == NS.CLASSICONSTYLE.FLAT then
             path = path .. "flat";
-            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Flat;
         else
             path = path .. "round";
-            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Round;
         end
-    end
-
-    if border then
-        path = path .. "border";
+        iconSize = ClassIconSize.Player;
     end
 
     return path .. "\\", iconSize;
@@ -191,10 +200,8 @@ local function ShowClassIcon(frame)
         end
     end
 
-    local isTarget = UnitIsUnit("target", frame.unit);
-
-    if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
-        local iconPath, iconSize = GetIconOptions(class, isTarget);
+    if ( icon.class == nil ) or ( class ~= icon.class ) then
+        local iconPath, iconSize = GetIconOptions(class);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             if ( SweepyBoop.db.profile.petIconStyle == NS.PETICONSTYLE.CATS ) then
@@ -202,24 +209,31 @@ local function ShowClassIcon(frame)
                 local petNumber = math.fmod(tonumber(npcID), iconCount);
                 iconFile = iconFile .. petNumber;
             else
-                iconFile = C_Spell.GetSpellTexture(136); -- Mend Pet
+                iconFile = iconPath .. "MendPet"; -- Mend Pet
             end
         end
         icon:SetTexture(iconFile);
 
         if ( icon.iconSize == nil ) or ( iconSize ~= icon.iconSize ) then
             icon:SetSize(iconSize, iconSize);
+            icon.border:SetSize(iconSize, iconSize);
         end
 
         local scale = SweepyBoop.db.profile.classIconScale / 100;
         if ( icon.iconScale == nil ) or ( scale ~= icon.iconScale ) then
             icon:SetScale(scale);
+            icon.border:SetScale(scale);
         end
 
         icon.class = class;
-        icon.isTarget = isTarget;
         icon.iconSize = iconSize;
         icon.iconScale = scale;
+    end
+
+    if UnitIsUnit("target", frame.unit) then
+        icon.border:Show();
+    else
+        icon.border:Hide();
     end
 
     icon:Show();
