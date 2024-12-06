@@ -90,3 +90,13 @@ NS.RaidFrameSortOrder = {
     PlayerBottom = 2,
     PlayerMiddle = 3,
 };
+
+NS.CLASSICONSTYLE = {
+    ROUND = 1,
+    FLAT = 2,
+};
+
+NS.PETICONSTYLE = {
+    CATS = 1,
+    MENDPET = 2,
+};

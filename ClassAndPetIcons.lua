@@ -197,9 +197,13 @@ local function ShowClassIcon(frame)
         local iconPath, iconSize = GetIconOptions(class, isTarget);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
-            local petNumber = math.fmod(tonumber(npcID), iconCount);
-            iconFile = iconFile .. petNumber;
+            if ( SweepyBoop.db.profile.petIconStyle == NS.PETICONSTYLE.CATS ) then
+                local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
+                local petNumber = math.fmod(tonumber(npcID), iconCount);
+                iconFile = iconFile .. petNumber;
+            else
+                iconFile = C_Spell.GetSpellTexture(136); -- Mend Pet
+            end
         end
         icon:SetTexture(iconFile);
 

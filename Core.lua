@@ -44,16 +44,6 @@ local options = {
     },
 };
 
-NS.CLASSICONSTYLE = {
-    ROUND = 1,
-    FLAT = 2,
-};
-
-NS.PETICONSTYLE = {
-    CATS = 1,
-    MENDPET = 2,
-};
-
 options.args.NamePlates = {
     order = 6,
     type = "group",
