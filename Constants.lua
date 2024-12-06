@@ -100,3 +100,10 @@ NS.PETICONSTYLE = {
     CATS = 1,
     MENDPET = 2,
 };
+
+NS.SELECTIONBORDERSTYLE = {
+    ARCANE = 1,
+    FIRE = 2,
+    AIR = 3,
+    MECHANICAL = 4,
+};

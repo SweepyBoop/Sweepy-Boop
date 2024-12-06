@@ -100,6 +100,23 @@ options.args.NamePlates = {
                 return ( not SweepyBoop:GetClassIconsEnabled() );
             end
         },
+        borderStyle = {
+            order = 6,
+            type = "select",
+            name = "Selection highlight border style",
+            style = "dropdown",
+            get = "GetSelectionBorderStyle",
+            set = "SetSelectionBorderStyle",
+            values = {
+                [NS.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
+                [NS.SELECTIONBORDERSTYLE.FIRE] = "Fire",
+                [NS.SELECTIONBORDERSTYLE.AIR] = "Air",
+                [NS.SELECTIONBORDERSTYLE.MECHANICAL] = "Mechanical",
+            },
+            disabled = function()
+                return ( not SweepyBoop:GetClassIconsEnabled() );
+            end
+        },
         healerIcon = {
             order = 6,
             width = "full",
@@ -339,6 +356,7 @@ local defaults = {
         classIconsEnabled = true,
         classIconStyle = NS.CLASSICONSTYLE.ROUND,
         petIconStyle = NS.PETICONSTYLE.CATS,
+        classIconSelectionBorderStyle = NS.SELECTIONBORDERSTYLE.ARCANE,
         classIconScale = 100,
         classIconOffset = 0,
         useHealerIcon = true,
@@ -428,6 +446,14 @@ end
 
 function SweepyBoop:SetPetIconStyle(info, value)
     self.db.profile.petIconStyle = value;
+end
+
+function SweepyBoop:GetSelectionBorderStyle(info)
+    return self.db.profile.classIconSelectionBorderStyle;
+end
+
+function SweepyBoop:SetSelectionBorderStyle(info, value)
+    self.db.profile.classIconSelectionBorderStyle = value;
 end
 
 function SweepyBoop:GetHealerIconEnabled(info)

@@ -54,7 +54,17 @@ local NameplateWhiteList = {
 
     -- Warrior
     [119052] = true, -- War Banner
-}
+};
+
+
+local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
+local selectionBorderSuffix = "_circular_frame";
+local selectionBorder = {
+    [NS.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
+    [NS.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
+    [NS.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
+    [NS.SELECTIONBORDERSTYLE.MECHANICAL] = selectionBorderPrefix .. "mechanical" .. selectionBorderSuffix,
+};
 
 local function IsInWhiteList(unitId)
     -- Tremor Totem
@@ -127,10 +137,9 @@ local function EnsureClassIcon(frame)
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
 
-        nameplate.FriendlyClassIconBorder = nameplate:CreateTexture(nil, "ARTWORK");
-        nameplate.FriendlyClassIconBorder:SetPoint("CENTER", nameplate.FriendlyClassIcon);
-        nameplate.FriendlyClassIconBorder:SetTexture("interface\\unitpowerbaralt\\arcane_circular_frame");
-        --nameplate.FriendlyClassIconBorder:SetColorTexture(1, 1, 0, 1);
+        nameplate.FriendlyClassIcon.Border = nameplate:CreateTexture(nil, "ARTWORK");
+        nameplate.FriendlyClassIcon.Border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
+        nameplate.FriendlyClassIcon.Border:SetTexture(selectionBorder[SweepyBoop.db.profile.classIconSelectionBorderStyle]);
     end
 
     return nameplate.FriendlyClassIcon
