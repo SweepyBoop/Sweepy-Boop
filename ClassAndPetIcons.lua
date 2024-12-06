@@ -156,7 +156,7 @@ end
 
 local ClassIconSize = {
     Player = 64,
-    Pet = 32, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
+    Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
     Healer = 52,
 };
 
@@ -209,7 +209,7 @@ local function ShowClassIcon(frame)
                 local petNumber = math.fmod(tonumber(npcID), iconCount);
                 iconFile = iconFile .. petNumber;
             else
-                iconFile = C_Spell.GetSpellTexture(136); -- Mend Pet
+                iconFile = iconPath .. "MendPet"; -- Mend Pet
             end
         end
         icon:SetTexture(iconFile);
