@@ -332,7 +332,7 @@ local defaults = {
         arenaEnemyDefensiveIconSize = 25,
         arenaNumbersEnabled = true,
         nameplateFilterEnabled = true,
-        raidFrameSortOrder = NS.RaidFrameSortOrder.Disabled,
+        arenaRaidFrameSortOrder = NS.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
         skipLeaveArenaConfirmation = false,
@@ -469,11 +469,11 @@ function SweepyBoop:SetNameplateFilterEnabled(info, value)
 end
 
 function SweepyBoop:GetRaidFrameSortOrder(info)
-    return self.db.profile.raidFrameSortOrder;
+    return self.db.profile.arenaRaidFrameSortOrder;
 end
 
 function SweepyBoop:SetRaidFrameSortOrder(info, value)
-    self.db.profile.raidFrameSortOrder = value;
+    self.db.profile.arenaRaidFrameSortOrder = value;
 end
 
 function SweepyBoop:GetRaidFrameAggroHighlightEnabled(info)
