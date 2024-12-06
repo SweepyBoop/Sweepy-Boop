@@ -136,6 +136,7 @@ local function EnsureClassIcon(frame)
         nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
+        -- Can we leverage SetTexCoord to get round icons without making them
 
         nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 1); -- higher subLevel to appear on top of the icon
         nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
@@ -156,7 +157,7 @@ end
 local ClassIconSize = {
     Round = 64,
     Flat = 48,
-    Pet = 32,
+    Pet = 36, -- border looks weird if this is set too small, might need to make tga file smaller
     Healer = 52,
 };
 
@@ -201,13 +202,6 @@ local function ShowClassIcon(frame)
         end
     end
 
-    local isTarget = UnitIsUnit("target", frame.unit);
-    if isTarget then
-        icon.border:Show();
-    else
-        icon.border:Hide();
-    end
-
     if ( icon.class == nil ) or ( class ~= icon.class ) then
         local iconPath, iconSize = GetIconOptions(class);
         local iconFile = iconPath .. class;
@@ -236,6 +230,14 @@ local function ShowClassIcon(frame)
         icon.class = class;
         icon.iconSize = iconSize;
         icon.iconScale = scale;
+    end
+
+    if UnitIsUnit("target", frame.unit) then
+        print(icon:GetSize());
+        print(icon.border:GetSize());
+        icon.border:Show();
+    else
+        icon.border:Hide();
     end
 
     icon:Show();
