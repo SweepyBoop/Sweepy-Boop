@@ -132,14 +132,14 @@ local function EnsureClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay');
+        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 0);
         nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
 
-        nameplate.FriendlyClassIcon.Border = nameplate:CreateTexture(nil, "ARTWORK");
-        nameplate.FriendlyClassIcon.Border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
-        nameplate.FriendlyClassIcon.Border:SetTexture(selectionBorder[SweepyBoop.db.profile.classIconSelectionBorderStyle]);
+        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 1); -- higher subLevel to appear on top of the icon
+        nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
+        nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.classIconSelectionBorderStyle]);
     end
 
     return nameplate.FriendlyClassIcon
@@ -160,7 +160,7 @@ local ClassIconSize = {
     Healer = 52,
 };
 
-local function GetIconOptions(class, border)
+local function GetIconOptions(class)
     local path, iconSize;
 
     if ( class == "PET" ) then
@@ -175,10 +175,6 @@ local function GetIconOptions(class, border)
             path = path .. "round";
             iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Round;
         end
-    end
-
-    if border then
-        path = path .. "border";
     end
 
     return path .. "\\", iconSize;
@@ -206,9 +202,14 @@ local function ShowClassIcon(frame)
     end
 
     local isTarget = UnitIsUnit("target", frame.unit);
+    if isTarget then
+        icon.border:Show();
+    else
+        icon.border:Hide();
+    end
 
-    if ( icon.class == nil ) or ( class ~= icon.class ) or ( icon.isTarget == nil ) or ( isTarget ~= icon.isTarget ) then
-        local iconPath, iconSize = GetIconOptions(class, isTarget);
+    if ( icon.class == nil ) or ( class ~= icon.class ) then
+        local iconPath, iconSize = GetIconOptions(class);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             if ( SweepyBoop.db.profile.petIconStyle == NS.PETICONSTYLE.CATS ) then
@@ -223,15 +224,16 @@ local function ShowClassIcon(frame)
 
         if ( icon.iconSize == nil ) or ( iconSize ~= icon.iconSize ) then
             icon:SetSize(iconSize, iconSize);
+            icon.border:SetSize(iconSize, iconSize);
         end
 
         local scale = SweepyBoop.db.profile.classIconScale / 100;
         if ( icon.iconScale == nil ) or ( scale ~= icon.iconScale ) then
             icon:SetScale(scale);
+            icon:SetScale(scale);
         end
 
         icon.class = class;
-        icon.isTarget = isTarget;
         icon.iconSize = iconSize;
         icon.iconScale = scale;
     end
