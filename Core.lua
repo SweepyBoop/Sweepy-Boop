@@ -44,11 +44,6 @@ local options = {
     },
 };
 
-NS.CLASSICONSTYLE = {
-    ROUND = 1,
-    FLAT = 2,
-};
-
 options.args.NamePlates = {
     order = 6,
     type = "group",
@@ -70,7 +65,7 @@ options.args.NamePlates = {
             type = "description",
             name = NS.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
-        select = {
+        selectClass = {
             order = 3,
             type = "select",
             name = "Class Icon Style",
@@ -82,8 +77,20 @@ options.args.NamePlates = {
                 [NS.CLASSICONSTYLE.FLAT] = "Flat",
             },
         },
-        healerIcon = {
+        selectPet = {
             order = 4,
+            type = "select",
+            name = "Pet Icon Style",
+            style = "dropdown",
+            get = "GetPetIconStyle",
+            set = "SetPetIconStyle",
+            values = {
+                [NS.PETICONSTYLE.CATS] = "Cat memes",
+                [NS.PETICONSTYLE.MENDPET] = "Mend pet icon",
+            },
+        },
+        healerIcon = {
+            order = 5,
             width = "full",
             type = "toggle",
             name = "Use dedicated healer icon",
@@ -92,7 +99,7 @@ options.args.NamePlates = {
             set = "SetHealerIconEnabled",
         },
         iconScale = {
-            order = 5,
+            order = 6,
             --width = "full",
             type = "range",
             min = 50,
@@ -102,7 +109,7 @@ options.args.NamePlates = {
             set = "SetClassIconScale",
         },
         iconOffset = {
-            order = 6,
+            order = 7,
             type = "range",
             min = 0,
             max = 150,
@@ -111,12 +118,12 @@ options.args.NamePlates = {
             set = "SetClassIconOffset",
         },
         break1 = {
-			order = 7,
+			order = 8,
 			type = "header",
 			name = ""
 		},
         arenaNumbers = {
-            order = 8,
+            order = 9,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
@@ -125,7 +132,7 @@ options.args.NamePlates = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
-            order = 9,
+            order = 10,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
@@ -230,7 +237,12 @@ options.args.RaidFrame = {
         sortGroup = {
             order = 1,
             type = "select",
-            values = NS.RaidFrameSortOrder,
+            values = {
+                [NS.RaidFrameSortOrder.Disabled] = "Disabled",
+                [NS.RaidFrameSortOrder.PlayerTop] = "Player on top",
+                [NS.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
+                [NS.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
+            },
             name = "Sort raid frames inside arena",
             desc = "Customize the sort order of raid frames inside arena",
             descStyle = "inline",
@@ -308,6 +320,7 @@ local defaults = {
     profile = {
         classIconsEnabled = true,
         classIconStyle = NS.CLASSICONSTYLE.ROUND,
+        petIconStyle = NS.PETICONSTYLE.CATS,
         classIconScale = 100,
         classIconOffset = 0,
         useHealerIcon = true,
@@ -389,6 +402,14 @@ end
 
 function SweepyBoop:SetClassIconStyle(info, value)
     self.db.profile.classIconStyle = value;
+end
+
+function SweepyBoop:GetPetIconStyle(info)
+    return self.db.profile.petIconStyle;
+end
+
+function SweepyBoop:SetPetIconStyle(info, value)
+    self.db.profile.petIconStyle = value;
 end
 
 function SweepyBoop:GetHealerIconEnabled(info)
