@@ -155,9 +155,8 @@ local function HideClassIcon(frame)
 end
 
 local ClassIconSize = {
-    Round = 64,
-    Flat = 48,
-    Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
+    Player = 64,
+    Pet = 32, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
     Healer = 52,
 };
 
@@ -171,11 +170,10 @@ local function GetIconOptions(class)
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
         if SweepyBoop.db.profile.classIconStyle == NS.CLASSICONSTYLE.FLAT then
             path = path .. "flat";
-            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Flat;
         else
             path = path .. "round";
-            iconSize = ( class == "HEALER" and ClassIconSize.Healer ) or ClassIconSize.Round;
         end
+        iconSize = ClassIconSize.Player;
     end
 
     return path .. "\\", iconSize;
@@ -233,8 +231,6 @@ local function ShowClassIcon(frame)
     end
 
     if UnitIsUnit("target", frame.unit) then
-        print(icon:GetSize());
-        print(icon.border:GetSize());
         icon.border:Show();
     else
         icon.border:Hide();
