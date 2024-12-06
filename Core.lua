@@ -50,23 +50,28 @@ options.args.NamePlates = {
     name = "Nameplates",
     handler = SweepyBoop,
     args = {
-        classIcons = {
+        header = {
             order = 1,
+            type = "header",
+            name = "Class & Pet Icons",
+        },
+        classIcons = {
+            order = 2,
             width = "full",
             type = "toggle",
-            name = "Class & Pet Icons",
+            name = "Enable",
             desc = "Show class/pet icons on friendly players/pets",
             get = "GetClassIconsEnabled",
             set = "SetClassIconsEnabled",
         },
         description = {
-            order = 2,
+            order = 3,
             width = "full",
             type = "description",
             name = NS.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
         selectClass = {
-            order = 3,
+            order = 4,
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
@@ -76,9 +81,12 @@ options.args.NamePlates = {
                 [NS.CLASSICONSTYLE.ROUND] = "Round",
                 [NS.CLASSICONSTYLE.FLAT] = "Flat",
             },
+            disabled = function()
+                return ( not SweepyBoop:GetClassIconsEnabled() );
+            end
         },
         selectPet = {
-            order = 4,
+            order = 5,
             type = "select",
             name = "Pet Icon Style",
             style = "dropdown",
@@ -88,18 +96,24 @@ options.args.NamePlates = {
                 [NS.PETICONSTYLE.CATS] = "Cat memes",
                 [NS.PETICONSTYLE.MENDPET] = "Mend pet icon",
             },
+            disabled = function()
+                return ( not SweepyBoop:GetClassIconsEnabled() );
+            end
         },
         healerIcon = {
-            order = 5,
+            order = 6,
             width = "full",
             type = "toggle",
             name = "Use dedicated healer icon",
             desc = "Use a dedicated icon for party healers",
             get = "GetHealerIconEnabled",
             set = "SetHealerIconEnabled",
+            disabled = function()
+                return ( not SweepyBoop:GetClassIconsEnabled() );
+            end
         },
         iconScale = {
-            order = 6,
+            order = 7,
             --width = "full",
             type = "range",
             min = 50,
@@ -107,23 +121,29 @@ options.args.NamePlates = {
             name = "Icon scale (%)",
             get = "GetClassIconScale",
             set = "SetClassIconScale",
+            disabled = function()
+                return ( not SweepyBoop:GetClassIconsEnabled() );
+            end
         },
         iconOffset = {
-            order = 7,
+            order = 8,
             type = "range",
             min = 0,
             max = 150,
             name = "Icon offset",
             get = "GetClassIconOffset",
             set = "SetClassIconOffset",
+            disabled = function()
+                return ( not SweepyBoop:GetClassIconsEnabled() );
+            end
         },
         break1 = {
-			order = 8,
+			order = 9,
 			type = "header",
 			name = ""
 		},
         arenaNumbers = {
-            order = 9,
+            order = 10,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
@@ -132,7 +152,7 @@ options.args.NamePlates = {
             set = "SetArenaNumbersEnabled",
         },
         nameplateFilter = {
-            order = 10,
+            order = 11,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
@@ -281,11 +301,9 @@ options.args.Misc = {
     name = "Misc",
     handler = SweepyBoop,
     args = {
-        description1 = {
+        header = {
             order = 1,
-            width = "full",
-            type = "description",
-            fontSize = "medium",
+            type = "header",
             name = "Type /afk to surrender arena",
         },
         surrender = {
@@ -307,7 +325,7 @@ options.args.Misc = {
                 return ( not SweepyBoop:GetArenaSurrenderEnabled() );
             end,
         },
-        description2 = {
+        description = {
             order = 4,
             width = "full",
             type = "description",
