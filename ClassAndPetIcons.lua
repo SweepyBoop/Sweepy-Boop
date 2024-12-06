@@ -56,7 +56,7 @@ local NameplateWhiteList = {
     [119052] = true, -- War Banner
 };
 
-
+-- https://www.wowinterface.com/downloads/info14110-BLPConverter.html
 local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
 local selectionBorderSuffix = "_circular_frame";
 local selectionBorder = {
