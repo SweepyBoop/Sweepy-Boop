@@ -85,8 +85,8 @@ NS.HIDETIMEROMNICC = "BoopHideTimer";
 NS.DEFAULT_ICON_SIZE = 32;
 
 NS.RaidFrameSortOrder = {
-    Disabled = "Disabled",
-    PlayerTop = "Player on top",
-    PlayerBottom = "Player at bottom",
-    PlayerMiddle = "Player in the middle",
+    Disabled = 0,
+    PlayerTop = 1,
+    PlayerBottom = 2,
+    PlayerMiddle = 3,
 };

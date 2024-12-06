@@ -58,9 +58,9 @@ local function Compare_Mid(left, right)
 end
 
 local sortFunctions = {
-    PlayerTop = Compare_Top,
-    PlayerBottom = Compare_Bottom,
-    PlayerMiddle = Compare_Mid,
+    [NS.RaidFrameSortOrder.PlayerTop] = Compare_Top,
+    [NS.RaidFrameSortOrder.PlayerBottom] = Compare_Bottom,
+    [NS.RaidFrameSortOrder.PlayerMiddle] = Compare_Mid,
 };
 
 local function GetPartyUnitId(unitId)
