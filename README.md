@@ -6,28 +6,48 @@ Here is how my UI looks like:
 
 Type **/sb** in game to invoke the options panel.
 
+Every module can be toggled on/off, with a few customization options.
+
 Most changes require a UI reload to take effect, and there is a Reload UI button below the settings for convinience.
 
 ![image](https://user-images.githubusercontent.com/78008331/219826235-9a9c1b72-5e5b-4108-9728-576e991f8789.png)
 
-#### Note
-This is my private version which includes a lot of stuff specifically made for myself (thus not needed by external users of the addon).
+[Open a ticket](https://legacy.curseforge.com/wow/addons/sweepyboops-arena-helper/issues) to report any issues or request new features
 
-If you want to directly download this version, make sure in SweepyBoop.toc, only the keep files in the "#Publish" section.
+## Friendly class and pet icons
+For friendly players and their primary pets, places a class (for players) or pet (for pets) icon on top to replace the health bar.
+- When selected, shows an orange highlight border.
+- This makes it much easier to track where your teammates are during an arena match, especially for healers.
+- <span style="color:#36f"><strong>There is an option to use a special icon for healers in your group!</strong></span> No more "where is my healer" scream in an intense arena game for DPS players
+- This is a great alternative to enabling friendly nameplates, since it's not always easy to distinguish between enemy/friendly nameplates. Some players use a script to make friendly nameplates shorter, but then there is the issue with priest mind control, i.e., friendly nameplates can become default width, or enemy nameplates can become shorter width after mind control effect.
 
-Currently there is no plan to publish this addon on CurseForge, but I will do so if there are enough number of requests.
+![image](https://github.com/user-attachments/assets/5c2402c2-6aa3-4a67-8e50-e19558bca9c3)
 
-## Class and pet icons
-For friendly players and their primary pets, places a class (for players) or pet (for pets) icon on top.
+(Friendly class icons. Option to use a special icon for healers; target is highlighted with a border that's customizable.)
 
-When selected, shows an orange highlight border.
+![image](https://github.com/user-attachments/assets/7283015e-bace-4253-ba02-30f3bd4b2ac5)
 
-This makes it much easier to track where your teammates are duing an arena match, especially for healers.
-
-This is a great alternative to enabling friendly nameplates, since it's not always easy to distinguish between enemy/friendly nameplates. Some players use a script to make friendly nameplates shorter, but then there is the issue with priest mind control, i.e., friendly nameplates can become default width, or enemy nameplates can become shorter width after mind control effect.
+(Pet icon on primary hunter pet, but not on the extra pet summoned by talent)
 
 To make the most of this module, configure your name & nameplate settings as follows:
-![Nameplate settings](https://user-images.githubusercontent.com/78008331/219557897-5c1f0d38-9a64-408c-b1b5-6d7f8207899b.png)
+
+![image](https://github.com/user-attachments/assets/3f43fe3b-5c84-4863-aa0a-29a0b61aaae8)
+
+## Arena enemy offensive/defensive cooldown tracking
+This module is a set of icons attached to (corresponding) arena enemy frames, which is very close to the tournament UI.
+
+It comes with a few key features:
+- Glows when spell is active, and shows cooldown timer otherwise (only the most important spells show cooldown timers)
+- Sorts icons by priority/threat, e.g., on an Assassination Rogue, Deathmark will always show before other icons
+- Filter by spec, e.g., only shows Convoke the Spirits for Balance/Feral Druids, but not Restoration Druids
+- Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
+
+![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
+
+**Note (important)**
+- This module supports Gladius and sArena
+- Make sure to /reload if you change your Gladius / sArena settings (especially when you change the layout / positioning)
+- This module only tracks damage offensives and defensive abilities, and currently there is no option to choose which abilities to track
 
 ## Nameplate filtering
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
@@ -36,11 +56,8 @@ While in arena, only show enemy player nameplates and important non-player units
 
 In short, this module shows the minimal set of unit nameplates that you need to keep an eye on during an arena match.
 
-## Arena enemy cooldown tracking
-The cooldown tracking mod comes with various advanced features:
-- Shows duration when the cooldown is active with a glow, and shows cooldown timer otherwise (similar to tournament UI)
-- Sort icons by priority/threat, e.g., on an Assasination Rogue, Deathmark will always show before other icons
-- Cooldown reduction: for instance, Windwalker Monk Storm, Earth, and Fire cooldown reduced by spending Chi, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
+
+
 
 #### Note
 Currently this module only supports sArena, since that's what I use.
