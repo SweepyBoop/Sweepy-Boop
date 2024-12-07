@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
@@ -6,7 +6,7 @@ local GetTime = GetTime;
 local wipe = wipe;
 local PlayerFrame = PlayerFrame;
 
-NS.CreateIconGroup = function (setPointOptions, growOptions, unit)
+addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
@@ -130,7 +130,7 @@ local function CalculateArenaFrameOffsetX(frameName)
     return offsetX / UIScale + SweepyBoop.db.profile.arenaCooldownOffsetX;
 end
 
-NS.IconGroup_Insert = function (group, icon, index)
+addon.IconGroup_Insert = function (group, icon, index)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then return end
 
@@ -162,7 +162,7 @@ NS.IconGroup_Insert = function (group, icon, index)
     icon:Show();
 end
 
-NS.IconGroup_Remove = function (group, icon)
+addon.IconGroup_Remove = function (group, icon)
     -- Hide icon first, then reposition, to avoid occlusion.
     icon:Hide();
 
@@ -191,13 +191,13 @@ end
 
 -- For arena offensive cooldown tracking, index is just spellID since we are always tracking a single unitId
 -- For CooldownTracking icons, we will use unitId - spellID
-NS.IconGroup_PopulateIcon = function (group, icon, index)
+addon.IconGroup_PopulateIcon = function (group, icon, index)
     icon.timers = {}; -- Reset current timers
     icon:SetParent(group);
     group.icons[index] = icon;
 end
 
-NS.IconGroup_Wipe = function (group)
+addon.IconGroup_Wipe = function (group)
     if ( not group ) then return end
 
     for _, icon in pairs(group.icons) do

@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
@@ -18,10 +18,10 @@ local sArena = sArena;
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-local test = NS.isTestMode;
+local test = addon.isTestMode;
 
-local spellData = NS.spellData;
-local spellResets = NS.spellResets;
+local spellData = addon.spellData;
+local spellResets = addon.spellResets;
 
 local npcToSpellID = {
     [101398] = 211522, -- Psyfiend
@@ -67,7 +67,7 @@ local function ValidateUnit(self)
 end
 
 local function ResetSweepyCooldown(icon, amount)
-    NS.ResetIconCooldown(icon, amount);
+    addon.ResetIconCooldown(icon, amount);
 
     -- Duration has more than 1s left, hide cooldown
     -- Duration frame's finish event handler will show the cooldown
@@ -81,7 +81,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( not guid ) then return end
 
     -- Check resets by spell cast
-    if ( subEvent == NS.SPELL_CAST_SUCCESS ) and ( sourceGUID == guid ) then
+    if ( subEvent == addon.SPELL_CAST_SUCCESS ) and ( sourceGUID == guid ) then
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
@@ -105,7 +105,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Check resets by crit damage (e.g., combustion)
-    if ( subEvent == NS.SPELL_DAMAGE ) and critical and ( sourceGUID == guid ) then
+    if ( subEvent == addon.SPELL_DAMAGE ) and critical and ( sourceGUID == guid ) then
         for i = 1, #resetByCrit do
             local reset = resetByCrit[i];
             if self.activeMap[reset] then
@@ -121,22 +121,22 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Check summon / dead
-    if ( subEvent == NS.UNIT_DIED ) or ( subEvent == NS.PARTY_KILL ) then
+    if ( subEvent == addon.UNIT_DIED ) or ( subEvent == addon.PARTY_KILL ) then
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
         if summonSpellId and self.activeMap[summonSpellId] then
-            NS.ResetSweepyDuration(self.activeMap[summonSpellId]);
+            addon.ResetSweepyDuration(self.activeMap[summonSpellId]);
         end
         return;
-    elseif ( subEvent == NS.SPELL_SUMMON ) and ( guid == sourceGUID ) then
+    elseif ( subEvent == addon.SPELL_SUMMON ) and ( guid == sourceGUID ) then
         -- We don't actually show the icon from SPELL_SUMMON, just create the mapping of mob GUID -> spellID
-        local npcId = NS.GetNpcIdFromGuid(destGUID);
+        local npcId = addon.GetNpcIdFromGuid(destGUID);
         local summonSpellId = npcToSpellID[npcId];
         self.npcMap[destGUID] = summonSpellId;
 
         -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
         if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) then
-            NS.StartSweepyIcon(self.icons[summonSpellId]);
+            addon.StartSweepyIcon(self.icons[summonSpellId]);
         end
         return;
     end
@@ -150,9 +150,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( spellGUID ~= guid ) then return end
 
     -- Check spell dismiss
-    if ( subEvent == NS.SPELL_AURA_REMOVED ) then
+    if ( subEvent == addon.SPELL_AURA_REMOVED ) then
         if self.activeMap[spellId] then
-            NS.ResetSweepyDuration(self.activeMap[spellId]);
+            addon.ResetSweepyDuration(self.activeMap[spellId]);
             return;
         end
     end
@@ -162,13 +162,13 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if spell.trackEvent then
         validateSubEvent = ( subEvent == spell.trackEvent );
     else
-        validateSubEvent = ( subEvent == NS.SPELL_CAST_SUCCESS );
+        validateSubEvent = ( subEvent == addon.SPELL_CAST_SUCCESS );
     end
     if ( not validateSubEvent ) then return end
 
     -- Find the icon to use
     if self.icons[spellId] then
-        NS.StartSweepyIcon(self.icons[spellId]);
+        addon.StartSweepyIcon(self.icons[spellId]);
     end
 end
 
@@ -179,9 +179,9 @@ local function ProcessUnitSpellCast(self, event, ...)
     local unitTarget, _, spellID = ...;
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
-        if ( not spell ) or ( spell.trackEvent ~= NS.UNIT_SPELLCAST_SUCCEEDED ) then return end
+        if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
         if self.icons[spellID] then
-            NS.StartSweepyIcon(self.icons[spellID]);
+            addon.StartSweepyIcon(self.icons[spellID]);
         end
     end
 end
@@ -199,16 +199,16 @@ local function ProcessUnitAura(self, event, ...)
                 local spellID = spellInfo.spellId
                 local spell = spellData[spellID]
                 if ( not spell ) or ( not spell.extend ) or ( not self.activeMap[spellID] ) then return end
-                NS.RefreshSweepyDuration(self.activeMap[spellID]);
+                addon.RefreshSweepyDuration(self.activeMap[spellID]);
             end
         end
     end
 end
 
 local function ProcessUnitEvent(group, event, ...)
-    if ( event == NS.UNIT_SPELLCAST_SUCCEEDED ) then
+    if ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
         ProcessUnitSpellCast(group, event, ...);
-    elseif ( event == NS.UNIT_AURA ) then
+    elseif ( event == addon.UNIT_AURA ) then
         ProcessUnitAura(group, event, ...);
     end
 end
@@ -223,20 +223,20 @@ function SweepyBoop:PremakeOffensiveIcons()
         local unitId = "player";
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+            premadeIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, iconSize, true);
         end
     else
-        for i = 1, NS.MAX_ARENA_SIZE do
+        for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena"..i;
             premadeIcons[unitId] = {};
             for spellID, spell in pairs(spellData) do
-                premadeIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+                premadeIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, iconSize, true);
             end
         end
     end
 end
 
-NS.GetUnitSpec = function(unit)
+addon.GetUnitSpec = function(unit)
     if ( unit == "player" ) then
         local currentSpec = GetSpecialization();
         if currentSpec then
@@ -250,13 +250,13 @@ end
 
 local function SetupAuraGroup(group, unit, testIcons)
     -- Clear previous icons
-    NS.IconGroup_Wipe(group);
+    addon.IconGroup_Wipe(group);
 
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         for spellID, spell in pairs(spellData) do
             testIcons[unit][spellID].info = { cooldown = spell.cooldown };
-            NS.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+            addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
         end
 
         return;
@@ -284,7 +284,7 @@ local function SetupAuraGroup(group, unit, testIcons)
             -- Does this spell filter by spec?
             if spell.spec then
                 local specEnabled = false;
-                local spec = NS.GetUnitSpec(unit);
+                local spec = addon.GetUnitSpec(unit);
 
                 if ( not spec ) then
                     specEnabled = true;
@@ -303,7 +303,7 @@ local function SetupAuraGroup(group, unit, testIcons)
             if enabled then
                 -- Reset dynamic info before populating to group
                 premadeIcons[unit][spellID].info = { cooldown = spell.cooldown };
-                NS.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                 --print("Populated", unit, spell.class, spellID)
             end
         end
@@ -324,19 +324,19 @@ local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
 local externalTestGroup; -- Icon group for "Toggle Test Mode"
 
 local function RefreshTestMode()
-    NS.IconGroup_Wipe(externalTestGroup);
+    addon.IconGroup_Wipe(externalTestGroup);
 
     local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
     local unitId = "player";
     if externalTestIcons[unitId] then
-        local scale = iconSize / NS.DEFAULT_ICON_SIZE;
+        local scale = iconSize / addon.DEFAULT_ICON_SIZE;
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
         end
     else
         externalTestIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            externalTestIcons[unitId][spellID] = NS.CreateSweepyIcon(unitId, spellID, iconSize, true);
+            externalTestIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, iconSize, true);
         end
     end
 
@@ -348,7 +348,7 @@ local function RefreshTestMode()
         offsetY = SweepyBoop.db.profile.arenaCooldownOffsetY,
     };
 
-    externalTestGroup = NS.CreateIconGroup(setPointOptions, growOptions, unitId);
+    externalTestGroup = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
     SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
 end
 
@@ -357,7 +357,7 @@ function SweepyBoop:PopulateOffensiveIcons()
 
     local setPointOptions = {};
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-    for i = 1, NS.MAX_ARENA_SIZE do
+    for i = 1, addon.MAX_ARENA_SIZE do
         setPointOptions[i] = {
             point = "LEFT",
             relativeTo = prefix .. i,
@@ -368,42 +368,42 @@ function SweepyBoop:PopulateOffensiveIcons()
 
     if test then
         local unitId = "player";
-        testGroup = NS.CreateIconGroup(setPointOptions[1], growOptions, unitId);
+        testGroup = addon.CreateIconGroup(setPointOptions[1], growOptions, unitId);
         SetupAuraGroup(testGroup, unitId);
     else
-        for i = 1, NS.MAX_ARENA_SIZE do
+        for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena" .. i;
-            arenaGroup[i] = NS.CreateIconGroup(setPointOptions[i], growOptions, unitId);
+            arenaGroup[i] = addon.CreateIconGroup(setPointOptions[i], growOptions, unitId);
             SetupAuraGroup(arenaGroup[i], unitId);
         end
     end
 
     -- Refresh icon groups when zone changes, or during test mode when player switches spec
     refreshFrame = CreateFrame("Frame");
-    refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-    refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    refreshFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED);
-    refreshFrame:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
-    refreshFrame:RegisterEvent(NS.UNIT_AURA);
-    refreshFrame:RegisterEvent(NS.UNIT_SPELLCAST_SUCCEEDED);
+    refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    refreshFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
+    refreshFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+    refreshFrame:RegisterEvent(addon.UNIT_AURA);
+    refreshFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
     refreshFrame:SetScript("OnEvent", function (frame, event, ...)
-        if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == NS.PLAYER_SPECIALIZATION_CHANGED and test ) then
+        if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
             -- Hide the external "Toggle Test Mode" group
             self:HideTestArenaEnemyBurst();
 
             if test then
                 SetupAuraGroup(testGroup, "player");
-            elseif ( event ~= NS.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
-                for i = 1, NS.MAX_ARENA_SIZE do
+            elseif ( event ~= addon.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
+                for i = 1, addon.MAX_ARENA_SIZE do
                     SetupAuraGroup(arenaGroup[i], "arena"..i);
                 end
             end
-        elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+        elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
             local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
             if test then
                 ProcessCombatLogEvent(testGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
             else
-                for i = 1, NS.MAX_ARENA_SIZE do
+                for i = 1, addon.MAX_ARENA_SIZE do
                     ProcessCombatLogEvent(arenaGroup[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                 end
             end
@@ -411,7 +411,7 @@ function SweepyBoop:PopulateOffensiveIcons()
             if test then
                 ProcessUnitEvent(testGroup, event, ...);
             else
-                for i = 1, NS.MAX_ARENA_SIZE do
+                for i = 1, addon.MAX_ARENA_SIZE do
                     ProcessUnitEvent(arenaGroup[i], event, ...);
                 end
             end
@@ -430,14 +430,14 @@ function SweepyBoop:TestArenaEnemyBurst()
 
     RefreshTestMode();
 
-    local subEvent = NS.SPELL_AURA_APPLIED;
+    local subEvent = addon.SPELL_AURA_APPLIED;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
     spellId = 190319; -- Combustion
-    subEvent = NS.SPELL_CAST_SUCCESS;
+    subEvent = addon.SPELL_CAST_SUCCESS;
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
     if shoudShow then
@@ -448,7 +448,7 @@ function SweepyBoop:TestArenaEnemyBurst()
 end
 
 function SweepyBoop:HideTestArenaEnemyBurst()
-    NS.IconGroup_Wipe(externalTestGroup);
+    addon.IconGroup_Wipe(externalTestGroup);
     if externalTestGroup then
         externalTestGroup:Hide();
     end

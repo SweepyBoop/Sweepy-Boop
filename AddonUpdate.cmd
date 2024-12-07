@@ -5,4 +5,4 @@ rmdir /s /q %addonDir%
 mkdir %addonDir%
 xcopy %workDir% %addonDir% /E /I /Y
 
-echo NS.internal = true;>> %addonDir%\Constants.lua
+echo addon.internal = true;>> %addonDir%\Constants.lua

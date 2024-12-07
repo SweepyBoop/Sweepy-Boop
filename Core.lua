@@ -1,11 +1,11 @@
-local addonName, NS = ...;
-NS.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
-NS.exclamation = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
+local addonName, addon = ...;
+addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
+addon.exclamation = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
 
 local options = {
-    name = NS.addonTitle,
+    name = addon.addonTitle,
     handler = SweepyBoop,
     type = "group",
     args = {
@@ -27,7 +27,7 @@ local options = {
 			order = 3,
 			type = "description",
 			fontSize = "medium",
-			name = NS.exclamation .. "UI must be reloaded for most changes to take effect.",
+			name = addon.exclamation .. "UI must be reloaded for most changes to take effect.",
 		},
         reloadButton = {
 			order = 4,
@@ -68,7 +68,7 @@ options.args.NamePlates = {
             order = 3,
             width = "full",
             type = "description",
-            name = NS.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
+            name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
         selectClass = {
             order = 4,
@@ -78,8 +78,8 @@ options.args.NamePlates = {
             get = "GetClassIconStyle",
             set = "SetClassIconStyle",
             values = {
-                [NS.CLASSICONSTYLE.ROUND] = "Round",
-                [NS.CLASSICONSTYLE.FLAT] = "Flat",
+                [addon.CLASSICONSTYLE.ROUND] = "Round",
+                [addon.CLASSICONSTYLE.FLAT] = "Flat",
             },
             disabled = function()
                 return ( not SweepyBoop:GetClassIconsEnabled() );
@@ -93,8 +93,8 @@ options.args.NamePlates = {
             get = "GetPetIconStyle",
             set = "SetPetIconStyle",
             values = {
-                [NS.PETICONSTYLE.CATS] = "Cat memes",
-                [NS.PETICONSTYLE.MENDPET] = "Mend pet icon",
+                [addon.PETICONSTYLE.CATS] = "Cat memes",
+                [addon.PETICONSTYLE.MENDPET] = "Mend pet icon",
             },
             disabled = function()
                 return ( not SweepyBoop:GetClassIconsEnabled() );
@@ -108,10 +108,10 @@ options.args.NamePlates = {
             get = "GetSelectionBorderStyle",
             set = "SetSelectionBorderStyle",
             values = {
-                [NS.SELECTIONBORDERSTYLE.FIRE] = "Fire",
-                [NS.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
-                [NS.SELECTIONBORDERSTYLE.AIR] = "Air",
-                [NS.SELECTIONBORDERSTYLE.MECHANICAL] = "Mechanical",
+                [addon.SELECTIONBORDERSTYLE.FIRE] = "Fire",
+                [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
+                [addon.SELECTIONBORDERSTYLE.AIR] = "Air",
+                [addon.SELECTIONBORDERSTYLE.MECHANICAL] = "Mechanical",
             },
             disabled = function()
                 return ( not SweepyBoop:GetClassIconsEnabled() );
@@ -196,7 +196,7 @@ options.args.ArenaFrames = {
             order = 2,
             width = "full",
             type = "description",
-            name = NS.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
+            name = addon.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
         },
         breaker1 = {
             order = 3,
@@ -275,10 +275,10 @@ options.args.RaidFrame = {
             order = 1,
             type = "select",
             values = {
-                [NS.RaidFrameSortOrder.Disabled] = "Disabled",
-                [NS.RaidFrameSortOrder.PlayerTop] = "Player on top",
-                [NS.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
-                [NS.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
+                [addon.RaidFrameSortOrder.Disabled] = "Disabled",
+                [addon.RaidFrameSortOrder.PlayerTop] = "Player on top",
+                [addon.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
+                [addon.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
             },
             name = "Sort raid frames inside arena",
             desc = "Customize the sort order of raid frames inside arena",
@@ -307,7 +307,7 @@ options.args.RaidFrame = {
             order = 4,
             width = "full",
             type = "description",
-            name = NS.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
+            name = addon.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
         },
     },
 };
@@ -346,7 +346,7 @@ options.args.Misc = {
             order = 4,
             width = "full",
             type = "description",
-            name = NS.exclamation .. NS.exclamation .. NS.exclamation ..  "Leaving arena without entering combat results in deserter status",
+            name = addon.exclamation .. addon.exclamation .. addon.exclamation ..  "Leaving arena without entering combat results in deserter status",
         },
     },
 };
@@ -354,9 +354,9 @@ options.args.Misc = {
 local defaults = {
     profile = {
         classIconsEnabled = true,
-        classIconStyle = NS.CLASSICONSTYLE.ROUND,
-        petIconStyle = NS.PETICONSTYLE.CATS,
-        classIconSelectionBorderStyle = NS.SELECTIONBORDERSTYLE.FIRE,
+        classIconStyle = addon.CLASSICONSTYLE.ROUND,
+        petIconStyle = addon.PETICONSTYLE.CATS,
+        classIconSelectionBorderStyle = addon.SELECTIONBORDERSTYLE.FIRE,
         classIconScale = 100,
         classIconOffset = 0,
         useHealerIcon = true,
@@ -368,7 +368,7 @@ local defaults = {
         arenaEnemyDefensiveIconSize = 25,
         arenaNumbersEnabled = true,
         nameplateFilterEnabled = true,
-        arenaRaidFrameSortOrder = NS.RaidFrameSortOrder.Disabled,
+        arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
         skipLeaveArenaConfirmation = false,
@@ -379,7 +379,7 @@ function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, NS.addonTitle);
+    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle);
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");

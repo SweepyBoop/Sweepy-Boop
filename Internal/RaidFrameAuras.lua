@@ -1,11 +1,11 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local CreateFrame = CreateFrame;
 local CompactPartyFrame = CompactPartyFrame;
 local hooksecurefunc = hooksecurefunc;
 local UnitIsPlayer = UnitIsPlayer;
 
-local test = NS.isTestMode;
+local test = addon.isTestMode;
 
 local function ConvertToSet(list)
     local set = {};
@@ -130,7 +130,7 @@ local function UpdateRaidFrame(frame)
     local center, topRight = SetupRaidFrame(frame);
 
     do
-        local name, icon, _, _, duration, expirationTime = AuraUtil.UnpackAuraData(NS.Util_GetFirstUnitBuff(frame.displayedUnit, centerSpellSet, nil, "player"));
+        local name, icon, _, _, duration, expirationTime = AuraUtil.UnpackAuraData(addon.Util_GetFirstUnitBuff(frame.displayedUnit, centerSpellSet, nil, "player"));
         if name then
             center.icon:SetTexture(icon);
 
@@ -145,14 +145,14 @@ local function UpdateRaidFrame(frame)
     end
 
     do
-        local name, icon, _, _, duration, expirationTime = AuraUtil.UnpackAuraData(NS.Util_GetFirstUnitBuff(frame.displayedUnit, topRightSpellSet));
+        local name, icon, _, _, duration, expirationTime = AuraUtil.UnpackAuraData(addon.Util_GetFirstUnitBuff(frame.displayedUnit, topRightSpellSet));
         if name and duration then
             topRight.icon:SetTexture(icon);
             topRight.cooldown:SetCooldown(expirationTime - duration, duration);
-            NS.ShowOverlayGlow(topRight);
+            addon.ShowOverlayGlow(topRight);
             topRight:Show();
         else
-            NS.HideOverlayGlow(topRight);
+            addon.HideOverlayGlow(topRight);
             topRight:Hide();
         end
     end

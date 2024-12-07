@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
@@ -20,7 +20,7 @@ local function SetupOverlayGlow(button)
 	button.SpellActivationAlert:Hide();
 end
 
-NS.ShowOverlayGlow = function (button)
+addon.ShowOverlayGlow = function (button)
     SetupOverlayGlow(button);
 
 	if not button.SpellActivationAlert:IsShown() then
@@ -30,7 +30,7 @@ NS.ShowOverlayGlow = function (button)
 	end
 end
 
-NS.HideOverlayGlow = function (button)
+addon.HideOverlayGlow = function (button)
     if not button.SpellActivationAlert then
 		return;
 	end
@@ -45,7 +45,7 @@ NS.HideOverlayGlow = function (button)
 end
 
 -- Call this after modifying timers
-NS.RefreshCooldownTimer = function (self, finish)
+addon.RefreshCooldownTimer = function (self, finish)
     local icon = self:GetParent();
     local timers = icon.timers;
     if ( not timers ) then return end
@@ -55,7 +55,7 @@ NS.RefreshCooldownTimer = function (self, finish)
         if finish then
             icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
             if icon.group then
-                NS.IconGroup_Remove(icon:GetParent(), icon);
+                addon.IconGroup_Remove(icon:GetParent(), icon);
             end
         else
             icon.cooldown:SetCooldown(timers[1].start, timers[1].duration);
@@ -98,28 +98,28 @@ NS.RefreshCooldownTimer = function (self, finish)
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
-            NS.IconGroup_Remove(icon:GetParent(), icon);
+            addon.IconGroup_Remove(icon:GetParent(), icon);
         end
     end
 end
 
-NS.FinishCooldownTimer = function (self)
-    NS.RefreshCooldownTimer(self, true);
+addon.FinishCooldownTimer = function (self)
+    addon.RefreshCooldownTimer(self, true);
 end
 
-NS.OnDurationTimerFinished = function(self)
+addon.OnDurationTimerFinished = function(self)
     local icon = self:GetParent();
-    NS.HideOverlayGlow(icon);
+    addon.HideOverlayGlow(icon);
     if icon.cooldown then
         icon.cooldown:Show();
     else
         if icon.group then
-            NS.IconGroup_Remove(icon:GetParent(), icon);
+            addon.IconGroup_Remove(icon:GetParent(), icon);
         end
     end
 end
 
-NS.CheckTimerToStart = function (timers)
+addon.CheckTimerToStart = function (timers)
     local index;
 
     if #(timers) < 2 then
@@ -139,7 +139,7 @@ NS.CheckTimerToStart = function (timers)
     return index;
 end
 
-NS.ResetIconCooldown = function (icon, amount)
+addon.ResetIconCooldown = function (icon, amount)
     if ( not icon.cooldown ) then return end
 
     local timers = icon.timers;
@@ -170,5 +170,5 @@ NS.ResetIconCooldown = function (icon, amount)
         end
     end
 
-    NS.RefreshCooldownTimer(icon.cooldown, finish);
+    addon.RefreshCooldownTimer(icon.cooldown, finish);
 end

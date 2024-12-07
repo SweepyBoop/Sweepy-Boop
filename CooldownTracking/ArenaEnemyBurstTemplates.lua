@@ -1,17 +1,17 @@
-local _, NS = ...;
+local _, addon = ...;
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local GetSpellInfo = C_Spell.GetSpellInfo;
 local GetSpellTexture = C_Spell.GetSpellTexture;
 local GetTime = GetTime;
 
-NS.CreateSweepyIcon = function (unit, spellID, size, group)
+addon.CreateSweepyIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide();
 
     frame.unit = unit;
     frame.spellID = spellID;
-    frame.spellInfo = NS.spellData[spellID];
+    frame.spellInfo = addon.spellData[spellID];
     frame.priority = frame.spellInfo.priority;
     frame.group = group;
 
@@ -30,7 +30,7 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
-        frame.cooldown:SetScript("OnCooldownDone", NS.FinishCooldownTimer);
+        frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
         if spell.charges then
             frame.Count = frame:CreateFontString(nil, "ARTWORK");
@@ -42,7 +42,7 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
     end
 
     -- For now, always create a duration timer, if there is no duration, show 3s glow as reminder
-    frame.duration = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "AuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
+    frame.duration = CreateFrame("Cooldown", addon.HIDETIMEROMNICC .. "AuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
     frame.duration:SetAllPoints();
     frame.duration:SetDrawEdge(false);
     frame.duration:SetDrawBling(false);
@@ -55,7 +55,7 @@ NS.CreateSweepyIcon = function (unit, spellID, size, group)
     frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
     frame.spellActivationAlert:Hide();
 
-    frame.duration:SetScript("OnCooldownDone", NS.OnDurationTimerFinished);
+    frame.duration:SetScript("OnCooldownDone", addon.OnDurationTimerFinished);
 
     return frame;
 end
@@ -65,7 +65,7 @@ local function SetSweepyDuration(icon, startTime, duration)
     icon.duration.finish = startTime + duration;
 end
 
-NS.StartSweepyIcon = function (icon)
+addon.StartSweepyIcon = function (icon)
     local spell = icon.spellInfo;
     local timers = icon.timers;
     local info = icon.info;
@@ -89,7 +89,7 @@ NS.StartSweepyIcon = function (icon)
         local now = GetTime();
 
         -- Check which one should be used
-        local index = NS.CheckTimerToStart(timers);
+        local index = addon.CheckTimerToStart(timers);
         timers[index].start = now;
         timers[index].duration = info.cooldown;
         timers[index].finish = now + info.cooldown;
@@ -102,7 +102,7 @@ NS.StartSweepyIcon = function (icon)
             timers[2].finish = math.huge;
         end
 
-        NS.RefreshCooldownTimer(icon.cooldown);
+        addon.RefreshCooldownTimer(icon.cooldown);
     end
 
     -- If there is a duration, start the duration timer
@@ -113,9 +113,9 @@ NS.StartSweepyIcon = function (icon)
         if ( not spell.duration ) then
             -- Default glow duration
             duration = 3;
-        elseif spell.duration == NS.DURATION_DYNAMIC then
+        elseif spell.duration == addon.DURATION_DYNAMIC then
             local expirationTime;
-            duration, expirationTime = select(5, AuraUtil.UnpackAuraData(NS.Util_GetUnitBuff(icon.unit, icon.spellID)));
+            duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
             startTime = expirationTime - duration;
         else
             duration = spell.duration;
@@ -125,7 +125,7 @@ NS.StartSweepyIcon = function (icon)
         if icon.cooldown then
             icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
         end
-        NS.ShowOverlayGlow(icon);
+        addon.ShowOverlayGlow(icon);
     end
 
     -- Play sound for spells with highest priority
@@ -135,23 +135,23 @@ NS.StartSweepyIcon = function (icon)
     end
 
     if icon.group then
-        NS.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
+        addon.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
     end
 end
 
 -- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
-NS.ResetSweepyDuration = function (icon)
+addon.ResetSweepyDuration = function (icon)
     if ( not icon.duration ) then return end
 
     SetSweepyDuration(icon, 0, 0);
-    NS.OnDurationTimerFinished(icon.duration);
+    addon.OnDurationTimerFinished(icon.duration);
 end
 
-NS.RefreshSweepyDuration = function (icon)
+addon.RefreshSweepyDuration = function (icon)
     if ( not icon.duration ) then return end
 
     -- Get new duration
-    duration, expirationTime = select(5, AuraUtil.UnpackAuraData(NS.Util_GetUnitBuff(icon.unit, icon.spellID)));
+    duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
     if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
         SetSweepyDuration(icon, expirationTime - duration, duration);
         if icon.cooldown then

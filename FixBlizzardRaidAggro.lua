@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local GetSpecialization = GetSpecialization;
 local GetSpecializationInfo = GetSpecializationInfo;
@@ -17,7 +17,7 @@ local CompactPartyFrame = CompactPartyFrame;
 -- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
 
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
-local isTestMode = NS.isTestMode;
+local isTestMode = addon.isTestMode;
 
 local arenaRoles = {};
 
@@ -40,8 +40,8 @@ local function GetArenaRole(unitId)
 end
 
 local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 refreshFrame:SetScript("OnEvent", function ()
     arenaRoles = {};
 end)
@@ -61,7 +61,7 @@ local function ShouldShowAggro(unit)
             return UnitIsUnit(unit, "target");
         end
     else
-        for i = 1, NS.MAX_ARENA_SIZE do
+        for i = 1, addon.MAX_ARENA_SIZE do
             if UnitIsUnit(unit, "arena" .. i .. "target") and ( GetArenaRole("arena" .. i) == "DAMAGER" ) then
                 return true;
             end

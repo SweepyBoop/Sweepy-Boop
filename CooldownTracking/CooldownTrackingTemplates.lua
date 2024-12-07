@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
@@ -19,7 +19,7 @@ end
 
 local function OnCooldownTimerFinished(self)
     StopAnimation(self:GetParent());
-    NS.FinishCooldownTimer(self);
+    addon.FinishCooldownTimer(self);
 end
 
 function CooldownTracking_UpdateBorder(icon)
@@ -32,18 +32,18 @@ end
 
 -- Only put static info in this function
 -- An icon for a unit + spellID is only created once per session
-NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
+addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame.group = true; -- To add itself to parent group
     frame:Hide();
 
     frame.unit = unit;
     frame.spellID = spellID;
-    local spell = NS.cooldownSpells[spellID];
+    local spell = addon.cooldownSpells[spellID];
     frame.category = spell.category;
 
     if size then
-        local scale = size / NS.DEFAULT_ICON_SIZE;
+        local scale = size / addon.DEFAULT_ICON_SIZE;
         frame:SetScale(scale);
     end
 
@@ -72,7 +72,7 @@ NS.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     return frame;
 end
 
-NS.StartCooldownTrackingIcon = function (icon)
+addon.StartCooldownTrackingIcon = function (icon)
     local spell = icon.spellInfo; -- static spell info
     local info = icon.info; -- dynamic info for current icon
     local timers = icon.timers;
@@ -102,7 +102,7 @@ NS.StartCooldownTrackingIcon = function (icon)
     local now = GetTime();
 
     -- Check which one should be used
-    local index = NS.CheckTimerToStart(timers);
+    local index = addon.CheckTimerToStart(timers);
     timers[index].start = now;
     timers[index].duration = info.cooldown;
     timers[index].finish = timers[index].start + timers[index].duration;
@@ -116,16 +116,16 @@ NS.StartCooldownTrackingIcon = function (icon)
         timers[2].finish = math.huge;
     end
 
-    NS.RefreshCooldownTimer(icon.cooldown);
+    addon.RefreshCooldownTimer(icon.cooldown);
 
     StartAnimation(icon);
 
-    NS.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
+    addon.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
 end
 
 -- For spells with reduce_on_interrupt, set an internal cooldown so it doesn't reset cd multiple times
 -- This is basically only for solar beam
-NS.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
+addon.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
     if internalCooldown then
         local now = GetTime();
         if icon.info.lasteReset and ( now < icon.info.lasteReset + internalCooldown ) then
@@ -135,5 +135,5 @@ NS.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
         icon.info.lasteReset = now;
     end
 
-    NS.ResetIconCooldown(icon, amount);
+    addon.ResetIconCooldown(icon, amount);
 end

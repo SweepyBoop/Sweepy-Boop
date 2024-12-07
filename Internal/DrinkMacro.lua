@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local CreateFrame = CreateFrame;
 local UnitLevel = UnitLevel;
@@ -19,9 +19,9 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 local frameDrinkMacro = CreateFrame("Frame");
 local inWorld = false;
 local bestDrink = nil;
-frameDrinkMacro:RegisterEvent(NS.BAG_UPDATE);
-frameDrinkMacro:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-frameDrinkMacro:RegisterEvent(NS.PLAYER_REGEN_ENABLED);
+frameDrinkMacro:RegisterEvent(addon.BAG_UPDATE);
+frameDrinkMacro:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+frameDrinkMacro:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
 
 local drinks = {
     113509, -- Conjured Mana Bun ................................................................ (100% MP/HP) [Mage Food]
@@ -319,9 +319,9 @@ end
 local healthStone;
 
 local classSpell = {
-    [NS.DRUID] = "Frenzied Regeneration",
-    [NS.PRIEST] = "Desperate Prayer",
-    [NS.PALADIN] = "Divine Protection",
+    [addon.DRUID] = "Frenzied Regeneration",
+    [addon.PRIEST] = "Desperate Prayer",
+    [addon.PALADIN] = "Divine Protection",
 };
 
 local function SetHealthStone()
@@ -361,14 +361,14 @@ local function eventHandler(self, event, ...)
         return
     end
     -- If not in combat, make a macro or edit existing one
-    if ( event == NS.PLAYER_ENTERING_WORLD ) then
+    if ( event == addon.PLAYER_ENTERING_WORLD ) then
         inWorld = true;
         MakeDrinkMacro();
     end
-    if ( event == NS.BAG_UPDATE ) and inWorld then
+    if ( event == addon.BAG_UPDATE ) and inWorld then
         MakeDrinkMacro();
     end
-    if ( event == NS.PLAYER_REGEN_ENABLED ) and inWorld then -- Exiting combat
+    if ( event == addon.PLAYER_REGEN_ENABLED ) and inWorld then -- Exiting combat
         MakeDrinkMacro();
     end
 end
@@ -383,7 +383,7 @@ local drinkBuffs = {
 
 local lastSent = 0;
 local chatMessage = CreateFrame("Frame");
-chatMessage:RegisterEvent(NS.UNIT_AURA);
+chatMessage:RegisterEvent(addon.UNIT_AURA);
 chatMessage:SetScript("OnEvent", function (self, event, ...)
     local unit = ...;
     if ( unit == "player" ) then

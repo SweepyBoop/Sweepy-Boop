@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 local CreateFrame = CreateFrame;
 local UIParent = UIParent;
 local C_LossOfControl = C_LossOfControl;
@@ -16,15 +16,15 @@ containerFrame.texture:SetAllPoints();
 
 -- Assign a name so we can disable it in OmniCC
 -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/LossOfControlFrame.xml
-containerFrame.cooldown = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "LoseControl", containerFrame, "CooldownFrameTemplate");
+containerFrame.cooldown = CreateFrame("Cooldown", addon.HIDETIMEROMNICC .. "LoseControl", containerFrame, "CooldownFrameTemplate");
 containerFrame.cooldown:SetHideCountdownNumbers(true);
 containerFrame.cooldown:SetDrawEdge(true);
 containerFrame.cooldown:SetAllPoints();
 
 containerFrame.lastMsgSent = 0;
-containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_ADDED);
-containerFrame:RegisterEvent(NS.LOSS_OF_CONTROL_UPDATE);
-containerFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+containerFrame:RegisterEvent(addon.LOSS_OF_CONTROL_ADDED);
+containerFrame:RegisterEvent(addon.LOSS_OF_CONTROL_UPDATE);
+containerFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 
 function containerFrame:OnEvent(event, ...)
     local locData = C_LossOfControl.GetActiveLossOfControlData(1);
@@ -50,7 +50,7 @@ function containerFrame:OnEvent(event, ...)
     self:Show();
 
     -- Send notification to group
-    if IsActiveBattlefieldArena() and ( event == NS.LOSS_OF_CONTROL_ADDED ) and ( UnitGroupRolesAssigned("player") == "HEALER" ) then
+    if IsActiveBattlefieldArena() and ( event == addon.LOSS_OF_CONTROL_ADDED ) and ( UnitGroupRolesAssigned("player") == "HEALER" ) then
         local now = GetTime();
         if ( now < self.lastMsgSent + 1.5) then
             -- Don't send more than one messages within 1.5 sec.

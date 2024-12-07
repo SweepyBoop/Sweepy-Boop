@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local UnitAura = C_UnitAuras.GetAuraDataByIndex;
 local strsplit = strsplit;
@@ -8,7 +8,7 @@ local UnitExists = UnitExists;
 local UnitGUID = UnitGUID;
 local UnitClass = UnitClass;
 
-NS.Util_GetUnitAura = function(unit, spell, filter)
+addon.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
         filter = filter.."|HELPFUL";
     end
@@ -22,7 +22,7 @@ NS.Util_GetUnitAura = function(unit, spell, filter)
     end
 end
 
-NS.Util_GetFirstUnitAura = function (unit, spells, filter, sourceUnit)
+addon.Util_GetFirstUnitAura = function (unit, spells, filter, sourceUnit)
     if filter and not filter:upper():find("FUL") then
         filter = filter.."|HELPFUL";
     end
@@ -37,17 +37,17 @@ NS.Util_GetFirstUnitAura = function (unit, spells, filter, sourceUnit)
     end
 end
 
-NS.Util_GetUnitBuff = function(unit, spell, filter)
+addon.Util_GetUnitBuff = function(unit, spell, filter)
     filter = filter and filter.."|HELPFUL" or "HELPFUL";
-    return NS.Util_GetUnitAura(unit, spell, filter);
+    return addon.Util_GetUnitAura(unit, spell, filter);
 end
 
-NS.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
+addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
     filter = filter and filter.."|HELPFUL" or "HELPFUL";
-    return NS.Util_GetFirstUnitAura(unit, spells, filter, sourceUnit);
+    return addon.Util_GetFirstUnitAura(unit, spells, filter, sourceUnit);
 end
 
-NS.GetNpcIdFromGuid = function (guid)
+addon.GetNpcIdFromGuid = function (guid)
     local NpcId = select ( 6, strsplit ( "-", guid ) )
     if (NpcId) then
         return tonumber ( NpcId )
@@ -56,8 +56,8 @@ NS.GetNpcIdFromGuid = function (guid)
     return 0
 end
 
-NS.MAX_ARENA_SIZE = 3
-NS.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
+addon.MAX_ARENA_SIZE = 3
+addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 
 local partyInfo = {
     -- Convert between unitGUID and unitID
@@ -68,8 +68,8 @@ local partyInfo = {
 }
 
 local partyInfoFrame = CreateFrame("Frame")
-partyInfoFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
-partyInfoFrame:RegisterEvent(NS.GROUP_ROSTER_UPDATE)
+partyInfoFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD)
+partyInfoFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE)
 partyInfoFrame:SetScript("OnEvent", function ()
     partyInfo.unitGUID = {}
     partyInfo.unitId = {}
@@ -101,9 +101,9 @@ local function PartyUnitClass(unitId)
     return partyInfo.unitClass[unitId]
 end
 
-local ClassWithFearSpell = NS.ClassWithFearSpell
+local ClassWithFearSpell = addon.ClassWithFearSpell
 
-NS.PartyWithFearSpell = function ()
+addon.PartyWithFearSpell = function ()
     if ( partyInfo.partyWithFearSpell == nil ) then
         partyInfo.partyWithFearSpell =
             ClassWithFearSpell(PartyUnitClass("player"))
@@ -114,9 +114,9 @@ NS.PartyWithFearSpell = function ()
     return partyInfo.partyWithFearSpell
 end
 
-NS.IsShamanPrimaryPet = function (unitId)
+addon.IsShamanPrimaryPet = function (unitId)
     local unitGUID = UnitGUID(unitId);
-    local npcID = NS.GetNpcIdFromGuid(unitGUID);
+    local npcID = addon.GetNpcIdFromGuid(unitGUID);
     -- Greater / Primal Fire Elemental
     return ( npcID == 95061 ) or ( npcID == 61029 );
 end

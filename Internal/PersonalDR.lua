@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local GetSpellInfo = C_Spell.GetSpellInfo;
 local UnitGUID = UnitGUID;
@@ -232,7 +232,7 @@ local playerGUID = UnitGUID("player");
 
 local function HideIconDR(icon)
     icon.stacks = 0;
-    NS.IconGroup_Remove(icon:GetParent(), icon);
+    addon.IconGroup_Remove(icon:GetParent(), icon);
 end
 
 local function CreateDRIcon(category)
@@ -252,7 +252,7 @@ local function CreateDRIcon(category)
     f.border:UpdateSizes();
 
     -- Assign frame name BoopHideTimer* to hide timer by OmniCC
-    f.cooldown = CreateFrame("Cooldown", NS.HIDETIMEROMNICC .. "PersonalDR" .. category, f, "CooldownFrameTemplate");
+    f.cooldown = CreateFrame("Cooldown", addon.HIDETIMEROMNICC .. "PersonalDR" .. category, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
     f.cooldown:SetDrawEdge(false);
     f.cooldown:SetAlpha(1);
@@ -276,10 +276,10 @@ local setPointOptions = {
     offsetX = -25,
     offsetY = -38,
 };
-local drIconGroup = NS.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
-NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
-NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
-NS.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
+local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
+addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
+addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
+addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
 
 local function ShowIconDR(icon)
     icon.stacks = icon.stacks + 1;
@@ -296,13 +296,13 @@ local function ShowIconDR(icon)
     icon.cooldown:SetCooldown(GetTime(), 15);
 
     -- Add to the icon group and re-position
-    NS.IconGroup_Insert(icon:GetParent(), icon);
+    addon.IconGroup_Insert(icon:GetParent(), icon);
 end
 
-drIconGroup:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
+drIconGroup:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 drIconGroup:SetScript("OnEvent", function (self, event, ...)
     local _, subEvent, _, _, _, _, _, destGUID, _, _, _, spellID = CombatLogGetCurrentEventInfo();
-    if ( subEvent == NS.SPELL_AURA_REMOVED ) and ( destGUID == playerGUID ) then
+    if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( destGUID == playerGUID ) then
         local category = spellList[spellID];
         if ( not category ) then return end
 
