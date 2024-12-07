@@ -21,7 +21,7 @@ local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = NS.isTestMode;
 --findSpellId.enabled = true;
 
-findSpellId.spellName = "Blooming Infusion";
+findSpellId.spellName = "Drink";
 findSpellId:RegisterEvent(NS.UNIT_AURA);
 findSpellId:RegisterEvent(NS.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
@@ -88,7 +88,7 @@ local playerPortraitStealthAbility = {}
 -- If buff has no duration, duration will be false
 playerPortraitStealthAbility[NS.DRUID] = {
     167152, -- Refreshment
-    369162, -- Drink
+    452384, -- Drink
     5215, -- Prowl
 }
 playerPortraitStealthAbility[NS.ROGUE] = {
