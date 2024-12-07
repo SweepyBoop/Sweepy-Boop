@@ -49,6 +49,12 @@ It comes with a few key features:
 - Make sure to /reload if you change your Gladius / sArena settings (especially when you change the layout / positioning)
 - This module only tracks damage offensives and defensive abilities, and currently there is no option to choose which abilities to track
 
+## Sort raid frames
+Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
+
+![image](https://github.com/user-attachments/assets/10ecb4de-691d-4e11-a2a2-69eca3a80938)
+
+
 ## Nameplate filtering
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
 - For Beast Mastery Hunter pets, only show the primary one, so you know which one to kill
