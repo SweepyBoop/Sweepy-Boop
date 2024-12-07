@@ -6,7 +6,6 @@ SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
 
 local options = {
     name = addon.addonTitle,
-    handler = SweepyBoop,
     type = "group",
     args = {
         description = {
@@ -48,7 +47,6 @@ options.args.NamePlates = {
     order = 6,
     type = "group",
     name = "Nameplates",
-    handler = SweepyBoop,
     get = function(info) return addon.db[info[#info]] end,
 	set = function(info, val) addon.db[info[#info]] = val end,
     args = {
@@ -63,8 +61,6 @@ options.args.NamePlates = {
             type = "toggle",
             name = "Enable",
             desc = "Show class/pet icons on friendly players/pets",
-            --get = "GetClassIconsEnabled",
-            --set = "SetClassIconsEnabled",
         },
         description = {
             order = 3,
@@ -77,8 +73,6 @@ options.args.NamePlates = {
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
-            --get = "GetClassIconStyle",
-            --set = "SetClassIconStyle",
             values = {
                 [addon.CLASSICONSTYLE.ROUND] = "Round",
                 [addon.CLASSICONSTYLE.FLAT] = "Flat",
@@ -92,8 +86,6 @@ options.args.NamePlates = {
             type = "select",
             name = "Pet Icon Style",
             style = "dropdown",
-            --get = "GetPetIconStyle",
-            --set = "SetPetIconStyle",
             values = {
                 [addon.PETICONSTYLE.CATS] = "Cat memes",
                 [addon.PETICONSTYLE.MENDPET] = "Mend pet icon",
@@ -107,8 +99,6 @@ options.args.NamePlates = {
             type = "select",
             name = "Selection highlight border style",
             style = "dropdown",
-            get = "GetSelectionBorderStyle",
-            set = "SetSelectionBorderStyle",
             values = {
                 [addon.SELECTIONBORDERSTYLE.FIRE] = "Fire",
                 [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
@@ -125,8 +115,6 @@ options.args.NamePlates = {
             type = "toggle",
             name = "Use dedicated healer icon",
             desc = "Use a dedicated icon for party healers",
-            get = "GetHealerIconEnabled",
-            set = "SetHealerIconEnabled",
             disabled = function()
                 return ( not addon.db.profile.classIconsEnabled );
             end
@@ -138,8 +126,6 @@ options.args.NamePlates = {
             min = 50,
             max = 200,
             name = "Icon scale (%)",
-            --get = "GetClassIconScale",
-            --set = "SetClassIconScale",
             disabled = function()
                 return ( not addon.db.profile.classIconsEnabled );
             end
@@ -150,8 +136,6 @@ options.args.NamePlates = {
             min = 0,
             max = 150,
             name = "Icon offset",
-            --get = "GetClassIconOffset",
-            --set = "SetClassIconOffset",
             disabled = function()
                 return ( not addon.db.profile.classIconsEnabled );
             end
@@ -167,8 +151,6 @@ options.args.NamePlates = {
             type = "toggle",
             name = "Show Arena Numbers",
             desc = "Show arena numbers on top of enemy nameplates",
-            --get = "GetArenaNumbersEnabled",
-            --set = "SetArenaNumbersEnabled",
         },
         nameplateFilterEnabled = {
             order = 11,
@@ -176,8 +158,6 @@ options.args.NamePlates = {
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
             desc = "Only show nameplates of enemy players and important non-player units while inside arena",
-            --get = "GetNameplateFilterEnabled",
-            --set = "SetNameplateFilterEnabled",
         },
     },
 };
@@ -214,8 +194,6 @@ options.args.ArenaFrames = {
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
-            --get = "GetArenaEnemyOffensivesEnabled",
-            --set = "SetArenaEnemyOffensivesEnabled",
         },
         arenaEnemyOffensiveIconSize = {
             order = 5,
@@ -224,8 +202,6 @@ options.args.ArenaFrames = {
             max = 64,
             name = "Icon size",
             desc = "Size of arena offensive cooldown icons",
-            --get = "GetArenaEnemyOffensiveIconSize",
-            --set = "SetArenaEnemyOffensiveIconSize",
         },
         arenaEnemyDefensivesEnabled = {
             order = 6,
@@ -233,8 +209,6 @@ options.args.ArenaFrames = {
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
-            --get = "GetArenaEnemyDefensivesEnabled",
-            --set = "SetArenaEnemyDefensivesEnabled",
         },
         arenaEnemyDefensiveIconSize = {
             order = 7,
@@ -243,8 +217,6 @@ options.args.ArenaFrames = {
             max = 64,
             name = "Icon size",
             desc = "Size of arena defensive cooldown icons",
-            --get = "GetArenaEnemyDefensiveIconSize",
-            --set = "SetArenaEnemyDefensiveIconSize",
         },
         arenaCooldownOffsetX = {
             order = 8,
@@ -253,8 +225,6 @@ options.args.ArenaFrames = {
             max = 750,
             name = "Horizontal offset",
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
-            --get = "GetArenaCooldownOffsetX",
-            --set = "SetArenaCooldownOffsetX",
         },
         arenaCooldownOffsetY = {
             order = 9,
@@ -263,8 +233,6 @@ options.args.ArenaFrames = {
             max = 150,
             name = "Vertical offset",
             desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
-            --get = "GetArenaCooldownOffsetY",
-            --set = "SetArenaCooldownOffsetY",
         },
     },
 };
@@ -273,7 +241,6 @@ options.args.RaidFrame = {
     order = 8,
     type = "group",
     name = "Raid Frames",
-    handler = SweepyBoop,
     get = function(info) return addon.db[info[#info]] end,
 	set = function(info, val) addon.db[info[#info]] = val end,
     args = {
@@ -289,8 +256,6 @@ options.args.RaidFrame = {
             name = "Sort raid frames inside arena",
             desc = "Customize the sort order of raid frames inside arena",
             descStyle = "inline",
-            --get = "GetRaidFrameSortOrder",
-            --set = "SetRaidFrameSortOrder",
             style = "radio",
         },
 
@@ -306,8 +271,6 @@ options.args.RaidFrame = {
             type = "toggle",
             name = "PvP Aggro Highlight",
             desc = "Show aggro highlight on raid frames when targeted by enemy players in arena",
-            get = "GetRaidFrameAggroHighlightEnabled",
-            set = "SetRaidFrameAggroHighlightEnabled",
         },
         description = {
             order = 4,
@@ -322,7 +285,6 @@ options.args.Misc = {
     order = 9,
     type = "group",
     name = "Misc",
-    handler = SweepyBoop,
     args = {
         header = {
             order = 1,
@@ -334,16 +296,12 @@ options.args.Misc = {
             width = "full",
             type = "toggle",
             name = "Enable",
-            --get = "GetArenaSurrenderEnabled",
-            --set = "SetArenaSurrenderEnabled",
         },
         skipLeaveArenaConfirmation = {
             order = 3,
             width = "full",
             type = "toggle",
             name = "Leave directly if unable to surrender (skip confirmation dialog)",
-            --get = "GetSkipLeaveArenaConfirmationEnabled",
-            --set = "SetSkipLeaveArenaConfirmationEnabled",
             disabled = function()
                 return ( not addon.db.profile.arenaSurrenderEnabled );
             end,
