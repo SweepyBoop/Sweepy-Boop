@@ -49,20 +49,22 @@ options.args.NamePlates = {
     type = "group",
     name = "Nameplates",
     handler = SweepyBoop,
+    get = function(info) return addon.db[info[#info]] end,
+	set = function(info, val) addon.db[info[#info]] = val end,
     args = {
         header = {
             order = 1,
             type = "header",
             name = "Class & Pet Icons",
         },
-        classIcons = {
+        classIconsEnabled = {
             order = 2,
             width = "full",
             type = "toggle",
             name = "Enable",
             desc = "Show class/pet icons on friendly players/pets",
-            get = "GetClassIconsEnabled",
-            set = "SetClassIconsEnabled",
+            --get = "GetClassIconsEnabled",
+            --set = "SetClassIconsEnabled",
         },
         description = {
             order = 3,
@@ -70,37 +72,37 @@ options.args.NamePlates = {
             type = "description",
             name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
-        selectClass = {
+        classIconStyle = {
             order = 4,
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
-            get = "GetClassIconStyle",
-            set = "SetClassIconStyle",
+            --get = "GetClassIconStyle",
+            --set = "SetClassIconStyle",
             values = {
                 [addon.CLASSICONSTYLE.ROUND] = "Round",
                 [addon.CLASSICONSTYLE.FLAT] = "Flat",
             },
             disabled = function()
-                return ( not SweepyBoop:GetClassIconsEnabled() );
+                return ( not addon.db.profile.classIconsEnabled );
             end
         },
-        selectPet = {
+        petIconStyle = {
             order = 5,
             type = "select",
             name = "Pet Icon Style",
             style = "dropdown",
-            get = "GetPetIconStyle",
-            set = "SetPetIconStyle",
+            --get = "GetPetIconStyle",
+            --set = "SetPetIconStyle",
             values = {
                 [addon.PETICONSTYLE.CATS] = "Cat memes",
                 [addon.PETICONSTYLE.MENDPET] = "Mend pet icon",
             },
             disabled = function()
-                return ( not SweepyBoop:GetClassIconsEnabled() );
+                return ( not addon.db.profile.classIconsEnabled );
             end
         },
-        borderStyle = {
+        classIconSelectionBorderStyle = {
             order = 6,
             type = "select",
             name = "Selection highlight border style",
@@ -114,10 +116,10 @@ options.args.NamePlates = {
                 [addon.SELECTIONBORDERSTYLE.MECHANICAL] = "Mechanical",
             },
             disabled = function()
-                return ( not SweepyBoop:GetClassIconsEnabled() );
+                return ( not addon.db.profile.classIconsEnabled );
             end
         },
-        healerIcon = {
+        useHealerIcon = {
             order = 6,
             width = "full",
             type = "toggle",
@@ -126,32 +128,32 @@ options.args.NamePlates = {
             get = "GetHealerIconEnabled",
             set = "SetHealerIconEnabled",
             disabled = function()
-                return ( not SweepyBoop:GetClassIconsEnabled() );
+                return ( not addon.db.profile.classIconsEnabled );
             end
         },
-        iconScale = {
+        classIconScale = {
             order = 7,
             --width = "full",
             type = "range",
             min = 50,
             max = 200,
             name = "Icon scale (%)",
-            get = "GetClassIconScale",
-            set = "SetClassIconScale",
+            --get = "GetClassIconScale",
+            --set = "SetClassIconScale",
             disabled = function()
-                return ( not SweepyBoop:GetClassIconsEnabled() );
+                return ( not addon.db.profile.classIconsEnabled );
             end
         },
-        iconOffset = {
+        classIconOffset = {
             order = 8,
             type = "range",
             min = 0,
             max = 150,
             name = "Icon offset",
-            get = "GetClassIconOffset",
-            set = "SetClassIconOffset",
+            --get = "GetClassIconOffset",
+            --set = "SetClassIconOffset",
             disabled = function()
-                return ( not SweepyBoop:GetClassIconsEnabled() );
+                return ( not addon.db.profile.classIconsEnabled );
             end
         },
         break1 = {
@@ -159,23 +161,23 @@ options.args.NamePlates = {
 			type = "header",
 			name = ""
 		},
-        arenaNumbers = {
+        arenaNumbersEnabled = {
             order = 10,
             width = "full",
             type = "toggle",
             name = "Show Arena Numbers",
             desc = "Show arena numbers on top of enemy nameplates",
-            get = "GetArenaNumbersEnabled",
-            set = "SetArenaNumbersEnabled",
+            --get = "GetArenaNumbersEnabled",
+            --set = "SetArenaNumbersEnabled",
         },
-        nameplateFilter = {
+        nameplateFilterEnabled = {
             order = 11,
             width = "full",
             type = "toggle",
             name = "Only Show Important Nameplates in Arena",
             desc = "Only show nameplates of enemy players and important non-player units while inside arena",
-            get = "GetNameplateFilterEnabled",
-            set = "SetNameplateFilterEnabled",
+            --get = "GetNameplateFilterEnabled",
+            --set = "SetNameplateFilterEnabled",
         },
     },
 };
@@ -185,6 +187,8 @@ options.args.ArenaFrames = {
     type = "group",
     name = "Arena Frames",
     handler = SweepyBoop,
+    get = function(info) return addon.db[info[#info]] end,
+	set = function(info, val) addon.db[info[#info]] = val end,
     args = {
         testmode = {
             order = 1,
@@ -204,63 +208,63 @@ options.args.ArenaFrames = {
             name = "",
         },
 
-        arenaEnemyOffensives = {
+        arenaEnemyOffensivesEnabled = {
             order = 4,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
-            get = "GetArenaEnemyOffensivesEnabled",
-            set = "SetArenaEnemyOffensivesEnabled",
+            --get = "GetArenaEnemyOffensivesEnabled",
+            --set = "SetArenaEnemyOffensivesEnabled",
         },
-        arenaEnemyOffensiveIconSizeSlider = {
+        arenaEnemyOffensiveIconSize = {
             order = 5,
             type = "range",
             min = 16,
             max = 64,
             name = "Icon size",
             desc = "Size of arena offensive cooldown icons",
-            get = "GetArenaEnemyOffensiveIconSize",
-            set = "SetArenaEnemyOffensiveIconSize",
+            --get = "GetArenaEnemyOffensiveIconSize",
+            --set = "SetArenaEnemyOffensiveIconSize",
         },
-        arenaEnemyDefensives = {
+        arenaEnemyDefensivesEnabled = {
             order = 6,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
-            get = "GetArenaEnemyDefensivesEnabled",
-            set = "SetArenaEnemyDefensivesEnabled",
+            --get = "GetArenaEnemyDefensivesEnabled",
+            --set = "SetArenaEnemyDefensivesEnabled",
         },
-        arenaEnemyDefensiveIconSizeSlider = {
+        arenaEnemyDefensiveIconSize = {
             order = 7,
             type = "range",
             min = 16,
             max = 64,
             name = "Icon size",
             desc = "Size of arena defensive cooldown icons",
-            get = "GetArenaEnemyDefensiveIconSize",
-            set = "SetArenaEnemyDefensiveIconSize",
+            --get = "GetArenaEnemyDefensiveIconSize",
+            --set = "SetArenaEnemyDefensiveIconSize",
         },
-        arenaCooldownOffsetXSlider = {
+        arenaCooldownOffsetX = {
             order = 8,
             type = "range",
             min = -750,
             max = 750,
             name = "Horizontal offset",
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
-            get = "GetArenaCooldownOffsetX",
-            set = "SetArenaCooldownOffsetX",
+            --get = "GetArenaCooldownOffsetX",
+            --set = "SetArenaCooldownOffsetX",
         },
-        arenaCooldownOffsetYSlider = {
+        arenaCooldownOffsetY = {
             order = 9,
             type = "range",
             min = -150,
             max = 150,
             name = "Vertical offset",
             desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
-            get = "GetArenaCooldownOffsetY",
-            set = "SetArenaCooldownOffsetY",
+            --get = "GetArenaCooldownOffsetY",
+            --set = "SetArenaCooldownOffsetY",
         },
     },
 };
@@ -270,8 +274,10 @@ options.args.RaidFrame = {
     type = "group",
     name = "Raid Frames",
     handler = SweepyBoop,
+    get = function(info) return addon.db[info[#info]] end,
+	set = function(info, val) addon.db[info[#info]] = val end,
     args = {
-        sortGroup = {
+        arenaRaidFrameSortOrder = {
             order = 1,
             type = "select",
             values = {
@@ -283,8 +289,8 @@ options.args.RaidFrame = {
             name = "Sort raid frames inside arena",
             desc = "Customize the sort order of raid frames inside arena",
             descStyle = "inline",
-            get = "GetRaidFrameSortOrder",
-            set = "SetRaidFrameSortOrder",
+            --get = "GetRaidFrameSortOrder",
+            --set = "SetRaidFrameSortOrder",
             style = "radio",
         },
 
@@ -294,7 +300,7 @@ options.args.RaidFrame = {
             name = "",
         },
 
-        raidFrameAggroHighlight = {
+        raidFrameAggroHighlightEnabled = {
             order = 3,
             width = "full",
             type = "toggle",
@@ -323,23 +329,23 @@ options.args.Misc = {
             type = "header",
             name = "Type /afk to surrender arena",
         },
-        surrender = {
+        arenaSurrenderEnabled = {
             order = 2,
             width = "full",
             type = "toggle",
             name = "Enable",
-            get = "GetArenaSurrenderEnabled",
-            set = "SetArenaSurrenderEnabled",
+            --get = "GetArenaSurrenderEnabled",
+            --set = "SetArenaSurrenderEnabled",
         },
-        skipConfirm = {
+        skipLeaveArenaConfirmation = {
             order = 3,
             width = "full",
             type = "toggle",
             name = "Leave directly if unable to surrender (skip confirmation dialog)",
-            get = "GetSkipLeaveArenaConfirmationEnabled",
-            set = "SetSkipLeaveArenaConfirmationEnabled",
+            --get = "GetSkipLeaveArenaConfirmationEnabled",
+            --set = "SetSkipLeaveArenaConfirmationEnabled",
             disabled = function()
-                return ( not SweepyBoop:GetArenaSurrenderEnabled() );
+                return ( not addon.db.profile.arenaSurrenderEnabled );
             end,
         },
         description = {
