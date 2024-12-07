@@ -12,7 +12,7 @@ Most changes require a UI reload to take effect, and there is a Reload UI button
 
 ![image](https://user-images.githubusercontent.com/78008331/219826235-9a9c1b72-5e5b-4108-9728-576e991f8789.png)
 
-[Open a ticket](https://legacy.curseforge.com/wow/addons/sweepyboops-arena-helper/issues) to report any issues or request new features
+[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
 
 ## Friendly class and pet icons
 For friendly players and their primary pets, places a class (for players) or pet (for pets) icon on top to replace the health bar.
