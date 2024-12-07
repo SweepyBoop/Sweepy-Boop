@@ -54,6 +54,12 @@ Sort raid frames inside arena. Currently supports player on top/bottom, or in th
 
 ![image](https://github.com/user-attachments/assets/10ecb4de-691d-4e11-a2a2-69eca3a80938)
 
+## Arena Nameplate Numbers
+Quality-of-life feature to replace arena enemy names on top of nameplates with arena numbers.
+
+![image](https://github.com/user-attachments/assets/9a629304-9675-40ea-a5d1-4f39f101032a)
+
+(Arena numbers on top of enemy players)
 
 ## Nameplate filtering
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
