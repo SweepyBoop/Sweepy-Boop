@@ -61,26 +61,33 @@ Quality-of-life feature to replace arena enemy names on top of nameplates with a
 
 (Arena numbers on top of enemy players)
 
+## Type /afk to surrender arena
+Players can conveniently surrender arena by simply typing /afk.
+
+If unable to surrender, e.g., no teammates have died, a confirmation dialog will pop up to leave.
+
+There is also an option to leave directly without the confirmation dialog, but be careful: leaving arena without ever entering combat might result in deserter status!
+
+![image](https://github.com/user-attachments/assets/45663a67-435d-4b45-985f-0924074d3f6c)
+
+
 ## Nameplate filtering
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
 - For Beast Mastery Hunter pets, only show the primary one, so you know which one to kill
+- Tremor totem nameplate will not show, unless current group (including player themselves) have a fear ability (Warrior, Warlock, Priest)
 - For warlocks, only show the pet, not the 1,000 wild imps
 
 In short, this module shows the minimal set of unit nameplates that you need to keep an eye on during an arena match.
 
 
-
-
-#### Note
-Currently this module only supports sArena, since that's what I use.
-
-If you use Gladius and want to use this module, feel free to make a feature request 😊
-
 ## Fix Blizzard raid frame aggro highlight
-Blizzard's raid frame aggro highlight only tracks PvE threats. That means pet threats inside arenas, which is not very useful.
+Blizzard's raid frame aggro highlight only tracks PvE threats.
+That means pet threats inside arenas, which is not very useful.
 
 This module fixes that by highlighting the teammate who is targetted by enemy DPS players.
 
 For this module to work, disable the following setting under Interface settings so that it stops showing PvE threats:
-![image](https://user-images.githubusercontent.com/78008331/216872796-737ec8a0-336b-4721-a122-bb9daaf70583.png)
+
+![image](https://github.com/user-attachments/assets/38505bd7-5f7d-4f7d-95a0-f8d6f232c02e)
+
 
