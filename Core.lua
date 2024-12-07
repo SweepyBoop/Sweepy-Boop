@@ -104,6 +104,7 @@ options.args.NamePlates = {
                 [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
                 [addon.SELECTIONBORDERSTYLE.AIR] = "Air",
                 [addon.SELECTIONBORDERSTYLE.MECHANICAL] = "Mechanical",
+                [addon.SELECTIONBORDERSTYLE.PLAIN] = "Plain",
             },
             disabled = function()
                 return ( not SweepyBoop.db.profile.classIconsEnabled );
@@ -284,6 +285,8 @@ options.args.Misc = {
     order = 9,
     type = "group",
     name = "Misc",
+    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
         header = {
             order = 1,

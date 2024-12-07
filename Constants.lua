@@ -106,4 +106,5 @@ addon.SELECTIONBORDERSTYLE = {
     ARCANE = 2,
     AIR = 3,
     MECHANICAL = 4,
+    PLAIN = 5,
 };
