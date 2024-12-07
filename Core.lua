@@ -47,8 +47,8 @@ options.args.NamePlates = {
     order = 6,
     type = "group",
     name = "Nameplates",
-    get = function(info) return addon.db[info[#info]] end,
-	set = function(info, val) addon.db[info[#info]] = val end,
+    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
+	set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
         header = {
             order = 1,
@@ -78,7 +78,7 @@ options.args.NamePlates = {
                 [addon.CLASSICONSTYLE.FLAT] = "Flat",
             },
             disabled = function()
-                return ( not addon.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.classIconsEnabled );
             end
         },
         petIconStyle = {
@@ -91,7 +91,7 @@ options.args.NamePlates = {
                 [addon.PETICONSTYLE.MENDPET] = "Mend pet icon",
             },
             disabled = function()
-                return ( not addon.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.classIconsEnabled );
             end
         },
         classIconSelectionBorderStyle = {
@@ -106,7 +106,7 @@ options.args.NamePlates = {
                 [addon.SELECTIONBORDERSTYLE.MECHANICAL] = "Mechanical",
             },
             disabled = function()
-                return ( not addon.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.classIconsEnabled );
             end
         },
         useHealerIcon = {
@@ -116,7 +116,7 @@ options.args.NamePlates = {
             name = "Use dedicated healer icon",
             desc = "Use a dedicated icon for party healers",
             disabled = function()
-                return ( not addon.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.classIconsEnabled );
             end
         },
         classIconScale = {
@@ -126,7 +126,7 @@ options.args.NamePlates = {
             max = 200,
             name = "Icon scale (%)",
             disabled = function()
-                return ( not addon.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.classIconsEnabled );
             end
         },
         classIconOffset = {
@@ -136,7 +136,7 @@ options.args.NamePlates = {
             max = 150,
             name = "Icon offset",
             disabled = function()
-                return ( not addon.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.classIconsEnabled );
             end
         },
         break1 = {
@@ -166,8 +166,8 @@ options.args.ArenaFrames = {
     type = "group",
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
-    get = function(info) return addon.db[info[#info]] end,
-	set = function(info, val) addon.db[info[#info]] = val end,
+    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
+	set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
         testmode = {
             order = 1,
@@ -240,8 +240,8 @@ options.args.RaidFrame = {
     order = 8,
     type = "group",
     name = "Raid Frames",
-    get = function(info) return addon.db[info[#info]] end,
-	set = function(info, val) addon.db[info[#info]] = val end,
+    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
+	set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
         arenaRaidFrameSortOrder = {
             order = 1,
@@ -302,7 +302,7 @@ options.args.Misc = {
             type = "toggle",
             name = "Leave directly if unable to surrender (skip confirmation dialog)",
             disabled = function()
-                return ( not addon.db.profile.arenaSurrenderEnabled );
+                return ( not SweepyBoop.db.profile.arenaSurrenderEnabled );
             end,
         },
         description = {
