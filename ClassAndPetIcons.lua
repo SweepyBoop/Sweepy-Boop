@@ -151,6 +151,7 @@ local function HideClassIcon(frame)
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
         nameplate.FriendlyClassIcon:Hide();
+        nameplate.FriendlyClassIcon.border:Hide();
     end
 end
 
