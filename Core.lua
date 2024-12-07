@@ -121,7 +121,6 @@ options.args.NamePlates = {
         },
         classIconScale = {
             order = 7,
-            --width = "full",
             type = "range",
             min = 50,
             max = 200,
@@ -166,7 +165,7 @@ options.args.ArenaFrames = {
     order = 7,
     type = "group",
     name = "Arena Frames",
-    handler = SweepyBoop,
+    handler = SweepyBoop, -- for running SweepyBoop:TestArena()
     get = function(info) return addon.db[info[#info]] end,
 	set = function(info, val) addon.db[info[#info]] = val end,
     args = {
