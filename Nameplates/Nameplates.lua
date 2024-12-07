@@ -132,13 +132,13 @@ local function EnsureClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 0);
+        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
         nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
         -- Can we leverage SetTexCoord to get round icons without making them
 
-        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 1); -- higher subLevel to appear on top of the icon
+        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 7); -- higher subLevel to appear on top of the icon
         nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
         nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.classIconSelectionBorderStyle]);
     end
