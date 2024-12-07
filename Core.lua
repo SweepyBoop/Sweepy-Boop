@@ -9,37 +9,37 @@ local options = {
     type = "group",
     args = {
         description = {
-			order = 1,
-			type ="description",
-			fontSize = "large",
+            order = 1,
+            type ="description",
+            fontSize = "large",
             image = "Interface\\Addons\\SweepyBoop\\ClassIcons\\pet\\PET0",
             imageWidth = 36,
-			imageHeight = 36,
-			name = "A lightweight addon to make your arena gameplay smoother :)"
-		},
+            imageHeight = 36,
+            name = "A lightweight addon to make your arena gameplay smoother :)"
+        },
         break1 = {
-			order = 2,
-			type = "header",
-			name = ""
-		},
+            order = 2,
+            type = "header",
+            name = ""
+        },
         reloadNotice = {
-			order = 3,
-			type = "description",
-			fontSize = "medium",
-			name = addon.exclamation .. "UI must be reloaded for most changes to take effect.",
-		},
+            order = 3,
+            type = "description",
+            fontSize = "medium",
+            name = addon.exclamation .. "UI must be reloaded for most changes to take effect.",
+        },
         reloadButton = {
-			order = 4,
-			type = "execute",
-			name = "Reload UI",
-			func = ReloadUI,
-			width = 0.6,
-		},
+            order = 4,
+            type = "execute",
+            name = "Reload UI",
+            func = ReloadUI,
+            width = 0.6,
+        },
         break2 = {
-			order = 5,
-			type = "header",
-			name = ""
-		},
+            order = 5,
+            type = "header",
+            name = ""
+        },
     },
 };
 
@@ -48,7 +48,7 @@ options.args.NamePlates = {
     type = "group",
     name = "Nameplates",
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-	set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
         header = {
             order = 1,
@@ -140,10 +140,10 @@ options.args.NamePlates = {
             end
         },
         break1 = {
-			order = 9,
-			type = "header",
-			name = ""
-		},
+            order = 9,
+            type = "header",
+            name = ""
+        },
         arenaNumbersEnabled = {
             order = 10,
             width = "full",
@@ -167,7 +167,7 @@ options.args.ArenaFrames = {
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-	set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
         testmode = {
             order = 1,
@@ -241,7 +241,7 @@ options.args.RaidFrame = {
     type = "group",
     name = "Raid Frames",
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-	set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
         arenaRaidFrameSortOrder = {
             order = 1,
