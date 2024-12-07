@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local UnitExists = UnitExists;
 local UnitClass = UnitClass;
@@ -23,7 +23,7 @@ local function ShouldShowHealthBar(unit)
 
     local partyUnitId = ( unit == "pet" and "player" ) or ( "party" .. string.sub(unit, -1, -1) );
     local class = select(2, UnitClass(partyUnitId));
-    return ( class == NS.HUNTER ) or ( class == NS.WARLOCK ) or ( class == NS.SHAMAN and NS.IsShamanPrimaryPet(unit) );
+    return ( class == addon.HUNTER ) or ( class == addon.WARLOCK ) or ( class == addon.SHAMAN and addon.IsShamanPrimaryPet(unit) );
 end
 
 local function CreateHealthBar(index, width, height) -- Create StatusBar with a text overlay
@@ -92,7 +92,7 @@ local function UpdateProperties(frame)
 end
 
 local function HealthBarOnEvent(self, event, ...)
-    if ( event == NS.PLAYER_TARGET_CHANGED ) then
+    if ( event == addon.PLAYER_TARGET_CHANGED ) then
         if UnitIsUnit(self.unit, "target") then
             self.targetBorder:Show();
         else
@@ -105,7 +105,7 @@ local function HealthBarOnEvent(self, event, ...)
 
     if ( unit ~= self.unit ) then return end
 
-    if ( event == NS.UNIT_MAXHEALTH ) then
+    if ( event == addon.UNIT_MAXHEALTH ) then
         self.healthMax = UnitHealthMax(unit);
         self:SetMinMaxValues(0, self.healthMax);
     end
@@ -115,9 +115,9 @@ end
 
 -- Update health values
 local function RegisterHealthEvents(frame)
-    frame:RegisterEvent(NS.UNIT_HEALTH);
-    frame:RegisterEvent(NS.UNIT_MAXHEALTH);
-    frame:RegisterEvent(NS.PLAYER_TARGET_CHANGED); -- Use this instead of UNIT_TARGET
+    frame:RegisterEvent(addon.UNIT_HEALTH);
+    frame:RegisterEvent(addon.UNIT_MAXHEALTH);
+    frame:RegisterEvent(addon.PLAYER_TARGET_CHANGED); -- Use this instead of UNIT_TARGET
     frame:SetScript("OnEvent", HealthBarOnEvent);
 end
 
@@ -137,10 +137,10 @@ else
 end
 
 local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-refreshFrame:RegisterEvent(NS.UNIT_PET);
-refreshFrame:RegisterEvent(NS.GROUP_ROSTER_UPDATE);
+refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+refreshFrame:RegisterEvent(addon.UNIT_PET);
+refreshFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
 refreshFrame:SetScript("OnEvent", function ()
     if test then
         UpdateProperties(testPet);
@@ -208,10 +208,10 @@ local function InitializeManaBar(frame, powerType)
 end
 
 local class = select(2, UnitClass("player"));
-if ( class == NS.DRUID ) then
+if ( class == addon.DRUID ) then
     local druidManaBar = CreateDruidManaBar();
     druidManaBar:SetScript("OnEvent", function(self, event, ...)
-        if ( event == NS.UPDATE_SHAPESHIFT_FORM ) or ( event == NS.PLAYER_ENTERING_WORLD ) then
+        if ( event == addon.UPDATE_SHAPESHIFT_FORM ) or ( event == addon.PLAYER_ENTERING_WORLD ) then
             if ShouldShowManaBar(self) then
                 self:SetAlpha(1);
             else
@@ -224,15 +224,15 @@ if ( class == NS.DRUID ) then
         local unit = ...;
         if ( unit ~= "player" ) then return end
 
-        if ( event == NS.UNIT_POWER_FREQUENT ) then
+        if ( event == addon.UNIT_POWER_FREQUENT ) then
             UpdatePower(self, POWERTYPE.Mana);
-        elseif ( event == NS.UNIT_MAXPOWER ) then
+        elseif ( event == addon.UNIT_MAXPOWER ) then
             UpdatePowerMax(self, POWERTYPE.Mana);
         end
     end);
     InitializeManaBar(druidManaBar, POWERTYPE.Mana);
-    druidManaBar:RegisterEvent(NS.UNIT_POWER_FREQUENT);
-    druidManaBar:RegisterEvent(NS.UNIT_MAXPOWER);
-    druidManaBar:RegisterEvent(NS.UPDATE_SHAPESHIFT_FORM); -- Fired when the current form changes
-    druidManaBar:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+    druidManaBar:RegisterEvent(addon.UNIT_POWER_FREQUENT);
+    druidManaBar:RegisterEvent(addon.UNIT_MAXPOWER);
+    druidManaBar:RegisterEvent(addon.UPDATE_SHAPESHIFT_FORM); -- Fired when the current form changes
+    druidManaBar:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 end

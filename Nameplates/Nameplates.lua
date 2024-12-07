@@ -1,4 +1,4 @@
-local _, NS = ...
+local _, addon = ...
 
 local UnitGUID = UnitGUID;
 local UnitIsUnit = UnitIsUnit;
@@ -60,15 +60,15 @@ local NameplateWhiteList = {
 local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
 local selectionBorderSuffix = "_circular_frame";
 local selectionBorder = {
-    [NS.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
-    [NS.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
-    [NS.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
-    [NS.SELECTIONBORDERSTYLE.MECHANICAL] = selectionBorderPrefix .. "mechanical" .. selectionBorderSuffix,
+    [addon.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
+    [addon.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
+    [addon.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
+    [addon.SELECTIONBORDERSTYLE.MECHANICAL] = selectionBorderPrefix .. "mechanical" .. selectionBorderSuffix,
 };
 
 local function IsInWhiteList(unitId)
     -- Tremor Totem
-    NameplateWhiteList[5913] = NS.PartyWithFearSpell();
+    NameplateWhiteList[5913] = addon.PartyWithFearSpell();
 
     local guid = UnitGUID(unitId);
     local npcID = select(6, strsplit("-", guid));
@@ -82,10 +82,10 @@ local function GetUnitClass(unitId)
 end
 
 local function IsArenaPrimaryPet(unitId)
-    for i = 1, NS.MAX_ARENA_SIZE do
+    for i = 1, addon.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
             local class = GetUnitClass("arena" .. i);
-            return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
+            return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
         end
     end
 end
@@ -94,14 +94,14 @@ local function IsPartyPrimaryPet(unitId, partySize)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
         local class = GetUnitClass("player");
-        return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
+        return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
     else
         local partySize = partySize or 2;
         for i = 1, partySize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 local partyUnitId = "party" .. i;
                 local class = GetUnitClass(partyUnitId);
-                return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and NS.IsShamanPrimaryPet(unitId) );
+                return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
             end
         end
     end
@@ -132,13 +132,13 @@ local function EnsureClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 0);
+        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
         nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
         -- Can we leverage SetTexCoord to get round icons without making them
 
-        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 1); -- higher subLevel to appear on top of the icon
+        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 7); -- higher subLevel to appear on top of the icon
         nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
         nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.classIconSelectionBorderStyle]);
     end
@@ -171,7 +171,7 @@ local function GetIconOptions(class)
         iconSize = ClassIconSize.Pet;
     else
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
-        if SweepyBoop.db.profile.classIconStyle == NS.CLASSICONSTYLE.FLAT then
+        if SweepyBoop.db.profile.classIconStyle == addon.CLASSICONSTYLE.FLAT then
             path = path .. "flat";
         else
             path = path .. "round";
@@ -207,7 +207,7 @@ local function ShowClassIcon(frame)
         local iconPath, iconSize = GetIconOptions(class);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            if ( SweepyBoop.db.profile.petIconStyle == NS.PETICONSTYLE.CATS ) then
+            if ( SweepyBoop.db.profile.petIconStyle == addon.PETICONSTYLE.CATS ) then
                 local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
                 local petNumber = math.fmod(tonumber(npcID), iconCount);
                 iconFile = iconFile .. petNumber;
@@ -272,7 +272,7 @@ local function ShouldShowNameplate(unitId)
     end
 
     -- Show arena 1~3
-    for i = 1, NS.MAX_ARENA_SIZE do
+    for i = 1, addon.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arena" .. i) then
             return true;
         end

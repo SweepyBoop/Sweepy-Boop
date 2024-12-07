@@ -1,15 +1,15 @@
-local _, NS = ...
-local isTestMode = NS.isTestMode
+local _, addon = ...
+local isTestMode = addon.isTestMode
 
 -- Import spell data
-local OFFENSIVE = NS.spellCategory.OFFENSIVE
-local OFFENSIVE_DURATION = NS.spellCategory.OFFENSIVE_DURATION
-local OFFENSIVE_PET = NS.OFFENSIVE_PET
-local OFFENSIVE_SPECIAL = NS.spellCategory.OFFENSIVE_SPECIAL
+local OFFENSIVE = addon.spellCategory.OFFENSIVE
+local OFFENSIVE_DURATION = addon.spellCategory.OFFENSIVE_DURATION
+local OFFENSIVE_PET = addon.OFFENSIVE_PET
+local OFFENSIVE_SPECIAL = addon.spellCategory.OFFENSIVE_SPECIAL
 
-local spellData = NS.spellData
+local spellData = addon.spellData
 
-local spellResets = NS.spellResets
+local spellResets = addon.spellResets
 
 local defaultDuration = 3
 
@@ -20,7 +20,7 @@ BoopUtilsWA.Triggers = {}
 -- PLAYER_ENTERING_WORLD,ARENA_PREP_OPPONENT_SPECIALIZATIONS, UNIT_SPELLCAST_SUCCEEDED, COMBAT_LOG_EVENT_UNFILTERED, UNIT_AURA
 
 local function resetAllStates(allstates, event)
-    if (event == NS.PLAYER_ENTERING_WORLD) or (event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS) then
+    if (event == addon.PLAYER_ENTERING_WORLD) or (event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS) then
         for _, state in pairs(allstates) do
             state.show = false
             state.changed = true
@@ -54,7 +54,7 @@ local function makeTriggerState(spellData, spellID, duration, ...)
         expirationTime = GetTime() + duration,
         icon = select(3, GetSpellInfo(spellID)),
         sound = spellData.sound,
-        index = spellData.index or NS.defaultIndex,
+        index = spellData.index or addon.defaultIndex,
         stacks = charges,
         unit = unit,
         autoHide = true,
@@ -70,15 +70,15 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID, destGUID)
     if spell.trackEvent then
         track = ( spell.trackEvent == subEvent )
     else
-        track = ( subEvent == NS.SPELL_CAST_SUCCESS )
+        track = ( subEvent == addon.SPELL_CAST_SUCCESS )
     end
     if ( not track ) then return end
 
     -- Validate GUID
     if spell.trackDest then
-        track = NS.isGUIDArena(destGUID)
+        track = addon.isGUIDArena(destGUID)
     else
-        track = NS.isGUIDArena(sourceGUID)
+        track = addon.isGUIDArena(sourceGUID)
     end
     if ( not track ) then return end
 
@@ -86,7 +86,7 @@ local function checkSpellEnabled(spell, subEvent, sourceGUID, destGUID)
     if spell.spec then
         local specEnabled = false
 
-        local spec = NS.arenaSpec(sourceGUID)
+        local spec = addon.arenaSpec(sourceGUID)
         local specs = spell.spec
         for i = 1, #specs do
             if (spec == specs[i]) then
@@ -103,13 +103,13 @@ end
 -- Check whether spell is enabled for UNIT_SPELLCAST_ events
 local function unitSpellEnabled(spell, unitId)
     -- Check if opponent is arena
-    if (not NS.isUnitArena(unitId)) then return end
+    if (not addon.isUnitArena(unitId)) then return end
 
     -- Check if spell is disabled for current spec
     if spell.spec then
         local specEnabled = false
 
-        local spec = NS.arenaUnitSpec(unitId)
+        local spec = addon.arenaUnitSpec(unitId)
         local specs = spell.spec
         for i = 1, #specs do
             if (spec == specs[i]) then
@@ -135,7 +135,7 @@ local function checkResetSpell(allstates, sourceGUID, resetSpells)
         local state = allstates[guid]
         if state then
             -- Hide if full reset, or after the reduction the cooldown gets reset
-            if (amount == NS.RESET_FULL) then
+            if (amount == addon.RESET_FULL) then
                 state.show = false
             else
                 state.expirationTime = state.expirationTime - amount
@@ -164,19 +164,19 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
         -- Spell has baseline charge, put the charge on cooldown and update available stacks to 0
         if spell.opt_charges and spell.opt_lower_cooldown then
             -- e.g., Double Time
-            NS.setArenaOptLowerCooldown(guid, true)
-            NS.setArenaSpellChargeExpire(guid, now + spell.cooldown)
+            addon.setArenaOptLowerCooldown(guid, true)
+            addon.setArenaSpellChargeExpire(guid, now + spell.cooldown)
             state.stacks = 0
             state.changed = true
             return true
         elseif spell.charges or spell.opt_charges then
-            NS.setArenaSpellChargeExpire(guid, now + spell.cooldown)
+            addon.setArenaSpellChargeExpire(guid, now + spell.cooldown)
             state.stacks = 0
             state.changed = true
             return true
         elseif spell.opt_lower_cooldown then
             -- Lower the cooldown of the spell, but do not return yet
-            NS.setArenaOptLowerCooldown(guid, true)
+            addon.setArenaOptLowerCooldown(guid, true)
         end
     end
 
@@ -184,19 +184,19 @@ local function checkCooldownOptions(allstates, guid, spell, spellID, unitTarget)
     local charges
     if spell.charges then
         -- When spell has baseline charge, it has available charge if that charge hasn't been used, or has come off cooldown
-        local spellChargeExpire = NS.arenaSpellChargeExpire(guid)
+        local spellChargeExpire = addon.arenaSpellChargeExpire(guid)
         if (not spellChargeExpire) or (now >= spellChargeExpire) then
             charges = 1
         end
     elseif spell.opt_charges then
         -- For optional charge spells, the optional charge must have been used once for us to know it exists, so it cannot be null.
-        local spellChargeExpire = NS.arenaSpellChargeExpire(guid)
+        local spellChargeExpire = addon.arenaSpellChargeExpire(guid)
         if spellChargeExpire and (now >= spellChargeExpire) then
             charges = 1
         end
     end
 
-    local cooldown = (NS.arenaOptLowerCooldown(guid) and spell.opt_lower_cooldown) or spell.cooldown
+    local cooldown = (addon.arenaOptLowerCooldown(guid) and spell.opt_lower_cooldown) or spell.cooldown
     allstates[guid] = makeTriggerState(spell, spellID, cooldown, unitTarget, charges)
     return true
 end
@@ -204,9 +204,9 @@ end
 local durationTrigger = function(category, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
-    elseif ( event == NS.UNIT_AURA ) then
+    elseif ( event == addon.UNIT_AURA ) then
         local unitTarget, updateAuras = ...
-        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
+        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not addon.isUnitArena(unitTarget) ) then return end
 
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
@@ -216,13 +216,13 @@ local durationTrigger = function(category, allstates, event, ...)
                 if ( not spell ) or ( not spell.extend ) then return end
                 local guid = concatGUID(UnitGUID(unitTarget), spellID)
                 if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
-                    allstates[guid].expirationTime = select(6, NS.Util_GetUnitBuff(unitTarget, spellID))
+                    allstates[guid].expirationTime = select(6, addon.Util_GetUnitBuff(unitTarget, spellID))
                     allstates[guid].changed = true
                     return true
                 end
             end
         end
-    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
+    elseif (event == addon.UNIT_SPELLCAST_SUCCEEDED) then
         local unitTarget, _, spellID = ...
         if (not unitTarget) then return end
         local spell = spellData[spellID]
@@ -233,7 +233,7 @@ local durationTrigger = function(category, allstates, event, ...)
             allstates[guid] = makeTriggerState(spell, spellID, spell.duration, unitTarget)
             return true
         end
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+    elseif (event == addon.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellID = select(2, ...)
         -- Return if no valid target
         if ( not sourceGUID ) then return end
@@ -243,7 +243,7 @@ local durationTrigger = function(category, allstates, event, ...)
         if ( not spell ) or ( spell.category ~= category ) then return end
 
         -- Check if an aura ended early
-        if (subEvent == NS.SPELL_AURA_REMOVED) then
+        if (subEvent == addon.SPELL_AURA_REMOVED) then
             local unitGUID = ( spell.trackDest and destGUID ) or sourceGUID
             local guid = concatGUID(unitGUID, spellID)
             if allstates[guid] then
@@ -261,15 +261,15 @@ local durationTrigger = function(category, allstates, event, ...)
             local guid = concatGUID(unitGUID, spellID)
 
             local duration
-            if spell.trackEvent == NS.SPELL_AURA_APPLIED then
-                local unitId = NS.arenaUnitId(destGUID)
+            if spell.trackEvent == addon.SPELL_AURA_APPLIED then
+                local unitId = addon.arenaUnitId(destGUID)
                 if ( not unitId ) then return end
-                duration = select(5, NS.Util_GetUnitBuff(unitId, spellID))
+                duration = select(5, addon.Util_GetUnitBuff(unitId, spellID))
             else
                 duration = spell.duration or defaultDuration
             end
 
-            local unit = NS.arenaUnitId(unitGUID)
+            local unit = addon.arenaUnitId(unitGUID)
             allstates[guid] = makeTriggerState(spell, spellID, duration, unit)
             return true
         end
@@ -287,11 +287,11 @@ end
 local function durationTriggerSingleSpell(specialSpellID, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
-    elseif ( event == NS.UNIT_AURA ) then
+    elseif ( event == addon.UNIT_AURA ) then
         if ( not spellData[specialSpellID] ) or ( not spellData[specialSpellID].extend ) then return end
 
         local unitTarget, updateAuras = ...
-        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not NS.isUnitArena(unitTarget) ) then return end
+        if ( not updateAuras ) or ( not updateAuras.updatedAuraInstanceIDs ) or ( not unitTarget ) or ( not addon.isUnitArena(unitTarget) ) then return end
 
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID)
@@ -300,20 +300,20 @@ local function durationTriggerSingleSpell(specialSpellID, allstates, event, ...)
                 if ( spellID ~= specialSpellID ) then return end
                 local guid = UnitGUID(unitTarget)
                 if allstates[guid] then -- Use UNIT_AURA to extend aura only, since checking all auras on a unit is expensive
-                    allstates[guid].expirationTime = select(6, NS.Util_GetUnitBuff(unitTarget, spellID))
+                    allstates[guid].expirationTime = select(6, addon.Util_GetUnitBuff(unitTarget, spellID))
                     allstates[guid].changed = true
                     return true
                 end
             end
         end
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+    elseif (event == addon.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...)
         if (not sourceGUID) then return end
         local spell = spellData[specialSpellID]
 
         if (spellID == specialSpellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                local unitId = NS.arenaUnitId(sourceGUID)
+                local unitId = addon.arenaUnitId(sourceGUID)
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration, unitId)
                 return true
             end
@@ -337,7 +337,7 @@ end
 local function cooldownTrigger(category, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
-    elseif (event == NS.UNIT_SPELLCAST_SUCCEEDED) then
+    elseif (event == addon.UNIT_SPELLCAST_SUCCEEDED) then
         local unitTarget, _, spellID = ...
         if (not unitTarget) then return end
 
@@ -350,14 +350,14 @@ local function cooldownTrigger(category, allstates, event, ...)
             allstates[guid] = makeTriggerState(spell, spellID, spell.cooldown, unitTarget)
             return true
         end
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+    elseif (event == addon.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...)
         -- Return if no valid target
         if (not sourceGUID) then return end
 
         -- Check if this is a reset spell
         local reset = spellResets[spellID]
-        if reset and (subEvent == NS.SPELL_CAST_SUCCESS) then
+        if reset and (subEvent == addon.SPELL_CAST_SUCCESS) then
             return checkResetSpell(allstates, sourceGUID, reset)
         end
 
@@ -366,7 +366,7 @@ local function cooldownTrigger(category, allstates, event, ...)
         if (not spell) or (spell.category ~= category) or (not spell.cooldown) then return end
         if checkSpellEnabled(spell, subEvent, sourceGUID) then
             local guid = concatGUID(sourceGUID, spellID)
-            local unit = NS.arenaUnitId(sourceGUID)
+            local unit = addon.arenaUnitId(sourceGUID)
             return checkCooldownOptions(allstates, guid, spell, spellID, unit)
         end
     end
@@ -380,14 +380,14 @@ end
 local function cooldownTriggerSingleSpell(specialSpellID, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+    elseif (event == addon.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...)
         if (not sourceGUID) then return end
 
         local spell = spellData[specialSpellID]
 
         -- Check if there is a current spell to reduce
-        if spell.reduce_power_type and (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == NS.SPELL_CAST_SUCCESS then
+        if spell.reduce_power_type and (spellID ~= specialSpellID) and allstates[sourceGUID] and subEvent == addon.SPELL_CAST_SUCCESS then
             local cost = GetSpellPowerCost(spellID)
             if (cost and cost[1] and cost[1].type == spell.reduce_power_type) then
                 if spell.reduce_type == "fixed" then
@@ -401,7 +401,7 @@ local function cooldownTriggerSingleSpell(specialSpellID, allstates, event, ...)
             end
         elseif (spellID == specialSpellID) then
             if checkSpellEnabled(spell, subEvent, sourceGUID) then
-                local unit = NS.arenaUnitId(sourceGUID)
+                local unit = addon.arenaUnitId(sourceGUID)
                 return checkCooldownOptions(allstates, sourceGUID, spell, spellID, unit)
             end
         end
@@ -437,19 +437,19 @@ BoopUtilsWA.Triggers.CooldownCombust = function (allstates, event, ...)
 
         if (spellID == specialSpellID and checkSpellEnabled(spell, subEvent, sourceGUID)) then
             -- Start cd timer (since this is single spell, just use sourceGUID)
-            local unitId = NS.arenaUnitId(sourceGUID)
+            local unitId = addon.arenaUnitId(sourceGUID)
             allstates[sourceGUID] = makeTriggerState(spell, specialSpellID, spell.cooldown, unitId)
             return true
         elseif allstates[sourceGUID] then -- There is a combustion on cooldown, check if we want to reduce it
             local state = allstates[sourceGUID]
-            if (subEvent == NS.SPELL_CAST_SUCCESS) then
+            if (subEvent == addon.SPELL_CAST_SUCCESS) then
                 local resets = spell.resets
                 if resets[spellID] then
                     state.expirationTime = state.expirationTime - resets[spellID]
                     state.changed = true
                     return true
                 end
-            elseif (subEvent == NS.SPELL_DAMAGE) then
+            elseif (subEvent == addon.SPELL_DAMAGE) then
                 local critResets = spell.critResets
                 for i = 1, #critResets do
                     if (spellID == critResets[i]) or (spellName == critResets[i]) then
@@ -471,7 +471,7 @@ end
 local function GlowForSpell (specialSpellID, allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
-    elseif (event == NS.COMBAT_LOG_EVENT_UNFILTERED) then
+    elseif (event == addon.COMBAT_LOG_EVENT_UNFILTERED) then
         local subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID = select(2, ...)
         -- We only care about this one spellID
         if (spellID ~= specialSpellID) then return end
@@ -481,7 +481,7 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
         local spell = spellData[specialSpellID]
 
         -- Check if an aura ended early
-        if (subEvent == NS.SPELL_AURA_REMOVED) then
+        if (subEvent == addon.SPELL_AURA_REMOVED) then
             if allstates[sourceGUID] then
                 local state = allstates[sourceGUID]
                 state.show = false
@@ -489,7 +489,7 @@ local function GlowForSpell (specialSpellID, allstates, event, ...)
                 return true
             end
         elseif checkSpellEnabled(spell, subEvent, sourceGUID) then
-                local unitId = NS.arenaUnitId(sourceGUID)
+                local unitId = addon.arenaUnitId(sourceGUID)
                 allstates[sourceGUID] = makeTriggerState(spell, spellID, spell.duration or glowOnActivationDuration, unitId)
                 return true
         end
@@ -510,9 +510,9 @@ end
 BoopUtilsWA.Triggers.DR = function(category, trackUnit, allstates, event, ...)
     local destGUID, _, _, _, spellID = select(8, ...)
     if ( not destGUID ) then return end
-    if ( NS.diminishingReturnSpells[spellID] == category ) then
-        local partyUnitId = NS.partyUnitId(destGUID)
-        if NS.validateUnitForDR(partyUnitId, trackUnit) then
+    if ( addon.diminishingReturnSpells[spellID] == category ) then
+        local partyUnitId = addon.partyUnitId(destGUID)
+        if addon.validateUnitForDR(partyUnitId, trackUnit) then
             local durationDR = 15
             local stacksNew = 1 + ( (allstates[destGUID] and allstates[destGUID].stacks) or 0 )
             allstates[destGUID] = {
@@ -536,7 +536,7 @@ BoopUtilsWA.AttachToArenaFrameByUnitId = function (frames, activeRegions)
     for _, regionData in ipairs(activeRegions) do
         local unitId = regionData.region.state and regionData.region.state.unit
         if ( not unitId ) then return end
-        local frame = NS.findArenaFrameForUnitId(unitId)
+        local frame = addon.findArenaFrameForUnitId(unitId)
         if frame then
             frames[frame] = frames[frame] or {}
             tinsert(frames[frame], regionData)
@@ -548,7 +548,7 @@ BoopUtilsWA.AttachToRaidFrameByUnitId = function (frames, activeRegions)
     for _, regionData in ipairs(activeRegions) do
         local unitId = regionData.region.state and regionData.region.state.unit
         if ( not unitId ) then return end
-        local frame = NS.findRaidFrameForUnitId(unitId)
+        local frame = addon.findRaidFrameForUnitId(unitId)
         if frame then
             frames[frame] = frames[frame] or {}
             tinsert(frames[frame], regionData)
@@ -560,18 +560,18 @@ end
 BoopUtilsWA.Triggers.Totem = function (allstates, event, ...)
     if resetAllStates(allstates, event) then
         return true
-    elseif ( event == NS.COMBAT_LOG_EVENT_UNFILTERED ) then
+    elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
         local subEvent, _, sourceGUID, _, _, _, destGUID = select(2, ...)
-        if ( subEvent == NS.SPELL_SUMMON ) then
-            if NS.isGUIDArena(sourceGUID) then
+        if ( subEvent == addon.SPELL_SUMMON ) then
+            if addon.isGUIDArena(sourceGUID) then
                 local npcID = getNpcIdFromGuid(destGUID)
                 local spell = spellData[npcID]
                 if ( not spell ) then return end
-                local unitId = NS.arenaUnitId(sourceGUID)
+                local unitId = addon.arenaUnitId(sourceGUID)
                 allstates[destGUID] = makeTriggerState(spell, spell.spellID, spell.duration, unitId)
                 return true
             end
-        elseif ( subEvent == NS.UNIT_DIED ) then
+        elseif ( subEvent == addon.UNIT_DIED ) then
             if allstates[destGUID] then
                 allstates[destGUID].show = false
                 allstates[destGUID].changed = true
@@ -605,14 +605,14 @@ local arenaInfo = {
 }
 
 local arenaInfoFrame = CreateFrame('Frame')
-arenaInfoFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
-arenaInfoFrame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
-arenaInfoFrame:RegisterEvent(NS.PLAYER_SPECIALIZATION_CHANGED)
+arenaInfoFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD)
+arenaInfoFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
+arenaInfoFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED)
 arenaInfoFrame:SetScript("OnEvent", function (self, event, ...)
     local reset = false
-    if ( event == NS.PLAYER_ENTERING_WORLD ) or ( event == NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
+    if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
         reset = true
-    elseif ( event == NS.PLAYER_SPECIALIZATION_CHANGED ) then
+    elseif ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
         local unitTarget = ...
         reset = ( unitTarget == "player" )
     end
@@ -680,13 +680,13 @@ local function arenaUnitGUID(unitId, index)
 end
 
 -- Caller ensures unitGUID is not nil
-NS.isGUIDArena = function(unitGUID)
+addon.isGUIDArena = function(unitGUID)
     if isTestMode then
         -- updateArenaInfo called by arenaUnitGUID
         return (unitGUID == arenaUnitGUID("player", 0))
     end
 
-    for i = 1, NS.MAX_ARENA_SIZE do
+    for i = 1, addon.MAX_ARENA_SIZE do
         if (unitGUID == arenaUnitGUID("arena"..i, i)) then
             -- updateArenaInfo called by arenaUnitGUID
             return true
@@ -694,17 +694,17 @@ NS.isGUIDArena = function(unitGUID)
     end
 end
 
-NS.arenaUnitId = function (unitGUID)
+addon.arenaUnitId = function (unitGUID)
     if ( not arenaInfo.unitId[unitGUID] ) then
-        NS.isGUIDArena(unitGUID)
+        addon.isGUIDArena(unitGUID)
     end
 
     return arenaInfo.unitId[unitGUID]
 end
 
-NS.arenaSpec = function (unitGUID)
+addon.arenaSpec = function (unitGUID)
     if ( not arenaInfo.spec[unitGUID] ) then
-        NS.isGUIDArena(unitGUID)
+        addon.isGUIDArena(unitGUID)
     end
 
     return arenaInfo.spec[unitGUID]
@@ -712,7 +712,7 @@ end
 
 -- Caller ensures unitId is not nil
 -- Call this before getting any info based on unitId
-NS.isUnitArena = function(unitId)
+addon.isUnitArena = function(unitId)
     if isTestMode then
         if ( unitId == "player" ) then
             updateArenaInfo(unitId, 0)
@@ -722,7 +722,7 @@ NS.isUnitArena = function(unitId)
         end
     end
 
-    for i = 1, NS.MAX_ARENA_SIZE do
+    for i = 1, addon.MAX_ARENA_SIZE do
         if (unitId == "arena"..i) then
             updateArenaInfo(unitId, i)
             return true
@@ -730,28 +730,28 @@ NS.isUnitArena = function(unitId)
     end
 end
 
-NS.arenaUnitSpec = function (unitId)
+addon.arenaUnitSpec = function (unitId)
     return arenaInfo.unitSpec[unitId]
 end
 
-NS.arenaUnitClass = function(unitId)
+addon.arenaUnitClass = function(unitId)
     return arenaInfo.unitClass[unitId]
 end
 
-NS.arenaUnitRace = function(unitId)
+addon.arenaUnitRace = function(unitId)
     return arenaInfo.unitRace[unitId]
 end
 
-NS.arenaSpellChargeExpire = function (guid)
+addon.arenaSpellChargeExpire = function (guid)
     return arenaInfo.spellChargeExpire[guid]
 end
-NS.setArenaSpellChargeExpire = function (guid, value)
+addon.setArenaSpellChargeExpire = function (guid, value)
     arenaInfo.spellChargeExpire[guid] = value
 end
 
-NS.arenaOptLowerCooldown = function (guid)
+addon.arenaOptLowerCooldown = function (guid)
     return arenaInfo.optLowerCooldown[guid]
 end
-NS.setArenaOptLowerCooldown = function (guid, value)
+addon.setArenaOptLowerCooldown = function (guid, value)
     arenaInfo.optLowerCooldown[guid] = value
 end

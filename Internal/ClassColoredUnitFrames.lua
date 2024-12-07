@@ -1,4 +1,4 @@
-local addonName, NS = ...;
+local addonName, addon = ...;
 
 local CreateFrame = CreateFrame;
 local RAID_CLASS_COLORS = RAID_CLASS_COLORS;

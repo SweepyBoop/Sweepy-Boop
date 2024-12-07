@@ -5,7 +5,7 @@
 
 -- Try leveraging SetPoint to modify the positions of CompactPartyFrames
 
-local _, NS = ...;
+local _, addon = ...;
 
 local UnitIsUnit = UnitIsUnit;
 local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP;
@@ -58,9 +58,9 @@ local function Compare_Mid(left, right)
 end
 
 local sortFunctions = {
-    [NS.RaidFrameSortOrder.PlayerTop] = Compare_Top,
-    [NS.RaidFrameSortOrder.PlayerBottom] = Compare_Bottom,
-    [NS.RaidFrameSortOrder.PlayerMiddle] = Compare_Mid,
+    [addon.RaidFrameSortOrder.PlayerTop] = Compare_Top,
+    [addon.RaidFrameSortOrder.PlayerBottom] = Compare_Bottom,
+    [addon.RaidFrameSortOrder.PlayerMiddle] = Compare_Mid,
 };
 
 local function GetPartyUnitId(unitId)
@@ -111,12 +111,12 @@ local function TrySort()
 end
 
 local function OnEvent(_, event)
-    if (SweepyBoop.db.profile.arenaRaidFrameSortOrder == NS.RaidFrameSortOrder.Disabled) then return end
+    if (SweepyBoop.db.profile.arenaRaidFrameSortOrder == addon.RaidFrameSortOrder.Disabled) then return end
     if ( not IsActiveBattlefieldArena() ) then return end -- only sort in arena
     if ( not IsInGroup() ) then return end
 
     -- Do we need to skip when EditModeManagerFrame.editModeActive is true?
-    if (event == NS.PLAYER_REGEN_ENABLED) and sortPending then
+    if (event == addon.PLAYER_REGEN_ENABLED) and sortPending then
         TrySort();
     else
         TrySort();
@@ -125,7 +125,7 @@ end
 
 local eventFrame = CreateFrame("Frame");
 eventFrame:HookScript("OnEvent", OnEvent);
-eventFrame:RegisterEvent(NS.GROUP_ROSTER_UPDATE);
-eventFrame:RegisterEvent(NS.UNIT_PET);
-eventFrame:RegisterEvent(NS.PLAYER_REGEN_ENABLED);
-eventFrame:RegisterEvent(NS.PLAYER_ENTERING_WORLD);
+eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+eventFrame:RegisterEvent(addon.UNIT_PET);
+eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
+eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);

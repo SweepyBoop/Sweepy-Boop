@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local IsActionInRange = IsActionInRange;
 local RANGE_INDICATOR = RANGE_INDICATOR;
@@ -96,7 +96,7 @@ SLASH_HIDEHOTKEYHHK1 = "/hhk"
 SlashCmdList["HIDEHOTKEYHHK"] = HideHotKeys
 
 local frame = CreateFrame("Frame")
-frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
+frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD)
 frame:SetScript("OnEvent", function ()
     HideHotKeys()
 end)

@@ -1,4 +1,4 @@
-local _, NS = ...
+local _, addon = ...
 
 BoopNameplateFilter = {}
 
@@ -34,7 +34,7 @@ local NameplateWhiteList = {
 }
 
 local function IsInWhiteList(unitId, npcID)
-    NameplateWhiteList["Tremor Totem"] = NS.partyWithFearSpell()
+    NameplateWhiteList["Tremor Totem"] = addon.partyWithFearSpell()
     if ( npcID and NameplateWhiteList[npcID] ) then
         return true
     else
@@ -45,11 +45,11 @@ end
 
 local function IsPrimaryPetClass(unitId)
     local class = GetUnitClass(unitId)
-    return ( class == NS.classId.Hunter ) or ( class == NS.classId.Warlock ) or ( class == NS.classId.Shaman )
+    return ( class == addon.classId.Hunter ) or ( class == addon.classId.Warlock ) or ( class == addon.classId.Shaman )
 end
 
 local function IsArenaPrimaryPet(unitId)
-    for i = 1, NS.MAX_ARENA_SIZE do
+    for i = 1, addon.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
             return IsPrimaryPetClass("arena" .. i)
         end
@@ -89,7 +89,7 @@ local function ShouldHideHealthBar(unitId)
 end
 
 local function ArenaNumber(unitFrame, unitId)
-    for i = 1, NS.MAX_ARENA_SIZE do
+    for i = 1, addon.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arena"..i) then
             unitFrame.unitName:SetText(i)
             unitFrame.unitName:SetTextColor(1,1,0) --Yellow

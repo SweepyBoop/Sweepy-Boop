@@ -1,6 +1,6 @@
 ## Interface: 110005
 ## Title: SweepyBoop's Arena Helper
-## Author: Kun
+## Author: SweepyBoop
 ## Version: @project-version@
 ## SavedVariables: SweepyBoopDB
 ## OptionalDeps: Ace3
@@ -18,25 +18,31 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 # Constants
 Constants.lua
-CooldownTracking\ArenaEnemyBurstSpells.lua
-CooldownTracking\CooldownSpells.lua
+ArenaFrames\ArenaEnemyBurstSpells.lua
+ArenaFrames\CooldownSpells.lua
 
-# Publish
+# Common
 Core.lua
 UnitInfoHelpers.lua
-IconGroupUtil.lua
-IconTemplates.lua
-ClassAndPetIcons.lua
-SortGroup.lua
-FixBlizzardRaidAggro.lua
-ArenaSurrender.lua
+
+# Nameplates
+Nameplates\Nameplates.lua
+
+# Misc
+Misc\ArenaSurrender.lua
+
+# Raid frames
+RaidFrames\SortGroup.lua
+RaidFrames\FixBlizzardRaidAggro.lua
 
 # Simple Cooldown Tracking
-CooldownTracking\CooldownTracking.xml
-CooldownTracking\CooldownTrackingTemplates.lua
-CooldownTracking\CooldownTracking.lua
-CooldownTracking\ArenaEnemyBurstTemplates.lua
-CooldownTracking\ArenaEnemyBurst.lua
+ArenaFrames\IconGroupUtil.lua
+ArenaFrames\IconTemplates.lua
+ArenaFrames\CooldownTracking.xml
+ArenaFrames\CooldownTrackingTemplates.lua
+ArenaFrames\CooldownTracking.lua
+ArenaFrames\ArenaEnemyBurstTemplates.lua
+ArenaFrames\ArenaEnemyBurst.lua
 
 
 

@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 SlashCmdList["CHAT_AFK"] = function(msg)
 	if IsActiveBattlefieldArena() and SweepyBoop.db.profile.arenaSurrenderEnabled then

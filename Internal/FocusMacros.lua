@@ -1,4 +1,4 @@
-local _, NS = ...;
+local _, addon = ...;
 
 local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
 local GetArenaOpponentSpec = GetArenaOpponentSpec;
@@ -14,7 +14,7 @@ local C_Timer = C_Timer;
 local classAbilities = {}
 local macroPrefixes = {}
 
-classAbilities[NS.DRUID] = {
+classAbilities[addon.DRUID] = {
     "Cyclone",
     "Entangling Roots",
     "Hibernate",
@@ -29,14 +29,14 @@ classAbilities[NS.DRUID] = {
 macroPrefixes["Rake"] = "#showtooltip no\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
 macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@";
 
-classAbilities[NS.PRIEST] = {
+classAbilities[addon.PRIEST] = {
     "Shadow Word: Pain",
     "Mind Control",
     "Mindgames",
     "Dispel Magic",
 };
 
-classAbilities[NS.PALADIN] = {
+classAbilities[addon.PALADIN] = {
     "Hammer of Justice",
     "Repentance",
     "Hand of Reckoning",
@@ -50,7 +50,7 @@ local function GetFocusName()
     if isArena then
         local roles = {}
 
-        for i = 1, NS.MAX_ARENA_SIZE do
+        for i = 1, addon.MAX_ARENA_SIZE do
             local spec = GetArenaOpponentSpec(i)
             if spec then
                 roles[i] = select(5, GetSpecializationInfoByID(spec))
@@ -62,7 +62,7 @@ local function GetFocusName()
         end
 
         -- Healer is not found, find a tank
-        for i = 1, NS.MAX_ARENA_SIZE do
+        for i = 1, addon.MAX_ARENA_SIZE do
             if roles[i] and ( roles[i] ~= "DAMAGER" ) then
                 return "arena" .. i
             end
@@ -149,8 +149,8 @@ local function TryUpdateMacros()
 end
 
 local frame = CreateFrame("Frame")
-frame:RegisterEvent(NS.PLAYER_ENTERING_WORLD)
-frame:RegisterEvent(NS.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
+frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD)
+frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
     TryUpdateMacros()
 end)
