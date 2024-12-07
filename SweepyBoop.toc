@@ -18,25 +18,25 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 # Constants
 Constants.lua
-CooldownTracking\ArenaEnemyBurstSpells.lua
-CooldownTracking\CooldownSpells.lua
+ArenaFrames\ArenaEnemyBurstSpells.lua
+ArenaFrames\CooldownSpells.lua
 
 # Publish
 Core.lua
 UnitInfoHelpers.lua
 IconGroupUtil.lua
 IconTemplates.lua
-ClassAndPetIcons.lua
+Nameplates.lua
 SortGroup.lua
 FixBlizzardRaidAggro.lua
 ArenaSurrender.lua
 
 # Simple Cooldown Tracking
-CooldownTracking\CooldownTracking.xml
-CooldownTracking\CooldownTrackingTemplates.lua
-CooldownTracking\CooldownTracking.lua
-CooldownTracking\ArenaEnemyBurstTemplates.lua
-CooldownTracking\ArenaEnemyBurst.lua
+ArenaFrames\CooldownTracking.xml
+ArenaFrames\CooldownTrackingTemplates.lua
+ArenaFrames\CooldownTracking.lua
+ArenaFrames\ArenaEnemyBurstTemplates.lua
+ArenaFrames\ArenaEnemyBurst.lua
 
 
 
