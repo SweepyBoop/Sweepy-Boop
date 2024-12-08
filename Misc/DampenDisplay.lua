@@ -18,7 +18,7 @@ frame:SetScript("OnEvent", function(self, ...)
     if instanceType == "arena" then
         self:Show();
     else
-        self:Show();
+        self:Hide();
     end
 end);
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
