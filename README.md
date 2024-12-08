@@ -92,6 +92,7 @@ For this module to work, disable the following setting under Interface settings 
 
 ## Dampen display inside arena
 Shows the dampening percentage under the remaining time on the arena widget:
+
 ![image](https://github.com/user-attachments/assets/329aa2b9-2a5e-4239-b40a-f68d90f8971b)
 
 
