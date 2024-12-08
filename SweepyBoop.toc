@@ -30,6 +30,7 @@ Nameplates\Nameplates.lua
 
 # Misc
 Misc\ArenaSurrender.lua
+Misc\DampenDisplay.lua
 
 # Raid frames
 RaidFrames\SortGroup.lua
