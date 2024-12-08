@@ -315,9 +315,10 @@ options.args.Misc = {
             name = addon.exclamation .. addon.exclamation .. addon.exclamation ..  "Leaving arena without entering combat results in deserter status",
         },
 
-        header1 = {
+        header2 = {
             order = 5,
             type = "header",
+            name = "",
         },
         showDampenPercentage = {
             order = 6,
