@@ -12,22 +12,10 @@ local dampeningText = C_Spell.GetSpellInfo(110310).name; -- This doesn't change 
 local updateInterval = 1; -- We don't need to update on every UNIT_AURA, just update every 1 sec via keeping track of timeSinceLastUpdate
 
 frame.timeSinceLastUpdate = 0;
-frame:SetScript("OnEvent", function(self, event, ...) self[event](self, ...) end);
-
-function frame:OnUpdate(elapsed)
-    if ( not SweepyBoop.db.profile.showDampenPercentage ) then return end
-
-    self.timeSinceLastUpdate = self.timeSinceLastUpdate + elapsed;
-
-    if self.timeSinceLastUpdate > updateInterval then
-        self.text:SetText(dampeningText..': ' .. C_Commentator.GetDampeningPercent() .. '%');
-        self.timeSinceLastUpdate = 0;
-    end
-end
-
-function frame:PLAYER_ENTERING_WORLD()
+frame:SetScript("OnEvent", function(self, ...) 
     if ( not SweepyBoop.db.profile.showDampenPercentage ) then
         self:Hide();
+        return;
     end
 
     local _, instanceType = IsInInstance();
@@ -36,4 +24,17 @@ function frame:PLAYER_ENTERING_WORLD()
     else
         self:Hide();
     end
-end
+end);
+frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+
+frame:SetScript('OnUpdate', function(self, elapsed)
+    if ( not SweepyBoop.db.profile.showDampenPercentage ) then
+        return;
+    end
+
+    self.timeSinceLastUpdate = self.timeSinceLastUpdate + elapsed;
+    if self.timeSinceLastUpdate > updateInterval then
+        self.Text:SetText(dampeningText..': ' .. C_Commentator.GetDampeningPercent() .. '%');
+        self.timeSinceLastUpdate = 0;
+    end
+end)

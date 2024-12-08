@@ -63,6 +63,7 @@ addon.PARTY_KILL = "PARTY_KILL";
 addon.SPELL_DISPEL = "SPELL_DISPEL";
 addon.SPELL_INTERRUPT = "SPELL_INTERRUPT";
 addon.SPELL_EMPOWER_END = "SPELL_EMPOWER_END";
+addon.OnUpdate = "OnUpdate";
 
 -- classFileName constants
 addon.DEATHKNIGHT = "DEATHKNIGHT";
