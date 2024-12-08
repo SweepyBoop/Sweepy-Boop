@@ -288,7 +288,7 @@ options.args.Misc = {
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
     set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
-        header = {
+        header1 = {
             order = 1,
             type = "header",
             name = "Type /afk to surrender arena",
@@ -314,6 +314,18 @@ options.args.Misc = {
             type = "description",
             name = addon.exclamation .. addon.exclamation .. addon.exclamation ..  "Leaving arena without entering combat results in deserter status",
         },
+
+        header2 = {
+            order = 5,
+            type = "header",
+            name = "",
+        },
+        showDampenPercentage = {
+            order = 6,
+            width = "full",
+            type = "toggle",
+            name = "Show dampen percentage on the arena widget",
+        },
     },
 };
 
@@ -338,6 +350,7 @@ local defaults = {
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
         skipLeaveArenaConfirmation = false,
+        showDampenPercentage = true,
     }
 };
 
