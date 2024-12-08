@@ -217,9 +217,9 @@ if test then
 end
 
 local categoryIcon = {
-    ["stun"] = select(3, GetSpellInfo(1833)), -- Cheap Shot
-    ["disorient"] = select(3, GetSpellInfo(5782)), -- Fear
-    ["incapacitate"] = select(3, GetSpellInfo(118)), -- Polymorph
+    ["stun"] = C_Spell.GetSpellTexture(1833), -- Cheap Shot
+    ["disorient"] = C_Spell.GetSpellTexture(5782), -- Fear
+    ["incapacitate"] = C_Spell.GetSpellTexture(118), -- Polymorph
 };
 
 local categoryPriority = {
