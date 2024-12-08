@@ -8,10 +8,6 @@ frame:SetWidth(200);
 frame.Text:SetAllPoints();
 frame.Text:SetJustifyH("CENTER");
 
-local dampeningText = C_Spell.GetSpellInfo(110310).name; -- This doesn't change so set it as constant
-local updateInterval = 1; -- We don't need to update on every UNIT_AURA, just update every 1 sec via keeping track of timeSinceLastUpdate
-
-frame.timeSinceLastUpdate = 0;
 frame:SetScript("OnEvent", function(self, ...) 
     if ( not SweepyBoop.db.profile.showDampenPercentage ) then
         self:Hide();
@@ -22,13 +18,18 @@ frame:SetScript("OnEvent", function(self, ...)
     if instanceType == "arena" then
         self:Show();
     else
-        self:Hide();
+        self:Show();
     end
 end);
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 
+local dampeningText = C_Spell.GetSpellInfo(110310).name; -- This doesn't change so set it as constant
+local updateInterval = 1; -- We don't need to update on every UNIT_AURA, just update every 1 sec via keeping track of timeSinceLastUpdate
+frame.timeSinceLastUpdate = 0;
 frame:SetScript('OnUpdate', function(self, elapsed)
+    -- This callback is not triggered whlie frame is hidden outside of arena, so no concern on perf
     if ( not SweepyBoop.db.profile.showDampenPercentage ) then
+        self:Hide(); -- Once hidden, this callback will no longer trigger
         return;
     end
 
