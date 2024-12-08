@@ -1,5 +1,5 @@
 # SweepyBoop's Arena Helper
-A _lightweight_ addon to support arena gameplay.
+An _extremely_ _lightweight_ addon to support arena gameplay.
 
 Here is an overall image of the UI:
 ![image](https://user-images.githubusercontent.com/78008331/226146638-ecd2f9d5-2276-4dbb-925f-157ff4e3a955.png)
