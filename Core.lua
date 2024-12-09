@@ -384,6 +384,7 @@ local defaults = {
             arenaNumbersEnabled = true,
             arenaNumbersHealerHighlight = true,
             filterEnabled = true,
+            filterList = {},
         },
         arenaCooldownOffsetX = 5,
         arenaCooldownOffsetY = 0,
