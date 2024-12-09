@@ -352,7 +352,7 @@ function SweepyBoop:SetupNameplateModules()
                         
                         if isHealer then
                             frame.name:SetText("*" .. i .. "*");
-                            frame.name:SetFontObject(GameFontHighlightLarge);
+                            frame.name:SetFontObject(GameFontHighlightHuge);
                         else
                             frame.name:SetText(i);
                             frame.name:SetFontObject(GameFontNormal);
