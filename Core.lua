@@ -169,7 +169,8 @@ options.args.NamePlates = {
                     order = 3,
                     width = "full",
                     type = "toggle",
-                    name = "Bigger name for healers",
+                    name = "Highlight healers",
+                    desc = "Bigger font and marker for healers",
                 },
 
                 breaker = {
@@ -184,16 +185,22 @@ options.args.NamePlates = {
                     width = "full",
                     name = "Enabled",
                 },
-                header = {
+                filterList = {
                     order = 6,
-                    type = "header",
-                    name = "Unit list",
-                },
+                    type = "group",
+                    name = "Filter list",
+                    get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
+                    set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
+                    hidden = function()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                    end
+                }
             },
         },
     },        
 };
 
+addon.AppendNpcOptionsToGroup(options.args.NamePlates.args.enemy.args.filterList);
 
 options.args.ArenaFrames = {
     order = 7,

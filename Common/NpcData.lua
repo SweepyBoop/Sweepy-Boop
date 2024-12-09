@@ -9,63 +9,85 @@ addon.NpcOption = {
 
 addon.importantNpcList = {
     -- Unknown
-    [225672] = { icon = C_Spell.GetSpellTexture(8122), default = addon.NpcOption.Show }, -- Shadow
+    [225672] = { name = "Shadow", icon = C_Spell.GetSpellTexture(8122), default = addon.NpcOption.Show },
 
     -- DK
-    [106041] = { icon = C_Spell.GetSpellTexture(210128), default = addon.NpcOption.Highlight }, -- Reanimation (stuns for 3s and takes 10% HP)
+    [106041] = { name = "Reanimation", icon = C_Spell.GetSpellTexture(210128), default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
 
     -- Shaman
-    [59764] = { icon = C_Spell.GetSpellTexture(108280), default = addon.NpcOption.Highlight }, -- Healing Tide Totem
-    [5925] = { icon = C_Spell.GetSpellTexture(204336), default = addon.NpcOption.Highlight }, -- Grounding Totem
-    [53006] = { icon = C_Spell.GetSpellTexture(98008), default = addon.NpcOption.Highlight }, -- Spirit Link Totem
-    [5913] = { icon = C_Spell.GetSpellTexture(8143), default = addon.NpcOption.Highlight }, -- Tremor Totem
-    [104818] = { icon = C_Spell.GetSpellTexture(207399), default = addon.NpcOption.Highlight }, -- Ancestral Protection Totem
-    [61245] = { icon = C_Spell.GetSpellTexture(192058), default = addon.NpcOption.Show }, -- Capacitor Totem (there is a cast bar already, no need to highlight)
-    [105451] = { icon = C_Spell.GetSpellTexture(204331), default = addon.NpcOption.Highlight }, -- Counterstrike Totem
-    [100943] = { icon = C_Spell.GetSpellTexture(198838), default = addon.NpcOption.Show }, -- Earthen Wall Totem (hard to kill, just try to fight outside of its range)
-    [59712] = { icon = C_Spell.GetSpellTexture(108270), default = addon.NpcOption.Show }, -- Stone Bulwark Totem (hard to kill)
-    [3527] = { icon = C_Spell.GetSpellTexture(5394), default = addon.NpcOption.Hide }, -- Healing Stream Totem
-    [78001] = { icon = C_Spell.GetSpellTexture(157153), default = addon.NpcOption.Hide }, -- Cloudburst Totem
-    [10467] = { icon = C_Spell.GetSpellTexture(16191), default = addon.NpcOption.Hide }, -- Mana Tide Totem
-    [97285] = { icon = C_Spell.GetSpellTexture(192077), default = addon.NpcOption.Hide }, -- Wind Rush Totem
-    [60561] = { icon = C_Spell.GetSpellTexture(51485), default = addon.NpcOption.Show }, -- Earthgrab Totem (gets players out of stealth)
-    [2630] = { icon = C_Spell.GetSpellTexture(2484), default = addon.NpcOption.Hide }, -- Earthbind Totem
-    [105427] = { icon = C_Spell.GetSpellTexture(204330), default = addon.NpcOption.Highlight }, -- Totem of Wrath (Skyfury Totem)
-    [97369] = { icon = C_Spell.GetSpellTexture(192222), default = addon.NpcOption.Hide }, -- Liquid Magma Totem
-    [179867] = { icon = C_Spell.GetSpellTexture(355580), default = addon.NpcOption.Show }, -- Static Field Totem
-    [194117] = { icon = C_Spell.GetSpellTexture(383017), default = addon.NpcOption.Show }, -- Stoneskin Totem
-    [5923] = { icon = C_Spell.GetSpellTexture(383013), default = addon.NpcOption.Show }, -- Poison Cleansing Totem
-    [194118] = { icon = C_Spell.GetSpellTexture(383019), default = addon.NpcOption.Show }, -- Tranquil Air Totem
-    [225409] = { icon = C_Spell.GetSpellTexture(444995), default = addon.NpcOption.Show }, -- Tranquil Air Totem
-    [95061] = { icon = C_Spell.GetSpellTexture(198067), default = addon.NpcOption.Show }, -- Greater Fire Elemental
-    [61029] = { icon = C_Spell.GetSpellTexture(198067), default = addon.NpcOption.Show }, -- Primal Fire Elemental
+    [59764] = { name = "Healing Tide Totem", icon = C_Spell.GetSpellTexture(108280), default = addon.NpcOption.Highlight },
+    [5925] = { name = "Grounding Totem", icon = C_Spell.GetSpellTexture(204336), default = addon.NpcOption.Highlight },
+    [53006] = { name = "Spirit Link Totem", icon = C_Spell.GetSpellTexture(98008), default = addon.NpcOption.Highlight },
+    [5913] = { name = "Tremor Totem", icon = C_Spell.GetSpellTexture(8143), default = addon.NpcOption.Highlight },
+    [104818] = { name = "Ancestral Protection Totem", icon = C_Spell.GetSpellTexture(207399), default = addon.NpcOption.Highlight },
+    [61245] = { name = "Capacitor Totem", icon = C_Spell.GetSpellTexture(192058), default = addon.NpcOption.Show },
+    [105451] = { name = "Counterstrike Totem", icon = C_Spell.GetSpellTexture(204331), default = addon.NpcOption.Highlight },
+    [100943] = { name = "Earthen Wall Totem", icon = C_Spell.GetSpellTexture(198838), default = addon.NpcOption.Show }, -- hard to kill, just try to fight outside of its range
+    [59712] = { name = "Stone Bulwark Totem", icon = C_Spell.GetSpellTexture(108270), default = addon.NpcOption.Show }, -- hard to kill
+    [3527] = { name = "Healing Stream Totem", icon = C_Spell.GetSpellTexture(5394), default = addon.NpcOption.Hide },
+    [78001] = { name = "Cloudburst Totem", icon = C_Spell.GetSpellTexture(157153), default = addon.NpcOption.Hide },
+    [10467] = { name = "Mana Tide Totem", icon = C_Spell.GetSpellTexture(16191), default = addon.NpcOption.Hide },
+    [97285] = { name = "Wind Rush Totem", icon = C_Spell.GetSpellTexture(192077), default = addon.NpcOption.Hide },
+    [60561] = { name = "Earthgrab Totem", icon = C_Spell.GetSpellTexture(51485), default = addon.NpcOption.Show }, -- gets players out of stealth
+    [2630] = { name = "Earthbind Totem", icon = C_Spell.GetSpellTexture(2484), default = addon.NpcOption.Hide },
+    [105427] = { name = "Totem of Wrath", icon = C_Spell.GetSpellTexture(204330), default = addon.NpcOption.Highlight },
+    [97369] = { name = "Liquid Magma Totem", icon = C_Spell.GetSpellTexture(192222), default = addon.NpcOption.Hide },
+    [179867] = { name = "Static Field Totem", icon = C_Spell.GetSpellTexture(355580), default = addon.NpcOption.Show },
+    [194117] = { name = "Stoneskin Totem", icon = C_Spell.GetSpellTexture(383017), default = addon.NpcOption.Show },
+    [5923] = { name = "Poison Cleansing Totem", icon = C_Spell.GetSpellTexture(383013), default = addon.NpcOption.Show },
+    [194118] = { name = "Tranquil Air Totem", icon = C_Spell.GetSpellTexture(383019), default = addon.NpcOption.Show },
+    [225409] = { name = "Tranquil Air Totem", icon = C_Spell.GetSpellTexture(444995), default = addon.NpcOption.Show },
+    [95061] = { name = "Greater Fire Elemental", icon = C_Spell.GetSpellTexture(198067), default = addon.NpcOption.Show },
+    [61029] = { name = "Primal Fire Elemental", icon = C_Spell.GetSpellTexture(198067), default = addon.NpcOption.Show },
 
     -- Warrior
-    [119052] = { icon = C_Spell.GetSpellTexture(236320), default = addon.NpcOption.Highlight }, -- War Banner
+    [119052] = { name = "War Banner", icon = C_Spell.GetSpellTexture(236320), default = addon.NpcOption.Highlight },
 
     -- Priest
-    [101398] = { icon = C_Spell.GetSpellTexture(199824), default = addon.NpcOption.Highlight }, -- Psyfiend
-    [224466] = { icon = C_Spell.GetSpellTexture(451234), default = addon.NpcOption.Show }, -- Voidwraith
-    [62982] = { icon = C_Spell.GetSpellTexture(123040), default = addon.NpcOption.Hide }, -- Mindbender
-    [19668] = { icon = C_Spell.GetSpellTexture(34433), default = addon.NpcOption.Hide }, -- Shadowfiend
-    [65282] = { icon = C_Spell.GetSpellTexture(108920), default = addon.NpcOption.Show }, -- Void Tendrils
+    [101398] = { name = "Psyfiend", icon = C_Spell.GetSpellTexture(199824), default = addon.NpcOption.Highlight },
+    [224466] = { name = "Voidwraith", icon = C_Spell.GetSpellTexture(451234), default = addon.NpcOption.Show },
+    [62982] = { name = "Mindbender", icon = C_Spell.GetSpellTexture(123040), default = addon.NpcOption.Hide },
+    [19668] = { name = "Shadowfiend", icon = C_Spell.GetSpellTexture(34433), default = addon.NpcOption.Hide },
+    [65282] = { name = "Void Tendrils", icon = C_Spell.GetSpellTexture(108920), default = addon.NpcOption.Show },
 
     -- Warlock
-    [107100] = { icon = C_Spell.GetSpellTexture(112869), default = addon.NpcOption.Highlight }, -- Observer
-    [135002] = { icon = C_Spell.GetSpellTexture(265187), default = addon.NpcOption.Show }, -- Demonic Tyrant
-    [107024] = { icon = C_Spell.GetSpellTexture(212459), default = addon.NpcOption.Show }, -- Fel Lord
-    [196111] = { icon = C_Spell.GetSpellTexture(138789), default = addon.NpcOption.Show }, -- Pit Lord
-    [89] = { icon = C_Spell.GetSpellTexture(1122), default = addon.NpcOption.Show }, -- Infernal
+    [107100] = { name = "Observer", icon = C_Spell.GetSpellTexture(112869), default = addon.NpcOption.Highlight },
+    [135002] = { name = "Demonic Tyrant", icon = C_Spell.GetSpellTexture(265187), default = addon.NpcOption.Show },
+    [107024] = { name = "Fel Lord", icon = C_Spell.GetSpellTexture(212459), default = addon.NpcOption.Show },
+    [196111] = { name = "Pit Lord", icon = C_Spell.GetSpellTexture(138789), default = addon.NpcOption.Show },
+    [89] = { name = "Infernal", icon = C_Spell.GetSpellTexture(1122), default = addon.NpcOption.Show },
 
     -- Paladin
-    [114565] = { icon = C_Spell.GetSpellTexture(228049), default = addon.NpcOption.Show }, -- Guardian of the Forgotten Queen
+    [114565] = { name = "Guardian of the Forgotten Queen", icon = C_Spell.GetSpellTexture(228049), default = addon.NpcOption.Show },
 
     -- Evoker
-    [185800] = { icon = C_Spell.GetSpellTexture(371869), default = addon.NpcOption.Show }, -- Past Self
+    [185800] = { name = "Past Self", icon = C_Spell.GetSpellTexture(371869), default = addon.NpcOption.Show },
 };
 
-function SweepyBoop:MakeNpcOptionsGroup()
-    for spellID, spell in pairs(addon.importantNpcList) do
-        
+addon.AppendNpcOptionsToGroup = function(group)
+    group.args = {};
+
+    group.args.header = {
+        order = 1,
+        type = "description",
+        width = "full",
+        name = "Select which non-player nameplates to show in PVP instances (highlight option shows an animating icon on top of the nameplate",
+    };
+
+    local index = 2;
+    for spellID, spellInfo in pairs(addon.importantNpcList) do
+        group.args[tostring(spellID)] = {
+            order = index,
+            type = "select",
+            values = {
+                [addon.NpcOption.Hide] = "Hide",
+                [addon.NpcOption.Show] = "Show",
+                [addon.NpcOption.Highlight] = "Highlight",
+            },
+            name = spellInfo.name;
+            icon = spellInfo.iconID;
+            style = "radio",
+        };
+        index = index + 1;
     end
 end

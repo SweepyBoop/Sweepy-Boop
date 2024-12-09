@@ -20,6 +20,7 @@ Common\Constants.lua
 Common\ArenaEnemyBurstSpells.lua
 Common\ArenaEnemyUtilitySpells.lua
 Common\UnitInfoHelpers.lua
+Common\NpcData.lua
 
 Core.lua
 
