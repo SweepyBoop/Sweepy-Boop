@@ -134,14 +134,14 @@ local function EnsureClassIcon(frame)
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
         nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.classIconOffset);
+        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
         -- Can we leverage SetTexCoord to get round icons without making them
 
         nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 7); -- higher subLevel to appear on top of the icon
         nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
-        nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.classIconSelectionBorderStyle]);
+        nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.nameplatesFriendly.classIconSelectionBorderStyle]);
     end
 
     return nameplate.FriendlyClassIcon
@@ -172,7 +172,7 @@ local function GetIconOptions(class)
         iconSize = ClassIconSize.Pet;
     else
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
-        if SweepyBoop.db.profile.classIconStyle == addon.CLASSICONSTYLE.FLAT then
+        if SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASSICONSTYLE.FLAT then
             path = path .. "flat";
         else
             path = path .. "round";
@@ -197,7 +197,7 @@ local function ShowClassIcon(frame)
     local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET";
 
     -- Show dedicated healer icon
-    if SweepyBoop.db.profile.useHealerIcon then
+    if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
         -- For player nameplates, check if it's a healer
         if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
             class = "HEALER";
@@ -208,7 +208,7 @@ local function ShowClassIcon(frame)
         local iconPath, iconSize = GetIconOptions(class);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            if ( SweepyBoop.db.profile.petIconStyle == addon.PETICONSTYLE.CATS ) then
+            if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then
                 local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
                 local petNumber = math.fmod(tonumber(npcID), iconCount);
                 iconFile = iconFile .. petNumber;
@@ -223,7 +223,7 @@ local function ShowClassIcon(frame)
             icon.border:SetSize(iconSize, iconSize);
         end
 
-        local scale = SweepyBoop.db.profile.classIconScale / 100;
+        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
         if ( icon.iconScale == nil ) or ( scale ~= icon.iconScale ) then
             icon:SetScale(scale);
             icon.border:SetScale(scale);
@@ -244,7 +244,7 @@ local function ShowClassIcon(frame)
 end
 
 local function UpdateClassIcon(frame)
-    if ( not SweepyBoop.db.profile.classIconsEnabled ) then return end
+    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
 
     if ShouldMakeIcon(frame.unit) then
         frame:Hide();
@@ -263,7 +263,7 @@ local function ShouldShowNameplate(unitId)
 
     -- When outside arena
     if ( not IsActiveBattlefieldArena() ) then
-        if SweepyBoop.db.profile.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
+        if SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             -- UnitIsEnemy will not work here, since it excludes neutral units
             return UnitCanAttack("player", unitId) ~= possessedFactor;
@@ -293,7 +293,7 @@ local function ShouldShowNameplate(unitId)
 end
 
 local function UpdateHealthBar(frame)
-    if ( not SweepyBoop.db.profile.nameplateFilter.enabled ) then return end
+    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then return end
 
     if ShouldShowNameplate(frame.unit) then
         frame:Show();
@@ -340,10 +340,24 @@ function SweepyBoop:SetupNameplateModules()
 
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
-            if self.db.profile.arenaNumbersEnabled then
+            if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i);
+                        local isHealer;
+                        if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+                            local specID = GetArenaOpponentSpec(i);
+                            local role = select(5, GetSpecializationInfoByID(specID));
+                            isHealer = (role ~= "DAMAGER"); -- TANK is considered healer in arena
+                        end
+                        
+                        if isHealer then
+                            frame.name:SetText("*" .. i .. "*");
+                            frame.name:SetFontObject(GameFontHighlightLarge);
+                        else
+                            frame.name:SetText(i);
+                            frame.name:SetFontObject(GameFontNormal);
+                        end
+
                         frame.name:SetTextColor(1,1,0); --Yellow
                         return;
                     end
@@ -351,7 +365,7 @@ function SweepyBoop:SetupNameplateModules()
             end
 
             -- Check if name should be hidden
-            if self.db.profile.nameplateFilter.enabled then
+            if self.db.profile.nameplatesEnemy.filterEnabled then
                 if ( not IsInWhiteList(frame.unit) ) then
                     frame.name:SetText("");
                 end
@@ -360,7 +374,7 @@ function SweepyBoop:SetupNameplateModules()
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-        if ( not self.db.profile.nameplateFilter.enabled ) then return end
+        if ( not self.db.profile.nameplatesEnemy.filterEnabled ) then return end
 
         if frame:IsForbidden() then
             return;
