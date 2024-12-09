@@ -27,6 +27,9 @@ addon.importantNpcList = {
     [78001] = { icon = C_Spell.GetSpellTexture(157153), defaulit = addon.NpcOption.Hide }, -- Cloudburst Totem
     [10467] = { icon = C_Spell.GetSpellTexture(16191), defaulit = addon.NpcOption.Hide }, -- Mana Tide Totem
     [97285] = { icon = C_Spell.GetSpellTexture(192077), defaulit = addon.NpcOption.Hide }, -- Wind Rush Totem
+    [60561] = { icon = C_Spell.GetSpellTexture(51485), defaulit = addon.NpcOption.Show }, -- Earthgrab Totem (gets players out of stealth)
+    [2630] = { icon = C_Spell.GetSpellTexture(2484), defaulit = addon.NpcOption.Hide }, -- Earthbind Totem
+    [105427] = { icon = C_Spell.GetSpellTexture(204330), defaulit = addon.NpcOption.Highlight }, -- Totem of Wrath (Skyfury Totem)
 
     -- Warrior
     [119052] = { icon = C_Spell.GetSpellTexture(236320), default = addon.NpcOption.Highlight }, -- War Banner

@@ -492,8 +492,8 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 15,
     },
-    -- Skyfury
-    [208963] = {
+    -- Totem of Wrath
+    [460697] = {
         duration = 15,
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
