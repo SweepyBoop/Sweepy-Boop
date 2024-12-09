@@ -16,27 +16,21 @@ Libs\AceConsole-3.0\AceConsole-3.0.xml
 Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 
-# Constants
-Constants.lua
-ArenaFrames\ArenaEnemyBurstSpells.lua
-ArenaFrames\CooldownSpells.lua
+Common\Constants.lua
+Common\ArenaEnemyBurstSpells.lua
+Common\ArenaEnemyUtilitySpells.lua
+Common\UnitInfoHelpers.lua
 
-# Common
 Core.lua
-UnitInfoHelpers.lua
 
-# Nameplates
 Nameplates\Nameplates.lua
 
-# Misc
 Misc\ArenaSurrender.lua
 Misc\DampenDisplay.lua
 
-# Raid frames
 RaidFrames\SortGroup.lua
 RaidFrames\FixBlizzardRaidAggro.lua
 
-# Simple Cooldown Tracking
 ArenaFrames\IconGroupUtil.lua
 ArenaFrames\IconTemplates.lua
 ArenaFrames\CooldownTracking.xml
@@ -45,21 +39,19 @@ ArenaFrames\CooldownTracking.lua
 ArenaFrames\ArenaEnemyBurstTemplates.lua
 ArenaFrames\ArenaEnemyBurst.lua
 
-
-
-# UI Personalization
+# UI Personalization (Internal)
 Internal\LoseControl.lua
 Internal\Personalization.lua
 Internal\HideHotKeys.lua
 
-# Misc
+# Misc (Internal)
 Internal\DrinkMacro.lua
 Internal\FocusMacros.lua
 Internal\CombatIndicator.lua
 Internal\PersonalDR.lua
 Internal\ClassColoredUnitFrames.lua
 
-# Weak Auras equivalent
+# Weak Auras equivalent (Internal)
 Internal\CustomAuras.xml
 Internal\CustomAuras.lua
 Internal\CustomStatusBar.lua
