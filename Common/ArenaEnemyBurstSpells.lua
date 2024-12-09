@@ -493,7 +493,7 @@ addon.spellData = {
         duration = 15,
     },
     -- Totem of Wrath
-    [460697] = {
+    [208963] = {
         duration = 15,
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
