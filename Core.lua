@@ -404,7 +404,7 @@ function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle);
+    self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle);
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
@@ -456,5 +456,8 @@ end
 
 SLASH_SweepyBoop1 = "/sb"
 SlashCmdList.SweepyBoop = function(msg)
-    LibStub("AceConfigDialog-3.0"):Open(addonName);
+    if Settings and Settings.OpenToCategory then
+        Settings.OpenToCategory(SweepyBoop.categoryID);
+    end
+    --LibStub("AceConfigDialog-3.0"):Open(addonName);
 end
