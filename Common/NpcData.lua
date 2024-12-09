@@ -30,6 +30,7 @@ addon.importantNpcList = {
     [60561] = { icon = C_Spell.GetSpellTexture(51485), defaulit = addon.NpcOption.Show }, -- Earthgrab Totem (gets players out of stealth)
     [2630] = { icon = C_Spell.GetSpellTexture(2484), defaulit = addon.NpcOption.Hide }, -- Earthbind Totem
     [105427] = { icon = C_Spell.GetSpellTexture(204330), defaulit = addon.NpcOption.Highlight }, -- Totem of Wrath (Skyfury Totem)
+    [97369] = { icon = C_Spell.GetSpellTexture(192222), defaulit = addon.NpcOption.Hide }, -- Liquid Magma Totem
 
     -- Warrior
     [119052] = { icon = C_Spell.GetSpellTexture(236320), default = addon.NpcOption.Highlight }, -- War Banner
