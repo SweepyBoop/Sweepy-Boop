@@ -59,7 +59,7 @@ options.args.NamePlates = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = "Enable",
+            name = "Enabled",
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
@@ -152,12 +152,25 @@ options.args.NamePlates = {
             name = "Show Arena Numbers",
             desc = "Show arena numbers on top of enemy nameplates",
         },
-        nameplateFilterEnabled = {
+
+        nameplateFilter = {
             order = 11,
-            width = "full",
-            type = "toggle",
-            name = "Only Show Important Nameplates in Arena",
-            desc = "Only show nameplates of enemy players and important non-player units while inside arena",
+            type = "group",
+            name = "Filter & Highlight",
+            get = function(info) return SweepyBoop.db.profile.nameplateFilter[info[#info]] end,
+            set = function(info, val) SweepyBoop.db.profile.nameplateFilter[info[#info]] = val end,
+            args = {
+                enabled = {
+                    order = 1,
+                    type = "toggle",
+                    name = "Enabled",
+                },
+                header = {
+                    order = 2,
+                    type = "header",
+                    name = "Unit list",
+                },
+            },
         },
     },
 };
@@ -297,7 +310,7 @@ options.args.Misc = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = "Enable",
+            name = "Enabled",
         },
         skipLeaveArenaConfirmation = {
             order = 3,
@@ -345,7 +358,9 @@ local defaults = {
         arenaEnemyDefensivesEnabled = true,
         arenaEnemyDefensiveIconSize = 25,
         arenaNumbersEnabled = true,
-        nameplateFilterEnabled = true,
+        nameplateFilter = {
+            enabled = true,
+        },
         arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,

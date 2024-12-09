@@ -293,7 +293,7 @@ local function ShouldShowNameplate(unitId)
 end
 
 local function UpdateHealthBar(frame)
-    if ( not SweepyBoop.db.profile.nameplateFilterEnabled ) then return end
+    if ( not SweepyBoop.db.profile.nameplateFilter.enabled ) then return end
 
     if ShouldShowNameplate(frame.unit) then
         frame:Show();
@@ -351,7 +351,7 @@ function SweepyBoop:SetupNameplateModules()
             end
 
             -- Check if name should be hidden
-            if self.db.profile.nameplateFilterEnabled then
+            if self.db.profile.nameplateFilter.enabled then
                 if ( not IsInWhiteList(frame.unit) ) then
                     frame.name:SetText("");
                 end
@@ -360,7 +360,7 @@ function SweepyBoop:SetupNameplateModules()
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-        if ( not self.db.profile.nameplateFilterEnabled ) then return end
+        if ( not self.db.profile.nameplateFilter.enabled ) then return end
 
         if frame:IsForbidden() then
             return;
