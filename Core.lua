@@ -141,6 +141,7 @@ options.args.nameplatesFriendly = {
 options.args.nameplatesEnemy = {
     order = 7,
     type = "group",
+    childGroups = "tab",
     name = "Enemy nameplates",
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
     set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val end,
@@ -176,10 +177,25 @@ options.args.nameplatesEnemy = {
             width = "full",
             name = "Enabled",
         },
-        filterList = {
+        filterSettings = {
             order = 6,
             type = "group",
-            childGroups = "tab",
+            name = "General",
+            handler = SweepyBoop,
+            args = {
+                reset = {
+                    order = 1,
+                    type = "execute",
+                    name = "Reset filter list",
+                    func = function()
+                        addon.FillDefaultToNpcOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
+                    end,
+                },
+            },
+        },
+        filterList = {
+            order = 7,
+            type = "group",
             name = "Filter list",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
             set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
