@@ -241,6 +241,38 @@ local function ShowClassIcon(frame)
     icon:Show();
 end
 
+local function SetupAnimation(frameWithAnimations)
+    local animationGroup = frameWithAnimations:CreateAnimationGroup();
+
+    local grow = animationGroup:CreateAnimation("Scale");
+    grow:SetOrder(1);
+    grow:SetScale(1.07, 1.07);
+    grow:SetDuration(0.5);
+
+    local shrink = animationGroup:CreateAnimation("Scale");
+    shrink:SetOrder(2);
+    shrink:SetScale(1 / 1.07, 1 / 1.07);
+    shrink:SetDuration(0.5);
+
+    animationGroup:SetLooping("REPEAT");
+
+    return animationGroup;
+end
+
+local function EnsureNpcHighlight(frame)
+    if ( not frame.npcHighlight ) then
+        frame.npcHighlight = CreateFrame("Frame", nil, frame);
+        frame.npcHighlight:SetSize(30, 30);
+        -- Option to set scale
+        frame.npcHighlight:SetFrameStrata("HIGH");
+
+        frame.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
+        frame.customIcon:SetAllPoints(frame.highlight);
+
+        frame.animationGroup = SetupAnimation(frame.npcHighlight);
+    end
+end
+
 local function UpdateClassIcon(frame)
     if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
 

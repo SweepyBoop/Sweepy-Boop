@@ -198,8 +198,15 @@ options.args.nameplatesEnemy = {
                     type = "header",
                     name = "",
                 },
-                hideHunterSecondaryPet = {
+                highlightScale = {
                     order = 3,
+                    type = "range",
+                    name = "Highlight icon scale (%)",
+                    min = 50,
+                    max = 300,
+                },
+                hideHunterSecondaryPet = {
+                    order = 4,
                     type = "toggle",
                     width = "full",
                     name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pet in arena"),
@@ -404,6 +411,7 @@ local defaults = {
             arenaNumbersEnabled = true,
             arenaNumbersHealerHighlight = true,
             filterEnabled = true,
+            highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
         },
