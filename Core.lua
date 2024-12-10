@@ -190,6 +190,8 @@ options.args.nameplatesEnemy = {
     },
 };
 
+-- https://warcraft.wiki.gg/wiki/API_C_Spell.GetSpellDescription
+-- Could be empty if not ready yet
 addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
 
 options.args.arenaFrames = {
