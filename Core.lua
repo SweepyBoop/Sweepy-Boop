@@ -181,7 +181,6 @@ options.args.nameplatesEnemy = {
             order = 6,
             type = "group",
             name = "General",
-            handler = SweepyBoop,
             args = {
                 reset = {
                     order = 1,
@@ -190,6 +189,18 @@ options.args.nameplatesEnemy = {
                     func = function()
                         addon.FillDefaultToNpcOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
                     end,
+                },
+                breaker = {
+                    order = 2,
+                    type = "header",
+                    name = "",
+                },
+                hideHunterSecondaryPet = {
+                    order = 3,
+                    type = "toggle",
+                    width = "full",
+                    name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pet in arena"),
+                    desc = "Hide the extra pet from talent Animal Companion\nThis setting is not available in battlegrounds due to WoW API limitations",
                 },
             },
         },
@@ -390,6 +401,7 @@ local defaults = {
             arenaNumbersEnabled = true,
             arenaNumbersHealerHighlight = true,
             filterEnabled = true,
+            hideHunterSecondaryPet = true,
             filterList = {},
         },
         arenaCooldownOffsetX = 5,
