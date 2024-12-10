@@ -39,9 +39,9 @@ local function ShouldShowNameplate(unitId)
         end
 
         -- Show arenapet 1~3 but only important ones
-        if IsArenaPrimaryPet(unitId) then
-            return true;
-        end
+        -- if addon.IsArenaPrimaryPet(unitId) then
+        --     return true;
+        -- end
 
         -- Show whitelisted non-player units
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
