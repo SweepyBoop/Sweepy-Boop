@@ -12,49 +12,6 @@ local strsplit = strsplit;
 local hooksecurefunc = hooksecurefunc;
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
--- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
--- To find the NpcID of a unit, target it and type:
--- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
-local NameplateWhiteList = {
-    -- DK
-    [106041] = true, -- Reanimation
-
-    -- DH - Fodder demons
-    [169421] = true, -- Felguard
-    [169425] = true, -- Felhound
-    [168932] = true, -- Doomguard
-    [169426] = true, -- Infernal
-    [169429] = true, -- Shivarra
-    [169428] = true, -- Wrathguard
-    [169430] = true, -- Urzul
-
-    -- Priest
-    [101398] = true, -- Psyfiend
-
-    -- Shaman: totems to kill instantly
-    [5925] = true, -- Grounding Totem
-    [53006] = true, -- Spirit Link Totem
-    [105427] = true, -- Skyfury Totem
-    [104818] = true, -- Ancestral Protection Totem
-    [61245] = true, -- Capacitor Totem
-    [60561] = true, -- Earthgrab Totem
-    [6112] = true, -- Windfury Totem
-    [59764] = true, -- Healing Tide Totem
-    [95061] = true, -- Greater Fire Elemental
-    [61029] = true, -- Primal Fire Elemental
-    [204331] = true, -- Counterstrike Totem
-    [5394] = true, -- Healing Stream Totem
-
-    -- Warlock
-    [196111] = true, -- Pit Lord (Guldan's Ambition)
-    [179193] = true, -- Fel Obelisk
-    [135002] = true, -- Demonic Tyrant
-    [107100] = true, -- Call Observer
-
-    -- Warrior
-    [119052] = true, -- War Banner
-};
-
 -- https://www.wowinterface.com/downloads/info14110-BLPConverter.html
 local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
 local selectionBorderSuffix = "_circular_frame";

@@ -7,6 +7,9 @@ addon.NpcOption = {
     Highlight = 3, -- For units that should be killed instantly or avoided at any cost :) (e.g., DK Reanimation)
 };
 
+-- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
+-- To find the NpcID of a unit, target it and type:
+-- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 addon.importantNpcList = {
     -- DK
     [addon.classID.DEATHKNIGHT] = {
@@ -100,6 +103,7 @@ addon.AppendNpcOptionsToGroup = function(group)
         order = 1,
         type = "description",
         width = "full",
+        fontSize = "medium",
         name = "Select which non-player nameplates to show in PVP instances\nHighlight option shows an animating icon on top of the nameplate",
     };
 
