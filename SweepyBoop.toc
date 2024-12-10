@@ -1,5 +1,5 @@
 ## Interface: 110005
-## Title: SweepyBoop's Arena Helper
+## Title: SweepyBoop's PVP Helper
 ## Author: SweepyBoop
 ## Version: @project-version@
 ## SavedVariables: SweepyBoopDB
@@ -20,9 +20,12 @@ Common\Constants.lua
 Common\ArenaEnemyBurstSpells.lua
 Common\ArenaEnemyUtilitySpells.lua
 Common\UnitInfoHelpers.lua
+Common\NpcData.lua
 
 Core.lua
 
+Nameplates\ClassIcons.lua
+Nameplates\NameplateFilter.lua
 Nameplates\Nameplates.lua
 
 Misc\ArenaSurrender.lua

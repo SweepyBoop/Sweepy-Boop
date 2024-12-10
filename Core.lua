@@ -43,33 +43,28 @@ local options = {
     },
 };
 
-options.args.NamePlates = {
+options.args.nameplatesFriendly = {
     order = 6,
     type = "group",
-    name = "Nameplates",
-    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    name = "Friendly class icons",
+    get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val end,
     args = {
-        header = {
-            order = 1,
-            type = "header",
-            name = "Class & Pet Icons",
-        },
         classIconsEnabled = {
-            order = 2,
+            order = 1,
             width = "full",
             type = "toggle",
-            name = "Enable",
+            name = "Enabled",
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
-            order = 3,
+            order = 2,
             width = "full",
             type = "description",
             name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
         classIconStyle = {
-            order = 4,
+            order = 3,
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
@@ -78,11 +73,11 @@ options.args.NamePlates = {
                 [addon.CLASSICONSTYLE.FLAT] = "Flat",
             },
             disabled = function()
-                return ( not SweepyBoop.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         petIconStyle = {
-            order = 5,
+            order = 4,
             type = "select",
             name = "Pet Icon Style",
             style = "dropdown",
@@ -91,11 +86,11 @@ options.args.NamePlates = {
                 [addon.PETICONSTYLE.MENDPET] = "Mend pet icon",
             },
             disabled = function()
-                return ( not SweepyBoop.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         classIconSelectionBorderStyle = {
-            order = 6,
+            order = 5,
             type = "select",
             name = "Selection highlight border style",
             style = "dropdown",
@@ -107,7 +102,7 @@ options.args.NamePlates = {
                 [addon.SELECTIONBORDERSTYLE.PLAIN] = "Plain",
             },
             disabled = function()
-                return ( not SweepyBoop.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         useHealerIcon = {
@@ -117,7 +112,7 @@ options.args.NamePlates = {
             name = "Use dedicated healer icon",
             desc = "Use a dedicated icon for party healers",
             disabled = function()
-                return ( not SweepyBoop.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         classIconScale = {
@@ -127,7 +122,7 @@ options.args.NamePlates = {
             max = 200,
             name = "Icon scale (%)",
             disabled = function()
-                return ( not SweepyBoop.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         classIconOffset = {
@@ -137,33 +132,106 @@ options.args.NamePlates = {
             max = 150,
             name = "Icon offset",
             disabled = function()
-                return ( not SweepyBoop.db.profile.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        break1 = {
-            order = 9,
+    }
+};
+
+options.args.nameplatesEnemy = {
+    order = 7,
+    type = "group",
+    childGroups = "tab",
+    name = "Enemy nameplates",
+    get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val end,
+    args = {
+        header1 = {
+            order = 1,
             type = "header",
-            name = ""
+            name = "Arena enemy numbers",
         },
         arenaNumbersEnabled = {
-            order = 10,
+            order = 2,
             width = "full",
             type = "toggle",
-            name = "Show Arena Numbers",
-            desc = "Show arena numbers on top of enemy nameplates",
+            name = "Replace arena enemy names with numbers",
         },
-        nameplateFilterEnabled = {
-            order = 11,
+        arenaNumbersHealerHighlight = {
+            order = 3,
             width = "full",
             type = "toggle",
-            name = "Only Show Important Nameplates in Arena",
-            desc = "Only show nameplates of enemy players and important non-player units while inside arena",
+            name = "Highlight healers",
+            desc = "Bigger font and marker for healers",
         },
+
+        breaker = {
+            order = 4,
+            type = "header",
+            name = "Nameplate Filters & Highlights",
+        },
+
+        filterEnabled = {
+            order = 5,
+            type = "toggle",
+            width = "full",
+            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
+            desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
+        },
+        filterSettings = {
+            order = 6,
+            type = "group",
+            name = "General",
+            disabled = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+            end,
+            args = {
+                reset = {
+                    order = 1,
+                    type = "execute",
+                    name = "Reset filter whitelist",
+                    func = function()
+                        addon.FillDefaultToNpcOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
+                    end,
+                },
+                breaker = {
+                    order = 2,
+                    type = "header",
+                    name = "",
+                },
+                highlightScale = {
+                    order = 3,
+                    type = "range",
+                    name = "Highlight icon scale (%)",
+                    min = 50,
+                    max = 300,
+                },
+                hideHunterSecondaryPet = {
+                    order = 4,
+                    type = "toggle",
+                    width = "full",
+                    name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pet in arena"),
+                    desc = "Hide the extra pet from talent Animal Companion\nThis setting is not available in battlegrounds due to WoW API limitations",
+                },
+            },
+        },
+        filterList = {
+            order = 7,
+            type = "group",
+            name = "Filter whitelist",
+            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
+            set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
+            disabled = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+            end
+        }
     },
 };
 
-options.args.ArenaFrames = {
-    order = 7,
+addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
+
+options.args.arenaFrames = {
+    order = 8,
     type = "group",
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
@@ -237,8 +305,8 @@ options.args.ArenaFrames = {
     },
 };
 
-options.args.RaidFrame = {
-    order = 8,
+options.args.raidFrames = {
+    order = 9,
     type = "group",
     name = "Raid Frames",
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
@@ -281,8 +349,8 @@ options.args.RaidFrame = {
     },
 };
 
-options.args.Misc = {
-    order = 9,
+options.args.misc = {
+    order = 10,
     type = "group",
     name = "Misc",
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
@@ -297,7 +365,7 @@ options.args.Misc = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = "Enable",
+            name = "Enabled",
         },
         skipLeaveArenaConfirmation = {
             order = 3,
@@ -331,21 +399,29 @@ options.args.Misc = {
 
 local defaults = {
     profile = {
-        classIconsEnabled = true,
-        classIconStyle = addon.CLASSICONSTYLE.ROUND,
-        petIconStyle = addon.PETICONSTYLE.CATS,
-        classIconSelectionBorderStyle = addon.SELECTIONBORDERSTYLE.FIRE,
-        classIconScale = 100,
-        classIconOffset = 0,
-        useHealerIcon = true,
+        nameplatesFriendly = {
+            classIconsEnabled = true,
+            classIconStyle = addon.CLASSICONSTYLE.ROUND,
+            petIconStyle = addon.PETICONSTYLE.CATS,
+            classIconSelectionBorderStyle = addon.SELECTIONBORDERSTYLE.FIRE,
+            classIconScale = 100,
+            classIconOffset = 0,
+            useHealerIcon = true,
+        },
+        nameplatesEnemy = {
+            arenaNumbersEnabled = true,
+            arenaNumbersHealerHighlight = true,
+            filterEnabled = true,
+            highlightScale = 100,
+            hideHunterSecondaryPet = true,
+            filterList = {},
+        },
         arenaCooldownOffsetX = 5,
         arenaCooldownOffsetY = 0,
         arenaEnemyOffensivesEnabled = true,
         arenaEnemyOffensiveIconSize = 32,
         arenaEnemyDefensivesEnabled = true,
         arenaEnemyDefensiveIconSize = 25,
-        arenaNumbersEnabled = true,
-        nameplateFilterEnabled = true,
         arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
@@ -354,11 +430,15 @@ local defaults = {
     }
 };
 
+addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
+
 function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    self.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle);
+    local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 640, 640);
+    self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
+    
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
@@ -410,5 +490,9 @@ end
 
 SLASH_SweepyBoop1 = "/sb"
 SlashCmdList.SweepyBoop = function(msg)
+    -- This opens the in-game options panel that is not moveable or resizable
+    -- if Settings and Settings.OpenToCategory then
+    --     Settings.OpenToCategory(SweepyBoop.categoryID);
+    -- end
     LibStub("AceConfigDialog-3.0"):Open(addonName);
 end

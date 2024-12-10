@@ -1,12 +1,9 @@
 local _, addon = ...;
 
 local UnitAura = C_UnitAuras.GetAuraDataByIndex;
-local strsplit = strsplit;
 
-local CreateFrame = CreateFrame;
-local UnitExists = UnitExists;
-local UnitGUID = UnitGUID;
-local UnitClass = UnitClass;
+addon.MAX_ARENA_SIZE = 3
+addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 
 addon.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
@@ -47,17 +44,57 @@ addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
     return addon.Util_GetFirstUnitAura(unit, spells, filter, sourceUnit);
 end
 
-addon.GetNpcIdFromGuid = function (guid)
-    local NpcId = select ( 6, strsplit ( "-", guid ) )
-    if (NpcId) then
-        return tonumber ( NpcId )
-    end
-
-    return 0
+addon.GetUnitClass = function(unitId)
+    return select(2, UnitClass(unitId));
 end
 
-addon.MAX_ARENA_SIZE = 3
-addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
+addon.GetUnitClassName = function(unitId)
+    return select(2, UnitClass(unitId));
+end
+
+addon.IsShamanPrimaryPet = function (unitId)
+    local unitGUID = UnitGUID(unitId);
+    local npcID = addon.GetNpcIdFromGuid(unitGUID);
+    -- Greater / Primal Fire Elemental
+    return ( npcID == 95061 ) or ( npcID == 61029 );
+end
+
+addon.IsPartyPrimaryPet = function(unitId, partySize)
+    -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
+    if UnitIsUnit(unitId, "pet") then
+        local class = addon.GetUnitClass("player");
+        return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
+    else
+        local partySize = partySize or 2;
+        for i = 1, partySize do
+            if UnitIsUnit(unitId, "partypet" .. i) then
+                local partyUnitId = "party" .. i;
+                local class = addon.GetUnitClass(partyUnitId);
+                return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
+            end
+        end
+    end
+end
+
+addon.UnitIsHostile = function(unitId)
+    local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
+    -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
+    return UnitCanAttack("player", unitId) ~= possessedFactor;
+end
+
+addon.UnitIsHunterSecondaryPet = function(unitId) -- Only call this check on hostile targets!
+    if SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet and ( addon.GetNpcIdFromGuid(unitId) == addon.HUNTERPET ) then
+        for i = 1, addon.MAX_ARENA_SIZE do
+            if UnitIsUnit(unitId, "arenapet" .. i) then
+                return false;
+            end
+        end
+
+        return true; -- Option enabled and unitId is a hunter pet, but failed to match with an arena opponent
+    end
+
+    return false; -- Option disabled or not a hunter pet
+end
 
 local partyInfo = {
     -- Convert between unitGUID and unitID
@@ -113,11 +150,3 @@ addon.PartyWithFearSpell = function ()
 
     return partyInfo.partyWithFearSpell
 end
-
-addon.IsShamanPrimaryPet = function (unitId)
-    local unitGUID = UnitGUID(unitId);
-    local npcID = addon.GetNpcIdFromGuid(unitGUID);
-    -- Greater / Primal Fire Elemental
-    return ( npcID == 95061 ) or ( npcID == 61029 );
-end
-
