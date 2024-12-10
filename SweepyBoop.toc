@@ -1,5 +1,5 @@
 ## Interface: 110005
-## Title: SweepyBoop's PVP Helper
+## Title: SweepyBoop's Arena Helper
 ## Author: SweepyBoop
 ## Version: @project-version@
 ## SavedVariables: SweepyBoopDB
