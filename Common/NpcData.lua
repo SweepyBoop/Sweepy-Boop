@@ -89,8 +89,8 @@ addon.AppendNpcOptionsToGroup = function(group)
             order = index,
             type = "group",
             icon = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
-			iconCoords = CLASS_ICON_TCOORDS[classID];
-            name = C_CreatureInfo.GetClassInfo(classID).className,
+			iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+            name = classInfo.className,
             args = {},
         };
 
