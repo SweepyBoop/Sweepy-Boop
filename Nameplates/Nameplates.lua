@@ -308,6 +308,7 @@ local function ShowNpcHighlight(frame)
     local guid = UnitGUID(frame.unit);
     local npcID = select(6, strsplit("-", guid));
     highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
+    highlight:Show();
     highlight.customIcon:Show();
     highlight.glowTexture:Show();
     highlight.animationGroup:Play();
@@ -319,6 +320,7 @@ local function HideNpcHighlight(frame)
         highlight.animationGroup:Stop();
         highlight.glowTexture:Hide();
         highlight.customIcon:Hide();
+        highlight:Hide();
     end
 end
 
