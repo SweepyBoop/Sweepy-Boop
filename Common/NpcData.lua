@@ -66,6 +66,11 @@ addon.importantNpcList = {
         [89] = { name = "Infernal", icon = 1122, default = addon.NpcOption.Show },
 
         -- Primary pets (so they don't get hidden in battlegrounds)
+        [416] = { name = "Imp", icon = 688, default = addon.NpcOption.Show },
+        [1860] = { name = "Voidwalker", icon = 697, default = addon.NpcOption.Show },
+        [417] = { name = "Felhunter", icon = 691, default = addon.NpcOption.Show },
+        [1863] = { name = "Sayaad", icon = 366222, default = addon.NpcOption.Show },
+        [17252] = { name = "Felguard", icon = 30146, default = addon.NpcOption.Show },
     },
 
     [addon.classID.PALADIN] = {
@@ -121,7 +126,7 @@ addon.AppendNpcOptionsToGroup = function(group)
         type = "description",
         width = "full",
         fontSize = "medium",
-        name = "Select which non-player nameplates to show in PVP instances\nHighlight option shows an animating icon on top of the nameplate",
+        name = "Select which non-player nameplates to show in PVP instances\nHighlight: show an animating icon on top of the nameplate",
     };
 
     local index = 2;

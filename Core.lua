@@ -175,20 +175,21 @@ options.args.nameplatesEnemy = {
             order = 5,
             type = "toggle",
             width = "full",
-            name = "Enabled",
+            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
+            desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
         },
         filterSettings = {
             order = 6,
             type = "group",
             name = "General",
-            hidden = function()
+            disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
             end,
             args = {
                 reset = {
                     order = 1,
                     type = "execute",
-                    name = "Reset filter list",
+                    name = "Reset filter whitelist",
                     func = function()
                         addon.FillDefaultToNpcOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
                     end,
@@ -217,10 +218,10 @@ options.args.nameplatesEnemy = {
         filterList = {
             order = 7,
             type = "group",
-            name = "Filter list",
+            name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
             set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
-            hidden = function()
+            disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
             end
         }
