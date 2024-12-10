@@ -282,16 +282,16 @@ local function ShouldMakeNpcHighlight(unitId)
         if ( option == addon.NpcOption.Highlight ) then
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             -- UnitIsFriend does not consider friendly units in duel
-            return UnitCanAttack("player", unitId) == possessedFactor;
+            return UnitCanAttack("player", unitId) ~= possessedFactor;
         end
     end
 end
 
 local function ShowNpcHighlight(frame)
     local highlight = EnsureNpcHighlight(frame);
-    local guid = UnitGUID(unitId);
+    local guid = UnitGUID(frame.unit);
     local npcID = select(6, strsplit("-", guid));
-    highlight.customIcon:SetTexture(addon.iconText[npcID]);
+    highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
     frame.npcHighlight:Show();
     frame.animationGroup:Play();
 end
