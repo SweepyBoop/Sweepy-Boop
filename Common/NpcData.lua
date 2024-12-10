@@ -96,7 +96,17 @@ for classID, spells in pairs(addon.importantNpcList) do
     end
 end
 
-addon.IsNpcInWhiteList = function(npcID)
+addon.GetNpcIdFromGuid = function (guid)
+    local npcID = select ( 6, strsplit ( "-", guid ) );
+    if (npcID) then
+        return tonumber ( npcID );
+    end
+
+    return 0;
+end
+
+addon.IsNpcInWhiteList = function(unitId)
+    local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
     local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
     if ( npcID and option ~= nil and option ~= addon.NpcOption.Hide ) then
         return true;

@@ -47,15 +47,6 @@ addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
     return addon.Util_GetFirstUnitAura(unit, spells, filter, sourceUnit);
 end
 
-addon.GetNpcIdFromGuid = function (guid)
-    local NpcId = select ( 6, strsplit ( "-", guid ) )
-    if (NpcId) then
-        return tonumber ( NpcId )
-    end
-
-    return 0
-end
-
 addon.GetUnitClass = function(unitId)
     return select(2, UnitClass(unitId));
 end
