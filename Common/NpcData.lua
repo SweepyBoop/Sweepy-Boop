@@ -85,8 +85,7 @@ addon.AppendNpcOptionsToGroup = function(group)
                 [addon.NpcOption.Show] = "Show",
                 [addon.NpcOption.Highlight] = "Highlight",
             },
-            name = spellInfo.name,
-            icon = spellInfo.icon,
+            name = format("|T%s:20|t %s", spellInfo.icon, spellInfo.name),
         };
         index = index + 1;
     end
