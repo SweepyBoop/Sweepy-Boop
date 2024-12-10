@@ -41,7 +41,7 @@ addon.importantNpcList = {
         [194117] = { name = "Stoneskin Totem", icon = 383017, default = addon.NpcOption.Show },
         [5923] = { name = "Poison Cleansing Totem", icon = 383013, default = addon.NpcOption.Show },
         [194118] = { name = "Tranquil Air Totem", icon = 383019, default = addon.NpcOption.Show },
-        [225409] = { name = "Tranquil Air Totem", icon = 444995, default = addon.NpcOption.Show },
+        [225409] = { name = "Surging Totem", icon = 444995, default = addon.NpcOption.Show },
         [95061] = { name = "Greater Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
         [61029] = { name = "Primal Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
     },
