@@ -179,6 +179,7 @@ options.args.nameplatesEnemy = {
         filterList = {
             order = 6,
             type = "group",
+            childGroups = "tab",
             name = "Filter list",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
             set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
