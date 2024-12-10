@@ -280,7 +280,7 @@ local function EnsureNpcHighlight(frame, scale)
         frame.npcHighlight.glowTexture:SetDesaturated(true);
         frame.npcHighlight.glowTexture:SetPoint('TOPLEFT', frame.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);
         frame.npcHighlight.glowTexture:SetPoint('BOTTOMRIGHT', frame.npcHighlight, 'BOTTOMRIGHT', widthOffset, -heightOffset);
-        frame.npcHighlight.glowTexture:SetVertexColor(160, 32, 240); -- Purple
+        frame.npcHighlight.glowTexture:SetVertexColor(128, 0, 128); -- Purple
 
         frame.npcHighlight.animationGroup = SetupAnimation(frame.npcHighlight);
     end
