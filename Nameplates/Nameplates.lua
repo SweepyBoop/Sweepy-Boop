@@ -261,9 +261,10 @@ end
 local function EnsureNpcHighlight(frame)
     if ( not frame.npcHighlight ) then
         frame.npcHighlight = CreateFrame("Frame", nil, frame);
-        frame.npcHighlight:SetSize(40, 40);
+        frame.npcHighlight:SetSize(30, 30);
         frame.npcHighlight:SetScale(1);
         frame.npcHighlight:SetFrameStrata("HIGH");
+        frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
 
         frame.npcHighlight.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
         frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
@@ -292,14 +293,14 @@ local function ShowNpcHighlight(frame)
     local guid = UnitGUID(frame.unit);
     local npcID = select(6, strsplit("-", guid));
     highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
-    highlight:Show();
+    highlight.customIcon:Show();
     highlight.animationGroup:Play();
 end
 
 local function HideNpcHighlight(frame)
     if frame.npcHighlight then
         frame.npcHighlight.animationGroup:Stop();
-        frame.npcHighlight:Hide();
+        frame.npcHighlight.customIcon:Hide();
     end
 end
 
