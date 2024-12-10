@@ -68,12 +68,10 @@ local selectionBorder = {
 };
 
 local function IsInWhiteList(unitId)
-    -- Tremor Totem
-    NameplateWhiteList[5913] = addon.PartyWithFearSpell();
-
     local guid = UnitGUID(unitId);
     local npcID = select(6, strsplit("-", guid));
-    if ( npcID and NameplateWhiteList[tonumber(npcID)] ) then
+    local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
+    if ( npcID and option ~= nil and option ~= addon.NpcOption.Hide ) then
         return true;
     end
 end
@@ -261,8 +259,8 @@ local function ShouldShowNameplate(unitId)
         return true;
     end
 
-    -- When outside arena
-    if ( not IsActiveBattlefieldArena() ) then
+    -- When outside arena or battleground and is not in test mode
+    if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) and ( not addon.isTestMode ) then
         if SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             -- UnitIsEnemy will not work here, since it excludes neutral units
@@ -272,23 +270,33 @@ local function ShouldShowNameplate(unitId)
         end
     end
 
-    -- Show arena 1~3
-    for i = 1, addon.MAX_ARENA_SIZE do
-        if UnitIsUnit(unitId, "arena" .. i) then
+    -- If we reach here, we're in an arena or battleground
+    if IsActiveBattlefieldArena() then -- In arenas, be more restrictive
+        -- Show arena 1~3
+        for i = 1, addon.MAX_ARENA_SIZE do
+            if UnitIsUnit(unitId, "arena" .. i) then
+                return true;
+            end
+        end
+
+        -- Show arenapet 1~3 but only important ones
+        if IsArenaPrimaryPet(unitId) then
             return true;
         end
-    end
 
-    -- Show arenapet 1~3 but only important ones
-    if IsArenaPrimaryPet(unitId) then
-        return true;
-    end
-
-    -- Show whitelisted non-player units
-    if ( not UnitIsPlayer(unitId) ) and IsInWhiteList(unitId) then
-        -- Reverse if one unit is possessed and the other is not
-        local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-        return UnitIsEnemy("player", unitId) ~= possessedFactor;
+        -- Show whitelisted non-player units
+        if ( not UnitIsPlayer(unitId) ) and IsInWhiteList(unitId) then
+            -- Reverse if one unit is possessed and the other is not
+            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
+            return UnitIsEnemy("player", unitId) ~= possessedFactor;
+        end
+    else
+        -- In battlegrounds or test mode, show hostile units that are either player or in whitelist
+        if UnitIsPlayer(unitId) or IsInWhiteList(unitId) then
+            -- Reverse if one unit is possessed and the other is not
+            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
+            return UnitIsEnemy("player", unitId) ~= possessedFactor;
+        end
     end
 end
 

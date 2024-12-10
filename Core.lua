@@ -181,6 +181,9 @@ options.args.nameplatesEnemy = {
             order = 6,
             type = "group",
             name = "General",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+            end,
             args = {
                 reset = {
                     order = 1,
