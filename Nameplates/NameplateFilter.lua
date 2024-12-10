@@ -56,9 +56,7 @@ local function ShouldShowNpcHighlight(unitId)
         local npcID = select(6, strsplit("-", guid));
         local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
         if ( option == addon.NpcOption.Highlight ) then
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            -- UnitIsFriend does not consider friendly units in duel
-            return UnitCanAttack("player", unitId) ~= possessedFactor;
+            return addon.UnitIsHostile(unitId);
         end
     end
 end

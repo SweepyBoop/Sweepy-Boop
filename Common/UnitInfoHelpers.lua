@@ -89,7 +89,7 @@ end
 
 addon.UnitIsHostile = function(unitId)
     local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-    -- UnitIsEnemy will not work here, since it excludes neutral units
+    -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
     return UnitCanAttack("player", unitId) ~= possessedFactor;
 end
 
