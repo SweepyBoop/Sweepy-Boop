@@ -87,6 +87,12 @@ addon.IsPartyPrimaryPet = function(unitId, partySize)
     end
 end
 
+addon.UnitIsHostile = function(unitId)
+    local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
+    -- UnitIsEnemy will not work here, since it excludes neutral units
+    return UnitCanAttack("player", unitId) ~= possessedFactor;
+end
+
 addon.MAX_ARENA_SIZE = 3
 addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 

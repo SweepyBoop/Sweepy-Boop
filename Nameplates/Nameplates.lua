@@ -21,9 +21,7 @@ local function ShouldShowNameplate(unitId)
     -- When outside arena or battleground and is not in test mode
     if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) and ( not addon.isTestMode ) then
         if SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            -- UnitIsEnemy will not work here, since it excludes neutral units
-            return UnitCanAttack("player", unitId) ~= possessedFactor;
+            return addon.UnitIsHostile(unitId);
         else -- Otherwise just show everything
             return true;
         end
@@ -46,17 +44,13 @@ local function ShouldShowNameplate(unitId)
         -- Show whitelisted non-player units
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         if ( not UnitIsPlayer(unitId) ) and isWhitelisted then
-            -- Reverse if one unit is possessed and the other is not
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            return UnitCanAttack("player", unitId) ~= possessedFactor;
+            return addon.UnitIsHostile(unitId);
         end
     else
         -- In battlegrounds or test mode, show hostile units that are either player or in whitelist
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         if UnitIsPlayer(unitId) or isWhitelisted then
-            -- Reverse if one unit is possessed and the other is not
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            return UnitCanAttack("player", unitId) ~= possessedFactor;
+            return addon.UnitIsHostile(unitId);
         end
     end
 end

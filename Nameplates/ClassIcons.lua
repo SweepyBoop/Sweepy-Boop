@@ -23,9 +23,7 @@ local function ShouldShowIcon(unitId)
         if isArena then
             return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
         else
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            -- UnitIsFriend does not consider friendly units in duel
-            return UnitCanAttack("player", unitId) == possessedFactor;
+            return ( not addon.UnitIsHostile(unitId) );
         end
     else
         return addon.IsPartyPrimaryPet(unitId, (isArena and 2) or 4);
