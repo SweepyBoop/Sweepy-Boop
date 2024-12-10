@@ -71,7 +71,7 @@ addon.AppendNpcOptionsToGroup = function(group)
         order = 1,
         type = "description",
         width = "full",
-        name = "Select which non-player nameplates to show in PVP instances (highlight option shows an animating icon on top of the nameplate",
+        name = "Select which non-player nameplates to show in PVP instances\nHighlight option shows an animating icon on top of the nameplate",
     };
 
     local index = 2;
@@ -79,15 +79,21 @@ addon.AppendNpcOptionsToGroup = function(group)
         group.args[tostring(spellID)] = {
             order = index,
             type = "select",
+            width = "full",
             values = {
                 [addon.NpcOption.Hide] = "Hide",
                 [addon.NpcOption.Show] = "Show",
                 [addon.NpcOption.Highlight] = "Highlight",
             },
-            name = spellInfo.name;
-            icon = spellInfo.iconID;
-            style = "radio",
+            name = spellInfo.name,
+            icon = spellInfo.icon,
         };
         index = index + 1;
+    end
+end
+
+addon.FillDefaultToNpcOptions = function(profile)
+    for spellID, spellInfo in pairs(addon.importantNpcList) do
+        profile[tostring(spellID)] = spellInfo.default;
     end
 end

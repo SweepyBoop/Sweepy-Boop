@@ -78,6 +78,23 @@ addon.ROGUE = "ROGUE";
 addon.SHAMAN = "SHAMAN";
 addon.WARLOCK = "WARLOCK";
 addon.WARRIOR = "WARRIOR";
+addon.EVOKER = "EVOKER";
+
+addon.classID = {
+    WARRIOR = 1,
+    PALADIN = 2,
+    HUNTER = 3,
+    ROGUE = 4,
+    PRIEST = 5,
+    DEATHKNIGHT = 6,
+    SHAMAN = 7,
+    MAGE = 8,
+    WARLOCK = 9,
+    MONK = 10,
+    DRUID = 11,
+    DEMONHUNTER = 12,
+    EVOKER = 13,
+};
 
 -- For hiding timer by OmniCC
 addon.HIDETIMEROMNICC = "BoopHideTimer";
