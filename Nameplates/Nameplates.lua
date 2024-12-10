@@ -67,7 +67,7 @@ end
 local restricted = {
 	party = true,
 	raid = true,
-}
+};
 
 local function ShouldUpdateNamePlate(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
