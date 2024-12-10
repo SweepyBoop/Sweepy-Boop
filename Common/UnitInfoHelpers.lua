@@ -1,12 +1,9 @@
 local _, addon = ...;
 
 local UnitAura = C_UnitAuras.GetAuraDataByIndex;
-local strsplit = strsplit;
 
-local CreateFrame = CreateFrame;
-local UnitExists = UnitExists;
-local UnitGUID = UnitGUID;
-local UnitClass = UnitClass;
+addon.MAX_ARENA_SIZE = 3
+addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 
 addon.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
@@ -93,8 +90,19 @@ addon.UnitIsHostile = function(unitId)
     return UnitCanAttack("player", unitId) ~= possessedFactor;
 end
 
-addon.MAX_ARENA_SIZE = 3
-addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
+addon.UnitIsHunterSecondaryPet = function(unitId)
+    if SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet and ( addon.GetNpcIdFromGuid(unitId) == addon.HUNTERPET ) then
+        for i = 1, addon.MAX_ARENA_SIZE do
+            if UnitIsUnit(unitId, "party" .. i .. "pet") or UnitIsUnit(unitId, "arena" .. i .. "pet") then
+                return false;
+            end
+        end
+
+        return true; -- Option enabled and unitId is a hunter pet, but failed to match with arena/party
+    end
+
+    return false; -- Option disabled or not a hunter pet
+end
 
 local partyInfo = {
     -- Convert between unitGUID and unitID
