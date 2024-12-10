@@ -23,24 +23,10 @@ local selectionBorder = {
     [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\PlainBorder.tga",
 };
 
-local function IsInWhiteList(unitId)
-    local guid = UnitGUID(unitId);
-    local npcID = select(6, strsplit("-", guid));
-    local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
-    if ( npcID and option ~= nil and option ~= addon.NpcOption.Hide ) then
-        return true;
-    end
-end
-
-local function GetUnitClass(unitId)
-    return select(2, UnitClass(unitId));
-end
-
 local function IsArenaPrimaryPet(unitId)
     for i = 1, addon.MAX_ARENA_SIZE do
         if UnitIsUnit(unitId, "arenapet" .. i) then
-            local class = GetUnitClass("arena" .. i);
-            return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
+            return true;
         end
     end
 end
@@ -48,21 +34,21 @@ end
 local function IsPartyPrimaryPet(unitId, partySize)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
-        local class = GetUnitClass("player");
+        local class = addon.GetUnitClass("player");
         return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
     else
         local partySize = partySize or 2;
         for i = 1, partySize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 local partyUnitId = "party" .. i;
-                local class = GetUnitClass(partyUnitId);
+                local class = addon.GetUnitClass(partyUnitId);
                 return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
             end
         end
     end
 end
 
-local function ShouldMakeIcon(unitId)
+local function ShouldShowIcon(unitId)
     -- Do not show class icon above the personal resource display
     if UnitIsUnit(unitId, "player") then
         return false;
@@ -137,10 +123,6 @@ local function GetIconOptions(class)
     return path .. "\\", iconSize;
 end
 
-local function GetUnitClassName(unitId)
-    return select(2, UnitClass(unitId));
-end
-
 local iconCount = 4
 
 local function ShowClassIcon(frame)
@@ -148,7 +130,7 @@ local function ShowClassIcon(frame)
     if ( not icon ) then return end;
 
     local isPlayer = UnitIsPlayer(frame.unit);
-    local class = ( isPlayer and GetUnitClassName(frame.unit) ) or "PET";
+    local class = ( isPlayer and addon.GetUnitClassName(frame.unit) ) or "PET";
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
@@ -247,7 +229,7 @@ local function EnsureNpcHighlight(frame, scale)
     return frame.npcHighlight;
 end
 
-local function ShouldMakeNpcHighlight(unitId)
+local function ShouldShowNpcHighlight(unitId)
     if ( not UnitIsPlayer(unitId) ) then
         local guid = UnitGUID(unitId);
         local npcID = select(6, strsplit("-", guid));
@@ -284,7 +266,7 @@ end
 local function UpdateClassIcon(frame)
     if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
 
-    if ShouldMakeIcon(frame.unit) then
+    if ShouldShowIcon(frame.unit) then
         frame:Hide();
         ShowClassIcon(frame);
     else
@@ -296,7 +278,7 @@ end
 local function UpdateNpcHighlight(frame)
     if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then return end
 
-    if ShouldMakeNpcHighlight(frame.unit) then
+    if ShouldShowNpcHighlight(frame.unit) then
         ShowNpcHighlight(frame);
     else
         HideNpcHighlight(frame);
@@ -335,14 +317,14 @@ local function ShouldShowNameplate(unitId)
         end
 
         -- Show whitelisted non-player units
-        if ( not UnitIsPlayer(unitId) ) and IsInWhiteList(unitId) then
+        if ( not UnitIsPlayer(unitId) ) and addon.IsNpcInWhiteList(unitId) then
             -- Reverse if one unit is possessed and the other is not
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             return UnitCanAttack("player", unitId) ~= possessedFactor;
         end
     else
         -- In battlegrounds or test mode, show hostile units that are either player or in whitelist
-        if UnitIsPlayer(unitId) or IsInWhiteList(unitId) then
+        if UnitIsPlayer(unitId) or addon.IsNpcInWhiteList(unitId) then
             -- Reverse if one unit is possessed and the other is not
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             return UnitCanAttack("player", unitId) ~= possessedFactor;
@@ -374,6 +356,7 @@ local function ShouldUpdateNamePlate(frame)
             -- In restricted instance, should skip all the nameplate logic
             -- But if there is a class icon showing, hide it
             HideClassIcon(frame);
+            HideNpcHighlight(frame);
             return false;
         end
 
@@ -401,6 +384,7 @@ function SweepyBoop:SetupNameplateModules()
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
             if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+                frame.name:SetFontObject(GameFontNormal);
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
                         local isHealer;
@@ -415,19 +399,11 @@ function SweepyBoop:SetupNameplateModules()
                             frame.name:SetFontObject(GameFontHighlightHuge);
                         else
                             frame.name:SetText(i);
-                            frame.name:SetFontObject(GameFontNormal);
                         end
 
                         frame.name:SetTextColor(1,1,0); --Yellow
                         return;
                     end
-                end
-            end
-
-            -- Check if name should be hidden
-            if self.db.profile.nameplatesEnemy.filterEnabled then
-                if ( not IsInWhiteList(frame.unit) ) then
-                    frame.name:SetText("");
                 end
             end
         end

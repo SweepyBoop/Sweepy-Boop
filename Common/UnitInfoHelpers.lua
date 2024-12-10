@@ -56,6 +56,14 @@ addon.GetNpcIdFromGuid = function (guid)
     return 0
 end
 
+addon.GetUnitClass = function(unitId)
+    return select(2, UnitClass(unitId));
+end
+
+addon.GetUnitClassName = function(unitId)
+    return select(2, UnitClass(unitId));
+end
+
 addon.MAX_ARENA_SIZE = 3
 addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 

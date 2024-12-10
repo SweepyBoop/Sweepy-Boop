@@ -91,8 +91,15 @@ end
 addon.iconTexture = {};
 for classID, spells in pairs(addon.importantNpcList) do
     for npcID, spellInfo in pairs(spells) do
-        -- Convert to string since this returns string GUID: local npcID = select(6, strsplit("-", guid));
+        -- Convert npcID to string since this returns string GUID: local npcID = select(6, strsplit("-", guid));
         addon.iconTexture[tostring(npcID)] = C_Spell.GetSpellTexture(spellInfo.icon);
+    end
+end
+
+addon.IsNpcInWhiteList = function(npcID)
+    local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
+    if ( npcID and option ~= nil and option ~= addon.NpcOption.Hide ) then
+        return true;
     end
 end
 
