@@ -40,13 +40,13 @@ local function ShouldShowNameplate(unitId)
             return false;
         end
 
-        -- Show whitelisted non-player units
+        -- Show hostile units that are whitelisted
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         if ( not UnitIsPlayer(unitId) ) and isWhitelisted then
             return addon.UnitIsHostile(unitId);
         end
     else
-        -- In battlegrounds or test mode, show hostile units that are either player or in whitelist
+        -- In battlegrounds or test mode, show hostile units that are either player or whitelisted
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         if UnitIsPlayer(unitId) or isWhitelisted then
             return addon.UnitIsHostile(unitId);
