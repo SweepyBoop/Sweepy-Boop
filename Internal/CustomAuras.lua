@@ -19,9 +19,8 @@ local UnitGUID = UnitGUID;
 -- To find the spellID of an aura
 local findSpellId = CreateFrame("Frame");
 findSpellId.enabled = addon.isTestMode;
---findSpellId.enabled = true;
 
-findSpellId.spellName = "Drink";
+findSpellId.spellName = "Totem of Wrath";
 findSpellId:RegisterEvent(addon.UNIT_AURA);
 findSpellId:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 findSpellId:SetScript("OnEvent", function (self, event, unitTarget)

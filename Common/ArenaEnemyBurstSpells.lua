@@ -492,7 +492,7 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 15,
     },
-    -- Skyfury
+    -- Totem of Wrath
     [208963] = {
         duration = 15,
         category = OFFENSIVE,
