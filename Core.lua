@@ -423,8 +423,10 @@ addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
 function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
-    LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
+    local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 600, 600);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
+    
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
