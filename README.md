@@ -1,5 +1,7 @@
-# SweepyBoop's Arena Helper
+# SweepyBoop's PVP Helper
 An _extremely_ _lightweight_ addon to support arena gameplay.
+
+Some of the functionalities also work well in battlegrounds.
 
 Here is an overall image of the UI:
 ![image](https://user-images.githubusercontent.com/78008331/226146638-ecd2f9d5-2276-4dbb-925f-157ff4e3a955.png)
@@ -54,6 +56,9 @@ While in arena, only show enemy player nameplates and important non-player units
 - For Beast Mastery Hunter pets, hide the extra pet from talent "Animal Companion", so you know which one to kill
 - Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
 - Option to highlight chosen units with an animating icon!
+
+![TotemHighlight](https://github.com/user-attachments/assets/3ca7871f-0566-44f0-b141-4560213c30f0)
+
 
 
 ## Sort raid frames
