@@ -73,7 +73,7 @@ There is also an option to leave directly without the confirmation dialog, but b
 
 ## Nameplate filtering
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
-- For Beast Mastery Hunter pets, only show the primary one, so you know which one to kill
+- For Beast Mastery Hunter pets, hide the secondary pet from talent "Animal Companion", so you know which one to target and kill
 - Tremor totem nameplate will not show, unless current group (including player themselves) have a fear ability (Warrior, Warlock, Priest)
 - For warlocks, only show the pet, not the 1,000 wild imps
 
