@@ -44,14 +44,16 @@ local function ShouldShowNameplate(unitId)
         end
 
         -- Show whitelisted non-player units
-        if ( not UnitIsPlayer(unitId) ) and addon.IsNpcInWhiteList(unitId) then
+        local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
+        if ( not UnitIsPlayer(unitId) ) and isWhitelisted then
             -- Reverse if one unit is possessed and the other is not
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             return UnitCanAttack("player", unitId) ~= possessedFactor;
         end
     else
         -- In battlegrounds or test mode, show hostile units that are either player or in whitelist
-        if UnitIsPlayer(unitId) or addon.IsNpcInWhiteList(unitId) then
+        local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
+        if UnitIsPlayer(unitId) or isWhitelisted then
             -- Reverse if one unit is possessed and the other is not
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
             return UnitCanAttack("player", unitId) ~= possessedFactor;
@@ -65,8 +67,6 @@ local function HideWidgets(frame)
 end
 
 local function UpdateHealthBar(frame)
-    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then return end
-
     if ShouldShowNameplate(frame.unit) then
         frame:Show();
     else
@@ -142,8 +142,6 @@ function SweepyBoop:SetupNameplateModules()
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-        if ( not self.db.profile.nameplatesEnemy.filterEnabled ) then return end
-
         if frame:IsForbidden() then
             return;
         end
