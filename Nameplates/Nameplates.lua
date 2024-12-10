@@ -70,7 +70,6 @@ local function UpdateHealthBar(frame)
     if ShouldShowNameplate(frame.unit) then
         frame:Show();
     else
-        HideWidgets(frame);
         frame:Hide();
     end
 end
