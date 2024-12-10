@@ -258,10 +258,12 @@ local function SetupAnimation(frameWithAnimations)
     return animationGroup;
 end
 
-local function EnsureNpcHighlight(frame)
+local function EnsureNpcHighlight(frame, scale)
     if ( not frame.npcHighlight ) then
+        local size = 30;
+
         frame.npcHighlight = CreateFrame("Frame", nil, frame);
-        frame.npcHighlight:SetSize(30, 30);
+        frame.npcHighlight:SetSize(size, size);
         frame.npcHighlight:SetScale(1);
         frame.npcHighlight:SetFrameStrata("HIGH");
         frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
@@ -269,8 +271,21 @@ local function EnsureNpcHighlight(frame)
         frame.npcHighlight.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
         frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
 
+        local offsetMultiplier = 0.41;
+        local widthOffset = size * offsetMultiplier;
+        local heightOffset = size * offsetMultiplier;
+        frame.npcHighlight.glowTexture = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
+        frame.npcHighlight.glowTexture:SetBlendMode("ADD");
+        frame.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
+        frame.npcHighlight.glowTexture:SetDesaturated(true);
+        frame.npcHighlight.glowTexture:SetPoint('TOPLEFT', frame.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);
+        frame.npcHighlight.glowTexture:SetPoint('BOTTOMRIGHT', frame.npcHighlight, 'BOTTOMRIGHT', widthOffset, -heightOffset);
+        frame.npcHighlight.glowTexture:SetVertexColor(160, 32, 240); -- Purple
+
         frame.npcHighlight.animationGroup = SetupAnimation(frame.npcHighlight);
     end
+
+    frame.npcHighlight:SetScale(scale);
 
     return frame.npcHighlight;
 end
@@ -289,18 +304,21 @@ local function ShouldMakeNpcHighlight(unitId)
 end
 
 local function ShowNpcHighlight(frame)
-    local highlight = EnsureNpcHighlight(frame);
+    local highlight = EnsureNpcHighlight(frame, SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
     local guid = UnitGUID(frame.unit);
     local npcID = select(6, strsplit("-", guid));
     highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
     highlight.customIcon:Show();
+    highlight.glowTexture:Show();
     highlight.animationGroup:Play();
 end
 
 local function HideNpcHighlight(frame)
-    if frame.npcHighlight then
-        frame.npcHighlight.animationGroup:Stop();
-        frame.npcHighlight.customIcon:Hide();
+    local highlight = frame.npcHighlight;
+    if highlight then
+        highlight.animationGroup:Stop();
+        highlight.glowTexture:Hide();
+        highlight.customIcon:Hide();
     end
 end
 
