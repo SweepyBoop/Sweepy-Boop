@@ -83,7 +83,8 @@ end
 addon.iconTexture = {};
 for classID, spells in pairs(addon.importantNpcList) do
     for npcID, spellInfo in pairs(spells) do
-        addon.iconTexture[npcID] = C_Spell.GetSpellTexture(spellInfo.icon);
+        -- Convert to string since this returns string GUID: local npcID = select(6, strsplit("-", guid));
+        addon.iconTexture[tostring(npcID)] = C_Spell.GetSpellTexture(spellInfo.icon);
     end
 end
 
