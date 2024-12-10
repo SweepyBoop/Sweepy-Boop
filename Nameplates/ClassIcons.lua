@@ -28,7 +28,7 @@ local function ShouldShowIcon(unitId)
             return UnitCanAttack("player", unitId) == possessedFactor;
         end
     else
-        return IsPartyPrimaryPet(unitId, (isArena and 2) or 4);
+        return addon.IsPartyPrimaryPet(unitId, (isArena and 2) or 4);
     end
 end
 
@@ -149,7 +149,7 @@ addon.UpdateClassIcon = function(frame)
         frame:Hide();
         ShowClassIcon(frame);
     else
-        HideClassIcon(frame);
+        addon.HideClassIcon(frame);
         frame:Show();
     end
 end

@@ -90,6 +90,6 @@ addon.UpdateNpcHighlight = function(frame)
     if ShouldShowNpcHighlight(frame.unit) then
         ShowNpcHighlight(frame);
     else
-        HideNpcHighlight(frame);
+        addon.HideNpcHighlight(frame);
     end
 end
