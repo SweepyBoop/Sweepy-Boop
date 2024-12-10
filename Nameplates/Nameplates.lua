@@ -7,7 +7,6 @@ local UnitIsPlayer = UnitIsPlayer;
 local UnitIsPossessed = UnitIsPossessed;
 local UnitClass = UnitClass;
 local UnitCanAttack = UnitCanAttack;
-local UnitIsEnemy = UnitIsEnemy;
 local IsInInstance = IsInInstance;
 local strsplit = strsplit;
 local hooksecurefunc = hooksecurefunc;
@@ -262,14 +261,48 @@ end
 local function EnsureNpcHighlight(frame)
     if ( not frame.npcHighlight ) then
         frame.npcHighlight = CreateFrame("Frame", nil, frame);
-        frame.npcHighlight:SetSize(30, 30);
-        -- Option to set scale
+        frame.npcHighlight:SetSize(40, 40);
+        frame.npcHighlight:SetScale(1);
         frame.npcHighlight:SetFrameStrata("HIGH");
 
-        frame.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
-        frame.customIcon:SetAllPoints(frame.highlight);
+        frame.npcHighlight.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
+        frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
 
         frame.animationGroup = SetupAnimation(frame.npcHighlight);
+    end
+
+    return frame.npcHighlight;
+end
+
+local function ShouldMakeNpcHighlight(unitId)
+    if ( not UnitIsPlayer(unitId) ) then
+        local guid = UnitGUID(unitId);
+        local npcID = select(6, strsplit("-", guid));
+        local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
+        if ( option == addon.NpcOption.Highlight ) then
+            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
+            -- UnitIsFriend does not consider friendly units in duel
+            return UnitCanAttack("player", unitId) == possessedFactor;
+        end
+    end
+end
+
+local function ShowNpcHighlight(frame)
+    local highlight = EnsureNpcHighlight(frame);
+    local guid = UnitGUID(unitId);
+    local npcID = select(6, strsplit("-", guid));
+    highlight.customIcon:SetTexture(addon.iconText[npcID]);
+    frame.npcHighlight:Show();
+    frame.animationGroup:Play();
+end
+
+local function HideNpcHighlight(frame)
+    if frame.animationGroup then
+        frame.animationGroup:Stop();
+    end
+
+    if frame.npcHighlight then
+        frame.npcHighlight:Hide();
     end
 end
 
@@ -282,6 +315,16 @@ local function UpdateClassIcon(frame)
     else
         HideClassIcon(frame);
         frame:Show();
+    end
+end
+
+local function UpdateNpcHighlight(frame)
+    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then return end
+
+    if ShouldMakeNpcHighlight(frame.unit) then
+        ShowNpcHighlight(frame);
+    else
+        HideNpcHighlight(frame);
     end
 end
 
@@ -320,14 +363,14 @@ local function ShouldShowNameplate(unitId)
         if ( not UnitIsPlayer(unitId) ) and IsInWhiteList(unitId) then
             -- Reverse if one unit is possessed and the other is not
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            return UnitIsEnemy("player", unitId) ~= possessedFactor;
+            return UnitCanAttack("player", unitId) ~= possessedFactor;
         end
     else
         -- In battlegrounds or test mode, show hostile units that are either player or in whitelist
         if UnitIsPlayer(unitId) or IsInWhiteList(unitId) then
             -- Reverse if one unit is possessed and the other is not
             local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            return UnitIsEnemy("player", unitId) ~= possessedFactor;
+            return UnitCanAttack("player", unitId) ~= possessedFactor;
         end
     end
 end
@@ -375,6 +418,8 @@ function SweepyBoop:SetupNameplateModules()
 
         -- Class icon mod will hide/show healthBar when showing/hiding class icons
         UpdateClassIcon(frame);
+        -- Show enemy nameplate highlight
+        UpdateNpcHighlight(frame);
         -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
         UpdateHealthBar(frame);
 

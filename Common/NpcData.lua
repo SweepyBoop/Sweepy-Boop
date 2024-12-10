@@ -77,7 +77,14 @@ addon.importantNpcList = {
 };
 
 if addon.isTestMode then
-    addon.importantNpcList[addon.classID.HUNTER][221641] = { name = "Ramolith Stonecrusher", icon = 267116, default = addon.NpcOption.Highlight };
+    addon.importantNpcList[addon.classID.HUNTER][219250] = { name = "Ramolith Stonecrusher", icon = 267116, default = addon.NpcOption.Highlight };
+end
+
+addon.iconTexture = {};
+for classID, spells in pairs(addon.importantNpcList) do
+    for npcID, spellInfo in pairs(spells) do
+        addon.iconTexture[npcID] = C_Spell.GetSpellTexture(spellInfo.icon);
+    end
 end
 
 addon.AppendNpcOptionsToGroup = function(group)
@@ -103,7 +110,7 @@ addon.AppendNpcOptionsToGroup = function(group)
         };
 
         local spellIdx = 1;
-        for spellID, spellInfo in pairs(spells) do
+        for npcID, spellInfo in pairs(spells) do
             -- https://warcraft.wiki.gg/wiki/SpellMixin
             local description;
             local spell = Spell:CreateFromSpellID(spellInfo.icon);
@@ -111,7 +118,7 @@ addon.AppendNpcOptionsToGroup = function(group)
                 description = spell:GetSpellDescription();
             end)
 
-            classGroup.args[tostring(spellID)] = {
+            classGroup.args[tostring(npcID)] = {
                 order = spellIdx,
                 type = "select",
                 width = "full",
@@ -133,8 +140,8 @@ end
 
 addon.FillDefaultToNpcOptions = function(profile)
     for classID, spells in pairs(addon.importantNpcList) do
-        for spellID, spellInfo in pairs(spells) do
-            profile[tostring(spellID)] = spellInfo.default;
+        for npcID, spellInfo in pairs(spells) do
+            profile[tostring(npcID)] = spellInfo.default;
         end
     end
 end
