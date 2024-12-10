@@ -36,14 +36,10 @@ local function ShouldShowNameplate(unitId)
             end
         end
 
-        if addon.UnitIsHunterSecondaryPet(unitId) then
-            return false;
-        end
-
-        -- Show hostile units that are whitelisted
+        -- Show hostile units that are whitelisted (exclude hunter secondary pet if applicable)
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         if ( not UnitIsPlayer(unitId) ) and isWhitelisted then
-            return addon.UnitIsHostile(unitId);
+            return addon.UnitIsHostile(unitId) and ( not addon.UnitIsHunterSecondaryPet(unitId) );
         end
     else
         -- In battlegrounds or test mode, show hostile units that are either player or whitelisted
