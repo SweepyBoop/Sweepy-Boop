@@ -96,6 +96,7 @@ addon.AppendNpcOptionsToGroup = function(group)
 
         local spellIdx = 1;
         for spellID, spellInfo in pairs(spells) do
+            -- https://warcraft.wiki.gg/wiki/SpellMixin
             local description;
             local spell = Spell:CreateFromSpellID(spellInfo.icon);
             spell:ContinueOnSpellLoad(function()
