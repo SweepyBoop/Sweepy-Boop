@@ -72,12 +72,12 @@ addon.importantNpcList = {
     },
 
     [addon.classID.HUNTER] = {
-        [221641] = { name = "Ramolith Stonecrusher", icon = 205691, default = addon.NpcOption.Show },
+        [105419] = { name = "Dire Beast: Basilisk", icon = 205691, default = addon.NpcOption.Show },
     },
 };
 
 if addon.isTestMode then
-    addon.importantNpcList[addon.classID.HUNTER][153285] = { name = "Training Dummy", icon = 205691, default = addon.NpcOption.Highlight };
+    addon.importantNpcList[addon.classID.HUNTER][221641] = { name = "Ramolith Stonecrusher", icon = 267116, default = addon.NpcOption.Highlight };
 end
 
 addon.AppendNpcOptionsToGroup = function(group)
