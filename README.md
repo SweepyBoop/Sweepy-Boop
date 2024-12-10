@@ -49,6 +49,13 @@ It comes with a few key features:
 - Make sure to /reload if you change your Gladius / sArena settings (especially when you change the layout / positioning)
 - This module only tracks damage offensives and defensive abilities, and currently there is no option to choose which abilities to track
 
+## Nameplate filtering
+While in arena, only show enemy player nameplates and important non-player units, e.g.,
+- For Beast Mastery Hunter pets, hide the extra pet from talent "Animal Companion", so you know which one to kill
+- Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
+- Option to highlight chosen units with an animating icon!
+
+
 ## Sort raid frames
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
 
@@ -70,14 +77,6 @@ There is also an option to leave directly without the confirmation dialog, but b
 
 ![image](https://github.com/user-attachments/assets/45663a67-435d-4b45-985f-0924074d3f6c)
 
-
-## Nameplate filtering
-While in arena, only show enemy player nameplates and important non-player units, e.g.,
-- For Beast Mastery Hunter pets, only show the primary one, so you know which one to kill
-- Tremor totem nameplate will not show, unless current group (including player themselves) have a fear ability (Warrior, Warlock, Priest)
-- For warlocks, only show the pet, not the 1,000 wild imps
-
-In short, this module shows the minimal set of unit nameplates that you need to keep an eye on during an arena match.
 
 
 ## Fix Blizzard raid frame aggro highlight
