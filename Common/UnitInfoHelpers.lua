@@ -82,7 +82,7 @@ addon.UnitIsHostile = function(unitId)
     return UnitCanAttack("player", unitId) ~= possessedFactor;
 end
 
-addon.UnitIsHunterSecondaryPet = function(unitId)
+addon.UnitIsHunterSecondaryPet = function(unitId) -- Only call this check on hostile targets!
     if SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet and ( addon.GetNpcIdFromGuid(unitId) == addon.HUNTERPET ) then
         for i = 1, addon.MAX_ARENA_SIZE do
             if UnitIsUnit(unitId, "arenapet" .. i) then
