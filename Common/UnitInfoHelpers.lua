@@ -64,6 +64,38 @@ addon.GetUnitClassName = function(unitId)
     return select(2, UnitClass(unitId));
 end
 
+addon.IsArenaPrimaryPet = function(unitId)
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if UnitIsUnit(unitId, "arenapet" .. i) then
+            return true;
+        end
+    end
+end
+
+addon.IsShamanPrimaryPet = function (unitId)
+    local unitGUID = UnitGUID(unitId);
+    local npcID = addon.GetNpcIdFromGuid(unitGUID);
+    -- Greater / Primal Fire Elemental
+    return ( npcID == 95061 ) or ( npcID == 61029 );
+end
+
+addon.IsPartyPrimaryPet = function(unitId, partySize)
+    -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
+    if UnitIsUnit(unitId, "pet") then
+        local class = addon.GetUnitClass("player");
+        return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
+    else
+        local partySize = partySize or 2;
+        for i = 1, partySize do
+            if UnitIsUnit(unitId, "partypet" .. i) then
+                local partyUnitId = "party" .. i;
+                local class = addon.GetUnitClass(partyUnitId);
+                return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
+            end
+        end
+    end
+end
+
 addon.MAX_ARENA_SIZE = 3
 addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
 
@@ -121,11 +153,3 @@ addon.PartyWithFearSpell = function ()
 
     return partyInfo.partyWithFearSpell
 end
-
-addon.IsShamanPrimaryPet = function (unitId)
-    local unitGUID = UnitGUID(unitId);
-    local npcID = addon.GetNpcIdFromGuid(unitGUID);
-    -- Greater / Primal Fire Elemental
-    return ( npcID == 95061 ) or ( npcID == 61029 );
-end
-

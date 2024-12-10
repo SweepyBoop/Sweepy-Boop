@@ -12,279 +12,6 @@ local strsplit = strsplit;
 local hooksecurefunc = hooksecurefunc;
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
--- https://www.wowinterface.com/downloads/info14110-BLPConverter.html
-local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
-local selectionBorderSuffix = "_circular_frame";
-local selectionBorder = {
-    [addon.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.MECHANICAL] = selectionBorderPrefix .. "mechanical" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\PlainBorder.tga",
-};
-
-local function IsArenaPrimaryPet(unitId)
-    for i = 1, addon.MAX_ARENA_SIZE do
-        if UnitIsUnit(unitId, "arenapet" .. i) then
-            return true;
-        end
-    end
-end
-
-local function IsPartyPrimaryPet(unitId, partySize)
-    -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
-    if UnitIsUnit(unitId, "pet") then
-        local class = addon.GetUnitClass("player");
-        return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
-    else
-        local partySize = partySize or 2;
-        for i = 1, partySize do
-            if UnitIsUnit(unitId, "partypet" .. i) then
-                local partyUnitId = "party" .. i;
-                local class = addon.GetUnitClass(partyUnitId);
-                return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
-            end
-        end
-    end
-end
-
-local function ShouldShowIcon(unitId)
-    -- Do not show class icon above the personal resource display
-    if UnitIsUnit(unitId, "player") then
-        return false;
-    end
-
-    local isArena = IsActiveBattlefieldArena();
-
-    if UnitIsPlayer(unitId) then
-        if isArena then
-            return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
-        else
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            -- UnitIsFriend does not consider friendly units in duel
-            return UnitCanAttack("player", unitId) == possessedFactor;
-        end
-    else
-        return IsPartyPrimaryPet(unitId, (isArena and 2) or 4);
-    end
-end
-
-local function EnsureClassIcon(frame)
-    local nameplate = frame:GetParent();
-    if ( not nameplate ) then return end
-    if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
-        nameplate.FriendlyClassIcon:SetAlpha(1);
-        nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
-        -- Can we leverage SetTexCoord to get round icons without making them
-
-        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 7); -- higher subLevel to appear on top of the icon
-        nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
-        nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.nameplatesFriendly.classIconSelectionBorderStyle]);
-    end
-
-    return nameplate.FriendlyClassIcon
-end
-
-local function HideClassIcon(frame)
-    local nameplate = frame:GetParent();
-    if ( not nameplate ) then return end
-    if nameplate.FriendlyClassIcon then
-        nameplate.FriendlyClassIcon:Hide();
-        if nameplate.FriendlyClassIcon.border then
-            nameplate.FriendlyClassIcon.border:Hide();
-        end
-    end
-end
-
-local ClassIconSize = {
-    Player = 64,
-    Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
-    Healer = 52,
-};
-
-local function GetIconOptions(class)
-    local path, iconSize;
-
-    if ( class == "PET" ) then
-        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\pet";
-        iconSize = ClassIconSize.Pet;
-    else
-        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
-        if SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASSICONSTYLE.FLAT then
-            path = path .. "flat";
-        else
-            path = path .. "round";
-        end
-        iconSize = ClassIconSize.Player;
-    end
-
-    return path .. "\\", iconSize;
-end
-
-local iconCount = 4
-
-local function ShowClassIcon(frame)
-    local icon = EnsureClassIcon(frame);
-    if ( not icon ) then return end;
-
-    local isPlayer = UnitIsPlayer(frame.unit);
-    local class = ( isPlayer and addon.GetUnitClassName(frame.unit) ) or "PET";
-
-    -- Show dedicated healer icon
-    if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
-        -- For player nameplates, check if it's a healer
-        if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
-            class = "HEALER";
-        end
-    end
-
-    if ( icon.class == nil ) or ( class ~= icon.class ) then
-        local iconPath, iconSize = GetIconOptions(class);
-        local iconFile = iconPath .. class;
-        if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then
-                local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
-                local petNumber = math.fmod(tonumber(npcID), iconCount);
-                iconFile = iconFile .. petNumber;
-            else
-                iconFile = iconPath .. "MendPet"; -- Mend Pet
-            end
-        end
-        icon:SetTexture(iconFile);
-
-        if ( icon.iconSize == nil ) or ( iconSize ~= icon.iconSize ) then
-            icon:SetSize(iconSize, iconSize);
-            icon.border:SetSize(iconSize, iconSize);
-        end
-
-        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        if ( icon.iconScale == nil ) or ( scale ~= icon.iconScale ) then
-            icon:SetScale(scale);
-            icon.border:SetScale(scale);
-        end
-
-        icon.class = class;
-        icon.iconSize = iconSize;
-        icon.iconScale = scale;
-    end
-
-    if UnitIsUnit("target", frame.unit) then
-        icon.border:Show();
-    else
-        icon.border:Hide();
-    end
-
-    icon:Show();
-end
-
-local function SetupAnimation(frameWithAnimations)
-    local animationGroup = frameWithAnimations:CreateAnimationGroup();
-
-    local grow = animationGroup:CreateAnimation("Scale");
-    grow:SetOrder(1);
-    grow:SetScale(1.07, 1.07);
-    grow:SetDuration(0.5);
-
-    local shrink = animationGroup:CreateAnimation("Scale");
-    shrink:SetOrder(2);
-    shrink:SetScale(1 / 1.07, 1 / 1.07);
-    shrink:SetDuration(0.5);
-
-    animationGroup:SetLooping("REPEAT");
-
-    return animationGroup;
-end
-
-local function EnsureNpcHighlight(frame, scale)
-    if ( not frame.npcHighlight ) then
-        local size = 30;
-
-        frame.npcHighlight = CreateFrame("Frame", nil, frame);
-        frame.npcHighlight:SetSize(size, size);
-        frame.npcHighlight:SetScale(1);
-        frame.npcHighlight:SetFrameStrata("HIGH");
-        frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
-
-        frame.npcHighlight.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
-        frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
-
-        local offsetMultiplier = 0.41;
-        local widthOffset = size * offsetMultiplier;
-        local heightOffset = size * offsetMultiplier;
-        frame.npcHighlight.glowTexture = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
-        frame.npcHighlight.glowTexture:SetBlendMode("ADD");
-        frame.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
-        frame.npcHighlight.glowTexture:SetDesaturated(true);
-        frame.npcHighlight.glowTexture:SetPoint('TOPLEFT', frame.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);
-        frame.npcHighlight.glowTexture:SetPoint('BOTTOMRIGHT', frame.npcHighlight, 'BOTTOMRIGHT', widthOffset, -heightOffset);
-        frame.npcHighlight.glowTexture:SetVertexColor(128, 0, 128); -- Purple
-
-        frame.npcHighlight.animationGroup = SetupAnimation(frame.npcHighlight);
-    end
-
-    frame.npcHighlight:SetScale(scale);
-
-    return frame.npcHighlight;
-end
-
-local function ShouldShowNpcHighlight(unitId)
-    if ( not UnitIsPlayer(unitId) ) then
-        local guid = UnitGUID(unitId);
-        local npcID = select(6, strsplit("-", guid));
-        local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
-        if ( option == addon.NpcOption.Highlight ) then
-            local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
-            -- UnitIsFriend does not consider friendly units in duel
-            return UnitCanAttack("player", unitId) ~= possessedFactor;
-        end
-    end
-end
-
-local function ShowNpcHighlight(frame)
-    local highlight = EnsureNpcHighlight(frame, SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
-    local guid = UnitGUID(frame.unit);
-    local npcID = select(6, strsplit("-", guid));
-    highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
-    highlight:Show();
-    highlight.customIcon:Show();
-    highlight.glowTexture:Show();
-    highlight.animationGroup:Play();
-end
-
-local function HideNpcHighlight(frame)
-    local highlight = frame.npcHighlight;
-    if highlight then
-        highlight.animationGroup:Stop();
-        highlight.glowTexture:Hide();
-        highlight.customIcon:Hide();
-        highlight:Hide();
-    end
-end
-
-local function UpdateClassIcon(frame)
-    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
-
-    if ShouldShowIcon(frame.unit) then
-        frame:Hide();
-        ShowClassIcon(frame);
-    else
-        HideClassIcon(frame);
-        frame:Show();
-    end
-end
-
-local function UpdateNpcHighlight(frame)
-    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then return end
-
-    if ShouldShowNpcHighlight(frame.unit) then
-        ShowNpcHighlight(frame);
-    else
-        HideNpcHighlight(frame);
-    end
-end
-
 local function ShouldShowNameplate(unitId)
     -- Do not hide personal resource display
     if UnitIsUnit(unitId, "player") then
@@ -332,12 +59,18 @@ local function ShouldShowNameplate(unitId)
     end
 end
 
+local function HideWidgets(frame)
+    addon.HideClassIcon(frame);
+    addon.hideHighlight(frame);
+end
+
 local function UpdateHealthBar(frame)
     if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then return end
 
     if ShouldShowNameplate(frame.unit) then
         frame:Show();
     else
+        HideWidgets(frame);
         frame:Hide();
     end
 end
@@ -355,8 +88,7 @@ local function ShouldUpdateNamePlate(frame)
         if restricted[instanceType] then
             -- In restricted instance, should skip all the nameplate logic
             -- But if there is a class icon showing, hide it
-            HideClassIcon(frame);
-            HideNpcHighlight(frame);
+            HideWidgets(frame);
             return false;
         end
 
@@ -375,9 +107,9 @@ function SweepyBoop:SetupNameplateModules()
         end
 
         -- Class icon mod will hide/show healthBar when showing/hiding class icons
-        UpdateClassIcon(frame);
+        addon.UpdateClassIcon(frame);
         -- Show enemy nameplate highlight
-        UpdateNpcHighlight(frame);
+        addon.UpdateNpcHighlight(frame);
         -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
         UpdateHealthBar(frame);
 
