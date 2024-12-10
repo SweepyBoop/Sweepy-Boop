@@ -110,8 +110,8 @@ function SweepyBoop:SetupNameplateModules()
                         local isHealer;
                         if self.db.profile.nameplatesEnemy.arenaNumbersHealerHighlight then
                             local specID = GetArenaOpponentSpec(i);
-                            local role = select(5, GetSpecializationInfoByID(specID));
-                            isHealer = (role ~= "DAMAGER"); -- TANK is considered healer in arena
+                            local role = specID and select(5, GetSpecializationInfoByID(specID)); -- check null for specID, it can be empty if teammates didn't get in arena
+                            isHealer = ( role ~= nil ) and ( role ~= "DAMAGER" ); -- TANK is considered healer in arena
                         end
                         
                         if isHealer then
