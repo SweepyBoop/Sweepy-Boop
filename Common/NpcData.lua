@@ -26,7 +26,7 @@ addon.importantNpcList = {
         [5913] = { name = "Tremor Totem", icon = 8143, default = addon.NpcOption.Highlight },
         [104818] = { name = "Ancestral Protection Totem", icon = 207399, default = addon.NpcOption.Highlight },
         [61245] = { name = "Capacitor Totem", icon = 192058, default = addon.NpcOption.Show },
-        [105451] = { name = "Counterstrike Totem", icon = 204331, default = addon.NpcOption.Highlight },
+        [105451] = { name = "Counterstrike Totem", icon = 204331, default = addon.NpcOption.Show },
         [100943] = { name = "Earthen Wall Totem", icon = 198838, default = addon.NpcOption.Show }, -- hard to kill, just try to fight outside of its range
         [59712] = { name = "Stone Bulwark Totem", icon = 108270, default = addon.NpcOption.Show }, -- hard to kill
         [3527] = { name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Hide },
@@ -35,7 +35,7 @@ addon.importantNpcList = {
         [97285] = { name = "Wind Rush Totem", icon = 192077, default = addon.NpcOption.Hide },
         [60561] = { name = "Earthgrab Totem", icon = 51485, default = addon.NpcOption.Show }, -- gets players out of stealth
         [2630] = { name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Hide },
-        [105427] = { name = "Totem of Wrath", icon = 204330, default = addon.NpcOption.Highlight },
+        [105427] = { name = "Totem of Wrath", icon = 204330, default = addon.NpcOption.Show },
         [97369] = { name = "Liquid Magma Totem", icon = 192222, default = addon.NpcOption.Hide },
         [179867] = { name = "Static Field Totem", icon = 355580, default = addon.NpcOption.Show },
         [194117] = { name = "Stoneskin Totem", icon = 383017, default = addon.NpcOption.Show },
