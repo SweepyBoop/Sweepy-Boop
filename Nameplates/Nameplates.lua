@@ -47,11 +47,6 @@ local function ShouldShowNameplate(unitId)
         end
     else
         -- In battlegrounds or test mode, show hostile units that are either player or in whitelist
-
-        if ( not UnitPlayerControlled(unitId) and ( not addon.isTestMode ) ) then
-            return true; -- Don't filter out game NPCs (e.g., mobs in battlegrounds), except when we're in test mode
-        end
-
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         if UnitIsPlayer(unitId) or isWhitelisted then
             return addon.UnitIsHostile(unitId);
