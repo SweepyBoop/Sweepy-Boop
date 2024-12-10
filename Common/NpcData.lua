@@ -70,6 +70,10 @@ addon.importantNpcList = {
     [addon.classID.EVOKER] = {
         [185800] = { name = "Past Self", icon = 371869, default = addon.NpcOption.Show },
     },
+
+    [addon.classID.HUNTER] = {
+        [105419] = { name = "Dire Beast", icon = 205691, default = addon.NpcOption.Show },
+    },
 };
 
 addon.AppendNpcOptionsToGroup = function(group)
