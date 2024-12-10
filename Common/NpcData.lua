@@ -61,6 +61,8 @@ addon.importantNpcList = {
         [107024] = { name = "Fel Lord", icon = 212459, default = addon.NpcOption.Show },
         [196111] = { name = "Pit Lord", icon = 138789, default = addon.NpcOption.Show },
         [89] = { name = "Infernal", icon = 1122, default = addon.NpcOption.Show },
+
+        -- Primary pets (so they don't get hidden in battlegrounds)
     },
 
     [addon.classID.PALADIN] = {
@@ -73,6 +75,9 @@ addon.importantNpcList = {
 
     [addon.classID.HUNTER] = {
         [105419] = { name = "Dire Beast: Basilisk", icon = 205691, default = addon.NpcOption.Show },
+
+        -- Hunter pets all have the same npcID, add here so they don't get hidden in battlegrounds
+        [165189] = { name = "Pet", icon = 267116, default = addon.NpcOption.Show },
     },
 };
 
