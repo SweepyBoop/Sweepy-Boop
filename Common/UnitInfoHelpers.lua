@@ -52,14 +52,6 @@ addon.GetUnitClassName = function(unitId)
     return select(2, UnitClass(unitId));
 end
 
-addon.IsArenaPrimaryPet = function(unitId)
-    for i = 1, addon.MAX_ARENA_SIZE do
-        if UnitIsUnit(unitId, "arenapet" .. i) then
-            return true;
-        end
-    end
-end
-
 addon.IsShamanPrimaryPet = function (unitId)
     local unitGUID = UnitGUID(unitId);
     local npcID = addon.GetNpcIdFromGuid(unitGUID);
@@ -93,12 +85,12 @@ end
 addon.UnitIsHunterSecondaryPet = function(unitId)
     if SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet and ( addon.GetNpcIdFromGuid(unitId) == addon.HUNTERPET ) then
         for i = 1, addon.MAX_ARENA_SIZE do
-            if UnitIsUnit(unitId, "party" .. i .. "pet") or UnitIsUnit(unitId, "arena" .. i .. "pet") then
+            if UnitIsUnit(unitId, "arenapet" .. i) then
                 return false;
             end
         end
 
-        return true; -- Option enabled and unitId is a hunter pet, but failed to match with arena/party
+        return true; -- Option enabled and unitId is a hunter pet, but failed to match with an arena opponent
     end
 
     return false; -- Option disabled or not a hunter pet
