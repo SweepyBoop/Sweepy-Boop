@@ -92,8 +92,8 @@ addon.importantNpcList = {
 };
 
 if addon.isTestMode then
-    addon.importantNpcList[addon.classID.HUNTER][219250] = { name = "PVP Training Dummy", icon = 267116, default = addon.NpcOption.Highlight };
-    addon.importantNpcList[addon.classID.HUNTER][225985] = { name = "Kelpfist", icon = 267116, default = addon.NpcOption.Show };
+    addon.importantNpcList[addon.classID.HUNTER][219250] = { name = "PVP Training Dummy", icon = 204336, default = addon.NpcOption.Highlight };
+    addon.importantNpcList[addon.classID.HUNTER][225985] = { name = "Kelpfist", icon = 204336, default = addon.NpcOption.Show };
 end
 
 addon.iconTexture = {};
