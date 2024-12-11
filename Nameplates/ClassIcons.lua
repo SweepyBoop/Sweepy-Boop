@@ -143,7 +143,10 @@ addon.HideClassIcon = function(frame)
 end
 
 addon.UpdateClassIcon = function(frame)
-    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
+    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then
+        addon.HideClassIcon(frame);
+        return; 
+    end
 
     if ShouldShowIcon(frame.unit) then
         frame:Hide();
