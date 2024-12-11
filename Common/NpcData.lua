@@ -7,7 +7,7 @@ addon.NpcOption = {
     Highlight = 3, -- For units that should be killed instantly or avoided at any cost :) (e.g., DK Reanimation)
 };
 
-addon.HUNTERPET = 105419;
+addon.HUNTERPET = 165189;
 
 -- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
 -- To find the NpcID of a unit, target it and type:
@@ -84,10 +84,10 @@ addon.importantNpcList = {
     },
 
     [addon.classID.HUNTER] = {
-        [addon.HUNTERPET] = { name = "Dire Beast: Basilisk", icon = 205691, default = addon.NpcOption.Show },
+        [105419] = { name = "Dire Beast: Basilisk", icon = 205691, default = addon.NpcOption.Show },
 
         -- Hunter pets all have the same npcID, add here so they don't get hidden in battlegrounds
-        [165189] = { name = "Pet", icon = 267116, default = addon.NpcOption.Show },
+        [addon.HUNTERPET] = { name = "Pet", icon = 267116, default = addon.NpcOption.Show },
     },
 };
 
