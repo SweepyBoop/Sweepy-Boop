@@ -83,13 +83,15 @@ addon.UnitIsHostile = function(unitId)
 end
 
 addon.UnitIsHunterSecondaryPet = function(unitId) -- Only call this check on hostile targets!
-    if SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet and ( addon.GetNpcIdFromGuid(unitId) == addon.HUNTERPET ) then
+    if SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet and ( addon.GetNpcIdFromGuid(UnitGUID(unitId)) == addon.HUNTERPET ) then
+        print("Found a hunter pet");
         for i = 1, addon.MAX_ARENA_SIZE do
             if UnitIsUnit(unitId, "arenapet" .. i) then
                 return false;
             end
         end
 
+        print("Hid a hunter pet");
         return true; -- Option enabled and unitId is a hunter pet, but failed to match with an arena opponent
     end
 
