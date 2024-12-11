@@ -12,7 +12,7 @@ addon.SPELLCATEGORY = {
     DEFENSIVE = 6,
 };
 
-addon.DURATION_DYNAMIC = "dynamic";
+addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
 
 addon.SPECID = {
     ARCANE = 62,
