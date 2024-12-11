@@ -147,7 +147,10 @@ options.args.nameplatesEnemy = {
     childGroups = "tab",
     name = "Enemy nameplates",
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val end,
+    set = function(info, val) 
+        SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+        SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+    end,
     args = {
         header1 = {
             order = 1,
@@ -494,7 +497,9 @@ function SweepyBoop:RefreshConfig()
     self:HideTestArenaEnemyBurst();
     self:HideTestCooldownTracking();
 
-    self.db.profile.nameplatesFriendly.lastModified = GetTime();
+    local time = GetTime();
+    self.db.profile.nameplatesFriendly.lastModified = time;
+    self.db.profile.nameplatesEnemy.lastModified = time;
 end
 
 SLASH_SweepyBoop1 = "/sb"
