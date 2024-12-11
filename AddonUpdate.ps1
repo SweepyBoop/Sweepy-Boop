@@ -8,5 +8,5 @@ New-Item -ItemType Directory -Path $addonDir | Out-Null
 
 Copy-Item -Path "$workDir\*" -Destination $addonDir -Recurse -Force
 
-$constantsFile = Join-Path -Path $addonDir -ChildPath "Constants.lua"
+$constantsFile = Join-Path -Path $addonDir -ChildPath "Common\Constants.lua"
 "addon.internal = true;" | Out-File -FilePath $constantsFile -Append -Encoding UTF8
