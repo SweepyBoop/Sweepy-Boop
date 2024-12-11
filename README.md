@@ -46,6 +46,10 @@ It comes with a few key features:
 
 ![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
 
+Here is my Twitch clip of this module in action!
+
+https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131
+
 **Note (important)**
 - This module supports Gladius and sArena
 - Make sure to /reload if you change your Gladius / sArena settings (especially when you change the layout / positioning)
