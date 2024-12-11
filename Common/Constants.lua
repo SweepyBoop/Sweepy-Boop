@@ -1,7 +1,5 @@
 local _, addon = ...;
 
-addon.isTestMode = false;
-
 addon.SPELLCATEGORY = {
     OFFENSIVE = 1,
 
