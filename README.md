@@ -59,6 +59,9 @@ While in arena, only show enemy player nameplates and important non-player units
 
 ![TotemHighlight](https://github.com/user-attachments/assets/3ca7871f-0566-44f0-b141-4560213c30f0)
 
+Players can customize which units to hide / show / highlight:
+
+![image](https://github.com/user-attachments/assets/c8e0073b-5e1a-4999-8b90-ed339f44ac45)
 
 
 ## Sort raid frames
