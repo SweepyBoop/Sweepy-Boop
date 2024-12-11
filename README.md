@@ -52,7 +52,7 @@ It comes with a few key features:
 - This module only tracks damage offensives and defensive abilities, and currently there is no option to choose which abilities to track
 
 ## Enemy nameplate filtering & highlighting
-While in arena, only show enemy player nameplates and important non-player units, e.g.,
+While in arenas / battlegrounds, customize which non-player enemy units to show, e.g.,
 - For Beast Mastery Hunter pets, hide the extra pet from talent "Animal Companion", so you know which one to kill
 - Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
 - Option to highlight chosen units with an animating icon!
