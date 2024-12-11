@@ -35,7 +35,7 @@ local function EnsureClassIcon(frame)
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
         nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER");
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
         -- Can we leverage SetTexCoord to get round icons without making them
@@ -48,7 +48,9 @@ local function EnsureClassIcon(frame)
     -- Compare the timestamp to see if any settings have changed
     if (nameplate.FriendlyClassIcon.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified) then
         nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
-        nameplate.FriendlyClassIcon:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale);
+        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
+        nameplate.FriendlyClassIcon:SetScale(scale);
+        nameplate.FriendlyClassIcon.border:SetScale(scale);
         nameplate.FriendlyClassIcon.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     end
 
