@@ -48,7 +48,10 @@ options.args.nameplatesFriendly = {
     type = "group",
     name = "Friendly class icons",
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val end,
+    set = function(info, val)
+        SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val;
+        SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
+    end,
     args = {
         classIconsEnabled = {
             order = 1,

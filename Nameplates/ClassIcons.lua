@@ -45,7 +45,14 @@ local function EnsureClassIcon(frame)
         nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.nameplatesFriendly.classIconSelectionBorderStyle]);
     end
 
-    return nameplate.FriendlyClassIcon
+    -- Compare the timestamp to see if any settings have changed
+    if (nameplate.FriendlyClassIcon.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified) then
+        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+        nameplate.FriendlyClassIcon:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale);
+        nameplate.FriendlyClassIcon.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+    end
+
+    return nameplate.FriendlyClassIcon;
 end
 
 local ClassIconSize = {
@@ -109,15 +116,8 @@ local function ShowClassIcon(frame)
             icon.border:SetSize(iconSize, iconSize);
         end
 
-        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        if ( icon.iconScale == nil ) or ( scale ~= icon.iconScale ) then
-            icon:SetScale(scale);
-            icon.border:SetScale(scale);
-        end
-
         icon.class = class;
         icon.iconSize = iconSize;
-        icon.iconScale = scale;
     end
 
     if UnitIsUnit("target", frame.unit) then
