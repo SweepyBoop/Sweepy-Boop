@@ -51,7 +51,7 @@ It comes with a few key features:
 - Make sure to /reload if you change your Gladius / sArena settings (especially when you change the layout / positioning)
 - This module only tracks damage offensives and defensive abilities, and currently there is no option to choose which abilities to track
 
-## Nameplate filtering
+## Nameplate Filtering & Highlighting
 While in arena, only show enemy player nameplates and important non-player units, e.g.,
 - For Beast Mastery Hunter pets, hide the extra pet from talent "Animal Companion", so you know which one to kill
 - Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
