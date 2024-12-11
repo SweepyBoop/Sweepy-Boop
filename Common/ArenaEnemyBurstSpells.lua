@@ -602,14 +602,7 @@ addon.spellData = {
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
         index = 1,
     },
-}
-
-addon.ClassWithFearSpell = function(class)
-    return ( class == addon.WARRIOR ) or ( class == addon.PRIEST ) or ( class == addon.WARLOCK );
-end
-
-addon.RESET_FULL = 0
-local RESET_FULL = addon.RESET_FULL
+};
 
 addon.spellResets = {
     -- Mindgames
@@ -638,7 +631,7 @@ addon.spellResets = {
     [133] = {
         [190319] = 2, -- Combustion
     },
-}
+};
 
 if addon.isTestMode then
     -- Test
@@ -650,27 +643,27 @@ if addon.isTestMode then
         cooldown = 30,
         index = 1,
         sound = true,
-    }
+    };
     -- Regrowth
     addon.spellData[8936] = {
         class = addon.DRUID,
         category = OFFENSIVE,
         duration = 5,
         cooldown = 10,
-    }
+    };
     -- Rejuv
     addon.spellData[774] = {
         class = addon.DRUID,
         category = OFFENSIVE,
         cooldown = 45,
-    }
+    };
     -- Wild Growth
     addon.spellData[48438] = {
         category = OFFENSIVE,
         duration = 7,
         trackDest = true,
         trackEvent = addon.SPELL_AURA_APPLIED,
-    }
+    };
 
     addon.spellData[1459] = {
         class = addon.MAGE,
@@ -688,5 +681,5 @@ if addon.isTestMode then
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
         critResetAmount = 1,
-    }
+    };
 end
