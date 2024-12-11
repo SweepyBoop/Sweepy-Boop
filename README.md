@@ -48,8 +48,6 @@ It comes with a few key features:
 
 Here is my Twitch clip of this module in action!
 
-<iframe src="https://clips.twitch.tv/embed?clip=SlipperyAmazonianFriseeDoritosChip-QXyxLSWYUlkUDjOx&parent=www.example.com" height="378" width="620"></iframe>
-
 https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131
 
 **Note (important)**
