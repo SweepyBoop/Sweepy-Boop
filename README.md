@@ -1,4 +1,4 @@
-# SweepyBoop's Arena Helper
+# SweepyBoop's PvP Helper
 An _extremely_ _lightweight_ addon to support arena gameplay.
 
 Some of the functionalities, such as class & pet icons and enemy nameplate highlight, also carry well into battlegrounds.
