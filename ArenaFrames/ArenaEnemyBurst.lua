@@ -426,9 +426,7 @@ function SweepyBoop:TestArenaEnemyBurst()
         return;
     end
 
-    local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
-
-    RefreshTestMode();
+    RefreshTestMode(); -- Wipe the previous test frames first
 
     local subEvent = addon.SPELL_AURA_APPLIED;
     local sourceGUID = UnitGUID("player");
@@ -440,11 +438,7 @@ function SweepyBoop:TestArenaEnemyBurst()
     subEvent = addon.SPELL_CAST_SUCCESS;
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
-    if shoudShow then
-        externalTestGroup:Show();
-    else
-        externalTestGroup:Hide();
-    end
+    externalTestGroup:Show();
 end
 
 function SweepyBoop:HideTestArenaEnemyBurst()

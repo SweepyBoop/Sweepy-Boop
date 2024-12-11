@@ -247,30 +247,36 @@ options.args.arenaFrames = {
         testmode = {
             order = 1,
             type = "execute",
-            name = "Toggle Test Mode",
+            name = "Test",
+            func = "TestArena",
+        },
+        hidetest = {
+            order = 2,
+            type = "execute",
+            name = "Hide",
             func = "TestArena",
         },
         description1 = {
-            order = 2,
+            order = 3,
             width = "full",
             type = "description",
             name = addon.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
         },
         breaker1 = {
-            order = 3,
+            order = 4,
             type = "header",
             name = "",
         },
 
         arenaEnemyOffensivesEnabled = {
-            order = 4,
+            order = 5,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
-            order = 5,
+            order = 6,
             type = "range",
             min = 16,
             max = 64,
@@ -278,14 +284,14 @@ options.args.arenaFrames = {
             desc = "Size of arena offensive cooldown icons",
         },
         arenaEnemyDefensivesEnabled = {
-            order = 6,
+            order = 7,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
-            order = 7,
+            order = 8,
             type = "range",
             min = 16,
             max = 64,
@@ -293,7 +299,7 @@ options.args.arenaFrames = {
             desc = "Size of arena defensive cooldown icons",
         },
         arenaCooldownOffsetX = {
-            order = 8,
+            order = 9,
             type = "range",
             min = -750,
             max = 750,
@@ -301,7 +307,7 @@ options.args.arenaFrames = {
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
         arenaCooldownOffsetY = {
-            order = 9,
+            order = 10,
             type = "range",
             min = -150,
             max = 150,
@@ -493,6 +499,11 @@ function SweepyBoop:TestArena()
 
     self:TestArenaEnemyBurst();
     self:TestCooldownTracking();
+end
+
+function SweepyBoop:HideTestArena()
+    self:HideTestArenaEnemyBurst();
+    self:HideTestCooldownTracking();
 end
 
 function SweepyBoop:RefreshConfig()
