@@ -92,7 +92,6 @@ local function sortFunc(a, b)
     end
 end
 
--- TODO: Add a slash command to call out test mode which also calls sArena:Test()
 local function CalculateArenaFrameOffsetX(frameName)
     local offsetX = 0;
 
