@@ -241,8 +241,8 @@ options.args.arenaFrames = {
     type = "group",
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
-    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile.arenaFrames[info[#info]] = val end,
     args = {
         testmode = {
             order = 1,
@@ -422,12 +422,14 @@ local defaults = {
             hideHunterSecondaryPet = true,
             filterList = {},
         },
-        arenaCooldownOffsetX = 5,
-        arenaCooldownOffsetY = 0,
-        arenaEnemyOffensivesEnabled = true,
-        arenaEnemyOffensiveIconSize = 32,
-        arenaEnemyDefensivesEnabled = true,
-        arenaEnemyDefensiveIconSize = 25,
+        arenaFrames = {
+            arenaCooldownOffsetX = 5,
+            arenaCooldownOffsetY = 0,
+            arenaEnemyOffensivesEnabled = true,
+            arenaEnemyOffensiveIconSize = 32,
+            arenaEnemyDefensivesEnabled = true,
+            arenaEnemyDefensiveIconSize = 25,
+        },
         arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,

@@ -216,9 +216,9 @@ end
 -- Premake all icons (regardless of class)
 local premadeIcons = {};
 function SweepyBoop:PremakeOffensiveIcons()
-    if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
+    if ( not self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then return end
 
-    local iconSize = self.db.profile.arenaEnemyOffensiveIconSize;
+    local iconSize = self.db.profile.arenaFrames.arenaEnemyOffensiveIconSize;
     if test then
         local unitId = "player";
         premadeIcons[unitId] = {};
@@ -326,7 +326,7 @@ local externalTestGroup; -- Icon group for "Toggle Test Mode"
 local function RefreshTestMode()
     addon.IconGroup_Wipe(externalTestGroup);
 
-    local iconSize = SweepyBoop.db.profile.arenaEnemyOffensiveIconSize;
+    local iconSize = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize;
     local unitId = "player";
     if externalTestIcons[unitId] then
         local scale = iconSize / addon.DEFAULT_ICON_SIZE;
@@ -345,7 +345,7 @@ local function RefreshTestMode()
         point = "LEFT",
         relativeTo = relativeTo,
         relativePoint = "RIGHT",
-        offsetY = SweepyBoop.db.profile.arenaCooldownOffsetY,
+        offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
     };
 
     externalTestGroup = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
@@ -353,7 +353,7 @@ local function RefreshTestMode()
 end
 
 function SweepyBoop:PopulateOffensiveIcons()
-    if ( not self.db.profile.arenaEnemyOffensivesEnabled ) then return end
+    if ( not self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then return end
 
     local setPointOptions = {};
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
@@ -362,7 +362,7 @@ function SweepyBoop:PopulateOffensiveIcons()
             point = "LEFT",
             relativeTo = prefix .. i,
             relativePoint = "RIGHT",
-            offsetY = self.db.profile.arenaCooldownOffsetY,
+            offsetY = self.db.profile.arenaFrames.arenaCooldownOffsetY,
         };
     end
 
@@ -420,7 +420,7 @@ function SweepyBoop:PopulateOffensiveIcons()
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
-    if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then
+    if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then
         -- Module disabled, simply hide test icons
         self:HideTestArenaEnemyBurst();
         return;
