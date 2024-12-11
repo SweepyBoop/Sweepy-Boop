@@ -420,12 +420,7 @@ function SweepyBoop:PopulateOffensiveIcons()
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
-    if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then
-        -- Module disabled, simply hide test icons
-        self:HideTestArenaEnemyBurst();
-        return;
-    end
-
+    -- Test is allowed even if the module is disabled
     RefreshTestMode(); -- Wipe the previous test frames first
 
     local subEvent = addon.SPELL_AURA_APPLIED;
