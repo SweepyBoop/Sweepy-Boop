@@ -553,14 +553,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
 end
 
 function SweepyBoop:TestCooldownTracking()
-    if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then
-        -- Module disabled, simply hide test icons
-        self:HideTestCooldownTracking();
-        return;
-    end
-
-    local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
-
+    -- Test is allowed even if the module is disabled
     RefreshTestMode();
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
@@ -573,11 +566,7 @@ function SweepyBoop:TestCooldownTracking()
     subEvent = addon.SPELL_AURA_APPLIED;
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
-    if shoudShow then
-        externalTestGroup:Show();
-    else
-        externalTestGroup:Hide();
-    end
+    externalTestGroup:Show();
 end
 
 function SweepyBoop:HideTestCooldownTracking()
