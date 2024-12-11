@@ -1,16 +1,16 @@
 local _, addon = ...;
 
-local UnitAura = C_UnitAuras.GetAuraDataByIndex;
+addon.MAX_ARENA_SIZE = 3;
 
-addon.MAX_ARENA_SIZE = 3
-addon.MAX_PARTY_SIZE = 6 -- 3 for players and 3 for pets
+local UnitAura = C_UnitAuras.GetAuraDataByIndex;
+local maxAuras = 255;
 
 addon.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
         filter = filter.."|HELPFUL";
     end
 
-    for i = 1, 255 do
+    for i = 1, maxAuras do
       local auraData = UnitAura(unit, i, filter);
       if (not auraData) or (not auraData.name) then return end
       if spell == auraData.spellId or spell == auraData.name then
@@ -24,7 +24,7 @@ addon.Util_GetFirstUnitAura = function (unit, spells, filter, sourceUnit)
         filter = filter.."|HELPFUL";
     end
 
-    for i = 1, 255 do
+    for i = 1, maxAuras do
         local auraData = UnitAura(unit, i, filter);
         if auraData and auraData.name and spells[auraData.spellId] then
             if ( not sourceUnit ) or ( auraData.sourceUnit == sourceUnit ) then
@@ -45,11 +45,7 @@ addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
 end
 
 addon.GetUnitClass = function(unitId)
-    return select(2, UnitClass(unitId));
-end
-
-addon.GetUnitClassName = function(unitId)
-    return select(2, UnitClass(unitId));
+    return select(2, UnitClass(unitId)); -- Locale-independent name, e.g. "WARRIOR"
 end
 
 addon.IsShamanPrimaryPet = function (unitId)

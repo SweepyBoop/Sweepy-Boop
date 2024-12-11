@@ -80,7 +80,7 @@ local function ShowClassIcon(frame)
     if ( not icon ) then return end;
 
     local isPlayer = UnitIsPlayer(frame.unit);
-    local class = ( isPlayer and addon.GetUnitClassName(frame.unit) ) or "PET";
+    local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
