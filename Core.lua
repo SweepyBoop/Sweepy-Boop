@@ -254,7 +254,7 @@ options.args.arenaFrames = {
             order = 2,
             type = "execute",
             name = "Hide",
-            func = "TestArena",
+            func = "HideTestArena",
         },
         description1 = {
             order = 3,
