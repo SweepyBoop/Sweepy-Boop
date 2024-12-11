@@ -493,6 +493,8 @@ end
 function SweepyBoop:RefreshConfig()
     self:HideTestArenaEnemyBurst();
     self:HideTestCooldownTracking();
+
+    self.db.profile.nameplatesFriendly.lastModified = GetTime();
 end
 
 SLASH_SweepyBoop1 = "/sb"
