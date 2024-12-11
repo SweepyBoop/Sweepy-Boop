@@ -59,14 +59,14 @@ addon.IsPartyPrimaryPet = function(unitId, partySize)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
         local class = addon.GetUnitClass("player");
-        return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
+        return ( class == addon.HUNTER ) or ( class == addon.WARLOCK ) or ( class == addon.SHAMAN and addon.IsShamanPrimaryPet(unitId) );
     else
         local partySize = partySize or 2;
         for i = 1, partySize do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 local partyUnitId = "party" .. i;
                 local class = addon.GetUnitClass(partyUnitId);
-                return ( class == "HUNTER" ) or ( class == "WARLOCK" ) or ( class == "SHAMAN" and addon.IsShamanPrimaryPet(unitId) );
+                return ( class == addon.HUNTER ) or ( class == addon.WARLOCK ) or ( class == addon.SHAMAN and addon.IsShamanPrimaryPet(unitId) );
             end
         end
     end
