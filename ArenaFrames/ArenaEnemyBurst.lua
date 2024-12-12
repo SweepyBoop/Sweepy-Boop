@@ -1,19 +1,6 @@
 local _, addon = ...;
 
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
-local UnitGUID = UnitGUID;
 local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
-local C_UnitAuras = C_UnitAuras;
-local GetSpecialization = GetSpecialization;
-local GetSpecializationInfo = GetSpecializationInfo;
-local GetArenaOpponentSpec = GetArenaOpponentSpec;
-local UnitClass = UnitClass;
-local GetSpecializationInfoByID = GetSpecializationInfoByID;
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
-local GetTime = GetTime;
-local Gladius = Gladius;
-local sArena = sArena;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
