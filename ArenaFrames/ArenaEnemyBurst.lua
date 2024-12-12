@@ -218,7 +218,8 @@ local function EnsureIcon(unitId, spellID)
     end
 
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        premadeIcons[unitId][spellID]:SetSize(SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize);
+        local size = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize;
+        premadeIcons[unitId][spellID]:SetSize(size, size);
         premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 end
