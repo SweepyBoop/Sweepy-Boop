@@ -91,3 +91,15 @@ addon.UnitIsHunterSecondaryPet = function(unitId) -- Only call this check on hos
 
     return false; -- Option disabled or not a hunter pet
 end
+
+addon.GetUnitSpec = function(unit)
+    if ( unit == "player" ) then
+        local currentSpec = GetSpecialization();
+        if currentSpec then
+            return GetSpecializationInfo(currentSpec);
+        end
+    else
+        local arenaIndex = string.sub(unit, -1, -1);
+        return GetArenaOpponentSpec(arenaIndex);
+    end
+end

@@ -242,18 +242,6 @@ local function EnsureIcons()
     end
 end
 
-addon.GetUnitSpec = function(unit)
-    if ( unit == "player" ) then
-        local currentSpec = GetSpecialization();
-        if currentSpec then
-            return GetSpecializationInfo(currentSpec);
-        end
-    else
-        local arenaIndex = string.sub(unit, -1, -1);
-        return GetArenaOpponentSpec(arenaIndex);
-    end
-end
-
 local function SetupAuraGroup(group, unit, testIcons)
     -- Clear previous icons
     addon.IconGroup_Wipe(group);
