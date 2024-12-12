@@ -12,10 +12,10 @@ if (Test-Path $constantsFile) {
     exit 1
 }
 
-$newLine = if ($Off) { 
-    "addon.isTestMode = false;" 
-} else { 
-    "addon.isTestMode = true;" 
+$newLine = if ($Off) {
+    "addon.isTestMode = false;"
+} else {
+    "addon.isTestMode = true;"
 }
 
 # Replace the line containing "addon.isTestMode" or add it if it doesn't exist
