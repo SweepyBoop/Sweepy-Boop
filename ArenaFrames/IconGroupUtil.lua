@@ -36,6 +36,26 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     return f;
 end
 
+addon.UpdateIconGroupPositionOptions = function (iconGroup, setPointOptions, growOptions)
+    local point, relativeTo, relativePoint, offsetX, offsetY =
+        setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
+
+    if ( relativeTo == UIParent ) or ( relativeTo == PlayerFrame ) then
+        iconGroup:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    else
+        iconGroup.setPointOptions = setPointOptions;
+    end
+
+    iconGroup.growDirection = growOptions.direction;
+    iconGroup.growAnchor = growOptions.anchor;
+    iconGroup.margin = growOptions.margin;
+    iconGroup.columns = growOptions.columns; -- For center alignment only
+    iconGroup.growUpward = growOptions.growUpward; -- "UP" or "DOWN"
+
+    -- Leave other fields untouched, we're only updating position-related settings
+end
+
+
 local function IconGroup_Position(group)
     if ( not group ) or ( #(group.active) == 0 ) then
         return;

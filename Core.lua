@@ -465,10 +465,8 @@ function SweepyBoop:OnInitialize()
     self:SetupNameplateModules();
 
     -- Setup arena enemy cooldown icons
-    self:PremakeOffensiveIcons();
-    self:PopulateOffensiveIcons();
-    self:PremakeCooldownTrackingIcons();
-    self:PopulateCooldownTrackingIcons();
+    self:SetupOffensiveIcons();
+    self:SetupCooldownTrackingIcons();
 
     -- Setup raid frame aggro highlight
     self:SetupRaidFrameAggroHighlight();

@@ -28,6 +28,18 @@ local resetByCrit = {
     190319, -- Combustion
 };
 
+-- Premake icons (regardless of class) only once and adjust if needed
+local premadeIcons = {};
+
+-- Premake icon groups only once and adjust if needed
+local iconGroups = {};
+local refreshFrame;
+local growOptions = {
+    direction = "RIGHT",
+    anchor = "LEFT",
+    margin = 3,
+};
+
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
     spell.priority = spell.index or 100;
@@ -200,25 +212,30 @@ local function ProcessUnitEvent(group, event, ...)
     end
 end
 
--- Premake all icons (regardless of class)
--- This should only happen once when addon is loaded
-local premadeIcons = {};
-function SweepyBoop:PremakeOffensiveIcons()
-    if ( not self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then return end
+local function EnsureIcon(unitId, spellID)
+    if ( not premadeIcons[unitId][spellID] ) then
+        premadeIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize, true);
+    end
 
-    local iconSize = self.db.profile.arenaFrames.arenaEnemyOffensiveIconSize;
+    if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+        premadeIcons[unitId][spellID]:SetSize(SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize);
+        premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
+    end
+end
+
+local function EnsureIcons()
     if test then
         local unitId = "player";
         premadeIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            premadeIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, iconSize, true);
+            EnsureIcon(unitId, spellID);
         end
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena"..i;
             premadeIcons[unitId] = {};
             for spellID, spell in pairs(spellData) do
-                premadeIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, iconSize, true);
+                EnsureIcon(unitId, spellID);
             end
         end
     end
@@ -298,16 +315,6 @@ local function SetupAuraGroup(group, unit, testIcons)
     end
 end
 
--- Populate icons based on class & spec on login
-local testGroup = nil;
-local arenaGroup = {};
-local refreshFrame;
-local growOptions = {
-    direction = "RIGHT",
-    anchor = "LEFT",
-    margin = 3,
-};
-
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
 local externalTestGroup; -- Icon group for "Toggle Test Mode"
 
@@ -340,73 +347,86 @@ local function RefreshTestMode()
     SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
 end
 
--- Create icon groups and anchor to arena frames
--- This should only happen once when the addon loads
-function SweepyBoop:PopulateOffensiveIcons()
-    if ( not self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then return end
-
-    local setPointOptions = {};
-    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-    for i = 1, addon.MAX_ARENA_SIZE do
-        setPointOptions[i] = {
+local function EnsureIconGroup(index)
+    if ( not iconGroups[index] ) then
+        local setPointOptions = {};
+        local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+        setPointOptions = {
             point = "LEFT",
-            relativeTo = prefix .. i,
+            relativeTo = prefix .. index,
             relativePoint = "RIGHT",
-            offsetY = self.db.profile.arenaFrames.arenaCooldownOffsetY,
+            offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
         };
+        local unitId = ( test and "player" ) or ( "arena" .. index );
+        iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
     end
 
+    if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+        addon.UpdateIconGroupPositionOptions(iconGroups[index]);
+        iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
+    end
+end
+
+local function EnsureIconGroups()
     if test then
-        local unitId = "player";
-        testGroup = addon.CreateIconGroup(setPointOptions[1], growOptions, unitId);
-        SetupAuraGroup(testGroup, unitId);
+        EnsureIconGroup(0);
+        SetupAuraGroup(iconGroups[0], "player");
     else
         for i = 1, addon.MAX_ARENA_SIZE do
-            local unitId = "arena" .. i;
-            arenaGroup[i] = addon.CreateIconGroup(setPointOptions[i], growOptions, unitId);
-            SetupAuraGroup(arenaGroup[i], unitId);
+            EnsureIconGroup(i);
+            SetupAuraGroup(iconGroups[i], "arena" .. i);
         end
     end
 
     -- Refresh icon groups when zone changes, or during test mode when player switches spec
-    refreshFrame = CreateFrame("Frame");
-    refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    refreshFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
-    refreshFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
-    refreshFrame:RegisterEvent(addon.UNIT_AURA);
-    refreshFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
-    refreshFrame:SetScript("OnEvent", function (frame, event, ...)
-        if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
-            -- Hide the external "Toggle Test Mode" group
-            self:HideTestArenaEnemyBurst();
+    if ( not refreshFrame ) then
+        refreshFrame = CreateFrame("Frame");
+        refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+        refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        refreshFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
+        refreshFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+        refreshFrame:RegisterEvent(addon.UNIT_AURA);
+        refreshFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+        refreshFrame:SetScript("OnEvent", function (frame, event, ...)
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
+                -- Hide the external "Toggle Test Mode" group
+                SweepyBoop:HideTestArenaEnemyBurst();
+                
+                -- We only need to update icon group options upon entering arena
+                EnsureIconGroups();
 
-            if test then
-                SetupAuraGroup(testGroup, "player");
-            elseif ( event ~= addon.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
-                for i = 1, addon.MAX_ARENA_SIZE do
-                    SetupAuraGroup(arenaGroup[i], "arena"..i);
+                if test then
+                    SetupAuraGroup(iconGroups[0], "player");
+                elseif ( event ~= addon.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
+                    for i = 1, addon.MAX_ARENA_SIZE do
+                        SetupAuraGroup(iconGroups[i], "arena"..i);
+                    end
                 end
-            end
-        elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
-            local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-            if test then
-                ProcessCombatLogEvent(testGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+                local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+                if test then
+                    ProcessCombatLogEvent(iconGroups[0], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                else
+                    for i = 1, addon.MAX_ARENA_SIZE do
+                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    end
+                end
             else
-                for i = 1, addon.MAX_ARENA_SIZE do
-                    ProcessCombatLogEvent(arenaGroup[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                if test then
+                    ProcessUnitEvent(iconGroups[0], event, ...);
+                else
+                    for i = 1, addon.MAX_ARENA_SIZE do
+                        ProcessUnitEvent(iconGroups[i], event, ...);
+                    end
                 end
             end
-        else
-            if test then
-                ProcessUnitEvent(testGroup, event, ...);
-            else
-                for i = 1, addon.MAX_ARENA_SIZE do
-                    ProcessUnitEvent(arenaGroup[i], event, ...);
-                end
-            end
-        end
-    end)
+        end)
+    end
+end
+
+function SweepyBoop:EnsureOffensiveIcons()
+    EnsureIcons();
+    EnsureIconGroups();
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
