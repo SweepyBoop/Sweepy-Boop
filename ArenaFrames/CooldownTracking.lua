@@ -203,9 +203,9 @@ local premadeIcons = {};
 
 -- Premake all icons (regardless of class and category)
 function SweepyBoop:PremakeCooldownTrackingIcons()
-    if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
+    if ( not self.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then return end
 
-    local defensiveIconSize = self.db.profile.arenaEnemyDefensiveIconSize;
+    local defensiveIconSize = self.db.profile.arenaFrames.arenaEnemyDefensiveIconSize;
     if test then
         local unitId = "player";
         premadeIcons[unitId] = {};
@@ -424,7 +424,7 @@ local externalTestGroup; -- Icon group for "Toggle Test Mode"
 local function RefreshTestMode()
     addon.IconGroup_Wipe(externalTestGroup);
 
-    local defensiveIconSize = SweepyBoop.db.profile.arenaEnemyDefensiveIconSize;
+    local defensiveIconSize = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize;
     local unitId = "player";
     if externalTestIcons[unitId] then
         local scale = defensiveIconSize / addon.DEFAULT_ICON_SIZE;
@@ -444,14 +444,14 @@ local function RefreshTestMode()
 
     local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
     local offsetY;
-    if SweepyBoop.db.profile.arenaEnemyOffensivesEnabled then
+    if SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
         -- Offensive icons enabled, show defensives below them
-        offsetY = -( SweepyBoop.db.profile.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaEnemyDefensiveIconSize*0.5 + 2 );
+        offsetY = -( SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize*0.5 + 2 );
     else
         -- Otherwise show at the center
         offsetY = 0;
     end
-    offsetY = offsetY + SweepyBoop.db.profile.arenaCooldownOffsetY;
+    offsetY = offsetY + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
     local setPointOption = {
         point = "LEFT",
         relativeTo = relativeTo,
@@ -465,20 +465,20 @@ end
 
 -- Create icon groups (note the category order)
 function SweepyBoop:PopulateCooldownTrackingIcons()
-    if ( not self.db.profile.arenaEnemyDefensivesEnabled ) then return end
+    if ( not self.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then return end
 
     -- Setup defensive group based on whether Gladius/sArena is loaded and user settings.
     setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
     local offsetY;
-    if self.db.profile.arenaEnemyOffensivesEnabled then
+    if self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
         -- Offensive icons enabled, show defensives below them
-        offsetY = -( self.db.profile.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaEnemyDefensiveIconSize*0.5 + 2 );
+        offsetY = -( self.db.profile.arenaFrames.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaFrames.arenaEnemyDefensiveIconSize*0.5 + 2 );
     else
         -- Otherwise show at the center
         offsetY = 0;
     end
-    offsetY = offsetY + SweepyBoop.db.profile.arenaCooldownOffsetY;
+    offsetY = offsetY + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
     for i = 1, addon.MAX_ARENA_SIZE do
         setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
             point = "LEFT",
@@ -553,14 +553,7 @@ function SweepyBoop:PopulateCooldownTrackingIcons()
 end
 
 function SweepyBoop:TestCooldownTracking()
-    if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then
-        -- Module disabled, simply hide test icons
-        self:HideTestCooldownTracking();
-        return;
-    end
-
-    local shoudShow = ( not externalTestGroup ) or ( not externalTestGroup:IsShown() );
-
+    -- Test is allowed even if the module is disabled
     RefreshTestMode();
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
@@ -573,11 +566,7 @@ function SweepyBoop:TestCooldownTracking()
     subEvent = addon.SPELL_AURA_APPLIED;
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
-    if shoudShow then
-        externalTestGroup:Show();
-    else
-        externalTestGroup:Hide();
-    end
+    externalTestGroup:Show();
 end
 
 function SweepyBoop:HideTestCooldownTracking()

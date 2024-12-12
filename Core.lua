@@ -48,7 +48,10 @@ options.args.nameplatesFriendly = {
     type = "group",
     name = "Friendly class icons",
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val end,
+    set = function(info, val)
+        SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val;
+        SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
+    end,
     args = {
         classIconsEnabled = {
             order = 1,
@@ -144,7 +147,10 @@ options.args.nameplatesEnemy = {
     childGroups = "tab",
     name = "Enemy nameplates",
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val end,
+    set = function(info, val) 
+        SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+        SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+    end,
     args = {
         header1 = {
             order = 1,
@@ -235,36 +241,42 @@ options.args.arenaFrames = {
     type = "group",
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
-    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile.arenaFrames[info[#info]] = val end,
     args = {
         testmode = {
             order = 1,
             type = "execute",
-            name = "Toggle Test Mode",
+            name = "Test",
             func = "TestArena",
         },
-        description1 = {
+        hidetest = {
             order = 2,
+            type = "execute",
+            name = "Hide",
+            func = "HideTestArena",
+        },
+        description1 = {
+            order = 3,
             width = "full",
             type = "description",
             name = addon.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
         },
         breaker1 = {
-            order = 3,
+            order = 4,
             type = "header",
             name = "",
         },
 
         arenaEnemyOffensivesEnabled = {
-            order = 4,
+            order = 5,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Offensive Cooldowns",
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
-            order = 5,
+            order = 6,
             type = "range",
             min = 16,
             max = 64,
@@ -272,14 +284,14 @@ options.args.arenaFrames = {
             desc = "Size of arena offensive cooldown icons",
         },
         arenaEnemyDefensivesEnabled = {
-            order = 6,
+            order = 7,
             width = 1.5,
             type = "toggle",
             name = "Arena Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
-            order = 7,
+            order = 8,
             type = "range",
             min = 16,
             max = 64,
@@ -287,7 +299,7 @@ options.args.arenaFrames = {
             desc = "Size of arena defensive cooldown icons",
         },
         arenaCooldownOffsetX = {
-            order = 8,
+            order = 9,
             type = "range",
             min = -750,
             max = 750,
@@ -295,7 +307,7 @@ options.args.arenaFrames = {
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
         arenaCooldownOffsetY = {
-            order = 9,
+            order = 10,
             type = "range",
             min = -150,
             max = 150,
@@ -416,12 +428,14 @@ local defaults = {
             hideHunterSecondaryPet = true,
             filterList = {},
         },
-        arenaCooldownOffsetX = 5,
-        arenaCooldownOffsetY = 0,
-        arenaEnemyOffensivesEnabled = true,
-        arenaEnemyOffensiveIconSize = 32,
-        arenaEnemyDefensivesEnabled = true,
-        arenaEnemyDefensiveIconSize = 25,
+        arenaFrames = {
+            arenaCooldownOffsetX = 5,
+            arenaCooldownOffsetY = 0,
+            arenaEnemyOffensivesEnabled = true,
+            arenaEnemyOffensiveIconSize = 32,
+            arenaEnemyDefensivesEnabled = true,
+            arenaEnemyDefensiveIconSize = 25,
+        },
         arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
@@ -429,6 +443,10 @@ local defaults = {
         showDampenPercentage = true,
     }
 };
+
+if addon.internal then -- Set default for internal version
+    defaults.profile.arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.PlayerMiddle;
+end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
 
@@ -483,9 +501,18 @@ function SweepyBoop:TestArena()
     self:TestCooldownTracking();
 end
 
+function SweepyBoop:HideTestArena()
+    self:HideTestArenaEnemyBurst();
+    self:HideTestCooldownTracking();
+end
+
 function SweepyBoop:RefreshConfig()
     self:HideTestArenaEnemyBurst();
     self:HideTestCooldownTracking();
+
+    local time = GetTime();
+    self.db.profile.nameplatesFriendly.lastModified = time;
+    self.db.profile.nameplatesEnemy.lastModified = time;
 end
 
 SLASH_SweepyBoop1 = "/sb"

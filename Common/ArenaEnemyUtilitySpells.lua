@@ -2,7 +2,6 @@ local _, addon = ...;
 
 local SPELLCATEGORY = addon.SPELLCATEGORY;
 local POWERTYPE = Enum.PowerType;
-local UnitClass = UnitClass;
 
 local specID = addon.SPECID;
 
@@ -366,7 +365,7 @@ addon.cooldownSpells = {
 };
 
 local class = select(2, UnitClass("player"));
-if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.WARRIOR ) then
+if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.WARRIOR ) then -- Only track the following if player has fear abilities!
     -- Lichborne
     addon.cooldownSpells[49039] = {
         class = addon.DEATHKNIGHT,
@@ -411,47 +410,42 @@ end
 if addon.isTestMode then
     local testCategory = SPELLCATEGORY.CROWDCONTROL;
     -- Test
-    -- Mark of the Wild
-    addon.cooldownSpells[1126] = {
+    addon.cooldownSpells[1126] = { -- Mark of the Wild
         class = addon.DRUID,
         category = testCategory,
         cooldown = 60,
         sound = true,
     };
-    -- Regrowth
-    addon.cooldownSpells[8936] = {
+    addon.cooldownSpells[8936] = { -- Regrowth
         class = addon.DRUID,
         category = testCategory,
         cooldown = 12,
         charges = true,
     };
-    -- Rejuv
-    addon.cooldownSpells[774] = {
+    addon.cooldownSpells[774] = { -- Rejuvenation
         class = addon.DRUID,
         category = testCategory,
         cooldown = 15,
         opt_charges = true,
     };
-    -- Wild Growth
-    addon.cooldownSpells[48438] = {
+    addon.cooldownSpells[48438] = { -- Wild Growth
         class = addon.DRUID,
         category = testCategory,
         cooldown = 60,
     };
-    -- Nourish
-    addon.cooldownSpells[50464] = {
+    addon.cooldownSpells[50464] = { -- Nourish
         class = addon.DRUID,
         category = testCategory,
         cooldown = 60,
     };
-    -- Efflorescence
-    addon.cooldownSpells[145205] = {
+    addon.cooldownSpells[145205] = { -- Efflorescence
         class = addon.DRUID,
         category = testCategory,
         cooldown = 60,
     };
 end
 
+-- If amount is not defined, it means a full reset
 addon.cooldownResets = {
     -- Shifting Power
     [314791] = {

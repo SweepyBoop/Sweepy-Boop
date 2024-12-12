@@ -35,7 +35,7 @@ local function EnsureClassIcon(frame)
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
         nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER");
         nameplate.FriendlyClassIcon:SetAlpha(1);
         nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
         -- Can we leverage SetTexCoord to get round icons without making them
@@ -45,7 +45,16 @@ local function EnsureClassIcon(frame)
         nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.nameplatesFriendly.classIconSelectionBorderStyle]);
     end
 
-    return nameplate.FriendlyClassIcon
+    -- Compare the timestamp to see if any settings have changed
+    if (nameplate.FriendlyClassIcon.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified) then
+        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
+        nameplate.FriendlyClassIcon:SetScale(scale);
+        nameplate.FriendlyClassIcon.border:SetScale(scale);
+        nameplate.FriendlyClassIcon.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+    end
+
+    return nameplate.FriendlyClassIcon;
 end
 
 local ClassIconSize = {
@@ -80,7 +89,7 @@ local function ShowClassIcon(frame)
     if ( not icon ) then return end;
 
     local isPlayer = UnitIsPlayer(frame.unit);
-    local class = ( isPlayer and addon.GetUnitClassName(frame.unit) ) or "PET";
+    local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
@@ -109,15 +118,8 @@ local function ShowClassIcon(frame)
             icon.border:SetSize(iconSize, iconSize);
         end
 
-        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        if ( icon.iconScale == nil ) or ( scale ~= icon.iconScale ) then
-            icon:SetScale(scale);
-            icon.border:SetScale(scale);
-        end
-
         icon.class = class;
         icon.iconSize = iconSize;
-        icon.iconScale = scale;
     end
 
     if UnitIsUnit("target", frame.unit) then
@@ -141,7 +143,10 @@ addon.HideClassIcon = function(frame)
 end
 
 addon.UpdateClassIcon = function(frame)
-    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
+    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then
+        addon.HideClassIcon(frame);
+        return; 
+    end
 
     if ShouldShowIcon(frame.unit) then
         frame:Hide();

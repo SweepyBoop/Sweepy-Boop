@@ -92,7 +92,6 @@ local function sortFunc(a, b)
     end
 end
 
--- TODO: Add a slash command to call out test mode which also calls sArena:Test()
 local function CalculateArenaFrameOffsetX(frameName)
     local offsetX = 0;
 
@@ -127,7 +126,7 @@ local function CalculateArenaFrameOffsetX(frameName)
     -- We got the offsetX by comparing the GetRight values, which are values after all the scaling factors.
     -- Now revert it to pre-scaling
     local UIScale = UIParent:GetEffectiveScale();
-    return offsetX / UIScale + SweepyBoop.db.profile.arenaCooldownOffsetX;
+    return offsetX / UIScale + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetX;
 end
 
 addon.IconGroup_Insert = function (group, icon, index)

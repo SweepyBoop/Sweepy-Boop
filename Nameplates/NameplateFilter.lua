@@ -1,30 +1,31 @@
 local _, addon = ...;
 
+local animationScale = 1.07;
+local animationDuration = 0.5;
+local iconSize = 30;
+
 local function SetupAnimation(frameWithAnimations)
     local animationGroup = frameWithAnimations:CreateAnimationGroup();
 
     local grow = animationGroup:CreateAnimation("Scale");
     grow:SetOrder(1);
-    grow:SetScale(1.07, 1.07);
-    grow:SetDuration(0.5);
+    grow:SetScale(animationScale, animationScale);
+    grow:SetDuration(animationDuration);
 
     local shrink = animationGroup:CreateAnimation("Scale");
     shrink:SetOrder(2);
-    shrink:SetScale(1 / 1.07, 1 / 1.07);
-    shrink:SetDuration(0.5);
+    shrink:SetScale(1 / animationScale, 1 / animationScale);
+    shrink:SetDuration(animationDuration);
 
     animationGroup:SetLooping("REPEAT");
 
     return animationGroup;
 end
 
-local function EnsureNpcHighlight(frame, scale)
+local function EnsureNpcHighlight(frame)
     if ( not frame.npcHighlight ) then
-        local size = 30;
-
         frame.npcHighlight = CreateFrame("Frame", nil, frame);
-        frame.npcHighlight:SetSize(size, size);
-        frame.npcHighlight:SetScale(1);
+        frame.npcHighlight:SetSize(iconSize, iconSize);
         frame.npcHighlight:SetFrameStrata("HIGH");
         frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
 
@@ -32,8 +33,8 @@ local function EnsureNpcHighlight(frame, scale)
         frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
 
         local offsetMultiplier = 0.41;
-        local widthOffset = size * offsetMultiplier;
-        local heightOffset = size * offsetMultiplier;
+        local widthOffset = iconSize * offsetMultiplier;
+        local heightOffset = iconSize * offsetMultiplier;
         frame.npcHighlight.glowTexture = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
         frame.npcHighlight.glowTexture:SetBlendMode("ADD");
         frame.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
@@ -45,7 +46,10 @@ local function EnsureNpcHighlight(frame, scale)
         frame.npcHighlight.animationGroup = SetupAnimation(frame.npcHighlight);
     end
 
-    frame.npcHighlight:SetScale(scale);
+    if ( frame.npcHighlight.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
+        frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
+        frame.npcHighlight.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
+    end
 
     return frame.npcHighlight;
 end
@@ -62,7 +66,7 @@ local function ShouldShowNpcHighlight(unitId)
 end
 
 local function ShowNpcHighlight(frame)
-    local highlight = EnsureNpcHighlight(frame, SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
+    local highlight = EnsureNpcHighlight(frame);
     local guid = UnitGUID(frame.unit);
     local npcID = select(6, strsplit("-", guid));
     highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
