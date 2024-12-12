@@ -47,7 +47,7 @@ local function EnsureNpcHighlight(frame)
     end
 
     if ( frame.npcHighlight.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
-        frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale);
+        frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
         frame.npcHighlight.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
     end
 
