@@ -257,17 +257,7 @@ local function SetupAuraGroup(group, unit, testIcons)
     end
 
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
-    local class;
-    if ( unit == "player" ) then
-        class = select(2, UnitClass(unit));
-    else
-        -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
-        local index = string.sub(unit, -1, -1);
-        local specID = GetArenaOpponentSpec(index);
-        if specID and ( specID > 0 ) then
-            class = select(6, GetSpecializationInfoByID(specID));
-        end
-    end
+    local class = addon.GetClassForPlayerOrArena(unit);
     if ( not class ) then return end
 
     -- Pre-populate icons

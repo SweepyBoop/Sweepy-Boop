@@ -11,6 +11,9 @@ local resetByPower = {
     853,
 };
 
+local premadeIcons = {}; -- Premake icons (regardless of class) only once and adjust if needed
+
+
 for spellID, spell in pairs(cooldowns) do
     spell.priority = spell.index or 100;
 
@@ -190,34 +193,36 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 end
 
-local premadeIcons = {};
+local function EnsureIcon(unitId, spellID, spell)
+    if ( not premadeIcons[unitId][spellID] ) then
+        local size, hideHighlight;
+        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+            size, hideHighlight = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize, true;
+        end
+        premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+    end
 
--- Premake all icons (regardless of class and category)
--- This should only happen once when addon is loaded
-function SweepyBoop:PremakeCooldownTrackingIcons()
-    if ( not self.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then return end
+    if ( premadeIcons[unitId[spellID]].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+            local size = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize;
+            premadeIcons[unitId][spellID]:SetSize(size, size);
+        end
+    end
+end
 
-    local defensiveIconSize = self.db.profile.arenaFrames.arenaEnemyDefensiveIconSize;
+local function EnsureIcons()
     if test then
         local unitId = "player";
-        premadeIcons[unitId] = {};
+        premadeIcons[unitId] = premadeIcons[unitId] or {};
         for spellID, spell in pairs(cooldowns) do
-            local size, hideHighlight;
-            if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-                size, hideHighlight = defensiveIconSize, true;
-            end
-            premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+            EnsureIcon(unitId, spellID, spell);
         end
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena" .. i;
-            premadeIcons[unitId] = {};
+            premadeIcons[unitId] = premadeIcons[unitId] or {};
             for spellID, spell in pairs(cooldowns) do
-                local size, hideHighlight;
-                if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-                    size, hideHighlight = defensiveIconSize, true;
-                end
-                premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+                EnsureIcon(unitId, spellID, spell);
             end
         end
     end
@@ -257,17 +262,7 @@ local function SetupIconGroupForUnit(group, category, unit, testIcons)
     end
 
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
-    local class;
-    if ( unit == "player" ) then
-        class = select(2, UnitClass(unit));
-    else
-        -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
-        local index = string.sub(unit, -1, -1);
-        local specID = GetArenaOpponentSpec(index);
-        if specID and ( specID > 0 ) then
-            class = select(6, GetSpecializationInfoByID(specID));
-        end
-    end
+    local class = addon.GetClassForPlayerOrArena(unit);
     if ( not class ) then return end
 
     -- Pre-populate icons

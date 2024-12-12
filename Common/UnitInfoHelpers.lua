@@ -103,3 +103,16 @@ addon.GetUnitSpec = function(unit)
         return GetArenaOpponentSpec(arenaIndex);
     end
 end
+
+addon.GetClassForPlayerOrArena = function (unitId)
+    if ( unitId == "player" ) then
+        return addon.GetUnitClass(unitId);
+    else
+        -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
+        local index = string.sub(unitId, -1, -1);
+        local specID = GetArenaOpponentSpec(index);
+        if specID and ( specID > 0 ) then
+            return select(6, GetSpecializationInfoByID(specID));
+        end
+    end
+end
