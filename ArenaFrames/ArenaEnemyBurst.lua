@@ -201,6 +201,7 @@ local function ProcessUnitEvent(group, event, ...)
 end
 
 -- Premake all icons (regardless of class)
+-- This should only happen once when addon is loaded
 local premadeIcons = {};
 function SweepyBoop:PremakeOffensiveIcons()
     if ( not self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then return end
@@ -339,6 +340,8 @@ local function RefreshTestMode()
     SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
 end
 
+-- Create icon groups and anchor to arena frames
+-- This should happen every time we enter arena
 function SweepyBoop:PopulateOffensiveIcons()
     if ( not self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then return end
 

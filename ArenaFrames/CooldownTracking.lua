@@ -1,16 +1,7 @@
 local _, addon = ...;
 local test = addon.isTestMode;
 
-local UIParent = UIParent;
-local UnitGUID = UnitGUID;
 local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
-local UnitClass = UnitClass;
-local GetArenaOpponentSpec = GetArenaOpponentSpec;
-local GetSpecializationInfoByID = GetSpecializationInfoByID;
-local CreateFrame = CreateFrame;
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
-local Gladius = Gladius;
-local sArena = sArena;
 
 local cooldowns = addon.cooldownSpells;
 local resets = addon.cooldownResets;
@@ -202,6 +193,7 @@ end
 local premadeIcons = {};
 
 -- Premake all icons (regardless of class and category)
+-- This should only happen once when addon is loaded
 function SweepyBoop:PremakeCooldownTrackingIcons()
     if ( not self.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then return end
 
@@ -463,7 +455,8 @@ local function RefreshTestMode()
     SetupIconGroup(externalTestGroup, SPELLCATEGORY.DEFENSIVE, externalTestIcons);
 end
 
--- Create icon groups (note the category order)
+-- Create icon groups and anchor to arena frames
+-- This should happen every time we enter arena
 function SweepyBoop:PopulateCooldownTrackingIcons()
     if ( not self.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then return end
 
