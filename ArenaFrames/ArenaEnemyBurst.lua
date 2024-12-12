@@ -341,7 +341,7 @@ local function RefreshTestMode()
 end
 
 -- Create icon groups and anchor to arena frames
--- This should happen every time we enter arena
+-- This should only happen once when the addon loads
 function SweepyBoop:PopulateOffensiveIcons()
     if ( not self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then return end
 
