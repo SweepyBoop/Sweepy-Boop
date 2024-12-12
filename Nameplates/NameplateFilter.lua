@@ -24,10 +24,8 @@ end
 
 local function EnsureNpcHighlight(frame)
     if ( not frame.npcHighlight ) then
-        local size = iconSize;
-
         frame.npcHighlight = CreateFrame("Frame", nil, frame);
-        frame.npcHighlight:SetSize(size, size);
+        frame.npcHighlight:SetSize(iconSize, iconSize);
         frame.npcHighlight:SetFrameStrata("HIGH");
         frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
 
@@ -35,8 +33,8 @@ local function EnsureNpcHighlight(frame)
         frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
 
         local offsetMultiplier = 0.41;
-        local widthOffset = size * offsetMultiplier;
-        local heightOffset = size * offsetMultiplier;
+        local widthOffset = iconSize * offsetMultiplier;
+        local heightOffset = iconSize * offsetMultiplier;
         frame.npcHighlight.glowTexture = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
         frame.npcHighlight.glowTexture:SetBlendMode("ADD");
         frame.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
