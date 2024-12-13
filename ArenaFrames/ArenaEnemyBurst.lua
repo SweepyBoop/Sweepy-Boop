@@ -371,7 +371,7 @@ local function EnsureIconGroups()
         refreshFrame:RegisterEvent(addon.UNIT_AURA);
         refreshFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
         refreshFrame:SetScript("OnEvent", function (frame, event, ...)
-            if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then
+            if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then
                 return;
             end
 

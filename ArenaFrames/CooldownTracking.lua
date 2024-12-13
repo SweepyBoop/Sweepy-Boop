@@ -498,7 +498,7 @@ local function EnsureIconGroups()
         refreshFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
         refreshFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         refreshFrame:SetScript("OnEvent", function (frame, event, ...)
-            if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then
+            if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then
                 return;
             end
 
