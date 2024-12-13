@@ -371,6 +371,10 @@ local function EnsureIconGroups()
         refreshFrame:RegisterEvent(addon.UNIT_AURA);
         refreshFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
         refreshFrame:SetScript("OnEvent", function (frame, event, ...)
+            if ( not SweepyBoop.db.profile.arenaEnemyOffensivesEnabled ) then
+                return;
+            end
+
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaEnemyBurst();

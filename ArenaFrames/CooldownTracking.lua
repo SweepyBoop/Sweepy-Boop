@@ -498,6 +498,10 @@ local function EnsureIconGroups()
         refreshFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
         refreshFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         refreshFrame:SetScript("OnEvent", function (frame, event, ...)
+            if ( not SweepyBoop.db.profile.arenaEnemyDefensivesEnabled ) then
+                return;
+            end
+
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestCooldownTracking();
