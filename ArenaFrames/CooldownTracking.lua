@@ -17,6 +17,8 @@ local premadeIcons = {}; -- Premake icons (regardless of class) only once and ad
 local iconGroups = {}; -- Each group tracks all 3 arena opponents
 local defensiveGroup = {}; -- This one needs a group per unit
 
+local refreshFrame;
+
 for spellID, spell in pairs(cooldowns) do
     spell.priority = spell.index or 100;
 
@@ -384,7 +386,25 @@ setPointOptions[SPELLCATEGORY.DISPEL] = {
     offsetY = -165,
 };
 
-local refreshFrame;
+local function GetSetPointOptions(index)
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    local offsetY;
+    if SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
+        -- Offensive icons enabled, show defensives below them
+        offsetY = -( SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize*0.5 + 2 );
+    else
+        -- Otherwise show at the center
+        offsetY = 0;
+    end
+    offsetY = offsetY + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = prefix .. index,
+        relativePoint = "RIGHT",
+        offsetY = offsetY;
+    };
+    return setPointOptions;
+end
 
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
 local externalTestGroup; -- Icon group for "Toggle Test Mode"
@@ -429,26 +449,6 @@ local function RefreshTestMode()
 
     externalTestGroup = addon.CreateIconGroup(setPointOption, growRight, unitId);
     SetupIconGroup(externalTestGroup, SPELLCATEGORY.DEFENSIVE, externalTestIcons);
-end
-
-local function GetSetPointOptions(index)
-    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-    local offsetY;
-    if SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
-        -- Offensive icons enabled, show defensives below them
-        offsetY = -( SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize*0.5 + 2 );
-    else
-        -- Otherwise show at the center
-        offsetY = 0;
-    end
-    offsetY = offsetY + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
-    local setPointOptions = {
-        point = "LEFT",
-        relativeTo = prefix .. index,
-        relativePoint = "RIGHT",
-        offsetY = offsetY;
-    };
-    return setPointOptions;
 end
 
 local function EnsureIconGroup(category, index)

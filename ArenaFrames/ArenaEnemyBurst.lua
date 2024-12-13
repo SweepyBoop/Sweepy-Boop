@@ -167,7 +167,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use
     if self.icons[spellId] then
-        print("Start icon")
         addon.StartSweepyIcon(self.icons[spellId]);
     end
 end
@@ -295,6 +294,17 @@ local function SetupAuraGroup(group, unit, testIcons)
     end
 end
 
+local function GetSetPointOptions(index)
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = prefix .. index,
+        relativePoint = "RIGHT",
+        offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
+    };
+    return setPointOptions;
+end
+
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
 local externalTestGroup; -- Icon group for "Toggle Test Mode"
 
@@ -323,19 +333,8 @@ local function RefreshTestMode()
         offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
     };
 
-    externalTestGroup = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
+    externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), growOptions, unitId);
     SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
-end
-
-local function GetSetPointOptions(index)
-    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-    local setPointOptions = {
-        point = "LEFT",
-        relativeTo = prefix .. index,
-        relativePoint = "RIGHT",
-        offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
-    };
-    return setPointOptions;
 end
 
 local function EnsureIconGroup(index)
