@@ -431,24 +431,7 @@ local function RefreshTestMode()
         end
     end
 
-    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
-    local offsetY;
-    if SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
-        -- Offensive icons enabled, show defensives below them
-        offsetY = -( SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize*0.5 + 2 );
-    else
-        -- Otherwise show at the center
-        offsetY = 0;
-    end
-    offsetY = offsetY + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
-    local setPointOption = {
-        point = "LEFT",
-        relativeTo = relativeTo,
-        relativePoint = "RIGHT",
-        offsetY = offsetY,
-    };
-
-    externalTestGroup = addon.CreateIconGroup(setPointOption, growRight, unitId);
+    externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), growRight, unitId);
     SetupIconGroup(externalTestGroup, SPELLCATEGORY.DEFENSIVE, externalTestIcons);
 end
 
@@ -547,7 +530,11 @@ function SweepyBoop:SetupCooldownTrackingIcons()
 end
 
 function SweepyBoop:TestCooldownTracking()
-    -- Test is allowed even if the module is disabled
+    if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then
+        self:HideTestCooldownTracking();
+        return;
+    end
+
     RefreshTestMode();
 
     local subEvent = addon.SPELL_CAST_SUCCESS;

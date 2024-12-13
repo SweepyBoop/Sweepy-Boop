@@ -326,14 +326,6 @@ local function RefreshTestMode()
         end
     end
 
-    local relativeTo = ( Gladius and "GladiusButtonFramearena1" )  or ( sArena and "sArenaEnemyFrame1" ) or "NONE";
-    local setPointOptions = {
-        point = "LEFT",
-        relativeTo = relativeTo,
-        relativePoint = "RIGHT",
-        offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
-    };
-
     externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), growOptions, unitId);
     SetupIconGroup(externalTestGroup, unitId, externalTestIcons);
 end
@@ -405,7 +397,11 @@ function SweepyBoop:SetupOffensiveIcons()
 end
 
 function SweepyBoop:TestArenaEnemyBurst()
-    -- Test is allowed even if the module is disabled
+    if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then
+        self:HideTestArenaEnemyBurst();
+        return;
+    end
+
     RefreshTestMode(); -- Wipe the previous test frames first
 
     local subEvent = addon.SPELL_AURA_APPLIED;
