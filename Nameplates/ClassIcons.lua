@@ -54,6 +54,7 @@ local function EnsureClassIcon(frame)
 
         -- Invalidate class as well, since icon style might has changed
         nameplate.FriendlyClassIcon.class = nil;
+        nameplate.FriendlyClassIcon.iconSize = nil;
 
         nameplate.FriendlyClassIcon.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     end
