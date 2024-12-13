@@ -383,20 +383,12 @@ local function EnsureIconGroups()
                 EnsureIconGroups();
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-                if test then
-                    ProcessCombatLogEvent(iconGroups[0], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-                else
-                    for i = 1, addon.MAX_ARENA_SIZE do
-                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-                    end
+                for i = 0, addon.MAX_ARENA_SIZE do
+                    ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                 end
             else
-                if test then
-                    ProcessUnitEvent(iconGroups[0], event, ...);
-                else
-                    for i = 1, addon.MAX_ARENA_SIZE do
-                        ProcessUnitEvent(iconGroups[i], event, ...);
-                    end
+                for i = 0, addon.MAX_ARENA_SIZE do
+                    ProcessUnitEvent(iconGroups[i], event, ...);
                 end
             end
         end)
