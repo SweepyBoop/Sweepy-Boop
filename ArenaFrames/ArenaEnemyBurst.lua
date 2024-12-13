@@ -242,7 +242,7 @@ local function EnsureIcons()
     end
 end
 
-local function SetupAuraGroup(group, unit, testIcons)
+local function SetupIconGroup(group, unit, testIcons)
     -- Clear previous icons
     addon.IconGroup_Wipe(group);
 
@@ -335,7 +335,7 @@ local function RefreshTestMode()
     };
 
     externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), growOptions, unitId);
-    SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
+    SetupIconGroup(externalTestGroup, unitId, externalTestIcons);
 end
 
 local function EnsureIconGroup(index)
@@ -353,11 +353,11 @@ end
 local function EnsureIconGroups()
     if test then
         EnsureIconGroup(0);
-        SetupAuraGroup(iconGroups[0], "player");
+        SetupIconGroup(iconGroups[0], "player");
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i);
-            SetupAuraGroup(iconGroups[i], "arena" .. i);
+            SetupIconGroup(iconGroups[i], "arena" .. i);
         end
     end
 
