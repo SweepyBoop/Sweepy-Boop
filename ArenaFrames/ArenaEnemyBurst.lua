@@ -326,22 +326,25 @@ local function RefreshTestMode()
     SetupAuraGroup(externalTestGroup, unitId, externalTestIcons);
 end
 
+local function GetSetPointOptions(index)
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = prefix .. index,
+        relativePoint = "RIGHT",
+        offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
+    };
+    return setPointOptions;
+end
+
 local function EnsureIconGroup(index)
     if ( not iconGroups[index] ) then
-        local setPointOptions = {};
-        local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
-        setPointOptions = {
-            point = "LEFT",
-            relativeTo = prefix .. index,
-            relativePoint = "RIGHT",
-            offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
-        };
         local unitId = ( test and "player" ) or ( "arena" .. index );
-        iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
+        iconGroups[index] = addon.CreateIconGroup(GetSetPointOptions(index), growOptions, unitId);
     end
 
     if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        addon.UpdateIconGroupPositionOptions(iconGroups[index]);
+        addon.UpdateIconGroupSetPointOptions(iconGroups[index], GetSetPointOptions(index));
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 end

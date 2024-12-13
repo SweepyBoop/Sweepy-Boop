@@ -459,7 +459,7 @@ local function EnsureIconGroup(category, index)
         end
 
         if ( defensiveGroup[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-            addon.UpdateIconGroupPositionOptions(defensiveGroup[index], GetSetPointOptions(index), index);
+            addon.UpdateIconGroupSetPointOptions(defensiveGroup[index], GetSetPointOptions(index), index);
             defensiveGroup[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
         end
     else

@@ -36,7 +36,7 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     return f;
 end
 
-addon.UpdateIconGroupPositionOptions = function (iconGroup, setPointOptions, growOptions)
+addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
@@ -45,12 +45,6 @@ addon.UpdateIconGroupPositionOptions = function (iconGroup, setPointOptions, gro
     else
         iconGroup.setPointOptions = setPointOptions;
     end
-
-    iconGroup.growDirection = growOptions.direction;
-    iconGroup.growAnchor = growOptions.anchor;
-    iconGroup.margin = growOptions.margin;
-    iconGroup.columns = growOptions.columns; -- For center alignment only
-    iconGroup.growUpward = growOptions.growUpward; -- "UP" or "DOWN"
 
     -- Leave other fields untouched, we're only updating position-related settings
 end
