@@ -265,6 +265,7 @@ addon.cooldownSpells = {
     [6789] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.CROWDCONTROL}, -- Mortal Coil
     [5484] = {cooldown = 40, class = addon.WARLOCK, category = SPELLCATEGORY.CROWDCONTROL}, -- Howl of Terror
     [89766] = {cooldown = 30, class = addon.WARLOCK, trackPet = true, category = SPELLCATEGORY.CROWDCONTROL}, -- Axe Toss
+        [119914] = { parent = 89766 }, -- Axe Toss (Command Demon Ability) (only shows up twice no matter which version is cast)
     -- Defensive
     [104773] = {cooldown = 180, class = addon.WARLOCK, opt_lower_cooldown = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Unending Resolve
     -- Interrupt
