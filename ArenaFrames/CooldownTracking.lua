@@ -475,6 +475,7 @@ local function EnsureIconGroups()
     if addon.internal then
         for category = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
             EnsureIconGroup(category);
+            SetupIconGroup(iconGroups[category], category);
         end
     end
 
