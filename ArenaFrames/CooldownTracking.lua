@@ -13,6 +13,9 @@ local resetByPower = {
 
 local premadeIcons = {}; -- Premake icons (regardless of class) only once and adjust if needed
 
+-- Populate icons based on class and spec
+local iconGroups = {}; -- Each group tracks all 3 arena opponents
+local defensiveGroup = {}; -- This one needs a group per unit
 
 for spellID, spell in pairs(cooldowns) do
     spell.priority = spell.index or 100;
@@ -314,28 +317,6 @@ local function SetupIconGroup(group, category, testIcons)
     end
 end
 
--- Populate icons based on class and spec
-local iconGroups = {}; -- Each group tracks all 3 arena opponents
-local defensiveGroups = {}; -- This one needs a group per unit
-
-local function RefreshGroups()
-    if test then
-        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-            SetupIconGroup(iconGroups[i], i);
-        end
-
-        SetupIconGroup(defensiveGroups[1], SPELLCATEGORY.DEFENSIVE);
-    else
-        for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-            SetupIconGroup(iconGroups[i], i); -- Don't specify unit, so it populates icons for all 3 arena opponents
-        end
-
-        for i = 1, addon.MAX_ARENA_SIZE do
-           SetupIconGroup(defensiveGroups[i], SPELLCATEGORY.DEFENSIVE);
-        end
-    end
-end
-
 local function UpdateAllBorders(group)
     for i = 1, #(group.active) do
         CooldownTracking_UpdateBorder(group.active[i]);
@@ -450,94 +431,113 @@ local function RefreshTestMode()
     SetupIconGroup(externalTestGroup, SPELLCATEGORY.DEFENSIVE, externalTestIcons);
 end
 
--- Create icon groups and anchor to arena frames
--- This should only happen once when the addon loads
-function SweepyBoop:PopulateCooldownTrackingIcons()
-    if ( not self.db.profile.arenaFrames.arenaEnemyDefensivesEnabled ) then return end
-
-    -- Setup defensive group based on whether Gladius/sArena is loaded and user settings.
-    setPointOptions[SPELLCATEGORY.DEFENSIVE] = {};
+local function GetSetPointOptions(index)
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
     local offsetY;
-    if self.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
+    if SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
         -- Offensive icons enabled, show defensives below them
-        offsetY = -( self.db.profile.arenaFrames.arenaEnemyOffensiveIconSize*0.5 + self.db.profile.arenaFrames.arenaEnemyDefensiveIconSize*0.5 + 2 );
+        offsetY = -( SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize*0.5 + SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize*0.5 + 2 );
     else
         -- Otherwise show at the center
         offsetY = 0;
     end
     offsetY = offsetY + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
-    for i = 1, addon.MAX_ARENA_SIZE do
-        setPointOptions[SPELLCATEGORY.DEFENSIVE][i] = {
-            point = "LEFT",
-            relativeTo = prefix .. i,
-            relativePoint = "RIGHT",
-            offsetY = offsetY;
-        };
-    end
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = prefix .. index,
+        relativePoint = "RIGHT",
+        offsetY = offsetY;
+    };
+    return setPointOptions;
+end
 
+local function EnsureIconGroup(category, index)
+    if ( category == SPELLCATEGORY.DEFENSIVE ) then
+        if ( not defensiveGroup[index] ) then
+            local unitId = (index == 0 and "player") or ( "arena" .. index );
+            defensiveGroup[index] = addon.CreateIconGroup(GetSetPointOptions(index), growRight, unitId);
+        end
+
+        if ( defensiveGroup[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+            addon.UpdateIconGroupPositionOptions(defensiveGroup[index], GetSetPointOptions(index), index);
+            defensiveGroup[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
+        end
+    else
+        if ( not iconGroups[category] ) then
+            local groupToken = ( test and "player" ) or nil;
+            iconGroups[category] = addon.CreateIconGroup(setPointOptions[category], growCenterUp, groupToken);
+        end
+    end
+end
+
+local function EnsureIconGroups()
     if addon.internal then
-        local groupToken = ( test and "player" ) or nil;
-        iconGroups[SPELLCATEGORY.INTERRUPT] = addon.CreateIconGroup(setPointOptions[SPELLCATEGORY.INTERRUPT], growCenterUp, groupToken);
-        iconGroups[SPELLCATEGORY.DISRUPT] = addon.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISRUPT], growCenterUp, groupToken);
-        iconGroups[SPELLCATEGORY.CROWDCONTROL] = addon.CreateIconGroup(setPointOptions[SPELLCATEGORY.CROWDCONTROL], growCenterDown, groupToken);
-        iconGroups[SPELLCATEGORY.DISPEL] = addon.CreateIconGroup(setPointOptions[SPELLCATEGORY.DISPEL], growRightDown, groupToken);
+        for category = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+            EnsureIconGroup(category);
+        end
     end
 
     if test then
-        defensiveGroups[1] = addon.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][1], growRight, "player");
+        EnsureIconGroup(SPELLCATEGORY.DEFENSIVE, 0);
+        SetupIconGroup(defensiveGroup[0], SPELLCATEGORY.DEFENSIVE);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
-            defensiveGroups[i] = addon.CreateIconGroup(setPointOptions[SPELLCATEGORY.DEFENSIVE][i], growRight, "arena" .. i);
+            EnsureIconGroup(SPELLCATEGORY.DEFENSIVE, i);
+            SetupIconGroup(defensiveGroup[i], SPELLCATEGORY.DEFENSIVE);
         end
     end
 
-    -- On first login
-    RefreshGroups();
-
     -- Refresh icon groups when zone changes, or during test mode when player switches spec
-    refreshFrame = CreateFrame("Frame");
-    refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    refreshFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
-    refreshFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
-    refreshFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
-    refreshFrame:SetScript("OnEvent", function (frame, event, ...)
-        if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
-            -- Hide the external "Toggle Test Mode" group
-            self:HideTestCooldownTracking();
+    if ( not refreshFrame ) then
+        refreshFrame = CreateFrame("Frame");
+        refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+        refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        refreshFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
+        refreshFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+        refreshFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
+        refreshFrame:SetScript("OnEvent", function (frame, event, ...)
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
+                -- Hide the external "Toggle Test Mode" group
+                SweepyBoop:HideTestCooldownTracking();
+                
+                -- This will simply update
+                EnsureIconGroups();
+            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+                local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
 
-            RefreshGroups();
-        elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
-            local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
+                if addon.internal then
+                    -- These bars are not for publish audience...
+                    for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+                    end
+                end
 
-            if addon.internal then
-                -- These bars are not for publish audience...
-                for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-                    ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+                for i = 1, addon.MAX_ARENA_SIZE do
+                    if defensiveGroup[i] then
+                        ProcessCombatLogEvent(defensiveGroup[i], subEvent, sourceGUID, destGUID, spellId, spellName);
+                    end
+                end
+            elseif ( event == addon.PLAYER_TARGET_CHANGED ) then
+                if addon.internal then
+                    -- These bars are not for publish audience...
+                    for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                        UpdateAllBorders(iconGroups[i]);
+                    end
+                end
+
+                for i = 1, addon.MAX_ARENA_SIZE do
+                    if defensiveGroup[i] then
+                        UpdateAllBorders(defensiveGroup[i]);
+                    end
                 end
             end
+        end)
+    end
+end
 
-            for i = 1, addon.MAX_ARENA_SIZE do
-                if defensiveGroups[i] then
-                    ProcessCombatLogEvent(defensiveGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
-                end
-            end
-        elseif ( event == addon.PLAYER_TARGET_CHANGED ) then
-            if addon.internal then
-                -- These bars are not for publish audience...
-                for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-                    UpdateAllBorders(iconGroups[i]);
-                end
-            end
-
-            for i = 1, addon.MAX_ARENA_SIZE do
-                if defensiveGroups[i] then
-                    UpdateAllBorders(defensiveGroups[i]);
-                end
-            end
-        end
-    end)
+function SweepyBoop:EnsureDefensiveIcons()
+    EnsureIcons();
+    EnsureIconGroups();
 end
 
 function SweepyBoop:TestCooldownTracking()
