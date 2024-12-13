@@ -181,6 +181,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     -- Find the icon to use
     local iconId = unitId .. "-" .. spellId;
     if self.icons[iconId] then
+        print(iconId);
         addon.StartCooldownTrackingIcon(self.icons[iconId]);
     end
 end

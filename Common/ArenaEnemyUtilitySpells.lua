@@ -265,19 +265,19 @@ addon.cooldownSpells = {
     [6789] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.CROWDCONTROL}, -- Mortal Coil
     [5484] = {cooldown = 40, class = addon.WARLOCK, category = SPELLCATEGORY.CROWDCONTROL}, -- Howl of Terror
     [89766] = {cooldown = 30, class = addon.WARLOCK, trackPet = true, category = SPELLCATEGORY.CROWDCONTROL}, -- Axe Toss
-        [119914] = { parent = 89766 }, -- Axe Toss (Command Demon Ability) (only shows up twice no matter which version is cast)
+        [119914] = { parent = 89766 }, -- Axe Toss (Command Demon Ability) (only shows up once no matter which version is cast)
     -- Defensive
     [104773] = {cooldown = 180, class = addon.WARLOCK, opt_lower_cooldown = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Unending Resolve
     -- Interrupt
-    [119910] = {cooldown = 24, class = addon.WARLOCK, trackPet = true, category = SPELLCATEGORY.INTERRUPT}, -- Spell Lock (Command Demon)
-        [19647] = {parent = 119910}, -- Spell Lock (Felhunter)
-        [132409] = {parent = 119910}, -- Spell Lock (Grimoire of Sacrifice)
+    [19647] = {cooldown = 24, class = addon.WARLOCK, trackPet = true, category = SPELLCATEGORY.INTERRUPT}, -- Spell Lock (Command Demon Ability)
+        --[119910] = {parent = 19647}, -- Spell Lock (Felhunter)
+        [132409] = {parent = 19647}, -- Spell Lock (Grimoire of Sacrifice)
 
-		[119911] = {parent = 119910}, -- Optical Blast (Command Demon)
-		[115781] = {parent = 119910}, -- Optical Blast (Observer)
-		[171138] = {parent = 119910}, -- Shadow Lock (Doomguard)
-		[171139] = {parent = 119910}, -- Shadow Lock (Grimoire of Sacrifice)
-		[171140] = {parent = 119910}, -- Shadow Lock (Command Demon)
+		[119911] = {parent = 19647}, -- Optical Blast (Command Demon)
+		[115781] = {parent = 19647}, -- Optical Blast (Observer)
+		[171138] = {parent = 19647}, -- Shadow Lock (Doomguard)
+		[171139] = {parent = 19647}, -- Shadow Lock (Grimoire of Sacrifice)
+		[171140] = {parent = 19647}, -- Shadow Lock (Command Demon)
     [212619] = {cooldown = 60, class = addon.WARLOCK, category = SPELLCATEGORY.INTERRUPT}, -- Call Felhunter
     -- Disrupt
     [212295] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.DISRUPT}, -- Nether Ward
