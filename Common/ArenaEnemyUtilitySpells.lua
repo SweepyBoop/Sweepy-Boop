@@ -408,39 +408,40 @@ for _, spell in pairs(addon.cooldownSpells) do
 end
 
 if addon.isTestMode then
-    local testCategory = SPELLCATEGORY.CROWDCONTROL;
+    local testCategory1 = SPELLCATEGORY.CROWDCONTROL;
+    local testCategory2 = SPELLCATEGORY.DEFENSIVE;
     -- Test
     addon.cooldownSpells[1126] = { -- Mark of the Wild
         class = addon.DRUID,
-        category = testCategory,
+        category = testCategory1,
         cooldown = 60,
         sound = true,
     };
     addon.cooldownSpells[8936] = { -- Regrowth
         class = addon.DRUID,
-        category = testCategory,
+        category = testCategory1,
         cooldown = 12,
         charges = true,
     };
     addon.cooldownSpells[774] = { -- Rejuvenation
         class = addon.DRUID,
-        category = testCategory,
+        category = testCategory1,
         cooldown = 15,
         opt_charges = true,
     };
     addon.cooldownSpells[48438] = { -- Wild Growth
         class = addon.DRUID,
-        category = testCategory,
+        category = testCategory2,
         cooldown = 60,
     };
     addon.cooldownSpells[50464] = { -- Nourish
         class = addon.DRUID,
-        category = testCategory,
+        category = testCategory2,
         cooldown = 60,
     };
     addon.cooldownSpells[145205] = { -- Efflorescence
         class = addon.DRUID,
-        category = testCategory,
+        category = testCategory2,
         cooldown = 60,
     };
 end

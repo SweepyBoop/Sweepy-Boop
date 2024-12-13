@@ -514,7 +514,7 @@ local function EnsureIconGroups()
                     end
                 end
 
-                for i = 1, addon.MAX_ARENA_SIZE do
+                for i = 0, addon.MAX_ARENA_SIZE do
                     if defensiveGroup[i] then
                         ProcessCombatLogEvent(defensiveGroup[i], subEvent, sourceGUID, destGUID, spellId, spellName);
                     end
@@ -527,7 +527,7 @@ local function EnsureIconGroups()
                     end
                 end
 
-                for i = 1, addon.MAX_ARENA_SIZE do
+                for i = 0, addon.MAX_ARENA_SIZE do
                     if defensiveGroup[i] then
                         UpdateAllBorders(defensiveGroup[i]);
                     end
