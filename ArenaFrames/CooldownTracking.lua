@@ -397,9 +397,10 @@ local function GetSetPointOptions(index)
         offsetY = 0;
     end
     offsetY = offsetY + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
+    local adjustedIndex = ( index == 0 and 1) or index;
     local setPointOptions = {
         point = "LEFT",
-        relativeTo = prefix .. index,
+        relativeTo = prefix .. adjustedIndex,
         relativePoint = "RIGHT",
         offsetY = offsetY;
     };

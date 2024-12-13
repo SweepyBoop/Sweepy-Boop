@@ -153,7 +153,7 @@ addon.IconGroup_Insert = function (group, icon, index)
         if ( not options.relativeTo ) or ( string.sub(options.relativeTo, 1, 4) == "NONE" ) then return end
 
         options.offsetX = options.offsetX or CalculateArenaFrameOffsetX(options.relativeTo);
-        group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, options.offsetX, options.offsetY);
+        group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
     end
 
     -- Give icon a timeStamp before inserting
@@ -173,6 +173,9 @@ addon.IconGroup_Insert = function (group, icon, index)
 
     -- Reposition first, then show, to avoid new icon occluding previously shown ones.
     icon:Show();
+    print(icon:IsShown());
+    print(group:IsShown());
+    print(group:GetPoint());
 end
 
 addon.IconGroup_Remove = function (group, icon)

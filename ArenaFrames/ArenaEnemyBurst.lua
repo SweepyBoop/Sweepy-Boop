@@ -295,10 +295,11 @@ local function SetupAuraGroup(group, unit, testIcons)
 end
 
 local function GetSetPointOptions(index)
+    local adjustedIndex = ( index == 0 and 1) or index;
     local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
     local setPointOptions = {
         point = "LEFT",
-        relativeTo = prefix .. index,
+        relativeTo = prefix .. adjustedIndex,
         relativePoint = "RIGHT",
         offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY,
     };
