@@ -32,7 +32,7 @@ for spellID, spell in pairs(cooldowns) do
     end
 
     -- Validate category
-    if ( not spell.category ) or ( spell.category < 2 ) or ( spell.category > 6 ) then
+    if ( not spell.category ) or ( spell.category < SPELLCATEGORY.INTERRUPT ) or ( spell.category > SPELLCATEGORY.DEFENSIVE ) then
         print("Invalid category for spellID:", spellID);
     end
 
