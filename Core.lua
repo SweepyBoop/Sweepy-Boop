@@ -22,21 +22,15 @@ local options = {
             type = "header",
             name = ""
         },
-        reloadNotice = {
-            order = 3,
-            type = "description",
-            fontSize = "medium",
-            name = addon.exclamation .. "Some changes might require a UI reload to take effect",
-        },
         reloadButton = {
-            order = 4,
+            order = 3,
             type = "execute",
             name = "Reload UI",
             func = ReloadUI,
-            width = 0.6,
+            desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
         },
         break2 = {
-            order = 5,
+            order = 4,
             type = "header",
             name = ""
         },
