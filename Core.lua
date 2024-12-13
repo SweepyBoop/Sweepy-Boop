@@ -22,21 +22,15 @@ local options = {
             type = "header",
             name = ""
         },
-        reloadNotice = {
-            order = 3,
-            type = "description",
-            fontSize = "medium",
-            name = addon.exclamation .. "UI must be reloaded for most changes to take effect.",
-        },
         reloadButton = {
-            order = 4,
+            order = 3,
             type = "execute",
             name = "Reload UI",
             func = ReloadUI,
-            width = 0.6,
+            desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
         },
         break2 = {
-            order = 5,
+            order = 4,
             type = "header",
             name = ""
         },
@@ -465,10 +459,8 @@ function SweepyBoop:OnInitialize()
     self:SetupNameplateModules();
 
     -- Setup arena enemy cooldown icons
-    self:PremakeOffensiveIcons();
-    self:PopulateOffensiveIcons();
-    self:PremakeCooldownTrackingIcons();
-    self:PopulateCooldownTrackingIcons();
+    self:SetupOffensiveIcons();
+    self:SetupCooldownTrackingIcons();
 
     -- Setup raid frame aggro highlight
     self:SetupRaidFrameAggroHighlight();

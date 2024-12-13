@@ -91,3 +91,28 @@ addon.UnitIsHunterSecondaryPet = function(unitId) -- Only call this check on hos
 
     return false; -- Option disabled or not a hunter pet
 end
+
+addon.GetSpecForPlayerOrArena = function(unit)
+    if ( unit == "player" ) then
+        local currentSpec = GetSpecialization();
+        if currentSpec then
+            return GetSpecializationInfo(currentSpec);
+        end
+    else
+        local arenaIndex = string.sub(unit, -1, -1);
+        return GetArenaOpponentSpec(arenaIndex);
+    end
+end
+
+addon.GetClassForPlayerOrArena = function (unitId)
+    if ( unitId == "player" ) then
+        return addon.GetUnitClass(unitId);
+    else
+        -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
+        local index = string.sub(unitId, -1, -1);
+        local specID = GetArenaOpponentSpec(index);
+        if specID and ( specID > 0 ) then
+            return select(6, GetSpecializationInfoByID(specID));
+        end
+    end
+end

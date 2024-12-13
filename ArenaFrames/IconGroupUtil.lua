@@ -36,6 +36,20 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     return f;
 end
 
+addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions)
+    local point, relativeTo, relativePoint, offsetX, offsetY =
+        setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
+
+    if ( relativeTo == UIParent ) or ( relativeTo == PlayerFrame ) then
+        iconGroup:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+    else
+        iconGroup.setPointOptions = setPointOptions;
+    end
+
+    -- Leave other fields untouched, we're only updating position-related settings
+end
+
+
 local function IconGroup_Position(group)
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
@@ -139,7 +153,7 @@ addon.IconGroup_Insert = function (group, icon, index)
         if ( not options.relativeTo ) or ( string.sub(options.relativeTo, 1, 4) == "NONE" ) then return end
 
         options.offsetX = options.offsetX or CalculateArenaFrameOffsetX(options.relativeTo);
-        group:SetPoint(options.point, _G[options.relativeTo], options.relativePoint, options.offsetX, options.offsetY);
+        group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
     end
 
     -- Give icon a timeStamp before inserting
@@ -159,6 +173,9 @@ addon.IconGroup_Insert = function (group, icon, index)
 
     -- Reposition first, then show, to avoid new icon occluding previously shown ones.
     icon:Show();
+    --print(icon:IsShown());
+    --print(group:IsShown());
+    --print(group:GetPoint());
 end
 
 addon.IconGroup_Remove = function (group, icon)
