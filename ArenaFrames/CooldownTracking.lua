@@ -506,7 +506,7 @@ local function EnsureIconGroups()
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
 
                 if addon.internal then
-                    -- These bars are not for publish audience...
+                    -- These bars are not for public audience...
                     for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                         ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName);
                     end
@@ -519,7 +519,7 @@ local function EnsureIconGroups()
                 end
             elseif ( event == addon.PLAYER_TARGET_CHANGED ) then
                 if addon.internal then
-                    -- These bars are not for publish audience...
+                    -- These bars are not for public audience...
                     for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                         UpdateAllBorders(iconGroups[i]);
                     end
