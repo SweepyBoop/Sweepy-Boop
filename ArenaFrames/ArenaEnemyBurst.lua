@@ -406,7 +406,7 @@ local function EnsureIconGroups()
     end
 end
 
-function SweepyBoop:EnsureOffensiveIcons()
+function SweepyBoop:SetupOffensiveIcons()
     EnsureIcons();
     EnsureIconGroups();
 end

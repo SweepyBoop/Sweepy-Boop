@@ -205,7 +205,7 @@ local function EnsureIcon(unitId, spellID, spell)
         premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
     end
 
-    if ( premadeIcons[unitId[spellID]].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+    if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
         if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
             local size = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize;
             premadeIcons[unitId][spellID]:SetSize(size, size);
@@ -535,7 +535,7 @@ local function EnsureIconGroups()
     end
 end
 
-function SweepyBoop:EnsureDefensiveIcons()
+function SweepyBoop:SetupCooldownTrackingIcons()
     EnsureIcons();
     EnsureIconGroups();
 end
