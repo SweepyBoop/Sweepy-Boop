@@ -32,6 +32,10 @@ addon.CreateSweepyIcon = function (unit, spellID, size, group)
         frame.cooldown:SetReverse(true);
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
+        if addon.internal then
+            frame.cooldown:SetHideCountdownNumbers(true);
+        end
+
         if spell.charges then
             frame.Count = frame:CreateFontString(nil, "ARTWORK");
             frame.Count:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");

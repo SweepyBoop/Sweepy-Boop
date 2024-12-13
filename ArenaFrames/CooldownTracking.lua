@@ -205,6 +205,11 @@ local function EnsureIcon(unitId, spellID, spell)
             size, hideHighlight = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize, true;
         end
         premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+
+        if addon.internal then
+            addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]); -- icons are pretty small, I'm not staring at the numbers, just taking a glance once in a while
+        end
+
         -- size is set on creation but can be updated if lastModified falls behind
         premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
