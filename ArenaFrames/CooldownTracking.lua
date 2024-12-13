@@ -275,7 +275,7 @@ local function SetupIconGroupForUnit(group, category, unit, testIcons)
         -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
         if ( spell.category == category ) and ( ( not spell.class ) or ( spell.class == class ) ) then
             local enabled = true;
-            local spec = addon.GetUnitSpec(unit);
+            local spec = addon.GetSpecForPlayerOrArena(unit);
             -- Does this spell filter by spec?
             if spell.spec then
                 local specEnabled = false;

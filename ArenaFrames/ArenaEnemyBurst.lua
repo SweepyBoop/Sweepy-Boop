@@ -268,7 +268,7 @@ local function SetupIconGroup(group, unit, testIcons)
             -- Does this spell filter by spec?
             if spell.spec then
                 local specEnabled = false;
-                local spec = addon.GetUnitSpec(unit);
+                local spec = addon.GetSpecForPlayerOrArena(unit);
 
                 if ( not spec ) then
                     specEnabled = true;
