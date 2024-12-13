@@ -167,6 +167,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use
     if self.icons[spellId] then
+        print("Start icon")
         addon.StartSweepyIcon(self.icons[spellId]);
     end
 end
@@ -376,14 +377,6 @@ local function EnsureIconGroups()
                 
                 -- We only need to update icon group options upon entering arena
                 EnsureIconGroups();
-
-                if test then
-                    SetupAuraGroup(iconGroups[0], "player");
-                elseif ( event ~= addon.PLAYER_SPECIALIZATION_CHANGED ) then -- This event is only for test mode
-                    for i = 1, addon.MAX_ARENA_SIZE do
-                        SetupAuraGroup(iconGroups[i], "arena"..i);
-                    end
-                end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
                 if test then
