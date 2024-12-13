@@ -215,6 +215,8 @@ end
 local function EnsureIcon(unitId, spellID)
     if ( not premadeIcons[unitId][spellID] ) then
         premadeIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize, true);
+        -- Size is set on creation but can be updated if lastModified falls behind
+        premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
@@ -334,6 +336,8 @@ local function EnsureIconGroup(index)
     if ( not iconGroups[index] ) then
         local unitId = ( index == 0 and "player" ) or ( "arena" .. index );
         iconGroups[index] = addon.CreateIconGroup(GetSetPointOptions(index), growOptions, unitId);
+        -- SetPointOptions is set but can be updated if lastModified falls behind
+        iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
