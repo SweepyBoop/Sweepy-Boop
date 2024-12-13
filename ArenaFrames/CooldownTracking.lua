@@ -438,7 +438,7 @@ end
 local function EnsureIconGroup(category, index)
     if ( category == SPELLCATEGORY.DEFENSIVE ) then
         if ( not defensiveGroup[index] ) then
-            local unitId = (index == 0 and "player") or ( "arena" .. index );
+            local unitId = ( index == 0 and "player" ) or ( "arena" .. index );
             defensiveGroup[index] = addon.CreateIconGroup(GetSetPointOptions(index), growRight, unitId);
         end
 

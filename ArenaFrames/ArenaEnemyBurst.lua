@@ -332,7 +332,7 @@ end
 
 local function EnsureIconGroup(index)
     if ( not iconGroups[index] ) then
-        local unitId = ( test and "player" ) or ( "arena" .. index );
+        local unitId = ( index == 0 and "player" ) or ( "arena" .. index );
         iconGroups[index] = addon.CreateIconGroup(GetSetPointOptions(index), growOptions, unitId);
     end
 
