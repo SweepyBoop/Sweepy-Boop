@@ -173,9 +173,6 @@ addon.IconGroup_Insert = function (group, icon, index)
 
     -- Reposition first, then show, to avoid new icon occluding previously shown ones.
     icon:Show();
-    print(icon:IsShown());
-    print(group:IsShown());
-    print(group:GetPoint());
 end
 
 addon.IconGroup_Remove = function (group, icon)
