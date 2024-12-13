@@ -26,7 +26,7 @@ local options = {
             order = 3,
             type = "description",
             fontSize = "medium",
-            name = addon.exclamation .. "UI must be reloaded for most changes to take effect.",
+            name = addon.exclamation .. "Some changes might require a UI reload to take effect",
         },
         reloadButton = {
             order = 4,

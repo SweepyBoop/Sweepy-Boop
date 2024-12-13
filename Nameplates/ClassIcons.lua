@@ -51,6 +51,11 @@ local function EnsureClassIcon(frame)
         local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
         nameplate.FriendlyClassIcon:SetScale(scale);
         nameplate.FriendlyClassIcon.border:SetScale(scale);
+
+        -- Invalidate class and iconSize as well, since icon style might has changed
+        nameplate.FriendlyClassIcon.class = nil;
+        nameplate.FriendlyClassIcon.iconSize = nil;
+
         nameplate.FriendlyClassIcon.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     end
 
