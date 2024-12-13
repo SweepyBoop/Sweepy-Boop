@@ -18,10 +18,6 @@ local function ShouldShowNameplate(unitId)
         return true;
     end
 
-    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) and ( not addon.UnitIsHostile(unitId) ) then
-        return true; -- Don't hide friendly nameplates if we're not making class icons
-    end
-
     -- When outside arena or battleground and is not in test mode
     if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) and ( not addon.isTestMode ) then
         if SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
@@ -32,6 +28,11 @@ local function ShouldShowNameplate(unitId)
     end
 
     -- If we reach here, we're in an arena or battleground
+
+    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) and ( not addon.UnitIsHostile(unitId) ) then
+        return true; -- Don't hide friendly nameplates if we're not making class icons
+    end
+
     if IsActiveBattlefieldArena() then -- In arenas, be more restrictive
         -- Show arena 1~3
         for i = 1, addon.MAX_ARENA_SIZE do
