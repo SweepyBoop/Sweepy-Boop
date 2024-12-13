@@ -190,7 +190,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     if self.unit then
         ProcessCombatLogEventForUnit(self, self.unit, guid, subEvent, sourceGUID, destGUID, spellId, spellName);
-    else
+    else -- if no unit is specified, process for arena 1/2/3
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena"..i;
             ProcessCombatLogEventForUnit(self, unitId, guid[unitId], subEvent, sourceGUID, destGUID, spellId, spellName);
