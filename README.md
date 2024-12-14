@@ -10,9 +10,10 @@ Type **/sb** in game to invoke the options panel.
 
 Every module can be toggled on/off, with a few customization options.
 
-Most changes require a UI reload to take effect, and there is a Reload UI button below the settings for convinience.
+Some option changes might require a UI reload to take full effect, and there is a reload button in the settings panel for your convenience.
 
-![image](https://user-images.githubusercontent.com/78008331/219826235-9a9c1b72-5e5b-4108-9728-576e991f8789.png)
+![image](https://github.com/user-attachments/assets/1942d0e6-830f-4f49-b482-44e8cc5f7261)
+
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
 
