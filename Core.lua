@@ -37,6 +37,8 @@ local options = {
     },
 };
 
+
+
 options.args.nameplatesFriendly = {
     order = 6,
     type = "group",
@@ -60,8 +62,15 @@ options.args.nameplatesFriendly = {
             type = "description",
             name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
         },
-        classIconStyle = {
+        hideOutsidePvP = {
             order = 3,
+            width = "full",
+            type = "toggle",
+            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Hide class icons outside of arenas & battlegrounds"),
+            icon = "interface\\cursor\\pvp",
+        },
+        classIconStyle = {
+            order = 4,
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
@@ -74,7 +83,7 @@ options.args.nameplatesFriendly = {
             end
         },
         petIconStyle = {
-            order = 4,
+            order = 5,
             type = "select",
             name = "Pet Icon Style",
             style = "dropdown",
@@ -87,7 +96,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconSelectionBorderStyle = {
-            order = 5,
+            order = 6,
             type = "select",
             name = "Selection highlight border style",
             style = "dropdown",
@@ -103,17 +112,27 @@ options.args.nameplatesFriendly = {
             end
         },
         useHealerIcon = {
-            order = 6,
+            order = 7,
             width = "full",
             type = "toggle",
-            name = "Use dedicated healer icon",
-            desc = "Use a dedicated icon for party healers",
+            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\round\\healer", "Use dedicated healer icon"),
+            desc = "Use a dedicated icon for party healers in arenas and battlegrounds",
+            disabled = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        },
+        useFlagCarrierIcon = {
+            order = 8,
+            width = "full",
+            type = "toggle",
+            name = format("|T%s:20|t|T%s:20|t %s", addon.allianceFlagIcon, addon.hordeFlagIcon, "Use flag carrier icons in battlegrounds"),
+            desc = "Use dedicated icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         classIconScale = {
-            order = 7,
+            order = 9,
             type = "range",
             min = 50,
             max = 200,
@@ -123,7 +142,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 8,
+            order = 10,
             type = "range",
             min = 0,
             max = 150,
@@ -407,12 +426,14 @@ local defaults = {
     profile = {
         nameplatesFriendly = {
             classIconsEnabled = true,
+            hideOutsidePvP = false,
             classIconStyle = addon.CLASSICONSTYLE.ROUND,
             petIconStyle = addon.PETICONSTYLE.CATS,
             classIconSelectionBorderStyle = addon.SELECTIONBORDERSTYLE.FIRE,
             classIconScale = 100,
             classIconOffset = 0,
             useHealerIcon = true,
+            useFlagCarrierIcon = true,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
