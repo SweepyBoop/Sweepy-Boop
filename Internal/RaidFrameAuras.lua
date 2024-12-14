@@ -164,3 +164,9 @@ hooksecurefunc("CompactUnitFrame_UpdateAuras", function (frame)
 
     UpdateRaidFrame(frame);
 end)
+
+local scaleRaidFrame = CreateFrame("Frame");
+scaleRaidFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+scaleRaidFrame:SetScript("OnEvent", function ()
+    CompactPartyFrame:SetScale(1.1);
+end)
