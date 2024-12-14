@@ -410,7 +410,7 @@ end
 
 if addon.isTestMode then
     local testCategory1 = SPELLCATEGORY.INTERRUPT;
-    local testCategory2 = SPELLCATEGORY.DEFENSIVE;
+    local testCategory2 = SPELLCATEGORY.DISRUPT;
     -- Test
     addon.cooldownSpells[1126] = { -- Mark of the Wild
         class = addon.DRUID,
@@ -432,17 +432,17 @@ if addon.isTestMode then
     };
     addon.cooldownSpells[48438] = { -- Wild Growth
         class = addon.DRUID,
-        category = testCategory1,
+        category = testCategory2,
         cooldown = 60,
     };
     addon.cooldownSpells[88423] = { -- Nature's Cure
         class = addon.DRUID,
-        category = testCategory1,
+        category = testCategory2,
         cooldown = 60,
     };
     addon.cooldownSpells[145205] = { -- Efflorescence
         class = addon.DRUID,
-        category = testCategory1,
+        category = testCategory2,
         cooldown = 60,
     };
 end
