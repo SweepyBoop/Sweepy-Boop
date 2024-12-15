@@ -581,6 +581,7 @@ addon.spellData = {
     },
     -- Bloodlust (Shamanism)
     [204361] = {
+        class = addon.SHAMAN,
         category = OFFENSIVE,
         duration = 10,
         trackEvent = addon.SPELL_AURA_APPLIED,
@@ -588,6 +589,7 @@ addon.spellData = {
     },
     -- Heroism (Shamanism)
     [204362] = {
+        class = addon.SHAMAN,
         category = OFFENSIVE,
         cooldown = 60,
         duration = 10,
