@@ -287,8 +287,25 @@ addon.spellData = {
     },
 
     -- Mage
-    -- Icy Veins (Skipped, duration unstable)
-    -- Ice Form (Skipped, duration unstable)
+    -- Frost
+    -- Icy Veins (make sure it's not triggered by Time Anomaly)
+    [12472] = {
+        class = addon.MAGE,
+        category = OFFENSIVE,
+        cooldown = 120,
+        duration = 25,
+        index = addon.SPELLPRIORITY.HIGH,
+        extend = true,
+    },
+    -- Ice Form
+    [198144] = {
+        class = addon.MAGE,
+        category = OFFENSIVE,
+        cooldown = 60,
+        duration = 12,
+        extend = true,
+    },
+
     -- Combustion
     [190319] = {
         class = addon.MAGE,
@@ -305,21 +322,7 @@ addon.spellData = {
 
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
-        critResetAmount = 75,
-    },
-    -- Icy Veins
-    [12472] = {
-        class = addon.MAGE,
-        category = OFFENSIVE,
-        duration = 25,
-        extend = true,
-    },
-    -- Ice Form
-    [198144] = {
-        class = addon.MAGE,
-        category = OFFENSIVE,
-        duration = 12,
-        extend = true,
+        critResetAmount = 1,
     },
     -- Arcane Surge
     [365350] = {
