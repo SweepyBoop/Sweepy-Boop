@@ -85,11 +85,11 @@ local ClassIconSize = {
     Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
 };
 
-local function GetIconOptions(class)
+local function GetIconOptions(useCommonIconPath)
     local path, iconSize;
 
-    if ( class == "PET" ) then
-        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\pet";
+    if ( useCommonIconPath ) then
+        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common";
         iconSize = ClassIconSize.Pet;
     else
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
@@ -109,14 +109,15 @@ local function ShowClassIcon(frame)
     if ( not icon ) then return end;
 
     local isPlayer = UnitIsPlayer(frame.unit);
-    local useCommonPath;
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
+    local useCommonIconPath = ( class == "PET" ); -- use common icon path if not a regular class, e.g., HEALER, PET, FlagCarrierXXX
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
         -- For player nameplates, check if it's a healer
         if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
             class = "HEALER";
+            useCommonIconPath = true;
         end
     end
 
@@ -125,14 +126,15 @@ local function ShowClassIcon(frame)
         local classification = UnitPvpClassification(frame.unit);
         if classification and flagCarrierClassNames[classification] then
             class = flagCarrierClassNames[classification];
+            useCommonIconPath = true;
         end
     end
 
     if ( icon.class == nil ) or ( class ~= icon.class ) then
-        local iconPath, iconSize = GetIconOptions(class);
+        local iconPath, iconSize = GetIconOptions(useCommonIconPath);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then
+            if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then -- Append a random index for cat pictures...
                 local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
                 local petNumber = math.fmod(tonumber(npcID), petIconCount);
                 iconFile = iconFile .. petNumber;
