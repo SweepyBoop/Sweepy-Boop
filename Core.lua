@@ -12,7 +12,7 @@ local options = {
             order = 1,
             type ="description",
             fontSize = "large",
-            image = "Interface\\Addons\\SweepyBoop\\ClassIcons\\pet\\PET0",
+            image = "Interface\\Addons\\SweepyBoop\\ClassIcons\\common\\PET0",
             imageWidth = 36,
             imageHeight = 36,
             name = "A lightweight addon to improve your arena & battleground experience :)"
@@ -120,7 +120,7 @@ options.args.nameplatesFriendly = {
             order = 8,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\round\\healer", "Use dedicated healer icon"),
+            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\common\\healer", "Use dedicated healer icon"),
             desc = "Use a dedicated icon for party healers in arenas and battlegrounds",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
