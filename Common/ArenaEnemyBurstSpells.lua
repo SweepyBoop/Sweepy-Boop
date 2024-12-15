@@ -526,25 +526,13 @@ addon.spellData = {
         cooldown = 45,
         duration = 21, -- Max duration, can dismiss early
     },
-    -- Sepsis
-    -- [385408] = {
-    --     class = addon.ROGUE,
-    --     category = OFFENSIVE,
-    --     duration = 10,
-    -- },
+    -- Assassination
     -- Death Mark
     [360194] = {
         class = addon.ROGUE,
         category = OFFENSIVE,
         duration = 16,
         cooldown = 120,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
-    -- Exsanguinate
-    [200806] = {
-        class = addon.ROGUE,
-        category = OFFENSIVE,
-        cooldown = 180,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Kingsbane
@@ -554,19 +542,23 @@ addon.spellData = {
         duration = 14,
         index = addon.SPELLPRIORITY.HIGH,
     },
-    -- Echoing Reprimand
-    [323560] = {
-        class = addon.ROGUE,
-        category = OFFENSIVE,
-        trackEvent = addon.SPELL_AURA_APPLIED,
-    },
 
     -- Shaman
-    -- Offensive
+    -- Totem of Wrath (cannot track cooldown reliably)
+    -- [208963] = {
+    --     class = addon.SHAMAN,
+    --     cooldown = 45,
+    --     duration = 15,
+    --     category = OFFENSIVE,
+    --     trackEvent = addon.SPELL_AURA_APPLIED,
+    --     --trackDest = true,
+    -- },
+    -- Enhancement
     -- Ascendance (Enhancement)
     [114051] = {
         class = addon.SHAMAN,
         category = OFFENSIVE,
+        cooldown = 180,
         duration = 15,
     },
     -- Doom Winds
@@ -574,13 +566,14 @@ addon.spellData = {
         class = addon.SHAMAN,
         category = OFFENSIVE,
         duration = 8,
-        cooldown = 90,
+        cooldown = 60,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Feral Spirit
     [51533] = {
         class = addon.SHAMAN,
         category = OFFENSIVE,
+        cooldown = 90,
         duration = 15,
     },
     -- Bloodlust (Shamanism)
@@ -593,22 +586,18 @@ addon.spellData = {
     -- Heroism (Shamanism)
     [204362] = {
         category = OFFENSIVE,
+        cooldown = 60,
         duration = 10,
         trackEvent = addon.SPELL_AURA_APPLIED,
-        trackDest = true,
+        --trackDest = true,
     },
+    -- Elemental
     -- Stormkeeper
     [191634] = {
         class = addon.SHAMAN,
         category = OFFENSIVE,
+        cooldown = 60, -- reduced by Lighting Bolt and Chain Lightning
         duration = 15,
-    },
-    -- Totem of Wrath
-    [208963] = {
-        duration = 15,
-        category = OFFENSIVE,
-        trackEvent = addon.SPELL_AURA_APPLIED,
-        trackDest = true,
     },
     -- Fire Elemental
     [198067] = {
