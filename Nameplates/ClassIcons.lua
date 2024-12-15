@@ -85,12 +85,11 @@ local ClassIconSize = {
     Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
 };
 
-local function GetIconOptions(useCommonIconPath)
+local function GetIconOptions(class, useCommonIconPath)
     local path, iconSize;
 
     if ( useCommonIconPath ) then
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common";
-        iconSize = ClassIconSize.Pet;
     else
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
         if SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASSICONSTYLE.FLAT then
@@ -98,8 +97,9 @@ local function GetIconOptions(useCommonIconPath)
         else
             path = path .. "round";
         end
-        iconSize = ClassIconSize.Player;
     end
+
+    iconSize = (class == "PET" and ClassIconSize.Pet) or ClassIconSize.Player;
 
     return path .. "\\", iconSize;
 end
@@ -131,7 +131,7 @@ local function ShowClassIcon(frame)
     end
 
     if ( icon.class == nil ) or ( class ~= icon.class ) then
-        local iconPath, iconSize = GetIconOptions(useCommonIconPath);
+        local iconPath, iconSize = GetIconOptions(class, useCommonIconPath);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then -- Append a random index for cat pictures...
