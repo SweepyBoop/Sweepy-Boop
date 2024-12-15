@@ -376,7 +376,7 @@ addon.spellData = {
         class = addon.PALADIN,
         category = OFFENSIVE,
         duration = 23, -- Baseline: 20s, Divine Wrath: 3s
-        cooldown = 60, -- Avenging Wrath: Might
+        cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RET },
     },
@@ -389,6 +389,13 @@ addon.spellData = {
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RET },
     },
+    -- Wake of Ashes
+    [255937] = {
+        class = addon.PALADIN,
+        category = OFFENSIVE,
+        cooldown = 30,
+        index = addon.SPELLPRIORITY.HIGH, -- the new way of activating wing
+    },
     -- Divine Toll
     [375576] = {
         class = addon.PALADIN,
@@ -397,7 +404,7 @@ addon.spellData = {
         cooldown = 60,
         opt_lower_cooldown = 45,
     },
-    -- Blessing of Summer
+    -- Blessing of Summer (cannot reliably track cooldown)
     [388007] = {
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
@@ -408,6 +415,7 @@ addon.spellData = {
     [343721] = {
         class = addon.PALADIN,
         category = OFFENSIVE,
+        cooldown = 60,
         duration = 12,
     },
 
