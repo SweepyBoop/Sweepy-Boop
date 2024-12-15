@@ -45,8 +45,7 @@ for spellID, spell in pairs(spellData) do
     -- Fill default priority
     spell.priority = spell.index or addon.SPELLPRIORITY.DEFAULT;
 
-    -- Validate class, class is allowed to be missing if trackDest (since destGUID can be any class)
-    if ( not spell.class ) and ( not spell.trackDest ) then
+    if ( not spell.class ) then
         print("Invalid spellID:", spellID);
     end
 

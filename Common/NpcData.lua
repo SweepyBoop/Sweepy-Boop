@@ -152,12 +152,13 @@ end
 addon.AppendNpcOptionsToGroup = function(group)
     group.args = {};
 
-    group.args.header = {
+    group.args.reset = {
         order = 1,
-        type = "description",
-        width = "full",
-        fontSize = "medium",
-        name = "Select which non-player nameplates to show in PVP instances\nHighlight: show an animating icon on top of the nameplate",
+        type = "execute",
+        name = "Reset filter whitelist",
+        func = function()
+            addon.FillDefaultToNpcOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
+        end,
     };
 
     local index = 2;

@@ -94,7 +94,6 @@ addon.ROGUE = "ROGUE";
 addon.SHAMAN = "SHAMAN";
 addon.WARLOCK = "WARLOCK";
 addon.WARRIOR = "WARRIOR";
-addon.EVOKER = "EVOKER";
 
 addon.classID = {
     WARRIOR = 1,
@@ -110,6 +109,22 @@ addon.classID = {
     DRUID = 11,
     DEMONHUNTER = 12,
     EVOKER = 13,
+};
+
+addon.classOrder = {
+    addon.classID.DEATHKNIGHT,
+    addon.classID.DEMONHUNTER,
+    addon.classID.DRUID,
+    addon.classID.EVOKER,
+    addon.classID.HUNTER,
+    addon.classID.MAGE,
+    addon.classID.MONK,
+    addon.classID.PALADIN,
+    addon.classID.PRIEST,
+    addon.classID.ROGUE,
+    addon.classID.SHAMAN,
+    addon.classID.WARLOCK,
+    addon.classID.WARRIOR,
 };
 
 -- For hiding timer by OmniCC

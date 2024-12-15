@@ -216,28 +216,15 @@ options.args.nameplatesEnemy = {
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
             end,
             args = {
-                reset = {
-                    order = 1,
-                    type = "execute",
-                    name = "Reset filter whitelist",
-                    func = function()
-                        addon.FillDefaultToNpcOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
-                    end,
-                },
-                breaker = {
-                    order = 2,
-                    type = "header",
-                    name = "",
-                },
                 highlightScale = {
-                    order = 3,
+                    order = 1,
                     type = "range",
                     name = "Highlight icon scale (%)",
                     min = 50,
                     max = 300,
                 },
                 hideHunterSecondaryPet = {
-                    order = 4,
+                    order = 2,
                     type = "toggle",
                     width = "full",
                     name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pets in arena"),

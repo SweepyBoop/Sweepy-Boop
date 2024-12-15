@@ -241,3 +241,25 @@ addon.IconGroup_Wipe = function (group)
     group.unitGUID = nil;
     group.unitGUIDs = {};
 end
+
+addon.AppendSpellOptions = function (group, spellList)
+    if ( not group.args ) then
+        local index = 1;
+        -- Create one group for each class, in order
+        for _, classID in ipairs(addon.addon.classOrder) do
+            local classInfo = C_CreatureInfo.GetClassInfo(classID);
+            group.args = {
+                order = index,
+                type = "group",
+                icon = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
+			    iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+                name = classInfo.className,
+                args = {},
+            }
+        end
+    end
+end
+
+addon.FillDefaultSpellOptions = function ()
+    
+end
