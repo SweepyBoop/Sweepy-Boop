@@ -28,6 +28,10 @@ For friendly players and their primary pets, places a class (for players) or pet
 
 (Friendly class icons. Option to use a special icon for healers; target is highlighted with a border that's customizable.)
 
+![Flag Carrier Icons](https://github.com/user-attachments/assets/7e5b40ac-9853-400a-acd0-d4380a69497c)
+
+(Flag carrier icon in battlegrounds)
+
 ![image](https://github.com/user-attachments/assets/7283015e-bace-4253-ba02-30f3bd4b2ac5)
 
 (Pet icon on primary hunter pet, but not on the extra pet summoned by talent)
