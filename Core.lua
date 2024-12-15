@@ -66,7 +66,7 @@ options.args.nameplatesFriendly = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Hide class icons outside of arenas & battlegrounds"),
+            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Hide class icons outside arenas & battlegrounds"),
             icon = "interface\\cursor\\pvp",
         },
         breaker = {
