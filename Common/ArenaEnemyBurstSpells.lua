@@ -610,17 +610,26 @@ addon.spellData = {
 
     -- Warlock
     -- Affliction
+    -- Soul Rot
+    [386997] = {
+        class = addon.WARLOCK,
+        category = OFFENSIVE,
+        cooldown = 60,
+        duration = 8,
+    },
     -- Summon Darkglare
     [205180] = {
         class = addon.WARLOCK,
         category = OFFENSIVE,
         duration = 20,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Destruction
     -- Summon Infernal
     [1122] = {
         class = addon.WARLOCK,
         category = OFFENSIVE,
+        cooldown = 120,
         duration = 30,
     },
     -- Demonology
@@ -636,28 +645,40 @@ addon.spellData = {
     [265187] = {
         class = addon.WARLOCK,
         category = OFFENSIVE,
-        duration = 15,
-    },
-    -- Fel Obelisk
-    [353601] = {
-        class = addon.WARLOCK,
-        category = OFFENSIVE,
+        cooldown = 60,
         duration = 15,
     },
     -- Grimoire: Felguard
     [111898] = {
         class = addon.WARLOCK,
         category = OFFENSIVE,
+        cooldown = 120,
         duration = 17,
     },
-    -- Gul'dan's Ambition (Pit Lord)
-    [387578] = {
+    -- Demonic Strength
+    [267171] = {
         class = addon.WARLOCK,
-        duration = 10,
+        category = OFFENSIVE,
+        cooldown = 60,
     },
 
     -- Warrior
-    -- Offensive
+    -- Champion's Spear
+    [376079] = {
+        class = addon.WARRIOR,
+        category = OFFENSIVE,
+        cooldown = 90,
+        duration = 4,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
+    -- Avatar
+    [107574] = {
+        class = addon.WARRIOR,
+        category = OFFENSIVE,
+        cooldown = 90,
+        duration = 20,
+    },
+    -- Arms
     -- Warbreaker
     [262161] = {
         class = addon.WARRIOR,
@@ -678,20 +699,7 @@ addon.spellData = {
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
         index = addon.SPELLPRIORITY.HIGH,
     },
-    -- Spear of Bastion
-    [376079] = {
-        class = addon.WARRIOR,
-        category = OFFENSIVE,
-        duration = 4,
-        cooldown = 90,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
-    -- Avatar
-    [107574] = {
-        class = addon.WARRIOR,
-        category = OFFENSIVE,
-        duration = 20,
-    },
+    -- Fury
     -- Recklessness
     [1719] = {
         class = addon.WARRIOR,
