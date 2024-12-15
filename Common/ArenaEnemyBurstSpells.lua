@@ -452,7 +452,7 @@ addon.spellData = {
         spec = { specID.SHADOW },
         category = OFFENSIVE,
         cooldown = 60,
-        duration = 20, -- UNIT_DIED not triggered when expiring, consider using UNIT_PET to scan the entire npcMap
+        duration = 15, -- UNIT_DIED not triggered when expiring, consider using UNIT_PET to scan the entire npcMap
     },
     -- Dark Ascension
     [391109] = {
@@ -483,7 +483,7 @@ addon.spellData = {
         class = addon.PRIEST,
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
-        cooldown = 120,
+        cooldown = 600,
         duration = 15,
         index = addon.SPELLPRIORITY.HIGH,
     },
