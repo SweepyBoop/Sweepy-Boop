@@ -15,7 +15,6 @@ local specID = addon.SPECID
 
 addon.spellData = {
     -- General
-    -- Offensive
 
     -- Death Knight
     -- Abomination Limb
@@ -26,7 +25,7 @@ addon.spellData = {
         duration = 12,
         index = 2,
     },
-    -- Offensive (Unholy)
+    -- Unholy
     -- Raise Abomination
     [455395] = {
         class = addon.DEATHKNIGHT,
@@ -63,7 +62,7 @@ addon.spellData = {
         cooldown = 180,
         duration = 25,
     },
-    -- Offensive (Frost)
+    -- Frost
     -- Remorseless Winter
     [196770] = {
         class = addon.DEATHKNIGHT,
@@ -102,8 +101,7 @@ addon.spellData = {
         duration = 4,
     },
     
-    -- DH
-    -- Offensive
+    -- Demon Hunter
     -- Eye Beam
     [198013] = {
         class = addon.DEMONHUNTER,
@@ -243,32 +241,35 @@ addon.spellData = {
     },
 
     -- Hunter
-    -- Offensive
+    -- Beast Mastery
     -- Bestial Wrath
     [19574] = {
         class = addon.HUNTER,
         category = OFFENSIVE,
+        cooldown = 90, -- Reduced by Barbed Shot
         duration = 15,
     },
+    -- Call of the Wild
+    [359844] = {
+        class = addon.HUNTER,
+        category = OFFENSIVE,
+        cooldown = 120,
+        duration = 20,
+    },
+    -- Survival
     -- Coordinated Assult
     [360952] = {
         class = addon.HUNTER,
         category = OFFENSIVE,
         duration = 20,
     },
+    -- Marksmanship
     -- Trueshot
     [288613] = {
         class = addon.HUNTER,
         category = OFFENSIVE,
-        duration = 18,
-    },
-    -- Call of the Wild
-    [359844] = {
-        class = addon.HUNTER,
-        category = OFFENSIVE,
-        duration = 20,
-        cooldown = 180,
-        index = 1,
+        cooldown = 120, -- Reduced by spending focus
+        duration = 15,
     },
 
     -- Mage
