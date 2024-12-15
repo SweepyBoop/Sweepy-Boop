@@ -492,7 +492,6 @@ addon.spellData = {
         duration = 16,
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
-        sound = true,
     },
     -- Exsanguinate
     [200806] = {
@@ -749,7 +748,6 @@ if addon.isTestMode then
         duration = 8,
         cooldown = 30,
         index = addon.SPELLPRIORITY.HIGH,
-        sound = true,
     };
     -- Regrowth
     addon.spellData[8936] = {
@@ -778,7 +776,6 @@ if addon.isTestMode then
         duration = 12,
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
-        sound = true,
 
         resets = {
             [133] = 2, -- Pyrokinesis
