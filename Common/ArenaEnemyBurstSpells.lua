@@ -198,11 +198,11 @@ addon.spellData = {
     },
     
     -- Evoker
-    -- Tip the Scales
-    [370553] = {
+    -- Devastation
+    -- Deep Breath
+    [357210] = {
         class = addon.EVOKER,
         category = OFFENSIVE,
-        spec = { specID.DEVASTATION },
         cooldown = 120,
     },
     -- Dragon Rage
@@ -211,8 +211,35 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 14,
         cooldown = 120,
+        extend = true, -- Animosity
+    },
+    -- Tip the Scales
+    [370553] = {
+        class = addon.EVOKER,
+        category = OFFENSIVE,
+        spec = { specID.DEVASTATION, specID.AUGMENTATION },
+        cooldown = 120,
+    },
+    -- Augmentation
+    -- Breath of Eons
+    [403631] = {
+        class = addon.EVOKER,
+        category = OFFENSIVE,
+        cooldown = 120,
+    },
+    -- Upheaval
+    [396286] = {
+        class = addon.EVOKER,
+        category = OFFENSIVE,
+        cooldown = 40,
+    },
+    -- Ebon Might
+    [395152] = {
+        class = addon.EVOKER,
+        category = OFFENSIVE,
+        cooldown = 30,
+        duration = 10,
         extend = true,
-        index = 2,
     },
 
     -- Hunter

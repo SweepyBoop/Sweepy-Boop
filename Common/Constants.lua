@@ -27,6 +27,7 @@ addon.SPECID = {
     SUBTLETY = 261,
     WW = 269,
     DEVASTATION = 1467,
+    AUGMENTATION = 1473,
 };
 
 -- Event name constants
