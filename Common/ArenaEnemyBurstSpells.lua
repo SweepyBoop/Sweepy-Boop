@@ -471,6 +471,7 @@ addon.spellData = {
         trackEvent = addon.SPELL_AURA_APPLIED,
         cooldown = 120, -- Reduced by Driven to Madness, cannot track reliably
         duration = addon.DURATION_DYNAMIC,
+        extend = true,
     },
     -- Holy
     -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
