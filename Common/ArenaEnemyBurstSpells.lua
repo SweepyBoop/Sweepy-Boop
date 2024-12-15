@@ -608,25 +608,32 @@ addon.spellData = {
     [198067] = {
         class = addon.SHAMAN,
         category = OFFENSIVE,
-        duration = 30,
         cooldown = 150,
+        duration = 24,
         index = addon.SPELLPRIORITY.HIGH,
     },
 
     -- Warlock
+    -- Call Observer
+    [201996] = {
+        class = addon.WARLOCK,
+        category = OFFENSIVE,
+        cooldown = 60,
+        duration = 20, -- confirm early dismiss if killed
+        index = addon.SPELLPRIORITY.HIGH,
+    },
     -- Affliction
     -- Soul Rot
     [386997] = {
         class = addon.WARLOCK,
         category = OFFENSIVE,
         cooldown = 60,
-        duration = 8,
     },
     -- Summon Darkglare
     [205180] = {
         class = addon.WARLOCK,
         category = OFFENSIVE,
-        duration = 20,
+        duration = 20, -- confirm early dismiss if killed
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Destruction
@@ -638,14 +645,6 @@ addon.spellData = {
         duration = 30,
     },
     -- Demonology
-    -- Nether Portal
-    [267217] = {
-        class = addon.WARLOCK,
-        category = OFFENSIVE,
-        duration = 15, -- Show Pit Lord nameplate
-        cooldown = 180,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
     -- Summon Demonic Tyrant
     [265187] = {
         class = addon.WARLOCK,
@@ -673,7 +672,7 @@ addon.spellData = {
         class = addon.WARRIOR,
         category = OFFENSIVE,
         cooldown = 90,
-        duration = 4,
+        duration = 6,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Avatar
