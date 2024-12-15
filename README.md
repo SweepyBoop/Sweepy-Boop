@@ -12,7 +12,8 @@ Every module can be toggled on/off, with a few customization options.
 
 Some option changes might require a UI reload to take full effect, and there is a reload button in the settings panel for your convenience.
 
-![image](https://github.com/user-attachments/assets/1942d0e6-830f-4f49-b482-44e8cc5f7261)
+![image](https://github.com/user-attachments/assets/c138f207-8ba2-408e-9681-6f2d6f9a7ab1)
+
 
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
