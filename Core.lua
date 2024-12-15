@@ -452,7 +452,7 @@ local defaults = {
             filterList = {},
         },
         arenaFrames = {
-            arenaCooldownOffsetX = 5,
+            arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
             arenaEnemyOffensivesEnabled = true,
             arenaEnemyOffensiveIconSize = 32,
@@ -469,6 +469,7 @@ local defaults = {
 
 if addon.internal then -- Set default for internal version
     defaults.profile.arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.PlayerMiddle;
+    defaults.profile.arenaFrames.arenaCooldownOffsetX = 5;
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
