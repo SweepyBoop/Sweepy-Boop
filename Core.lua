@@ -281,7 +281,7 @@ options.args.arenaFrames = {
             order = 3,
             width = "full",
             type = "description",
-            name = addon.exclamation .. "UI Reload is required if Gladius / sArena settings are changed",
+            name = addon.exclamation .. "UI Reload might be required if Gladius / sArena settings are changed",
         },
         breaker1 = {
             order = 4,
