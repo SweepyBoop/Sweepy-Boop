@@ -133,8 +133,8 @@ addon.spellData = {
         class = addon.DRUID,
         category = OFFENSIVE,
         cooldown = 90, -- Whirling Stars
-        duration = 30,
-        charges = true,
+        duration = 20,
+        charges = true, -- Whirling Stars
         index = 1,
     },
     -- Celestial Alignment
@@ -142,8 +142,8 @@ addon.spellData = {
         class = addon.DRUID,
         category = OFFENSIVE,
         cooldown = 90, -- Whirling Stars
-        duration = 20,
-        charges = true,
+        duration = 15,
+        charges = true, -- Whirling Stars
         index = 1,
     },
     -- Force of Nature
