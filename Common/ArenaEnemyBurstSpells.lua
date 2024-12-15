@@ -100,7 +100,7 @@ addon.spellData = {
         cooldown = 45,
         duration = 4,
     },
-    
+
     -- Demon Hunter
     -- Eye Beam
     [198013] = {
@@ -203,7 +203,7 @@ addon.spellData = {
         duration = 20, -- can end early
         index = addon.SPELLPRIORITY.LOW,
     },
-    
+
     -- Evoker
     -- Devastation
     -- Deep Breath
@@ -363,7 +363,7 @@ addon.spellData = {
         cooldown = 120,
         duration = 24,
     },
-    -- Dance of Chi-ji
+    -- Dance of Chi-ji (no cooldown, aura only)
     [325202] = {
         class = addon.MONK,
         category = OFFENSIVE,
@@ -420,7 +420,6 @@ addon.spellData = {
     },
 
     -- Priest
-    -- Offensive
     -- Mindgames
     [375901] = {
         class = addon.PRIEST,
