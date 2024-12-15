@@ -425,14 +425,6 @@ addon.spellData = {
         duration = 7, -- Confirm early dismiss
         index = addon.SPELLPRIORITY.HIGH,
     },
-    -- Mindbender (Idol of Y'Shaarj)
-    [200174] = {
-        class = addon.PRIEST,
-        spec = { specID.SHADOW },
-        category = OFFENSIVE,
-        cooldown = 60,
-        duration = 20, -- UNIT_DIED not triggered when expiring, consider using UNIT_PET to scan the entire npcMap
-    },
     -- Psyfiend
     [211522] = {
         class = addon.PRIEST,
@@ -443,30 +435,51 @@ addon.spellData = {
     },
     -- Power Infusion
     [10060] = {
+        class = addon.PRIEST,
         category = OFFENSIVE,
-        trackDest = true,
-        trackEvent = addon.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
-        duration = 20,
+        --trackDest = true,
+        --trackEvent = addon.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
+        cooldown = 120,
+        duration = 20, -- Dismissed when either aura is gone (Twins of the Sun Priestess)
+    },
+    -- Shadow
+    -- Mindbender (Idol of Y'Shaarj)
+    [200174] = {
+        class = addon.PRIEST,
+        spec = { specID.SHADOW },
+        category = OFFENSIVE,
+        cooldown = 60,
+        duration = 20, -- UNIT_DIED not triggered when expiring, consider using UNIT_PET to scan the entire npcMap
     },
     -- Dark Ascension
     [391109] = {
         category = OFFENSIVE,
         class = addon.PRIEST,
+        cooldown = 60,
         duration = 20,
+    },
+    -- Void Torrent
+    [263165] = {
+        category = OFFENSIVE,
+        class = addon.PRIEST,
+        cooldown = 45,
     },
     -- Voidform
     [194249] = {
         category = OFFENSIVE,
         class = addon.PRIEST,
         trackEvent = addon.SPELL_AURA_APPLIED,
+        cooldown = 120, -- Reduced by Driven to Madness, cannot track reliably
         duration = addon.DURATION_DYNAMIC,
     },
+    -- Holy
     -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
     -- Currently lacking the detection of early dismiss (if the priest right clicks the spirit buff)
     [211319] = {
         class = addon.PRIEST,
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
+        cooldown = 120,
         duration = 15,
         index = addon.SPELLPRIORITY.HIGH,
     },
