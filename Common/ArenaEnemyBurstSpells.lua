@@ -305,7 +305,7 @@ addon.spellData = {
         duration = 12,
         extend = true,
     },
-
+    -- Fire
     -- Combustion
     [190319] = {
         class = addon.MAGE,
@@ -313,17 +313,17 @@ addon.spellData = {
         duration = 12,
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
-        sound = true,
 
-        resets = {
-            [133] = 2, -- Pyrokinesis
-            [314791] = 12, -- Shifting Power
-        },
+        -- resets = {
+        --     [133] = 2, -- Pyrokinesis
+        --     [314791] = 12, -- Shifting Power
+        -- },
 
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
         critResetAmount = 1,
     },
+    -- Arcane
     -- Arcane Surge
     [365350] = {
         class = addon.MAGE,
@@ -333,13 +333,12 @@ addon.spellData = {
     },
 
     -- Monk
-    -- Offensive
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
         class = addon.MONK,
         category = OFFENSIVE,
-        duration = 15,
         cooldown = 90,
+        duration = 15,
         charges = true,
         reduce_power_type = POWERTYPE.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
@@ -350,8 +349,8 @@ addon.spellData = {
     [152173] = {
         class = addon.MONK,
         category = OFFENSIVE,
-        duration = 12,
         cooldown = 90,
+        duration = 12,
         reduce_power_type = POWERTYPE.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
         extend = true,
@@ -361,22 +360,14 @@ addon.spellData = {
     [123904] = {
         class = addon.MONK,
         category = OFFENSIVE,
+        cooldown = 120,
         duration = 24,
-    },
-    -- Bonedust Brew
-    [386276] = {
-        class = addon.MONK,
-        category = OFFENSIVE,
-        duration = 10,
-        spec = { specID.WW },
-        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Dance of Chi-ji
     [325202] = {
         class = addon.MONK,
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
-        index = addon.SPELLPRIORITY.HIGH,
     },
 
     -- Paladin
