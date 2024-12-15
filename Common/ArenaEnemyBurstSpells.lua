@@ -261,6 +261,8 @@ addon.spellData = {
     [360952] = {
         class = addon.HUNTER,
         category = OFFENSIVE,
+        cooldown = 120,
+        opt_lower_cooldown = 60, -- Maybe set it baseline
         duration = 20,
     },
     -- Marksmanship
