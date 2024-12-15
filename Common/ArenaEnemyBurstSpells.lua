@@ -17,7 +17,7 @@ addon.spellData = {
     -- General
     -- Offensive
 
-    -- DK
+    -- Death Knight
     -- Abomination Limb
     [383269] = {
         class = addon.DEATHKNIGHT,
@@ -28,7 +28,7 @@ addon.spellData = {
     },
     -- Offensive (Unholy)
     -- Raise Abomination
-    [288853] = {
+    [455395] = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
         cooldown = 90,
@@ -43,6 +43,12 @@ addon.spellData = {
         duration = 20,
     },
     -- Dark Transformation
+    [63560] = {
+        class = addon.DEATHKNIGHT,
+        category = OFFENSIVE,
+        cooldown = 45,
+        duration = 15, -- extended by Eternal Agony (need to track buff on pet, is it feasible)
+    },
     -- Apocalypse
     [275699] = {
         class = addon.DEATHKNIGHT,
@@ -64,6 +70,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 20,
         duration = 8,
+        extend = true, -- Gathering Storm
     },
     -- Pillar of Frost
     [51271] = {
