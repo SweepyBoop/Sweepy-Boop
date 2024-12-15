@@ -226,6 +226,7 @@ addon.spellData = {
         category = OFFENSIVE,
         spec = { specID.DEVASTATION, specID.AUGMENTATION },
         cooldown = 120,
+        trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Augmentation
     -- Breath of Eons
