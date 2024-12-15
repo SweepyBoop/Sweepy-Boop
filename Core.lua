@@ -100,6 +100,7 @@ options.args.nameplatesFriendly = {
             type = "select",
             name = "Selection highlight border style",
             style = "dropdown",
+            width = "full",
             values = {
                 [addon.SELECTIONBORDERSTYLE.FIRE] = "Fire",
                 [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
