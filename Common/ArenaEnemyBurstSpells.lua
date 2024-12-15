@@ -271,8 +271,7 @@ addon.spellData = {
     [360952] = {
         class = addon.HUNTER,
         category = OFFENSIVE,
-        cooldown = 120,
-        opt_lower_cooldown = 60, -- Maybe set it baseline
+        cooldown = 60, -- Symboitic Adrenaline (almost always picked)
         duration = 20,
     },
     -- Marksmanship
@@ -313,11 +312,6 @@ addon.spellData = {
         duration = 12,
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
-
-        -- resets = {
-        --     [133] = 2, -- Pyrokinesis
-        --     [314791] = 12, -- Shifting Power
-        -- },
 
         -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
         critResets = { 133, 11366, 108853, "Phoenix Flames" },
