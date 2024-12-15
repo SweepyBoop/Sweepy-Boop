@@ -61,7 +61,7 @@ addon.importantNpcList = {
     },
 
     [addon.classID.WARLOCK] = {
-        --[107100] = { name = "Observer", icon = 112869, default = addon.NpcOption.Highlight },
+        [107100] = { name = "Observer", icon = 112869, default = addon.NpcOption.Highlight },
         [135002] = { name = "Demonic Tyrant", icon = 265187, default = addon.NpcOption.Show },
         [107024] = { name = "Fel Lord", icon = 212459, default = addon.NpcOption.Show },
         [196111] = { name = "Pit Lord", icon = 138789, default = addon.NpcOption.Show },
