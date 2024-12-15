@@ -107,6 +107,7 @@ addon.spellData = {
         class = addon.DEMONHUNTER,
         category = OFFENSIVE,
         cooldown = 40,
+        index = addon.SPELLPRIORITY.LOW,
         -- Cooldown reduced by Blade dance, Chaos Strike, Glaive Tempest
         -- Cooldown reset by activating Metamorphosis
     },
