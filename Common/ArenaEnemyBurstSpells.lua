@@ -235,7 +235,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 120,
     },
-    -- Upheaval (not triggered)
+    -- Upheaval (bug: not triggered)
     [396286] = {
         class = addon.EVOKER,
         category = OFFENSIVE,
