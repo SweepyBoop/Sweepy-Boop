@@ -110,6 +110,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 40,
         -- Cooldown reduced by Blade dance, Chaos Strike, Glaive Tempest
+        -- Cooldown reset by activating Metamorphosis
     },
     -- The Hunt
     [370965] = {
@@ -122,7 +123,7 @@ addon.spellData = {
         class = addon.DEMONHUNTER,
         category = OFFENSIVE,
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
-        cooldown = 180,
+        cooldown = 120,
         duration = 24,
     },
     -- Essence Break
