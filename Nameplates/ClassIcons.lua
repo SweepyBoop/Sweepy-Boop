@@ -11,6 +11,18 @@ local selectionBorder = {
     [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\PlainBorder.tga",
 };
 
+local PvPUnitClassification = Enum.PvPUnitClassification;
+local flagCarrierIcons = {
+    [PvPUnitClassification.FlagCarrierHorde] = {
+        class = "FlagCarrierHorde", icon = addon.allianceFlagIcon
+    },
+    [PvPUnitClassification.FlagCarrierAlliance] = {
+        class = "FlagCarrierAlliance", icon = addon.hordeFlagIcon
+    },
+};
+
+local petIconCount = 4;
+
 local function ShouldShowIcon(unitId)
     -- Do not show class icon above the personal resource display
     if UnitIsUnit(unitId, "player") then
@@ -76,6 +88,7 @@ local ClassIconSize = {
     Player = 64,
     Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
     Healer = 52,
+    FlagCarrier = 52,
 };
 
 local function GetIconOptions(class)
@@ -97,8 +110,6 @@ local function GetIconOptions(class)
     return path .. "\\", iconSize;
 end
 
-local iconCount = 4
-
 local function ShowClassIcon(frame)
     local icon = EnsureClassIcon(frame);
     if ( not icon ) then return end;
@@ -114,13 +125,21 @@ local function ShowClassIcon(frame)
         end
     end
 
+    -- Show dedicated flag carrier icon (this overwrites the healer icon)
+    if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
+        local classification = UnitPvpClassification(frame.unit);
+        if classification and flagCarrierIcons[classification] then
+            class = flagCarrierIcons[classification].class;
+        end
+    end
+
     if ( icon.class == nil ) or ( class ~= icon.class ) then
         local iconPath, iconSize = GetIconOptions(class);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
             if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then
                 local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
-                local petNumber = math.fmod(tonumber(npcID), iconCount);
+                local petNumber = math.fmod(tonumber(npcID), petIconCount);
                 iconFile = iconFile .. petNumber;
             else
                 iconFile = iconPath .. "MendPet"; -- Mend Pet
