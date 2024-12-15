@@ -65,11 +65,20 @@ addon.SPELL_AURA_REMOVED = "SPELL_AURA_REMOVED";
 addon.SPELL_DAMAGE = "SPELL_DAMAGE";
 addon.SPELL_CAST_START = "SPELL_CAST_START";
 addon.SPELL_SUMMON = "SPELL_SUMMON";
-addon.UNIT_DIED = "UNIT_DIED";
 addon.PARTY_KILL = "PARTY_KILL";
+addon.UNIT_DIED = "UNIT_DIED";
+addon.UNIT_DESTROYED = "UNIT_DESTROYED";
+addon.UNIT_DISSIPATES = "UNIT_DISSIPATES";
 addon.SPELL_DISPEL = "SPELL_DISPEL";
 addon.SPELL_INTERRUPT = "SPELL_INTERRUPT";
 addon.SPELL_EMPOWER_END = "SPELL_EMPOWER_END";
+
+addon.PetDismissEvents = {
+    [addon.PARTY_KILL] = true,
+    [addon.UNIT_DIED] = true,
+    [addon.UNIT_DESTROYED] = true,
+    [addon.UNIT_DISSIPATES] = true,
+};
 
 -- classFileName constants
 addon.DEATHKNIGHT = "DEATHKNIGHT";

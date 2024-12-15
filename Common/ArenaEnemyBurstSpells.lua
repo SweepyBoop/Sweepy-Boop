@@ -422,6 +422,7 @@ addon.spellData = {
         class = addon.PRIEST,
         category = OFFENSIVE,
         cooldown = 45,
+        duration = 7, -- Confirm early dismiss
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Mindbender (Idol of Y'Shaarj)
@@ -429,15 +430,16 @@ addon.spellData = {
         class = addon.PRIEST,
         spec = { specID.SHADOW },
         category = OFFENSIVE,
-        duration = 15,
         cooldown = 60,
+        duration = 20, -- UNIT_DIED not triggered when expiring, consider using UNIT_PET to scan the entire npcMap
     },
     -- Psyfiend
     [211522] = {
         class = addon.PRIEST,
         category = OFFENSIVE,
         spellID = 211522,
-        duration = 12,
+        cooldown = 45,
+        duration = 12, -- If killed early, UNIT_DIED is triggered
     },
     -- Power Infusion
     [10060] = {
