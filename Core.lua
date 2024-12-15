@@ -413,7 +413,7 @@ options.args.misc = {
             order = 4,
             width = "full",
             type = "description",
-            name = addon.exclamation .. addon.exclamation .. addon.exclamation ..  "Leaving arena without entering combat results in deserter status",
+            name = addon.exclamation .. "Leaving arena without entering combat results in deserter status",
         },
 
         header2 = {
