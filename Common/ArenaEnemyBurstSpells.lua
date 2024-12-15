@@ -27,11 +27,11 @@ addon.spellData = {
         index = 2,
     },
     -- Offensive (Unholy)
-    -- Summon Gargoyle
-    [49206] = {
+    -- Raise Abomination
+    [288853] = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
-        cooldown = 180,
+        cooldown = 90,
         duration = 25,
         index = 1,
     },
@@ -39,70 +39,91 @@ addon.spellData = {
     [207289] = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
+        cooldown = 90,
         duration = 20,
     },
-    -- Raise Abomination
-    [288853] = {
-        class = addon.DEATHKNIGHT,
-        category = OFFENSIVE,
-        duration = 25,
-    },
+    -- Dark Transformation
     -- Apocalypse
     [275699] = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
+        cooldown = 45,
         duration = 20,
     },
-    -- Offensive (Frost)
-    -- Empower Rune Weapon
-    [47568] = {
+    -- Summon Gargoyle
+    [49206] = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
-        duration = 20,
+        cooldown = 180,
+        duration = 25,
+    },
+    -- Offensive (Frost)
+    -- Remorseless Winter
+    [196770] = {
+        class = addon.DEATHKNIGHT,
+        category = OFFENSIVE,
+        cooldown = 20,
+        duration = 8,
     },
     -- Pillar of Frost
     [51271] = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
+        cooldown = 60,
         duration = 12,
+    },
+    -- Absolute zero (Frostwyrm's Fury)
+    [279302] = {
+        class = addon.DEATHKNIGHT,
+        category = OFFENSIVE,
+        cooldown = 90,
+        duration = 10,
+        index = 1,
+    },
+    -- Empower Rune Weapon
+    [47568] = {
+        class = addon.DEATHKNIGHT,
+        category = OFFENSIVE,
+        cooldown = 120,
+        duration = 20,
     },
     -- Chill Streak
     [305392] = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
+        cooldown = 45,
         duration = 4,
-        index = 2,
-        sound = true,
     },
-    -- Remorseless Winter
-    [196770] = {
-        class = addon.DEATHKNIGHT,
-        category = OFFENSIVE,
-        duration = 20,
-    },
-
+    
     -- DH
     -- Offensive
+    -- Eye Beam
+    [198013] = {
+        class = addon.DEMONHUNTER,
+        category = OFFENSIVE,
+        cooldown = 40,
+        -- Cooldown reduced by Blade dance, Chaos Strike, Glaive Tempest
+    },
     -- The Hunt
     [370965] = {
         class = addon.DEMONHUNTER,
         category = OFFENSIVE,
         cooldown = 90,
-        index = 1,
-    },
-    -- Essence Break
-    [258860] = {
-        class = addon.DEMONHUNTER,
-        category = OFFENSIVE,
-        duration = 4,
-        index = 2,
     },
     -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
         class = addon.DEMONHUNTER,
         category = OFFENSIVE,
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
+        cooldown = 180,
         duration = 24,
+    },
+    -- Essence Break
+    [258860] = {
+        class = addon.DEMONHUNTER,
+        category = OFFENSIVE,
+        cooldown = 40,
+        duration = 4,
     },
 
     -- Druid
