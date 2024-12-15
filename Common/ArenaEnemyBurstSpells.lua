@@ -494,7 +494,7 @@ addon.spellData = {
         class = addon.ROGUE,
         category = OFFENSIVE,
         cooldown = 45,
-        spec = {specID.SUBTLETY},
+        --spec = {specID.SUBTLETY},
         index = addon.SPELLPRIORITY.HIGH,
         trackEvent = addon.SPELL_AURA_REMOVED,
     },
@@ -512,7 +512,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 30, -- 2 charges but cannot track cd reliably, just divide cd by 2
         duration = 8,
-        spec = {specID.SUBTLETY},
+        --spec = {specID.SUBTLETY},
     },
     -- Outlaw
     -- Adrenaline Rush
@@ -534,7 +534,7 @@ addon.spellData = {
     [360194] = {
         class = addon.ROGUE,
         category = OFFENSIVE,
-        duration = 16,
+        duration = 16, -- confirm early dismiss
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
     },
