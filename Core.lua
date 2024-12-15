@@ -190,6 +190,9 @@ options.args.nameplatesEnemy = {
             type = "toggle",
             name = "Highlight healers",
             desc = "Bigger font and marker for healers",
+            disabled = function ()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled );
+            end
         },
 
         breaker = {
