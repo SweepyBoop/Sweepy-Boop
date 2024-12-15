@@ -127,7 +127,40 @@ addon.spellData = {
     },
 
     -- Druid
-    -- Offensive
+    -- Balance
+    -- Incarnation: Chosen of Elune (spellID has not changed in DF)
+    [102560] = {
+        class = addon.DRUID,
+        category = OFFENSIVE,
+        cooldown = 90, -- Whirling Stars
+        duration = 30,
+        charges = true,
+        index = 1,
+    },
+    -- Celestial Alignment
+    [194223] = {
+        class = addon.DRUID,
+        category = OFFENSIVE,
+        cooldown = 90, -- Whirling Stars
+        duration = 20,
+        charges = true,
+        index = 1,
+    },
+    -- Force of Nature
+    [205636] = {
+        class = addon.DRUID,
+        category = OFFENSIVE,
+        cooldown = 60,
+        duration = 10,
+    },
+    -- Fury of Elune
+    [202770] = {
+        class = addon.DRUID,
+        category = OFFENSIVE,
+        cooldown = 60,
+        duration = 8,
+    },
+    -- Feral
     -- Berserk
     [106951] = {
         class = addon.DRUID,
@@ -140,20 +173,8 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 30,
     },
-    -- Celestial Alignment
-    [194223] = {
-        class = addon.DRUID,
-        category = OFFENSIVE,
-        duration = 20,
-    },
-    -- Incarnation: Chosen of Elune (spellID has not changed in DF)
-    [102560] = {
-        class = addon.DRUID,
-        category = OFFENSIVE,
-        duration = 30,
-        cooldown = 120,
-        index = 2,
-    },
+    
+    
     -- Convoke the Spirits
     [391528] = {
         class = addon.DRUID,
