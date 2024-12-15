@@ -371,14 +371,12 @@ addon.spellData = {
     },
 
     -- Paladin
-    -- Offensive
     -- Avenging Wrath
     [31884] = {
         class = addon.PALADIN,
         category = OFFENSIVE,
         duration = 23, -- Baseline: 20s, Divine Wrath: 3s
         cooldown = 60, -- Avenging Wrath: Might
-        sound = true,
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RET },
     },
@@ -388,7 +386,6 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 30, -- Baseline: 27s, Divine Wrath: 3s
         cooldown = 120,
-        sound = true,
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RET },
     },
