@@ -124,7 +124,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
         if summonSpellId and self.activeMap[summonSpellId] then
-            addon.ResetSweepyDuration(self.activeMap[summonSpellId]);
+            addon.ResetBurstDuration(self.activeMap[summonSpellId]);
         end
         return;
     elseif ( subEvent == addon.SPELL_SUMMON ) and ( guid == sourceGUID ) then
@@ -135,7 +135,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
         -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
         if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) then
-            addon.StartSweepyIcon(self.icons[summonSpellId]);
+            addon.StartBurstIcon(self.icons[summonSpellId]);
         end
         return;
     end
@@ -151,7 +151,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Check spell dismiss
     if ( subEvent == addon.SPELL_AURA_REMOVED ) then
         if self.activeMap[spellId] then
-            addon.ResetSweepyDuration(self.activeMap[spellId]);
+            addon.ResetBurstDuration(self.activeMap[spellId]);
             return;
         end
     end
@@ -167,7 +167,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use
     if self.icons[spellId] then
-        addon.StartSweepyIcon(self.icons[spellId]);
+        addon.StartBurstIcon(self.icons[spellId]);
     end
 end
 
@@ -180,7 +180,7 @@ local function ProcessUnitSpellCast(self, event, ...)
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
         if self.icons[spellID] then
-            addon.StartSweepyIcon(self.icons[spellID]);
+            addon.StartBurstIcon(self.icons[spellID]);
         end
     end
 end
@@ -198,7 +198,7 @@ local function ProcessUnitAura(self, event, ...)
                 local spellID = spellInfo.spellId
                 local spell = spellData[spellID]
                 if ( not spell ) or ( not spell.extend ) or ( not self.activeMap[spellID] ) then return end
-                addon.RefreshSweepyDuration(self.activeMap[spellID]);
+                addon.RefreshBurstDuration(self.activeMap[spellID]);
             end
         end
     end
@@ -214,7 +214,7 @@ end
 
 local function EnsureIcon(unitId, spellID)
     if ( not premadeIcons[unitId][spellID] ) then
-        premadeIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize, true);
+        premadeIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize, true);
         -- Size is set on creation but can be updated if lastModified falls behind
         premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
@@ -324,7 +324,7 @@ local function RefreshTestMode()
     else
         externalTestIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
-            externalTestIcons[unitId][spellID] = addon.CreateSweepyIcon(unitId, spellID, iconSize, true);
+            externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
         end
     end
 

@@ -5,7 +5,7 @@ local GetSpellInfo = C_Spell.GetSpellInfo;
 local GetSpellTexture = C_Spell.GetSpellTexture;
 local GetTime = GetTime;
 
-addon.CreateSweepyIcon = function (unit, spellID, size, group)
+addon.CreateBurstIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide();
 
@@ -64,12 +64,12 @@ addon.CreateSweepyIcon = function (unit, spellID, size, group)
     return frame;
 end
 
-local function SetSweepyDuration(icon, startTime, duration)
+local function SetBurstDuration(icon, startTime, duration)
     icon.duration:SetCooldown(startTime, duration);
     icon.duration.finish = startTime + duration;
 end
 
-addon.StartSweepyIcon = function (icon)
+addon.StartBurstIcon = function (icon)
     local spell = icon.spellInfo;
     local timers = icon.timers;
     local info = icon.info;
@@ -125,7 +125,7 @@ addon.StartSweepyIcon = function (icon)
             duration = spell.duration;
         end
 
-        SetSweepyDuration(icon, startTime, duration);
+        SetBurstDuration(icon, startTime, duration);
         if icon.cooldown then
             icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
         end
@@ -144,20 +144,20 @@ addon.StartSweepyIcon = function (icon)
 end
 
 -- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
-addon.ResetSweepyDuration = function (icon)
+addon.ResetBurstDuration = function (icon)
     if ( not icon.duration ) then return end
 
-    SetSweepyDuration(icon, 0, 0);
+    SetBurstDuration(icon, 0, 0);
     addon.OnDurationTimerFinished(icon.duration);
 end
 
-addon.RefreshSweepyDuration = function (icon)
+addon.RefreshBurstDuration = function (icon)
     if ( not icon.duration ) then return end
 
     -- Get new duration
     duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
     if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
-        SetSweepyDuration(icon, expirationTime - duration, duration);
+        SetBurstDuration(icon, expirationTime - duration, duration);
         if icon.cooldown then
             icon.cooldown:Hide(); -- Duration OnCooldownDone callback will show the cooldown timer
         end
