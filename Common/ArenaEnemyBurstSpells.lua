@@ -486,25 +486,52 @@ addon.spellData = {
     },
 
     -- Rogue
-    -- Offensive
+    -- Cold Blood
+    [382245] = {
+        class = addon.ROGUE,
+        category = OFFENSIVE,
+        cooldown = 45,
+        spec = {specID.SUBTLETY},
+        index = addon.SPELLPRIORITY.HIGH,
+        trackEvent = addon.SPELL_AURA_REMOVED,
+    },
+    -- Subtlety
     -- Shadow Blades
     [121471] = {
         class = addon.ROGUE,
         category = OFFENSIVE,
+        cooldown = 90,
         duration = 20,
     },
+    -- Shadow Dance
+    [185313] = {
+        class = addon.ROGUE,
+        category = OFFENSIVE,
+        cooldown = 30, -- 2 charges but cannot track cd reliably, just divide cd by 2
+        duration = 8,
+        spec = {specID.SUBTLETY},
+    },
+    -- Outlaw
     -- Adrenaline Rush
     [13750] = {
         class = addon.ROGUE,
         category = OFFENSIVE,
+        cooldown = 180,
         duration = 20,
     },
-    -- Sepsis
-    [385408] = {
+    -- Between the Eyes
+    [315341] = {
         class = addon.ROGUE,
         category = OFFENSIVE,
-        duration = 10,
+        cooldown = 45,
+        duration = 21, -- Max duration, can dismiss early
     },
+    -- Sepsis
+    -- [385408] = {
+    --     class = addon.ROGUE,
+    --     category = OFFENSIVE,
+    --     duration = 10,
+    -- },
     -- Death Mark
     [360194] = {
         class = addon.ROGUE,
@@ -532,22 +559,6 @@ addon.spellData = {
         class = addon.ROGUE,
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
-    },
-    -- Cold Blood
-    [382245] = {
-        class = addon.ROGUE,
-        category = OFFENSIVE,
-        cooldown = 45,
-        spec = {specID.SUBTLETY},
-        index = addon.SPELLPRIORITY.HIGH,
-        trackEvent = addon.SPELL_AURA_REMOVED,
-    },
-    -- Shadow Dance
-    [185313] = {
-        class = addon.ROGUE,
-        category = OFFENSIVE,
-        duration = 8,
-        spec = {specID.SUBTLETY},
     },
 
     -- Shaman
