@@ -12,6 +12,12 @@ addon.SPELLCATEGORY = {
     DEFENSIVE = 6,
 };
 
+addon.SPELLPRIORITY = {
+    DEFAULT = 50,
+    HIGH = 10,
+    LOW = 100,
+};
+
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
 
 addon.SPECID = {

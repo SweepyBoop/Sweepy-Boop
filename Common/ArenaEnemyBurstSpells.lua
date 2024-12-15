@@ -23,7 +23,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 120,
         duration = 12,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Unholy
     -- Raise Abomination
@@ -32,7 +32,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 90,
         duration = 25,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Unholy Assult
     [207289] = {
@@ -84,7 +84,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 90,
         duration = 10,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Empower Rune Weapon
     [47568] = {
@@ -138,7 +138,7 @@ addon.spellData = {
         class = addon.DRUID,
         category = OFFENSIVE,
         cooldown = 60,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Balance
     -- Incarnation: Chosen of Elune (spellID has not changed in DF)
@@ -148,7 +148,7 @@ addon.spellData = {
         cooldown = 90, -- Whirling Stars
         duration = 20,
         charges = true, -- Whirling Stars
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Celestial Alignment
     [194223] = {
@@ -157,7 +157,7 @@ addon.spellData = {
         cooldown = 90, -- Whirling Stars
         duration = 15,
         charges = true, -- Whirling Stars
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Force of Nature
     [205636] = {
@@ -193,6 +193,14 @@ addon.spellData = {
         class = addon.DRUID,
         category = OFFENSIVE,
         cooldown = 45,
+    },
+    -- Tiger's Fury
+    [5217] = {
+        class = addon.DRUID,
+        category = OFFENSIVE,
+        cooldown = 30,
+        duration = 20, -- can end early
+        index = addon.SPELLPRIORITY.LOW,
     },
     
     -- Evoker
@@ -238,6 +246,7 @@ addon.spellData = {
         cooldown = 30,
         duration = 10,
         extend = true,
+        index = addon.SPELLPRIORITY.LOW,
     },
 
     -- Hunter
@@ -275,7 +284,6 @@ addon.spellData = {
     },
 
     -- Mage
-    -- Offensive
     -- Icy Veins (Skipped, duration unstable)
     -- Ice Form (Skipped, duration unstable)
     -- Combustion
@@ -284,7 +292,7 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 12,
         cooldown = 120,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
         sound = true,
 
         resets = {
@@ -315,7 +323,7 @@ addon.spellData = {
         class = addon.MAGE,
         category = OFFENSIVE,
         cooldown = 90,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
 
     -- Monk
@@ -330,7 +338,7 @@ addon.spellData = {
         reduce_power_type = POWERTYPE.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
         extend = true,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Serenity
     [152173] = {
@@ -341,7 +349,7 @@ addon.spellData = {
         reduce_power_type = POWERTYPE.Chi,
         reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
         extend = true,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
@@ -355,14 +363,14 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 10,
         spec = { specID.WW },
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Dance of Chi-ji
     [325202] = {
         class = addon.MONK,
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
 
     -- Paladin
@@ -374,7 +382,7 @@ addon.spellData = {
         duration = 23, -- Baseline: 20s, Divine Wrath: 3s
         cooldown = 60, -- Avenging Wrath: Might
         sound = true,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RET },
     },
     -- Crusade
@@ -384,7 +392,7 @@ addon.spellData = {
         duration = 30, -- Baseline: 27s, Divine Wrath: 3s
         cooldown = 120,
         sound = true,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RET },
     },
     -- Divine Toll
@@ -400,7 +408,7 @@ addon.spellData = {
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         trackDest = true,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Final Reckoning
     [343721] = {
@@ -416,7 +424,7 @@ addon.spellData = {
         class = addon.PRIEST,
         category = OFFENSIVE,
         cooldown = 45,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Mindbender (Idol of Y'Shaarj)
     [200174] = {
@@ -460,7 +468,7 @@ addon.spellData = {
         category = OFFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         duration = 15,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
 
     -- Rogue
@@ -489,7 +497,7 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 16,
         cooldown = 120,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
         sound = true,
     },
     -- Exsanguinate
@@ -497,14 +505,14 @@ addon.spellData = {
         class = addon.ROGUE,
         category = OFFENSIVE,
         cooldown = 180,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Kingsbane
     [385627] = {
         class = addon.ROGUE,
         category = OFFENSIVE,
         duration = 14,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Echoing Reprimand
     [323560] = {
@@ -518,7 +526,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 45,
         spec = {specID.SUBTLETY},
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
         trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Shadow Dance
@@ -543,7 +551,7 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 8,
         cooldown = 90,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Feral Spirit
     [51533] = {
@@ -584,7 +592,7 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 30,
         cooldown = 150,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
 
     -- Warlock
@@ -609,7 +617,7 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 15, -- Show Pit Lord nameplate
         cooldown = 180,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Summon Demonic Tyrant
     [265187] = {
@@ -645,7 +653,7 @@ addon.spellData = {
         cooldown = 45,
         reduce_power_type = POWERTYPE.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Colossus Smash
     [167105] = {
@@ -655,7 +663,7 @@ addon.spellData = {
         cooldown = 45,
         reduce_power_type = POWERTYPE.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Spear of Bastion
     [376079] = {
@@ -663,7 +671,7 @@ addon.spellData = {
         category = OFFENSIVE,
         duration = 4,
         cooldown = 90,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Avatar
     [107574] = {
@@ -679,7 +687,7 @@ addon.spellData = {
         duration = 16,
         reduce_power_type = POWERTYPE.Rage,
         reduce_amount = 0.05, -- Every 20 rage spent reduces the cooldown by 1 sec.
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
 };
 
@@ -720,7 +728,7 @@ if addon.isTestMode then
         category = OFFENSIVE,
         duration = 8,
         cooldown = 30,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
         sound = true,
     };
     -- Regrowth
@@ -749,7 +757,7 @@ if addon.isTestMode then
         category = OFFENSIVE,
         duration = 12,
         cooldown = 120,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
         sound = true,
 
         resets = {
