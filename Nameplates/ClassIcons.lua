@@ -80,9 +80,10 @@ local function EnsureClassIcon(frame)
     return nameplate.FriendlyClassIcon;
 end
 
+-- Make sure icons have about the same padding between border and actual content, otherwise the border texture might look strange (too big or too small)
 local ClassIconSize = {
     Player = 64,
-    Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
+    Pet = 48,
 };
 
 local function GetIconOptions(class, useCommonIconPath)
