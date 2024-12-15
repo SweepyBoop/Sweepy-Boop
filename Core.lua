@@ -69,8 +69,13 @@ options.args.nameplatesFriendly = {
             name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Hide class icons outside of arenas & battlegrounds"),
             icon = "interface\\cursor\\pvp",
         },
-        classIconStyle = {
+        breaker = {
             order = 4,
+            type = "header",
+            name = "",
+        },
+        classIconStyle = {
+            order = 5,
             type = "select",
             name = "Class Icon Style",
             style = "dropdown",
@@ -83,7 +88,7 @@ options.args.nameplatesFriendly = {
             end
         },
         petIconStyle = {
-            order = 5,
+            order = 6,
             type = "select",
             name = "Pet Icon Style",
             style = "dropdown",
@@ -96,11 +101,10 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconSelectionBorderStyle = {
-            order = 6,
+            order = 7,
             type = "select",
             name = "Selection highlight border style",
             style = "dropdown",
-            width = "full",
             values = {
                 [addon.SELECTIONBORDERSTYLE.FIRE] = "Fire",
                 [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
@@ -113,7 +117,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useHealerIcon = {
-            order = 7,
+            order = 8,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\round\\healer", "Use dedicated healer icon"),
@@ -123,7 +127,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 8,
+            order = 9,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t|T%s:20|t %s", addon.allianceFlagIcon, addon.hordeFlagIcon, "Use flag carrier icons in battlegrounds"),
@@ -133,7 +137,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 9,
+            order = 10,
             type = "range",
             min = 50,
             max = 200,
@@ -143,7 +147,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 10,
+            order = 11,
             type = "range",
             min = 0,
             max = 150,
