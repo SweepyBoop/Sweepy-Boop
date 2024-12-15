@@ -167,6 +167,7 @@ addon.UpdateClassIcon = function(frame)
         -- Hide outside arenas and battlegrounds
         addon.HideClassIcon(frame);
         frame:Hide();
+        return;
     end
 
     if ShouldShowIcon(frame.unit) then
