@@ -20,7 +20,7 @@ local defensiveGroup = {}; -- This one needs a group per unit
 local refreshFrame;
 
 for spellID, spell in pairs(cooldowns) do
-    spell.priority = spell.index or 100;
+    spell.priority = spell.index or addon.SPELLPRIORITY.DEFAULT;
 
     if ( not spell.class ) then
         print("Spell missing class:", spellID);
