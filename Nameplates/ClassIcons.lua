@@ -109,6 +109,7 @@ local function ShowClassIcon(frame)
     if ( not icon ) then return end;
 
     local isPlayer = UnitIsPlayer(frame.unit);
+    local useCommonPath;
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
 
     -- Show dedicated healer icon
@@ -122,8 +123,8 @@ local function ShowClassIcon(frame)
     -- Show dedicated flag carrier icon (this overwrites the healer icon)
     if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
         local classification = UnitPvpClassification(frame.unit);
-        if classification and flagCarrierIcons[classification] then
-            class = flagCarrierIcons[classification];
+        if classification and flagCarrierClassNames[classification] then
+            class = flagCarrierClassNames[classification];
         end
     end
 
