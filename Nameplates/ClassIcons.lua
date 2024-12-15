@@ -160,7 +160,13 @@ end
 addon.UpdateClassIcon = function(frame)
     if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then
         addon.HideClassIcon(frame);
-        return; 
+        return;
+    end
+
+    if SweepyBoop.db.profile.nameplatesFriendly.hideOutsidePvP and ( UnitInBattleground("player") == nil ) and ( not IsActiveBattlefieldArena() )  then
+        -- Hide outside arenas and battlegrounds
+        addon.HideClassIcon(frame);
+        frame:Hide();
     end
 
     if ShouldShowIcon(frame.unit) then
