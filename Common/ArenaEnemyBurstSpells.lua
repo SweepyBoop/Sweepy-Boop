@@ -401,8 +401,10 @@ addon.spellData = {
     -- Blessing of Summer (cannot reliably track cooldown, assume 45s * 3 = 135s perhaps)
     [388007] = {
         category = OFFENSIVE,
-        trackEvent = addon.SPELL_AURA_APPLIED,
-        trackDest = true,
+        --trackEvent = addon.SPELL_AURA_APPLIED,
+        --trackDest = true,
+        cooldown = 135,
+        duration = 30,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Final Reckoning
