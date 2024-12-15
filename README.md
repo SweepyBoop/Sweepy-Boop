@@ -40,6 +40,18 @@ To make the most of this module, configure your name & nameplate settings as fol
 
 ![image](https://github.com/user-attachments/assets/3f43fe3b-5c84-4863-aa0a-29a0b61aaae8)
 
+## Enemy nameplate filtering & highlighting
+While in arenas / battlegrounds, customize which non-player enemy units to show, e.g.,
+- For Beast Mastery Hunter pets, hide the extra pet from talent "Animal Companion", so you know which one to kill
+- Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
+- Option to highlight chosen units with an animating icon!
+
+![TotemHighlight](https://github.com/user-attachments/assets/3ca7871f-0566-44f0-b141-4560213c30f0)
+
+Players can customize which units to hide / show / highlight:
+
+![image](https://github.com/user-attachments/assets/c8e0073b-5e1a-4999-8b90-ed339f44ac45)
+
 ## Arena enemy offensive/defensive cooldown tracking
 This module is a set of icons attached to (corresponding) arena enemy frames, which is very close to the tournament UI.
 
@@ -57,18 +69,6 @@ It comes with a few key features:
 - This module supports Gladius and sArena
 - Make sure to /reload if you change your Gladius / sArena settings (especially when you change the layout / positioning)
 - This module only tracks damage offensives and defensive abilities, and currently there is no option to choose which abilities to track
-
-## Enemy nameplate filtering & highlighting
-While in arenas / battlegrounds, customize which non-player enemy units to show, e.g.,
-- For Beast Mastery Hunter pets, hide the extra pet from talent "Animal Companion", so you know which one to kill
-- Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
-- Option to highlight chosen units with an animating icon!
-
-![TotemHighlight](https://github.com/user-attachments/assets/3ca7871f-0566-44f0-b141-4560213c30f0)
-
-Players can customize which units to hide / show / highlight:
-
-![image](https://github.com/user-attachments/assets/c8e0073b-5e1a-4999-8b90-ed339f44ac45)
 
 
 ## Sort raid frames
