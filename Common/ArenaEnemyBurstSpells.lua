@@ -282,6 +282,8 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 120, -- Reduced by spending focus
         duration = 15,
+        reduce_power_type = POWERTYPE.Focus,
+        reduce_amount = 0.05, -- Every 50 focus reduces cd by 2.5s
     },
 
     -- Mage
@@ -719,6 +721,32 @@ addon.spellResets = {
     [133] = {
         [190319] = 2, -- Combustion
     },
+
+    -- Eye Beam
+    -- Metamorphosis
+    [191427] = {
+        198013, -- Full reset
+    },
+    -- Blade Dance
+    [188499] = {
+        [198013] = 1,
+    },
+    -- Chaos Strike
+    [162794] = {
+        [198013] = 1,
+    },
+    -- Glaive Tempest
+    [342817] = {
+        [198013] = 1,
+    },
+
+    -- Bestial Wrath
+    -- Barbed Shot
+    [217200] = {
+        [19574] = 12,
+    },
+
+
 };
 
 if addon.isTestMode then
