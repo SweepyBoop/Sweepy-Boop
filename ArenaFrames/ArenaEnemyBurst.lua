@@ -148,7 +148,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
     if ( spellGUID ~= guid ) then return end
 
-    -- Check spell dismiss
+    -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) then
         if self.activeMap[spellId] then
             addon.ResetBurstDuration(self.activeMap[spellId]);
