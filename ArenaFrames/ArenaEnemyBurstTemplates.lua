@@ -132,12 +132,6 @@ addon.StartBurstIcon = function (icon)
         addon.ShowOverlayGlow(icon);
     end
 
-    -- Play sound for spells with highest priority
-    if ( icon.priority == 1 ) then
-        -- https://wowpedia.fandom.com/wiki/API_PlaySound
-        --PlaySoundFile(567721); -- MachineGun
-    end
-
     if icon.group then
         addon.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
     end
