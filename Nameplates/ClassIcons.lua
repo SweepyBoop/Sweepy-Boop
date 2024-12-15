@@ -12,13 +12,9 @@ local selectionBorder = {
 };
 
 local PvPUnitClassification = Enum.PvPUnitClassification;
-local flagCarrierIcons = {
-    [PvPUnitClassification.FlagCarrierHorde] = {
-        class = "FlagCarrierHorde", icon = addon.allianceFlagIcon
-    },
-    [PvPUnitClassification.FlagCarrierAlliance] = {
-        class = "FlagCarrierAlliance", icon = addon.hordeFlagIcon
-    },
+local flagCarrierClassNames = {
+    [PvPUnitClassification.FlagCarrierHorde] = "FlagCarrierHorde",
+    [PvPUnitClassification.FlagCarrierAlliance] = "FlagCarrierAlliance",
 };
 
 local petIconCount = 4;
@@ -129,7 +125,7 @@ local function ShowClassIcon(frame)
     if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
         local classification = UnitPvpClassification(frame.unit);
         if classification and flagCarrierIcons[classification] then
-            class = flagCarrierIcons[classification].class;
+            class = flagCarrierIcons[classification];
         end
     end
 

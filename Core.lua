@@ -130,7 +130,7 @@ options.args.nameplatesFriendly = {
             order = 9,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t|T%s:20|t %s", addon.allianceFlagIcon, addon.hordeFlagIcon, "Use flag carrier icons in battlegrounds"),
+            name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeIcon, addon.flagCarrierAllianceIcon, "Use flag carrier icons in battlegrounds"),
             desc = "Use dedicated icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
