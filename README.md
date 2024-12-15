@@ -75,7 +75,8 @@ It comes with a few key features:
 ## Sort raid frames
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
 
-![image](https://github.com/user-attachments/assets/10ecb4de-691d-4e11-a2a2-69eca3a80938)
+![image](https://github.com/user-attachments/assets/3646a51b-c11e-43e9-ba8e-2a71da2cc22f)
+
 
 ## Arena nameplate numbers
 Quality-of-life feature to replace arena enemy names on top of nameplates with arena numbers.
