@@ -128,5 +128,5 @@ addon.SELECTIONBORDERSTYLE = {
 
 addon.alliancePvPIcon = "interface\\icons\\achievement_pvp_a_a";
 addon.hordePvPIcon = "interface\\icons\\achievement_pvp_h_h";
-addon.allianceFlagIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\flag\\FlagAlliance";
-addon.hordeFlagIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\flag\\FlagHorde";
+addon.allianceFlagIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\round\\FlagCarrierHorde";
+addon.hordeFlagIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\round\\FlagCarrierAlliance";
