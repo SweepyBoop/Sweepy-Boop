@@ -325,6 +325,7 @@ addon.spellData = {
         class = addon.MAGE,
         category = OFFENSIVE,
         cooldown = 90,
+        duration = 15,
         index = addon.SPELLPRIORITY.HIGH,
     },
 
