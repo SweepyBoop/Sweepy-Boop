@@ -127,6 +127,13 @@ addon.spellData = {
     },
 
     -- Druid
+    -- Convoke the Spirits
+    [391528] = {
+        class = addon.DRUID,
+        category = OFFENSIVE,
+        cooldown = 60,
+        index = 1,
+    },
     -- Balance
     -- Incarnation: Chosen of Elune (spellID has not changed in DF)
     [102560] = {
@@ -165,23 +172,15 @@ addon.spellData = {
     [106951] = {
         class = addon.DRUID,
         category = OFFENSIVE,
+        cooldown = 120,
         duration = 20,
     },
     -- Incarnation: Avatar of Ashamane
     [102543] = {
         class = addon.DRUID,
         category = OFFENSIVE,
-        duration = 30,
-    },
-    
-    
-    -- Convoke the Spirits
-    [391528] = {
-        class = addon.DRUID,
-        category = OFFENSIVE,
-        cooldown = 60,
-        spec = { specID.BALANCE, specID.FERAL },
-        index = 1,
+        cooldown = 120,
+        duration = 20,
     },
     -- Feral Frenzy
     [274837] = {
@@ -189,7 +188,7 @@ addon.spellData = {
         category = OFFENSIVE,
         cooldown = 45,
     },
-
+    
     -- Evoker
     -- Tip the Scales
     [370553] = {
