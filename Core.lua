@@ -68,6 +68,9 @@ options.args.nameplatesFriendly = {
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Hide class icons outside arenas & battlegrounds"),
             icon = "interface\\cursor\\pvp",
+            disabled = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
         },
         breaker = {
             order = 4,
