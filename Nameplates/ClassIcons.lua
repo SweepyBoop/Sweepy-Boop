@@ -8,8 +8,16 @@ local selectionBorder = {
     [addon.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
     [addon.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
     [addon.SELECTIONBORDERSTYLE.MECHANICAL] = selectionBorderPrefix .. "mechanical" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\PlainBorder.tga",
+    [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common\\PlainBorder",
 };
+
+local PvPUnitClassification = Enum.PvPUnitClassification;
+local flagCarrierClassNames = {
+    [PvPUnitClassification.FlagCarrierHorde] = "FlagCarrierHorde",
+    [PvPUnitClassification.FlagCarrierAlliance] = "FlagCarrierAlliance",
+};
+
+local petIconCount = 4;
 
 local function ShouldShowIcon(unitId)
     -- Do not show class icon above the personal resource display
@@ -75,15 +83,13 @@ end
 local ClassIconSize = {
     Player = 64,
     Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
-    Healer = 52,
 };
 
-local function GetIconOptions(class)
+local function GetIconOptions(class, useCommonIconPath)
     local path, iconSize;
 
-    if ( class == "PET" ) then
-        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\pet";
-        iconSize = ClassIconSize.Pet;
+    if ( useCommonIconPath ) then
+        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common";
     else
         path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
         if SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASSICONSTYLE.FLAT then
@@ -91,13 +97,12 @@ local function GetIconOptions(class)
         else
             path = path .. "round";
         end
-        iconSize = ClassIconSize.Player;
     end
+
+    iconSize = (class == "PET" and ClassIconSize.Pet) or ClassIconSize.Player;
 
     return path .. "\\", iconSize;
 end
-
-local iconCount = 4
 
 local function ShowClassIcon(frame)
     local icon = EnsureClassIcon(frame);
@@ -105,22 +110,33 @@ local function ShowClassIcon(frame)
 
     local isPlayer = UnitIsPlayer(frame.unit);
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
+    local useCommonIconPath = ( class == "PET" ); -- use common icon path if not a regular class, e.g., HEALER, PET, FlagCarrierXXX
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
         -- For player nameplates, check if it's a healer
         if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
             class = "HEALER";
+            useCommonIconPath = true;
+        end
+    end
+
+    -- Show dedicated flag carrier icon (this overwrites the healer icon)
+    if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
+        local classification = UnitPvpClassification(frame.unit);
+        if classification and flagCarrierClassNames[classification] then
+            class = flagCarrierClassNames[classification];
+            useCommonIconPath = true;
         end
     end
 
     if ( icon.class == nil ) or ( class ~= icon.class ) then
-        local iconPath, iconSize = GetIconOptions(class);
+        local iconPath, iconSize = GetIconOptions(class, useCommonIconPath);
         local iconFile = iconPath .. class;
         if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then
+            if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then -- Append a random index for cat pictures...
                 local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
-                local petNumber = math.fmod(tonumber(npcID), iconCount);
+                local petNumber = math.fmod(tonumber(npcID), petIconCount);
                 iconFile = iconFile .. petNumber;
             else
                 iconFile = iconPath .. "MendPet"; -- Mend Pet
@@ -160,7 +176,14 @@ end
 addon.UpdateClassIcon = function(frame)
     if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then
         addon.HideClassIcon(frame);
-        return; 
+        return;
+    end
+
+    if SweepyBoop.db.profile.nameplatesFriendly.hideOutsidePvP and ( UnitInBattleground("player") == nil ) and ( not IsActiveBattlefieldArena() )  then
+        -- Hide outside arenas and battlegrounds
+        addon.HideClassIcon(frame);
+        frame:Hide();
+        return;
     end
 
     if ShouldShowIcon(frame.unit) then

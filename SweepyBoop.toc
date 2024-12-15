@@ -4,7 +4,7 @@
 ## Version: @project-version@
 ## SavedVariables: SweepyBoopDB
 ## OptionalDeps: Ace3
-## IconTexture: Interface\AddOns\SweepyBoop\ClassIcons\Logo
+## IconTexture: Interface\AddOns\SweepyBoop\ClassIcons\common\Logo
 
 Libs\LibStub\LibStub.lua
 Libs\CallbackHandler-1.0\CallbackHandler-1.0.xml
