@@ -83,8 +83,6 @@ end
 local ClassIconSize = {
     Player = 64,
     Pet = 48, -- border looks weird if this is set too small, might need to make tga file smaller or set this value bigger
-    Healer = 52,
-    FlagCarrier = 52,
 };
 
 local function GetIconOptions(class)
