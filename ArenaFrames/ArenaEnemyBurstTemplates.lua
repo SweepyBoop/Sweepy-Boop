@@ -32,7 +32,7 @@ addon.CreateSweepyIcon = function (unit, spellID, size, group)
         frame.cooldown:SetReverse(true);
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
-        if addon.internal then
+        if addon.internal and ( not addon.isTestMode ) then
             frame.cooldown:SetHideCountdownNumbers(true);
         end
 
