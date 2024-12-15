@@ -707,10 +707,7 @@ addon.spellResets = {
     [314791] = {
         [190319] = 12, -- Combustion
     },
-    -- Fireball
-    [133] = {
-        [190319] = 2, -- Combustion
-    },
+    -- Pyrokinesis removed
 
     -- Eye Beam
     -- Metamorphosis
