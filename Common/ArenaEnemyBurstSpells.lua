@@ -314,8 +314,9 @@ addon.spellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
 
-        -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
-        critResets = { 133, 11366, 108853, "Phoenix Flames" },
+        -- Reduce cooldown by 1s
+        -- Fireball, Pyroblast, Fire Blast, Scorch, Phoenix Flames
+        critResets = { 133, 11366, 108853, 2948, 257542 },
         critResetAmount = 1,
     },
     -- Arcane

@@ -112,6 +112,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                 local spells = spellData[reset].critResets;
                 for i = 1, #spells do
                     if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
+                        --print(spellName, spellId, spellData[reset].critResetAmount);
                         ResetSweepyCooldown(self.activeMap[reset], spellData[reset].critResetAmount);
                     end
                 end
