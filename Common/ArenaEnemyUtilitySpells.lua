@@ -132,6 +132,20 @@ addon.utilitySpells = {
     -- Dispel
     [88423] = {cooldown = 8, class = addon.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Nature's Cure
 
+    -- Evoker
+    -- Defensive
+    [363916] = {cooldown = 90, class = addon.EVOKER, charges = true, category = SPELLCATEGORY.DEFENSIVE}, -- Obsidian Scales
+    [370960] = {cooldown = 180, class = addon.EVOKER, category = SPELLCATEGORY.DEFENSIVE}, -- Emerald Communion
+    -- Interrupt
+    [351338] = {cooldown = {default = 40, [specID.DEVASTATION] = 20}, class = addon.EVOKER, category = SPELLCATEGORY.INTERRUPT}, -- Quell
+    -- Crowd Control
+    [357210] = {cooldown = {default = 120, [specID.DEVASTATION] = 60}, class = addon.EVOKER, category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
+    -- Dispel
+    [360823] = {cooldown = 8, class = addon.EVOKER, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Naturalize
+    -- Disrupt
+    -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
+    [382266] = {cooldown = 30, class = addon.EVOKER, category = SPELLCATEGORY.DISRUPT, trackEvent = addon.SPELL_EMPOWER_END},
+
     -- Priest
     -- Dispel
     -- Mass Dispel
@@ -378,20 +392,6 @@ addon.utilitySpells = {
     [116849] = {cooldown = 75, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Life Cocoon
     -- Dispel
     [115450] = {cooldown = 8, class = addon.MONK, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Detox
-
-    -- Evoker
-    -- Defensive
-    [363916] = {cooldown = 90, class = addon.EVOKER, charges = true, category = SPELLCATEGORY.DEFENSIVE}, -- Obsidian Scales
-    [370960] = {cooldown = 180, class = addon.EVOKER, category = SPELLCATEGORY.DEFENSIVE}, -- Emerald Communion
-    -- Interrupt
-    [351338] = {cooldown = {default = 40, [specID.DEVASTATION] = 20}, class = addon.EVOKER, category = SPELLCATEGORY.INTERRUPT}, -- Quell
-    -- Crowd Control
-    [357210] = {cooldown = {default = 120, [specID.DEVASTATION] = 60}, class = addon.EVOKER, category = SPELLCATEGORY.CROWDCONTROL}, -- Deep Breath
-    -- Dispel
-    [360823] = {cooldown = 8, class = addon.EVOKER, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Naturalize
-    -- Disrupt
-    -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
-    [382266] = {cooldown = 30, class = addon.EVOKER, category = SPELLCATEGORY.DISRUPT, trackEvent = addon.SPELL_EMPOWER_END},
 };
 
 -- For internal version, only show the following if player has fear abilities!
