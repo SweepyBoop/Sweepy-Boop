@@ -310,6 +310,7 @@ addon.utilitySpells = {
         cooldown = 300,
         class = addon.PRIEST,
         category = SPELLCATEGORY.DEFENSIVE,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Pain Suppression
     [33206] = {
@@ -317,18 +318,27 @@ addon.utilitySpells = {
         class = addon.PRIEST,
         category = SPELLCATEGORY.DEFENSIVE,
         charges = true,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
+    -- Rapture
+    [47536] = {
+        cooldown = 90,
+        class = addon.PRIEST,
+        category = SPELLCATEGORY.DEFENSIVE,
     },
     -- Guardian Spirit
     [47788] = {
         cooldown = 60, -- Assume it didn't proc
         class = addon.PRIEST,
         category = SPELLCATEGORY.DEFENSIVE,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Dispersion
     [47585] = {
         cooldown = 90,
         class = addon.PRIEST,
         category = SPELLCATEGORY.DEFENSIVE,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Restitution
     [211319] = {
@@ -353,6 +363,22 @@ addon.utilitySpells = {
         category = SPELLCATEGORY.DISRUPT,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
+
+    -- Rogue
+    -- Interrupt
+    [1766] = {cooldown = 15, class = addon.ROGUE, category = SPELLCATEGORY.INTERRUPT}, -- Kick
+    -- Defensive
+    [1856] = {cooldown = {default = 120, [specID.OUTLAW] = 75}, class = addon.ROGUE, charges = {[specID.SUBTLETY] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Vanish
+    [31224] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Cloak of Shadows
+    [5277] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Evasion
+    -- Crowd Control
+    [408] = {cooldown = 20, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Kidney Shot
+    [2094] = {cooldown = {default = 120, [specID.OUTLAW] = 90}, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Blind
+    [212182] = {cooldown = 180, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb
+    [359053] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb (Subtlety)
+    -- Disrupt
+    [36554] = {cooldown = 30, class = addon.ROGUE, charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
+    [195457] = {cooldown = 30, class = addon.ROGUE, category = SPELLCATEGORY.DISRUPT}, -- Grappling Hook
 
     -- Warrior
     -- Disrupt
@@ -401,22 +427,6 @@ addon.utilitySpells = {
     [204336] = {cooldown = 30, class = addon.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
     [77130] = {cooldown = 8, class = addon.SHAMAN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
-
-    -- Rogue
-    -- Interrupt
-    [1766] = {cooldown = 15, class = addon.ROGUE, category = SPELLCATEGORY.INTERRUPT}, -- Kick
-    -- Defensive
-    [1856] = {cooldown = {default = 120, [specID.OUTLAW] = 75}, class = addon.ROGUE, charges = {[specID.SUBTLETY] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Vanish
-    [31224] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Cloak of Shadows
-    [5277] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Evasion
-    -- Crowd Control
-    [408] = {cooldown = 20, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Kidney Shot
-    [2094] = {cooldown = {default = 120, [specID.OUTLAW] = 90}, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Blind
-    [212182] = {cooldown = 180, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb
-    [359053] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.CROWDCONTROL}, -- Smoke Bomb (Subtlety)
-    -- Disrupt
-    [36554] = {cooldown = 30, class = addon.ROGUE, charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
-    [195457] = {cooldown = 30, class = addon.ROGUE, category = SPELLCATEGORY.DISRUPT}, -- Grappling Hook
 };
 
 -- For internal version, only show the following if player has fear abilities!
