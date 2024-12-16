@@ -417,19 +417,19 @@ addon.utilitySpells = {
     -- Disrupt
     [212295] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.DISRUPT}, -- Nether Ward
 
-    -- Warrior
+    -- Warrior (need to calculate cooldowns after 5% reduction from Honed Reflexes)
     -- Disrupt
     [100] = {cooldown = 17, class = addon.WARRIOR, charges = true, category = SPELLCATEGORY.DISRUPT}, -- Charge
-    [23920] = {cooldown = 25, class = addon.WARRIOR, category = SPELLCATEGORY.DISRUPT}, -- Spell Reflection
+    [23920] = {cooldown = 23.75, class = addon.WARRIOR, category = SPELLCATEGORY.DISRUPT}, -- Spell Reflection
     [6544] = {cooldown = 30, class = addon.WARRIOR, category = SPELLCATEGORY.DISRUPT}, -- Heroic Leap
     -- Interrupt
-    [6552] = {cooldown = 14, class = addon.WARRIOR, category = SPELLCATEGORY.INTERRUPT}, -- Pummel
+    [6552] = {cooldown = 14.25, class = addon.WARRIOR, category = SPELLCATEGORY.INTERRUPT}, -- Pummel
     -- Crowd Control
-    [107570] = {cooldown = 30, class = addon.WARRIOR, category = SPELLCATEGORY.CROWDCONTROL}, -- Storm Bolt
+    [107570] = {cooldown = 28.5, class = addon.WARRIOR, category = SPELLCATEGORY.CROWDCONTROL}, -- Storm Bolt
     [5246] = {cooldown = 90, class = addon.WARRIOR, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidating Shout
     -- Defensive
-    [118038] = {cooldown = 90, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
-    [184364] = {cooldown = 120, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration    
+    [118038] = {cooldown = 85.5, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
+    [184364] = {cooldown = 114, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration    
 };
 
 -- For internal version, only show the following if player has fear abilities!
