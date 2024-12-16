@@ -128,6 +128,7 @@ addon.utilitySpells = {
     [61336] = {cooldown = {default = 180, [specID.GUARDIAN] = 120}, class = addon.DRUID, charges = {[specID.GUARDIAN] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
     [102342] = {cooldown = 90, class = addon.DRUID, opt_lower_cooldown = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
     [740] = {cooldown = 180, class = addon.DRUID, opt_lower_cooldown = 120, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Tranquility
+    [22812] = {cooldown = 60, class = addon.DRUID, category = SPELLCATEGORY.DEFENSIVE}, -- Barkskin
     -- Dispel
     [88423] = {cooldown = 8, class = addon.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Nature's Cure
 
