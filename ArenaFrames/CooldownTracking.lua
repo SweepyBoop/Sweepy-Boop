@@ -22,8 +22,8 @@ local refreshFrame;
 for spellID, spell in pairs(cooldowns) do
     spell.priority = spell.index or addon.SPELLPRIORITY.DEFAULT;
 
-    if ( not spell.class ) then
-        print("Spell missing class:", spellID);
+    if ( not spell.class ) or ( not C_Spell.GetSpellName(spellID) ) then
+        print("Invalid spellID:", spellID);
     end
 
     -- Validate class
