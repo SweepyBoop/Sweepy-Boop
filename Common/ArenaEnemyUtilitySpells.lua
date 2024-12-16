@@ -135,7 +135,9 @@ addon.utilitySpells = {
     -- Evoker
     -- Defensive
     [363916] = {cooldown = 90, class = addon.EVOKER, charges = true, category = SPELLCATEGORY.DEFENSIVE}, -- Obsidian Scales
+    [374348] = {cooldown = 90, class = addon.EVOKER, category = SPELLCATEGORY.DEFENSIVE}, -- Renewing Blaze
     [370960] = {cooldown = 180, class = addon.EVOKER, category = SPELLCATEGORY.DEFENSIVE}, -- Emerald Communion
+    [374251] = {cooldown = 60, class = addon.EVOKER, category = SPELLCATEGORY.DEFENSIVE}, -- Cauterizing Flame
     -- Interrupt
     [351338] = {cooldown = {default = 40, [specID.DEVASTATION] = 20}, class = addon.EVOKER, category = SPELLCATEGORY.INTERRUPT}, -- Quell
     -- Crowd Control
