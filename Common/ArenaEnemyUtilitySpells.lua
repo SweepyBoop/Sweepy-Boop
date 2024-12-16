@@ -116,6 +116,21 @@ addon.utilitySpells = {
     },
     [211881] = {cooldown = 30, class = addon.DEMONHUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Fel Eruption
 
+    -- Druid
+    -- Crowd Control
+    [5211] = {cooldown = 60, class = addon.DRUID, category = SPELLCATEGORY.CROWDCONTROL}, -- Mighty Bash
+    [22570] = {cooldown = 20, class = addon.DRUID, category = SPELLCATEGORY.CROWDCONTROL}, -- Maim
+    [99] = {cooldown = 30, class = addon.DRUID, category = SPELLCATEGORY.CROWDCONTROL}, -- Incapacitating Roar
+    [78675] = {cooldown = 60, class = addon.DRUID, reduce_on_interrupt = 15, category = SPELLCATEGORY.CROWDCONTROL}, -- Solar Beam
+    -- Interrupt
+    [106839] = {cooldown = 15, class = addon.DRUID, category = SPELLCATEGORY.INTERRUPT}, -- Skull Bash
+    -- Defensive
+    [61336] = {cooldown = {default = 180, [specID.GUARDIAN] = 120}, class = addon.DRUID, charges = {[specID.GUARDIAN] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
+    [102342] = {cooldown = 90, class = addon.DRUID, opt_lower_cooldown = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
+    [740] = {cooldown = 180, class = addon.DRUID, opt_lower_cooldown = 120, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Tranquility
+    -- Dispel
+    [88423] = {cooldown = 8, class = addon.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Nature's Cure
+
     -- Priest
     -- Dispel
     -- Mass Dispel
@@ -259,20 +274,6 @@ addon.utilitySpells = {
     [4987] = {cooldown = 8, class = addon.PALADIN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Cleanse
     [210256] = {cooldown = 45, class = addon.PALADIN, category = SPELLCATEGORY.DISPEL}, -- Blessing of Sanctuary
 
-    -- Druid
-    -- Crowd Control
-    [5211] = {cooldown = 60, class = addon.DRUID, category = SPELLCATEGORY.CROWDCONTROL}, -- Mighty Bash
-    [22570] = {cooldown = 20, class = addon.DRUID, category = SPELLCATEGORY.CROWDCONTROL}, -- Maim
-    [99] = {cooldown = 30, class = addon.DRUID, category = SPELLCATEGORY.CROWDCONTROL}, -- Incapacitating Roar
-    [78675] = {cooldown = 60, class = addon.DRUID, reduce_on_interrupt = 15, category = SPELLCATEGORY.CROWDCONTROL}, -- Solar Beam
-    -- Interrupt
-    [106839] = {cooldown = 15, class = addon.DRUID, category = SPELLCATEGORY.INTERRUPT}, -- Skull Bash
-    -- Defensive
-    [61336] = {cooldown = {default = 180, [specID.GUARDIAN] = 120}, class = addon.DRUID, charges = {[specID.GUARDIAN] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
-    [102342] = {cooldown = 90, class = addon.DRUID, opt_lower_cooldown = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
-    [740] = {cooldown = 180, class = addon.DRUID, opt_lower_cooldown = 120, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Tranquility
-    -- Dispel
-    [88423] = {cooldown = 8, class = addon.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Nature's Cure
 
     -- Warrior
     -- Disrupt
