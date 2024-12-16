@@ -166,7 +166,7 @@ addon.utilitySpells = {
     -- Interrupt
     [2139] = {cooldown = 24, class = addon.MAGE, reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
     -- Defensive
-    [45438] = {cooldown = 200, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Ice Block
+    [45438] = {cooldown = 180, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Ice Block
     [87024] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, trackEvent = addon.SPELL_AURA_APPLIED, index = addon.SPELLPRIORITY.HIGH}, -- Cauterize
     [198111] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE}, -- Temporal Shield
     [235219] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Cold Snap (resets ice block)
