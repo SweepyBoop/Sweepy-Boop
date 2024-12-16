@@ -83,6 +83,12 @@ addon.utilitySpells = {
         cooldown = 15,
     },
     -- Defensive
+    -- Blur
+    [198589] = {
+        cooldown = 60,
+        class = addon.DEMONHUNTER,
+        category = SPELLCATEGORY.DEFENSIVE
+    },
     -- Netherwalk
     [196555] = {
         cooldown = 180,
