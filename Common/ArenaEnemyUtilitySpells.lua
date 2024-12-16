@@ -393,20 +393,6 @@ addon.utilitySpells = {
     -- Dispel
     [77130] = {cooldown = 8, class = addon.SHAMAN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
 
-    -- Warrior
-    -- Disrupt
-    [100] = {cooldown = 17, class = addon.WARRIOR, charges = true, category = SPELLCATEGORY.DISRUPT}, -- Charge
-    [23920] = {cooldown = 25, class = addon.WARRIOR, category = SPELLCATEGORY.DISRUPT}, -- Spell Reflection
-    [6544] = {cooldown = 30, class = addon.WARRIOR, category = SPELLCATEGORY.DISRUPT}, -- Heroic Leap
-    -- Interrupt
-    [6552] = {cooldown = 14, class = addon.WARRIOR, category = SPELLCATEGORY.INTERRUPT}, -- Pummel
-    -- Crowd Control
-    [107570] = {cooldown = 30, class = addon.WARRIOR, category = SPELLCATEGORY.CROWDCONTROL}, -- Storm Bolt
-    [5246] = {cooldown = 90, class = addon.WARRIOR, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidating Shout
-    -- Defensive
-    [118038] = {cooldown = 90, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
-    [184364] = {cooldown = 120, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration
-
     -- Warlock
     -- Crowd Control
     [6789] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.CROWDCONTROL}, -- Mortal Coil
@@ -428,6 +414,20 @@ addon.utilitySpells = {
     [212619] = {cooldown = 60, class = addon.WARLOCK, category = SPELLCATEGORY.INTERRUPT}, -- Call Felhunter
     -- Disrupt
     [212295] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.DISRUPT}, -- Nether Ward
+
+    -- Warrior
+    -- Disrupt
+    [100] = {cooldown = 17, class = addon.WARRIOR, charges = true, category = SPELLCATEGORY.DISRUPT}, -- Charge
+    [23920] = {cooldown = 25, class = addon.WARRIOR, category = SPELLCATEGORY.DISRUPT}, -- Spell Reflection
+    [6544] = {cooldown = 30, class = addon.WARRIOR, category = SPELLCATEGORY.DISRUPT}, -- Heroic Leap
+    -- Interrupt
+    [6552] = {cooldown = 14, class = addon.WARRIOR, category = SPELLCATEGORY.INTERRUPT}, -- Pummel
+    -- Crowd Control
+    [107570] = {cooldown = 30, class = addon.WARRIOR, category = SPELLCATEGORY.CROWDCONTROL}, -- Storm Bolt
+    [5246] = {cooldown = 90, class = addon.WARRIOR, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidating Shout
+    -- Defensive
+    [118038] = {cooldown = 90, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Die by the Sword
+    [184364] = {cooldown = 120, class = addon.WARRIOR, category = SPELLCATEGORY.DEFENSIVE}, -- Enraged Regeneration    
 };
 
 -- For internal version, only show the following if player has fear abilities!
