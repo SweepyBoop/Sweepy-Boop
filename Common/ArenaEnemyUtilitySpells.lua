@@ -162,6 +162,18 @@ addon.utilitySpells = {
     [147362] = {cooldown = 24, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
     [187707] = {cooldown = 15, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
 
+    -- Mage
+    -- Interrupt
+    [2139] = {cooldown = 24, class = addon.MAGE, reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
+    -- Defensive
+    [45438] = {cooldown = 200, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Ice Block
+    [87024] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, trackEvent = addon.SPELL_AURA_APPLIED}, -- Cauterize
+    -- Crowd Control
+    [113724] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
+    [31661] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
+    -- Disrupt
+    [30449] = {cooldown = 30, class = addon.MAGE, spec = {specID.ARCANE}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
+
     -- Priest
     -- Dispel
     -- Mass Dispel
@@ -353,18 +365,6 @@ addon.utilitySpells = {
     [204336] = {cooldown = 30, class = addon.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
     [77130] = {cooldown = 8, class = addon.SHAMAN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
-
-    -- Mage
-    -- Interrupt
-    [2139] = {cooldown = 24, class = addon.MAGE, reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
-    -- Defensive
-    [45438] = {cooldown = 200, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Ice Block
-    [87024] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, trackEvent = addon.SPELL_AURA_APPLIED}, -- Cauterize
-    -- Crowd Control
-    [113724] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
-    [31661] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
-    -- Disrupt
-    [30449] = {cooldown = 30, class = addon.MAGE, spec = {specID.ARCANE}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
 
     -- Rogue
     -- Interrupt
