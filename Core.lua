@@ -335,50 +335,67 @@ options.args.arenaFrames = {
             desc = "Select which abilities to track cooldown inside arenas",
             get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
             set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
+            args = {
+                checkAll = {
+                    order = 1,
+                    type = "execute",
+                    name = "Check All",
+                    func = function ()
+                        SweepyBoop:CheckAllSpells(true);
+                    end
+                },
+                uncheckAll = {
+                    order = 2,
+                    type = "execute",
+                    name = "Uncheck All",
+                    func = function ()
+                        SweepyBoop:CheckAllSpells(false);
+                    end
+                },
+            },
         }
     },
 };
 
 local indexInClassGroup = {};
+local groupIndex = 3;
+-- Ensure one group for each class, in order
+for _, classID in ipairs(addon.classOrder) do
+    local classInfo = C_CreatureInfo.GetClassInfo(classID);
+    options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
+        order = groupIndex,
+        type = "group",
+        icon = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
+        iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+        name = classInfo.className,
+        args = {},
+    };
+
+    indexInClassGroup[classInfo.classFile] = 1;
+    groupIndex = groupIndex + 1;
+end
 local function AppendSpellOptions(group, spellList, category)
-    if ( not group.args ) then -- only create once, since we will append burst, then defensive
-        group.args = {};
-        local index = 1;
-        -- Ensure one group for each class, in order
-        for _, classID in ipairs(addon.classOrder) do
-            local classInfo = C_CreatureInfo.GetClassInfo(classID);
-            group.args[classInfo.classFile] = {
-                order = index,
-                type = "group",
-                icon = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
-			    iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
-                name = classInfo.className,
-                args = {},
-            };
-
-            indexInClassGroup[classInfo.classFile] = 1;
-            index = index + 1;
-        end
-    end
-
     for spellID, spellInfo in pairs(spellList) do
         if ( not category ) or ( spellInfo.category == category ) then
             local classFile = spellInfo.class;
             local classGroup = group.args[classFile];
             local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
+            -- https://warcraft.wiki.gg/wiki/SpellMixin
+            local description;
+            local spell = Spell:CreateFromSpellID(spellID);
+            spell:ContinueOnSpellLoad(function()
+                description = spell:GetSpellDescription();
+            end)
             classGroup.args[tostring(spellID)] = {
                 order = indexInClassGroup[classFile],
                 type = "toggle",
                 name = format("|T%s:20|t %s", icon, name),
+                desc = description,
             };
             
             indexInClassGroup[classFile] = indexInClassGroup[classFile] + 1;
         end
     end
-end
-
-local function FillDefaultSpellOptions()
-    
 end
 
 AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
@@ -521,6 +538,15 @@ end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
 
+local function SetupAllSpells(profile, spellList, value)
+    for spellID, spellEntry in pairs(spellList) do
+        profile[tostring(spellID)] = value;
+    end
+end
+
+SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.burstSpells, true);
+SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.utilitySpells, true);
+
 function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
@@ -582,6 +608,11 @@ function SweepyBoop:RefreshConfig()
     local time = GetTime();
     self.db.profile.nameplatesFriendly.lastModified = time;
     self.db.profile.nameplatesEnemy.lastModified = time;
+end
+
+function SweepyBoop:CheckAllSpells(value)
+    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.burstSpells, value);
+    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.utilitySpells, value);
 end
 
 SLASH_SweepyBoop1 = "/sb"
