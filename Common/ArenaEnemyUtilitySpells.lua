@@ -368,7 +368,7 @@ addon.utilitySpells = {
     -- Interrupt
     [1766] = {cooldown = 15, class = addon.ROGUE, category = SPELLCATEGORY.INTERRUPT}, -- Kick
     -- Defensive
-    [1856] = {cooldown = {default = 120, [specID.OUTLAW] = 75}, class = addon.ROGUE, charges = {[specID.SUBTLETY] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Vanish
+    [1856] = {cooldown = 120, class = addon.ROGUE, charges = true, category = SPELLCATEGORY.DEFENSIVE}, -- Vanish (addition charge in class talent tree)
     [31224] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Cloak of Shadows
     [5277] = {cooldown = 120, class = addon.ROGUE, category = SPELLCATEGORY.DEFENSIVE}, -- Evasion
     -- Crowd Control
