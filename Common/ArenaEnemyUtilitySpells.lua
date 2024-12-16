@@ -57,7 +57,7 @@ addon.utilitySpells = {
         class = addon.DEATHKNIGHT,
         category = SPELLCATEGORY.DEFENSIVE,
         cooldown = 120,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
 
     -- Demon Hunter
@@ -188,7 +188,7 @@ addon.utilitySpells = {
         cooldown = 210,
         class = addon.PALADIN,
         category = SPELLCATEGORY.DEFENSIVE,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Blessing of Protection
     [1022] = {
@@ -196,7 +196,7 @@ addon.utilitySpells = {
         class = addon.PALADIN,
         category = SPELLCATEGORY.DEFENSIVE,
         opt_charges = true,
-        index = 1,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Crowd Control
     -- Hammer of Justice
@@ -242,7 +242,7 @@ addon.utilitySpells = {
     -- Defensive
     [61336] = {cooldown = {default = 180, [specID.GUARDIAN] = 120}, class = addon.DRUID, charges = {[specID.GUARDIAN] = true}, category = SPELLCATEGORY.DEFENSIVE}, -- Survival Instincts
     [102342] = {cooldown = 90, class = addon.DRUID, opt_lower_cooldown = 70, category = SPELLCATEGORY.DEFENSIVE}, -- Ironbark
-    [740] = {cooldown = 180, class = addon.DRUID, opt_lower_cooldown = 120, category = SPELLCATEGORY.DEFENSIVE, index = 1}, -- Tranquility
+    [740] = {cooldown = 180, class = addon.DRUID, opt_lower_cooldown = 120, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Tranquility
     -- Dispel
     [88423] = {cooldown = 8, class = addon.DRUID, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Nature's Cure
 
@@ -310,7 +310,7 @@ addon.utilitySpells = {
     -- Interrupt
     [2139] = {cooldown = 24, class = addon.MAGE, reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
     -- Defensive
-    [45438] = {cooldown = 200, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = 1}, -- Ice Block
+    [45438] = {cooldown = 200, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Ice Block
     [87024] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, trackEvent = addon.SPELL_AURA_APPLIED}, -- Cauterize
     -- Crowd Control
     [113724] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
@@ -372,7 +372,7 @@ if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.W
         class = addon.DEATHKNIGHT,
         category = SPELLCATEGORY.DEFENSIVE,
         cooldown = 120,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     };
     -- Tremor Totem
     addon.utilitySpells[8143] = {
@@ -385,14 +385,14 @@ if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.W
         cooldown = 60,
         class = addon.WARRIOR,
         category = SPELLCATEGORY.DEFENSIVE,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     };
     -- Berserker Shout
     addon.utilitySpells[384100] = {
         cooldown = 60,
         class = addon.WARRIOR,
         category = SPELLCATEGORY.DEFENSIVE,
-        index = 2,
+        index = addon.SPELLPRIORITY.HIGH,
     };
 end
 
