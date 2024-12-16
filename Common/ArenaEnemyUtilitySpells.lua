@@ -155,7 +155,9 @@ addon.utilitySpells = {
     [19577] = {cooldown = 60, class = addon.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidation
     [187650] = {cooldown = 25, class = addon.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Freezing Trap
     -- Defensive
-    [186265] = {cooldown = 144, class = addon.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
+    [264735] = {cooldown = 90, class = addon.HUNTER, category = SPELLCATEGORY.DEFENSIVE, charges = true}, -- Survival of the Fittest
+    [186265] = {cooldown = 144, class = addon.HUNTER, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Aspect of the Turtle
+    [53480] = {cooldown = 60, class = addon.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Roar of Sacrifice (need to confirm)
     -- Interrupt
     [147362] = {cooldown = 24, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
     [187707] = {cooldown = 15, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
