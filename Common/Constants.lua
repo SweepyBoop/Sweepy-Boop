@@ -130,7 +130,7 @@ addon.classOrder = {
 -- For hiding timer by OmniCC
 addon.HIDETIMEROMNICC = "BoopHideTimer";
 
-addon.DEFAULT_ICON_SIZE = 32;
+addon.DEFAULT_ICON_SIZE = 35;
 
 addon.RaidFrameSortOrder = {
     Disabled = 0,

@@ -218,8 +218,8 @@ local function EnsureIcon(unitId, spellID, spell)
 
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
         if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-            local size = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize;
-            premadeIcons[unitId][spellID]:SetSize(size, size);
+            local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize / addon.DEFAULT_ICON_SIZE;
+            premadeIcons[unitId][spellID]:SetScale(scale);
 
             premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
         end
