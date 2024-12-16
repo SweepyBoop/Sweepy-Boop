@@ -209,6 +209,25 @@ addon.utilitySpells = {
         opt_charges = true,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Lay on Hands
+    [633] = {
+        cooldown = 420,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.DEFENSIVE,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
+    -- Divine Protection
+    [498] = {
+        cooldown = 60,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.DEFENSIVE,
+    },
+    -- Shield of Vengeance
+    [184662] = {
+        cooldown = 90,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.DEFENSIVE,
+    },
     -- Crowd Control
     -- Hammer of Justice
     [853] = {
