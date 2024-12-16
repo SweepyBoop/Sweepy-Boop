@@ -192,6 +192,56 @@ addon.utilitySpells = {
     -- Dispel
     [115450] = {cooldown = 8, class = addon.MONK, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Detox
 
+    -- Paladin
+    -- Defensive
+    -- Divine Shield
+    [642] = {
+        cooldown = 210,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.DEFENSIVE,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
+    -- Blessing of Protection
+    [1022] = {
+        cooldown = 240,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.DEFENSIVE,
+        opt_charges = true,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
+    -- Crowd Control
+    -- Hammer of Justice
+    [853] = {
+        cooldown = 60,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.CROWDCONTROL,
+        reduce_power_type = POWERTYPE.HolyPower;
+        reduce_amount = 2, -- Each holy power spent reduces the cooldown by 2 sec.
+    },
+    -- Blinding Light
+    [115750] = {
+        cooldown = 90,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.CROWDCONTROL,
+    },
+    -- Shield of Virtue
+    [215652] = {
+        cooldown = 45,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.CROWDCONTROL,
+        trackEvent = addon.SPELL_AURA_REMOVED,
+    },
+    -- Interrupt
+    -- Rebuke
+    [96231] = {
+        cooldown = 15,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.INTERRUPT,
+    },
+    -- Dispel
+    [4987] = {cooldown = 8, class = addon.PALADIN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Cleanse
+    [210256] = {cooldown = 45, class = addon.PALADIN, category = SPELLCATEGORY.DISPEL}, -- Blessing of Sanctuary
+
     -- Priest
     -- Dispel
     -- Mass Dispel
@@ -284,57 +334,6 @@ addon.utilitySpells = {
         category = SPELLCATEGORY.DISRUPT,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
-
-    -- Paladin
-    -- Defensive
-    -- Divine Shield
-    [642] = {
-        cooldown = 210,
-        class = addon.PALADIN,
-        category = SPELLCATEGORY.DEFENSIVE,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
-    -- Blessing of Protection
-    [1022] = {
-        cooldown = 240,
-        class = addon.PALADIN,
-        category = SPELLCATEGORY.DEFENSIVE,
-        opt_charges = true,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
-    -- Crowd Control
-    -- Hammer of Justice
-    [853] = {
-        cooldown = 60,
-        class = addon.PALADIN,
-        category = SPELLCATEGORY.CROWDCONTROL,
-        reduce_power_type = POWERTYPE.HolyPower;
-        reduce_amount = 2, -- Each holy power spent reduces the cooldown by 2 sec.
-    },
-    -- Blinding Light
-    [115750] = {
-        cooldown = 90,
-        class = addon.PALADIN,
-        category = SPELLCATEGORY.CROWDCONTROL,
-    },
-    -- Shield of Virtue
-    [215652] = {
-        cooldown = 45,
-        class = addon.PALADIN,
-        category = SPELLCATEGORY.CROWDCONTROL,
-        trackEvent = addon.SPELL_AURA_REMOVED,
-    },
-    -- Interrupt
-    -- Rebuke
-    [96231] = {
-        cooldown = 15,
-        class = addon.PALADIN,
-        category = SPELLCATEGORY.INTERRUPT,
-    },
-    -- Dispel
-    [4987] = {cooldown = 8, class = addon.PALADIN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Cleanse
-    [210256] = {cooldown = 45, class = addon.PALADIN, category = SPELLCATEGORY.DISPEL}, -- Blessing of Sanctuary
-
 
     -- Warrior
     -- Disrupt
