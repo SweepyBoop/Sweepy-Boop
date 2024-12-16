@@ -380,6 +380,18 @@ addon.utilitySpells = {
     [36554] = {cooldown = 30, class = addon.ROGUE, charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
     [195457] = {cooldown = 30, class = addon.ROGUE, category = SPELLCATEGORY.DISRUPT}, -- Grappling Hook
 
+    -- Shaman
+    -- Interrupt
+    [57994] = {cooldown = 12, class = addon.SHAMAN, category = SPELLCATEGORY.INTERRUPT}, -- Wind Shear
+    -- Defensive
+    [108271] = {cooldown = 90, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
+    [98008] = {cooldown = 180, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Spirit Link Totem
+    [409293] = {cooldown = 120, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Burrow
+    -- Disrupt
+    [204336] = {cooldown = 30, class = addon.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
+    -- Dispel
+    [77130] = {cooldown = 8, class = addon.SHAMAN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
+
     -- Warrior
     -- Disrupt
     [100] = {cooldown = 17, class = addon.WARRIOR, charges = true, category = SPELLCATEGORY.DISRUPT}, -- Charge
@@ -415,18 +427,6 @@ addon.utilitySpells = {
     [212619] = {cooldown = 60, class = addon.WARLOCK, category = SPELLCATEGORY.INTERRUPT}, -- Call Felhunter
     -- Disrupt
     [212295] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.DISRUPT}, -- Nether Ward
-
-    -- Shaman
-    -- Interrupt
-    [57994] = {cooldown = 12, class = addon.SHAMAN, category = SPELLCATEGORY.INTERRUPT}, -- Wind Shear
-    -- Defensive
-    [108271] = {cooldown = 90, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
-    [98008] = {cooldown = 180, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Spirit Link Totem
-    [409293] = {cooldown = 120, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Burrow
-    -- Disrupt
-    [204336] = {cooldown = 30, class = addon.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
-    -- Dispel
-    [77130] = {cooldown = 8, class = addon.SHAMAN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
 };
 
 -- For internal version, only show the following if player has fear abilities!
