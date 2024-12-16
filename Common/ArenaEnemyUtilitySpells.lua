@@ -186,8 +186,9 @@ addon.utilitySpells = {
     -- Interrupt
     [116705] = {cooldown = 15, class = addon.MONK, category = SPELLCATEGORY.DISRUPT}, -- Spear Hand Strike
     -- Defensive
-    [122470] = {cooldown = 90, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Touch of Karma
-    [116849] = {cooldown = 75, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Life Cocoon
+    [122470] = {cooldown = 90, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Touch of Karma
+    [116849] = {cooldown = 75, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Life Cocoon (120 baseline - 45s from Chrysalis)
+    [122783] = {cooldown = 90, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Diffuse Magic
     -- Dispel
     [115450] = {cooldown = 8, class = addon.MONK, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Detox
 
