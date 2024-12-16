@@ -30,7 +30,8 @@ addon.utilitySpells = {
         class = addon.DEATHKNIGHT,
         category = SPELLCATEGORY.DISRUPT,
         cooldown = 25,
-        opt_charges = true,
+        --opt_charges = true,
+        charges = true, -- Death's Echo is almost always picked
     },
     -- Crowd Control
     -- Strangulate
