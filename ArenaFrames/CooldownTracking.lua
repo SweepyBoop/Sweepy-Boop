@@ -181,7 +181,9 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     -- Find the icon to use
     local iconId = unitId .. "-" .. spellId;
     if self.icons[iconId] then
-        addon.StartCooldownTrackingIcon(self.icons[iconId]);
+        if ( cooldowns[spellId].category ~= SPELLCATEGORY.DEFENSIVE ) or SweepyBoop.db.profile.arenaFrames.spellList[tostring(spellId)] then
+            addon.StartCooldownTrackingIcon(self.icons[iconId]);
+        end
     end
 end
 

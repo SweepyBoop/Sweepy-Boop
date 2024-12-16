@@ -782,6 +782,7 @@ if addon.isTestMode then
     };
     -- Wild Growth
     addon.burstSpells[48438] = {
+        class = addon.DRUID,
         category = OFFENSIVE,
         duration = 7,
         trackDest = true,

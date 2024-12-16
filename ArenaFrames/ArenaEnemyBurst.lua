@@ -135,7 +135,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         self.npcMap[destGUID] = summonSpellId;
 
         -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
-        if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) then
+        if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) and SweepyBoop.db.profile.arenaFrames.spellList[tostring(summonSpellId)]  then
             addon.StartBurstIcon(self.icons[summonSpellId]);
         end
         return;
@@ -167,7 +167,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( not validateSubEvent ) then return end
 
     -- Find the icon to use
-    if self.icons[spellId] then
+    if self.icons[spellId] and SweepyBoop.db.profile.arenaFrames.spellList[tostring(spellId)] then
         addon.StartBurstIcon(self.icons[spellId]);
     end
 end
@@ -180,7 +180,7 @@ local function ProcessUnitSpellCast(self, event, ...)
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
-        if self.icons[spellID] then
+        if self.icons[spellID] and SweepyBoop.db.profile.arenaFrames.spellList[tostring(spellID)] then
             addon.StartBurstIcon(self.icons[spellID]);
         end
     end

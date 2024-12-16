@@ -409,7 +409,7 @@ end
 
 if addon.isTestMode then
     local testCategory1 = SPELLCATEGORY.INTERRUPT;
-    local testCategory2 = SPELLCATEGORY.DISRUPT;
+    local testCategory2 = SPELLCATEGORY.DEFENSIVE;
     -- Test
     addon.utilitySpells[1126] = { -- Mark of the Wild
         class = addon.DRUID,
