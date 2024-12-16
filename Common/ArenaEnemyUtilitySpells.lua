@@ -148,6 +148,18 @@ addon.utilitySpells = {
     -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
     [382266] = {cooldown = 30, class = addon.EVOKER, category = SPELLCATEGORY.DISRUPT, trackEvent = addon.SPELL_EMPOWER_END},
 
+    -- Hunter
+    -- Disrupt
+    [5384] = {cooldown = 30, class = addon.HUNTER, category = SPELLCATEGORY.DISRUPT}, -- Feign Death
+    -- Crowd Control
+    [19577] = {cooldown = 60, class = addon.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidation
+    [187650] = {cooldown = 25, class = addon.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Freezing Trap
+    -- Defensive
+    [186265] = {cooldown = 144, class = addon.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
+    -- Interrupt
+    [147362] = {cooldown = 24, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
+    [187707] = {cooldown = 15, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
+
     -- Priest
     -- Dispel
     -- Mass Dispel
@@ -339,18 +351,6 @@ addon.utilitySpells = {
     [204336] = {cooldown = 30, class = addon.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
     [77130] = {cooldown = 8, class = addon.SHAMAN, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
-
-    -- Hunter
-    -- Disrupt
-    [5384] = {cooldown = 30, class = addon.HUNTER, category = SPELLCATEGORY.DISRUPT}, -- Feign Death
-    -- Crowd Control
-    [19577] = {cooldown = 60, class = addon.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Intimidation
-    [187650] = {cooldown = 25, class = addon.HUNTER, category = SPELLCATEGORY.CROWDCONTROL}, -- Freezing Trap
-    -- Defensive
-    [186265] = {cooldown = 144, class = addon.HUNTER, category = SPELLCATEGORY.DEFENSIVE}, -- Aspect of the Turtle
-    -- Interrupt
-    [147362] = {cooldown = 24, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Counter Shot
-    [187707] = {cooldown = 15, class = addon.HUNTER, category = SPELLCATEGORY.INTERRUPT}, -- Muzzle
 
     -- Mage
     -- Interrupt
