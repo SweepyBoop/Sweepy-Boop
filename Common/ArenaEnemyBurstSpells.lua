@@ -465,17 +465,6 @@ addon.burstSpells = {
         duration = addon.DURATION_DYNAMIC,
         extend = true,
     },
-    -- Holy
-    -- Restitution (treat as offensive spell with highest priority. Buff is hidden aura, so we track debuff spellId)
-    -- Currently lacking the detection of early dismiss (if the priest right clicks the spirit buff)
-    [211319] = {
-        class = addon.PRIEST,
-        category = OFFENSIVE,
-        trackEvent = addon.SPELL_AURA_APPLIED,
-        cooldown = 600,
-        duration = 15,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
 
     -- Rogue
     -- Cold Blood

@@ -165,6 +165,14 @@ addon.utilitySpells = {
         class = addon.PRIEST,
         category = SPELLCATEGORY.DEFENSIVE,
     },
+    -- Restitution
+    [211319] = {
+        class = addon.PRIEST,
+        category = SPELLCATEGORY.DEFENSIVE,
+        trackEvent = addon.SPELL_AURA_APPLIED,
+        cooldown = 600,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
     -- Disrupt
     -- Holy Ward
     [213610] = {
@@ -409,8 +417,8 @@ for _, spell in pairs(addon.utilitySpells) do
 end
 
 if addon.isTestMode then
-    local testCategory1 = SPELLCATEGORY.INTERRUPT;
-    local testCategory2 = SPELLCATEGORY.DEFENSIVE;
+    local testCategory1 = SPELLCATEGORY.CROWDCONTROL;
+    local testCategory2 = SPELLCATEGORY.CROWDCONTROL;
     -- Test
     addon.utilitySpells[1126] = { -- Mark of the Wild
         class = addon.DRUID,
