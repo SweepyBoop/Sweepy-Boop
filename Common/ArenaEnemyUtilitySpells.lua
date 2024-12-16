@@ -364,8 +364,9 @@ addon.utilitySpells = {
     [382266] = {cooldown = 30, class = addon.EVOKER, category = SPELLCATEGORY.DISRUPT, trackEvent = addon.SPELL_EMPOWER_END},
 };
 
+-- For internal version, only show the following if player has fear abilities!
 local class = select(2, UnitClass("player"));
-if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.WARRIOR ) then -- Only track the following if player has fear abilities!
+if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.WARRIOR ) or ( not addon.internal ) then
     -- Lichborne
     addon.utilitySpells[49039] = {
         class = addon.DEATHKNIGHT,
