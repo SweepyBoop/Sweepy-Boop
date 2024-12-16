@@ -39,7 +39,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 
     frame.unit = unit;
     frame.spellID = spellID;
-    local spell = addon.cooldownSpells[spellID];
+    local spell = addon.utilitySpells[spellID];
     frame.category = spell.category;
 
     if size then

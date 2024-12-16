@@ -3,7 +3,7 @@ local test = addon.isTestMode;
 
 local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
 
-local cooldowns = addon.cooldownSpells;
+local cooldowns = addon.utilitySpells;
 local resets = addon.cooldownResets;
 local SPELLCATEGORY = addon.SPELLCATEGORY;
 
@@ -20,10 +20,10 @@ local defensiveGroup = {}; -- This one needs a group per unit
 local refreshFrame;
 
 for spellID, spell in pairs(cooldowns) do
-    spell.priority = spell.index or 100;
+    spell.priority = spell.index or addon.SPELLPRIORITY.DEFAULT;
 
-    if ( not spell.class ) then
-        print("Spell missing class:", spellID);
+    if ( not spell.class ) or ( not C_Spell.GetSpellName(spellID) ) then
+        print("Invalid spellID:", spellID);
     end
 
     -- Validate class
@@ -181,7 +181,9 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
     -- Find the icon to use
     local iconId = unitId .. "-" .. spellId;
     if self.icons[iconId] then
-        addon.StartCooldownTrackingIcon(self.icons[iconId]);
+        if ( cooldowns[spellId].category ~= SPELLCATEGORY.DEFENSIVE ) or SweepyBoop.db.profile.arenaFrames.spellList[tostring(spellId)] then
+            addon.StartCooldownTrackingIcon(self.icons[iconId]);
+        end
     end
 end
 
@@ -206,7 +208,7 @@ local function EnsureIcon(unitId, spellID, spell)
         end
         premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
 
-        if addon.internal and ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+        if addon.internal and ( spell.category == SPELLCATEGORY.DEFENSIVE ) and ( not addon.isTestMode ) then
             addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]); -- icons are pretty small, I'm not staring at the numbers, just taking a glance once in a while
         end
 

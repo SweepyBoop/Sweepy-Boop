@@ -12,6 +12,12 @@ addon.SPELLCATEGORY = {
     DEFENSIVE = 6,
 };
 
+addon.SPELLPRIORITY = {
+    DEFAULT = 50,
+    HIGH = 10,
+    LOW = 100,
+};
+
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
 
 addon.SPECID = {
@@ -27,6 +33,7 @@ addon.SPECID = {
     SUBTLETY = 261,
     WW = 269,
     DEVASTATION = 1467,
+    AUGMENTATION = 1473,
 };
 
 -- Event name constants
@@ -58,11 +65,20 @@ addon.SPELL_AURA_REMOVED = "SPELL_AURA_REMOVED";
 addon.SPELL_DAMAGE = "SPELL_DAMAGE";
 addon.SPELL_CAST_START = "SPELL_CAST_START";
 addon.SPELL_SUMMON = "SPELL_SUMMON";
-addon.UNIT_DIED = "UNIT_DIED";
 addon.PARTY_KILL = "PARTY_KILL";
+addon.UNIT_DIED = "UNIT_DIED";
+addon.UNIT_DESTROYED = "UNIT_DESTROYED";
+addon.UNIT_DISSIPATES = "UNIT_DISSIPATES";
 addon.SPELL_DISPEL = "SPELL_DISPEL";
 addon.SPELL_INTERRUPT = "SPELL_INTERRUPT";
 addon.SPELL_EMPOWER_END = "SPELL_EMPOWER_END";
+
+addon.PetDismissEvents = {
+    [addon.PARTY_KILL] = true,
+    [addon.UNIT_DIED] = true,
+    [addon.UNIT_DESTROYED] = true,
+    [addon.UNIT_DISSIPATES] = true,
+};
 
 -- classFileName constants
 addon.DEATHKNIGHT = "DEATHKNIGHT";
@@ -78,7 +94,6 @@ addon.ROGUE = "ROGUE";
 addon.SHAMAN = "SHAMAN";
 addon.WARLOCK = "WARLOCK";
 addon.WARRIOR = "WARRIOR";
-addon.EVOKER = "EVOKER";
 
 addon.classID = {
     WARRIOR = 1,
@@ -94,6 +109,22 @@ addon.classID = {
     DRUID = 11,
     DEMONHUNTER = 12,
     EVOKER = 13,
+};
+
+addon.classOrder = {
+    addon.classID.DEATHKNIGHT,
+    addon.classID.DEMONHUNTER,
+    addon.classID.DRUID,
+    addon.classID.EVOKER,
+    addon.classID.HUNTER,
+    addon.classID.MAGE,
+    addon.classID.MONK,
+    addon.classID.PALADIN,
+    addon.classID.PRIEST,
+    addon.classID.ROGUE,
+    addon.classID.SHAMAN,
+    addon.classID.WARLOCK,
+    addon.classID.WARRIOR,
 };
 
 -- For hiding timer by OmniCC
