@@ -402,7 +402,7 @@ addon.utilitySpells = {
     -- Defensive
     [104773] = {cooldown = 180, class = addon.WARLOCK, opt_lower_cooldown = 135, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Unending Resolve
     [410598] = {cooldown = 60, class = addon.WARLOCK, opt_lower_cooldown = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Soul Rip
-    [108416] = {cooldown = 45, class = addon.WARLOCK, opt_lower_cooldown = 135, category = SPELLCATEGORY.DEFENSIVE}, -- Dark Pact
+    [108416] = {cooldown = 45, class = addon.WARLOCK, category = SPELLCATEGORY.DEFENSIVE}, -- Dark Pact
     -- Interrupt
     [19647] = {cooldown = 24, class = addon.WARLOCK, trackPet = true, category = SPELLCATEGORY.INTERRUPT}, -- Spell Lock (Command Demon Ability)
         --[119910] = {parent = 19647}, -- Spell Lock (Felhunter)
