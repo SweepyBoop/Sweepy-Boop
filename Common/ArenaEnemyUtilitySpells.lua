@@ -387,6 +387,7 @@ addon.utilitySpells = {
     [108271] = {cooldown = 90, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
     [98008] = {cooldown = 180, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Spirit Link Totem
     [409293] = {cooldown = 120, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Burrow
+    [108270] = {cooldown = 180, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Stone Bulwark Totem (can be reset by Totemic Recall)
     -- Disrupt
     [204336] = {cooldown = 30, class = addon.SHAMAN, category = SPELLCATEGORY.DISRUPT}, -- Grounding Totem
     -- Dispel
