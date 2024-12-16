@@ -62,7 +62,9 @@ It comes with a few key features:
 - Filter by spec, e.g., only shows Convoke the Spirits for Balance/Feral Druids, but not Restoration Druids
 - Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
 
-The benefit of this module is to give players a quick view of which enemy player is bursting and which one ran out of defensive options (thus would be the ideal kill target for next go).
+The benefit of this module is to give you a quick view of
+- Which enemy player is bursting (so you can peel accordingly if needed)
+- Which enemy player(s) ran out of defensive options (thus would be the ideal kill target for next go)
 
 ![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
 
