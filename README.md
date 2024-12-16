@@ -67,9 +67,11 @@ It comes with a few key features:
 [Here is my Twitch clip of the cooldown tracking module in action!](https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131)
 
 **Note (important)**
-- This module supports Gladius and sArena
-- Make sure to /reload if you change your Gladius / sArena settings (especially when you change the layout / positioning)
-- This module only tracks damage offensives and defensive abilities, and currently there is no option to choose which abilities to track
+- This module supports Gladius and sArena only, and cooldown icons anchor to their frames
+- This module tracks damage offensives and defensive abilities, and players can fully customize which cooldowns to track in the options panel
+
+![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
+
 
 
 ## Sort raid frames
