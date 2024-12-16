@@ -60,6 +60,19 @@ addon.utilitySpells = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Anti-Magic Shell
+    [48707] = {
+        class = addon.DEATHKNIGHT,
+        category = SPELLCATEGORY.DEFENSIVE,
+        cooldown = 40, -- Anti-Magic Barrier almost always picked
+    },
+    -- Anti-Magic Zone
+    [51052] = {
+        class = addon.DEATHKNIGHT,
+        category = SPELLCATEGORY.DEFENSIVE,
+        cooldown = 120,
+        opt_lower_cooldown = 90, -- Assimilation
+    },
 
     -- Demon Hunter
     -- Interrupt
