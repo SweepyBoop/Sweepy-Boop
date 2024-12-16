@@ -167,12 +167,29 @@ addon.utilitySpells = {
     [2139] = {cooldown = 24, class = addon.MAGE, reduce_on_interrupt = 4, category = SPELLCATEGORY.INTERRUPT}, -- Counterspell
     -- Defensive
     [45438] = {cooldown = 200, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Ice Block
-    [87024] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, trackEvent = addon.SPELL_AURA_APPLIED}, -- Cauterize
+    [87024] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, trackEvent = addon.SPELL_AURA_APPLIED, index = addon.SPELLPRIORITY.HIGH}, -- Cauterize
+    [198111] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE}, -- Temporal Shield
+    [235219] = {cooldown = 300, class = addon.MAGE, category = SPELLCATEGORY.DEFENSIVE, index = addon.SPELLPRIORITY.HIGH}, -- Cold Snap (resets ice block)
     -- Crowd Control
     [113724] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
     -- Disrupt
     [30449] = {cooldown = 30, class = addon.MAGE, spec = {specID.ARCANE}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
+
+    -- Monk
+    -- Crowd Control
+    [115078] = {cooldown = 30, class = addon.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Paralysis
+    [119381] = {cooldown = 50, class = addon.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Leg Sweep
+    [115181] = { cooldown = 30, class = addon.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Breath of Fire (Incendiary Breath)
+    -- Disrupt
+    [116844] = {cooldown = 45, class = addon.MONK, category = SPELLCATEGORY.DISRUPT}, -- Ring of Peace
+    -- Interrupt
+    [116705] = {cooldown = 15, class = addon.MONK, category = SPELLCATEGORY.DISRUPT}, -- Spear Hand Strike
+    -- Defensive
+    [122470] = {cooldown = 90, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Touch of Karma
+    [116849] = {cooldown = 75, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Life Cocoon
+    -- Dispel
+    [115450] = {cooldown = 8, class = addon.MONK, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Detox
 
     -- Priest
     -- Dispel
@@ -381,21 +398,6 @@ addon.utilitySpells = {
     -- Disrupt
     [36554] = {cooldown = 30, class = addon.ROGUE, charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true}, category = SPELLCATEGORY.DISRUPT}, -- Shadowstep
     [195457] = {cooldown = 30, class = addon.ROGUE, category = SPELLCATEGORY.DISRUPT}, -- Grappling Hook
-
-    -- Monk
-    -- Crowd Control
-    [115078] = {cooldown = 30, class = addon.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Paralysis
-    [119381] = {cooldown = 50, class = addon.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Leg Sweep
-    [115181] = { cooldown = 30, class = addon.MONK, category = SPELLCATEGORY.CROWDCONTROL}, -- Breath of Fire (Incendiary Breath)
-    -- Disrupt
-    [116844] = {cooldown = 45, class = addon.MONK, category = SPELLCATEGORY.DISRUPT}, -- Ring of Peace
-    -- Interrupt
-    [116705] = {cooldown = 15, class = addon.MONK, category = SPELLCATEGORY.DISRUPT}, -- Spear Hand Strike
-    -- Defensive
-    [122470] = {cooldown = 90, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Touch of Karma
-    [116849] = {cooldown = 75, class = addon.MONK, category = SPELLCATEGORY.DEFENSIVE}, -- Life Cocoon
-    -- Dispel
-    [115450] = {cooldown = 8, class = addon.MONK, category = SPELLCATEGORY.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Detox
 };
 
 -- For internal version, only show the following if player has fear abilities!
