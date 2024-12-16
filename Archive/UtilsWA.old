@@ -7,7 +7,7 @@ local OFFENSIVE_DURATION = addon.spellCategory.OFFENSIVE_DURATION
 local OFFENSIVE_PET = addon.OFFENSIVE_PET
 local OFFENSIVE_SPECIAL = addon.spellCategory.OFFENSIVE_SPECIAL
 
-local spellData = addon.spellData
+local spellData = addon.burstSpells
 
 local spellResets = addon.spellResets
 

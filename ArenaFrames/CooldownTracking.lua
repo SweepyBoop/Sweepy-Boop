@@ -3,7 +3,7 @@ local test = addon.isTestMode;
 
 local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
 
-local cooldowns = addon.cooldownSpells;
+local cooldowns = addon.utilitySpells;
 local resets = addon.cooldownResets;
 local SPELLCATEGORY = addon.SPELLCATEGORY;
 

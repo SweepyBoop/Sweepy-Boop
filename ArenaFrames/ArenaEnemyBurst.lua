@@ -7,7 +7,7 @@ CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 local test = addon.isTestMode;
 
-local spellData = addon.spellData;
+local spellData = addon.burstSpells;
 local spellResets = addon.spellResets;
 
 local npcToSpellID = {
@@ -45,7 +45,7 @@ for spellID, spell in pairs(spellData) do
     -- Fill default priority
     spell.priority = spell.index or addon.SPELLPRIORITY.DEFAULT;
 
-    if ( not spell.class ) then
+    if ( not spell.class ) or ( not C_Spell.GetSpellName(spellID) ) then
         print("Invalid spellID:", spellID);
     end
 

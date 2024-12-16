@@ -5,7 +5,7 @@ local POWERTYPE = Enum.PowerType;
 
 local specID = addon.SPECID;
 
-addon.cooldownSpells = {
+addon.utilitySpells = {
     -- General
 
     -- DK
@@ -287,7 +287,6 @@ addon.cooldownSpells = {
     [57994] = {cooldown = 12, class = addon.SHAMAN, category = SPELLCATEGORY.INTERRUPT}, -- Wind Shear
     -- Defensive
     [108271] = {cooldown = 90, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Astral Shift
-    [210918] = {cooldown = 60, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Ethereal Form
     [98008] = {cooldown = 180, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Spirit Link Totem
     [409293] = {cooldown = 120, class = addon.SHAMAN, category = SPELLCATEGORY.DEFENSIVE}, -- Burrow
     -- Disrupt
@@ -368,27 +367,27 @@ addon.cooldownSpells = {
 local class = select(2, UnitClass("player"));
 if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.WARRIOR ) then -- Only track the following if player has fear abilities!
     -- Lichborne
-    addon.cooldownSpells[49039] = {
+    addon.utilitySpells[49039] = {
         class = addon.DEATHKNIGHT,
         category = SPELLCATEGORY.DEFENSIVE,
         cooldown = 120,
         index = 2,
     };
     -- Tremor Totem
-    addon.cooldownSpells[8143] = {
+    addon.utilitySpells[8143] = {
         cooldown = 60,
         class = addon.SHAMAN,
         category = SPELLCATEGORY.DISRUPT,
     };
     -- Berserker Rage
-    addon.cooldownSpells[18499] = {
+    addon.utilitySpells[18499] = {
         cooldown = 60,
         class = addon.WARRIOR,
         category = SPELLCATEGORY.DEFENSIVE,
         index = 2,
     };
     -- Berserker Shout
-    addon.cooldownSpells[384100] = {
+    addon.utilitySpells[384100] = {
         cooldown = 60,
         class = addon.WARRIOR,
         category = SPELLCATEGORY.DEFENSIVE,
@@ -396,10 +395,10 @@ if ( class == addon.PRIEST ) or ( class == addon.WARLOCK ) or ( class == addon.W
     };
 end
 
-for _, spell in pairs(addon.cooldownSpells) do
+for _, spell in pairs(addon.utilitySpells) do
     -- Fill options from parent
     if spell.parent then
-        local parent = addon.cooldownSpells[spell.parent];
+        local parent = addon.utilitySpells[spell.parent];
 
         spell.cooldown = spell.cooldown or parent.cooldown;
         spell.class = spell.class or parent.class;
@@ -412,35 +411,35 @@ if addon.isTestMode then
     local testCategory1 = SPELLCATEGORY.INTERRUPT;
     local testCategory2 = SPELLCATEGORY.DISRUPT;
     -- Test
-    addon.cooldownSpells[1126] = { -- Mark of the Wild
+    addon.utilitySpells[1126] = { -- Mark of the Wild
         class = addon.DRUID,
         category = testCategory1,
         cooldown = 60,
         sound = true,
     };
-    addon.cooldownSpells[8936] = { -- Regrowth
+    addon.utilitySpells[8936] = { -- Regrowth
         class = addon.DRUID,
         category = testCategory1,
         cooldown = 12,
         charges = true,
     };
-    addon.cooldownSpells[774] = { -- Rejuvenation
+    addon.utilitySpells[774] = { -- Rejuvenation
         class = addon.DRUID,
         category = testCategory1,
         cooldown = 15,
         opt_charges = true,
     };
-    addon.cooldownSpells[48438] = { -- Wild Growth
+    addon.utilitySpells[48438] = { -- Wild Growth
         class = addon.DRUID,
         category = testCategory2,
         cooldown = 60,
     };
-    addon.cooldownSpells[88423] = { -- Nature's Cure
+    addon.utilitySpells[88423] = { -- Nature's Cure
         class = addon.DRUID,
         category = testCategory2,
         cooldown = 60,
     };
-    addon.cooldownSpells[145205] = { -- Efflorescence
+    addon.utilitySpells[145205] = { -- Efflorescence
         class = addon.DRUID,
         category = testCategory2,
         cooldown = 60,

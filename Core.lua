@@ -238,6 +238,7 @@ options.args.nameplatesEnemy = {
             name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
             set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
+            args = {},
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
             end
@@ -250,6 +251,7 @@ addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
 options.args.arenaFrames = {
     order = 8,
     type = "group",
+    childGroups = "tab",
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
     get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
@@ -325,8 +327,62 @@ options.args.arenaFrames = {
             name = "Vertical offset",
             desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
+
+        spellList = {
+            order = 11,
+            type = "group",
+            name = "Spells",
+            desc = "Select which abilities to track cooldown inside arenas",
+            get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
+            set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
+        }
     },
 };
+
+local indexInClassGroup = {};
+local function AppendSpellOptions(group, spellList, category)
+    if ( not group.args ) then -- only create once, since we will append burst, then defensive
+        group.args = {};
+        local index = 1;
+        -- Ensure one group for each class, in order
+        for _, classID in ipairs(addon.classOrder) do
+            local classInfo = C_CreatureInfo.GetClassInfo(classID);
+            group.args[classInfo.classFile] = {
+                order = index,
+                type = "group",
+                icon = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
+			    iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+                name = classInfo.className,
+                args = {},
+            };
+
+            indexInClassGroup[classInfo.classFile] = 1;
+            index = index + 1;
+        end
+    end
+
+    for spellID, spellInfo in pairs(spellList) do
+        if ( not category ) or ( spellInfo.category == category ) then
+            local classFile = spellInfo.class;
+            local classGroup = group.args[classFile];
+            local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
+            classGroup.args[tostring(spellID)] = {
+                order = indexInClassGroup[classFile],
+                type = "toggle",
+                name = format("|T%s:20|t %s", icon, name),
+            };
+            
+            indexInClassGroup[classFile] = indexInClassGroup[classFile] + 1;
+        end
+    end
+end
+
+local function FillDefaultSpellOptions()
+    
+end
+
+AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
+AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
 
 options.args.raidFrames = {
     order = 9,
@@ -448,6 +504,7 @@ local defaults = {
             arenaEnemyOffensiveIconSize = 32,
             arenaEnemyDefensivesEnabled = true,
             arenaEnemyDefensiveIconSize = 25,
+            spellList = {},
         },
         arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,

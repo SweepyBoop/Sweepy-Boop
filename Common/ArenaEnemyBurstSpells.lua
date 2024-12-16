@@ -13,7 +13,7 @@ local specID = addon.SPECID
 -- opt_charges: optionally 2 charges
 -- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
 
-addon.spellData = {
+addon.burstSpells = {
     -- General
 
     -- Death Knight
@@ -339,17 +339,6 @@ addon.spellData = {
         charges = true,
         reduce_power_type = POWERTYPE.Chi,
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
-        extend = true,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
-    -- Serenity
-    [152173] = {
-        class = addon.MONK,
-        category = OFFENSIVE,
-        cooldown = 90,
-        duration = 12,
-        reduce_power_type = POWERTYPE.Chi,
-        reduce_amount = 0.15, -- Every 2 Chi spent reduces the cooldown by 0.3 sec.
         extend = true,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -771,7 +760,7 @@ addon.spellResets = {
 if addon.isTestMode then
     -- Test
     -- Mark of the Wild
-    addon.spellData[1126] = {
+    addon.burstSpells[1126] = {
         class = addon.DRUID,
         category = OFFENSIVE,
         duration = 8,
@@ -779,27 +768,27 @@ if addon.isTestMode then
         index = addon.SPELLPRIORITY.HIGH,
     };
     -- Regrowth
-    addon.spellData[8936] = {
+    addon.burstSpells[8936] = {
         class = addon.DRUID,
         category = OFFENSIVE,
         duration = 5,
         cooldown = 10,
     };
     -- Rejuv
-    addon.spellData[774] = {
+    addon.burstSpells[774] = {
         class = addon.DRUID,
         category = OFFENSIVE,
         cooldown = 45,
     };
     -- Wild Growth
-    addon.spellData[48438] = {
+    addon.burstSpells[48438] = {
         category = OFFENSIVE,
         duration = 7,
         trackDest = true,
         trackEvent = addon.SPELL_AURA_APPLIED,
     };
 
-    addon.spellData[1459] = {
+    addon.burstSpells[1459] = {
         class = addon.MAGE,
         category = OFFENSIVE,
         duration = 12,
