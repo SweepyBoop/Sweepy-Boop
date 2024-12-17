@@ -389,6 +389,7 @@ local function AppendSpellOptions(group, spellList, category)
             classGroup.args[tostring(spellID)] = {
                 order = indexInClassGroup[classFile],
                 type = "toggle",
+                width = "full", -- otherwise the icon might look strange vertically
                 name = format("|T%s:20|t %s", icon, name),
                 desc = description,
             };
