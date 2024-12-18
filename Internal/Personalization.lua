@@ -6,31 +6,31 @@ SetCVar("weatherDensity", 0);
 SetCVar("cursorSizePreferred", 1);
 
 -- Hide target & focus cast bars (duplicate info with sArena cast bars)
-TargetFrameSpellBar:UnregisterAllEvents()
-FocusFrameSpellBar:UnregisterAllEvents()
+TargetFrameSpellBar:UnregisterAllEvents();
+FocusFrameSpellBar:UnregisterAllEvents();
 
 -- Hide focus frame
-FocusFrame:SetAlpha(0)
+FocusFrame:SetAlpha(0);
 
 
 
-ArenaEnemyMatchFrame1PetFrame:SetAlpha(0)
-ArenaEnemyMatchFrame2PetFrame:SetAlpha(0)
-ArenaEnemyMatchFrame3PetFrame:SetAlpha(0)
+ArenaEnemyMatchFrame1PetFrame:SetAlpha(0);
+ArenaEnemyMatchFrame2PetFrame:SetAlpha(0);
+ArenaEnemyMatchFrame3PetFrame:SetAlpha(0);
 
 -- Hide group indicator
 hooksecurefunc("PlayerFrame_UpdateGroupIndicator", function ()
     local groupIndicator = PlayerFrame.PlayerFrameContent.PlayerFrameContentContextual.GroupIndicator
     if GetNumGroupMembers() <= 5 then
-        groupIndicator:Hide()
+        groupIndicator:Hide();
     end
 end)
 
 -- Hide group leader icon
 hooksecurefunc("PlayerFrame_UpdatePartyLeader", function ()
-    local playerFrameTargetContextual = PlayerFrame_GetPlayerFrameContentContextual()
-    playerFrameTargetContextual.LeaderIcon:Hide()
-    playerFrameTargetContextual.GuideIcon:Hide()
+    local playerFrameTargetContextual = PlayerFrame_GetPlayerFrameContentContextual();
+    playerFrameTargetContextual.LeaderIcon:Hide();
+    playerFrameTargetContextual.GuideIcon:Hide();
 end)
 
 -- Hide player name and level (if full level)
