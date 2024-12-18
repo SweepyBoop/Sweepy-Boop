@@ -11,7 +11,7 @@ local function SetupOverlayGlow(button)
 		return;
 	end
 
-    button.SpellActivationAlert:SetMouseClickEnabled(false);
+	button.SpellActivationAlert = CreateFrame("Frame", nil, button, "ActionBarButtonSpellActivationAlert");
 
 	--Make the height/width available before the next frame:
 	local frameWidth, frameHeight = button:GetSize();
