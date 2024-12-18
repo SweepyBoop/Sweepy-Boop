@@ -9,6 +9,7 @@ local GetTime = GetTime;
 local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent);
+containerFrame:SetMouseClickEnabled(false);
 containerFrame:SetSize(30, 30);
 containerFrame:SetPoint("CENTER");
 containerFrame.texture = containerFrame:CreateTexture();
