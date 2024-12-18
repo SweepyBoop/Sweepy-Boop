@@ -1,12 +1,4 @@
 local _, addon = ...;
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
-local C_LossOfControl = C_LossOfControl;
-local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
-local SendChatMessage = SendChatMessage;
-local UnitIsGroupLeader = UnitIsGroupLeader;
-local GetTime = GetTime;
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent);
 containerFrame:SetMouseClickEnabled(false);
