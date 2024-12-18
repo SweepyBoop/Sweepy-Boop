@@ -45,13 +45,14 @@ function SpellActivationOverlayFadeInAnimMixin:CustomOnFinished(animGroup)
 end
 
 local function CreateTexture(buff, filePath, width, height, offsetX, offsetY, rotate)
-    local frame = CreateFrame("Frame", nil, UIParent, "CustomSpellActivationOverlayTemplate")
-    frame.buff = buff
-    frame:SetSize(width, height)
-    frame:SetPoint("CENTER", offsetX, offsetY)
-    frame.texture:SetTexture(filePath)
+    local frame = CreateFrame("Frame", nil, UIParent, "CustomSpellActivationOverlayTemplate");
+    frame:SetMouseClickEnabled(false);
+    frame.buff = buff;
+    frame:SetSize(width, height);
+    frame:SetPoint("CENTER", offsetX, offsetY);
+    frame.texture:SetTexture(filePath);
     if rotate then
-        frame.texture:SetRotation(rotate)
+        frame.texture:SetRotation(rotate);
     end
     frame:Hide() -- Hide initially until aura is detected
 
@@ -60,13 +61,13 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY, ro
         if ( unitTarget ~= "player" ) then return end
         local aura = GetPlayerAuraBySpellID(self.buff);
         if aura and aura.duration then
-            self:Show()
+            self:Show();
         else
-            self:Hide()
+            self:Hide();
         end
     end)
 
-    return frame
+    return frame;
 end
 
 local class = select(2, UnitClass("player"));
@@ -156,6 +157,7 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent)
 
 local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY)
     local frame = CreateFrame("Frame", nil, UIParent);
+    frame:SetMouseClickEnabled(false);
     frame:Hide() -- Hide initially until aura is detected
 
     frame.spellID = spellID;
@@ -202,6 +204,7 @@ end
 -- No duration text, only show stacks, and glow when max stacks (if set)
 local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration, stackFunc)
     local frame = CreateFrame("Frame", addon.HIDETIMEROMNICC .. "CustomAura" .. spellID, UIParent);
+    frame:SetMouseClickEnabled(false);
     frame.spellID = spellID;
     frame.maxStacks = maxStacks;
     frame.stackFunc = stackFunc;
@@ -345,7 +348,7 @@ end
 local testGlowingBuffIcon = false;
 
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
-local dummy = CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
+CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 local precongnition = CreateGlowingBuffIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60);
 
@@ -462,6 +465,7 @@ end
 
 local function CreateGlowingDefensiveBuffs(spells, size, point, relativeTo, relativePoint, offsetX, offsetY, external)
     local frame = CreateFrame("Frame", nil, UIParent);
+    frame:SetMouseClickEnabled(false);
     frame:Hide() -- Hide initially until aura is detected
 
     frame.spells = spells;

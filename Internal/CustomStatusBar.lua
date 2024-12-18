@@ -30,6 +30,7 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     local unit = ( index == 0 and "pet" ) or ( "partypet" .. index );
 
     local f = CreateFrame("StatusBar", nil, UIParent);
+    f:SetMouseClickEnabled(false);
     f.unit = unit;
     f:SetSize(width, height);
 

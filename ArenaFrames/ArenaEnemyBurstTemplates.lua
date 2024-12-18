@@ -1,12 +1,11 @@
 local _, addon = ...;
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
+
 local GetSpellInfo = C_Spell.GetSpellInfo;
 local GetSpellTexture = C_Spell.GetSpellTexture;
-local GetTime = GetTime;
 
 addon.CreateBurstIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
+    frame:SetMouseClickEnabled(false);
     frame:Hide();
 
     frame.unit = unit;

@@ -258,6 +258,7 @@ end
 
 local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
+    f:SetMouseClickEnabled(false);
     f:Hide();
     f.category = category;
     f.priority = categoryPriority[category];
