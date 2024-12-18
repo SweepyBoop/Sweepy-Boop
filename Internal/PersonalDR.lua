@@ -1,11 +1,6 @@
 local _, addon = ...;
 
 local GetSpellInfo = C_Spell.GetSpellInfo;
-local UnitGUID = UnitGUID;
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
-local GetTime = GetTime;
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
 
 local test = addon.isTestMode;
 
@@ -258,6 +253,7 @@ end
 
 local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
+    f:SetMouseClickEnabled(false);
     f:Hide();
     f.category = category;
     f.priority = categoryPriority[category];

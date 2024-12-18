@@ -1,10 +1,5 @@
 local _, addon = ...;
 
-local CreateFrame = CreateFrame;
-local CompactPartyFrame = CompactPartyFrame;
-local hooksecurefunc = hooksecurefunc;
-local UnitIsPlayer = UnitIsPlayer;
-
 local test = addon.isTestMode;
 
 local function ConvertToSet(list)

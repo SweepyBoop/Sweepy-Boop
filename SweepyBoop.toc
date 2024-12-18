@@ -52,7 +52,6 @@ Internal\DrinkMacro.lua
 Internal\FocusMacros.lua
 Internal\CombatIndicator.lua
 Internal\PersonalDR.lua
-Internal\ClassColoredUnitFrames.lua
 
 # Weak Auras equivalent (Internal)
 Internal\CustomAuras.xml

@@ -1,17 +1,5 @@
 local _, addon = ...;
 
-local UnitExists = UnitExists;
-local UnitClass = UnitClass;
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
-local PlayerFrame = PlayerFrame;
-local GameFontNormal = GameFontNormal;
-local UnitHealthMax = UnitHealthMax;
-local UnitHealth = UnitHealth;
-local UnitIsUnit = UnitIsUnit;
-local UnitPower = UnitPower;
-local UnitPowerMax = UnitPowerMax;
-local GetShapeshiftForm = GetShapeshiftForm;
 local POWERTYPE = Enum.PowerType;
 
 local test = false;
@@ -30,6 +18,7 @@ local function CreateHealthBar(index, width, height) -- Create StatusBar with a 
     local unit = ( index == 0 and "pet" ) or ( "partypet" .. index );
 
     local f = CreateFrame("StatusBar", nil, UIParent);
+    f:SetMouseClickEnabled(false);
     f.unit = unit;
     f:SetSize(width, height);
 
@@ -153,6 +142,7 @@ end)
 
 local function CreateDruidManaBar() -- Create StatusBar with a text overlay
     local f = CreateFrame("StatusBar", nil, UIParent);
+    f:SetMouseClickEnabled(false);
     f.unit = "player";
     local playerPortrait = PlayerFrame.portrait;
     local size = playerPortrait:GetWidth();

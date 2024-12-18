@@ -1,18 +1,7 @@
 local _, addon = ...;
 
-local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
-local GetArenaOpponentSpec = GetArenaOpponentSpec;
-local GetSpecializationInfoByID = GetSpecializationInfoByID;
-local UnitClass = UnitClass;
-local GetMacroIndexByName = GetMacroIndexByName;
-local CreateMacro = CreateMacro;
-local EditMacro = EditMacro;
-local CreateFrame = CreateFrame;
-local InCombatLockdown = InCombatLockdown;
-local C_Timer = C_Timer;
-
-local classAbilities = {}
-local macroPrefixes = {}
+local classAbilities = {};
+local macroPrefixes = {};
 
 classAbilities[addon.DRUID] = {
     "Cyclone",
@@ -45,53 +34,53 @@ classAbilities[addon.PALADIN] = {
 };
 
 local function GetFocusName()
-    local isArena = IsActiveBattlefieldArena()
+    local isArena = IsActiveBattlefieldArena();
 
     if isArena then
-        local roles = {}
+        local roles = {};
 
         for i = 1, addon.MAX_ARENA_SIZE do
-            local spec = GetArenaOpponentSpec(i)
+            local spec = GetArenaOpponentSpec(i);
             if spec then
-                roles[i] = select(5, GetSpecializationInfoByID(spec))
+                roles[i] = select(5, GetSpecializationInfoByID(spec));
             end
             if ( roles[i] == "HEALER" ) then
                 -- Early return if healer is found
-                return "arena" .. i
+                return "arena" .. i;
             end
         end
 
         -- Healer is not found, find a tank
         for i = 1, addon.MAX_ARENA_SIZE do
             if roles[i] and ( roles[i] ~= "DAMAGER" ) then
-                return "arena" .. i
+                return "arena" .. i;
             end
         end
     end
 
     -- Fallback in case no healer/tank found
-    return "focus"
+    return "focus";
 end
 
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
-local commonPrefix = "#showtooltip\n/cast [@"
-local commonSuffix = "] "
+local commonPrefix = "#showtooltip\n/cast [@";
+local commonSuffix = "] ";
 
 local function updateMacros(focusName)
-    local class = select(2, UnitClass("player"))
-    local abilities = classAbilities[class]
+    local class = select(2, UnitClass("player"));
+    local abilities = classAbilities[class];
     if ( not abilities ) then return end
 
     for i = 1, #(abilities) do
-        local ability = abilities[i]
-        local macroName = "Focus " .. ability
-        local prefix = macroPrefixes[ability] or commonPrefix
-        local macroContent = prefix .. focusName .. commonSuffix .. ability
-        local iMacro = GetMacroIndexByName(macroName)
+        local ability = abilities[i];
+        local macroName = "Focus " .. ability;
+        local prefix = macroPrefixes[ability] or commonPrefix;
+        local macroContent = prefix .. focusName .. commonSuffix .. ability;
+        local iMacro = GetMacroIndexByName(macroName);
         if ( iMacro == 0 ) then
-            CreateMacro(macroName, "INV_MISC_QUESTIONMARK", macroContent, true)
+            CreateMacro(macroName, "INV_MISC_QUESTIONMARK", macroContent, true);
         else
-            EditMacro(iMacro, macroName, "INV_MISC_QUESTIONMARK", macroContent)
+            EditMacro(iMacro, macroName, "INV_MISC_QUESTIONMARK", macroContent);
         end
     end
 end
@@ -152,5 +141,5 @@ local frame = CreateFrame("Frame")
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD)
 frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
 frame:SetScript("OnEvent", function ()
-    TryUpdateMacros()
+    TryUpdateMacros();
 end)

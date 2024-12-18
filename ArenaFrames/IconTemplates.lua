@@ -1,9 +1,6 @@
 local _, addon = ...;
 
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
 local GetSpellInfo = C_Spell.GetSpellInfo;
-local GetTime = GetTime;
 
 local function SetupOverlayGlow(button)
     -- If we already have a SpellActivationAlert then just early return. We should already be setup

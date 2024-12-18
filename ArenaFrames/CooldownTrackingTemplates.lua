@@ -1,11 +1,7 @@
 local _, addon = ...;
 
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
-local GetTime = GetTime;
 local GetSpellInfo = C_Spell.GetSpellInfo;
 local GetSpellTexture = C_Spell.GetSpellTexture;
-local UnitIsUnit = UnitIsUnit;
 
 local function StartAnimation(icon)
     icon.FlashAnimation:Play();
@@ -34,6 +30,7 @@ end
 -- An icon for a unit + spellID is only created once per session
 addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
+    frame:SetMouseClickEnabled(false);
     frame.group = true; -- To add itself to parent group
     frame:Hide();
 
