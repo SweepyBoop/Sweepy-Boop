@@ -288,6 +288,7 @@ end
 
 local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowDuration)
     local frame = CreateFrame("Frame", nil, UIParent);
+    frame:SetMouseClickEnabled(false);
     frame.spellID = spellID;
     frame.glowDuration = glowDuration;
 
