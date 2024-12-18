@@ -154,6 +154,7 @@ end)
 
 local function CreateDruidManaBar() -- Create StatusBar with a text overlay
     local f = CreateFrame("StatusBar", nil, UIParent);
+    f:SetMouseClickEnabled(false);
     f.unit = "player";
     local playerPortrait = PlayerFrame.portrait;
     local size = playerPortrait:GetWidth();
