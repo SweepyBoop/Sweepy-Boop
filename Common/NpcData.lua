@@ -17,6 +17,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         classID = addon.classID.DEATHKNIGHT,
         npcs = {
             { npcID = 106041, name = "Reanimation", icon = 210128, default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
+            { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show},
         }
     },
     {

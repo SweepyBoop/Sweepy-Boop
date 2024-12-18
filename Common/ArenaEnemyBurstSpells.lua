@@ -31,7 +31,7 @@ addon.burstSpells = {
         class = addon.DEATHKNIGHT,
         category = OFFENSIVE,
         cooldown = 90,
-        duration = 25,
+        duration = 30,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Unholy Assult
