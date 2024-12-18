@@ -148,7 +148,7 @@ addon.RefreshBurstDuration = function (icon)
     if ( not icon.duration ) then return end
 
     -- Get new duration
-    duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
+    local duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
     if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
         SetBurstDuration(icon, expirationTime - duration, duration);
         if icon.cooldown then
