@@ -1,16 +1,8 @@
 local _, addon = ...
 
-local CreateFrame = CreateFrame;
-local UnitClass = UnitClass;
-local PlayerFrame = PlayerFrame;
-local UIParent = UIParent;
 local GetSpellInfo = C_Spell.GetSpellInfo;
 local GetSpellTexture = C_Spell.GetSpellTexture;
-local GetTime = GetTime;
-local UnitStat = UnitStat;
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
-local CombatLogGetCurrentEventInfo = CombatLogGetCurrentEventInfo;
-local UnitGUID = UnitGUID;
 
 -- https://wowpedia.fandom.com/wiki/FileDataID
 -- https://wow.tools/files/

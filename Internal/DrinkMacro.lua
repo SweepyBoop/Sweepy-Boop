@@ -1,16 +1,7 @@
 local _, addon = ...;
 
-local CreateFrame = CreateFrame;
-local UnitLevel = UnitLevel;
-local GetMacroIndexByName = GetMacroIndexByName;
 local GetItemInfo = C_Item.GetItemInfo;
 local GetItemCount = C_Item.GetItemCount;
-local CreateMacro = CreateMacro;
-local EditMacro = EditMacro;
-local InCombatLockdown = InCombatLockdown;
-local IsInInstance = IsInInstance;
-local GetTime = GetTime;
-local SendChatMessage = SendChatMessage;
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- https://github.com/DavidPHH/Drink-Macro-Creator

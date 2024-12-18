@@ -1,17 +1,5 @@
 local _, addon = ...;
 
-local UnitExists = UnitExists;
-local UnitClass = UnitClass;
-local CreateFrame = CreateFrame;
-local UIParent = UIParent;
-local PlayerFrame = PlayerFrame;
-local GameFontNormal = GameFontNormal;
-local UnitHealthMax = UnitHealthMax;
-local UnitHealth = UnitHealth;
-local UnitIsUnit = UnitIsUnit;
-local UnitPower = UnitPower;
-local UnitPowerMax = UnitPowerMax;
-local GetShapeshiftForm = GetShapeshiftForm;
 local POWERTYPE = Enum.PowerType;
 
 local test = false;
