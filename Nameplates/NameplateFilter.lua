@@ -25,6 +25,7 @@ end
 local function EnsureNpcHighlight(frame)
     if ( not frame.npcHighlight ) then
         frame.npcHighlight = CreateFrame("Frame", nil, frame);
+        frame.npcHighlight:SetMouseClickEnabled(false);
         frame.npcHighlight:SetSize(iconSize, iconSize);
         frame.npcHighlight:SetFrameStrata("HIGH");
         frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
