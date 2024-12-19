@@ -31,7 +31,7 @@ local function GetThreatCount(unit)
             end
         end
 
-        return 1;
+        return ( count > 0 and 1 );
     end
 end
 
