@@ -1,17 +1,5 @@
 local _, addon = ...;
 
-local GetSpecialization = GetSpecialization;
-local GetSpecializationInfo = GetSpecializationInfo;
-local GetArenaOpponentSpec = GetArenaOpponentSpec;
-local GetSpecializationInfoByID = GetSpecializationInfoByID;
-local UnitGUID = UnitGUID;
-local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
-local GetThreatStatusColor = GetThreatStatusColor;
-local CreateFrame = CreateFrame;
-local hooksecurefunc = hooksecurefunc;
-local UnitIsUnit = UnitIsUnit;
-local CompactPartyFrame = CompactPartyFrame;
-
 -- IMPORTANT!!!
 -- Make sure you disable Interface -> Raid Profiles -> "Display Aggro Highlight", and do a /reload
 -- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
