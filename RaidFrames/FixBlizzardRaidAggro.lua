@@ -25,10 +25,13 @@ local function GetThreatCount(unit)
         for i = 1, addon.MAX_ARENA_SIZE do
             if UnitIsUnit(unit, "arena" .. i .. "target") then
                 count = count + 1;
+                if ( count > 1 ) then
+                    return 3; -- red when unit is being targeted by more than one enemy players
+                end
             end
         end
 
-        return count;
+        return 1;
     end
 end
 
