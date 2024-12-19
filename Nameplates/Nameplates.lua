@@ -1,16 +1,4 @@
-local _, addon = ...
-
-local UnitGUID = UnitGUID;
-local UnitIsUnit = UnitIsUnit;
-local IsActiveBattlefieldArena = IsActiveBattlefieldArena;
-local UnitIsPlayer = UnitIsPlayer;
-local UnitIsPossessed = UnitIsPossessed;
-local UnitClass = UnitClass;
-local UnitCanAttack = UnitCanAttack;
-local IsInInstance = IsInInstance;
-local strsplit = strsplit;
-local hooksecurefunc = hooksecurefunc;
-local UnitGroupRolesAssigned = UnitGroupRolesAssigned;
+local _, addon = ...;
 
 local function ShouldShowNameplate(unitId)
     -- Do not hide personal resource display

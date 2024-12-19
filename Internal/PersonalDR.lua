@@ -1,7 +1,5 @@
 local _, addon = ...;
 
-local GetSpellInfo = C_Spell.GetSpellInfo;
-
 local test = addon.isTestMode;
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
