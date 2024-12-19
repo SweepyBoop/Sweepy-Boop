@@ -1,7 +1,5 @@
 local _, addon = ...;
 
-local GetSpellInfo = C_Spell.GetSpellInfo;
-
 local function SetupOverlayGlow(button)
     -- If we already have a SpellActivationAlert then just early return. We should already be setup
 	if button.SpellActivationAlert then
