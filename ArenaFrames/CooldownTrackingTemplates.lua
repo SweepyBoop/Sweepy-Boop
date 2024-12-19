@@ -1,6 +1,5 @@
 local _, addon = ...;
 
-local GetSpellInfo = C_Spell.GetSpellInfo;
 local GetSpellTexture = C_Spell.GetSpellTexture;
 
 local function StartAnimation(icon)
