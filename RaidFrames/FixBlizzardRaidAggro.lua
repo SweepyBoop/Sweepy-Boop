@@ -7,52 +7,32 @@ local _, addon = ...;
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
 local isTestMode = addon.isTestMode;
 
-local arenaRoles = {};
-
--- Make sure to only pass "player", "arena".. 1~3
-local function GetArenaRole(unitId)
-    if ( not arenaRoles[unitId] ) then
-        if ( unitId == "player" ) then
-            local currentSpec = GetSpecialization();
-            arenaRoles[unitId] = select(5, GetSpecializationInfo(currentSpec));
-        else
-            local arenaIndex = string.sub(unitId, -1, -1);
-            local specID = GetArenaOpponentSpec(arenaIndex);
-            if specID then
-                arenaRoles[unitId] = select(5, GetSpecializationInfoByID(specID));
-            end
-        end
-    end
-
-    return arenaRoles[unitId];
-end
-
-local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-refreshFrame:SetScript("OnEvent", function ()
-    arenaRoles = {};
-end)
+local orange = GetThreatStatusColor(2);
+local red = GetThreatStatusColor(3);
 
 local function ShouldShowAggro(unit)
     if ( not unit ) then
-        return false;
+        return nil;
     end
 
     local arena = IsActiveBattlefieldArena();
     if ( not arena ) and ( not isTestMode ) then
-        return false;
+        return nil;
     end
 
     if isTestMode then
-        if ( GetArenaRole("player") == "DAMAGER" ) then
-            return UnitIsUnit(unit, "target");
-        end
+        return ( UnitIsUnit(unit, "target") and orange );
     else
+        local count = 0;
         for i = 1, addon.MAX_ARENA_SIZE do
-            if UnitIsUnit(unit, "arena" .. i .. "target") and ( GetArenaRole("arena" .. i) == "DAMAGER" ) then
-                return true;
+            if UnitIsUnit(unit, "arena" .. i .. "target") then
+                count = count + 1;
             end
+        end
+        if ( count > 1 ) then
+            return red;
+        elseif ( count == 1 ) then
+            return orange;
         end
     end
 end
@@ -72,8 +52,9 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
                 return;
             end
 
-            if ShouldShowAggro(frame.unit) then
-                frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(3)); -- red
+            local shouldShow = ShouldShowAggro(frame.unit);
+            if shouldShow then
+                frame.aggroHighlight:SetVertexColor(shouldShow);
                 frame.aggroHighlight:Show();
             else
                 frame.aggroHighlight:Hide();
