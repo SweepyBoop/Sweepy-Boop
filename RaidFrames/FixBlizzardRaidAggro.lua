@@ -7,10 +7,7 @@ local _, addon = ...;
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
 local isTestMode = addon.isTestMode;
 
-local orange = GetThreatStatusColor(2);
-local red = GetThreatStatusColor(3);
-
-local function ShouldShowAggro(unit)
+local function GetThreatCount(unit)
     if ( not unit ) then
         return nil;
     end
@@ -21,19 +18,17 @@ local function ShouldShowAggro(unit)
     end
 
     if isTestMode then
-        return ( UnitIsUnit(unit, "target") and orange );
+        return ( UnitIsUnit(unit, "target") and 1 );
     else
         local count = 0;
+
         for i = 1, addon.MAX_ARENA_SIZE do
             if UnitIsUnit(unit, "arena" .. i .. "target") then
                 count = count + 1;
             end
         end
-        if ( count > 1 ) then
-            return red;
-        elseif ( count == 1 ) then
-            return orange;
-        end
+
+        return count;
     end
 end
 
@@ -52,9 +47,9 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
                 return;
             end
 
-            local shouldShow = ShouldShowAggro(frame.unit);
-            if shouldShow then
-                frame.aggroHighlight:SetVertexColor(shouldShow);
+            local threatCount = GetThreatCount(frame.unit);
+            if threatCount then
+                frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(threatCount));
                 frame.aggroHighlight:Show();
             else
                 frame.aggroHighlight:Hide();
