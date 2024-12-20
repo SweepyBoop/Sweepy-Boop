@@ -33,7 +33,8 @@ For friendly players and their primary pets, places a class (for players) or pet
 
 (Flag carrier icon in battlegrounds)
 
-![image](https://github.com/user-attachments/assets/7283015e-bace-4253-ba02-30f3bd4b2ac5)
+![Pet icons](https://github.com/user-attachments/assets/b08af1dd-babc-435c-9c85-ae0e4e186f5d)
+
 
 (Pet icon on primary hunter pet, but not on the extra pet summoned by talent)
 
