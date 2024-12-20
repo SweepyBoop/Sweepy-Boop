@@ -199,22 +199,29 @@ options.args.nameplatesEnemy = {
             name = format("|T%s:20|t %s", addon.specIconOthers, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
+        arenaSpecIconScale = {
+            order = 5,
+            min = 50,
+            max = 300,
+            type = "range",
+            name = "Spec icon scale (%)",
+        },
 
         breaker2 = {
-            order = 5,
+            order = 6,
             type = "header",
             name = "Nameplate Filters & Highlights",
         },
 
         filterEnabled = {
-            order = 6,
+            order = 7,
             type = "toggle",
             width = "full",
             name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
             desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
         },
         filterSettings = {
-            order = 7,
+            order = 8,
             type = "group",
             name = "General",
             disabled = function()
@@ -238,7 +245,7 @@ options.args.nameplatesEnemy = {
             },
         },
         filterList = {
-            order = 8,
+            order = 9,
             type = "group",
             name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
@@ -516,6 +523,7 @@ local defaults = {
             arenaNumbersEnabled = true,
             arenaSpecIconHealer = true,
             arenaSpecIconOthers = false,
+            arenaSpecIconScale = 100,
             filterEnabled = true,
             highlightScale = 100,
             hideHunterSecondaryPet = true,

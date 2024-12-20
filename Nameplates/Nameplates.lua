@@ -91,6 +91,8 @@ function SweepyBoop:SetupNameplateModules()
         addon.UpdateClassIcon(frame);
         -- Show enemy nameplate highlight
         addon.UpdateNpcHighlight(frame);
+        -- Update spec icons
+        addon.UpdateSpecIcon(frame);
         -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
         UpdateHealthBar(frame);
 
