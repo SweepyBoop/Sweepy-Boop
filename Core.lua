@@ -192,15 +192,24 @@ options.args.nameplatesEnemy = {
             name = format("|T%s:20|t %s", addon.specIconHealer, "Show spec icon for healers"),
             desc = "Show a spec icon on top of the nameplate for enemy healers inside arenas",
         },
-        arenaSpecIconOthers = {
+        arenaSpecIconHealerIcon = {
             order = 4,
+            width = "full",
+            type = "toggle",
+            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\common\\healer", "Show healer icon instead of spec icon for healers"),
+            disabled = function ()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+            end
+        },
+        arenaSpecIconOthers = {
+            order = 5,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", addon.specIconOthers, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
         arenaSpecIconScale = {
-            order = 5,
+            order = 6,
             min = 50,
             max = 300,
             type = "range",
@@ -208,20 +217,20 @@ options.args.nameplatesEnemy = {
         },
 
         breaker2 = {
-            order = 6,
+            order = 7,
             type = "header",
             name = "Nameplate Filters & Highlights",
         },
 
         filterEnabled = {
-            order = 7,
+            order = 8,
             type = "toggle",
             width = "full",
             name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
             desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
         },
         filterSettings = {
-            order = 8,
+            order = 9,
             type = "group",
             name = "General",
             disabled = function()
@@ -245,7 +254,7 @@ options.args.nameplatesEnemy = {
             },
         },
         filterList = {
-            order = 9,
+            order = 10,
             type = "group",
             name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
@@ -522,6 +531,7 @@ local defaults = {
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
             arenaSpecIconHealer = true,
+            arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
             filterEnabled = true,
