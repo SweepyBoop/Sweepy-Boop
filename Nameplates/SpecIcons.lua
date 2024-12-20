@@ -47,7 +47,7 @@ local function EnsureSpecIcon(frame)
         nameplate.SpecIcon.icon:SetPoint("CENTER", nameplate.SpecIcon);
         
         nameplate.SpecIcon.mask = nameplate.SpecIcon:CreateMaskTexture();
-        nameplate.SpecIcon.mask:SetAtlas("charactercreate-ring-metallight");
+        nameplate.SpecIcon.mask:SetTexture("Interface/Masks/CircleMaskScalable");
         nameplate.SpecIcon.mask:SetSize(iconSize, iconSize);
         nameplate.SpecIcon.mask:SetPoint("CENTER", nameplate.SpecIcon.icon);
         nameplate.SpecIcon.icon:AddMaskTexture(nameplate.SpecIcon.mask);
