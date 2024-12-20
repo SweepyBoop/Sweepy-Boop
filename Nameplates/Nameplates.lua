@@ -100,7 +100,6 @@ function SweepyBoop:SetupNameplateModules()
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
             if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                frame.name:SetFontObject(GameFontNormal);
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
                         frame.name:SetText(i);
