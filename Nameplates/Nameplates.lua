@@ -46,6 +46,7 @@ end
 local function HideWidgets(frame)
     addon.HideClassIcon(frame);
     addon.HideNpcHighlight(frame);
+    addon.HideSpecIcon(frame);
 end
 
 local function UpdateHealthBar(frame)
