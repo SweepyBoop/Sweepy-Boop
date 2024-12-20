@@ -77,11 +77,9 @@ The benefit of this module is to give you a quick view of
 ![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
 
 ## Arena nameplate numbers & spec icons
-Replace arena enemy names on top of nameplates with arena numbers:
+Replace arena enemy names on top of nameplates with arena numbers.
 
-![image](https://github.com/user-attachments/assets/9a629304-9675-40ea-a5d1-4f39f101032a)
-
-There is also a feature to show enemy spec icons on top of their names inside arenas
+There is also a feature to show enemy spec icons on top of their names inside arenas.
 
 (by default only healers' are shown but you can choose to show all players):
 
