@@ -5,7 +5,7 @@ local healerIconID = "interface/lfgframe/uilfgprompts";
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
     if addon.isTestMode then
-        return ( UnitIsUnit(unitId, "target") and addon.specIconHealer ) or (UnitIsUnit(unitId, "focus") and healerIconID );
+        return (UnitIsUnit(unitId, "focus") and healerIconID ) or ( UnitIsUnit(unitId, "target") and addon.specIconHealer );
     end
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
@@ -45,17 +45,12 @@ local function EnsureSpecIcon(frame)
         nameplate.SpecIcon.icon = nameplate.SpecIcon:CreateTexture(nil, "BORDER");
         nameplate.SpecIcon.icon:SetSize(iconSize, iconSize);
         nameplate.SpecIcon.icon:SetPoint("CENTER", nameplate.SpecIcon);
-        
+
         nameplate.SpecIcon.mask = nameplate.SpecIcon:CreateMaskTexture();
         nameplate.SpecIcon.mask:SetTexture("Interface/Masks/CircleMaskScalable");
         nameplate.SpecIcon.mask:SetSize(iconSize, iconSize);
         nameplate.SpecIcon.mask:SetPoint("CENTER", nameplate.SpecIcon.icon);
         nameplate.SpecIcon.icon:AddMaskTexture(nameplate.SpecIcon.mask);
-
-        -- nameplate.SpecIcon.border = nameplate.SpecIcon:CreateTexture(nil, "OVERLAY");
-        -- nameplate.SpecIcon.border:SetAtlas("charactercreate-ring-metallight");
-        -- nameplate.SpecIcon.border:SetSize(iconSize * 1.25, iconSize * 1.25);
-        -- nameplate.SpecIcon.border:SetPoint("CENTER", nameplate.SpecIcon);
 
         nameplate.SpecIcon:SetScale(SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100);
         nameplate.SpecIcon.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
