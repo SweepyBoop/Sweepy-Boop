@@ -5,7 +5,7 @@ local healerIconID = "interface/lfgframe/uilfgprompts";
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
     if addon.isTestMode then
-        return (UnitIsUnit(unitId, "focus") and healerIconID ) or ( UnitIsUnit(unitId, "target") and addon.specIconHealer );
+        return ( UnitIsUnit(unitId, "focus") and healerIconID ) or ( UnitIsUnit(unitId, "target") and addon.specIconHealer );
     end
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
