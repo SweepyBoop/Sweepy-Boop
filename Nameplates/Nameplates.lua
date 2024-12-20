@@ -46,6 +46,7 @@ end
 local function HideWidgets(frame)
     addon.HideClassIcon(frame);
     addon.HideNpcHighlight(frame);
+    addon.HideSpecIcon(frame);
 end
 
 local function UpdateHealthBar(frame)
@@ -91,29 +92,17 @@ function SweepyBoop:SetupNameplateModules()
         addon.UpdateClassIcon(frame);
         -- Show enemy nameplate highlight
         addon.UpdateNpcHighlight(frame);
+        -- Update spec icons
+        addon.UpdateSpecIcon(frame);
         -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
         UpdateHealthBar(frame);
 
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
             if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                frame.name:SetFontObject(GameFontNormal);
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
-                        local isHealer;
-                        if self.db.profile.nameplatesEnemy.arenaNumbersHealerHighlight then
-                            local specID = GetArenaOpponentSpec(i);
-                            local role = specID and select(5, GetSpecializationInfoByID(specID)); -- check null for specID, it can be empty if teammates didn't get in arena
-                            isHealer = ( role ~= nil ) and ( role ~= "DAMAGER" ); -- TANK is considered healer in arena
-                        end
-                        
-                        if isHealer then
-                            frame.name:SetText("*" .. i .. "*");
-                            frame.name:SetFontObject(GameFontHighlightLarge);
-                        else
-                            frame.name:SetText(i);
-                        end
-
+                        frame.name:SetText(i);
                         frame.name:SetTextColor(1,1,0); --Yellow
                         return;
                     end

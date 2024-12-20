@@ -26,6 +26,7 @@ Core.lua
 
 Nameplates\ClassIcons.lua
 Nameplates\NameplateFilter.lua
+Nameplates\SpecIcons.lua
 Nameplates\Nameplates.lua
 
 Misc\ArenaSurrender.lua
