@@ -43,22 +43,12 @@ local function EnsureSpecIcon(frame)
         nameplate.SpecIcon:SetFrameStrata("HIGH");
 
         nameplate.SpecIcon.icon = nameplate.SpecIcon:CreateTexture(nil, "BORDER");
-        nameplate.SpecIcon.icon:SetSize(iconSize, iconSize);
-        nameplate.SpecIcon.icon:SetPoint("CENTER", nameplate.SpecIcon);
+        nameplate.SpecIcon.icon:SetAllPoints(nameplate.SpecIcon);
 
         nameplate.SpecIcon.mask = nameplate.SpecIcon:CreateMaskTexture();
         nameplate.SpecIcon.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-        nameplate.SpecIcon.mask:SetSize(iconSize, iconSize);
-        nameplate.SpecIcon.mask:SetPoint("CENTER", nameplate.SpecIcon.icon);
+        nameplate.SpecIcon.mask:SetAllPoints(nameplate.SpecIcon.icon);
         nameplate.SpecIcon.icon:AddMaskTexture(nameplate.SpecIcon.mask);
-
-        nameplate.SpecIcon:SetScale(SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100);
-        nameplate.SpecIcon.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
-    end
-
-    if ( nameplate.SpecIcon.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
-        nameplate.SpecIcon:SetScale(SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100);
-        nameplate.SpecIcon.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
     end
 
     return nameplate.SpecIcon;
@@ -68,14 +58,26 @@ local function ShowSpecIcon(frame, iconID)
     local specIcon = EnsureSpecIcon(frame);
     if ( not specIcon ) then return end;
 
+    local isHealerIcon = ( iconID == healerIconID );
     if ( specIcon.iconID ~= iconID) then
         specIcon.icon:SetTexture(iconID);
-        if ( iconID == healerIconID ) then
+        if isHealerIcon then
             specIcon.icon:SetTexCoord(0.005, 0.116, 0.76, 0.87);
         else
             specIcon.icon:SetTexCoord(0, 1, 0, 1);
         end
         specIcon.iconID = iconID;
+    end
+
+    if ( specIcon.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIcon.isHealerIcon ~= isHealerIcon ) then
+        local scale = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100;
+        if isHealerIcon then
+            scale = scale * 1.25;
+        end
+        specIcon:SetScale(scale);
+
+        specIcon.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
+        specIcon.isHealerIcon = isHealerIcon;
     end
 
     specIcon:Show();
