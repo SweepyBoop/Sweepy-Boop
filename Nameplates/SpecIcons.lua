@@ -24,7 +24,7 @@ local function EnsureSpecIcon(frame)
 
     if ( not nameplate.SpecIcon ) then
         nameplate.SpecIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
-        nameplate.SpecIcon:Setsize(iconSize, iconSize);
+        nameplate.SpecIcon:SetSize(iconSize, iconSize);
         nameplate.SpecIcon:SetPoint("BOTTOM", frame.name, "TOP");
         nameplate.SpecIcon:SetAlpha(1);
         nameplate.SpecIcon:SetIgnoreParentAlpha(true);
