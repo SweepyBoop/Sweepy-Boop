@@ -7,16 +7,6 @@
 
 local _, addon = ...;
 
-local UnitIsUnit = UnitIsUnit;
-local MEMBERS_PER_RAID_GROUP = MEMBERS_PER_RAID_GROUP;
-local InCombatLockdown = InCombatLockdown;
-local C_Timer = C_Timer;
-local CompactPartyFrame = CompactPartyFrame;
-local CompactPartyFrameTitle = CompactPartyFrameTitle;
-local CompactRaidFrameContainer = CompactRaidFrameContainer;
-local hooksecurefunc = hooksecurefunc;
-local CreateFrame = CreateFrame;
-
 local function Compare_Top(left, right)
     local leftToken, rightToken = left.unit, right.unit;
 
