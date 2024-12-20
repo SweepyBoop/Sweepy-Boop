@@ -76,20 +76,21 @@ The benefit of this module is to give you a quick view of
 
 ![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
 
+## Arena nameplate numbers & spec icons
+Replace arena enemy names on top of nameplates with arena numbers:
 
+![image](https://github.com/user-attachments/assets/9a629304-9675-40ea-a5d1-4f39f101032a)
+
+There is also a feature to show enemy spec icons on top of their names inside arenas
+
+(by default only healers' are shown but you can choose to show all players):
+
+![Enemy spec icons](https://github.com/user-attachments/assets/2dbe7db7-f9a9-433d-aa7c-472ff3d2fa67)
 
 ## Sort raid frames
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
 
 ![image](https://github.com/user-attachments/assets/3646a51b-c11e-43e9-ba8e-2a71da2cc22f)
-
-
-## Arena nameplate numbers
-Quality-of-life feature to replace arena enemy names on top of nameplates with arena numbers.
-
-![image](https://github.com/user-attachments/assets/9a629304-9675-40ea-a5d1-4f39f101032a)
-
-(Arena numbers on top of enemy players)
 
 ## Type /afk to surrender arena
 Players can conveniently surrender arena by simply typing /afk.
