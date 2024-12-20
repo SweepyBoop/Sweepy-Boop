@@ -1,5 +1,5 @@
 local _, addon = ...;
-local iconSize = 30;
+local iconSize = 25;
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
     for i = 1, addon.MAX_ARENA_SIZE do
@@ -28,6 +28,7 @@ local function EnsureSpecIcon(frame)
         nameplate.SpecIcon:SetPoint("BOTTOM", frame.name, "TOP");
         nameplate.SpecIcon:SetAlpha(1);
         nameplate.SpecIcon:SetIgnoreParentAlpha(true);
+        nameplate.SpecIcon:SetMask("interface/characterframe/tempportraitalphamask");
 
         nameplate.SpecIcon:SetScale(SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100);
         nameplate.SpecIcon.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
