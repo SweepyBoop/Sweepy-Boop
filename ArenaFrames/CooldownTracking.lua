@@ -393,8 +393,8 @@ setPointOptions[SPELLCATEGORY.DISPEL] = {
     point = "CENTER",
     relativeTo = UIParent,
     relativePoint = "CENTER",
-    offsetX = 375,
-    offsetY = -165,
+    offsetX = 400,
+    offsetY = -172.5,
 };
 
 local function GetSetPointOptions(index)
