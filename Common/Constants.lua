@@ -26,6 +26,7 @@ addon.SPECID = {
     BALANCE = 102,
     FERAL = 103,
     GUARDIAN = 104,
+    RESTODRUID = 105,
     BM = 253,
     SHADOW = 258,
     ASSASSIN = 259,
@@ -161,3 +162,6 @@ addon.alliancePvPIcon = "interface\\icons\\achievement_pvp_a_a";
 addon.hordePvPIcon = "interface\\icons\\achievement_pvp_h_h";
 addon.flagCarrierHordeIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierHorde";
 addon.flagCarrierAllianceIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierAlliance";
+
+addon.specIconHealer = select(4, GetSpecializationInfoByID(addon.SPECID.RESTODRUID));
+addon.specIconOthers = select(4, GetSpecializationInfoByID(addon.SPECID.ASSASSIN));
