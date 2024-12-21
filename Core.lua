@@ -12,7 +12,7 @@ local options = {
             order = 1,
             type ="description",
             fontSize = "large",
-            image = "Interface\\Addons\\SweepyBoop\\ClassIcons\\common\\PET0",
+            image = "Interface\\Addons\\SweepyBoop\\Art\\Logo",
             imageWidth = 36,
             imageHeight = 36,
             name = "A lightweight addon to improve your arena & battleground experience :)"
@@ -37,9 +37,6 @@ local options = {
     },
 };
 
-
-local class = addon.GetUnitClass("player");
-local classIcon = "Interface\\Addons\\SweepyBoop\\ClassIcons\\round\\" .. class;
 options.args.nameplatesFriendly = {
     order = 6,
     type = "group",
@@ -54,7 +51,7 @@ options.args.nameplatesFriendly = {
             order = 1,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", classIcon, "Enabled"), -- Display icon for player's class
+            name = format("|T%s:20|t %s", 625999, "Enabled"), -- Display druid icon here
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
