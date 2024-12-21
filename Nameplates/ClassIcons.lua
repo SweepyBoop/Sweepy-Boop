@@ -1,22 +1,17 @@
 local _, addon = ...;
 
--- https://www.wowinterface.com/downloads/info14110-BLPConverter.html
-local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
-local selectionBorderSuffix = "_circular_frame";
-local selectionBorder = {
-    [addon.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common\\PlainBorder",
-};
-
 local PvPUnitClassification = Enum.PvPUnitClassification;
-local flagCarrierIcons = {
-    [PvPUnitClassification.FlagCarrierHorde] = addon.flagCarrierHordeIcon,
-    [PvPUnitClassification.FlagCarrierAlliance] = addon.flagCarrierAllianceIcon,
-};
 
-local petIconCount = 4;
+local flagCarrierInfo = {
+    [PvPUnitClassification.FlagCarrierHorde] = {
+        className = "FlagCarrierHorde",
+        icon = addon.flagCarrierHordeIcon,
+    },
+    [PvPUnitClassification.FlagCarrierAlliance] = {
+        className = "FlagCarrierAlliance",
+        icon = addon.flagCarrierAllianceIcon,
+    },
+};
 
 local function ShouldShowIcon(unitId)
     -- Do not show class icon above the personal resource display
@@ -47,18 +42,13 @@ local function EnsureClassIcon(frame)
     return nameplate.FriendlyClassIcon;
 end
 
--- Make sure icons have about the same padding between border and actual content, otherwise the border texture might look strange (too big or too small)
-local ClassIconSize = {
-    Player = 64,
-    Pet = 48,
-};
 
 local function GetIconOptions(class)
     local iconID;
     local iconCoords = {0, 1, 0, 1};
 
-    if ( flagCarrierIcons[class] ) then
-        iconID = flagCarrierIcons[class];
+    if ( flagCarrierInfo[class] ) then
+        iconID = flagCarrierInfo[class].icon;
     elseif ( class == "HELAER" ) then
         iconID = addon.healerIconID;
         iconCoords = addon.healerIconCoords;
@@ -90,8 +80,8 @@ local function ShowClassIcon(frame)
     -- Show dedicated flag carrier icon (this overwrites the healer icon)
     if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
         local classification = UnitPvpClassification(frame.unit);
-        if classification and flagCarrierIcons[classification] then
-            class = flagCarrierIcons[classification];
+        if classification and flagCarrierInfo[classification] then
+            class = flagCarrierInfo[classification];
         end
     end
 
