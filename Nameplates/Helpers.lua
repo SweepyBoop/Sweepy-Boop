@@ -15,6 +15,9 @@ local highlightSize = 55;
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
     classIconFrame:SetMouseClickEnabled(false);
+    -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
+    classIconFrame:SetAlpha(1);
+    classIconFrame:SetIgnoreParentAlpha(true);
     classIconFrame:SetSize(iconSize, iconSize);
     classIconFrame:SetFrameStrata("HIGH");
     classIconFrame:SetPoint(point, nameplate, relativePoint);
