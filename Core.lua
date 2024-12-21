@@ -78,49 +78,8 @@ options.args.nameplatesFriendly = {
             type = "header",
             name = "",
         },
-        classIconStyle = {
-            order = 5,
-            type = "select",
-            name = "Class Icon Style",
-            style = "dropdown",
-            values = {
-                [addon.CLASSICONSTYLE.ROUND] = "Round",
-                [addon.CLASSICONSTYLE.FLAT] = "Flat",
-            },
-            disabled = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-            end
-        },
-        petIconStyle = {
-            order = 6,
-            type = "select",
-            name = "Pet Icon Style",
-            style = "dropdown",
-            values = {
-                [addon.PETICONSTYLE.CATS] = "Cat memes",
-                [addon.PETICONSTYLE.MENDPET] = "Mend pet icon",
-            },
-            disabled = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-            end
-        },
-        classIconSelectionBorderStyle = {
-            order = 7,
-            type = "select",
-            name = "Selection highlight border style",
-            style = "dropdown",
-            values = {
-                [addon.SELECTIONBORDERSTYLE.PLAIN] = "Plain",
-                [addon.SELECTIONBORDERSTYLE.FIRE] = "Fire",
-                [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
-                [addon.SELECTIONBORDERSTYLE.AIR] = "Air",
-            },
-            disabled = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-            end
-        },
         useHealerIcon = {
-            order = 8,
+            order = 5,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\common\\healer", "Use dedicated healer icon"),
@@ -130,7 +89,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 9,
+            order = 6,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Use flag carrier icons in battlegrounds"),
@@ -140,7 +99,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 10,
+            order = 7,
             type = "range",
             min = 50,
             max = 200,
@@ -150,7 +109,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 11,
+            order = 8,
             type = "range",
             min = 0,
             max = 150,
@@ -520,9 +479,6 @@ local defaults = {
         nameplatesFriendly = {
             classIconsEnabled = true,
             hideOutsidePvP = false,
-            classIconStyle = addon.CLASSICONSTYLE.ROUND,
-            petIconStyle = addon.PETICONSTYLE.CATS,
-            classIconSelectionBorderStyle = addon.SELECTIONBORDERSTYLE.PLAIN,
             classIconScale = 100,
             classIconOffset = 0,
             useHealerIcon = true,

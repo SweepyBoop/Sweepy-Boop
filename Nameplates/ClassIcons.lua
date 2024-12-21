@@ -102,7 +102,11 @@ local function ShowClassIcon(frame)
         iconFrame.icon:SetTexture(iconID);
         iconFrame.icon:SetTexCoord(unpack(iconCoords));
 
-        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
+        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
+        if ( not isPlayer ) then
+            scale = scale * 0.75; -- smaller icon for pets
+        end
+        iconFrame:SetScale(scale);
 
         iconFrame.class = class;
         iconFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
@@ -114,7 +118,6 @@ local function ShowClassIcon(frame)
         iconFrame.targetHighlight:Hide();
     end
 
-    print(iconFrame.border, iconFrame.border:IsShown());
     iconFrame:Show();
 end
 
