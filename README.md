@@ -30,7 +30,8 @@ For friendly players and their primary pets, places a class (for players) or pet
 
 (Friendly class icons. Option to use a special icon for healers; target is highlighted with a border that's customizable.)
 
-![Flag Carrier Icons](https://github.com/user-attachments/assets/7e5b40ac-9853-400a-acd0-d4380a69497c)
+![Flag Carrier Icons](https://github.com/user-attachments/assets/ba8d4723-57b0-42e6-adfa-2af4bf18e3da)
+
 
 (Flag carrier icon in battlegrounds)
 
