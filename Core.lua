@@ -38,7 +38,8 @@ local options = {
 };
 
 
-
+local class = addon.GetUnitClass("player");
+local classIcon = "Interface\\Addons\\SweepyBoop\\ClassIcons\\round\\" .. class;
 options.args.nameplatesFriendly = {
     order = 6,
     type = "group",
@@ -53,7 +54,7 @@ options.args.nameplatesFriendly = {
             order = 1,
             width = "full",
             type = "toggle",
-            name = "Enabled",
+            name = format("|T%s:20|t %s", classIcon, "Enabled"), -- Display icon for player's class
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
@@ -531,7 +532,7 @@ local defaults = {
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
             arenaSpecIconHealer = true,
-            arenaSpecIconHealerIcon = true,
+            arenaSpecIconHealerIcon = false,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
             filterEnabled = true,
