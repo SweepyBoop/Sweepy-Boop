@@ -93,7 +93,9 @@ local function ShowClassIcon(frame)
         iconFrame.icon:SetTexCoord(unpack(iconCoords));
 
         local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        if ( not isPlayer ) then
+        if ( class == "HEALER" ) then
+            scale = scale * 1.25; -- Because healer uses icon coords from a collection of icons, using the same scale would make it seem smaller
+        elseif ( class == "PET" ) then
             scale = scale * 0.8; -- smaller icon for pets
         end
         iconFrame:SetScale(scale);
