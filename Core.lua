@@ -113,7 +113,6 @@ options.args.nameplatesFriendly = {
                 [addon.SELECTIONBORDERSTYLE.FIRE] = "Fire",
                 [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
                 [addon.SELECTIONBORDERSTYLE.AIR] = "Air",
-                [addon.SELECTIONBORDERSTYLE.MECHANICAL] = "Mechanical",
                 [addon.SELECTIONBORDERSTYLE.PLAIN] = "Plain",
             },
             disabled = function()
