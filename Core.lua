@@ -259,9 +259,9 @@ options.args.arenaFrames = {
 
         arenaEnemyOffensivesEnabled = {
             order = 5,
-            width = 1.5,
+            width = "full",
             type = "toggle",
-            name = "Arena Enemy Offensive Cooldowns",
+            name = format("|T%s:20|t %s", "interface/icons/spell_fire_sealoffire", "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
@@ -274,9 +274,9 @@ options.args.arenaFrames = {
         },
         arenaEnemyDefensivesEnabled = {
             order = 7,
-            width = 1.5,
+            width = "full",
             type = "toggle",
-            name = "Arena Enemy Defensive Cooldowns",
+            name = format("|T%s:20|t %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
@@ -287,8 +287,14 @@ options.args.arenaFrames = {
             name = "Icon size",
             desc = "Size of arena defensive cooldown icons",
         },
-        arenaCooldownOffsetX = {
+
+        breaker2 = {
             order = 9,
+            type = "header",
+            name = "",
+        },
+        arenaCooldownOffsetX = {
+            order = 10,
             type = "range",
             min = -750,
             max = 750,
@@ -296,7 +302,7 @@ options.args.arenaFrames = {
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
         arenaCooldownOffsetY = {
-            order = 10,
+            order = 11,
             type = "range",
             min = -150,
             max = 150,
@@ -305,7 +311,7 @@ options.args.arenaFrames = {
         },
 
         spellList = {
-            order = 11,
+            order = 12,
             type = "group",
             name = "Spells",
             desc = "Select which abilities to track cooldown inside arenas",
@@ -528,7 +534,7 @@ function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 720, 640);
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 720, 720);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
     
 
