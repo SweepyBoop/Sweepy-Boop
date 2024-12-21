@@ -84,7 +84,8 @@ There is also a feature to show enemy spec icons on top of their names inside ar
 
 (by default only healers' are shown but you can choose to show all players):
 
-![Enemy spec icons](https://github.com/user-attachments/assets/2dbe7db7-f9a9-433d-aa7c-472ff3d2fa67)
+![Enemy spec icons](https://github.com/user-attachments/assets/53c1792d-33c1-457b-baad-47e02d134fb0)
+
 
 ## Sort raid frames
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
