@@ -73,8 +73,8 @@ local function GetIconOptions(class)
 end
 
 local function ShowClassIcon(frame)
-    local icon = EnsureClassIcon(frame);
-    if ( not icon ) then return end;
+    local iconFrame = EnsureClassIcon(frame);
+    if ( not iconFrame ) then return end;
 
     local isPlayer = UnitIsPlayer(frame.unit);
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
@@ -95,22 +95,26 @@ local function ShowClassIcon(frame)
         end
     end
 
-    if ( icon.class == nil ) or ( class ~= icon.class ) then
+    -- Class changed or settings changed, update scale and offset
+    if ( class ~= iconFrame.class ) or ( iconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
         local iconID, iconCoords = GetIconOptions(class);
 
-        icon.icon:SetTexture(iconID);
-        icon.icon:SetTexCoord(unpack(iconCoords));
+        iconFrame.icon:SetTexture(iconID);
+        iconFrame.icon:SetTexCoord(unpack(iconCoords));
 
-        icon.class = class;
+        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
+
+        iconFrame.class = class;
+        iconFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     end
 
     if UnitIsUnit("target", frame.unit) then
-        icon.targetHighlight:Show();
+        iconFrame.targetHighlight:Show();
     else
-        icon.targetHighlight:Hide();
+        iconFrame.targetHighlight:Hide();
     end
 
-    icon:Show();
+    iconFrame:Show();
 end
 
 addon.HideClassIcon = function(frame)
