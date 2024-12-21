@@ -8,8 +8,8 @@ local flagCarrierClassNames = {
 };
 
 local flagCarrierIcons = {
-    [PvPUnitClassification.FlagCarrierHorde] = addon.flagCarrierHordeIconID,
-    [PvPUnitClassification.FlagCarrierAlliance] = addon.flagCarrierAllianceIconID,
+    ["FlagCarrierHorde"] = addon.flagCarrierHordeIconID,
+    ["FlagCarrierAlliance"] = addon.flagCarrierAllianceIconID,
 };
 
 local function ShouldShowIcon(unitId)
@@ -46,8 +46,8 @@ local function GetIconOptions(class)
     local iconID;
     local iconCoords = {0, 1, 0, 1};
 
-    if ( flagCarrierInfo[class] ) then
-        iconID = flagCarrierInfo[class].icon;
+    if ( flagCarrierIcons[class] ) then
+        iconID = flagCarrierIcons[class];
     elseif ( class == "HELAER" ) then
         iconID = addon.healerIconID;
         iconCoords = addon.healerIconCoords;
