@@ -51,7 +51,7 @@ options.args.nameplatesFriendly = {
             order = 1,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", 625999, "Enabled"), -- Display druid icon here
+            name = "Enabled", -- TODO: show a round icon of current player class
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
