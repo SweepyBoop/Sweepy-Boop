@@ -221,8 +221,8 @@ local function EnsureIcon(unitId, spellID)
     end
 
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        local size = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize;
-        premadeIcons[unitId][spellID]:SetSize(size, size);
+        local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE;
+        premadeIcons[unitId][spellID]:SetScale(scale);
         premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 end
@@ -315,10 +315,9 @@ local externalTestGroup; -- Icon group for "Toggle Test Mode"
 local function RefreshTestMode()
     addon.IconGroup_Wipe(externalTestGroup);
 
-    local iconSize = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize;
+    local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE;
     local unitId = "player";
     if externalTestIcons[unitId] then
-        local scale = iconSize / addon.DEFAULT_ICON_SIZE;
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
         end

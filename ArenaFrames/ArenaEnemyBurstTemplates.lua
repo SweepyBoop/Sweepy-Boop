@@ -2,9 +2,12 @@ local _, addon = ...;
 
 local GetSpellTexture = C_Spell.GetSpellTexture;
 
+local iconSize = addon.DEFAULT_ICON_SIZE;
+
 addon.CreateBurstIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:SetMouseClickEnabled(false);
+    frame:SetSize(iconSize, iconSize);
     frame:Hide();
 
     frame.unit = unit;
@@ -12,8 +15,6 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     frame.spellInfo = addon.burstSpells[spellID];
     frame.priority = frame.spellInfo.priority;
     frame.group = group;
-
-    frame:SetSize(size, size);
 
     frame.tex = frame:CreateTexture();
     frame.tex:SetTexture(GetSpellTexture(spellID));
@@ -36,7 +37,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
 
         if spell.charges then
             frame.Count = frame:CreateFontString(nil, "ARTWORK");
-            frame.Count:SetFont("Fonts\\ARIALN.ttf", size / 2, "OUTLINE");
+            frame.Count:SetFont("Fonts\\ARIALN.ttf", iconSize / 2, "OUTLINE");
             frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
             frame.Count:SetText(""); -- Call this before setting font color
             frame.Count:SetTextColor(1, 1, 0);
@@ -53,11 +54,16 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     frame.duration:SetAlpha(0);
 
     frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
-    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
+    frame.spellActivationAlert:SetSize(iconSize * 1.4, iconSize * 1.4);
     frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
     frame.spellActivationAlert:Hide();
 
     frame.duration:SetScript("OnCooldownDone", addon.OnDurationTimerFinished);
+
+    if size then
+        local scale = size / iconSize;
+        frame:SetScale(scale);
+    end
 
     return frame;
 end
