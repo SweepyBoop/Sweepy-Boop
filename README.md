@@ -28,7 +28,7 @@ For friendly players and their primary pets, places a class (for players) or pet
 
 ![image](https://github.com/user-attachments/assets/5c2402c2-6aa3-4a67-8e50-e19558bca9c3)
 
-(Friendly class icons. Option to use a special icon for healers; target is highlighted with a border that's customizable.)
+(Friendly class icons. Option to use a special icon for healers; target is highlighted with a border)
 
 ![Flag Carrier Icons](https://github.com/user-attachments/assets/ba8d4723-57b0-42e6-adfa-2af4bf18e3da)
 
