@@ -12,7 +12,7 @@ addon.healerIconCoords = {0.005, 0.116, 0.76, 0.87};
 
 -- Sizes are fixed, players can customize by scale
 local iconSize = 40;
-local highlightSize = 60;
+local highlightSize = 55;
 
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
@@ -36,10 +36,11 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint)
     classIconFrame.border:SetAllPoints(classIconFrame);
 
     classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
+    classIconFrame.targetHighlight:Hide();
     classIconFrame.targetHighlight:SetDesaturated(false);
     classIconFrame.targetHighlight:SetAtlas("charactercreate-ring-select");
     classIconFrame.targetHighlight:SetSize(highlightSize, highlightSize);
-    classIconFrame.targetHighlight:SetAllPoints(classIconFrame.icon);
+    classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
     classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
     classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
 
