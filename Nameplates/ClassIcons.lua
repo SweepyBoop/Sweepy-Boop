@@ -48,7 +48,7 @@ local function GetIconOptions(class)
 
     if ( flagCarrierIcons[class] ) then
         iconID = flagCarrierIcons[class];
-    elseif ( class == "HELAER" ) then
+    elseif ( class == "HEALER" ) then
         iconID = addon.healerIconID;
         iconCoords = addon.healerIconCoords;
     elseif ( class == "PET" ) then
