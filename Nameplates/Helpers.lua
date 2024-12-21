@@ -1,7 +1,5 @@
 local _, addon = ...;
 
-addon.selectedBorder = "charactercreate-ring-select";
-addon.unselectedBorder = "charactercreate-ring-metallight";
 addon.healerIconID = "interface/lfgframe/uilfgprompts";
 addon.petIconID = "interface/icons/ability_hunter_mendpet";
 addon.classIconID = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
