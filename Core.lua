@@ -51,7 +51,7 @@ options.args.nameplatesFriendly = {
             order = 1,
             width = "full",
             type = "toggle",
-            name = "Enabled", -- TODO: show a round icon of current player class
+            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\Druid", "Enabled"),
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
@@ -65,7 +65,6 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Hide class icons outside arenas & battlegrounds"),
-            icon = "interface\\cursor\\pvp",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -79,7 +78,7 @@ options.args.nameplatesFriendly = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\common\\healer", "Use dedicated healer icon"),
+            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Use dedicated healer icon"),
             desc = "Use a dedicated icon for party healers in arenas and battlegrounds",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -152,7 +151,7 @@ options.args.nameplatesEnemy = {
             order = 4,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\ClassIcons\\common\\healer", "Show healer icon instead of spec icon for healers"),
+            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\art\\healer", "Show healer icon instead of spec icon for healers"),
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
