@@ -2,15 +2,14 @@ local _, addon = ...;
 
 local PvPUnitClassification = Enum.PvPUnitClassification;
 
-local flagCarrierInfo = {
-    [PvPUnitClassification.FlagCarrierHorde] = {
-        className = "FlagCarrierHorde",
-        icon = addon.flagCarrierHordeIconID,
-    },
-    [PvPUnitClassification.FlagCarrierAlliance] = {
-        className = "FlagCarrierAlliance",
-        icon = addon.flagCarrierAllianceIconID,
-    },
+local flagCarrierClassNames = {
+    [PvPUnitClassification.FlagCarrierHorde] = "FlagCarrierHorde",
+    [PvPUnitClassification.FlagCarrierAlliance] = "FlagCarrierAlliance",
+};
+
+local flagCarrierIcons = {
+    [PvPUnitClassification.FlagCarrierHorde] = addon.flagCarrierHordeIconID,
+    [PvPUnitClassification.FlagCarrierAlliance] = addon.flagCarrierAllianceIconID,
 };
 
 local function ShouldShowIcon(unitId)
@@ -80,8 +79,8 @@ local function ShowClassIcon(frame)
     -- Show dedicated flag carrier icon (this overwrites the healer icon)
     if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
         local classification = UnitPvpClassification(frame.unit);
-        if classification and flagCarrierInfo[classification] then
-            class = flagCarrierInfo[classification].className;
+        if classification and flagCarrierClassNames[classification] then
+            class = flagCarrierClassNames[classification];
         end
     end
 
