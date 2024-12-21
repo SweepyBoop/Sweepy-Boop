@@ -133,7 +133,7 @@ options.args.nameplatesFriendly = {
             order = 9,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeIcon, addon.flagCarrierAllianceIcon, "Use flag carrier icons in battlegrounds"),
+            name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Use flag carrier icons in battlegrounds"),
             desc = "Use dedicated icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -189,7 +189,7 @@ options.args.nameplatesEnemy = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", addon.specIconHealer, "Show spec icon for healers"),
+            name = format("|T%s:20|t %s", addon.specIconHealerLogo, "Show spec icon for healers"),
             desc = "Show a spec icon on top of the nameplate for enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
@@ -205,7 +205,7 @@ options.args.nameplatesEnemy = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", addon.specIconOthers, "Show spec icon for non-healers"),
+            name = format("|T%s:20|t %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
         arenaSpecIconScale = {

@@ -160,8 +160,8 @@ addon.SELECTIONBORDERSTYLE = {
 
 addon.alliancePvPIcon = "interface\\icons\\achievement_pvp_a_a";
 addon.hordePvPIcon = "interface\\icons\\achievement_pvp_h_h";
-addon.flagCarrierHordeIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierHorde";
-addon.flagCarrierAllianceIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierAlliance";
+addon.flagCarrierHordeLogo = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierHorde";
+addon.flagCarrierAllianceLogo = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierAlliance";
 
-addon.specIconHealer = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\HealingTouch"; -- icon 136041
-addon.specIconOthers = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\DeathMark"; -- icon 236270
+addon.specIconHealerLogo = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\HealingTouch"; -- icon 136041
+addon.specIconOthersLogo = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\DeathMark"; -- icon 236270
