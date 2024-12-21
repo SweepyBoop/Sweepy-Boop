@@ -110,10 +110,10 @@ options.args.nameplatesFriendly = {
             name = "Selection highlight border style",
             style = "dropdown",
             values = {
+                [addon.SELECTIONBORDERSTYLE.PLAIN] = "Plain",
                 [addon.SELECTIONBORDERSTYLE.FIRE] = "Fire",
                 [addon.SELECTIONBORDERSTYLE.ARCANE] = "Arcane",
                 [addon.SELECTIONBORDERSTYLE.AIR] = "Air",
-                [addon.SELECTIONBORDERSTYLE.PLAIN] = "Plain",
             },
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -522,7 +522,7 @@ local defaults = {
             hideOutsidePvP = false,
             classIconStyle = addon.CLASSICONSTYLE.ROUND,
             petIconStyle = addon.PETICONSTYLE.CATS,
-            classIconSelectionBorderStyle = addon.SELECTIONBORDERSTYLE.FIRE,
+            classIconSelectionBorderStyle = addon.SELECTIONBORDERSTYLE.PLAIN,
             classIconScale = 100,
             classIconOffset = 0,
             useHealerIcon = true,

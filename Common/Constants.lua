@@ -151,11 +151,11 @@ addon.PETICONSTYLE = {
 };
 
 addon.SELECTIONBORDERSTYLE = {
+    PLAIN = 0,
+
     FIRE = 1,
     ARCANE = 2,
     AIR = 3,
-    
-    PLAIN = 0,
 };
 
 addon.alliancePvPIcon = "interface\\icons\\achievement_pvp_a_a";
