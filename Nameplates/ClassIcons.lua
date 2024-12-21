@@ -94,9 +94,11 @@ local function ShowClassIcon(frame)
 
         local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
         if ( not isPlayer ) then
-            scale = scale * 0.75; -- smaller icon for pets
+            scale = scale * 0.8; -- smaller icon for pets
         end
         iconFrame:SetScale(scale);
+
+        iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
         iconFrame.class = class;
         iconFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
