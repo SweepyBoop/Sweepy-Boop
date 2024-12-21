@@ -1,0 +1,15 @@
+-- https://www.wowinterface.com/downloads/info14110-BLPConverter.html
+local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
+local selectionBorderSuffix = "_circular_frame";
+local selectionBorder = {
+    [addon.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
+    [addon.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
+    [addon.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
+    [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common\\PlainBorder",
+};
+
+-- Make sure icons have about the same padding between border and actual content, otherwise the border texture might look strange (too big or too small)
+local ClassIconSize = {
+    Player = 64,
+    Pet = 48,
+};

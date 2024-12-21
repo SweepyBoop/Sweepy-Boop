@@ -1,22 +1,17 @@
 local _, addon = ...;
 
--- https://www.wowinterface.com/downloads/info14110-BLPConverter.html
-local selectionBorderPrefix = "interface\\unitpowerbaralt\\";
-local selectionBorderSuffix = "_circular_frame";
-local selectionBorder = {
-    [addon.SELECTIONBORDERSTYLE.ARCANE] = selectionBorderPrefix .. "arcane" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.FIRE] = selectionBorderPrefix .. "fire" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.AIR] = selectionBorderPrefix .. "air" .. selectionBorderSuffix,
-    [addon.SELECTIONBORDERSTYLE.PLAIN] = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common\\PlainBorder",
-};
-
 local PvPUnitClassification = Enum.PvPUnitClassification;
-local flagCarrierClassNames = {
-    [PvPUnitClassification.FlagCarrierHorde] = "FlagCarrierHorde",
-    [PvPUnitClassification.FlagCarrierAlliance] = "FlagCarrierAlliance",
-};
 
-local petIconCount = 4;
+local flagCarrierInfo = {
+    [PvPUnitClassification.FlagCarrierHorde] = {
+        className = "FlagCarrierHorde",
+        icon = addon.flagCarrierHordeIcon,
+    },
+    [PvPUnitClassification.FlagCarrierAlliance] = {
+        className = "FlagCarrierAlliance",
+        icon = addon.flagCarrierAllianceIcon,
+    },
+};
 
 local function ShouldShowIcon(unitId)
     -- Do not show class icon above the personal resource display
@@ -41,125 +36,83 @@ local function EnsureClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = nameplate:CreateTexture(nil, 'overlay', nil, 6);
-        -- Can be updated if lastModified falls behind db.profile
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
-        nameplate.FriendlyClassIcon:SetAlpha(1);
-        nameplate.FriendlyClassIcon:SetIgnoreParentAlpha(true);
-
-        -- Can we leverage SetTexCoord to get round icons without making them
-
-        nameplate.FriendlyClassIcon.border = nameplate:CreateTexture(nil, "overlay", nil, 7); -- higher subLevel to appear on top of the icon
-        nameplate.FriendlyClassIcon.border:SetPoint("CENTER", nameplate.FriendlyClassIcon);
-        nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.nameplatesFriendly.classIconSelectionBorderStyle]);
-
-        -- Can be updated if lastModified falls behind db.profile
-        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        nameplate.FriendlyClassIcon:SetScale(scale);
-        nameplate.FriendlyClassIcon.border:SetScale(scale);
-
-        nameplate.FriendlyClassIcon.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    end
-
-    -- Compare the timestamp to see if any settings have changed
-    if (nameplate.FriendlyClassIcon.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified) then
-        nameplate.FriendlyClassIcon:SetPoint("CENTER", nameplate, "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
-        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        nameplate.FriendlyClassIcon:SetScale(scale);
-        nameplate.FriendlyClassIcon.border:SetScale(scale);
-        nameplate.FriendlyClassIcon.border:SetTexture(selectionBorder[SweepyBoop.db.profile.nameplatesFriendly.classIconSelectionBorderStyle]);
-
-        -- Invalidate class as well, since icon style might has changed
-        nameplate.FriendlyClassIcon.class = nil;
-        nameplate.FriendlyClassIcon.iconSize = nil;
-
-        nameplate.FriendlyClassIcon.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+        nameplate.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER");
     end
 
     return nameplate.FriendlyClassIcon;
 end
 
--- Make sure icons have about the same padding between border and actual content, otherwise the border texture might look strange (too big or too small)
-local ClassIconSize = {
-    Player = 64,
-    Pet = 48,
-};
 
-local function GetIconOptions(class, useCommonIconPath)
-    local path, iconSize;
+local function GetIconOptions(class)
+    local iconID;
+    local iconCoords = {0, 1, 0, 1};
 
-    if ( useCommonIconPath ) then
-        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\common";
-    else
-        path = "Interface\\AddOns\\SweepyBoop\\ClassIcons\\";
-        if SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASSICONSTYLE.FLAT then
-            path = path .. "flat";
-        else
-            path = path .. "round";
-        end
+    if ( flagCarrierInfo[class] ) then
+        iconID = flagCarrierInfo[class].icon;
+    elseif ( class == "HELAER" ) then
+        iconID = addon.healerIconID;
+        iconCoords = addon.healerIconCoords;
+    elseif ( class == "PET" ) then
+        iconID = addon.petIconID;
+    else -- For regular classes
+        iconID = addon.classIconID;
+        iconCoords = CLASS_ICON_TCOORDS[class];
     end
 
-    iconSize = (class == "PET" and ClassIconSize.Pet) or ClassIconSize.Player;
-
-    return path .. "\\", iconSize;
+    return iconID, iconCoords;
 end
 
 local function ShowClassIcon(frame)
-    local icon = EnsureClassIcon(frame);
-    if ( not icon ) then return end;
+    local iconFrame = EnsureClassIcon(frame);
+    if ( not iconFrame ) then return end;
 
     local isPlayer = UnitIsPlayer(frame.unit);
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
-    local useCommonIconPath = ( class == "PET" ); -- use common icon path if not a regular class, e.g., HEALER, PET, FlagCarrierXXX
 
     -- Show dedicated healer icon
     if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
         -- For player nameplates, check if it's a healer
         if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
             class = "HEALER";
-            useCommonIconPath = true;
         end
     end
 
     -- Show dedicated flag carrier icon (this overwrites the healer icon)
     if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
         local classification = UnitPvpClassification(frame.unit);
-        if classification and flagCarrierClassNames[classification] then
-            class = flagCarrierClassNames[classification];
-            useCommonIconPath = true;
+        if classification and flagCarrierInfo[classification] then
+            class = flagCarrierInfo[classification];
         end
     end
 
-    if ( icon.class == nil ) or ( class ~= icon.class ) then
-        local iconPath, iconSize = GetIconOptions(class, useCommonIconPath);
-        local iconFile = iconPath .. class;
-        if ( not isPlayer ) then -- Pick a pet icon based on NpcID
-            if ( SweepyBoop.db.profile.nameplatesFriendly.petIconStyle == addon.PETICONSTYLE.CATS ) then -- Append a random index for cat pictures...
-                local npcID = select(6, strsplit("-", UnitGUID(frame.unit)));
-                local petNumber = math.fmod(tonumber(npcID), petIconCount);
-                iconFile = iconFile .. petNumber;
-            else
-                iconFile = iconPath .. "MendPet"; -- Mend Pet
-            end
-        end
-        icon:SetTexture(iconFile);
+    -- Class changed or settings changed, update scale and offset
+    if ( class ~= iconFrame.class ) or ( iconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
+        local iconID, iconCoords = GetIconOptions(class);
 
-        if ( icon.iconSize == nil ) or ( iconSize ~= icon.iconSize ) then
-            icon:SetSize(iconSize, iconSize);
-            icon.border:SetSize(iconSize, iconSize);
-        end
+        iconFrame.icon:SetTexture(iconID);
+        iconFrame.icon:SetTexCoord(unpack(iconCoords));
 
-        icon.class = class;
-        icon.iconSize = iconSize;
+        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
+        if ( class == "HEALER" ) then
+            scale = scale * 1.25; -- Because healer uses icon coords from a collection of icons, using the same scale would make it seem smaller
+        elseif ( class == "PET" ) then
+            scale = scale * 0.8; -- smaller icon for pets
+        end
+        iconFrame:SetScale(scale);
+
+        iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+
+        iconFrame.class = class;
+        iconFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     end
 
     if UnitIsUnit("target", frame.unit) then
-        icon.border:Show();
+        iconFrame.targetHighlight:Show();
     else
-        icon.border:Hide();
+        iconFrame.targetHighlight:Hide();
     end
 
-    icon:Show();
+    iconFrame:Show();
 end
 
 addon.HideClassIcon = function(frame)
@@ -167,9 +120,6 @@ addon.HideClassIcon = function(frame)
     if ( not nameplate ) then return end
     if nameplate.FriendlyClassIcon then
         nameplate.FriendlyClassIcon:Hide();
-        if nameplate.FriendlyClassIcon.border then
-            nameplate.FriendlyClassIcon.border:Hide();
-        end
     end
 end
 

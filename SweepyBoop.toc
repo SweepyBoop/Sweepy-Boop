@@ -24,6 +24,7 @@ Common\NpcData.lua
 
 Core.lua
 
+Nameplates\Helpers.lua
 Nameplates\ClassIcons.lua
 Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua

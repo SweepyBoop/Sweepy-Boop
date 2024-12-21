@@ -1,11 +1,8 @@
 local _, addon = ...;
-local iconSize = 24;
-
-local healerIconID = "interface/lfgframe/uilfgprompts";
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
     if addon.isTestMode then
-        return ( UnitIsUnit(unitId, "focus") and healerIconID ) or ( UnitIsUnit(unitId, "target") and addon.specIconHealer );
+        return ( UnitIsUnit(unitId, "focus") and addon.healerIconID ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
     end
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
@@ -19,7 +16,7 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
             if ( role == "HEALER" ) then
                 if config.arenaSpecIconHealer then
                     if config.arenaSpecIconHealerIcon then
-                        return healerIconID;
+                        return addon.healerIconID;
                     else
                         return iconID;
                     end
@@ -35,59 +32,49 @@ local function EnsureSpecIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
 
-    if ( not nameplate.SpecIcon ) then
-        nameplate.SpecIcon = CreateFrame("Frame", nil, nameplate);
-        nameplate.SpecIcon:SetMouseClickEnabled(false);
-        nameplate.SpecIcon:SetSize(iconSize, iconSize);
-        nameplate.SpecIcon:SetPoint("BOTTOM", frame.name, "TOP");
-        nameplate.SpecIcon:SetFrameStrata("HIGH");
-
-        nameplate.SpecIcon.icon = nameplate.SpecIcon:CreateTexture(nil, "BORDER");
-        nameplate.SpecIcon.icon:SetAllPoints(nameplate.SpecIcon);
-
-        nameplate.SpecIcon.mask = nameplate.SpecIcon:CreateMaskTexture();
-        nameplate.SpecIcon.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-        nameplate.SpecIcon.mask:SetAllPoints(nameplate.SpecIcon.icon);
-        nameplate.SpecIcon.icon:AddMaskTexture(nameplate.SpecIcon.mask);
+    if ( not nameplate.SpecIconFrame ) then
+        nameplate.SpecIconFrame = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "TOP");
     end
 
-    return nameplate.SpecIcon;
+    return nameplate.SpecIconFrame;
 end
 
-local function ShowSpecIcon(frame, iconID)
-    local specIcon = EnsureSpecIcon(frame);
-    if ( not specIcon ) then return end;
+local builtInScaleFactor = 0.5; -- We don't want to show spec icon too large
 
-    local isHealerIcon = ( iconID == healerIconID );
-    if ( specIcon.iconID ~= iconID) then
-        specIcon.icon:SetTexture(iconID);
+local function ShowSpecIcon(frame, iconID)
+    local specIconFrame = EnsureSpecIcon(frame);
+    if ( not specIconFrame ) then return end;
+
+    local isHealerIcon = ( iconID == addon.healerIconID );
+    if ( specIconFrame.iconID ~= iconID) then
+        specIconFrame.icon:SetTexture(iconID);
         if isHealerIcon then
-            specIcon.icon:SetTexCoord(0.005, 0.116, 0.76, 0.87);
+            specIconFrame.icon:SetTexCoord(unpack(addon.healerIconCoords));
         else
-            specIcon.icon:SetTexCoord(0, 1, 0, 1);
+            specIconFrame.icon:SetTexCoord(0, 1, 0, 1);
         end
-        specIcon.iconID = iconID;
+        specIconFrame.iconID = iconID;
     end
 
-    if ( specIcon.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIcon.isHealerIcon ~= isHealerIcon ) then
+    if ( specIconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconFrame.isHealerIcon ~= isHealerIcon ) then
         local scale = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100;
         if isHealerIcon then
             scale = scale * 1.25;
         end
-        specIcon:SetScale(scale);
+        specIconFrame:SetScale(scale * builtInScaleFactor);
 
-        specIcon.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
-        specIcon.isHealerIcon = isHealerIcon;
+        specIconFrame.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
+        specIconFrame.isHealerIcon = isHealerIcon;
     end
 
-    specIcon:Show();
+    specIconFrame:Show();
 end
 
 addon.HideSpecIcon = function (frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
-    if nameplate.SpecIcon then
-        nameplate.SpecIcon:Hide();
+    if nameplate.SpecIconFrame then
+        nameplate.SpecIconFrame:Hide();
     end
 end
 
