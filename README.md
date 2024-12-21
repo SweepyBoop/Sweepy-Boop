@@ -95,7 +95,7 @@ There is also a feature to show enemy spec icons on top of their names inside ar
 ## Sort raid frames
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
 
-![image](https://github.com/user-attachments/assets/3646a51b-c11e-43e9-ba8e-2a71da2cc22f)
+![SortGroup](https://github.com/user-attachments/assets/3636ced6-c8a1-47db-9a35-43b3a4627d92)
 
 ## Type /afk to surrender arena
 Players can conveniently surrender arena by simply typing /afk.
