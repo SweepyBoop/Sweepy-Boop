@@ -87,7 +87,8 @@ There is also a feature to show enemy spec icons on top of their names inside ar
 
 (by default only healers' are shown but you can choose to show all players):
 
-![Enemy spec icons](https://github.com/user-attachments/assets/53c1792d-33c1-457b-baad-47e02d134fb0)
+![Enemy spec icons](https://github.com/user-attachments/assets/6520d5c7-a85f-444e-9688-76dd60fba753)
+
 
 
 ## Sort raid frames
