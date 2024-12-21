@@ -163,5 +163,5 @@ addon.hordePvPIcon = "interface\\icons\\achievement_pvp_h_h";
 addon.flagCarrierHordeIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierHorde";
 addon.flagCarrierAllianceIcon = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\FlagCarrierAlliance";
 
-addon.specIconHealer = select(4, GetSpecializationInfoByID(addon.SPECID.RESTODRUID)); -- 136041
-addon.specIconOthers = select(4, GetSpecializationInfoByID(addon.SPECID.ASSASSIN)); -- 236270
+addon.specIconHealer = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\HealingTouch"; -- icon 136041
+addon.specIconOthers = "interface\\addons\\SweepyBoop\\ClassIcons\\common\\DeathMark"; -- icon 236270
