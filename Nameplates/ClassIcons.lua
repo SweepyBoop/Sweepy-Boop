@@ -35,7 +35,7 @@ local function EnsureClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER");
+        nameplate.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
     end
 
     return nameplate.FriendlyClassIcon;

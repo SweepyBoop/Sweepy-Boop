@@ -12,7 +12,7 @@ addon.healerIconCoords = {0.005, 0.116, 0.76, 0.87};
 local iconSize = 40;
 local highlightSize = 55;
 
-addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint)
+addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFriendly)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
     classIconFrame:SetMouseClickEnabled(false);
     -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
@@ -36,14 +36,18 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint)
     classIconFrame.border:SetAtlas("ui-frame-genericplayerchoice-portrait-border");
     classIconFrame.border:SetAllPoints(classIconFrame);
 
-    classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
-    classIconFrame.targetHighlight:Hide();
-    classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetAtlas("charactercreate-ring-select");
-    classIconFrame.targetHighlight:SetSize(highlightSize, highlightSize);
-    classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
-    classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
-    classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
+    if isFriendly then
+        classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
+        classIconFrame.targetHighlight:Hide();
+        classIconFrame.targetHighlight:SetDesaturated(false);
+        classIconFrame.targetHighlight:SetAtlas("charactercreate-ring-select");
+        classIconFrame.targetHighlight:SetSize(highlightSize, highlightSize);
+        classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
+        classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
+        classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
+    else
+        classIconFrame.border:SetVertexColor(255, 0, 0); -- Red border for hostile
+    end
 
     return classIconFrame;
 end
