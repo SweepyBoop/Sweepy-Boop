@@ -17,28 +17,11 @@ local options = {
             imageHeight = 36,
             name = "A lightweight addon to improve your arena & battleground experience :)"
         },
-        break1 = {
-            order = 2,
-            type = "header",
-            name = ""
-        },
-        reloadButton = {
-            order = 3,
-            type = "execute",
-            name = "Reload UI",
-            func = ReloadUI,
-            desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
-        },
-        break2 = {
-            order = 4,
-            type = "header",
-            name = ""
-        },
     },
 };
 
 options.args.nameplatesFriendly = {
-    order = 6,
+    order = 2,
     type = "group",
     name = "Friendly class icons",
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
@@ -118,7 +101,7 @@ options.args.nameplatesFriendly = {
 };
 
 options.args.nameplatesEnemy = {
-    order = 7,
+    order = 3,
     type = "group",
     childGroups = "tab",
     name = "Enemy nameplates",
@@ -225,7 +208,7 @@ options.args.nameplatesEnemy = {
 addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
 
 options.args.arenaFrames = {
-    order = 8,
+    order = 4,
     type = "group",
     childGroups = "tab",
     name = "Arena Frames",
@@ -251,21 +234,28 @@ options.args.arenaFrames = {
             type = "description",
             name = addon.exclamation .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
         },
-        breaker1 = {
+        reloadButton = {
             order = 4,
+            type = "execute",
+            name = "Reload UI",
+            func = ReloadUI,
+            desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
+        },
+        breaker1 = {
+            order = 5,
             type = "header",
             name = "",
         },
 
         arenaEnemyOffensivesEnabled = {
-            order = 5,
+            order = 6,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface/icons/spell_fire_sealoffire", "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
-            order = 6,
+            order = 7,
             type = "range",
             min = 16,
             max = 64,
@@ -273,14 +263,14 @@ options.args.arenaFrames = {
             desc = "Size of arena offensive cooldown icons",
         },
         arenaEnemyDefensivesEnabled = {
-            order = 7,
+            order = 8,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
-            order = 8,
+            order = 9,
             type = "range",
             min = 16,
             max = 64,
@@ -289,12 +279,12 @@ options.args.arenaFrames = {
         },
 
         breaker2 = {
-            order = 9,
+            order = 10,
             type = "header",
             name = "",
         },
         arenaCooldownOffsetX = {
-            order = 10,
+            order = 11,
             type = "range",
             min = -750,
             max = 750,
@@ -302,7 +292,7 @@ options.args.arenaFrames = {
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
         arenaCooldownOffsetY = {
-            order = 11,
+            order = 12,
             type = "range",
             min = -150,
             max = 150,
@@ -311,7 +301,7 @@ options.args.arenaFrames = {
         },
 
         spellList = {
-            order = 12,
+            order = 13,
             type = "group",
             name = "Spells",
             desc = "Select which abilities to track cooldown inside arenas",
@@ -385,7 +375,7 @@ AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
 AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
 
 options.args.raidFrames = {
-    order = 9,
+    order = 5,
     type = "group",
     name = "Raid Frames",
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
@@ -429,7 +419,7 @@ options.args.raidFrames = {
 };
 
 options.args.misc = {
-    order = 10,
+    order = 6,
     type = "group",
     name = "Misc",
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
@@ -459,7 +449,7 @@ options.args.misc = {
             order = 4,
             width = "full",
             type = "description",
-            name = addon.exclamation .. "Leaving arena without entering combat results in deserter status",
+            name = addon.exclamation .. "Leaving arena without entering combat might result in deserter status",
         },
 
         header2 = {
