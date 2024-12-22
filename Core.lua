@@ -228,19 +228,20 @@ options.args.arenaFrames = {
             name = "Hide",
             func = "HideTestArena",
         },
-        reloadButton = {
-            order = 3,
-            type = "execute",
-            name = "Reload UI",
-            func = ReloadUI,
-            desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
-        },
-        description1 = {
-            order = 4,
-            width = "full",
-            type = "description",
-            name = addon.exclamation .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
-        },
+        -- Reload UI shouldn't be needed anymore, but keep them here in case
+        -- reloadButton = {
+        --     order = 3,
+        --     type = "execute",
+        --     name = "Reload UI",
+        --     func = ReloadUI,
+        --     desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
+        -- },
+        -- description1 = {
+        --     order = 4,
+        --     width = "full",
+        --     type = "description",
+        --     name = addon.exclamation .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
+        -- },
         breaker1 = {
             order = 5,
             type = "header",
