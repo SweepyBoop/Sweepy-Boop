@@ -276,7 +276,7 @@ options.args.arenaFrames = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Offensive Cooldowns"),
+            name = format("|T%s:20|t %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
