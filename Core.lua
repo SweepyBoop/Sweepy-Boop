@@ -221,12 +221,14 @@ options.args.arenaFrames = {
             type = "execute",
             name = "Test",
             func = "TestArena",
+            width = "half",
         },
         hidetest = {
             order = 2,
             type = "execute",
             name = "Hide",
             func = "HideTestArena",
+            width = "half",
         },
         -- Reload UI shouldn't be needed anymore, but keep them here in case
         -- reloadButton = {
