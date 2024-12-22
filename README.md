@@ -3,18 +3,9 @@ An _extremely_ _lightweight_ addon to support arena gameplay.
 
 Some of the functionalities, such as class & pet icons and enemy nameplate highlight, also carry well into battlegrounds.
 
-Here is an overall image of the UI:
-![image](https://user-images.githubusercontent.com/78008331/226146638-ecd2f9d5-2276-4dbb-925f-157ff4e3a955.png)
-
 Type **/sb** in game to invoke the options panel.
 
 Every module can be toggled on/off, with a few customization options.
-
-Some option changes might require a UI reload to take full effect, and there is a reload button in the settings panel for your convenience.
-
-![image](https://github.com/user-attachments/assets/df690af2-5beb-42fe-8dba-f1d6a7ec18b7)
-
-
 
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
