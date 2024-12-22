@@ -16,8 +16,8 @@ Every module can be toggled on/off, with a few customization options.
 
 ## Friendly class and pet icons
 For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
-- Shows a highlight border for current target.
-- Makes it much easier to track where your teammates are during an arena match, especially for healers.
+- Shows a highlight border for current target
+- Makes it much easier to track where your teammates are during an arena match, especially for healers
 - <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" scream during an intense arena game
 - Easy to distinguish between enemy/friendly nameplates
 
@@ -44,7 +44,7 @@ To make the most of this module, configure your name & nameplate settings as fol
 
 ## Enemy nameplate filtering & highlighting
 While in arenas / battlegrounds, customize which non-player enemy units to show, e.g.,
-- For Beast Mastery Hunter pets, hide the extra pet from talent "Animal Companion", so you know which one to kill
+- For Beast Mastery Hunter pets, hide the extra pet from talents like "Animal Companion", so you know which one to kill
 - Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
 - Option to highlight chosen units with an animating icon!
 
