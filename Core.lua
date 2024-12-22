@@ -252,7 +252,7 @@ options.args.arenaFrames = {
 
         arenaEnemyOffensivesEnabled = {
             order = 6,
-            width = "double",
+            width = 1.75,
             type = "toggle",
             name = format("|T%s:20|t %s", "interface/icons/spell_fire_sealoffire", "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
@@ -273,7 +273,7 @@ options.args.arenaFrames = {
         },
         arenaEnemyDefensivesEnabled = {
             order = 9,
-            width = "double",
+            width = 1.75,
             type = "toggle",
             name = format("|T%s:20|t %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
