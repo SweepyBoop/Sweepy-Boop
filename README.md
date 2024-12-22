@@ -19,7 +19,7 @@ For friendly players and their primary pets, replace their health bars with clas
 - Shows a highlight border for current target
 - Makes it much easier to track where your teammates are during an arena match, especially for healers
 - <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" panic :)
-- Easy to distinguish between enemy/friendly nameplates
+- Easy to distinguish between friendly class icons and enemy nameplates
 
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
