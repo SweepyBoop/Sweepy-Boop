@@ -18,7 +18,7 @@ Every module can be toggled on/off, with a few customization options.
 For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
 - Shows a highlight border for current target
 - Makes it much easier to track where your teammates are during an arena match, especially for healers
-- <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" scream during an intense arena game
+- <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" panic :)
 - Easy to distinguish between enemy/friendly nameplates
 
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
