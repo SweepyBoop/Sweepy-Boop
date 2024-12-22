@@ -1,7 +1,7 @@
 # SweepyBoop's PvP Helper
 An _extremely_ _lightweight_ addon to support arena gameplay.
 
-Some of the functionalities, such as class & pet icons and enemy nameplate highlight, also carry well into battlegrounds.
+Some of the features, such as class & pet icons and enemy nameplate highlight, also carry well into battlegrounds.
 
 Type **/sb** in game to invoke the options panel.
 
