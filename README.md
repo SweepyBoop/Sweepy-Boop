@@ -15,11 +15,11 @@ Every module can be toggled on/off, with a few customization options.
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
 
 ## Friendly class and pet icons
-For friendly players and their primary pets, places a class (for players) or pet (for pets) icon on top to replace the health bar.
-- When selected, shows an orange highlight border.
-- This makes it much easier to track where your teammates are during an arena match, especially for healers.
-- <span style="color:#36f"><strong>There is an option to use a special icon for healers in your group!</strong></span> No more "where is my healer" scream in an intense arena game for DPS players
-- This is a great alternative to enabling friendly nameplates, since it's not always easy to distinguish between enemy/friendly nameplates. Some players use a script to make friendly nameplates shorter, but then there is the issue with priest mind control, i.e., friendly nameplates can become default width, or enemy nameplates can become shorter width after mind control effect.
+For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
+- Shows a highlight border for current target.
+- Makes it much easier to track where your teammates are during an arena match, especially for healers.
+- <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" scream during an intense arena game
+- Easy to distinguish between enemy/friendly nameplates
 
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
