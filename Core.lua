@@ -228,18 +228,18 @@ options.args.arenaFrames = {
             name = "Hide",
             func = "HideTestArena",
         },
-        description1 = {
-            order = 3,
-            width = "full",
-            type = "description",
-            name = addon.exclamation .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
-        },
         reloadButton = {
-            order = 4,
+            order = 3,
             type = "execute",
             name = "Reload UI",
             func = ReloadUI,
             desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
+        },
+        description1 = {
+            order = 4,
+            width = "full",
+            type = "description",
+            name = addon.exclamation .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
         },
         breaker1 = {
             order = 5,
@@ -249,7 +249,7 @@ options.args.arenaFrames = {
 
         arenaEnemyOffensivesEnabled = {
             order = 6,
-            width = "full",
+            width = "double",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface/icons/spell_fire_sealoffire", "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
@@ -262,15 +262,21 @@ options.args.arenaFrames = {
             name = "Icon size",
             desc = "Size of arena offensive cooldown icons",
         },
-        arenaEnemyDefensivesEnabled = {
+        newline1 = {
             order = 8,
+            type = "description",
             width = "full",
+            name = "",
+        },
+        arenaEnemyDefensivesEnabled = {
+            order = 9,
+            width = "double",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
-            order = 9,
+            order = 10,
             type = "range",
             min = 16,
             max = 64,
@@ -278,13 +284,14 @@ options.args.arenaFrames = {
             desc = "Size of arena defensive cooldown icons",
         },
 
-        breaker2 = {
-            order = 10,
-            type = "header",
+        newline2 = {
+            order = 11,
+            type = "description",
+            width = "full",
             name = "",
         },
         arenaCooldownOffsetX = {
-            order = 11,
+            order = 12,
             type = "range",
             min = -750,
             max = 750,
@@ -292,7 +299,7 @@ options.args.arenaFrames = {
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
         arenaCooldownOffsetY = {
-            order = 12,
+            order = 13,
             type = "range",
             min = -150,
             max = 150,
@@ -301,7 +308,7 @@ options.args.arenaFrames = {
         },
 
         spellList = {
-            order = 13,
+            order = 14,
             type = "group",
             name = "Spells",
             desc = "Select which abilities to track cooldown inside arenas",
