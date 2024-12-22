@@ -31,7 +31,8 @@ For friendly players and their primary pets, places a class (for players) or pet
 
 (Flag carrier icon in battlegrounds)
 
-![Pet icons](https://github.com/user-attachments/assets/ebfacada-8f7b-438e-a6b9-ddd2b811b6bf)
+![Pet icons](https://github.com/user-attachments/assets/6e937613-bf68-4024-937a-28661b0ebd1c)
+
 
 
 
