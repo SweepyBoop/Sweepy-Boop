@@ -36,27 +36,29 @@ local function GetThreatCount(unit)
 end
 
 function SweepyBoop:SetupRaidFrameAggroHighlight()
-    if self.db.profile.raidFrameAggroHighlightEnabled then
-        hooksecurefunc("CompactUnitFrame_UpdateName", function (frame)
-            if ( not frame ) or frame:IsForbidden() then
-                return;
-            end
+    hooksecurefunc("CompactUnitFrame_UpdateName", function (frame)
+        if ( not self.db.profile.raidFrameAggroHighlightEnabled ) then
+            return; -- Skip if feature disabled
+        end
 
-            if ( frame:GetParent() ~= CompactPartyFrame ) then
-                return;
-            end
+        if ( not frame ) or frame:IsForbidden() then
+            return;
+        end
 
-            if frame.optionTable.displayAggroHighlight then
-                return;
-            end
+        if ( frame:GetParent() ~= CompactPartyFrame ) then
+            return;
+        end
 
-            local threatCount = GetThreatCount(frame.unit);
-            if threatCount then
-                frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(threatCount));
-                frame.aggroHighlight:Show();
-            else
-                frame.aggroHighlight:Hide();
-            end
-        end)
-    end
+        if frame.optionTable.displayAggroHighlight then
+            return; -- Don't overwrite PvE threats
+        end
+
+        local threatCount = GetThreatCount(frame.unit);
+        if threatCount then
+            frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(threatCount));
+            frame.aggroHighlight:Show();
+        else
+            frame.aggroHighlight:Hide();
+        end
+    end)
 end
