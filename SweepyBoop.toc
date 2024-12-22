@@ -1,4 +1,4 @@
-## Interface: 110005
+## Interface: 110007
 ## Title: SweepyBoop's PvP Helper
 ## Author: SweepyBoop
 ## Version: @project-version@
