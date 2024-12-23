@@ -299,7 +299,7 @@ end
 
 local function GetSetPointOptions(index)
     local adjustedIndex = ( index == 0 and 1) or index;
-    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
     local setPointOptions = {
         point = "LEFT",
         relativeTo = prefix .. adjustedIndex,

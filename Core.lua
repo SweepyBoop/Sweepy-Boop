@@ -571,8 +571,13 @@ function SweepyBoop:TestArena()
            sArena:Test();
         end
     else
-        print("No Gladius / sArena detected");
-        return;
+        -- Use Blizzard arena frames
+        if ( not CompactArenaFrame:IsShown() ) then
+            CompactArenaFrame:Show();
+            for i = 1, addon.MAX_ARENA_SIZE do
+                _G["CompactArenaFrameMember" .. i]:Show();
+            end
+        end
     end
 
     self:TestArenaEnemyBurst();
