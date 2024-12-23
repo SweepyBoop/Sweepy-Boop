@@ -64,17 +64,17 @@ end
 local class = addon.GetUnitClass("player");
 
 if ( class == addon.DRUID ) then
-    CreateOverlayTexture(114108, 1518303, 150, 50, 0, 150) -- Soul of the Forest, predatory_swiftness_green.blp
-    CreateOverlayTexture(429474, 450915, 100, 100, -100, 150) -- Blooming Infusion (damage), Eclipse_Sun.blp
-    CreateOverlayTexture(429438, 450914, 100, 100, 100, 150, math.pi) -- Blooming Infusion (heal), Eclipse_Moon.blp
-    CreateOverlayTexture(69369, 898423, 150, 50, 0, 150) -- Predatory Swiftness, predatory_swiftness.blp
-    CreateOverlayTexture(391882, 627609, 150, 50, 0, 180) -- Apex Predator's Craving, shadow_of_death.blp
+    CreateOverlayTexture(114108, 1518303, 150, 50, 0, 150); -- Soul of the Forest, predatory_swiftness_green.blp
+    CreateOverlayTexture(429474, 450915, 100, 100, -100, 150); -- Blooming Infusion (damage), Eclipse_Sun.blp
+    CreateOverlayTexture(429438, 450914, 100, 100, 100, 150, math.pi); -- Blooming Infusion (heal), Eclipse_Moon.blp
+    CreateOverlayTexture(69369, 898423, 150, 50, 0, 150); -- Predatory Swiftness, predatory_swiftness.blp
+    CreateOverlayTexture(391882, 627609, 150, 50, 0, 180); -- Apex Predator's Craving, shadow_of_death.blp
 end
 
 
 
 -- BigDebuffs player portrait override
-local playerPortraitAbilities = {}
+local playerPortraitAbilities = {};
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
 playerPortraitAbilities[addon.DRUID] = {
@@ -82,29 +82,29 @@ playerPortraitAbilities[addon.DRUID] = {
     452384, -- Drink
 };
 
-local classPortraitAbilities = playerPortraitAbilities[class]
+local classPortraitAbilities = playerPortraitAbilities[class];
 
-local playerPortraitAuraFrame = CreateFrame("Frame", nil, PlayerFrame)
-playerPortraitAuraFrame:SetPoint(PlayerFrame.portrait:GetPoint())
-playerPortraitAuraFrame:SetSize(PlayerFrame.portrait:GetSize())
-playerPortraitAuraFrame:SetFrameStrata("HIGH")
-playerPortraitAuraFrame.tex = playerPortraitAuraFrame:CreateTexture()
-playerPortraitAuraFrame.tex:SetAllPoints(playerPortraitAuraFrame)
-playerPortraitAuraFrame.tex:SetTexCoord(0.1, 0.9, 0.1, 0.9) -- To appear naturally as a round button
+local playerPortraitAuraFrame = CreateFrame("Frame", nil, PlayerFrame);
+playerPortraitAuraFrame:SetPoint(PlayerFrame.portrait:GetPoint());
+playerPortraitAuraFrame:SetSize(PlayerFrame.portrait:GetSize());
+playerPortraitAuraFrame:SetFrameStrata("HIGH");
+playerPortraitAuraFrame.tex = playerPortraitAuraFrame:CreateTexture();
+playerPortraitAuraFrame.tex:SetAllPoints(playerPortraitAuraFrame);
+playerPortraitAuraFrame.tex:SetTexCoord(0.1, 0.9, 0.1, 0.9); -- To appear naturally as a round button
 
 -- Apply a circle texture mask (https://wowpedia.fandom.com/wiki/UIOBJECT_MaskTexture)
-playerPortraitAuraFrame.mask = playerPortraitAuraFrame:CreateMaskTexture()
-playerPortraitAuraFrame.mask:SetAllPoints(playerPortraitAuraFrame.tex)
-playerPortraitAuraFrame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-playerPortraitAuraFrame.tex:AddMaskTexture(playerPortraitAuraFrame.mask)
+playerPortraitAuraFrame.mask = playerPortraitAuraFrame:CreateMaskTexture();
+playerPortraitAuraFrame.mask:SetAllPoints(playerPortraitAuraFrame.tex);
+playerPortraitAuraFrame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMask", "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE");
+playerPortraitAuraFrame.tex:AddMaskTexture(playerPortraitAuraFrame.mask);
 
-playerPortraitAuraFrame.cooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate")
-playerPortraitAuraFrame.cooldown:SetAllPoints()
-playerPortraitAuraFrame.cooldown:SetReverse(true)
-playerPortraitAuraFrame.cooldown:SetDrawBling(false)
-playerPortraitAuraFrame.cooldown:SetDrawEdge(false)
-playerPortraitAuraFrame.cooldown:SetSwipeTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall")
-playerPortraitAuraFrame.cooldown:SetSwipeColor(0, 0, 0, 0.6)
+playerPortraitAuraFrame.cooldown = CreateFrame("Cooldown", nil, playerPortraitAuraFrame, "CooldownFrameTemplate");
+playerPortraitAuraFrame.cooldown:SetAllPoints();
+playerPortraitAuraFrame.cooldown:SetReverse(true);
+playerPortraitAuraFrame.cooldown:SetDrawBling(false);
+playerPortraitAuraFrame.cooldown:SetDrawEdge(false);
+playerPortraitAuraFrame.cooldown:SetSwipeTexture("Interface\\CHARACTERFRAME\\TempPortraitAlphaMaskSmall");
+playerPortraitAuraFrame.cooldown:SetSwipeColor(0, 0, 0, 0.6);
 
 playerPortraitAuraFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 playerPortraitAuraFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS); -- Between solo shuffle rounds
@@ -115,36 +115,35 @@ function playerPortraitAuraFrame:OnEvent(event, unitTarget)
     if ( event == addon.UNIT_AURA and unitTarget ~= "player" ) or ( not classPortraitAbilities ) then return end
 
     for i = 1, #(classPortraitAbilities) do
-        local spell = classPortraitAbilities[i]
-        local aura = GetPlayerAuraBySpellID(spell)
+        local spell = classPortraitAbilities[i];
+        local aura = GetPlayerAuraBySpellID(spell);
         if aura and aura.name then
-            playerPortraitAuraFrame.tex:SetTexture(aura.icon)
+            playerPortraitAuraFrame.tex:SetTexture(aura.icon);
 
             if aura.duration and ( aura.duration ~= 0 ) then
-                playerPortraitAuraFrame.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
-                playerPortraitAuraFrame.cooldown:Show()
+                playerPortraitAuraFrame.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
+                playerPortraitAuraFrame.cooldown:Show();
             else
-                playerPortraitAuraFrame.cooldown:Hide()
+                playerPortraitAuraFrame.cooldown:Hide();
             end
 
-            playerPortraitAuraFrame:Show()
+            playerPortraitAuraFrame:Show();
             return
         end
     end
 
     -- No early return means no matching aura
-    playerPortraitAuraFrame:Hide()
+    playerPortraitAuraFrame:Hide();
 end
-playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent)
+playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent);
 
 
 
 -- Glowing buff icon
-
 local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:SetMouseClickEnabled(false);
-    frame:Hide() -- Hide initially until aura is detected
+    frame:Hide(); -- Hide initially until aura is detected
 
     frame.spellID = spellID;
     frame:SetSize(size, size);
