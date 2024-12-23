@@ -347,22 +347,13 @@ CreateGlowingBuffIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60); -- preco
 if ( class == addon.DRUID ) then
     CreateGlowingBuffIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32); -- Prowl
 
-    local reforestation = CreateStackBuffIcon(392360, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
-    local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5, 2, true);
-    local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5);
-    local berserk = CreateGlowingBuffIcon(106951, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50);
-    local kingofJungle = CreateGlowingBuffIcon(102543, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50);
+    CreateStackBuffIcon(392360, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3); -- Reforestation
+    CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5, 2, true); -- Blood Talons
+    CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5); -- Tree of Life
+    CreateGlowingBuffIcon(106951, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50); -- Berserk
+    CreateGlowingBuffIcon(102543, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50); -- King of Jungle
 
-    -- local function protectorFunc(count, duration, expirationTime, value)
-    --     local currentValue = value or 0;
-    --     -- 1 intellect = 1 spell power
-    --     local _, spellPower = UnitStat("player", 4);
-    --     local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
-    --     return percent;
-    -- end
-    --local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
-
-    local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarRightButton8"], "RIGHT", 5, 0, 3);
+    CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarRightButton8"], "RIGHT", 5, 0, 3); -- Well-Honed Instincts
 
     if testGlowingBuffIcon then
         local test = CreateGlowingBuffIcon(774, 36, "BOTTOM", _G["MultiBarBottomRightButton4"], "TOP", 0, 5);
