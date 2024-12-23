@@ -74,20 +74,15 @@ end
 
 
 -- BigDebuffs player portrait override
-local playerPortraitStealthAbility = {}
+local playerPortraitAbilities = {}
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
-playerPortraitStealthAbility[addon.DRUID] = {
+playerPortraitAbilities[addon.DRUID] = {
     167152, -- Refreshment
     452384, -- Drink
-    5215, -- Prowl
-}
-playerPortraitStealthAbility[addon.ROGUE] = {
-    115191, -- Stealth
-    115192, -- Subterfuge
-}
+};
 
-local classStealthAbility = playerPortraitStealthAbility[class]
+local classPortraitAbilities = playerPortraitAbilities[class]
 
 local playerPortraitAuraFrame = CreateFrame("Frame", nil, PlayerFrame)
 playerPortraitAuraFrame:SetPoint(PlayerFrame.portrait:GetPoint())
@@ -117,10 +112,10 @@ playerPortraitAuraFrame:RegisterEvent(addon.UNIT_AURA);
 playerPortraitAuraFrame:Hide();
 
 function playerPortraitAuraFrame:OnEvent(event, unitTarget)
-    if ( event == addon.UNIT_AURA and unitTarget ~= "player" ) or ( not classStealthAbility ) then return end
+    if ( event == addon.UNIT_AURA and unitTarget ~= "player" ) or ( not classPortraitAbilities ) then return end
 
-    for i = 1, #(classStealthAbility) do
-        local spell = classStealthAbility[i]
+    for i = 1, #(classPortraitAbilities) do
+        local spell = classPortraitAbilities[i]
         local aura = GetPlayerAuraBySpellID(spell)
         if aura and aura.name then
             playerPortraitAuraFrame.tex:SetTexture(aura.icon)
