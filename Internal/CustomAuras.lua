@@ -174,12 +174,18 @@ local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativeP
     frame.spellActivationAlert:Hide();
 
     frame:RegisterEvent(addon.UNIT_AURA);
+    frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     frame:SetScript("OnEvent", function (self, event, ...)
         local unitTarget = ...;
         if ( event == addon.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
             local aura = GetPlayerAuraBySpellID(frame.spellID);
-            if aura and aura.duration and ( aura.duration ~= 0 ) then
-                self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
+            if aura then
+                if aura.duration and ( aura.duration ~= 0 ) then
+                    self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
+                    self.cooldown:Show();
+                else
+                    self.cooldown:Hide();
+                end
                 addon.ShowOverlayGlow(self);
                 self:Show();
             else
@@ -345,6 +351,8 @@ CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 local precongnition = CreateGlowingBuffIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60);
 
 if ( class == addon.DRUID ) then
+    CreateGlowingBuffIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32); -- Prowl
+
     local reforestation = CreateStackBuffIcon(392360, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3);
     local bloodTalons = CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5, 2, true);
     local treeOfLife = CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5);
