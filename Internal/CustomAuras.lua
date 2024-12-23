@@ -8,13 +8,13 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 -- https://www.townlong-yak.com/framexml/live/Helix/ArtTextureID.lua
 
 -- To find the spellID of an aura
-local findSpellId = CreateFrame("Frame");
-findSpellId.enabled = addon.isTestMode;
+local checkSpellID = CreateFrame("Frame");
+checkSpellID.enabled = addon.isTestMode;
 
-findSpellId.spellName = "Totem of Wrath";
-findSpellId:RegisterEvent(addon.UNIT_AURA);
-findSpellId:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
-findSpellId:SetScript("OnEvent", function (self, event, unitTarget)
+checkSpellID.spellName = "Totem of Wrath";
+checkSpellID:RegisterEvent(addon.UNIT_AURA);
+checkSpellID:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+checkSpellID:SetScript("OnEvent", function (self, event, unitTarget)
     if ( not self.enabled ) then return end
 
     if ( event == addon.UNIT_AURA ) and ( unitTarget == "player" ) then
@@ -61,14 +61,14 @@ local function CreateTexture(buff, filePath, width, height, offsetX, offsetY, ro
     return frame;
 end
 
-local class = select(2, UnitClass("player"));
+local class = addon.GetUnitClass("player");
 
 if ( class == addon.DRUID ) then
-    local soulOfTheForest = CreateTexture(114108, 1518303, 150, 50, 0, 150) -- predatory_swiftness_green.blp
-    local bloomingInfusionDamage = CreateTexture(429474, 450915, 100, 100, -100, 150) -- Eclipse_Sun.blp
-    local bloomingInfusionHeal = CreateTexture(429438, 450914, 100, 100, 100, 150, math.pi) -- Eclipse_Moon.blp
-    local predatorySwiftness = CreateTexture(69369, 898423, 150, 50, 0, 150) -- predatory_swiftness.blp
-    local apexPredatorsCraving = CreateTexture(391882, 627609, 150, 50, 0, 180) -- shadow_of_death.blp
+    CreateTexture(114108, 1518303, 150, 50, 0, 150) -- Soul of the Forest, predatory_swiftness_green.blp
+    CreateTexture(429474, 450915, 100, 100, -100, 150) -- Blooming Infusion (damage), Eclipse_Sun.blp
+    CreateTexture(429438, 450914, 100, 100, 100, 150, math.pi) -- Blooming Infusion (heal), Eclipse_Moon.blp
+    CreateTexture(69369, 898423, 150, 50, 0, 150) -- Predatory Swiftness, predatory_swiftness.blp
+    CreateTexture(391882, 627609, 150, 50, 0, 180) -- Apex Predator's Craving, shadow_of_death.blp
 end
 
 
