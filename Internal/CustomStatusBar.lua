@@ -147,7 +147,7 @@ local function CreateDruidManaBar() -- Create StatusBar with a text overlay
     local playerPortrait = PlayerFrame.portrait;
     local size = playerPortrait:GetWidth();
     f:SetSize(size, size / 3);
-    f:SetPoint("TOP", playerPortrait, "BOTTOM", 0, -10);
+    f:SetPoint("TOP", playerPortrait, "BOTTOM", 0, -5);
 
     f:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar");
     f:SetStatusBarColor(0, 102/255, 204/255); -- Blue
