@@ -398,7 +398,7 @@ setPointOptions[SPELLCATEGORY.DISPEL] = {
 };
 
 local function GetSetPointOptions(index)
-    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "NONE";
+    local prefix = ( Gladius and "GladiusButtonFramearena" )  or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
     local offsetY;
     if SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled then
         -- Offensive icons enabled, show defensives below them
