@@ -351,14 +351,14 @@ if ( class == addon.DRUID ) then
     local berserk = CreateGlowingBuffIcon(106951, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50);
     local kingofJungle = CreateGlowingBuffIcon(102543, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50);
 
-    local function protectorFunc(count, duration, expirationTime, value)
-        local currentValue = value or 0;
-        -- 1 intellect = 1 spell power
-        local _, spellPower = UnitStat("player", 4);
-        local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
-        return percent;
-    end
-    local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
+    -- local function protectorFunc(count, duration, expirationTime, value)
+    --     local currentValue = value or 0;
+    --     -- 1 intellect = 1 spell power
+    --     local _, spellPower = UnitStat("player", 4);
+    --     local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
+    --     return percent;
+    -- end
+    --local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
 
     local wellHonedInstincts = CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarRightButton8"], "RIGHT", 5, 0, 3);
 
