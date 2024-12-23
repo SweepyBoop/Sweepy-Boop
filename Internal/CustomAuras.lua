@@ -35,7 +35,7 @@ function SpellActivationOverlayFadeInAnimMixin:CustomOnFinished(animGroup)
 	overlay.pulse:Play();
 end
 
-local function CreateTexture(buff, filePath, width, height, offsetX, offsetY, rotate)
+local function CreateOverlayTexture(buff, filePath, width, height, offsetX, offsetY, rotate)
     local frame = CreateFrame("Frame", nil, UIParent, "CustomSpellActivationOverlayTemplate");
     frame:SetMouseClickEnabled(false);
     frame.buff = buff;
@@ -64,11 +64,11 @@ end
 local class = addon.GetUnitClass("player");
 
 if ( class == addon.DRUID ) then
-    CreateTexture(114108, 1518303, 150, 50, 0, 150) -- Soul of the Forest, predatory_swiftness_green.blp
-    CreateTexture(429474, 450915, 100, 100, -100, 150) -- Blooming Infusion (damage), Eclipse_Sun.blp
-    CreateTexture(429438, 450914, 100, 100, 100, 150, math.pi) -- Blooming Infusion (heal), Eclipse_Moon.blp
-    CreateTexture(69369, 898423, 150, 50, 0, 150) -- Predatory Swiftness, predatory_swiftness.blp
-    CreateTexture(391882, 627609, 150, 50, 0, 180) -- Apex Predator's Craving, shadow_of_death.blp
+    CreateOverlayTexture(114108, 1518303, 150, 50, 0, 150) -- Soul of the Forest, predatory_swiftness_green.blp
+    CreateOverlayTexture(429474, 450915, 100, 100, -100, 150) -- Blooming Infusion (damage), Eclipse_Sun.blp
+    CreateOverlayTexture(429438, 450914, 100, 100, 100, 150, math.pi) -- Blooming Infusion (heal), Eclipse_Moon.blp
+    CreateOverlayTexture(69369, 898423, 150, 50, 0, 150) -- Predatory Swiftness, predatory_swiftness.blp
+    CreateOverlayTexture(391882, 627609, 150, 50, 0, 180) -- Apex Predator's Craving, shadow_of_death.blp
 end
 
 
