@@ -143,9 +143,7 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent);
 local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowAtStacks, stackFunc, alwaysShow, suppressedBy)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:SetMouseClickEnabled(false);
-    if ( not alwaysShow ) then
-        frame:Hide(); -- Hide initially until aura is detected
-    end
+    frame:Hide(); -- Hide initially until aura is detected, for alwaysShow icons, it will stay visible once detected
 
     frame.spellID = spellID;
     frame:SetSize(size, size);
