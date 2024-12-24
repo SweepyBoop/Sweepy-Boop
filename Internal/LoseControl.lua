@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local containerFrame = CreateFrame("Frame", nil, UIParent);
 containerFrame:SetMouseClickEnabled(false);
-containerFrame:SetSize(30, 30);
+containerFrame:SetSize(35, 35);
 containerFrame:SetPoint("CENTER");
 containerFrame.texture = containerFrame:CreateTexture();
 containerFrame.texture:SetAllPoints();
