@@ -67,8 +67,17 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        useFlagCarrierIcon = {
+        showHealerOnly = {
             order = 6,
+            width = "full",
+            type = "toggle",
+            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Only show friendly healers"),
+            disabled = function ()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon );
+            end
+        },
+        useFlagCarrierIcon = {
+            order = 7,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Use flag carrier icons in battlegrounds"),
@@ -78,7 +87,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 7,
+            order = 8,
             type = "range",
             min = 50,
             max = 200,
@@ -88,7 +97,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 8,
+            order = 9,
             type = "range",
             min = 0,
             max = 150,
@@ -484,6 +493,7 @@ local defaults = {
             classIconScale = 100,
             classIconOffset = 0,
             useHealerIcon = true,
+            showHealerOnly = false,
             useFlagCarrierIcon = true,
         },
         nameplatesEnemy = {
