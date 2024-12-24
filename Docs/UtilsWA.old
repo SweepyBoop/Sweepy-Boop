@@ -764,3 +764,4 @@ end
     --     return percent;
     -- end
     --local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
+    
