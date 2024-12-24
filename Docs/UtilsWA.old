@@ -757,11 +757,10 @@ addon.setArenaOptLowerCooldown = function (guid, value)
 end
 
 -- local function protectorFunc(count, duration, expirationTime, value)
-    --     local currentValue = value or 0;
-    --     -- 1 intellect = 1 spell power
-    --     local _, spellPower = UnitStat("player", 4);
-    --     local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
-    --     return percent;
-    -- end
-    --local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
-    
+--     local currentValue = value or 0;
+--     -- 1 intellect = 1 spell power
+--     local _, spellPower = UnitStat("player", 4);
+--     local percent = math.ceil(((currentValue*100/spellPower)/220)*100);
+--     return percent;
+-- end
+--local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
