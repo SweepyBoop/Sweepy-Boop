@@ -143,6 +143,7 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent);
 local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowAtStacks, stackFunc, alwaysShow, suppressedBy)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:SetMouseClickEnabled(false);
+    frame:SetFrameStrata("HIGH");
     frame:Hide(); -- Hide initially until aura is detected, for alwaysShow icons, it will stay visible once detected
 
     frame.spellID = spellID;
@@ -253,6 +254,7 @@ if ( class == addon.DRUID ) then
 
     -- Common
     CreateAuraIcon(319454, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, 0); -- Heart of the Wild
+    CreateAuraIcon(382912, 50, "TOP", MultiBarRightButton1, "BOTTOM", 0, 0, nil, nil, true); -- Well-Honed Instincts
 
     -- Restoration
     CreateAuraIcon(392360, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 3, nil, nil, 117679); -- Reforestation
