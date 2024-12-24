@@ -154,8 +154,7 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     frame.suppressedBy = suppressedBy;
 
     frame.texture = frame:CreateTexture();
-    local tex = GetSpellTexture(spellID);
-    frame.texture:SetTexture(tex);
+    frame.texture:SetTexture(GetSpellTexture(spellID));
     frame.texture:SetAllPoints();
 
     if glowAtStacks and ( glowAtStacks > 0 ) then
