@@ -136,6 +136,16 @@ addon.UpdateClassIcon = function(frame)
     end
 
     if ShouldShowIcon(frame.unit) then
+        if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
+            -- We reached here meaning friendly player detected, but we only want to show healer
+            -- Thus if not healer, hide both the frame and the class icon
+            if UnitIsPlayer(frame.unit) and ( UnitGroupRolesAssigned(frame.unit) ~= "HEALER" ) then
+                addon.HideClassIcon(frame);
+                frame:Hide();
+                return;
+            end
+        end
+
         frame:Hide();
         ShowClassIcon(frame);
     else
