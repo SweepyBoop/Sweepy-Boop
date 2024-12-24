@@ -224,6 +224,8 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
 
                 if shouldGlow then
                     addon.ShowOverlayGlow(self);
+                else
+                    addon.HideOverlayGlow(self);
                 end
                 self:Show();
             else
