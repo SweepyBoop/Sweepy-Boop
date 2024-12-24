@@ -126,7 +126,8 @@ options.args.nameplatesEnemy = {
             order = 1,
             width = "full",
             type = "toggle",
-            name = "Replace arena enemy names with numbers",
+            name = format("|T%s:20|t|T%s:20|t|T%s:20|t %s", "interface/icons/inv_misc_number_1", "interface/icons/inv_misc_number_2", "interface/icons/inv_misc_number_3", "Arena enemy player nameplate numbers"),
+            desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
         },
 
         breaker1 = {
