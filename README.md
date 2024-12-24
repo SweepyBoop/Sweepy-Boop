@@ -7,7 +7,8 @@ Type **/sb** in game to invoke the options panel.
 
 Every module can be toggled on/off, with a few customization options.
 
-![image](https://github.com/user-attachments/assets/de59011f-1d37-4783-8d8d-0af03c7ef506)
+![Options panel](https://github.com/user-attachments/assets/bd22a31e-f371-4647-b888-32256fe4fd92)
+
 
 
 
