@@ -164,8 +164,8 @@ options.args.nameplatesEnemy = {
         },
         arenaSpecIconOffset = {
             order = 7,
-            min = -150,
-            max = 150,
+            min = -100,
+            max = 100,
             type = "range",
             name = "Spec icon offset",
         },
