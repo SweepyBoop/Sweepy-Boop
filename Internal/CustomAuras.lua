@@ -460,10 +460,10 @@ if ( class == addon.DRUID ) then
     -- CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarRightButton8"], "RIGHT", 5, 0, 3); -- Well-Honed Instincts
 
     if testGlowingBuffIcon then -- Test all 4 icons with Rejuvenation
-        CreateGlowingBuffIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -50, 3);
-        CreateGlowingBuffIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -100, 3);
-        CreateGlowingBuffIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -50, 3); -- test with Rejuvenation
-        CreateGlowingBuffIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -100, 3); -- test with Rejuvenation
+        CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -50, 0);
+        CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -100, 0);
+        CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -50, 0); -- test with Rejuvenation
+        CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -100, 0); -- test with Rejuvenation
     end
 elseif ( class == addon.PRIEST ) then
     --CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50, 4); -- Harsh Discipline
