@@ -444,6 +444,13 @@ if ( class == addon.DRUID ) then
 
     CreateAuraIcon(426790, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, nil, nil, nil, 319454); -- Call of the Elder Druid
 
+
+    -- Feral
+    CreateAuraIcon(145152, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 2, nil); -- Blood Talons
+    CreateAuraIcon(5217, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -100, 0); -- Tiger's Fury
+    CreateAuraIcon(106951, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Berserk
+    CreateAuraIcon(102543, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Incarnation: Avatar of Ashamane
+
     -- CreateStackBuffIcon(392360, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3); -- Reforestation
     -- CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5, 2, true); -- Blood Talons
     -- CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5); -- Tree of Life
