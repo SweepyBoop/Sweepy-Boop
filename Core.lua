@@ -588,7 +588,7 @@ function SweepyBoop:TestArena()
     elseif sArena then
         local frame = _G["sArenaEnemyFrame1"];
         if ( not frame ) or ( not frame:IsShown() ) then
-           sArena:Test();
+            sArena:Test();
         end
     else
         -- Use Blizzard arena frames
