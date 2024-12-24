@@ -63,6 +63,8 @@ local function ShowSpecIcon(frame, iconID)
         end
         specIconFrame:SetScale(scale * builtInScaleFactor);
 
+        specIconFrame:SetPoint("BOTTOM", specIconFrame:GetParent(), "TOP", 0, SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOffset);
+
         specIconFrame.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
         specIconFrame.isHealerIcon = isHealerIcon;
     end

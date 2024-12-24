@@ -27,6 +27,7 @@ options.args.nameplatesFriendly = {
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val;
+        -- Can we force all nameplates to call CompactUnitFrame_UpdateName
         SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
     end,
     args = {
@@ -41,7 +42,8 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates",
+            name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
+                   .. addon.exclamation ..  "If icons don't refresh right after changing options, change current target to force an update",
         },
         hideOutsidePvP = {
             order = 3,
@@ -117,30 +119,44 @@ options.args.nameplatesEnemy = {
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
     set = function(info, val) 
         SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+        -- Can we force all nameplates to call CompactUnitFrame_UpdateName
         SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
     end,
     args = {
-        arenaNumbersEnabled = {
+        tip = {
             order = 1,
             width = "full",
-            type = "toggle",
-            name = "Replace arena enemy names with numbers",
+            type = "description",
+            name = addon.exclamation ..  "If nameplates don't refresh right after changing options, change current target to force an update",
         },
-
         breaker1 = {
             order = 2,
+            type = "header",
+            name = "",
+        },
+
+        arenaNumbersEnabled = {
+            order = 3,
+            width = "full",
+            type = "toggle",
+            name = format("|T%s:20|t|T%s:20|t|T%s:20|t %s", "interface/icons/inv_misc_number_1", "interface/icons/inv_misc_number_2", "interface/icons/inv_misc_number_3", "Arena enemy player nameplate numbers"),
+            desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
+        },
+
+        breaker2 = {
+            order = 4,
             type = "header",
             name = "Arena enemy spec icons",
         },
         arenaSpecIconHealer = {
-            order = 3,
+            order = 5,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", addon.specIconHealerLogo, "Show spec icon for healers"),
             desc = "Show a spec icon on top of the nameplate for enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
-            order = 4,
+            order = 6,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\art\\healer", "Show healer icon instead of spec icon for healers"),
@@ -149,35 +165,42 @@ options.args.nameplatesEnemy = {
             end
         },
         arenaSpecIconOthers = {
-            order = 5,
+            order = 7,
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
         arenaSpecIconScale = {
-            order = 6,
+            order = 8,
             min = 50,
             max = 300,
             type = "range",
             name = "Spec icon scale (%)",
         },
+        arenaSpecIconOffset = {
+            order = 9,
+            min = -150,
+            max = 150,
+            type = "range",
+            name = "Spec icon offset",
+        },
 
-        breaker2 = {
-            order = 7,
+        breaker3 = {
+            order = 10,
             type = "header",
             name = "Nameplate Filters & Highlights",
         },
 
         filterEnabled = {
-            order = 8,
+            order = 11,
             type = "toggle",
             width = "full",
             name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
             desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
         },
         filterSettings = {
-            order = 9,
+            order = 12,
             type = "group",
             name = "General",
             disabled = function()
@@ -201,7 +224,7 @@ options.args.nameplatesEnemy = {
             },
         },
         filterList = {
-            order = 10,
+            order = 13,
             type = "group",
             name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
@@ -502,6 +525,7 @@ local defaults = {
             arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
+            arenaSpecIconOffset = 0,
             filterEnabled = true,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
@@ -578,7 +602,7 @@ function SweepyBoop:TestArena()
     elseif sArena then
         local frame = _G["sArenaEnemyFrame1"];
         if ( not frame ) or ( not frame:IsShown() ) then
-           sArena:Test();
+            sArena:Test();
         end
     else
         -- Use Blizzard arena frames
