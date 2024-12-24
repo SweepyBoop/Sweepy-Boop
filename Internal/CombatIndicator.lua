@@ -9,7 +9,7 @@ targetCombatFrame:Hide();
 
 local combatFrame = CreateFrame('Frame', nil , UIParent);
 combatFrame.timeSinceLastUpdate = 0;
-local combatInterval = 0.1;
+local combatInterval = 0.05;
 local function combatUpdate(self, elapsed)
     self.timeSinceLastUpdate = self.timeSinceLastUpdate + elapsed;
 
