@@ -239,195 +239,10 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     return frame;
 end
 
--- Glowing buff icon
-local function CreateGlowingBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY)
-    local frame = CreateFrame("Frame", nil, UIParent);
-    frame:SetMouseClickEnabled(false);
-    frame:Hide(); -- Hide initially until aura is detected
-
-    frame.spellID = spellID;
-    frame:SetSize(size, size);
-    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
-
-    frame.texture = frame:CreateTexture();
-    local icon = GetSpellTexture(spellID);
-    frame.texture:SetTexture(icon);
-    frame.texture:SetAllPoints();
-
-    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-    frame.cooldown:SetAllPoints();
-    frame.cooldown:SetDrawEdge(false);
-    frame.cooldown:SetAlpha(1);
-    frame.cooldown:SetDrawBling(false);
-    frame.cooldown:SetDrawSwipe(true);
-    frame.cooldown:SetReverse(true);
-
-    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
-    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
-    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
-    frame.spellActivationAlert:Hide();
-
-    frame:RegisterEvent(addon.UNIT_AURA);
-    frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    frame:SetScript("OnEvent", function (self, event, ...)
-        local unitTarget = ...;
-        if ( event == addon.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            local aura = GetPlayerAuraBySpellID(frame.spellID);
-            if aura then
-                if aura.duration and ( aura.duration ~= 0 ) then
-                    self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
-                    self.cooldown:Show();
-                else
-                    self.cooldown:Hide();
-                end
-                addon.ShowOverlayGlow(self);
-                self:Show();
-            else
-                addon.HideOverlayGlow(self);
-                self:Hide();
-            end
-        end
-    end)
-
-    return frame;
-end
-
--- No duration text, only show stacks, and glow when max stacks (if set)
-local function CreateStackBuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, maxStacks, duration, stackFunc)
-    local frame = CreateFrame("Frame", addon.HIDETIMEROMNICC .. "CustomAura" .. spellID, UIParent);
-    frame:SetMouseClickEnabled(false);
-    frame.spellID = spellID;
-    frame.maxStacks = maxStacks;
-    frame.stackFunc = stackFunc;
-    frame:Hide();
-
-    frame:SetSize(size, size);
-    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
-    frame:SetFrameStrata("HIGH");
-
-    frame.text = frame:CreateFontString(nil, "ARTWORK");
-    -- https://wow.tools/files/#search=fonts&page=1&sort=0&desc=asc
-    frame.text:SetFont("Fonts\\2002.ttf", size / 2, "OUTLINE");
-    frame.text:SetPoint("CENTER", 0, 0);
-    frame.text:SetText("");
-    frame.text:SetTextColor(1, 1, 0); -- Yellow
-
-    frame.texture = frame:CreateTexture();
-    local icon = GetSpellTexture(spellID);
-    frame.texture:SetTexture(icon);
-    frame.texture:SetAllPoints();
-
-    if duration then
-        frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-        frame.cooldown:SetAllPoints();
-        frame.cooldown:SetDrawEdge(false);
-        frame.cooldown:SetAlpha(1);
-        frame.cooldown:SetDrawBling(false);
-        frame.cooldown:SetDrawSwipe(true);
-        frame.cooldown:SetReverse(true);
-
-        -- No numeric display on cooldown
-        frame.cooldown:SetHideCountdownNumbers(true);
-    end
-
-    if maxStacks then
-        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
-        frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
-        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
-        frame.spellActivationAlert:Hide();
-    end
-
-    frame:RegisterEvent(addon.UNIT_AURA);
-    frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    frame:SetScript("OnEvent", function (self, event, ...)
-        local unitTarget = ...;
-        if ( event == addon.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            -- GetPlayerAuraBySpellID does not show count and value correctly, so we have to stick with UnitAura here
-            local name, _, count, _, duration, expirationTime, _, _, _, _, _, _, _, _, _, value = AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff("player", frame.spellID));
-            if ( not name ) then
-                self:Hide();
-                return;
-            end
-
-            if duration and ( duration ~= 0 ) and self.cooldown then
-                self.cooldown:SetCooldown(expirationTime - duration, duration);
-            end
-
-            local stacks;
-            if self.stackFunc then
-                stacks = self.stackFunc(count, duration, expirationTime, value);
-            else
-                stacks = count;
-            end
-
-            if ( stacks > 0 ) then
-                if ( stacks >= self.maxStacks ) then
-                    self.text:SetText("");
-                    addon.ShowOverlayGlow(self);
-                else
-                    self.text:SetText(stacks);
-                    addon.HideOverlayGlow(self);
-                end
-            end
-
-            self:Show();
-        end
-    end)
-
-    return frame;
-end
-
-local function CreatePlayerPassiveDebuffIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowDuration)
-    local frame = CreateFrame("Frame", nil, UIParent);
-    frame:SetMouseClickEnabled(false);
-    frame.spellID = spellID;
-    frame.glowDuration = glowDuration;
-
-    frame:SetSize(size, size);
-    frame:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
-    frame:SetFrameStrata("HIGH");
-
-    frame.texture = frame:CreateTexture();
-    local icon = GetSpellTexture(spellID);
-    frame.texture:SetTexture(icon);
-    frame.texture:SetAllPoints();
-
-    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-    frame.cooldown:SetAllPoints();
-    frame.cooldown:SetDrawEdge(false);
-    frame.cooldown:SetAlpha(1);
-    frame.cooldown:SetDrawBling(false);
-    frame.cooldown:SetDrawSwipe(true);
-    frame.cooldown:SetReverse(true);
-
-    frame:RegisterEvent(addon.UNIT_AURA);
-    frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    frame:SetScript("OnEvent", function (self, event, ...)
-        local unitTarget = ...;
-        if ( event == addon.PLAYER_ENTERING_WORLD ) or ( unitTarget == "player" ) then
-            local aura = GetPlayerAuraBySpellID(frame.spellID);
-            if ( not aura) or ( not aura.name ) then
-                self.cooldown:SetCooldown(0, 0);
-                return;
-            end
-
-            local startTime = aura.expirationTime - aura.duration;
-
-            if aura.duration and ( aura.duration ~= 0 ) then
-                self.cooldown:SetCooldown(startTime, aura.duration);
-            end
-        end
-    end)
-
-    return frame;
-end
-
-local testGlowingBuffIcon = addon.isTestMode;
-
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-CreateGlowingBuffIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60); -- precongnition
+CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0); -- precongnition
 
 if ( class == addon.DRUID ) then
     CreateAuraIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32, 0); -- Prowl
@@ -444,33 +259,24 @@ if ( class == addon.DRUID ) then
 
     CreateAuraIcon(426790, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, nil, nil, nil, 319454); -- Call of the Elder Druid
 
-
     -- Feral
     CreateAuraIcon(145152, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 2, nil); -- Blood Talons
     CreateAuraIcon(5217, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -100, 0); -- Tiger's Fury
     CreateAuraIcon(106951, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Berserk
     CreateAuraIcon(102543, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Incarnation: Avatar of Ashamane
 
-    -- CreateStackBuffIcon(392360, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50, 3); -- Reforestation
-    -- CreateStackBuffIcon(145152, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5, 2, true); -- Blood Talons
-    -- CreateGlowingBuffIcon(117679, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 5); -- Tree of Life
-    -- CreateGlowingBuffIcon(106951, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50); -- Berserk
-    -- CreateGlowingBuffIcon(102543, 36, "BOTTOM", _G["MultiBarBottomRightButton3"], "TOP", 0, 50); -- King of Jungle
-
-    -- CreatePlayerPassiveDebuffIcon(382912, 45, "LEFT", _G["MultiBarRightButton8"], "RIGHT", 5, 0, 3); -- Well-Honed Instincts
-
-    if testGlowingBuffIcon then -- Test all 4 icons with Rejuvenation
+    if addon.isTestMode then -- Test all 4 icons with Rejuvenation
         CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -50, 0);
         CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -100, 0);
         CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -50, 0); -- test with Rejuvenation
         CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -100, 0); -- test with Rejuvenation
     end
 elseif ( class == addon.PRIEST ) then
-    --CreateStackBuffIcon(373181, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50, 4); -- Harsh Discipline
+    --373181 Harsh Discipline
 elseif ( class == addon.PALADIN ) then
-    --CreateStackBuffIcon(247676, 40, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 5, 100); -- Aura of Reckoning
-    --CreateGlowingBuffIcon(31884, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50); -- Avenging Wrath
-    --CreateGlowingBuffIcon(216331, 36, "BOTTOM", _G["MultiBarBottomLeftButton9"], "TOP", 0, 50); -- Avenging Crusader
+    --247676 Aura of Reckoning
+    --31884 Avenging Wrath
+    --216331 Avenging Crusader
 end
 
 -- Defensive buffs
