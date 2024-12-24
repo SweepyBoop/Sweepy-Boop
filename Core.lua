@@ -162,22 +162,29 @@ options.args.nameplatesEnemy = {
             type = "range",
             name = "Spec icon scale (%)",
         },
+        arenaSpecIconOffset = {
+            order = 7,
+            min = -150,
+            max = 150,
+            type = "range",
+            name = "Spec icon offset",
+        },
 
         breaker2 = {
-            order = 7,
+            order = 8,
             type = "header",
             name = "Nameplate Filters & Highlights",
         },
 
         filterEnabled = {
-            order = 8,
+            order = 9,
             type = "toggle",
             width = "full",
             name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
             desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
         },
         filterSettings = {
-            order = 9,
+            order = 10,
             type = "group",
             name = "General",
             disabled = function()
@@ -201,7 +208,7 @@ options.args.nameplatesEnemy = {
             },
         },
         filterList = {
-            order = 10,
+            order = 11,
             type = "group",
             name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
@@ -502,6 +509,7 @@ local defaults = {
             arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
+            arenaSpecIconOffset = 0,
             filterEnabled = true,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
