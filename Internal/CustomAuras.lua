@@ -73,7 +73,7 @@ end
 
 
 
--- BigDebuffs player portrait override
+-- BigDebuffs player portrait override for healer drink buff
 local playerPortraitAbilities = {};
 -- If we use table, then we can't do ipairs to keep the order
 -- If buff has no duration, duration will be false
