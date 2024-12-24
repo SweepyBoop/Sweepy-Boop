@@ -24,7 +24,7 @@ For friendly players and their primary pets, replace their health bars with clas
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
 
-(Friendly class icons. Option to use a special icon for healers; target is highlighted with a border)
+(Friendly class icons. Option to use a special icon for healers (and only show healer icon); target is highlighted with a border)
 
 ![Flag Carrier Icons](https://github.com/user-attachments/assets/ba8d4723-57b0-42e6-adfa-2af4bf18e3da)
 
