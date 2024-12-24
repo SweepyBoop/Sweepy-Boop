@@ -157,15 +157,6 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     frame.texture:SetTexture(GetSpellTexture(spellID));
     frame.texture:SetAllPoints();
 
-    if glowAtStacks and ( glowAtStacks > 0 ) then
-        frame.text = frame:CreateFontString(nil, "ARTWORK");
-        -- https://wow.tools/files/#search=fonts&page=1&sort=0&desc=asc
-        frame.text:SetFont("Fonts\\2002.ttf", size / 2, "OUTLINE");
-        frame.text:SetPoint("CENTER", 0, 0);
-        frame.text:SetText("");
-        frame.text:SetTextColor(1, 1, 0); -- Yellow
-    end
-
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(false);
@@ -173,6 +164,17 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     frame.cooldown:SetDrawBling(false);
     frame.cooldown:SetDrawSwipe(true);
     frame.cooldown:SetReverse(true);
+
+    if glowAtStacks and ( glowAtStacks > 0 ) then
+        frame.text = frame:CreateFontString(nil, "ARTWORK");
+        -- https://wow.tools/files/#search=fonts&page=1&sort=0&desc=asc
+        frame.text:SetFont("Fonts\\2002.ttf", size / 2, "OUTLINE");
+        frame.text:SetPoint("CENTER", 0, 0);
+        frame.text:SetText("");
+        frame.text:SetTextColor(1, 1, 0); -- Yellow
+
+        frame.cooldown:SetHideCountdownNumbers(true); -- Hide cooldown numbers to see stack count more clearly
+    end
 
     if glowAtStacks then
         frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
