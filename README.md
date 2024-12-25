@@ -5,7 +5,7 @@ Some of the features, such as class & pet icons and enemy nameplate highlight, a
 
 Type **/sb** in game to invoke the options panel.
 
-Every module can be toggled on/off, with a few customization options (the default settings should work great for most players).
+Every module can be toggled on/off, with customization options (the default settings should work great for most players).
 
 ![Options panel](https://github.com/user-attachments/assets/bd22a31e-f371-4647-b888-32256fe4fd92)
 
