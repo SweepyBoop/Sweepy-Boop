@@ -77,7 +77,8 @@ local function ShowSpecIcon(frame, iconID)
         for alignment, iconFrame in pairs(specIconContainer.frames) do
             iconFrame:SetScale(scale * builtInScaleFactor);
             local options = setPointOptions[alignment];
-            iconFrame:SetPoint(options.point, iconFrame:GetParent(), options.relativePoint, 0, SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset);
+            local offsetY = ( alignment == addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP and SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset ) or 0;
+            iconFrame:SetPoint(options.point, iconFrame:GetParent(), options.relativePoint, 0, offsetY);
         end
 
         specIconContainer.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;

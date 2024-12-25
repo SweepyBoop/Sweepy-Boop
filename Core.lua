@@ -189,6 +189,9 @@ options.args.nameplatesEnemy = {
             type = "range",
             width = 0.85,
             name = "Vertical offset",
+            disabled = function ()
+                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP );
+            end
         },
         arenaSpecIconScale = {
             order = 10,
