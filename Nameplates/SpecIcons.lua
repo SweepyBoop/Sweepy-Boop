@@ -44,8 +44,7 @@ local function EnsureSpecIcon(frame)
         nameplate.SpecIconFrame.frames = {};
         -- Subsequent calls to SetPoint with different anchor family will not work, we have to create one frame for each alignment option
         for alignment, options in pairs(setPointOptions) do
-            -- Parent to nameplate health bar, not nameplate itself, since when the health bar is hidden we don't want to show the spec icon
-            nameplate.SpecIconFrame.frames[alignment] = addon.CreateClassOrSpecIcon(frame, options.point, options.relativePoint);
+            nameplate.SpecIconFrame.frames[alignment] = addon.CreateClassOrSpecIcon(nameplate, options.point, options.relativePoint);
         end
     end
 
