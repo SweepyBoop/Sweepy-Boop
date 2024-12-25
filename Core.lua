@@ -171,13 +171,13 @@ options.args.nameplatesEnemy = {
             name = format("|T%s:20|t %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
-        arenaSpecIconHorizontalAlignment = {
+        arenaSpecIconAlignment = {
             order = 8,
             type = "select",
             width = 0.85,
             name = "Horizontal alignment",
             values = {
-                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.CENTER] = "Center",
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = "TOP",
                 [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = "Left",
                 [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = "Right",
             },
@@ -539,7 +539,7 @@ local defaults = {
             arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
-            arenaSpecIconHorizontalAlignment = addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.CENTER,
+            arenaSpecIconAlignment = addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP,
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
             highlightScale = 100,

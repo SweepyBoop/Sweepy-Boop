@@ -167,7 +167,7 @@ addon.specIconHealerLogo = "interface\\addons\\SweepyBoop\\art\\HealingTouch"; -
 addon.specIconOthersLogo = "interface\\addons\\SweepyBoop\\art\\DeathMark"; -- icon 236270
 
 addon.SPEC_ICON_HORIZONTAL_ALIGNMENT = {
-    CENTER = 0,
+    TOP = 0,
     LEFT = 1,
     RIGHT = 2,
 };
