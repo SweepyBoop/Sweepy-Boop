@@ -37,6 +37,19 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
     {
+        classID = addon.classID.MAGE,
+        npcs = {
+            { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Show },
+        }
+    },
+    {
+        classID = addon.classID.MONK,
+        npcs = {
+            { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Show },
+            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Show },
+        }
+    },
+    {
         classID = addon.classID.PALADIN,
         npcs = {
             { npcID = 114565, name = "Guardian of the Forgotten Queen", icon = 228049, default = addon.NpcOption.Show },
