@@ -64,7 +64,7 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Use dedicated healer icon"),
-            desc = "Use a dedicated icon for party healers in arenas and battlegrounds",
+            desc = "Use a dedicated icon for party/raid healers in arenas and battlegrounds",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
