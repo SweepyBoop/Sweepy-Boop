@@ -40,6 +40,11 @@ local function EnsureSpecIcon(frame)
 end
 
 local builtInScaleFactor = 0.5; -- We don't want to show spec icon too large
+local setPointOptions = {
+    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.CENTER] = { point = "BOTTOM", relativePoint = "TOP" },
+    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = { point = "BOTTOMLEFT", relativePoint = "TOPLEFT" },
+    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = { point = "BOTTOMRIGHT", relativePoint = "TOPRIGHT" },
+};
 
 local function ShowSpecIcon(frame, iconID)
     local specIconFrame = EnsureSpecIcon(frame);
@@ -63,7 +68,8 @@ local function ShowSpecIcon(frame, iconID)
         end
         specIconFrame:SetScale(scale * builtInScaleFactor);
 
-        specIconFrame:SetPoint("BOTTOM", specIconFrame:GetParent(), "TOP", 0, SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset);
+        local options = setPointOptions[SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHorizontalAlignment];
+        specIconFrame:SetPoint(options.point, specIconFrame:GetParent(), options.relativePoint, 0, SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset);
 
         specIconFrame.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
         specIconFrame.isHealerIcon = isHealerIcon;
