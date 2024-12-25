@@ -439,6 +439,9 @@ local function RefreshTestMode()
                 size, hideHighlight = defensiveIconSize, true;
             end
             externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
+            if addon.internal then
+                addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID]);
+            end
         end
     end
 
