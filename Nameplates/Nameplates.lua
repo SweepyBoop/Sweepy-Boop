@@ -30,6 +30,7 @@ local function ShouldShowNameplate(unitId)
         end
 
         -- Show hostile units that are whitelisted (exclude hunter secondary pet if applicable)
+        -- Hide hunter secondary pets can be enabled even when filter is disabled => isWhitelisted = true, so we are basically checking hostility and UnitIsHunterSecondaryPet
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         if ( not UnitIsPlayer(unitId) ) and isWhitelisted then
             return addon.UnitIsHostile(unitId) and ( not addon.UnitIsHunterSecondaryPet(unitId) ); -- TODO: hunter secondary pet still showing nameplate

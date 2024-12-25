@@ -171,58 +171,75 @@ options.args.nameplatesEnemy = {
             name = format("|T%s:20|t %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
-        arenaSpecIconScale = {
+        arenaSpecIconAlignment = {
             order = 8,
-            min = 50,
-            max = 300,
-            type = "range",
-            name = "Spec icon scale (%)",
+            type = "select",
+            width = 0.85,
+            name = "Horizontal alignment",
+            values = {
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = "Top",
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = "Left",
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = "Right",
+            },
         },
-        arenaSpecIconOffset = {
+        arenaSpecIconVerticalOffset = {
             order = 9,
             min = -150,
             max = 150,
             type = "range",
-            name = "Spec icon offset",
+            width = 0.85,
+            name = "Vertical offset",
+            disabled = function ()
+                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP );
+            end
+        },
+        arenaSpecIconScale = {
+            order = 10,
+            min = 50,
+            max = 300,
+            type = "range",
+            width = 0.85,
+            name = "Scale (%)",
         },
 
         breaker3 = {
-            order = 10,
+            order = 11,
             type = "header",
             name = "Nameplate Filters & Highlights",
         },
 
-        filterEnabled = {
-            order = 11,
-            type = "toggle",
-            width = "full",
-            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
-            desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
-        },
         filterSettings = {
             order = 12,
             type = "group",
             name = "General",
-            disabled = function()
-                return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
-            end,
             args = {
-                highlightScale = {
-                    order = 1,
-                    type = "range",
-                    name = "Highlight icon scale (%)",
-                    min = 50,
-                    max = 300,
-                },
                 hideHunterSecondaryPet = {
-                    order = 2,
+                    order = 1,
                     type = "toggle",
                     width = "full",
                     name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pets in arena"),
                     desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
                 },
+                filterEnabled = {
+                    order = 2,
+                    type = "toggle",
+                    width = "full",
+                    name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Filter which hostile non-player units to hide / show / highlight"),
+                    desc = "Each unit's nameplate can be hidden, shown, or shown with an animating icon on top\nThis works in arenas and battlegrounds",
+                },
+                highlightScale = {
+                    order = 3,
+                    type = "range",
+                    name = "Highlight icon scale (%)",
+                    min = 50,
+                    max = 300,
+                    disabled = function()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                    end,
+                },
             },
         },
+
         filterList = {
             order = 13,
             type = "group",
@@ -525,7 +542,8 @@ local defaults = {
             arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
-            arenaSpecIconOffset = 0,
+            arenaSpecIconAlignment = addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP,
+            arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
