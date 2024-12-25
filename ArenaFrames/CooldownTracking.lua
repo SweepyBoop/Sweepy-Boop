@@ -445,7 +445,12 @@ local function RefreshTestMode()
         end
     end
 
-    externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), growRight, unitId);
+    if externalTestGroup then
+        addon.UpdateIconGroupSetPointOptions(externalTestGroup, GetSetPointOptions(1));
+    else
+        externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), growRight, unitId);
+    end
+
     SetupIconGroup(externalTestGroup, SPELLCATEGORY.DEFENSIVE, externalTestIcons);
 end
 
@@ -504,7 +509,7 @@ local function EnsureIconGroups()
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestCooldownTracking();
-                
+
                 -- This will simply update
                 EnsureIconGroups();
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
