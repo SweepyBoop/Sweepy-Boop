@@ -192,34 +192,34 @@ options.args.nameplatesEnemy = {
             name = "Nameplate Filters & Highlights",
         },
 
-        filterEnabled = {
-            order = 11,
-            type = "toggle",
-            width = "full",
-            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Enabled"),
-            desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
-        },
         filterSettings = {
-            order = 12,
+            order = 11,
             type = "group",
             name = "General",
-            disabled = function()
-                return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
-            end,
             args = {
-                highlightScale = {
-                    order = 1,
-                    type = "range",
-                    name = "Highlight icon scale (%)",
-                    min = 50,
-                    max = 300,
-                },
                 hideHunterSecondaryPet = {
-                    order = 2,
+                    order = 1,
                     type = "toggle",
                     width = "full",
                     name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pets in arena"),
                     desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
+                },
+                filterEnabled = {
+                    order = 2,
+                    type = "toggle",
+                    width = "full",
+                    name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Filter which hostile non-player units to show / highlight in arenas and battlegrounds"),
+                    --desc = "Filter which hostile non-player units to show nameplates in arenas and battlegrounds",
+                },
+                highlightScale = {
+                    order = 3,
+                    type = "range",
+                    name = "Highlight icon scale (%)",
+                    min = 50,
+                    max = 300,
+                    disabled = function()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                    end,
                 },
             },
         },
