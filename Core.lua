@@ -171,29 +171,40 @@ options.args.nameplatesEnemy = {
             name = format("|T%s:20|t %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
-        arenaSpecIconScale = {
+        arenaSpecIconHorizontalAlignment = {
             order = 8,
-            min = 50,
-            max = 300,
-            type = "range",
-            name = "Spec icon scale (%)",
+            type = "select",
+            width = 0.75,
+            name = "Horizontal alignment",
+            values = {
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.CENTER] = "Center",
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = "Left",
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = "Right",
+            },
         },
-        arenaSpecIconOffset = {
+        arenaSpecIconVerticalOffset = {
             order = 9,
             min = -150,
             max = 150,
             type = "range",
-            name = "Spec icon offset",
+            name = "Vertical offset",
+        },
+        arenaSpecIconScale = {
+            order = 10,
+            min = 50,
+            max = 300,
+            type = "range",
+            name = "Scale (%)",
         },
 
         breaker3 = {
-            order = 10,
+            order = 11,
             type = "header",
             name = "Nameplate Filters & Highlights",
         },
 
         filterSettings = {
-            order = 11,
+            order = 12,
             type = "group",
             name = "General",
             args = {
@@ -223,6 +234,7 @@ options.args.nameplatesEnemy = {
                 },
             },
         },
+
         filterList = {
             order = 13,
             type = "group",
@@ -525,7 +537,8 @@ local defaults = {
             arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
-            arenaSpecIconOffset = 0,
+            arenaSpecIconHorizontalAlignment = addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.CENTER,
+            arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
