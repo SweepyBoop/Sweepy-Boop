@@ -75,7 +75,7 @@ options.args.nameplatesFriendly = {
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Only show friendly healers"),
             disabled = function ()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         useFlagCarrierIcon = {
