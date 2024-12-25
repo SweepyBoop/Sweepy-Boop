@@ -12,7 +12,7 @@ local flagCarrierIcons = {
     ["FlagCarrierAlliance"] = addon.flagCarrierAllianceIconID,
 };
 
-local function ShouldShowIcon(unitId)
+local function ShouldShowIcon(unitId) -- "Show healers only" option will be checked in function ShowClassIcon
     -- Do not show class icon above the personal resource display
     if UnitIsUnit(unitId, "player") then
         return false;
@@ -84,6 +84,15 @@ local function ShowClassIcon(frame)
         end
     end
 
+    -- If the player enabled "Show healers only", hide the icon except for flag carrier
+    if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
+        if ( class ~= "HEALER" and class ~= "FlagCarrierHorde" and class ~= "FlagCarrierAlliance" ) then
+            -- iconFrame.class and iconFrame.lastModified remain unchanged
+            iconFrame:Hide();
+            return;
+        end
+    end
+
     -- Class changed or settings changed, update scale and offset
     if ( class ~= iconFrame.class ) or ( iconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
         local iconID, iconCoords = GetIconOptions(class);
@@ -136,16 +145,6 @@ addon.UpdateClassIcon = function(frame)
     end
 
     if ShouldShowIcon(frame.unit) then
-        if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
-            -- We reached here meaning friendly player detected, but we only want to show healer
-            -- Thus if not healer, hide both the frame and the class icon
-            if UnitIsPlayer(frame.unit) and ( UnitGroupRolesAssigned(frame.unit) ~= "HEALER" ) then
-                addon.HideClassIcon(frame);
-                frame:Hide();
-                return;
-            end
-        end
-
         frame:Hide();
         ShowClassIcon(frame);
     else

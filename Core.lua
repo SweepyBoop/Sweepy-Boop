@@ -64,7 +64,7 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Use dedicated healer icon"),
-            desc = "Use a dedicated icon for party healers in arenas and battlegrounds",
+            desc = "Use a dedicated icon for party/raid healers in arenas and battlegrounds",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -73,7 +73,7 @@ options.args.nameplatesFriendly = {
             order = 6,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Only show friendly healers"),
+            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healers only"),
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -82,7 +82,7 @@ options.args.nameplatesFriendly = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Use flag carrier icons in battlegrounds"),
+            name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Show flag carrier icons in battlegrounds"),
             desc = "Use dedicated icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
