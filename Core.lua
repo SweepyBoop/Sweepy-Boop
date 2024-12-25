@@ -208,7 +208,7 @@ options.args.nameplatesEnemy = {
                     order = 2,
                     type = "toggle",
                     width = "full",
-                    name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Filter which hostile non-player units to show / highlight"),
+                    name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Filter which hostile non-player units to hide / show / highlight"),
                     desc = "Each unit's nameplate can be hidden, shown, or shown with an animating icon on top\nThis works in arenas and battlegrounds",
                 },
                 highlightScale = {
