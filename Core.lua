@@ -174,7 +174,7 @@ options.args.nameplatesEnemy = {
         arenaSpecIconHorizontalAlignment = {
             order = 8,
             type = "select",
-            width = 0.75,
+            width = 0.85,
             name = "Horizontal alignment",
             values = {
                 [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.CENTER] = "Center",
@@ -187,6 +187,7 @@ options.args.nameplatesEnemy = {
             min = -150,
             max = 150,
             type = "range",
+            width = 0.85,
             name = "Vertical offset",
         },
         arenaSpecIconScale = {
@@ -194,6 +195,7 @@ options.args.nameplatesEnemy = {
             min = 50,
             max = 300,
             type = "range",
+            width = 0.85,
             name = "Scale (%)",
         },
 
