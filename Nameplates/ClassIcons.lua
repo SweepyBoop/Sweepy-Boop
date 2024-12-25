@@ -12,7 +12,7 @@ local flagCarrierIcons = {
     ["FlagCarrierAlliance"] = addon.flagCarrierAllianceIconID,
 };
 
-local function ShouldShowIcon(unitId) -- This function does not exclude the "Show healers only" option
+local function ShouldShowIcon(unitId) -- "Show healers only" option will be checked in function ShowClassIcon
     -- Do not show class icon above the personal resource display
     if UnitIsUnit(unitId, "player") then
         return false;
