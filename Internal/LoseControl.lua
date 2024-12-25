@@ -43,25 +43,25 @@ function containerFrame:OnEvent(event, ...)
     self:Show();
 
     -- Send notification to group
-    if IsActiveBattlefieldArena() and ( event == addon.LOSS_OF_CONTROL_ADDED ) and ( UnitGroupRolesAssigned("player") == "HEALER" ) then
-        local now = GetTime();
-        if ( now < self.lastMsgSent + 1.5) then
-            -- Don't send more than one messages within 1.5 sec.
-            return;
-        end
+    -- if IsActiveBattlefieldArena() and ( event == addon.LOSS_OF_CONTROL_ADDED ) and ( UnitGroupRolesAssigned("player") == "HEALER" ) then
+    --     local now = GetTime();
+    --     if ( now < self.lastMsgSent + 1.5) then
+    --         -- Don't send more than one messages within 1.5 sec.
+    --         return;
+    --     end
 
-        -- Check remaining time of current CC
-        local sendMsg;
-        if ( locType ~= "ROOT" ) and ( locType ~= "DISARM" ) and ( locType ~= "SCHOOL_INTERRUPT" ) then
-            sendMsg = locData.startTime and locData.duration and ( now < locData.startTime + locData.duration - 3 );
-        end
+    --     -- Check remaining time of current CC
+    --     local sendMsg;
+    --     if ( locType ~= "ROOT" ) and ( locType ~= "DISARM" ) and ( locType ~= "SCHOOL_INTERRUPT" ) then
+    --         sendMsg = locData.startTime and locData.duration and ( now < locData.startTime + locData.duration - 3 );
+    --     end
 
-        if sendMsg then
-            --local channel = UnitIsGroupLeader("player") and "RAID_WARNING" or "YELL";
-            local channel = "YELL";
-            pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", channel) end)
-            self.lastMsgSent = now;
-        end
-    end
+    --     if sendMsg then
+    --         --local channel = UnitIsGroupLeader("player") and "RAID_WARNING" or "YELL";
+    --         local channel = "YELL";
+    --         pcall(function() SendChatMessage("Healer in CC. Press buttons to live!!!", channel) end)
+    --         self.lastMsgSent = now;
+    --     end
+    -- end
 end
 containerFrame:SetScript("OnEvent", containerFrame.OnEvent);
