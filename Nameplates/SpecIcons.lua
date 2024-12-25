@@ -42,7 +42,7 @@ local function EnsureSpecIcon(frame)
     if ( not nameplate.SpecIconFrame ) then
         nameplate.SpecIconFrame = {};
         nameplate.SpecIconFrame.frames = {};
-        -- Subsequent calls to SetPoint will not work, we have to create one frame for each alignment option
+        -- Subsequent calls to SetPoint with different anchor family will not work, we have to create one frame for each alignment option
         for alignment, options in pairs(setPointOptions) do
             nameplate.SpecIconFrame.frames[alignment] = addon.CreateClassOrSpecIcon(frame, options.point, options.relativePoint);
         end
