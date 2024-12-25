@@ -177,7 +177,7 @@ options.args.nameplatesEnemy = {
             width = 0.85,
             name = "Horizontal alignment",
             values = {
-                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = "TOP",
+                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = "Top",
                 [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = "Left",
                 [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = "Right",
             },
