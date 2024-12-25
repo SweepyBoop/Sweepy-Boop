@@ -12,7 +12,7 @@ local flagCarrierIcons = {
     ["FlagCarrierAlliance"] = addon.flagCarrierAllianceIconID,
 };
 
-local function ShouldShowIcon(unitId)
+local function ShouldShowIcon(unitId) -- This function does not exclude the "Show healers only" option
     -- Do not show class icon above the personal resource display
     if UnitIsUnit(unitId, "player") then
         return false;
@@ -84,9 +84,10 @@ local function ShowClassIcon(frame)
         end
     end
 
-    -- If the player opts to show healers only, hide the icon except for flag carrier
+    -- If the player enabled "Show healers only", hide the icon except for flag carrier
     if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
         if ( class ~= "HEALER" and class ~= "FlagCarrierHorde" and class ~= "FlagCarrierAlliance" ) then
+            -- iconFrame.class and iconFrame.lastModified remain unchanged
             iconFrame:Hide();
             return;
         end
