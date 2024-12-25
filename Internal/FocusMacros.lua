@@ -88,7 +88,7 @@ end
 local function UpdateHighlightBorder(frame, show)
     if ( not frame.HighlightBorder ) then
         local highlightBorder = CreateFrame("Frame", nil, frame, "BackdropTemplate");
-        highlightBorder:SetFrameStrata("HIGH");
+        --highlightBorder:SetFrameStrata("HIGH");
         local width, healthBarHeight = frame.HealthBar:GetSize();
         local _, powerBarHeight = frame.PowerBar:GetSize();
         highlightBorder:SetSize(width + 5, (healthBarHeight + powerBarHeight) * 2.25); -- For Blizz Target 100% scale with system default scale
