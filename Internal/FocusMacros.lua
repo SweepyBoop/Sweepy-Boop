@@ -87,11 +87,18 @@ end
 
 local function UpdateHighlightBorder(frame, show)
     if ( not frame.HighlightBorder ) then
-        frame.HighlightBorder = CreateFrame("Frame", nil, frame, "NamePlateFullBorderTemplate");
-        frame.HighlightBorder:SetBorderSizes(5, 5, 5, 5);
-        frame.HighlightBorder:SetVertexColor(1, 0, 0); -- Red
-        frame.HighlightBorder:UpdateSizes();
-        frame.HighlightBorder:Hide();
+        local highlightBorder = CreateFrame("Frame", nil, frame, "BackdropTemplate");
+        highlightBorder:SetFrameStrata("HIGH");
+        local width, healthBarHeight = frame.HealthBar:GetSize();
+        local _, powerBarHeight = frame.PowerBar:GetSize();
+        highlightBorder:SetSize(width + 5, (healthBarHeight + powerBarHeight) * 2.25); -- For Blizz Target 100% scale with system default scale
+        highlightBorder:SetPoint("BOTTOM", frame.PowerBar, "BOTTOM");
+        highlightBorder:SetBackdrop( { bgFile="Interface\\ChatFrame\\ChatFrameBackground", tileSize=16, tile=true, edgeFile="Interface\\ChatFrame\\ChatFrameBackground", edgeSize=1 } );
+        highlightBorder:SetBackdropColor(0, 0, 0, 0); -- transparent main area
+        highlightBorder:SetBackdropBorderColor(255, 0, 0); -- red border
+
+        highlightBorder:Hide();
+        frame.HighlightBorder = highlightBorder;
     end
 
     if show then
@@ -102,16 +109,14 @@ local function UpdateHighlightBorder(frame, show)
 end
 
 local function UpdateArenaFrame(frame, show)
-    UpdateHighlightBorder(frame.HealthBar, show);
-    UpdateHighlightBorder(frame.PowerBar, show);
+    UpdateHighlightBorder(frame, show);
 end
 
-local test = false;
 local function updateArenaHighlight(focusName)
     local frameIndex = nil;
 
     if ( focusName == "focus" ) then
-        if test then
+        if addon.isTestMode then
             frameIndex = 1;
         end
     else
@@ -137,9 +142,9 @@ local function TryUpdateMacros()
     end
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD)
-frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS)
+local frame = CreateFrame("Frame");
+frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 frame:SetScript("OnEvent", function ()
     TryUpdateMacros();
 end)
