@@ -40,8 +40,12 @@ local function EnsureSpecIcon(frame)
     if ( not nameplate ) then return end
 
     if ( not nameplate.SpecIconFrame ) then
-        local options = setPointOptions[SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment];
-        nameplate.SpecIconFrame = addon.CreateClassOrSpecIcon(nameplate, options.point, options.relativePoint);
+        nameplate.SpecIconFrame = {};
+        nameplate.SpecIconFrame.frames = {};
+        -- Subsequent calls to SetPoint will not work, we have to create one frame for each alignment option
+        for alignment, options in pairs(setPointOptions) do
+            nameplate.SpecIconFrame.frames[alignment] = addon.CreateClassOrSpecIcon(frame, options.point, options.relativePoint);
+        end
     end
 
     return nameplate.SpecIconFrame;
@@ -53,13 +57,15 @@ local function ShowSpecIcon(frame, iconID)
 
     local isHealerIcon = ( iconID == addon.healerIconID );
     if ( specIconFrame.iconID ~= iconID) then
-        specIconFrame.icon:SetTexture(iconID);
-        if isHealerIcon then
-            specIconFrame.icon:SetTexCoord(unpack(addon.healerIconCoords));
-        else
-            specIconFrame.icon:SetTexCoord(0, 1, 0, 1);
+        for _, iconFrame in pairs(specIconFrame.frames) do
+            iconFrame.icon:SetTexture(iconID);
+            if isHealerIcon then
+                iconFrame.icon:SetTexCoord(unpack(addon.healerIconCoords));
+            else
+                iconFrame.icon:SetTexCoord(0, 1, 0, 1);
+            end
+            iconFrame.iconID = iconID;
         end
-        specIconFrame.iconID = iconID;
     end
 
     if ( specIconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconFrame.isHealerIcon ~= isHealerIcon ) then
@@ -67,23 +73,33 @@ local function ShowSpecIcon(frame, iconID)
         if isHealerIcon then
             scale = scale * 1.25;
         end
-        specIconFrame:SetScale(scale * builtInScaleFactor);
 
-        local options = setPointOptions[SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment];
-        specIconFrame:SetPoint(options.point, specIconFrame:GetParent(), options.relativePoint, 0, SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset);
+        for alignment, iconFrame in pairs(specIconFrame.frames) do
+            iconFrame:SetScale(scale * builtInScaleFactor);
+            local options = setPointOptions[alignment];
+            iconFrame:SetPoint(options.point, iconFrame:GetParent(), options.relativePoint, 0, SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset);
+        end
 
         specIconFrame.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
         specIconFrame.isHealerIcon = isHealerIcon;
     end
 
-    specIconFrame:Show();
+    for alignment, iconFrame in pairs(specIconFrame.frames) do
+        if ( alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ) then
+            iconFrame:Show();
+        else
+            iconFrame:Hide();
+        end
+    end
 end
 
 addon.HideSpecIcon = function (frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if nameplate.SpecIconFrame then
-        nameplate.SpecIconFrame:Hide();
+        for _, iconFrame in pairs(nameplate.SpecIconFrame.frames) do
+            iconFrame:Hide();
+        end
     end
 end
 
