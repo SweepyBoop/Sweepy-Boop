@@ -9,6 +9,10 @@ addon.NpcOption = {
 
 addon.HUNTERPET = 165189;
 
+local function GetNpcOptionOverride()
+    return ( addon.internal and addon.NpcOption.Hide ) or addon.NpcOption.Show;
+end
+
 -- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
 -- To find the NpcID of a unit, target it and type:
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
@@ -17,8 +21,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         classID = addon.classID.DEATHKNIGHT,
         npcs = {
             { npcID = 106041, name = "Reanimation", icon = 210128, default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
-            { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show},
-            { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Show},
+            { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show },
+            { npcID = 26125, name = "Raise Dead", icon = 46585, default = GetNpcOptionOverride() },
         }
     },
     {
@@ -45,8 +49,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
     {
         classID = addon.classID.MONK,
         npcs = {
-            { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Show },
-            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Show },
+            { npcID = 63508, name = "Xuen", icon = 123904, default = GetNpcOptionOverride() },
+            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = GetNpcOptionOverride() },
         }
     },
     {
