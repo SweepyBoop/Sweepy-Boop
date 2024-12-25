@@ -1,5 +1,12 @@
 local _, addon = ...;
 
+local builtInScaleFactor = 0.5; -- We don't want to show spec icon too large
+local setPointOptions = {
+    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = { point = "BOTTOM", relativePoint = "TOP" },
+    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = { point = "LEFT", relativePoint = "LEFT" },
+    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
+};
+
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
     if addon.isTestMode then
         return ( UnitIsUnit(unitId, "focus") and addon.healerIconID ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
@@ -33,18 +40,12 @@ local function EnsureSpecIcon(frame)
     if ( not nameplate ) then return end
 
     if ( not nameplate.SpecIconFrame ) then
-        nameplate.SpecIconFrame = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "TOP");
+        local options = setPointOptions[SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment];
+        nameplate.SpecIconFrame = addon.CreateClassOrSpecIcon(nameplate, options.point, options.relativePoint);
     end
 
     return nameplate.SpecIconFrame;
 end
-
-local builtInScaleFactor = 0.5; -- We don't want to show spec icon too large
-local setPointOptions = {
-    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = { point = "BOTTOM", relativePoint = "TOP" },
-    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = { point = "LEFT", relativePoint = "LEFT" },
-    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
-};
 
 local function ShowSpecIcon(frame, iconID)
     local specIconFrame = EnsureSpecIcon(frame);
@@ -70,7 +71,6 @@ local function ShowSpecIcon(frame, iconID)
 
         local options = setPointOptions[SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment];
         specIconFrame:SetPoint(options.point, specIconFrame:GetParent(), options.relativePoint, 0, SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset);
-
         specIconFrame.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
         specIconFrame.isHealerIcon = isHealerIcon;
     end
