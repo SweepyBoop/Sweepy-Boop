@@ -45,7 +45,7 @@ To make the most of this module, configure your name & nameplate settings as fol
 
 ## Enemy nameplate filtering & highlighting
 While in arenas / battlegrounds, customize which non-player enemy units to show, e.g.,
-- For Beast Mastery Hunter pets, hide the extra pet from talents like "Animal Companion", so you know which one to kill
+- For Beast Mastery Hunters, hide the extra pets from talents like "Animal Companion", so you know which one to kill
 - Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
 - Option to highlight chosen units with an animating icon!
 
