@@ -56,7 +56,7 @@
 	        </Layer>
 	    </Layers>
 	    <Frames>
-	        <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">
+	        <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" drawBling="true" drawEdge="true" drawSwipe="true" hidden="true">
 	            <Size x="35" y="35"/>
 	            <Anchors>
 	                <Anchor point="CENTER"/>
