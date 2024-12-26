@@ -43,7 +43,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
     {
         classID = addon.classID.MAGE,
         npcs = {
-            { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Show },
+            { npcID = 208441, name = "Water Elemental", icon = 12472, default = GetNpcOptionOverride() },
         }
     },
     {
