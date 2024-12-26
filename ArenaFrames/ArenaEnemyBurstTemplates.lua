@@ -31,8 +31,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
         if addon.internal and ( not addon.isTestMode ) then
-            frame.cooldown:SetDrawEdge(true); -- Since we're hiding numbers, draw edge to make it more visible
-            frame.cooldown:SetHideCountdownNumbers(true);
+            addon.SetHideCountdownNumbers(frame);
         end
 
         if spell.charges then

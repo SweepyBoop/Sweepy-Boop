@@ -68,13 +68,6 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     return frame;
 end
 
-addon.SetHideCountdownNumbers = function (frame)
-    if frame.cooldown then
-        frame.cooldown:SetDrawEdge(true); -- Since we're hiding numbers, draw edge to make it more visible
-        frame.cooldown:SetHideCountdownNumbers(true);
-    end
-end
-
 addon.StartCooldownTrackingIcon = function (icon)
     local spell = icon.spellInfo; -- static spell info
     local info = icon.info; -- dynamic info for current icon
