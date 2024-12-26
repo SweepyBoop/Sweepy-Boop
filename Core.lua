@@ -63,8 +63,7 @@ options.args.nameplatesFriendly = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Use dedicated healer icon"),
-            desc = "Use a dedicated icon for party/raid healers in arenas and battlegrounds",
+            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healer icon instead of class icon for healers"),
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -74,6 +73,7 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healers only"),
+            desc = "Hide class icons for non-healer players (flag carrier icons will still show if the option is enabled)",
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -83,7 +83,7 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Show flag carrier icons in battlegrounds"),
-            desc = "Use dedicated icons for friendly flag carriers\nThis overwrites the healer icon",
+            desc = "Use special icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -153,7 +153,7 @@ options.args.nameplatesEnemy = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", addon.specIconHealerLogo, "Show spec icon for healers"),
-            desc = "Show a spec icon on top of the nameplate for enemy healers inside arenas",
+            desc = "Show spec icons on top of the nameplates of enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
             order = 6,

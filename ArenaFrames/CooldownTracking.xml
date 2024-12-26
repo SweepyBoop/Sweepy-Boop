@@ -1,71 +1,67 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-	<!-- Is it possible to make the button click through? -->
+    <!-- Is it possible to make the button click through? -->
     <Button name="CooldownTrackingButtonTemplate" hidden="true" virtual="true">
-	    <Size>
-	        <AbsDimension x="35" y="35"/>
-	    </Size>
-	    <Anchors>
-	        <Anchor point="CENTER"/>
-	    </Anchors>
-	    <Animations>
-	        <AnimationGroup parentKey="ActivationAnimation" setToFinalAlpha="true">
-	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="1" fromAlpha="1" toAlpha="0.4"/>
-	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="2" fromAlpha="0.4" toAlpha="1"/>
-	            <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="3" fromAlpha="1" toAlpha="0"/>
+        <Size>
+            <AbsDimension x="35" y="35"/>
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER"/>
+        </Anchors>
+        <Animations>
+            <AnimationGroup parentKey="ActivationAnimation" setToFinalAlpha="true">
+                <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="1" fromAlpha="1" toAlpha="0.4"/>
+                <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="2" fromAlpha="0.4" toAlpha="1"/>
+                <Alpha childKey="ActivationTexture" smoothing="NONE" duration="1" order="3" fromAlpha="1" toAlpha="0"/>
                 <Scripts>
-	                <OnFinished>
-	                    local icon = self:GetParent()
-	                    CooldownTracking_UpdateBorder(icon)
-	                </OnFinished>
-	            </Scripts>
-	        </AnimationGroup>
-	        <AnimationGroup parentKey="FlashAnimation" setToFinalAlpha="true">
-	            <Alpha childKey="flash" smoothing="OUT" duration="1" order="1" fromAlpha="1" toAlpha="0"/>
-	        </AnimationGroup>
-	    </Animations>
-	    <Layers>
-	        <Layer level="BACKGROUND">
-	            <Texture parentKey="Icon"/>
-	        </Layer>
-	        <Layer level="ARTWORK" textureSubLevel="2">
-	        	<FontString inherits="NumberFontNormal" parentKey="Count" justifyH="RIGHT">
-	        		<Anchors>
-	        			<Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
-	        		</Anchors>
-	        	</FontString>
-	        </Layer>
-	        <Layer level="OVERLAY" textureSubLevel="1">
-	            <Texture parentKey="flash" hidden="false" alpha="0" alphaMode="ADD" atlas="bags-glow-flash" useAtlasSize="true">
-	                <Anchors>
-	                    <Anchor point="CENTER"/>
-	                </Anchors>
-	            </Texture>
-	            <Texture parentKey="ActivationTexture" alpha="0" alphaMode="ADD" atlas="bags-glow-blue" useAtlasSize="true">
-	                <Anchors>
-	                    <Anchor point="CENTER"/>
-	                </Anchors>
-	            </Texture>
-	        </Layer>
-	        <Layer level="BACKGROUND" textureSubLevel="-1">
-	            <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
-	                <Anchors>
-	                    <Anchor point="CENTER"/>
-	                </Anchors>
-	            </Texture>
-	        </Layer>
-	    </Layers>
-	    <Frames>
-	        <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">
-	            <Size x="35" y="35"/>
-	            <Anchors>
-	                <Anchor point="CENTER"/>
-	            </Anchors>
-	            <SwipeTexture>
-                    <!-- Set this to 0, 0, 0 for transparent background -->
-	                <Color r="0" g="0" b="0" a="0.8"/>
-	            </SwipeTexture>
-	        </Cooldown>
-	    </Frames>
-	</Button>
+                    <OnFinished>
+                        local icon = self:GetParent()
+                        CooldownTracking_UpdateBorder(icon)
+                    </OnFinished>
+                </Scripts>
+            </AnimationGroup>
+            <AnimationGroup parentKey="FlashAnimation" setToFinalAlpha="true">
+                <Alpha childKey="flash" smoothing="OUT" duration="1" order="1" fromAlpha="1" toAlpha="0"/>
+            </AnimationGroup>
+        </Animations>
+        <Layers>
+            <Layer level="BACKGROUND">
+                <Texture parentKey="Icon"/>
+            </Layer>
+            <Layer level="ARTWORK" textureSubLevel="2">
+                <FontString inherits="NumberFontNormal" parentKey="Count" justifyH="RIGHT">
+                    <Anchors>
+                        <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
+                    </Anchors>
+                </FontString>
+            </Layer>
+            <Layer level="OVERLAY" textureSubLevel="1">
+                <Texture parentKey="flash" hidden="false" alpha="0" alphaMode="ADD" atlas="bags-glow-flash" useAtlasSize="true">
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+                <Texture parentKey="ActivationTexture" alpha="0" alphaMode="ADD" atlas="bags-glow-blue" useAtlasSize="true">
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+            <Layer level="BACKGROUND" textureSubLevel="-1">
+                <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer>
+        </Layers>
+        <Frames>
+            <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">
+                <Size x="35" y="35"/>
+                <Anchors>
+                    <Anchor point="CENTER"/>
+                </Anchors>
+            </Cooldown>
+        </Frames>
+    </Button>
 </Ui>

@@ -27,12 +27,11 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
         frame.cooldown:SetAllPoints();
         frame.cooldown:SetDrawEdge(false);
         frame.cooldown:SetDrawBling(false);
-        frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
         if addon.internal and ( not addon.isTestMode ) then
-            frame.cooldown:SetHideCountdownNumbers(true);
+            addon.SetHideCountdownNumbers(frame);
         end
 
         if spell.charges then
