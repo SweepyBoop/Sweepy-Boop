@@ -764,3 +764,9 @@ end
 --     return percent;
 -- end
 --local protector = CreateStackBuffIcon(378987, 45, "BOTTOM", _G["ActionButton12"], "TOP", 0, 5, 100, false, protectorFunc);
+
+From CooldownTracking.xml
+<SwipeTexture>
+    <!-- Set this to 0, 0, 0 for transparent background -->
+    <Color r="0" g="0" b="0" a="0.8"/>
+</SwipeTexture>
