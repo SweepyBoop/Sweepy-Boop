@@ -152,7 +152,7 @@ options.args.nameplatesEnemy = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", addon.specIconHealerLogo, "Show spec icon for healers"),
-            desc = "Show spec icons on top of the nameplate for enemy healers inside arenas",
+            desc = "Show spec icons on top of the nameplates of enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
             order = 6,
