@@ -56,11 +56,15 @@
 	        </Layer>
 	    </Layers>
 	    <Frames>
-	        <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" drawBling="true" drawEdge="true" drawSwipe="true" hidden="true">
+	        <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="true" hidden="true">
 	            <Size x="35" y="35"/>
 	            <Anchors>
 	                <Anchor point="CENTER"/>
 	            </Anchors>
+				<SwipeTexture>
+                    <!-- Set this to 0, 0, 0 for transparent background -->
+	                <Color r="0" g="0" b="0" a="0.8"/>
+	            </SwipeTexture>
 	        </Cooldown>
 	    </Frames>
 	</Button>
