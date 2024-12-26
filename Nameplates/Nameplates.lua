@@ -70,7 +70,7 @@ local function ShouldUpdateNamePlate(frame)
         local instanceType = select(2, IsInInstance());
         if restricted[instanceType] then
             -- In restricted instance, should skip all the nameplate logic
-            -- But if there is a class icon showing, hide it
+            -- But hide all the widgets, we don't want to show class icons, spec icons, etc. in dungeons
             HideWidgets(frame);
             return false;
         end
