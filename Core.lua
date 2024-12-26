@@ -73,6 +73,7 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healers only"),
+            desc = "Hide class icons for non-healer players (flag carrier icons will still show if the option is enabled)",
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
