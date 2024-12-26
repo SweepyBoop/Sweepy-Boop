@@ -64,7 +64,6 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healer icon instead of class icon for healers"),
-            desc = "Use a dedicated icon for party/raid healers in arenas and battlegrounds",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -153,7 +152,7 @@ options.args.nameplatesEnemy = {
             width = "full",
             type = "toggle",
             name = format("|T%s:20|t %s", addon.specIconHealerLogo, "Show spec icon for healers"),
-            desc = "Show a spec icon on top of the nameplate for enemy healers inside arenas",
+            desc = "Show spec icons on top of the nameplate for enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
             order = 6,
