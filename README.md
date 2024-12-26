@@ -53,7 +53,7 @@ While in arenas / battlegrounds, customize which non-player enemy units to show,
 
 Players can customize which units to hide / show / highlight:
 
-![image](https://github.com/user-attachments/assets/c8e0073b-5e1a-4999-8b90-ed339f44ac45)
+![Nameplate filter](https://github.com/user-attachments/assets/d19f8f3f-ac53-476a-afb9-acb10b1246b2)
 
 ## Arena enemy offensive/defensive cooldown tracking
 This module is a set of icons attached to (corresponding) arena enemy frames, which is very close to the tournament UI.
