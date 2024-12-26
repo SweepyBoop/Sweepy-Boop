@@ -5,20 +5,21 @@ $spellFile = Join-Path -Path $addonDir -ChildPath "BigDebuffs_Mainline.lua"
 
 # Check if $spellFile exists
 if (Test-Path $spellFile) {
-    # Read the content of $spellFile
+    # Read the content of both files
     $spellFileContent = Get-Content $spellFile
+    $overrideFileFirstLine = (Get-Content $overrideFile -First 1).Trim()
     
-    # Check if the line "-- Spell type overrides" is present
-    if (-not ($spellFileContent -contains "-- Spell type overrides")) {
-        Write-Host "'-- Spell type overrides' is missing in $spellFile. Appending content from $overrideFile..."
+    # Check if the first line of $overrideFile is in $spellFile
+    if (-not ($spellFileContent -contains $overrideFileFirstLine)) {
+        Write-Host "Spell Overrides are missing in $spellFile. Appending content..."
         
-        # Append content of $overrideFile to $spellFile
+        # Append the content of $overrideFile to $spellFile
         Get-Content $overrideFile | Add-Content $spellFile
         
-        Write-Host "Content appended successfully."
+        Write-Host "Content from $overrideFile has been appended successfully."
     } else {
-        Write-Host "'-- Spell type overrides' already exists in $spellFile. No changes made."
+        Write-Host "Spell Overrides already exists in $spellFile. No changes made."
     }
 } else {
-    Write-Host "File $spellFile does not exist. Please ensure the path is correct."
+    Write-Host "Destination file does not exist."
 }
