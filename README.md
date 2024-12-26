@@ -45,7 +45,7 @@ To make the most of this module, configure your name & nameplate settings as fol
 
 ## Enemy nameplate filtering & highlighting
 While in arenas / battlegrounds, customize which non-player enemy units to show, e.g.,
-- For Beast Mastery Hunters, hide the extra pets from talents like "Animal Companion", so you know which one to kill
+- Hide Beast Mastery hunters' extra pets from talents like "Animal Companion", so you know which one to kill
 - Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
 - Option to highlight chosen units with an animating icon!
 
@@ -58,8 +58,10 @@ Players can customize which units to hide / show / highlight:
 ## Arena enemy offensive/defensive cooldown tracking
 This module is a set of icons attached to (corresponding) arena enemy frames, which is very close to the tournament UI.
 
+![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
+
 It comes with a few key features:
-- Glows when spell is active, and shows cooldown timer otherwise (only the most important spells show cooldown timers)
+- Glows when spell is active, and shows cooldown timer otherwise
 - Sorts icons by priority/threat, e.g., on an Assassination Rogue, Deathmark will always show before other icons
 - Filter by spec, e.g., only shows Convoke the Spirits for Balance/Feral Druids, but not Restoration Druids
 - Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
@@ -68,12 +70,10 @@ The benefit of this module is to give you a quick view of
 - Which enemy player is bursting (so you can peel accordingly if needed)
 - Which enemy player(s) ran out of defensive options (thus would be the ideal kill target for next go)
 
-![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
-
 [Here is my Twitch clip of the cooldown tracking module in action!](https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131)
 
 **Note (important)**
-- This module supports Gladius and sArena only, and cooldown icons anchor to their frames
+- This module looks for Gladius / sArena frames to anchor to, if neither is present icons will anchor to default Blizzard arena frames
 - This module tracks damage offensives and defensive abilities, and players can fully customize which cooldowns to track in the options panel
 
 ![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
