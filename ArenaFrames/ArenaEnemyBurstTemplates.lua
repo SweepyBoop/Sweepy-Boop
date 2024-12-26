@@ -25,12 +25,13 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     if spell.cooldown then
         frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
         frame.cooldown:SetAllPoints();
-        frame.cooldown:SetDrawEdge(true);
+        frame.cooldown:SetDrawEdge(false);
         frame.cooldown:SetDrawBling(false);
         frame.cooldown:SetReverse(true);
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
         if addon.internal and ( not addon.isTestMode ) then
+            frame.cooldown:SetDrawEdge(true);
             frame.cooldown:SetHideCountdownNumbers(true);
         end
 
