@@ -27,7 +27,6 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
         frame.cooldown:SetAllPoints();
         frame.cooldown:SetDrawEdge(true);
         frame.cooldown:SetDrawBling(false);
-        frame.cooldown:SetDrawSwipe(true);
         frame.cooldown:SetReverse(true);
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
