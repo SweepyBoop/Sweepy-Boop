@@ -61,10 +61,6 @@
                 <Anchors>
                     <Anchor point="CENTER"/>
                 </Anchors>
-                <SwipeTexture>
-                    <!-- Set this to 0, 0, 0 for transparent background -->
-                    <Color r="0" g="0" b="0" a="0.8"/>
-                </SwipeTexture>
             </Cooldown>
         </Frames>
     </Button>
