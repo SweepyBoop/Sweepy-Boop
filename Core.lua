@@ -447,10 +447,10 @@ options.args.raidFrames = {
             order = 1,
             type = "select",
             values = {
-                [addon.RAID_FRAME_SORT_ORDER.Disabled] = "Disabled",
-                [addon.RAID_FRAME_SORT_ORDER.PlayerTop] = "Player on top",
-                [addon.RAID_FRAME_SORT_ORDER.PlayerBottom] = "Player at bottom",
-                [addon.RAID_FRAME_SORT_ORDER.PlayerMiddle] = "Player in the middle",
+                [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
+                [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
+                [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player at bottom",
+                [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in the middle",
             },
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
             style = "radio",
@@ -544,7 +544,7 @@ local defaults = {
             arenaEnemyDefensiveIconSize = 25,
             spellList = {},
         },
-        arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.Disabled,
+        arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
         skipLeaveArenaConfirmation = false,
@@ -553,7 +553,7 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
-    defaults.profile.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PlayerMiddle;
+    defaults.profile.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.skipLeaveArenaConfirmation = true;
 end

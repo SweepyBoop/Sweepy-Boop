@@ -134,10 +134,10 @@ addon.HIDETIMEROMNICC = "BoopHideTimer";
 addon.DEFAULT_ICON_SIZE = 35;
 
 addon.RAID_FRAME_SORT_ORDER = {
-    Disabled = 0,
-    PlayerTop = 1,
-    PlayerBottom = 2,
-    PlayerMiddle = 3,
+    DISABLED = 0,
+    PLAYER_TOP = 1,
+    PLAYER_BOTTOM = 2,
+    PLAYER_MID = 3,
 };
 
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
