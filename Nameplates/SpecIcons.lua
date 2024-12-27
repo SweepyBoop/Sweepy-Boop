@@ -2,9 +2,9 @@ local _, addon = ...;
 
 local builtInScaleFactor = 0.5; -- We don't want to show spec icon too large
 local setPointOptions = {
-    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = { point = "BOTTOM", relativePoint = "TOP" },
-    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = { point = "LEFT", relativePoint = "LEFT" },
-    [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
+    [addon.SPEC_ICON_ALIGNMENT.TOP] = { point = "BOTTOM", relativePoint = "TOP" },
+    [addon.SPEC_ICON_ALIGNMENT.LEFT] = { point = "LEFT", relativePoint = "LEFT" },
+    [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
@@ -77,7 +77,7 @@ local function ShowSpecIcon(frame, iconID)
         for alignment, iconFrame in pairs(specIconContainer.frames) do
             iconFrame:SetScale(scale * builtInScaleFactor);
             local options = setPointOptions[alignment];
-            local offsetY = ( alignment == addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP and SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset ) or 0;
+            local offsetY = ( alignment == addon.SPEC_ICON_ALIGNMENT.TOP and SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset ) or 0;
             iconFrame:SetPoint(options.point, iconFrame:GetParent(), options.relativePoint, 0, offsetY);
         end
 

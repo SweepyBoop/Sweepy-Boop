@@ -178,11 +178,11 @@ options.args.nameplatesEnemy = {
             order = 8,
             type = "select",
             width = 0.85,
-            name = "Horizontal alignment",
+            name = "Alignment",
             values = {
-                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP] = "Top",
-                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.LEFT] = "Left",
-                [addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.RIGHT] = "Right",
+                [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
+                [addon.SPEC_ICON_ALIGNMENT.LEFT] = "Left",
+                [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
             },
         },
         arenaSpecIconVerticalOffset = {
@@ -193,7 +193,7 @@ options.args.nameplatesEnemy = {
             width = 0.85,
             name = "Vertical offset",
             disabled = function ()
-                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP );
+                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
             end
         },
         arenaSpecIconScale = {
@@ -528,7 +528,7 @@ local defaults = {
             arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
-            arenaSpecIconAlignment = addon.SPEC_ICON_HORIZONTAL_ALIGNMENT.TOP,
+            arenaSpecIconAlignment = addon.SPEC_ICON_ALIGNMENT.TOP,
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
             highlightScale = 100,

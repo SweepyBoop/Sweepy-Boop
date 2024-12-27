@@ -121,7 +121,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Check summon / dead
-    if addon.PetDismissEvents[subEvent] then
+    if addon.EVENTS_PET_DISMISS[subEvent] then
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
         if summonSpellId and self.activeMap[summonSpellId] then

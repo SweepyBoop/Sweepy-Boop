@@ -74,7 +74,7 @@ addon.SPELL_DISPEL = "SPELL_DISPEL";
 addon.SPELL_INTERRUPT = "SPELL_INTERRUPT";
 addon.SPELL_EMPOWER_END = "SPELL_EMPOWER_END";
 
-addon.PetDismissEvents = {
+addon.EVENTS_PET_DISMISS = {
     [addon.PARTY_KILL] = true,
     [addon.UNIT_DIED] = true,
     [addon.UNIT_DESTROYED] = true,
@@ -128,9 +128,6 @@ addon.CLASSORDER = {
     addon.CLASSID.WARRIOR,
 };
 
--- For hiding timer by OmniCC
-addon.HIDETIMEROMNICC = "BoopHideTimer";
-
 addon.DEFAULT_ICON_SIZE = 35;
 
 addon.RAID_FRAME_SORT_ORDER = {
@@ -148,7 +145,7 @@ addon.FLAG_CARRIER_ALLIANCE_LOGO = addon.INTERFACE_SWEEPY .. "art/FlagCarrierAll
 addon.SPEC_ICON_HEALER_LOGO = addon.INTERFACE_SWEEPY .. "art/HealingTouch"; -- icon 136041
 addon.SPEC_ICON_OTHERS_LOGO = addon.INTERFACE_SWEEPY .. "art/DeathMark"; -- icon 236270
 
-addon.SPEC_ICON_HORIZONTAL_ALIGNMENT = {
+addon.SPEC_ICON_ALIGNMENT = {
     TOP = 0,
     LEFT = 1,
     RIGHT = 2,

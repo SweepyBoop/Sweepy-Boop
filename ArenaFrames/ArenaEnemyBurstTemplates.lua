@@ -44,7 +44,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     end
 
     -- For now, always create a duration timer, if there is no duration, show 3s glow as reminder
-    frame.duration = CreateFrame("Cooldown", addon.HIDETIMEROMNICC .. "AuraDuration" .. unit .. spellID, frame, "CooldownFrameTemplate");
+    frame.duration = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.duration:SetAllPoints();
     frame.duration:SetDrawEdge(false);
     frame.duration:SetDrawBling(false);
