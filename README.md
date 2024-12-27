@@ -124,4 +124,4 @@ Shows the dampening percentage under the remaining time on the arena widget.
 
 This is a more optimized version than the Dampening Display addon, as that addon updates the dampening display on every aura change, which could be hundreds or even thousands of times per second inside arena.
 
-Our module updates once per second, which is more than enough since the dampening % only changes every few seconds!
+Our module updates once per sec, which is more than enough since dampening % only changes every few seconds!
