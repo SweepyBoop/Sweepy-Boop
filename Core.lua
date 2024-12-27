@@ -399,7 +399,7 @@ for _, classID in ipairs(addon.classOrder) do
     options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
         order = groupIndex,
         type = "group",
-        icon = "Interface/Glues/CharacterCreate/UI-CharacterCreate-Classes",
+        icon = addon.classIconID,
         iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
         name = classInfo.className,
         args = {},
