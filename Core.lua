@@ -117,7 +117,7 @@ options.args.nameplatesEnemy = {
     childGroups = "tab",
     name = "Enemy nameplates",
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
-    set = function(info, val) 
+    set = function(info, val)
         SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
         -- Can we force all nameplates to call CompactUnitFrame_UpdateName
         SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
@@ -424,7 +424,7 @@ local function AppendSpellOptions(group, spellList, category)
                 name = format("|T%s:20|t %s", icon, name),
                 desc = description,
             };
-            
+
             indexInClassGroup[classFile] = indexInClassGroup[classFile] + 1;
         end
     end
@@ -574,7 +574,7 @@ function SweepyBoop:OnInitialize()
     local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 600);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
-    
+
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
