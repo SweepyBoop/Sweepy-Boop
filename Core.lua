@@ -1,8 +1,10 @@
 local addonName, addon = ...;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
-addon.exclamation = "|TInterface\\OptionsFrame\\UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
+addon.exclamation = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
+
+local pvpCursor = "interface/cursor/pvp";
 
 local options = {
     name = addon.addonTitle,
@@ -12,7 +14,7 @@ local options = {
             order = 1,
             type ="description",
             fontSize = "large",
-            image = "Interface\\Addons\\SweepyBoop\\Art\\Logo",
+            image = addon.INTERFACE_SWEEPY .. "Art/Logo",
             imageWidth = 36,
             imageHeight = 36,
             name = "A lightweight addon to improve your arena & battleground experience :)"
@@ -35,7 +37,7 @@ options.args.nameplatesFriendly = {
             order = 1,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface\\addons\\SweepyBoop\\Art\\Druid", "Enabled"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/Druid", "Enabled"),
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
@@ -49,7 +51,7 @@ options.args.nameplatesFriendly = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface\\cursor\\pvp", "Hide class icons outside arenas & battlegrounds"),
+            name = format(addon.ICON_FORMAT .. " %s", pvpCursor, "Hide class icons outside arenas & battlegrounds"),
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -63,7 +65,7 @@ options.args.nameplatesFriendly = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healer icon instead of class icon for healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of class icon for healers"),
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -72,7 +74,7 @@ options.args.nameplatesFriendly = {
             order = 6,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healers only"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healers only"),
             desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -161,7 +163,7 @@ options.args.nameplatesEnemy = {
             order = 6,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "Interface\\Addons\\SweepyBoop\\art\\healer", "Show healer icon instead of spec icon for healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of spec icon for healers"),
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
@@ -226,7 +228,7 @@ options.args.nameplatesEnemy = {
                     order = 2,
                     type = "toggle",
                     width = "full",
-                    name = format(addon.ICON_FORMAT .. " %s", "interface\\cursor\\pvp", "Filter which hostile non-player units to hide / show / highlight"),
+                    name = format(addon.ICON_FORMAT .. " %s", pvpCursor, "Filter which hostile non-player units to hide / show / highlight"),
                     desc = "Each unit's nameplate can be hidden, shown, or shown with an animating icon on top\nThis works in arenas and battlegrounds",
                 },
                 highlightScale = {
@@ -398,7 +400,7 @@ for _, classID in ipairs(addon.classOrder) do
     options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
         order = groupIndex,
         type = "group",
-        icon = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
+        icon = "Interface/Glues/CharacterCreate/UI-CharacterCreate-Classes",
         iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
         name = classInfo.className,
         args = {},
