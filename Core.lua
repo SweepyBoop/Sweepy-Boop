@@ -449,30 +449,20 @@ options.args.raidFrames = {
                 [addon.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
                 [addon.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
             },
-            name = "Sort raid frames inside arena",
+            name = format("|T%s:20|t %s", "interface/icons/achievement_guildperk_everybodysfriend", "Sort raid frames inside arena"),
             desc = "Customize the sort order of raid frames inside arena",
             descStyle = "inline",
+            icon = "interface/icons/achievement_guildperk_everybodysfriend",
             style = "radio",
         },
 
-        breaker1 = {
-            order = 2,
-            type = "header",
-            name = "",
-        },
-
         raidFrameAggroHighlightEnabled = {
-            order = 3,
+            order = 2,
             width = "full",
             type = "toggle",
-            name = "PvP Aggro Highlight",
-            desc = "Show aggro highlight on raid frames when targeted by enemy players in arena",
-        },
-        description = {
-            order = 4,
-            width = "full",
-            type = "description",
-            name = addon.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
+            name = "Show PvP aggro highlight in arena",
+            desc = addon.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames",
+            descStyle = "inline",
         },
     },
 };
