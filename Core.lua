@@ -35,7 +35,7 @@ options.args.nameplatesFriendly = {
             order = 1,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\Druid", "Enabled"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface\\addons\\SweepyBoop\\Art\\Druid", "Enabled"),
             desc = "Show class/pet icons on friendly players/pets",
         },
         description = {
@@ -49,7 +49,7 @@ options.args.nameplatesFriendly = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Hide class icons outside arenas & battlegrounds"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface\\cursor\\pvp", "Hide class icons outside arenas & battlegrounds"),
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -63,7 +63,7 @@ options.args.nameplatesFriendly = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healer icon instead of class icon for healers"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healer icon instead of class icon for healers"),
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -72,7 +72,7 @@ options.args.nameplatesFriendly = {
             order = 6,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healers only"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface\\addons\\SweepyBoop\\Art\\healer", "Show healers only"),
             desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -82,7 +82,7 @@ options.args.nameplatesFriendly = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t|T%s:20|t %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Show flag carrier icons in battlegrounds"),
+            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Show flag carrier icons in battlegrounds"),
             desc = "Use special icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -152,14 +152,14 @@ options.args.nameplatesEnemy = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", addon.specIconHealerLogo, "Show spec icon for healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.specIconHealerLogo, "Show spec icon for healers"),
             desc = "Show spec icons on top of the nameplates of enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
             order = 6,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "Interface\\Addons\\SweepyBoop\\art\\healer", "Show healer icon instead of spec icon for healers"),
+            name = format(addon.ICON_FORMAT .. " %s", "Interface\\Addons\\SweepyBoop\\art\\healer", "Show healer icon instead of spec icon for healers"),
             disabled = function ()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
@@ -168,7 +168,7 @@ options.args.nameplatesEnemy = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
         arenaSpecIconAlignment = {
@@ -217,14 +217,14 @@ options.args.nameplatesEnemy = {
                     order = 1,
                     type = "toggle",
                     width = "full",
-                    name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pets in arena"),
+                    name = format(addon.ICON_FORMAT .. " %s", C_Spell.GetSpellTexture(267116), "Hide beast mastery hunter secondary pets in arena"),
                     desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
                 },
                 filterEnabled = {
                     order = 2,
                     type = "toggle",
                     width = "full",
-                    name = format("|T%s:20|t %s", "interface\\cursor\\pvp", "Filter which hostile non-player units to hide / show / highlight"),
+                    name = format(addon.ICON_FORMAT .. " %s", "interface\\cursor\\pvp", "Filter which hostile non-player units to hide / show / highlight"),
                     desc = "Each unit's nameplate can be hidden, shown, or shown with an animating icon on top\nThis works in arenas and battlegrounds",
                 },
                 highlightScale = {
@@ -303,7 +303,7 @@ options.args.arenaFrames = {
             order = 6,
             width = 1.75,
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface/icons/spell_fire_sealoffire", "Arena Enemy Offensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/spell_fire_sealoffire", "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
@@ -324,7 +324,7 @@ options.args.arenaFrames = {
             order = 9,
             width = 1.75,
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Defensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
@@ -421,7 +421,7 @@ local function AppendSpellOptions(group, spellList, category)
                 order = indexInClassGroup[classFile],
                 type = "toggle",
                 width = "full", -- otherwise the icon might look strange vertically
-                name = format("|T%s:20|t %s", icon, name),
+                name = format(addon.ICON_FORMAT .. " %s", icon, name),
                 desc = description,
             };
 
@@ -449,7 +449,7 @@ options.args.raidFrames = {
                 [addon.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
                 [addon.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
             },
-            name = format("|T%s:20|t %s", "interface/icons/achievement_guildperk_everybodysfriend", "Sort raid frames inside arena"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/achievement_guildperk_everybodysfriend", "Sort raid frames in arena"),
             desc = "Customize the sort order of raid frames inside arena",
             descStyle = "inline",
             icon = "interface/icons/achievement_guildperk_everybodysfriend",
@@ -483,13 +483,13 @@ options.args.misc = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface/icons/inv_pet_exitbattle", "Enabled"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/inv_pet_exitbattle", "Enabled"),
         },
         skipLeaveArenaConfirmation = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface/icons/ability_druid_cower", "Leave arena directly if unable to surrender (skip confirmation dialog)"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/ability_druid_cower", "Leave arena directly if unable to surrender (skip confirmation dialog)"),
             desc = addon.exclamation .. "Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
             disabled = function()
@@ -506,7 +506,7 @@ options.args.misc = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t %s", "interface/icons/achievement_bg_winsoa_underxminutes", "Show dampen percentage on the arena widget"),
+            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/achievement_bg_winsoa_underxminutes", "Show dampen percentage on the arena widget"),
         },
     },
 };
