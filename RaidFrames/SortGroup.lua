@@ -48,9 +48,9 @@ local function Compare_Mid(left, right)
 end
 
 local sortFunctions = {
-    [addon.RaidFrameSortOrder.PlayerTop] = Compare_Top,
-    [addon.RaidFrameSortOrder.PlayerBottom] = Compare_Bottom,
-    [addon.RaidFrameSortOrder.PlayerMiddle] = Compare_Mid,
+    [addon.RAID_FRAME_SORT_ORDER.PlayerTop] = Compare_Top,
+    [addon.RAID_FRAME_SORT_ORDER.PlayerBottom] = Compare_Bottom,
+    [addon.RAID_FRAME_SORT_ORDER.PlayerMiddle] = Compare_Mid,
 };
 
 local function GetPartyUnitId(unitId)
@@ -101,7 +101,7 @@ local function TrySort()
 end
 
 local function OnEvent(_, event)
-    if (SweepyBoop.db.profile.arenaRaidFrameSortOrder == addon.RaidFrameSortOrder.Disabled) then return end
+    if (SweepyBoop.db.profile.arenaRaidFrameSortOrder == addon.RAID_FRAME_SORT_ORDER.Disabled) then return end
     if ( not IsActiveBattlefieldArena() ) then return end -- only sort in arena
     if ( not IsInGroup() ) then return end
 

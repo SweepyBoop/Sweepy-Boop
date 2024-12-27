@@ -96,7 +96,7 @@ addon.SHAMAN = "SHAMAN";
 addon.WARLOCK = "WARLOCK";
 addon.WARRIOR = "WARRIOR";
 
-addon.classID = {
+addon.CLASSID = {
     WARRIOR = 1,
     PALADIN = 2,
     HUNTER = 3,
@@ -112,20 +112,20 @@ addon.classID = {
     EVOKER = 13,
 };
 
-addon.classOrder = {
-    addon.classID.DEATHKNIGHT,
-    addon.classID.DEMONHUNTER,
-    addon.classID.DRUID,
-    addon.classID.EVOKER,
-    addon.classID.HUNTER,
-    addon.classID.MAGE,
-    addon.classID.MONK,
-    addon.classID.PALADIN,
-    addon.classID.PRIEST,
-    addon.classID.ROGUE,
-    addon.classID.SHAMAN,
-    addon.classID.WARLOCK,
-    addon.classID.WARRIOR,
+addon.CLASSORDER = {
+    addon.CLASSID.DEATHKNIGHT,
+    addon.CLASSID.DEMONHUNTER,
+    addon.CLASSID.DRUID,
+    addon.CLASSID.EVOKER,
+    addon.CLASSID.HUNTER,
+    addon.CLASSID.MAGE,
+    addon.CLASSID.MONK,
+    addon.CLASSID.PALADIN,
+    addon.CLASSID.PRIEST,
+    addon.CLASSID.ROGUE,
+    addon.CLASSID.SHAMAN,
+    addon.CLASSID.WARLOCK,
+    addon.CLASSID.WARRIOR,
 };
 
 -- For hiding timer by OmniCC
@@ -133,7 +133,7 @@ addon.HIDETIMEROMNICC = "BoopHideTimer";
 
 addon.DEFAULT_ICON_SIZE = 35;
 
-addon.RaidFrameSortOrder = {
+addon.RAID_FRAME_SORT_ORDER = {
     Disabled = 0,
     PlayerTop = 1,
     PlayerBottom = 2,

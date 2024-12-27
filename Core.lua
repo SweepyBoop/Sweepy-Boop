@@ -394,7 +394,7 @@ options.args.arenaFrames = {
 local indexInClassGroup = {};
 local groupIndex = 3;
 -- Ensure one group for each class, in order
-for _, classID in ipairs(addon.classOrder) do
+for _, classID in ipairs(addon.CLASSORDER) do
     local classInfo = C_CreatureInfo.GetClassInfo(classID);
     options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
         order = groupIndex,
@@ -447,10 +447,10 @@ options.args.raidFrames = {
             order = 1,
             type = "select",
             values = {
-                [addon.RaidFrameSortOrder.Disabled] = "Disabled",
-                [addon.RaidFrameSortOrder.PlayerTop] = "Player on top",
-                [addon.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
-                [addon.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
+                [addon.RAID_FRAME_SORT_ORDER.Disabled] = "Disabled",
+                [addon.RAID_FRAME_SORT_ORDER.PlayerTop] = "Player on top",
+                [addon.RAID_FRAME_SORT_ORDER.PlayerBottom] = "Player at bottom",
+                [addon.RAID_FRAME_SORT_ORDER.PlayerMiddle] = "Player in the middle",
             },
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
             style = "radio",
@@ -544,7 +544,7 @@ local defaults = {
             arenaEnemyDefensiveIconSize = 25,
             spellList = {},
         },
-        arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
+        arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
         skipLeaveArenaConfirmation = false,
@@ -553,7 +553,7 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
-    defaults.profile.arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.PlayerMiddle;
+    defaults.profile.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PlayerMiddle;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.skipLeaveArenaConfirmation = true;
 end

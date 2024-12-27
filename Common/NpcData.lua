@@ -18,7 +18,7 @@ end
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
 addon.importantNpcList = { -- Use table with consecutive indexes to preserve the order
     {
-        classID = addon.classID.DEATHKNIGHT,
+        classID = addon.CLASSID.DEATHKNIGHT,
         npcs = {
             { npcID = 106041, name = "Reanimation", icon = 210128, default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
             { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show },
@@ -26,13 +26,13 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
     {
-        classID = addon.classID.EVOKER,
+        classID = addon.CLASSID.EVOKER,
         npcs = {
             { npcID = 185800, name = "Past Self", icon = 371869, default = addon.NpcOption.Show },
         }
     },
     {
-        classID = addon.classID.HUNTER,
+        classID = addon.CLASSID.HUNTER,
         npcs = {
             { npcID = 105419, name = "Dire Beast: Basilisk", icon = 205691, default = addon.NpcOption.Show },
 
@@ -41,26 +41,26 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
     {
-        classID = addon.classID.MAGE,
+        classID = addon.CLASSID.MAGE,
         npcs = {
             { npcID = 208441, name = "Water Elemental", icon = 12472, default = GetNpcOptionOverride() },
         }
     },
     {
-        classID = addon.classID.MONK,
+        classID = addon.CLASSID.MONK,
         npcs = {
             { npcID = 63508, name = "Xuen", icon = 123904, default = GetNpcOptionOverride() },
             { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = GetNpcOptionOverride() },
         }
     },
     {
-        classID = addon.classID.PALADIN,
+        classID = addon.CLASSID.PALADIN,
         npcs = {
             { npcID = 114565, name = "Guardian of the Forgotten Queen", icon = 228049, default = addon.NpcOption.Show },
         }
     },
     {
-        classID = addon.classID.PRIEST,
+        classID = addon.CLASSID.PRIEST,
         npcs = {
             { npcID = 101398, name = "Psyfiend", icon = 199824, default = addon.NpcOption.Highlight },
             { npcID = 224466, name = "Voidwraith", icon = 451234, default = addon.NpcOption.Show },
@@ -71,7 +71,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
     {
-        classID = addon.classID.SHAMAN,
+        classID = addon.CLASSID.SHAMAN,
         npcs = {
             { npcID = 5925, name = "Grounding Totem", icon = 204336, default = addon.NpcOption.Highlight },
             { npcID = 53006, name = "Spirit Link Totem", icon = 98008, default = addon.NpcOption.Highlight },
@@ -100,7 +100,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
     {
-        classID = addon.classID.WARLOCK,
+        classID = addon.CLASSID.WARLOCK,
         npcs = {
             { npcID = 107100, name = "Observer", icon = 112869, default = addon.NpcOption.Highlight },
             { npcID = 135002, name = "Demonic Tyrant", icon = 265187, default = addon.NpcOption.Show },
@@ -117,7 +117,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
     {
-        classID = addon.classID.WARRIOR,
+        classID = addon.CLASSID.WARRIOR,
         npcs = {
             { npcID = 119052, name = "War Banner", icon = 236320, default = addon.NpcOption.Highlight },
         }
@@ -126,15 +126,15 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
 
 if addon.isTestMode then
     local testClass = {
-        classID = addon.classID.DRUID,
+        classID = addon.CLASSID.DRUID,
         npcs = {
             { npcID = 219250, name = "PVP Training Dummy", icon = 204336, default = addon.NpcOption.Highlight },
             { npcID = 225985, name = "Kelpfist", icon = 204336, default = addon.NpcOption.Show },
         },
     }
     table.insert(addon.importantNpcList, testClass);
-    -- addon.importantNpcList[addon.classID.HUNTER][219250] = { name = "PVP Training Dummy", icon = 204336, default = addon.NpcOption.Highlight };
-    -- addon.importantNpcList[addon.classID.HUNTER][225985] = { name = "Kelpfist", icon = 204336, default = addon.NpcOption.Show };
+    -- addon.importantNpcList[addon.CLASSID.HUNTER][219250] = { name = "PVP Training Dummy", icon = 204336, default = addon.NpcOption.Highlight };
+    -- addon.importantNpcList[addon.CLASSID.HUNTER][225985] = { name = "Kelpfist", icon = 204336, default = addon.NpcOption.Show };
 end
 
 addon.iconTexture = {};
