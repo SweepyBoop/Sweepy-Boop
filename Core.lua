@@ -450,9 +450,6 @@ options.args.raidFrames = {
                 [addon.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
             },
             name = format(addon.ICON_FORMAT .. " %s", "interface/icons/achievement_guildperk_everybodysfriend", "Sort raid frames in arena"),
-            desc = "Customize the sort order of raid frames inside arena",
-            descStyle = "inline",
-            icon = "interface/icons/achievement_guildperk_everybodysfriend",
             style = "radio",
         },
 
