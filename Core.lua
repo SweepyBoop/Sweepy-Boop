@@ -462,7 +462,7 @@ options.args.raidFrames = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
-            desc = addon.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
+            desc = addon.exclamation .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
     },
