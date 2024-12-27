@@ -19,8 +19,8 @@ $newLine = if ($Off) {
 }
 
 # Replace the line containing "addon.TEST_MODE" or add it if it doesn't exist
-if ($fileContent -match "addon\.isTestMode") {
-    $fileContent = $fileContent -replace "addon\.isTestMode\s*=\s*.*?;", $newLine
+if ($fileContent -match "addon\.TEST_MODE") {
+    $fileContent = $fileContent -replace "addon\.TEST_MODE\s*=\s*.*?;", $newLine
 } else {
     $fileContent += $newLine
 }
