@@ -159,7 +159,7 @@ addon.GetIconPath = function (iconName)
     return "interface/icons/" .. iconName;
 end
 
-addon.exclamation = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
+addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 addon.healerIconID = "interface/lfgframe/uilfgprompts";
 addon.petIconID = addon.GetIconPath("ability_hunter_mendpet");

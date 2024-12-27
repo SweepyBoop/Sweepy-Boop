@@ -43,8 +43,8 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
-                   .. addon.exclamation ..  "If icons don't refresh right after changing options, change current target to force an update",
+            name = addon.EXCLAMATION ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
+                   .. addon.EXCLAMATION ..  "If icons don't refresh right after changing options, change current target to force an update",
         },
         hideOutsidePvP = {
             order = 3,
@@ -128,7 +128,7 @@ options.args.nameplatesEnemy = {
             order = 1,
             width = "full",
             type = "description",
-            name = addon.exclamation ..  "If nameplates don't refresh right after changing options, change current target to force an update",
+            name = addon.EXCLAMATION ..  "If nameplates don't refresh right after changing options, change current target to force an update",
         },
         breaker1 = {
             order = 2,
@@ -288,13 +288,13 @@ options.args.arenaFrames = {
         --     type = "execute",
         --     name = "Reload UI",
         --     func = ReloadUI,
-        --     desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
+        --     desc = addon.EXCLAMATION .. "Some changes might require a UI reload to take full effect",
         -- },
         -- description1 = {
         --     order = 4,
         --     width = "full",
         --     type = "description",
-        --     name = addon.exclamation .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
+        --     name = addon.EXCLAMATION .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
         -- },
         breaker1 = {
             order = 5,
@@ -461,7 +461,7 @@ options.args.raidFrames = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
-            desc = addon.exclamation .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
+            desc = addon.EXCLAMATION .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
     },
@@ -490,7 +490,7 @@ options.args.misc = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
-            desc = addon.exclamation .. "Leaving arena before entering combat might result in deserter status",
+            desc = addon.EXCLAMATION .. "Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
             disabled = function()
                 return ( not SweepyBoop.db.profile.arenaSurrenderEnabled );
