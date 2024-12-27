@@ -9,7 +9,7 @@ local setPointOptions = {
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
     if addon.TEST_MODE then
-        return ( UnitIsUnit(unitId, "focus") and addon.healerIconID ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
+        return ( UnitIsUnit(unitId, "focus") and addon.ICON_ID_HEALER ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
     end
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
@@ -23,7 +23,7 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
             if ( role == "HEALER" ) then
                 if config.arenaSpecIconHealer then
                     if config.arenaSpecIconHealerIcon then
-                        return addon.healerIconID;
+                        return addon.ICON_ID_HEALER;
                     else
                         return iconID;
                     end
@@ -55,12 +55,12 @@ local function ShowSpecIcon(frame, iconID)
     local specIconContainer = EnsureSpecIcon(frame);
     if ( not specIconContainer ) then return end;
 
-    local isHealerIcon = ( iconID == addon.healerIconID );
+    local isHealerIcon = ( iconID == addon.ICON_ID_HEALER );
     if ( specIconContainer.iconID ~= iconID) then
         for _, iconFrame in pairs(specIconContainer.frames) do
             iconFrame.icon:SetTexture(iconID);
             if isHealerIcon then
-                iconFrame.icon:SetTexCoord(unpack(addon.healerIconCoords));
+                iconFrame.icon:SetTexCoord(unpack(addon.ICON_COORDS_HEALER));
             else
                 iconFrame.icon:SetTexCoord(0, 1, 0, 1);
             end

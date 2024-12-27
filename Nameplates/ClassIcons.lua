@@ -8,8 +8,8 @@ local flagCarrierClassNames = {
 };
 
 local flagCarrierIcons = {
-    ["FlagCarrierHorde"] = addon.flagCarrierHordeIconID,
-    ["FlagCarrierAlliance"] = addon.flagCarrierAllianceIconID,
+    ["FlagCarrierHorde"] = addon.ICON_ID_FLAG_CARRIER_HORDE,
+    ["FlagCarrierAlliance"] = addon.ICON_ID_FLAG_CARRIER_ALLIANCE,
 };
 
 local function ShouldShowIcon(unitId) -- "Show healers only" option will be checked in function ShowClassIcon
@@ -49,12 +49,12 @@ local function GetIconOptions(class)
     if ( flagCarrierIcons[class] ) then
         iconID = flagCarrierIcons[class];
     elseif ( class == "HEALER" ) then
-        iconID = addon.healerIconID;
-        iconCoords = addon.healerIconCoords;
+        iconID = addon.ICON_ID_HEALER;
+        iconCoords = addon.ICON_COORDS_HEALER;
     elseif ( class == "PET" ) then
-        iconID = addon.petIconID;
+        iconID = addon.ICON_ID_PET;
     else -- For regular classes
-        iconID = addon.classIconID;
+        iconID = addon.ICON_ID_CLASSES;
         iconCoords = CLASS_ICON_TCOORDS[class];
     end
 

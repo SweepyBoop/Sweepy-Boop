@@ -142,11 +142,11 @@ addon.RAID_FRAME_SORT_ORDER = {
 
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
-addon.flagCarrierHordeLogo = addon.INTERFACE_SWEEPY .. "art/FlagCarrierHorde";
-addon.flagCarrierAllianceLogo = addon.INTERFACE_SWEEPY .. "art/FlagCarrierAlliance";
+addon.FLAG_CARRIER_HORDE_LOGO = addon.INTERFACE_SWEEPY .. "art/FlagCarrierHorde";
+addon.FLAG_CARRIER_ALLIANCE_LOGO = addon.INTERFACE_SWEEPY .. "art/FlagCarrierAlliance";
 
-addon.specIconHealerLogo = addon.INTERFACE_SWEEPY .. "art/HealingTouch"; -- icon 136041
-addon.specIconOthersLogo = addon.INTERFACE_SWEEPY .. "art/DeathMark"; -- icon 236270
+addon.SPEC_ICON_HEALER_LOGO = addon.INTERFACE_SWEEPY .. "art/HealingTouch"; -- icon 136041
+addon.SPEC_ICON_OTHERS_LOGO = addon.INTERFACE_SWEEPY .. "art/DeathMark"; -- icon 236270
 
 addon.SPEC_ICON_HORIZONTAL_ALIGNMENT = {
     TOP = 0,
@@ -161,10 +161,10 @@ end
 
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
-addon.healerIconID = "interface/lfgframe/uilfgprompts";
-addon.petIconID = addon.GetIconPath("ability_hunter_mendpet");
-addon.classIconID = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
-addon.flagCarrierHordeIconID = addon.GetIconPath("inv_bannerpvp_01");
-addon.flagCarrierAllianceIconID = addon.GetIconPath("inv_bannerpvp_02");
+addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
+addon.ICON_ID_PET = addon.GetIconPath("ability_hunter_mendpet");
+addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
+addon.ICON_ID_FLAG_CARRIER_HORDE = addon.GetIconPath("inv_bannerpvp_01");
+addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.GetIconPath("inv_bannerpvp_02");
 
-addon.healerIconCoords = {0.005, 0.116, 0.76, 0.87};
+addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};

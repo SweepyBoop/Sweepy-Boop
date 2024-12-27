@@ -83,7 +83,7 @@ options.args.nameplatesFriendly = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Show flag carrier icons in battlegrounds"),
+            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.FLAG_CARRIER_HORDE_LOGO, addon.FLAG_CARRIER_ALLIANCE_LOGO, "Show flag carrier icons in battlegrounds"),
             desc = "Use special icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -155,7 +155,7 @@ options.args.nameplatesEnemy = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.specIconHealerLogo, "Show spec icon for healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.SPEC_ICON_HEALER_LOGO, "Show spec icon for healers"),
             desc = "Show spec icons on top of the nameplates of enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
@@ -171,7 +171,7 @@ options.args.nameplatesEnemy = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.SPEC_ICON_OTHERS_LOGO, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
         arenaSpecIconAlignment = {
@@ -399,7 +399,7 @@ for _, classID in ipairs(addon.CLASSORDER) do
     options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
         order = groupIndex,
         type = "group",
-        icon = addon.classIconID,
+        icon = addon.ICON_ID_CLASSES,
         iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
         name = classInfo.className,
         args = {},
