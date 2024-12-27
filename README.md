@@ -95,18 +95,6 @@ There is also an option to show enemy spec icons on top of their names inside ar
 
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
 
-
-## Type /afk to surrender arena
-Players can conveniently surrender arena by simply typing /afk.
-
-If unable to surrender, e.g., no teammates have died, a confirmation dialog will pop up to leave.
-
-There is also an option to leave directly without the confirmation dialog, but be careful: leaving arena without ever entering combat might result in deserter status!
-
-![image](https://github.com/user-attachments/assets/45663a67-435d-4b45-985f-0924074d3f6c)
-
-
-
 ## Fix Blizzard raid frame aggro highlight
 Blizzard's raid frame aggro highlight only tracks PvE threats.
 That means pet threats inside arenas, which is not very useful.
@@ -117,7 +105,20 @@ For this module to work, disable the following setting under Interface settings 
 
 ![image](https://github.com/user-attachments/assets/38505bd7-5f7d-4f7d-95a0-f8d6f232c02e)
 
-## Dampen display inside arena
+## Miscellaneous quality-of-life features 
+![Misc](https://github.com/user-attachments/assets/67f632e5-936e-4250-aca6-80eeadd68abd)
+
+
+### Type /afk to surrender arena
+Players can conveniently surrender arena by simply typing /afk.
+
+If unable to surrender, e.g., no teammates have died, a confirmation dialog will pop up to leave.
+
+There is also an option to leave directly without the confirmation dialog, but be careful:
+
+leaving arena without ever entering combat might result in deserter status!
+
+### Dampen display inside arena
 ![image](https://github.com/user-attachments/assets/329aa2b9-2a5e-4239-b40a-f68d90f8971b)
 
 Shows the dampening percentage under the remaining time on the arena widget:
