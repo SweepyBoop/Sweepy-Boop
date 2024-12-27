@@ -63,7 +63,7 @@ end
 
 local function IsPrimaryPetClass(unitId)
     local class = GetUnitClass(unitId)
-    return ( class == addon.classId.Hunter ) or ( class == addon.classId.Warlock ) or ( class == addon.classId.Shaman )
+    return ( class == addon.CLASSID.Hunter ) or ( class == addon.CLASSID.Warlock ) or ( class == addon.CLASSID.Shaman )
 end
 
 local function IsArenaPrimaryPet(unitId)

@@ -1,5 +1,5 @@
 local _, addon = ...
-local isTestMode = addon.isTestMode
+local isTestMode = addon.TEST_MODE
 
 -- Import spell data
 local OFFENSIVE = addon.spellCategory.OFFENSIVE

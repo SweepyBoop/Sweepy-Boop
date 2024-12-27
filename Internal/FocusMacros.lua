@@ -116,7 +116,7 @@ local function updateArenaHighlight(focusName)
     local frameIndex = nil;
 
     if ( focusName == "focus" ) then
-        if addon.isTestMode then
+        if addon.TEST_MODE then
             frameIndex = 1;
         end
     else

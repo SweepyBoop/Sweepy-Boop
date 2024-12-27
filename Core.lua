@@ -1,6 +1,5 @@
 local addonName, addon = ...;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
-addon.exclamation = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
 
@@ -44,8 +43,8 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = addon.exclamation ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
-                   .. addon.exclamation ..  "If icons don't refresh right after changing options, change current target to force an update",
+            name = addon.EXCLAMATION ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
+                   .. addon.EXCLAMATION ..  "If icons don't refresh right after changing options, change current target to force an update",
         },
         hideOutsidePvP = {
             order = 3,
@@ -84,7 +83,7 @@ options.args.nameplatesFriendly = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.flagCarrierHordeLogo, addon.flagCarrierAllianceLogo, "Show flag carrier icons in battlegrounds"),
+            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.FLAG_CARRIER_HORDE_LOGO, addon.FLAG_CARRIER_ALLIANCE_LOGO, "Show flag carrier icons in battlegrounds"),
             desc = "Use special icons for friendly flag carriers\nThis overwrites the healer icon",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -129,7 +128,7 @@ options.args.nameplatesEnemy = {
             order = 1,
             width = "full",
             type = "description",
-            name = addon.exclamation ..  "If nameplates don't refresh right after changing options, change current target to force an update",
+            name = addon.EXCLAMATION ..  "If nameplates don't refresh right after changing options, change current target to force an update",
         },
         breaker1 = {
             order = 2,
@@ -156,7 +155,7 @@ options.args.nameplatesEnemy = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.specIconHealerLogo, "Show spec icon for healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.SPEC_ICON_HEALER_LOGO, "Show spec icon for healers"),
             desc = "Show spec icons on top of the nameplates of enemy healers inside arenas",
         },
         arenaSpecIconHealerIcon = {
@@ -172,7 +171,7 @@ options.args.nameplatesEnemy = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.specIconOthersLogo, "Show spec icon for non-healers"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.SPEC_ICON_OTHERS_LOGO, "Show spec icon for non-healers"),
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
         },
         arenaSpecIconAlignment = {
@@ -289,13 +288,13 @@ options.args.arenaFrames = {
         --     type = "execute",
         --     name = "Reload UI",
         --     func = ReloadUI,
-        --     desc = addon.exclamation .. "Some changes might require a UI reload to take full effect",
+        --     desc = addon.EXCLAMATION .. "Some changes might require a UI reload to take full effect",
         -- },
         -- description1 = {
         --     order = 4,
         --     width = "full",
         --     type = "description",
-        --     name = addon.exclamation .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
+        --     name = addon.EXCLAMATION .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
         -- },
         breaker1 = {
             order = 5,
@@ -395,12 +394,12 @@ options.args.arenaFrames = {
 local indexInClassGroup = {};
 local groupIndex = 3;
 -- Ensure one group for each class, in order
-for _, classID in ipairs(addon.classOrder) do
+for _, classID in ipairs(addon.CLASSORDER) do
     local classInfo = C_CreatureInfo.GetClassInfo(classID);
     options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
         order = groupIndex,
         type = "group",
-        icon = "Interface/Glues/CharacterCreate/UI-CharacterCreate-Classes",
+        icon = addon.ICON_ID_CLASSES,
         iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
         name = classInfo.className,
         args = {},
@@ -448,10 +447,10 @@ options.args.raidFrames = {
             order = 1,
             type = "select",
             values = {
-                [addon.RaidFrameSortOrder.Disabled] = "Disabled",
-                [addon.RaidFrameSortOrder.PlayerTop] = "Player on top",
-                [addon.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
-                [addon.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
+                [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
+                [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
+                [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player at bottom",
+                [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in the middle",
             },
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
             style = "radio",
@@ -462,7 +461,7 @@ options.args.raidFrames = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
-            desc = addon.exclamation .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
+            desc = addon.EXCLAMATION .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
     },
@@ -491,7 +490,7 @@ options.args.misc = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
-            desc = addon.exclamation .. "Leaving arena before entering combat might result in deserter status",
+            desc = addon.EXCLAMATION .. "Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
             disabled = function()
                 return ( not SweepyBoop.db.profile.arenaSurrenderEnabled );
@@ -545,7 +544,7 @@ local defaults = {
             arenaEnemyDefensiveIconSize = 25,
             spellList = {},
         },
-        arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
+        arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
         skipLeaveArenaConfirmation = false,
@@ -554,7 +553,7 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
-    defaults.profile.arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.PlayerMiddle;
+    defaults.profile.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.skipLeaveArenaConfirmation = true;
 end

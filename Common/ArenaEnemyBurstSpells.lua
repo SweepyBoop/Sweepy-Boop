@@ -746,7 +746,7 @@ addon.spellResets = {
 
 };
 
-if addon.isTestMode then
+if addon.TEST_MODE then
     -- Test
     -- Mark of the Wild
     addon.burstSpells[1126] = {

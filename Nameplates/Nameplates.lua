@@ -7,7 +7,7 @@ local function ShouldShowNameplate(unitId)
     end
 
     -- When outside arena or battleground and is not in test mode
-    if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) and ( not addon.isTestMode ) then
+    if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) and ( not addon.TEST_MODE ) then
         if SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
             return addon.UnitIsHostile(unitId);
         else -- Otherwise just show everything
