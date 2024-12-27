@@ -73,8 +73,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 53006, name = "Spirit Link Totem", icon = 98008, default = addon.NpcOption.Highlight },
             { npcID = 5913, name = "Tremor Totem", icon = 8143, default = addon.NpcOption.Highlight },
             { npcID = 104818, name = "Ancestral Protection Totem", icon = 207399, default = addon.NpcOption.Highlight },
+            { npcID = 59764, name = "Healing Tide Totem", icon = 108280, default = addon.NpcOption.Highlight },
             { npcID = 179867, name = "Static Field Totem", icon = 355580, default = addon.NpcOption.Show },
-            { npcID = 59764, name = "Healing Tide Totem", icon = 108280, default = addon.NpcOption.Show },
             { npcID = 61245, name = "Capacitor Totem", icon = 192058, default = addon.NpcOption.Show },
             { npcID = 105451, name = "Counterstrike Totem", icon = 204331, default = addon.NpcOption.Show },
             { npcID = 100943, name = "Earthen Wall Totem", icon = 198838, default = addon.NpcOption.Show }, -- hard to kill, just try to fight outside of its range
