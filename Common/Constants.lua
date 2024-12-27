@@ -74,7 +74,7 @@ addon.SPELL_DISPEL = "SPELL_DISPEL";
 addon.SPELL_INTERRUPT = "SPELL_INTERRUPT";
 addon.SPELL_EMPOWER_END = "SPELL_EMPOWER_END";
 
-addon.PetDismissEvents = {
+addon.EVENTS_PET_DISMISS = {
     [addon.PARTY_KILL] = true,
     [addon.UNIT_DIED] = true,
     [addon.UNIT_DESTROYED] = true,
