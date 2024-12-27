@@ -158,11 +158,13 @@ addon.SELECTIONBORDERSTYLE = {
     AIR = 3,
 };
 
-addon.flagCarrierHordeLogo = "interface\\addons\\SweepyBoop\\art\\FlagCarrierHorde";
-addon.flagCarrierAllianceLogo = "interface\\addons\\SweepyBoop\\art\\FlagCarrierAlliance";
+addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
-addon.specIconHealerLogo = "interface\\addons\\SweepyBoop\\art\\HealingTouch"; -- icon 136041
-addon.specIconOthersLogo = "interface\\addons\\SweepyBoop\\art\\DeathMark"; -- icon 236270
+addon.flagCarrierHordeLogo = addon.INTERFACE_SWEEPY .. "art/FlagCarrierHorde";
+addon.flagCarrierAllianceLogo = addon.INTERFACE_SWEEPY .. "art/FlagCarrierAlliance";
+
+addon.specIconHealerLogo = addon.INTERFACE_SWEEPY .. "art/HealingTouch"; -- icon 136041
+addon.specIconOthersLogo = addon.INTERFACE_SWEEPY .. "art/DeathMark"; -- icon 236270
 
 addon.SPEC_ICON_HORIZONTAL_ALIGNMENT = {
     TOP = 0,
