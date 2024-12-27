@@ -9,10 +9,6 @@ addon.NpcOption = {
 
 addon.HUNTERPET = 165189;
 
-local function GetNpcOptionOverride()
-    return ( addon.internal and addon.NpcOption.Hide ) or addon.NpcOption.Show;
-end
-
 -- Have to use NpcID because non-US locales can return different names for totems, minions, etc.
 -- To find the NpcID of a unit, target it and type:
 -- /run npcID = select(6, strsplit("-", UnitGUID("target"))); print(npcID)
@@ -22,7 +18,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         npcs = {
             { npcID = 106041, name = "Reanimation", icon = 210128, default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
             { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show },
-            { npcID = 26125, name = "Raise Dead", icon = 46585, default = GetNpcOptionOverride() },
+            { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide },
         }
     },
     {
@@ -43,14 +39,14 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
     {
         classID = addon.CLASSID.MAGE,
         npcs = {
-            { npcID = 208441, name = "Water Elemental", icon = 12472, default = GetNpcOptionOverride() },
+            { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide },
         }
     },
     {
         classID = addon.CLASSID.MONK,
         npcs = {
-            { npcID = 63508, name = "Xuen", icon = 123904, default = GetNpcOptionOverride() },
-            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = GetNpcOptionOverride() },
+            { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide },
+            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide },
         }
     },
     {
@@ -83,14 +79,14 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 105451, name = "Counterstrike Totem", icon = 204331, default = addon.NpcOption.Show },
             { npcID = 100943, name = "Earthen Wall Totem", icon = 198838, default = addon.NpcOption.Show }, -- hard to kill, just try to fight outside of its range
             { npcID = 59712, name = "Stone Bulwark Totem", icon = 108270, default = addon.NpcOption.Show }, -- hard to kill
-            { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = GetNpcOptionOverride() },
-            { npcID = 78001, name = "Cloudburst Totem", icon = 157153, default = GetNpcOptionOverride() },
-            { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = GetNpcOptionOverride() },
-            { npcID = 97285, name = "Wind Rush Totem", icon = 192077, default = GetNpcOptionOverride() },
+            { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Hide },
+            { npcID = 78001, name = "Cloudburst Totem", icon = 157153, default = addon.NpcOption.Hide },
+            { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Hide },
+            { npcID = 97285, name = "Wind Rush Totem", icon = 192077, default = addon.NpcOption.Hide },
             { npcID = 60561, name = "Earthgrab Totem", icon = 51485, default = addon.NpcOption.Show }, -- gets players out of stealth
-            { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = GetNpcOptionOverride() },
+            { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Hide },
             { npcID = 105427, name = "Totem of Wrath", icon = 204330, default = addon.NpcOption.Show },
-            { npcID = 97369, name = "Liquid Magma Totem", icon = 192222, default = GetNpcOptionOverride() },
+            { npcID = 97369, name = "Liquid Magma Totem", icon = 192222, default = addon.NpcOption.Hide },
             { npcID = 194117, name = "Stoneskin Totem", icon = 383017, default = addon.NpcOption.Show },
             { npcID = 5923, name = "Poison Cleansing Totem", icon = 383013, default = addon.NpcOption.Show },
             { npcID = 194118, name = "Tranquil Air Totem", icon = 383019, default = addon.NpcOption.Show },
