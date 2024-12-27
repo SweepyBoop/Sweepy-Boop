@@ -305,7 +305,7 @@ options.args.arenaFrames = {
             order = 6,
             width = 1.75,
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/spell_fire_sealoffire", "Arena Enemy Offensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_fire_sealoffire"), "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
@@ -326,7 +326,7 @@ options.args.arenaFrames = {
             order = 9,
             width = 1.75,
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/spell_holy_divineshield", "Arena Enemy Defensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_holy_divineshield"), "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
@@ -451,7 +451,7 @@ options.args.raidFrames = {
                 [addon.RaidFrameSortOrder.PlayerBottom] = "Player at bottom",
                 [addon.RaidFrameSortOrder.PlayerMiddle] = "Player in the middle",
             },
-            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/achievement_guildperk_everybodysfriend", "Sort raid frames in arena"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
             style = "radio",
         },
 
@@ -459,7 +459,7 @@ options.args.raidFrames = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/spell_nature_reincarnation", "Show PvP aggro highlight in arena"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
             desc = addon.exclamation .. "Need to uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
@@ -482,13 +482,13 @@ options.args.misc = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/inv_pet_exitbattle", "Enabled"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("inv_pet_exitbattle"), "Enabled"),
         },
         skipLeaveArenaConfirmation = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/ability_druid_cower", "Leave arena directly if unable to surrender (skip confirmation dialog)"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
             desc = addon.exclamation .. "Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
             disabled = function()
@@ -505,7 +505,7 @@ options.args.misc = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", "interface/icons/achievement_bg_winsoa_underxminutes", "Show dampen percentage on the arena widget"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_bg_winsoa_underxminutes"), "Show dampen percentage on the arena widget"),
         },
     },
 };
