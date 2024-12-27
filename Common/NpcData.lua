@@ -79,20 +79,21 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 105451, name = "Counterstrike Totem", icon = 204331, default = addon.NpcOption.Show },
             { npcID = 100943, name = "Earthen Wall Totem", icon = 198838, default = addon.NpcOption.Show }, -- hard to kill, just try to fight outside of its range
             { npcID = 59712, name = "Stone Bulwark Totem", icon = 108270, default = addon.NpcOption.Show }, -- hard to kill
-            { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Hide },
-            { npcID = 78001, name = "Cloudburst Totem", icon = 157153, default = addon.NpcOption.Hide },
-            { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Hide },
-            { npcID = 97285, name = "Wind Rush Totem", icon = 192077, default = addon.NpcOption.Hide },
             { npcID = 60561, name = "Earthgrab Totem", icon = 51485, default = addon.NpcOption.Show }, -- gets players out of stealth
-            { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Hide },
             { npcID = 105427, name = "Totem of Wrath", icon = 204330, default = addon.NpcOption.Show },
-            { npcID = 97369, name = "Liquid Magma Totem", icon = 192222, default = addon.NpcOption.Hide },
             { npcID = 194117, name = "Stoneskin Totem", icon = 383017, default = addon.NpcOption.Show },
             { npcID = 5923, name = "Poison Cleansing Totem", icon = 383013, default = addon.NpcOption.Show },
             { npcID = 194118, name = "Tranquil Air Totem", icon = 383019, default = addon.NpcOption.Show },
             { npcID = 225409, name = "Surging Totem", icon = 444995, default = addon.NpcOption.Show },
             { npcID = 95061, name = "Greater Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
             { npcID = 61029, name = "Primal Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
+
+            { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Hide },
+            { npcID = 78001, name = "Cloudburst Totem", icon = 157153, default = addon.NpcOption.Hide },
+            { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Hide },
+            { npcID = 97285, name = "Wind Rush Totem", icon = 192077, default = addon.NpcOption.Hide },
+            { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Hide },
+            { npcID = 97369, name = "Liquid Magma Totem", icon = 192222, default = addon.NpcOption.Hide },
         }
     },
     {
