@@ -176,3 +176,5 @@ addon.ICON_FORMAT = "|T%s:20|t";
 addon.GetIconPath = function (iconName)
     return "interface/icons/" .. iconName;
 end
+
+addon.exclamation = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
