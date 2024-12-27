@@ -91,7 +91,7 @@ There is also an option to show enemy spec icons on top of their names inside ar
 
 
 ## Sort raid frames
-![SortGroup](https://github.com/user-attachments/assets/3636ced6-c8a1-47db-9a35-43b3a4627d92)
+![SortGroup](https://github.com/user-attachments/assets/caefcbd3-ad7b-432f-86e9-dc5f5c6caefd)
 
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
 
