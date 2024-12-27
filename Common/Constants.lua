@@ -173,3 +173,6 @@ addon.SPEC_ICON_HORIZONTAL_ALIGNMENT = {
 };
 
 addon.ICON_FORMAT = "|T%s:20|t";
+addon.GetIconPath = function (iconName)
+    return "interface/icons/" .. iconName;
+end

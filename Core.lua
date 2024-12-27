@@ -139,7 +139,9 @@ options.args.nameplatesEnemy = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format("|T%s:20|t|T%s:20|t|T%s:20|t %s", "interface/icons/inv_misc_number_1", "interface/icons/inv_misc_number_2", "interface/icons/inv_misc_number_3", "Arena enemy player nameplate numbers"),
+            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", 
+                addon.GetIconPath("inv_misc_number_1"),  addon.GetIconPath("inv_misc_number_2"), addon.GetIconPath("inv_misc_number_3"),
+                "Arena enemy player nameplate numbers"),
             desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
         },
 
