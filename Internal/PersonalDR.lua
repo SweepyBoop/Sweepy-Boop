@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local test = addon.isTestMode;
+local test = addon.TEST_MODE;
 
 -- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
 local spellList = {

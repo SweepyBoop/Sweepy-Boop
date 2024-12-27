@@ -8,7 +8,7 @@ local setPointOptions = {
 };
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
-    if addon.isTestMode then
+    if addon.TEST_MODE then
         return ( UnitIsUnit(unitId, "focus") and addon.healerIconID ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
     end
 

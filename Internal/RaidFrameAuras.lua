@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local test = addon.isTestMode;
+local test = addon.TEST_MODE;
 
 local function ConvertToSet(list)
     local set = {};

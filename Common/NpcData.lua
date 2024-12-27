@@ -124,7 +124,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
     },
 };
 
-if addon.isTestMode then
+if addon.TEST_MODE then
     local testClass = {
         classID = addon.CLASSID.DRUID,
         npcs = {
@@ -157,7 +157,7 @@ addon.GetNpcIdFromGuid = function (guid)
 end
 
 addon.IsNpcInWhiteList = function(unitId)
-    if ( not UnitPlayerControlled(unitId) ) and ( not addon.isTestMode ) then
+    if ( not UnitPlayerControlled(unitId) ) and ( not addon.TEST_MODE ) then
         return true; -- Don't filter out game NPCs (e.g., mobs in battlegrounds), except when we're in test mode
     end
 

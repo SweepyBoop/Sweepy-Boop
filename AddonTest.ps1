@@ -13,12 +13,12 @@ if (Test-Path $constantsFile) {
 }
 
 $newLine = if ($Off) {
-    "addon.isTestMode = false;"
+    "addon.TEST_MODE = false;"
 } else {
-    "addon.isTestMode = true;"
+    "addon.TEST_MODE = true;"
 }
 
-# Replace the line containing "addon.isTestMode" or add it if it doesn't exist
+# Replace the line containing "addon.TEST_MODE" or add it if it doesn't exist
 if ($fileContent -match "addon\.isTestMode") {
     $fileContent = $fileContent -replace "addon\.isTestMode\s*=\s*.*?;", $newLine
 } else {

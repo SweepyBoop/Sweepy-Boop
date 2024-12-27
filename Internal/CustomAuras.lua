@@ -9,7 +9,7 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- To find the spellID of an aura
 local checkSpellID = CreateFrame("Frame");
-checkSpellID.enabled = addon.isTestMode;
+checkSpellID.enabled = addon.TEST_MODE;
 
 checkSpellID.spellName = "Call of the Elder Druid";
 checkSpellID:RegisterEvent(addon.UNIT_AURA);
@@ -268,7 +268,7 @@ if ( class == addon.DRUID ) then
     CreateAuraIcon(106951, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Berserk
     CreateAuraIcon(102543, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Incarnation: Avatar of Ashamane
 
-    if addon.isTestMode then -- Test all 4 icons with Rejuvenation
+    if addon.TEST_MODE then -- Test all 4 icons with Rejuvenation
         CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -50, 0);
         CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -100, 0);
         CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -50, 0); -- test with Rejuvenation

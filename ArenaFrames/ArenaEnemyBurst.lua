@@ -5,7 +5,7 @@ local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-local test = addon.isTestMode;
+local test = addon.TEST_MODE;
 
 local spellData = addon.burstSpells;
 local spellResets = addon.spellResets;

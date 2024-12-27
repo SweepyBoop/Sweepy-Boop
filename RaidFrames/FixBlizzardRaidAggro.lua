@@ -5,7 +5,7 @@ local _, addon = ...;
 -- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
 
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
-local isTestMode = addon.isTestMode;
+local isTestMode = addon.TEST_MODE;
 
 local function GetThreatCount(unit)
     if ( not unit ) then

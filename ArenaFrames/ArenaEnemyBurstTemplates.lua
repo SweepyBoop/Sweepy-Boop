@@ -30,7 +30,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
         frame.cooldown:SetReverse(true);
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
-        if addon.internal and ( not addon.isTestMode ) then
+        if addon.internal and ( not addon.TEST_MODE ) then
             addon.SetHideCountdownNumbers(frame);
         end
 

@@ -476,7 +476,7 @@ for _, spell in pairs(addon.utilitySpells) do
     end
 end
 
-if addon.isTestMode then
+if addon.TEST_MODE then
     local testCategory1 = SPELLCATEGORY.CROWDCONTROL;
     local testCategory2 = SPELLCATEGORY.DEFENSIVE;
     -- Test

@@ -1,5 +1,5 @@
 local _, addon = ...;
-local test = addon.isTestMode;
+local test = addon.TEST_MODE;
 
 local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
 
@@ -208,7 +208,7 @@ local function EnsureIcon(unitId, spellID, spell)
         end
         premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
 
-        if addon.internal and ( spell.category == SPELLCATEGORY.DEFENSIVE ) and ( not addon.isTestMode ) then
+        if addon.internal and ( spell.category == SPELLCATEGORY.DEFENSIVE ) and ( not addon.TEST_MODE ) then
             addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]); -- icons are pretty small, I'm not staring at the numbers, just taking a glance once in a while
         end
 
