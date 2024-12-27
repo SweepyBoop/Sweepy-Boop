@@ -78,8 +78,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 59764, name = "Healing Tide Totem", icon = 108280, default = addon.NpcOption.Highlight },
 
             { npcID = 179867, name = "Static Field Totem", icon = 355580, default = addon.NpcOption.Show },
-            { npcID = 100943, name = "Earthen Wall Totem", icon = 198838, default = addon.NpcOption.Show }, -- hard to kill, just try to fight outside of its range
             { npcID = 59712, name = "Stone Bulwark Totem", icon = 108270, default = addon.NpcOption.Show }, -- hard to kill
+            { npcID = 100943, name = "Earthen Wall Totem", icon = 198838, default = addon.NpcOption.Show }, -- hard to kill, just try to fight outside of its range
             { npcID = 60561, name = "Earthgrab Totem", icon = 51485, default = addon.NpcOption.Show }, -- gets players out of stealth
             { npcID = 105427, name = "Totem of Wrath", icon = 204330, default = addon.NpcOption.Show },
             { npcID = 194117, name = "Stoneskin Totem", icon = 383017, default = addon.NpcOption.Show },
