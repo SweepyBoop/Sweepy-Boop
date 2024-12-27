@@ -493,34 +493,30 @@ options.args.misc = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = "Enabled",
+            name = format("|T%s:20|t %s", "interface/icons/inv_pet_exitbattle", "Enabled"),
         },
         skipLeaveArenaConfirmation = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = "Leave directly if unable to surrender (skip confirmation dialog)",
+            name = format("|T%s:20|t %s", "interface/icons/ability_druid_cower", "Leave arena directly if unable to surrender (skip confirmation dialog)"),
+            desc = addon.exclamation .. "Leaving arena before entering combat might result in deserter status",
+            descStyle = "inline",
             disabled = function()
                 return ( not SweepyBoop.db.profile.arenaSurrenderEnabled );
             end,
         },
-        description = {
-            order = 4,
-            width = "full",
-            type = "description",
-            name = addon.exclamation .. "Leaving arena without entering combat might result in deserter status",
-        },
 
         header2 = {
-            order = 5,
+            order = 4,
             type = "header",
             name = "",
         },
         showDampenPercentage = {
-            order = 6,
+            order = 5,
             width = "full",
             type = "toggle",
-            name = "Show dampen percentage on the arena widget",
+            name = format("|T%s:20|t %s", "interface/icons/achievement_bg_winsoa_underxminutes", "Show dampen percentage on the arena widget"),
         },
     },
 };
