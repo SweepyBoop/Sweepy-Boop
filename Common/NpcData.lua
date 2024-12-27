@@ -186,7 +186,7 @@ addon.AppendNpcOptionsToGroup = function(group)
         local classGroup = {
             order = index,
             type = "group",
-            icon = "Interface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes",
+            icon = "Interface/Glues/CharacterCreate/UI-CharacterCreate-Classes",
 			iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
             name = classInfo.className,
             args = {},
@@ -210,7 +210,7 @@ addon.AppendNpcOptionsToGroup = function(group)
                     [addon.NpcOption.Show] = "Show",
                     [addon.NpcOption.Highlight] = "Highlight",
                 },
-                name = format("|T%s:20|t %s", C_Spell.GetSpellTexture(npcEntry.icon), npcEntry.name),
+                name = format(addon.ICON_FORMAT .. " %s", C_Spell.GetSpellTexture(npcEntry.icon), npcEntry.name),
                 desc = description,
             };
             spellIdx = spellIdx + 1;

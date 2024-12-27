@@ -1,10 +1,10 @@
 local _, addon = ...;
 
 addon.healerIconID = "interface/lfgframe/uilfgprompts";
-addon.petIconID = "interface/icons/ability_hunter_mendpet";
+addon.petIconID = addon.GetIconPath("ability_hunter_mendpet");
 addon.classIconID = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
-addon.flagCarrierHordeIconID = "interface/icons/inv_bannerpvp_01";
-addon.flagCarrierAllianceIconID = "interface/icons/inv_bannerpvp_02";
+addon.flagCarrierHordeIconID = addon.GetIconPath("inv_bannerpvp_01");
+addon.flagCarrierAllianceIconID = addon.GetIconPath("inv_bannerpvp_02");
 
 addon.healerIconCoords = {0.005, 0.116, 0.76, 0.87};
 
