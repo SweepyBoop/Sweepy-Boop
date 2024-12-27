@@ -120,8 +120,7 @@ leaving arena without ever entering combat might result in deserter status!
 ### Dampen display inside arena
 ![image](https://github.com/user-attachments/assets/329aa2b9-2a5e-4239-b40a-f68d90f8971b)
 
-Shows the dampening percentage under the remaining time on the arena widget:
-
+Shows the dampening percentage under the remaining time on the arena widget.
 
 This is a more optimized version than the Dampening Display addon, as that addon updates the dampening display on every aura change, which could be hundreds or even thousands of times per second inside arena.
 
