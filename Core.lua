@@ -556,6 +556,7 @@ local defaults = {
 if addon.internal then -- Set default for internal version
     defaults.profile.arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.PlayerMiddle;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
+    defaults.profile.skipLeaveArenaConfirmation = true;
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
