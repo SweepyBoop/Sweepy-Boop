@@ -128,9 +128,6 @@ addon.CLASSORDER = {
     addon.CLASSID.WARRIOR,
 };
 
--- For hiding timer by OmniCC
-addon.HIDETIMEROMNICC = "BoopHideTimer";
-
 addon.DEFAULT_ICON_SIZE = 35;
 
 addon.RAID_FRAME_SORT_ORDER = {

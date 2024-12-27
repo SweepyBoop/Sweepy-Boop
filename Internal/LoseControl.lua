@@ -9,7 +9,7 @@ containerFrame.texture:SetAllPoints();
 
 -- Assign a name so we can disable it in OmniCC
 -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/master/Interface/FrameXML/LossOfControlFrame.xml
-containerFrame.cooldown = CreateFrame("Cooldown", addon.HIDETIMEROMNICC .. "LoseControl", containerFrame, "CooldownFrameTemplate");
+containerFrame.cooldown = CreateFrame("Cooldown", nil, containerFrame, "CooldownFrameTemplate");
 containerFrame.cooldown:SetHideCountdownNumbers(true);
 containerFrame.cooldown:SetDrawEdge(true);
 containerFrame.cooldown:SetAllPoints();
