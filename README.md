@@ -96,6 +96,8 @@ There is also an option to show enemy spec icons on top of their names inside ar
 Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
 
 ## Fix Blizzard raid frame aggro highlight
+![PvP raid frame aggro highlight](https://github.com/user-attachments/assets/4507a8b7-8848-4711-8b0a-d668bac1f62c)
+
 Blizzard's raid frame aggro highlight only tracks PvE threats, i.e., pet threats inside arenas, which is basically useless.
 
 This module fixes that by highlighting the teammate who is targetted by enemy DPS players.
