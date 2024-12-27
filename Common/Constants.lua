@@ -145,7 +145,7 @@ addon.FLAG_CARRIER_ALLIANCE_LOGO = addon.INTERFACE_SWEEPY .. "art/FlagCarrierAll
 addon.SPEC_ICON_HEALER_LOGO = addon.INTERFACE_SWEEPY .. "art/HealingTouch"; -- icon 136041
 addon.SPEC_ICON_OTHERS_LOGO = addon.INTERFACE_SWEEPY .. "art/DeathMark"; -- icon 236270
 
-addon.SPEC_ICON_HORIZONTAL_ALIGNMENT = {
+addon.SPEC_ICON_ALIGNMENT = {
     TOP = 0,
     LEFT = 1,
     RIGHT = 2,
