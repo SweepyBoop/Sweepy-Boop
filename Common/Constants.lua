@@ -171,3 +171,5 @@ addon.SPEC_ICON_HORIZONTAL_ALIGNMENT = {
     LEFT = 1,
     RIGHT = 2,
 };
+
+addon.ICON_FORMAT = "|T%s:20|t";
