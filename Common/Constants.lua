@@ -140,24 +140,6 @@ addon.RaidFrameSortOrder = {
     PlayerMiddle = 3,
 };
 
-addon.CLASSICONSTYLE = {
-    ROUND = 1,
-    FLAT = 2,
-};
-
-addon.PETICONSTYLE = {
-    CATS = 1,
-    MENDPET = 2,
-};
-
-addon.SELECTIONBORDERSTYLE = {
-    PLAIN = 0,
-
-    FIRE = 1,
-    ARCANE = 2,
-    AIR = 3,
-};
-
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
 addon.flagCarrierHordeLogo = addon.INTERFACE_SWEEPY .. "art/FlagCarrierHorde";
