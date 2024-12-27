@@ -484,43 +484,17 @@ options.args.misc = {
     get = function(info) return SweepyBoop.db.profile[info[#info]] end,
     set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
     args = {
-        header1 = {
-            order = 1,
-            type = "header",
-            name = "Type /afk to surrender arena",
-        },
         arenaSurrenderEnabled = {
+            order = 1,
+            width = "full",
+            type = "toggle",
+            name = format("|T%s:20|t %s", "interface/icons/inv_pet_exitbattle", "Type /afk to surrender arena"),
+        },
+        showDampenPercentage = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = "Enabled",
-        },
-        skipLeaveArenaConfirmation = {
-            order = 3,
-            width = "full",
-            type = "toggle",
-            name = "Leave directly if unable to surrender (skip confirmation dialog)",
-            disabled = function()
-                return ( not SweepyBoop.db.profile.arenaSurrenderEnabled );
-            end,
-        },
-        description = {
-            order = 4,
-            width = "full",
-            type = "description",
-            name = addon.exclamation .. "Leaving arena without entering combat might result in deserter status",
-        },
-
-        header2 = {
-            order = 5,
-            type = "header",
-            name = "",
-        },
-        showDampenPercentage = {
-            order = 6,
-            width = "full",
-            type = "toggle",
-            name = "Show dampen percentage on the arena widget",
+            name = format("|T%s:20|t %s", "interface/icons/achievement_bg_winsoa_underxminutes", "Show dampen percentage on the arena widget"),
         },
     },
 };
@@ -561,7 +535,6 @@ local defaults = {
         arenaRaidFrameSortOrder = addon.RaidFrameSortOrder.Disabled,
         raidFrameAggroHighlightEnabled = true,
         arenaSurrenderEnabled = true,
-        skipLeaveArenaConfirmation = false,
         showDampenPercentage = true,
     }
 };

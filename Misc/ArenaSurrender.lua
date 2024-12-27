@@ -1,10 +1,11 @@
 local _, addon = ...;
 
 SlashCmdList["CHAT_AFK"] = function(msg)
-    if IsActiveBattlefieldArena() and SweepyBoop.db.profile.arenaSurrenderEnabled then
+    local isArena, isRanked = IsActiveBattlefieldArena();
+    if isArena and SweepyBoop.db.profile.arenaSurrenderEnabled then
         if CanSurrenderArena() then
             SurrenderArena();
-        elseif SweepyBoop.db.profile.skipLeaveArenaConfirmation then
+        elseif isRanked then
             LeaveBattlefield();
         else
             ConfirmOrLeaveBattlefield();
