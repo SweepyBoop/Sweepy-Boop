@@ -52,7 +52,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
     {
         classID = addon.CLASSID.PALADIN,
         npcs = {
-            { npcID = 114565, name = "Guardian of the Forgotten Queen", icon = 228049, default = addon.NpcOption.Show },
+            { npcID = 114565, name = "Guardian of the Forgotten Queen", icon = 228049, default = addon.NpcOption.Highlight },
         }
     },
     {
