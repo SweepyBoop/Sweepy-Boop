@@ -37,19 +37,24 @@ local function EnsureIconFrame()
         frame.icon:SetSize(iconSize, iconSize);
         frame.icon:SetAllPoints(frame);
 
-        frame.mask = frame:CreateMaskTexture();
-        frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-        frame.mask:SetSize(iconSize, iconSize);
-        frame.mask:SetAllPoints(frame.icon);
-        frame.icon:AddMaskTexture(frame.mask);
+        -- frame.mask = frame:CreateMaskTexture();
+        -- frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
+        -- frame.mask:SetSize(iconSize, iconSize);
+        -- frame.mask:SetAllPoints(frame.icon);
+        -- frame.icon:AddMaskTexture(frame.mask);
 
-        frame.border = frame:CreateTexture(nil, "OVERLAY");
-        frame.border:SetAtlas("Azerite-Trait-RingGlow");
-        frame.border:SetBlendMode("ADD");
-        frame.border:SetDesaturated(true);
-        frame.border:SetSize(iconSize * 1.25, iconSize * 1.25);
-        frame.border:SetPoint("CENTER", frame, "CENTER");
-        frame.border:SetVertexColor(128, 0, 128); -- Purple
+        -- frame.border = frame:CreateTexture(nil, "OVERLAY");
+        -- frame.border:SetAtlas("Azerite-Trait-RingGlow");
+        -- frame.border:SetBlendMode("ADD");
+        -- frame.border:SetDesaturated(true);
+        -- frame.border:SetSize(iconSize * 1.25, iconSize * 1.25);
+        -- frame.border:SetPoint("CENTER", frame, "CENTER");
+        -- frame.border:SetVertexColor(128, 0, 128); -- Purple
+
+        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+        frame.spellActivationAlert:SetSize(iconSize * 1.4, iconSize * 1.4);
+        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER");
+        frame.spellActivationAlert:Hide();
 
         frame.animation = SetupAnimation(frame);
     end
@@ -67,11 +72,13 @@ local function ShowIcon(iconID, duration)
     EnsureIconFrame();
     frame.icon:SetTexture(iconID);
     frame:Show();
+    addon.ShowOverlayGlow(frame);
     frame.animation:Play();
 end
 
 local function HideIcon()
     frame.animation:Stop();
+    addon.HideOverlayGlow(frame);
     frame:Hide();
     isInTest = false;
 end
