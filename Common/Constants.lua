@@ -152,16 +152,16 @@ addon.SPEC_ICON_ALIGNMENT = {
 };
 
 addon.ICON_FORMAT = "|T%s:20|t";
-addon.GetIconPath = function (iconName)
+addon.ICON_PATH = function (iconName)
     return "interface/icons/" .. iconName;
 end
 
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
-addon.ICON_ID_PET = addon.GetIconPath("ability_hunter_mendpet");
+addon.ICON_ID_PET = addon.ICON_PATH("ability_hunter_mendpet");
 addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
-addon.ICON_ID_FLAG_CARRIER_HORDE = addon.GetIconPath("inv_bannerpvp_01");
-addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.GetIconPath("inv_bannerpvp_02");
+addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
+addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
 
 addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
