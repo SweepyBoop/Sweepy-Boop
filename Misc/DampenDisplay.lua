@@ -9,7 +9,7 @@ frame.Text:SetAllPoints();
 frame.Text:SetJustifyH("CENTER");
 
 frame:SetScript("OnEvent", function(self, ...) 
-    if ( not SweepyBoop.db.profile.showDampenPercentage ) then
+    if ( not SweepyBoop.db.profile.misc.showDampenPercentage ) then
         self:Hide();
         return;
     end
@@ -28,7 +28,7 @@ local updateInterval = 1; -- We don't need to update on every UNIT_AURA, just up
 frame.timeSinceLastUpdate = 0;
 frame:SetScript('OnUpdate', function(self, elapsed)
     -- This callback is not triggered whlie frame is hidden outside of arena, so no concern on perf
-    if ( not SweepyBoop.db.profile.showDampenPercentage ) then
+    if ( not SweepyBoop.db.profile.misc.showDampenPercentage ) then
         self:Hide(); -- Once hidden, this callback will no longer trigger
         return;
     end

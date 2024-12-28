@@ -140,8 +140,8 @@ options.args.nameplatesEnemy = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", 
-                addon.GetIconPath("inv_misc_number_1"),  addon.GetIconPath("inv_misc_number_2"), addon.GetIconPath("inv_misc_number_3"),
+            name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s",
+                addon.ICON_PATH("inv_misc_number_1"),  addon.ICON_PATH("inv_misc_number_2"), addon.ICON_PATH("inv_misc_number_3"),
                 "Arena enemy player nameplate numbers"),
             desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
         },
@@ -282,20 +282,6 @@ options.args.arenaFrames = {
             func = "HideTestArena",
             width = "half",
         },
-        -- Reload UI shouldn't be needed anymore, but keep them here in case
-        -- reloadButton = {
-        --     order = 3,
-        --     type = "execute",
-        --     name = "Reload UI",
-        --     func = ReloadUI,
-        --     desc = addon.EXCLAMATION .. "Some changes might require a UI reload to take full effect",
-        -- },
-        -- description1 = {
-        --     order = 4,
-        --     width = "full",
-        --     type = "description",
-        --     name = addon.EXCLAMATION .. "Reload UI might be required if Gladius / sArena settings are changed significantly",
-        -- },
         breaker1 = {
             order = 5,
             type = "header",
@@ -306,7 +292,7 @@ options.args.arenaFrames = {
             order = 6,
             width = 1.75,
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_fire_sealoffire"), "Arena Enemy Offensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_fire_sealoffire"), "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
@@ -327,7 +313,7 @@ options.args.arenaFrames = {
             order = 9,
             width = 1.75,
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_holy_divineshield"), "Arena Enemy Defensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_holy_divineshield"), "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
@@ -440,8 +426,8 @@ options.args.raidFrames = {
     order = 5,
     type = "group",
     name = "Raid Frames",
-    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
     args = {
         arenaRaidFrameSortOrder = {
             order = 1,
@@ -452,7 +438,7 @@ options.args.raidFrames = {
                 [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player at bottom",
                 [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in the middle",
             },
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
             style = "radio",
         },
 
@@ -460,7 +446,7 @@ options.args.raidFrames = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
             desc = addon.EXCLAMATION .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
@@ -471,42 +457,49 @@ options.args.misc = {
     order = 6,
     type = "group",
     name = "Misc",
-    get = function(info) return SweepyBoop.db.profile[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile[info[#info]] = val end,
+    get = function(info) return SweepyBoop.db.profile.misc[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile.misc[info[#info]] = val end,
     args = {
-        header1 = {
+        healerInCrowdControl = {
             order = 1,
+            type = "toggle",
+            width = "full",
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_polymorph"), "Healer in crowd control reminder"),
+        },
+
+        header1 = {
+            order = 2,
             type = "header",
             name = "Type /afk to surrender arena",
         },
         arenaSurrenderEnabled = {
-            order = 2,
-            width = "full",
-            type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("inv_pet_exitbattle"), "Enabled"),
-        },
-        skipLeaveArenaConfirmation = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("inv_pet_exitbattle"), "Enabled"),
+        },
+        skipLeaveArenaConfirmation = {
+            order = 4,
+            width = "full",
+            type = "toggle",
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
             desc = addon.EXCLAMATION .. "Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
             disabled = function()
-                return ( not SweepyBoop.db.profile.arenaSurrenderEnabled );
+                return ( not SweepyBoop.db.profile.misc.arenaSurrenderEnabled );
             end,
         },
 
         header2 = {
-            order = 4,
+            order = 5,
             type = "header",
             name = "",
         },
         showDampenPercentage = {
-            order = 5,
+            order = 6,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_bg_winsoa_underxminutes"), "Show dampen percentage on the arena widget"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("achievement_bg_winsoa_underxminutes"), "Show dampen percentage on the arena widget"),
         },
     },
 };
@@ -544,18 +537,23 @@ local defaults = {
             arenaEnemyDefensiveIconSize = 25,
             spellList = {},
         },
-        arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
-        raidFrameAggroHighlightEnabled = true,
-        arenaSurrenderEnabled = true,
-        skipLeaveArenaConfirmation = false,
-        showDampenPercentage = true,
+        raidFrames = {
+            arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
+            raidFrameAggroHighlightEnabled = true,
+        },
+        misc = {
+            healerInCrowdControl = true,
+            arenaSurrenderEnabled = true,
+            skipLeaveArenaConfirmation = false,
+            showDampenPercentage = true,
+        },
     }
 };
 
 if addon.internal then -- Set default for internal version
-    defaults.profile.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
+    defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
-    defaults.profile.skipLeaveArenaConfirmation = true;
+    defaults.profile.misc.skipLeaveArenaConfirmation = true;
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
