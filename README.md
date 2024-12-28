@@ -98,11 +98,11 @@ Sort raid frames inside arena. Currently supports player on top/bottom, or in th
 ## Fix Blizzard raid frame aggro highlight
 ![PvP raid frame aggro highlight](https://github.com/user-attachments/assets/5fc7913f-3a96-4d2d-9939-55e6ef264ad3)
 
-Blizzard's raid frame aggro highlight only tracks PvE threat, i.e., threat from pets inside arenas, which is basically useless.
+Blizzard's raid frame aggro highlight only tracks PvE aggro, i.e., threat from pets inside arenas, which is basically useless.
 
 This module fixes that by highlighting the teammate who is targetted by enemy DPS players.
 
-For this module to work, uncheck the following under Interface settings so that it stops showing PvE threats:
+For this module to work, uncheck the following under Interface settings so that it stops showing PvE aggro:
 
 ![image](https://github.com/user-attachments/assets/38505bd7-5f7d-4f7d-95a0-f8d6f232c02e)
 
