@@ -31,6 +31,7 @@ local function HideIcon(frame)
 
     frame.animation:Stop();
     addon.HideOverlayGlow(frame);
+    frame.text:Hide(); -- This is parented to UIParent to not scale with the animation
     frame:Hide();
 end
 
@@ -49,7 +50,7 @@ local function CreateContainerFrame()
     frame.cooldown:SetDrawEdge(false);
     frame.cooldown:SetDrawBling(false);
     frame.cooldown:SetReverse(true);
-    frame.cooldown:SetIgnoreParentScale(true);
+    -- frame.cooldown:SetIgnoreParentScale(true); -- the cooldown is still scaling with the animation
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent:IsShown() then
@@ -94,6 +95,7 @@ local function ShowIcon(iconID, startTime, duration)
     end
 
     containerFrame:Show();
+    containerFrame.text:Show();
     addon.ShowOverlayGlow(containerFrame);
     containerFrame.animation:Play();
 end
