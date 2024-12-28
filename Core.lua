@@ -460,26 +460,70 @@ options.args.misc = {
     get = function(info) return SweepyBoop.db.profile.misc[info[#info]] end,
     set = function(info, val) SweepyBoop.db.profile.misc[info[#info]] = val end,
     args = {
-        healerInCrowdControl = {
+        header1 = {
             order = 1,
+            type = "header",
+            name = "Healer in crowd control reminder in arena",
+        },
+        healerInCrowdControl = {
+            order = 2,
             type = "toggle",
             width = "full",
-            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_polymorph"), "Healer in crowd control reminder in arena"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_polymorph"), "Enabled"),
+        },
+        healerInCrowdControlTest = {
+            order = 3,
+            type = "execute",
+            width = "half",
+            name = "Test",
+        },
+        healerInCrowdControlHide = {
+            order = 4,
+            type = "execute",
+            width = "half",
+            name = "Hide",
+        },
+        newline = {
+            order = 5,
+            type = "description",
+            width = "full",
+            name = "",
+        },
+        healerInCrowdControlSize = {
+            order = 6,
+            type = "range",
+            min = 30,
+            max = 200,
+            name = "Icon size",
+        },
+        healerInCrowdControlOffsetX = {
+            order = 7,
+            type = "range",
+            min = -1000,
+            max = 1000,
+            name = "Horizontal offset",
+        },
+        healerInCrowdControlOffsetY = {
+            order = 8,
+            type = "range",
+            min = -1000,
+            max = 1000,
+            name = "Vertical offset",
         },
 
-        header1 = {
-            order = 2,
+        header2 = {
+            order = 9,
             type = "header",
             name = "Type /afk to surrender arena",
         },
         arenaSurrenderEnabled = {
-            order = 3,
+            order = 10,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("inv_pet_exitbattle"), "Enabled"),
         },
         skipLeaveArenaConfirmation = {
-            order = 4,
+            order = 11,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
@@ -490,13 +534,13 @@ options.args.misc = {
             end,
         },
 
-        header2 = {
-            order = 5,
+        header3 = {
+            order = 12,
             type = "header",
             name = "",
         },
         showDampenPercentage = {
-            order = 6,
+            order = 13,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("achievement_bg_winsoa_underxminutes"), "Show dampen percentage on the arena widget"),
@@ -543,6 +587,9 @@ local defaults = {
         },
         misc = {
             healerInCrowdControl = true,
+            healerInCrowdControlSize = 30,
+            healerInCrowdControlOffsetX = 0,
+            healerInCrowdControlOffsetY = 500,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
