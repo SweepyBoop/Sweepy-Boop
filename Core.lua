@@ -593,7 +593,7 @@ local defaults = {
         },
         misc = {
             healerInCrowdControl = true,
-            healerInCrowdControlSize = 30,
+            healerInCrowdControlSize = 50,
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 150,
             arenaSurrenderEnabled = true,
