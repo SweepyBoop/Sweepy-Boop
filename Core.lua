@@ -464,7 +464,7 @@ options.args.misc = {
             order = 1,
             type = "toggle",
             width = "full",
-            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_polymorph"), "Healer in crowd control reminder"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_polymorph"), "Healer in crowd control reminder in arena"),
         },
 
         header1 = {
