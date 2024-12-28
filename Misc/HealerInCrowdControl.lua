@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local iconSize = addon.DEFAULT_ICON_SIZE;
 
-local frame;
+local containerFrame;
 local isInTest = false;
 
 local animationScale = 1.07;
@@ -26,84 +26,117 @@ local function SetupAnimation(frameWithAnimations)
     return animationGroup;
 end
 
-local function EnsureIconFrame()
-    if ( not frame ) then
-        frame = CreateFrame("Frame");
-        frame:SetMouseClickEnabled(false);
-        frame:SetFrameStrata("HIGH");
-        frame:SetSize(iconSize, iconSize);
-        
-        frame.icon = frame:CreateTexture(nil, "BORDER");
-        frame.icon:SetSize(iconSize, iconSize);
-        frame.icon:SetAllPoints(frame);
+local function HideIcon(frame)
+    if ( not frame ) then return end
 
-        frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-        frame.cooldown:SetAllPoints();
-        frame.cooldown:SetDrawEdge(false);
-        frame.cooldown:SetDrawBling(false);
-        frame.cooldown:SetReverse(true);
-        frame.cooldown:SetHideCountdownNumbers(true);
-
-        -- frame.mask = frame:CreateMaskTexture();
-        -- frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-        -- frame.mask:SetSize(iconSize, iconSize);
-        -- frame.mask:SetAllPoints(frame.icon);
-        -- frame.icon:AddMaskTexture(frame.mask);
-
-        -- frame.border = frame:CreateTexture(nil, "OVERLAY");
-        -- frame.border:SetAtlas("Azerite-Trait-RingGlow");
-        -- frame.border:SetBlendMode("ADD");
-        -- frame.border:SetDesaturated(true);
-        -- frame.border:SetSize(iconSize * 1.25, iconSize * 1.25);
-        -- frame.border:SetPoint("CENTER", frame, "CENTER");
-        -- frame.border:SetVertexColor(128, 0, 128); -- Purple
-
-        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
-        frame.spellActivationAlert:SetSize(iconSize * 1.4, iconSize * 1.4);
-        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER");
-        frame.spellActivationAlert:Hide();
-
-        frame.animation = SetupAnimation(frame);
-    end
-
-    if ( not frame.lastModified ) or ( frame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
-        local config = SweepyBoop.db.profile.misc;
-        local scale = config.healerInCrowdControlSize / iconSize;
-        frame:SetScale(scale);
-        frame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
-
-        frame.lastModified = SweepyBoop.db.profile.misc.lastModified;
-    end
-end
-
-local function ShowIcon(iconID, startTime, duration)
-    EnsureIconFrame();
-
-    frame.icon:SetTexture(iconID);
-    if duration then
-        frame.cooldown:SetCooldown(startTime, duration);
-        frame.cooldown:Show();
-    else
-        frame.cooldown:SetCooldown(0, 0);
-    end
-
-    frame:Show();
-    addon.ShowOverlayGlow(frame);
-    frame.animation:Play();
-end
-
-local function HideIcon()
     frame.animation:Stop();
     addon.HideOverlayGlow(frame);
     frame:Hide();
-    isInTest = false;
+end
+
+local function CreateContainerFrame()
+    local frame = CreateFrame("Frame");
+    frame:SetMouseClickEnabled(false);
+    frame:SetFrameStrata("HIGH");
+    frame:SetSize(iconSize, iconSize);
+    
+    frame.icon = frame:CreateTexture(nil, "BORDER");
+    frame.icon:SetSize(iconSize, iconSize);
+    frame.icon:SetAllPoints(frame);
+
+    frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+    frame.cooldown:SetAllPoints();
+    frame.cooldown:SetDrawEdge(false);
+    frame.cooldown:SetDrawBling(false);
+    frame.cooldown:SetReverse(true);
+    frame.cooldown:SetIgnoreParentScale(true);
+    frame.cooldown:SetScript("OnCooldownDone", function (self)
+        local parent = self:GetParent();
+        if parent:IsShown() then
+            HideIcon(parent);
+        end
+    end)
+
+    frame.text = UIParent:CreateFontString(nil, "OVERLAY", "GameTooltipText");
+    frame.text:SetPoint("TOP", frame, "BOTTOM", 0, -5);
+    frame.text:SetText("Healer in CC!");
+    frame.text:SetTextScale(2);
+    frame.text:SetTextColor(255, 0, 0);
+
+    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+    frame.spellActivationAlert:SetSize(iconSize * 1.4, iconSize * 1.4);
+    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER");
+    frame.spellActivationAlert:Hide();
+
+    frame.animation = SetupAnimation(frame);
+    
+    return frame;
+end
+
+local function ShowIcon(iconID, startTime, duration)
+    containerFrame = containerFrame or CreateContainerFrame();
+
+    if ( not containerFrame.lastModified ) or ( containerFrame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
+        local config = SweepyBoop.db.profile.misc;
+        local scale = config.healerInCrowdControlSize / iconSize;
+        containerFrame:SetScale(scale);
+        containerFrame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
+
+        containerFrame.lastModified = SweepyBoop.db.profile.misc.lastModified;
+    end
+
+    containerFrame.icon:SetTexture(iconID);
+    if duration then
+        containerFrame.cooldown:SetCooldown(startTime, duration);
+        containerFrame.cooldown:Show();
+    else
+        containerFrame.cooldown:SetCooldown(0, 0);
+    end
+
+    containerFrame:Show();
+    addon.ShowOverlayGlow(containerFrame);
+    containerFrame.animation:Play();
 end
 
 function SweepyBoop:TestHealerInCrowdControl()
-    ShowIcon(addon.ICON_PATH("spell_nature_polymorph"), GetTime(), 60);
+    if IsInInstance() then
+        print("Cannot run textest mode inside an instance");
+        return;
+    end
+
+    ShowIcon(addon.ICON_PATH("spell_nature_polymorph"), GetTime(), 15);
     isInTest = true;
 end
 
 function SweepyBoop:HideTestHealerInCrowdControl()
-    HideIcon();
+    HideIcon(containerFrame);
 end
+
+local updateFrame = CreateFrame("Frame"); -- When a frame is hidden it might not receive event, so we create a frame to catch events
+updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+updateFrame:RegisterEvent(addon.UNIT_AURA);
+updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
+    if ( not SweepyBoop.db.profile.misc.healerInCrowdControl ) then
+        HideIcon();
+        return;
+    end
+
+    if ( not IsActiveBattlefieldArena() ) and ( not isInTest ) and ( not addon.TEST_MODE ) then
+        HideIcon();
+        return;
+    end
+
+    if ( event == UNIT_AURA ) then
+        local auraFound, startTime, duration;
+        local isHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" ) or ( addon.TEST_MODE and unitTarget == "PLAYER" );
+        if isHealer then
+            for i = 1, 40 do
+                local auraData = C_UnitAuras.GetAuraDataByIndex(i);
+                if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
+                    local category = addon.DRList[auraData.spellId];
+
+                end
+            end
+        end
+    end
+end)
