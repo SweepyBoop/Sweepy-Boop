@@ -34,14 +34,17 @@ end
 local function EnsureClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
-    if ( not UnitIsUnit(nameplate.namePlateUnitToken, frame.unit) ) then
-        print(nameplate.namePlateUnitToken, frame.unit);
-    end
+
     if ( not nameplate.FriendlyClassIcon ) then
         nameplate.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
         nameplate.FriendlyClassIcon:SetScript("OnEvent", function (self, event, unitTarget)
-            if ( event == addon.UNIT_AURA ) and UnitIsUnit(unitTarget, self:GetParent().namePlateUnitToken) then
-                
+            if ( event == addon.UNIT_AURA ) then
+                local unitFrame = self:GetParent().UnitFrame;
+                if unitTarget and unitFrame and unitFrame.unit and UnitIsUnit(unitTarget, unitFrame.unit) then
+                    for i = 1, 40 do
+                        
+                    end
+                end
             end
         end)
     end
