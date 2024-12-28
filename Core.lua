@@ -240,6 +240,32 @@ options.args.nameplatesEnemy = {
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                     end,
                 },
+                breaker = {
+                    order = 4,
+                    type = "header",
+                    name = "",
+                },
+                useRecommended = {
+                    order = 5,
+                    type = "execute",
+                    name = "Use recommended config for filter whitelist",
+                    width = "double",
+                    icon = addon.GetIconPath("ability_druid_mangle.tga"),
+                    func = function ()
+                        
+                    end
+                },
+                useRecommendedCredit = {
+                    order = 6,
+                    type = "input",
+                    name = "Credit: MMarkers, the legend resto druid who inspired SweepyBoop to step into arena",
+                    width = "full",
+                    get = function ()
+                        return "https://www.twitch.tv/mmarkers";
+                    end,
+                    set = function ()
+                    end
+                },
             },
         },
 
@@ -573,7 +599,7 @@ function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 600);
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
 
 
