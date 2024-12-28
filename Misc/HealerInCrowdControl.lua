@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local iconSize = 40;
+local iconSize = addon.DEFAULT_ICON_SIZE;
 
 local frame;
 local isInTest = false;
@@ -37,6 +37,13 @@ local function EnsureIconFrame()
         frame.icon:SetSize(iconSize, iconSize);
         frame.icon:SetAllPoints(frame);
 
+        frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+        frame.cooldown:SetAllPoints();
+        frame.cooldown:SetDrawEdge(false);
+        frame.cooldown:SetDrawBling(false);
+        frame.cooldown:SetReverse(true);
+        frame.cooldown:SetHideCountdownNumbers(true);
+
         -- frame.mask = frame:CreateMaskTexture();
         -- frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
         -- frame.mask:SetSize(iconSize, iconSize);
@@ -61,16 +68,25 @@ local function EnsureIconFrame()
 
     if ( not frame.lastModified ) or ( frame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
         local config = SweepyBoop.db.profile.misc;
-        frame:SetScale(config.healerInCrowdControlSize / iconSize);
-        frame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX, config.healerInCrowdControlOffsetY);
+        local scale = config.healerInCrowdControlSize / iconSize;
+        frame:SetScale(scale);
+        frame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
 
         frame.lastModified = SweepyBoop.db.profile.misc.lastModified;
     end
 end
 
-local function ShowIcon(iconID, duration)
+local function ShowIcon(iconID, startTime, duration)
     EnsureIconFrame();
+
     frame.icon:SetTexture(iconID);
+    if duration then
+        frame.cooldown:SetCooldown(startTime, duration);
+        frame.cooldown:Show();
+    else
+        frame.cooldown:SetCooldown(0, 0);
+    end
+
     frame:Show();
     addon.ShowOverlayGlow(frame);
     frame.animation:Play();
@@ -84,7 +100,7 @@ local function HideIcon()
 end
 
 function SweepyBoop:TestHealerInCrowdControl()
-    ShowIcon(addon.ICON_PATH("spell_nature_polymorph"), 60);
+    ShowIcon(addon.ICON_PATH("spell_nature_polymorph"), GetTime(), 60);
     isInTest = true;
 end
 

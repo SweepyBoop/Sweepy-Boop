@@ -505,15 +505,15 @@ options.args.misc = {
         healerInCrowdControlOffsetX = {
             order = 7,
             type = "range",
-            min = -300,
-            max = 300,
+            min = -500,
+            max = 500,
             name = "Horizontal offset",
         },
         healerInCrowdControlOffsetY = {
             order = 8,
             type = "range",
-            min = -300,
-            max = 300,
+            min = -500,
+            max = 500,
             name = "Vertical offset",
         },
 
@@ -593,9 +593,9 @@ local defaults = {
         },
         misc = {
             healerInCrowdControl = true,
-            healerInCrowdControlSize = 48,
+            healerInCrowdControlSize = 35,
             healerInCrowdControlOffsetX = 0,
-            healerInCrowdControlOffsetY = 200,
+            healerInCrowdControlOffsetY = 250,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
