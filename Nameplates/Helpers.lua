@@ -37,6 +37,12 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
         classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
         classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
+
+        classIconFrame.cooldown = CreateFrame("Cooldown", nil, classIconFrame, "CooldownFrameTemplate");
+        classIconFrame.cooldown:SetAllPoints();
+        classIconFrame.cooldown:SetDrawEdge(false);
+        classIconFrame.cooldown:SetDrawBling(false);
+        classIconFrame.cooldown:SetHideCountdownNumbers(true);
     else
         classIconFrame.border:SetVertexColor(255, 0, 0); -- Red border for hostile
     end

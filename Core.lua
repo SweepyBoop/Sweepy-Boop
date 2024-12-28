@@ -60,8 +60,17 @@ options.args.nameplatesFriendly = {
             type = "header",
             name = "",
         },
-        useHealerIcon = {
+        showCrowdControl = {
             order = 5,
+            type = "toggle",
+            width = "full",
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_polymorph"), "Show crowd controls"),
+            disabled = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        },
+        useHealerIcon = {
+            order = 6,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of class icon for healers"),
@@ -70,7 +79,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showHealerOnly = {
-            order = 6,
+            order = 7,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healers only"),
@@ -80,7 +89,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 7,
+            order = 8,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.FLAG_CARRIER_HORDE_LOGO, addon.FLAG_CARRIER_ALLIANCE_LOGO, "Show flag carrier icons in battlegrounds"),
@@ -90,7 +99,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 8,
+            order = 9,
             type = "range",
             min = 50,
             max = 200,
@@ -100,7 +109,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 9,
+            order = 10,
             type = "range",
             min = 0,
             max = 150,
@@ -141,7 +150,7 @@ options.args.nameplatesEnemy = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", 
-                addon.GetIconPath("inv_misc_number_1"),  addon.GetIconPath("inv_misc_number_2"), addon.GetIconPath("inv_misc_number_3"),
+                addon.ICON_PATH("inv_misc_number_1"),  addon.ICON_PATH("inv_misc_number_2"), addon.ICON_PATH("inv_misc_number_3"),
                 "Arena enemy player nameplate numbers"),
             desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
         },
@@ -306,7 +315,7 @@ options.args.arenaFrames = {
             order = 6,
             width = 1.75,
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_fire_sealoffire"), "Arena Enemy Offensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_fire_sealoffire"), "Arena Enemy Offensive Cooldowns"),
             desc = "Show arena enemy offensive cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
@@ -327,7 +336,7 @@ options.args.arenaFrames = {
             order = 9,
             width = 1.75,
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_holy_divineshield"), "Arena Enemy Defensive Cooldowns"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_holy_divineshield"), "Arena Enemy Defensive Cooldowns"),
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
@@ -452,7 +461,7 @@ options.args.raidFrames = {
                 [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player at bottom",
                 [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in the middle",
             },
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("achievement_guildperk_everybodysfriend"), "Sort raid frames in arena"),
             style = "radio",
         },
 
@@ -460,7 +469,7 @@ options.args.raidFrames = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("spell_nature_reincarnation"), "Show PvP aggro highlight in arena"),
             desc = addon.EXCLAMATION .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
@@ -483,13 +492,13 @@ options.args.misc = {
             order = 2,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("inv_pet_exitbattle"), "Enabled"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("inv_pet_exitbattle"), "Enabled"),
         },
         skipLeaveArenaConfirmation = {
             order = 3,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
             desc = addon.EXCLAMATION .. "Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
             disabled = function()
@@ -506,7 +515,7 @@ options.args.misc = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.GetIconPath("achievement_bg_winsoa_underxminutes"), "Show dampen percentage on the arena widget"),
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("achievement_bg_winsoa_underxminutes"), "Show dampen percentage on the arena widget"),
         },
     },
 };
@@ -516,6 +525,7 @@ local defaults = {
         nameplatesFriendly = {
             classIconsEnabled = true,
             hideOutsidePvP = false,
+            showCrowdControl = true,
             classIconScale = 100,
             classIconOffset = 0,
             useHealerIcon = true,
