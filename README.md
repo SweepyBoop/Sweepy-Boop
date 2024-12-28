@@ -1,11 +1,11 @@
 # SweepyBoop's PvP Helper
-An _extremely_ _lightweight_ addon to support arena gameplay without changing default Blizzard UI as possible.
+An _extremely_ _lightweight_ addon to support arena gameplay while keeping original Blizzard UI as possible.
 
-Some of the features, such as class & pet icons and enemy nameplate highlight, also carry well into battlegrounds.
+Some of the features, such as class & pet icons and enemy nameplate highlight, also work well battlegrounds.
 
 Type **/sb** in game to invoke the options panel.
 
-Every module can be toggled on/off, with customization options (default settings should work great for most players).
+Each module can be toggled on/off, with customization options (default settings should work great for most players).
 
 ![Options panel](https://github.com/user-attachments/assets/4590c455-8456-4dac-b2d6-c432134cc07e)
 
@@ -63,7 +63,7 @@ This module comes with a few key features:
 - Glows when spell is active, and shows cooldown timer otherwise
 - Sorts icons by priority/threat, e.g., on an Assassination Rogue, Deathmark will always show before other icons
 - Filter by spec, e.g., only shows Convoke the Spirits for Balance/Feral Druids, but not Restoration Druids
-- Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by casting Fireball or crit damage
+- Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by crit damage
 
 This module is designed to give you **a quick overview** of
 - Which enemy player is bursting (so you can peel accordingly if needed)
@@ -75,7 +75,7 @@ It is **not** designed as some icons for players to stare at, or a spacestation 
 
 **Note**
 - This module looks for Gladius / sArena frames to anchor to, if neither is present icons will anchor to default Blizzard arena frames
-- This module tracks damage offensives and defensives, and players can fully customize which cooldowns to track in the options panel
+- This module tracks damage offensives and defensives, and players can fully customize which cooldowns to track
 
 ![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
 
