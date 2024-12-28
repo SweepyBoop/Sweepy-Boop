@@ -458,7 +458,11 @@ options.args.misc = {
     type = "group",
     name = "Misc",
     get = function(info) return SweepyBoop.db.profile.misc[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.misc[info[#info]] = val end,
+    set = function(info, val)
+        SweepyBoop.db.profile.misc[info[#info]] = val;
+        SweepyBoop.db.profile.misc.lastModified = GetTime();
+    end,
+    handler = SweepyBoop,
     args = {
         header1 = {
             order = 1,
@@ -476,12 +480,14 @@ options.args.misc = {
             type = "execute",
             width = "half",
             name = "Test",
+            func = "TestHealerInCrowdControl",
         },
         healerInCrowdControlHide = {
             order = 4,
             type = "execute",
             width = "half",
             name = "Hide",
+            func = "HideTestHealerInCrowdControl",
         },
         newline = {
             order = 5,
@@ -499,15 +505,15 @@ options.args.misc = {
         healerInCrowdControlOffsetX = {
             order = 7,
             type = "range",
-            min = -1000,
-            max = 1000,
+            min = -300,
+            max = 300,
             name = "Horizontal offset",
         },
         healerInCrowdControlOffsetY = {
             order = 8,
             type = "range",
-            min = -1000,
-            max = 1000,
+            min = -300,
+            max = 300,
             name = "Vertical offset",
         },
 
@@ -589,7 +595,7 @@ local defaults = {
             healerInCrowdControl = true,
             healerInCrowdControlSize = 30,
             healerInCrowdControlOffsetX = 0,
-            healerInCrowdControlOffsetY = 500,
+            healerInCrowdControlOffsetY = 150,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
