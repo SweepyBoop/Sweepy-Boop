@@ -219,3 +219,5 @@ addon.DRList = {
     [368970]  = "knockback", -- Tail Swipe (Racial, Dracthyr)
     [357214]  = "knockback", -- Wing Buffet (Racial, Dracthyr)
 };
+
+addon.DRList[78675]   = "silence"; -- Solar Beam (has no DR)

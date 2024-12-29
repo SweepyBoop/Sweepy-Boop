@@ -148,7 +148,7 @@ updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
     local isHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" ) or ( addon.TEST_MODE and unitTarget == "target" );
     if isHealer then
         for i = 1, 40 do
-            local auraData = C_UnitAuras.GetAuraDataByIndex(i);
+            local auraData = C_UnitAuras.GetAuraDataByIndex(unitTarget, i, "HARMFUL");
             if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
                 local category = addon.DRList[auraData.spellId];
                 if crowdControlPriority[category] then -- Found a CC that should be shown
