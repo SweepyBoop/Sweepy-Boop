@@ -3,7 +3,7 @@ An <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-t
 
 Type **/sb** in game to bring up the options panel.
 
-Default settings should work great out of the box, though each module can be toggled on/off with customization options.
+Default settings should work great out of the box, though each module can be toggled on/off with customizations.
 
 ![Options panel](https://github.com/user-attachments/assets/4590c455-8456-4dac-b2d6-c432134cc07e)
 
