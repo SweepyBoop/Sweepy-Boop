@@ -8,7 +8,7 @@ Each module can be toggled on/off, with customization options (default settings 
 ![Options panel](https://github.com/user-attachments/assets/4590c455-8456-4dac-b2d6-c432134cc07e)
 
 
-Some of the features, such as class & pet icons and enemy nameplate highlight, also work great in battlegrounds.
+Some features such as class & pet icons and enemy nameplate highlight also work great in battlegrounds.
 
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
