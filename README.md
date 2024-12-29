@@ -1,5 +1,5 @@
 # SweepyBoop's PvP Helper
-An _extremely_ _lightweight_ addon to support arena gameplay while keeping original Blizzard UI as possible.
+An **_extremely_ _lightweight_** addon to support arena gameplay while keeping **_original Blizzard UI_** as possible.
 
 Some of the features, such as class & pet icons and enemy nameplate highlight, also work well in battlegrounds.
 
