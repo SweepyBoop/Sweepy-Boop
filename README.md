@@ -1,8 +1,6 @@
 # SweepyBoop's PvP Helper
 An **_extremely_ _lightweight_** addon to support arena gameplay while keeping **_original Blizzard UI_** as possible.
 
-Some of the features, such as class & pet icons and enemy nameplate highlight, also work well in battlegrounds.
-
 Type **/sb** in game to bring up the options panel.
 
 Each module can be toggled on/off, with customization options (default settings should work great for most players).
@@ -10,7 +8,7 @@ Each module can be toggled on/off, with customization options (default settings 
 ![Options panel](https://github.com/user-attachments/assets/4590c455-8456-4dac-b2d6-c432134cc07e)
 
 
-
+Some of the features, such as class & pet icons and enemy nameplate highlight, also work great in battlegrounds.
 
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
