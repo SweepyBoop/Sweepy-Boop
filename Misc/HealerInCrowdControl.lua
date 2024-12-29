@@ -167,11 +167,11 @@ updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
                 end
             end
         end
-    end
 
-    if ( not spellID ) then -- No CC found, hide
-        HideIcon(containerFrame);
-    else
-        ShowIcon(spellID, duration and (expirationTime - duration), duration);
-    end
+        if ( not spellID ) then -- No CC found, hide
+            HideIcon(containerFrame);
+        else
+            ShowIcon(C_Spell.GetSpellTexture(spellID), duration and (expirationTime - duration), duration);
+        end
+    end    
 end)

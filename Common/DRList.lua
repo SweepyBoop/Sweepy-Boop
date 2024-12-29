@@ -220,4 +220,9 @@ addon.DRList = {
     [357214]  = "knockback", -- Wing Buffet (Racial, Dracthyr)
 };
 
-addon.DRList[78675]   = "silence"; -- Solar Beam (has no DR)
+-- Reference the list from BigDebuffs
+addon.DRList[81261]   = "silence"; -- Solar Beam (has no DR)
+
+if addon.TEST_MODE then
+    addon.DRList[164812] = "silence";
+end
