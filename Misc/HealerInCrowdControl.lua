@@ -149,13 +149,14 @@ updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
         return;
     end
 
-    local spellID;
-    local priority = 0; -- init with a low priority
-    local duration;
-    local expirationTime;
     local isFriendly = UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2");
     local isFriendlyHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
     if isFriendlyHealer then
+        local spellID;
+        local priority = 0; -- init with a low priority
+        local duration;
+        local expirationTime;
+
         for i = 1, 40 do
             local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
             if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
