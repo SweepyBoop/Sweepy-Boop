@@ -68,7 +68,7 @@ local function ShowSpecIcon(frame, iconID)
         end
     end
 
-    if ( specIconContainer.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconContainer.isHealerIcon ~= isHealerIcon ) then
+    if ( not specIconContainer.lastModified ) or ( specIconContainer.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconContainer.isHealerIcon ~= isHealerIcon ) then
         local scale = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100;
         if isHealerIcon then
             scale = scale * 1.25;

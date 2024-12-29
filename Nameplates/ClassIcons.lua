@@ -94,7 +94,7 @@ local function ShowClassIcon(frame)
     end
 
     -- Class changed or settings changed, update scale and offset
-    if ( class ~= iconFrame.class ) or ( iconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
+    if ( class ~= iconFrame.class ) or ( not iconFrame.lastModified ) or ( iconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
         local iconID, iconCoords = GetIconOptions(class);
 
         iconFrame.icon:SetTexture(iconID);

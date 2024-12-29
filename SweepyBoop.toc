@@ -21,6 +21,7 @@ Common\ArenaEnemyBurstSpells.lua
 Common\ArenaEnemyUtilitySpells.lua
 Common\UnitInfoHelpers.lua
 Common\NpcData.lua
+Common\DRList.lua
 
 Core.lua
 
@@ -32,6 +33,7 @@ Nameplates\Nameplates.lua
 
 Misc\ArenaSurrender.lua
 Misc\DampenDisplay.lua
+Misc\HealerInCrowdControl.lua
 
 RaidFrames\SortGroup.lua
 RaidFrames\FixBlizzardRaidAggro.lua

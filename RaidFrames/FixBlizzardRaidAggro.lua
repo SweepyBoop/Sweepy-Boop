@@ -37,7 +37,7 @@ end
 
 function SweepyBoop:SetupRaidFrameAggroHighlight()
     hooksecurefunc("CompactUnitFrame_UpdateName", function (frame)
-        if ( not self.db.profile.raidFrameAggroHighlightEnabled ) then
+        if ( not self.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then
             return; -- Skip if feature disabled
         end
 
