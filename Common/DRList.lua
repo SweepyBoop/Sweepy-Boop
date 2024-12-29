@@ -221,7 +221,7 @@ addon.DRList = {
 };
 
 -- Reference the list from BigDebuffs
-addon.DRList[81261]   = "silence"; -- Solar Beam (has no DR)
+addon.DRList[81261]   = "silence"; -- Solar Beam
 
 if addon.TEST_MODE then
     addon.DRList[164812] = "silence";
