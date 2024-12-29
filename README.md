@@ -109,6 +109,9 @@ For this module to work, uncheck the following under Interface settings so that 
 ## Miscellaneous quality-of-life features 
 ![Misc](https://github.com/user-attachments/assets/67f632e5-936e-4250-aca6-80eeadd68abd)
 
+### Healer in crowd control reminder
+![Healer in CC](https://github.com/user-attachments/assets/b17b510d-cc48-44bc-9256-7567020cbf5a)
+
 
 ### Type /afk to surrender arena
 Players can conveniently surrender arena by simply typing /afk.
