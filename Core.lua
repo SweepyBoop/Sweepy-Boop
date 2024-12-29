@@ -282,6 +282,19 @@ options.args.arenaFrames = {
             func = "HideTestArena",
             width = "half",
         },
+        reloadUI = {
+            order = 3,
+            type = "execute",
+            width = 0.75,
+            name = "Reload UI",
+            func = ReloadUI,
+        },
+        desc = {
+            order = 4,
+            type = "description",
+            width = "full",
+            name = addon.EXCLAMATION .. "Changes made during an arena session require a reload to take effect",
+        },
         breaker1 = {
             order = 5,
             type = "header",
@@ -334,8 +347,8 @@ options.args.arenaFrames = {
         arenaCooldownOffsetX = {
             order = 12,
             type = "range",
-            min = -750,
-            max = 750,
+            min = -250,
+            max = 250,
             name = "Horizontal offset",
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
