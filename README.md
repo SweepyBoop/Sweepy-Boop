@@ -1,5 +1,5 @@
 # SweepyBoop's PvP Helper
-An **_extremely_ _lightweight_** addon to support arena gameplay while keeping **_original Blizzard UI_** as possible.
+An <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to-set-up</strong></span> addon to enhance arena gameplay with minimal changes to <span style="color:#36f; font-style:italic"><strong>original Blizzard UI</strong></span>.
 
 Type **/sb** in game to bring up the options panel.
 
