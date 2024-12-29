@@ -5,21 +5,24 @@ local iconSize = addon.DEFAULT_ICON_SIZE;
 local containerFrame;
 local isInTest = false;
 
-local animationScale = 1.07;
 local animationDuration = 0.5;
 
 local function SetupAnimation(frameWithAnimations)
     local animationGroup = frameWithAnimations:CreateAnimationGroup();
 
-    local grow = animationGroup:CreateAnimation("Scale");
-    grow:SetOrder(1);
-    grow:SetScale(animationScale, animationScale);
-    grow:SetDuration(animationDuration);
+    local fadeIn = animationGroup:CreateAnimation("Alpha");
+    fadeIn:SetOrder(1);
+    fadeIn:SetSmoothing("OUT");
+    fadeIn:SetFromAlpha(1);
+    fadeIn:SetToAlpha(0);
+    fadeIn:SetDuration(animationDuration);
 
-    local shrink = animationGroup:CreateAnimation("Scale");
-    shrink:SetOrder(2);
-    shrink:SetScale(1 / animationScale, 1 / animationScale);
-    shrink:SetDuration(animationDuration);
+    local fadeOut = animationGroup:CreateAnimation("Scale");
+    fadeOut:SetOrder(2);
+    fadeOut:SetSmoothing("OUT");
+    fadeIn:SetFromAlpha(0);
+    fadeIn:SetToAlpha(1);
+    fadeOut:SetDuration(animationDuration);
 
     animationGroup:SetLooping("REPEAT");
 
@@ -31,7 +34,6 @@ local function HideIcon(frame)
 
     frame.animation:Stop();
     addon.HideOverlayGlow(frame);
-    frame.text:Hide(); -- This is parented to UIParent to not scale with the animation
     frame:Hide();
 end
 
@@ -58,7 +60,7 @@ local function CreateContainerFrame()
         end
     end)
 
-    frame.text = UIParent:CreateFontString(nil, "OVERLAY", "GameTooltipText");
+    frame.text = frame:CreateFontString(nil, "OVERLAY", "GameTooltipText");
     frame.text:SetPoint("TOP", frame, "BOTTOM", 0, -5);
     frame.text:SetText("Healer in CC!");
     frame.text:SetTextScale(2);
@@ -69,7 +71,7 @@ local function CreateContainerFrame()
     frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER");
     frame.spellActivationAlert:Hide();
 
-    frame.animation = SetupAnimation(frame);
+    frame.animation = SetupAnimation(frame.text);
 
     return frame;
 end
@@ -95,7 +97,6 @@ local function ShowIcon(iconID, startTime, duration)
     end
 
     containerFrame:Show();
-    containerFrame.text:Show();
     addon.ShowOverlayGlow(containerFrame);
     containerFrame.animation:Play();
 end
