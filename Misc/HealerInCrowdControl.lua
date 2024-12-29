@@ -149,7 +149,7 @@ updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
         return;
     end
 
-    local isFriendly = UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2");
+    local isFriendly = unitTarget and ( UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2") );
     local isFriendlyHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
     if isFriendlyHealer then
         local spellID;
@@ -183,5 +183,5 @@ updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
         else
             ShowIcon(C_Spell.GetSpellTexture(spellID), duration and (expirationTime - duration), duration);
         end
-    end    
+    end
 end)
