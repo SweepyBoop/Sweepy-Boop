@@ -35,6 +35,8 @@ local function HideIcon(frame)
     frame.animation:Stop();
     addon.HideOverlayGlow(frame);
     frame:Hide();
+
+    isInTest = false;
 end
 
 local function CreateContainerFrame()
