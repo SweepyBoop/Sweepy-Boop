@@ -592,7 +592,7 @@ local defaults = {
             raidFrameAggroHighlightEnabled = true,
         },
         misc = {
-            healerInCrowdControl = true,
+            healerInCrowdControl = false,
             healerInCrowdControlSize = 35,
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
@@ -607,6 +607,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
+    defaults.profile.misc.healerInCrowdControl = true;
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);

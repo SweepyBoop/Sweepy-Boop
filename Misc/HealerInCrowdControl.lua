@@ -144,6 +144,11 @@ updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
         return;
     end
 
+    if ( UnitGroupRolesAssigned("player") == "HEALER" ) then -- do not need to show if player is playing a healing spec
+        HideIcon(containerFrame);
+        return;
+    end
+
     local spellID;
     local priority = 0; -- init with a low priority
     local duration;
