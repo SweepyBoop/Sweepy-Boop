@@ -40,7 +40,7 @@ local function CreateContainerFrame()
     frame:SetMouseClickEnabled(false);
     frame:SetFrameStrata("HIGH");
     frame:SetSize(iconSize, iconSize);
-    
+
     frame.icon = frame:CreateTexture(nil, "BORDER");
     frame.icon:SetSize(iconSize, iconSize);
     frame.icon:SetAllPoints(frame);
@@ -70,7 +70,7 @@ local function CreateContainerFrame()
     frame.spellActivationAlert:Hide();
 
     frame.animation = SetupAnimation(frame);
-    
+
     return frame;
 end
 
@@ -114,31 +114,61 @@ function SweepyBoop:HideTestHealerInCrowdControl()
     HideIcon(containerFrame);
 end
 
+local crowdControlPriority = { -- sort by priority first, then remaining time
+    ["stun"] = 100,
+    ["silence"] = 90,
+    ["disorient"] = 80,
+    ["incapacitate"] = 80,
+};
+
 local updateFrame = CreateFrame("Frame"); -- When a frame is hidden it might not receive event, so we create a frame to catch events
 updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 updateFrame:RegisterEvent(addon.UNIT_AURA);
 updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
     if ( not SweepyBoop.db.profile.misc.healerInCrowdControl ) then
-        HideIcon();
+        HideIcon(containerFrame);
         return;
     end
 
     if ( not IsActiveBattlefieldArena() ) and ( not isInTest ) and ( not addon.TEST_MODE ) then
-        HideIcon();
+        HideIcon(containerFrame);
         return;
     end
 
     if ( event == UNIT_AURA ) then
-        local auraFound, startTime, duration;
-        local isHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" ) or ( addon.TEST_MODE and unitTarget == "PLAYER" );
+        local spellID;
+        local priority = 0; -- init with a low priority
+        local duration;
+        local expirationTime;
+        local isHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" ) or ( addon.TEST_MODE and unitTarget == "target" );
         if isHealer then
             for i = 1, 40 do
                 local auraData = C_UnitAuras.GetAuraDataByIndex(i);
                 if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
                     local category = addon.DRList[auraData.spellId];
-
+                    if crowdControlPriority[category] then -- Found a CC that should be shown
+                        if crowdControlPriority[category] > priority then -- first compare by priority
+                            priority = crowdControlPriority[category];
+                            duration = auraData.duration;
+                            expirationTime = auraData.expirationTime;
+                            spellID = auraData.spellId;
+                        elseif crowdControlPriority[category] == priority then -- same priority, use expirationTime as tie breaker
+                            if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then
+                                duration = auraData.duration;
+                                expirationTime = auraData.expirationTime;
+                                spellID = auraData.spellId;
+                            end
+                        end
+                    end
                 end
             end
         end
+
+        if ( not spellID ) then -- No CC found, hide
+            HideIcon(containerFrame);
+        else
+            ShowIcon(spellID, duration and (expirationTime - duration), duration);
+        end
+
     end
 end)
