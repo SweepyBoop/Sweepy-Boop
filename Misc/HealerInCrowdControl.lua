@@ -123,9 +123,15 @@ local crowdControlPriority = { -- sort by priority first, then remaining time
 
 local updateFrame = CreateFrame("Frame"); -- When a frame is hidden it might not receive event, so we create a frame to catch events
 updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+updateFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 updateFrame:RegisterEvent(addon.UNIT_AURA);
 updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
-    if ( not SweepyBoop.db.profile.misc.healerInCrowdControl ) then
+    if ( event ~= addon.UNIT_AURA ) then -- Hide when switching map or entering new round of solo shuffle
+        HideIcon(containerFrame);
+        return;
+    end
+
+    if ( not SweepyBoop.db.profile.misc.healerInCrowdControl ) and ( not isInTest ) then
         HideIcon(containerFrame);
         return;
     end
@@ -135,40 +141,37 @@ updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
         return;
     end
 
-    if ( event == UNIT_AURA ) then
-        local spellID;
-        local priority = 0; -- init with a low priority
-        local duration;
-        local expirationTime;
-        local isHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" ) or ( addon.TEST_MODE and unitTarget == "target" );
-        if isHealer then
-            for i = 1, 40 do
-                local auraData = C_UnitAuras.GetAuraDataByIndex(i);
-                if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
-                    local category = addon.DRList[auraData.spellId];
-                    if crowdControlPriority[category] then -- Found a CC that should be shown
-                        if crowdControlPriority[category] > priority then -- first compare by priority
-                            priority = crowdControlPriority[category];
+    local spellID;
+    local priority = 0; -- init with a low priority
+    local duration;
+    local expirationTime;
+    local isHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" ) or ( addon.TEST_MODE and unitTarget == "target" );
+    if isHealer then
+        for i = 1, 40 do
+            local auraData = C_UnitAuras.GetAuraDataByIndex(i);
+            if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
+                local category = addon.DRList[auraData.spellId];
+                if crowdControlPriority[category] then -- Found a CC that should be shown
+                    if crowdControlPriority[category] > priority then -- first compare by priority
+                        priority = crowdControlPriority[category];
+                        duration = auraData.duration;
+                        expirationTime = auraData.expirationTime;
+                        spellID = auraData.spellId;
+                    elseif crowdControlPriority[category] == priority then -- same priority, use expirationTime as tie breaker
+                        if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then
                             duration = auraData.duration;
                             expirationTime = auraData.expirationTime;
                             spellID = auraData.spellId;
-                        elseif crowdControlPriority[category] == priority then -- same priority, use expirationTime as tie breaker
-                            if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then
-                                duration = auraData.duration;
-                                expirationTime = auraData.expirationTime;
-                                spellID = auraData.spellId;
-                            end
                         end
                     end
                 end
             end
         end
+    end
 
-        if ( not spellID ) then -- No CC found, hide
-            HideIcon(containerFrame);
-        else
-            ShowIcon(spellID, duration and (expirationTime - duration), duration);
-        end
-
+    if ( not spellID ) then -- No CC found, hide
+        HideIcon(containerFrame);
+    else
+        ShowIcon(spellID, duration and (expirationTime - duration), duration);
     end
 end)
