@@ -16,7 +16,7 @@ local options = {
             image = addon.INTERFACE_SWEEPY .. "Art/Logo",
             imageWidth = 36,
             imageHeight = 36,
-            name = "A lightweight addon to improve your arena & battleground experience :)"
+            name = "A lightweight addon to enhance your arena & battleground experience :)"
         },
     },
 };
