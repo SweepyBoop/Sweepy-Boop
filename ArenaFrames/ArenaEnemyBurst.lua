@@ -218,7 +218,7 @@ local function EnsureIcon(unitId, spellID)
         premadeIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize, true);
     end
 
-    -- Size is not set on creation, need to set scale on init
+    -- Size was not set on creation, need to set scale
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
         local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE;
         premadeIcons[unitId][spellID]:SetScale(scale);
