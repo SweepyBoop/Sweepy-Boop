@@ -50,7 +50,7 @@ local function EnsureNpcHighlight(frame)
         frame.npcHighlight.animationGroup = SetupAnimation(frame.npcHighlight);
     end
 
-    if ( not frame.npcHighlight.lastModified ) or ( frame.npcHighlight.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
+    if ( frame.npcHighlight.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
         frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
         frame.npcHighlight.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
     end
