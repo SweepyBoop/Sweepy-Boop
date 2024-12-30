@@ -379,7 +379,8 @@ local function EnsureIconGroups()
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaEnemyBurst();
 
-                -- We only need to update icon group options upon entering arena
+                -- This will simply update
+                EnsureIcons();
                 EnsureIconGroups();
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
