@@ -16,7 +16,7 @@ local options = {
             image = addon.INTERFACE_SWEEPY .. "Art/Logo",
             imageWidth = 36,
             imageHeight = 36,
-            name = "A lightweight addon to improve your arena & battleground experience :)"
+            name = "A lightweight addon to enhance your arena & battleground experience :)"
         },
     },
 };
@@ -94,6 +94,7 @@ options.args.nameplatesFriendly = {
             type = "range",
             min = 50,
             max = 200,
+            step = 1,
             name = "Icon scale (%)",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -104,6 +105,7 @@ options.args.nameplatesFriendly = {
             type = "range",
             min = 0,
             max = 150,
+            step = 1,
             name = "Icon offset",
             disabled = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -189,6 +191,7 @@ options.args.nameplatesEnemy = {
             order = 9,
             min = -150,
             max = 150,
+            step = 1,
             type = "range",
             width = 0.85,
             name = "Vertical offset",
@@ -200,6 +203,7 @@ options.args.nameplatesEnemy = {
             order = 10,
             min = 50,
             max = 300,
+            step = 1,
             type = "range",
             width = 0.85,
             name = "Scale (%)",
@@ -236,6 +240,7 @@ options.args.nameplatesEnemy = {
                     name = "Highlight icon scale (%)",
                     min = 50,
                     max = 300,
+                    step = 1,
                     disabled = function()
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                     end,
@@ -282,6 +287,19 @@ options.args.arenaFrames = {
             func = "HideTestArena",
             width = "half",
         },
+        reloadUI = {
+            order = 3,
+            type = "execute",
+            width = 0.625,
+            name = "Reload UI",
+            func = ReloadUI,
+        },
+        desc = {
+            order = 4,
+            type = "description",
+            width = "full",
+            name = addon.EXCLAMATION .. "Changes made during an arena session require a reload to take effect",
+        },
         breaker1 = {
             order = 5,
             type = "header",
@@ -300,6 +318,7 @@ options.args.arenaFrames = {
             type = "range",
             min = 16,
             max = 64,
+            step = 1,
             name = "Icon size",
             desc = "Size of arena offensive cooldown icons",
         },
@@ -321,6 +340,7 @@ options.args.arenaFrames = {
             type = "range",
             min = 16,
             max = 64,
+            step = 1,
             name = "Icon size",
             desc = "Size of arena defensive cooldown icons",
         },
@@ -334,8 +354,9 @@ options.args.arenaFrames = {
         arenaCooldownOffsetX = {
             order = 12,
             type = "range",
-            min = -750,
-            max = 750,
+            min = -300,
+            max = 300,
+            step = 1,
             name = "Horizontal offset",
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
@@ -344,6 +365,7 @@ options.args.arenaFrames = {
             type = "range",
             min = -150,
             max = 150,
+            step = 1,
             name = "Vertical offset",
             desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
@@ -500,6 +522,7 @@ options.args.misc = {
             type = "range",
             min = 30,
             max = 200,
+            step = 1,
             name = "Icon size",
         },
         healerInCrowdControlOffsetX = {
@@ -507,6 +530,7 @@ options.args.misc = {
             type = "range",
             min = -500,
             max = 500,
+            step = 1,
             name = "Horizontal offset",
         },
         healerInCrowdControlOffsetY = {
@@ -514,6 +538,7 @@ options.args.misc = {
             type = "range",
             min = -500,
             max = 500,
+            step = 1,
             name = "Vertical offset",
         },
 
