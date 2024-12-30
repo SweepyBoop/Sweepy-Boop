@@ -271,7 +271,10 @@ options.args.arenaFrames = {
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
     get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.arenaFrames[info[#info]] = val end,
+    set = function(info, val) 
+        SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+        SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+    end,
     args = {
         testmode = {
             order = 1,
@@ -647,6 +650,13 @@ SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.burstSpells, true);
 SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.utilitySpells, true);
 
 function SweepyBoop:OnInitialize()
+    local currentTime = GetTime();
+    for _, category in pairs(defaults) do
+        if type(category) == "table" then
+            category.lastModified = currentTime;
+        end
+    end
+
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
@@ -709,9 +719,12 @@ function SweepyBoop:RefreshConfig()
     self:HideTestArenaEnemyBurst();
     self:HideTestCooldownTracking();
 
-    local time = GetTime();
-    self.db.profile.nameplatesFriendly.lastModified = time;
-    self.db.profile.nameplatesEnemy.lastModified = time;
+    local currentTime = GetTime();
+    for _, category in pairs(self.db.profile) do
+        if type(category) == "table" then
+            category.lastModified = currentTime;
+        end
+    end
 end
 
 function SweepyBoop:CheckAllSpells(value)

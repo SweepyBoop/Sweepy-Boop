@@ -81,7 +81,7 @@ end
 local function ShowIcon(iconID, startTime, duration)
     containerFrame = containerFrame or CreateContainerFrame();
 
-    if ( not containerFrame.lastModified ) or ( containerFrame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
+    if ( containerFrame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
         local config = SweepyBoop.db.profile.misc;
         local scale = config.healerInCrowdControlSize / iconSize;
         containerFrame:SetScale(scale);

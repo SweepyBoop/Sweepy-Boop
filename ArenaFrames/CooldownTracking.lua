@@ -511,6 +511,7 @@ local function EnsureIconGroups()
                 SweepyBoop:HideTestCooldownTracking();
 
                 -- This will simply update
+                EnsureIcons();
                 EnsureIconGroups();
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();

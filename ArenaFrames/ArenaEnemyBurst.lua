@@ -216,10 +216,9 @@ end
 local function EnsureIcon(unitId, spellID)
     if ( not premadeIcons[unitId][spellID] ) then
         premadeIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize, true);
-        -- Size is set on creation but can be updated if lastModified falls behind
-        premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
+    -- Size was not set on creation, need to set scale
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
         local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE;
         premadeIcons[unitId][spellID]:SetScale(scale);
@@ -380,7 +379,8 @@ local function EnsureIconGroups()
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaEnemyBurst();
 
-                -- We only need to update icon group options upon entering arena
+                -- This will simply update
+                EnsureIcons();
                 EnsureIconGroups();
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
