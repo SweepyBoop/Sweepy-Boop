@@ -169,18 +169,16 @@ local function ShowClassIcon(frame)
         -- Class changed or settings changed, update scale and offset
         if ( class ~= arrowFrame.class ) or ( arrowFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
             local classColor = C_ClassColor.GetClassColor(class);
-            --arrowFrame.icon:SetVertexColor(classColor);
+            arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
 
             arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
-            arrowFrame:SetPoint("BOTTOM", arrowFrame:GetParent(), "TOP", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "TOP", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
             arrowFrame.class = class;
             arrowFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
         end
 
         arrowFrame:Show();
-        print(arrowFrame:IsShown());
-        print(arrowFrame:GetSize());
     end
 end
 
