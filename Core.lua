@@ -50,10 +50,10 @@ options.args.nameplatesFriendly = {
             order = 3,
             type = "select",
             values = {
-                [addon.CLASS_ICON_STYLE.ICON] = "Class icons",
-                [addon.CLASS_ICON_STYLE.ARROW] = "Class color arrows",
+                [addon.CLASS_ICON_STYLE.ICON] = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/Druid", "Class icons"),
+                [addon.CLASS_ICON_STYLE.ARROW] = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/ClassArrow", "Class color arrows"),
             },
-            name = "Style",
+            name = "Icon style",
         },
         newline = {
             order = 4,
