@@ -17,15 +17,19 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
-(Icon style)
+(In-game class icon style)
 
 
 For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
-- Shows a highlight border for current target
+
+There are two styles of frinedly icons: in-game class icons and class color arrows:
+
+- Current friendly target will be highlighted with a border
 - <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" panic :)
-- Easy to distinguish between friendly class icons and enemy nameplates
 
 This module makes it much easier to track where your teammates are during an arena match, especially for healers!
+
+And it's super easy to distinguish between friendly icons and enemy nameplates.
 
 
 ![Flag Carrier Icons](https://github.com/user-attachments/assets/ba8d4723-57b0-42e6-adfa-2af4bf18e3da)
