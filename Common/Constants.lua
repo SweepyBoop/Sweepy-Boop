@@ -165,3 +165,8 @@ addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
 addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
 
 addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
+
+addon.CLASS_ICON_STYLE = {
+    ICON = 0,
+    ARROW = 1,
+};

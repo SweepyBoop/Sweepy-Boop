@@ -31,7 +31,7 @@ local function ShouldShowIcon(unitId) -- "Show healers only" option will be chec
     end
 end
 
-local function EnsureClassIcon(frame)
+local function EnsureIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassIcon ) then
@@ -41,6 +41,15 @@ local function EnsureClassIcon(frame)
     return nameplate.FriendlyClassIcon;
 end
 
+local function EnsureArrow(frame)
+    local nameplate = frame:GetParent();
+    if ( not nameplate ) then return end
+    if ( not nameplate.FriendlyClassArrow ) then
+        nameplate.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
+    end
+
+    return nameplate.FriendlyClassArrow;
+end
 
 local function GetIconOptions(class)
     local iconID;
@@ -61,10 +70,25 @@ local function GetIconOptions(class)
     return iconID, iconCoords;
 end
 
-local function ShowClassIcon(frame)
-    local iconFrame = EnsureClassIcon(frame);
-    if ( not iconFrame ) then return end;
+addon.HideClassIcon = function(frame)
+    local nameplate = frame:GetParent();
+    if ( not nameplate ) then return end
+    if nameplate.FriendlyClassIcon then
+        nameplate.FriendlyClassIcon:Hide();
+    end
+    if nameplate.FriendlyClassArrow then
+        nameplate.FriendlyClassArrow:Hide();
+    end
+end
 
+local specialClasses = { -- For these special classes, there is no arrow style
+    ["HEALER"] = true,
+    ["PET"] = true,
+    ["FlagCarrierHorde"] = true,
+    ["FlagCarrierAlliance"] = true,
+};
+
+local function ShowClassIcon(frame)
     local isPlayer = UnitIsPlayer(frame.unit);
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
 
@@ -88,46 +112,73 @@ local function ShowClassIcon(frame)
     if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
         if ( class ~= "HEALER" and class ~= "FlagCarrierHorde" and class ~= "FlagCarrierAlliance" ) then
             -- iconFrame.class and iconFrame.lastModified remain unchanged
-            iconFrame:Hide();
+            addon.HideClassIcon(frame);
             return;
         end
     end
 
-    -- Class changed or settings changed, update scale and offset
-    if ( class ~= iconFrame.class ) or ( iconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
-        local iconID, iconCoords = GetIconOptions(class);
-
-        iconFrame.icon:SetTexture(iconID);
-        iconFrame.icon:SetTexCoord(unpack(iconCoords));
-
-        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        if ( class == "HEALER" ) then
-            scale = scale * 1.25; -- Because healer uses icon coords from a collection of icons, using the same scale would make it seem smaller
-        elseif ( class == "PET" ) then
-            scale = scale * 0.8; -- smaller icon for pets
+    -- If we enabled icon style, or in case of a special class such as "PET", "HEALER", use icon style
+    if ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ICON ) or specialClasses[class] then
+        -- Hide arrow style if present
+        local nameplate = frame:GetParent();
+        if nameplate and nameplate.FriendlyClassArrow then
+            nameplate.FriendlyClassArrow:Hide();
         end
-        iconFrame:SetScale(scale);
 
-        iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+        local iconFrame = EnsureIcon(frame);
+        if ( not iconFrame ) then return end;
 
-        iconFrame.class = class;
-        iconFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    end
+        -- Class changed or settings changed, update scale and offset
+        if ( class ~= iconFrame.class ) or ( iconFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
+            local iconID, iconCoords = GetIconOptions(class);
 
-    if UnitIsUnit("target", frame.unit) then
-        iconFrame.targetHighlight:Show();
+            iconFrame.icon:SetTexture(iconID);
+            iconFrame.icon:SetTexCoord(unpack(iconCoords));
+
+            local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
+            if ( class == "HEALER" ) then
+                scale = scale * 1.25; -- Because healer uses icon coords from a collection of icons, using the same scale would make it seem smaller
+            elseif ( class == "PET" ) then
+                scale = scale * 0.8; -- smaller icon for pets
+            end
+            iconFrame:SetScale(scale);
+
+            iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+
+            iconFrame.class = class;
+            iconFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+        end
+
+        if UnitIsUnit("target", frame.unit) then
+            iconFrame.targetHighlight:Show();
+        else
+            iconFrame.targetHighlight:Hide();
+        end
+
+        iconFrame:Show();
     else
-        iconFrame.targetHighlight:Hide();
-    end
+        -- Hide icon style if present
+        local nameplate = frame:GetParent();
+        if nameplate and nameplate.FriendlyClassIcon then
+            nameplate.FriendlyClassIcon:Hide();
+        end
 
-    iconFrame:Show();
-end
+        local arrowFrame = EnsureArrow(frame);
+        if ( not arrowFrame ) then return end
 
-addon.HideClassIcon = function(frame)
-    local nameplate = frame:GetParent();
-    if ( not nameplate ) then return end
-    if nameplate.FriendlyClassIcon then
-        nameplate.FriendlyClassIcon:Hide();
+        -- Class changed or settings changed, update scale and offset
+        if ( class ~= arrowFrame.class ) or ( arrowFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
+            local classColor = C_ClassColor.GetClassColor(class);
+            arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+
+            arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
+            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "TOP", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+
+            arrowFrame.class = class;
+            arrowFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+        end
+
+        arrowFrame:Show();
     end
 end
 
