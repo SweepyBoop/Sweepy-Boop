@@ -594,7 +594,6 @@ local defaults = {
             useHealerIcon = true,
             showHealerOnly = false,
             useFlagCarrierIcon = true,
-            lastModified = now,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
@@ -608,7 +607,6 @@ local defaults = {
             highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
-            lastModified = now,
         },
         arenaFrames = {
             arenaCooldownOffsetX = 0,
@@ -618,12 +616,10 @@ local defaults = {
             arenaEnemyDefensivesEnabled = true,
             arenaEnemyDefensiveIconSize = 25,
             spellList = {},
-            lastModified = now,
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
-            lastModified = now,
         },
         misc = {
             healerInCrowdControl = false,
@@ -633,7 +629,6 @@ local defaults = {
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
-            lastModified = now,
         },
     }
 };
@@ -657,6 +652,13 @@ SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.burstSpells, true);
 SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.utilitySpells, true);
 
 function SweepyBoop:OnInitialize()
+    local currentTime = GetTime();
+    for _, category in pairs(defaults) do
+        if type(category) == "table" then
+            category.lastModified = currentTime;
+        end
+    end
+
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
@@ -720,7 +722,7 @@ function SweepyBoop:RefreshConfig()
     self:HideTestCooldownTracking();
 
     local currentTime = GetTime();
-    for name, category in pairs(self.db.profile) do
+    for _, category in pairs(self.db.profile) do
         if type(category) == "table" then
             category.lastModified = currentTime;
         end
