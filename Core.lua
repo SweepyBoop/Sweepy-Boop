@@ -719,9 +719,13 @@ function SweepyBoop:RefreshConfig()
     self:HideTestArenaEnemyBurst();
     self:HideTestCooldownTracking();
 
-    local time = GetTime();
-    self.db.profile.nameplatesFriendly.lastModified = time;
-    self.db.profile.nameplatesEnemy.lastModified = time;
+    local currentTime = GetTime();
+    for name, category in pairs(self.db.profile) do
+        if type(category) == "table" then
+            print("Set lastModified", name);
+            category.lastModified = currentTime;
+        end
+    end
 end
 
 function SweepyBoop:CheckAllSpells(value)
