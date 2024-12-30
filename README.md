@@ -18,7 +18,7 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 
 (Icon style)
 
-![image](https://github.com/user-attachments/assets/107ead14-16d1-46a8-8a7e-e0c4f59c3db8)
+![Arena friendly markers](https://github.com/user-attachments/assets/b02b3b59-2935-4687-bfad-f710575ee89b)
 
 (Class color arrows)
 
