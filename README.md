@@ -20,7 +20,7 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 
 ![image](https://github.com/user-attachments/assets/107ead14-16d1-46a8-8a7e-e0c4f59c3db8)
 
-(Class icon arrows)
+(Class color arrows)
 
 For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
 - Shows a highlight border for current target
