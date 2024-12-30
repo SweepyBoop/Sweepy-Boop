@@ -64,7 +64,7 @@ local function CreateContainerFrame()
 
     frame.text = frame:CreateFontString(nil, "OVERLAY", "GameTooltipText");
     frame.text:SetPoint("TOP", frame, "BOTTOM", 0, -5);
-    frame.text:SetText("Healer in CC!");
+    frame.text:SetText("");
     frame.text:SetTextScale(2);
     frame.text:SetTextColor(255, 0, 0);
 
@@ -87,6 +87,8 @@ local function ShowIcon(iconID, startTime, duration)
         containerFrame:SetScale(scale);
         containerFrame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
 
+        containerFrame.text:SetText(config.healerInCrowdControlText);
+
         containerFrame.lastModified = SweepyBoop.db.profile.misc.lastModified;
     end
 
@@ -100,7 +102,9 @@ local function ShowIcon(iconID, startTime, duration)
 
     containerFrame:Show();
     addon.ShowOverlayGlow(containerFrame);
-    containerFrame.animation:Play();
+    if string.gsub(containerFrame.text:GetText(), "%s+", "") ~= "" then
+        containerFrame.animation:Play();
+    end
 end
 
 function SweepyBoop:TestHealerInCrowdControl()
