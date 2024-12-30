@@ -53,7 +53,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame:SetIgnoreParentAlpha(true);
     classIconFrame:SetSize(arrowSize, arrowSize);
     classIconFrame:SetFrameStrata("HIGH");
-    classIconFrame:SetPoint("CENTER", nameplate, "TOP");
+    classIconFrame:SetPoint("CENTER", nameplate, "CENTER");
 
     classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
     classIconFrame.icon:SetSize(arrowSize, arrowSize);

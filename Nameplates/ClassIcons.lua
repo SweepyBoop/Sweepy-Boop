@@ -172,7 +172,7 @@ local function ShowClassIcon(frame)
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
 
             arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
-            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "TOP", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
             arrowFrame.class = class;
             arrowFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
