@@ -582,8 +582,6 @@ options.args.misc = {
     },
 };
 
-local now = GetTime();
-
 local defaults = {
     profile = {
         nameplatesFriendly = {
