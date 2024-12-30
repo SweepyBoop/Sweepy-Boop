@@ -220,7 +220,6 @@ local function EnsureIcon(unitId, spellID)
 
     -- Size is not set on creation, need to set scale on init
     if ( not premadeIcons[unitId][spellID].lastModified ) or ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        print("Icon updated", unitId, spellID);
         local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE;
         premadeIcons[unitId][spellID]:SetScale(scale);
         premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
