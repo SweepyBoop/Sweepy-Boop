@@ -582,6 +582,8 @@ options.args.misc = {
     },
 };
 
+local now = GetTime();
+
 local defaults = {
     profile = {
         nameplatesFriendly = {
@@ -592,6 +594,7 @@ local defaults = {
             useHealerIcon = true,
             showHealerOnly = false,
             useFlagCarrierIcon = true,
+            lastModified = now,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
@@ -605,6 +608,7 @@ local defaults = {
             highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
+            lastModified = now,
         },
         arenaFrames = {
             arenaCooldownOffsetX = 0,
@@ -614,10 +618,12 @@ local defaults = {
             arenaEnemyDefensivesEnabled = true,
             arenaEnemyDefensiveIconSize = 25,
             spellList = {},
+            lastModified = now,
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
+            lastModified = now,
         },
         misc = {
             healerInCrowdControl = false,
@@ -627,6 +633,7 @@ local defaults = {
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
+            lastModified = now,
         },
     }
 };
