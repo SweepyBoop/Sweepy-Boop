@@ -16,6 +16,12 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 ## Friendly class and pet icons
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
+(Icon style)
+
+![image](https://github.com/user-attachments/assets/107ead14-16d1-46a8-8a7e-e0c4f59c3db8)
+
+(Class icon arrows)
+
 For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
 - Shows a highlight border for current target
 - <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" panic :)
