@@ -102,7 +102,8 @@ local function ShowIcon(iconID, startTime, duration)
 
     containerFrame:Show();
     addon.ShowOverlayGlow(containerFrame);
-    if string.gsub(containerFrame.text:GetText(), "%s+", "") ~= "" then
+    local customText = containerFrame.text:GetText();
+    if customText and ( string.gsub(containerFrame.text:GetText(), "%s+", "") ~= "" ) then
         containerFrame.animation:Play();
     end
 end
