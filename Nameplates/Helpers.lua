@@ -57,7 +57,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
     classIconFrame.icon:SetSize(iconSize, iconSize);
     classIconFrame.icon:SetAllPoints(classIconFrame);
-    classIconFrame.icon:SetTexture("covenantsanctum-renown-double-arrow-depressed");
+    classIconFrame.icon:SetAtlas("covenantsanctum-renown-double-arrow-depressed");
     classIconFrame.icon:SetRotation(math.pi * 1.5);
 
     return classIconFrame;

@@ -45,7 +45,7 @@ local function EnsureArrow(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     if ( not nameplate.FriendlyClassArrow ) then
-        nameplate.FriendlyClassArrow = addon.CreateClassArrowFrame(nameplate);
+        nameplate.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
     end
 
     return nameplate.FriendlyClassArrow;
@@ -169,7 +169,7 @@ local function ShowClassIcon(frame)
         -- Class changed or settings changed, update scale and offset
         if ( class ~= arrowFrame.class ) or ( arrowFrame.lastModified ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) then
             local classColor = C_ClassColor.GetClassColor(class);
-            arrowFrame.icon:SetVertexColor(classColor);
+            --arrowFrame.icon:SetVertexColor(classColor);
 
             arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
             arrowFrame:SetPoint("BOTTOM", arrowFrame:GetParent(), "TOP", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
@@ -177,6 +177,10 @@ local function ShowClassIcon(frame)
             arrowFrame.class = class;
             arrowFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
         end
+
+        arrowFrame:Show();
+        print(arrowFrame:IsShown());
+        print(arrowFrame:GetSize());
     end
 end
 
