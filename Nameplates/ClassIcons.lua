@@ -178,6 +178,12 @@ local function ShowClassIcon(frame)
             arrowFrame.lastModified = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
         end
 
+        if UnitIsUnit("target", frame.unit) then
+            arrowFrame.targetHighlight:Show();
+        else
+            arrowFrame.targetHighlight:Hide();
+        end
+
         arrowFrame:Show();
     end
 end

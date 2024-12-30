@@ -569,6 +569,7 @@ options.args.misc = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("inv_pet_exitbattle"), "Enabled"),
+            desc = "If unable to surrender, by default a confirmation dialog will pop up to confirm leaving arena",
         },
         skipLeaveArenaConfirmation = {
             order = 11,
