@@ -46,8 +46,22 @@ options.args.nameplatesFriendly = {
             name = addon.EXCLAMATION ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
                    .. addon.EXCLAMATION ..  "If icons don't refresh right after changing options, change current target to force an update",
         },
-        hideOutsidePvP = {
+        classIconStyle = {
             order = 3,
+            type = "select",
+            values = {
+                [addon.CLASS_ICON_STYLE.ICON] = "Class icons",
+                [addon.CLASS_ICON_STYLE.ARROW] = "Class color arrows",
+            },
+            name = "Style",
+        },
+        newline = {
+            order = 4,
+            type = "description",
+            name = "",
+        },
+        hideOutsidePvP = {
+            order = 5,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", pvpCursor, "Hide class icons outside arenas & battlegrounds"),
@@ -56,12 +70,12 @@ options.args.nameplatesFriendly = {
             end
         },
         breaker = {
-            order = 4,
+            order = 6,
             type = "header",
             name = "",
         },
         useHealerIcon = {
-            order = 5,
+            order = 7,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of class icon for healers"),
@@ -70,7 +84,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showHealerOnly = {
-            order = 6,
+            order = 8,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healers only"),
@@ -80,7 +94,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 7,
+            order = 9,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.FLAG_CARRIER_HORDE_LOGO, addon.FLAG_CARRIER_ALLIANCE_LOGO, "Show flag carrier icons in battlegrounds"),
@@ -90,7 +104,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 8,
+            order = 10,
             type = "range",
             min = 50,
             max = 200,
@@ -101,7 +115,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 9,
+            order = 11,
             type = "range",
             min = 0,
             max = 150,
@@ -586,6 +600,7 @@ local defaults = {
     profile = {
         nameplatesFriendly = {
             classIconsEnabled = true,
+            classIconStyle = addon.CLASS_ICON_STYLE.ICON,
             hideOutsidePvP = false,
             classIconScale = 100,
             classIconOffset = 0,

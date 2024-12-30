@@ -43,3 +43,22 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
 
     return classIconFrame;
 end
+
+addon.CreateClassColorArrowFrame = function (nameplate)
+    local classIconFrame = CreateFrame("Frame", nil, nameplate);
+    classIconFrame:SetMouseClickEnabled(false);
+    -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
+    classIconFrame:SetAlpha(1);
+    classIconFrame:SetIgnoreParentAlpha(true);
+    classIconFrame:SetSize(iconSize, iconSize);
+    classIconFrame:SetFrameStrata("HIGH");
+    classIconFrame:SetPoint("BOTTOM", nameplate, "TOP");
+
+    classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
+    classIconFrame.icon:SetSize(iconSize, iconSize);
+    classIconFrame.icon:SetAllPoints(classIconFrame);
+    classIconFrame.icon:SetTexture("covenantsanctum-renown-double-arrow-depressed");
+    classIconFrame.icon:SetRotation(math.pi * 1.5);
+
+    return classIconFrame;
+end
