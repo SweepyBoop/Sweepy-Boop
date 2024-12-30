@@ -285,7 +285,7 @@ options.args.arenaFrames = {
         reloadUI = {
             order = 3,
             type = "execute",
-            width = 0.75,
+            width = 0.625,
             name = "Reload UI",
             func = ReloadUI,
         },
