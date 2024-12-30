@@ -11,13 +11,14 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
 
 ## Friendly class and pet icons
+![Arena friendly markers](https://github.com/user-attachments/assets/b02b3b59-2935-4687-bfad-f710575ee89b)
+
+(Class color arrows)
+
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
 (Icon style)
 
-![Arena friendly markers](https://github.com/user-attachments/assets/b02b3b59-2935-4687-bfad-f710575ee89b)
-
-(Class color arrows)
 
 For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
 - Shows a highlight border for current target
