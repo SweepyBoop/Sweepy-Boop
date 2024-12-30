@@ -271,7 +271,10 @@ options.args.arenaFrames = {
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
     get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.arenaFrames[info[#info]] = val end,
+    set = function(info, val) 
+        SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+        SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+    end,
     args = {
         testmode = {
             order = 1,
