@@ -114,7 +114,7 @@ For this module to work, uncheck the following under Interface settings so that 
 
 ## Miscellaneous quality-of-life features 
 ### Arena / battleground queue timer
-![SafeQueue](https://github.com/user-attachments/assets/a78decee-5ec0-4135-85d2-109050e87ab1)
+![SafeQueue](https://github.com/user-attachments/assets/35f6ad2e-63e4-4f46-8cbf-343499b8d8c7)
 
 Timer text changes to yellow at 20s mark, then red at 10s mark, with an alarm clock sound alert.
 
