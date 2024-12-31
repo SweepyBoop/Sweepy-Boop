@@ -113,6 +113,11 @@ For this module to work, uncheck the following under Interface settings so that 
 ![image](https://github.com/user-attachments/assets/38505bd7-5f7d-4f7d-95a0-f8d6f232c02e)
 
 ## Miscellaneous quality-of-life features 
+### Arena / battleground queue timer
+![SafeQueue](https://github.com/user-attachments/assets/a78decee-5ec0-4135-85d2-109050e87ab1)
+
+Timer text changes to yellow at 20s mark, then red at 10s mark, with an alarm clock sound alert.
+
 ### Healer in crowd control reminder
 ![Healer in CC](https://github.com/user-attachments/assets/b17b510d-cc48-44bc-9256-7567020cbf5a)
 
