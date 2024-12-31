@@ -17,6 +17,14 @@ local function EnsureTimerText(dialogFrame)
     dialogFrame.labelOverride:SetWidth(maxWidth);
 end
 
+local addonOverrides = {
+    -- From BBF
+    "customLabel",
+    "timerLabel",
+    "bgLabel",
+    "statusTextLabel",  
+};
+
 local function SetExpiresText()
     if ( not SweepyBoop.db.profile.misc.queueReminder) or ( not PVPReadyDialog ) or ( not battlefieldId ) then
         if PVPReadyDialog.labelOverride then
@@ -26,17 +34,11 @@ local function SetExpiresText()
     end
 
     -- Hide timers from other addons
-    if PVPReadyDialog.customLabel and PVPReadyDialog.customLabel.SetText then
-        PVPReadyDialog.customLabel:SetText("");
-    end
-    if PVPReadyDialog.timerLabel and PVPReadyDialog.timerLabel.SetText then
-        PVPReadyDialog.timerLabel:SetText("");
-    end
-    if PVPReadyDialog.bgLabel and PVPReadyDialog.bgLabel.SetText then
-        PVPReadyDialog.bgLabel:SetText("");
-    end
-    if PVPReadyDialog.statusTextLabel and PVPReadyDialog.statusTextLabel.SetText then
-        PVPReadyDialog.statusTextLabel:SetText("");
+    for i = 1, #(addonOverrides) do
+        local field = addonOverrides[i];
+        if PVPReadyDialog[field] and PVPReadyDialog[field].SetText then
+            PVPReadyDialog[field]:SetText("");
+        end
     end
 
     local seconds = GetBattlefieldPortExpiration(battlefieldId);

@@ -574,6 +574,7 @@ options.args.misc = {
             type = "toggle",
             width = "full",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("ability_racial_timeismoney"), "PvP Queue Timer"),
+            desc = "Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire",
             set = function (info, val)
                 SweepyBoop.db.profile.misc[info[#info]] = val;
                 SweepyBoop:SetupQueueReminder();
