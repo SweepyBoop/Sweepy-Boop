@@ -45,9 +45,9 @@ local function SetExpiresText()
     if ( seconds <= 0 ) then seconds = 1 end
     local color = ( seconds > 20 and "20ff20" ) or ( seconds > 10 and "ffff00" ) or "ff0000"; -- green -> yellow -> red
     local queueType = "Expires";
-    local battlefieldStatus = GetBattleFieldStatus(battlefieldId);
+    local battlefieldStatus = GetBattlefieldStatus(battlefieldId);
     if battlefieldStatus and battlefieldStatus.queueType then
-        queueType = battlefieldStatus.queueType + "expires";
+        queueType = battlefieldStatus.queueType + " expires";
     end
     local text = format("%s in |cff%s%s|r", queueType, color, SecondsToTime(seconds)); -- Only the time portion will change color
 
