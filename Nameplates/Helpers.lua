@@ -66,7 +66,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight:SetAtlas("Forge-ColorSwatchSelection");
     classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
     classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetSize(arrowSize / 1.25, arrowSize * 1.125);
+    classIconFrame.targetHighlight:SetSize(arrowSize / 1.375, arrowSize);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame);
     classIconFrame.targetHighlight:Hide();
 
