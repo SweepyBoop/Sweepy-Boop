@@ -5,10 +5,8 @@ local updateFrame; -- For update timer text
 local eventFrame; -- For listening to UPDATE_BATTLEFIELD_STATUS events
 local queues = {};
 
-local queueTypeText = {
+local queueTypeText = { -- For queues that don't have info outside of label, e.g., Arena Skirmishes
     ["ARENASKIRMISH"] = "Arena",
-    ["ARENA"] = "Arena",
-    ["RATEDSHUFFLE"] = "Arena",
 };
 
 local function EnsureTimerText(dialogFrame)
