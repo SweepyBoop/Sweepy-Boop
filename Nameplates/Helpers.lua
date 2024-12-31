@@ -63,10 +63,10 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
 
     classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
-    classIconFrame.targetHighlight:SetAtlas("Forge-ColorSwatchSelection");
+    classIconFrame.targetHighlight:SetAtlas("Capacitance-General-WorkOrderBorder");
     classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
     classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetSize(48, arrowSize);
+    classIconFrame.targetHighlight:SetSize(arrowSize / 2, arrowSize / 1.375);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame);
     classIconFrame.targetHighlight:Hide();
 
