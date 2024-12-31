@@ -65,7 +65,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
     classIconFrame.targetHighlight:SetAtlas("Capacitance-General-WorkOrderActive");
     classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
-    classIconFrame.targetHighlight:SetDesaturated(false);
+    classIconFrame.targetHighlight:SetDesaturated(true);
     classIconFrame.targetHighlight:SetSize(arrowSize / 1.25, arrowSize * 1.125);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame);
     classIconFrame.targetHighlight:Hide();
