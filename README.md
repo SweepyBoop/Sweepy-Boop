@@ -113,8 +113,6 @@ For this module to work, uncheck the following under Interface settings so that 
 ![image](https://github.com/user-attachments/assets/38505bd7-5f7d-4f7d-95a0-f8d6f232c02e)
 
 ## Miscellaneous quality-of-life features 
-![Misc](https://github.com/user-attachments/assets/67f632e5-936e-4250-aca6-80eeadd68abd)
-
 ### Healer in crowd control reminder
 ![Healer in CC](https://github.com/user-attachments/assets/b17b510d-cc48-44bc-9256-7567020cbf5a)
 
