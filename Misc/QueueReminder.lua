@@ -22,7 +22,7 @@ local addonOverrides = {
     "customLabel",
     "timerLabel",
     "bgLabel",
-    "statusTextLabel",  
+    "statusTextLabel",
 };
 
 local function SetExpiresText()
