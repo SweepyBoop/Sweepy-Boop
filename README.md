@@ -11,7 +11,7 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
 
 ## Friendly class and pet icons
-![Arena Friendly Markers](https://github.com/user-attachments/assets/0b537e0d-4b87-4aae-a74c-0344593e4b68)
+![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/fd2170d8-7377-4f52-9c74-77efbf7df1a2)
 
 (Class color arrows, with target highlight!)
 
