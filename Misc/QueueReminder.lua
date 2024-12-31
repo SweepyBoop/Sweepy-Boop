@@ -90,7 +90,7 @@ SweepyBoop.SetupQueueReminder = function ()
     if ( not SweepyBoop.db.profile.misc.queueReminder ) then return end
 
     if C_AddOns.IsAddOnLoaded("SafeQueue") then
-        DEFAULT_CHAT_FRAME:AddMessage(addon.BLIZZARD_CHAT_ICON .. "|cff00c0ffQueueReminder:|r SafeQueue is enabled, disable it to use SweepyBoop Queue Reminder.");
+        DEFAULT_CHAT_FRAME:AddMessage(addon.BLIZZARD_CHAT_ICON .. "|cff00c0ffPvP Queue Timer:|r SafeQueue is enabled, disable it to use SweepyBoop Queue Reminder.");
     end
 
     if ( not eventFrame ) then -- Only init once
