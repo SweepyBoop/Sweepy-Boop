@@ -18,7 +18,12 @@ local function EnsureTimerText(dialogFrame)
 end
 
 local function SetExpiresText()
-    if ( not SweepyBoop.db.profile.misc.queueReminder) or ( not PVPReadyDialog ) or ( not battlefieldId ) then return end
+    if ( not SweepyBoop.db.profile.misc.queueReminder) or ( not PVPReadyDialog ) or ( not battlefieldId ) then
+        if PVPReadyDialog.labelOverride then
+            PVPReadyDialog.labelOverride:SetText("");
+        end
+        return;
+    end
 
     local seconds = GetBattlefieldPortExpiration(battlefieldId);
     if ( seconds <= 0 ) then seconds = 1 end
