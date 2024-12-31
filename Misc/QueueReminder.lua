@@ -8,6 +8,7 @@ local queues = {};
 local queueTypeText = {
     ["ARENASKIRMISH"] = "Arena skirmish",
     ["ARENA"] = "Arena",
+    ["RATEDSHUFFLE"] = "Arena",
 };
 
 local function EnsureTimerText(dialogFrame)
@@ -118,6 +119,7 @@ SweepyBoop.SetupQueueReminder = function ()
                 local status, _, _, _, _, queueType = GetBattlefieldStatus(i);
                 if status == "queued" then
                     queues[i] = queues[i] or ( GetTime() - (GetBattlefieldTimeWaited(i) / 1000) );
+                    --print(queueType); -- for debugging queue types
                 elseif status == "confirm" then
                     if queues[i] then
                         local seconds = GetTime() - queues[i];
