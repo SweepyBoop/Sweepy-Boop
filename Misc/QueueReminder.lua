@@ -11,7 +11,7 @@ local function EnsureTimerText(dialogFrame)
     local maxWidth = dialogFrame:GetWidth();
 
     -- The original label (e.g., "Your Arena is ready!") will be hidden by calling SetText("")
-    dialogFrame.labelOverride = dialogFrame:CreateFontString(nil, "OVERLAY", "GameFontighlightLarge");
+    dialogFrame.labelOverride = dialogFrame:CreateFontString(nil, "OVERLAY", "GameFontHighlightLarge");
     dialogFrame.labelOverride:SetPoint("TOP", dialogFrame.label, "TOP", 0, 0);
     dialogFrame.labelOverride:SetText(""); -- e.g., Expires in 1 min 30 Sec, the time portion will change color based on time left
     dialogFrame.labelOverride:SetWidth(maxWidth);
