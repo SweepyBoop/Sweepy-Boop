@@ -7,6 +7,7 @@ local queues = {};
 
 local queueTypeText = { -- For queues that don't have info outside of label, e.g., Arena Skirmishes
     ["ARENASKIRMISH"] = "Arena",
+    ["ARENA"] = "Arena",
 };
 
 local function EnsureTimerText(dialogFrame)
