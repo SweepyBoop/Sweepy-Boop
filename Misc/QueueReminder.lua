@@ -110,7 +110,7 @@ SweepyBoop.SetupQueueReminder = function ()
             for i = 1, GetMaxBattlefieldID() do
                 local status = GetBattlefieldStatus(i)
                 if status == "queued" then
-                    queues[i] = ( queues[i] or GetTime() ) - (GetBattlefieldTimeWaited(i) / 1000);
+                    queues[i] = queues[i] or ( GetTime() - (GetBattlefieldTimeWaited(i) / 1000) );
                 elseif status == "confirm" then
                     if queues[i] then
                         local seconds = GetTime() - queues[i];
@@ -120,12 +120,16 @@ SweepyBoop.SetupQueueReminder = function ()
                         else
                             message = format("Queue popped after %s", SecondsToTime(seconds));
                         end
-                        print(message);
-                        isConfirm = true;
-                    else
+
                         queues[i] = nil;
+                        print(message);
                     end
+
+                    isConfirm = true;
+                else
+                    queues[i] = nil;
                 end
+
             end
 
             if ( not isConfirm ) then
