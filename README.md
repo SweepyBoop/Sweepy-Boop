@@ -116,7 +116,7 @@ For this module to work, uncheck the following under Interface settings so that 
 ### Arena / battleground queue timer
 ![SafeQueue](https://github.com/user-attachments/assets/35f6ad2e-63e4-4f46-8cbf-343499b8d8c7)
 
-Timer text changes to yellow at 20s mark, then red at 10s mark, with an alarm clock sound alert.
+Timer text color changes to yellow at 20s mark, then red at 10s mark, with an alarm clock sound alert.
 
 ### Healer in crowd control reminder
 ![Healer in CC](https://github.com/user-attachments/assets/b17b510d-cc48-44bc-9256-7567020cbf5a)
