@@ -129,7 +129,6 @@ SweepyBoop.SetupQueueReminder = function ()
                 else
                     queues[i] = nil;
                 end
-
             end
 
             if ( not isConfirm ) then
