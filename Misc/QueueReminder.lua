@@ -37,7 +37,7 @@ local function SetExpiresText()
 
     -- Play sound when remaining time text changes color (green -> yellow, yellow -> red)
     if labelOverride.prevSeconds then
-        local shouldPlaySound = ( labelOverride.prevSeconds >= 20 and seconds < 20 ) or ( labelOverride.prevSeconds >= 10 and seconds < 10 );
+        local shouldPlaySound = ( labelOverride.prevSeconds > 20 and seconds <= 20 ) or ( labelOverride.prevSeconds > 10 and seconds <= 10 );
         if shouldPlaySound then
             print("Play sound");
             PlaySoundFile(567458, "master"); -- sound/interface/alarmclockwarning3.ogg
