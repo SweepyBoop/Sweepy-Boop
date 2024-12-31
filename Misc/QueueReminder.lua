@@ -110,7 +110,7 @@ SweepyBoop.SetupQueueReminder = function ()
             for i = 1, GetMaxBattlefieldID() do
                 local status = GetBattlefieldStatus(i)
                 if status == "queued" then
-                    queues[i] = queues[i] or ( GetTime() - (GetBattlefieldTimeWaited(i) / 1000) );
+                    queues[i] = ( queues[i] or GetTime() ) - (GetBattlefieldTimeWaited(i) / 1000);
                 elseif status == "confirm" then
                     if queues[i] then
                         local seconds = GetTime() - queues[i];
