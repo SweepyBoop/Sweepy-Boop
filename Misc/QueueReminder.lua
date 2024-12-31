@@ -26,17 +26,17 @@ local function SetExpiresText()
     end
 
     -- Hide timers from other addons
-    if PVPReadyDialog.customLabel then
-        PVPReadyDialog.customLabel:Hide();
+    if PVPReadyDialog.customLabel and PVPReadyDialog.customLabel.SetText then
+        PVPReadyDialog.customLabel:SetText("");
     end
-    if PVPReadyDialog.timerLabel then
-        PVPReadyDialog.timerLabel:Hide();
+    if PVPReadyDialog.timerLabel and PVPReadyDialog.timerLabel.SetText then
+        PVPReadyDialog.timerLabel:SetText("");
     end
-    if PVPReadyDialog.bgLabel then
-        PVPReadyDialog.bgLabel:Hide();
+    if PVPReadyDialog.bgLabel and PVPReadyDialog.bgLabel.SetText then
+        PVPReadyDialog.bgLabel:SetText("");
     end
-    if PVPReadyDialog.statusTextLabel then
-        PVPReadyDialog.statusTextLabel:Hide();
+    if PVPReadyDialog.statusTextLabel and PVPReadyDialog.statusTextLabel.SetText then
+        PVPReadyDialog.statusTextLabel:SetText("");
     end
 
     local seconds = GetBattlefieldPortExpiration(battlefieldId);
