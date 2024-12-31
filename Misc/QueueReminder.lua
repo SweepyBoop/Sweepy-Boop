@@ -68,7 +68,7 @@ addon.StopUpdateQueueReminder = function ()
 end
 
 SweepyBoop.SetupQueueReminder = function ()
-    if SweepyBoop.db.profile.misc.pvpQueueReminder and PVPReadyDialog_Display then
+    if SweepyBoop.db.profile.misc.queueReminder and PVPReadyDialog_Display then
         hooksecurefunc("PVPReadyDialog_Display", function(_, i) -- Does this get triggered when logging off and on with a queue pop?
             battlefieldId = i;
             addon.StartUpdateQueueReminder();

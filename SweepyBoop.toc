@@ -34,6 +34,7 @@ Nameplates\Nameplates.lua
 Misc\ArenaSurrender.lua
 Misc\DampenDisplay.lua
 Misc\HealerInCrowdControl.lua
+Misc\QueueReminder.lua
 
 RaidFrames\SortGroup.lua
 RaidFrames\FixBlizzardRaidAggro.lua
