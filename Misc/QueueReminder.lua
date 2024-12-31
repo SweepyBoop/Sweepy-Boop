@@ -6,7 +6,7 @@ local eventFrame; -- For listening to UPDATE_BATTLEFIELD_STATUS events
 local queues = {};
 
 local queueTypeText = {
-    ["ARENASKIRMISH"] = "Arena skirmish",
+    ["ARENASKIRMISH"] = "Arena",
     ["ARENA"] = "Arena",
     ["RATEDSHUFFLE"] = "Arena",
 };
