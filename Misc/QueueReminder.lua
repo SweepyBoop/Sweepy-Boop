@@ -4,7 +4,11 @@ local battlefieldId;
 local updateFrame; -- For update timer text
 local eventFrame; -- For listening to UPDATE_BATTLEFIELD_STATUS events
 local queues = {};
-local queueTypes = {};
+
+local queueTypeText = {
+    ["ARENASKIRMISH"] = "Arena skirmish",
+    ["ARENA"] = "Arena",
+};
 
 local function EnsureTimerText(dialogFrame)
     if dialogFrame.labelOverride then return end -- Only create once
@@ -45,8 +49,9 @@ local function SetExpiresText()
     local seconds = GetBattlefieldPortExpiration(battlefieldId);
     if ( seconds <= 0 ) then seconds = 1 end
     local color = ( seconds > 20 and "20ff20" ) or ( seconds > 10 and "ffff00" ) or "ff0000"; -- green -> yellow -> red
-    local queueType = ( queueTypes[battlefieldId] and queueTypes[battlefieldId].." expires" ) or "Expires";
-    local text = format("%s in |cff%s%s|r", queueType, color, SecondsToTime(seconds)); -- Only the time portion will change color
+    local queueType = select(6, GetBattlefieldStatus(battlefieldId));
+    local prefix = ( queueType and queueTypeText[queueType] and ( queueTypeText[queueType] .. " expires" ) ) or "Expires";
+    local text = format("%s in |cff%s%s|r", prefix, color, SecondsToTime(seconds)); -- Only the time portion will change color
 
     EnsureTimerText(PVPReadyDialog);
     PVPReadyDialog.label:SetText(""); -- Hide the original label
@@ -113,7 +118,6 @@ SweepyBoop.SetupQueueReminder = function ()
                 local status, _, _, _, _, queueType = GetBattlefieldStatus(i);
                 if status == "queued" then
                     queues[i] = queues[i] or ( GetTime() - (GetBattlefieldTimeWaited(i) / 1000) );
-                    queueTypes[i] = queueTypes[i] or queueType;
                 elseif status == "confirm" then
                     if queues[i] then
                         local seconds = GetTime() - queues[i];
@@ -125,14 +129,12 @@ SweepyBoop.SetupQueueReminder = function ()
                         end
 
                         queues[i] = nil;
-                        queueTypes[i] = nil;
                         print(message);
                     end
 
                     isConfirm = true;
                 else
                     queues[i] = nil;
-                    queueTypes[i] = nil;
                 end
             end
 
