@@ -2,7 +2,7 @@ local _, addon = ...;
 
 -- Sizes are fixed, players can customize by scale
 local iconSize = 40;
-local arrowSize = 64;
+local arrowSize = 67;
 local highlightSize = 55;
 
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFriendly)
@@ -58,7 +58,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
     classIconFrame.icon:SetSize(arrowSize, arrowSize);
     classIconFrame.icon:SetDesaturated(false);
-    classIconFrame.icon:SetAtlas("covenantsanctum-renown-doublearrow-disabled");
+    classIconFrame.icon:SetAtlas("covenantsanctum-renown-doublearrow-disabled"); -- original size is 67 * 48, distort to 67 * 67
     classIconFrame.icon:SetAllPoints(classIconFrame);
     classIconFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
 
@@ -66,7 +66,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight:SetAtlas("Forge-ColorSwatchSelection");
     classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
     classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetSize(arrowSize / 1.375, arrowSize);
+    classIconFrame.targetHighlight:SetSize(48, arrowSize);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame);
     classIconFrame.targetHighlight:Hide();
 
