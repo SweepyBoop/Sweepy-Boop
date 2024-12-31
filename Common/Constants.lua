@@ -170,3 +170,5 @@ addon.CLASS_ICON_STYLE = {
     ICON = 0,
     ARROW = 1,
 };
+
+addon.BLIZZARD_CHAT_ICON = "|A:gmchat-icon-blizz:16:16|a";

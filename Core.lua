@@ -567,17 +567,34 @@ options.args.misc = {
         header2 = {
             order = 10,
             type = "header",
+            name = "",
+        },
+        queueReminder = {
+            order = 11,
+            type = "toggle",
+            width = "full",
+            name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("ability_racial_timeismoney"), "PvP Queue Timer"),
+            desc = "Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire",
+            set = function (info, val)
+                SweepyBoop.db.profile.misc[info[#info]] = val;
+                SweepyBoop:SetupQueueReminder();
+            end
+        },
+
+        header3 = {
+            order = 12,
+            type = "header",
             name = "Type /afk to surrender arena",
         },
         arenaSurrenderEnabled = {
-            order = 11,
+            order = 13,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("inv_pet_exitbattle"), "Enabled"),
             desc = "If unable to surrender, by default a confirmation dialog will pop up to confirm leaving arena",
         },
         skipLeaveArenaConfirmation = {
-            order = 12,
+            order = 14,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
@@ -588,13 +605,13 @@ options.args.misc = {
             end,
         },
 
-        header3 = {
-            order = 13,
+        header4 = {
+            order = 15,
             type = "header",
             name = "",
         },
         showDampenPercentage = {
-            order = 14,
+            order = 16,
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("achievement_bg_winsoa_underxminutes"), "Show dampen percentage on the arena widget"),
@@ -646,6 +663,7 @@ local defaults = {
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
             healerInCrowdControlText = "",
+            queueReminder = true,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
@@ -699,6 +717,8 @@ function SweepyBoop:OnInitialize()
 
     -- Setup raid frame aggro highlight
     self:SetupRaidFrameAggroHighlight();
+
+    self:SetupQueueReminder();
 end
 
 function SweepyBoop:TestArena()
