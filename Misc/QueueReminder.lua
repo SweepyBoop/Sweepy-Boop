@@ -39,7 +39,7 @@ local function SetExpiresText()
     if labelOverride.prevSeconds then
         local shouldPlaySound = ( labelOverride.prevSeconds > 20 and seconds < 20 ) or ( labelOverride.prevSeconds > 10 and seconds < 10 );
         if shouldPlaySound then
-            PlaySoundFile("sound/interface/alarmclockwarning3.ogg", "master");
+            PlaySoundFile(567458, "master"); -- sound/interface/alarmclockwarning3.ogg
         end
     end
 
