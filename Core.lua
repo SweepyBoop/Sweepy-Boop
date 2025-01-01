@@ -722,8 +722,6 @@ SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.burstSpells, true);
 SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.utilitySpells, true);
 
 function SweepyBoop:OnInitialize()
-    --addon.PRINT("Thank you for using my addon! Type /sb to bring up the options panel");
-
     local currentTime = GetTime();
     for _, category in pairs(defaults) do
         if type(category) == "table" then
@@ -737,6 +735,14 @@ function SweepyBoop:OnInitialize()
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 600);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
 
+    -- Print message on first 3 logins with the addon enabled
+    if SweepyBoopDB then
+        SweepyBoopDB.loginCount = SweepyBoopDB.loginCount or 1;
+        if ( SweepyBoopDB.loginCount <= 3 ) then
+            addon.PRINT("Thank you for supporting my addon! Type /sb to bring up the options panel. Hope you have a great PvP experience :)");
+            SweepyBoopDB.loginCount = SweepyBoopDB.loginCount + 1;
+        end
+    end
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
