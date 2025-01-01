@@ -62,6 +62,9 @@ options.args.nameplatesFriendly = {
             order = 4,
             type = "description",
             name = "",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
         },
         hideOutsidePvP = {
             order = 5,
@@ -528,6 +531,9 @@ options.args.misc = {
             width = "half",
             name = "Test",
             func = "TestHealerInCrowdControl",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+            end
         },
         healerInCrowdControlHide = {
             order = 4,
@@ -535,12 +541,18 @@ options.args.misc = {
             width = "half",
             name = "Hide",
             func = "HideTestHealerInCrowdControl",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+            end
         },
         newline = {
             order = 5,
             type = "description",
             width = "full",
             name = "",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+            end
         },
         healerInCrowdControlSize = {
             order = 6,
@@ -549,6 +561,9 @@ options.args.misc = {
             max = 200,
             step = 1,
             name = "Icon size",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+            end
         },
         healerInCrowdControlOffsetX = {
             order = 7,
@@ -557,6 +572,9 @@ options.args.misc = {
             max = 500,
             step = 1,
             name = "Horizontal offset",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+            end
         },
         healerInCrowdControlOffsetY = {
             order = 8,
@@ -565,11 +583,17 @@ options.args.misc = {
             max = 500,
             step = 1,
             name = "Vertical offset",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+            end
         },
         healerInCrowdControlText = {
             order = 9,
             type = "input",
             name = "Custom Text",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+            end
         },
 
         header2 = {
