@@ -31,17 +31,14 @@ This module makes it much easier to track where your teammates are during an are
 
 And it's super easy to distinguish between friendly icons and enemy nameplates.
 
+And some bonus features:
+- Flag carrier icons in battlegrounds
 
 ![Flag Carrier Icons](https://github.com/user-attachments/assets/ba8d4723-57b0-42e6-adfa-2af4bf18e3da)
 
-(Flag carrier icon in battlegrounds)
+- Pet icons
 
 ![Pet icons](https://github.com/user-attachments/assets/6e937613-bf68-4024-937a-28661b0ebd1c)
-
-
-
-
-(Pet icon on primary hunter pet, but not on the extra pet summoned by talent)
 
 To make the most of this module, configure your name & nameplate settings as follows:
 
