@@ -691,7 +691,7 @@ SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.burstSpells, true);
 SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.utilitySpells, true);
 
 function SweepyBoop:OnInitialize()
-    addon.PRINT("Thank you for using my addon! Type /sb to bring up the options panel");
+    --addon.PRINT("Thank you for using my addon! Type /sb to bring up the options panel");
 
     local currentTime = GetTime();
     for _, category in pairs(defaults) do
