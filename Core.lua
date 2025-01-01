@@ -79,7 +79,7 @@ options.args.nameplatesFriendly = {
             order = 6,
             type = "header",
             name = "",
-            hidden = function() -- hide this break line when the module is disabled since there is nothing to show
+            hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
