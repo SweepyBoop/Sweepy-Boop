@@ -81,8 +81,8 @@ addon.StartUpdateQueueReminder = function ()
     -- Hide timers from other addons
     for i = 1, #(addonOverrides) do
         local field = addonOverrides[i];
-        if PVPReadyDialog[field] and PVPReadyDialog[field].SetText then
-            PVPReadyDialog[field]:SetText("");
+        if PVPReadyDialog[field] and PVPReadyDialog[field].SetAlpha then
+            PVPReadyDialog[field]:SetAlpha(0);
         end
     end
 
@@ -92,6 +92,13 @@ end
 addon.StopUpdateQueueReminder = function ()
     if updateFrame then
         updateFrame:Hide(); -- A frame does not receive events when it's hidden, we only need to do updates when there is currently a queue pop
+    end
+
+    for i = 1, #(addonOverrides) do
+        local field = addonOverrides[i];
+        if PVPReadyDialog[field] and PVPReadyDialog[field].SetAlpha then
+            PVPReadyDialog[field]:SetAlpha(1);
+        end
     end
 end
 
