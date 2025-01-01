@@ -38,14 +38,6 @@ local function SetExpiresText()
         return;
     end
 
-    -- Hide timers from other addons
-    for i = 1, #(addonOverrides) do
-        local field = addonOverrides[i];
-        if PVPReadyDialog[field] and PVPReadyDialog[field].SetText then
-            PVPReadyDialog[field]:SetText("");
-        end
-    end
-
     local seconds = GetBattlefieldPortExpiration(battlefieldId);
     if ( seconds <= 0 ) then seconds = 1 end
     local color = ( seconds > 20 and "20ff20" ) or ( seconds > 10 and "ffff00" ) or "ff0000"; -- green -> yellow -> red
@@ -86,20 +78,42 @@ addon.StartUpdateQueueReminder = function ()
         end)
     end
 
+    -- Hide timers from other addons
+    for i = 1, #(addonOverrides) do
+        local field = addonOverrides[i];
+        if PVPReadyDialog[field] and PVPReadyDialog[field].SetAlpha then
+            PVPReadyDialog[field]:SetAlpha(0);
+        end
+    end
+
     updateFrame:Show();
 end
 
 addon.StopUpdateQueueReminder = function ()
+    if PVPReadyDialog.labelOverride then
+        PVPReadyDialog.labelOverride:SetText("");
+    end
+
     if updateFrame then
         updateFrame:Hide(); -- A frame does not receive events when it's hidden, we only need to do updates when there is currently a queue pop
+    end
+
+    for i = 1, #(addonOverrides) do
+        local field = addonOverrides[i];
+        if PVPReadyDialog[field] and PVPReadyDialog[field].SetAlpha then
+            PVPReadyDialog[field]:SetAlpha(1);
+        end
     end
 end
 
 SweepyBoop.SetupQueueReminder = function ()
-    if ( not SweepyBoop.db.profile.misc.queueReminder ) then return end
+    if ( not SweepyBoop.db.profile.misc.queueReminder ) then
+        addon.StopUpdateQueueReminder();
+        return;
+    end
 
     if C_AddOns.IsAddOnLoaded("SafeQueue") then
-        DEFAULT_CHAT_FRAME:AddMessage(addon.BLIZZARD_CHAT_ICON .. "|cff00c0ffSweepyBoop's PvP Helper:|r SafeQueue is enabled, disable it to use PvP Queue Timer.");
+        addon.PRINT("SafeQueue is enabled, disable it to use PvP Queue Timer");
     end
 
     if ( not eventFrame ) then -- Only init once
@@ -130,7 +144,7 @@ SweepyBoop.SetupQueueReminder = function ()
                         end
 
                         queues[i] = nil;
-                        print(message);
+                        addon.PRINT(message);
                     end
 
                     isConfirm = true;
