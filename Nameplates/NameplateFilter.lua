@@ -1,8 +1,9 @@
 local _, addon = ...;
 
-local animationScale = 1.07;
+local animationScale = 1.05;
 local animationDuration = 0.5;
 local iconSize = 30;
+local offsetMultiplier = 0.41;
 
 local function SetupAnimation(frameWithAnimations)
     local animationGroup = frameWithAnimations:CreateAnimationGroup();
@@ -30,13 +31,9 @@ local function EnsureNpcHighlight(frame)
         frame.npcHighlight:SetFrameStrata("HIGH");
         frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
 
-        -- Can be updated if lastModified falls behind db.profile
-        frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
-
         frame.npcHighlight.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
         frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
 
-        local offsetMultiplier = 0.41;
         local widthOffset = iconSize * offsetMultiplier;
         local heightOffset = iconSize * offsetMultiplier;
         frame.npcHighlight.glowTexture = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
