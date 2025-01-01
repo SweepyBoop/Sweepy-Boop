@@ -103,7 +103,10 @@ addon.StopUpdateQueueReminder = function ()
 end
 
 SweepyBoop.SetupQueueReminder = function ()
-    if ( not SweepyBoop.db.profile.misc.queueReminder ) then return end
+    if ( not SweepyBoop.db.profile.misc.queueReminder ) then
+        addon.StopUpdateQueueReminder();
+        return;
+    end
 
     if C_AddOns.IsAddOnLoaded("SafeQueue") then
         DEFAULT_CHAT_FRAME:AddMessage(addon.BLIZZARD_CHAT_ICON .. "|cff00c0ffSweepyBoop's PvP Helper:|r SafeQueue is enabled, disable it to use PvP Queue Timer.");
