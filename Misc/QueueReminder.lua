@@ -38,14 +38,6 @@ local function SetExpiresText()
         return;
     end
 
-    -- Hide timers from other addons
-    for i = 1, #(addonOverrides) do
-        local field = addonOverrides[i];
-        if PVPReadyDialog[field] and PVPReadyDialog[field].SetText then
-            PVPReadyDialog[field]:SetText("");
-        end
-    end
-
     local seconds = GetBattlefieldPortExpiration(battlefieldId);
     if ( seconds <= 0 ) then seconds = 1 end
     local color = ( seconds > 20 and "20ff20" ) or ( seconds > 10 and "ffff00" ) or "ff0000"; -- green -> yellow -> red
@@ -84,6 +76,14 @@ addon.StartUpdateQueueReminder = function ()
             end
             self.timer = timer;
         end)
+    end
+
+    -- Hide timers from other addons
+    for i = 1, #(addonOverrides) do
+        local field = addonOverrides[i];
+        if PVPReadyDialog[field] and PVPReadyDialog[field].SetText then
+            PVPReadyDialog[field]:SetText("");
+        end
     end
 
     updateFrame:Show();
