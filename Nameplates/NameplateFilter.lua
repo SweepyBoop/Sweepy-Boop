@@ -30,9 +30,6 @@ local function EnsureNpcHighlight(frame)
         frame.npcHighlight:SetFrameStrata("HIGH");
         frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
 
-        -- Can be updated if lastModified falls behind db.profile
-        frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
-
         frame.npcHighlight.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
         frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
 
