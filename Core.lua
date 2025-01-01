@@ -54,6 +54,9 @@ options.args.nameplatesFriendly = {
                 [addon.CLASS_ICON_STYLE.ARROW] = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/ClassArrow", "Class color arrows"),
             },
             name = "Icon style",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
         },
         newline = {
             order = 4,
@@ -73,6 +76,9 @@ options.args.nameplatesFriendly = {
             order = 6,
             type = "header",
             name = "",
+            hidden = function() -- hide this break line when the module is disabled since there is nothing to show
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
         },
         useHealerIcon = {
             order = 7,
