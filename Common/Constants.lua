@@ -172,3 +172,7 @@ addon.CLASS_ICON_STYLE = {
 };
 
 addon.BLIZZARD_CHAT_ICON = "|A:gmchat-icon-blizz:16:16|a";
+
+addon.PRINT = function(message)
+    DEFAULT_CHAT_FRAME:AddMessage(addon.BLIZZARD_CHAT_ICON .. "|cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
+end

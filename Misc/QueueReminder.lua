@@ -109,7 +109,7 @@ SweepyBoop.SetupQueueReminder = function ()
     end
 
     if C_AddOns.IsAddOnLoaded("SafeQueue") then
-        DEFAULT_CHAT_FRAME:AddMessage(addon.BLIZZARD_CHAT_ICON .. "|cff00c0ffSweepyBoop's PvP Helper:|r SafeQueue is enabled, disable it to use PvP Queue Timer.");
+        addon.PRINT("SafeQueue is enabled, disable it to use PvP Queue Timer");
     end
 
     if ( not eventFrame ) then -- Only init once
@@ -140,7 +140,7 @@ SweepyBoop.SetupQueueReminder = function ()
                         end
 
                         queues[i] = nil;
-                        print(message);
+                        addon.PRINT(message);
                     end
 
                     isConfirm = true;
