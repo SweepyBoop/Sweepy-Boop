@@ -724,7 +724,7 @@ end
 
 function SweepyBoop:TestArena()
     if IsInInstance() then
-        print("Test mode can only be used outside instances");
+        addon.PRINT("Test mode can only be used outside instances");
         return;
     end
 
