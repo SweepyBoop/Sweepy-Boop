@@ -65,7 +65,7 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", pvpCursor, "Hide class icons outside arenas & battlegrounds"),
-            disabled = function()
+            hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
@@ -79,7 +79,7 @@ options.args.nameplatesFriendly = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of class icon for healers"),
-            disabled = function()
+            hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
@@ -89,8 +89,10 @@ options.args.nameplatesFriendly = {
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healers only"),
             desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
-            disabled = function ()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            hidden = function ()
+                local config = SweepyBoop.db.profile.nameplatesFriendly;
+                local dependencyEnabled = config.classIconsEnabled and config.useHealerIcon;
+                return ( not dependencyEnabled );
             end
         },
         useFlagCarrierIcon = {
@@ -99,7 +101,7 @@ options.args.nameplatesFriendly = {
             type = "toggle",
             name = format(addon.ICON_FORMAT .. addon.ICON_FORMAT .. " %s", addon.FLAG_CARRIER_HORDE_LOGO, addon.FLAG_CARRIER_ALLIANCE_LOGO, "Show flag carrier icons in battlegrounds"),
             desc = "Use special icons for friendly flag carriers\nThis overwrites the healer icon",
-            disabled = function()
+            hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
@@ -110,7 +112,7 @@ options.args.nameplatesFriendly = {
             max = 200,
             step = 1,
             name = "Icon scale (%)",
-            disabled = function()
+            hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
@@ -121,7 +123,7 @@ options.args.nameplatesFriendly = {
             max = 150,
             step = 1,
             name = "Icon offset",
-            disabled = function()
+            hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
@@ -179,7 +181,7 @@ options.args.nameplatesEnemy = {
             width = "full",
             type = "toggle",
             name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of spec icon for healers"),
-            disabled = function ()
+            hidden = function ()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
         },
@@ -209,7 +211,7 @@ options.args.nameplatesEnemy = {
             type = "range",
             width = 0.85,
             name = "Vertical offset",
-            disabled = function ()
+            hidden = function ()
                 return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
             end
         },
@@ -255,7 +257,7 @@ options.args.nameplatesEnemy = {
                     min = 50,
                     max = 300,
                     step = 1,
-                    disabled = function()
+                    hidden = function()
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                     end,
                 },
@@ -269,7 +271,7 @@ options.args.nameplatesEnemy = {
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
             set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
             args = {},
-            disabled = function()
+            hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
             end
         }
@@ -600,7 +602,7 @@ options.args.misc = {
             name = format(addon.ICON_FORMAT .. " %s", addon.ICON_PATH("ability_druid_cower"), "Leave arena directly if unable to surrender (skip confirmation dialog)"),
             desc = addon.EXCLAMATION .. "Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
-            disabled = function()
+            hidden = function()
                 return ( not SweepyBoop.db.profile.misc.arenaSurrenderEnabled );
             end,
         },
