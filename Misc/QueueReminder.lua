@@ -90,6 +90,10 @@ addon.StartUpdateQueueReminder = function ()
 end
 
 addon.StopUpdateQueueReminder = function ()
+    if PVPReadyDialog.labelOverride then
+        PVPReadyDialog.labelOverride:SetText("");
+    end
+
     if updateFrame then
         updateFrame:Hide(); -- A frame does not receive events when it's hidden, we only need to do updates when there is currently a queue pop
     end
