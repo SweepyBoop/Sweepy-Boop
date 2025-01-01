@@ -5,5 +5,9 @@
   - Problem with disable/enable is some short cooldowns are not worth tracking but worth showing auras in case of cooldown stacking
   - Premake icons regardless of whether they are enabled or not, and activate only if they are enabled by the player
 
-- [ ] Enemy spec icon in arena
+- [x] Enemy spec icon in arena
   - Leverage API GetSpecializationInfoByID
+
+- [ ] Rogue indicator with Shadow Sight
+
+- [ ] Customize loss of control frame
