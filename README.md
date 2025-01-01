@@ -31,6 +31,11 @@ This module makes it much easier to track where your teammates are during an are
 
 And it's super easy to distinguish between friendly icons and enemy nameplates.
 
+There is an option to hide class icons outside inside PvP instances to reduce clutter on the screen:
+
+![image](https://github.com/user-attachments/assets/47e026f0-38f9-4cc6-aa80-5837fc30c273)
+
+
 And some bonus features:
 - Flag carrier icons in battlegrounds
 
