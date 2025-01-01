@@ -118,6 +118,8 @@ For this module to work, uncheck the following under Interface settings so that 
 
 Timer text color changes to yellow at 20s mark, then red at 10s mark, with an alarm clock sound alert.
 
+This makes the fewest changes to the original WoW UI compared to other similar addons (SafeQueue, BetterBlizzFrames, etc.)
+
 ### Healer in crowd control reminder
 ![Healer in CC](https://github.com/user-attachments/assets/b17b510d-cc48-44bc-9256-7567020cbf5a)
 
