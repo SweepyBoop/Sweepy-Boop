@@ -11,20 +11,20 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
 
 ## Friendly class and pet icons
-![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/fd2170d8-7377-4f52-9c74-77efbf7df1a2)
-
-(Class color arrows, with target highlight!)
-
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
 (In-game class icon style)
+
+![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/fd2170d8-7377-4f52-9c74-77efbf7df1a2)
+
+(Class color arrow style)
 
 
 For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
 
 There are two styles of frinedly icons: in-game class icons and class color arrows:
 
-- Current friendly target will be highlighted with a border
+- Current friendly target will be highlighted with a border (for both styles)
 - <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" panic :)
 
 This module makes it much easier to track where your teammates are during an arena match, especially for healers!
