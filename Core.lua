@@ -766,7 +766,12 @@ function SweepyBoop:TestArena()
         return;
     end
 
-    if Gladius then
+    if GladiusEx then
+        local frame = _G["GladiusExButtonFramearena1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+            GladiusEx:SetTesting(3);
+        end
+    elseif Gladius then
         local frame = _G["GladiusButtonFramearena1"];
         if ( not frame ) or ( not frame:IsShown() ) then
             if SlashCmdList["GLADIUS"] then
