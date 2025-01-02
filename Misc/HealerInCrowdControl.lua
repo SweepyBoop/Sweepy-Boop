@@ -9,6 +9,7 @@ local function HideIcon(frame)
     if ( not frame ) then return end
 
     frame.cooldown:SetCooldown(0, 0);
+    frame.text:SetText("");
     frame:Hide();
     isInTest = false;
 end
