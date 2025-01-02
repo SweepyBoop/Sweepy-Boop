@@ -106,7 +106,7 @@ function SweepyBoop:TestHealerInCrowdControl()
         return;
     end
 
-    ShowIcon(addon.ICON_PATH("spell_nature_polymorph"), GetTime(), 15);
+    ShowIcon(addon.ICON_PATH("spell_nature_polymorph"), GetTime(), 8);
     isInTest = true;
 end
 
