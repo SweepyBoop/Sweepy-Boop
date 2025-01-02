@@ -26,7 +26,7 @@ Important: to use friendly class icons, <span style="color:#36f"><strong>enable 
 ![Nameplate options](https://github.com/user-attachments/assets/2f5f7a9b-43d3-432a-8f11-5f2acbf8cc7b)
 
 
-There are two styles of frinedly icons: in-game class icons and class color arrows:
+There are two styles of friendly icons: in-game class icons and class color arrows:
 
 - Current friendly target will be highlighted with a border (for both styles)
 - <span style="color:#36f"><strong>Option to use a special icon for healers</strong></span> in your group! No more "where is my healer" panic :)
