@@ -39,6 +39,7 @@ local function CreateContainerFrame()
     frame.cooldown:SetDrawEdge(false);
     frame.cooldown:SetReverse(true);
     frame.cooldown:SetSwipeTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMaskSmall");
+    frame.cooldown:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
     frame.cooldown:SetHideCountdownNumbers(true);
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
