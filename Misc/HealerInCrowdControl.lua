@@ -25,7 +25,7 @@ local function CreateContainerFrame()
     frame.icon:SetAllPoints(frame);
 
     frame.mask = frame:CreateMaskTexture();
-    frame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMaskSmall");
+    frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
     frame.mask:SetSize(iconSize, iconSize);
     frame.mask:SetAllPoints(frame.icon);
     frame.icon:AddMaskTexture(frame.mask);
@@ -38,7 +38,7 @@ local function CreateContainerFrame()
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(false);
     frame.cooldown:SetReverse(true);
-    frame.cooldown:SetSwipeTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMaskSmall");
+    frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
     frame.cooldown:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
     frame.cooldown:SetHideCountdownNumbers(true);
     frame.cooldown:SetScript("OnCooldownDone", function (self)
