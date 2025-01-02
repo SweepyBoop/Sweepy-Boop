@@ -691,7 +691,7 @@ local defaults = {
         },
         misc = {
             healerInCrowdControl = false,
-            healerInCrowdControlSize = 35,
+            healerInCrowdControlSize = 48,
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
             healerInCrowdControlText = "",

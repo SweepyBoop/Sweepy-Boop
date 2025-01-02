@@ -49,7 +49,28 @@ local function CreateContainerFrame()
     frame.text:SetPoint("TOP", frame, "BOTTOM", 0, -5);
     frame.text:SetText("");
     frame.text:SetTextScale(2);
-    frame.text:SetTextColor(255, 0, 0);
+    
+    
+    frame.timer = TOOLTIP_UPDATE_TIME;
+    frame:SetScript("OnUpdate", function (self, elapsed)
+        local timer = self.timer;
+        timer = timer - elapsed;
+        if timer <= 0 then
+            local start, duration = self.cooldown:GetCooldownTimes();
+
+            if start and duration then
+                local remainingMs = start + duration - GetTime() * 1000;
+                if remainingMs > 0 then
+                    self.text:SetText(string.format("%.1f Sec", remainingMs / 1000));
+                else
+                    self.text:SetText("");
+                end
+            else
+                self.text:SetText("");
+            end
+        end
+        self.timer = timer;
+    end)
 
     return frame;
 end
