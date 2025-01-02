@@ -587,14 +587,6 @@ options.args.misc = {
                 return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
             end
         },
-        healerInCrowdControlText = {
-            order = 9,
-            type = "input",
-            name = "Custom Text",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
-            end
-        },
 
         header2 = {
             order = 10,
@@ -694,7 +686,6 @@ local defaults = {
             healerInCrowdControlSize = 48,
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
-            healerInCrowdControlText = "",
             queueReminder = true,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,

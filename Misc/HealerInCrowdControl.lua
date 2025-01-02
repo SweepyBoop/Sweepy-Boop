@@ -85,8 +85,6 @@ local function ShowIcon(iconID, startTime, duration)
         containerFrame:SetScale(scale);
         containerFrame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
 
-        containerFrame.text:SetText(config.healerInCrowdControlText);
-
         containerFrame.lastModified = SweepyBoop.db.profile.misc.lastModified;
     end
 
