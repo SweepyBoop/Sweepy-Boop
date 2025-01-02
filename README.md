@@ -81,7 +81,7 @@ It is **not** designed as some icons for players to stare at, or a spacestation 
 [Here is my Twitch clip of the cooldown tracking module in action!](https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131)
 
 **Note**
-- This module looks for Gladius / sArena frames to anchor to, if neither is present icons will anchor to default Blizzard arena frames
+- This module supports all major arena frames, including Gladius, GladiusEx, sArena as well as built-in WoW arena frames
 - This module tracks damage offensives and defensives, and players can fully customize which cooldowns to track
 
 ![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
