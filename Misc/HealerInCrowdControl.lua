@@ -25,7 +25,7 @@ local function CreateContainerFrame()
     frame.icon:SetAllPoints(frame);
 
     frame.mask = frame:CreateMaskTexture();
-    frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
+    frame.mask:SetTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMaskSmall");
     frame.mask:SetSize(iconSize, iconSize);
     frame.mask:SetAllPoints(frame.icon);
     frame.icon:AddMaskTexture(frame.mask);
