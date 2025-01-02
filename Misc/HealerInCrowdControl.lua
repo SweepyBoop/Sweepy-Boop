@@ -5,37 +5,10 @@ local iconSize = addon.DEFAULT_ICON_SIZE;
 local containerFrame;
 local isInTest = false;
 
-local animationDuration = 0.5;
-
-local function SetupAnimation(frameWithAnimations)
-    local animationGroup = frameWithAnimations:CreateAnimationGroup();
-
-    local fadeIn = animationGroup:CreateAnimation("Alpha");
-    fadeIn:SetOrder(1);
-    fadeIn:SetSmoothing("OUT");
-    fadeIn:SetFromAlpha(1);
-    fadeIn:SetToAlpha(0);
-    fadeIn:SetDuration(animationDuration);
-
-    local fadeOut = animationGroup:CreateAnimation("Scale");
-    fadeOut:SetOrder(2);
-    fadeOut:SetSmoothing("OUT");
-    fadeIn:SetFromAlpha(0);
-    fadeIn:SetToAlpha(1);
-    fadeOut:SetDuration(animationDuration);
-
-    animationGroup:SetLooping("REPEAT");
-
-    return animationGroup;
-end
-
 local function HideIcon(frame)
     if ( not frame ) then return end
 
-    frame.animation:Stop();
-    addon.HideOverlayGlow(frame);
     frame:Hide();
-
     isInTest = false;
 end
 
@@ -49,12 +22,22 @@ local function CreateContainerFrame()
     frame.icon:SetSize(iconSize, iconSize);
     frame.icon:SetAllPoints(frame);
 
+    frame.mask = frame:CreateMaskTexture();
+    frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
+    frame.mask:SetSize(iconSize, iconSize);
+    frame.mask:SetAllPoints(frame.icon);
+    frame.icon:AddMaskTexture(frame.mask);
+
+    frame.border = frame:CreateTexture(nil, "OVERLAY");
+    frame.border:SetAtlas("pvptalents-warmode-ring");
+    frame.border:SetAllPoints(frame);
+
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(false);
-    frame.cooldown:SetDrawBling(false);
     frame.cooldown:SetReverse(true);
-    -- frame.cooldown:SetIgnoreParentScale(true); -- the cooldown is still scaling with the animation
+    frame.cooldown:SetSwipeTexture("Interface/CHARACTERFRAME/TempPortraitAlphaMaskSmall");
+    frame.cooldown:SetHideCountdownNumbers(true);
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent:IsShown() then
@@ -67,13 +50,6 @@ local function CreateContainerFrame()
     frame.text:SetText("");
     frame.text:SetTextScale(2);
     frame.text:SetTextColor(255, 0, 0);
-
-    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
-    frame.spellActivationAlert:SetSize(iconSize * 1.4, iconSize * 1.4);
-    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER");
-    frame.spellActivationAlert:Hide();
-
-    frame.animation = SetupAnimation(frame.text);
 
     return frame;
 end
@@ -101,11 +77,7 @@ local function ShowIcon(iconID, startTime, duration)
     end
 
     containerFrame:Show();
-    addon.ShowOverlayGlow(containerFrame);
-    local customText = containerFrame.text:GetText();
-    if customText and ( string.gsub(containerFrame.text:GetText(), "%s+", "") ~= "" ) then
-        containerFrame.animation:Play();
-    end
+    
 end
 
 function SweepyBoop:TestHealerInCrowdControl()
