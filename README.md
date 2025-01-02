@@ -19,8 +19,12 @@ Some features such as class & pet icons and enemy nameplate highlight also work 
 
 (Class color arrow style)
 
+Replace nameplates of friendly players and their primary pets with class / pet icons.
 
-For friendly players and their primary pets, replace their health bars with class (for players) or pet (for pets) icons.
+Important: to use friendly class icons, <span style="color:#36f"><strong>enable the following settings in Options - Interface - Nameplates</strong></span>:
+
+![Nameplate options](https://github.com/user-attachments/assets/2f5f7a9b-43d3-432a-8f11-5f2acbf8cc7b)
+
 
 There are two styles of frinedly icons: in-game class icons and class color arrows:
 
@@ -28,11 +32,9 @@ There are two styles of frinedly icons: in-game class icons and class color arro
 - <span style="color:#36f"><strong>Option to use a special icon for healers</strong></span> in your group! No more "where is my healer" panic :)
 - You can also <span style="color:#36f"><strong>customize to show your healer only</strong></span>, a great option for DPS players.
 
-This module makes it much easier to track where your teammates are during an arena match, especially for healers!
+This module makes it much easier to track your teammates' positioning, since the icons are super visible and easily distinguishable from enemy nameplates!
 
-And it's super easy to distinguish between friendly icons and enemy nameplates.
-
-There is an option to hide class icons outside inside PvP instances to reduce clutter on the screen:
+There is also an option to hide class icons outside inside PvP instances to reduce clutter on the screen:
 
 ![image](https://github.com/user-attachments/assets/47e026f0-38f9-4cc6-aa80-5837fc30c273)
 
@@ -45,10 +47,6 @@ And some bonus features:
 - Pet icons
 
 ![Pet icons](https://github.com/user-attachments/assets/6e937613-bf68-4024-937a-28661b0ebd1c)
-
-To make the most of this module, configure your name & nameplate settings as follows:
-
-![image](https://github.com/user-attachments/assets/3f43fe3b-5c84-4863-aa0a-29a0b61aaae8)
 
 ## Enemy nameplate filtering & highlighting
 ![TotemHighlight](https://github.com/user-attachments/assets/3ca7871f-0566-44f0-b141-4560213c30f0)
