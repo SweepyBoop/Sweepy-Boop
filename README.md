@@ -25,7 +25,7 @@ For friendly players and their primary pets, replace their health bars with clas
 There are two styles of frinedly icons: in-game class icons and class color arrows:
 
 - Current friendly target will be highlighted with a border (for both styles)
-- <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" panic :)
+- <span style="color:#36f"><strong>Option to use a special icon for healers</strong></span> in your group! No more "where is my healer" panic :)
 - You can also <span style="color:#36f"><strong>customize to show your healer only</strong></span>, a great option for DPS players.
 
 This module makes it much easier to track where your teammates are during an arena match, especially for healers!
