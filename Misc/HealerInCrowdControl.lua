@@ -48,9 +48,7 @@ local function CreateContainerFrame()
     frame.text = frame:CreateFontString(nil, "OVERLAY", "GameTooltipText");
     frame.text:SetPoint("TOP", frame, "BOTTOM", 0, -5);
     frame.text:SetText("");
-    frame.text:SetTextScale(2);
-    
-    
+
     frame.timer = TOOLTIP_UPDATE_TIME;
     frame:SetScript("OnUpdate", function (self, elapsed)
         local timer = self.timer;
@@ -98,7 +96,7 @@ local function ShowIcon(iconID, startTime, duration)
     end
 
     containerFrame:Show();
-    
+
 end
 
 function SweepyBoop:TestHealerInCrowdControl()
