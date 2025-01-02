@@ -103,7 +103,18 @@ end
 local function CalculateArenaFrameOffsetX(frameName)
     local offsetX = 0;
 
-    if string.sub(frameName, 1, 7) == "Gladius" then
+    if string.sub(frameName, 1, 9) == "GladiusEx" then
+        local frame = _G["GladiusExButtonFramearena1"];
+        local frameRight = frame:GetRight() * frame:GetEffectiveScale();
+        local trinket = _G["GladiusExTrinketFramearena1"];
+        if trinket then
+            offsetX = math.max(offsetX, trinket:GetRight() * trinket:GetEffectiveScale() - frameRight);
+        end
+        local racial = _G["GladiusExRacialFramearena1"];
+        if racial then
+            offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
+        end
+    elseif string.sub(frameName, 1, 7) == "Gladius" then
         local frame = _G["GladiusButtonFramearena1"];
         local frameRight = frame:GetRight() * frame:GetEffectiveScale();
         local trinket = _G["GladiusTrinketFramearena1"];
