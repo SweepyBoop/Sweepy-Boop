@@ -103,7 +103,7 @@ end
 
 function SweepyBoop:TestHealerInCrowdControl()
     if IsInInstance() then
-        print("Cannot run textest mode inside an instance");
+        addon.PRINT("Cannot run textest mode inside an instance");
         return;
     end
 
