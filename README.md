@@ -122,7 +122,7 @@ Timer text color changes to yellow at 20s mark, then red at 10s mark, with an al
 This module makes the <span style="color:#36f"><strong>fewest changes to the original WoW UI</strong></span> compared to other similar addons (SafeQueue, BetterBlizzFrames, etc.)
 
 ### Healer in crowd control reminder
-![Healer in CC](https://github.com/user-attachments/assets/b17b510d-cc48-44bc-9256-7567020cbf5a)
+![Healer in CC](https://github.com/user-attachments/assets/28c5f724-c0fe-46ab-b575-8fbb21790ef0)
 
 
 ### Type /afk to surrender arena
