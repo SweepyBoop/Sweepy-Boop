@@ -27,6 +27,8 @@ There are two styles of frinedly icons: in-game class icons and class color arro
 - Current friendly target will be highlighted with a border (for both styles)
 - <span style="color:#36f"><strong>Option to use a special icon for healers in your group!</strong></span> No more "where is my healer" panic :)
 
+  (you can also customize to show your heal only, a great option for DPS players)
+
 This module makes it much easier to track where your teammates are during an arena match, especially for healers!
 
 And it's super easy to distinguish between friendly icons and enemy nameplates.
