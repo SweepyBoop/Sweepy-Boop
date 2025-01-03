@@ -118,7 +118,7 @@ This module fixes that by highlighting the teammate who is targetted by enemy DP
 
 For this module to work, uncheck the following under Interface settings so that it stops showing PvE aggro:
 
-![image](https://github.com/user-attachments/assets/38505bd7-5f7d-4f7d-95a0-f8d6f232c02e)
+![image](https://github.com/user-attachments/assets/39e0088e-7280-4775-a5eb-1c824987ebaa)
 
 ## Miscellaneous quality-of-life features 
 ### Arena / battleground queue timer
