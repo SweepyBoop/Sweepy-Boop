@@ -164,6 +164,9 @@ addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLAS
 addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
 addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
 
+-- https://warcraft.wiki.gg/wiki/UI_escape_sequences
+addon.HELAER_LOGO = "|A:UI-LFG-RoleIcon-Healer:20:20|a";
+
 addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
 
 addon.CLASS_ICON_STYLE = {

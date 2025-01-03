@@ -87,7 +87,7 @@ options.args.nameplatesFriendly = {
             order = 7,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of class icon for healers"),
+            name = format("%s %s", addon.HELAER_LOGO, "Show healer icon instead of class icon for healers"),
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -96,7 +96,7 @@ options.args.nameplatesFriendly = {
             order = 8,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healers only"),
+            name = format("%s %s", addon.HELAER_LOGO, "Show healers only"),
             desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
             hidden = function ()
                 local config = SweepyBoop.db.profile.nameplatesFriendly;
@@ -189,7 +189,7 @@ options.args.nameplatesEnemy = {
             order = 6,
             width = "full",
             type = "toggle",
-            name = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/healer", "Show healer icon instead of spec icon for healers"),
+            name = format("%s %s", addon.HELAER_LOGO, "Show healer icon instead of spec icon for healers"),
             hidden = function ()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
