@@ -2,7 +2,7 @@
 A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to-set-up</strong></span> addon to enhance arena gameplay with <span style="color:#36f; font-style:italic"><strong>minimal changes to original WoW UI</strong></span>.
 
 Features include:
-- Friendly player markers: replaces friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
+- Friendly player markers: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
 - Enemy nameplate filter & highlight: customize which enemy units to hide / show / show with a pulsing icon; hide beast master hunters' secondary pets
 - Arena offensive & defensive cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, factoring in cooldown reduction (such as combustion)
 - Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
