@@ -43,14 +43,14 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = addon.EXCLAMATION ..  "Need to enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
+            name = addon.EXCLAMATION ..  "Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
                    .. addon.EXCLAMATION ..  "If icons don't refresh right after changing options, change current target to force an update",
         },
         classIconStyle = {
             order = 3,
             type = "select",
             values = {
-                [addon.CLASS_ICON_STYLE.ICON] = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/Druid", "Class icons"),
+                [addon.CLASS_ICON_STYLE.ICON] = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/Druid", "WoW class icons"),
                 [addon.CLASS_ICON_STYLE.ARROW] = format(addon.ICON_FORMAT .. " %s", addon.INTERFACE_SWEEPY .. "Art/ClassArrow", "Class color arrows"),
             },
             name = "Icon style",
