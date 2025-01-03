@@ -43,7 +43,7 @@ This module makes it much easier to track your teammates' positioning, since the
 
 There is also an option to hide class icons outside inside PvP instances to reduce clutter on the screen:
 
-![image](https://github.com/user-attachments/assets/47e026f0-38f9-4cc6-aa80-5837fc30c273)
+![image](https://github.com/user-attachments/assets/32819e4f-d69b-4e68-910f-c5ea04d2d6a2)
 
 
 And some bonus features:
