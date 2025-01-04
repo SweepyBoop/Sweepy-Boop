@@ -12,6 +12,8 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
         return ( UnitIsUnit(unitId, "focus") and addon.ICON_ID_HEALER ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
     end
 
+    if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
+
     local config = SweepyBoop.db.profile.nameplatesEnemy;
     if IsActiveBattlefieldArena() then
         for i = 1, addon.MAX_ARENA_SIZE do
