@@ -51,7 +51,7 @@ options.args.nameplatesFriendly = {
             type = "select",
             values = {
                 [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
-                [addon.CLASS_ICON_STYLE.ARROW] = addon.FORMAT_ATLAS("CovenantSanctum-Renown-DoubleArrow-Depressed", 20) .. " Class color arrows",
+                [addon.CLASS_ICON_STYLE.ARROW] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow") .. " Class color arrows",
             },
             name = "Icon style",
             hidden = function()
