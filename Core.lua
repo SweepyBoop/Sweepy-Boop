@@ -43,8 +43,8 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = addon.EXCLAMATION ..  "Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
-                   .. addon.EXCLAMATION ..  "If icons don't refresh right after changing options, change current target to force an update",
+            name = addon.EXCLAMATION ..  " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
+                   .. addon.EXCLAMATION ..  " If icons don't refresh right after changing options, change current target to force an update",
         },
         classIconStyle = {
             order = 3,
@@ -156,7 +156,7 @@ options.args.nameplatesEnemy = {
             order = 1,
             width = "full",
             type = "description",
-            name = addon.EXCLAMATION ..  "If nameplates don't refresh right after changing options, change current target to force an update",
+            name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
         },
         breaker1 = {
             order = 2,
@@ -325,7 +325,7 @@ options.args.arenaFrames = {
             order = 4,
             type = "description",
             width = "full",
-            name = addon.EXCLAMATION .. "Changes made during an arena session require a reload to take effect",
+            name = addon.EXCLAMATION .. " Changes made during an arena session require a reload to take effect",
         },
         breaker1 = {
             order = 5,
@@ -496,7 +496,7 @@ options.args.raidFrames = {
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
-            desc = addon.EXCLAMATION .. "Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
+            desc = addon.EXCLAMATION .. " Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
     },
@@ -621,7 +621,7 @@ options.args.misc = {
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_cower")) .. " Leave arena directly if unable to surrender (skip confirmation dialog)",
-            desc = addon.EXCLAMATION .. "Leaving arena before entering combat might result in deserter status",
+            desc = addon.EXCLAMATION .. " Leaving arena before entering combat might result in deserter status",
             descStyle = "inline",
             hidden = function()
                 return ( not SweepyBoop.db.profile.misc.arenaSurrenderEnabled );
