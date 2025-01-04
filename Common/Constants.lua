@@ -182,5 +182,5 @@ addon.CLASS_ICON_STYLE = {
 };
 
 addon.PRINT = function(message)
-    DEFAULT_CHAT_FRAME:AddMessage(addon.FORMAT_ATLAS("pvptalents-warmode-swords", 16) .. "|cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
+    DEFAULT_CHAT_FRAME:AddMessage(addon.FORMAT_ATLAS("pvptalents-warmode-swords", 16) .. " |cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
 end
