@@ -116,3 +116,27 @@ addon.GetClassForPlayerOrArena = function (unitId)
         end
     end
 end
+
+-- C_PvP.GetScoreInfoByPlayerGuid returns localized spec name
+local specInfoByName = {};
+for specIndex = 1, GetNumSpecializations() do
+    local _, name, _, icon, role = GetSpecializationInfo(specIndex);
+    specInfoByName[name] = { icon = icon, role = role };
+end
+
+-- Battleground enemy info parser
+addon.cachedBattlefieldSpec = {};
+local refreshFrame = CreateFrame("Frame");
+refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Are there other events we need to register?
+refreshFrame:SetScript("OnEvent", function ()
+    addon.cachedBattlefieldSpec = {};
+end)
+
+addon.GetBattlefieldSpecByPlayerGuid = function (guid)
+    if ( not addon.cachedBattlefieldSpec[guid] ) then
+        local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+        addon.cachedBattlefieldSpec[guid] = scoreInfo and scoreInfo.talentSpec and specInfoByName[scoreInfo.talentSpec];
+    end
+
+    return addon.cachedBattlefieldSpec[guid];
+end
