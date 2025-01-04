@@ -13,24 +13,32 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
     end
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    for i = 1, addon.MAX_ARENA_SIZE do
-        if UnitIsUnit(unitId, "arena" .. i) then
-            -- i is the opponent index
-            local specID = GetArenaOpponentSpec(i);
-            if ( not specID ) then return end
-            local iconID, role = select(4, GetSpecializationInfoByID(specID));
 
-            if ( role == "HEALER" ) then
-                if config.arenaSpecIconHealer then
-                    if config.arenaSpecIconHealerIcon then
-                        return addon.ICON_ID_HEALER;
-                    else
-                        return iconID;
+    if IsActiveBattlefieldArena() then
+        for i = 1, addon.MAX_ARENA_SIZE do
+            if UnitIsUnit(unitId, "arena" .. i) then
+                -- i is the opponent index
+                local specID = GetArenaOpponentSpec(i);
+                if ( not specID ) then return end
+                local iconID, role = select(4, GetSpecializationInfoByID(specID));
+
+                if ( role == "HEALER" ) then
+                    if config.arenaSpecIconHealer then
+                        if config.arenaSpecIconHealerIcon then
+                            return addon.ICON_ID_HEALER;
+                        else
+                            return iconID;
+                        end
                     end
+                elseif config.arenaSpecIconOthers then
+                    return iconID;
                 end
-            elseif config.arenaSpecIconOthers then
-                return iconID;
             end
+        end
+    elseif config.arenaSpecIconHealer and config.arenaSpecIconHealerIcon and ( UnitInBattleground("player") ~= nil ) then
+        -- Also show enemy healer icon in battlegrounds
+        if ( UnitGroupRolesAssigned(unitId) == "HEALER" ) and addon.IsUnitHostile(unitId) then
+            return addon.ICON_ID_HEALER;
         end
     end
 end

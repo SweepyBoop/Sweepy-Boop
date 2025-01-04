@@ -190,6 +190,7 @@ options.args.nameplatesEnemy = {
             width = "full",
             type = "toggle",
             name = format("%s %s", addon.HELAER_LOGO, "Show healer icon instead of spec icon for healers"),
+            desc = "This feature also works in battlegrounds",
             hidden = function ()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
