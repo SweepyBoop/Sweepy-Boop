@@ -151,7 +151,14 @@ addon.SPEC_ICON_ALIGNMENT = {
     RIGHT = 2,
 };
 
-addon.ICON_FORMAT = "|T%s:20|t";
+addon.FORMAT_TEXTURE = function (texture, customSize)
+    local size = customSize or 20;
+    return format("|T%s:" .. size .. "|t", texture);
+end
+addon.FORMAT_ATLAS = function (texture, customSize)
+    local size = customSize or 20;
+    return format("|A:%s:" .. size .. ":" .. size .. ":|a", texture);
+end
 addon.ICON_PATH = function (iconName)
     return "interface/icons/" .. iconName;
 end
@@ -165,7 +172,7 @@ addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
 addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
 
 -- https://warcraft.wiki.gg/wiki/UI_escape_sequences
-addon.HELAER_LOGO = "|A:UI-LFG-RoleIcon-Healer:20:20|a";
+addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
 
 addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
 
@@ -175,5 +182,5 @@ addon.CLASS_ICON_STYLE = {
 };
 
 addon.PRINT = function(message)
-    DEFAULT_CHAT_FRAME:AddMessage("|A:pvptalents-warmode-swords:16:16|a|cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
+    DEFAULT_CHAT_FRAME:AddMessage(addon.FORMAT_ATLAS("pvptalents-warmode-swords") .. "|cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
 end
