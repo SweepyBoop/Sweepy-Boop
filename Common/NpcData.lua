@@ -198,7 +198,8 @@ addon.AppendNpcOptionsToGroup = function(group)
             spell:ContinueOnSpellLoad(function()
                 description = spell:GetSpellDescription();
             end)
-
+            
+            local texture = C_Spell.GetSpellTexture(npcEntry.icon);
             classGroup.args[tostring(npcEntry.npcID)] = {
                 order = spellIdx,
                 type = "select",
@@ -208,7 +209,7 @@ addon.AppendNpcOptionsToGroup = function(group)
                     [addon.NpcOption.Show] = "Show",
                     [addon.NpcOption.Highlight] = "Highlight",
                 },
-                name = format(addon.ICON_FORMAT .. " %s", C_Spell.GetSpellTexture(npcEntry.icon), npcEntry.name),
+                name = addon.FORMAT_TEXTURE(texture) .. " " .. npcEntry.name,
                 desc = description,
             };
             spellIdx = spellIdx + 1;
