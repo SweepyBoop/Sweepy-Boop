@@ -55,7 +55,7 @@ local function CreateContainerFrame()
     frame.timer = 0;
     frame:SetScript("OnUpdate", function (self, elapsed)
         self.timer = self.timer + elapsed;
-        if self.timer >= 0.05 then
+        if self.timer > 0.05 then -- Update every 0.05s
             local start, duration = self.cooldown:GetCooldownTimes();
 
             if start and duration then

@@ -131,10 +131,10 @@ end
 
 local requestFrame = CreateFrame("Frame");
 requestFrame:Hide(); -- OnUpdate is not called when frame is hidden, only show this frame in battlegrounds
-requestFrame.timer = 0; -- update every 2 sec
+requestFrame.timer = 0;
 requestFrame:SetScript("OnUpdate", function (self, elapsed)
     self.timer = self.timer + elapsed;
-    if self.timer >= 2 then
+    if self.timer > 2 then -- update every 2 sec
         RequestBattlefieldScoreData();
         --print("RequestBattlefieldScoreData", GetTime());
         self.timer = 0;

@@ -63,7 +63,7 @@ addon.StartUpdateQueueReminder = function ()
         updateFrame:SetScript("OnUpdate", function (self, elapsed)
             if (not battlefieldId) then return end
             self.timer = self.timer + elapsed;
-            if self.timer > TOOLTIP_UPDATE_TIME then
+            if self.timer > TOOLTIP_UPDATE_TIME then -- update every 0.2s
                 if GetBattlefieldStatus(battlefieldId) == "confirm" then
                     SetExpiresText();
                 end
