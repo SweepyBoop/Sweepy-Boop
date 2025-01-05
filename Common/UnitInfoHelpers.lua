@@ -131,15 +131,14 @@ end
 
 local requestFrame = CreateFrame("Frame");
 requestFrame:Hide(); -- OnUpdate is not called when frame is hidden, only show this frame in battlegrounds
-requestFrame.timer = 2; -- update every 2 sec
+requestFrame.timer = 0; -- update every 2 sec
 requestFrame:SetScript("OnUpdate", function (self, elapsed)
-    self.timer = self.timer - elapsed;
-    local timer = self.timer;
-    timer = timer - elapsed;
-    if timer <= 0 then
+    self.timer = self.timer + elapsed;
+    if self.timer >= 2 then
         RequestBattlefieldScoreData();
+        --print("RequestBattlefieldScoreData", GetTime());
+        self.timer = 0;
     end
-    self.timer = timer;
 end)
 
 -- Battleground enemy info parser
@@ -152,15 +151,17 @@ refreshFrame:SetScript("OnEvent", function ()
     if ( UnitInBattleground("player") ~= nil ) then
         requestFrame:Show();
     else
-        requestFrame:Hide();
+        requestFrame:Show();
     end
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-        addon.cachedBattlefieldSpec[guid] = scoreInfo and scoreInfo.talentSpec and specInfoByName[scoreInfo.talentSpec];
-        print(addon.cachedBattlefieldSpec[guid].icon, addon.cachedBattlefieldSpec[guid].role);
+        if scoreInfo and scoreInfo.talentSpec then
+            addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
+            print(addon.cachedBattlefieldSpec[guid].icon, addon.cachedBattlefieldSpec[guid].role);
+        end
     end
 
     return addon.cachedBattlefieldSpec[guid];
