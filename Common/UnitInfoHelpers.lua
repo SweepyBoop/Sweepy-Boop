@@ -119,9 +119,13 @@ end
 
 -- C_PvP.GetScoreInfoByPlayerGuid returns localized spec name
 local specInfoByName = {};
-for specIndex = 1, GetNumSpecializations() do
-    local _, name, _, icon, role = GetSpecializationInfo(specIndex);
-    specInfoByName[name] = { icon = icon, role = role };
+for _, classID in pairs(addon.CLASSID) do
+    for specIndex = 1, 4 do
+        local _, name, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
+        if name then
+            specInfoByName[name] = { icon = icon, role = role };
+        end
+    end
 end
 
 local requestFrame = CreateFrame("Frame");
@@ -154,10 +158,8 @@ end)
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-        if scoreInfo then
-            print(guid, scoreInfo.talentSpec);
-        end
         addon.cachedBattlefieldSpec[guid] = scoreInfo and scoreInfo.talentSpec and specInfoByName[scoreInfo.talentSpec];
+        print(addon.cachedBattlefieldSpec[guid].icon, addon.cachedBattlefieldSpec[guid].role);
     end
 
     return addon.cachedBattlefieldSpec[guid];
