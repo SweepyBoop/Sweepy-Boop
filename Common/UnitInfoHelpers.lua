@@ -136,7 +136,7 @@ requestFrame:SetScript("OnUpdate", function (self, elapsed)
     self.timer = self.timer + elapsed;
     if self.timer > 2 then -- update every 2 sec
         RequestBattlefieldScoreData();
-        --print("RequestBattlefieldScoreData", GetTime());
+        print("RequestBattlefieldScoreData", GetTime());
         self.timer = 0;
     end
 end)
@@ -149,7 +149,7 @@ refreshFrame:SetScript("OnEvent", function ()
     addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
 
     if ( UnitInBattleground("player") ~= nil ) then
-        requestFrame:Show();
+        requestFrame:Hide();
     else
         requestFrame:Show();
     end
