@@ -108,7 +108,7 @@ Show spec icons (or a special healer icon) on top of enemy players in both arena
 
 (by default only healers' are shown but you can choose to show all players).
 
-![Spec icons in BG healer only](https://github.com/user-attachments/assets/fb4d7368-0df6-456c-81c3-19c99c98290f)
+![image](https://github.com/user-attachments/assets/bf5b9d81-68f6-4928-a2eb-3dfa976a7a55)
 
 
 ## Sort raid frames
