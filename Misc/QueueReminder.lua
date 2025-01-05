@@ -133,6 +133,10 @@ SweepyBoop.SetupQueueReminder = function ()
                         addon.PRINT(message);
                     end
 
+                    if PVPReadyDialog.labelOverride then
+                        PVPReadyDialog.labelOverride.prevSeconds = nil; -- reset prevSeconds because a new PvP instance popped
+                    end
+
                     isConfirm = true;
                 else
                     queues[i] = nil;
