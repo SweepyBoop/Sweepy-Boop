@@ -12,12 +12,9 @@ There might be conflicts with other nameplate addons (Plater, Threat Plates, Bet
 
 Type **/sb** in game to bring up the options panel.
 
-Default settings should work great out of the box, though each module can be toggled on/off with customizations.
+Default settings should work great out of the box, though each module can be toggled on/off and customized.
 
-Some features such as friendly player markers and totem indicators also work great in battlegrounds.
-
-
-[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features.
+[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report issues or request new features. You can also join my [Discord](https://discord.gg/SMRxeZzVwc).
 
 If you like my addon, please introduce it to your friends who play PvP!
 
