@@ -36,7 +36,8 @@ local function CreateContainerFrame()
 
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.cooldown:SetAllPoints();
-    frame.cooldown:SetDrawEdge(false);
+    frame.cooldown:SetDrawEdge(true);
+    frame.cooldown:SetUseCircularEdge(true);
     frame.cooldown:SetReverse(true);
     frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
     frame.cooldown:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
