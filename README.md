@@ -89,8 +89,6 @@ This module is designed to give you **a quick overview** of
 - Which enemy player is bursting (so you can peel accordingly if needed)
 - Which enemy player(s) ran out of defensive options (thus would be the ideal kill target for next go)
 
-It is **not** designed as some icons for players to stare at, or a spacestation WeakAuras group that replaces awareness :)
-
 [Here is my Twitch clip of the cooldown tracking module in action!](https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131)
 
 **Note**
