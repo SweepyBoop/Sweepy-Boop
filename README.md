@@ -14,7 +14,7 @@ Type **/sb** in game to bring up the options panel.
 
 Default settings should work great out of the box, though each module can be toggled on/off with customizations.
 
-Some features such as class & pet icons and enemy nameplate highlight also work great in battlegrounds.
+Some features such as friendly player markers and totem indicators also work great in battlegrounds.
 
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
