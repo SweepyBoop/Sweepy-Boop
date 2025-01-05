@@ -175,14 +175,14 @@ options.args.nameplatesEnemy = {
         breaker2 = {
             order = 4,
             type = "header",
-            name = "Arena enemy spec icons",
+            name = "Arena & battleground enemy spec icons",
         },
         arenaSpecIconHealer = {
             order = 5,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-            desc = "Show spec icons on top of the nameplates of enemy healers inside arenas",
+            desc = "Show spec icons on top of the nameplates of enemy healers",
         },
         arenaSpecIconHealerIcon = {
             order = 6,
