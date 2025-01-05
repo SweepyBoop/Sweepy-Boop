@@ -93,12 +93,12 @@ It is **not** designed as some icons for players to stare at, or a spacestation 
 
 ![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
 
-## Arena nameplate numbers & spec icons
+## Arena nameplate numbers & enemy player spec icons
 ![Enemy spec icons](https://github.com/user-attachments/assets/6520d5c7-a85f-444e-9688-76dd60fba753)
 
 Replace arena enemy names on top of nameplates with arena numbers.
 
-There is also an option to show enemy spec icons on top of their names inside arenas
+Show spec icons (or a special healer icon) on top of enemy players in both arenas and battlegrounds
 
 (by default only healers' are shown but you can choose to show all players).
 
