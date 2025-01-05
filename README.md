@@ -14,9 +14,7 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report issues or request new features. You can also join my [Discord](https://discord.gg/SMRxeZzVwc).
 
-If you like my addon, please introduce it to your friends who play PvP!
-
-I'm really hoping to bring more people to (or back to) PvP with my work :)
+If you like my addon, please introduce it to your friends who play PvP! I'm really hoping to bring more people to (or back to) PvP with my work :)
 
 ## Friendly class and pet icons
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
