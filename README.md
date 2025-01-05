@@ -100,7 +100,7 @@ It is **not** designed as some icons for players to stare at, or a spacestation 
 ![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
 
 ## Arena nameplate numbers & enemy player spec icons
-![Enemy spec icons](https://github.com/user-attachments/assets/6520d5c7-a85f-444e-9688-76dd60fba753)
+![Screenshot 2025-01-05 101115](https://github.com/user-attachments/assets/fd7731af-13ed-48c6-a1c3-bbef63a70847)
 
 Replace arena enemy names on top of nameplates with arena numbers.
 
