@@ -188,7 +188,7 @@ options.args.nameplatesEnemy = {
             order = 6,
             width = "full",
             type = "toggle",
-            name = addon.HELAER_LOGO .. " Show healer icon instead of spec icon for healers",
+            name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
             hidden = function ()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
