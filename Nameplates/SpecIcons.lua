@@ -9,7 +9,7 @@ local setPointOptions = {
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
     if addon.TEST_MODE then
-        return ( UnitIsUnit(unitId, "focus") and addon.ICON_ID_HEALER ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
+        return ( UnitIsUnit(unitId, "focus") and addon.ICON_ID_HEALER_ENEMY ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
     end
 
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
@@ -26,7 +26,7 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
                 if ( role == "HEALER" ) then
                     if config.arenaSpecIconHealer then
                         if config.arenaSpecIconHealerIcon then
-                            return addon.ICON_ID_HEALER;
+                            return addon.ICON_ID_HEALER_ENEMY;
                         else
                             return iconID;
                         end
@@ -44,7 +44,7 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
             if ( role == "HEALER" ) then
                 if config.arenaSpecIconHealer then
                     if config.arenaSpecIconHealerIcon then
-                        return addon.ICON_ID_HEALER;
+                        return addon.ICON_ID_HEALER_ENEMY;
                     else
                         return iconID;
                     end
@@ -76,14 +76,13 @@ local function ShowSpecIcon(frame, iconID)
     local specIconContainer = EnsureSpecIcon(frame);
     if ( not specIconContainer ) then return end;
 
-    local isHealerIcon = ( iconID == addon.ICON_ID_HEALER );
+    local isHealerIcon = ( iconID == addon.ICON_ID_HEALER_ENEMY );
     if ( specIconContainer.iconID ~= iconID) then
         for _, iconFrame in pairs(specIconContainer.frames) do
-            iconFrame.icon:SetTexture(iconID);
             if isHealerIcon then
-                iconFrame.icon:SetTexCoord(unpack(addon.ICON_COORDS_HEALER));
+                iconFrame.icon:SetAtlas(iconID);
             else
-                iconFrame.icon:SetTexCoord(0, 1, 0, 1);
+                iconFrame.icon:SetTexture(iconID);
             end
             iconFrame.iconID = iconID;
         end
