@@ -52,11 +52,10 @@ local function CreateContainerFrame()
     frame.text:SetPoint("TOP", frame, "BOTTOM", 0, -5);
     frame.text:SetText("");
 
-    frame.timer = TOOLTIP_UPDATE_TIME;
+    frame.timer = 0;
     frame:SetScript("OnUpdate", function (self, elapsed)
-        local timer = self.timer;
-        timer = timer - elapsed;
-        if timer <= 0 then
+        self.timer = self.timer + elapsed;
+        if self.timer >= 0.05 then
             local start, duration = self.cooldown:GetCooldownTimes();
 
             if start and duration then
@@ -69,8 +68,9 @@ local function CreateContainerFrame()
             else
                 self.text:SetText("");
             end
+
+            self.timer = 0;
         end
-        self.timer = timer;
     end)
 
     return frame;
