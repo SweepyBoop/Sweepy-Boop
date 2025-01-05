@@ -8,6 +8,8 @@
 - [x] Enemy spec icon in arena
   - Leverage API GetSpecializationInfoByID
 
+- [x] Different color for enemy healer icon to distinguish better
+
 - [ ] Rogue indicator with Shadow Sight
 
 - [ ] Customize loss of control frame
