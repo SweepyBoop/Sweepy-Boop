@@ -10,9 +10,7 @@ Features include:
 
 There might be conflicts with other nameplate addons (Plater, Threat Plates, BetterBlizzPlates), but <span style="color:#36f; font-style:italic"><strong>this addon's got every essential nameplate element for PvP, you don't really need another full nameplate addon</strong></span>.
 
-Type **/sb** in game to bring up the options panel.
-
-Default settings should work great out of the box, though each module can be toggled on/off and customized.
+Type **/sb** in game to bring up the options panel. Default settings should work great out of the box, though each module can be toggled on/off and customized.
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report issues or request new features. You can also join my [Discord](https://discord.gg/SMRxeZzVwc).
 
