@@ -175,14 +175,14 @@ options.args.nameplatesEnemy = {
         breaker2 = {
             order = 4,
             type = "header",
-            name = "Arena enemy spec icons",
+            name = "Arena & battleground enemy spec icons",
         },
         arenaSpecIconHealer = {
             order = 5,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-            desc = "Show spec icons on top of the nameplates of enemy healers inside arenas",
+            desc = "Show spec icons on top of the nameplates of enemy healers",
         },
         arenaSpecIconHealerIcon = {
             order = 6,
@@ -256,7 +256,7 @@ options.args.nameplatesEnemy = {
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_TEXTURE(pvpCursor) .. " Filter which hostile non-player units to hide / show / highlight",
-                    desc = "Each unit's nameplate can be hidden, shown, or shown with an animating icon on top\nThis works in arenas and battlegrounds",
+                    desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                 },
                 highlightScale = {
                     order = 3,
