@@ -10,7 +10,7 @@ Features include:
 
 With this addon you basically only need very few other essential addons for arena: Gladius/sArena, BigDebuffs, Omnibar/OmniCD.
 
-There might be some conflict with other full nameplate addons (Plater, Threat Plates, BetterBlizzPlates), but this addon's got every nameplate element needed for PvP, you don't really need another nameplate addon.
+There might be conflicts with other full nameplate addons (Plater, Threat Plates, BetterBlizzPlates), but this addon's got every nameplate element needed for PvP, you don't really need another nameplate addon.
 
 Type **/sb** in game to bring up the options panel.
 
