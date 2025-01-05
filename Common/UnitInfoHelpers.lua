@@ -124,17 +124,39 @@ for specIndex = 1, GetNumSpecializations() do
     specInfoByName[name] = { icon = icon, role = role };
 end
 
+local requestFrame = CreateFrame("Frame");
+requestFrame:Hide(); -- OnUpdate is not called when frame is hidden, only show this frame in battlegrounds
+requestFrame.timer = 2; -- update every 2 sec
+requestFrame:SetScript("OnUpdate", function (self, elapsed)
+    self.timer = self.timer - elapsed;
+    local timer = self.timer;
+    timer = timer - elapsed;
+    if timer <= 0 then
+        RequestBattlefieldScoreData();
+    end
+    self.timer = timer;
+end)
+
 -- Battleground enemy info parser
 addon.cachedBattlefieldSpec = {};
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Are there other events we need to register?
 refreshFrame:SetScript("OnEvent", function ()
-    addon.cachedBattlefieldSpec = {};
+    addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
+
+    if ( UnitInBattleground("player") ~= nil ) then
+        requestFrame:Show();
+    else
+        requestFrame:Hide();
+    end
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+        if scoreInfo then
+            print(guid, scoreInfo.talentSpec);
+        end
         addon.cachedBattlefieldSpec[guid] = scoreInfo and scoreInfo.talentSpec and specInfoByName[scoreInfo.talentSpec];
     end
 
