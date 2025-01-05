@@ -124,6 +124,7 @@ for _, classID in pairs(addon.CLASSID) do
         local _, name, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
         if name then
             specInfoByName[name] = { icon = icon, role = role };
+            --print(name, specInfoByName[name].icon, specInfoByName[name].role);
         end
     end
 end
