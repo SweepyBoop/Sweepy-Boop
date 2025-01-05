@@ -17,7 +17,11 @@ Default settings should work great out of the box, though each module can be tog
 Some features such as friendly player markers and totem indicators also work great in battlegrounds.
 
 
-[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features
+[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features.
+
+If you like my addon, please introduce it to your friends who plays PvP!
+
+I'm really hoping to bring more people to (or back to) PvP with my work :)
 
 ## Friendly class and pet icons
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
