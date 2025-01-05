@@ -136,7 +136,6 @@ requestFrame:SetScript("OnUpdate", function (self, elapsed)
     self.timer = self.timer + elapsed;
     if self.timer > 2 then -- update every 2 sec
         RequestBattlefieldScoreData();
-        print("RequestBattlefieldScoreData", GetTime());
         self.timer = 0;
     end
 end)
@@ -160,7 +159,6 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
         local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
         if scoreInfo and scoreInfo.talentSpec then
             addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
-            print(addon.cachedBattlefieldSpec[guid].icon, addon.cachedBattlefieldSpec[guid].role);
         end
     end
 
