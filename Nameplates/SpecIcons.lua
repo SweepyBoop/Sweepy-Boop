@@ -36,7 +36,7 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
                 end
             end
         end
-    elseif ( UnitInBattleground("player") ~= nil ) then -- currently in a battleground
+    elseif ( UnitInBattleground("player") ~= nil ) and addon.UnitIsHostile(unitId) then -- Show spec icons for hostile players in battlegrounds
         local specInfo = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
         if specInfo then
             local iconID, role = specInfo.icon, specInfo.role;

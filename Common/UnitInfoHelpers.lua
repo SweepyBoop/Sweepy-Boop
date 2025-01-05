@@ -149,9 +149,9 @@ refreshFrame:SetScript("OnEvent", function ()
     addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
 
     if ( UnitInBattleground("player") ~= nil ) then
-        requestFrame:Hide();
-    else
         requestFrame:Show();
+    else
+        requestFrame:Hide();
     end
 end)
 
