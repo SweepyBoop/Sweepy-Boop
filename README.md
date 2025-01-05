@@ -8,8 +8,6 @@ Features include:
 - Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender, dampen display, and more
 
-With this addon you only need few other essential ones to play arena at any level: Gladius/sArena, BigDebuffs, Omnibar/OmniCD, WeakAuras.
-
 There might be conflicts with other nameplate addons (Plater, Threat Plates, BetterBlizzPlates), but <span style="color:#36f; font-style:italic"><strong>this addon's got every essential nameplate element for PvP, you don't really need another full nameplate addon</strong></span>.
 
 Type **/sb** in game to bring up the options panel.
