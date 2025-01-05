@@ -19,7 +19,7 @@ Some features such as friendly player markers and totem indicators also work gre
 
 [Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report any issues or request new features.
 
-If you like my addon, please introduce it to your friends who plays PvP!
+If you like my addon, please introduce it to your friends who play PvP!
 
 I'm really hoping to bring more people to (or back to) PvP with my work :)
 
