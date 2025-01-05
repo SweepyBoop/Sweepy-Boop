@@ -9,6 +9,7 @@
   - Leverage API GetSpecializationInfoByID
 
 - [x] Different color for enemy healer icon to distinguish better
+  - Healing_Red
 
 - [ ] Rogue indicator with Shadow Sight
 
