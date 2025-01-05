@@ -6,7 +6,7 @@ Features include:
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; hide beast master hunters' secondary pets
 - Arena offensive & defensive cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, factoring in cooldown reduction (such as combustion)
 - Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
-- Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender, dampen display, and more
+- Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
 
 There might be conflicts with other nameplate addons (Plater, Threat Plates, BetterBlizzPlates), but <span style="color:#36f; font-style:italic"><strong>this addon's got every essential nameplate element for PvP, you don't really need another full nameplate addon</strong></span>.
 
