@@ -16,7 +16,7 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 <span style="color:#36f; font-style:italic"><strong>If you like my addon, please introduce it to your friends who play PvP!</strong></span> I'm really hoping to bring more people to (or back to) PvP with my work :)
 
-## Friendly player markers
+## Friendly player / pet markers
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
 (In-game class icon style)
