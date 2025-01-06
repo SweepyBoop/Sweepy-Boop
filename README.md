@@ -75,7 +75,6 @@ A set of icons attached to (corresponding) arena enemy frames, which is very clo
 This module comes with a few key features:
 - Glows when spell is active, and shows cooldown timer otherwise
 - Sorts icons by priority/threat, e.g., on an Assassination Rogue, Deathmark will always show before other icons
-- Filter by spec, e.g., only shows Convoke the Spirits for Balance/Feral Druids, but not Restoration Druids
 - Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by crit damage
 
 This module is designed to give you **a quick overview** of
