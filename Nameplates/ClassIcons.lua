@@ -5,11 +5,13 @@ local PvPUnitClassification = Enum.PvPUnitClassification;
 local flagCarrierClassNames = {
     [PvPUnitClassification.FlagCarrierHorde] = "FlagCarrierHorde",
     [PvPUnitClassification.FlagCarrierAlliance] = "FlagCarrierAlliance",
+    [PvPUnitClassification.FlagCarrierNeutral] = "FlagCarrierNeutral",
 };
 
 local flagCarrierIcons = {
     ["FlagCarrierHorde"] = addon.ICON_ID_FLAG_CARRIER_HORDE,
     ["FlagCarrierAlliance"] = addon.ICON_ID_FLAG_CARRIER_ALLIANCE,
+    ["FlagCarrierNeutral"] = addon.ICON_ID_FLAG_CARRIER_NEUTRAL,
 };
 
 local function ShouldShowIcon(unitId) -- "Show healers only" option will be checked in function ShowClassIcon
@@ -86,6 +88,7 @@ local specialClasses = { -- For these special classes, there is no arrow style
     ["PET"] = true,
     ["FlagCarrierHorde"] = true,
     ["FlagCarrierAlliance"] = true,
+    ['FlagCarrierNeutral'] = true,
 };
 
 local function ShowClassIcon(frame)
@@ -110,7 +113,7 @@ local function ShowClassIcon(frame)
 
     -- If the player enabled "Show healers only", hide the icon except for flag carrier
     if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
-        if ( class ~= "HEALER" and class ~= "FlagCarrierHorde" and class ~= "FlagCarrierAlliance" ) then
+        if ( class ~= "HEALER" and ( not flagCarrierClassNames[class] ) ) then
             -- iconFrame.class and iconFrame.lastModified remain unchanged
             addon.HideClassIcon(frame);
             return;
