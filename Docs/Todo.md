@@ -11,6 +11,4 @@
 - [x] Different color for enemy healer icon to distinguish better
   - Healing_Red
 
-- [ ] Rogue indicator with Shadow Sight
-
 - [ ] Customize loss of control frame
