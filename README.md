@@ -12,7 +12,7 @@ There might be conflicts with other nameplate addons (Plater, Threat Plates, Bet
 
 Type **/sb** in game to bring up the options panel. Default settings should work great out of the box, though each module can be toggled on/off and customized.
 
-[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report issues or request new features. You can also <span style="color:#36f; font-style:italic"><strong>join my [Discord](https://discord.gg/SMRxeZzVwc)</strong></span>.
+[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report issues or request new features. You can also join my <span style="color:#36f; font-style:italic"><strong>[Discord](https://discord.gg/SMRxeZzVwc)</strong></span> to get help on setup with the addon or UI in general.
 
 <span style="color:#36f; font-style:italic"><strong>If you like my addon, please introduce it to your friends who play PvP!</strong></span> I'm really hoping to bring more people to (or back to) PvP with my work :)
 
