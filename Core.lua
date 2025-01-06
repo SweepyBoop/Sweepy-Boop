@@ -23,7 +23,7 @@ local options = {
             order = 2,
             type = "input",
             width = 1.5,
-            name = "Join Discord for PvP addon / UI discussion",
+            name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Join Discord for PvP addon / UI discussion",
             get = function ()
                 return "https://discord.gg/SMRxeZzVwc";
             end,
