@@ -18,11 +18,22 @@ local options = {
             imageHeight = 36,
             name = "A lightweight addon to enhance your arena & battleground experience :)"
         },
+
+        discordLink = {
+            order = 2,
+            type = "input",
+            width = 1.5,
+            name = "Join Discord to get help on addon/UI setup",
+            get = function ()
+                return "https://discord.gg/SMRxeZzVwc";
+            end,
+            set = function () end
+        },
     },
 };
 
 options.args.nameplatesFriendly = {
-    order = 2,
+    order = 3,
     type = "group",
     name = "Friendly class icons",
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
@@ -141,7 +152,7 @@ options.args.nameplatesFriendly = {
 
 local beastMasteryHunterIcon = C_Spell.GetSpellTexture(267116);
 options.args.nameplatesEnemy = {
-    order = 3,
+    order = 4,
     type = "group",
     childGroups = "tab",
     name = "Enemy nameplates",
@@ -289,7 +300,7 @@ options.args.nameplatesEnemy = {
 addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
 
 options.args.arenaFrames = {
-    order = 4,
+    order = 5,
     type = "group",
     childGroups = "tab",
     name = "Arena Frames",
@@ -472,7 +483,7 @@ AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
 AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
 
 options.args.raidFrames = {
-    order = 5,
+    order = 6,
     type = "group",
     name = "Raid Frames",
     get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
@@ -503,7 +514,7 @@ options.args.raidFrames = {
 };
 
 options.args.misc = {
-    order = 6,
+    order = 7,
     type = "group",
     name = "Misc",
     get = function(info) return SweepyBoop.db.profile.misc[info[#info]] end,
