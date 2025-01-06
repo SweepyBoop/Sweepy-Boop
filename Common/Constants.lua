@@ -171,6 +171,7 @@ addon.ICON_ID_PET = addon.ICON_PATH("ability_hunter_mendpet");
 addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
 addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
 addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
+addon.ICON_ID_FLAG_CARRIER_NEUTRAL = addon.ICON_PATH("inv_bannerpvp_03");
 
 -- https://warcraft.wiki.gg/wiki/UI_escape_sequences
 addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
