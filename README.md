@@ -16,7 +16,7 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 <span style="color:#36f; font-style:italic"><strong>If you like my addon, please introduce it to your friends who play PvP!</strong></span> I'm really hoping to bring more people to (or back to) PvP with my work :)
 
-## Friendly class and pet icons
+## Friendly player markers
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
 (In-game class icon style)
@@ -25,14 +25,14 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 (Class color arrow style)
 
-Replace nameplates of friendly players and their primary pets with class / pet icons.
+Replace nameplates of friendly players and their primary pets with class / healer / pet icons.
 
-Important: to use friendly class icons, <span style="color:#36f"><strong>enable the following settings in Options - Interface - Nameplates</strong></span>:
+Important: to use friendly markers, <span style="color:#36f"><strong>enable the following settings in Options - Interface - Nameplates</strong></span>:
 
 ![Nameplate options](https://github.com/user-attachments/assets/2f5f7a9b-43d3-432a-8f11-5f2acbf8cc7b)
 
 
-There are two styles of friendly icons: in-game class icons and class color arrows:
+There are two styles of friendly markers: in-game class icons and class color arrows:
 
 - Current friendly target will be highlighted with a border (for both styles)
 - <span style="color:#36f"><strong>Option to use a special icon for healers</strong></span> in your group! No more "where is my healer" panic :)
@@ -40,7 +40,7 @@ There are two styles of friendly icons: in-game class icons and class color arro
 
 This module makes it much easier to track your teammates' positioning, since the icons are super visible and easily distinguishable from enemy nameplates!
 
-There is also an option to hide class icons outside inside PvP instances to reduce clutter on the screen:
+There is also an option to hide friendly markers outside inside PvP instances to reduce clutter on the screen:
 
 ![image](https://github.com/user-attachments/assets/32819e4f-d69b-4e68-910f-c5ea04d2d6a2)
 
