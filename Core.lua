@@ -307,13 +307,36 @@ options.args.arenaFrames = {
     name = "Arena Frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
     get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
-    set = function(info, val) 
+    set = function(info, val)
         SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
         SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
     end,
     args = {
-        healerIndicator = {
+        reloadUI = {
             order = 1,
+            type = "execute",
+            width = 0.625,
+            name = "Reload UI",
+            func = ReloadUI,
+        },
+        desc = {
+            order = 2,
+            type = "description",
+            --width = "full",
+            name = addon.EXCLAMATION .. " Changes made during an arena session require a reload to take effect",
+        },
+
+        breaker1 = {
+            order = 3,
+            type = "header",
+            name = "",
+            hidden = function ()
+                return ( not sArena );
+            end
+        },
+
+        healerIndicator = {
+            order = 4,
             type = "toggle",
             name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on sArena frames",
             desc = "To make it easier to identify the healer in case of class stacking",
@@ -324,55 +347,40 @@ options.args.arenaFrames = {
         },
 
         header1 = {
-            order = 2,
+            order = 5,
             type = "header",
             name = "Enemy burst / defensive cooldowns",
-            hidden = function ()
-                return ( not sArena );
-            end
         },
         testmode = {
-            order = 3,
+            order = 6,
             type = "execute",
             name = "Test",
             func = "TestArena",
             width = "half",
         },
         hidetest = {
-            order = 4,
+            order = 7,
             type = "execute",
             name = "Hide",
             func = "HideTestArena",
             width = "half",
         },
-        reloadUI = {
-            order = 5,
-            type = "execute",
-            width = 0.625,
-            name = "Reload UI",
-            func = ReloadUI,
-        },
-        desc = {
-            order = 6,
-            type = "description",
-            width = "full",
-            name = addon.EXCLAMATION .. " Changes made during an arena session require a reload to take effect",
-        },
-        breaker1 = {
-            order = 7,
+
+        breaker2 = {
+            order = 8,
             type = "description",
             name = "",
         },
 
         arenaEnemyOffensivesEnabled = {
-            order = 8,
+            order = 9,
             width = 1.75,
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enemy burst Cooldowns",
             desc = "Show arena enemy burst cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
-            order = 9,
+            order = 10,
             type = "range",
             min = 16,
             max = 64,
@@ -381,20 +389,20 @@ options.args.arenaFrames = {
             desc = "Size of arena burst cooldown icons",
         },
         newline1 = {
-            order = 10,
+            order = 11,
             type = "description",
             width = "full",
             name = "",
         },
         arenaEnemyDefensivesEnabled = {
-            order = 11,
+            order = 12,
             width = 1.75,
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
-            order = 12,
+            order = 13,
             type = "range",
             min = 16,
             max = 64,
@@ -404,13 +412,13 @@ options.args.arenaFrames = {
         },
 
         newline2 = {
-            order = 13,
+            order = 14,
             type = "description",
             width = "full",
             name = "",
         },
         arenaCooldownOffsetX = {
-            order = 14,
+            order = 15,
             type = "range",
             min = -300,
             max = 300,
@@ -419,7 +427,7 @@ options.args.arenaFrames = {
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
         arenaCooldownOffsetY = {
-            order = 15,
+            order = 16,
             type = "range",
             min = -150,
             max = 150,
@@ -429,7 +437,7 @@ options.args.arenaFrames = {
         },
 
         spellList = {
-            order = 16,
+            order = 17,
             type = "group",
             name = "Spells",
             desc = "Select which abilities to track cooldown inside arenas",
