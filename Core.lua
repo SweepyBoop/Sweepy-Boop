@@ -19,17 +19,17 @@ local options = {
             name = "A lightweight addon to enhance your arena & battleground experience :)"
         },
 
-        discordLink = {
-            order = 2,
-            type = "input",
-            width = "full",
-            name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Join Discord for support and discussion on PvP addon / UI",
-            desc = "Press Ctrl+C to copy URL",
-            dialogControl = "Link-SweepyBoop",
-            get = function ()
-                return "https://discord.gg/SMRxeZzVwc";
-            end
-        },
+        -- discordLink = {
+        --     order = 2,
+        --     type = "input",
+        --     width = "full",
+        --     name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Join Discord for support and discussion on PvP addon / UI",
+        --     desc = "Press Ctrl+C to copy URL",
+        --     dialogControl = "Link-SweepyBoop",
+        --     get = function ()
+        --         return "https://discord.gg/SMRxeZzVwc";
+        --     end
+        -- },
     },
 };
 
