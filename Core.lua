@@ -19,17 +19,17 @@ local options = {
             name = "A lightweight addon to enhance your arena & battleground experience :)"
         },
 
-        discordLink = {
-            order = 2,
-            type = "input",
-            width = "full",
-            name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Join Discord for support and discussion on PvP addon / UI",
-            desc = "Press Ctrl+C to copy URL",
-            dialogControl = "Link-SweepyBoop",
-            get = function ()
-                return "https://discord.gg/SMRxeZzVwc";
-            end
-        },
+        -- discordLink = {
+        --     order = 2,
+        --     type = "input",
+        --     width = "full",
+        --     name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Join Discord for support and discussion on PvP addon / UI",
+        --     desc = "Press Ctrl+C to copy URL",
+        --     dialogControl = "Link-SweepyBoop",
+        --     get = function ()
+        --         return "https://discord.gg/SMRxeZzVwc";
+        --     end
+        -- },
     },
 };
 
@@ -366,7 +366,7 @@ options.args.arenaFrames = {
 
         arenaEnemyOffensivesEnabled = {
             order = 8,
-            width = 1.75,
+            width = 1.5,
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enemy burst Cooldowns",
             desc = "Show arena enemy burst cooldowns next to the arena frames",
@@ -388,7 +388,7 @@ options.args.arenaFrames = {
         },
         arenaEnemyDefensivesEnabled = {
             order = 11,
-            width = 1.75,
+            width = 1.5,
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
