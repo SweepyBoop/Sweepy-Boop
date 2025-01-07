@@ -734,7 +734,7 @@ function SweepyBoop:OnInitialize()
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 600);
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
 
     -- Print message on first 3 logins with the addon enabled
