@@ -22,12 +22,13 @@ local options = {
         discordLink = {
             order = 2,
             type = "input",
-            width = 1.5,
-            name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Join Discord for PvP addon / UI discussion",
+            width = "full",
+            name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Discord",
+            desc = "Press Ctrl+C to copy URL",
+            dialogControl = "Link-SweepyBoop",
             get = function ()
                 return "https://discord.gg/SMRxeZzVwc";
-            end,
-            set = function () end
+            end
         },
     },
 };
