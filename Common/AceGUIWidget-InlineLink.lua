@@ -129,7 +129,7 @@ local function Constructor()
 	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
 	label:SetPoint("TOPLEFT");
 	label:SetJustifyH("LEFT");
-	label:SetWidth(100);
+	label:SetWidth(350);
 	label:SetHeight(26);
 
 	local editbox = CreateFrame("EditBox", nil, frame, BackdropTemplateMixin and "BackdropTemplate" or nil);
