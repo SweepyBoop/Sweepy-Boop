@@ -312,70 +312,89 @@ options.args.arenaFrames = {
         SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
     end,
     args = {
-        testmode = {
+        healerIndicator = {
             order = 1,
+            type = "toggle",
+            name = addon.HELAER_LOGO .. " Show healer indicator on Gladius / sArena frames",
+            desc = "To make it easier to identify the healer in case of class stacking",
+            width = "full",
+            hidden = function ()
+                return ( not sArena );
+            end
+        },
+
+        header1 = {
+            order = 2,
+            type = "header",
+            name = "Enemy burst / defensive cooldowns",
+            hidden = function ()
+                return ( not sArena );
+            end
+        },
+        testmode = {
+            order = 3,
             type = "execute",
             name = "Test",
             func = "TestArena",
             width = "half",
         },
         hidetest = {
-            order = 2,
+            order = 4,
             type = "execute",
             name = "Hide",
             func = "HideTestArena",
             width = "half",
         },
         reloadUI = {
-            order = 3,
+            order = 5,
             type = "execute",
             width = 0.625,
             name = "Reload UI",
             func = ReloadUI,
         },
         desc = {
-            order = 4,
+            order = 6,
             type = "description",
             width = "full",
             name = addon.EXCLAMATION .. " Changes made during an arena session require a reload to take effect",
         },
         breaker1 = {
-            order = 5,
-            type = "header",
+            order = 7,
+            type = "description",
             name = "",
         },
 
         arenaEnemyOffensivesEnabled = {
-            order = 6,
+            order = 8,
             width = 1.75,
             type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Arena Enemy Offensive Cooldowns",
-            desc = "Show arena enemy offensive cooldowns next to the arena frames",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enemy burst Cooldowns",
+            desc = "Show arena enemy burst cooldowns next to the arena frames",
         },
         arenaEnemyOffensiveIconSize = {
-            order = 7,
+            order = 9,
             type = "range",
             min = 16,
             max = 64,
             step = 1,
             name = "Icon size",
-            desc = "Size of arena offensive cooldown icons",
+            desc = "Size of arena burst cooldown icons",
         },
         newline1 = {
-            order = 8,
+            order = 10,
             type = "description",
             width = "full",
             name = "",
         },
         arenaEnemyDefensivesEnabled = {
-            order = 9,
+            order = 11,
             width = 1.75,
             type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Arena Enemy Defensive Cooldowns",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
-            order = 10,
+            order = 12,
             type = "range",
             min = 16,
             max = 64,
@@ -385,13 +404,13 @@ options.args.arenaFrames = {
         },
 
         newline2 = {
-            order = 11,
+            order = 13,
             type = "description",
             width = "full",
             name = "",
         },
         arenaCooldownOffsetX = {
-            order = 12,
+            order = 14,
             type = "range",
             min = -300,
             max = 300,
@@ -400,7 +419,7 @@ options.args.arenaFrames = {
             desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
         },
         arenaCooldownOffsetY = {
-            order = 13,
+            order = 15,
             type = "range",
             min = -150,
             max = 150,
@@ -410,7 +429,7 @@ options.args.arenaFrames = {
         },
 
         spellList = {
-            order = 14,
+            order = 16,
             type = "group",
             name = "Spells",
             desc = "Select which abilities to track cooldown inside arenas",
@@ -680,6 +699,7 @@ local defaults = {
             filterList = {},
         },
         arenaFrames = {
+            healerIndicator = true,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
             arenaEnemyOffensivesEnabled = true,
@@ -755,6 +775,8 @@ function SweepyBoop:OnInitialize()
     -- Setup arena enemy cooldown icons
     self:SetupOffensiveIcons();
     self:SetupCooldownTrackingIcons();
+
+    self:SetupHealerIndicator();
 
     -- Setup raid frame aggro highlight
     self:SetupRaidFrameAggroHighlight();

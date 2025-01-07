@@ -47,6 +47,7 @@ ArenaFrames\CooldownTrackingTemplates.lua
 ArenaFrames\CooldownTracking.lua
 ArenaFrames\ArenaEnemyBurstTemplates.lua
 ArenaFrames\ArenaEnemyBurst.lua
+ArenaFrames\HealerIndicator.lua
 
 # UI Personalization (Internal)
 Internal\LoseControl.lua
