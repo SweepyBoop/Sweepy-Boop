@@ -693,6 +693,7 @@ local defaults = {
             filterList = {},
         },
         arenaFrames = {
+            healerIndicator = true,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
             arenaEnemyOffensivesEnabled = true,
