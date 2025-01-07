@@ -318,12 +318,18 @@ options.args.arenaFrames = {
             name = addon.HELAER_LOGO .. " Show healer indicator on Gladius / sArena frames",
             desc = "To make it easier to identify the healer in case of class stacking",
             width = "full",
+            hidden = function ()
+                return ( not sArena );
+            end
         },
 
         header1 = {
             order = 2,
             type = "header",
             name = "Enemy burst / defensive cooldowns",
+            hidden = function ()
+                return ( not sArena );
+            end
         },
         testmode = {
             order = 3,
