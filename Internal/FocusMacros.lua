@@ -46,7 +46,7 @@ local function GetFocusName()
         end
     end
 
-    -- Fallback in case no healer/tank found
+    -- Fallback in case no healer found
     return "focus";
 end
 
