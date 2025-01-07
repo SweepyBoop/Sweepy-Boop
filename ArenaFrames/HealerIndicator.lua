@@ -58,12 +58,12 @@ local function UpdateHealerIndicator()
     healerIndicator:SetScale(sArena:GetScale());
 
     local frame = _G["sArenaEnemyFrame" .. healerIndex];
-    if ( not frame ) then
+    if ( not frame ) or ( not frame.HealthBar ) then
         HideHealerIndicator();
         return;
     end
 
-    healerIndicator:SetPoint("CENTER", frame, "RIGHT");
+    healerIndicator:SetPoint("CENTER", frame.HealthBar, "RIGHT");
     healerIndicator:Show();
 end
 
