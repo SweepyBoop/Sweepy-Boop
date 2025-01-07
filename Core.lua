@@ -366,7 +366,7 @@ options.args.arenaFrames = {
 
         arenaEnemyOffensivesEnabled = {
             order = 8,
-            width = 1.75,
+            width = 1.5,
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enemy burst Cooldowns",
             desc = "Show arena enemy burst cooldowns next to the arena frames",
@@ -388,7 +388,7 @@ options.args.arenaFrames = {
         },
         arenaEnemyDefensivesEnabled = {
             order = 11,
-            width = 1.75,
+            width = 1.5,
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy Defensive Cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
