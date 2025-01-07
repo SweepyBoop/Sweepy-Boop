@@ -8,7 +8,7 @@ Features include:
 - Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
 
-[Open a ticket](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) to report issues or request new features. You can also <span style="color:#36f; font-style:italic"><strong>join my [Discord](https://discord.gg/SMRxeZzVwc) to get help on addon/UI setup</strong></span>.
+<span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for help and discussion on PvP addon / UI</strong></span>. If you encounter any [issues](https://github.com/SweepyBoop/Sweepy-Boop/issues/new).
 
 There might be conflicts with other nameplate addons (Plater, Threat Plates, BetterBlizzPlates), but <span style="color:#36f; font-style:italic"><strong>this addon's got every essential nameplate element for PvP, you don't really need another full nameplate addon</strong></span>.
 
