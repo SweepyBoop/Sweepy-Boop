@@ -55,7 +55,7 @@ local commonPrefix = "#showtooltip\n/cast [@";
 local commonSuffix = "] ";
 
 local function updateMacros(focusName)
-    print("Updated focus macros to index " .. focusName);
+    print("Updated focus macros to " .. focusName);
 
     local class = select(2, UnitClass("player"));
     local abilities = classAbilities[class];
