@@ -770,6 +770,8 @@ function SweepyBoop:OnInitialize()
     self:SetupOffensiveIcons();
     self:SetupCooldownTrackingIcons();
 
+    self:SetupHealerIndicator();
+
     -- Setup raid frame aggro highlight
     self:SetupRaidFrameAggroHighlight();
 
