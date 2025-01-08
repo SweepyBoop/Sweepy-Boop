@@ -132,6 +132,12 @@ This module makes the <span style="color:#36f"><strong>fewest changes to the ori
 ### Healer in crowd control reminder
 ![Healer in CC](https://github.com/user-attachments/assets/c3ba52f4-0d58-4fe8-b90d-e4298454b6c4)
 
+### Healer indicator on Gladius / sArena frames
+![Healer indicator on Gladius](https://github.com/user-attachments/assets/d4872859-0594-4c0c-830f-be9ce2a23d88)
+
+Makes it easier to identify the enemy healer when there is class stacking on the opponent team
+
+(e.g., a shadow priest and a disc priest in the screenshot above)
 
 ### Type /afk to surrender arena
 Players can conveniently surrender arena by simply typing /afk.
