@@ -22,7 +22,7 @@ local healerIndicator; -- Create on first usage
 local function EnsureHealerIndicator()
     if ( not healerIndicator ) then
         healerIndicator = CreateFrame("Frame");
-        healerIndicator:SetFrameStrata("HIGH");
+        healerIndicator:SetFrameLevel(10000);
         healerIndicator:SetMouseClickEnabled(false);
         healerIndicator.icon = healerIndicator:CreateTexture();
         healerIndicator.icon:SetAtlas("Icon-Healer");
@@ -43,27 +43,48 @@ local function UpdateHealerIndicator()
         return;
     end
 
-    EnsureHealerIndicator();
+    EnsureHealerIndicator(); -- Created but size / scale not set
 
     -- Update size in case the player adjusted Gladius / sArena settings
     -- Require a reload when settings are changed during an arena session
-    local size = sArenaEnemyFrame1 and sArenaEnemyFrame1.ClassIcon and sArenaEnemyFrame1.ClassIcon:GetSize();
+    local size;
+    if Gladius then
+        size = GladiusClassIconFramearena1 and GladiusClassIconFramearena1:GetSize();
+    elseif sArena then
+        size = sArenaEnemyFrame1 and sArenaEnemyFrame1.ClassIcon and sArenaEnemyFrame1.ClassIcon:GetSize();
+    end
     if ( not size ) then
         HideHealerIndicator();
         return;
     end
-    size = size / 2;
-    healerIndicator:SetSize(size, size);
-    healerIndicator.icon:SetSize(size, size);
-    healerIndicator:SetScale(sArena:GetScale());
 
-    local frame = _G["sArenaEnemyFrame" .. healerIndex];
-    if ( not frame ) or ( not frame.ClassIcon ) then
+    local scale;
+    if Gladius then
+        scale = GladiusButtonFramearena1 and GladiusButtonFramearena1:GetScale();
+    elseif sArena then
+        scale = sArena:GetScale();
+    end
+    if ( not scale ) then
         HideHealerIndicator();
         return;
     end
 
-    healerIndicator:SetPoint("CENTER", frame.ClassIcon, "RIGHT");
+    local frame;
+    if Gladius then
+        frame = _G["GladiusClassIconFramearena" .. healerIndex];
+    elseif sArena then
+        frame = _G["sArenaEnemyFrame" .. healerIndex] and _G["sArenaEnemyFrame" .. healerIndex].ClassIcon;
+    end
+    if ( not frame ) then
+        HideHealerIndicator();
+        return;
+    end
+
+    size = size / 2;
+    healerIndicator:SetSize(size, size);
+    healerIndicator.icon:SetSize(size, size);
+    healerIndicator:SetScale(scale);
+    healerIndicator:SetPoint("CENTER", frame, "RIGHT");
     healerIndicator:Show();
 end
 
@@ -72,7 +93,7 @@ function SweepyBoop:SetupHealerIndicator()
     frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     frame:SetScript("OnEvent", function ()
-        if ( not SweepyBoop.db.profile.arenaFrames.healerIndicator ) or ( not sArena ) then
+        if ( not SweepyBoop.db.profile.arenaFrames.healerIndicator ) or ( not ( Gladius or sArena ) ) then
             HideHealerIndicator();
             return;
         end

@@ -55,8 +55,6 @@ local commonPrefix = "#showtooltip\n/cast [@";
 local commonSuffix = "] ";
 
 local function updateMacros(focusName)
-    print("Updated focus macros to " .. focusName);
-
     local class = select(2, UnitClass("player"));
     local abilities = classAbilities[class];
     if ( not abilities ) then return end
@@ -73,6 +71,8 @@ local function updateMacros(focusName)
             EditMacro(iMacro, macroName, "INV_MISC_QUESTIONMARK", macroContent);
         end
     end
+
+    print("Focus macros set to " .. focusName);
 end
 
 local function TryUpdateMacros()
