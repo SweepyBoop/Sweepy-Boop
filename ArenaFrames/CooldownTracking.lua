@@ -225,6 +225,12 @@ local function EnsureIcon(unitId, spellID, spell)
             local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize / addon.DEFAULT_ICON_SIZE;
             premadeIcons[unitId][spellID]:SetScale(scale);
 
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]);
+            else
+                addon.SetShowCountdownNumbers(premadeIcons[unitId][spellID]);
+            end
+
             premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
         end
     end
