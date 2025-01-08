@@ -319,7 +319,7 @@ options.args.arenaFrames = {
             desc = "To make it easier to identify the healer in case of class stacking",
             width = "full",
             hidden = function ()
-                return ( not sArena );
+                return ( not (Gladius or sArena ) );
             end
         },
 
@@ -328,7 +328,7 @@ options.args.arenaFrames = {
             type = "header",
             name = "Enemy burst / defensive cooldowns",
             hidden = function ()
-                return ( not sArena );
+                return ( not (Gladius or sArena ) );
             end
         },
         testmode = {
