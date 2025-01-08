@@ -325,11 +325,21 @@ local function RefreshTestMode()
     if externalTestIcons[unitId] then
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(icon);
+            else
+                addon.SetShowCountdownNumbers(icon);
+            end
         end
     else
         externalTestIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
             externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID]);
+            else
+                addon.SetShowCountdownNumbers(externalTestIcons[unitId][spellID]);
+            end
         end
     end
 
