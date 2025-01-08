@@ -208,8 +208,12 @@ local function EnsureIcon(unitId, spellID, spell)
         end
         premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
 
-        if addon.internal and ( spell.category == SPELLCATEGORY.DEFENSIVE ) and ( not addon.TEST_MODE ) then
-            addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]); -- icons are pretty small, I'm not staring at the numbers, just taking a glance once in a while
+        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]);
+            else
+                addon.SetShowCountdownNumbers(premadeIcons[unitId][spellID]);
+            end
         end
 
         -- size is set on creation but can be updated if lastModified falls behind
@@ -220,6 +224,12 @@ local function EnsureIcon(unitId, spellID, spell)
         if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
             local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize / addon.DEFAULT_ICON_SIZE;
             premadeIcons[unitId][spellID]:SetScale(scale);
+
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]);
+            else
+                addon.SetShowCountdownNumbers(premadeIcons[unitId][spellID]);
+            end
 
             premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
         end
@@ -430,6 +440,11 @@ local function RefreshTestMode()
         local scale = defensiveIconSize / addon.DEFAULT_ICON_SIZE;
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(icon);
+            else
+                addon.SetShowCountdownNumbers(icon);
+            end
         end
     else
         externalTestIcons[unitId] = {};
@@ -439,8 +454,10 @@ local function RefreshTestMode()
                 size, hideHighlight = defensiveIconSize, true;
             end
             externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
-            if addon.internal then
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
                 addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID]);
+            else
+                addon.SetShowCountdownNumbers(externalTestIcons[unitId][spellID]);
             end
         end
     end

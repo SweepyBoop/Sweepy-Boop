@@ -174,3 +174,10 @@ addon.SetHideCountdownNumbers = function (frame)
         frame.cooldown:SetHideCountdownNumbers(true);
     end
 end
+
+addon.SetShowCountdownNumbers = function (frame)
+    if frame.cooldown then
+        frame.cooldown:SetDrawEdge(false);
+        frame.cooldown:SetHideCountdownNumbers(false);
+    end
+end

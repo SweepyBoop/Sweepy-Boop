@@ -218,10 +218,16 @@ local function EnsureIcon(unitId, spellID)
         premadeIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize, true);
     end
 
-    -- Size was not set on creation, need to set scale
+    -- Size was not set on creation, need to set scale and show/hide countdown numbers
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE;
-        premadeIcons[unitId][spellID]:SetScale(scale);
+        local config = SweepyBoop.db.profile.arenaFrames;
+        premadeIcons[unitId][spellID]:SetScale(config.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE);
+        if config.hideCountDownNumbers then
+            addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID]);
+        else
+            addon.SetShowCountdownNumbers(premadeIcons[unitId][spellID]);
+        end
+
         premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 end
@@ -319,11 +325,21 @@ local function RefreshTestMode()
     if externalTestIcons[unitId] then
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(icon);
+            else
+                addon.SetShowCountdownNumbers(icon);
+            end
         end
     else
         externalTestIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
             externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
+            if SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers then
+                addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID]);
+            else
+                addon.SetShowCountdownNumbers(externalTestIcons[unitId][spellID]);
+            end
         end
     end
 
