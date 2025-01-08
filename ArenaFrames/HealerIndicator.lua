@@ -47,28 +47,45 @@ local function UpdateHealerIndicator()
 
     -- Update size in case the player adjusted Gladius / sArena settings
     -- Require a reload when settings are changed during an arena session
+    local size;
     if Gladius then
-        
+        size = GladiusClassIconFramearena1 and GladiusClassIconFramearena1:GetSize();
     elseif sArena then
-        local size = sArenaEnemyFrame1 and sArenaEnemyFrame1.ClassIcon and sArenaEnemyFrame1.ClassIcon:GetSize();
-        if ( not size ) then
-            HideHealerIndicator();
-            return;
-        end
-        size = size / 2;
-        healerIndicator:SetSize(size, size);
-        healerIndicator.icon:SetSize(size, size);
-        healerIndicator:SetScale(sArena:GetScale());
-
-        local frame = _G["sArenaEnemyFrame" .. healerIndex];
-        if ( not frame ) or ( not frame.ClassIcon ) then
-            HideHealerIndicator();
-            return;
-        end
-
-        healerIndicator:SetPoint("CENTER", frame.ClassIcon, "RIGHT");
-        healerIndicator:Show();
+        size = sArenaEnemyFrame1 and sArenaEnemyFrame1.ClassIcon and sArenaEnemyFrame1.ClassIcon:GetSize();
     end
+    if ( not size ) then
+        HideHealerIndicator();
+        return;
+    end
+
+    local scale;
+    if Gladius then
+        scale = GladiusButtonFramearena1 and GladiusButtonFramearena1:GetScale();
+    elseif sArena then
+        scale = sArena:GetScale();
+    end
+    if ( not scale ) then
+        HideHealerIndicator();
+        return;
+    end
+
+    local frame;
+    if Gladius then
+        frame = _G["GladiusClassIconFramearena" .. healerIndex] and _G["GladiusClassIconFramearena" .. healerIndex].ClassIcon;
+    elseif sArena then
+        frame = _G["sArenaEnemyFrame" .. healerIndex];
+    end
+    if ( not frame ) then
+        HideHealerIndicator();
+        return;
+    end
+
+    size = size / 2;
+    healerIndicator:SetSize(size, size);
+    healerIndicator.icon:SetSize(size, size);
+    healerIndicator:SetScale(scale);
+    healerIndicator:SetPoint("CENTER", frame, "RIGHT");
+    healerIndicator:Show();
 end
 
 function SweepyBoop:SetupHealerIndicator()
