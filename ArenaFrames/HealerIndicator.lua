@@ -43,28 +43,32 @@ local function UpdateHealerIndicator()
         return;
     end
 
-    EnsureHealerIndicator();
+    EnsureHealerIndicator(); -- Created but size / scale not set
 
     -- Update size in case the player adjusted Gladius / sArena settings
     -- Require a reload when settings are changed during an arena session
-    local size = sArenaEnemyFrame1 and sArenaEnemyFrame1.ClassIcon and sArenaEnemyFrame1.ClassIcon:GetSize();
-    if ( not size ) then
-        HideHealerIndicator();
-        return;
-    end
-    size = size / 2;
-    healerIndicator:SetSize(size, size);
-    healerIndicator.icon:SetSize(size, size);
-    healerIndicator:SetScale(sArena:GetScale());
+    if Gladius then
+        
+    elseif sArena then
+        local size = sArenaEnemyFrame1 and sArenaEnemyFrame1.ClassIcon and sArenaEnemyFrame1.ClassIcon:GetSize();
+        if ( not size ) then
+            HideHealerIndicator();
+            return;
+        end
+        size = size / 2;
+        healerIndicator:SetSize(size, size);
+        healerIndicator.icon:SetSize(size, size);
+        healerIndicator:SetScale(sArena:GetScale());
 
-    local frame = _G["sArenaEnemyFrame" .. healerIndex];
-    if ( not frame ) or ( not frame.ClassIcon ) then
-        HideHealerIndicator();
-        return;
-    end
+        local frame = _G["sArenaEnemyFrame" .. healerIndex];
+        if ( not frame ) or ( not frame.ClassIcon ) then
+            HideHealerIndicator();
+            return;
+        end
 
-    healerIndicator:SetPoint("CENTER", frame.ClassIcon, "RIGHT");
-    healerIndicator:Show();
+        healerIndicator:SetPoint("CENTER", frame.ClassIcon, "RIGHT");
+        healerIndicator:Show();
+    end
 end
 
 function SweepyBoop:SetupHealerIndicator()
