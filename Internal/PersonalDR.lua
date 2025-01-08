@@ -269,10 +269,8 @@ local function CreateDRIcon(category)
     -- Assign frame name BoopHideTimer* to hide timer by OmniCC
     f.cooldown = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
-    f.cooldown:SetDrawEdge(false);
+    f.cooldown:SetDrawEdge(true);
     f.cooldown:SetAlpha(1);
-    f.cooldown:SetDrawBling(false);
-    f.cooldown:SetDrawSwipe(true);
     f.cooldown:SetReverse(true);
     f.cooldown:SetHideCountdownNumbers(true);
     f.cooldown:SetScript("OnCooldownDone", function (self)
