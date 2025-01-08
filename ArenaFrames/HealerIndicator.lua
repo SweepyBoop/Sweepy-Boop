@@ -80,7 +80,7 @@ local function UpdateHealerIndicator()
         return;
     end
 
-    size = size / 2;
+    size = size / 3;
     healerIndicator:SetSize(size, size);
     healerIndicator.icon:SetSize(size, size);
     healerIndicator:SetScale(scale);
