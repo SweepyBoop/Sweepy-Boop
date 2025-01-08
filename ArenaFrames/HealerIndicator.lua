@@ -71,9 +71,9 @@ local function UpdateHealerIndicator()
 
     local frame;
     if Gladius then
-        frame = _G["GladiusClassIconFramearena" .. healerIndex] and _G["GladiusClassIconFramearena" .. healerIndex].ClassIcon;
+        frame = _G["GladiusClassIconFramearena" .. healerIndex];
     elseif sArena then
-        frame = _G["sArenaEnemyFrame" .. healerIndex];
+        frame = _G["sArenaEnemyFrame" .. healerIndex] and _G["sArenaEnemyFrame" .. healerIndex].ClassIcon;
     end
     if ( not frame ) then
         HideHealerIndicator();
