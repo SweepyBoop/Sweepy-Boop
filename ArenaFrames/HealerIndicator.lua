@@ -22,7 +22,7 @@ local healerIndicator; -- Create on first usage
 local function EnsureHealerIndicator()
     if ( not healerIndicator ) then
         healerIndicator = CreateFrame("Frame");
-        healerIndicator:SetFrameStrata("HIGH");
+        healerIndicator:SetFrameLevel(10000);
         healerIndicator:SetMouseClickEnabled(false);
         healerIndicator.icon = healerIndicator:CreateTexture();
         healerIndicator.icon:SetAtlas("Icon-Healer");
