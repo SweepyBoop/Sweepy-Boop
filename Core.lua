@@ -403,11 +403,12 @@ options.args.arenaFrames = {
             desc = "Size of arena defensive cooldown icons",
         },
 
-        newline2 = {
+        hideCountDownNumbers = {
             order = 13,
-            type = "description",
+            type = "toggle",
             width = "full",
-            name = "",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
+            desc = "Hide countdown numbers but show a more visible swiping edge",
         },
         arenaCooldownOffsetX = {
             order = 14,
@@ -706,6 +707,7 @@ local defaults = {
             arenaEnemyOffensiveIconSize = 32,
             arenaEnemyDefensivesEnabled = true,
             arenaEnemyDefensiveIconSize = 25,
+            hideCountDownNumbers = false,
             spellList = {},
         },
         raidFrames = {
