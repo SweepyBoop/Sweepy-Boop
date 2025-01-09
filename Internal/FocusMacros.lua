@@ -72,7 +72,7 @@ local function updateMacros(focusName)
         end
     end
 
-    print("Focus macros set to " .. focusName);
+    --print("Focus macros set to " .. focusName);
 end
 
 local function TryUpdateMacros()
