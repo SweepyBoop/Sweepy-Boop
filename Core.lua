@@ -764,10 +764,9 @@ function SweepyBoop:OnInitialize()
 
     -- Print message on first 3 logins with the addon enabled
     if SweepyBoopDB then
-        SweepyBoopDB.loginCount = SweepyBoopDB.loginCount or 1;
-        if ( SweepyBoopDB.loginCount <= 3 ) then
-            addon.PRINT("Thank you for supporting my addon! Type /sb to bring up the options panel. Hope you have a great PvP experience :)");
-            SweepyBoopDB.loginCount = SweepyBoopDB.loginCount + 1;
+        SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 1;
+        if ( SweepyBoopDB.slashCommandInvoked <= 3 ) then
+            addon.PRINT("Thank you for supporting my addon! Type /sb to bring up the options panel. Have a wonderful PvP journey :)");
         end
     end
 
@@ -857,4 +856,8 @@ SlashCmdList.SweepyBoop = function(msg)
     --     Settings.OpenToCategory(SweepyBoop.categoryID);
     -- end
     LibStub("AceConfigDialog-3.0"):Open(addonName);
+    if SweepyBoopDB then
+        SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 0;
+        SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked + 1;
+    end
 end
