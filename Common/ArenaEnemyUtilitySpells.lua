@@ -477,8 +477,8 @@ for _, spell in pairs(addon.utilitySpells) do
 end
 
 if addon.TEST_MODE then
-    local testCategory1 = SPELLCATEGORY.CROWDCONTROL;
-    local testCategory2 = SPELLCATEGORY.DEFENSIVE;
+    local testCategory1 = SPELLCATEGORY.INTERRUPT;
+    local testCategory2 = SPELLCATEGORY.DISRUPT;
     -- Test
     addon.utilitySpells[1126] = { -- Mark of the Wild
         class = addon.DRUID,

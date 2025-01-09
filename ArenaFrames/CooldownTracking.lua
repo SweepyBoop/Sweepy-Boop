@@ -205,6 +205,8 @@ local function EnsureIcon(unitId, spellID, spell)
         local size, hideHighlight;
         if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
             size, hideHighlight = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize, true;
+        elseif ( spell.category == SPELLCATEGORY.INTERRUPT ) then
+            size = 40;
         end
         premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
 
@@ -383,7 +385,7 @@ setPointOptions[SPELLCATEGORY.INTERRUPT] = {
     relativeTo = UIParent,
     relativePoint = "CENTER",
     offsetX = 0,
-    offsetY = -177.5,
+    offsetY = -180,
 };
 setPointOptions[SPELLCATEGORY.DISRUPT] = {
     point = "CENTER",
