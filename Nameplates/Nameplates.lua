@@ -79,37 +79,41 @@ local function ShouldUpdateNamePlate(frame)
     end
 end
 
-function SweepyBoop:SetupNameplateModules()
-    hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        if frame:IsForbidden() then
-            return;
-        end
+local function UpdateName(frame)
+    if frame:IsForbidden() then
+        return;
+    end
 
-        if ( not ShouldUpdateNamePlate(frame) ) then
-            return;
-        end
+    if ( not ShouldUpdateNamePlate(frame) ) then
+        return;
+    end
 
-        -- Class icon mod will hide/show healthBar when showing/hiding class icons
-        addon.UpdateClassIcon(frame);
-        -- Show enemy nameplate highlight
-        addon.UpdateNpcHighlight(frame);
-        -- Update spec icons
-        addon.UpdateSpecIcon(frame);
-        -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
-        UpdateHealthBar(frame);
+    -- Class icon mod will hide/show healthBar when showing/hiding class icons
+    addon.UpdateClassIcon(frame);
+    -- Show enemy nameplate highlight
+    addon.UpdateNpcHighlight(frame);
+    -- Update spec icons
+    addon.UpdateSpecIcon(frame);
+    -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
+    UpdateHealthBar(frame);
 
-        if IsActiveBattlefieldArena() then
-            -- Put arena numbers
-            if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                for i = 1, 3 do
-                    if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i);
-                        frame.name:SetTextColor(1,1,0); --Yellow
-                        return;
-                    end
+    if IsActiveBattlefieldArena() then
+        -- Put arena numbers
+        if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+            for i = 1, 3 do
+                if UnitIsUnit(frame.unit, "arena" .. i) then
+                    frame.name:SetText(i);
+                    frame.name:SetTextColor(1,1,0); --Yellow
+                    return;
                 end
             end
         end
+    end
+end
+
+function SweepyBoop:SetupNameplateModules()
+    hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+        UpdateName(frame);
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
@@ -123,4 +127,14 @@ function SweepyBoop:SetupNameplateModules()
 
         UpdateHealthBar(frame);
     end)
+end
+
+function SweepyBoop:RefreshAllNamePlates()
+    local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
+    for i = 1, #(nameplates) do
+        local nameplate = nameplates[i];
+        if nameplate and nameplate.UnitFrame then
+            UpdateName(nameplate.UnitFrame);
+        end
+    end
 end

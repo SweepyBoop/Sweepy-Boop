@@ -40,7 +40,7 @@ options.args.nameplatesFriendly = {
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val;
-        -- Can we force all nameplates to call CompactUnitFrame_UpdateName
+        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
     end,
     args = {
@@ -160,7 +160,7 @@ options.args.nameplatesEnemy = {
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-        -- Can we force all nameplates to call CompactUnitFrame_UpdateName
+        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
     end,
     args = {
