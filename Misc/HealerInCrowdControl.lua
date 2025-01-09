@@ -42,6 +42,7 @@ local function CreateContainerFrame()
     frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
     frame.cooldown:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
     frame.cooldown:SetHideCountdownNumbers(true);
+    frame.cooldown.noCooldownCount = true; -- hide OmniCC timers
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent:IsShown() then
