@@ -40,7 +40,7 @@ options.args.nameplatesFriendly = {
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val;
-        -- Can we force all nameplates to call CompactUnitFrame_UpdateName
+        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
     end,
     args = {
@@ -55,8 +55,10 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = addon.EXCLAMATION ..  " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
-                   .. addon.EXCLAMATION ..  " If icons don't refresh right after changing options, change current target to force an update",
+            name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates|r",
+            hidden = function ()
+                return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
+            end
         },
         classIconStyle = {
             order = 3,
@@ -160,16 +162,16 @@ options.args.nameplatesEnemy = {
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-        -- Can we force all nameplates to call CompactUnitFrame_UpdateName
+        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
     end,
     args = {
-        tip = {
-            order = 1,
-            width = "full",
-            type = "description",
-            name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
-        },
+        -- tip = {
+        --     order = 1,
+        --     width = "full",
+        --     type = "description",
+        --     name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
+        -- },
         breaker1 = {
             order = 2,
             type = "header",
@@ -762,10 +764,9 @@ function SweepyBoop:OnInitialize()
 
     -- Print message on first 3 logins with the addon enabled
     if SweepyBoopDB then
-        SweepyBoopDB.loginCount = SweepyBoopDB.loginCount or 1;
-        if ( SweepyBoopDB.loginCount <= 3 ) then
-            addon.PRINT("Thank you for supporting my addon! Type /sb to bring up the options panel. Hope you have a great PvP experience :)");
-            SweepyBoopDB.loginCount = SweepyBoopDB.loginCount + 1;
+        SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 1;
+        if ( SweepyBoopDB.slashCommandInvoked <= 3 ) then
+            addon.PRINT("Thank you for supporting my addon! Type /sb to bring up the options panel. Have a wonderful PvP journey :)");
         end
     end
 
@@ -839,6 +840,8 @@ function SweepyBoop:RefreshConfig()
             category.lastModified = currentTime;
         end
     end
+
+    self:RefreshAllNamePlates();
 end
 
 function SweepyBoop:CheckAllSpells(value)
@@ -853,4 +856,10 @@ SlashCmdList.SweepyBoop = function(msg)
     --     Settings.OpenToCategory(SweepyBoop.categoryID);
     -- end
     LibStub("AceConfigDialog-3.0"):Open(addonName);
+    if SweepyBoopDB then
+        SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 0;
+        if ( SweepyBoopDB.slashCommandInvoked <= 3 ) then
+            SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked + 1;
+        end
+    end
 end
