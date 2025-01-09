@@ -99,7 +99,7 @@ local function UpdateName(frame)
 
     if IsActiveBattlefieldArena() then
         -- Put arena numbers
-        if self.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+        if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
             for i = 1, 3 do
                 if UnitIsUnit(frame.unit, "arena" .. i) then
                     frame.name:SetText(i);
