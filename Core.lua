@@ -55,18 +55,9 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = function ()
-                local string = "";
-                local nameplatesFriendly = C_CVar.GetCVar("nameplateShowFriends");
-                local shouldShowRed = ( not nameplatesFriendly ) or ( nameplatesFriendly == "0" );
-                if shouldShowRed then
-                    string = string .. "|cFFFF0000";
-                end
-                string = string .. addon.EXCLAMATION ..  " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates";
-                if shouldShowRed then
-                    string = string .. "|r";
-                end
-                return string;
+            name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates|r",
+            hidden = function ()
+                return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
             end
         },
         classIconStyle = {
