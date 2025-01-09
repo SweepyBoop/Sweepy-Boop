@@ -55,8 +55,19 @@ options.args.nameplatesFriendly = {
             order = 2,
             width = "full",
             type = "description",
-            name = addon.EXCLAMATION ..  " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates\n\n"
-                   .. addon.EXCLAMATION ..  " If icons don't refresh right after changing options, change current target to force an update",
+            name = function ()
+                local string = "";
+                local nameplatesFriendly = C_CVar.GetCVar("nameplateShowFriends");
+                local shouldShowRed = ( not nameplatesFriendly ) or ( nameplatesFriendly == "0" );
+                if shouldShowRed then
+                    string = string .. "|cFFFF0000";
+                end
+                string = string .. addon.EXCLAMATION ..  " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates";
+                if shouldShowRed then
+                    string = string .. "|r";
+                end
+                return string;
+            end
         },
         classIconStyle = {
             order = 3,
@@ -164,12 +175,12 @@ options.args.nameplatesEnemy = {
         SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
     end,
     args = {
-        tip = {
-            order = 1,
-            width = "full",
-            type = "description",
-            name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
-        },
+        -- tip = {
+        --     order = 1,
+        --     width = "full",
+        --     type = "description",
+        --     name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
+        -- },
         breaker1 = {
             order = 2,
             type = "header",
@@ -839,6 +850,8 @@ function SweepyBoop:RefreshConfig()
             category.lastModified = currentTime;
         end
     end
+
+    self:RefreshAllNamePlates();
 end
 
 function SweepyBoop:CheckAllSpells(value)
