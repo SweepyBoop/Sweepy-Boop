@@ -858,6 +858,8 @@ SlashCmdList.SweepyBoop = function(msg)
     LibStub("AceConfigDialog-3.0"):Open(addonName);
     if SweepyBoopDB then
         SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 0;
-        SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked + 1;
+        if ( SweepyBoopDB.slashCommandInvoked <= 3 ) then
+            SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked + 1;
+        end
     end
 end
