@@ -534,7 +534,7 @@ options.args.raidFrames = {
             descStyle = "inline",
         },
 
-        enhancedAuras = {
+        druidHoTHelper = {
             order = 3,
             width = "full",
             type = "toggle",
@@ -724,7 +724,7 @@ local defaults = {
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
-            enhancedAuras = true,
+            druidHoTHelper = true,
         },
         misc = {
             healerInCrowdControl = false,
