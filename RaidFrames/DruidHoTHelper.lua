@@ -5,9 +5,9 @@ local lifeblooms = {
     [188550] = true, -- Undergrowth
 };
 
-local CenarionWards = {
+local CenarionWard = {
     [102351] = true, -- The buff before proc
-    [102352] = false, -- The healing buff
+    --[102352] = false, -- The healing buff
 };
 
 local soTFSpells = {
@@ -107,8 +107,10 @@ local function HandleRaidFrameAuras(buffFrame, aura)
         return;
     end
 
-    if ( CenarionWards[aura.spellId] ~= nil ) then
-        buffFrame.icon:SetDesaturated(CenarionWards[aura.spellId]);
+    if CenarionWard[aura.spellId] then
+        buffFrame.icon:SetDesaturated(true);
+    else
+        buffFrame.icon:SetDesaturated(false);
     end
 
     EnsureGlowFrame(buffFrame);
