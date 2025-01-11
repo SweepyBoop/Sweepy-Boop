@@ -37,9 +37,6 @@ Misc\DampenDisplay.lua
 Misc\HealerInCrowdControl.lua
 Misc\QueueReminder.lua
 
-RaidFrames\SortGroup.lua
-RaidFrames\FixBlizzardRaidAggro.lua
-
 ArenaFrames\IconGroupUtil.lua
 ArenaFrames\IconTemplates.lua
 ArenaFrames\CooldownTracking.xml
@@ -48,6 +45,10 @@ ArenaFrames\CooldownTracking.lua
 ArenaFrames\ArenaEnemyBurstTemplates.lua
 ArenaFrames\ArenaEnemyBurst.lua
 ArenaFrames\HealerIndicator.lua
+
+RaidFrames\SortGroup.lua
+RaidFrames\FixBlizzardRaidAggro.lua
+RaidFrames\DruidHoTHelper.lua
 
 # UI Personalization (Internal)
 Internal\LoseControl.lua
