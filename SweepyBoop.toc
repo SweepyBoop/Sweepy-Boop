@@ -48,7 +48,7 @@ ArenaFrames\HealerIndicator.lua
 
 RaidFrames\SortGroup.lua
 RaidFrames\FixBlizzardRaidAggro.lua
-RaidFrames\EnhancedAuras.lua
+RaidFrames\DruidHoTHelper.lua
 
 # UI Personalization (Internal)
 Internal\LoseControl.lua
