@@ -102,15 +102,15 @@ local function HandleRaidFrameAuras(buffFrame, aura)
     if ( not SweepyBoop.db.profile.raidFrames.enhancedAuras ) or ( not aura ) or ( aura.isHarmful ) then
         addon.HideOverlayGlow(buffFrame);
         if buffFrame.icon then
-            buffFrame.icon:SetDesaturated(false); -- Cenarion ward texture might have been greyed out
+            buffFrame.icon:SetAlpha(1); -- Cenarion ward texture might have been greyed out
         end
         return;
     end
 
     if CenarionWard[aura.spellId] then
-        buffFrame.icon:SetDesaturated(true);
+        buffFrame.icon:SetAlpha(0.5);
     else
-        buffFrame.icon:SetDesaturated(false);
+        buffFrame.icon:SetAlpha(1);
     end
 
     EnsureGlowFrame(buffFrame);
