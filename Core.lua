@@ -533,6 +533,16 @@ options.args.raidFrames = {
             desc = addon.EXCLAMATION .. " Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
             descStyle = "inline",
         },
+
+        enhancedAuras = {
+            order = 3,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid aura helper",
+            descStyle = "inline",
+            desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Lifebloom pandemic glow\n"
+                .. addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_naturalperfection")) .. " Grey out Cenarion Ward before the healing procs",
+        }
     },
 };
 
@@ -782,8 +792,9 @@ function SweepyBoop:OnInitialize()
 
     self:SetupHealerIndicator();
 
-    -- Setup raid frame aggro highlight
+    -- Setup raid frame modules
     self:SetupRaidFrameAggroHighlight();
+    self:SetupRaidFrameAuraModule();
 
     self:SetupQueueReminder();
 end

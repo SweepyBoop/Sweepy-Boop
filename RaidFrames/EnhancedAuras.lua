@@ -5,22 +5,27 @@ local lifeblooms = {
     [188550] = true, -- Undergrowth
 };
 
+local CenarionWards = {
+    [102351] = true, -- The buff before proc
+    [102352] = false, -- The healing buff
+};
+
+local soTFSpells = {
+    [774] = true,    -- Rejuv
+    [155777] = true, -- Germination
+};
+
 local lifebloomInstances = {};
 local lifebloomAuras = {};
 
 local lifebloomUpdate = CreateFrame("Frame");
 lifebloomUpdate.timer = 0;
 lifebloomUpdate:SetScript("OnUpdate", function (self, elapsed)
-    if ( not SweepyBoop.db.profile.raidFrames.enhancedAuras ) then
-        self:Hide();
-        return;
-    end
-
     self.timer = self.timer + elapsed;
-    if self.timer > 0.01 then
+    if self.timer > 0.025 then
         self.timer = 0;
 
-        if next(lifebloomAuras) == nil then
+        if next(lifebloomAuras) == nil then -- No more active lifeblooms
             self:Hide();
             return;
         end
@@ -37,7 +42,7 @@ lifebloomUpdate:SetScript("OnUpdate", function (self, elapsed)
                 if (timeRemaining <= refreshTime) then
                     addon.ShowOverlayGlow(buffFrame);
                 else
-                    buffFrame.glow:Hide()
+                    addon.HideOverlayGlow(buffFrame);
                 end
             else
                 addon.HideOverlayGlow(buffFrame);
@@ -56,6 +61,28 @@ local function EnsureGlowFrame(buffFrame)
     end
 end
 
+local function EnsureHighlight(buffFrame)
+    if ( not buffFrame.highlight ) then
+        local borderFrame = CreateFrame("Frame", nil, buffFrame);
+        borderFrame:SetAllPoints();
+        borderFrame:SetFrameLevel(buffFrame:GetFrameLevel() + 10);
+
+        local highlight = borderFrame:CreateTexture(nil, "OVERLAY");
+        highlight:SetAtlas("newplayertutorial-drag-slotgreen");
+        highlight:SetDesaturated(true);
+        highlight:SetAllPoints();
+        highlight:SetTexCoord(.24, .76, .24, .76);
+
+        buffFrame.highlight = highlight;
+    end
+end
+
+local function HideHighlight(buffFrame)
+    if ( buffFrame.highlight ) then
+        buffFrame.highlight:Hide();
+    end
+end
+
 local function GlowLifeBloom(aura, buffFrame)
     if lifeblooms[aura.spellId] and (aura.sourceUnit == "player") then
         lifebloomInstances[aura.auraInstanceID] = true;
@@ -67,15 +94,27 @@ local function GlowLifeBloom(aura, buffFrame)
     end
 end
 
+local isDruid = ( addon.GetUnitClass("player") == addon.DRUID ); -- this won't change for a login session
+
 local function HandleRaidFrameAuras(buffFrame, aura)
+    if ( not isDruid ) then return end -- if not druid, none of the following code is relevant
+
     if ( not SweepyBoop.db.profile.raidFrames.enhancedAuras ) or ( not aura ) or ( aura.isHarmful ) then
         addon.HideOverlayGlow(buffFrame);
+        if buffFrame.icon then
+            buffFrame.icon:SetDesaturated(false); -- Cenarion ward texture might have been greyed out
+        end
         return;
     end
 
-    EnsureGlowFrame(buffFrame);
+    if ( CenarionWards[aura.spellId] ~= nil ) then
+        buffFrame.icon:SetDesaturated(CenarionWards[aura.spellId]);
+    end
 
+    EnsureGlowFrame(buffFrame);
     GlowLifeBloom(aura, buffFrame);
+
+    -- Don't do SoTF for now, it's just a guess based on the timing of SoTF buff being consumed
 end
 
 function SweepyBoop:SetupRaidFrameAuraModule()
