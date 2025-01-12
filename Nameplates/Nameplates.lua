@@ -63,6 +63,7 @@ local function UpdateHealthBar(frame)
 end
 
 local function HideWidgets(frame)
+    -- Getting called a lot in dungeons, possibly causing frame drop?
     addon.HideClassIcon(frame);
     addon.HideNpcHighlight(frame);
     addon.HideSpecIcon(frame);
