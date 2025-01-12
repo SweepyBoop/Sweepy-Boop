@@ -167,7 +167,14 @@ function SweepyBoop:RefreshAllNamePlates()
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame then
-            OnNamePlateAdded(nameplate.UnitFrame);
+            local frame = nameplate.UnitFrame;
+            if frame:IsForbidden() then return end
+
+            addon.UpdateClassIcon(frame);
+            addon.UpdateNpcHighlight(frame);
+            addon.UpdateSpecIcon(frame);
+
+            UpdateHealthBar(frame);
         end
     end
 end
