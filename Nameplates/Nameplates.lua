@@ -133,10 +133,6 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         end
-
-        if ShouldUpdateUnitFrame(frame) then
-            UpdateHealthBar(frame);
-        end
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
