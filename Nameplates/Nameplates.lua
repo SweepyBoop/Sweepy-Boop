@@ -135,7 +135,7 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
 
-        if ( not IsRestricted() ) then
+        if ( not IsRestricted() ) and frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
             addon.UpdateClassIconTargetHighlight(frame);
         end
     end)
