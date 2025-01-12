@@ -76,7 +76,7 @@ local restricted = {
 	raid = true,
 };
 
-local function ShouldUpdateNamePlate(frame)
+local function IsFrameNamePlate(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
         local instanceType = select(2, IsInInstance());
@@ -130,13 +130,13 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
 
-        if ShouldUpdateNamePlate(frame) then
+        if IsFrameNamePlate(frame) then
             UpdateHealthBar(frame);
         end
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-        if ShouldUpdateNamePlate(frame) then
+        if IsFrameNamePlate(frame) then
             UpdateHealthBar(frame);
         end
     end)
