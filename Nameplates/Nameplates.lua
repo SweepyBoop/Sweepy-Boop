@@ -70,8 +70,8 @@ end
 
 -- Protected nameplates in dungeons and raids
 local restricted = {
-	party = true,
-	raid = true,
+    party = true,
+    raid = true,
 };
 
 local function IsRestricted()
