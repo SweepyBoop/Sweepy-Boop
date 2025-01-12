@@ -136,7 +136,7 @@ local function ShowClassIcon(frame)
 
     -- If the player enabled "Show healers only", hide the icon except for flag carrier
     if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
-        if ( class ~= "HEALER" and ( not flagCarrierIcons[class] ) ) then
+        if ( class ~= "HEALER" and class ~= "PET" and ( not flagCarrierIcons[class] ) ) then
             -- iconFrame.class and iconFrame.lastModified remain unchanged
             addon.HideClassIcon(frame);
             return;
