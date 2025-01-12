@@ -129,6 +129,16 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         end
+
+        if ShouldUpdateNamePlate(frame) then
+            UpdateHealthBar(frame);
+        end
+    end)
+
+    hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+        if ShouldUpdateNamePlate(frame) then
+            UpdateHealthBar(frame);
+        end
     end)
 
     local eventFrame = CreateFrame("Frame");
