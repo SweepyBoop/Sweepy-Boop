@@ -122,6 +122,8 @@ end
 
 function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+        if frame:IsForbidden() then return end
+
         if IsActiveBattlefieldArena() then
             -- Put arena numbers
             if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
@@ -134,8 +136,6 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         end
-
-        if frame:IsForbidden() then return end
 
         if IsFrameNamePlate(frame) then
             UpdateHealthBar(frame);
