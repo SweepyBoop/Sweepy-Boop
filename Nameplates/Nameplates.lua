@@ -100,8 +100,9 @@ local function OnNamePlateRemoved(unitId)
 
     -- Undo changes by the addon
     HideWidgets(frame); -- Even in restricted areas, hide widgets we've created (we don't want to show class icons, spec icons, etc. in dungeons)
-    if IsRestricted() then return end
-    frame:Show(); -- Restore the unit frame hidden by the addon
+    if ( not IsRestricted() ) then
+        frame:Show(); -- Restore the unit frame hidden by the addon
+    end
 end
 
 local function OnNamePlateAdded(unitId)
@@ -160,6 +161,8 @@ function SweepyBoop:SetupNameplateModules()
 end
 
 function SweepyBoop:RefreshAllNamePlates()
+    if IsRestricted then return end
+
     local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
