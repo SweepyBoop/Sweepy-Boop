@@ -5,11 +5,6 @@ local lifeblooms = {
     [188550] = true, -- Undergrowth
 };
 
-local CenarionWard = {
-    [102351] = true, -- The buff before proc
-    --[102352] = false, -- The healing buff
-};
-
 local soTFSpells = {
     [774] = true,    -- Rejuv
     [155777] = true, -- Germination
@@ -107,10 +102,12 @@ local function HandleRaidFrameAuras(buffFrame, aura)
         return;
     end
 
-    if CenarionWard[aura.spellId] then
-        buffFrame.icon:SetAlpha(0.5);
-    else
-        buffFrame.icon:SetAlpha(1);
+    if buffFrame.icon then
+        if ( aura.spellId == 102351 ) then -- Cenarion Ward before healing procs
+            buffFrame.icon:SetAlpha(0.5);
+        else
+            buffFrame.icon:SetAlpha(1);
+        end
     end
 
     EnsureGlowFrame(buffFrame);
