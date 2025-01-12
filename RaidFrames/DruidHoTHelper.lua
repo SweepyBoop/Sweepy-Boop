@@ -104,7 +104,7 @@ local function HandleRaidFrameAuras(buffFrame, aura)
 
     if buffFrame.icon then
         if ( aura.spellId == 102351 ) then -- Cenarion Ward before healing procs
-            buffFrame.icon:SetAlpha(0.5);
+            buffFrame.icon:SetAlpha(0.25);
         else
             buffFrame.icon:SetAlpha(1);
         end
