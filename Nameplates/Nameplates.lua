@@ -101,7 +101,7 @@ local function OnNamePlateRemoved(unitId)
     -- Undo changes by the addon
     HideWidgets(frame); -- Even in restricted areas, hide widgets we've created (we don't want to show class icons, spec icons, etc. in dungeons)
     if IsRestricted() then return end
-    frame:SetAlpha(1);
+    frame:Show(); -- Restore the unit frame hidden by the addon
 end
 
 local function OnNamePlateAdded(unitId)
@@ -135,16 +135,16 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
 
-        -- if IsFrameNamePlate(frame) then
-        --     UpdateHealthBar(frame);
-        -- end
+        if IsFrameNamePlate(frame) then
+            UpdateHealthBar(frame);
+        end
     end)
 
-    -- hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-    --     if IsFrameNamePlate(frame) then
-    --         UpdateHealthBar(frame);
-    --     end
-    -- end)
+    hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+        if IsFrameNamePlate(frame) then
+            UpdateHealthBar(frame);
+        end
+    end)
 
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
