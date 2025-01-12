@@ -118,6 +118,36 @@ local function OnNamePlateAdded(unitId)
     UpdateHealthBar(frame);
 end
 
+function SweepyBoop:RefreshAllNamePlates()
+    -- Refresh all visible nameplates
+    -- Skip if we're in a dungeon, changes will be handled by OnNamePlateAdded once we're out of the instance
+    if IsRestricted() then return end
+
+    local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
+    for i = 1, #(nameplates) do
+        local nameplate = nameplates[i];
+        if nameplate and nameplate.UnitFrame then
+            local frame = nameplate.UnitFrame;
+            if frame:IsForbidden() then return end
+
+            addon.UpdateClassIcon(frame);
+            addon.UpdateNpcHighlight(frame);
+            addon.UpdateSpecIcon(frame);
+
+            UpdateHealthBar(frame);
+        end
+    end
+end
+
+local TryRefreshAllNamePlates = function()
+    if UnitAffectingCombat("player") then
+        print("In combat, retry after 1s");
+        C_Timer.After(1, TryRefreshAllNamePlates);
+    else
+        SweepyBoop:RefreshAllNamePlates();
+    end
+end
+
 function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
@@ -152,37 +182,16 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
     -- Sometimes between solo shuffle rounds friendly nameplates show up, or nameplate is hidden but class icon is not showing
+    -- UnitIsUnit(unitId, "party1/2") is possibly messed up at the beginning of new round
+    -- Wait for 1s to do a full refresh on all visible nameplates
     eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:SetScript("OnEvent", function(_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             OnNamePlateAdded(unitId);
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             OnNamePlateRemoved(unitId);
-        else -- ARENA_PREP_OPPONENT_SPECIALIZATIONS, GROUP_ROSTER_UPDATE
-            -- Refresh all visible nameplates
-            SweepyBoop:RefreshAllNamePlates();
+        else -- ARENA_PREP_OPPONENT_SPECIALIZATIONS
+            TryRefreshAllNamePlates(); -- If in combat, retry every sec until succeeds
         end
     end)
-end
-
-function SweepyBoop:RefreshAllNamePlates()
-    -- Refresh all visible nameplates
-    -- Skip if we're in a dungeon, changes will be handled by OnNamePlateAdded once we're out of the instance
-    if IsRestricted() then return end
-
-    local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
-    for i = 1, #(nameplates) do
-        local nameplate = nameplates[i];
-        if nameplate and nameplate.UnitFrame then
-            local frame = nameplate.UnitFrame;
-            if frame:IsForbidden() then return end
-
-            addon.UpdateClassIcon(frame);
-            addon.UpdateNpcHighlight(frame);
-            addon.UpdateSpecIcon(frame);
-
-            UpdateHealthBar(frame);
-        end
-    end
 end
