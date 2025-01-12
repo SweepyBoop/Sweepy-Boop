@@ -1,5 +1,17 @@
 local _, addon = ...;
 
+local function GetNameplate(unitId)
+    if ( not unitId ) then return nil, nil end
+
+    local nameplate = C_NamePlate.GetNamePlateForUnit(unitId, true);
+
+    if ( not nameplate ) or ( not nameplate.UnitFrame ) then
+        return nil, nil;
+    end
+
+    return nameplate, nameplate.UnitFrame;
+end
+
 local function ShouldShowNameplate(unitId)
     -- Do not hide personal resource display
     if UnitIsUnit(unitId, "player") then
@@ -44,18 +56,18 @@ local function ShouldShowNameplate(unitId)
     end
 end
 
-local function HideWidgets(frame)
-    addon.HideClassIcon(frame);
-    addon.HideNpcHighlight(frame);
-    addon.HideSpecIcon(frame);
-end
-
 local function UpdateHealthBar(frame)
     if ShouldShowNameplate(frame.unit) then
         frame:Show();
     else
         frame:Hide();
     end
+end
+
+local function HideWidgets(frame)
+    addon.HideClassIcon(frame);
+    addon.HideNpcHighlight(frame);
+    addon.HideSpecIcon(frame);
 end
 
 -- Protected nameplates in dungeons and raids
@@ -79,54 +91,76 @@ local function ShouldUpdateNamePlate(frame)
     end
 end
 
-local function UpdateName(frame)
-    if frame:IsForbidden() then
-        return;
-    end
+local function OnNamePlateRemoved(unitId)
+    local nameplate, frame = GetNameplate(unitId);
+    if ( not frame ) then return end
 
-    if ( not ShouldUpdateNamePlate(frame) ) then
-        return;
-    end
-
-    -- Class icon mod will hide/show healthBar when showing/hiding class icons
-    addon.UpdateClassIcon(frame);
-    -- Show enemy nameplate highlight
-    addon.UpdateNpcHighlight(frame);
-    -- Update spec icons
-    addon.UpdateSpecIcon(frame);
-    -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
-    UpdateHealthBar(frame);
-
-    if IsActiveBattlefieldArena() then
-        -- Put arena numbers
-        if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-            for i = 1, 3 do
-                if UnitIsUnit(frame.unit, "arena" .. i) then
-                    frame.name:SetText(i);
-                    frame.name:SetTextColor(1,1,0); --Yellow
-                    return;
-                end
-            end
-        end
-    end
+    -- Undo changes by the addon
+    HideWidgets(frame);
+    frame:Show();
 end
+
+local function OnNamePlateAdded(unitId)
+    OnNamePlateRemoved(unitId); -- Undo previous changes
+
+    local nameplate, frame = GetNameplate(unitId);
+    if ( not frame ) then return end
+
+    if frame:IsForbidden() then return end
+
+    addon.UpdateClassIcon(frame);
+    addon.UpdateNpcHighlight(frame);
+    addon.UpdateSpecIcon(frame);
+
+    UpdateHealthBar(frame);
+end
+
+local eventFrame;
 
 function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        UpdateName(frame);
+        if IsActiveBattlefieldArena() then
+            -- Put arena numbers
+            if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+                for i = 1, 3 do
+                    if UnitIsUnit(frame.unit, "arena" .. i) then
+                        frame.name:SetText(i);
+                        frame.name:SetTextColor(1,1,0); --Yellow
+                        return;
+                    end
+                end
+            end
+        end
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-        if frame:IsForbidden() then
-            return;
+        if frame:IsForbidden() then return end
+        if ShouldUpdateNamePlate(frame) then
+            UpdateHealthBar(frame);
         end
-
-        if ( not ShouldUpdateNamePlate(frame) ) then
-            return;
-        end
-
-        UpdateHealthBar(frame);
     end)
+
+    if ( not eventFrame) then
+        eventFrame = CreateFrame("Frame");
+        eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
+        eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
+        eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
+        eventFrame:SetScript("OnEvent", function(_, event, unitId)
+            if event == addon.NAME_PLATE_UNIT_ADDED then
+                OnNamePlateAdded(unitId);
+            elseif event == addon.NAME_PLATE_UNIT_REMOVED then
+                OnNamePlateRemoved(unitId);
+            elseif event == addon.PLAYER_TARGET_CHANGED then
+                local nameplates = C_NamePlate.GetNamePlates(true);
+                for i = 1, #(nameplates) do
+                    local nameplate = nameplates[i];
+                    if nameplate and nameplate.UnitFrame then
+                        addon.UpdateClassIcon(nameplate.UnitFrame);
+                    end
+                end
+            end
+        end)
+    end
 end
 
 function SweepyBoop:RefreshAllNamePlates()
@@ -134,7 +168,7 @@ function SweepyBoop:RefreshAllNamePlates()
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame then
-            UpdateName(nameplate.UnitFrame);
+            OnNamePlateAdded(nameplate.UnitFrame);
         end
     end
 end
