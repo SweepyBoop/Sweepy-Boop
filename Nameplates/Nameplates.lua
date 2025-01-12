@@ -82,8 +82,7 @@ end
 local function IsFrameNamePlate(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
-        local instanceType = select(2, IsInInstance());
-        if restricted[instanceType] then
+        if IsRestricted() then
             -- In restricted instance, should skip all the nameplate logic
             -- But hide all the widgets, we don't want to show class icons, spec icons, etc. in dungeons
             HideWidgets(frame);
