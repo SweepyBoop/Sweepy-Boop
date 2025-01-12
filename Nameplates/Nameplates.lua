@@ -156,7 +156,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplates = C_NamePlate.GetNamePlates(true);
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
-                if nameplate and nameplate.UnitFrame and ( not IsRestricted() ) then
+                if nameplate and nameplate.UnitFrame and ( not nameplate:IsForbidden() ) and ( not IsRestricted() ) then
                     addon.UpdateClassIconTargetHighlight(nameplate.UnitFrame);
                 end
             end
