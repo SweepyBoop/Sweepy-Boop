@@ -79,7 +79,7 @@ local function IsRestricted()
     return restricted[instanceType];
 end
 
-local function IsFrameNamePlate(frame)
+local function ShouldUpdateUnitFrame(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
         if IsRestricted() then
@@ -133,7 +133,7 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
 
-        if IsFrameNamePlate(frame) then
+        if ShouldUpdateUnitFrame(frame) then
             UpdateHealthBar(frame);
         end
     end)
@@ -141,7 +141,7 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
         if frame:IsForbidden() then return end
 
-        if IsFrameNamePlate(frame) then
+        if ShouldUpdateUnitFrame(frame) then
             UpdateHealthBar(frame);
         end
     end)
