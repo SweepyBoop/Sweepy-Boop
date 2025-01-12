@@ -18,7 +18,7 @@ local topRightAura = {};
 -- Mortal Strike gives 50% healing reduction baseline
 
 local centerAuraSpells = {
-    102352, -- Cenarion Ward
+    --102352, -- Cenarion Ward
     194384,  -- Atonement
     53563, -- Beacon of Light
     156910, -- Beacon of Faith
