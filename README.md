@@ -106,6 +106,13 @@ Show spec icons (or a special healer icon) on top of enemy players in both arena
 
 (You do not need to install Details for the spec icons to work!  Other nameplate addons, e.g., BetterBlizzPlates require Details to show spec icons in battlegrounds, and the specs are detected a few sec after the first encounter with an enemy player. There is neither addon dependency nor delay with our module)
 
+## Druid HoT helper
+![Lifebloom pandemic glow](https://github.com/user-attachments/assets/a502695d-242a-4422-ba5c-317be20cb243)
+![Cenarion Ward fade out before proc](https://github.com/user-attachments/assets/73622a46-9898-4d77-a0f7-29a8a497e24c)
+
+On Blizzard raid frames:
+- Glow lifebloom buff during pandemic window for optimal refresh timing
+- Cenarion Ward buff fades out until the actual healing procs (to extend the healing with Verdant Infusion)
 
 ## Sort raid frames
 ![SortGroup](https://github.com/user-attachments/assets/caefcbd3-ad7b-432f-86e9-dc5f5c6caefd)
