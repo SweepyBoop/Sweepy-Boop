@@ -150,20 +150,11 @@ function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
-    eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
     eventFrame:SetScript("OnEvent", function(_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             OnNamePlateAdded(unitId);
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             OnNamePlateRemoved(unitId);
-        -- elseif event == addon.PLAYER_TARGET_CHANGED then
-        --     local nameplates = C_NamePlate.GetNamePlates(true);
-        --     for i = 1, #(nameplates) do
-        --         local nameplate = nameplates[i];
-        --         if nameplate and nameplate.UnitFrame and ( not nameplate:IsForbidden() ) and ( not IsRestricted() ) then
-        --             addon.UpdateClassIconTargetHighlight(nameplate.UnitFrame);
-        --         end
-        --     end
         end
     end)
 end
