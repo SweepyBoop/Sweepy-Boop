@@ -92,6 +92,8 @@ local specialClasses = { -- For these special classes, there is no arrow style
 };
 
 addon.UpdateClassIconTargetHighlight = function (frame)
+    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
+
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
 
