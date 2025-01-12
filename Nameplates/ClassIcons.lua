@@ -95,11 +95,20 @@ addon.UpdateClassIconTargetHighlight = function (frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
 
-    if nameplate.FriendlyClassIcon then
-        nameplate.FriendlyClassIcon.targetHighlight:Hide();
+    if nameplate.FriendlyClassIcon and nameplate.FriendlyClassIcon.targetHighlight then
+        if UnitIsUnit("target", frame.unit) then
+            nameplate.FriendlyClassIcon.targetHighlight:Show();
+        else
+            nameplate.FriendlyClassIcon.targetHighlight:Hide();
+        end
     end
-    if nameplate.FriendlyClassArrow then
-        nameplate.FriendlyClassArrow.targetHighlight:Hide();
+
+    if nameplate.FriendlyClassArrow and nameplate.FriendlyClassArrow.targetHighlight then
+        if UnitIsUnit("target", frame.unit) then
+            nameplate.FriendlyClassArrow.targetHighlight:Show();
+        else
+            nameplate.FriendlyClassArrow.targetHighlight:Hide();
+        end
     end
 end
 
