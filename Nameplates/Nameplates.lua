@@ -135,12 +135,16 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
 
+        if frame:IsForbidden() then return end
+
         if IsFrameNamePlate(frame) then
             UpdateHealthBar(frame);
         end
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+        if frame:IsForbidden() then return end
+
         if IsFrameNamePlate(frame) then
             UpdateHealthBar(frame);
         end
