@@ -91,6 +91,18 @@ local specialClasses = { -- For these special classes, there is no arrow style
     ['FlagCarrierNeutral'] = true,
 };
 
+addon.UpdateClassIconTargetHighlight = function (frame)
+    local nameplate = frame:GetParent();
+    if ( not nameplate ) then return end
+
+    if nameplate.FriendlyClassIcon then
+        nameplate.FriendlyClassIcon.targetHighlight:Hide();
+    end
+    if nameplate.FriendlyClassArrow then
+        nameplate.FriendlyClassArrow.targetHighlight:Hide();
+    end
+end
+
 local function ShowClassIcon(frame)
     local isPlayer = UnitIsPlayer(frame.unit);
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";

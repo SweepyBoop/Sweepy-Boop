@@ -76,6 +76,11 @@ local restricted = {
 	raid = true,
 };
 
+local function IsRestricted()
+    local instanceType = select(2, IsInInstance());
+    return restricted[instanceType];
+end
+
 local function IsFrameNamePlate(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
@@ -92,18 +97,20 @@ local function IsFrameNamePlate(frame)
 end
 
 local function OnNamePlateRemoved(unitId)
-    local nameplate, frame = GetNameplate(unitId);
+    local _, frame = GetNameplate(unitId);
     if ( not frame ) then return end
 
     -- Undo changes by the addon
-    HideWidgets(frame);
-    frame:Show();
+    HideWidgets(frame); -- Even in restricted areas, hide widgets we've created (we don't want to show class icons, spec icons, etc. in dungeons)
+    if IsRestricted() then return end
+    frame:SetAlpha(1);
 end
 
 local function OnNamePlateAdded(unitId)
     OnNamePlateRemoved(unitId); -- Undo previous changes
+    if IsRestricted() then return end
 
-    local nameplate, frame = GetNameplate(unitId);
+    local _, frame = GetNameplate(unitId);
     if ( not frame ) then return end
 
     if frame:IsForbidden() then return end
@@ -130,16 +137,16 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
 
-        if IsFrameNamePlate(frame) then
-            UpdateHealthBar(frame);
-        end
+        -- if IsFrameNamePlate(frame) then
+        --     UpdateHealthBar(frame);
+        -- end
     end)
 
-    hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-        if IsFrameNamePlate(frame) then
-            UpdateHealthBar(frame);
-        end
-    end)
+    -- hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
+    --     if IsFrameNamePlate(frame) then
+    --         UpdateHealthBar(frame);
+    --     end
+    -- end)
 
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
@@ -155,7 +162,7 @@ function SweepyBoop:SetupNameplateModules()
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
-                    addon.UpdateClassIcon(nameplate.UnitFrame);
+                    addon.UpdateClassIconTargetHighlight(nameplate.UnitFrame);
                 end
             end
         end
