@@ -1,13 +1,11 @@
 local _, addon = ...;
 
 local function GetNameplate(unitId)
-    if ( not unitId ) then return nil, nil end
+    if ( not unitId ) then return end
 
     local nameplate = C_NamePlate.GetNamePlateForUnit(unitId, true);
 
-    if ( not nameplate ) or ( not nameplate.UnitFrame ) then
-        return nil, nil;
-    end
+    if ( not nameplate ) or ( not nameplate.UnitFrame ) then return end
 
     return nameplate, nameplate.UnitFrame;
 end
