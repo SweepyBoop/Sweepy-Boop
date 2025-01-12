@@ -54,19 +54,19 @@ local function ShouldShowNameplate(unitId)
     end
 end
 
+local function HideWidgets(frame)
+    -- Getting called a lot in dungeons, possibly causing frame drop?
+    addon.HideClassIcon(frame);
+    addon.HideNpcHighlight(frame);
+    addon.HideSpecIcon(frame);
+end
+
 local function UpdateHealthBar(frame)
     if ShouldShowNameplate(frame.unit) then
         frame:Show();
     else
         frame:Hide();
     end
-end
-
-local function HideWidgets(frame)
-    -- Getting called a lot in dungeons, possibly causing frame drop?
-    addon.HideClassIcon(frame);
-    addon.HideNpcHighlight(frame);
-    addon.HideSpecIcon(frame);
 end
 
 -- Protected nameplates in dungeons and raids
