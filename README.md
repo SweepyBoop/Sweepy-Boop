@@ -108,7 +108,8 @@ Show spec icons (or a special healer icon) on top of enemy players in both arena
 
 ## Druid HoT helper
 ![Lifebloom pandemic glow](https://github.com/user-attachments/assets/a502695d-242a-4422-ba5c-317be20cb243)
-![Cenarion Ward fade out before proc](https://github.com/user-attachments/assets/73622a46-9898-4d77-a0f7-29a8a497e24c)
+![Cenarion Ward fade out before proc](https://github.com/user-attachments/assets/85bf2199-5c40-4ebb-bcf5-3f99967bec5a)
+
 
 On Blizzard raid frames:
 - Glow lifebloom buff during pandemic window for optimal refresh timing
