@@ -153,12 +153,13 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
     -- Sometimes between solo shuffle rounds nameplates are not fully updated, consequently we see original nameplates on friendly units instead of class icons
     eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:SetScript("OnEvent", function(_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             OnNamePlateAdded(unitId);
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             OnNamePlateRemoved(unitId);
-        elseif event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
+        else -- ARENA_PREP_OPPONENT_SPECIALIZATIONS, GROUP_ROSTER_UPDATE
             -- Refresh all visible nameplates
             SweepyBoop:RefreshAllNamePlates();
         end
