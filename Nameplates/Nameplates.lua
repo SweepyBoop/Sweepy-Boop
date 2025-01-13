@@ -165,8 +165,9 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
 
-        if ( not IsRestricted() ) and frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
+        if ShouldUpdateUnitFrame(frame) then
             addon.UpdateClassIconTargetHighlight(frame);
+            UpdateHealthBar(frame);
         end
     end)
 
@@ -191,7 +192,7 @@ function SweepyBoop:SetupNameplateModules()
             OnNamePlateAdded(unitId);
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             OnNamePlateRemoved(unitId);
-        else -- ARENA_PREP_OPPONENT_SPECIALIZATIONS
+        elseif IsActiveBattlefieldArena() then -- ARENA_PREP_OPPONENT_SPECIALIZATIONS
             TryRefreshAllNamePlates(); -- If in combat, retry every sec until succeeds
         end
     end)
