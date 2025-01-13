@@ -156,8 +156,14 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
+    -- Issue: in one SS round, if I target an enemy player when the round ends and that player joins my side in the next round
+    -- this nameplate will be reused and not trigger an update
+    -- Perhaps do a full update in CompactUnitFrame_UpdateName, if it's current target
+
     local eventFrame = CreateFrame("Frame");
+    eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    eventFrame:RegisterEvent(addon.UNIT_PET);
     eventFrame:SetScript("OnEvent", function()
         TryRefreshAllNamePlates();
     end)
