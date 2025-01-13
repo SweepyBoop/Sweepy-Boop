@@ -84,8 +84,6 @@ local function ShouldUpdateUnitFrame(frame)
     end
 end
 
-
-
 function SweepyBoop:RefreshAllNamePlates()
     -- Refresh all visible nameplates
     -- Skip if we're in a dungeon, changes will be handled by OnNamePlateAdded once we're out of the instance
@@ -104,6 +102,15 @@ function SweepyBoop:RefreshAllNamePlates()
 
             UpdateHealthBar(frame);
         end
+    end
+end
+
+local function TryRefreshAllNamePlates()
+    if UnitAffectingCombat("player") then
+        print("In combat, retry after 1s");
+        C_Timer.After(1, TryRefreshAllNamePlates);
+    else
+        SweepyBoop:RefreshAllNamePlates();
     end
 end
 
@@ -147,5 +154,11 @@ function SweepyBoop:SetupNameplateModules()
         if ShouldUpdateUnitFrame(frame) then
             UpdateHealthBar(frame);
         end
+    end)
+
+    local eventFrame = CreateFrame("Frame");
+    eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    eventFrame:SetScript("OnEvent", function()
+        TryRefreshAllNamePlates();
     end)
 end
