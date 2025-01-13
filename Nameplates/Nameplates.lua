@@ -139,7 +139,7 @@ function SweepyBoop:RefreshAllNamePlates()
     end
 end
 
-local TryRefreshAllNamePlates = function()
+local function TryRefreshAllNamePlates()
     if UnitAffectingCombat("player") then
         print("In combat, retry after 1s");
         C_Timer.After(1, TryRefreshAllNamePlates);
