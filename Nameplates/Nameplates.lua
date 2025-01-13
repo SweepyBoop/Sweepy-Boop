@@ -105,15 +105,6 @@ function SweepyBoop:RefreshAllNamePlates()
     end
 end
 
-local function TryRefreshAllNamePlates()
-    if UnitAffectingCombat("player") then
-        print("In combat, retry after 1s");
-        C_Timer.After(1, TryRefreshAllNamePlates);
-    else
-        SweepyBoop:RefreshAllNamePlates();
-    end
-end
-
 function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateAll", function(frame)
         if frame:IsForbidden() then return end
@@ -131,7 +122,19 @@ function SweepyBoop:SetupNameplateModules()
         if frame:IsForbidden() then return end
 
         if ShouldUpdateUnitFrame(frame) then
-            addon.UpdateClassIconTargetHighlight(frame);
+            -- Issue: in one SS round, if I target an enemy player when the round ends and that player joins my side in the next round
+            -- this nameplate will be reused and not trigger an update
+            -- Perhaps do a full update in CompactUnitFrame_UpdateName, if it's current target
+            local fullUpdate = frame.unit and UnitIsUnit(frame.unit, "target");
+            if fullUpdate then
+                addon.UpdateClassIcon(frame);
+                addon.UpdateNpcHighlight(frame);
+                addon.UpdateSpecIcon(frame);
+
+                UpdateHealthBar(frame);
+            else
+                addon.UpdateClassIconTargetHighlight(frame);
+            end
 
             if IsActiveBattlefieldArena() then
                 -- Put arena numbers
@@ -156,15 +159,13 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    -- Issue: in one SS round, if I target an enemy player when the round ends and that player joins my side in the next round
-    -- this nameplate will be reused and not trigger an update
-    -- Perhaps do a full update in CompactUnitFrame_UpdateName, if it's current target
+    -- Issue: sometimes party pet shows both icon and health bar
+    -- When this happens, the pet health bar turns from red to blue, so hopefully hooking this function can resolve it
+    hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function (frame)
+        if frame:IsForbidden() then return end
 
-    local eventFrame = CreateFrame("Frame");
-    eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    eventFrame:RegisterEvent(addon.UNIT_PET);
-    eventFrame:SetScript("OnEvent", function()
-        TryRefreshAllNamePlates();
+        if ShouldUpdateUnitFrame(frame) then
+            UpdateHealthBar(frame);
+        end
     end)
 end
