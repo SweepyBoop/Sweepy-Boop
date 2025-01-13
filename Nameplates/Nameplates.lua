@@ -149,6 +149,18 @@ local function TryRefreshAllNamePlates()
 end
 
 function SweepyBoop:SetupNameplateModules()
+    hooksecurefunc("CompactUnitFrame_UpdateAll", function(frame)
+        if frame:IsForbidden() then return end
+
+        if ShouldUpdateUnitFrame(frame) then
+            addon.UpdateClassIcon(frame);
+            addon.UpdateNpcHighlight(frame);
+            addon.UpdateSpecIcon(frame);
+
+            UpdateHealthBar(frame);
+        end
+    end)
+
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
@@ -167,7 +179,6 @@ function SweepyBoop:SetupNameplateModules()
 
         if ShouldUpdateUnitFrame(frame) then
             addon.UpdateClassIconTargetHighlight(frame);
-            UpdateHealthBar(frame);
         end
     end)
 
@@ -179,20 +190,20 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    local eventFrame = CreateFrame("Frame");
-    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
-    -- Sometimes between solo shuffle rounds friendly nameplates show up, or nameplate is hidden but class icon is not showing
-    -- UnitIsUnit(unitId, "party1/2") is possibly messed up at the beginning of new round
-    -- Wait for 1s to do a full refresh on all visible nameplates
-    eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    eventFrame:SetScript("OnEvent", function(_, event, unitId)
-        if event == addon.NAME_PLATE_UNIT_ADDED then
-            OnNamePlateAdded(unitId);
-        elseif event == addon.NAME_PLATE_UNIT_REMOVED then
-            OnNamePlateRemoved(unitId);
-        else -- ARENA_PREP_OPPONENT_SPECIALIZATIONS
-            TryRefreshAllNamePlates(); -- If in combat, retry every sec until succeeds
-        end
-    end)
+    -- local eventFrame = CreateFrame("Frame");
+    -- eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
+    -- eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
+    -- -- Sometimes between solo shuffle rounds friendly nameplates show up, or nameplate is hidden but class icon is not showing
+    -- -- UnitIsUnit(unitId, "party1/2") is possibly messed up at the beginning of new round
+    -- -- Wait for 1s to do a full refresh on all visible nameplates
+    -- eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    -- eventFrame:SetScript("OnEvent", function(_, event, unitId)
+    --     if event == addon.NAME_PLATE_UNIT_ADDED then
+    --         OnNamePlateAdded(unitId);
+    --     elseif event == addon.NAME_PLATE_UNIT_REMOVED then
+    --         OnNamePlateRemoved(unitId);
+    --     else -- ARENA_PREP_OPPONENT_SPECIALIZATIONS
+    --         TryRefreshAllNamePlates(); -- If in combat, retry every sec until succeeds
+    --     end
+    -- end)
 end
