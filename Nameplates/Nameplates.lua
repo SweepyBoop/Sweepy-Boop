@@ -185,6 +185,7 @@ function SweepyBoop:SetupNameplateModules()
     -- UnitIsUnit(unitId, "party1/2") is possibly messed up at the beginning of new round
     -- Wait for 1s to do a full refresh on all visible nameplates
     eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:SetScript("OnEvent", function(_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             OnNamePlateAdded(unitId);
