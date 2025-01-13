@@ -91,6 +91,29 @@ local specialClasses = { -- For these special classes, there is no arrow style
     ['FlagCarrierNeutral'] = true,
 };
 
+addon.UpdateClassIconTargetHighlight = function (frame)
+    if ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) then return end
+
+    local nameplate = frame:GetParent();
+    if ( not nameplate ) then return end
+
+    if nameplate.FriendlyClassIcon and nameplate.FriendlyClassIcon.targetHighlight then
+        if UnitIsUnit("target", frame.unit) then
+            nameplate.FriendlyClassIcon.targetHighlight:Show();
+        else
+            nameplate.FriendlyClassIcon.targetHighlight:Hide();
+        end
+    end
+
+    if nameplate.FriendlyClassArrow and nameplate.FriendlyClassArrow.targetHighlight then
+        if UnitIsUnit("target", frame.unit) then
+            nameplate.FriendlyClassArrow.targetHighlight:Show();
+        else
+            nameplate.FriendlyClassArrow.targetHighlight:Hide();
+        end
+    end
+end
+
 local function ShowClassIcon(frame)
     local isPlayer = UnitIsPlayer(frame.unit);
     local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
@@ -111,9 +134,9 @@ local function ShowClassIcon(frame)
         end
     end
 
-    -- If the player enabled "Show healers only", hide the icon except for flag carrier
+    -- If the player enabled "Show healers only", hide the icon except for flag carrier and pet
     if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
-        if ( class ~= "HEALER" and ( not flagCarrierIcons[class] ) ) then
+        if ( class ~= "HEALER" and class ~= "PET" and ( not flagCarrierIcons[class] ) ) then
             -- iconFrame.class and iconFrame.lastModified remain unchanged
             addon.HideClassIcon(frame);
             return;

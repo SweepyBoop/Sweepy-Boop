@@ -45,6 +45,7 @@ local function ShouldShowNameplate(unitId)
 end
 
 local function HideWidgets(frame)
+    -- Getting called a lot in dungeons, possibly causing frame drop?
     addon.HideClassIcon(frame);
     addon.HideNpcHighlight(frame);
     addon.HideSpecIcon(frame);
@@ -60,15 +61,19 @@ end
 
 -- Protected nameplates in dungeons and raids
 local restricted = {
-	party = true,
-	raid = true,
+    party = true,
+    raid = true,
 };
 
-local function ShouldUpdateNamePlate(frame)
+local function IsRestricted()
+    local instanceType = select(2, IsInInstance());
+    return restricted[instanceType];
+end
+
+local function ShouldUpdateUnitFrame(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
-        local instanceType = select(2, IsInInstance());
-        if restricted[instanceType] then
+        if IsRestricted() then
             -- In restricted instance, should skip all the nameplate logic
             -- But hide all the widgets, we don't want to show class icons, spec icons, etc. in dungeons
             HideWidgets(frame);
@@ -79,62 +84,88 @@ local function ShouldUpdateNamePlate(frame)
     end
 end
 
-local function UpdateName(frame)
-    if frame:IsForbidden() then
-        return;
-    end
+function SweepyBoop:RefreshAllNamePlates()
+    -- Refresh all visible nameplates
+    -- Skip if we're in a dungeon, changes will be handled by OnNamePlateAdded once we're out of the instance
+    if IsRestricted() then return end
 
-    if ( not ShouldUpdateNamePlate(frame) ) then
-        return;
-    end
+    local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
+    for i = 1, #(nameplates) do
+        local nameplate = nameplates[i];
+        if nameplate and nameplate.UnitFrame then
+            local frame = nameplate.UnitFrame;
+            if frame:IsForbidden() then return end
 
-    -- Class icon mod will hide/show healthBar when showing/hiding class icons
-    addon.UpdateClassIcon(frame);
-    -- Show enemy nameplate highlight
-    addon.UpdateNpcHighlight(frame);
-    -- Update spec icons
-    addon.UpdateSpecIcon(frame);
-    -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
-    UpdateHealthBar(frame);
+            addon.UpdateClassIcon(frame);
+            addon.UpdateNpcHighlight(frame);
+            addon.UpdateSpecIcon(frame);
 
-    if IsActiveBattlefieldArena() then
-        -- Put arena numbers
-        if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-            for i = 1, 3 do
-                if UnitIsUnit(frame.unit, "arena" .. i) then
-                    frame.name:SetText(i);
-                    frame.name:SetTextColor(1,1,0); --Yellow
-                    return;
-                end
-            end
+            UpdateHealthBar(frame);
         end
     end
 end
 
 function SweepyBoop:SetupNameplateModules()
+    hooksecurefunc("CompactUnitFrame_UpdateAll", function(frame)
+        if frame:IsForbidden() then return end
+
+        if ShouldUpdateUnitFrame(frame) then
+            addon.UpdateClassIcon(frame);
+            addon.UpdateNpcHighlight(frame);
+            addon.UpdateSpecIcon(frame);
+
+            UpdateHealthBar(frame);
+        end
+    end)
+
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        UpdateName(frame);
+        if frame:IsForbidden() then return end
+
+        if ShouldUpdateUnitFrame(frame) then
+            -- Issue: in one SS round, if I target an enemy player when the round ends and that player joins my side in the next round
+            -- this nameplate will be reused and not trigger an update
+            -- Perhaps do a full update in CompactUnitFrame_UpdateName, if it's current target
+            local fullUpdate = frame.unit and UnitIsUnit(frame.unit, "target");
+            if fullUpdate then
+                addon.UpdateClassIcon(frame);
+                addon.UpdateNpcHighlight(frame);
+                addon.UpdateSpecIcon(frame);
+
+                UpdateHealthBar(frame);
+            else
+                addon.UpdateClassIconTargetHighlight(frame);
+            end
+
+            if IsActiveBattlefieldArena() then
+                -- Put arena numbers
+                if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+                    for i = 1, 3 do
+                        if UnitIsUnit(frame.unit, "arena" .. i) then
+                            frame.name:SetText(i);
+                            frame.name:SetTextColor(1,1,0); --Yellow
+                            return;
+                        end
+                    end
+                end
+            end
+        end
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
-        if frame:IsForbidden() then
-            return;
-        end
+        if frame:IsForbidden() then return end
 
-        if ( not ShouldUpdateNamePlate(frame) ) then
-            return;
+        if ShouldUpdateUnitFrame(frame) then
+            UpdateHealthBar(frame);
         end
-
-        UpdateHealthBar(frame);
     end)
-end
 
-function SweepyBoop:RefreshAllNamePlates()
-    local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
-    for i = 1, #(nameplates) do
-        local nameplate = nameplates[i];
-        if nameplate and nameplate.UnitFrame then
-            UpdateName(nameplate.UnitFrame);
+    -- Issue: sometimes party pet shows both icon and health bar
+    -- When this happens, the pet health bar turns from red to blue, so hopefully hooking this function can resolve it
+    hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function (frame)
+        if frame:IsForbidden() then return end
+
+        if ShouldUpdateUnitFrame(frame) then
+            UpdateHealthBar(frame);
         end
-    end
+    end)
 end

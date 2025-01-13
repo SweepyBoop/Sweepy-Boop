@@ -163,5 +163,5 @@ end)
 local scaleRaidFrame = CreateFrame("Frame");
 scaleRaidFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 scaleRaidFrame:SetScript("OnEvent", function ()
-    CompactPartyFrame:SetScale(1.1);
+    CompactPartyFrame:SetScale(1.25);
 end)
