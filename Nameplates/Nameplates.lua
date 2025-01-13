@@ -123,21 +123,21 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
-        if IsActiveBattlefieldArena() then
-            -- Put arena numbers
-            if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                for i = 1, 3 do
-                    if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i);
-                        frame.name:SetTextColor(1,1,0); --Yellow
-                        return;
+        if ShouldUpdateUnitFrame(frame) then
+            addon.UpdateClassIconTargetHighlight(frame);
+
+            if IsActiveBattlefieldArena() then
+                -- Put arena numbers
+                if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+                    for i = 1, 3 do
+                        if UnitIsUnit(frame.unit, "arena" .. i) then
+                            frame.name:SetText(i);
+                            frame.name:SetTextColor(1,1,0); --Yellow
+                            return;
+                        end
                     end
                 end
             end
-        end
-
-        if ShouldUpdateUnitFrame(frame) then
-            addon.UpdateClassIconTargetHighlight(frame);
         end
     end)
 
