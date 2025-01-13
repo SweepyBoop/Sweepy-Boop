@@ -105,9 +105,12 @@ function SweepyBoop:RefreshAllNamePlates()
     end
 end
 
+-- local eventCounters = {};
+
 function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateAll", function(frame)
         if frame:IsForbidden() then return end
+        --eventCounters["CompactUnitFrame_UpdateAll"] = (eventCounters["CompactUnitFrame_UpdateAll"] or 0) + 1;
 
         if ShouldUpdateUnitFrame(frame) then
             addon.UpdateClassIcon(frame);
@@ -120,6 +123,7 @@ function SweepyBoop:SetupNameplateModules()
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
+        --eventCounters["CompactUnitFrame_UpdateName"] = (eventCounters["CompactUnitFrame_UpdateName"] or 0) + 1;
 
         if ShouldUpdateUnitFrame(frame) then
             -- Issue: in one SS round, if I target an enemy player when the round ends and that player joins my side in the next round
@@ -153,6 +157,7 @@ function SweepyBoop:SetupNameplateModules()
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
         if frame:IsForbidden() then return end
+        --eventCounters["CompactUnitFrame_UpdateVisible"] = (eventCounters["CompactUnitFrame_UpdateVisible"] or 0) + 1;
 
         if ShouldUpdateUnitFrame(frame) then
             UpdateHealthBar(frame);
@@ -163,9 +168,24 @@ function SweepyBoop:SetupNameplateModules()
     -- When this happens, the pet health bar turns from red to blue, so hopefully hooking this function can resolve it
     hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function (frame)
         if frame:IsForbidden() then return end
+        --eventCounters["CompactUnitFrame_UpdateHealthColor"] = (eventCounters["CompactUnitFrame_UpdateHealthColor"] or 0) + 1;
 
         if ShouldUpdateUnitFrame(frame) then
             UpdateHealthBar(frame);
         end
     end)
+
+    -- local printCounters = CreateFrame("Frame");
+    -- printCounters.timer = 0;
+    -- printCounters:SetScript("OnUpdate", function (self, elapsed)
+    --     self.timer = self.timer + elapsed;
+    --     if (self.timer > 5) then
+    --         self.timer = 0;
+    --         for name, value in pairs(eventCounters) do
+    --             print(name, value);
+    --         end
+    --     end
+    -- end)
+
+    -- UpdateAll is called many times initially, but UpdateName quickly out numbers it
 end
