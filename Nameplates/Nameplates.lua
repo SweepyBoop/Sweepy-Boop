@@ -1,15 +1,5 @@
 local _, addon = ...;
 
-local function GetNameplate(unitId)
-    if ( not unitId ) then return end
-
-    local nameplate = C_NamePlate.GetNamePlateForUnit(unitId, true);
-
-    if ( not nameplate ) or ( not nameplate.UnitFrame ) then return end
-
-    return nameplate, nameplate.UnitFrame;
-end
-
 local function ShouldShowNameplate(unitId)
     -- Do not hide personal resource display
     if UnitIsUnit(unitId, "player") then
@@ -94,29 +84,7 @@ local function ShouldUpdateUnitFrame(frame)
     end
 end
 
-local function OnNamePlateRemoved(unitId)
-    local _, frame = GetNameplate(unitId);
-    if ( not frame ) or frame:IsForbidden() then return end
 
-    -- Undo changes by the addon
-    HideWidgets(frame); -- Even in restricted areas, hide widgets we've created (we don't want to show class icons, spec icons, etc. in dungeons)
-    if ( not IsRestricted() ) then
-        frame:Show(); -- Restore the unit frame hidden by the addon
-    end
-end
-
-local function OnNamePlateAdded(unitId)
-    OnNamePlateRemoved(unitId); -- Undo previous changes
-
-    local _, frame = GetNameplate(unitId);
-    if ( not frame ) or frame:IsForbidden() or IsRestricted() then return end
-
-    addon.UpdateClassIcon(frame);
-    addon.UpdateNpcHighlight(frame);
-    addon.UpdateSpecIcon(frame);
-
-    UpdateHealthBar(frame);
-end
 
 function SweepyBoop:RefreshAllNamePlates()
     -- Refresh all visible nameplates
@@ -136,15 +104,6 @@ function SweepyBoop:RefreshAllNamePlates()
 
             UpdateHealthBar(frame);
         end
-    end
-end
-
-local function TryRefreshAllNamePlates()
-    if UnitAffectingCombat("player") then
-        print("In combat, retry after 1s");
-        C_Timer.After(1, TryRefreshAllNamePlates);
-    else
-        SweepyBoop:RefreshAllNamePlates();
     end
 end
 
@@ -189,21 +148,4 @@ function SweepyBoop:SetupNameplateModules()
             UpdateHealthBar(frame);
         end
     end)
-
-    -- local eventFrame = CreateFrame("Frame");
-    -- eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    -- eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
-    -- -- Sometimes between solo shuffle rounds friendly nameplates show up, or nameplate is hidden but class icon is not showing
-    -- -- UnitIsUnit(unitId, "party1/2") is possibly messed up at the beginning of new round
-    -- -- Wait for 1s to do a full refresh on all visible nameplates
-    -- eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    -- eventFrame:SetScript("OnEvent", function(_, event, unitId)
-    --     if event == addon.NAME_PLATE_UNIT_ADDED then
-    --         OnNamePlateAdded(unitId);
-    --     elseif event == addon.NAME_PLATE_UNIT_REMOVED then
-    --         OnNamePlateRemoved(unitId);
-    --     else -- ARENA_PREP_OPPONENT_SPECIALIZATIONS
-    --         TryRefreshAllNamePlates(); -- If in combat, retry every sec until succeeds
-    --     end
-    -- end)
 end
