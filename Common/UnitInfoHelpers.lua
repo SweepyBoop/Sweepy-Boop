@@ -55,11 +55,13 @@ addon.IsShamanPrimaryPet = function (unitId)
     return ( npcID == 95061 ) or ( npcID == 61029 );
 end
 
+local playerClass; -- This won't chnage for a login session so cache it
+
 addon.IsPartyPrimaryPet = function(unitId, partySize)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
-        local class = addon.GetUnitClass("player");
-        return ( class == addon.HUNTER ) or ( class == addon.WARLOCK ) or ( class == addon.SHAMAN and addon.IsShamanPrimaryPet(unitId) );
+        playerClass = playerClass or addon.GetUnitClass("player");
+        return ( playerClass == addon.HUNTER ) or ( playerClass == addon.WARLOCK ) or ( playerClass == addon.SHAMAN and addon.IsShamanPrimaryPet(unitId) );
     else
         local partySize = partySize or 2;
         for i = 1, partySize do
