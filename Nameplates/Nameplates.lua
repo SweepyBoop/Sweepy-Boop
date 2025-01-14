@@ -112,6 +112,11 @@ local function UpdateName(frame)
 end
 
 function SweepyBoop:SetupNameplateModules()
+    -- If both unitGUID and config remain unchanged, we just need to update the visibility of the widgets
+    -- Otherwise, do a full update
+
+    -- Separate flag carrier from class icon feature since it can update more frequently
+
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         UpdateName(frame);
     end)
