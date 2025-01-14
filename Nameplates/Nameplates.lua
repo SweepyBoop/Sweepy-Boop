@@ -114,7 +114,7 @@ function SweepyBoop:SetupNameplateModules()
             local fullUpdate = ( frame.currUnitGUID ~= UnitGUID(frame.unit) ) or ( frame.currReaction ~= UnitReaction(frame.unit, "player") )
                 or ( frame.lastModifiedFriendly ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) or ( frame.lastModifiedEnemy ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified );
             if fullUpdate then
-                print("Full update on", frame.unit);
+                --print("Full update on", frame.unit);
                 addon.UpdateClassIcon(frame);
                 addon.UpdateNpcHighlight(frame);
                 addon.UpdateSpecIcon(frame);
