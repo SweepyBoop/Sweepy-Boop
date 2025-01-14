@@ -59,11 +59,11 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         classID = addon.CLASSID.PRIEST,
         npcs = {
             { npcID = 101398, name = "Psyfiend", icon = 199824, default = addon.NpcOption.Highlight },
+            { npcID = 225672, name = "Shadow", icon = 8122, default = addon.NpcOption.Highlight }, -- casts fear
             { npcID = 224466, name = "Voidwraith", icon = 451234, default = addon.NpcOption.Show },
             { npcID = 62982, name = "Mindbender", icon = 123040, default = addon.NpcOption.Show },
             { npcID = 19668, name = "Shadowfiend", icon = 34433, default = addon.NpcOption.Show },
             { npcID = 65282, name = "Void Tendrils", icon = 108920, default = addon.NpcOption.Show },
-            { npcID = 225672, name = "Shadow", icon = 8122, default = addon.NpcOption.Show },
         }
     },
     {
