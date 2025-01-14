@@ -164,8 +164,11 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    -- Issue: sometimes party pet shows both icon and health bar
+    -- Issue 1: sometimes party pet shows both icon and health bar
     -- When this happens, the pet health bar turns from red to blue, so hopefully hooking this function can resolve it
+
+    -- Issue 2: sometimes party pet shows neither health bar or icon, but when I target the pet, the icon shows up
+    -- Must've run UpdateHealthBar but needs a full update
     hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function (frame)
         if frame:IsForbidden() then return end
         --eventCounters["CompactUnitFrame_UpdateHealthColor"] = (eventCounters["CompactUnitFrame_UpdateHealthColor"] or 0) + 1;
