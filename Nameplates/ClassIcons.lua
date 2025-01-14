@@ -29,7 +29,7 @@ local function ShouldShowIcon(unitId) -- "Show healers only" option will be chec
             return ( not addon.UnitIsHostile(unitId) );
         end
     else
-        return addon.IsPartyPrimaryPet(unitId, (isArena and 2) or 4);
+        return addon.IsPartyPrimaryPet(unitId);
     end
 end
 
