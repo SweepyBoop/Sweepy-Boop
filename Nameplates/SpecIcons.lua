@@ -77,7 +77,7 @@ local function ShowSpecIcon(frame, iconID)
     if ( not specIconContainer ) then return end;
 
     local isHealerIcon = ( iconID == addon.ICON_ID_HEALER_ENEMY );
-    if ( specIconContainer.iconID ~= iconID) then
+    if ( specIconContainer.iconID ~= iconID ) then
         for _, iconFrame in pairs(specIconContainer.frames) do
             if isHealerIcon then
                 iconFrame.icon:SetAtlas(iconID);
