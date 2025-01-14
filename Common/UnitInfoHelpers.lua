@@ -141,11 +141,11 @@ requestFrame:SetScript("OnUpdate", function (self, elapsed)
 end)
 
 -- Battleground enemy info parser
-addon.cachedBattlefieldSpec = {};
+local cachedBattlefieldSpec = {};
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Are there other events we need to register?
 refreshFrame:SetScript("OnEvent", function ()
-    addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
+    cachedBattlefieldSpec = {}; -- reset after every loading screen
 
     if ( UnitInBattleground("player") ~= nil ) then
         requestFrame:Show();
@@ -155,12 +155,22 @@ refreshFrame:SetScript("OnEvent", function ()
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
-    if ( not addon.cachedBattlefieldSpec[guid] ) then
-        local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-        if scoreInfo and scoreInfo.talentSpec then
-            addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
+    if ( not cachedBattlefieldSpec[guid] ) then
+        if IsActiveBattlefieldArena() then
+            for i = 1, addon.MAX_ARENA_SIZE do
+                if UnitIsUnit(guid, "arena" .. i) then
+                    local specID = GetArenaOpponentSpec(i);
+                    if ( not specID ) then return end
+                    cachedBattlefieldSpec[guid] = select(4, GetSpecializationInfoByID(specID));
+                end
+            end
+        elseif ( UnitInBattleground("player") == nil ) then
+            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+            if scoreInfo and scoreInfo.talentSpec then
+                cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
+            end
         end
     end
 
-    return addon.cachedBattlefieldSpec[guid];
+    return cachedBattlefieldSpec[guid];
 end

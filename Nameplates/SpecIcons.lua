@@ -15,43 +15,18 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if IsActiveBattlefieldArena() then
-        for i = 1, addon.MAX_ARENA_SIZE do
-            if UnitIsUnit(unitId, "arena" .. i) then
-                -- i is the opponent index
-                local specID = GetArenaOpponentSpec(i);
-                if ( not specID ) then return end
-                local iconID, role = select(4, GetSpecializationInfoByID(specID));
-
-                if ( role == "HEALER" ) then
-                    if config.arenaSpecIconHealer then
-                        if config.arenaSpecIconHealerIcon then
-                            return addon.ICON_ID_HEALER_ENEMY;
-                        else
-                            return iconID;
-                        end
-                    end
-                elseif config.arenaSpecIconOthers then
+    if IsActiveBattlefieldArena() or ( ( UnitInBattleground("player") ~= nil ) and addon.UnitIsHostile(unitId) ) then
+        local iconID, role = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
+        if ( role == "HEALER" ) then
+            if config.arenaSpecIconHealer then
+                if config.arenaSpecIconHealerIcon then
+                    return addon.ICON_ID_HEALER_ENEMY;
+                else
                     return iconID;
                 end
             end
-        end
-    elseif ( UnitInBattleground("player") ~= nil ) and addon.UnitIsHostile(unitId) then -- Show spec icons for hostile players in battlegrounds
-        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
-        if specInfo then
-            local iconID, role = specInfo.icon, specInfo.role;
-
-            if ( role == "HEALER" ) then
-                if config.arenaSpecIconHealer then
-                    if config.arenaSpecIconHealerIcon then
-                        return addon.ICON_ID_HEALER_ENEMY;
-                    else
-                        return iconID;
-                    end
-                end
-            elseif config.arenaSpecIconOthers then
-                return iconID;
-            end
+        elseif config.arenaSpecIconOthers then
+            return iconID;
         end
     end
 end
