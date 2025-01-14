@@ -64,7 +64,7 @@ local restricted = {
 	raid = true,
 };
 
-local function ShouldUpdateNamePlate(frame)
+local function ShouldUpdateUnitFrame(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
         local instanceType = select(2, IsInInstance());
@@ -84,7 +84,7 @@ local function UpdateName(frame)
         return;
     end
 
-    if ( not ShouldUpdateNamePlate(frame) ) then
+    if ( not ShouldUpdateUnitFrame(frame) ) then
         return;
     end
 
@@ -126,7 +126,7 @@ function SweepyBoop:SetupNameplateModules()
             return;
         end
 
-        if ( not ShouldUpdateNamePlate(frame) ) then
+        if ( not ShouldUpdateUnitFrame(frame) ) then
             return;
         end
 
