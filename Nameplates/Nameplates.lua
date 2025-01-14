@@ -86,7 +86,7 @@ end
 
 function SweepyBoop:RefreshAllNamePlates()
     -- Refresh all visible nameplates
-    -- Skip if we're in a dungeon, changes will be handled by OnNamePlateAdded once we're out of the instance
+    -- Skip if we're in a dungeon, changes will be handled once we're out of the instance
     if IsRestricted() then return end
 
     local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
