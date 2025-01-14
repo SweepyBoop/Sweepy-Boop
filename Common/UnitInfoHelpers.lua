@@ -163,7 +163,8 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                 if UnitIsUnit(guid, "arena" .. i) then
                     local specID = GetArenaOpponentSpec(i);
                     if ( not specID ) then return end
-                    cachedBattlefieldSpec[guid] = select(4, GetSpecializationInfoByID(specID));
+                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                    cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
                 end
             end
         elseif ( UnitInBattleground("player") == nil ) then
