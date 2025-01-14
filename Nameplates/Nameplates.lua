@@ -105,37 +105,24 @@ function SweepyBoop:RefreshAllNamePlates()
     end
 end
 
--- local eventCounters = {};
-
 function SweepyBoop:SetupNameplateModules()
-    hooksecurefunc("CompactUnitFrame_UpdateAll", function(frame)
-        if frame:IsForbidden() then return end
-        --eventCounters["CompactUnitFrame_UpdateAll"] = (eventCounters["CompactUnitFrame_UpdateAll"] or 0) + 1;
-
-        if ShouldUpdateUnitFrame(frame) then
-            addon.UpdateClassIcon(frame);
-            addon.UpdateNpcHighlight(frame);
-            addon.UpdateSpecIcon(frame);
-
-            UpdateHealthBar(frame);
-        end
-    end)
-
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
-        --eventCounters["CompactUnitFrame_UpdateName"] = (eventCounters["CompactUnitFrame_UpdateName"] or 0) + 1;
 
         if ShouldUpdateUnitFrame(frame) then
-            -- Issue: in one SS round, if I target an enemy player when the round ends and that player joins my side in the next round
-            -- this nameplate will be reused and not trigger an update
-            -- Perhaps do a full update in CompactUnitFrame_UpdateName, if it's current target
-            local fullUpdate = frame.unit and UnitIsUnit(frame.unit, "target");
+            -- A full update is needed if unitGUID changes, or config changes, or unit reaction changes
+            local fullUpdate = ( frame.currUnitGUID ~= UnitGUID(frame.unit) ) or ( frame.lastModified ~= SweepyBoop.db.profile.lastModified ) or ( frame.currReaction ~= UnitReaction(frame.unit, "player") );
             if fullUpdate then
+                print("Full update on", frame.unit);
                 addon.UpdateClassIcon(frame);
                 addon.UpdateNpcHighlight(frame);
                 addon.UpdateSpecIcon(frame);
 
                 UpdateHealthBar(frame);
+
+                frame.currUnitGUID = UnitGUID(frame.unit);
+                frame.lastModified = SweepyBoop.db.profile.lastModified;
+                frame.currReaction = UnitReaction(frame.unit, "player");
             else
                 addon.UpdateClassIconTargetHighlight(frame);
             end
@@ -157,38 +144,9 @@ function SweepyBoop:SetupNameplateModules()
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
         if frame:IsForbidden() then return end
-        --eventCounters["CompactUnitFrame_UpdateVisible"] = (eventCounters["CompactUnitFrame_UpdateVisible"] or 0) + 1;
 
         if ShouldUpdateUnitFrame(frame) then
             UpdateHealthBar(frame);
         end
     end)
-
-    -- Issue 1: sometimes party pet shows both icon and health bar
-    -- When this happens, the pet health bar turns from red to blue, so hopefully hooking this function can resolve it
-
-    -- Issue 2: sometimes party pet shows neither health bar or icon, but when I target the pet, the icon shows up
-    -- Must've run UpdateHealthBar but needs a full update
-    hooksecurefunc("CompactUnitFrame_UpdateHealthColor", function (frame)
-        if frame:IsForbidden() then return end
-        --eventCounters["CompactUnitFrame_UpdateHealthColor"] = (eventCounters["CompactUnitFrame_UpdateHealthColor"] or 0) + 1;
-
-        if ShouldUpdateUnitFrame(frame) then
-            UpdateHealthBar(frame);
-        end
-    end)
-
-    -- local printCounters = CreateFrame("Frame");
-    -- printCounters.timer = 0;
-    -- printCounters:SetScript("OnUpdate", function (self, elapsed)
-    --     self.timer = self.timer + elapsed;
-    --     if (self.timer > 5) then
-    --         self.timer = 0;
-    --         for name, value in pairs(eventCounters) do
-    --             print(name, value);
-    --         end
-    --     end
-    -- end)
-
-    -- UpdateAll is called many times initially, but UpdateName quickly out numbers it
 end
