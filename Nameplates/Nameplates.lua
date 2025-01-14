@@ -64,11 +64,15 @@ local restricted = {
 	raid = true,
 };
 
+local function IsRestricted()
+    local instanceType = select(2, IsInInstance());
+    return restricted[instanceType];
+end
+
 local function ShouldUpdateUnitFrame(frame)
     if frame.unit and ( string.sub(frame.unit, 1, 9) == "nameplate" ) then
         -- Check if in restricted areas
-        local instanceType = select(2, IsInInstance());
-        if restricted[instanceType] then
+        if IsRestricted() then
             -- In restricted instance, should skip all the nameplate logic
             -- But hide all the widgets, we don't want to show class icons, spec icons, etc. in dungeons
             HideWidgets(frame);
@@ -135,6 +139,8 @@ function SweepyBoop:SetupNameplateModules()
 end
 
 function SweepyBoop:RefreshAllNamePlates()
+    if IsRestricted then return end
+
     local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
