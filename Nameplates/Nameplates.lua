@@ -111,6 +111,7 @@ function SweepyBoop:SetupNameplateModules()
 
         if ShouldUpdateUnitFrame(frame) then
             -- A full update is needed if unitGUID changes, or config changes, or unit reaction changes
+            -- Sometimes between solo shuffle rounds, class icons are not created on new teammates
             local unitIsHostile = addon.UnitIsHostile(frame.unit);
             local fullUpdate = ( frame.currUnitGUID ~= UnitGUID(frame.unit) ) or ( frame.unitIsHostile ~= unitIsHostile )
                 or ( frame.lastModifiedFriendly ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) or ( frame.lastModifiedEnemy ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified );
