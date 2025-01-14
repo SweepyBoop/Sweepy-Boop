@@ -111,7 +111,8 @@ function SweepyBoop:SetupNameplateModules()
 
         if ShouldUpdateUnitFrame(frame) then
             -- A full update is needed if unitGUID changes, or config changes, or unit reaction changes
-            local fullUpdate = ( frame.currUnitGUID ~= UnitGUID(frame.unit) ) or ( frame.currReaction ~= UnitReaction(frame.unit, "player") )
+            local unitIsHostile = addon.UnitIsHostile(frame.unit);
+            local fullUpdate = ( frame.currUnitGUID ~= UnitGUID(frame.unit) ) or ( frame.unitIsHostile ~= unitIsHostile )
                 or ( frame.lastModifiedFriendly ~= SweepyBoop.db.profile.nameplatesFriendly.lastModified ) or ( frame.lastModifiedEnemy ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified );
             if fullUpdate then
                 --print("Full update on", frame.unit);
@@ -124,7 +125,7 @@ function SweepyBoop:SetupNameplateModules()
                 frame.currUnitGUID = UnitGUID(frame.unit);
                 frame.lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
                 frame.lastModifiedEnemy = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
-                frame.currReaction = UnitReaction(frame.unit, "player");
+                frame.unitIsHostile = unitIsHostile;
             else
                 addon.UpdateClassIconTargetHighlight(frame);
             end
