@@ -55,7 +55,7 @@ local function GetShowInfoForUnit(unitId)
     showInfo.isHostile = addon.UnitIsHostile(unitId);
     showInfo.pvpClassification = UnitPvpClassification(unitId);
     showInfo.assignedRole = UnitGroupRolesAssigned(unitId);
-    showInfo.class = addon.UnitClass(unitId);
+    showInfo.class = addon.GetUnitClass(unitId);
 
     if UnitIsUnit(unitId, "player") then
         showInfo.showUnitFrame = true; -- Don't hide personal resource display
