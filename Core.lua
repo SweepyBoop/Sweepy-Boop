@@ -40,8 +40,8 @@ options.args.nameplatesFriendly = {
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val;
-        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
+        SweepyBoop:RefreshAllNamePlates();
     end,
     args = {
         classIconsEnabled = {
@@ -162,8 +162,8 @@ options.args.nameplatesEnemy = {
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+        SweepyBoop:RefreshAllNamePlates();
     end,
     args = {
         -- tip = {
