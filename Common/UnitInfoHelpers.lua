@@ -164,7 +164,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then
             for i = 1, addon.MAX_ARENA_SIZE do
-                if UnitIsUnit(guid, "arena" .. i) then
+                if ( guid == UnitGUID("arena" .. i) ) then
                     local specID = GetArenaOpponentSpec(i);
                     if ( not specID ) then return end
                     local iconID, role = select(4, GetSpecializationInfoByID(specID));
