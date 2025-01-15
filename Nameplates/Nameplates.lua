@@ -62,7 +62,7 @@ local function GetShowInfoForUnit(unitId)
         -- nothing else will be shown
     elseif UnitIsPlayer(unitId) then
         local classIconsEnabled = SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled;
-        local specIconsEnabled = SweepyBoop.db.profile.nameplatesEnemy.specIconsEnabled;
+        local specIconsEnabled = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers;
         if IsActiveBattlefieldArena() then
             local isEnemyPlayer = UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3");
 
