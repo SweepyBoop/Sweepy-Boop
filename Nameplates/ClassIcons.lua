@@ -127,30 +127,40 @@ local function ShowClassIcon(frame)
         -- If the player enabled "Show healers only", hide the icon except for flag carrier
         if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
             if ( class ~= "HEALER" and ( not flagCarrierIcons[class] ) ) then
-                -- iconFrame.class and iconFrame.lastModified remain unchanged
-                addon.HideClassIcon(frame);
-                return;
+                class = "NONE"; -- To set an empty icon
             end
         end
 
-        local iconID, iconCoords = GetIconOptions(class);
-        iconFrame.icon:SetTexture(iconID);
-        iconFrame.icon:SetTexCoord(unpack(iconCoords));
-        local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
-        if ( class == "HEALER" ) then
-            scale = scale * 1.25; -- Because healer uses icon coords from a collection of icons, using the same scale would make it seem smaller
-        elseif ( class == "PET" ) then
-            scale = scale * 0.8; -- smaller icon for pets
-        end
-        iconFrame:SetScale(scale);
-        iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+        if ( class == "NONE" ) then
+            iconFrame.icon:SetTexture();
+            iconFrame.targetHighlight:SetTexture();
+            arrowFrame.icon:SetTexture();
+            arrowFrame.targetHighlight:SetTexture();
+        else
+            local iconID, iconCoords = GetIconOptions(class);
+            iconFrame.icon:SetTexture(iconID);
+            iconFrame.icon:SetTexCoord(unpack(iconCoords));
+            local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
+            if ( class == "HEALER" ) then
+                scale = scale * 1.25; -- Because healer uses icon coords from a collection of icons, using the same scale would make it seem smaller
+            elseif ( class == "PET" ) then
+                scale = scale * 0.8; -- smaller icon for pets
+            end
+            iconFrame:SetScale(scale);
+            iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
-        local classColor = RAID_CLASS_COLORS[class];
-        if classColor then
-            arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            local classColor = RAID_CLASS_COLORS[class];
+            if classColor then
+                arrowFrame.icon:SetAtlas("covenantsanctum-renown-doublearrow-disabled");
+                arrowFrame.targetHighlight:SetAtlas("Capacitance-General-WorkOrderBorder");
+                arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            else
+                arrowFrame.icon:SetTexture();
+                arrowFrame.targetHighlight:SetTexture();
+            end
+            arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
+            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
         end
-        arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
-        arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
         -- If we enabled icon style, or in case of a special class such as "PET", "HEALER", use icon style
         if ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ICON ) or specialClasses[class] then
