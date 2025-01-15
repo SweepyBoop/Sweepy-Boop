@@ -88,7 +88,7 @@ local function ShowClassIcon(frame, showInfo)
         -- Show dedicated healer icon
         if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
             -- For player nameplates, check if it's a healer
-            if isPlayer and showInfo.isHealer then
+            if isPlayer and ( showInfo.assignedRole == "HEALER" ) then
                 class = "HEALER";
             end
         end
