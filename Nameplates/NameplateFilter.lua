@@ -23,62 +23,53 @@ local function SetupAnimation(frameWithAnimations)
     return animationGroup;
 end
 
-local function EnsureNpcHighlight(frame)
-    if ( not frame.npcHighlight ) then
-        frame.npcHighlight = CreateFrame("Frame", nil, frame);
-        frame.npcHighlight:SetMouseClickEnabled(false);
-        frame.npcHighlight:SetSize(iconSize, iconSize);
-        frame.npcHighlight:SetFrameStrata("HIGH");
-        frame.npcHighlight:SetPoint("BOTTOM", frame, "TOP");
+local function EnsureNpcHighlight(nameplate)
+    if ( not nameplate.npcHighlight ) then
+        nameplate.npcHighlight = CreateFrame("Frame", nil, nameplate);
+        nameplate.npcHighlight:SetMouseClickEnabled(false);
+        nameplate.npcHighlight:SetSize(iconSize, iconSize);
+        nameplate.npcHighlight:SetFrameStrata("HIGH");
+        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP");
 
-        frame.npcHighlight.customIcon = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
-        frame.npcHighlight.customIcon:SetAllPoints(frame.npcHighlight);
+        nameplate.npcHighlight.customIcon = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
+        nameplate.npcHighlight.customIcon:SetAllPoints(nameplate.npcHighlight);
 
         local widthOffset = iconSize * offsetMultiplier;
         local heightOffset = iconSize * offsetMultiplier;
-        frame.npcHighlight.glowTexture = frame.npcHighlight:CreateTexture(nil, "OVERLAY");
-        frame.npcHighlight.glowTexture:SetBlendMode("ADD");
-        frame.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
-        frame.npcHighlight.glowTexture:SetDesaturated(true);
-        frame.npcHighlight.glowTexture:SetPoint('TOPLEFT', frame.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);
-        frame.npcHighlight.glowTexture:SetPoint('BOTTOMRIGHT', frame.npcHighlight, 'BOTTOMRIGHT', widthOffset, -heightOffset);
-        frame.npcHighlight.glowTexture:SetVertexColor(128, 0, 128); -- Purple
+        nameplate.npcHighlight.glowTexture = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
+        nameplate.npcHighlight.glowTexture:SetBlendMode("ADD");
+        nameplate.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
+        nameplate.npcHighlight.glowTexture:SetDesaturated(true);
+        nameplate.npcHighlight.glowTexture:SetPoint('TOPLEFT', nameplate.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);
+        nameplate.npcHighlight.glowTexture:SetPoint('BOTTOMRIGHT', nameplate.npcHighlight, 'BOTTOMRIGHT', widthOffset, -heightOffset);
+        nameplate.npcHighlight.glowTexture:SetVertexColor(128, 0, 128); -- Purple
 
-        frame.npcHighlight.animationGroup = SetupAnimation(frame.npcHighlight);
+        nameplate.npcHighlight.animationGroup = SetupAnimation(nameplate.npcHighlight);
+
+        nameplate.npcHighlight:Hide();
     end
 
-    if ( frame.npcHighlight.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
-        frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
-        frame.npcHighlight.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
+    if ( nameplate.npcHighlight.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
+        nameplate.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
+        nameplate.npcHighlight.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
     end
 
-    return frame.npcHighlight;
+    return nameplate.npcHighlight;
 end
 
-local function ShowNpcHighlight(frame, showInfo)
-    local highlight = EnsureNpcHighlight(frame);
+addon.ShowNpcHighlight = function(nameplate)
+    local highlight = nameplate.npcHighlight;
 
-    local guid = showInfo.unitGUID;
-    if ( highlight.currentGuid ~= guid ) then
-        local npcID = select(6, strsplit("-", guid));
-        highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
-        highlight.currentGuid = guid;
-    end
-
-    if ( not highlight:IsShown() ) then
-        highlight:Show();
-        highlight.customIcon:Show();
-        highlight.glowTexture:Show();
-    end
-
-    if ( not highlight.animationGroup:IsPlaying() ) then
-        -- check animation separately, play it if not already playing
+    if highlight then
         highlight.animationGroup:Play();
+        highlight.glowTexture:Show();
+        highlight.customIcon:Show();
+        highlight:Show();
     end
 end
 
-addon.HideNpcHighlight = function(frame)
-    local highlight = frame.npcHighlight;
+addon.HideNpcHighlight = function(nameplate)
+    local highlight = nameplate.npcHighlight;
     if highlight then
         highlight.animationGroup:Stop();
         highlight.glowTexture:Hide();
@@ -87,10 +78,13 @@ addon.HideNpcHighlight = function(frame)
     end
 end
 
-addon.UpdateNpcHighlight = function(frame, showInfo)
-    if showInfo.showNpcHighlight then
-        ShowNpcHighlight(frame, showInfo);
-    else
-        addon.HideNpcHighlight(frame);
+addon.UpdateNpcHighlight = function(nameplate, frame)
+    local highlight = EnsureNpcHighlight(nameplate);
+
+    local guid = UnitGUID(frame.unit);
+    if ( highlight.currentGuid ~= guid ) then
+        local npcID = select(6, strsplit("-", guid));
+        highlight.customIcon:SetTexture(addon.iconTexture[npcID]); -- nil if no texture found
+        highlight.currentGuid = guid;
     end
 end

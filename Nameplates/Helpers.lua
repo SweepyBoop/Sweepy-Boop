@@ -2,8 +2,8 @@ local _, addon = ...;
 
 -- Sizes are fixed, players can customize by scale
 local iconSize = 40;
-local arrowSize = 67;
-local highlightSize = 55;
+addon.CLASS_ARROW_SIZE = 67;
+addon.CLASS_ICON_TARGET_HIGHLIGHT_SIZE = 55;
 
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFriendly)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
@@ -34,7 +34,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight:Hide();
         classIconFrame.targetHighlight:SetDesaturated(false);
         classIconFrame.targetHighlight:SetAtlas("charactercreate-ring-select");
-        classIconFrame.targetHighlight:SetSize(highlightSize, highlightSize);
+        classIconFrame.targetHighlight:SetSize(addon.CLASS_ICON_TARGET_HIGHLIGHT_SIZE, addon.CLASS_ICON_TARGET_HIGHLIGHT_SIZE);
         classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
         classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
         classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
@@ -51,12 +51,12 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
     classIconFrame:SetAlpha(1);
     classIconFrame:SetIgnoreParentAlpha(true);
-    classIconFrame:SetSize(arrowSize, arrowSize);
+    classIconFrame:SetSize(addon.CLASS_ARROW_SIZE, addon.CLASS_ARROW_SIZE);
     classIconFrame:SetFrameStrata("HIGH");
     classIconFrame:SetPoint("CENTER", nameplate, "CENTER");
 
     classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
-    classIconFrame.icon:SetSize(arrowSize, arrowSize);
+    classIconFrame.icon:SetSize(addon.CLASS_ARROW_SIZE, addon.CLASS_ARROW_SIZE);
     classIconFrame.icon:SetDesaturated(false);
     classIconFrame.icon:SetAtlas("covenantsanctum-renown-doublearrow-disabled"); -- original size is 67 * 48, distort to 67 * 67
     classIconFrame.icon:SetAllPoints(classIconFrame);
@@ -66,7 +66,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight:SetAtlas("Capacitance-General-WorkOrderBorder");
     classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
     classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetSize(arrowSize / 2, arrowSize / 1.375);
+    classIconFrame.targetHighlight:SetSize(addon.CLASS_ARROW_SIZE / 2, addon.CLASS_ARROW_SIZE / 1.375);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame);
     classIconFrame.targetHighlight:Hide();
 

@@ -17,6 +17,7 @@ local flagCarrierIcons = {
 local function EnsureIcon(nameplate)
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
         nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+        nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
 
     return nameplate.classIconContainer.FriendlyClassIcon;
@@ -25,6 +26,7 @@ end
 local function EnsureArrow(nameplate)
     if ( not nameplate.classIconContainer.FriendlyClassArrow ) then
         nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
+        nameplate.classIconContainer.FriendlyClassArrow:Hide();
     end
 
     return nameplate.classIconContainer.FriendlyClassArrow;
@@ -49,14 +51,36 @@ local function GetIconOptions(class)
     return iconID, iconCoords;
 end
 
-addon.HideClassIcon = function(frame)
-    local nameplate = frame:GetParent();
-    if ( not nameplate ) or ( not nameplate.classIconContainer ) then return end
+addon.ShowClassIcon = function (nameplate)
+    local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
+    if nameplate.classIconContainer.FriendlyClassIcon then
+        nameplate.classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON);
+    end
+    if nameplate.classIconContainer.FriendlyClassArrow then
+        nameplate.classIconContainer.FriendlyClassArrow:SetShown(style == addon.CLASS_ICON_STYLE.ARROW);
+    end
+end
+
+addon.HideClassIcon = function(nameplate)
+    if ( not nameplate.classIconContainer ) then return end
+
     if nameplate.classIconContainer.FriendlyClassIcon then
         nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
     if nameplate.classIconContainer.FriendlyClassArrow then
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
+    end
+end
+
+addon.UpdateTargetHighlight = function (nameplate, frame)
+    local isTarget = UnitIsUnit(frame.unit, "target");
+    if nameplate.classIconContainer then
+        if nameplate.classIconContainer.FriendlyClassIcon then
+            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget);
+        end
+        if nameplate.classIconContainer.FriendlyClassArrow then
+            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget);
+        end
     end
 end
 
@@ -68,27 +92,25 @@ local specialClasses = { -- For these special classes, there is no arrow style
     ['FlagCarrierNeutral'] = true,
 };
 
-local function ShowClassIcon(frame, showInfo)
+addon.UpdateClassIcon = function(nameplate, frame)
     -- Full update if UnitGUID, PvPClassification, or configurations have changed
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
-    local unitGUID = showInfo.unitGUID;
-    local pvpClassification = showInfo.pvpClassification;
+    local unitGUID = UnitGUID(frame.unit);
+    local pvpClassification = UnitPvpClassification(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    local nameplate = frame:GetParent();
-    if ( not nameplate ) then return end
     nameplate.classIconContainer = nameplate.classIconContainer or {};
     local iconFrame = EnsureIcon(nameplate);
     local arrowFrame = EnsureArrow(nameplate);
     if ( not iconFrame ) or ( not arrowFrame ) then return end
     local classIconContainer = nameplate.classIconContainer;
     if ( classIconContainer.currentGUID ~= unitGUID ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        local isPlayer = showInfo.isPlayer;
-        local class = ( isPlayer and showInfo.class ) or "PET";
+        local isPlayer = UnitIsPlayer(frame.unit);
+        local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
 
         -- Show dedicated healer icon
         if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
             -- For player nameplates, check if it's a healer
-            if isPlayer and ( showInfo.assignedRole == "HEALER" ) then
+            if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
                 class = "HEALER";
             end
         end
@@ -152,35 +174,5 @@ local function ShowClassIcon(frame, showInfo)
         classIconContainer.currentGUID = unitGUID;
         classIconContainer.pvpClassification = pvpClassification;
         classIconContainer.lastModifiedFriendly = lastModifiedFriendly;
-    end
-
-    if ( classIconContainer.style == addon.CLASS_ICON_STYLE.ICON ) then
-        arrowFrame:Hide(); -- null check already done above
-        if iconFrame.targetHighlight then
-            if showInfo.isTarget then
-                iconFrame.targetHighlight:Show();
-            else
-                iconFrame.targetHighlight:Hide();
-            end
-        end
-        iconFrame:Show();
-    else
-        iconFrame:Hide(); -- null check already done above
-        if arrowFrame.targetHighlight then
-            if showInfo.isTarget then
-                arrowFrame.targetHighlight:Show();
-            else
-                arrowFrame.targetHighlight:Hide();
-            end
-        end
-        arrowFrame:Show();
-    end
-end
-
-addon.UpdateClassIcon = function(frame, showInfo)
-    if showInfo.showClassIcon then
-        ShowClassIcon(frame, showInfo);
-    else
-        addon.HideClassIcon(frame);
     end
 end
