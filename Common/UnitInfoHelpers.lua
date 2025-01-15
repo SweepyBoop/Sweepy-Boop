@@ -147,12 +147,12 @@ requestFrame:SetScript("OnUpdate", function (self, elapsed)
 end)
 
 -- Battleground enemy info parser
-local cachedBattlefieldSpec = {};
+addon.cachedBattlefieldSpec = {}; -- This cache is accessed by other files, don't use local as it might act funny
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 refreshFrame:SetScript("OnEvent", function ()
-    cachedBattlefieldSpec = {}; -- reset after every loading screen
+    addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
 
     if ( UnitInBattleground("player") ~= nil ) then
         requestFrame:Show();
@@ -162,17 +162,17 @@ refreshFrame:SetScript("OnEvent", function ()
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
-    if ( not cachedBattlefieldSpec[guid] ) then
+    if ( not addon.cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
-                cachedBattlefieldSpec[guid] = { icon = 0 }; -- return something to avoid repeatedly trying to retrieve spec for party members
+                addon.cachedBattlefieldSpec[guid] = { icon = 0 }; -- return something to avoid repeatedly trying to retrieve spec for party members
             else
                 for i = 1, addon.MAX_ARENA_SIZE do
                     if ( guid == UnitGUID("arena" .. i) ) then
                         local specID = GetArenaOpponentSpec(i);
                         if ( not specID ) then return end
                         local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                        cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
+                        addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
                     end
                 end
             end
@@ -180,10 +180,10 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
             -- Some nameplates are not showing spec icons until a reload in the BG
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.talentSpec then
-                cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
+                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
             end
         end
     end
 
-    return cachedBattlefieldSpec[guid];
+    return addon.cachedBattlefieldSpec[guid];
 end
