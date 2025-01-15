@@ -83,7 +83,7 @@ local function ShouldUpdateUnitFrame(frame)
     end
 end
 
-local function UpdateName(frame)
+local function UpdateAll(frame)
     if frame:IsForbidden() then
         return;
     end
@@ -120,7 +120,7 @@ function SweepyBoop:SetupNameplateModules()
     -- For enemy, full update if unitGUID / config changes; otherwise just update visibility
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        UpdateName(frame);
+        UpdateAll(frame);
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateVisible", function (frame)
@@ -137,13 +137,13 @@ function SweepyBoop:SetupNameplateModules()
 end
 
 function SweepyBoop:RefreshAllNamePlates()
-    if IsRestricted then return end
+    if IsRestricted() then return end
 
     local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame then
-            UpdateName(nameplate.UnitFrame);
+            UpdateAll(nameplate.UnitFrame);
         end
     end
 end
