@@ -167,7 +167,7 @@ local function ShowClassIcon(frame, showInfo)
             end
         end
         iconFrame:Show();
-    elseif ( classIconContainer.style == addon.CLASS_ICON_STYLE.ARROW ) then
+    else
         iconFrame:Hide(); -- null check already done above
         if arrowFrame.targetHighlight then
             if UnitIsUnit("target", showInfo.unitId) then
@@ -177,9 +177,6 @@ local function ShowClassIcon(frame, showInfo)
             end
         end
         arrowFrame:Show();
-    else
-        iconFrame:Hide();
-        arrowFrame:Hide();
     end
 end
 
