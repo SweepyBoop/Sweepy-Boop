@@ -56,15 +56,17 @@ local function GetShowInfoForUnit(unitId)
         local classIconsEnabled = SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled;
         local specIconsEnabled = SweepyBoop.db.profile.nameplatesEnemy.specIconsEnabled;
         if IsActiveBattlefieldArena() then
+            local isEnemyPlayer = UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3");
+
             if classIconsEnabled then
-                showInfo.showUnitFrame = UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3");
+                showInfo.showUnitFrame = isEnemyPlayer;
                 showInfo.showClassIcon = UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") or UnitIsUnit(unitId, "party1pet") or UnitIsUnit(unitId, "party2pet");
             else
                 showInfo.showUnitFrame = true;
             end
 
             if specIconsEnabled then
-                showInfo.showSpecIcon = UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3");
+                showInfo.showSpecIcon = isEnemyPlayer;
             end
         else
             showInfo.showUnitFrame = ( not classIconsEnabled ) or addon.UnitIsHostile(unitId); -- if class icons disabled, show everything; otherwise show hostile
