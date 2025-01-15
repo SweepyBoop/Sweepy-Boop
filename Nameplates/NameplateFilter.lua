@@ -77,13 +77,13 @@ local function ShowNpcHighlight(frame)
     end
 
     if ( not highlight:IsShown() ) then
-        -- Seems animation is not playing
         highlight:Show();
         highlight.customIcon:Show();
         highlight.glowTexture:Show();
     end
 
     if ( not highlight.animationGroup:IsPlaying() ) then
+        -- check animation separately, play it if not already playing
         highlight.animationGroup:Play();
     end
 end
