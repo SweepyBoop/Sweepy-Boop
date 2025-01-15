@@ -92,7 +92,7 @@ local specialClasses = { -- For these special classes, there is no arrow style
 };
 
 local function ShowClassIcon(frame)
-    -- Update the icon if UnitGUID, PvPClassification, or configurations have changed
+    -- Full update if UnitGUID, PvPClassification, or configurations have changed
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
     local unitGUID = UnitGUID(frame.unit);
     local pvpClassification = UnitPvpClassification(frame.unit);
@@ -146,7 +146,9 @@ local function ShowClassIcon(frame)
         iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
         local classColor = RAID_CLASS_COLORS[class];
-        arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+        if classColor then
+            arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+        end
         arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
         arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
