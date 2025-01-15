@@ -100,11 +100,9 @@ local function ShowClassIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     nameplate.classIconContainer = nameplate.classIconContainer or {};
-    nameplate.classIconContainer.FriendlyClassIcon = EnsureIcon(frame);
-    nameplate.classIconContainer.FriendlyClassArrow = EnsureArrow(frame);
     local classIconContainer = nameplate.classIconContainer;
-    local iconFrame = classIconContainer.FriendlyClassIcon;
-    local arrowFrame = classIconContainer.FriendlyClassArrow;
+    local iconFrame = EnsureIcon(frame);
+    local arrowFrame = EnsureArrow(frame);
     if ( not iconFrame ) or ( not arrowFrame ) then return end
     if ( classIconContainer.currentGUID ~= unitGUID ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
         local isPlayer = UnitIsPlayer(frame.unit);
