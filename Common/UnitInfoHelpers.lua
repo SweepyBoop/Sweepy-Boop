@@ -143,7 +143,6 @@ requestFrame:SetScript("OnUpdate", function (self, elapsed)
     if self.timer > 2 then -- update every 2 sec
         self.timer = 0;
         RequestBattlefieldScoreData();
-        print("RequestBattlefieldScoreData");
     end
 end)
 
@@ -164,8 +163,6 @@ end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not addon.cachedBattlefieldSpec[guid] ) then
-        print("Checking spec for new player: " .. guid);
-
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
                 addon.cachedBattlefieldSpec[guid] = { icon = 0 }; -- return something to avoid repeatedly trying to retrieve spec for party members
@@ -181,7 +178,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
             end
         else
             -- Some nameplates are not showing spec icons until a reload in the BG
-            -- requestFrame is messed up by registereing ARENA_PREP_OPPONENT_SPECIALIZATIONS event?
+            -- requestFrame is messed up by registereing ARENA_PREP_OPPONENT_SPECIALIZATIONS event
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.talentSpec then
                 addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
