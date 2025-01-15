@@ -161,14 +161,18 @@ refreshFrame:SetScript("OnEvent", function ()
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
-    if ( not cachedBattlefieldSpec[guid] ) then
-        if IsActiveBattlefieldArena() then
-            for i = 1, addon.MAX_ARENA_SIZE do
-                if ( guid == UnitGUID("arena" .. i) ) then
-                    local specID = GetArenaOpponentSpec(i);
-                    if ( not specID ) then return end
-                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                    cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
+    if ( cachedBattlefieldSpec[guid] == nil ) then
+        if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
+            if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
+                cachedBattlefieldSpec[guid] = { icon = 0, role = "" }; -- return something to avoid repeatedly trying to retrieve spec for party members
+            else
+                for i = 1, addon.MAX_ARENA_SIZE do
+                    if ( guid == UnitGUID("arena" .. i) ) then
+                        local specID = GetArenaOpponentSpec(i);
+                        if ( not specID ) then return end
+                        local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                        cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
+                    end
                 end
             end
         elseif ( UnitInBattleground("player") == nil ) then
