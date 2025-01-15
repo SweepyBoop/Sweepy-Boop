@@ -58,7 +58,7 @@ end
 local function ShowNpcHighlight(frame, showInfo)
     local highlight = EnsureNpcHighlight(frame);
 
-    local guid = UnitGUID(showInfo.unitId);
+    local guid = showInfo.unitGUID;
     if ( highlight.currentGuid ~= guid ) then
         local npcID = select(6, strsplit("-", guid));
         highlight.customIcon:SetTexture(addon.iconTexture[npcID]);

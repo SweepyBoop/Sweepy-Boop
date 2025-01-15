@@ -7,25 +7,14 @@ local setPointOptions = {
     [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
-local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil
+local function GetSpecIconInfo(showInfo) -- Return icon ID if should show, otherwise nil
     local iconID, isHealer;
 
-    if addon.TEST_MODE then
-        if UnitIsUnit(unitId, "focus") then
-            iconID = addon.ICON_ID_HEALER_ENEMY;
-            isHealer = true;
-        elseif UnitIsUnit(unitId, "target") then
-            iconID = 136041;
-        end
-        
-        return iconID, isHealer;
-    end
-
-    if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
+    if ( not showInfo.isPlayer ) then return end -- No spec icon on non-player units
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if IsActiveBattlefieldArena() or ( C_PvP.IsBattleground() and addon.UnitIsHostile(unitId) ) then
-        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
+    if IsActiveBattlefieldArena() or ( C_PvP.IsBattleground() and showInfo.isHostile ) then
+        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(showInfo.unitGUID);
         if ( not specInfo ) then return end
         if ( specInfo.role == "HEALER" ) then
             if config.arenaSpecIconHealer then
@@ -117,7 +106,7 @@ addon.UpdateSpecIcon = function (frame, showInfo)
         return;
     end
 
-    local iconID, isHealer = GetSpecIconInfo(showInfo.unitId);
+    local iconID, isHealer = GetSpecIconInfo(showInfo);
     if ( iconID ~= nil ) and ( iconID ~= 0 ) then
         ShowSpecIcon(frame, iconID, isHealer);
     else

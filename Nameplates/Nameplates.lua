@@ -47,7 +47,15 @@ end
 local function GetShowInfoForUnit(unitId)
     -- Whether we should show: unit frame, class icon, spec icon, highlight (if not set, defaults to false)
     local showInfo = {};
-    showInfo.unitId = unitId;
+
+    -- Perform all checks with current unitId to pass to widgets, so that we keep the info consistent
+    showInfo.unitGUID = UnitGUID(unitId);
+    showInfo.isPlayer = UnitIsPlayer(unitId);
+    showInfo.isTarget = UnitIsUnit(unitId, "target");
+    showInfo.isHostile = addon.UnitIsHostile(unitId);
+    showInfo.pvpClassification = UnitPvpClassification(unitId);
+    showInfo.assignedRole = UnitGroupRolesAssigned(unitId);
+    showInfo.class = addon.UnitClass(unitId);
 
     if UnitIsUnit(unitId, "player") then
         showInfo.showUnitFrame = true; -- Don't hide personal resource display

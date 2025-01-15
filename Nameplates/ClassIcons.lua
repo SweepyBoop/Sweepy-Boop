@@ -71,8 +71,8 @@ local specialClasses = { -- For these special classes, there is no arrow style
 local function ShowClassIcon(frame, showInfo)
     -- Full update if UnitGUID, PvPClassification, or configurations have changed
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
-    local unitGUID = UnitGUID(showInfo.unitId);
-    local pvpClassification = UnitPvpClassification(showInfo.unitId);
+    local unitGUID = showInfo.unitGUID;
+    local pvpClassification = showInfo.pvpClassification;
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
@@ -82,13 +82,13 @@ local function ShowClassIcon(frame, showInfo)
     if ( not iconFrame ) or ( not arrowFrame ) then return end
     local classIconContainer = nameplate.classIconContainer;
     if ( classIconContainer.currentGUID ~= unitGUID ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        local isPlayer = UnitIsPlayer(showInfo.unitId);
-        local class = ( isPlayer and addon.GetUnitClass(showInfo.unitId) ) or "PET";
+        local isPlayer = showInfo.isPlayer;
+        local class = ( isPlayer and showInfo.class ) or "PET";
 
         -- Show dedicated healer icon
         if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
             -- For player nameplates, check if it's a healer
-            if isPlayer and ( UnitGroupRolesAssigned(showInfo.unitId) == "HEALER" ) then
+            if isPlayer and showInfo.isHealer then
                 class = "HEALER";
             end
         end
@@ -157,7 +157,7 @@ local function ShowClassIcon(frame, showInfo)
     if ( classIconContainer.style == addon.CLASS_ICON_STYLE.ICON ) then
         arrowFrame:Hide(); -- null check already done above
         if iconFrame.targetHighlight then
-            if UnitIsUnit("target", showInfo.unitId) then
+            if showInfo.isTarget then
                 iconFrame.targetHighlight:Show();
             else
                 iconFrame.targetHighlight:Hide();
@@ -167,7 +167,7 @@ local function ShowClassIcon(frame, showInfo)
     else
         iconFrame:Hide(); -- null check already done above
         if arrowFrame.targetHighlight then
-            if UnitIsUnit("target", showInfo.unitId) then
+            if showInfo.isTarget then
                 arrowFrame.targetHighlight:Show();
             else
                 arrowFrame.targetHighlight:Hide();
