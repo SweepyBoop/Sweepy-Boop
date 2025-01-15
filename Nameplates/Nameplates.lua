@@ -60,7 +60,8 @@ local function GetShowInfoForUnit(unitId)
 
             if classIconsEnabled then
                 showInfo.showUnitFrame = isEnemyPlayer;
-                showInfo.showClassIcon = UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") or UnitIsUnit(unitId, "party1pet") or UnitIsUnit(unitId, "party2pet");
+                showInfo.showClassIcon = UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") 
+                    or UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2");
             else
                 showInfo.showUnitFrame = true;
             end
