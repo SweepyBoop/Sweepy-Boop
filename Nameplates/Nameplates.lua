@@ -80,9 +80,9 @@ local function GetShowInfoForUnit(unitId)
         end
     else
         -- For non-player units, check whitelist first to see if we should show the unit frame
-        local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
         -- If hostilie show if whitelisted and not a hunter secondary pet; for friendly show if class icons are disabled
         if addon.UnitIsHostile(unitId) then
+            local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
             showInfo.showUnitFrame = isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(unitId) );
         else
             showInfo.showUnitFrame = ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
