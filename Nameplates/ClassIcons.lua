@@ -77,10 +77,10 @@ local function ShowClassIcon(frame, showInfo)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
     nameplate.classIconContainer = nameplate.classIconContainer or {};
-    local classIconContainer = nameplate.classIconContainer;
     local iconFrame = EnsureIcon(nameplate);
     local arrowFrame = EnsureArrow(nameplate);
     if ( not iconFrame ) or ( not arrowFrame ) then return end
+    local classIconContainer = nameplate.classIconContainer;
     if ( classIconContainer.currentGUID ~= unitGUID ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
         local isPlayer = UnitIsPlayer(showInfo.unitId);
         local class = ( isPlayer and addon.GetUnitClass(showInfo.unitId) ) or "PET";
