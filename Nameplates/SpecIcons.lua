@@ -8,38 +8,39 @@ local setPointOptions = {
 };
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
-    local icon, isHealer;
+    local iconID, isHealer;
 
     if addon.TEST_MODE then
         if UnitIsUnit(unitId, "focus") then
-            icon = addon.ICON_ID_HEALER_ENEMY;
+            iconID = addon.ICON_ID_HEALER_ENEMY;
             isHealer = true;
         elseif UnitIsUnit(unitId, "target") then
-            icon = 136041;
+            iconID = 136041;
         end
         
-        return icon, isHealer;
+        return iconID, isHealer;
     end
 
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
     if IsActiveBattlefieldArena() or ( ( UnitInBattleground("player") ~= nil ) and addon.UnitIsHostile(unitId) ) then
-        local iconID, role = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
-        if ( role == "HEALER" ) then
+        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
+        if ( not specInfo ) then return end
+        if ( specInfo.role == "HEALER" ) then
             if config.arenaSpecIconHealer then
                 if config.arenaSpecIconHealerIcon then
-                    icon = addon.ICON_ID_HEALER_ENEMY;
+                    iconID = addon.ICON_ID_HEALER_ENEMY;
                     isHealer = true;
                 else
-                    icon = iconID;
+                    iconID = specInfo.iconID;
                 end
             end
         elseif config.arenaSpecIconOthers then
-            icon = iconID;
+            iconID = specInfo.iconID;
         end
 
-        return icon, isHealer;
+        return iconID, isHealer;
     end
 end
 
@@ -113,6 +114,7 @@ end
 addon.UpdateSpecIcon = function (frame)
     local iconID, isHealer = ShouldShowSpecIcon(frame.unit);
     if iconID and ( iconID ~= 0 ) then
+        print(iconID);
         ShowSpecIcon(frame, iconID, isHealer);
     else
         addon.HideSpecIcon(frame);
