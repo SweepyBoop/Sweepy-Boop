@@ -39,7 +39,6 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
             icon = iconID;
         end
 
-        print(icon, isHealer);
         return icon, isHealer;
     end
 end
