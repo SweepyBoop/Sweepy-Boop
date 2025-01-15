@@ -98,13 +98,8 @@ addon.HideNpcHighlight = function(frame)
     end
 end
 
-addon.UpdateNpcHighlight = function(frame)
-    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
-        addon.HideNpcHighlight(frame);
-        return;
-    end
-
-    if ShouldShowNpcHighlight(frame.unit) then
+addon.UpdateNpcHighlight = function(frame, shouldShow)
+    if shouldShow then
         ShowNpcHighlight(frame);
     else
         addon.HideNpcHighlight(frame);

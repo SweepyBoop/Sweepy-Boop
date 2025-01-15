@@ -7,7 +7,7 @@ local setPointOptions = {
     [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
-local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
+local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil
     local iconID, isHealer;
 
     if addon.TEST_MODE then
@@ -111,8 +111,13 @@ addon.HideSpecIcon = function (frame)
     end
 end
 
-addon.UpdateSpecIcon = function (frame)
-    local iconID, isHealer = ShouldShowSpecIcon(frame.unit);
+addon.UpdateSpecIcon = function (frame, shouldShow)
+    if ( not shouldShow ) then
+        addon.HideSpecIcon(frame);
+        return;
+    end
+
+    local iconID, isHealer = GetSpecIconInfo(frame.unit);
     if ( iconID ~= nil ) and ( iconID ~= 0 ) then
         ShowSpecIcon(frame, iconID, isHealer);
     else

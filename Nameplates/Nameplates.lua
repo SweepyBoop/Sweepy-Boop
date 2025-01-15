@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local function ShouldShowNameplate(unitId)
+local function ShouldShowUnitFrame(unitId)
     -- Do not hide personal resource display
     if UnitIsUnit(unitId, "player") then
         return true;
@@ -44,14 +44,68 @@ local function ShouldShowNameplate(unitId)
     end
 end
 
+local function GetShowInfoForUnit(unitId)
+    -- Whether we should show: unit frame, class icon, spec icon, highlight (if not set, defaults to false)
+    local showInfo = {};
+
+    if UnitIsUnit(unitId, "player") then
+        showInfo.showUnitFrame = true; -- Don't hide personal resource display
+        -- nothing else will be shown
+    elseif UnitIsPlayer(unitId) then
+        local classIconsEnabled = SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled;
+        local specIconsEnabled = SweepyBoop.db.profile.nameplatesEnemy.specIconsEnabled;
+        if IsActiveBattlefieldArena() then
+            if classIconsEnabled then
+                showInfo.showUnitFrame = UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3");
+                showInfo.showClassIcon = UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") or UnitIsUnit(unitId, "party1pet") or UnitIsUnit(unitId, "party2pet");
+            else
+                showInfo.showUnitFrame = true;
+            end
+
+            if specIconsEnabled then
+                showInfo.showSpecIcon = UnitIsUnit(unitId, "arena1") or UnitIsUnit(unitId, "arena2") or UnitIsUnit(unitId, "arena3");
+            end
+        else
+            showInfo.showUnitFrame = ( not classIconsEnabled ) or addon.UnitIsHostile(unitId); -- if class icons disabled, show everything; otherwise show hostile
+            showInfo.showClassIcon = classIconsEnabled and ( not addon.UnitIsHostile(unitId) ); -- show class icon if enabled and friendly
+            showInfo.showSpecIcon = specIconsEnabled and addon.UnitIsHostile(unitId); -- show spec icon if enabled and hostile
+        end
+
+        -- Check if we need to hide class icons outside PvP instances
+        if SweepyBoop.db.profile.nameplatesFriendly.hideOutsidePvP and ( not C_PvP.IsBattleground() ) and ( not IsActiveBattlefieldArena() )  then
+            showInfo.showClassIcon = false;
+        end
+    else
+        -- For non-player units, check whitelist first to see if we should show the unit frame
+        local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
+        -- If hostilie show if whitelisted and not a hunter secondary pet; for friendly show if class icons are disabled
+        if addon.UnitIsHostile(unitId) then
+            showInfo.showUnitFrame = isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(unitId) );
+        else
+            showInfo.showUnitFrame = ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+        end
+
+        if SweepyBoop.db.profile.nameplatesEnemy.filterEnabled then
+            local guid = UnitGUID(unitId);
+            local npcID = select(6, strsplit("-", guid));
+            local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
+            if ( option == addon.NpcOption.Highlight ) then
+                showInfo.showNpcHighlight = addon.UnitIsHostile(unitId);
+            end
+        end
+    end
+
+    return showInfo;
+end
+
 local function HideWidgets(frame)
     addon.HideClassIcon(frame);
     addon.HideNpcHighlight(frame);
     addon.HideSpecIcon(frame);
 end
 
-local function UpdateHealthBar(frame)
-    if ShouldShowNameplate(frame.unit) then
+local function UpdateHealthBar(frame, shouldShow)
+    if shouldShow then
         frame:Show();
     else
         frame:Hide();
@@ -92,14 +146,16 @@ local function UpdateAll(frame)
         return;
     end
 
+    local showInfo = GetShowInfoForUnit(frame.unit);
+
     -- Class icon mod will hide/show healthBar when showing/hiding class icons
-    addon.UpdateClassIcon(frame);
+    addon.UpdateClassIcon(frame, showInfo.showClassIcon);
     -- Show enemy nameplate highlight
-    addon.UpdateNpcHighlight(frame);
+    addon.UpdateNpcHighlight(frame, showInfo.showNpcHighlight);
     -- Update spec icons
-    addon.UpdateSpecIcon(frame);
+    addon.UpdateSpecIcon(frame, showInfo.showSpecIcon);
     -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
-    UpdateHealthBar(frame);
+    UpdateHealthBar(frame, showInfo.showUnitFrame);
 
     if IsActiveBattlefieldArena() then
         -- Put arena numbers
@@ -132,7 +188,7 @@ function SweepyBoop:SetupNameplateModules()
             return;
         end
 
-        UpdateHealthBar(frame);
+        UpdateHealthBar(frame, ShouldShowUnitFrame(frame.unit));
     end)
 end
 
