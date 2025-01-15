@@ -525,6 +525,8 @@ local function EnsureIconGroups()
                 return;
             end
 
+            local isArena = IsActiveBattlefieldArena();
+
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and test ) then
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestCooldownTracking();
@@ -532,7 +534,7 @@ local function EnsureIconGroups()
                 -- This will simply update
                 EnsureIcons();
                 EnsureIconGroups();
-            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) and isArena then
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
 
                 if addon.internal then
@@ -547,17 +549,11 @@ local function EnsureIconGroups()
                         ProcessCombatLogEvent(defensiveGroup[i], subEvent, sourceGUID, destGUID, spellId, spellName);
                     end
                 end
-            elseif ( event == addon.PLAYER_TARGET_CHANGED ) then
+            elseif ( event == addon.PLAYER_TARGET_CHANGED ) and isArena then
                 if addon.internal then
                     -- These bars are not for public audience...
                     for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                         UpdateAllBorders(iconGroups[i]);
-                    end
-                end
-
-                for i = 0, addon.MAX_ARENA_SIZE do
-                    if defensiveGroup[i] then
-                        UpdateAllBorders(defensiveGroup[i]);
                     end
                 end
             end
