@@ -14,25 +14,6 @@ local flagCarrierIcons = {
     ["FlagCarrierNeutral"] = addon.ICON_ID_FLAG_CARRIER_NEUTRAL,
 };
 
-local function ShouldShowIcon(unitId) -- "Show healers only" option will be checked in function ShowClassIcon
-    -- Do not show class icon above the personal resource display
-    if UnitIsUnit(unitId, "player") then
-        return false;
-    end
-
-    local isArena = IsActiveBattlefieldArena();
-
-    if UnitIsPlayer(unitId) then
-        if isArena then
-            return UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
-        else
-            return ( not addon.UnitIsHostile(unitId) );
-        end
-    else
-        return addon.IsPartyPrimaryPet(unitId);
-    end
-end
-
 local function EnsureIcon(nameplate)
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
         nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);

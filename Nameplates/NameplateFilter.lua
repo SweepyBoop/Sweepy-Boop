@@ -55,17 +55,6 @@ local function EnsureNpcHighlight(frame)
     return frame.npcHighlight;
 end
 
-local function ShouldShowNpcHighlight(unitId)
-    if ( not UnitIsPlayer(unitId) ) then
-        local guid = UnitGUID(unitId);
-        local npcID = select(6, strsplit("-", guid));
-        local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
-        if ( option == addon.NpcOption.Highlight ) then
-            return addon.UnitIsHostile(unitId);
-        end
-    end
-end
-
 local function ShowNpcHighlight(frame)
     local highlight = EnsureNpcHighlight(frame);
 
