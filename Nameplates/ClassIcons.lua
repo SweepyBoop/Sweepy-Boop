@@ -98,7 +98,7 @@ local function ShowClassIcon(frame)
     local unitGUID = UnitGUID(frame.unit);
     local pvpClassification = UnitPvpClassification(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    if ( frame.currentGUID ~= unitGUID ) or ( frame.PvPClassification ~= pvpClassification ) or ( frame.lastModifiedFriendly ~= lastModifiedFriendly ) then
+    if ( frame.currentGUID ~= unitGUID ) or ( frame.pvpClassification ~= pvpClassification ) or ( frame.lastModifiedFriendly ~= lastModifiedFriendly ) then
         local isPlayer = UnitIsPlayer(frame.unit);
         local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
 
@@ -174,20 +174,28 @@ local function ShowClassIcon(frame)
         end
 
         frame.currentGUID = unitGUID;
-        frame.PvPClassification = pvpClassification;
+        frame.pvpClassification = pvpClassification;
         frame.lastModifiedFriendly = lastModifiedFriendly;
     end
 
     if ( style == addon.CLASS_ICON_STYLE.ICON ) then
-        arrowFrame:Hide();
+        if arrowFrame then arrowFrame:Hide() end
         if iconFrame.targetHighlight then
-            iconFrame.targetHighlight:SetShown(UnitIsUnit(frame.unit, "target"));
+            if UnitIsUnit(frame.unit, "target") then
+                iconFrame.targetHighlight:Show();
+            else
+                iconFrame.targetHighlight:Hide();
+            end
         end
         iconFrame:Show();
-    else
-        iconFrame:Hide();
+    elseif ( style == addon.CLASS_ICON_STYLE.ARROW ) then
+        if iconFrame then iconFrame:Hide() end
         if arrowFrame.targetHighlight then
-            arrowFrame.targetHighlight:SetShown(UnitIsUnit(frame.unit, "target"));
+            if UnitIsUnit(frame.unit, "target") then
+                arrowFrame.targetHighlight:Show();
+            else
+                arrowFrame.targetHighlight:Hide();
+            end
         end
         arrowFrame:Show();
     end
