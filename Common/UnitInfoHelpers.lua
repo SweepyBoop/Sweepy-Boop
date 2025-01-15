@@ -159,7 +159,7 @@ refreshFrame:SetScript("OnEvent", function (self, event)
 
     -- Right after a loading screen, both UnitInBattleground and C_PvP.IsBattleground are false
     -- we might as well have request frame always showing and scanning every 2.5s, request if in BG
-    -- instead of show/hide request frame based on UnitInBattleground
+    -- instead of show/hide request frame based on UnitInBattleground / C_PvP.IsBattleground
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
