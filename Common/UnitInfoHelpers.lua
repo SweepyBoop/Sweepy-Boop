@@ -176,7 +176,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                     end
                 end
             end
-        elseif ( UnitInBattleground("player") == nil ) then
+        elseif ( UnitInBattleground("player") ~= nil ) then
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.talentSpec then
                 cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
