@@ -77,9 +77,9 @@ local function GetShowInfoForUnit(unitId)
                 showInfo.showSpecIcon = isEnemyPlayer;
             end
         else
-            showInfo.showUnitFrame = ( not classIconsEnabled ) or addon.UnitIsHostile(unitId); -- if class icons disabled, show everything; otherwise show hostile
-            showInfo.showClassIcon = classIconsEnabled and ( not addon.UnitIsHostile(unitId) ); -- show class icon if enabled and friendly
-            showInfo.showSpecIcon = specIconsEnabled and addon.UnitIsHostile(unitId); -- show spec icon if enabled and hostile
+            showInfo.showUnitFrame = ( not classIconsEnabled ) or showInfo.isHostile; -- if class icons disabled, show everything; otherwise show hostile
+            showInfo.showClassIcon = classIconsEnabled and ( not showInfo.isHostile ); -- show class icon if enabled and friendly
+            showInfo.showSpecIcon = specIconsEnabled and showInfo.isHostile; -- show spec icon if enabled and hostile
         end
 
         -- Check if we need to hide class icons outside PvP instances
@@ -88,7 +88,7 @@ local function GetShowInfoForUnit(unitId)
         end
     else
         -- If hostilie show if whitelisted and not a hunter secondary pet; for friendly show if class icons are disabled
-        if addon.UnitIsHostile(unitId) then
+        if showInfo.isHostile then
             local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
             showInfo.showUnitFrame = isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(unitId) );
         else
@@ -102,7 +102,7 @@ local function GetShowInfoForUnit(unitId)
             local npcID = select(6, strsplit("-", guid));
             local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
             if ( option == addon.NpcOption.Highlight ) then
-                showInfo.showNpcHighlight = addon.UnitIsHostile(unitId);
+                showInfo.showNpcHighlight = showInfo.isHostile;
             end
         end
     end
