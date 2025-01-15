@@ -783,6 +783,7 @@ function SweepyBoop:OnInitialize()
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
 
+    -- Nameplate module needs optimization to eat less CPU
     -- Setup nameplate modules
     self:SetupNameplateModules();
 
