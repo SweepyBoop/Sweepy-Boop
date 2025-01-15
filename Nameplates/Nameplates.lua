@@ -6,7 +6,7 @@ local function ShouldShowUnitFrame(unitId)
         return true;
     end
 
-    -- When outside arena or battleground and is not in test mode
+    -- When outside arena or battleground
     if ( not IsActiveBattlefieldArena() ) and ( not C_PvP.IsBattleground() ) then
         if SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled then -- Show everything hostile if we have class & pet icons enabled
             return addon.UnitIsHostile(unitId);
