@@ -136,7 +136,6 @@ for _, classID in pairs(addon.CLASSID) do
 end
 
 local requestFrame = CreateFrame("Frame");
---requestFrame:Hide(); -- OnUpdate is not called when frame is hidden, only show this frame in battlegrounds
 requestFrame.timer = 0;
 requestFrame:SetScript("OnUpdate", function (self, elapsed)
     self.timer = self.timer + elapsed;
@@ -158,7 +157,7 @@ refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
 
-    -- After a loading screen, both values are false, we might as well have request frame always showing and scanning every 2.5s, request if in BG
+    -- Right after a loading screen, both values are false, we might as well have request frame always showing and scanning every 2.5s, request if in BG
     --print(event, UnitInBattleground("player"), C_PvP.IsBattleground());
 
     -- if ( UnitInBattleground("player") ~= nil ) then
@@ -185,8 +184,6 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                 end
             end
         else
-            -- Some nameplates are not showing spec icons until a reload in the BG
-            -- requestFrame is messed up and not showing
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.talentSpec then
                 addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
