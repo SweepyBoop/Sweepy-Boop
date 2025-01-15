@@ -60,8 +60,7 @@ local function GetShowInfoForUnit(unitId)
 
             if classIconsEnabled then
                 showInfo.showUnitFrame = isEnemyPlayer;
-                showInfo.showClassIcon = UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2") 
-                    or UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2");
+                showInfo.showClassIcon = UnitIsUnit(unitId, "party1") or UnitIsUnit(unitId, "party2");
             else
                 showInfo.showUnitFrame = true;
             end
@@ -80,7 +79,6 @@ local function GetShowInfoForUnit(unitId)
             showInfo.showClassIcon = false;
         end
     else
-        -- For non-player units, check whitelist first to see if we should show the unit frame
         -- If hostilie show if whitelisted and not a hunter secondary pet; for friendly show if class icons are disabled
         if addon.UnitIsHostile(unitId) then
             local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(unitId);
@@ -88,6 +86,8 @@ local function GetShowInfoForUnit(unitId)
         else
             showInfo.showUnitFrame = ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
         end
+
+        showInfo.showClassIcon = UnitIsUnit(unitId, "pet") or UnitIsUnit(unitId, "partypet1") or UnitIsUnit(unitId, "partypet2");
 
         if SweepyBoop.db.profile.nameplatesEnemy.filterEnabled then
             local guid = UnitGUID(unitId);
