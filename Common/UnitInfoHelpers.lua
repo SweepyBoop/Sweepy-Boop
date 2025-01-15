@@ -55,7 +55,7 @@ addon.IsShamanPrimaryPet = function (unitId)
     return ( npcID == 95061 ) or ( npcID == 61029 );
 end
 
-local playerClass; -- This won't chnage for a login session so cache it
+local playerClass; -- This won't change for a login session so cache it
 local classesWithPets = {
     [addon.HUNTER] = true,
     [addon.WARLOCK] = true,
