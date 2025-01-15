@@ -94,12 +94,16 @@ local specialClasses = { -- For these special classes, there is no arrow style
 local function ShowClassIcon(frame)
     -- Update the icon if UnitGUID, PvPClassification, or configurations have changed
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
-    local style, iconFrame, arrowFrame;
     local unitGUID = UnitGUID(frame.unit);
     local pvpClassification = UnitPvpClassification(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     frame.classIconContainer = frame.classIconContainer or {};
+    frame.classIconContainer.FriendlyClassIcon = EnsureIcon(frame);
+    frame.classIconContainer.FriendlyClassArrow = EnsureArrow(frame);
     local classIconContainer = frame.classIconContainer;
+    local iconFrame = classIconContainer.FriendlyClassIcon;
+    local arrowFrame = classIconContainer.FriendlyClassArrow;
+    if ( not iconFrame ) or ( not arrowFrame ) then return end
     if ( classIconContainer.currentGUID ~= unitGUID ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
         local isPlayer = UnitIsPlayer(frame.unit);
         local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
@@ -129,9 +133,6 @@ local function ShowClassIcon(frame)
             end
         end
 
-        classIconContainer.iconFrame = EnsureIcon(frame);
-        iconFrame = classIconContainer.iconFrame;
-        if ( not iconFrame ) then return end;
         local iconID, iconCoords = GetIconOptions(class);
         iconFrame.icon:SetTexture(iconID);
         iconFrame.icon:SetTexCoord(unpack(iconCoords));
@@ -144,9 +145,6 @@ local function ShowClassIcon(frame)
         iconFrame:SetScale(scale);
         iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
-        classIconContainer.arrowFrame = EnsureArrow(frame);
-        arrowFrame = EnsureArrow(frame);
-        if ( not arrowFrame ) then return end
         local classColor = RAID_CLASS_COLORS[class];
         arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
         arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
@@ -154,9 +152,9 @@ local function ShowClassIcon(frame)
 
         -- If we enabled icon style, or in case of a special class such as "PET", "HEALER", use icon style
         if ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ICON ) or specialClasses[class] then
-            style = addon.CLASS_ICON_STYLE.ICON;
+            classIconContainer.style = addon.CLASS_ICON_STYLE.ICON;
         else
-            style = addon.CLASS_ICON_STYLE.ARROW;
+            classIconContainer.style = addon.CLASS_ICON_STYLE.ARROW;
         end
 
         classIconContainer.currentGUID = unitGUID;
@@ -164,7 +162,7 @@ local function ShowClassIcon(frame)
         classIconContainer.lastModifiedFriendly = lastModifiedFriendly;
     end
 
-    if ( style == addon.CLASS_ICON_STYLE.ICON ) then
+    if ( classIconContainer.style == addon.CLASS_ICON_STYLE.ICON ) then
         if arrowFrame then arrowFrame:Hide() end
         if iconFrame.targetHighlight then
             if UnitIsUnit("target", frame.unit) then
@@ -174,7 +172,7 @@ local function ShowClassIcon(frame)
             end
         end
         iconFrame:Show();
-    elseif ( style == addon.CLASS_ICON_STYLE.ARROW ) then
+    elseif ( classIconContainer.style == addon.CLASS_ICON_STYLE.ARROW ) then
         if iconFrame then iconFrame:Hide() end
         if arrowFrame.targetHighlight then
             if UnitIsUnit("target", frame.unit) then
