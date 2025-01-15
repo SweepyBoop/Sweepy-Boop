@@ -33,9 +33,7 @@ local function ShouldShowIcon(unitId) -- "Show healers only" option will be chec
     end
 end
 
-local function EnsureIcon(frame)
-    local nameplate = frame:GetParent();
-    if ( not nameplate ) then return end
+local function EnsureIcon(nameplate)
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
         nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
     end
@@ -43,9 +41,7 @@ local function EnsureIcon(frame)
     return nameplate.classIconContainer.FriendlyClassIcon;
 end
 
-local function EnsureArrow(frame)
-    local nameplate = frame:GetParent();
-    if ( not nameplate ) then return end
+local function EnsureArrow(nameplate)
     if ( not nameplate.classIconContainer.FriendlyClassArrow ) then
         nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
     end
@@ -101,8 +97,8 @@ local function ShowClassIcon(frame)
     if ( not nameplate ) then return end
     nameplate.classIconContainer = nameplate.classIconContainer or {};
     local classIconContainer = nameplate.classIconContainer;
-    local iconFrame = EnsureIcon(frame);
-    local arrowFrame = EnsureArrow(frame);
+    local iconFrame = EnsureIcon(nameplate);
+    local arrowFrame = EnsureArrow(nameplate);
     if ( not iconFrame ) or ( not arrowFrame ) then return end
     if ( classIconContainer.currentGUID ~= unitGUID ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
         local isPlayer = UnitIsPlayer(frame.unit);
