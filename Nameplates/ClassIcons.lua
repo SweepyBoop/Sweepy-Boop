@@ -104,7 +104,7 @@ local function ShowClassIcon(frame, showInfo)
         -- If the player enabled "Show healers only", hide the icon except for flag carrier
         if SweepyBoop.db.profile.nameplatesFriendly.showHealerOnly then
             if ( class ~= "HEALER" and ( not flagCarrierIcons[class] ) ) then
-                class = "NONE"; -- To set an empty icon
+                class = "NONE"; -- To set alpha to 0
             end
         end
 
@@ -158,7 +158,7 @@ local function ShowClassIcon(frame, showInfo)
     end
 
     if ( classIconContainer.style == addon.CLASS_ICON_STYLE.ICON ) then
-        if arrowFrame then arrowFrame:Hide() end
+        arrowFrame:Hide(); -- null check already done above
         if iconFrame.targetHighlight then
             if UnitIsUnit("target", showInfo.unitId) then
                 iconFrame.targetHighlight:Show();
@@ -168,7 +168,7 @@ local function ShowClassIcon(frame, showInfo)
         end
         iconFrame:Show();
     elseif ( classIconContainer.style == addon.CLASS_ICON_STYLE.ARROW ) then
-        if iconFrame then iconFrame:Hide() end
+        iconFrame:Hide(); -- null check already done above
         if arrowFrame.targetHighlight then
             if UnitIsUnit("target", showInfo.unitId) then
                 arrowFrame.targetHighlight:Show();
@@ -177,6 +177,9 @@ local function ShowClassIcon(frame, showInfo)
             end
         end
         arrowFrame:Show();
+    else
+        iconFrame:Hide();
+        arrowFrame:Hide();
     end
 end
 
