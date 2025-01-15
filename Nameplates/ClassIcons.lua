@@ -68,11 +68,11 @@ local specialClasses = { -- For these special classes, there is no arrow style
     ['FlagCarrierNeutral'] = true,
 };
 
-local function ShowClassIcon(frame)
+local function ShowClassIcon(frame, showInfo)
     -- Full update if UnitGUID, PvPClassification, or configurations have changed
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
-    local unitGUID = UnitGUID(frame.unit);
-    local pvpClassification = UnitPvpClassification(frame.unit);
+    local unitGUID = UnitGUID(showInfo.unitId);
+    local pvpClassification = UnitPvpClassification(showInfo.unitId);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
@@ -82,20 +82,20 @@ local function ShowClassIcon(frame)
     local arrowFrame = EnsureArrow(nameplate);
     if ( not iconFrame ) or ( not arrowFrame ) then return end
     if ( classIconContainer.currentGUID ~= unitGUID ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        local isPlayer = UnitIsPlayer(frame.unit);
-        local class = ( isPlayer and addon.GetUnitClass(frame.unit) ) or "PET";
+        local isPlayer = UnitIsPlayer(showInfo.unitId);
+        local class = ( isPlayer and addon.GetUnitClass(showInfo.unitId) ) or "PET";
 
         -- Show dedicated healer icon
         if SweepyBoop.db.profile.nameplatesFriendly.useHealerIcon then
             -- For player nameplates, check if it's a healer
-            if isPlayer and ( UnitGroupRolesAssigned(frame.unit) == "HEALER" ) then
+            if isPlayer and ( UnitGroupRolesAssigned(showInfo.unitId) == "HEALER" ) then
                 class = "HEALER";
             end
         end
 
         -- Show dedicated flag carrier icon (this overwrites the healer icon)
         if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
-            local classification = UnitPvpClassification(frame.unit);
+            local classification = UnitPvpClassification(showInfo.unitId);
             if classification and flagCarrierClassNames[classification] then
                 class = flagCarrierClassNames[classification];
             end
@@ -160,7 +160,7 @@ local function ShowClassIcon(frame)
     if ( classIconContainer.style == addon.CLASS_ICON_STYLE.ICON ) then
         if arrowFrame then arrowFrame:Hide() end
         if iconFrame.targetHighlight then
-            if UnitIsUnit("target", frame.unit) then
+            if UnitIsUnit("target", showInfo.unitId) then
                 iconFrame.targetHighlight:Show();
             else
                 iconFrame.targetHighlight:Hide();
@@ -170,7 +170,7 @@ local function ShowClassIcon(frame)
     elseif ( classIconContainer.style == addon.CLASS_ICON_STYLE.ARROW ) then
         if iconFrame then iconFrame:Hide() end
         if arrowFrame.targetHighlight then
-            if UnitIsUnit("target", frame.unit) then
+            if UnitIsUnit("target", showInfo.unitId) then
                 arrowFrame.targetHighlight:Show();
             else
                 arrowFrame.targetHighlight:Hide();
@@ -180,9 +180,9 @@ local function ShowClassIcon(frame)
     end
 end
 
-addon.UpdateClassIcon = function(frame, shouldShow)
-    if shouldShow then
-        ShowClassIcon(frame);
+addon.UpdateClassIcon = function(frame, showInfo)
+    if showInfo.showClassIcon then
+        ShowClassIcon(frame, showInfo);
     else
         addon.HideClassIcon(frame);
     end

@@ -111,13 +111,13 @@ addon.HideSpecIcon = function (frame)
     end
 end
 
-addon.UpdateSpecIcon = function (frame, shouldShow)
-    if ( not shouldShow ) then
+addon.UpdateSpecIcon = function (frame, showInfo)
+    if ( not showInfo.showSpecIcon ) then
         addon.HideSpecIcon(frame);
         return;
     end
 
-    local iconID, isHealer = GetSpecIconInfo(frame.unit);
+    local iconID, isHealer = GetSpecIconInfo(showInfo.unitId);
     if ( iconID ~= nil ) and ( iconID ~= 0 ) then
         ShowSpecIcon(frame, iconID, isHealer);
     else

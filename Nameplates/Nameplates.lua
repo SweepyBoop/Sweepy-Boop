@@ -47,6 +47,7 @@ end
 local function GetShowInfoForUnit(unitId)
     -- Whether we should show: unit frame, class icon, spec icon, highlight (if not set, defaults to false)
     local showInfo = {};
+    showInfo.unitId = unitId;
 
     if UnitIsUnit(unitId, "player") then
         showInfo.showUnitFrame = true; -- Don't hide personal resource display
@@ -149,11 +150,11 @@ local function UpdateAll(frame)
     local showInfo = GetShowInfoForUnit(frame.unit);
 
     -- Class icon mod will hide/show healthBar when showing/hiding class icons
-    addon.UpdateClassIcon(frame, showInfo.showClassIcon);
+    addon.UpdateClassIcon(frame, showInfo);
     -- Show enemy nameplate highlight
-    addon.UpdateNpcHighlight(frame, showInfo.showNpcHighlight);
+    addon.UpdateNpcHighlight(frame, showInfo);
     -- Update spec icons
-    addon.UpdateSpecIcon(frame, showInfo.showSpecIcon);
+    addon.UpdateSpecIcon(frame, showInfo);
     -- Nameplate filter mod could overwrite the healthBar visibility afterwards (need to ensure healthBar and class icon do not show at the same time)
     UpdateHealthBar(frame, showInfo.showUnitFrame);
 

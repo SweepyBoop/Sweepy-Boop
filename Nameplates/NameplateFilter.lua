@@ -55,10 +55,10 @@ local function EnsureNpcHighlight(frame)
     return frame.npcHighlight;
 end
 
-local function ShowNpcHighlight(frame)
+local function ShowNpcHighlight(frame, showInfo)
     local highlight = EnsureNpcHighlight(frame);
 
-    local guid = UnitGUID(frame.unit);
+    local guid = UnitGUID(showInfo.unitId);
     if ( highlight.currentGuid ~= guid ) then
         local npcID = select(6, strsplit("-", guid));
         highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
@@ -87,9 +87,9 @@ addon.HideNpcHighlight = function(frame)
     end
 end
 
-addon.UpdateNpcHighlight = function(frame, shouldShow)
-    if shouldShow then
-        ShowNpcHighlight(frame);
+addon.UpdateNpcHighlight = function(frame, showInfo)
+    if showInfo.showNpcHighlight then
+        ShowNpcHighlight(frame, showInfo);
     else
         addon.HideNpcHighlight(frame);
     end
