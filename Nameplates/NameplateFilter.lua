@@ -81,7 +81,10 @@ local function ShowNpcHighlight(frame)
         highlight:Show();
         highlight.customIcon:Show();
         highlight.glowTexture:Show();
-        highlight.animationGroup:Play();=1aw
+    end
+
+    if ( not highlight.animationGroup:IsPlaying() ) then
+        highlight.animationGroup:Play();
     end
 end
 
