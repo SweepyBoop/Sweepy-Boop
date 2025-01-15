@@ -68,13 +68,20 @@ end
 
 local function ShowNpcHighlight(frame)
     local highlight = EnsureNpcHighlight(frame);
+
     local guid = UnitGUID(frame.unit);
-    local npcID = select(6, strsplit("-", guid));
-    highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
-    highlight:Show();
-    highlight.customIcon:Show();
-    highlight.glowTexture:Show();
-    highlight.animationGroup:Play();
+    if ( highlight.currentGuid ~= guid ) then
+        local npcID = select(6, strsplit("-", guid));
+        highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
+        highlight.currentGuid = guid;
+    end
+
+    if ( not highlight:IsShown() ) then
+        highlight:Show();
+        highlight.customIcon:Show();
+        highlight.glowTexture:Show();
+        highlight.animationGroup:Play();
+    end
 end
 
 addon.HideNpcHighlight = function(frame)
