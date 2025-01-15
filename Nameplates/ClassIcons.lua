@@ -132,12 +132,15 @@ local function ShowClassIcon(frame)
         end
 
         if ( class == "NONE" ) then
-            iconFrame.icon:SetTexture();
-            iconFrame.border:SetTexture();
-            iconFrame.targetHighlight:SetTexture();
-            arrowFrame.icon:SetTexture();
-            arrowFrame.targetHighlight:SetTexture();
+            iconFrame.icon:SetAlpha(0);
+            iconFrame.border:SetAlpha(0);
+            iconFrame.targetHighlight:SetAlpha(0);
+            arrowFrame.icon:SetAlpha(0);
+            arrowFrame.targetHighlight:SetAlpha(0);
         else
+            iconFrame.icon:SetAlpha(1);
+            iconFrame.border:SetAlpha(1);
+            iconFrame.targetHighlight:SetAlpha(1);
             local iconID, iconCoords = GetIconOptions(class);
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
@@ -154,12 +157,12 @@ local function ShowClassIcon(frame)
 
             local classColor = RAID_CLASS_COLORS[class];
             if classColor then
-                arrowFrame.icon:SetAtlas("covenantsanctum-renown-doublearrow-disabled");
-                arrowFrame.targetHighlight:SetAtlas("Capacitance-General-WorkOrderBorder");
+                arrowFrame.icon:SetAlpha(1);
+                arrowFrame.targetHighlight:SetAlpha(1);
                 arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
-                arrowFrame.icon:SetTexture();
-                arrowFrame.targetHighlight:SetTexture();
+                arrowFrame.icon:SetAlpha(0);
+                arrowFrame.targetHighlight:SetAlpha(0);
             end
             arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
             arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
