@@ -36,21 +36,21 @@ end
 local function EnsureIcon(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
-    if ( not nameplate.FriendlyClassIcon ) then
-        nameplate.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+    if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
+        nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
     end
 
-    return nameplate.FriendlyClassIcon;
+    return nameplate.classIconContainer.FriendlyClassIcon;
 end
 
 local function EnsureArrow(frame)
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
-    if ( not nameplate.FriendlyClassArrow ) then
-        nameplate.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
+    if ( not nameplate.classIconContainer.FriendlyClassArrow ) then
+        nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
     end
 
-    return nameplate.FriendlyClassArrow;
+    return nameplate.classIconContainer.FriendlyClassArrow;
 end
 
 local function GetIconOptions(class)
@@ -74,12 +74,12 @@ end
 
 addon.HideClassIcon = function(frame)
     local nameplate = frame:GetParent();
-    if ( not nameplate ) then return end
-    if nameplate.FriendlyClassIcon then
-        nameplate.FriendlyClassIcon:Hide();
+    if ( not nameplate ) or ( not nameplate.classIconContainer ) then return end
+    if nameplate.classIconContainer.FriendlyClassIcon then
+        nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
-    if nameplate.FriendlyClassArrow then
-        nameplate.FriendlyClassArrow:Hide();
+    if nameplate.classIconContainer.FriendlyClassArrow then
+        nameplate.classIconContainer.FriendlyClassArrow:Hide();
     end
 end
 
@@ -97,10 +97,12 @@ local function ShowClassIcon(frame)
     local unitGUID = UnitGUID(frame.unit);
     local pvpClassification = UnitPvpClassification(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    frame.classIconContainer = frame.classIconContainer or {};
-    frame.classIconContainer.FriendlyClassIcon = EnsureIcon(frame);
-    frame.classIconContainer.FriendlyClassArrow = EnsureArrow(frame);
-    local classIconContainer = frame.classIconContainer;
+    local nameplate = frame:GetParent();
+    if ( not nameplate ) then return end
+    nameplate.classIconContainer = frame.classIconContainer or {};
+    nameplate.classIconContainer.FriendlyClassIcon = EnsureIcon(frame);
+    nameplate.classIconContainer.FriendlyClassArrow = EnsureArrow(frame);
+    local classIconContainer = nameplate.classIconContainer;
     local iconFrame = classIconContainer.FriendlyClassIcon;
     local arrowFrame = classIconContainer.FriendlyClassArrow;
     if ( not iconFrame ) or ( not arrowFrame ) then return end
