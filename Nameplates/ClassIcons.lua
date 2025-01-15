@@ -133,7 +133,7 @@ local function ShowClassIcon(frame)
 
         if ( class == "NONE" ) then
             iconFrame.icon:SetTexture();
-            iconFrame.mask:SetTexture();
+            iconFrame.border:SetTexture();
             iconFrame.targetHighlight:SetTexture();
             arrowFrame.icon:SetTexture();
             arrowFrame.targetHighlight:SetTexture();
@@ -141,8 +141,8 @@ local function ShowClassIcon(frame)
             local iconID, iconCoords = GetIconOptions(class);
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
-            iconFrame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-            iconFrame.targetHighlight:SetAtlas("ui-frame-genericplayerchoice-portrait-border");
+            iconFrame.border:SetAtlas("ui-frame-genericplayerchoice-portrait-border");
+            iconFrame.targetHighlight:SetAtlas("charactercreate-ring-select");
             local scale = SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100;
             if ( class == "HEALER" ) then
                 scale = scale * 1.25; -- Because healer uses icon coords from a collection of icons, using the same scale would make it seem smaller
