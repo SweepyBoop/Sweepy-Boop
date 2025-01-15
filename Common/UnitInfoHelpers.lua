@@ -149,7 +149,8 @@ end)
 -- Battleground enemy info parser
 local cachedBattlefieldSpec = {};
 local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Are there other events we need to register?
+refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 refreshFrame:SetScript("OnEvent", function ()
     cachedBattlefieldSpec = {}; -- reset after every loading screen
 
