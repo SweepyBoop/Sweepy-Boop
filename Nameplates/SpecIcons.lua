@@ -33,11 +33,11 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
                     iconID = addon.ICON_ID_HEALER_ENEMY;
                     isHealer = true;
                 else
-                    iconID = specInfo.iconID;
+                    iconID = specInfo.icon;
                 end
             end
         elseif config.arenaSpecIconOthers then
-            iconID = specInfo.iconID;
+            iconID = specInfo.icon;
         end
 
         return iconID, isHealer;
@@ -113,6 +113,7 @@ end
 
 addon.UpdateSpecIcon = function (frame)
     local iconID, isHealer = ShouldShowSpecIcon(frame.unit);
+    print(iconID);
     if ( iconID ~= nil ) and ( iconID ~= 0 ) then
         ShowSpecIcon(frame, iconID, isHealer);
     else
