@@ -136,13 +136,17 @@ for _, classID in pairs(addon.CLASSID) do
 end
 
 local requestFrame = CreateFrame("Frame");
-requestFrame:Hide(); -- OnUpdate is not called when frame is hidden, only show this frame in battlegrounds
+--requestFrame:Hide(); -- OnUpdate is not called when frame is hidden, only show this frame in battlegrounds
 requestFrame.timer = 0;
 requestFrame:SetScript("OnUpdate", function (self, elapsed)
     self.timer = self.timer + elapsed;
-    if self.timer > 2 then -- update every 2 sec
+    if self.timer > 2.5 then -- update every 2 sec
         self.timer = 0;
-        RequestBattlefieldScoreData();
+
+        if C_PvP.IsBattleground() then
+            --print("RequestBattlefieldScoreData");
+            RequestBattlefieldScoreData();
+        end
     end
 end)
 
@@ -154,11 +158,15 @@ refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
 
-    if ( UnitInBattleground("player") ~= nil ) then
-        requestFrame:Show();
-    else
-        requestFrame:Hide();
-    end
+    -- After a loading screen, both values are false, we might as well have request frame always showing and scanning every 2.5s, request if in BG
+    --print(event, UnitInBattleground("player"), C_PvP.IsBattleground());
+
+    -- if ( UnitInBattleground("player") ~= nil ) then
+    --     print(event, "Requesting battlefield score data");
+    --     requestFrame:Show();
+    -- else
+    --     requestFrame:Hide();
+    -- end
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
@@ -178,7 +186,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
             end
         else
             -- Some nameplates are not showing spec icons until a reload in the BG
-            -- requestFrame is messed up by registereing ARENA_PREP_OPPONENT_SPECIALIZATIONS event
+            -- requestFrame is messed up and not showing
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.talentSpec then
                 addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
