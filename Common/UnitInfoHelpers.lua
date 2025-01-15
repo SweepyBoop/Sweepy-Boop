@@ -177,6 +177,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                 end
             end
         elseif ( UnitInBattleground("player") ~= nil ) then
+            -- Some nameplates are not showing spec icons until a reload in the BG
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.talentSpec then
                 cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
