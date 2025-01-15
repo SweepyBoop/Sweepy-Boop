@@ -139,7 +139,7 @@ local requestFrame = CreateFrame("Frame");
 requestFrame.timer = 0;
 requestFrame:SetScript("OnUpdate", function (self, elapsed)
     self.timer = self.timer + elapsed;
-    if self.timer > 2.5 then -- update every 2 sec
+    if self.timer > 2.5 then -- update every 2.5 sec
         self.timer = 0;
 
         if C_PvP.IsBattleground() then
