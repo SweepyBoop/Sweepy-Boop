@@ -99,7 +99,7 @@ local function ShowClassIcon(frame)
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     local nameplate = frame:GetParent();
     if ( not nameplate ) then return end
-    nameplate.classIconContainer = frame.classIconContainer or {};
+    nameplate.classIconContainer = nameplate.classIconContainer or {};
     nameplate.classIconContainer.FriendlyClassIcon = EnsureIcon(frame);
     nameplate.classIconContainer.FriendlyClassArrow = EnsureArrow(frame);
     local classIconContainer = nameplate.classIconContainer;
