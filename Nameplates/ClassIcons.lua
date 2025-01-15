@@ -95,9 +95,8 @@ local function ShowClassIcon(frame, showInfo)
 
         -- Show dedicated flag carrier icon (this overwrites the healer icon)
         if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
-            local classification = UnitPvpClassification(showInfo.unitId);
-            if classification and flagCarrierClassNames[classification] then
-                class = flagCarrierClassNames[classification];
+            if pvpClassification and flagCarrierClassNames[pvpClassification] then
+                class = flagCarrierClassNames[pvpClassification];
             end
         end
 
