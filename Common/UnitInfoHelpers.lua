@@ -141,8 +141,8 @@ requestFrame.timer = 0;
 requestFrame:SetScript("OnUpdate", function (self, elapsed)
     self.timer = self.timer + elapsed;
     if self.timer > 2 then -- update every 2 sec
-        RequestBattlefieldScoreData();
         self.timer = 0;
+        RequestBattlefieldScoreData();
     end
 end)
 
