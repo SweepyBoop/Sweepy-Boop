@@ -8,8 +8,17 @@ local setPointOptions = {
 };
 
 local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, otherwise nil
+    local icon, isHealer;
+
     if addon.TEST_MODE then
-        return ( UnitIsUnit(unitId, "focus") and addon.ICON_ID_HEALER_ENEMY ) or ( UnitIsUnit(unitId, "target") and 136041 ); -- Restoration Druid icon
+        if UnitIsUnit(unitId, "focus") then
+            icon = addon.ICON_ID_HEALER_ENEMY;
+            isHealer = true;
+        elseif UnitIsUnit(unitId, "target") then
+            icon = 136041;
+        end
+        
+        return icon, isHealer;
     end
 
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
@@ -20,14 +29,17 @@ local function ShouldShowSpecIcon(unitId) -- Return icon ID if should show, othe
         if ( role == "HEALER" ) then
             if config.arenaSpecIconHealer then
                 if config.arenaSpecIconHealerIcon then
-                    return addon.ICON_ID_HEALER_ENEMY;
+                    icon = addon.ICON_ID_HEALER_ENEMY;
+                    isHealer = true;
                 else
-                    return iconID;
+                    icon = iconID;
                 end
             end
         elseif config.arenaSpecIconOthers then
-            return iconID;
+            icon = iconID;
         end
+
+        return icon, isHealer;
     end
 end
 
@@ -47,14 +59,13 @@ local function EnsureSpecIcon(frame)
     return nameplate.SpecIconContainer;
 end
 
-local function ShowSpecIcon(frame, iconID)
+local function ShowSpecIcon(frame, iconID, isHealer)
     local specIconContainer = EnsureSpecIcon(frame);
     if ( not specIconContainer ) then return end;
 
-    local isHealerIcon = ( iconID == addon.ICON_ID_HEALER_ENEMY );
     if ( specIconContainer.iconID ~= iconID ) then
         for _, iconFrame in pairs(specIconContainer.frames) do
-            if isHealerIcon then
+            if isHealer then
                 iconFrame.icon:SetAtlas(iconID);
             else
                 iconFrame.icon:SetTexture(iconID);
@@ -63,9 +74,9 @@ local function ShowSpecIcon(frame, iconID)
         end
     end
 
-    if ( specIconContainer.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconContainer.isHealerIcon ~= isHealerIcon ) then
+    if ( specIconContainer.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconContainer.isHealer ~= isHealer ) then
         local scale = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100;
-        if isHealerIcon then
+        if isHealer then
             scale = scale * 1.25;
         end
 
@@ -77,7 +88,7 @@ local function ShowSpecIcon(frame, iconID)
         end
 
         specIconContainer.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
-        specIconContainer.isHealerIcon = isHealerIcon;
+        specIconContainer.isHealerIcon = isHealer;
     end
 
     for alignment, iconFrame in pairs(specIconContainer.frames) do
@@ -100,9 +111,9 @@ addon.HideSpecIcon = function (frame)
 end
 
 addon.UpdateSpecIcon = function (frame)
-    local iconID = ShouldShowSpecIcon(frame.unit);
+    local iconID, isHealer = ShouldShowSpecIcon(frame.unit);
     if iconID then
-        ShowSpecIcon(frame, iconID);
+        ShowSpecIcon(frame, iconID, isHealer);
     else
         addon.HideSpecIcon(frame);
     end
