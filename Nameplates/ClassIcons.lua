@@ -119,6 +119,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         end
 
         -- Show dedicated flag carrier icon (this overwrites the healer icon)
+        -- Issue: flag carrier icons are showing up but no target highlight
         if SweepyBoop.db.profile.nameplatesFriendly.useFlagCarrierIcon and isPlayer then
             if pvpClassification and flagCarrierClassNames[pvpClassification] then
                 class = flagCarrierClassNames[pvpClassification];
