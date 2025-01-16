@@ -52,6 +52,8 @@ local function GetIconOptions(class)
 end
 
 addon.ShowClassIcon = function (nameplate)
+    if ( not nameplate.classIconContainer ) then return end
+
     local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
     if nameplate.classIconContainer.FriendlyClassIcon then
         nameplate.classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON);
