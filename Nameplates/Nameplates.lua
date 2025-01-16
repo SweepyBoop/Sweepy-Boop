@@ -34,7 +34,7 @@ local function UpdateUnitFrameVisibility(frame, show)
     frame.HealthBarsContainer:SetAlpha(alpha);
     frame.selectionHighlight:SetAlpha(alpha);
     frame.castBar:SetAlpha(alpha);
-    local children = {frame.castBar:GetRegions()}
+    local children = {frame.castBar:GetRegions()};
     for _, region in ipairs(children) do
         if region:IsObjectType("Texture") then
             region:SetAlpha(0)
