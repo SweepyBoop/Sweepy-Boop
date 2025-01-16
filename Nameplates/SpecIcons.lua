@@ -10,12 +10,6 @@ local setPointOptions = {
 local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil
     local iconID, isHealer;
 
-    -- if addon.TEST_MODE then
-    --     iconID = addon.ICON_ID_HEALER_ENEMY;
-    --     isHealer = true;
-    --     return iconID, isHealer;
-    -- end
-
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
@@ -79,8 +73,8 @@ addon.UpdateSpecIcon = function (frame)
     if ( specIconContainer.iconID ~= iconID ) then
         for _, iconFrame in pairs(specIconContainer.frames) do
             if ( not iconID ) then
-                iconFrame.icon:SetTexture(); -- Empty texture if no spec icon to show
-                iconFrame.border:SetTexture(); -- Hide the red border if icon texture is empty
+                iconFrame.icon:SetTexture();
+                iconFrame.border:SetAlpha(0);
             elseif isHealer then
                 iconFrame.icon:SetAtlas(iconID);
             else

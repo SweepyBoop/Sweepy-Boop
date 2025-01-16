@@ -71,7 +71,12 @@ local function UpdateVisibility(nameplate, frame)
         addon.HideClassIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
-            addon.ShowSpecIcon(frame); -- If no spec is available yet, will show an empty icon
+            if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
+                addon.ShowSpecIcon(frame); -- Control alpha in spec icon module for healer / non-healer
+            else
+                addon.HideSpecIcon(frame);
+            end
+
             addon.HideNpcHighlight(frame);
             UpdateUnitFrameVisibility(frame, true); -- Always show enemy players
             return;
