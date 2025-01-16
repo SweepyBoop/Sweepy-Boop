@@ -174,7 +174,7 @@ addon.utilitySpells = {
     [113724] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Ring of Frost
     [31661] = {cooldown = 45, class = addon.MAGE, category = SPELLCATEGORY.CROWDCONTROL}, -- Dragon's Breath
     -- Disrupt
-    [30449] = {cooldown = 30, class = addon.MAGE, spec = {specID.ARCANE}, category = SPELLCATEGORY.DISRUPT}, -- Spellsteal (Kleptomania)
+    [198100] = {cooldown = 20, class = addon.MAGE, category = SPELLCATEGORY.DISRUPT}, -- Kleptomania (now a channel with a different spellID)
 
     -- Monk
     -- Crowd Control
