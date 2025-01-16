@@ -27,15 +27,19 @@ local function UpdateWidgets(nameplate, frame)
 end
 
 local function UpdateUnitFrameVisibility(frame, show)
-    local alpha = ( show and 1 ) or 0;
-    frame:SetAlpha(alpha);
-    frame.healthBar:SetAlpha(alpha);
-    frame.selectionHighlight:SetAlpha(alpha);
-    frame.BuffFrame:SetAlpha(alpha);
-    frame.castBar:SetAlpha(alpha);
+    -- local alpha = ( show and 1 ) or 0;
+    -- frame:SetAlpha(alpha);
+    -- frame.healthBar:SetAlpha(alpha);
+    -- frame.selectionHighlight:SetAlpha(alpha);
+    -- frame.BuffFrame:SetAlpha(alpha);
+    -- frame.castBar:SetAlpha(alpha); - icon still shows up...
+
+    frame:SetShown(show);
 end
 
 local function UpdateVisibility(nameplate, frame)
+    -- Issue: after priest mind control, party member shows both class icon and health bar
+
     if ( not addon.UnitIsHostile(frame.unit) ) then -- Friendly units, show class icon for friendly players and party pets
         local configFriendly = SweepyBoop.db.profile.nameplatesFriendly;
         if configFriendly.classIconsEnabled then
@@ -110,6 +114,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
+            print("UNIT_FACTION", unitId);
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
