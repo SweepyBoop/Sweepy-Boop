@@ -45,36 +45,28 @@ local function EnsureNpcHighlight(frame)
         frame.npcHighlight.glowTexture:SetVertexColor(128, 0, 128); -- Purple
 
         frame.npcHighlight.animationGroup = SetupAnimation(frame.npcHighlight);
+
+        frame.npcHighlight:Hide();
     end
 
-    if ( frame.npcHighlight.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) then
-        frame.npcHighlight:SetScale(SweepyBoop.db.profile.nameplatesEnemy.highlightScale / 100);
-        frame.npcHighlight.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
+    local config = SweepyBoop.db.profile.nameplatesEnemy;
+    if ( frame.npcHighlight.lastModified ~= config.lastModified ) then
+        frame.npcHighlight:SetScale(config.highlightScale / 100);
+        frame.npcHighlight.lastModified = config.lastModified;
     end
 
     return frame.npcHighlight;
 end
 
-local function ShouldShowNpcHighlight(unitId)
-    if ( not UnitIsPlayer(unitId) ) then
-        local guid = UnitGUID(unitId);
-        local npcID = select(6, strsplit("-", guid));
-        local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
-        if ( option == addon.NpcOption.Highlight ) then
-            return addon.UnitIsHostile(unitId);
-        end
-    end
-end
+addon.ShowNpcHighlight = function(frame)
+    local highlight = frame.npcHighlight;
 
-local function ShowNpcHighlight(frame)
-    local highlight = EnsureNpcHighlight(frame);
-    local guid = UnitGUID(frame.unit);
-    local npcID = select(6, strsplit("-", guid));
-    highlight.customIcon:SetTexture(addon.iconTexture[npcID]);
-    highlight:Show();
-    highlight.customIcon:Show();
-    highlight.glowTexture:Show();
-    highlight.animationGroup:Play();
+    if highlight then
+        highlight.animationGroup:Play();
+        highlight.glowTexture:Show();
+        highlight.customIcon:Show();
+        highlight:Show();
+    end
 end
 
 addon.HideNpcHighlight = function(frame)
@@ -88,14 +80,12 @@ addon.HideNpcHighlight = function(frame)
 end
 
 addon.UpdateNpcHighlight = function(frame)
-    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
-        addon.HideNpcHighlight(frame);
-        return;
-    end
-
-    if ShouldShowNpcHighlight(frame.unit) then
-        ShowNpcHighlight(frame);
-    else
-        addon.HideNpcHighlight(frame);
+    -- Parented to UnitFrame to inherit the visibility
+    local highlight = EnsureNpcHighlight(frame);
+    local unitGUID = UnitGUID(frame.unit);
+    if ( highlight.currentGuid ~= unitGUID ) then
+        local npcID = select(6, strsplit("-", unitGUID));
+        highlight.customIcon:SetTexture(addon.iconTexture[npcID]); -- nil if no texture found
+        highlight.currentGuid = unitGUID;
     end
 end

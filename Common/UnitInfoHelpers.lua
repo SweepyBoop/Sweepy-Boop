@@ -55,18 +55,24 @@ addon.IsShamanPrimaryPet = function (unitId)
     return ( npcID == 95061 ) or ( npcID == 61029 );
 end
 
-addon.IsPartyPrimaryPet = function(unitId, partySize)
+local playerClass; -- This won't change for a login session so cache it
+local classesWithPets = {
+    [addon.HUNTER] = true,
+    [addon.WARLOCK] = true,
+    [addon.SHAMAN] = true,
+};
+
+addon.IsPartyPrimaryPet = function(unitId)
     -- We're only checking hunter/warlock pets, which includes mind controlled units (which are considered as "pets")
     if UnitIsUnit(unitId, "pet") then
-        local class = addon.GetUnitClass("player");
-        return ( class == addon.HUNTER ) or ( class == addon.WARLOCK ) or ( class == addon.SHAMAN and addon.IsShamanPrimaryPet(unitId) );
+        playerClass = playerClass or addon.GetUnitClass("player");
+        return classesWithPets[playerClass];
     else
-        local partySize = partySize or 2;
-        for i = 1, partySize do
+        for i = 1, 2 do
             if UnitIsUnit(unitId, "partypet" .. i) then
                 local partyUnitId = "party" .. i;
                 local class = addon.GetUnitClass(partyUnitId);
-                return ( class == addon.HUNTER ) or ( class == addon.WARLOCK ) or ( class == addon.SHAMAN and addon.IsShamanPrimaryPet(unitId) );
+                return classesWithPets[class];
             end
         end
     end
@@ -118,47 +124,55 @@ addon.GetClassForPlayerOrArena = function (unitId)
 end
 
 -- C_PvP.GetScoreInfoByPlayerGuid returns localized spec name
+-- There are Frost Mage and Frost DK, but the spec name is "Frost" for both...
+-- We need to append class info as well
 local specInfoByName = {};
 for _, classID in pairs(addon.CLASSID) do
     for specIndex = 1, 4 do
-        local _, name, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
-        if name then
-            specInfoByName[name] = { icon = icon, role = role };
-            --print(name, specInfoByName[name].icon, specInfoByName[name].role);
+        local _, specName, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
+        local classInfo = C_CreatureInfo.GetClassInfo(classID);
+        if specName and classInfo and classInfo.className then
+            specInfoByName[classInfo.className .. " " .. specName] = { icon = icon, role = role };
         end
     end
 end
 
-local requestFrame = CreateFrame("Frame");
-requestFrame:Hide(); -- OnUpdate is not called when frame is hidden, only show this frame in battlegrounds
-requestFrame.timer = 0;
-requestFrame:SetScript("OnUpdate", function (self, elapsed)
-    self.timer = self.timer + elapsed;
-    if self.timer > 2 then -- update every 2 sec
-        RequestBattlefieldScoreData();
-        self.timer = 0;
-    end
-end)
-
 -- Battleground enemy info parser
 addon.cachedBattlefieldSpec = {};
 local refreshFrame = CreateFrame("Frame");
-refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Are there other events we need to register?
-refreshFrame:SetScript("OnEvent", function ()
+refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
 
-    if ( UnitInBattleground("player") ~= nil ) then
-        requestFrame:Show();
-    else
-        requestFrame:Hide();
-    end
+    -- Right after a loading screen, both UnitInBattleground and C_PvP.IsBattleground are false
+    -- we might as well have request frame always showing and scanning every 2.5s, request if in BG
+    -- instead of show/hide request frame based on UnitInBattleground / C_PvP.IsBattleground
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not addon.cachedBattlefieldSpec[guid] ) then
-        local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-        if scoreInfo and scoreInfo.talentSpec then
-            addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
+        if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
+            if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
+                return { icon = 0 };
+            else
+                for i = 1, addon.MAX_ARENA_SIZE do
+                    if ( guid == UnitGUID("arena" .. i) ) then
+                        local specID = GetArenaOpponentSpec(i);
+                        if ( not specID ) then return end
+                        local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                        addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
+                    end
+                end
+            end
+        else
+            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+            if scoreInfo and scoreInfo.className and scoreInfo.talentSpec then
+                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.className .. " " .. scoreInfo.talentSpec];
+            else
+                -- There are still units with unknown spec, request info
+                RequestBattlefieldScoreData();
+            end
         end
     end
 

@@ -40,8 +40,8 @@ options.args.nameplatesFriendly = {
     get = function(info) return SweepyBoop.db.profile.nameplatesFriendly[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesFriendly[info[#info]] = val;
-        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
+        SweepyBoop:RefreshAllNamePlates();
     end,
     args = {
         classIconsEnabled = {
@@ -162,8 +162,8 @@ options.args.nameplatesEnemy = {
     get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
     set = function(info, val)
         SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-        SweepyBoop:RefreshAllNamePlates();
         SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+        SweepyBoop:RefreshAllNamePlates();
     end,
     args = {
         -- tip = {
@@ -291,7 +291,11 @@ options.args.nameplatesEnemy = {
             type = "group",
             name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
-            set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
+            set = function(info, val) 
+                SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
+                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                SweepyBoop:RefreshAllNamePlates();
+            end,
             args = {},
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
@@ -783,6 +787,7 @@ function SweepyBoop:OnInitialize()
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
 
+    -- Nameplate module needs optimization to eat less CPU
     -- Setup nameplate modules
     self:SetupNameplateModules();
 
