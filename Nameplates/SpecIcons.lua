@@ -90,13 +90,13 @@ addon.UpdateSpecIcon = function (frame)
     end
 
     if ( specIconContainer.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconContainer.isHealer ~= isHealer ) then
-        local scale = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100;
+        local scale = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100 * builtInScaleFactor;
         if isHealer then
             scale = scale * 1.25;
         end
 
         for alignment, iconFrame in pairs(specIconContainer.frames) do
-            iconFrame:SetScale(scale * builtInScaleFactor);
+            iconFrame:SetScale(scale);
             local options = setPointOptions[alignment];
             local offsetY = ( alignment == addon.SPEC_ICON_ALIGNMENT.TOP and SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset ) or 0;
             iconFrame:SetPoint(options.point, iconFrame:GetParent(), options.relativePoint, 0, offsetY);
