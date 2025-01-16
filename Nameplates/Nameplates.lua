@@ -53,26 +53,19 @@ local function UpdateVisibility(nameplate, frame)
             return;
         end
 
-        -- Process non-player units
-        print("Test");
+        -- Process non-player hostile units
         addon.HideSpecIcon(frame);
         local guid = UnitGUID(frame.unit);
         local npcID = select(6, strsplit("-", guid));
         local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
         if ( option == addon.NpcOption.Highlight ) then
-            print("ShowNpcHighlight", UnitName(frame.unit));
             addon.ShowNpcHighlight(frame);
         else
             addon.HideNpcHighlight(frame);
         end
 
-        -- If frame is still shown, check if it should be filtered out
-        if frame:IsShown() then
-            local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(frame.unit);
-            if ( not isWhitelisted ) or addon.UnitIsHunterSecondaryPet(frame.unit) then
-                frame:Hide();
-            end
-        end
+        local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(frame.unit);
+        frame:SetShown( isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(frame.unit) ) );
     end
 end
 
