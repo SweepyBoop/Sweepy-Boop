@@ -146,8 +146,7 @@ function SweepyBoop:SetupNameplateModules()
 
     -- When flag is picked up / dropped
     hooksecurefunc("CompactUnitFrame_UpdateClassificationIndicator", function (frame)
-        if frame:IsForbidden() then return end
-        if IsRestricted() then return end
+        if frame:IsForbidden() or IsRestricted() then return end
         if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
             -- UpdateClassIcon should include UpdateTargetHighlight
             -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
