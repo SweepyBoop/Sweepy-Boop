@@ -26,6 +26,15 @@ local function UpdateWidgets(nameplate, frame)
     addon.UpdateSpecIcon(frame);
 end
 
+local function UpdateUnitFrameVisibility(frame, show)
+    local alpha = ( show and 1 ) or 0;
+    frame:SetAlpha(alpha);
+    frame.healthBar:SetAlpha(alpha);
+    frame.selectionHighlight:SetAlpha(alpha);
+    frame.BuffFrame:SetAlpha(alpha);
+    frame.castBar:SetAlpha(alpha);
+end
+
 local function UpdateVisibility(nameplate, frame)
     if ( not addon.UnitIsHostile(frame.unit) ) then -- Friendly units, show class icon for friendly players and party pets
         local configFriendly = SweepyBoop.db.profile.nameplatesFriendly;
@@ -36,10 +45,10 @@ local function UpdateVisibility(nameplate, frame)
                 addon.ShowClassIcon(nameplate);
             end
 
-            frame:Hide(); -- if class icons are enabled, all friendly units' health bars should be hidden
+            UpdateUnitFrameVisibility(frame, false); -- if class icons are enabled, all friendly units' health bars should be hidden
         else
             addon.HideClassIcon(nameplate);
-            frame:Show(); -- Will be overriden by nameplate filter later
+            UpdateUnitFrameVisibility(frame, true); -- Will be overriden by nameplate filter later
         end
 
         addon.HideSpecIcon(frame);
@@ -65,7 +74,7 @@ local function UpdateVisibility(nameplate, frame)
         end
 
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(frame.unit);
-        frame:SetShown( isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(frame.unit) ) );
+        UpdateUnitFrameVisibility(frame, isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(frame.unit) ) );
     end
 end
 
