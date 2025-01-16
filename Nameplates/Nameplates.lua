@@ -163,7 +163,7 @@ function SweepyBoop:SetupNameplateModules()
 
             -- Don't update names on raid frames
             -- In BGs, flag carriers can be arena1 / arena2
-            if IsActiveBattlefieldArena and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
                         frame.name:SetText(i);
