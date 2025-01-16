@@ -68,7 +68,7 @@ addon.UpdateSpecIcon = function (frame)
     local specIconContainer = EnsureSpecIcon(frame);
     if ( not specIconContainer ) then return end;
 
-    -- Buggy between solo shuffle rounds, multiple healer icons
+    -- Still seeing an empty icon with a red border between solo shuffle rounds
     local iconID, isHealer = GetSpecIconInfo(frame.unit);
 
     if ( specIconContainer.iconID ~= iconID ) then
