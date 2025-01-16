@@ -7,7 +7,7 @@ local setPointOptions = {
     [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
-local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil
+local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil; check cache (for perf) and config
     local iconID, isHealer;
 
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
@@ -68,6 +68,7 @@ addon.UpdateSpecIcon = function (frame)
     local specIconContainer = EnsureSpecIcon(frame);
     if ( not specIconContainer ) then return end;
 
+    -- Buggy between solo shuffle rounds, multiple healer icons
     local iconID, isHealer = GetSpecIconInfo(frame.unit);
 
     if ( specIconContainer.iconID ~= iconID ) then
@@ -80,8 +81,9 @@ addon.UpdateSpecIcon = function (frame)
             else
                 iconFrame.icon:SetTexture(iconID);
             end
-            iconFrame.iconID = iconID;
         end
+
+        specIconContainer.iconID = iconID;
     end
 
     if ( specIconContainer.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified ) or ( specIconContainer.isHealer ~= isHealer ) then
