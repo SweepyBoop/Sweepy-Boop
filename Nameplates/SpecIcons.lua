@@ -80,6 +80,7 @@ addon.UpdateSpecIcon = function (frame)
         for _, iconFrame in pairs(specIconContainer.frames) do
             if ( not iconID ) then
                 iconFrame.icon:SetTexture(); -- Empty texture if no spec icon to show
+                iconFrame.border:SetTexture(); -- Hide the red border if icon texture is empty
             elseif isHealer then
                 iconFrame.icon:SetAtlas(iconID);
             else
