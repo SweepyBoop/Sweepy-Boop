@@ -69,6 +69,7 @@ addon.UpdateSpecIcon = function (frame)
     if ( not specIconContainer ) then return end;
 
     -- Still seeing an empty icon with a red border between solo shuffle rounds
+    -- Repro if play some rounds with "show healer only", then switch to "show all"?
     local iconID, isHealer = GetSpecIconInfo(frame.unit);
 
     if ( specIconContainer.iconID ~= iconID ) then
