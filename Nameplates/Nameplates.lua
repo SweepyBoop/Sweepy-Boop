@@ -34,11 +34,17 @@ local function UpdateUnitFrameVisibility(frame, show)
                 region:SetIgnoreParentAlpha(false);
             end
         end
+        for _, region in pairs(frame.castBar) do
+            if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                region:SetIgnoreParentAlpha(false);
+            end
+        end
         frame.forceChildrenFollowAlpha = true;
     end
 
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
+    frame.castBar:SetAlpha(alpha);
 end
 
 local function UpdateVisibility(nameplate, frame)
