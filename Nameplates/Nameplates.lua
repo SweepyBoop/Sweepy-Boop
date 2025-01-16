@@ -158,18 +158,20 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
-        if IsActiveBattlefieldArena and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-            for i = 1, 3 do
-                if UnitIsUnit(frame.unit, "arena" .. i) then
-                    frame.name:SetText(i);
-                    frame.name:SetTextColor(1,1,0); --Yellow
-                    return;
-                end
-            end
-        end
-
         if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
             addon.UpdateTargetHighlight(frame:GetParent(), frame);
+
+            -- Don't update names on raid frames
+            -- In BGs, flag carriers can be arena1 / arena2
+            if IsActiveBattlefieldArena and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+                for i = 1, 3 do
+                    if UnitIsUnit(frame.unit, "arena" .. i) then
+                        frame.name:SetText(i);
+                        frame.name:SetTextColor(1,1,0); --Yellow
+                        return;
+                    end
+                end
+            end
         end
     end)
 end
