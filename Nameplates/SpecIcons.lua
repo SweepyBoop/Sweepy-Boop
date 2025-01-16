@@ -13,7 +13,7 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if IsActiveBattlefieldArena() or ( C_PvP.IsBattleground() and addon.UnitIsHostile(unitId) ) then
+    if IsActiveBattlefieldArena() or C_PvP.IsBattleground() then
         local specInfo = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
         if ( not specInfo ) then return end
         if ( specInfo.role == "HEALER" ) then
