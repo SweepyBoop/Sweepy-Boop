@@ -59,6 +59,7 @@ local function UpdateVisibility(nameplate, frame)
         if UnitIsPlayer(frame.unit) then
             addon.ShowSpecIcon(frame); -- If no spec is available yet, will show an empty icon
             addon.HideNpcHighlight(frame);
+            UpdateUnitFrameVisibility(frame, true); -- Always show enemy players
             return;
         end
 
