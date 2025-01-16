@@ -28,14 +28,11 @@ end
 
 local function UpdateUnitFrameVisibility(frame, show)
     -- This is not working
-    -- local alpha = ( show and 1 ) or 0;
-    -- frame:SetAlpha(alpha);
-    -- frame.healthBar:SetAlpha(alpha);
-    -- frame.healthBar.Border:SetAlpha(alpha);
-    -- frame.selectionHighlight:SetAlpha(alpha);
-    -- frame.hideCastBar = ( not show );
-
-    frame:SetShown(show);
+    local alpha = ( show and 1 ) or 0;
+    frame:SetAlpha(alpha);
+    frame.HealthBarsContainer:SetAlpha(alpha);
+    frame.selectionHighlight:SetAlpha(alpha);
+    frame.castBar:SetAlpha(alpha);
 end
 
 local function UpdateVisibility(nameplate, frame)
@@ -151,13 +148,13 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    hooksecurefunc("CompactUnitFrame_UpdateVisible", function(frame)
-        if frame:IsForbidden() then return end
+    -- hooksecurefunc("CompactUnitFrame_UpdateVisible", function(frame)
+    --     if frame:IsForbidden() then return end
 
-        if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
-            UpdateVisibility(frame:GetParent(), frame);
-        end
-    end)
+    --     if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
+    --         UpdateVisibility(frame:GetParent(), frame);
+    --     end
+    -- end)
 end
 
 function SweepyBoop:RefreshAllNamePlates()
