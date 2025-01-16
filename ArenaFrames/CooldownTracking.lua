@@ -534,7 +534,8 @@ local function EnsureIconGroups()
                 -- This will simply update
                 EnsureIcons();
                 EnsureIconGroups();
-            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) and isArena then
+            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+                if ( not isArena ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName = CombatLogGetCurrentEventInfo();
 
                 if addon.internal then
@@ -550,6 +551,7 @@ local function EnsureIconGroups()
                     end
                 end
             elseif ( event == addon.PLAYER_TARGET_CHANGED ) and addon.internal then
+                if ( not isArena ) and ( not addon.TEST_MODE ) then return end
                 for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
                     UpdateAllBorders(iconGroups[i]);
                 end
