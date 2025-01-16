@@ -73,6 +73,7 @@ function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
+    eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
@@ -87,6 +88,15 @@ function SweepyBoop:SetupNameplateModules()
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 HideWidgets(nameplate, nameplate.UnitFrame);
+            end
+        elseif event == addon.UPDATE_BATTLEFIELD_SCORE then
+            local nameplates = C_NamePlate.GetNamePlates();
+            for i = 1, #(nameplates) do
+                local nameplate = nameplates[i];
+                if nameplate and nameplate.UnitFrame then
+                    if nameplate.UnitFrame:IsForbidden() then return end
+                    addon.UpdateSpecIcon(nameplate.UnitFrame);
+                end
             end
         end
     end)
