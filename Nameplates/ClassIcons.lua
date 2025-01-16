@@ -179,4 +179,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
         classIconContainer.pvpClassification = pvpClassification;
         classIconContainer.lastModifiedFriendly = lastModifiedFriendly;
     end
+
+    addon.UpdateTargetHighlight(nameplate, frame);
 end

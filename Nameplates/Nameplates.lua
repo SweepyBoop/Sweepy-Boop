@@ -144,8 +144,10 @@ function SweepyBoop:SetupNameplateModules()
         if frame:IsForbidden() then return end
         if IsRestricted() then return end
         if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
+            -- UpdateClassIcon should include UpdateTargetHighlight
+            -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
+            -- Consequently we can't guarantee the target highlight is up-to-date on FC
             addon.UpdateClassIcon(frame:GetParent(), frame);
-            addon.UpdateTargetHighlight(frame:GetParent(), frame); -- In case we select friendly FC from a far distance
         end
     end)
 
