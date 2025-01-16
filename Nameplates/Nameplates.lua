@@ -33,6 +33,19 @@ local function UpdateUnitFrameVisibility(frame, show)
     frame.HealthBarsContainer:SetAlpha(alpha);
     frame.selectionHighlight:SetAlpha(alpha);
     frame.castBar:SetAlpha(alpha);
+    for _, region in pairs(frame.castBar) do
+        if ( type(region) == "table" ) and region.SetAlpha then
+            region:SetAlpha(alpha);
+        end
+    end
+
+    -- local str = "";
+    -- for field, val in pairs(frame) do
+    --     if ( type(val) == "table" ) and val.SetAlpha then
+    --         str = str .. " " .. field;
+    --     end
+    -- end
+    -- print(str);
 end
 
 local function UpdateVisibility(nameplate, frame)
