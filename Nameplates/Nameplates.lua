@@ -110,6 +110,7 @@ function SweepyBoop:SetupNameplateModules()
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 HideWidgets(nameplate, nameplate.UnitFrame);
+                if IsRestricted() then return end -- Cannot show widgets in restricted areas
                 UpdateWidgets(nameplate, nameplate.UnitFrame);
                 UpdateVisibility(nameplate, nameplate.UnitFrame);
             end
@@ -119,7 +120,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 HideWidgets(nameplate, nameplate.UnitFrame);
             end
-        elseif event == addon.UPDATE_BATTLEFIELD_SCORE then
+        elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
@@ -132,6 +133,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
+                if IsRestricted() then return end
                 UpdateVisibility(nameplate, nameplate.UnitFrame);
             end
         end
@@ -140,7 +142,7 @@ function SweepyBoop:SetupNameplateModules()
     -- When flag is picked up / dropped
     hooksecurefunc("CompactUnitFrame_UpdateClassificationIndicator", function (frame)
         if frame:IsForbidden() then return end
-
+        if IsRestricted() then return end
         if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
             addon.UpdateClassIcon(frame:GetParent(), frame);
         end
@@ -163,14 +165,6 @@ function SweepyBoop:SetupNameplateModules()
             addon.UpdateTargetHighlight(frame:GetParent(), frame);
         end
     end)
-
-    -- hooksecurefunc("CompactUnitFrame_UpdateVisible", function(frame)
-    --     if frame:IsForbidden() then return end
-
-    --     if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
-    --         UpdateVisibility(frame:GetParent(), frame);
-    --     end
-    -- end)
 end
 
 function SweepyBoop:RefreshAllNamePlates()
