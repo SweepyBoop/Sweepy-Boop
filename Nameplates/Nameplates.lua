@@ -54,11 +54,13 @@ local function UpdateVisibility(nameplate, frame)
         end
 
         -- Process non-player units
+        print("Test");
         addon.HideSpecIcon(frame);
         local guid = UnitGUID(frame.unit);
         local npcID = select(6, strsplit("-", guid));
         local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
         if ( option == addon.NpcOption.Highlight ) then
+            print("ShowNpcHighlight", UnitName(frame.unit));
             addon.ShowNpcHighlight(frame);
         else
             addon.HideNpcHighlight(frame);

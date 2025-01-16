@@ -291,7 +291,11 @@ options.args.nameplatesEnemy = {
             type = "group",
             name = "Filter whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
-            set = function(info, val) SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val end,
+            set = function(info, val) 
+                SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
+                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                SweepyBoop:RefreshAllNamePlates();
+            end,
             args = {},
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
