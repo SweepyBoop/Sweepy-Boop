@@ -145,6 +145,7 @@ function SweepyBoop:SetupNameplateModules()
         if IsRestricted() then return end
         if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
             addon.UpdateClassIcon(frame:GetParent(), frame);
+            addon.UpdateTargetHighlight(frame:GetParent(), frame); -- In case we select friendly FC from a far distance
         end
     end)
 
