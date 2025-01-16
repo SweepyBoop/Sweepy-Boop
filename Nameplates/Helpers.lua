@@ -40,6 +40,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
     else
         classIconFrame.border:SetVertexColor(255, 0, 0); -- Red border for hostile
+        classIconFrame.border:SetAlpha(0); -- Set to transparent initially until an actual icon is set
     end
 
     return classIconFrame;
