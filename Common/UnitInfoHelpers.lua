@@ -167,7 +167,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
             end
         else
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-            if scoreInfo and scoreInfo.talentSpec then
+            if scoreInfo and scoreInfo.className and scoreInfo.talentSpec then
                 addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.className .. " " .. scoreInfo.talentSpec];
             else
                 -- There are still units with unknown spec, request info
