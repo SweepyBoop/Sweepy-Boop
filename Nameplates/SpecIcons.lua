@@ -57,7 +57,6 @@ addon.ShowSpecIcon = function (frame)
     if frame.SpecIconContainer then
         for alignment, iconFrame in pairs(frame.SpecIconContainer.frames) do
             iconFrame:SetShown(alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment);
-            print(iconFrame:IsShown())
         end
     end
 end
