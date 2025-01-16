@@ -124,13 +124,15 @@ addon.GetClassForPlayerOrArena = function (unitId)
 end
 
 -- C_PvP.GetScoreInfoByPlayerGuid returns localized spec name
+-- There are Frost Mage and Frost DK, but the spec name is "Frost" for both...
+-- We need to append class info as well
 local specInfoByName = {};
 for _, classID in pairs(addon.CLASSID) do
     for specIndex = 1, 4 do
-        local _, name, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
-        if name then
-            specInfoByName[name] = { icon = icon, role = role };
-            --print(name, specInfoByName[name].icon, specInfoByName[name].role);
+        local _, specName, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
+        local classInfo = C_CreatureInfo.GetClassInfo(classID);
+        if specName and classInfo and classInfo.className then
+            specInfoByName[classInfo.className .. " " .. specName] = { icon = icon, role = role };
         end
     end
 end
@@ -166,7 +168,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
         else
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.talentSpec then
-                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.talentSpec];
+                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.className .. " " .. scoreInfo.talentSpec];
             else
                 -- There are still units with unknown spec, request info
                 RequestBattlefieldScoreData();
