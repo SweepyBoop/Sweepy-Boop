@@ -146,6 +146,7 @@ function SweepyBoop:RefreshAllNamePlates()
         if nameplate and nameplate.UnitFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
+            UpdateVisibility(nameplate, nameplate.UnitFrame);
         end
     end
 end
