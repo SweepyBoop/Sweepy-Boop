@@ -109,8 +109,11 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                HideWidgets(nameplate, nameplate.UnitFrame);
-                if IsRestricted() then return end -- Cannot show widgets in restricted areas
+                HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets and do update first
+                if IsRestricted() then
+                    UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
+                    return;
+                end -- Cannot show widgets in restricted areas
                 UpdateWidgets(nameplate, nameplate.UnitFrame);
                 UpdateVisibility(nameplate, nameplate.UnitFrame);
             end
