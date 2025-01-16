@@ -27,12 +27,13 @@ local function UpdateWidgets(nameplate, frame)
 end
 
 local function UpdateUnitFrameVisibility(frame, show)
+    -- This is not working
     -- local alpha = ( show and 1 ) or 0;
     -- frame:SetAlpha(alpha);
     -- frame.healthBar:SetAlpha(alpha);
+    -- frame.healthBar.Border:SetAlpha(alpha);
     -- frame.selectionHighlight:SetAlpha(alpha);
-    -- frame.BuffFrame:SetAlpha(alpha);
-    -- frame.castBar:SetAlpha(alpha); - icon still shows up...
+    -- frame.hideCastBar = ( not show );
 
     frame:SetShown(show);
 end
@@ -147,6 +148,14 @@ function SweepyBoop:SetupNameplateModules()
 
         if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
             addon.UpdateTargetHighlight(frame:GetParent(), frame);
+        end
+    end)
+
+    hooksecurefunc("CompactUnitFrame_UpdateVisible", function(frame)
+        if frame:IsForbidden() then return end
+
+        if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
+            UpdateVisibility(frame:GetParent(), frame);
         end
     end)
 end
