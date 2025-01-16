@@ -97,6 +97,7 @@ local specialClasses = { -- For these special classes, there is no arrow style
 -- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
 addon.UpdateClassIcon = function(nameplate, frame)
     -- Full update if UnitGUID, PvPClassification, or configurations have changed
+    -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
     local unitGUID = UnitGUID(frame.unit);
     local pvpClassification = UnitPvpClassification(frame.unit);
