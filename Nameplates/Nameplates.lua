@@ -106,6 +106,7 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
     eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
+    eventFrame:RegisterEvent(addon.UNIT_CLASSIFICATION_CHANGED);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
@@ -141,18 +142,15 @@ function SweepyBoop:SetupNameplateModules()
                 if IsRestricted() then return end
                 UpdateVisibility(nameplate, nameplate.UnitFrame);
             end
-        end
-    end)
-
-    -- When flag is picked up / dropped
-    hooksecurefunc("CompactUnitFrame_UpdateClassificationIndicator", function (frame)
-        if frame:IsForbidden() then return end
-        if IsRestricted() then return end
-        if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
-            -- UpdateClassIcon should include UpdateTargetHighlight
-            -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
-            -- Consequently we can't guarantee the target highlight is up-to-date on FC
-            addon.UpdateClassIcon(frame:GetParent(), frame);
+        elseif event == addon.UNIT_CLASSIFICATION_CHANGED then -- When a flag is picked up / dropped
+            -- Listen to this event instead of hooking CompactUnitFrame_UpdateClassificationIndicator
+            -- Since CompactUnitFrame_UpdateClassificationIndicator is called in other cases as well
+            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
+            if nameplate and nameplate.UnitFrame then
+                if nameplate.UnitFrame:IsForbidden() then return end
+                if IsRestricted() then return end
+                addon.UpdateClassIcon(nameplate, nameplate.UnitFrame);
+            end
         end
     end)
 
