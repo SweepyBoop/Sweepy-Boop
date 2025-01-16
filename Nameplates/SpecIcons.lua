@@ -78,8 +78,10 @@ addon.UpdateSpecIcon = function (frame)
                 iconFrame.border:SetAlpha(0);
             elseif isHealer then
                 iconFrame.icon:SetAtlas(iconID);
+                iconFrame.border:SetAlpha(1);
             else
                 iconFrame.icon:SetTexture(iconID);
+                iconFrame.border:SetAlpha(1);
             end
         end
 
