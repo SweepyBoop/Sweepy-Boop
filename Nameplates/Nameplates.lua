@@ -27,27 +27,18 @@ local function UpdateWidgets(nameplate, frame)
 end
 
 local function UpdateUnitFrameVisibility(frame, show)
-    -- This is not working
-    local alpha = ( show and 1 ) or 0;
-    frame:SetAlpha(alpha);
-    frame.ClassificationFrame:SetAlpha(alpha);
-    frame.HealthBarsContainer:SetAlpha(alpha);
-    frame.selectionHighlight:SetAlpha(alpha);
-    frame.castBar:SetAlpha(alpha);
-    local children = {frame.castBar:GetRegions()};
-    for _, region in ipairs(children) do
-        if region:IsObjectType("Texture") then
-            region:SetAlpha(0)
+    -- Force frame's child elements to not ignore parent alpha
+    if ( not frame.forceChildrenFollowAlpha ) then
+        for _, region in pairs(frame) do
+            if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                region:SetIgnoreParentAlpha(false);
+            end
         end
+        frame.forceChildrenFollowAlpha = true;
     end
 
-    -- local str = "";
-    -- for field, val in pairs(frame) do
-    --     if ( type(val) == "table" ) and val.SetAlpha then
-    --         str = str .. " " .. field;
-    --     end
-    -- end
-    -- print(str);
+    local alpha = ( show and 1 ) or 0;
+    frame:SetAlpha(alpha);
 end
 
 local function UpdateVisibility(nameplate, frame)
