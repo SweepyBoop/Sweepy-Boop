@@ -1,9 +1,9 @@
 local _, addon = ...;
 
-local function HideWidgets(nameplate)
+local function HideWidgets(nameplate, frame)
     addon.HideClassIcon(nameplate);
-    addon.HideNpcHighlight(nameplate);
-    addon.HideSpecIcon(nameplate);
+    addon.HideNpcHighlight(frame);
+    addon.HideSpecIcon(frame);
 end
 
 -- Protected nameplates in dungeons and raids
@@ -21,9 +21,9 @@ local function UpdateWidgets(nameplate, frame)
     -- Class icon mod will hide/show healthBar when showing/hiding class icons
     addon.UpdateClassIcon(nameplate, frame);
     -- Show enemy nameplate highlight
-    addon.UpdateNpcHighlight(nameplate, frame);
+    addon.UpdateNpcHighlight(frame);
     -- Update spec icons
-    addon.UpdateSpecIcon(nameplate, frame);
+    addon.UpdateSpecIcon(frame);
 
     if IsActiveBattlefieldArena() then
         -- Put arena numbers
@@ -45,20 +45,45 @@ local function UpdateVisibility(nameplate, frame)
         if configFriendly.classIconsEnabled then
             if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( not C_PvP.IsBattleground() ) then
                 addon.HideClassIcon(nameplate);
-                frame:Hide();
             elseif UnitIsPlayer(frame.unit) or UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
                 addon.ShowClassIcon(nameplate);
-                frame:Hide();
             end
+
+            frame:Hide(); -- if class icons are enabled, all friendly units' health bars should be hidden
         else
             addon.HideClassIcon(nameplate);
             frame:Show(); -- Will be overriden by nameplate filter later
         end
 
-        addon.HideSpecIcon(nameplate);
-        addon.HideNpcHighlight(nameplate);
+        addon.HideSpecIcon(frame);
+        addon.HideNpcHighlight(frame);
     else
-        addon.ShowSpecIcon(nameplate);
+        addon.HideClassIcon(nameplate);
+
+        if UnitIsPlayer(frame.unit) then
+            addon.ShowSpecIcon(frame); -- If no spec is available yet, will show an empty icon
+            addon.HideNpcHighlight(frame);
+            return;
+        end
+
+        -- Process non-player units
+        addon.HideSpecIcon(frame);
+        local guid = UnitGUID(unitId);
+        local npcID = select(6, strsplit("-", guid));
+        local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
+        if ( option == addon.NpcOption.Highlight ) then
+            addon.ShowNpcHighlight(frame);
+        else
+            addon.HideNpcHighlight(frame);
+        end
+
+        -- If frame is still shown, check if it should be filtered out
+        if frame:IsShown() then
+            local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(frame.unit);
+            if ( not isWhitelisted ) or addon.UnitIsHunterSecondaryPet(frame.unit) then
+                frame:Hide();
+            end
+        end
     end
 end
 
@@ -72,7 +97,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                HideWidgets(nameplate);
+                HideWidgets(nameplate, nameplate.UnitFrame);
                 UpdateWidgets(nameplate, nameplate.UnitFrame);
                 UpdateVisibility(nameplate, nameplate.UnitFrame);
             end
@@ -80,7 +105,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                HideWidgets(nameplate);
+                HideWidgets(nameplate, nameplate.UnitFrame);
             end
         elseif event == addon.PLAYER_TARGET_CHANGED then
             if IsRestricted() then return end

@@ -10,11 +10,11 @@ local setPointOptions = {
 local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil
     local iconID, isHealer;
 
-    if addon.TEST_MODE then
-        iconID = addon.ICON_ID_HEALER_ENEMY;
-        isHealer = true;
-        return iconID, isHealer;
-    end
+    -- if addon.TEST_MODE then
+    --     iconID = addon.ICON_ID_HEALER_ENEMY;
+    --     isHealer = true;
+    --     return iconID, isHealer;
+    -- end
 
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
 
@@ -39,39 +39,40 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
     end
 end
 
-local function EnsureSpecIcon(nameplate)
-    if ( not nameplate.SpecIconContainer ) then
-        nameplate.SpecIconContainer = {};
-        nameplate.SpecIconContainer.frames = {};
+local function EnsureSpecIcon(frame)
+    if ( not frame.SpecIconContainer ) then
+        frame.SpecIconContainer = {};
+        frame.SpecIconContainer.frames = {};
         -- Subsequent calls to SetPoint with different anchor family will not work, we have to create one frame for each alignment option
         for alignment, options in pairs(setPointOptions) do
-            nameplate.SpecIconContainer.frames[alignment] = addon.CreateClassOrSpecIcon(nameplate, options.point, options.relativePoint);
-            nameplate.SpecIconContainer.frames[alignment]:Hide();
+            frame.SpecIconContainer.frames[alignment] = addon.CreateClassOrSpecIcon(frame, options.point, options.relativePoint);
+            frame.SpecIconContainer.frames[alignment]:Hide();
         end
     end
 
-    return nameplate.SpecIconContainer;
+    return frame.SpecIconContainer;
 end
 
-addon.ShowSpecIcon = function (nameplate)
-    if nameplate.SpecIconContainer then
-        for alignment, iconFrame in pairs(nameplate.SpecIconContainer.frames) do
+addon.ShowSpecIcon = function (frame)
+    if frame.SpecIconContainer then
+        for alignment, iconFrame in pairs(frame.SpecIconContainer.frames) do
             iconFrame:SetShown(alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment);
             print(iconFrame:IsShown())
         end
     end
 end
 
-addon.HideSpecIcon = function (nameplate)
-    if nameplate.SpecIconContainer then
-        for _, iconFrame in pairs(nameplate.SpecIconContainer.frames) do
+addon.HideSpecIcon = function (frame)
+    if frame.SpecIconContainer then
+        for _, iconFrame in pairs(frame.SpecIconContainer.frames) do
             iconFrame:Hide();
         end
     end
 end
 
-addon.UpdateSpecIcon = function (nameplate, frame)
-    local specIconContainer = EnsureSpecIcon(nameplate);
+addon.UpdateSpecIcon = function (frame)
+    -- Parented to UnitFrame to inherit the visibility
+    local specIconContainer = EnsureSpecIcon(frame);
     if ( not specIconContainer ) then return end;
 
     local iconID, isHealer = GetSpecIconInfo(frame.unit);
