@@ -103,6 +103,6 @@ addon.UpdateSpecIcon = function (frame)
         end
 
         specIconContainer.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
-        specIconContainer.isHealerIcon = isHealer;
+        specIconContainer.isHealer = isHealer;
     end
 end
