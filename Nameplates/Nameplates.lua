@@ -91,7 +91,6 @@ function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
-    eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
@@ -107,16 +106,6 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 HideWidgets(nameplate, nameplate.UnitFrame);
             end
-        elseif event == addon.PLAYER_TARGET_CHANGED then
-            if IsRestricted() then return end
-            local nameplates = C_NamePlate.GetNamePlates();
-            for i = 1, #(nameplates) do
-                local nameplate = nameplates[i];
-                if nameplate and nameplate.UnitFrame then
-                    if nameplate.UnitFrame:IsForbidden() then return end
-                    addon.UpdateTargetHighlight(nameplate, nameplate.UnitFrame);
-                end
-            end
         end
     end)
 
@@ -130,6 +119,8 @@ function SweepyBoop:SetupNameplateModules()
     end)
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+        if frame:IsForbidden() then return end
+
         if IsActiveBattlefieldArena and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
             for i = 1, 3 do
                 if UnitIsUnit(frame.unit, "arena" .. i) then
@@ -138,6 +129,10 @@ function SweepyBoop:SetupNameplateModules()
                     return;
                 end
             end
+        end
+
+        if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
+            addon.UpdateTargetHighlight(frame:GetParent(), frame);
         end
     end)
 end
