@@ -24,19 +24,6 @@ local function UpdateWidgets(nameplate, frame)
     addon.UpdateNpcHighlight(frame);
     -- Update spec icons
     addon.UpdateSpecIcon(frame);
-
-    -- if IsActiveBattlefieldArena() then
-    --     -- Put arena numbers
-    --     if SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-    --         for i = 1, 3 do
-    --             if UnitIsUnit(frame.unit, "arena" .. i) then
-    --                 frame.name:SetText(i);
-    --                 frame.name:SetTextColor(1,1,0); --Yellow
-    --                 return;
-    --             end
-    --         end
-    --     end
-    -- end
 end
 
 local function UpdateVisibility(nameplate, frame)
