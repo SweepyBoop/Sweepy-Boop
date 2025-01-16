@@ -56,6 +56,7 @@ local function UpdateVisibility(nameplate, frame)
             if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( not C_PvP.IsBattleground() ) then
                 addon.HideClassIcon(nameplate);
             elseif UnitIsPlayer(frame.unit) or UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
+                -- Issue: a pet that's not one of the above 3 showed an icon
                 addon.ShowClassIcon(nameplate);
             end
 
