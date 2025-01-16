@@ -143,7 +143,6 @@ requestFrame:SetScript("OnUpdate", function (self, elapsed)
         self.timer = 0;
 
         if C_PvP.IsBattleground() then
-            --print("RequestBattlefieldScoreData");
             RequestBattlefieldScoreData();
         end
     end
