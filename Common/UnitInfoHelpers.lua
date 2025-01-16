@@ -165,7 +165,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
-                addon.cachedBattlefieldSpec[guid] = { icon = 0 }; -- return something to avoid repeatedly trying to retrieve spec for party members
+                return { icon = 0 };
             else
                 for i = 1, addon.MAX_ARENA_SIZE do
                     if ( guid == UnitGUID("arena" .. i) ) then
