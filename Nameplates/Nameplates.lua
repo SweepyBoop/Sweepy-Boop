@@ -147,8 +147,7 @@ function SweepyBoop:SetupNameplateModules()
             -- Since CompactUnitFrame_UpdateClassificationIndicator is called in other cases as well
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
-                if IsRestricted() then return end
+                if nameplate.UnitFrame:IsForbidden() or IsRestricted() then return end
                 addon.UpdateClassIcon(nameplate, nameplate.UnitFrame);
             end
         end
