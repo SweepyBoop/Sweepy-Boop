@@ -30,12 +30,14 @@ local function UpdateUnitFrameVisibility(frame, show)
     -- This is not working
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
+    frame.ClassificationFrame:SetAlpha(alpha);
     frame.HealthBarsContainer:SetAlpha(alpha);
     frame.selectionHighlight:SetAlpha(alpha);
     frame.castBar:SetAlpha(alpha);
-    for _, region in pairs(frame.castBar) do
-        if ( type(region) == "table" ) and region.SetAlpha then
-            region:SetAlpha(alpha);
+    local children = {frame.castBar:GetRegions()}
+    for _, region in ipairs(children) do
+        if region:IsObjectType("Texture") then
+            region:SetAlpha(0)
         end
     end
 
