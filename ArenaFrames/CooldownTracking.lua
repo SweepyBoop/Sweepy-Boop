@@ -553,10 +553,8 @@ local function EnsureIconGroups()
             elseif ( event == addon.PLAYER_TARGET_CHANGED ) and addon.internal then
                 if ( not isArena ) and ( not addon.TEST_MODE ) then return end
 
-                if addon.internal then
-                    for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
-                        UpdateAllBorders(iconGroups[i]);
-                    end
+                for i = SPELLCATEGORY.INTERRUPT, SPELLCATEGORY.DISPEL do
+                    UpdateAllBorders(iconGroups[i]);
                 end
             end
         end)
