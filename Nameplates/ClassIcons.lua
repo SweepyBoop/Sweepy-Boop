@@ -30,7 +30,7 @@ end
 local function GetIconOptions(class, pvpClassification, roleAssigned)
     local iconID;
     local iconCoords = {0, 1, 0, 1};
-    local scaleFactor = 1; -- 1.25 for healers and flag carriers
+    local isSpecialIcon;
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
@@ -40,7 +40,7 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
     if ( roleAssigned == "HEALER" ) and config.useHealerIcon then
         iconID = addon.ICON_ID_HEALER;
         iconCoords = addon.ICON_COORDS_HEALER;
-        scaleFactor = specialIconScaleFactor;
+        isSpecialIcon = true;
     elseif ( roleAssigned ~= "HEALER" ) and config.showHealerOnly then
         iconID = nil;
     end
@@ -48,7 +48,7 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
     if ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
         iconID = flagCarrierIcons[pvpClassification];
         iconCoords = {0, 1, 0, 1};
-        scaleFactor = specialIconScaleFactor;
+        isSpecialIcon = true;
     end
 
     return iconID, iconCoords, scaleFactor;
@@ -105,7 +105,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
     if ( not iconFrame ) or ( not arrowFrame ) then return end
     local classIconContainer = nameplate.classIconContainer;
     if ( classIconContainer.class ~= class ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.roleAssigned ~= roleAssigned ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        local iconID, iconCoords, scaleFactor = GetIconOptions(class, pvpClassification, roleAssigned);
+        local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, roleAssigned);
 
         if ( not iconID ) then
             iconFrame.icon:SetAlpha(0);
@@ -119,6 +119,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.targetHighlight:SetAlpha(1);
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
+            local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
             iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
             iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
 
@@ -130,7 +131,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
         end
 
-        classIconContainer.isSpecialIcon = ( scaleFactor == specialIconScaleFactor );
+        classIconContainer.isSpecialIcon = isSpecialIcon;
 
         classIconContainer.class = class;
         classIconContainer.pvpClassification = pvpClassification;
