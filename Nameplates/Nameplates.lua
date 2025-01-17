@@ -145,7 +145,8 @@ function SweepyBoop:SetupNameplateModules()
     end)
 
     -- When flag is picked up / dropped
-    hooksecurefunc("CompactUnitFrame_UpdateClassificationIndicator", function (frame)
+    hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
+        -- This will only be applied to nameplates in PvP instances
         if frame:IsForbidden() or IsRestricted() then return end
         if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
             -- UpdateClassIcon should include UpdateTargetHighlight
