@@ -12,7 +12,20 @@ local function EnsureIcon(nameplate)
     return nameplate.FriendlyPetIcon;
 end
 
-addon.ShowPetIcon = function (nameplate)
+addon.UpdatePetIcon = function(nameplate, frame)
+    -- Only update if config changes (we have separated out pet icon from class / healer / flag carrier icons, and pet icon has fixed texture)
+    local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+    local iconFrame = EnsureIcon(nameplate);
+    if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
+        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
+        iconFrame.lastModifiedFriendly = lastModifiedFriendly;
+    end
+
+    addon.UpdatePetIconTargetHighlight(nameplate, frame);
+end
+
+addon.ShowPetIcon = function (nameplate, frame)
+    addon.UpdatePetIcon(nameplate, frame);
     if nameplate.FriendlyPetIcon then
         nameplate.FriendlyPetIcon:Show();
     end
@@ -28,16 +41,4 @@ addon.UpdatePetIconTargetHighlight = function (nameplate, frame)
     if nameplate.FriendlyPetIcon then
         nameplate.FriendlyPetIcon.targetHighlight:SetShown(UnitIsUnit(frame.unit, "target"));
     end
-end
-
-addon.UpdatePetIcon = function(nameplate, frame)
-    -- Only update if config changes (we have separated out pet icon from class / healer / flag carrier icons, and pet icon has fixed texture)
-    local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    local iconFrame = EnsureIcon(nameplate);
-    if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
-        iconFrame.lastModifiedFriendly = lastModifiedFriendly;
-    end
-
-    addon.UpdatePetIconTargetHighlight(nameplate, frame);
 end

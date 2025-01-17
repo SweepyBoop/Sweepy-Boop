@@ -54,42 +54,6 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
     return iconID, iconCoords, scaleFactor;
 end
 
-addon.ShowClassIcon = function (nameplate)
-    if ( not nameplate.classIconContainer ) then return end
-    local classIconContainer = nameplate.classIconContainer;
-
-    local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
-    if classIconContainer.FriendlyClassIcon then
-        classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or classIconContainer.isSpecialIcon);
-    end
-    if classIconContainer.FriendlyClassArrow then
-        classIconContainer.FriendlyClassArrow:SetShown(style == addon.CLASS_ICON_STYLE.ARROW and ( not classIconContainer.isSpecialIcon ));
-    end
-end
-
-addon.HideClassIcon = function(nameplate)
-    if ( not nameplate.classIconContainer ) then return end
-
-    if nameplate.classIconContainer.FriendlyClassIcon then
-        nameplate.classIconContainer.FriendlyClassIcon:Hide();
-    end
-    if nameplate.classIconContainer.FriendlyClassArrow then
-        nameplate.classIconContainer.FriendlyClassArrow:Hide();
-    end
-end
-
-addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
-    local isTarget = UnitIsUnit(frame.unit, "target");
-    if nameplate.classIconContainer then
-        if nameplate.classIconContainer.FriendlyClassIcon then
-            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget);
-        end
-        if nameplate.classIconContainer.FriendlyClassArrow then
-            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget);
-        end
-    end
-end
-
 -- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
 addon.UpdateClassIcon = function(nameplate, frame)
     -- Full update if class, PvPClassification, roleAssigned or configurations have changed
@@ -140,4 +104,41 @@ addon.UpdateClassIcon = function(nameplate, frame)
     end
 
     addon.UpdateClassIconTargetHighlight(nameplate, frame);
+end
+
+addon.ShowClassIcon = function (nameplate, frame)
+    addon.UpdateClassIcon(nameplate, frame);
+    if ( not nameplate.classIconContainer ) then return end
+    local classIconContainer = nameplate.classIconContainer;
+
+    local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
+    if classIconContainer.FriendlyClassIcon then
+        classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or classIconContainer.isSpecialIcon);
+    end
+    if classIconContainer.FriendlyClassArrow then
+        classIconContainer.FriendlyClassArrow:SetShown(style == addon.CLASS_ICON_STYLE.ARROW and ( not classIconContainer.isSpecialIcon ));
+    end
+end
+
+addon.HideClassIcon = function(nameplate)
+    if ( not nameplate.classIconContainer ) then return end
+
+    if nameplate.classIconContainer.FriendlyClassIcon then
+        nameplate.classIconContainer.FriendlyClassIcon:Hide();
+    end
+    if nameplate.classIconContainer.FriendlyClassArrow then
+        nameplate.classIconContainer.FriendlyClassArrow:Hide();
+    end
+end
+
+addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
+    local isTarget = UnitIsUnit(frame.unit, "target");
+    if nameplate.classIconContainer then
+        if nameplate.classIconContainer.FriendlyClassIcon then
+            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget);
+        end
+        if nameplate.classIconContainer.FriendlyClassArrow then
+            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget);
+        end
+    end
 end

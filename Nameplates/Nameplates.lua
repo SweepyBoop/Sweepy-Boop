@@ -17,16 +17,6 @@ local function IsRestricted()
     return restricted[instanceType];
 end
 
-local function UpdateWidgets(nameplate, frame)
-    -- Class icon mod will hide/show healthBar when showing/hiding class icons
-    addon.UpdateClassIcon(nameplate, frame);
-    addon.UpdatePetIcon(nameplate, frame);
-    -- Show enemy nameplate highlight
-    addon.UpdateNpcHighlight(frame);
-    -- Update spec icons
-    addon.UpdateSpecIcon(frame);
-end
-
 local function UpdateUnitFrameVisibility(frame, show)
     -- Force frame's child elements to not ignore parent alpha
     if ( not frame.unsetIgnoreParentAlpha ) then
@@ -48,7 +38,7 @@ local function UpdateUnitFrameVisibility(frame, show)
     frame.castBar:SetAlpha(alpha);
 end
 
-local function UpdateVisibility(nameplate, frame)
+local function UpdateWidgets(nameplate, frame)
     -- Don't mess with personal resource display
     if ( UnitIsUnit(frame.unit, "player") ) then
         HideWidgets(nameplate, frame);
@@ -65,11 +55,11 @@ local function UpdateVisibility(nameplate, frame)
             elseif UnitIsPlayer(frame.unit) then
                 -- Issue: a pet that's not one of the above 3 showed an icon
                 -- Maybe it was partypet2 and later someone else joined so this pet became partypet3
-                addon.ShowClassIcon(nameplate);
+                addon.ShowClassIcon(nameplate, frame);
                 addon.HidePetIcon(nameplate);
             elseif UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
                 addon.HideClassIcon(nameplate);
-                addon.ShowPetIcon(nameplate);
+                addon.ShowPetIcon(nameplate, frame);
             else
                 addon.HideClassIcon(nameplate);
                 addon.HidePetIcon(nameplate);
@@ -133,7 +123,6 @@ function SweepyBoop:SetupNameplateModules()
                     return;
                 end -- Cannot show widgets in restricted areas
                 UpdateWidgets(nameplate, nameplate.UnitFrame);
-                UpdateVisibility(nameplate, nameplate.UnitFrame);
             end
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
@@ -158,7 +147,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 nameplate.UnitFrame.isNameplateUnitFrame = true;
                 if IsRestricted() then return end
-                UpdateVisibility(nameplate, nameplate.UnitFrame);
+                UpdateWidgets(nameplate, nameplate.UnitFrame);
             end
         end
     end)
@@ -206,7 +195,6 @@ function SweepyBoop:RefreshAllNamePlates()
         if nameplate and nameplate.UnitFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
-            UpdateVisibility(nameplate, nameplate.UnitFrame);
         end
     end
 end
