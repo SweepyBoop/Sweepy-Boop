@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local PvPUnitClassification = Enum.PvPUnitClassification;
+local specialIconScaleFactor = 1.25;
 
 local flagCarrierIcons = {
     [PvPUnitClassification.FlagCarrierHorde] = addon.ICON_ID_FLAG_CARRIER_HORDE,
@@ -42,14 +43,14 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
         else
             iconID = addon.ICON_ID_HEALER;
             iconCoords = addon.ICON_COORDS_HEALER;
-            scaleFactor = 1.25;
+            scaleFactor = specialIconScaleFactor;
         end
     end
 
     if ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
         iconID = flagCarrierIcons[pvpClassification];
         iconCoords = {0, 1, 0, 1};
-        scaleFactor = 1.25;
+        scaleFactor = specialIconScaleFactor;
     end
 
     return iconID, iconCoords, scaleFactor;
@@ -57,13 +58,14 @@ end
 
 addon.ShowClassIcon = function (nameplate)
     if ( not nameplate.classIconContainer ) then return end
+    local classIconContainer = nameplate.classIconContainer;
 
     local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
-    if nameplate.classIconContainer.FriendlyClassIcon then
-        nameplate.classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON);
+    if classIconContainer.FriendlyClassIcon then
+        classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or classIconContainer.isSpecialIcon);
     end
-    if nameplate.classIconContainer.FriendlyClassArrow then
-        nameplate.classIconContainer.FriendlyClassArrow:SetShown(style == addon.CLASS_ICON_STYLE.ARROW);
+    if classIconContainer.FriendlyClassArrow then
+        classIconContainer.FriendlyClassArrow:SetShown(style == addon.CLASS_ICON_STYLE.ARROW and ( not classIconContainer.isSpecialIcon ));
     end
 end
 
@@ -129,6 +131,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
             arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
         end
+
+        classIconContainer.isSpecialIcon = ( scaleFactor == specialIconScaleFactor );
 
         classIconContainer.class = class;
         classIconContainer.pvpClassification = pvpClassification;
