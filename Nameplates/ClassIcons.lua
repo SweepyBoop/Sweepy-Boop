@@ -54,6 +54,18 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
     return iconID, iconCoords, scaleFactor;
 end
 
+addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
+    local isTarget = UnitIsUnit(frame.unit, "target");
+    if nameplate.classIconContainer then
+        if nameplate.classIconContainer.FriendlyClassIcon then
+            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget);
+        end
+        if nameplate.classIconContainer.FriendlyClassArrow then
+            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget);
+        end
+    end
+end
+
 -- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
 addon.UpdateClassIcon = function(nameplate, frame)
     -- Full update if class, PvPClassification, roleAssigned or configurations have changed
@@ -128,17 +140,5 @@ addon.HideClassIcon = function(nameplate)
     end
     if nameplate.classIconContainer.FriendlyClassArrow then
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
-    end
-end
-
-addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
-    local isTarget = UnitIsUnit(frame.unit, "target");
-    if nameplate.classIconContainer then
-        if nameplate.classIconContainer.FriendlyClassIcon then
-            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget);
-        end
-        if nameplate.classIconContainer.FriendlyClassArrow then
-            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget);
-        end
     end
 end
