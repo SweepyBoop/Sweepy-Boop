@@ -2,6 +2,7 @@ local _, addon = ...;
 
 local function HideWidgets(nameplate, frame)
     addon.HideClassIcon(nameplate);
+    addon.HidePetIcon(nameplate);
     addon.HideNpcHighlight(frame);
     addon.HideSpecIcon(frame);
 end
