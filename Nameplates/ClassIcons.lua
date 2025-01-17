@@ -38,13 +38,11 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
     iconCoords = CLASS_ICON_TCOORDS[class];
 
     if ( roleAssigned == "HEALER" ) and config.useHealerIcon then
-        if config.showHealerOnly then -- can be overwritten by flag carrier
-            iconID = nil;
-        else
-            iconID = addon.ICON_ID_HEALER;
-            iconCoords = addon.ICON_COORDS_HEALER;
-            scaleFactor = specialIconScaleFactor;
-        end
+        iconID = addon.ICON_ID_HEALER;
+        iconCoords = addon.ICON_COORDS_HEALER;
+        scaleFactor = specialIconScaleFactor;
+    elseif ( roleAssigned ~= "HEALER" ) and config.showHealerOnly then
+        iconID = nil;
     end
 
     if ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
