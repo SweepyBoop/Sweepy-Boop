@@ -170,7 +170,7 @@ function SweepyBoop:SetupNameplateModules()
         if frame:IsForbidden() then return end
 
         if frame.isNameplateUnitFrame then
-            addon.UpdateTargetHighlight(frame:GetParent(), frame);
+            addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
 
             -- Don't update names on raid frames
             -- In BGs, flag carriers can be arena1 / arena2
