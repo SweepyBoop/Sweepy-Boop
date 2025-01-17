@@ -28,7 +28,7 @@ end
 
 local function UpdateUnitFrameVisibility(frame, show)
     -- Force frame's child elements to not ignore parent alpha
-    if ( not frame.forceChildrenFollowAlpha ) then
+    if ( not frame.unsetIgnoreParentAlpha ) then
         for _, region in pairs(frame) do
             if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
                 region:SetIgnoreParentAlpha(false);
@@ -39,7 +39,7 @@ local function UpdateUnitFrameVisibility(frame, show)
                 region:SetIgnoreParentAlpha(false);
             end
         end
-        frame.forceChildrenFollowAlpha = true;
+        frame.unsetIgnoreParentAlpha = true;
     end
 
     local alpha = ( show and 1 ) or 0;
