@@ -48,8 +48,14 @@ local function UpdateUnitFrameVisibility(frame, show)
 end
 
 local function UpdateVisibility(nameplate, frame)
-    -- Issue: after priest mind control, party member shows both class icon and health bar
+    -- Don't mess with personal resource display
+    if ( UnitIsUnit(frame.unit, "player") ) then
+        HideWidgets(nameplate, frame);
+        UpdateUnitFrameVisibility(frame, true);
+        return;
+    end
 
+    -- Possible issue: after priest mind control, party member shows both class icon and health bar
     if ( not addon.UnitIsHostile(frame.unit) ) then -- Friendly units, show class icon for friendly players and party pets
         local configFriendly = SweepyBoop.db.profile.nameplatesFriendly;
         if configFriendly.classIconsEnabled then
