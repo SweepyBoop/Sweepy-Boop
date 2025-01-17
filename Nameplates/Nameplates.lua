@@ -111,6 +111,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
+                nameplate.UnitFrame.isNameplateUnitFrame = true;
                 HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets and do update first
                 if IsRestricted() then
                     UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
@@ -123,6 +124,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
+                nameplate.UnitFrame.isNameplateUnitFrame = true;
                 HideWidgets(nameplate, nameplate.UnitFrame);
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
@@ -131,6 +133,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
+                    nameplate.UnitFrame.isNameplateUnitFrame = true;
                     addon.UpdateSpecIcon(nameplate.UnitFrame);
                 end
             end
@@ -138,6 +141,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
+                nameplate.UnitFrame.isNameplateUnitFrame = true;
                 if IsRestricted() then return end
                 UpdateVisibility(nameplate, nameplate.UnitFrame);
             end
@@ -148,7 +152,7 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
         -- This will only be applied to nameplates in PvP instances
         if frame:IsForbidden() or IsRestricted() then return end
-        if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
+        if frame.isNameplateUnitFrame then
             -- UpdateClassIcon should include UpdateTargetHighlight
             -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
             -- Consequently we can't guarantee the target highlight is up-to-date on FC
@@ -159,7 +163,7 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
-        if frame.unit and string.sub(frame.unit, 1, 9) == "nameplate" then
+        if frame.isNameplateUnitFrame then
             addon.UpdateTargetHighlight(frame:GetParent(), frame);
 
             -- Don't update names on raid frames
