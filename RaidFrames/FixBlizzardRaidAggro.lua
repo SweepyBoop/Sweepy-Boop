@@ -7,6 +7,8 @@ local _, addon = ...;
 -- Test mode: target a raid frame and check if the aggro highlight is showing up
 local isTestMode = addon.TEST_MODE;
 
+local R, G, B = GetThreatStatusColor(3); -- Red
+
 local function GetThreatCount(unit)
     if ( not unit ) then
         return nil;
@@ -18,7 +20,7 @@ local function GetThreatCount(unit)
     end
 
     if isTestMode then
-        return ( UnitIsUnit(unit, "target") and 1 );
+        return UnitIsUnit(unit, "target");
     else
         local count = 0;
 
@@ -26,12 +28,10 @@ local function GetThreatCount(unit)
             if UnitIsUnit(unit, "arena" .. i .. "target") then
                 count = count + 1;
                 if ( count > 1 ) then
-                    return 3; -- red when unit is being targeted by more than one enemy players
+                    return true; -- red when unit is being targeted by more than one enemy players
                 end
             end
         end
-
-        return ( count > 0 and 1 );
     end
 end
 
@@ -55,7 +55,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
 
         local threatCount = GetThreatCount(frame.unit);
         if threatCount then
-            frame.aggroHighlight:SetVertexColor(GetThreatStatusColor(threatCount));
+            frame.aggroHighlight:SetVertexColor(R, G, B);
             frame.aggroHighlight:Show();
         else
             frame.aggroHighlight:Hide();
