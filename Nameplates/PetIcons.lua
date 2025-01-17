@@ -24,7 +24,7 @@ addon.HidePetIcon = function(nameplate)
     end
 end
 
-addon.UpdatePetTargetHighlight = function (nameplate, frame)
+addon.UpdatePetIconTargetHighlight = function (nameplate, frame)
     if nameplate.FriendlyPetIcon then
         nameplate.FriendlyPetIcon.targetHighlight:SetShown(UnitIsUnit(frame.unit, "target"));
     end
@@ -35,9 +35,9 @@ addon.UpdatePetIcon = function(nameplate, frame)
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     local iconFrame = EnsureIcon(nameplate);
     if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.iconScale / 100 * scaleFactor);
+        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
     end
 
-    addon.UpdatePetTargetHighlight(nameplate, frame);
+    addon.UpdatePetIconTargetHighlight(nameplate, frame);
 end
