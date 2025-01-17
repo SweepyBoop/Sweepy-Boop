@@ -20,6 +20,7 @@ end
 local function UpdateWidgets(nameplate, frame)
     -- Class icon mod will hide/show healthBar when showing/hiding class icons
     addon.UpdateClassIcon(nameplate, frame);
+    addon.UpdatePetIcon(nameplate, frame);
     -- Show enemy nameplate highlight
     addon.UpdateNpcHighlight(frame);
     -- Update spec icons
@@ -61,10 +62,17 @@ local function UpdateVisibility(nameplate, frame)
         if configFriendly.classIconsEnabled then
             if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( not C_PvP.IsBattleground() ) then
                 addon.HideClassIcon(nameplate);
-            elseif UnitIsPlayer(frame.unit) or UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
+            elseif UnitIsPlayer(frame.unit) then
                 -- Issue: a pet that's not one of the above 3 showed an icon
                 -- Maybe it was partypet2 and later someone else joined so this pet became partypet3
                 addon.ShowClassIcon(nameplate);
+                addon.HidePetIcon(nameplate);
+            elseif UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
+                addon.HideClassIcon(nameplate);
+                addon.ShowPetIcon(nameplate);
+            else
+                addon.HideClassIcon(nameplate);
+                addon.HidePetIcon(nameplate);
             end
 
             UpdateUnitFrameVisibility(frame, false); -- if class icons are enabled, all friendly units' health bars should be hidden
@@ -77,6 +85,7 @@ local function UpdateVisibility(nameplate, frame)
         addon.HideNpcHighlight(frame);
     else
         addon.HideClassIcon(nameplate);
+        addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
             if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
@@ -171,6 +180,7 @@ function SweepyBoop:SetupNameplateModules()
 
         if frame.isNameplateUnitFrame then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
+            addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
 
             -- Don't update names on raid frames
             -- In BGs, flag carriers can be arena1 / arena2

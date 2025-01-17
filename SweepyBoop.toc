@@ -28,6 +28,7 @@ Core.lua
 
 Nameplates\Helpers.lua
 Nameplates\ClassIcons.lua
+Nameplates\PetIcons.lua
 Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua
 Nameplates\Nameplates.lua
