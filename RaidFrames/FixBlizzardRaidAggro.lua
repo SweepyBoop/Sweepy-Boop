@@ -37,24 +37,12 @@ end
 
 function SweepyBoop:SetupRaidFrameAggroHighlight()
     hooksecurefunc("CompactUnitFrame_UpdateName", function (frame)
-        if ( not self.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then
-            return; -- Skip if feature disabled
-        end
+        if frame:IsForbidden() then return end
+        if ( frame:GetParent() ~= CompactPartyFrame ) then return end
+        if ( not self.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then return end -- If feature disabled
+        if frame.optionTable.displayAggroHighlight then return end -- Don't overwrite PvE threats
 
-        if ( not frame ) or frame:IsForbidden() then
-            return;
-        end
-
-        if ( frame:GetParent() ~= CompactPartyFrame ) then
-            return;
-        end
-
-        if frame.optionTable.displayAggroHighlight then
-            return; -- Don't overwrite PvE threats
-        end
-
-        local threatCount = GetThreatCount(frame.unit);
-        if threatCount then
+        if GetThreatCount(frame.unit) then
             frame.aggroHighlight:SetVertexColor(R, G, B);
             frame.aggroHighlight:Show();
         else
