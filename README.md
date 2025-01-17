@@ -18,9 +18,6 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 <span style="color:#36f; font-style:italic"><strong>If you like my addon, please introduce it to your friends who play PvP!</strong></span> I'm really hoping to bring more people to (or back to) PvP with my work :)
 
-[Donate](https://www.paypal.com/cgi-bin/webscr?return=https%3A%2F%2Fwww.curseforge.com%2Fwow%2Faddons%2Fsweepyboops-pvp-helper&cn=Add+special+instructions+to+the+addon+author%28%29&business=bigben198891%40gmail.com&bn=PP-DonationsBF%3Abtn_donateCC_LG.gif%3ANonHosted&cancel_return=https%3A%2F%2Fwww.curseforge.com%2Fwow%2Faddons%2Fsweepyboops-pvp-helper&lc=US&item_name=SweepyBoop%27s+PvP+Helper+%28from+www.curseforge.com%29&cmd=_donations&rm=1&no_shipping=1&currency_code=USD) button if feeling generous, unnecessary but appreciated.
-
-
 ## Friendly player / pet icons
 ![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
 
