@@ -4,22 +4,15 @@ local _, addon = ...;
 -- Make sure you disable Interface -> Raid Profiles -> "Display Aggro Highlight", and do a /reload
 -- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
 
--- Test mode: target a raid frame and check if the aggro highlight is showing up
-local isTestMode = addon.TEST_MODE;
-
 local R, G, B = GetThreatStatusColor(3); -- Red
 
 local function GetThreatCount(unit)
-    if ( not unit ) then
-        return nil;
-    end
+    if ( not unit ) then return end
 
-    local arena = IsActiveBattlefieldArena();
-    if ( not arena ) and ( not isTestMode ) then
-        return nil;
-    end
+    local isArena = C_PvP.IsArena();
+    if ( not isArena ) and ( not addon.TEST_MODE ) then return end
 
-    if isTestMode then
+    if addon.TEST_MODE then
         return UnitIsUnit(unit, "target");
     else
         local count = 0;
