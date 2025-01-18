@@ -61,13 +61,10 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
 end
 
 -- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
-addon.UpdateClassIcon = function(nameplate, frame, forceUpdate)
+addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassArrow ) then return end
-
-    -- Only update if visible or forceUpdate (on first show)
-    if ( not classIconContainer.isShown ) and ( not forceUpdate ) then return end
 
     -- Full update if class, PvPClassification, roleAssigned or configurations have changed
     -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
@@ -118,7 +115,7 @@ end
 
 addon.ShowClassIcon = function (nameplate, frame)
     EnsureClassIcon(nameplate);
-    addon.UpdateClassIcon(nameplate, frame, true);
+    addon.UpdateClassIcon(nameplate, frame);
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
 

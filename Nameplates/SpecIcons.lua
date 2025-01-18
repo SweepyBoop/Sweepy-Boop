@@ -47,12 +47,11 @@ local function EnsureSpecIcon(frame)
     return frame.SpecIconContainer;
 end
 
-addon.UpdateSpecIcon = function (frame, forceUpdate)
+addon.UpdateSpecIcon = function (frame)
     -- Parented to UnitFrame to inherit the visibility
     -- Only update if visible
     local specIconContainer = frame.SpecIconContainer;
     if ( not specIconContainer ) then return end
-    if ( not specIconContainer.isShown ) and ( not forceUpdate ) then return end
 
     -- Still seeing an empty icon with a red border between solo shuffle rounds
     -- Repro if play some rounds with "show healer only", then switch to "show all"?
@@ -95,7 +94,7 @@ end
 
 addon.ShowSpecIcon = function (frame)
     EnsureSpecIcon(frame);
-    addon.UpdateSpecIcon(frame, true);
+    addon.UpdateSpecIcon(frame);
     if frame.SpecIconContainer then
         for alignment, iconFrame in pairs(frame.SpecIconContainer.frames) do
             iconFrame:SetShown(alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment);
