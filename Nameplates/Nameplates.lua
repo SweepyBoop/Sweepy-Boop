@@ -150,6 +150,7 @@ function SweepyBoop:SetupNameplateModules()
     end)
 
     -- When flag is picked up / dropped
+    -- Issue, not immediately updated to flag carrier icon when someone picked up the flag
     hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
         -- This will only be applied to nameplates in PvP instances
         if frame:IsForbidden() then return end
