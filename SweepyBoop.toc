@@ -65,6 +65,6 @@ Internal\FocusMacros.lua
 # Weak Auras equivalent (Internal)
 Internal\CustomAuras.xml
 Internal\CustomAuras.lua
-#Internal\CustomStatusBar.lua
+Internal\CustomStatusBar.lua
 #Internal\RaidFrameAuras.xml
 #Internal\RaidFrameAuras.lua
