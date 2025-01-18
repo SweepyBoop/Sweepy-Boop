@@ -516,21 +516,8 @@ options.args.raidFrames = {
     get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
     set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
     args = {
-        arenaRaidFrameSortOrder = {
-            order = 1,
-            type = "select",
-            values = {
-                [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
-                [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
-                [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player at bottom",
-                [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in the middle",
-            },
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_guildperk_everybodysfriend")) .. " Sort raid frames in arena",
-            style = "radio",
-        },
-
         raidFrameAggroHighlightEnabled = {
-            order = 2,
+            order = 1,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
@@ -539,7 +526,7 @@ options.args.raidFrames = {
         },
 
         druidHoTHelper = {
-            order = 3,
+            order = 2,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
