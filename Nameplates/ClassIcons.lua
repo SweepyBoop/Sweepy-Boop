@@ -127,8 +127,6 @@ addon.ShowClassIcon = function (nameplate, frame)
     if classIconContainer.FriendlyClassArrow then
         classIconContainer.FriendlyClassArrow:SetShown(style == addon.CLASS_ICON_STYLE.ARROW and ( not classIconContainer.isSpecialIcon ));
     end
-
-    classIconContainer.isShown = true;
 end
 
 addon.HideClassIcon = function(nameplate)
@@ -141,6 +139,4 @@ addon.HideClassIcon = function(nameplate)
     if classIconContainer.FriendlyClassArrow then
         classIconContainer.FriendlyClassArrow:Hide();
     end
-
-    classIconContainer.isShown = false;
 end
