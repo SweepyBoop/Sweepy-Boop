@@ -8,9 +8,7 @@ local R, G, B = GetThreatStatusColor(3); -- Red
 
 local function GetThreatCount(unit)
     if ( not unit ) then return end
-
-    local isArena = C_PvP.IsArena();
-    if ( not isArena ) and ( not addon.TEST_MODE ) then return end
+    if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
 
     if addon.TEST_MODE then
         return UnitIsUnit(unit, "target");

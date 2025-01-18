@@ -92,17 +92,25 @@ local function UpdateWidgets(nameplate, frame)
 
         -- Process non-player hostile units
         addon.HideSpecIcon(frame);
-        local guid = UnitGUID(frame.unit);
-        local npcID = select(6, strsplit("-", guid));
-        local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
-        if ( option == addon.NpcOption.Highlight ) then
+
+        local npcOption = addon.CheckNpcWhiteList(frame.unit);
+        local shouldShowUnitFrame = true;
+        if ( npcOption == addon.NpcOption.Highlight ) then
             addon.ShowNpcHighlight(frame);
+        elseif ( npcOption == addon.NpcOption.Show ) then
+            addon.HideNpcHighlight(frame);
         else
             addon.HideNpcHighlight(frame);
+            shouldShowUnitFrame = false;
         end
 
-        local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(frame.unit);
-        UpdateUnitFrameVisibility(frame, isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(frame.unit) ) );
+        -- Hide Beast Mastery Hunter secondary pets (this override the above setting)
+        -- If we already decided to hide a unit, no need to perform this check!
+        if shouldShowUnitFrame and addon.UnitIsHunterSecondaryPet(frame.unit) then
+            shouldShowUnitFrame = false;
+        end
+
+        UpdateUnitFrameVisibility(frame, shouldShowUnitFrame);
     end
 end
 
