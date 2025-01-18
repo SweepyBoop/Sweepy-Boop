@@ -20,8 +20,8 @@ end
 
 addon.UpdatePetIcon = function(nameplate, frame)
     -- Only update if config changes (we have separated out pet icon from class / healer / flag carrier icons, and pet icon has fixed texture)
-    local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     local iconFrame = EnsureIcon(nameplate);
+    local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
         iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
