@@ -135,13 +135,14 @@ end
 
 addon.HideClassIcon = function(nameplate)
     if ( not nameplate.classIconContainer ) then return end
+    local classIconContainer = nameplate.classIconContainer;
 
-    if nameplate.classIconContainer.FriendlyClassIcon then
-        nameplate.classIconContainer.FriendlyClassIcon:Hide();
+    if classIconContainer.FriendlyClassIcon then
+        classIconContainer.FriendlyClassIcon:Hide();
     end
-    if nameplate.classIconContainer.FriendlyClassArrow then
-        nameplate.classIconContainer.FriendlyClassArrow:Hide();
+    if classIconContainer.FriendlyClassArrow then
+        classIconContainer.FriendlyClassArrow:Hide();
     end
 
-    PvPUnitClassification.isShown = false;
+    classIconContainer.isShown = false;
 end
