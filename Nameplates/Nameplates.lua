@@ -109,7 +109,6 @@ end
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
     eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
@@ -124,15 +123,10 @@ function SweepyBoop:SetupNameplateModules()
                 else
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
-            end
-        elseif event == addon.NAME_PLATE_UNIT_REMOVED then
-            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
-            if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
-                nameplate.UnitFrame.isNameplateUnitFrame = true;
-                HideWidgets(nameplate, nameplate.UnitFrame);
+                print("NAME_PLATE_UNIT_ADDED", nameplate.UnitFrame.unit);
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
+            if ( not C_PvP.IsBattleground() ) then return end -- Only needed in battlegrounds for updating visible spec icons
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
@@ -152,6 +146,7 @@ function SweepyBoop:SetupNameplateModules()
                 if ( not IsRestricted()) then
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
+                print("UNIT_FACTION", nameplate.UnitFrame.unit);
             end
         end
     end)
@@ -165,6 +160,7 @@ function SweepyBoop:SetupNameplateModules()
             -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
             -- Consequently we can't guarantee the target highlight is up-to-date on FC
             addon.UpdateClassIcon(frame:GetParent(), frame);
+            print("CompactUnitFrame_UpdatePvPClassificationIndicator", frame.unit);
         end
     end)
 
