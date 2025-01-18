@@ -31,11 +31,12 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
     iconID = addon.ICON_ID_CLASSES;
     iconCoords = CLASS_ICON_TCOORDS[class];
 
-    if ( roleAssigned == "HEALER" ) and config.useHealerIcon then
+    local isHealer = ( roleAssigned == "HEALER" );
+    if isHealer and config.useHealerIcon then
         iconID = addon.ICON_ID_HEALER;
         iconCoords = addon.ICON_COORDS_HEALER;
         isSpecialIcon = true;
-    elseif ( roleAssigned ~= "HEALER" ) and config.showHealerOnly then
+    elseif ( not isHealer ) and config.showHealerOnly then
         iconID = nil;
     end
 
