@@ -116,7 +116,6 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                nameplate.UnitFrame.isNameplateUnitFrame = true;
                 HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets (even in restricted areas)
                 if IsRestricted() then
                     UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
@@ -131,8 +130,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
-                    nameplate.UnitFrame.isNameplateUnitFrame = true;
-                    if nameplate.UnitFrame.specIconContainer and nameplate.UnitFrame.specIconContainer.isShown then
+                    if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
                         addon.UpdateSpecIcon(nameplate.UnitFrame);
                     end
                 end
@@ -141,7 +139,6 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                nameplate.UnitFrame.isNameplateUnitFrame = true;
                 if ( not IsRestricted() ) then
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
@@ -154,7 +151,7 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
         -- This will only be applied to nameplates in PvP instances
         if frame:IsForbidden() then return end
-        if frame.isNameplateUnitFrame and frame.classIconContainer and frame.classIconContainer.isShown then
+        if frame.optionTable.showPvPClassificationIndicator then
             -- UpdateClassIcon should include UpdateTargetHighlight
             -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
             -- Consequently we can't guarantee the target highlight is up-to-date on FC
@@ -165,17 +162,17 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
-        if frame.isNameplateUnitFrame then
+        if frame.optionTable.showPvPClassificationIndicator then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
-        end
 
-        if IsActiveBattlefieldArena() and frame.optionTable.showClassificationIndicator then
-            for i = 1, 3 do
-                if UnitIsUnit(frame.unit, "arena" .. i) then
-                    frame.name:SetText(i);
-                    frame.name:SetTextColor(1,1,0); --Yellow
-                    break;
+            if IsActiveBattlefieldArena() then
+                for i = 1, 3 do
+                    if UnitIsUnit(frame.unit, "arena" .. i) then
+                        frame.name:SetText(i);
+                        frame.name:SetTextColor(1,1,0); --Yellow
+                        break;
+                    end
                 end
             end
         end

@@ -369,11 +369,11 @@ frameDrinkMacro:SetScript("OnEvent", eventHandler);
 -- Send chat message when drinking
 local drinkBuffs = {
     167152, -- Refreshment
-    369162, -- Drink
+    452384, -- Drink
 };
 
-local lastSent = 0;
 local chatMessage = CreateFrame("Frame");
+chatMessage.lastSent = 0;
 chatMessage:RegisterEvent(addon.UNIT_AURA);
 chatMessage:SetScript("OnEvent", function (self, event, ...)
     local unit = ...;
@@ -383,9 +383,9 @@ chatMessage:SetScript("OnEvent", function (self, event, ...)
             local aura = GetPlayerAuraBySpellID(buffName);
             if aura and aura.expirationTime and IsInInstance() then
                 local now = GetTime();
-                if ( now > lastSent + 6 ) then
+                if ( now > self.lastSent + 6 ) then
                     pcall(function() SendChatMessage("Drinking. Do not overextend!", "YELL") end)
-                    lastSent = now;
+                    self.lastSent = now;
                 end
             end
         end
