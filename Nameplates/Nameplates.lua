@@ -118,12 +118,12 @@ function SweepyBoop:SetupNameplateModules()
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 nameplate.UnitFrame.isNameplateUnitFrame = true;
-                HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets and do update first
+                HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets (even in restricted areas)
                 if IsRestricted() then
                     UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
-                    return;
-                end -- Cannot show widgets in restricted areas
-                UpdateWidgets(nameplate, nameplate.UnitFrame);
+                else
+                    UpdateWidgets(nameplate, nameplate.UnitFrame);
+                end
             end
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
@@ -139,7 +139,9 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
                     nameplate.UnitFrame.isNameplateUnitFrame = true;
-                    addon.UpdateSpecIcon(nameplate.UnitFrame);
+                    if nameplate.UnitFrame.specIconContainer and nameplate.UnitFrame.specIconContainer.isShown then
+                        addon.UpdateSpecIcon(nameplate.UnitFrame);
+                    end
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
@@ -147,8 +149,9 @@ function SweepyBoop:SetupNameplateModules()
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 nameplate.UnitFrame.isNameplateUnitFrame = true;
-                if IsRestricted() then return end
-                UpdateWidgets(nameplate, nameplate.UnitFrame);
+                if ( not IsRestricted()) then
+                    UpdateWidgets(nameplate, nameplate.UnitFrame);
+                end
             end
         end
     end)
@@ -156,8 +159,8 @@ function SweepyBoop:SetupNameplateModules()
     -- When flag is picked up / dropped
     hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
         -- This will only be applied to nameplates in PvP instances
-        if frame:IsForbidden() or IsRestricted() then return end
-        if frame.isNameplateUnitFrame then
+        if frame:IsForbidden() then return end
+        if frame.isNameplateUnitFrame and frame.classIconContainer and frame.classIconContainer.isShown then
             -- UpdateClassIcon should include UpdateTargetHighlight
             -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
             -- Consequently we can't guarantee the target highlight is up-to-date on FC
