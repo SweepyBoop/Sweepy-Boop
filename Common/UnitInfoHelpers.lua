@@ -143,11 +143,7 @@ local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 refreshFrame:SetScript("OnEvent", function (self, event)
-    addon.cachedBattlefieldSpec = {}; -- reset after every loading screen
-
-    -- Right after a loading screen, both UnitInBattleground and C_PvP.IsBattleground are false
-    -- we might as well have request frame always showing and scanning every 2.5s, request if in BG
-    -- instead of show/hide request frame based on UnitInBattleground / C_PvP.IsBattleground
+    addon.cachedBattlefieldSpec = {};
 end)
 
 addon.GetBattlefieldSpecByPlayerGuid = function (guid)
