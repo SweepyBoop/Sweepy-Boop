@@ -155,6 +155,10 @@ addon.GetNpcIdFromGuid = function (guid)
 end
 
 addon.CheckNpcWhiteList = function (unitId)
+    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
+        return addon.NpcOption.Show; -- Filter is disabled, show everything
+    end
+
     if ( not UnitPlayerControlled(unitId) ) then
         return addon.NpcOption.Show; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
     end
