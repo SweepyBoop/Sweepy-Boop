@@ -123,7 +123,6 @@ function SweepyBoop:SetupNameplateModules()
                 else
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
-                print("NAME_PLATE_UNIT_ADDED", nameplate.UnitFrame.unit);
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
             if ( not C_PvP.IsBattleground() ) then return end -- Only needed in battlegrounds for updating visible spec icons
@@ -170,16 +169,14 @@ function SweepyBoop:SetupNameplateModules()
         if frame.isNameplateUnitFrame then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
+        end
 
-            -- Don't update names on raid frames
-            -- In BGs, flag carriers can be arena1 / arena2
-            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                for i = 1, 3 do
-                    if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i);
-                        frame.name:SetTextColor(1,1,0); --Yellow
-                        return;
-                    end
+        if IsActiveBattlefieldArena() and frame.optionTable.showClassificationIndicator then
+            for i = 1, 3 do
+                if UnitIsUnit(frame.unit, "arena" .. i) then
+                    frame.name:SetText(i);
+                    frame.name:SetTextColor(1,1,0); --Yellow
+                    break;
                 end
             end
         end
