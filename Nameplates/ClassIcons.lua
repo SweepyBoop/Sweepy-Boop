@@ -9,22 +9,16 @@ local flagCarrierIcons = {
     [PvPUnitClassification.FlagCarrierNeutral] = addon.ICON_ID_FLAG_CARRIER_NEUTRAL,
 };
 
-local function EnsureIcon(nameplate)
+local function EnsureIconAndArrow(nameplate)
+    nameplate.classIconContainer = nameplate.classIconContainer or {};
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
         nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
         nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
-
-    return nameplate.classIconContainer.FriendlyClassIcon;
-end
-
-local function EnsureArrow(nameplate)
     if ( not nameplate.classIconContainer.FriendlyClassArrow ) then
         nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
     end
-
-    return nameplate.classIconContainer.FriendlyClassArrow;
 end
 
 local function GetIconOptions(class, pvpClassification, roleAssigned)
@@ -51,7 +45,7 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
         isSpecialIcon = true;
     end
 
-    return iconID, iconCoords, scaleFactor;
+    return iconID, iconCoords, isSpecialIcon;
 end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
@@ -68,6 +62,8 @@ end
 
 -- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
 addon.UpdateClassIcon = function(nameplate, frame)
+    if ( not nameplate.classIconContainer ) then return end -- Only update if visible
+
     -- Full update if class, PvPClassification, roleAssigned or configurations have changed
     -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
@@ -119,6 +115,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
 end
 
 addon.ShowClassIcon = function (nameplate, frame)
+    EnsureIconAndArrow(nameplate);
     addon.UpdateClassIcon(nameplate, frame);
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
