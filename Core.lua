@@ -787,21 +787,21 @@ function SweepyBoop:OnInitialize()
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
 
-    -- Nameplate module needs optimization to eat less CPU
-    -- Setup nameplate modules
-    self:SetupNameplateModules();
+    -- -- Nameplate module needs optimization to eat less CPU
+    -- -- Setup nameplate modules
+    -- self:SetupNameplateModules();
 
-    -- Setup arena enemy cooldown icons
-    self:SetupOffensiveIcons();
-    self:SetupCooldownTrackingIcons();
+    -- -- Setup arena enemy cooldown icons
+    -- self:SetupOffensiveIcons();
+    -- self:SetupCooldownTrackingIcons();
 
-    self:SetupHealerIndicator();
+    -- self:SetupHealerIndicator();
 
-    -- Setup raid frame modules
-    self:SetupRaidFrameAggroHighlight();
-    self:SetupRaidFrameAuraModule();
+    -- -- Setup raid frame modules
+    -- self:SetupRaidFrameAggroHighlight();
+    -- self:SetupRaidFrameAuraModule();
 
-    self:SetupQueueReminder();
+    -- self:SetupQueueReminder();
 end
 
 function SweepyBoop:TestArena()
