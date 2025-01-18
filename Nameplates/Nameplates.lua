@@ -148,6 +148,7 @@ function SweepyBoop:SetupNameplateModules()
                     local currentGuid = UnitGUID(unitId);
                     local currentHostilility = addon.UnitIsHostile(unitId);
                     -- If nameplate's displayed GUID did not change but hostility did, update widgets
+                    -- This should prevent most of the redundant UpdateWidgets calls
                     if nameplate.currentGUID == currentGuid and nameplate.currentHostility ~= currentHostilility then
                         UpdateWidgets(nameplate, nameplate.UnitFrame);
                         nameplate.currentHostility = currentHostilility;

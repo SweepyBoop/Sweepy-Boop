@@ -791,17 +791,17 @@ function SweepyBoop:OnInitialize()
     -- Setup nameplate modules
     self:SetupNameplateModules();
 
-    -- Setup arena enemy cooldown icons
-    self:SetupOffensiveIcons();
-    self:SetupCooldownTrackingIcons();
+    -- -- Setup arena enemy cooldown icons
+    -- self:SetupOffensiveIcons();
+    -- self:SetupCooldownTrackingIcons();
 
-    self:SetupHealerIndicator();
+    -- self:SetupHealerIndicator();
 
-    -- Setup raid frame modules
-    self:SetupRaidFrameAggroHighlight();
-    self:SetupRaidFrameAuraModule();
+    -- -- Setup raid frame modules
+    -- self:SetupRaidFrameAggroHighlight();
+    -- self:SetupRaidFrameAuraModule();
 
-    self:SetupQueueReminder();
+    -- self:SetupQueueReminder();
 end
 
 function SweepyBoop:TestArena()
