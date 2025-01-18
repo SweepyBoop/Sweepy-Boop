@@ -39,7 +39,7 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
         iconID = nil;
     end
 
-    if ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
+    if ( pvpClassification ~= nil ) and ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
         iconID = flagCarrierIcons[pvpClassification];
         iconCoords = {0, 1, 0, 1};
         isSpecialIcon = true;
