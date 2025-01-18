@@ -47,25 +47,9 @@ local function EnsureSpecIcon(frame)
     return frame.SpecIconContainer;
 end
 
-addon.ShowSpecIcon = function (frame)
-    if frame.SpecIconContainer then
-        for alignment, iconFrame in pairs(frame.SpecIconContainer.frames) do
-            iconFrame:SetShown(alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment);
-        end
-    end
-end
-
-addon.HideSpecIcon = function (frame)
-    if frame.SpecIconContainer then
-        for _, iconFrame in pairs(frame.SpecIconContainer.frames) do
-            iconFrame:Hide();
-        end
-    end
-end
-
 addon.UpdateSpecIcon = function (frame)
     -- Parented to UnitFrame to inherit the visibility
-    local specIconContainer = EnsureSpecIcon(frame);
+    local specIconContainer = frame.SpecIconContainer;
     if ( not specIconContainer ) then return end;
 
     -- Still seeing an empty icon with a red border between solo shuffle rounds
@@ -104,5 +88,23 @@ addon.UpdateSpecIcon = function (frame)
 
         specIconContainer.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
         specIconContainer.isHealer = isHealer;
+    end
+end
+
+addon.ShowSpecIcon = function (frame)
+    EnsureSpecIcon(frame);
+    addon.UpdateSpecIcon(frame);
+    if frame.SpecIconContainer then
+        for alignment, iconFrame in pairs(frame.SpecIconContainer.frames) do
+            iconFrame:SetShown(alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment);
+        end
+    end
+end
+
+addon.HideSpecIcon = function (frame)
+    if frame.SpecIconContainer then
+        for _, iconFrame in pairs(frame.SpecIconContainer.frames) do
+            iconFrame:Hide();
+        end
     end
 end
