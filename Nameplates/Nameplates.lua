@@ -40,13 +40,10 @@ local function UpdateUnitFrameVisibility(frame, show)
 end
 
 local function UpdateWidgets(nameplate, frame)
-    local hostility = addon.UnitIsHostile(frame.unit);
-
     -- Don't mess with personal resource display
     if ( UnitIsUnit(frame.unit, "player") ) then
         HideWidgets(nameplate, frame);
         UpdateUnitFrameVisibility(frame, true);
-        nameplate.currentHostility = hostility;
         return;
     end
 
@@ -90,7 +87,6 @@ local function UpdateWidgets(nameplate, frame)
 
             addon.HideNpcHighlight(frame);
             UpdateUnitFrameVisibility(frame, true); -- Always show enemy players
-            nameplate.currentHostility = hostility;
             return;
         end
 
@@ -108,8 +104,6 @@ local function UpdateWidgets(nameplate, frame)
         local isWhitelisted = ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) or addon.IsNpcInWhiteList(frame.unit);
         UpdateUnitFrameVisibility(frame, isWhitelisted and ( not addon.UnitIsHunterSecondaryPet(frame.unit) ) );
     end
-
-    nameplate.currentHostility = hostility;
 end
 
 function SweepyBoop:SetupNameplateModules()
@@ -152,6 +146,7 @@ function SweepyBoop:SetupNameplateModules()
                     local hostility = addon.UnitIsHostile(unitId);
                     if nameplate.currentHostility ~= hostility then
                         UpdateWidgets(nameplate, nameplate.UnitFrame);
+                        nameplate.currentHostility = hostility;
                     end
                 end
             end
