@@ -9,7 +9,7 @@ local flagCarrierIcons = {
     [PvPUnitClassification.FlagCarrierNeutral] = addon.ICON_ID_FLAG_CARRIER_NEUTRAL,
 };
 
-local function EnsureIconAndArrow(nameplate)
+local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
         nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
@@ -61,11 +61,13 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
 end
 
 -- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
-addon.UpdateClassIcon = function(nameplate, frame)
-    -- Only update if already created
+addon.UpdateClassIcon = function(nameplate, frame, forceUpdate)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassArrow ) then return end
+
+    -- Only update if visible or forceUpdate (on first show)
+    if ( not classIconContainer.isShown ) and ( not forceUpdate ) then return end
 
     -- Full update if class, PvPClassification, roleAssigned or configurations have changed
     -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
@@ -115,8 +117,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
 end
 
 addon.ShowClassIcon = function (nameplate, frame)
-    EnsureIconAndArrow(nameplate);
-    addon.UpdateClassIcon(nameplate, frame);
+    EnsureClassIcon(nameplate);
+    addon.UpdateClassIcon(nameplate, frame, true);
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
 
@@ -127,6 +129,8 @@ addon.ShowClassIcon = function (nameplate, frame)
     if classIconContainer.FriendlyClassArrow then
         classIconContainer.FriendlyClassArrow:SetShown(style == addon.CLASS_ICON_STYLE.ARROW and ( not classIconContainer.isSpecialIcon ));
     end
+
+    classIconContainer.isShown = true;
 end
 
 addon.HideClassIcon = function(nameplate)
@@ -138,4 +142,6 @@ addon.HideClassIcon = function(nameplate)
     if nameplate.classIconContainer.FriendlyClassArrow then
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
     end
+
+    PvPUnitClassification.isShown = false;
 end
