@@ -28,6 +28,7 @@ Core.lua
 
 Nameplates\Helpers.lua
 Nameplates\ClassIcons.lua
+Nameplates\PetIcons.lua
 Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua
 Nameplates\Nameplates.lua
@@ -51,19 +52,19 @@ RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\DruidHoTHelper.lua
 
 # UI Personalization (Internal)
-Internal\LoseControl.lua
-Internal\Personalization.lua
+#Internal\LoseControl.lua
+#Internal\Personalization.lua
 Internal\HideHotKeys.lua
 
 # Misc (Internal)
-Internal\DrinkMacro.lua
+#Internal\DrinkMacro.lua
 Internal\FocusMacros.lua
-Internal\CombatIndicator.lua
-Internal\PersonalDR.lua
+#Internal\CombatIndicator.lua
+#Internal\PersonalDR.lua
 
 # Weak Auras equivalent (Internal)
 Internal\CustomAuras.xml
 Internal\CustomAuras.lua
-Internal\CustomStatusBar.lua
-Internal\RaidFrameAuras.xml
-Internal\RaidFrameAuras.lua
+#Internal\CustomStatusBar.lua
+#Internal\RaidFrameAuras.xml
+#Internal\RaidFrameAuras.lua

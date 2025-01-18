@@ -2,6 +2,7 @@ local _, addon = ...;
 
 local function HideWidgets(nameplate, frame)
     addon.HideClassIcon(nameplate);
+    addon.HidePetIcon(nameplate);
     addon.HideNpcHighlight(frame);
     addon.HideSpecIcon(frame);
 end
@@ -15,15 +16,6 @@ local restricted = {
 local function IsRestricted()
     local instanceType = select(2, IsInInstance());
     return restricted[instanceType];
-end
-
-local function UpdateWidgets(nameplate, frame)
-    -- Class icon mod will hide/show healthBar when showing/hiding class icons
-    addon.UpdateClassIcon(nameplate, frame);
-    -- Show enemy nameplate highlight
-    addon.UpdateNpcHighlight(frame);
-    -- Update spec icons
-    addon.UpdateSpecIcon(frame);
 end
 
 local function UpdateUnitFrameVisibility(frame, show)
@@ -47,7 +39,7 @@ local function UpdateUnitFrameVisibility(frame, show)
     frame.castBar:SetAlpha(alpha);
 end
 
-local function UpdateVisibility(nameplate, frame)
+local function UpdateWidgets(nameplate, frame)
     -- Don't mess with personal resource display
     if ( UnitIsUnit(frame.unit, "player") ) then
         HideWidgets(nameplate, frame);
@@ -61,10 +53,17 @@ local function UpdateVisibility(nameplate, frame)
         if configFriendly.classIconsEnabled then
             if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( not C_PvP.IsBattleground() ) then
                 addon.HideClassIcon(nameplate);
-            elseif UnitIsPlayer(frame.unit) or UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
+            elseif UnitIsPlayer(frame.unit) then
                 -- Issue: a pet that's not one of the above 3 showed an icon
                 -- Maybe it was partypet2 and later someone else joined so this pet became partypet3
-                addon.ShowClassIcon(nameplate);
+                addon.ShowClassIcon(nameplate, frame);
+                addon.HidePetIcon(nameplate);
+            elseif UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
+                addon.HideClassIcon(nameplate);
+                addon.ShowPetIcon(nameplate, frame);
+            else
+                addon.HideClassIcon(nameplate);
+                addon.HidePetIcon(nameplate);
             end
 
             UpdateUnitFrameVisibility(frame, false); -- if class icons are enabled, all friendly units' health bars should be hidden
@@ -77,6 +76,7 @@ local function UpdateVisibility(nameplate, frame)
         addon.HideNpcHighlight(frame);
     else
         addon.HideClassIcon(nameplate);
+        addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
             if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
@@ -109,7 +109,6 @@ end
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
     eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
@@ -118,29 +117,24 @@ function SweepyBoop:SetupNameplateModules()
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 nameplate.UnitFrame.isNameplateUnitFrame = true;
-                HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets and do update first
+                HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets (even in restricted areas)
                 if IsRestricted() then
                     UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
-                    return;
-                end -- Cannot show widgets in restricted areas
-                UpdateWidgets(nameplate, nameplate.UnitFrame);
-                UpdateVisibility(nameplate, nameplate.UnitFrame);
-            end
-        elseif event == addon.NAME_PLATE_UNIT_REMOVED then
-            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
-            if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
-                nameplate.UnitFrame.isNameplateUnitFrame = true;
-                HideWidgets(nameplate, nameplate.UnitFrame);
+                else
+                    UpdateWidgets(nameplate, nameplate.UnitFrame);
+                end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
+            if ( not C_PvP.IsBattleground() ) then return end -- Only needed in battlegrounds for updating visible spec icons
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
                     nameplate.UnitFrame.isNameplateUnitFrame = true;
-                    addon.UpdateSpecIcon(nameplate.UnitFrame);
+                    if nameplate.UnitFrame.specIconContainer and nameplate.UnitFrame.specIconContainer.isShown then
+                        addon.UpdateSpecIcon(nameplate.UnitFrame);
+                    end
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
@@ -148,8 +142,9 @@ function SweepyBoop:SetupNameplateModules()
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 nameplate.UnitFrame.isNameplateUnitFrame = true;
-                if IsRestricted() then return end
-                UpdateVisibility(nameplate, nameplate.UnitFrame);
+                if ( not IsRestricted() ) then
+                    UpdateWidgets(nameplate, nameplate.UnitFrame);
+                end
             end
         end
     end)
@@ -157,8 +152,8 @@ function SweepyBoop:SetupNameplateModules()
     -- When flag is picked up / dropped
     hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
         -- This will only be applied to nameplates in PvP instances
-        if frame:IsForbidden() or IsRestricted() then return end
-        if frame.isNameplateUnitFrame then
+        if frame:IsForbidden() then return end
+        if frame.isNameplateUnitFrame and frame.classIconContainer and frame.classIconContainer.isShown then
             -- UpdateClassIcon should include UpdateTargetHighlight
             -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
             -- Consequently we can't guarantee the target highlight is up-to-date on FC
@@ -170,17 +165,16 @@ function SweepyBoop:SetupNameplateModules()
         if frame:IsForbidden() then return end
 
         if frame.isNameplateUnitFrame then
-            addon.UpdateTargetHighlight(frame:GetParent(), frame);
+            addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
+            addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
+        end
 
-            -- Don't update names on raid frames
-            -- In BGs, flag carriers can be arena1 / arena2
-            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                for i = 1, 3 do
-                    if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i);
-                        frame.name:SetTextColor(1,1,0); --Yellow
-                        return;
-                    end
+        if IsActiveBattlefieldArena() and frame.optionTable.showClassificationIndicator then
+            for i = 1, 3 do
+                if UnitIsUnit(frame.unit, "arena" .. i) then
+                    frame.name:SetText(i);
+                    frame.name:SetTextColor(1,1,0); --Yellow
+                    break;
                 end
             end
         end
@@ -196,7 +190,6 @@ function SweepyBoop:RefreshAllNamePlates()
         if nameplate and nameplate.UnitFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
-            UpdateVisibility(nameplate, nameplate.UnitFrame);
         end
     end
 end

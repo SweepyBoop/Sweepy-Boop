@@ -58,7 +58,19 @@ local function EnsureNpcHighlight(frame)
     return frame.npcHighlight;
 end
 
+addon.UpdateNpcHighlight = function(frame)
+    -- Parented to UnitFrame to inherit the visibility
+    local highlight = EnsureNpcHighlight(frame);
+    local unitGUID = UnitGUID(frame.unit);
+    if ( highlight.currentGuid ~= unitGUID ) then
+        local npcID = select(6, strsplit("-", unitGUID));
+        highlight.customIcon:SetTexture(addon.iconTexture[npcID]); -- nil if no texture found
+        highlight.currentGuid = unitGUID;
+    end
+end
+
 addon.ShowNpcHighlight = function(frame)
+    addon.UpdateNpcHighlight(frame);
     local highlight = frame.npcHighlight;
 
     if highlight then
@@ -76,16 +88,5 @@ addon.HideNpcHighlight = function(frame)
         highlight.glowTexture:Hide();
         highlight.customIcon:Hide();
         highlight:Hide();
-    end
-end
-
-addon.UpdateNpcHighlight = function(frame)
-    -- Parented to UnitFrame to inherit the visibility
-    local highlight = EnsureNpcHighlight(frame);
-    local unitGUID = UnitGUID(frame.unit);
-    if ( highlight.currentGuid ~= unitGUID ) then
-        local npcID = select(6, strsplit("-", unitGUID));
-        highlight.customIcon:SetTexture(addon.iconTexture[npcID]); -- nil if no texture found
-        highlight.currentGuid = unitGUID;
     end
 end
