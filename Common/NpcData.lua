@@ -154,16 +154,14 @@ addon.GetNpcIdFromGuid = function (guid)
     return 0;
 end
 
-addon.IsNpcInWhiteList = function(unitId)
-    if ( not UnitPlayerControlled(unitId) ) and ( not addon.TEST_MODE ) then
-        return true; -- Don't filter out game NPCs (e.g., mobs in battlegrounds), except when we're in test mode
+addon.CheckWhiteList = function (unitId)
+    if ( not UnitPlayerControlled(unitId) ) then
+        return addon.NpcOption.Show; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add highlight in the future
     end
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
     local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
-    if ( npcID and option ~= nil and option ~= addon.NpcOption.Hide ) then
-        return true;
-    end
+    return option or addon.NpcOption.Hide; -- If not found, hide by default
 end
 
 addon.AppendNpcOptionsToGroup = function(group)
