@@ -100,8 +100,8 @@ addon.ShowSpecIcon = function (frame)
         for alignment, iconFrame in pairs(frame.SpecIconContainer.frames) do
             iconFrame:SetShown(alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment);
         end
+        frame.SpecIconContainer.isShown = true;
     end
-    frame.SpecIconContainer.isShown = true;
 end
 
 addon.HideSpecIcon = function (frame)
@@ -109,6 +109,6 @@ addon.HideSpecIcon = function (frame)
         for _, iconFrame in pairs(frame.SpecIconContainer.frames) do
             iconFrame:Hide();
         end
+        frame.SpecIconContainer.isShown = false;
     end
-    frame.SpecIconContainer.isShown = false;
 end
