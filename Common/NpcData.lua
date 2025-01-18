@@ -156,7 +156,7 @@ end
 
 addon.CheckNpcWhiteList = function (unitId)
     if ( not UnitPlayerControlled(unitId) ) then
-        return addon.NpcOption.Show; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add highlight in the future
+        return addon.NpcOption.Show; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
     end
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
