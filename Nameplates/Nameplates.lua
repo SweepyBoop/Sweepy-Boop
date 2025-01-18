@@ -122,8 +122,6 @@ function SweepyBoop:SetupNameplateModules()
                     UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
                 else
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
-                    nameplate.currentGUID = UnitGUID(unitId);
-                    nameplate.currentHostility = addon.UnitIsHostile(unitId);
                 end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
@@ -145,14 +143,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 nameplate.UnitFrame.isNameplateUnitFrame = true;
                 if ( not IsRestricted() ) then
-                    local currentGuid = UnitGUID(unitId);
-                    local currentHostilility = addon.UnitIsHostile(unitId);
-                    -- If nameplate's displayed GUID did not change but hostility did, update widgets
-                    -- This should prevent most of the redundant UpdateWidgets calls
-                    if nameplate.currentGUID == currentGuid and nameplate.currentHostility ~= currentHostilility then
-                        UpdateWidgets(nameplate, nameplate.UnitFrame);
-                        nameplate.currentHostility = currentHostilility;
-                    end
+                    UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
             end
         end
@@ -199,8 +190,6 @@ function SweepyBoop:RefreshAllNamePlates()
         if nameplate and nameplate.UnitFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
-            nameplate.currentGUID = UnitGUID(nameplate.UnitFrame.unit);
-            nameplate.currentHostility = addon.UnitIsHostile(nameplate.UnitFrame.unit);
         end
     end
 end
