@@ -49,7 +49,6 @@ end
 
 addon.UpdateSpecIcon = function (frame)
     -- Parented to UnitFrame to inherit the visibility
-    -- Only update if visible
     local specIconContainer = frame.SpecIconContainer;
     if ( not specIconContainer ) then return end
 
