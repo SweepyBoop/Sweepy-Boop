@@ -62,7 +62,10 @@ end
 
 -- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
 addon.UpdateClassIcon = function(nameplate, frame)
-    if ( not nameplate.classIconContainer ) then return end -- Only update if visible
+    -- Only update if already created
+    if ( not nameplate.classIconContainer ) then return end
+    local classIconContainer = nameplate.classIconContainer;
+    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassArrow ) then return end
 
     -- Full update if class, PvPClassification, roleAssigned or configurations have changed
     -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
@@ -71,13 +74,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
     local pvpClassification = UnitPvpClassification(frame.unit);
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    nameplate.classIconContainer = nameplate.classIconContainer or {};
-    local iconFrame = EnsureIcon(nameplate);
-    local arrowFrame = EnsureArrow(nameplate);
-    if ( not iconFrame ) or ( not arrowFrame ) then return end
-    local classIconContainer = nameplate.classIconContainer;
     if ( classIconContainer.class ~= class ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.roleAssigned ~= roleAssigned ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
         local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, roleAssigned);
+        local iconFrame = classIconContainer.FriendlyClassIcon;
+        local arrowFrame = classIconContainer.FriendlyClassArrow;
 
         if ( not iconID ) then
             iconFrame.icon:SetAlpha(0);
