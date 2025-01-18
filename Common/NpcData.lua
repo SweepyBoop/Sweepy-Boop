@@ -154,14 +154,13 @@ addon.GetNpcIdFromGuid = function (guid)
     return 0;
 end
 
-addon.CheckWhiteList = function (unitId)
+addon.CheckNpcWhiteList = function (unitId)
     if ( not UnitPlayerControlled(unitId) ) then
         return addon.NpcOption.Show; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add highlight in the future
     end
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
-    local option = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)];
-    return option or addon.NpcOption.Hide; -- If not found, hide by default
+    return SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
 end
 
 addon.AppendNpcOptionsToGroup = function(group)
