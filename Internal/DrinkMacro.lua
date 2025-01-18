@@ -381,11 +381,9 @@ chatMessage:SetScript("OnEvent", function (self, event, ...)
         for i = 1, #(drinkBuffs) do
             local buffName = drinkBuffs[i];
             local aura = GetPlayerAuraBySpellID(buffName);
-            if aura and aura.expirationTime then      
-                print("Aura found");
+            if aura and aura.expirationTime and IsInInstance() then
                 local now = GetTime();
                 if ( now > self.lastSent + 6 ) then
-                    print("Send Chat Message");
                     pcall(function() SendChatMessage("Drinking. Do not overextend!", "YELL") end)
                     self.lastSent = now;
                 end
