@@ -174,7 +174,7 @@ function SweepyBoop:SetupNameplateModules()
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
 
-            if IsActiveBattlefieldArena() then
+            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
                         frame.name:SetText(i);
