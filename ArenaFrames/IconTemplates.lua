@@ -168,16 +168,10 @@ addon.ResetIconCooldown = function (icon, amount)
     addon.RefreshCooldownTimer(icon.cooldown, finish);
 end
 
-addon.SetHideCountdownNumbers = function (frame)
+addon.SetHideCountdownNumbers = function (frame, hide)
     if frame.cooldown then
-        frame.cooldown:SetDrawEdge(true); -- Since we're hiding numbers, draw edge to make it more visible
-        frame.cooldown:SetHideCountdownNumbers(true);
-    end
-end
-
-addon.SetShowCountdownNumbers = function (frame)
-    if frame.cooldown then
-        frame.cooldown:SetDrawEdge(false);
-        frame.cooldown:SetHideCountdownNumbers(false);
+        frame.cooldown:SetDrawEdge(hide); -- Since we're hiding numbers, draw edge to make it more visible
+        frame.cooldown:SetHideCountdownNumbers(hide);
+        frame.cooldown.noCooldownCount = hide; -- hide OmniCC timers
     end
 end
