@@ -396,7 +396,7 @@ options.args.arenaFrames = {
             order = 11,
             width = 1.5,
             type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy Defensive Cooldowns",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy defensive cooldowns",
             desc = "Show arena enemy defensive cooldowns next to the arena frames",
         },
         arenaEnemyDefensiveIconSize = {
