@@ -113,11 +113,6 @@ On Blizzard raid frames:
 - Glow lifebloom buff during pandemic window for optimal refresh timing
 - Cenarion Ward buff fades out until the actual healing procs (to extend the healing with Verdant Infusion)
 
-## Sort raid frames
-![SortGroup](https://github.com/user-attachments/assets/caefcbd3-ad7b-432f-86e9-dc5f5c6caefd)
-
-Sort raid frames inside arena. Currently supports player on top/bottom, or in the middle between party1 and party2.
-
 ## Fix Blizzard raid frame aggro highlight
 ![PvP raid frame aggro highlight](https://github.com/user-attachments/assets/5fc7913f-3a96-4d2d-9939-55e6ef264ad3)
 
