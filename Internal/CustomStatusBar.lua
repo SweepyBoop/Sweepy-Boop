@@ -59,32 +59,36 @@ local function InitializeManaBar(frame, powerType)
     end
 end
 
-local class = select(2, UnitClass("player"));
-if ( class == addon.DRUID ) then
-    local druidManaBar = CreateDruidManaBar();
-    druidManaBar:SetScript("OnEvent", function(self, event, ...)
-        if ( event == addon.UPDATE_SHAPESHIFT_FORM ) or ( event == addon.PLAYER_ENTERING_WORLD ) then
-            if ShouldShowManaBar(self) then
-                self:SetAlpha(1);
-            else
-                self:SetAlpha(0);
+local eventFrame = CreateFrame("Frame");
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+eventFrame:SetScript("OnEvent", function ()
+    local class = addon.GetUnitClass("player");
+    if ( class == addon.DRUID ) then
+        local druidManaBar = CreateDruidManaBar();
+        druidManaBar:SetScript("OnEvent", function(self, event, ...)
+            if ( event == addon.UPDATE_SHAPESHIFT_FORM ) or ( event == addon.PLAYER_ENTERING_WORLD ) then
+                if ShouldShowManaBar(self) then
+                    self:SetAlpha(1);
+                else
+                    self:SetAlpha(0);
+                end
+
+                return;
             end
 
-            return;
-        end
+            local unit = ...;
+            if ( unit ~= "player" ) then return end
 
-        local unit = ...;
-        if ( unit ~= "player" ) then return end
-
-        if ( event == addon.UNIT_POWER_FREQUENT ) then
-            UpdatePower(self, POWERTYPE.Mana);
-        elseif ( event == addon.UNIT_MAXPOWER ) then
-            UpdatePowerMax(self, POWERTYPE.Mana);
-        end
-    end);
-    InitializeManaBar(druidManaBar, POWERTYPE.Mana);
-    druidManaBar:RegisterEvent(addon.UNIT_POWER_FREQUENT);
-    druidManaBar:RegisterEvent(addon.UNIT_MAXPOWER);
-    druidManaBar:RegisterEvent(addon.UPDATE_SHAPESHIFT_FORM); -- Fired when the current form changes
-    druidManaBar:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-end
+            if ( event == addon.UNIT_POWER_FREQUENT ) then
+                UpdatePower(self, POWERTYPE.Mana);
+            elseif ( event == addon.UNIT_MAXPOWER ) then
+                UpdatePowerMax(self, POWERTYPE.Mana);
+            end
+        end);
+        InitializeManaBar(druidManaBar, POWERTYPE.Mana);
+        druidManaBar:RegisterEvent(addon.UNIT_POWER_FREQUENT);
+        druidManaBar:RegisterEvent(addon.UNIT_MAXPOWER);
+        druidManaBar:RegisterEvent(addon.UPDATE_SHAPESHIFT_FORM); -- Fired when the current form changes
+        druidManaBar:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    end
+end)
