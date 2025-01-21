@@ -202,10 +202,6 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
 
             if aura then
                 if aura.duration and ( aura.duration ~= 0 ) then
-                    if playSound and ( not self.cooldown:IsShown() ) then
-                        PlaySoundFile(569006, "master"); -- spell_uni_sonarping_01
-                    end
-
                     self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
                     self.cooldown:Show();
                 else
@@ -234,6 +230,10 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
                 else
                     addon.HideOverlayGlow(self);
                 end
+
+                if playSound and ( not self:IsShown() ) then
+                    PlaySoundFile(569006, "master"); -- spell_uni_sonarping_01
+                end
                 self:Show();
             else
                 addon.HideOverlayGlow(self);
@@ -249,7 +249,7 @@ end
 CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- precognition
-CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
+--CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
 
 if ( class == addon.DRUID ) then
     CreateAuraIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32, 0); -- Prowl
