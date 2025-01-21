@@ -140,7 +140,7 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent);
 
 
 -- glowAtStacks: nil means no glow, 0 means always glow, positive value means glow at certain stacks
-local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowAtStacks, stackFunc, alwaysShow, suppressedBy)
+local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowAtStacks, stackFunc, alwaysShow, suppressedBy, playSound)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:SetMouseClickEnabled(false);
     frame:SetFrameStrata("HIGH");
@@ -202,6 +202,10 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
 
             if aura then
                 if aura.duration and ( aura.duration ~= 0 ) then
+                    if playSound and ( not self.cooldown:IsShown() ) then
+                        PlaySoundFile(addon.INTERFACE_SWEEPY .. "/internal/sonar.ogg", "master");
+                    end
+
                     self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
                     self.cooldown:Show();
                 else
@@ -244,7 +248,8 @@ end
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0); -- precognition
+CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- precognition
+CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
 
 if ( class == addon.DRUID ) then
     CreateAuraIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32, 0); -- Prowl
