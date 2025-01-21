@@ -81,7 +81,8 @@ end
 addon.UnitIsHostile = function(unitId)
     local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
     -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
-    return UnitCanAttack("player", unitId) ~= possessedFactor;
+    local isHostile = UnitReaction("player", unitId) < 5;
+    return isHostile ~= possessedFactor;
 end
 
 addon.UnitIsHunterSecondaryPet = function(unitId) -- Only call this check on hostile targets!
