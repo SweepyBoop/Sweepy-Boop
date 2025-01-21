@@ -244,7 +244,7 @@ end
 -- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
 CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
-CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0); -- precongnition
+CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0); -- precognition
 
 if ( class == addon.DRUID ) then
     CreateAuraIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32, 0); -- Prowl
