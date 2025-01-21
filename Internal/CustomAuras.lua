@@ -203,7 +203,7 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
             if aura then
                 if aura.duration and ( aura.duration ~= 0 ) then
                     if playSound and ( not self.cooldown:IsShown() ) then
-                        PlaySoundFile(addon.INTERFACE_SWEEPY .. "/internal/sonar.ogg", "master");
+                        PlaySoundFile(569006, "master"); -- spell_uni_sonarping_01
                     end
 
                     self.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration);
