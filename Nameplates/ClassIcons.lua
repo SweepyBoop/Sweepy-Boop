@@ -79,7 +79,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
 
-        if ( not iconID ) then -- nil icon ID due to "Show Healer Only" option
+        if ( not iconID ) or ( not iconCoords ) then -- nil icon ID due to "Show Healer Only" option, or class ID is not valid
             iconFrame.icon:SetAlpha(0);
             iconFrame.border:SetAlpha(0);
             iconFrame.targetHighlight:SetAlpha(0);
