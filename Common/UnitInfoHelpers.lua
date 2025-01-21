@@ -133,8 +133,8 @@ for _, classID in pairs(addon.CLASSID) do
     for specIndex = 1, 4 do
         local _, specName, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
-        if specName and classInfo and classInfo.className then
-            specInfoByName[classInfo.className .. " " .. specName] = { icon = icon, role = role };
+        if specName and classInfo and classInfo.classFile then
+            specInfoByName[classInfo.classFile .. "-" .. specName] = { icon = icon, role = role };
         end
     end
 end
@@ -165,8 +165,8 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
             end
         else
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-            if scoreInfo and scoreInfo.className and scoreInfo.talentSpec then
-                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.className .. " " .. scoreInfo.talentSpec];
+            if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
+                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
             else
                 -- There are still units with unknown spec, request info
                 RequestBattlefieldScoreData();
