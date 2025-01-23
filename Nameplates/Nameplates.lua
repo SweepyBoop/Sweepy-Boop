@@ -1,10 +1,10 @@
 local _, addon = ...;
 
-local function HideWidgets(nameplate, frame)
+local function HideWidgets(nameplate)
     addon.HideClassIcon(nameplate);
     addon.HidePetIcon(nameplate);
-    addon.HideNpcHighlight(frame);
-    addon.HideSpecIcon(frame);
+    addon.HideNpcHighlight(nameplate);
+    addon.HideSpecIcon(nameplate);
 end
 
 -- Protected nameplates in dungeons and raids
@@ -42,7 +42,7 @@ end
 local function UpdateWidgets(nameplate, frame)
     -- Don't mess with personal resource display
     if ( UnitIsUnit(frame.unit, "player") ) then
-        HideWidgets(nameplate, frame);
+        HideWidgets(nameplate);
         UpdateUnitFrameVisibility(frame, true);
         return;
     end
@@ -72,35 +72,35 @@ local function UpdateWidgets(nameplate, frame)
             UpdateUnitFrameVisibility(frame, true); -- Will be overriden by nameplate filter later
         end
 
-        addon.HideSpecIcon(frame);
-        addon.HideNpcHighlight(frame);
+        addon.HideSpecIcon(nameplate);
+        addon.HideNpcHighlight(nameplate);
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
             if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
-                addon.ShowSpecIcon(frame); -- Control alpha in spec icon module for healer / non-healer
+                addon.ShowSpecIcon(nameplate); -- Control alpha in spec icon module for healer / non-healer
             else
-                addon.HideSpecIcon(frame);
+                addon.HideSpecIcon(nameplate);
             end
 
-            addon.HideNpcHighlight(frame);
+            addon.HideNpcHighlight(nameplate);
             UpdateUnitFrameVisibility(frame, true); -- Always show enemy players
             return;
         end
 
         -- Process non-player hostile units
-        addon.HideSpecIcon(frame);
+        addon.HideSpecIcon(nameplate);
 
         local npcOption = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
         if ( npcOption == addon.NpcOption.Highlight ) then
-            addon.ShowNpcHighlight(frame);
+            addon.ShowNpcHighlight(nameplate);
         elseif ( npcOption == addon.NpcOption.Show ) then
-            addon.HideNpcHighlight(frame);
+            addon.HideNpcHighlight(nameplate);
         else
-            addon.HideNpcHighlight(frame);
+            addon.HideNpcHighlight(nameplate);
             shouldShowUnitFrame = false;
         end
 
@@ -124,7 +124,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets (even in restricted areas)
+                HideWidgets(nameplate); -- Hide previous widgets (even in restricted areas)
                 if IsRestricted() then
                     UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
                 else
@@ -139,7 +139,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
                     if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
-                        addon.UpdateSpecIcon(nameplate.UnitFrame);
+                        addon.UpdateSpecIcon(nameplate);
                     end
                 end
             end

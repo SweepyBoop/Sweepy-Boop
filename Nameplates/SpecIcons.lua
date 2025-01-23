@@ -33,28 +33,28 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
     end
 end
 
-local function EnsureSpecIcon(frame)
-    if ( not frame.SpecIconContainer ) then
-        frame.SpecIconContainer = {};
-        frame.SpecIconContainer.frames = {};
-        -- Subsequent calls to SetPoint with different anchor family will not work, we have to create one frame for each alignment option
+local function EnsureSpecIcon(nameplate)
+    if ( not nameplate.SpecIconContainer ) then
+        nameplate.SpecIconContainer = {};
+        nameplate.SpecIconContainer.frames = {};
+        -- Subsequent calls to SetPoint with different anchor family will not work, we have to create one nameplate for each alignment option
         for alignment, options in pairs(setPointOptions) do
-            frame.SpecIconContainer.frames[alignment] = addon.CreateClassOrSpecIcon(frame, options.point, options.relativePoint);
-            frame.SpecIconContainer.frames[alignment]:Hide();
+            nameplate.SpecIconContainer.frames[alignment] = addon.CreateClassOrSpecIcon(nameplate, options.point, options.relativePoint);
+            nameplate.SpecIconContainer.frames[alignment]:Hide();
         end
     end
 
-    return frame.SpecIconContainer;
+    return nameplate.SpecIconContainer;
 end
 
-addon.UpdateSpecIcon = function (frame)
+addon.UpdateSpecIcon = function (nameplate)
     -- Parented to UnitFrame to inherit the visibility
-    local specIconContainer = frame.SpecIconContainer;
+    local specIconContainer = nameplate.SpecIconContainer;
     if ( not specIconContainer ) then return end
 
     -- Still seeing an empty icon with a red border between solo shuffle rounds
     -- Repro if play some rounds with "show healer only", then switch to "show all"?
-    local iconID, isHealer = GetSpecIconInfo(frame.unit);
+    local iconID, isHealer = GetSpecIconInfo(nameplate.UnitFrame.unit);
 
     if ( specIconContainer.iconID ~= iconID ) then
         for _, iconFrame in pairs(specIconContainer.frames) do
@@ -91,19 +91,19 @@ addon.UpdateSpecIcon = function (frame)
     end
 end
 
-addon.ShowSpecIcon = function (frame)
-    EnsureSpecIcon(frame);
-    addon.UpdateSpecIcon(frame);
-    if frame.SpecIconContainer then
-        for alignment, iconFrame in pairs(frame.SpecIconContainer.frames) do
+addon.ShowSpecIcon = function (nameplate)
+    EnsureSpecIcon(nameplate);
+    addon.UpdateSpecIcon(nameplate);
+    if nameplate.SpecIconContainer then
+        for alignment, iconFrame in pairs(nameplate.SpecIconContainer.frames) do
             iconFrame:SetShown(alignment == SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment);
         end
     end
 end
 
-addon.HideSpecIcon = function (frame)
-    if frame.SpecIconContainer then
-        for _, iconFrame in pairs(frame.SpecIconContainer.frames) do
+addon.HideSpecIcon = function (nameplate)
+    if nameplate.SpecIconContainer then
+        for _, iconFrame in pairs(nameplate.SpecIconContainer.frames) do
             iconFrame:Hide();
         end
     end
