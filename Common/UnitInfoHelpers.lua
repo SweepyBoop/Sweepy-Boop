@@ -81,7 +81,8 @@ end
 addon.UnitIsHostile = function(unitId)
     local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
     -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
-    local isHostile = UnitReaction("player", unitId) < 5;
+    local reaction = UnitReaction("player", unitId); -- this can sometimes return nil, treat as hostile to avoid showing friendly class icons on NPCs
+    local isHostile = ( not reaction ) or ( reaction < 5 );
     return isHostile ~= possessedFactor;
 end
 
