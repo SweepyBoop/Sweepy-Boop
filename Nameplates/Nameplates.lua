@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local function HideWidgets(nameplate, frame)
+local function HideWidgets(nameplate)
     addon.HideClassIcon(nameplate);
     addon.HidePetIcon(nameplate);
     addon.HideNpcHighlight(nameplate);
@@ -42,7 +42,7 @@ end
 local function UpdateWidgets(nameplate, frame)
     -- Don't mess with personal resource display
     if ( UnitIsUnit(frame.unit, "player") ) then
-        HideWidgets(nameplate, frame);
+        HideWidgets(nameplate);
         UpdateUnitFrameVisibility(frame, true);
         return;
     end
@@ -124,7 +124,7 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                HideWidgets(nameplate, nameplate.UnitFrame); -- Hide previous widgets (even in restricted areas)
+                HideWidgets(nameplate); -- Hide previous widgets (even in restricted areas)
                 if IsRestricted() then
                     UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
                 else
