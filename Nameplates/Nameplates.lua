@@ -3,8 +3,8 @@ local _, addon = ...;
 local function HideWidgets(nameplate, frame)
     addon.HideClassIcon(nameplate);
     addon.HidePetIcon(nameplate);
-    addon.HideNpcHighlight(frame);
-    addon.HideSpecIcon(frame);
+    addon.HideNpcHighlight(nameplate);
+    addon.HideSpecIcon(nameplate);
 end
 
 -- Protected nameplates in dungeons and raids
@@ -72,35 +72,35 @@ local function UpdateWidgets(nameplate, frame)
             UpdateUnitFrameVisibility(frame, true); -- Will be overriden by nameplate filter later
         end
 
-        addon.HideSpecIcon(frame);
-        addon.HideNpcHighlight(frame);
+        addon.HideSpecIcon(nameplate);
+        addon.HideNpcHighlight(nameplate);
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
             if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
-                addon.ShowSpecIcon(frame); -- Control alpha in spec icon module for healer / non-healer
+                addon.ShowSpecIcon(nameplate); -- Control alpha in spec icon module for healer / non-healer
             else
-                addon.HideSpecIcon(frame);
+                addon.HideSpecIcon(nameplate);
             end
 
-            addon.HideNpcHighlight(frame);
+            addon.HideNpcHighlight(nameplate);
             UpdateUnitFrameVisibility(frame, true); -- Always show enemy players
             return;
         end
 
         -- Process non-player hostile units
-        addon.HideSpecIcon(frame);
+        addon.HideSpecIcon(nameplate);
 
         local npcOption = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
         if ( npcOption == addon.NpcOption.Highlight ) then
-            addon.ShowNpcHighlight(frame);
+            addon.ShowNpcHighlight(nameplate);
         elseif ( npcOption == addon.NpcOption.Show ) then
-            addon.HideNpcHighlight(frame);
+            addon.HideNpcHighlight(nameplate);
         else
-            addon.HideNpcHighlight(frame);
+            addon.HideNpcHighlight(nameplate);
             shouldShowUnitFrame = false;
         end
 
@@ -139,7 +139,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
                     if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
-                        addon.UpdateSpecIcon(nameplate.UnitFrame);
+                        addon.UpdateSpecIcon(nameplate);
                     end
                 end
             end
