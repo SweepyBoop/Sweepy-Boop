@@ -210,22 +210,21 @@ local function EnsureIcon(unitId, spellID, spell)
         end
         premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, hideHighlight);
 
-        if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
-            addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID], SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers);
-        end
+        addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID], SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers);
 
         -- size is set on creation but can be updated if lastModified falls behind
         premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     if ( premadeIcons[unitId][spellID].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+        addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID], SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers);
+
         if ( spell.category == SPELLCATEGORY.DEFENSIVE ) then
             local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyDefensiveIconSize / addon.DEFAULT_ICON_SIZE;
             premadeIcons[unitId][spellID]:SetScale(scale);
-            addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID], SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers);
-
-            premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
         end
+
+        premadeIcons[unitId][spellID].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 end
 
