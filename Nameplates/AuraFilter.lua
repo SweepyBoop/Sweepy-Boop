@@ -1,5 +1,19 @@
 local _, addon = ...;
 
+local crowdControlsHiddenByBlizz = {
+    [20549] = true, -- War Stomp
+};
+
+local function ShouldShowBuffOverride(self, aura, forceAll)
+    -- There are crowd controls that are not shown by Blizzard, we need to add them
+    if ( not self:ShouldShowBuff(aura, forceAll) ) then
+        return aura and aura.spellId and crowdControlsHiddenByBlizz[aura.spellId];
+    end
+
+    -- Now check whitelist
+    return true;
+end
+
 local function ParseAllAuras(self, unitFrame, forceAll)
     if self.auras == nil then
 		self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
@@ -8,7 +22,7 @@ local function ParseAllAuras(self, unitFrame, forceAll)
 	end
 
 	local function HandleAura(aura)
-		if self:ShouldShowBuff(aura, forceAll) then
+		if ShouldShowBuffOverride(self, aura, forceAll) then
 			self.auras[aura.auraInstanceID] = aura;
 		end
 
@@ -50,7 +64,7 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 	else
 		if unitAuraUpdateInfo.addedAuras ~= nil then
 			for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-				if self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString) then
+				if ShouldShowBuffOverride(self, aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString) then
 					self.auras[aura.auraInstanceID] = aura;
 					aurasChanged = true;
 				end
