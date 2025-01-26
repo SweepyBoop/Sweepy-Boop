@@ -1,5 +1,6 @@
 local _, addon = ...;
-addon.CrowdControl = {
+
+addon.CrowdControlAuras = {
     [383121] = true, -- Mass Polymorph
     [10326] = true, -- Turn Evil
     [77505] = true, -- Earthquake (Stun)
@@ -142,5 +143,5 @@ addon.CrowdControl = {
     [853] = true, -- Hammer of Justice
     [91797] = true, -- Monstrous Blow
     [356567] = true, -- Shackles of Malediction
-}
+};
 

@@ -1,17 +1,5 @@
 local _, addon = ...;
 
--- Some crowd controls are not shown by Blizzard
-local crowdControls = {
-    -- Racials
-    [20549] = true, -- War Stomp
-    [107079] = true, -- Quaking Palm
-    [255723] = true, -- Bull Rush
-    [287712] = true, -- Haymaker
-
-    -- Death Knight
-    [47476] = true, -- Strangulate
-};
-
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
         return false;
@@ -19,7 +7,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
 
     -- Racial crowd controls are hidden by Blizzard, display them properly
     -- This part will be checked even if the aura filter feature is disabled
-    if crowdControls[aura.spellId] then
+    if addon.CrowdControlAuras[aura.spellId] then
         return true;
     end
 

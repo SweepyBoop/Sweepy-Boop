@@ -51,11 +51,11 @@ foreach ($line in $spellFileContent) {
 }
 
 # Prepare the output content
-$outputContent = "local _, addon = ...;`naddon.CrowdControl = {`n"
+$outputContent = "local _, addon = ...;`n`naddon.CrowdControlAuras = {`n"
 foreach ($id in $crowdControlTable.Keys) {
     $outputContent += "    [$id] = true, -- $($crowdControlTable[$id])`n"
 }
-$outputContent += "}`n"
+$outputContent += "};`n"
 
 # Write the output content to $outputFile
 $outputContent | Set-Content $outputFile
