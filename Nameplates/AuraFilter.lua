@@ -1,8 +1,8 @@
 local _, addon = ...;
 
 local crowdControlsHiddenByBlizz = {
-    [15407] = true, -- Mind Flay (test)
     [20549] = true, -- War Stomp
+    [287712] = true, -- Haymaker
 };
 
 local function ShouldShowBuffOverride(self, aura, forceAll)
