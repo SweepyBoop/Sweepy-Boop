@@ -769,6 +769,7 @@ if addon.internal then -- Set default for internal version
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
+addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.auraWhiteList);
 
 local function SetupAllSpells(profile, spellList, value)
     for spellID, spellEntry in pairs(spellList) do

@@ -12,8 +12,6 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 55095, default = true }, -- Frost Fever
             -- Blood
             { spellId = 55078, default = true }, -- Blood Plague
-            { spellId = 206930, default = true }, -- Heart Strike
-            { spellId = 206931, default = true }, -- Blooddrinker
         }
     },
     {
