@@ -64,12 +64,6 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
         ParseAllAuras(self, unitFrame, auraSettings.showAll);
         aurasChanged = true;
-    elseif self.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified then
-        -- Make sure to do an initial run, or do a full update when the config has changed
-
-        ParseAllAuras(self, unitFrame, auraSettings.showAll);
-        aurasChanged = true;
-        self.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
@@ -112,8 +106,8 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
         return;
     end
 
-    -- This sometimes works but there is a delay after Blizzard code runs
-    -- When the debuff is the first debuff on a nameplate, it doesn't work; when the nameplate already has some debuffs it works
+    -- Can show extra debuffs, but cannot hide buffs that are shown by Blizzard
+
     local buffIndex = 1;
     self.auras:Iterate(function(auraInstanceID, aura)
         local buff = self.buffPool:Acquire();
