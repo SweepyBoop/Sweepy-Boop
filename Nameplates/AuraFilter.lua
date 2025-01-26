@@ -1,10 +1,15 @@
 local _, addon = ...;
 
-local racialCrowdControls = {
+-- Some crowd controls are not shown by Blizzard
+local crowdControls = {
+    -- Racials
     [20549] = true, -- War Stomp
     [107079] = true, -- Quaking Palm
     [255723] = true, -- Bull Rush
     [287712] = true, -- Haymaker
+
+    -- Death Knight
+    [47476] = true, -- Strangulate
 };
 
 local function ShouldShowBuffOverride(self, aura, forceAll)
@@ -14,18 +19,18 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
 
     -- Racial crowd controls are hidden by Blizzard, display them properly
     -- This part will be checked even if the aura filter feature is disabled
-    if racialCrowdControls[aura.spellId] then
+    if crowdControls[aura.spellId] then
         return true;
     end
 
-    if ( aura.sourceUnit == "player") or ( aura.sourceUnit == "pet" ) then
+    if aura.nameplateShowAll or forceAll then
+        return true;
+    elseif (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
         if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-            return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)]
+            return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)];
         else
-            return self:ShouldShowBuff(aura, forceAll);
+            return aura.nameplateShowPersonal;
         end
-    else
-        return self:ShouldShowBuff(aura, forceAll);
     end
 end
 
@@ -138,7 +143,6 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 		CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
 		buff:Show();
-        print(aura.name, aura.spellId);
 
 		buffIndex = buffIndex + 1;
 		return buffIndex >= BUFF_MAX_DISPLAY;
