@@ -332,7 +332,7 @@ options.args.nameplatesEnemy = {
 };
 
 addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
-addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
+--addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
 
 options.args.arenaFrames = {
     order = 5,
