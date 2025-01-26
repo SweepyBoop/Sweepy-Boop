@@ -11,6 +11,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     end
 
     if aura.nameplateShowAll or forceAll then
+        print(aura.name, aura.spellId);
         return true;
     elseif (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
         return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)];
