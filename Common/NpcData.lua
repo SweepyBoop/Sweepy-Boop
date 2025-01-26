@@ -167,6 +167,14 @@ addon.CheckNpcWhiteList = function (unitId)
     return SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
 end
 
+addon.FillDefaultToNpcOptions = function(profile)
+    for _, classEntry in ipairs(addon.importantNpcList) do
+        for _, npcEntry in ipairs(classEntry.npcs) do
+            profile[tostring(npcEntry.npcID)] = npcEntry.default;
+        end
+    end
+end
+
 addon.AppendNpcOptionsToGroup = function(group)
     group.args = {};
 
@@ -218,13 +226,5 @@ addon.AppendNpcOptionsToGroup = function(group)
 
         group.args[tostring(classEntry.classID)] = classGroup;
         index = index + 1;
-    end
-end
-
-addon.FillDefaultToNpcOptions = function(profile)
-    for _, classEntry in ipairs(addon.importantNpcList) do
-        for _, npcEntry in ipairs(classEntry.npcs) do
-            profile[tostring(npcEntry.npcID)] = npcEntry.default;
-        end
     end
 end

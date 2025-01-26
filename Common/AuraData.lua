@@ -30,6 +30,18 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
         }
     },
     {
+        classID = addon.CLASSID.DRUID,
+        auras = {
+            { spellId = 164812, default = true }, -- Moonfire
+            { spellId = 164815, default = true }, -- Sunfire
+            { spellId = 155722, default = true }, -- Rake
+            { spellId = 1079, default = true }, -- Rip
+            { spellId = 33763, default = true }, -- Lifebloom
+            { spellId = 188550, default = true }, -- Lifebloom (new)
+            { spellId = 102359, default = true }, -- Mass Entanglement
+        }
+    },
+    {
         classID = addon.CLASSID.EVOKER,
         auras = {
             { spellId = 370898, default = true }, -- Fire Breath
@@ -118,3 +130,65 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
         }
     },
 };
+
+addon.FillDefaultToAuraOptions = function(profile)
+    for _, classEntry in ipairs(addon.AuraList) do
+        for _, auraEntry in ipairs(classEntry.auras) do
+            profile[tostring(auraEntry.spellId)] = auraEntry.default;
+        end
+    end
+end
+
+addon.AppendAuraOptionsToGroup = function(group)
+    group.args = {};
+
+    group.args.reset = {
+        order = 1,
+        type = "execute",
+        name = "Reset filter whitelist",
+        func = function()
+            addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
+        end,
+    };
+
+    local index = 2;
+    for _, classEntry in ipairs(addon.AuraList) do
+        local classInfo = C_CreatureInfo.GetClassInfo(classEntry.classID);
+        local classGroup = {
+            order = index,
+            type = "group",
+            icon = addon.ICON_ID_CLASSES,
+            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+            name = classInfo.className,
+            args = {},
+        };
+
+        local auraIdx = 1;
+        for _, auraEntry in ipairs(classEntry.auras) do
+            -- https://warcraft.wiki.gg/wiki/SpellMixin
+            local description;
+            local spell = Spell:CreateFromSpellID(auraEntry.spellId);
+            spell:ContinueOnSpellLoad(function()
+                description = spell:GetSpellDescription();
+            end)
+            
+            local texture = C_Spell.GetSpellTexture(auraEntry.spellId);
+            classGroup.args[tostring(auraEntry.spellId)] = {
+                order = auraIdx,
+                type = "select",
+                width = "full",
+                values = {
+                    [addon.AuraOption.Hide] = "Hide",
+                    [addon.AuraOption.Show] = "Show",
+                    [addon.AuraOption.Highlight] = "Highlight",
+                },
+                name = addon.FORMAT_TEXTURE(texture) .. " " .. GetSpellInfo(auraEntry.spellId),
+                desc = description,
+            };
+            auraIdx = auraIdx + 1;
+        end
+
+        group.args[tostring(classEntry.classID)] = classGroup;
+        index = index + 1;
+    end
+end
