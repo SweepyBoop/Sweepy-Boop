@@ -126,6 +126,7 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
         buff:Show();
+        buff:SetMouseClickEnabled(false);
 
         buffIndex = buffIndex + 1;
         return buffIndex >= BUFF_MAX_DISPLAY;
