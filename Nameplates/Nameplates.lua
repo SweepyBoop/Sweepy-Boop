@@ -119,7 +119,8 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
-    eventFrame:SetScript("OnEvent", function (_, event, unitId)
+    eventFrame:RegisterEvent(addon.UNIT_AURA);
+    eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -149,6 +150,14 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 if ( not IsRestricted() ) then
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
+                end
+            end
+        elseif event == addon.UNIT_AURA then
+            if unitId:find("nameplate") and addon.UnitIsHostile(unitId) then -- UnitIsHostile will exclude Personal Resource Display
+                local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
+                if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
+                    local unitAuraUpdateInfo = ...;
+                    addon.UpdateNamePlateAuras(nameplate.UnitFrame.buffFrame, unitId, unitAuraUpdateInfo);
                 end
             end
         end

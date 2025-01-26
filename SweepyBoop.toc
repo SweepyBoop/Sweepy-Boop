@@ -31,6 +31,7 @@ Nameplates\ClassIcons.lua
 Nameplates\PetIcons.lua
 Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua
+Nameplates\AuraFilter.lua
 Nameplates\Nameplates.lua
 
 Misc\ArenaSurrender.lua
