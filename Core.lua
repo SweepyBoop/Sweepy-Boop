@@ -269,7 +269,7 @@ options.args.nameplatesEnemy = {
                     order = 2,
                     type = "toggle",
                     width = "full",
-                    name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize hostile non-player units to hide / show / highlight",
+                    name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
                     desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                 },
                 highlightScale = {
