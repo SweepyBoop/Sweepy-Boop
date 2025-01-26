@@ -21,6 +21,7 @@ Common\ArenaEnemyBurstSpells.lua
 Common\ArenaEnemyUtilitySpells.lua
 Common\UnitInfoHelpers.lua
 Common\NpcData.lua
+Common\AuraData.lua
 Common\DRList.lua
 Common\AceGUIWidget-InlineLink.lua
 

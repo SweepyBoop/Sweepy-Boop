@@ -181,7 +181,7 @@ addon.AppendNpcOptionsToGroup = function(group)
     group.args.reset = {
         order = 1,
         type = "execute",
-        name = "Reset filter whitelist",
+        name = "Reset to default",
         func = function()
             addon.FillDefaultToNpcOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
         end,

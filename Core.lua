@@ -283,6 +283,17 @@ options.args.nameplatesEnemy = {
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                     end,
                 },
+
+                auraFilterEnabled = {
+                    order = 4,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras on enemy nameplates",
+                    desc = "Show only whitelisted auras from player on enemy nameplates",
+                    hidden = function()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                    end,
+                },
             },
         },
 
@@ -300,11 +311,28 @@ options.args.nameplatesEnemy = {
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
             end
+        },
+
+        auraWhiteList = {
+            order = 14,
+            type = "group",
+            name = "Aura whitelist",
+            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] end,
+            set = function(info, val) 
+                SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] = val;
+                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                -- No need to refresh nameplates, just apply it on next UNIT_AURA
+            end,
+            args = {},
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+            end
         }
     },
 };
 
 addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
+addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
 
 options.args.arenaFrames = {
     order = 5,
@@ -697,9 +725,11 @@ local defaults = {
             arenaSpecIconAlignment = addon.SPEC_ICON_ALIGNMENT.TOP,
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
+            auraFilterEnabled = true,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
+            auraWhiteList = {},
         },
         arenaFrames = {
             healerIndicator = true,

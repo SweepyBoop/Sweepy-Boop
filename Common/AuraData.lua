@@ -145,7 +145,7 @@ addon.AppendAuraOptionsToGroup = function(group)
     group.args.reset = {
         order = 1,
         type = "execute",
-        name = "Reset filter whitelist",
+        name = "Reset to default",
         func = function()
             addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
         end,
@@ -175,14 +175,9 @@ addon.AppendAuraOptionsToGroup = function(group)
             local texture = C_Spell.GetSpellTexture(auraEntry.spellId);
             classGroup.args[tostring(auraEntry.spellId)] = {
                 order = auraIdx,
-                type = "select",
+                type = "toggle",
                 width = "full",
-                values = {
-                    [addon.AuraOption.Hide] = "Hide",
-                    [addon.AuraOption.Show] = "Show",
-                    [addon.AuraOption.Highlight] = "Highlight",
-                },
-                name = addon.FORMAT_TEXTURE(texture) .. " " .. GetSpellInfo(auraEntry.spellId),
+                name = addon.FORMAT_TEXTURE(texture) .. " " .. C_Spell.GetSpellName(auraEntry.spellId),
                 desc = description,
             };
             auraIdx = auraIdx + 1;
