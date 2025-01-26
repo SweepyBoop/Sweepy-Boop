@@ -157,7 +157,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
                 if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
                     local unitAuraUpdateInfo = ...;
-                    addon.UpdateNamePlateAuras(nameplate.UnitFrame.buffFrame, unitId, unitAuraUpdateInfo);
+                    addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame, unitId, unitAuraUpdateInfo);
                 end
             end
         end
