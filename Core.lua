@@ -288,8 +288,8 @@ options.args.nameplatesEnemy = {
                     order = 4,
                     type = "toggle",
                     width = "full",
-                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras on enemy nameplates",
-                    desc = "Show only whitelisted auras from player on enemy nameplates",
+                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",
+                    desc = "Show only whitelisted auras applied by myself on enemy nameplates\nCrowd controls from all source units will always show",
                     hidden = function()
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                     end,
