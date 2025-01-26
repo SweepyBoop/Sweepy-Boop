@@ -1,5 +1,25 @@
 local _, addon = ...;
 
+local function ParseAllAuras(self, unitFrame, forceAll)
+    if self.auras == nil then
+		self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
+	else
+		self.auras:Clear();
+	end
+
+	local function HandleAura(aura)
+		if self:ShouldShowBuff(aura, forceAll) then
+			self.auras[aura.auraInstanceID] = aura;
+		end
+
+		return false;
+	end
+
+	local batchCount = nil;
+	local usePackedAura = true;
+	AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
+end
+
 local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, auraSettings)
     -- Copied from BlizzardInterfaceCode
     local filters = {};
@@ -25,7 +45,7 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-		self:ParseAllAuras(auraSettings.showAll);
+		ParseAllAuras(self, unitFrame, auraSettings.showAll);
 		aurasChanged = true;
 	else
 		if unitAuraUpdateInfo.addedAuras ~= nil then
