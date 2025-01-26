@@ -19,22 +19,22 @@ end
 
 local function ParseAllAuras(self, unitFrame, forceAll)
     if self.auras == nil then
-		self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
-	else
-		self.auras:Clear();
-	end
+        self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
+    else
+        self.auras:Clear();
+    end
 
-	local function HandleAura(aura)
-		if ShouldShowBuffOverride(self, aura, forceAll) then
-			self.auras[aura.auraInstanceID] = aura;
-		end
+    local function HandleAura(aura)
+        if ShouldShowBuffOverride(self, aura, forceAll) then
+            self.auras[aura.auraInstanceID] = aura;
+        end
 
-		return false;
-	end
+        return false;
+    end
 
-	local batchCount = nil;
-	local usePackedAura = true;
-	AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
+    local batchCount = nil;
+    local usePackedAura = true;
+    AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
 end
 
 local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, auraSettings)
@@ -62,76 +62,79 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-		ParseAllAuras(self, unitFrame, auraSettings.showAll);
-		aurasChanged = true;
-	else
-		if unitAuraUpdateInfo.addedAuras ~= nil then
-			for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-				if ShouldShowBuffOverride(self, aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString) then
-					self.auras[aura.auraInstanceID] = aura;
-					aurasChanged = true;
-				end
-			end
-		end
+        ParseAllAuras(self, unitFrame, auraSettings.showAll);
+        aurasChanged = true;
+    elseif self.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified then
+        -- Make sure to do an initial run, or do a full update when the config has changed
+        ParseAllAuras(self, unitFrame, auraSettings.showAll);
+        aurasChanged = true;
+        self.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
+    else
+        if unitAuraUpdateInfo.addedAuras ~= nil then
+            for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
+                if ShouldShowBuffOverride(self, aura, auraSettings.showAll) then
+                    self.auras[aura.auraInstanceID] = aura;
+                    aurasChanged = true;
+                end
+            end
+        end
 
-		if unitAuraUpdateInfo.updatedAuraInstanceIDs ~= nil then
-			for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
-				if self.auras[auraInstanceID] ~= nil then
-					local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
-					self.auras[auraInstanceID] = newAura;
-					aurasChanged = true;
-				end
-			end
-		end
+        if unitAuraUpdateInfo.updatedAuraInstanceIDs ~= nil then
+            for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
+                if self.auras[auraInstanceID] ~= nil then
+                    local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
+                    self.auras[auraInstanceID] = newAura;
+                    aurasChanged = true;
+                end
+            end
+        end
 
-		if unitAuraUpdateInfo.removedAuraInstanceIDs ~= nil then
-			for _, auraInstanceID in ipairs(unitAuraUpdateInfo.removedAuraInstanceIDs) do
-				if self.auras[auraInstanceID] ~= nil then
-					self.auras[auraInstanceID] = nil;
-					aurasChanged = true;
-				end
-			end
-		end
-	end
+        if unitAuraUpdateInfo.removedAuraInstanceIDs ~= nil then
+            for _, auraInstanceID in ipairs(unitAuraUpdateInfo.removedAuraInstanceIDs) do
+                if self.auras[auraInstanceID] ~= nil then
+                    self.auras[auraInstanceID] = nil;
+                    aurasChanged = true;
+                end
+            end
+        end
+    end
 
-    -- we need aurasChanged to return true when something is filtered out by us
-
-	self:UpdateAnchor();
+    self:UpdateAnchor();
 
     if not aurasChanged then
-		return;
-	end
+        return;
+    end
 
     self.buffPool:ReleaseAll();
 
-    if auraSettings.hideAll or not self.isActive then
-		return;
-	end
+    if not self.isActive then
+        return;
+    end
 
     -- This sometimes works but there is a delay after Blizzard code runs
     -- When the debuff is the first debuff on a nameplate, it doesn't work; when the nameplate already has some debuffs it works
     local buffIndex = 1;
-	self.auras:Iterate(function(auraInstanceID, aura)
-		local buff = self.buffPool:Acquire();
-		buff.auraInstanceID = auraInstanceID;
-		buff.isBuff = aura.isHelpful;
-		buff.layoutIndex = buffIndex;
-		buff.spellID = aura.spellId;
+    self.auras:Iterate(function(auraInstanceID, aura)
+        local buff = self.buffPool:Acquire();
+        buff.auraInstanceID = auraInstanceID;
+        buff.isBuff = aura.isHelpful;
+        buff.layoutIndex = buffIndex;
+        buff.spellID = aura.spellId;
 
-		buff.Icon:SetTexture(aura.icon);
-		if (aura.applications > 1) then
-			buff.CountFrame.Count:SetText(aura.applications);
-			buff.CountFrame.Count:Show();
-		else
-			buff.CountFrame.Count:Hide();
-		end
-		CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
+        buff.Icon:SetTexture(aura.icon);
+        if (aura.applications > 1) then
+            buff.CountFrame.Count:SetText(aura.applications);
+            buff.CountFrame.Count:Show();
+        else
+            buff.CountFrame.Count:Hide();
+        end
+        CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
-		buff:Show();
+        buff:Show();
 
-		buffIndex = buffIndex + 1;
-		return buffIndex >= BUFF_MAX_DISPLAY;
-	end);
+        buffIndex = buffIndex + 1;
+        return buffIndex >= BUFF_MAX_DISPLAY;
+    end);
 
     self:Layout();
 end
