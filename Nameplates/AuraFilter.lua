@@ -8,19 +8,25 @@ local racialCrowdControls = {
 };
 
 local function ShouldShowBuffOverride(self, aura, forceAll)
-    -- Racial crowd controls are hidden by Blizzard, display them properly
-    -- This part will be checked even if the aura filter feature is disabled
-    if aura and aura.spellId then
-        if racialCrowdControls[aura.spellId] then
-            return true;
-        elseif SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-            if aura.sourceUnit == "player" and SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)] then
-                return true;
-            end
-        end
+    if ( not aura ) or ( not aura.spellId ) then
+        return false;
     end
 
-    return self:ShouldShowBuff(aura, forceAll);
+    -- Racial crowd controls are hidden by Blizzard, display them properly
+    -- This part will be checked even if the aura filter feature is disabled
+    if racialCrowdControls[aura.spellId] then
+        return true;
+    end
+
+    if ( aura.sourceUnit == "player") or ( aura.sourceUnit == "pet" ) then
+        if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+            return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)]
+        else
+            return self:ShouldShowBuff(aura, forceAll);
+        end
+    else
+        return self:ShouldShowBuff(aura, forceAll);
+    end
 end
 
 local function ParseAllAuras(self, unitFrame, forceAll)
