@@ -66,6 +66,7 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
         aurasChanged = true;
     elseif self.lastModified ~= SweepyBoop.db.profile.nameplatesEnemy.lastModified then
         -- Make sure to do an initial run, or do a full update when the config has changed
+
         ParseAllAuras(self, unitFrame, auraSettings.showAll);
         aurasChanged = true;
         self.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
