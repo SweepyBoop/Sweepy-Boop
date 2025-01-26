@@ -5,8 +5,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
         return false;
     end
 
-    -- Racial crowd controls are hidden by Blizzard, display them properly
-    -- This part will be checked even if the aura filter feature is disabled
+    -- Some crowd controls are hidden by Blizzard, override the logic
     if addon.CrowdControlAuras[aura.spellId] then
         return true;
     end
@@ -14,11 +13,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     if aura.nameplateShowAll or forceAll then
         return true;
     elseif (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
-        if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-            return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)];
-        else
-            return aura.nameplateShowPersonal;
-        end
+        return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)];
     end
 end
 
