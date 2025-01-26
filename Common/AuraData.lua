@@ -6,8 +6,8 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
         auras = {
             { spellId = 45524, default = true }, -- Chains of Ice
             -- Unholy
-            { spellId = 77575, default = true }, -- Virulent Plague
-            { spellId = 197147, default = true }, -- Festering Wound
+            { spellId = 191587, default = true }, -- Virulent Plague
+            { spellId = 194310, default = true }, -- Festering Wound
             -- Frost
             { spellId = 55095, default = true }, -- Frost Fever
             -- Blood
