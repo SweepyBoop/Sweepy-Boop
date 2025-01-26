@@ -2,6 +2,7 @@ local _, addon = ...;
 
 local crowdControlsHiddenByBlizz = {
     [20549] = true, -- War Stomp
+    [107079] = true, -- Quaking Palm
     [255723] = true, -- Bull Rush
     [287712] = true, -- Haymaker
 };
