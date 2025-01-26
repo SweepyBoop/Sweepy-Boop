@@ -104,6 +104,8 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 		return;
 	end
 
+    -- This sometimes works but there is a delay after Blizzard code runs
+    -- When the debuff is the first debuff on a nameplate, it doesn't work; when the nameplate already has some debuffs it works
     local buffIndex = 1;
 	self.auras:Iterate(function(auraInstanceID, aura)
 		local buff = self.buffPool:Acquire();
@@ -126,6 +128,8 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 		buffIndex = buffIndex + 1;
 		return buffIndex >= BUFF_MAX_DISPLAY;
 	end);
+
+    self:Layout();
 end
 
 addon.OnNamePlateAuraUpdate = function (self, unitFrame, unit, unitAuraUpdateInfo)
