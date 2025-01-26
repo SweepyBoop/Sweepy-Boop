@@ -153,7 +153,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_AURA then
-            if unitId:find("nameplate") then -- UnitIsHostile will exclude Personal Resource Display
+            if unitId:find("nameplate") and addon.UnitIsHostile(unitId) then -- UnitIsHostile will exclude Personal Resource Display
                 local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
                 if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
                     local unitAuraUpdateInfo = ...;
