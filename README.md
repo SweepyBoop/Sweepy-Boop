@@ -23,7 +23,7 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 (In-game class icon style)
 
-![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/fd2170d8-7377-4f52-9c74-77efbf7df1a2)
+![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/19ea83a0-c143-44a3-bdc9-96b0b5505636)
 
 (Class color arrow style)
 
