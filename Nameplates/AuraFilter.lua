@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local crowdControlsHiddenByBlizz = {
+local racialCrowdControls = {
     [20549] = true, -- War Stomp
     [107079] = true, -- Quaking Palm
     [255723] = true, -- Bull Rush
@@ -8,9 +8,10 @@ local crowdControlsHiddenByBlizz = {
 };
 
 local function ShouldShowBuffOverride(self, aura, forceAll)
-    -- There are crowd controls that are not shown by Blizzard, we need to add them
+    -- Racial crowd controls are hidden by Blizzard, display them properly
+    -- This part will be checked even if the aura filter feature is disabled
     if ( not self:ShouldShowBuff(aura, forceAll) ) then
-        return aura and aura.spellId and crowdControlsHiddenByBlizz[aura.spellId];
+        return aura and aura.spellId and racialCrowdControls[aura.spellId];
     end
 
     -- Now check whitelist
