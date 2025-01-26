@@ -64,11 +64,11 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
 
     classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
-    classIconFrame.targetHighlight:SetAtlas("Capacitance-General-WorkOrderBorder");
+    classIconFrame.targetHighlight:SetAtlas("communities-guildbanner-border"); -- Originally Capacitance-General-WorkOrderBorder which is rectangle
     classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
     classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetSize(arrowSize / 2, arrowSize / 1.375);
-    classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame);
+    classIconFrame.targetHighlight:SetSize(arrowSize / 1.25, arrowSize);
+    classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -5);
     classIconFrame.targetHighlight:Hide();
 
     return classIconFrame;

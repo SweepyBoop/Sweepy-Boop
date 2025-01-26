@@ -269,7 +269,7 @@ options.args.nameplatesEnemy = {
                     order = 2,
                     type = "toggle",
                     width = "full",
-                    name = addon.FORMAT_TEXTURE(pvpCursor) .. " Filter which hostile non-player units to hide / show / highlight",
+                    name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
                     desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                 },
                 highlightScale = {
@@ -289,7 +289,7 @@ options.args.nameplatesEnemy = {
         filterList = {
             order = 13,
             type = "group",
-            name = "Filter whitelist",
+            name = "Unit whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
             set = function(info, val) 
                 SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
