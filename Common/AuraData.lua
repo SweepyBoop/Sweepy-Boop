@@ -112,15 +112,21 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 3600 }, -- Earthbind
         }
     },
-    -- {
-    --     classID = addon.CLASSID.WARLOCK,
-    --     auras = {
-    --         { spellId = 980, default = true }, -- Agony
-    --         { spellId = 172, default = true }, -- Corruption
-    --         { spellId = 348, default = true }, -- Immolate
-    --         { spellId = 30108, default = true }, -- Unstable Affliction
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.WARLOCK,
+        auras = {
+            { spellId = 316099, default = true }, -- Unstable Affliction
+            { spellId = 980, default = true }, -- Agony
+            { spellId = 146739, default = true }, -- Corruption
+            { spellId = 702, default = true }, -- Curse of Weakness
+            { spellId = 1714, default = true}, -- Curse of Tongues
+
+            { spellId = 157736 }, -- Immolate
+            { spellId = 386997 }, -- Soul Rot
+
+            { spellId = 334275 }, -- Curse of Exhaustion
+        }
+    },
     -- {
     --     classID = addon.CLASSID.WARRIOR,
     --     auras = {
