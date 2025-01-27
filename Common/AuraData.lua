@@ -5,12 +5,9 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
         classID = addon.CLASSID.DEATHKNIGHT,
         auras = {
             { spellId = 45524, default = true }, -- Chains of Ice
-            -- Unholy
             { spellId = 191587, default = true }, -- Virulent Plague
             { spellId = 194310, default = true }, -- Festering Wound
-            -- Frost
             { spellId = 55095, default = true }, -- Frost Fever
-            -- Blood
             { spellId = 55078, default = true }, -- Blood Plague
         }
     },
@@ -68,15 +65,15 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 228287 }, -- Mark of the Crane
         }
     },
-    -- {
-    --     classID = addon.CLASSID.PALADIN,
-    --     auras = {
-    --         { spellId = 853, default = true }, -- Hammer of Justice
-    --         { spellId = 183218, default = true }, -- Hand of Hindrance
-    --         { spellId = 197277, default = true }, -- Judgment of Light
-    --         { spellId = 204242, default = true }, -- Consecration
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.PALADIN,
+        auras = {
+            { spellId = 343721, default = true }, -- Final Reckoning
+            { spellId = 197277, default = true }, -- Judgment
+            { spellId = 403695, default = true }, -- Truth's Wake
+            { spellId = 408383 }, -- Judgment of Justice
+        }
+    },
     -- {
     --     classID = addon.CLASSID.PRIEST,
     --     auras = {
