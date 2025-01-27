@@ -1,18 +1,21 @@
 local _, addon = ...;
 
+-- Crowd controls missed by BigDebuffs
+addon.CrowdControlAuras[64695] = true; -- Earthgrab
+
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
         return false;
     end
+
+    -- Basically only show crowd controls and whitelisted debuffs applied by the player
 
     -- Some crowd controls are hidden by Blizzard, override the logic
     if addon.CrowdControlAuras[aura.spellId] then
         return true;
     end
 
-    if aura.nameplateShowAll or forceAll then
-        return true;
-    elseif (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
+    if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
         return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)];
     end
 end
