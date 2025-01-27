@@ -86,15 +86,22 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             -- { spellId = 199845 }, -- Psyflay (Psyfiend)
         }
     },
-    -- {
-    --     classID = addon.CLASSID.ROGUE,
-    --     auras = {
-    --         { spellId = 703, default = true }, -- Garrote
-    --         { spellId = 1943, default = true }, -- Rupture
-    --         { spellId = 2818, default = true }, -- Deadly Poison
-    --         { spellId = 3409, default = true }, -- Crippling Poison
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.ROGUE,
+        auras = {
+            { spellId = 703, default = true }, -- Garrote
+            { spellId = 1943, default = true }, -- Rupture
+            { spellId = 360194, default = true }, -- Deathmark
+            { spellId = 121411, default = true }, -- Crimson Tempest
+
+            { spellId = 385627 }, -- Kingsbane
+            { spellId = 5760 }, -- Numbing Poison
+            { spellId = 3409 }, -- Crippling Poison
+            { spellId = 383414 }, -- Amplifying Poison
+            { spellId = 2818 }, -- Deadly Poison
+            { spellId = 8680 }, -- Wound Poison
+        }
+    },
     -- {
     --     classID = addon.CLASSID.SHAMAN,
     --     auras = {
