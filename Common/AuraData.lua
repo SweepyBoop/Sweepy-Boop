@@ -62,15 +62,12 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 244813 }, -- Living Bomb
         }
     },
-    -- {
-    --     classID = addon.CLASSID.MONK,
-    --     auras = {
-    --         { spellId = 115078, default = true }, -- Paralysis
-    --         { spellId = 123725, default = true }, -- Breath of Fire
-    --         { spellId = 115804, default = true }, -- Mortal Wounds
-    --         { spellId = 116189, default = true }, -- Provoke
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.MONK,
+        auras = {
+            { spellId = 228287 }, -- Mark of the Crane
+        }
+    },
     -- {
     --     classID = addon.CLASSID.PALADIN,
     --     auras = {
