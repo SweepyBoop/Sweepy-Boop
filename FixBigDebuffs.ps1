@@ -39,7 +39,7 @@ $spellFileContent = Get-Content $spellFile
 
 # Loop through each line in the file content
 foreach ($line in $spellFileContent) {
-    if ($line -match 'type = CROWD_CONTROL') {
+    if ($line -match 'type = CROWD_CONTROL' -or $line -match 'type == ROOT' -or $line -match 'type == INTERRUPT') {
         # Extract the ID and comment from the line
         if ($line -match '\[(\d+)\].*--\s*(.+)$') {
             $id = $matches[1]
