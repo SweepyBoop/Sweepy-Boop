@@ -225,6 +225,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 end
 
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
+-- Possibly need to override logic for isFullUpdate
 addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
     -- Copied from BlizzardInterfaceCode but checking ( not addon.UnitIsHostile ) instead of PlayerUtil.HasFriendlyReaction
     -- This function is only called on hostile units (factoring in Mind Control)
