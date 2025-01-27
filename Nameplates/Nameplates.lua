@@ -142,7 +142,6 @@ function SweepyBoop:SetupNameplateModules()
                             end
                         end
                     end
-                    nameplate.UnitFrame.BuffFrame.UpdateBuffs = addon.UpdateBuffsOverride;
                 end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
