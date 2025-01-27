@@ -4,11 +4,12 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
     {
         classID = addon.CLASSID.DEATHKNIGHT,
         auras = {
-            { spellId = 45524, default = true }, -- Chains of Ice
             { spellId = 191587, default = true }, -- Virulent Plague
             { spellId = 194310, default = true }, -- Festering Wound
             { spellId = 55095, default = true }, -- Frost Fever
             { spellId = 55078, default = true }, -- Blood Plague
+
+            { spellId = 45524, default = true }, -- Chains of Ice
         }
     },
     {
@@ -16,6 +17,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
         auras = {
             { spellId = 390155, default = true }, -- Serrated Glaive
             { spellId = 391191, default = true }, -- Burning Wound
+
             { spellId = 390181 }, -- Soulscar
             { spellId = 213405 }, -- Master of the Glaive
         }
@@ -29,6 +31,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 1079, default = true }, -- Rip
             { spellId = 391889, default = true }, -- Adaptive Swarm
             { spellId = 405233, default = true}, -- Thrash
+
             { spellId = 236021 }, -- Ferocious Wound
             { spellId = 274838 }, -- Feral Frenzy
             { spellId = 439531 }, -- Bloodseeker Vines
@@ -46,6 +49,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 212431, default = true }, -- Explosive Shot
             { spellId = 271788, default = true }, -- Serpent Sting
             { spellId = 5116, default = true }, -- Concussive Shot
+
             { spellId = 217200 }, -- Barbed Shot
         }
     },
@@ -54,6 +58,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
         auras = {
             { spellId = 210824, default = true }, -- Touch of the Magi
             { spellId = 31589, default = true }, -- Slow
+
             { spellId = 12654 }, -- Ignite
             { spellId = 217694 }, -- Living Bomb
             { spellId = 244813 }, -- Living Bomb
@@ -72,6 +77,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 197277, default = true }, -- Judgment
             { spellId = 403695, default = true }, -- Truth's Wake
             { spellId = 383346, default = true }, -- Expurgation
+
             { spellId = 408383 }, -- Judgment of Justice
         }
     },
@@ -109,6 +115,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 196840, default = true }, -- Frost Shock
             { spellId = 197209, default = true }, -- Lightning Rod
             { spellId = 64695, default = true }, -- Earthgrab
+
             { spellId = 3600 }, -- Earthbind
         }
     },
@@ -180,7 +187,7 @@ addon.AppendAuraOptionsToGroup = function(group)
             spell:ContinueOnSpellLoad(function()
                 description = spell:GetSpellDescription();
             end)
-            
+
             local texture = C_Spell.GetSpellTexture(auraEntry.spellId);
             classGroup.args[tostring(auraEntry.spellId)] = {
                 order = auraIdx,
