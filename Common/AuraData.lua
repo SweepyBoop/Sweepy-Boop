@@ -71,6 +71,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 343721, default = true }, -- Final Reckoning
             { spellId = 197277, default = true }, -- Judgment
             { spellId = 403695, default = true }, -- Truth's Wake
+            { spellId = 383346, default = true }, -- Expurgation
             { spellId = 408383 }, -- Judgment of Justice
         }
     },
