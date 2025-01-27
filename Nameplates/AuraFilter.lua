@@ -1,8 +1,5 @@
 local _, addon = ...;
 
--- Crowd controls missed by BigDebuffs
-addon.CrowdControlAuras[64695] = true; -- Earthgrab
-
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
         return false;
