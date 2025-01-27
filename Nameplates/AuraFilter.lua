@@ -17,7 +17,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     end
 end
 
-local function ParseAllAuras(self, forceAll)
+local function ParseAllAurasOverride(self, forceAll)
     if self.auras == nil then
         self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
     else
@@ -95,7 +95,11 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-        self:ParseAllAuras(auraSettings.showAll);
+        if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled and isEnemy then
+            ParseAllAurasOverride(self, auraSettings.showAll);
+        else
+            self:ParseAllAuras(auraSettings.showAll);
+        end
         aurasChanged = true;
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
@@ -239,7 +243,10 @@ addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
         auraSettings.includeNameplateOnly = true;
         auraSettings.showPersonalCooldowns = self.showPersonalCooldowns;
     else
-        if ( not addon.UnitIsHostile(unit) ) then
+        if addon.UnitIsHostile(unit) then
+            auraSettings.harmful = true;
+            auraSettings.includeNameplateOnly = true;
+        else -- Friendly units
             if (showDebuffsOnFriendly) then
                 -- dispellable debuffs
                 auraSettings.harmful = true;
@@ -248,10 +255,6 @@ addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
             else
                 auraSettings.hideAll = true;
             end
-        else
-            -- Reaction 4 is neutral and less than 4 becomes increasingly more hostile
-            auraSettings.harmful = true;
-            auraSettings.includeNameplateOnly = true;
         end
     end
 

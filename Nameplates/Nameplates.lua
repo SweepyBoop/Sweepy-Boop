@@ -133,6 +133,10 @@ function SweepyBoop:SetupNameplateModules()
                 
                 if nameplate.UnitFrame.BuffFrame then
                     nameplate.UnitFrame.BuffFrame.UpdateBuffs = addon.UpdateBuffsOverride;
+
+                    -- if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+                    --     addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, unitId, {});
+                    -- end
                 end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
