@@ -27,7 +27,11 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 164815, default = true }, -- Sunfire
             { spellId = 155722, default = true }, -- Rake
             { spellId = 1079, default = true }, -- Rip
+            { spellId = 391889, default = true }, -- Adaptive Swarm
+            { spellId = 405233, default = true}, -- Thrash
+            { spellId = 236021 }, -- Ferocious Wound
             { spellId = 274838 }, -- Feral Frenzy
+            { spellId = 439531 }, -- Bloodseeker Vines
         }
     },
     -- {
@@ -136,7 +140,7 @@ addon.AppendAuraOptionsToGroup = function(group)
         type = "execute",
         name = "Reset to default",
         func = function()
-            addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.filterList);
+            addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList);
         end,
     };
 
