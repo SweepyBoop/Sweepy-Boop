@@ -102,15 +102,15 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 8680 }, -- Wound Poison
         }
     },
-    -- {
-    --     classID = addon.CLASSID.SHAMAN,
-    --     auras = {
-    --         { spellId = 188389, default = true }, -- Flame Shock
-    --         { spellId = 196840, default = true }, -- Frost Shock
-    --         { spellId = 197209, default = true }, -- Lightning Rod
-    --         { spellId = 64695, default = true }, -- Earthgrab
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.SHAMAN,
+        auras = {
+            { spellId = 188389, default = true }, -- Flame Shock
+            { spellId = 196840, default = true }, -- Frost Shock
+            { spellId = 197209, default = true }, -- Lightning Rod
+            { spellId = 64695, default = true }, -- Earthgrab
+        }
+    },
     -- {
     --     classID = addon.CLASSID.WARLOCK,
     --     auras = {
