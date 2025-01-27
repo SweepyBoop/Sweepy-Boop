@@ -17,7 +17,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     end
 end
 
-local function ParseAllAuras(self, unitFrame, forceAll)
+local function ParseAllAuras(self, forceAll)
     if self.auras == nil then
         self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
     else
@@ -37,7 +37,7 @@ local function ParseAllAuras(self, unitFrame, forceAll)
     AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
 end
 
-local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, auraSettings)
+addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
     -- Copied from BlizzardInterfaceCode
     local filters = {};
     if auraSettings.helpful then
@@ -62,19 +62,18 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-        ParseAllAuras(self, unitFrame, auraSettings.showAll);
+        ParseAllAuras(self, auraSettings.showAll);
         aurasChanged = true;
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-                local shouldShowByBlizzard = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
+                --local shouldShowByBlizzard = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
                 local shouldShowOverride = ShouldShowBuffOverride(self, aura, auraSettings.showAll);
                 if shouldShowOverride then
+                    print("Should show buff", aura.name);
                     self.auras[aura.auraInstanceID] = aura;
-                else
-                    self.auras[aura.auraInstanceID] = nil;
                 end
-                aurasChanged = aurasChanged or ( shouldShowByBlizzard ~= shouldShowOverride );
+                aurasChanged = true;
             end
         end
 
@@ -115,6 +114,7 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
 
     local buffIndex = 1;
     self.auras:Iterate(function(auraInstanceID, aura)
+        print("Actually show buff", aura.name);
         local buff = self.buffPool:Acquire();
         buff.auraInstanceID = auraInstanceID;
         buff.isBuff = aura.isHelpful;
@@ -140,7 +140,7 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
     self:Layout();
 end
 
-addon.OnNamePlateAuraUpdate = function (self, unitFrame, unit, unitAuraUpdateInfo)
+addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
     -- Copied from BlizzardInterfaceCode but checking ( not addon.UnitIsHostile ) instead of PlayerUtil.HasFriendlyReaction
     -- This function is only called on hostile units (factoring in Mind Control)
     local isPlayer = UnitIsUnit("player", unit);
@@ -177,5 +177,5 @@ addon.OnNamePlateAuraUpdate = function (self, unitFrame, unit, unitAuraUpdateInf
         end
     end
 
-    UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, auraSettings);
+    addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
 end

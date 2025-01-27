@@ -131,7 +131,8 @@ function SweepyBoop:SetupNameplateModules()
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
                 if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-                    nameplate.UnitFrame.BuffFrame.UpdateBuffs = function() return end
+                    nameplate.UnitFrame.BuffFrame.UpdateBuffs = addon.UpdateBuffsOverride;
+                    addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, unitId, {});
                 end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
@@ -164,7 +165,7 @@ function SweepyBoop:SetupNameplateModules()
         if unitId:find("nameplate") and addon.UnitIsHostile(unitId) then -- UnitIsHostile will exclude Personal Resource Display
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
-                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame, unitId, unitAuraUpdateInfo);
+                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, unitId, unitAuraUpdateInfo);
             end
         end
     end)
