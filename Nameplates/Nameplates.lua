@@ -132,7 +132,16 @@ function SweepyBoop:SetupNameplateModules()
                 end
 
                 if nameplate.UnitFrame.BuffFrame then
-                    nameplate.UnitFrame.BuffFrame.UpdateBuffs = addon.UpdateBuffsOverride;
+                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard ) then
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
+                            if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+                                addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
+                            else
+                                self:UpdateBuffsByBlizzard(unit, unitAuraUpdateInfo, auraSettings);
+                            end
+                        end
+                    end
                 end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
