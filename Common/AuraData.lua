@@ -37,22 +37,21 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 439531 }, -- Bloodseeker Vines
         }
     },
-    -- {
-    --     classID = addon.CLASSID.EVOKER,
-    --     auras = {
-    --         { spellId = 370898, default = true }, -- Fire Breath
-    --         { spellId = 355689, default = true }, -- Dream Breath
-    --     }
-    -- },
-    -- {
-    --     classID = addon.CLASSID.HUNTER,
-    --     auras = {
-    --         { spellId = 217200, default = true }, -- Barbed Shot
-    --         { spellId = 259491, default = true }, -- Serpent Sting
-    --         { spellId = 135299, default = true }, -- Tar Trap
-    --         { spellId = 162487, default = true }, -- Steel Trap
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.EVOKER,
+        auras = {
+            { spellId = 357209, default = true }, -- Fire Breath
+        }
+    },
+    {
+        classID = addon.CLASSID.HUNTER,
+        auras = {
+            { spellId = 217200, default = true }, -- Barbed Shot
+            { spellId = 259491, default = true }, -- Serpent Sting
+            { spellId = 135299, default = true }, -- Tar Trap
+            { spellId = 162487, default = true }, -- Steel Trap
+        }
+    },
     -- {
     --     classID = addon.CLASSID.MAGE,
     --     auras = {
