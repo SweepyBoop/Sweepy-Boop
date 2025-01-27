@@ -89,6 +89,8 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 34914, default = true }, -- Vampiric Touch
             { spellId = 335467, default = true }, -- Devouring Plague
             { spellId = 375901, default = true }, -- Mindgames
+            { spellId = 323716, default = true }, -- Thoughtsteal
+
             -- { spellId = 199845 }, -- Psyflay (Psyfiend)
         }
     },
