@@ -44,6 +44,16 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
 
         if ( not isPlayer ) then
+            auraSettings =
+            {
+                helpful = false;
+                harmful = false;
+                raid = false;
+                includeNameplateOnly = false;
+                showAll = false;
+                hideAll = false;
+            };
+
             if addon.UnitIsHostile(unit) then
                 auraSettings.harmful = true;
                 auraSettings.includeNameplateOnly = true;
@@ -83,7 +93,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-        ParseAllAuras(self, auraSettings.showAll);
+        self:ParseAllAuras(auraSettings.showAll);
         aurasChanged = true;
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
@@ -97,8 +107,8 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
                 if shouldShowBuff then
                     self.auras[aura.auraInstanceID] = aura;
+                    aurasChanged = true;
                 end
-                aurasChanged = true;
             end
         end
 
@@ -130,12 +140,9 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     self.buffPool:ReleaseAll();
 
-    if not self.isActive then
+    if auraSettings.hideAll or not self.isActive then
         return;
     end
-
-    -- Can show extra debuffs, but cannot hide buffs that are shown by Blizzard
-    -- Possibly messed up by CompactUnitFrame_UpdateAuras
 
     local buffIndex = 1;
     self.auras:Iterate(function(auraInstanceID, aura)
@@ -155,11 +162,51 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
         buff:Show();
-        buff:SetMouseClickEnabled(false);
 
         buffIndex = buffIndex + 1;
         return buffIndex >= BUFF_MAX_DISPLAY;
     end);
+
+    --Add Cooldowns 
+    if(auraSettings.showPersonalCooldowns and buffIndex < BUFF_MAX_DISPLAY and UnitIsUnit(unit, "player")) then 
+        local nameplateSpells = C_SpellBook.GetTrackedNameplateCooldownSpells(); 
+        for _, spellID in ipairs(nameplateSpells) do 
+            if (not self:HasActiveBuff(spellID) and buffIndex < BUFF_MAX_DISPLAY) then
+                local locStart, locDuration = C_Spell.GetSpellLossOfControlCooldown(spellID);
+                local cooldownInfo = C_Spell.GetSpellCooldown(spellID);
+                if ((locDuration and locDuration ~= 0) or (cooldownInfo and cooldownInfo.duration ~= 0)) then
+                    local spellInfo = C_Spell.GetSpellInfo(spellID);
+                    if(spellInfo) then 
+                        local buff = self.buffPool:Acquire();
+                        buff.isBuff = true;
+                        buff.layoutIndex = buffIndex;
+                        buff.spellID = spellID; 
+                        buff.auraInstanceID = nil;
+                        buff.Icon:SetTexture(spellInfo.iconID); 
+
+                        local chargeInfo = C_Spell.GetSpellCharges(spellID) or {};
+                        local charges, maxCharges = chargeInfo.currentCharges, chargeInfo.maxCharges;
+                        buff.Cooldown:SetSwipeColor(0, 0, 0);
+
+                        if (cooldownInfo and cooldownInfo.duration ~= 0) then
+                            CooldownFrame_Set(buff.Cooldown, cooldownInfo.startTime, cooldownInfo.duration, cooldownInfo.isEnabled, true, cooldownInfo.modRate);
+                        else
+                            CooldownFrame_Set(buff.Cooldown, locStart, locDuration, true, true);
+                        end
+
+                        if (maxCharges and maxCharges > 1) then
+                            buff.CountFrame.Count:SetText(charges);
+                            buff.CountFrame.Count:Show();
+                        else
+                            buff.CountFrame.Count:Hide();
+                        end
+                        buff:Show();
+                        buffIndex = buffIndex + 1;
+                    end
+                end
+            end
+        end 
+    end
 
     self:Layout();
 end
