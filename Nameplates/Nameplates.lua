@@ -130,6 +130,10 @@ function SweepyBoop:SetupNameplateModules()
                 else
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
+
+                if nameplate.UnitFrame.BuffFrame then
+                    nameplate.UnitFrame.BuffFrame.UpdateBuffs = addon.UpdateBuffsOverride;
+                end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
             if ( not C_PvP.IsBattleground() ) then return end -- Only needed in battlegrounds for updating visible spec icons

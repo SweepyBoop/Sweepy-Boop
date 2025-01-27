@@ -283,6 +283,14 @@ options.args.nameplatesEnemy = {
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                     end,
                 },
+
+                auraFilterEnabled = {
+                    order = 4,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",
+                    desc = "Show only whitelisted auras applied by myself on enemy nameplates\nCrowd controls from all source units will always show",
+                },
             },
         },
 
@@ -300,11 +308,28 @@ options.args.nameplatesEnemy = {
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
             end
+        },
+
+        auraWhiteList = {
+            order = 14,
+            type = "group",
+            name = "Aura whitelist",
+            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] end,
+            set = function(info, val) 
+                SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] = val;
+                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                -- No need to refresh nameplates, just apply it on next UNIT_AURA
+            end,
+            args = {},
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+            end
         }
     },
 };
 
 addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
+addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
 
 options.args.arenaFrames = {
     order = 5,
@@ -697,9 +722,11 @@ local defaults = {
             arenaSpecIconAlignment = addon.SPEC_ICON_ALIGNMENT.TOP,
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
+            auraFilterEnabled = false,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
+            auraWhiteList = {},
         },
         arenaFrames = {
             healerIndicator = true,
@@ -731,6 +758,7 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
+    defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
@@ -739,6 +767,7 @@ if addon.internal then -- Set default for internal version
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
+addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.auraWhiteList);
 
 local function SetupAllSpells(profile, spellList, value)
     for spellID, spellEntry in pairs(spellList) do

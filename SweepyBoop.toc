@@ -21,6 +21,8 @@ Common\ArenaEnemyBurstSpells.lua
 Common\ArenaEnemyUtilitySpells.lua
 Common\UnitInfoHelpers.lua
 Common\NpcData.lua
+Common\CrowdControlAuras.lua
+Common\AuraData.lua
 Common\DRList.lua
 Common\AceGUIWidget-InlineLink.lua
 
@@ -31,6 +33,7 @@ Nameplates\ClassIcons.lua
 Nameplates\PetIcons.lua
 Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua
+Nameplates\AuraFilter.lua
 Nameplates\Nameplates.lua
 
 Misc\ArenaSurrender.lua

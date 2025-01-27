@@ -28,3 +28,35 @@ if (Test-Path $spellFile) {
 } else {
     Write-Host "Destination file does not exist."
 }
+
+$outputFile = Join-Path -Path $PSScriptRoot -ChildPath "Common\CrowdControlAuras.lua"
+
+# Initialize an empty hashtable to store the IDs and comments
+$crowdControlTable = @{}
+
+# Read the content of $spellFile
+$spellFileContent = Get-Content $spellFile
+
+# Loop through each line in the file content
+foreach ($line in $spellFileContent) {
+    if ($line -match 'type = CROWD_CONTROL' -or $line -match 'type = ROOT') {
+        # Extract the ID and comment from the line
+        if ($line -match '\[(\d+)\].*--\s*(.+)$') {
+            $id = $matches[1]
+            $comment = $matches[2]
+            # Add the ID and comment to the hashtable
+            $crowdControlTable[$id] = $comment
+        }
+    }
+}
+
+# Prepare the output content
+$outputContent = "local _, addon = ...;`n`naddon.CrowdControlAuras = {`n"
+foreach ($id in $crowdControlTable.Keys) {
+    $outputContent += "    [$id] = true, -- $($crowdControlTable[$id])`n"
+}
+$outputContent += "};`n"
+
+# Write the output content to $outputFile
+$outputContent | Set-Content $outputFile
+Write-Host "Crowd control IDs with comments have been written to $outputFile successfully."
