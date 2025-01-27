@@ -134,7 +134,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame.BuffFrame then
                     if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizz ) then
                         nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (unit, unitAuraUpdateInfo, auraSettings)
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
                             if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
                                 addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
                             else
