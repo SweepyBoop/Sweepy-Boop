@@ -119,7 +119,7 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
-    eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
+    eventFrame:SetScript("OnEvent", function (_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -130,9 +130,9 @@ function SweepyBoop:SetupNameplateModules()
                 else
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
-                if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+                
+                if nameplate.UnitFrame.BuffFrame then
                     nameplate.UnitFrame.BuffFrame.UpdateBuffs = addon.UpdateBuffsOverride;
-                    addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, unitId, {});
                 end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
