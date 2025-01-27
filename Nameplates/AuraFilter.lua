@@ -39,35 +39,32 @@ end
 
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
     -- Override auraSettings because Blizzard code doesn't properly check unit hostility under Mind Control
-    local isEnemy;
-    if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-        isEnemy = addon.UnitIsHostile(unit);
-        local isPlayer = UnitIsUnit("player", unit);
-        local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
+    local isEnemy = addon.UnitIsHostile(unit);
+    local isPlayer = UnitIsUnit("player", unit);
+    local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
 
-        if ( not isPlayer ) then
-            auraSettings =
-            {
-                helpful = false;
-                harmful = false;
-                raid = false;
-                includeNameplateOnly = false;
-                showAll = false;
-                hideAll = false;
-            };
+    if ( not isPlayer ) then
+        auraSettings =
+        {
+            helpful = false;
+            harmful = false;
+            raid = false;
+            includeNameplateOnly = false;
+            showAll = false;
+            hideAll = false;
+        };
 
-            if isEnemy then
+        if isEnemy then
+            auraSettings.harmful = true;
+            auraSettings.includeNameplateOnly = true;
+        else
+            if (showDebuffsOnFriendly) then
+                -- dispellable debuffs
                 auraSettings.harmful = true;
-                auraSettings.includeNameplateOnly = true;
+                auraSettings.raid = true;
+                auraSettings.showAll = true;
             else
-                if (showDebuffsOnFriendly) then
-                    -- dispellable debuffs
-                    auraSettings.harmful = true;
-                    auraSettings.raid = true;
-                    auraSettings.showAll = true;
-                else
-                    auraSettings.hideAll = true;
-                end
+                auraSettings.hideAll = true;
             end
         end
     end
@@ -95,17 +92,13 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-        if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled and isEnemy then
-            ParseAllAurasOverride(self, auraSettings.showAll);
-        else
-            self:ParseAllAuras(auraSettings.showAll);
-        end
+        ParseAllAurasOverride(self, auraSettings.showAll);
         aurasChanged = true;
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
                 local shouldShowBuff;
-                if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled and isEnemy then
+                if isEnemy then
                     shouldShowBuff = ShouldShowBuffOverride(self, aura, auraSettings.showAll);
                 else
                     shouldShowBuff = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
