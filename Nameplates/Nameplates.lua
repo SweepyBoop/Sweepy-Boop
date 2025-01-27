@@ -119,7 +119,6 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
-    eventFrame:RegisterEvent(addon.UNIT_AURA);
     eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
@@ -152,14 +151,17 @@ function SweepyBoop:SetupNameplateModules()
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
             end
-        elseif event == addon.UNIT_AURA then
-            if ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) then return end
-            if unitId:find("nameplate") and addon.UnitIsHostile(unitId) then -- UnitIsHostile will exclude Personal Resource Display
-                local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
-                if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
-                    local unitAuraUpdateInfo = ...;
-                    addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame, unitId, unitAuraUpdateInfo);
-                end
+        end
+    end)
+
+    local unitAuraFrame = CreateFrame("Frame");
+    unitAuraFrame:RegisterEvent(addon.UNIT_AURA);
+    unitAuraFrame:SetScript("OnEvent",function (_, _, unitId, unitAuraUpdateInfo)
+        if ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) then return end
+        if unitId:find("nameplate") and addon.UnitIsHostile(unitId) then -- UnitIsHostile will exclude Personal Resource Display
+            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
+            if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
+                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame, unitId, unitAuraUpdateInfo);
             end
         end
     end)

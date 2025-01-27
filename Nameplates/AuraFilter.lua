@@ -67,10 +67,14 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-                if ShouldShowBuffOverride(self, aura, auraSettings.showAll) then
+                local shouldShowByBlizzard = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
+                local shouldShowOverride = ShouldShowBuffOverride(self, aura, auraSettings.showAll);
+                if shouldShowOverride then
                     self.auras[aura.auraInstanceID] = aura;
-                    aurasChanged = true;
+                else
+                    self.auras[aura.auraInstanceID] = nil;
                 end
+                aurasChanged = aurasChanged or ( shouldShowByBlizzard ~= shouldShowOverride );
             end
         end
 
@@ -107,6 +111,7 @@ local function UpdateNamePlateAuras(self, unitFrame, unit, unitAuraUpdateInfo, a
     end
 
     -- Can show extra debuffs, but cannot hide buffs that are shown by Blizzard
+    -- Possibly messed up by CompactUnitFrame_UpdateAuras
 
     local buffIndex = 1;
     self.auras:Iterate(function(auraInstanceID, aura)
