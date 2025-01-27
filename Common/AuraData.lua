@@ -127,15 +127,17 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 334275 }, -- Curse of Exhaustion
         }
     },
-    -- {
-    --     classID = addon.CLASSID.WARRIOR,
-    --     auras = {
-    --         { spellId = 115767, default = true }, -- Deep Wounds
-    --         { spellId = 1160, default = true }, -- Demoralizing Shout
-    --         { spellId = 208086, default = true }, -- Colossus Smash
-    --         { spellId = 1715, default = true }, -- Hamstring
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.WARRIOR,
+        auras = {
+            { spellId = 1715, default = true }, -- Hamstring
+            { spellId = 376080, default = true }, -- Champion's Spear
+            { spellId = 208086, default = true }, -- Colossus Smash (Warbreaker)
+            { spellId = 385042, default = true }, -- Slaughterhouse
+
+            { spellId = 388539 }, -- Rend
+        }
+    },
 };
 
 addon.FillDefaultToAuraOptions = function(profile)
