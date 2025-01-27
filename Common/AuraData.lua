@@ -109,6 +109,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 196840, default = true }, -- Frost Shock
             { spellId = 197209, default = true }, -- Lightning Rod
             { spellId = 64695, default = true }, -- Earthgrab
+            { spellId = 3600 }, -- Earthbind
         }
     },
     -- {
