@@ -38,7 +38,28 @@ local function ParseAllAuras(self, forceAll)
 end
 
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
-    -- Copied from BlizzardInterfaceCode
+    -- Override auraSettings because Blizzard code doesn't properly check unit hostility under Mind Control
+    if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+        local isPlayer = UnitIsUnit("player", unit);
+        local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
+
+        if ( not isPlayer ) then
+            if addon.UnitIsHostile(unit) then
+                auraSettings.harmful = true;
+                auraSettings.includeNameplateOnly = true;
+            else
+                if (showDebuffsOnFriendly) then
+                    -- dispellable debuffs
+                    auraSettings.harmful = true;
+                    auraSettings.raid = true;
+                    auraSettings.showAll = true;
+                else
+                    auraSettings.hideAll = true;
+                end
+            end
+        end
+    end
+
     local filters = {};
     if auraSettings.helpful then
         table.insert(filters, AuraUtil.AuraFilters.Helpful);
@@ -67,10 +88,14 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-                --local shouldShowByBlizzard = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
-                local shouldShowOverride = ShouldShowBuffOverride(self, aura, auraSettings.showAll);
-                if shouldShowOverride then
-                    print("Should show buff", aura.name);
+                local shouldShowBuff;
+                if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled and addon.UnitIsHostile(unit) then
+                    shouldShowBuff = ShouldShowBuffOverride(self, aura, auraSettings.showAll);
+                else
+                    shouldShowBuff = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
+                end
+
+                if shouldShowBuff then
                     self.auras[aura.auraInstanceID] = aura;
                 end
                 aurasChanged = true;
@@ -114,7 +139,6 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local buffIndex = 1;
     self.auras:Iterate(function(auraInstanceID, aura)
-        print("Actually show buff", aura.name);
         local buff = self.buffPool:Acquire();
         buff.auraInstanceID = auraInstanceID;
         buff.isBuff = aura.isHelpful;

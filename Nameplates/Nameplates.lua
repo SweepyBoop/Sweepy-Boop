@@ -158,17 +158,17 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    local unitAuraFrame = CreateFrame("Frame");
-    unitAuraFrame:RegisterEvent(addon.UNIT_AURA);
-    unitAuraFrame:SetScript("OnEvent",function (_, _, unitId, unitAuraUpdateInfo)
-        if ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) then return end
-        if unitId:find("nameplate") and addon.UnitIsHostile(unitId) then -- UnitIsHostile will exclude Personal Resource Display
-            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
-            if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
-                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, unitId, unitAuraUpdateInfo);
-            end
-        end
-    end)
+    -- local unitAuraFrame = CreateFrame("Frame");
+    -- unitAuraFrame:RegisterEvent(addon.UNIT_AURA);
+    -- unitAuraFrame:SetScript("OnEvent",function (_, _, unitId, unitAuraUpdateInfo)
+    --     if ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) then return end
+    --     if unitId:find("nameplate") and addon.UnitIsHostile(unitId) then -- UnitIsHostile will exclude Personal Resource Display
+    --         local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
+    --         if nameplate and nameplate.UnitFrame and ( not nameplate.UnitFrame:IsForbidden() ) then
+    --             addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, unitId, unitAuraUpdateInfo);
+    --         end
+    --     end
+    -- end)
 
     -- When flag is picked up / dropped
     -- Issue, not immediately updated to flag carrier icon when someone picked up the flag
