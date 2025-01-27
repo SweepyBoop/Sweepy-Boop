@@ -17,7 +17,10 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
     {
         classID = addon.CLASSID.DEMONHUNTER,
         auras = {
-            { spellId = 213405, default = true }, -- Master of the Glaive
+            { spellId = 390155, default = true }, -- Serrated Glaive
+            { spellId = 391191, default = true }, -- Burning Wound
+            { spellId = 390181 }, -- Soulscar
+            { spellId = 213405 }, -- Master of the Glaive
         }
     },
     {
