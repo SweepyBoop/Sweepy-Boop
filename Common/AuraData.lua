@@ -27,6 +27,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 164815, default = true }, -- Sunfire
             { spellId = 155722, default = true }, -- Rake
             { spellId = 1079, default = true }, -- Rip
+            { spellId = 274838 }, -- Feral Frenzy
         }
     },
     -- {
