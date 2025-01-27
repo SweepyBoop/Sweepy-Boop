@@ -46,10 +46,9 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
     {
         classID = addon.CLASSID.HUNTER,
         auras = {
-            { spellId = 217200, default = true }, -- Barbed Shot
-            { spellId = 259491, default = true }, -- Serpent Sting
-            { spellId = 135299, default = true }, -- Tar Trap
-            { spellId = 162487, default = true }, -- Steel Trap
+            { spellId = 212431, default = true }, -- Explosive Shot
+            { spellId = 271788, default = true }, -- Serpent Sting
+            { spellId = 217200 }, -- Barbed Shot
         }
     },
     -- {
