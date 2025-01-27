@@ -92,7 +92,11 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-        ParseAllAurasOverride(self, auraSettings.showAll);
+        if isEnemy then
+            ParseAllAurasOverride(self, auraSettings.showAll);
+        else
+            self:ParseAllAuras(auraSettings.showAll);
+        end
         aurasChanged = true;
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
