@@ -20,18 +20,15 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 213405, default = true }, -- Master of the Glaive
         }
     },
-    -- {
-    --     classID = addon.CLASSID.DRUID,
-    --     auras = {
-    --         { spellId = 164812, default = true }, -- Moonfire
-    --         { spellId = 164815, default = true }, -- Sunfire
-    --         { spellId = 155722, default = true }, -- Rake
-    --         { spellId = 1079, default = true }, -- Rip
-    --         { spellId = 33763, default = true }, -- Lifebloom
-    --         { spellId = 188550, default = true }, -- Lifebloom (new)
-    --         { spellId = 102359, default = true }, -- Mass Entanglement
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.DRUID,
+        auras = {
+            { spellId = 164812, default = true }, -- Moonfire
+            { spellId = 164815, default = true }, -- Sunfire
+            { spellId = 155722, default = true }, -- Rake
+            { spellId = 1079, default = true }, -- Rip
+        }
+    },
     -- {
     --     classID = addon.CLASSID.EVOKER,
     --     auras = {
