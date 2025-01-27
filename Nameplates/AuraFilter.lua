@@ -100,7 +100,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-                if aura.sourceUnit == "player" or aura.sourceUnit == "pet" then
+                if aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle" then
                     print(aura.name, aura.spellId);
                 end
 
