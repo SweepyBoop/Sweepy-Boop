@@ -48,6 +48,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
         auras = {
             { spellId = 212431, default = true }, -- Explosive Shot
             { spellId = 271788, default = true }, -- Serpent Sting
+            { spellId = 5116, default = true }, -- Concussive Shot
             { spellId = 217200 }, -- Barbed Shot
         }
     },
