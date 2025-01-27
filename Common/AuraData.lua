@@ -52,15 +52,16 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 217200 }, -- Barbed Shot
         }
     },
-    -- {
-    --     classID = addon.CLASSID.MAGE,
-    --     auras = {
-    --         { spellId = 12654, default = true }, -- Ignite
-    --         { spellId = 31589, default = true }, -- Slow
-    --         { spellId = 122, default = true }, -- Frost Nova
-    --         { spellId = 44457, default = true }, -- Living Bomb
-    --     }
-    -- },
+    {
+        classID = addon.CLASSID.MAGE,
+        auras = {
+            { spellId = 210824, default = true }, -- Touch of the Magi
+            { spellId = 31589, default = true }, -- Slow
+            { spellId = 12654 }, -- Ignite
+            { spellId = 217694 }, -- Living Bomb
+            { spellId = 244813 }, -- Living Bomb
+        }
+    },
     -- {
     --     classID = addon.CLASSID.MONK,
     --     auras = {
