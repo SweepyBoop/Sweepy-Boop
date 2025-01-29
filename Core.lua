@@ -51,17 +51,26 @@ options.args.nameplatesFriendly = {
             name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " Enabled",
             desc = "Show class/pet icons on friendly players/pets",
         },
-        description = {
+        description1 = {
             order = 2,
             width = "full",
             type = "description",
-            name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" & \"Minions\" in Interface - Nameplates|r",
+            name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
             hidden = function ()
                 return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
             end
         },
-        classIconStyle = {
+        description2 = {
             order = 3,
+            width = "full",
+            type = "description",
+            name = addon.EXCLAMATION .. " Enable \"Minions\" in Interface - Nameplates for pet icons",
+            hidden = function ()
+                return ( C_CVar.GetCVar("nameplateShowFriendlyPets") == "1" );
+            end
+        },
+        classIconStyle = {
+            order = 4,
             type = "select",
             values = {
                 [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
@@ -73,7 +82,7 @@ options.args.nameplatesFriendly = {
             end
         },
         newline = {
-            order = 4,
+            order = 5,
             type = "description",
             name = "",
             hidden = function()
@@ -81,7 +90,7 @@ options.args.nameplatesFriendly = {
             end
         },
         hideOutsidePvP = {
-            order = 5,
+            order = 6,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide class icons outside arenas & battlegrounds",
@@ -90,7 +99,7 @@ options.args.nameplatesFriendly = {
             end
         },
         breaker = {
-            order = 6,
+            order = 7,
             type = "header",
             name = "",
             hidden = function()
@@ -98,7 +107,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useHealerIcon = {
-            order = 7,
+            order = 8,
             width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healer icon instead of class icon for healers",
@@ -107,7 +116,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showHealerOnly = {
-            order = 8,
+            order = 9,
             width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healers only",
@@ -119,7 +128,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 9,
+            order = 10,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.FLAG_CARRIER_ALLIANCE_LOGO) .. " Show flag carrier icons in battlegrounds",
@@ -129,7 +138,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 10,
+            order = 11,
             type = "range",
             min = 50,
             max = 200,
@@ -140,7 +149,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 11,
+            order = 12,
             type = "range",
             min = 0,
             max = 150,
