@@ -198,6 +198,15 @@ function SweepyBoop:SetupNameplateModules()
             end
         end
     end)
+
+    hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
+        if self:IsForbidden() then return end
+        if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+            self:EnableMouse(false);
+        else
+            self:EnableMouse(true);
+        end
+    end)
 end
 
 function SweepyBoop:RefreshAllNamePlates()
