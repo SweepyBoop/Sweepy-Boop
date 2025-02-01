@@ -69,6 +69,15 @@ Players can customize which units to hide / show / highlight:
 
 ![Nameplate filter](https://github.com/user-attachments/assets/d19f8f3f-ac53-476a-afb9-acb10b1246b2)
 
+## Debuff filter on enemy nameplates
+![Aura Filter Whitelist](https://github.com/user-attachments/assets/80c97393-cae9-43d3-aa3f-be05765dd3e1)
+
+Show only crowd controls and whitelisted debuffs applied by the player themselves on enemy nameplates.
+
+This is especially useful for rogue players as they can filter out the poisons which are shown by Blizzard.
+
+Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
+
 ## Arena enemy offensive/defensive cooldown tracking
 ![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
 
