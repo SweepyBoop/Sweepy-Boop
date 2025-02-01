@@ -59,6 +59,9 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 210824, default = true }, -- Touch of the Magi
             { spellId = 31589, default = true }, -- Slow
 
+            { spellId = 205708 }, -- Chilled
+            { spellId = 228358 }, -- Winter's Chill
+
             { spellId = 12654 }, -- Ignite
             { spellId = 217694 }, -- Living Bomb
             { spellId = 244813 }, -- Living Bomb
