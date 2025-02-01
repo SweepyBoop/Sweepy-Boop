@@ -72,7 +72,7 @@ Players can customize which units to hide / show / highlight:
 ## Debuff filter on enemy nameplates
 ![Aura Filter Whitelist](https://github.com/user-attachments/assets/80c97393-cae9-43d3-aa3f-be05765dd3e1)
 
-Show only crowd controls and whitelisted debuffs applied by the player themselves on enemy nameplates.
+Show only crowd controls (from all sources) and whitelisted debuffs applied by the player themselves on enemy nameplates.
 
 This is especially useful for rogue players as they can filter out the poisons which are shown by Blizzard.
 
