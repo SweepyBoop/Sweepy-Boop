@@ -137,8 +137,17 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        classIconScale = {
+        targetHighlight = {
             order = 11,
+            type = "toggle",
+            width = "full",
+            name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        },
+        classIconScale = {
+            order = 12,
             type = "range",
             min = 50,
             max = 200,
@@ -149,7 +158,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 12,
+            order = 13,
             type = "range",
             min = 0,
             max = 150,
@@ -722,6 +731,7 @@ local defaults = {
             useHealerIcon = true,
             showHealerOnly = false,
             useFlagCarrierIcon = true,
+            targetHighlight = true,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
