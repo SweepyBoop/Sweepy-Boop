@@ -209,6 +209,13 @@ addon.utilitySpells = {
         opt_charges = true,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Blessing of SpellWarding
+    [204018] = {
+        cooldown = 240,
+        class = addon.PALADIN,
+        category = SPELLCATEGORY.DEFENSIVE,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
     -- Lay on Hands
     [633] = {
         cooldown = 420,
