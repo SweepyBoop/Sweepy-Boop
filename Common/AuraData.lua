@@ -186,10 +186,9 @@ addon.AppendAuraOptionsToGroup = function(group)
         local auraIdx = 1;
         for _, auraEntry in ipairs(classEntry.auras) do
             -- https://warcraft.wiki.gg/wiki/SpellMixin
-            local description;
             local spell = Spell:CreateFromSpellID(auraEntry.spellId);
             spell:ContinueOnSpellLoad(function()
-                description = spell:GetSpellDescription();
+                addon.SPELL_DESCRIPTION[auraEntry.spellId] = spell:GetSpellDescription();
             end)
 
             local texture = C_Spell.GetSpellTexture(auraEntry.spellId);
@@ -198,7 +197,9 @@ addon.AppendAuraOptionsToGroup = function(group)
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(texture) .. " " .. C_Spell.GetSpellName(auraEntry.spellId),
-                desc = description,
+                desc = function ()
+                    return addon.SPELL_DESCRIPTION[auraEntry.spellId] or "";
+                end
             };
             auraIdx = auraIdx + 1;
         end

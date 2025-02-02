@@ -522,17 +522,18 @@ local function AppendSpellOptions(group, spellList, category)
             local classGroup = group.args[classFile];
             local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
             -- https://warcraft.wiki.gg/wiki/SpellMixin
-            local description;
             local spell = Spell:CreateFromSpellID(spellID);
             spell:ContinueOnSpellLoad(function()
-                description = spell:GetSpellDescription();
+                addon.SPELL_DESCRIPTION[spellID] = spell:GetSpellDescription();
             end)
             classGroup.args[tostring(spellID)] = {
                 order = indexInClassGroup[classFile],
                 type = "toggle",
                 width = "full", -- otherwise the icon might look strange vertically
                 name = addon.FORMAT_TEXTURE(icon) .. " " .. name,
-                desc = description,
+                desc = function ()
+                    return addon.SPELL_DESCRIPTION[spellID] or "";
+                end
             };
 
             indexInClassGroup[classFile] = indexInClassGroup[classFile] + 1;
