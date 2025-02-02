@@ -51,12 +51,13 @@ end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local isTarget = UnitIsUnit(frame.unit, "target");
+    local featureEnabled = SweepyBoop.db.profile.nameplatesFriendly.targetHighlight;
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
-            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget);
+            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget and featureEnabled);
         end
         if nameplate.classIconContainer.FriendlyClassArrow then
-            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget);
+            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget and featureEnabled);
         end
     end
 end
