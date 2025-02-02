@@ -202,10 +202,9 @@ addon.AppendNpcOptionsToGroup = function(group)
         local spellIdx = 1;
         for _, npcEntry in ipairs(classEntry.npcs) do
             -- https://warcraft.wiki.gg/wiki/SpellMixin
-            local description;
             local spell = Spell:CreateFromSpellID(npcEntry.icon);
             spell:ContinueOnSpellLoad(function()
-                description = spell:GetSpellDescription();
+                addon.SPELL_DESCRIPTION[npcEntry.icon] = spell:GetSpellDescription();
             end)
             
             local texture = C_Spell.GetSpellTexture(npcEntry.icon);
@@ -219,7 +218,9 @@ addon.AppendNpcOptionsToGroup = function(group)
                     [addon.NpcOption.Highlight] = "Highlight",
                 },
                 name = addon.FORMAT_TEXTURE(texture) .. " " .. npcEntry.name,
-                desc = description,
+                desc = function ()
+                    return addon.SPELL_DESCRIPTION[npcEntry.icon] or "";
+                end,
             };
             spellIdx = spellIdx + 1;
         end

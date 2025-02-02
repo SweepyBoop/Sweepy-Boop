@@ -185,6 +185,8 @@ addon.CLASS_ICON_STYLE = {
     ARROW = 1,
 };
 
+addon.SPELL_DESCRIPTION = {}; -- by spellId, requested via -- https://warcraft.wiki.gg/wiki/SpellMixin
+
 addon.PRINT = function(message)
     DEFAULT_CHAT_FRAME:AddMessage(addon.FORMAT_ATLAS("pvptalents-warmode-swords", 16) .. " |cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
 end
