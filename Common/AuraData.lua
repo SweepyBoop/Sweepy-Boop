@@ -129,6 +129,8 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 316099, default = true }, -- Unstable Affliction
             { spellId = 980, default = true }, -- Agony
             { spellId = 146739, default = true }, -- Corruption
+            { spellId = 27243, default = true }, -- Seed of Corruption
+            { spellId = 48181, default = true }, -- Haunt
             { spellId = 702, default = true }, -- Curse of Weakness
             { spellId = 1714, default = true}, -- Curse of Tongues
 
