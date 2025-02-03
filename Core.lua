@@ -847,6 +847,7 @@ function SweepyBoop:OnInitialize()
     -- Setup raid frame modules
     self:SetupRaidFrameAggroHighlight();
     self:SetupRaidFrameAuraModule();
+    self:SetupUnitFrameAuraModule();
 
     self:SetupQueueReminder();
 end
