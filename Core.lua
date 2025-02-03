@@ -588,6 +588,13 @@ options.args.unitFrames = {
             type = "header",
             name = "Target & focus frames",
         },
+        auraFilterEnabled = {
+            order = 5,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Ability_dragonriding_staticflight01")) .. " Filter out unimportant auras when inside PvP instances",
+            desc = "Filter out all the unnecessary auras on target and focus frames, e.g., we don't want to see the Flight Style: Steady buff while inside arenas",
+        }
     },
 };
 
@@ -774,6 +781,7 @@ local defaults = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
             druidHoTHelper = true,
+            auraFilterEnabled = true,
         },
         misc = {
             healerInCrowdControl = false,
