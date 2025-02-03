@@ -560,8 +560,13 @@ options.args.unitFrames = {
     get = function(info) return SweepyBoop.db.profile.unitFrames[info[#info]] end,
     set = function(info, val) SweepyBoop.db.profile.unitFrames[info[#info]] = val end,
     args = {
-        raidFrameAggroHighlightEnabled = {
+        header1 = {
             order = 1,
+            type = "header",
+            name = "Raid frames",
+        },
+        raidFrameAggroHighlightEnabled = {
+            order = 2,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
@@ -570,13 +575,19 @@ options.args.unitFrames = {
         },
 
         druidHoTHelper = {
-            order = 2,
+            order = 3,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
             desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Glow Lifebloom during pandemic window\n\n"
                 .. addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_naturalperfection")) .. " Fade out Cenarion Ward before the healing procs",
-        }
+        },
+
+        header2 = {
+            order = 4,
+            type = "header",
+            name = "Target & focus frames",
+        },
     },
 };
 
