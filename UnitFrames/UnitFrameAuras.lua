@@ -11,7 +11,6 @@ local function ProcessAura(self, aura)
 		return AuraUpdateChangedType.None;
 	end
 
-    --local shouldFilter = SweepyBoop.db.profile.unitFrames.auraFilterEnabled;
     local shouldFilter = SweepyBoop.db.profile.unitFrames.auraFilterEnabled and ( IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) );
 
 	if aura.isHelpful and not aura.isNameplateOnly and self:ShouldShowBuffs() then
