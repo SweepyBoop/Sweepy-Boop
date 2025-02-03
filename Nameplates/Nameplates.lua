@@ -133,6 +133,9 @@ function SweepyBoop:SetupNameplateModules()
 
                 if nameplate.UnitFrame.BuffFrame then
                     if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard ) then
+                        -- Avoid conflicts with BetterBlizzPlates
+                        if BetterBlizzPlatesDB and BetterBlizzPlatesDB.enableNameplateAuraCustomisation then return end
+
                         nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
                         nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
                             if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
