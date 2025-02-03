@@ -592,8 +592,8 @@ options.args.unitFrames = {
             order = 5,
             width = "full",
             type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Ability_dragonriding_staticflight01")) .. " Filter out unimportant auras when inside PvP instances",
-            desc = "Filter out all the unnecessary auras on target and focus frames, e.g., we don't want to see the Flight Style: Steady buff while inside arenas",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Ability_dragonriding_staticflight01")) .. " Filter out irrelevant auras when inside PvP instances",
+            desc = "Filter out irrelevant auras on target and focus frames, e.g., no one wants to see the Flight Style: Steady buff while inside arenas",
         }
     },
 };
