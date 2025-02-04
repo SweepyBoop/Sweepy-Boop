@@ -18,7 +18,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         npcs = {
             { npcID = 106041, name = "Reanimation", icon = 210128, default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
             { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show },
-            { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide },
+            { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide, isCritter = true },
+            { npcID = 24207, name = "Army of the Dead", icon = 220143, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
@@ -33,20 +34,20 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 105419, name = "Dire Beast: Basilisk", icon = 205691, default = addon.NpcOption.Show },
 
             -- Hunter pets all have the same npcID, add here so they don't get hidden in battlegrounds
-            { npcID = addon.HUNTERPET, name = "Pet", icon = 267116, default = addon.NpcOption.Show },
+            { npcID = addon.HUNTERPET, name = "Pet", icon = 267116, default = addon.NpcOption.Show, isCritter = true },
         }
     },
     {
         classID = addon.CLASSID.MAGE,
         npcs = {
-            { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide },
+            { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
         classID = addon.CLASSID.MONK,
         npcs = {
-            { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide },
-            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide },
+            { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide, isCritter = true },
+            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
@@ -112,6 +113,10 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.Show },
             { npcID = 1863, name = "Sayaad", icon = 366222, default = addon.NpcOption.Show },
             { npcID = 17252, name = "Felguard", icon = 30146, default = addon.NpcOption.Show },
+
+            -- Pets that should be hidden
+            { npcID = 98035, name = "Dreadstalker", icon = 104316, default = addon.NpcOption.Hide, isCritter = true },
+            { npcID = 143622, name = "Wild Imp", icon = 105174, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
@@ -121,6 +126,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
 };
+
+addon.CritterNPCs = {};
 
 if addon.TEST_MODE then
     local testClass = {
@@ -156,15 +163,17 @@ end
 
 addon.CheckNpcWhiteList = function (unitId)
     if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
-        return addon.NpcOption.Show; -- Filter is disabled, show everything
+        return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
 
     if ( not UnitPlayerControlled(unitId) ) then
-        return addon.NpcOption.Show; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
+        return addon.NpcOption.Show, false; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
     end
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
-    return SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
+    local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
+    local isCritter = addon.CritterNPCs[tonumber(npcID)];
+    return isWhitelisted, isCritter;
 end
 
 addon.FillDefaultToNpcOptions = function(profile)
@@ -222,6 +231,11 @@ addon.AppendNpcOptionsToGroup = function(group)
                     return addon.SPELL_DESCRIPTION[npcEntry.icon] or "";
                 end,
             };
+
+            if npcEntry.isCritter then
+                addon.CritterNPCs[npcEntry.npcID] = true;
+            end
+
             spellIdx = spellIdx + 1;
         end
 

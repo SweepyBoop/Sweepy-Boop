@@ -290,8 +290,18 @@ options.args.nameplatesEnemy = {
                     name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
                     desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                 },
-                highlightScale = {
+                showCritterIcons = {
                     order = 3,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
+                    desc = "Show a critter icon in place of pet nameplates hidden by the addon\nThis helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen",
+                    hidden = function ()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
+                    end
+                },
+                highlightScale = {
+                    order = 4,
                     type = "range",
                     name = "Highlight icon scale (%)",
                     min = 50,
@@ -303,7 +313,7 @@ options.args.nameplatesEnemy = {
                 },
 
                 auraFilterEnabled = {
-                    order = 4,
+                    order = 5,
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",
@@ -779,6 +789,7 @@ local defaults = {
 
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
+    defaults.profile.nameplatesEnemy.showCritterIcons = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
