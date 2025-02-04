@@ -172,7 +172,7 @@ addon.CheckNpcWhiteList = function (unitId)
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
     local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
-    local isCritter = addon.CritterNPCs[npcID];
+    local isCritter = addon.CritterNPCs[tonumber(npcID)];
     return isWhitelisted, isCritter;
 end
 
