@@ -46,7 +46,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         classID = addon.CLASSID.MONK,
         npcs = {
             { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide },
-            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide },
+            { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
@@ -115,6 +115,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
 
             -- Pets that should be hidden
             { npcID = 98035, name = "Dreadstalker", icon = 104316, default = addon.NpcOption.Hide, isCritter = true },
+            { npcID = 143622, name = "Wild Imp", icon = 105174, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
