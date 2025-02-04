@@ -153,10 +153,6 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local buffIndex = 1;
     self.auras:Iterate(function(auraInstanceID, aura)
-        -- if aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle" then
-        --     print(aura.name, aura.spellId);
-        -- end
-
         local buff = self.buffPool:Acquire();
         buff.auraInstanceID = auraInstanceID;
         buff.isBuff = aura.isHelpful;
