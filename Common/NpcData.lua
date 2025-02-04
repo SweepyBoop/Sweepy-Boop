@@ -112,6 +112,9 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.Show },
             { npcID = 1863, name = "Sayaad", icon = 366222, default = addon.NpcOption.Show },
             { npcID = 17252, name = "Felguard", icon = 30146, default = addon.NpcOption.Show },
+
+            -- Pets that should be hidden
+            { npcID = 98035, name = "Dreadstalker", icon = 104316, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
@@ -121,6 +124,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         }
     },
 };
+
+addon.CritterNPCs = {};
 
 if addon.TEST_MODE then
     local testClass = {
@@ -156,15 +161,17 @@ end
 
 addon.CheckNpcWhiteList = function (unitId)
     if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
-        return addon.NpcOption.Show; -- Filter is disabled, show everything
+        return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
 
     if ( not UnitPlayerControlled(unitId) ) then
-        return addon.NpcOption.Show; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
+        return addon.NpcOption.Show, false; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
     end
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
-    return SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
+    local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
+    local isCritter = addon.CritterNPCs[npcID];
+    return isWhitelisted, isCritter;
 end
 
 addon.FillDefaultToNpcOptions = function(profile)
@@ -222,6 +229,11 @@ addon.AppendNpcOptionsToGroup = function(group)
                     return addon.SPELL_DESCRIPTION[npcEntry.icon] or "";
                 end,
             };
+
+            if npcEntry.isCritter then
+                addon.CritterNPCs[npcEntry.npcID] = true;
+            end
+
             spellIdx = spellIdx + 1;
         end
 

@@ -90,3 +90,38 @@ addon.HideNpcHighlight = function(nameplate)
         highlight:Hide();
     end
 end
+
+local scaleFactor = 0.25; -- Smaller icons for critters
+
+local function EnsureIcon(nameplate)
+    if ( not nameplate.EnemyCritterIcon ) then
+        nameplate.EnemyCritterIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+        nameplate.EnemyCritterIcon.icon:SetAtlas(addon.ICON_CRITTER);
+        nameplate.EnemyCritterIcon:Hide();
+    end
+
+    return nameplate.EnemyCritterIcon;
+end
+
+addon.UpdateCritterIcon = function(nameplate)
+    -- Only update if config changes (we have separated out pet icon from class / healer / flag carrier icons, and pet icon has fixed texture)
+    local iconFrame = EnsureIcon(nameplate);
+    local lastModifiedEnemy = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
+    if ( iconFrame.lastModifiedEnemy ~= lastModifiedEnemy ) then
+        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100 * scaleFactor);
+        iconFrame.lastModifiedEnemy = lastModifiedEnemy;
+    end
+end
+
+addon.ShowCritterIcon = function (nameplate)
+    addon.UpdateCritterIcon(nameplate);
+    if nameplate.EnemyCritterIcon then
+        nameplate.EnemyCritterIcon:Show();
+    end
+end
+
+addon.HideCritterIcon = function(nameplate)
+    if nameplate.EnemyCritterIcon then
+        nameplate.EnemyCritterIcon:Hide();
+    end
+end

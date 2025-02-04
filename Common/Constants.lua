@@ -170,6 +170,7 @@ addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0
 addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
 addon.ICON_ID_HEALER_ENEMY = "Healing_Red";
 addon.ICON_ID_PET = addon.ICON_PATH("ability_hunter_mendpet");
+addon.ICON_CRITTER = "Mobile-Pets";
 addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
 addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
 addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");

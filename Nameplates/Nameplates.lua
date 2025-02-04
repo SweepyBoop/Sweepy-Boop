@@ -74,6 +74,7 @@ local function UpdateWidgets(nameplate, frame)
 
         addon.HideSpecIcon(nameplate);
         addon.HideNpcHighlight(nameplate);
+        addon.HideCritterIcon(nameplate);
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
@@ -86,6 +87,7 @@ local function UpdateWidgets(nameplate, frame)
             end
 
             addon.HideNpcHighlight(nameplate);
+            addon.HideCritterIcon(nameplate);
             UpdateUnitFrameVisibility(frame, true); -- Always show enemy players
             return;
         end
@@ -93,7 +95,7 @@ local function UpdateWidgets(nameplate, frame)
         -- Process non-player hostile units
         addon.HideSpecIcon(nameplate);
 
-        local npcOption = addon.CheckNpcWhiteList(frame.unit);
+        local npcOption, isCritter = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
         if ( npcOption == addon.NpcOption.Highlight ) then
             addon.ShowNpcHighlight(nameplate);
@@ -108,6 +110,12 @@ local function UpdateWidgets(nameplate, frame)
         -- If we already decided to hide a unit, no need to perform this check!
         if shouldShowUnitFrame and addon.UnitIsHunterSecondaryPet(frame.unit) then
             shouldShowUnitFrame = false;
+        end
+
+        if ( not shouldShowUnitFrame ) and isCritter then
+            addon.ShowCritterIcon(nameplate);
+        else
+            addon.HideCritterIcon(nameplate);
         end
 
         UpdateUnitFrameVisibility(frame, shouldShowUnitFrame);
@@ -134,7 +142,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame.BuffFrame then
                     -- Avoid conflicts with BetterBlizzPlates
                     if BetterBlizzPlatesDB and BetterBlizzPlatesDB.enableNameplateAuraCustomisation then return end
-                    
+
                     if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard ) then
                         nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
                         nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
