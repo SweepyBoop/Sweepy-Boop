@@ -97,6 +97,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 204213, default = true }, -- Purge the Wicked
             { spellId = 34914, default = true }, -- Vampiric Touch
             { spellId = 335467, default = true }, -- Devouring Plague
+            { spellId = 214621, default = true }, -- Schism
             { spellId = 375901, default = true }, -- Mindgames
             { spellId = 323716, default = true }, -- Thoughtsteal
 
