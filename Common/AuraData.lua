@@ -70,7 +70,13 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
     {
         classID = addon.CLASSID.MONK,
         auras = {
+            { spellId = 116095, default = true }, -- Disable
+
             { spellId = 228287 }, -- Mark of the Crane
+            { spellId = 451433}, -- Acclamation
+            { spellId = 392983 }, -- Strike of the Windlord
+            { spellId = 122470 }, -- Touch of Karma
+            { spellId = 115804 }, -- Mortal Wounds
         }
     },
     {
