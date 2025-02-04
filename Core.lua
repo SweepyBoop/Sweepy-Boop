@@ -290,8 +290,15 @@ options.args.nameplatesEnemy = {
                     name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
                     desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                 },
-                highlightScale = {
+                showCritterIcons = {
                     order = 3,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons on hidden pet nameplates",
+                    desc = "Show a critter icon on pet nameplates hidden by the addon/nThis helps with situations such as casting Ring of the Frost on hunter pets",
+                },
+                highlightScale = {
+                    order = 4,
                     type = "range",
                     name = "Highlight icon scale (%)",
                     min = 50,
@@ -303,7 +310,7 @@ options.args.nameplatesEnemy = {
                 },
 
                 auraFilterEnabled = {
-                    order = 4,
+                    order = 5,
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",

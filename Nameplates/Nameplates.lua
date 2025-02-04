@@ -74,7 +74,7 @@ local function UpdateWidgets(nameplate, frame)
 
         addon.HideSpecIcon(nameplate);
         addon.HideNpcHighlight(nameplate);
-        addon.ShowCritterIcon(nameplate);
+        addon.HideCritterIcon(nameplate);
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
@@ -112,7 +112,7 @@ local function UpdateWidgets(nameplate, frame)
             shouldShowUnitFrame = false;
         end
 
-        if ( not shouldShowUnitFrame ) and isCritter then
+        if SweepyBoop.db.profile.nameplatesEnemy.showCritterIcons and ( not shouldShowUnitFrame ) and isCritter then
             addon.ShowCritterIcon(nameplate);
         else
             addon.HideCritterIcon(nameplate);
