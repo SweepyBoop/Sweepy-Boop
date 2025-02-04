@@ -139,6 +139,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 386997 }, -- Soul Rot
 
             { spellId = 334275 }, -- Curse of Exhaustion
+            { spellId = 410598 }, -- Soul Rip
         }
     },
     {
