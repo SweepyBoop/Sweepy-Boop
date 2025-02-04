@@ -353,7 +353,7 @@ options.args.arenaFrames = {
     order = 5,
     type = "group",
     childGroups = "tab",
-    name = "Arena Frames",
+    name = "Arena frames",
     handler = SweepyBoop, -- for running SweepyBoop:TestArena()
     get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
     set = function(info, val) 
@@ -553,15 +553,20 @@ end
 AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
 AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
 
-options.args.raidFrames = {
+options.args.unitFrames = {
     order = 6,
     type = "group",
-    name = "Raid Frames",
-    get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
+    name = "Unit frames",
+    get = function(info) return SweepyBoop.db.profile.unitFrames[info[#info]] end,
+    set = function(info, val) SweepyBoop.db.profile.unitFrames[info[#info]] = val end,
     args = {
-        raidFrameAggroHighlightEnabled = {
+        header1 = {
             order = 1,
+            type = "header",
+            name = "Raid frames",
+        },
+        raidFrameAggroHighlightEnabled = {
+            order = 2,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
@@ -570,12 +575,25 @@ options.args.raidFrames = {
         },
 
         druidHoTHelper = {
-            order = 2,
+            order = 3,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
             desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Glow Lifebloom during pandemic window\n\n"
                 .. addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_naturalperfection")) .. " Fade out Cenarion Ward before the healing procs",
+        },
+
+        header2 = {
+            order = 4,
+            type = "header",
+            name = "Target & focus frames",
+        },
+        auraFilterEnabled = {
+            order = 5,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Ability_dragonriding_staticflight01")) .. " Filter out irrelevant auras when inside PvP instances",
+            desc = "Filter out irrelevant auras on target and focus frames, e.g., no one wants to see the Flight Style: Steady buff while inside arenas and battlegrounds",
         }
     },
 };
@@ -759,10 +777,11 @@ local defaults = {
             hideCountDownNumbers = false,
             spellList = {},
         },
-        raidFrames = {
+        unitFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
             druidHoTHelper = true,
+            auraFilterEnabled = true,
         },
         misc = {
             healerInCrowdControl = false,
@@ -779,7 +798,7 @@ local defaults = {
 
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
-    defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
+    defaults.profile.unitFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
@@ -836,6 +855,7 @@ function SweepyBoop:OnInitialize()
     -- Setup raid frame modules
     self:SetupRaidFrameAggroHighlight();
     self:SetupRaidFrameAuraModule();
+    self:SetupUnitFrameAuraModule();
 
     self:SetupQueueReminder();
 end

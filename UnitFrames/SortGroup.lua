@@ -82,7 +82,7 @@ local function TrySort()
         frames[i] = { unit = unit, frame = frame };
     end
 
-    table.sort(frames, sortFunctions[SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder]);
+    table.sort(frames, sortFunctions[SweepyBoop.db.profile.unitFrames.arenaRaidFrameSortOrder]);
 
     local prevFrame;
     for _, value in ipairs(frames) do
@@ -101,7 +101,7 @@ local function TrySort()
 end
 
 local function OnEvent(_, event)
-    if (SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder == addon.RAID_FRAME_SORT_ORDER.DISABLED) then return end
+    if (SweepyBoop.db.profile.unitFrames.arenaRaidFrameSortOrder == addon.RAID_FRAME_SORT_ORDER.DISABLED) then return end
     if ( not IsActiveBattlefieldArena() ) then return end -- only sort in arena
     if ( not IsInGroup() ) then return end
 

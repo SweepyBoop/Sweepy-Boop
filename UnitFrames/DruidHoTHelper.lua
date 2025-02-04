@@ -94,7 +94,7 @@ local isDruid = ( addon.GetUnitClass("player") == addon.DRUID ); -- this won't c
 local function HandleRaidFrameAuras(buffFrame, aura)
     if ( not isDruid ) then return end -- if not druid, none of the following code is relevant
 
-    if ( not SweepyBoop.db.profile.raidFrames.druidHoTHelper ) or ( not aura ) or ( aura.isHarmful ) then
+    if ( not SweepyBoop.db.profile.unitFrames.druidHoTHelper ) or ( not aura ) or ( aura.isHarmful ) then
         addon.HideOverlayGlow(buffFrame);
         if buffFrame.icon then
             buffFrame.icon:SetAlpha(1); -- Cenarion ward texture might have been greyed out
