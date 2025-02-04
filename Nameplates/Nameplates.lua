@@ -74,7 +74,7 @@ local function UpdateWidgets(nameplate, frame)
 
         addon.HideSpecIcon(nameplate);
         addon.HideNpcHighlight(nameplate);
-        addon.HideCritterIcon(nameplate);
+        addon.ShowCritterIcon(nameplate);
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);

@@ -91,12 +91,14 @@ addon.HideNpcHighlight = function(nameplate)
     end
 end
 
-local scaleFactor = 0.25; -- Smaller icons for critters
+local scaleFactor = 0.5; -- Smaller icons for critters
 
 local function EnsureIcon(nameplate)
     if ( not nameplate.EnemyCritterIcon ) then
-        nameplate.EnemyCritterIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+        nameplate.EnemyCritterIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", false);
         nameplate.EnemyCritterIcon.icon:SetAtlas(addon.ICON_CRITTER);
+        nameplate.EnemyCritterIcon.icon:SetDesaturated(true);
+        nameplate.EnemyCritterIcon.icon:SetVertexColor(1, 0, 0); -- Red
         nameplate.EnemyCritterIcon:Hide();
     end
 

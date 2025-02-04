@@ -33,7 +33,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 105419, name = "Dire Beast: Basilisk", icon = 205691, default = addon.NpcOption.Show },
 
             -- Hunter pets all have the same npcID, add here so they don't get hidden in battlegrounds
-            { npcID = addon.HUNTERPET, name = "Pet", icon = 267116, default = addon.NpcOption.Show },
+            { npcID = addon.HUNTERPET, name = "Pet", icon = 267116, default = addon.NpcOption.Show, isCritter = true },
         }
     },
     {
