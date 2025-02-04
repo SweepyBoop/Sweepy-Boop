@@ -294,8 +294,8 @@ options.args.nameplatesEnemy = {
                     order = 3,
                     type = "toggle",
                     width = "full",
-                    name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons on hidden pet nameplates",
-                    desc = "Show a critter icon on pet nameplates hidden by the addon/nThis helps with situations such as casting Ring of the Frost on hunter pets",
+                    name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
+                    desc = "Show a critter icon in place of pet nameplates hidden by the addon/nThis helps with situations such as casting Ring of the Frost on hunter pets",
                     hidden = function ()
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
                     end
