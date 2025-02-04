@@ -19,6 +19,7 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
             { npcID = 106041, name = "Reanimation", icon = 210128, default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
             { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show },
             { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide },
+            { npcID = 24207, name = "Army of the Dead", icon = 128403, default = addon.NpcOption.Hide },
         }
     },
     {
