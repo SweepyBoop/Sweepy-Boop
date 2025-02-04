@@ -112,7 +112,7 @@ local function UpdateWidgets(nameplate, frame)
             shouldShowUnitFrame = false;
         end
 
-        if SweepyBoop.db.profile.nameplatesEnemy.showCritterIcons and ( not shouldShowUnitFrame ) and isCritter then
+        if SweepyBoop.db.profile.nameplatesEnemy.showCritterIcons and isCritter and ( not shouldShowUnitFrame ) then
             addon.ShowCritterIcon(nameplate);
         else
             addon.HideCritterIcon(nameplate);
