@@ -18,8 +18,8 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
         npcs = {
             { npcID = 106041, name = "Reanimation", icon = 210128, default = addon.NpcOption.Highlight }, -- stuns for 3s and takes 10% HP
             { npcID = 149555, name = "Raise Abomination", icon = 455395, default = addon.NpcOption.Show },
-            { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide },
-            { npcID = 24207, name = "Army of the Dead", icon = 128403, default = addon.NpcOption.Hide },
+            { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide, isCritter = true },
+            { npcID = 24207, name = "Army of the Dead", icon = 220143, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
@@ -40,13 +40,13 @@ addon.importantNpcList = { -- Use table with consecutive indexes to preserve the
     {
         classID = addon.CLASSID.MAGE,
         npcs = {
-            { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide },
+            { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
     {
         classID = addon.CLASSID.MONK,
         npcs = {
-            { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide },
+            { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide, isCritter = true },
             { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
         }
     },
