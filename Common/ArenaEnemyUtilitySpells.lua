@@ -238,7 +238,7 @@ addon.utilitySpells = {
     -- Crowd Control
     -- Hammer of Justice
     [853] = {
-        cooldown = 60,
+        cooldown = 45,
         class = addon.PALADIN,
         category = SPELLCATEGORY.CROWDCONTROL,
         reduce_power_type = POWERTYPE.HolyPower;
