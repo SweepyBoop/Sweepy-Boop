@@ -111,7 +111,9 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
             { spellId = 1943, default = true }, -- Rupture
             { spellId = 360194, default = true }, -- Deathmark
             { spellId = 121411, default = true }, -- Crimson Tempest
+            { spellId = 394036, default = true }, -- Serrated Bone Spike
 
+            { spellId = 381628 }, -- Internal Bleeding
             { spellId = 385627 }, -- Kingsbane
             { spellId = 5760 }, -- Numbing Poison
             { spellId = 3409 }, -- Crippling Poison
