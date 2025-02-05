@@ -714,7 +714,7 @@ addon.spellResets = {
     },
 
     -- Shifting Power
-    [314791] = {
+    [382440] = {
         [190319] = 12, -- Combustion
     },
     -- Pyrokinesis removed

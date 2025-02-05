@@ -386,14 +386,16 @@ local function EnsureIconGroups()
                 -- This will simply update
                 EnsureIcons();
                 EnsureIconGroups();
-            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) and IsActiveBattlefieldArena() then
+            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+                if ( not IsActiveBattlefieldArena() ) and ( not test ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
                 for i = 0, addon.MAX_ARENA_SIZE do
                     if iconGroups[i] then
                         ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                     end
                 end
-            else
+            elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
+                if ( not IsActiveBattlefieldArena() ) and ( not test ) then return end
                 for i = 0, addon.MAX_ARENA_SIZE do
                     if iconGroups[i] then
                         ProcessUnitEvent(iconGroups[i], event, ...);

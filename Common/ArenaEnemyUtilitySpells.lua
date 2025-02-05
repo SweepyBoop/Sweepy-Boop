@@ -525,7 +525,7 @@ end
 -- If amount is not defined, it means a full reset
 addon.cooldownResets = {
     -- Shifting Power
-    [314791] = {
+    [382440] = {
         { spellID = 31661, amount = 12 }, -- Dragon's Breath
         { spellID = 113724, amount = 12 }, -- Ring of Frost
         { spellID = 2139, amount = 12 }, -- Counterspell
