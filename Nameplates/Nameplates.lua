@@ -212,7 +212,9 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
-        if frame.optionTable.showPvPClassificationIndicator then
+        -- Less efficient check for classic as showPvPClassificationIndicator is not available
+        local isNamePlate = frame.optionTable.showPvPClassificationIndicator or string.find(frame.unit, "nameplate");
+        if isNamePlate then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
 
