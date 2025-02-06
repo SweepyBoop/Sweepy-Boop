@@ -145,7 +145,9 @@ end
 addon.cachedBattlefieldSpec = {};
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+    refreshFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+end
 refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {};
 end)
