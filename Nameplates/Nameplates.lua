@@ -4,6 +4,7 @@ local function HideWidgets(nameplate)
     addon.HideClassIcon(nameplate);
     addon.HidePetIcon(nameplate);
     addon.HideNpcHighlight(nameplate);
+    addon.HideCritterIcon(nameplate);
     addon.HideSpecIcon(nameplate);
 end
 
