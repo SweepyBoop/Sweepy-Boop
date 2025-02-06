@@ -2,9 +2,11 @@ local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
 
+local PvPUnitClassification;
+local flagCarrierIcons;
 if addon.PROJECT_MAINLINE then
-    local PvPUnitClassification = Enum.PvPUnitClassification;
-    local flagCarrierIcons = {
+    PvPUnitClassification = Enum.PvPUnitClassification;
+    flagCarrierIcons = {
         [PvPUnitClassification.FlagCarrierHorde] = addon.ICON_ID_FLAG_CARRIER_HORDE,
         [PvPUnitClassification.FlagCarrierAlliance] = addon.ICON_ID_FLAG_CARRIER_ALLIANCE,
         [PvPUnitClassification.FlagCarrierNeutral] = addon.ICON_ID_FLAG_CARRIER_NEUTRAL,
