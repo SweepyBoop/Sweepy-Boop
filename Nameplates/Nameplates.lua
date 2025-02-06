@@ -87,6 +87,14 @@ local function UpdateWidgets(nameplate, frame)
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
 
+        if ( not addon.PROJECT_MAINLINE ) then
+            addon.HideNpcHighlight(nameplate);
+            addon.HideCritterIcon(nameplate);
+            addon.HideSpecIcon(nameplate);
+            UpdateUnitFrameVisibility(frame, true);
+            return;
+        end
+
         if UnitIsPlayer(frame.unit) then
             if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
                 addon.ShowSpecIcon(nameplate); -- Control alpha in spec icon module for healer / non-healer
