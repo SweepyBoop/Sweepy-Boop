@@ -4,6 +4,7 @@ local function HideWidgets(nameplate)
     addon.HideClassIcon(nameplate);
     addon.HidePetIcon(nameplate);
     addon.HideNpcHighlight(nameplate);
+    addon.HideCritterIcon(nameplate);
     addon.HideSpecIcon(nameplate);
 end
 
@@ -85,6 +86,14 @@ local function UpdateWidgets(nameplate, frame)
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
+
+        if ( not addon.PROJECT_MAINLINE ) then
+            addon.HideNpcHighlight(nameplate);
+            addon.HideCritterIcon(nameplate);
+            addon.HideSpecIcon(nameplate);
+            UpdateUnitFrameVisibility(frame, true);
+            return;
+        end
 
         if UnitIsPlayer(frame.unit) then
             if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
