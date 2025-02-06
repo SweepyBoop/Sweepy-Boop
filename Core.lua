@@ -838,6 +838,9 @@ function SweepyBoop:OnInitialize()
     -- Setup nameplate modules
     self:SetupNameplateModules();
 
+    -- Only nameplate modules for Classic currently
+    if WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE then return end
+
     -- Setup arena enemy cooldown icons
     self:SetupOffensiveIcons();
     self:SetupCooldownTrackingIcons();
