@@ -141,7 +141,9 @@ end
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+    if addon.PROJECT_MAINLINE then
+        eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+    end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
