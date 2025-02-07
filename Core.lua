@@ -139,7 +139,7 @@ options.args.nameplatesFriendly = {
             name = addon.FORMAT_TEXTURE(addon.FLAG_CARRIER_ALLIANCE_LOGO) .. " Show flag carrier icons in battlegrounds",
             desc = "Use special icons for friendly flag carriers\nThis overwrites the healer icon",
             hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
             end
         },
         targetHighlight = {
