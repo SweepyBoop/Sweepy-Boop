@@ -918,7 +918,7 @@ function SweepyBoop:RefreshConfig()
         end
     end
 
-    self:RefreshAllNamePlates();
+    self:RefreshAllNamePlates(true);
 end
 
 function SweepyBoop:CheckAllSpells(value)
