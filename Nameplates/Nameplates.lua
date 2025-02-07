@@ -215,7 +215,7 @@ function SweepyBoop:SetupNameplateModules()
         if frame:IsForbidden() then return end
 
         -- Less efficient check for classic as showPvPClassificationIndicator is not available
-        local isNamePlate = frame.optionTable.showPvPClassificationIndicator or string.find(frame.unit, "nameplate");
+        local isNamePlate = frame.optionTable.showPvPClassificationIndicator or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
         if isNamePlate then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
