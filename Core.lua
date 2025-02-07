@@ -78,7 +78,7 @@ options.args.nameplatesFriendly = {
             },
             name = "Icon style",
             hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
             end
         },
         newline = {
