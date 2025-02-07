@@ -4,7 +4,7 @@ local _, addon = ...;
 local iconSize = 40;
 local arrowSize = 67;
 local highlightSize = 55;
-local classicBorderSize = 60;
+local classicBorderSize = 64;
 
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFriendly)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
