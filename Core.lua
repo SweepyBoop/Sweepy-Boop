@@ -50,6 +50,11 @@ options.args.nameplatesFriendly = {
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " Enabled",
             desc = "Show class/pet icons on friendly players/pets",
+            set = function(info, val)
+                SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled = val;
+                SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
+                SweepyBoop:RefreshAllNamePlates(true);
+            end
         },
         description1 = {
             order = 2,

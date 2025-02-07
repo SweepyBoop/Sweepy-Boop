@@ -242,7 +242,7 @@ function SweepyBoop:SetupNameplateModules()
     end
 end
 
-function SweepyBoop:RefreshAllNamePlates()
+function SweepyBoop:RefreshAllNamePlates(hideFirst)
     if IsRestricted() then return end
 
     local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
@@ -250,6 +250,9 @@ function SweepyBoop:RefreshAllNamePlates()
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
+            if hideFirst then
+                HideWidgets(nameplate);
+            end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
         end
     end
