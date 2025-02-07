@@ -901,8 +901,10 @@ function SweepyBoop:HideTestArena()
 end
 
 function SweepyBoop:RefreshConfig()
-    self:HideTestArenaEnemyBurst();
-    self:HideTestCooldownTracking();
+    if addon.PROJECT_MAINLINE then
+        self:HideTestArenaEnemyBurst();
+        self:HideTestCooldownTracking();
+    end
 
     local currentTime = GetTime();
     for _, category in pairs(self.db.profile) do
