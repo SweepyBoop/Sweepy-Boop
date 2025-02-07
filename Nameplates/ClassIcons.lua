@@ -1,13 +1,17 @@
 local _, addon = ...;
 
-local PvPUnitClassification = Enum.PvPUnitClassification;
 local specialIconScaleFactor = 1.25;
 
-local flagCarrierIcons = {
-    [PvPUnitClassification.FlagCarrierHorde] = addon.ICON_ID_FLAG_CARRIER_HORDE,
-    [PvPUnitClassification.FlagCarrierAlliance] = addon.ICON_ID_FLAG_CARRIER_ALLIANCE,
-    [PvPUnitClassification.FlagCarrierNeutral] = addon.ICON_ID_FLAG_CARRIER_NEUTRAL,
-};
+local PvPUnitClassification;
+local flagCarrierIcons;
+if addon.PROJECT_MAINLINE then
+    PvPUnitClassification = Enum.PvPUnitClassification;
+    flagCarrierIcons = {
+        [PvPUnitClassification.FlagCarrierHorde] = addon.ICON_ID_FLAG_CARRIER_HORDE,
+        [PvPUnitClassification.FlagCarrierAlliance] = addon.ICON_ID_FLAG_CARRIER_ALLIANCE,
+        [PvPUnitClassification.FlagCarrierNeutral] = addon.ICON_ID_FLAG_CARRIER_NEUTRAL,
+    };
+end
 
 local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
@@ -40,10 +44,12 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
         iconID = nil;
     end
 
-    if ( pvpClassification ~= nil ) and ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
-        iconID = flagCarrierIcons[pvpClassification];
-        iconCoords = {0, 1, 0, 1};
-        isSpecialIcon = true;
+    if addon.PROJECT_MAINLINE then
+        if ( pvpClassification ~= nil ) and ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
+            iconID = flagCarrierIcons[pvpClassification];
+            iconCoords = {0, 1, 0, 1};
+            isSpecialIcon = true;
+        end
     end
 
     return iconID, iconCoords, isSpecialIcon;
@@ -62,7 +68,6 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     end
 end
 
--- For FC icon, listen to whatever triggers CompactUnitFrame_UpdatePvPClassificationIndicator
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
@@ -72,7 +77,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
     -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
     local class = addon.GetUnitClass(frame.unit);
-    local pvpClassification = UnitPvpClassification(frame.unit);
+    local pvpClassification;
+    if addon.PROJECT_MAINLINE then
+        pvpClassification = UnitPvpClassification(frame.unit);
+    end
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     if ( classIconContainer.class ~= class ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.roleAssigned ~= roleAssigned ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then

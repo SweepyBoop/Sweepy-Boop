@@ -27,17 +27,24 @@ local function UpdateUnitFrameVisibility(frame, show)
                 region:SetIgnoreParentAlpha(false);
             end
         end
-        for _, region in pairs(frame.castBar) do
-            if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-                region:SetIgnoreParentAlpha(false);
+
+        if addon.PROJECT_MAINLINE then
+            for _, region in pairs(frame.castBar) do
+                if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                    region:SetIgnoreParentAlpha(false);
+                end
             end
         end
+
         frame.unsetIgnoreParentAlpha = true;
     end
 
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
-    frame.castBar:SetAlpha(alpha);
+
+    if addon.PROJECT_MAINLINE then
+        frame.castBar:SetAlpha(alpha);
+    end
 end
 
 local function UpdateWidgets(nameplate, frame)
@@ -79,6 +86,14 @@ local function UpdateWidgets(nameplate, frame)
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
+
+        if ( not addon.PROJECT_MAINLINE ) then
+            addon.HideNpcHighlight(nameplate);
+            addon.HideCritterIcon(nameplate);
+            addon.HideSpecIcon(nameplate);
+            UpdateUnitFrameVisibility(frame, true);
+            return;
+        end
 
         if UnitIsPlayer(frame.unit) then
             if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
@@ -126,7 +141,9 @@ end
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+    if addon.PROJECT_MAINLINE then
+        eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+    end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
         if event == addon.NAME_PLATE_UNIT_ADDED then
@@ -181,21 +198,25 @@ function SweepyBoop:SetupNameplateModules()
 
     -- When flag is picked up / dropped
     -- Issue, not immediately updated to flag carrier icon when someone picked up the flag
-    hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
-        -- This will only be applied to nameplates in PvP instances
-        if frame:IsForbidden() then return end
-        if frame.optionTable.showPvPClassificationIndicator then
-            -- UpdateClassIcon should include UpdateTargetHighlight
-            -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
-            -- Consequently we can't guarantee the target highlight is up-to-date on FC
-            addon.UpdateClassIcon(frame:GetParent(), frame);
-        end
-    end)
+    if addon.PROJECT_MAINLINE then
+        hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
+            -- This will only be applied to nameplates in PvP instances
+            if frame:IsForbidden() then return end
+            if frame.optionTable.showPvPClassificationIndicator then
+                -- UpdateClassIcon should include UpdateTargetHighlight
+                -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
+                -- Consequently we can't guarantee the target highlight is up-to-date on FC
+                addon.UpdateClassIcon(frame:GetParent(), frame);
+            end
+        end)
+    end
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
-        if frame.optionTable.showPvPClassificationIndicator then
+        -- Less efficient check for classic as showPvPClassificationIndicator is not available
+        local isNamePlate = frame.optionTable.showPvPClassificationIndicator or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
+        if isNamePlate then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
 
@@ -211,17 +232,19 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
-        if self:IsForbidden() then return end
-        if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-            self:EnableMouse(false);
-        else
-            self:EnableMouse(true);
-        end
-    end)
+    if addon.PROJECT_MAINLINE then
+        hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
+            if self:IsForbidden() then return end
+            if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+                self:EnableMouse(false);
+            else
+                self:EnableMouse(true);
+            end
+        end)
+    end
 end
 
-function SweepyBoop:RefreshAllNamePlates()
+function SweepyBoop:RefreshAllNamePlates(hideFirst)
     if IsRestricted() then return end
 
     local nameplates = C_NamePlate.GetNamePlates(true); -- isSecure = true to return nameplates in instances (to hide widgets)
@@ -229,6 +252,9 @@ function SweepyBoop:RefreshAllNamePlates()
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
+            if hideFirst then
+                HideWidgets(nameplate);
+            end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
         end
     end

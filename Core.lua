@@ -50,6 +50,11 @@ options.args.nameplatesFriendly = {
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " Enabled",
             desc = "Show class/pet icons on friendly players/pets",
+            set = function(info, val)
+                SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled = val;
+                SweepyBoop.db.profile.nameplatesFriendly.lastModified = GetTime();
+                SweepyBoop:RefreshAllNamePlates(true);
+            end
         },
         description1 = {
             order = 2,
@@ -78,7 +83,7 @@ options.args.nameplatesFriendly = {
             },
             name = "Icon style",
             hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
             end
         },
         newline = {
@@ -171,564 +176,568 @@ options.args.nameplatesFriendly = {
     }
 };
 
-local beastMasteryHunterIcon = C_Spell.GetSpellTexture(267116);
-options.args.nameplatesEnemy = {
-    order = 4,
-    type = "group",
-    childGroups = "tab",
-    name = "Enemy nameplates",
-    get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
-    set = function(info, val)
-        SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-        SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-        SweepyBoop:RefreshAllNamePlates();
-    end,
-    args = {
-        -- tip = {
-        --     order = 1,
-        --     width = "full",
-        --     type = "description",
-        --     name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
-        -- },
-        breaker1 = {
-            order = 2,
-            type = "header",
-            name = "",
-        },
+if addon.PROJECT_MAINLINE then
 
-        arenaNumbersEnabled = {
-            order = 3,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
-            desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
-        },
-
-        breaker2 = {
-            order = 4,
-            type = "header",
-            name = "Arena & battleground enemy spec icons",
-        },
-        arenaSpecIconHealer = {
-            order = 5,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-            desc = "Show spec icons on top of the nameplates of enemy healers",
-        },
-        arenaSpecIconHealerIcon = {
-            order = 6,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
-            end
-        },
-        arenaSpecIconOthers = {
-            order = 7,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
-            desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
-        },
-        arenaSpecIconAlignment = {
-            order = 8,
-            type = "select",
-            width = 0.85,
-            name = "Alignment",
-            values = {
-                [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
-                [addon.SPEC_ICON_ALIGNMENT.LEFT] = "Left",
-                [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
-            },
-        },
-        arenaSpecIconVerticalOffset = {
-            order = 9,
-            min = -150,
-            max = 150,
-            step = 1,
-            type = "range",
-            width = 0.85,
-            name = "Vertical offset",
-            hidden = function ()
-                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
-            end
-        },
-        arenaSpecIconScale = {
-            order = 10,
-            min = 50,
-            max = 300,
-            step = 1,
-            type = "range",
-            width = 0.85,
-            name = "Scale (%)",
-        },
-
-        breaker3 = {
-            order = 11,
-            type = "header",
-            name = "Nameplate Filters & Highlights",
-        },
-
-        filterSettings = {
-            order = 12,
-            type = "group",
-            name = "General",
-            args = {
-                hideHunterSecondaryPet = {
-                    order = 1,
-                    type = "toggle",
-                    width = "full",
-                    name = addon.FORMAT_TEXTURE(beastMasteryHunterIcon) .. " Hide beast mastery hunter secondary pets in arena",
-                    desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
-                },
-                filterEnabled = {
-                    order = 2,
-                    type = "toggle",
-                    width = "full",
-                    name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
-                    desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
-                },
-                showCritterIcons = {
-                    order = 3,
-                    type = "toggle",
-                    width = "full",
-                    name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
-                    desc = "Show a critter icon in place of pet nameplates hidden by the addon\nThis helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen",
-                    hidden = function ()
-                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
-                    end
-                },
-                highlightScale = {
-                    order = 4,
-                    type = "range",
-                    name = "Highlight icon scale (%)",
-                    min = 50,
-                    max = 300,
-                    step = 1,
-                    hidden = function()
-                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
-                    end,
-                },
-
-                auraFilterEnabled = {
-                    order = 5,
-                    type = "toggle",
-                    width = "full",
-                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",
-                    desc = "Show only whitelisted auras applied by myself on enemy nameplates\nCrowd controls from all source units will always show",
-                },
-            },
-        },
-
-        filterList = {
-            order = 13,
-            type = "group",
-            name = "Unit whitelist",
-            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
-            set = function(info, val) 
-                SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
-                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-                SweepyBoop:RefreshAllNamePlates();
-            end,
-            args = {},
-            hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
-            end
-        },
-
-        auraWhiteList = {
-            order = 14,
-            type = "group",
-            name = "Aura whitelist",
-            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] end,
-            set = function(info, val) 
-                SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] = val;
-                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-                -- No need to refresh nameplates, just apply it on next UNIT_AURA
-            end,
-            args = {},
-            hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
-            end
-        }
-    },
-};
-
-addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
-addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
-
-options.args.arenaFrames = {
-    order = 5,
-    type = "group",
-    childGroups = "tab",
-    name = "Arena Frames",
-    handler = SweepyBoop, -- for running SweepyBoop:TestArena()
-    get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
-    set = function(info, val) 
-        SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-        SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-    end,
-    args = {
-        healerIndicator = {
-            order = 1,
-            type = "toggle",
-            name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
-            desc = "To make it easier to identify the healer in case of class stacking",
-            width = "full",
-            hidden = function ()
-                return ( not (Gladius or sArena ) );
-            end
-        },
-
-        header1 = {
-            order = 2,
-            type = "header",
-            name = "Enemy burst / defensive cooldowns",
-            hidden = function ()
-                return ( not (Gladius or sArena ) );
-            end
-        },
-        testmode = {
-            order = 3,
-            type = "execute",
-            name = "Test",
-            func = "TestArena",
-            width = "half",
-        },
-        hidetest = {
-            order = 4,
-            type = "execute",
-            name = "Hide",
-            func = "HideTestArena",
-            width = "half",
-        },
-        reloadUI = {
-            order = 5,
-            type = "execute",
-            width = 0.625,
-            name = "Reload UI",
-            func = ReloadUI,
-        },
-        desc = {
-            order = 6,
-            type = "description",
-            width = "full",
-            name = addon.EXCLAMATION .. " Changes made during an arena session require a reload to take effect",
-        },
-        breaker1 = {
-            order = 7,
-            type = "description",
-            name = "",
-        },
-
-        arenaEnemyOffensivesEnabled = {
-            order = 8,
-            width = 1.5,
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enemy burst Cooldowns",
-            desc = "Show arena enemy burst cooldowns next to the arena frames",
-        },
-        arenaEnemyOffensiveIconSize = {
-            order = 9,
-            type = "range",
-            min = 16,
-            max = 64,
-            step = 1,
-            name = "Icon size",
-            desc = "Size of arena burst cooldown icons",
-        },
-        newline1 = {
-            order = 10,
-            type = "description",
-            width = "full",
-            name = "",
-        },
-        arenaEnemyDefensivesEnabled = {
-            order = 11,
-            width = 1.5,
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy defensive cooldowns",
-            desc = "Show arena enemy defensive cooldowns next to the arena frames",
-        },
-        arenaEnemyDefensiveIconSize = {
-            order = 12,
-            type = "range",
-            min = 16,
-            max = 64,
-            step = 1,
-            name = "Icon size",
-            desc = "Size of arena defensive cooldown icons",
-        },
-
-        hideCountDownNumbers = {
-            order = 13,
-            type = "toggle",
-            width = "full",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
-            desc = "Hide countdown numbers but show a more visible swiping edge",
-        },
-        arenaCooldownOffsetX = {
-            order = 14,
-            type = "range",
-            min = -300,
-            max = 300,
-            step = 1,
-            name = "Horizontal offset",
-            desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
-        },
-        arenaCooldownOffsetY = {
-            order = 15,
-            type = "range",
-            min = -150,
-            max = 150,
-            step = 1,
-            name = "Vertical offset",
-            desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
-        },
-
-        spellList = {
-            order = 16,
-            type = "group",
-            name = "Spells",
-            desc = "Select which abilities to track cooldown inside arenas",
-            get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
-            set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
-            args = {
-                checkAll = {
-                    order = 1,
-                    type = "execute",
-                    name = "Check All",
-                    func = function ()
-                        SweepyBoop:CheckAllSpells(true);
-                    end
-                },
-                uncheckAll = {
-                    order = 2,
-                    type = "execute",
-                    name = "Uncheck All",
-                    func = function ()
-                        SweepyBoop:CheckAllSpells(false);
-                    end
-                },
-            },
-        }
-    },
-};
-
-local indexInClassGroup = {};
-local groupIndex = 3;
--- Ensure one group for each class, in order
-for _, classID in ipairs(addon.CLASSORDER) do
-    local classInfo = C_CreatureInfo.GetClassInfo(classID);
-    options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
-        order = groupIndex,
+    local beastMasteryHunterIcon = C_Spell.GetSpellTexture(267116);
+    options.args.nameplatesEnemy = {
+        order = 4,
         type = "group",
-        icon = addon.ICON_ID_CLASSES,
-        iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
-        name = classInfo.className,
-        args = {},
+        childGroups = "tab",
+        name = "Enemy nameplates",
+        get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
+        set = function(info, val)
+            SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+            SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+            SweepyBoop:RefreshAllNamePlates();
+        end,
+        args = {
+            -- tip = {
+            --     order = 1,
+            --     width = "full",
+            --     type = "description",
+            --     name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
+            -- },
+            breaker1 = {
+                order = 2,
+                type = "header",
+                name = "",
+            },
+
+            arenaNumbersEnabled = {
+                order = 3,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
+                desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
+            },
+
+            breaker2 = {
+                order = 4,
+                type = "header",
+                name = "Arena & battleground enemy spec icons",
+            },
+            arenaSpecIconHealer = {
+                order = 5,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
+                desc = "Show spec icons on top of the nameplates of enemy healers",
+            },
+            arenaSpecIconHealerIcon = {
+                order = 6,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                end
+            },
+            arenaSpecIconOthers = {
+                order = 7,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
+                desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
+            },
+            arenaSpecIconAlignment = {
+                order = 8,
+                type = "select",
+                width = 0.85,
+                name = "Alignment",
+                values = {
+                    [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
+                    [addon.SPEC_ICON_ALIGNMENT.LEFT] = "Left",
+                    [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
+                },
+            },
+            arenaSpecIconVerticalOffset = {
+                order = 9,
+                min = -150,
+                max = 150,
+                step = 1,
+                type = "range",
+                width = 0.85,
+                name = "Vertical offset",
+                hidden = function ()
+                    return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
+                end
+            },
+            arenaSpecIconScale = {
+                order = 10,
+                min = 50,
+                max = 300,
+                step = 1,
+                type = "range",
+                width = 0.85,
+                name = "Scale (%)",
+            },
+
+            breaker3 = {
+                order = 11,
+                type = "header",
+                name = "Nameplate Filters & Highlights",
+            },
+
+            filterSettings = {
+                order = 12,
+                type = "group",
+                name = "General",
+                args = {
+                    hideHunterSecondaryPet = {
+                        order = 1,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(beastMasteryHunterIcon) .. " Hide beast mastery hunter secondary pets in arena",
+                        desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
+                    },
+                    filterEnabled = {
+                        order = 2,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
+                        desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
+                    },
+                    showCritterIcons = {
+                        order = 3,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
+                        desc = "Show a critter icon in place of pet nameplates hidden by the addon\nThis helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
+                        end
+                    },
+                    highlightScale = {
+                        order = 4,
+                        type = "range",
+                        name = "Highlight icon scale (%)",
+                        min = 50,
+                        max = 300,
+                        step = 1,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                        end,
+                    },
+
+                    auraFilterEnabled = {
+                        order = 5,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",
+                        desc = "Show only whitelisted auras applied by myself on enemy nameplates\nCrowd controls from all source units will always show",
+                    },
+                },
+            },
+
+            filterList = {
+                order = 13,
+                type = "group",
+                name = "Unit whitelist",
+                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
+                set = function(info, val) 
+                    SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
+                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                    SweepyBoop:RefreshAllNamePlates();
+                end,
+                args = {},
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                end
+            },
+
+            auraWhiteList = {
+                order = 14,
+                type = "group",
+                name = "Aura whitelist",
+                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] end,
+                set = function(info, val) 
+                    SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] = val;
+                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                    -- No need to refresh nameplates, just apply it on next UNIT_AURA
+                end,
+                args = {},
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                end
+            }
+        },
     };
 
-    indexInClassGroup[classInfo.classFile] = 1;
-    groupIndex = groupIndex + 1;
-end
-local function AppendSpellOptions(group, spellList, category)
-    for spellID, spellInfo in pairs(spellList) do
-        if ( not category ) or ( spellInfo.category == category ) then
-            local classFile = spellInfo.class;
-            local classGroup = group.args[classFile];
-            local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
-            -- https://warcraft.wiki.gg/wiki/SpellMixin
-            local spell = Spell:CreateFromSpellID(spellID);
-            spell:ContinueOnSpellLoad(function()
-                addon.SPELL_DESCRIPTION[spellID] = spell:GetSpellDescription();
-            end)
-            classGroup.args[tostring(spellID)] = {
-                order = indexInClassGroup[classFile],
-                type = "toggle",
-                width = "full", -- otherwise the icon might look strange vertically
-                name = addon.FORMAT_TEXTURE(icon) .. " " .. name,
-                desc = function ()
-                    return addon.SPELL_DESCRIPTION[spellID] or "";
-                end
-            };
+    addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
+    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
 
-            indexInClassGroup[classFile] = indexInClassGroup[classFile] + 1;
+    options.args.arenaFrames = {
+        order = 5,
+        type = "group",
+        childGroups = "tab",
+        name = "Arena Frames",
+        handler = SweepyBoop, -- for running SweepyBoop:TestArena()
+        get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
+        set = function(info, val) 
+            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+        end,
+        args = {
+            healerIndicator = {
+                order = 1,
+                type = "toggle",
+                name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
+                desc = "To make it easier to identify the healer in case of class stacking",
+                width = "full",
+                hidden = function ()
+                    return ( not (Gladius or sArena ) );
+                end
+            },
+
+            header1 = {
+                order = 2,
+                type = "header",
+                name = "Enemy burst / defensive cooldowns",
+                hidden = function ()
+                    return ( not (Gladius or sArena ) );
+                end
+            },
+            testmode = {
+                order = 3,
+                type = "execute",
+                name = "Test",
+                func = "TestArena",
+                width = "half",
+            },
+            hidetest = {
+                order = 4,
+                type = "execute",
+                name = "Hide",
+                func = "HideTestArena",
+                width = "half",
+            },
+            reloadUI = {
+                order = 5,
+                type = "execute",
+                width = 0.625,
+                name = "Reload UI",
+                func = ReloadUI,
+            },
+            desc = {
+                order = 6,
+                type = "description",
+                width = "full",
+                name = addon.EXCLAMATION .. " Changes made during an arena session require a reload to take effect",
+            },
+            breaker1 = {
+                order = 7,
+                type = "description",
+                name = "",
+            },
+
+            arenaEnemyOffensivesEnabled = {
+                order = 8,
+                width = 1.5,
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enemy burst Cooldowns",
+                desc = "Show arena enemy burst cooldowns next to the arena frames",
+            },
+            arenaEnemyOffensiveIconSize = {
+                order = 9,
+                type = "range",
+                min = 16,
+                max = 64,
+                step = 1,
+                name = "Icon size",
+                desc = "Size of arena burst cooldown icons",
+            },
+            newline1 = {
+                order = 10,
+                type = "description",
+                width = "full",
+                name = "",
+            },
+            arenaEnemyDefensivesEnabled = {
+                order = 11,
+                width = 1.5,
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy defensive cooldowns",
+                desc = "Show arena enemy defensive cooldowns next to the arena frames",
+            },
+            arenaEnemyDefensiveIconSize = {
+                order = 12,
+                type = "range",
+                min = 16,
+                max = 64,
+                step = 1,
+                name = "Icon size",
+                desc = "Size of arena defensive cooldown icons",
+            },
+
+            hideCountDownNumbers = {
+                order = 13,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
+                desc = "Hide countdown numbers but show a more visible swiping edge",
+            },
+            arenaCooldownOffsetX = {
+                order = 14,
+                type = "range",
+                min = -300,
+                max = 300,
+                step = 1,
+                name = "Horizontal offset",
+                desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
+            },
+            arenaCooldownOffsetY = {
+                order = 15,
+                type = "range",
+                min = -150,
+                max = 150,
+                step = 1,
+                name = "Vertical offset",
+                desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
+            },
+
+            spellList = {
+                order = 16,
+                type = "group",
+                name = "Spells",
+                desc = "Select which abilities to track cooldown inside arenas",
+                get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
+                set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
+                args = {
+                    checkAll = {
+                        order = 1,
+                        type = "execute",
+                        name = "Check All",
+                        func = function ()
+                            SweepyBoop:CheckAllSpells(true);
+                        end
+                    },
+                    uncheckAll = {
+                        order = 2,
+                        type = "execute",
+                        name = "Uncheck All",
+                        func = function ()
+                            SweepyBoop:CheckAllSpells(false);
+                        end
+                    },
+                },
+            }
+        },
+    };
+
+    local indexInClassGroup = {};
+    local groupIndex = 3;
+    -- Ensure one group for each class, in order
+    for _, classID in ipairs(addon.CLASSORDER) do
+        local classInfo = C_CreatureInfo.GetClassInfo(classID);
+        options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
+            order = groupIndex,
+            type = "group",
+            icon = addon.ICON_ID_CLASSES,
+            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+            name = classInfo.className,
+            args = {},
+        };
+
+        indexInClassGroup[classInfo.classFile] = 1;
+        groupIndex = groupIndex + 1;
+    end
+    local function AppendSpellOptions(group, spellList, category)
+        for spellID, spellInfo in pairs(spellList) do
+            if ( not category ) or ( spellInfo.category == category ) then
+                local classFile = spellInfo.class;
+                local classGroup = group.args[classFile];
+                local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
+                -- https://warcraft.wiki.gg/wiki/SpellMixin
+                local spell = Spell:CreateFromSpellID(spellID);
+                spell:ContinueOnSpellLoad(function()
+                    addon.SPELL_DESCRIPTION[spellID] = spell:GetSpellDescription();
+                end)
+                classGroup.args[tostring(spellID)] = {
+                    order = indexInClassGroup[classFile],
+                    type = "toggle",
+                    width = "full", -- otherwise the icon might look strange vertically
+                    name = addon.FORMAT_TEXTURE(icon) .. " " .. name,
+                    desc = function ()
+                        return addon.SPELL_DESCRIPTION[spellID] or "";
+                    end
+                };
+
+                indexInClassGroup[classFile] = indexInClassGroup[classFile] + 1;
+            end
         end
     end
+
+    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
+    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
+
+    options.args.raidFrames = {
+        order = 6,
+        type = "group",
+        name = "Raid Frames",
+        get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
+        set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
+        args = {
+            raidFrameAggroHighlightEnabled = {
+                order = 1,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
+                desc = addon.EXCLAMATION .. " Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
+                descStyle = "inline",
+            },
+
+            druidHoTHelper = {
+                order = 2,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
+                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Glow Lifebloom during pandemic window\n\n"
+                    .. addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_naturalperfection")) .. " Fade out Cenarion Ward before the healing procs",
+            }
+        },
+    };
+
+    options.args.misc = {
+        order = 7,
+        type = "group",
+        name = "Misc",
+        get = function(info) return SweepyBoop.db.profile.misc[info[#info]] end,
+        set = function(info, val)
+            SweepyBoop.db.profile.misc[info[#info]] = val;
+            SweepyBoop.db.profile.misc.lastModified = GetTime();
+        end,
+        handler = SweepyBoop,
+        args = {
+            header1 = {
+                order = 1,
+                type = "header",
+                name = "Healer in crowd control reminder in arena",
+            },
+            healerInCrowdControl = {
+                order = 2,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Enabled",
+            },
+            healerInCrowdControlTest = {
+                order = 3,
+                type = "execute",
+                width = "half",
+                name = "Test",
+                func = "TestHealerInCrowdControl",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                end
+            },
+            healerInCrowdControlHide = {
+                order = 4,
+                type = "execute",
+                width = "half",
+                name = "Hide",
+                func = "HideTestHealerInCrowdControl",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                end
+            },
+            newline = {
+                order = 5,
+                type = "description",
+                width = "full",
+                name = "",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                end
+            },
+            healerInCrowdControlSize = {
+                order = 6,
+                type = "range",
+                min = 30,
+                max = 200,
+                step = 1,
+                name = "Icon size",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                end
+            },
+            healerInCrowdControlOffsetX = {
+                order = 7,
+                type = "range",
+                min = -500,
+                max = 500,
+                step = 1,
+                name = "Horizontal offset",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                end
+            },
+            healerInCrowdControlOffsetY = {
+                order = 8,
+                type = "range",
+                min = -500,
+                max = 500,
+                step = 1,
+                name = "Vertical offset",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                end
+            },
+
+            header2 = {
+                order = 10,
+                type = "header",
+                name = "",
+            },
+            queueReminder = {
+                order = 11,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " PvP Queue Timer",
+                desc = "Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire",
+                set = function (info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop:SetupQueueReminder();
+                end
+            },
+
+            header3 = {
+                order = 12,
+                type = "header",
+                name = "Type /afk to surrender arena",
+            },
+            arenaSurrenderEnabled = {
+                order = 13,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Enabled",
+                desc = "If unable to surrender, by default a confirmation dialog will pop up to confirm leaving arena",
+            },
+            skipLeaveArenaConfirmation = {
+                order = 14,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_cower")) .. " Leave arena directly if unable to surrender (skip confirmation dialog)",
+                desc = addon.EXCLAMATION .. " Leaving arena before entering combat might result in deserter status",
+                descStyle = "inline",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.misc.arenaSurrenderEnabled );
+                end,
+            },
+
+            header4 = {
+                order = 15,
+                type = "header",
+                name = "",
+            },
+            showDampenPercentage = {
+                order = 16,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
+            },
+        },
+    };
+
 end
-
-AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
-AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
-
-options.args.raidFrames = {
-    order = 6,
-    type = "group",
-    name = "Raid Frames",
-    get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
-    set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
-    args = {
-        raidFrameAggroHighlightEnabled = {
-            order = 1,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
-            desc = addon.EXCLAMATION .. " Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
-            descStyle = "inline",
-        },
-
-        druidHoTHelper = {
-            order = 2,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
-            desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Glow Lifebloom during pandemic window\n\n"
-                .. addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_naturalperfection")) .. " Fade out Cenarion Ward before the healing procs",
-        }
-    },
-};
-
-options.args.misc = {
-    order = 7,
-    type = "group",
-    name = "Misc",
-    get = function(info) return SweepyBoop.db.profile.misc[info[#info]] end,
-    set = function(info, val)
-        SweepyBoop.db.profile.misc[info[#info]] = val;
-        SweepyBoop.db.profile.misc.lastModified = GetTime();
-    end,
-    handler = SweepyBoop,
-    args = {
-        header1 = {
-            order = 1,
-            type = "header",
-            name = "Healer in crowd control reminder in arena",
-        },
-        healerInCrowdControl = {
-            order = 2,
-            type = "toggle",
-            width = "full",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Enabled",
-        },
-        healerInCrowdControlTest = {
-            order = 3,
-            type = "execute",
-            width = "half",
-            name = "Test",
-            func = "TestHealerInCrowdControl",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
-            end
-        },
-        healerInCrowdControlHide = {
-            order = 4,
-            type = "execute",
-            width = "half",
-            name = "Hide",
-            func = "HideTestHealerInCrowdControl",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
-            end
-        },
-        newline = {
-            order = 5,
-            type = "description",
-            width = "full",
-            name = "",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
-            end
-        },
-        healerInCrowdControlSize = {
-            order = 6,
-            type = "range",
-            min = 30,
-            max = 200,
-            step = 1,
-            name = "Icon size",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
-            end
-        },
-        healerInCrowdControlOffsetX = {
-            order = 7,
-            type = "range",
-            min = -500,
-            max = 500,
-            step = 1,
-            name = "Horizontal offset",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
-            end
-        },
-        healerInCrowdControlOffsetY = {
-            order = 8,
-            type = "range",
-            min = -500,
-            max = 500,
-            step = 1,
-            name = "Vertical offset",
-            hidden = function ()
-                return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
-            end
-        },
-
-        header2 = {
-            order = 10,
-            type = "header",
-            name = "",
-        },
-        queueReminder = {
-            order = 11,
-            type = "toggle",
-            width = "full",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " PvP Queue Timer",
-            desc = "Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire",
-            set = function (info, val)
-                SweepyBoop.db.profile.misc[info[#info]] = val;
-                SweepyBoop:SetupQueueReminder();
-            end
-        },
-
-        header3 = {
-            order = 12,
-            type = "header",
-            name = "Type /afk to surrender arena",
-        },
-        arenaSurrenderEnabled = {
-            order = 13,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Enabled",
-            desc = "If unable to surrender, by default a confirmation dialog will pop up to confirm leaving arena",
-        },
-        skipLeaveArenaConfirmation = {
-            order = 14,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_cower")) .. " Leave arena directly if unable to surrender (skip confirmation dialog)",
-            desc = addon.EXCLAMATION .. " Leaving arena before entering combat might result in deserter status",
-            descStyle = "inline",
-            hidden = function()
-                return ( not SweepyBoop.db.profile.misc.arenaSurrenderEnabled );
-            end,
-        },
-
-        header4 = {
-            order = 15,
-            type = "header",
-            name = "",
-        },
-        showDampenPercentage = {
-            order = 16,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
-        },
-    },
-};
 
 local defaults = {
     profile = {
@@ -838,6 +847,9 @@ function SweepyBoop:OnInitialize()
     -- Setup nameplate modules
     self:SetupNameplateModules();
 
+    -- Only nameplate modules for Classic currently
+    if ( not addon.PROJECT_MAINLINE ) then return end
+
     -- Setup arena enemy cooldown icons
     self:SetupOffensiveIcons();
     self:SetupCooldownTrackingIcons();
@@ -894,8 +906,10 @@ function SweepyBoop:HideTestArena()
 end
 
 function SweepyBoop:RefreshConfig()
-    self:HideTestArenaEnemyBurst();
-    self:HideTestCooldownTracking();
+    if addon.PROJECT_MAINLINE then
+        self:HideTestArenaEnemyBurst();
+        self:HideTestCooldownTracking();
+    end
 
     local currentTime = GetTime();
     for _, category in pairs(self.db.profile) do
@@ -904,7 +918,7 @@ function SweepyBoop:RefreshConfig()
         end
     end
 
-    self:RefreshAllNamePlates();
+    self:RefreshAllNamePlates(true);
 end
 
 function SweepyBoop:CheckAllSpells(value)
