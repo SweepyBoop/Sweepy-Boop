@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local iconSize = addon.DEFAULT_ICON_SIZE;
+local borderSize = iconSize * 1.25;
 
 local containerFrame;
 local isInTest = false;
@@ -31,8 +32,9 @@ local function CreateContainerFrame()
     frame.icon:AddMaskTexture(frame.mask);
 
     frame.border = frame:CreateTexture(nil, "OVERLAY");
-    frame.border:SetAtlas("pvptalents-warmode-ring");
-    frame.border:SetAllPoints(frame);
+    frame.border:SetAtlas("talents-warmode-ring");
+    frame.border:SetSize(borderSize, borderSize);
+    frame.border:SetPoint("CENTER", frame);
 
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.cooldown:SetAllPoints();
