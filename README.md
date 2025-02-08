@@ -56,6 +56,8 @@ And some bonus features:
 
 ![Pet icons](https://github.com/user-attachments/assets/6e937613-bf68-4024-937a-28661b0ebd1c)
 
+- Friendly class icons are properly displayed on actual teammates under Priest Mind Control effect, i.e., if you're Mind Controlled, you won't see friendly class icons on enemy team members!
+
 ## Enemy nameplate filtering & highlighting
 ![TotemHighlight](https://github.com/user-attachments/assets/3ca7871f-0566-44f0-b141-4560213c30f0)
 
