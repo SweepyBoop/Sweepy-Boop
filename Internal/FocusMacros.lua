@@ -21,7 +21,6 @@ macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@playe
 classAbilities[addon.PRIEST] = {
     "Shadow Word: Pain",
     "Mind Control",
-    "Mindgames",
     "Dispel Magic",
 };
 
