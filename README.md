@@ -61,7 +61,11 @@ And some bonus features:
 ## Enemy nameplate filtering & highlighting
 ![TotemHighlight](https://github.com/user-attachments/assets/3ca7871f-0566-44f0-b141-4560213c30f0)
 
+(*Pulsing totem indicators*)
+
 ![image](https://github.com/user-attachments/assets/ad9c2a2d-aeb7-4877-9656-db71c51c7a2a)
+
+(*Beast Mastery extra pets' are hidden, instead small critter icons are shown*)
 
 While in arenas / battlegrounds, customize which non-player enemy units to show, e.g.,
 - Hide Beast Mastery hunters' extra pets from talents like "Animal Companion", so you know which one to kill (there is also an option to show small critter icons on those hidden extra pets, so you have a sense of where they are to cast spells such as Ring of Frost / Mass Entanglement, without actually seeing all those health bars to clutter your UI)
