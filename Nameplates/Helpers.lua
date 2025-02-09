@@ -41,7 +41,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
         classIconFrame.targetHighlight:Hide();
         classIconFrame.targetHighlight:SetDesaturated(false);
-        classIconFrame.targetHighlight:SetAtlas("charactercreate-ring-select");
+        classIconFrame.targetHighlight:SetAtlas("charactercreate-ring-select"); -- Consider using UI-LFG-RoleIcon-Incentive for a stronger effect
         classIconFrame.targetHighlight:SetSize(highlightSize, highlightSize);
         classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
         classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
