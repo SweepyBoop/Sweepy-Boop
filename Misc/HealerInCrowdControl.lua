@@ -114,6 +114,19 @@ function SweepyBoop:TestHealerInCrowdControl()
     isInTest = true;
 end
 
+function SweepyBoop:UpdateHealerInCrowdControl()
+    if containerFrame and containerFrame:IsShown() then
+        if ( containerFrame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
+            local config = SweepyBoop.db.profile.misc;
+            local scale = config.healerInCrowdControlSize / iconSize;
+            containerFrame:SetScale(scale);
+            containerFrame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
+
+            containerFrame.lastModified = SweepyBoop.db.profile.misc.lastModified;
+        end
+    end
+end
+
 function SweepyBoop:HideTestHealerInCrowdControl()
     HideIcon(containerFrame);
 end

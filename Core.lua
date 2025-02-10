@@ -655,6 +655,11 @@ if addon.PROJECT_MAINLINE then
                 max = 200,
                 step = 1,
                 name = "Icon size",
+                set = function (info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop.db.profile.misc.lastModified = GetTime();
+                    SweepyBoop:UpdateHealerInCrowdControl();
+                end,
                 hidden = function ()
                     return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
                 end
@@ -666,6 +671,11 @@ if addon.PROJECT_MAINLINE then
                 max = 500,
                 step = 1,
                 name = "Horizontal offset",
+                set = function (info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop.db.profile.misc.lastModified = GetTime();
+                    SweepyBoop:UpdateHealerInCrowdControl();
+                end,
                 hidden = function ()
                     return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
                 end
@@ -677,6 +687,11 @@ if addon.PROJECT_MAINLINE then
                 max = 500,
                 step = 1,
                 name = "Vertical offset",
+                set = function (info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop.db.profile.misc.lastModified = GetTime();
+                    SweepyBoop:UpdateHealerInCrowdControl();
+                end,
                 hidden = function ()
                     return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
                 end
@@ -797,6 +812,7 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
+    defaults.profile.nameplatesFriendly.classIconScale = 125;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
