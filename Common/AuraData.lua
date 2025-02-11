@@ -232,6 +232,44 @@ addon.BuffList = {
             { spellId = 184662, default = true }, -- Shield of Vengeance
             { spellId = 498 }, -- Divine Protection
         }
+    },
+    {
+        classID = addon.CLASSID.PRIEST,
+        auras = {
+            { spellId = 33206, default = true }, -- Pain Suppression
+            { spellId = 47788, default = true }, -- Guardian Spirit
+            { spellId = 47585, default = true }, -- Dispersion
+        }
+    },
+    {
+        classID = addon.CLASSID.ROGUE,
+        auras = {
+            { spellId = 31224, default = true }, -- Cloak of Shadows
+            { spellId = 5277, default = true }, -- Evasion
+            { spellId = 1966, default = true }, -- Feint
+        }
+    },
+    {
+        classID = addon.CLASSID.SHAMAN,
+        auras = {
+            { spellId = 108271, default = true }, -- Astral Shift
+            { spellId = 108281, default = true }, -- Ancestral Guidance
+        }
+    },
+    {
+        classID = addon.CLASSID.WARLOCK,
+        auras = {
+            { spellId = 104773, default = true }, -- Unending Resolve
+            { spellId = 108416, default = true }, -- Dark Pact
+        }
+    },
+    {
+        classID = addon.CLASSID.WARRIOR,
+        auras = {
+            { spellId = 2565, default = true }, -- Shield Block
+            { spellId = 118038, default = true }, -- Die by the Sword
+            { spellId = 184364, default = true }, -- Enraged Regeneration
+        }
     }
 };
 
