@@ -323,8 +323,9 @@ if addon.PROJECT_MAINLINE then
                         order = 5,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",
-                        desc = "Show only whitelisted auras applied by myself on enemy nameplates\nCrowd controls from all source units will always show",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Filter auras",
+                        desc = "Show whitelisted debuffs applied by myself and whitelisted buffs from all sources"
+                            .. "\nCrowd control debuffs are never filtered as they are critical for PvP",
                     },
                 },
             },
@@ -348,7 +349,7 @@ if addon.PROJECT_MAINLINE then
             auraWhiteList = {
                 order = 14,
                 type = "group",
-                name = "Aura whitelist",
+                name = "Debuff whitelist",
                 get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] end,
                 set = function(info, val) 
                     SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] = val;
@@ -359,7 +360,23 @@ if addon.PROJECT_MAINLINE then
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
                 end
-            }
+            },
+
+            buffWhiteList = {
+                order = 15,
+                type = "group",
+                name = "Buff whitelist",
+                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] end,
+                set = function(info, val) 
+                    SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] = val;
+                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                    -- No need to refresh nameplates, just apply it on next UNIT_AURA
+                end,
+                args = {},
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                end
+            },
         },
     };
 
