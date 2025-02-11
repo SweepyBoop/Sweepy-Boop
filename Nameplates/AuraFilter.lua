@@ -1,19 +1,42 @@
 local _, addon = ...;
 
+local AURA_CATEGORY = {
+    CROWD_CONTROL = 1,
+    DEBUFF = 2,
+    BUFF_PURGALE = 3,
+    BUFF = 4,
+}
+
+-- Return aura category if should be shown, nil otherwise
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
-        return false;
+        return nil;
     end
 
     -- Basically only show crowd controls and whitelisted debuffs applied by the player
 
     -- Some crowd controls are hidden by Blizzard, override the logic
     if addon.CrowdControlAuras[aura.spellId] then
-        return true;
+        return AURA_CATEGORY.CROWD_CONTROL;
     end
 
-    if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
-        return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(aura.spellId)];
+    -- Parse non crowd control debuffs
+    if aura.isHarmful then
+        if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
+            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(aura.spellId)] and AURA_CATEGORY.DEBUFF;
+        else
+            return nil;
+        end
+    end
+
+    -- Parse buffs
+    if aura.isHelpful then
+        if ( not SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(aura.spellId)] ) then
+            return nil;
+        end
+
+        -- In buff whitelist, check if it's purgable
+        return ( aura.isStealable and AURA_CATEGORY.BUFF_PURGALE ) or AURA_CATEGORY.BUFF;
     end
 end
 
