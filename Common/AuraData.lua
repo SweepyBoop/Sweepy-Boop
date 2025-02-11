@@ -164,15 +164,46 @@ addon.DebuffList = { -- Use table with consecutive indexes to preserve the order
     },
 };
 
-addon.FillDefaultToAuraOptions = function(profile)
-    for _, classEntry in ipairs(addon.DebuffList) do
+addon.BuffList = {
+    {
+        classID = addon.CLASSID.DEATHKNIGHT,
+        auras = {
+            { spellId = 48707, default = true }, -- Anti-Magic Shell
+            { spellId = 48792, default = true }, -- Icebound Fortitude
+            { spellId = 49039, default = true }, -- Lichborne
+        }
+    },
+    {
+        classID = addon.CLASSID.DEMONHUNTER,
+        auras = {
+            { spellId = 196555, default = true }, -- Netherwalk
+            { spellId = 212800, default = true }, -- Blur
+            { spellId = 196718, default = true }, -- Darkness
+            { spellId = 187827, default = true }, -- Metamorphosis
+            { spellId = 196555, default = true }, -- Netherwalk
+            { spellId = 212800, default = true }, -- Blur
+            { spellId = 196718, default = true }, -- Darkness
+            { spellId = 187827, default = true }, -- Metamorphosis
+        }
+    },
+    {
+        classID = addon.CLASSID.DRUID,
+        auras = {
+            { spellId = 22812, default = true }, -- Barkskin
+            { spellId = 102342, default = true }, -- Ironbark
+        }
+    },
+};
+
+addon.FillDefaultToAuraOptions = function(profile, auraList)
+    for _, classEntry in ipairs(auraList) do
         for _, auraEntry in ipairs(classEntry.auras) do
             profile[tostring(auraEntry.spellId)] = auraEntry.default;
         end
     end
 end
 
-addon.AppendAuraOptionsToGroup = function(group)
+addon.AppendAuraOptionsToGroup = function(group, auraList, profileName)
     group.args = {};
 
     group.args.reset = {
@@ -180,12 +211,13 @@ addon.AppendAuraOptionsToGroup = function(group)
         type = "execute",
         name = "Reset to default",
         func = function()
-            addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList);
+            local profile = SweepyBoop.db.profile.nameplatesEnemy[profileName];
+            addon.FillDefaultToAuraOptions(profile, auraList);
         end,
     };
 
     local index = 2;
-    for _, classEntry in ipairs(addon.DebuffList) do
+    for _, classEntry in ipairs(auraList) do
         local classInfo = C_CreatureInfo.GetClassInfo(classEntry.classID);
         local classGroup = {
             order = index,

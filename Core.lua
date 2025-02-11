@@ -381,7 +381,8 @@ if addon.PROJECT_MAINLINE then
     };
 
     addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
-    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.debuffWhiteList);
+    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.debuffWhiteList, addon.DebuffList, "debuffWhiteList");
+    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.buffWhiteList, addon.BuffList, "buffWhiteList");
 
     options.args.arenaFrames = {
         order = 5,
@@ -798,6 +799,7 @@ local defaults = {
             hideHunterSecondaryPet = true,
             filterList = {},
             debuffWhiteList = {},
+            buffWhiteList = {},
         },
         arenaFrames = {
             healerIndicator = true,
@@ -840,7 +842,8 @@ if addon.internal then -- Set default for internal version
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
-addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList);
+addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
+addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
 local function SetupAllSpells(profile, spellList, value)
     for spellID, spellEntry in pairs(spellList) do
