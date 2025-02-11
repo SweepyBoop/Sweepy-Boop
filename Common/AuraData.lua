@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-addon.AuraList = { -- Use table with consecutive indexes to preserve the order
+addon.DebuffList = { -- Use table with consecutive indexes to preserve the order
     {
         classID = addon.CLASSID.DEATHKNIGHT,
         auras = {
@@ -165,7 +165,7 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
 };
 
 addon.FillDefaultToAuraOptions = function(profile)
-    for _, classEntry in ipairs(addon.AuraList) do
+    for _, classEntry in ipairs(addon.DebuffList) do
         for _, auraEntry in ipairs(classEntry.auras) do
             profile[tostring(auraEntry.spellId)] = auraEntry.default;
         end
@@ -185,7 +185,7 @@ addon.AppendAuraOptionsToGroup = function(group)
     };
 
     local index = 2;
-    for _, classEntry in ipairs(addon.AuraList) do
+    for _, classEntry in ipairs(addon.DebuffList) do
         local classInfo = C_CreatureInfo.GetClassInfo(classEntry.classID);
         local classGroup = {
             order = index,
