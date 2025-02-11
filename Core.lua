@@ -325,7 +325,7 @@ if addon.PROJECT_MAINLINE then
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Filter auras",
                         desc = "Show whitelisted debuffs applied by myself and whitelisted buffs from all sources"
-                            .. "\nCrowd control debuffs are never filtered as they are critical for PvP",
+                            .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
                     },
                 },
             },
