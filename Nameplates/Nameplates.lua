@@ -161,6 +161,17 @@ function SweepyBoop:SetupNameplateModules()
                     -- Avoid conflicts with BetterBlizzPlates
                     if BetterBlizzPlatesDB and BetterBlizzPlatesDB.enableNameplateAuraCustomisation then return end
 
+                    -- if ( not nameplate.UnitFrame.BuffFrame.LayoutChildrenByBlizzard ) then
+                    --     nameplate.UnitFrame.BuffFrame.LayoutChildrenByBlizzard = nameplate.UnitFrame.BuffFrame.LayoutChildren;
+                    --     nameplate.UnitFrame.BuffFrame.LayoutChildren = function (self, children, ignored, expandToHeight)
+                    --         if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+                    --             addon.LayoutChildrenOverride(self, children, ignored, expandToHeight);
+                    --         else
+                    --             self:LayoutChildrenByBlizzard(children, ignored, expandToHeight);
+                    --         end
+                    --     end
+                    -- end
+
                     if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard ) then
                         nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
                         nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)

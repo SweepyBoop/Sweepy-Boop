@@ -5,7 +5,11 @@ local AURA_CATEGORY = {
     DEBUFF = 2,
     BUFF_PURGALE = 3,
     BUFF = 4,
-}
+};
+
+local function IsLayoutFrame(frame)
+    return frame.IsLayoutFrame and frame:IsLayoutFrame();
+end
 
 -- Return aura category if should be shown, nil otherwise
 local function ShouldShowBuffOverride(self, aura, forceAll)
@@ -58,6 +62,78 @@ local function ParseAllAurasOverride(self, forceAll)
     local batchCount = nil;
     local usePackedAura = true;
     AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
+end
+
+addon.LayoutChildrenOverride = function (self, children, ignored, expandToHeight)
+    local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
+    local spacing = self.spacing or 0;
+    local childrenWidth, childrenHeight = 0, 0;
+    local hasExpandableChild = false;
+
+    -- Calculate width and height based on children
+    for i, child in ipairs(children) do
+        if not self.skipChildLayout and IsLayoutFrame(child) then
+            child:Layout();
+        end
+
+        local childWidth, childHeight = child:GetSize();
+        local leftPadding, rightPadding, topPadding, bottomPadding = self:GetChildPadding(child);
+        if (child.expand) then
+            hasExpandableChild = true;
+        end
+
+        -- Expand child height if it is set to expand and we also have an expandToHeight value.
+        if (child.expand and expandToHeight) then
+            childHeight = expandToHeight - topPadding - bottomPadding - frameTopPadding - frameBottomPadding;
+            child:SetHeight(childHeight);
+            childWidth = child:GetWidth();
+        end
+
+        if self.respectChildScale then
+            local childScale = child:GetScale();
+            childWidth = childWidth * childScale;
+            childHeight = childHeight * childScale;
+        end
+
+        childrenHeight = math.max(childrenHeight, childHeight + topPadding + bottomPadding);
+        childrenWidth = childrenWidth + childWidth + leftPadding + rightPadding;
+        if (i > 1) then
+            childrenWidth = childrenWidth + spacing;
+        end
+
+        -- Set child position
+        child:ClearAllPoints();
+
+        if self.childLayoutDirection == "rightToLeft" then
+            rightOffset = rightOffset + rightPadding;
+            if (child.align == "bottom") then
+                local bottomOffset = frameBottomPadding + bottomPadding;
+                child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset);
+            elseif (child.align == "center") then
+                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+                child:SetPoint("RIGHT", -rightOffset, -topOffset);
+            else
+                local topOffset = frameTopPadding + topPadding;
+                child:SetPoint("TOPRIGHT", -rightOffset, -topOffset);
+            end
+            rightOffset = rightOffset + childWidth + leftPadding + spacing;
+        else
+            leftOffset = leftOffset + leftPadding;
+            if (child.align == "bottom") then
+                local bottomOffset = frameBottomPadding + bottomPadding;
+                child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset);
+            elseif (child.align == "center") then
+                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+                child:SetPoint("LEFT", leftOffset, -topOffset);
+            else
+                local topOffset = frameTopPadding + topPadding;
+                child:SetPoint("TOPLEFT", leftOffset, -topOffset);
+            end
+            leftOffset = leftOffset + childWidth + rightPadding + spacing;
+        end
+    end
+
+    return childrenWidth, childrenHeight, hasExpandableChild;
 end
 
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
