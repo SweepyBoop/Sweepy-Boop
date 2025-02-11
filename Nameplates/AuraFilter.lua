@@ -13,7 +13,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     end
 
     if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
-        return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)];
+        return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(aura.spellId)];
     end
 end
 

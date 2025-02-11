@@ -346,13 +346,13 @@ if addon.PROJECT_MAINLINE then
                 end
             },
 
-            auraWhiteList = {
+            debuffWhiteList = {
                 order = 14,
                 type = "group",
                 name = "Debuff whitelist",
-                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] end,
+                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] end,
                 set = function(info, val) 
-                    SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] = val;
+                    SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] = val;
                     SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
                     -- No need to refresh nameplates, just apply it on next UNIT_AURA
                 end,
@@ -381,7 +381,7 @@ if addon.PROJECT_MAINLINE then
     };
 
     addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
-    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
+    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.debuffWhiteList);
 
     options.args.arenaFrames = {
         order = 5,
@@ -797,7 +797,7 @@ local defaults = {
             highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
-            auraWhiteList = {},
+            debuffWhiteList = {},
         },
         arenaFrames = {
             healerIndicator = true,
@@ -840,7 +840,7 @@ if addon.internal then -- Set default for internal version
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
-addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.auraWhiteList);
+addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList);
 
 local function SetupAllSpells(profile, spellList, value)
     for spellID, spellEntry in pairs(spellList) do

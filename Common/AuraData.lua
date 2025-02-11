@@ -180,7 +180,7 @@ addon.AppendAuraOptionsToGroup = function(group)
         type = "execute",
         name = "Reset to default",
         func = function()
-            addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList);
+            addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList);
         end,
     };
 
