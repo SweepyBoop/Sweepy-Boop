@@ -178,21 +178,61 @@ addon.BuffList = {
         auras = {
             { spellId = 196555, default = true }, -- Netherwalk
             { spellId = 212800, default = true }, -- Blur
-            { spellId = 196718, default = true }, -- Darkness
-            { spellId = 187827, default = true }, -- Metamorphosis
-            { spellId = 196555, default = true }, -- Netherwalk
-            { spellId = 212800, default = true }, -- Blur
-            { spellId = 196718, default = true }, -- Darkness
-            { spellId = 187827, default = true }, -- Metamorphosis
+            { spellId = 196718 }, -- Darkness
         }
     },
     {
         classID = addon.CLASSID.DRUID,
         auras = {
-            { spellId = 22812, default = true }, -- Barkskin
+            { spellId = 61336, default = true }, -- Survival Instincts
             { spellId = 102342, default = true }, -- Ironbark
+            { spellId = 22812, default = true }, -- Barkskin
+
+            { spellId = 102352 }, -- Cenarion Ward
+            { spellId = 33763 }, -- Lifebloom
+            { spellId = 188550 }, -- Lifebloom (Undergrowth)
         }
     },
+    {
+        classID = addon.CLASSID.EVOKER,
+        auras = {
+            { spellId = 363916, default = true }, -- Obsidian Scales
+        }
+    },
+    {
+        classID = addon.CLASSID.HUNTER,
+        auras = {
+            { spellId = 186265, default = true }, -- Aspect of the Turtle
+            { spellId = 264735, default = true }, -- Survival of the Fittest
+        }
+    },
+    {
+        classID = addon.CLASSID.MAGE,
+        auras = {
+            { spellId = 45438, default = true }, -- Ice Block
+            { spellId = 110909, default = true }, -- Alter Time
+        }
+    },
+    {
+        classID = addon.CLASSID.MONK,
+        auras = {
+            { spellId = 116849, default = true }, -- Life Cocoon
+            { spellId = 122470, default = true }, -- Touch of Karma
+            { spellId = 122783, default = true }, -- Diffuse Magic
+        }
+    },
+    {
+        classID = addon.CLASSID.PALADIN,
+        auras = {
+            { spellId = 642, default = true }, -- Divine Shield
+            { spellId = 1022, default = true }, -- Blessing of Protection
+            { spellId = 204018, default = true }, -- Blessing of Spellwarding
+            { spellId = 6940, default = true }, -- Blessing of Sacrifice
+            { spellId = 86659, default = true }, -- Guardian of Ancient Kings
+            { spellId = 184662, default = true }, -- Shield of Vengeance
+            { spellId = 498 }, -- Divine Protection
+        }
+    }
 };
 
 addon.FillDefaultToAuraOptions = function(profile, auraList)
