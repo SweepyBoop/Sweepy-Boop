@@ -806,6 +806,7 @@ local defaults = {
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
             auraFilterEnabled = false,
+            showBuffsOnEnemy = false,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
@@ -844,6 +845,7 @@ local defaults = {
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconScale = 125;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
+    defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
