@@ -62,6 +62,10 @@ local function ParseAllAurasOverride(self, forceAll)
     local batchCount = nil;
     local usePackedAura = true;
     AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
+
+    if SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy then
+        AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
+    end
 end
 
 local function LayoutAuras(self, children, expandToHeight, verticalOffset)
