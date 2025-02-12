@@ -19,7 +19,6 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     -- Basically only show crowd controls and whitelisted debuffs applied by the player
 
     -- Some crowd controls are hidden by Blizzard, override the logic
-    print("Checking spell", aura.name, aura.spellId);
     if addon.CrowdControlAuras[aura.spellId] then
         return AURA_CATEGORY.CROWD_CONTROL;
     end
@@ -120,33 +119,10 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
         -- Set child position
         child:ClearAllPoints();
 
-        if self.childLayoutDirection == "rightToLeft" then
-            rightOffset = rightOffset + rightPadding;
-            if (child.align == "bottom") then
-                local bottomOffset = frameBottomPadding + bottomPadding;
-                child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset + verticalOffset);
-            elseif (child.align == "center") then
-                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-                child:SetPoint("RIGHT", -rightOffset, -topOffset + verticalOffset);
-            else
-                local topOffset = frameTopPadding + topPadding;
-                child:SetPoint("TOPRIGHT", -rightOffset, -topOffset + verticalOffset);
-            end
-            rightOffset = rightOffset + childWidth + leftPadding + spacing;
-        else
-            leftOffset = leftOffset + leftPadding;
-            if (child.align == "bottom") then
-                local bottomOffset = frameBottomPadding + bottomPadding;
-                child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
-            elseif (child.align == "center") then
-                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-                child:SetPoint("LEFT", leftOffset, -topOffset + verticalOffset);
-            else
-                local topOffset = frameTopPadding + topPadding;
-                child:SetPoint("TOPLEFT", leftOffset, -topOffset + verticalOffset);
-            end
-            leftOffset = leftOffset + childWidth + rightPadding + spacing;
-        end
+        leftOffset = leftOffset + leftPadding;
+        local bottomOffset = frameBottomPadding + bottomPadding;
+        child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
+        leftOffset = leftOffset + childWidth + rightPadding + spacing;
     end
 
     return childrenWidth, childrenHeight, hasExpandableChild;
@@ -367,10 +343,8 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if aura.customCategory == AURA_CATEGORY.CROWD_CONTROL or aura.customCategory == AURA_CATEGORY.BUFF then
-            print("Larger scale", aura.name);
-            buff:SetScale(1.25);
+            buff:SetScale(5.25);
         else
-            print("Default scale", aura.name);
             buff:SetScale(1);
         end
 
