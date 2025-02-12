@@ -194,7 +194,7 @@ local function UpdatePurgeBorder(buff, show)
             container.borderPurge = container:CreateTexture(nil, "OVERLAY");
             container.borderPurge:SetTexture("Interface/TargetingFrame/UI-TargetingFrame-Stealable");
             container.borderPurge:SetBlendMode("ADD");
-            container.borderPurge:SetSize(buff:GetWidth() * 1.14, buff:GetHeight() * 1.14);
+            container.borderPurge:SetSize(buff:GetWidth() * 1.25, buff:GetHeight() * 1.25);
             container.borderPurge:SetPoint("CENTER", buff, "CENTER");
             --container.borderPurge:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 10, -6);
         end
