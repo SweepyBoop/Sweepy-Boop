@@ -182,6 +182,35 @@ local function LayoutOverride(self)
 	self:MarkClean();
 end
 
+local function EnsureGlowContainerFrame(buff)
+    if ( not buff.GlowContainerFrame ) then
+        if buff.CountFrame then
+            buff.CountFrame:SetFrameStrata("HIGH");
+        end
+        buff.GlowContainerFrame = CreateFrame("Frame", nil, buff);
+        buff.GlowContainerFrame:SetFrameStrata("MEDIUM");
+        buff.GlowContainerFrame:SetFrameLevel(9999);
+    end
+
+    return buff.GlowContainerFrame;
+end
+
+local function UpdatePurgeBorder(buff, show)
+    if show then
+        local container = EnsureGlowContainerFrame(buff);
+        if ( not container.borderPurge ) then
+            container.borderPurge = container:CreateTexture(nil, "ARTWORK");
+            container.borderPurge:SetAtlas("newplayertutorial-drag-slotblue");
+            container.borderPurge:SetAllPoints();
+        end
+        container.borderPurge:Show();
+    else
+        if buff.GlowContainerFrame and buff.GlowContainerFrame.borderPurge then
+            buff.GlowContainerFrame.borderPurge:Hide();
+        end
+    end
+end
+
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
     -- local function foo(name, icon, _, _, _, _, _, _, _, spellId, ...)
     --     print(name, spellId);
@@ -316,6 +345,21 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         else
             buff.CountFrame.Count:Hide();
         end
+
+        if buff.Border then
+            if aura.isStealable then
+                UpdatePurgeBorder(buff, true);
+                buff.Border:Hide();
+            elseif aura.isHelpful then
+                UpdatePurgeBorder(buff, false);
+                buff.Border:SetColorTexture(0.0,1.0,0.498);
+                buff.Border:Show();
+            else
+                UpdatePurgeBorder(buff, false);
+                buff.Border:Hide();
+            end
+        end
+
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
         buff:Show();
