@@ -226,7 +226,7 @@ addon.BuffList = {
                 { spellId = 342246, parent = 110909 }, -- Alter Time
             { spellId = 198144, default = true }, -- Ice Form (immune to stuns)
 
-            { spellId = 12544, parent = 45438 }, -- Frost Armor (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
+            --{ spellId = 12544, parent = 45438 }, -- Frost Armor (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
         }
     },
     {
