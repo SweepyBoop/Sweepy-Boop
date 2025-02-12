@@ -195,7 +195,9 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
         if isEnemy then
             auraSettings.harmful = true;
-            auraSettings.helpful = true; -- Show whitelisted buffs on enemies
+            -- Show whitelisted buffs from all sources on enemies
+            auraSettings.helpful = true;
+            auraSettings.showAll = true;
             auraSettings.includeNameplateOnly = true;
         else
             if (showDebuffsOnFriendly) then
