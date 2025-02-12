@@ -213,7 +213,7 @@ addon.BuffList = {
             { spellId = 110909, default = true }, -- Alter Time
             { spellId = 342246, default = true }, -- Alter Time
 
-            { spellId = 269083, default = true }, -- Enlisted (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
+            { spellId = 12544, default = true }, -- Frost Armor (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
         }
     },
     {

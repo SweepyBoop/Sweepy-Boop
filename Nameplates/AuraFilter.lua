@@ -68,12 +68,14 @@ local function ParseAllAurasOverride(self, forceAll)
     end
 end
 
+local rowGap = 2;
+
 local function LayoutAuras(self, children, expandToHeight, verticalOffset)
     verticalOffset = verticalOffset or 0; -- buff row will set this based on the height of the debuff row
     local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
 
     if verticalOffset > 0 then
-        verticalOffset = verticalOffset + frameBottomPadding;
+        verticalOffset = verticalOffset + frameBottomPadding + frameTopPadding + rowGap;
     end
 
     local spacing = self.spacing or 0;
