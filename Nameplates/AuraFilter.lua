@@ -52,7 +52,6 @@ local function ParseAllAurasOverride(self, forceAll)
     end
 
     local function HandleAura(aura)
-        print("HandleAura", aura.name, aura.spellId);
         if ShouldShowBuffOverride(self, aura, forceAll) then
             self.auras[aura.auraInstanceID] = aura;
         end
