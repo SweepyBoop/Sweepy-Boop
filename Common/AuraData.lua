@@ -169,6 +169,8 @@ addon.BuffList = {
         classID = addon.CLASSID.DEATHKNIGHT,
         auras = {
             { spellId = 48707, default = true }, -- Anti-Magic Shell
+                { spellId = 410358, parent = 48707 }, -- Anti-Magic Shell (Spellwarden)
+                { spellId = 444741, parent = 48707 }, -- Anti-Magic Shell (Horsemen's Aid)
             { spellId = 48792, default = true }, -- Icebound Fortitude
             { spellId = 49039, default = true }, -- Lichborne
         }
@@ -178,7 +180,6 @@ addon.BuffList = {
         auras = {
             { spellId = 196555, default = true }, -- Netherwalk
             { spellId = 212800, default = true }, -- Blur
-            { spellId = 209426 }, -- Darkness
         }
     },
     {
@@ -190,7 +191,7 @@ addon.BuffList = {
 
             { spellId = 102352 }, -- Cenarion Ward
             { spellId = 33763 }, -- Lifebloom
-            { spellId = 188550 }, -- Lifebloom (Undergrowth)
+                { spellId = 188550, parent = 33763 }, -- Lifebloom (Undergrowth)
         }
     },
     {
@@ -212,7 +213,7 @@ addon.BuffList = {
         auras = {
             { spellId = 45438, default = true }, -- Ice Block
             { spellId = 110909, default = true }, -- Alter Time
-            { spellId = 342246, default = true }, -- Alter Time
+                { spellId = 342246, parent = 110909 }, -- Alter Time
 
             --{ spellId = 12544, default = true }, -- Frost Armor (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
         }
@@ -222,7 +223,7 @@ addon.BuffList = {
         auras = {
             { spellId = 116849, default = true }, -- Life Cocoon
             { spellId = 125174, default = true }, -- Touch of Karma
-            { spellId = 122783, default = true }, -- Diffuse Magic
+            { spellId = 122783 }, -- Diffuse Magic
         }
     },
     {
@@ -276,7 +277,11 @@ addon.BuffList = {
 addon.FillDefaultToAuraOptions = function(profile, auraList)
     for _, classEntry in ipairs(auraList) do
         for _, auraEntry in ipairs(classEntry.auras) do
-            profile[tostring(auraEntry.spellId)] = auraEntry.default;
+            if auraEntry.parent then
+                profile[tostring(auraEntry.spellId)] = auraEntry.parent.default;
+            else
+                profile[tostring(auraEntry.spellId)] = auraEntry.default;
+            end
         end
     end
 end
@@ -308,23 +313,27 @@ addon.AppendAuraOptionsToGroup = function(group, auraList, profileName)
 
         local auraIdx = 1;
         for _, auraEntry in ipairs(classEntry.auras) do
-            -- https://warcraft.wiki.gg/wiki/SpellMixin
-            local spell = Spell:CreateFromSpellID(auraEntry.spellId);
-            spell:ContinueOnSpellLoad(function()
-                addon.SPELL_DESCRIPTION[auraEntry.spellId] = spell:GetSpellDescription();
-            end)
+            if ( not auraEntry.parent ) then
 
-            local texture = C_Spell.GetSpellTexture(auraEntry.spellId);
-            classGroup.args[tostring(auraEntry.spellId)] = {
-                order = auraIdx,
-                type = "toggle",
-                width = "full",
-                name = addon.FORMAT_TEXTURE(texture) .. " " .. C_Spell.GetSpellName(auraEntry.spellId),
-                desc = function ()
-                    return addon.SPELL_DESCRIPTION[auraEntry.spellId] or "";
-                end
-            };
-            auraIdx = auraIdx + 1;
+                -- https://warcraft.wiki.gg/wiki/SpellMixin
+                local spell = Spell:CreateFromSpellID(auraEntry.spellId);
+                spell:ContinueOnSpellLoad(function()
+                    addon.SPELL_DESCRIPTION[auraEntry.spellId] = spell:GetSpellDescription();
+                end)
+
+                local texture = C_Spell.GetSpellTexture(auraEntry.spellId);
+                classGroup.args[tostring(auraEntry.spellId)] = {
+                    order = auraIdx,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_TEXTURE(texture) .. " " .. C_Spell.GetSpellName(auraEntry.spellId),
+                    desc = function ()
+                        return addon.SPELL_DESCRIPTION[auraEntry.spellId] or "";
+                    end
+                };
+                auraIdx = auraIdx + 1;
+
+            end
         end
 
         group.args[tostring(classEntry.classID)] = classGroup;
