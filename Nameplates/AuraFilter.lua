@@ -347,13 +347,16 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
         if buff.Border then
             if aura.isStealable then
+                buff:SetScale(1.25);
                 UpdatePurgeBorder(buff, true);
                 buff.Border:Hide();
             elseif aura.isHelpful then
+                buff:SetScale(1.25);
                 UpdatePurgeBorder(buff, false);
                 buff.Border:SetColorTexture(0.0,1.0,0.498);
                 buff.Border:Show();
             else
+                buff:SetScale(1);
                 UpdatePurgeBorder(buff, false);
                 buff.Border:Hide();
             end
