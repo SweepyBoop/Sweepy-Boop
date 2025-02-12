@@ -195,6 +195,8 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
         if isEnemy then
             auraSettings.harmful = true;
+            -- Issue: buffs show when newly applied, but gone when the nameplate's buff is refreshed or switching target
+            auraSettings.helpful = true;
             auraSettings.includeNameplateOnly = true;
         else
             if (showDebuffsOnFriendly) then
