@@ -295,11 +295,7 @@ end
 addon.FillDefaultToAuraOptions = function(profile, auraList)
     for _, classEntry in ipairs(auraList) do
         for _, auraEntry in ipairs(classEntry.auras) do
-            if auraEntry.parent then
-                profile[tostring(auraEntry.spellId)] = auraEntry.parent.default;
-            else
-                profile[tostring(auraEntry.spellId)] = auraEntry.default;
-            end
+            profile[tostring(auraEntry.spellId)] = auraEntry.default;
         end
     end
 end
