@@ -75,7 +75,7 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
     local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
 
     if verticalOffset > 0 then
-        verticalOffset = verticalOffset + frameBottomPadding + frameTopPadding + rowGap;
+        verticalOffset = verticalOffset + rowGap;
     end
 
     local spacing = self.spacing or 0;
