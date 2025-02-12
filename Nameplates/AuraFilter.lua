@@ -19,6 +19,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     -- Basically only show crowd controls and whitelisted debuffs applied by the player
 
     -- Some crowd controls are hidden by Blizzard, override the logic
+    print("Checking spell", aura.name, aura.spellId);
     if addon.CrowdControlAuras[aura.spellId] then
         return AURA_CATEGORY.CROWD_CONTROL;
     end
@@ -53,7 +54,9 @@ local function ParseAllAurasOverride(self, forceAll)
     end
 
     local function HandleAura(aura)
-        if ShouldShowBuffOverride(self, aura, forceAll) then
+        local shouldShow = ShouldShowBuffOverride(self, aura, forceAll);
+        if shouldShow then
+            aura.customCategory = shouldShow;
             self.auras[aura.auraInstanceID] = aura;
         end
 
@@ -291,6 +294,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 end
 
                 if shouldShowBuff then
+                    aura.customCategory = shouldShowBuff;
                     self.auras[aura.auraInstanceID] = aura;
                     aurasChanged = true;
                 end
@@ -301,6 +305,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
                 if self.auras[auraInstanceID] ~= nil then
                     local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
+                    newAura.customCategory = self.auras[auraInstanceID].customCategory;
                     self.auras[auraInstanceID] = newAura;
                     aurasChanged = true;
                 end
@@ -347,16 +352,26 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
         if buff.Border then
             if aura.isStealable then
-                UpdatePurgeBorder(buff, true);
-                buff.Border:Hide();
+                --UpdatePurgeBorder(buff, true);
+                --buff.Border:Hide();
+                buff.Border:SetColorTexture(1, 1, 1);
+                buff.Border:Show();
             elseif aura.isHelpful then
-                UpdatePurgeBorder(buff, false);
+                --UpdatePurgeBorder(buff, false);
                 buff.Border:SetColorTexture(0.0,1.0,0.498);
                 buff.Border:Show();
             else
-                UpdatePurgeBorder(buff, false);
+                --UpdatePurgeBorder(buff, false);
                 buff.Border:Hide();
             end
+        end
+
+        if aura.customCategory == AURA_CATEGORY.CROWD_CONTROL or aura.customCategory == AURA_CATEGORY.BUFF then
+            print("Larger scale", aura.name);
+            buff:SetScale(1.25);
+        else
+            print("Default scale", aura.name);
+            buff:SetScale(1);
         end
 
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
