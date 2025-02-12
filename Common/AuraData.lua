@@ -1,5 +1,7 @@
 local _, addon = ...;
 
+addon.AuraParent = {}; -- For quick look-up on parent aura ID
+
 addon.DebuffList = { -- Use table with consecutive indexes to preserve the order
     {
         classID = addon.CLASSID.DEATHKNIGHT,
@@ -164,6 +166,14 @@ addon.DebuffList = { -- Use table with consecutive indexes to preserve the order
     },
 };
 
+for _, classEntry in ipairs(addon.DebuffList) do
+    for _, auraEntry in ipairs(classEntry.auras) do
+        if auraEntry.parent then
+            addon.AuraParent[auraEntry.spellId] = auraEntry.parent;
+        end
+    end
+end
+
 addon.BuffList = {
     {
         classID = addon.CLASSID.DEATHKNIGHT,
@@ -273,6 +283,14 @@ addon.BuffList = {
         }
     }
 };
+
+for _, classEntry in ipairs(addon.BuffList) do
+    for _, auraEntry in ipairs(classEntry.auras) do
+        if auraEntry.parent then
+            addon.AuraParent[auraEntry.spellId] = auraEntry.parent;
+        end
+    end
+end
 
 addon.FillDefaultToAuraOptions = function(profile, auraList)
     for _, classEntry in ipairs(auraList) do

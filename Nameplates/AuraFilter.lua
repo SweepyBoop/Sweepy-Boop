@@ -3,8 +3,7 @@ local _, addon = ...;
 local AURA_CATEGORY = { -- Maybe apply different borders based on category?
     CROWD_CONTROL = 1,
     DEBUFF = 2,
-    BUFF_PURGALE = 3,
-    BUFF = 4,
+    BUFF = 3,
 };
 
 local function IsLayoutFrame(frame)
@@ -14,25 +13,35 @@ end
 -- Return aura category if should be shown, nil otherwise
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
-        return false;
+        return nil;
     end
 
     -- Basically only show crowd controls and whitelisted debuffs applied by the player
 
     -- Some crowd controls are hidden by Blizzard, override the logic
     if addon.CrowdControlAuras[aura.spellId] then
-        return true;
+        return AURA_CATEGORY.CROWD_CONTROL;
     end
 
     -- Parse non crowd control debuffs
     if aura.isHarmful then
-        return (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle")
-            and SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(aura.spellId)];
-    end
+        if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
+            local spellId = aura.spellId;
+            if addon.AuraParent[spellId] then
+                spellId = addon.AuraParent[spellId];
+            end
 
-    -- Parse buffs
-    if aura.isHelpful then
-        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(aura.spellId)];
+            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(spellId)] and AURA_CATEGORY.DEBUFF;
+        else
+            return nil;
+        end
+    elseif aura.isHelpful and SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy then
+        local spellId = aura.spellId;
+        if addon.AuraParent[spellId] then
+            spellId = addon.AuraParent[spellId];
+        end
+
+        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)] and AURA_CATEGORY.BUFF;
     end
 end
 
