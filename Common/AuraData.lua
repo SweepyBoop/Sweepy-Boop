@@ -178,7 +178,7 @@ addon.BuffList = {
         auras = {
             { spellId = 196555, default = true }, -- Netherwalk
             { spellId = 212800, default = true }, -- Blur
-            { spellId = 196718 }, -- Darkness
+            { spellId = 209426 }, -- Darkness
         }
     },
     {
@@ -211,13 +211,14 @@ addon.BuffList = {
         auras = {
             { spellId = 45438, default = true }, -- Ice Block
             { spellId = 110909, default = true }, -- Alter Time
+            { spellId = 342246, default = true }, -- Alter Time
         }
     },
     {
         classID = addon.CLASSID.MONK,
         auras = {
             { spellId = 116849, default = true }, -- Life Cocoon
-            { spellId = 122470, default = true }, -- Touch of Karma
+            { spellId = 125174, default = true }, -- Touch of Karma
             { spellId = 122783, default = true }, -- Diffuse Magic
         }
     },
@@ -229,7 +230,7 @@ addon.BuffList = {
             { spellId = 204018, default = true }, -- Blessing of Spellwarding
             { spellId = 6940, default = true }, -- Blessing of Sacrifice
             { spellId = 86659, default = true }, -- Guardian of Ancient Kings
-            { spellId = 184662, default = true }, -- Shield of Vengeance
+            { spellId = 184662 }, -- Shield of Vengeance
             { spellId = 498 }, -- Divine Protection
         }
     },
@@ -246,27 +247,23 @@ addon.BuffList = {
         auras = {
             { spellId = 31224, default = true }, -- Cloak of Shadows
             { spellId = 5277, default = true }, -- Evasion
-            { spellId = 1966, default = true }, -- Feint
         }
     },
     {
         classID = addon.CLASSID.SHAMAN,
         auras = {
             { spellId = 108271, default = true }, -- Astral Shift
-            { spellId = 108281, default = true }, -- Ancestral Guidance
         }
     },
     {
         classID = addon.CLASSID.WARLOCK,
         auras = {
             { spellId = 104773, default = true }, -- Unending Resolve
-            { spellId = 108416, default = true }, -- Dark Pact
         }
     },
     {
         classID = addon.CLASSID.WARRIOR,
         auras = {
-            { spellId = 2565, default = true }, -- Shield Block
             { spellId = 118038, default = true }, -- Die by the Sword
             { spellId = 184364, default = true }, -- Enraged Regeneration
         }
