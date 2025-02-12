@@ -199,9 +199,12 @@ local function UpdatePurgeBorder(buff, show)
     if show then
         local container = EnsureGlowContainerFrame(buff);
         if ( not container.borderPurge ) then
-            container.borderPurge = container:CreateTexture(nil, "ARTWORK");
-            container.borderPurge:SetAtlas("newplayertutorial-drag-slotblue");
-            container.borderPurge:SetAllPoints();
+            container.borderPurge = container:CreateTexture(nil, "OVERLAY");
+            container.borderPurge:SetTexture("Interface/TargetingFrame/UI-TargetingFrame-Stealable");
+            container.borderPurge:SetBlendMode("ADD");
+            container.borderPurge:SetSize(buff:GetWidth() * 1.14, buff:GetHeight() * 1.14);
+            container.borderPurge:SetPoint("CENTER", buff, "CENTER");
+            --container.borderPurge:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 10, -6);
         end
         container.borderPurge:Show();
     else
@@ -212,11 +215,6 @@ local function UpdatePurgeBorder(buff, show)
 end
 
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
-    -- local function foo(name, icon, _, _, _, _, _, _, _, spellId, ...)
-    --     print(name, spellId);
-    -- end
-    -- AuraUtil.ForEachAura(unit, "HELPFUL|HARMFUL", nil, foo)
-
     -- Override auraSettings because Blizzard code doesn't properly check unit hostility under Mind Control
     local isEnemy = addon.UnitIsHostile(unit);
     local isPlayer = UnitIsUnit("player", unit);
