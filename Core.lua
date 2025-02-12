@@ -323,9 +323,20 @@ if addon.PROJECT_MAINLINE then
                         order = 5,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Filter auras",
-                        desc = "Show whitelisted debuffs applied by myself and whitelisted buffs from all sources"
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
+                        desc = "Show whitelisted debuffs applied by myself"
                             .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
+                    },
+
+                    showBuffsOnEnemy = {
+                        order = 6,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",
+                        desc = "Show whitelisted buffs on enemy nameplates from all sources",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                        end
                     },
                 },
             },

@@ -177,6 +177,11 @@ local function LayoutOverride(self)
 end
 
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
+    -- local function foo(name, icon, _, _, _, _, _, _, _, spellId, ...)
+    --     print(name, spellId);
+    -- end
+    -- AuraUtil.ForEachAura(unit, "HELPFUL|HARMFUL", nil, foo)
+
     -- Override auraSettings because Blizzard code doesn't properly check unit hostility under Mind Control
     local isEnemy = addon.UnitIsHostile(unit);
     local isPlayer = UnitIsUnit("player", unit);
@@ -195,8 +200,6 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
         if isEnemy then
             auraSettings.harmful = true;
-            -- Issue: buffs show when newly applied, but gone when the nameplate's buff is refreshed or switching target
-            auraSettings.helpful = true;
             auraSettings.includeNameplateOnly = true;
         else
             if (showDebuffsOnFriendly) then
@@ -384,7 +387,6 @@ addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
     else
         if addon.UnitIsHostile(unit) then
             auraSettings.harmful = true;
-            auraSettings.helpful = true;
             auraSettings.includeNameplateOnly = true;
         else -- Friendly units
             if (showDebuffsOnFriendly) then
