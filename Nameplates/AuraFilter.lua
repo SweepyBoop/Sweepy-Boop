@@ -146,9 +146,14 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
     return math.max(debuffWidth, buffWidth), debuffHeight + buffHeight, debuffHasExpandableChild or buffHasExpandableChild;
 end
 
-local function LayoutOverride(self)
+local function LayoutOverride(self, isEnemy)
     local children = self:GetLayoutChildren();
-	local childrenWidth, childrenHeight, hasExpandableChild = LayoutChildrenOverride(self, children);
+	local childrenWidth, childrenHeight, hasExpandableChild;
+    if isEnemy then
+        childrenWidth, childrenHeight, hasExpandableChild = LayoutChildrenOverride(self, children);
+    else
+        childrenWidth, childrenHeight, hasExpandableChild = self:LayoutChildren(children);
+    end
 
 	local frameWidth, frameHeight = self:CalculateFrameSize(childrenWidth, childrenHeight);
 
@@ -343,7 +348,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if aura.customCategory == AURA_CATEGORY.CROWD_CONTROL or aura.customCategory == AURA_CATEGORY.BUFF then
-            buff:SetScale(5.25);
+            buff:SetScale(1.25);
         else
             buff:SetScale(1);
         end
@@ -397,7 +402,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
     end
 
-    LayoutOverride(self);
+    LayoutOverride(self, isEnemy);
 end
 
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
