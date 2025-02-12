@@ -195,9 +195,6 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
         if isEnemy then
             auraSettings.harmful = true;
-            -- Show whitelisted buffs from all sources on enemies
-            auraSettings.helpful = true;
-            auraSettings.showAll = true;
             auraSettings.includeNameplateOnly = true;
         else
             if (showDebuffsOnFriendly) then
@@ -358,45 +355,4 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
     end
 
     LayoutOverride(self);
-end
-
--- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
--- Possibly need to override logic for isFullUpdate
-addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
-    -- Copied from BlizzardInterfaceCode but checking ( not addon.UnitIsHostile ) instead of PlayerUtil.HasFriendlyReaction
-    -- This function is only called on hostile units (factoring in Mind Control)
-    local isPlayer = UnitIsUnit("player", unit);
-    local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
-
-    local auraSettings =
-    {
-        helpful = false;
-        harmful = false;
-        raid = false;
-        includeNameplateOnly = false;
-        showAll = false;
-        hideAll = false;
-    };
-
-    if isPlayer then
-        auraSettings.helpful = true;
-        auraSettings.includeNameplateOnly = true;
-        auraSettings.showPersonalCooldowns = self.showPersonalCooldowns;
-    else
-        if addon.UnitIsHostile(unit) then
-            auraSettings.harmful = true;
-            auraSettings.includeNameplateOnly = true;
-        else -- Friendly units
-            if (showDebuffsOnFriendly) then
-                -- dispellable debuffs
-                auraSettings.harmful = true;
-                auraSettings.raid = true;
-                auraSettings.showAll = true;
-            else
-                auraSettings.hideAll = true;
-            end
-        end
-    end
-
-    addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
 end
