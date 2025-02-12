@@ -196,6 +196,7 @@ addon.BuffList = {
     {
         classID = addon.CLASSID.EVOKER,
         auras = {
+            { spellId = 378464, default = true }, -- Nullifying Shroud
             { spellId = 363916, default = true }, -- Obsidian Scales
         }
     },
