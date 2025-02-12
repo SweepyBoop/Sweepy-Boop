@@ -1,5 +1,17 @@
 local _, addon = ...;
 
+local AURA_CATEGORY = { -- Maybe apply different borders based on category?
+    CROWD_CONTROL = 1,
+    DEBUFF = 2,
+    BUFF_PURGALE = 3,
+    BUFF = 4,
+};
+
+local function IsLayoutFrame(frame)
+    return frame.IsLayoutFrame and frame:IsLayoutFrame();
+end
+
+-- Return aura category if should be shown, nil otherwise
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
         return false;
@@ -12,8 +24,15 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
         return true;
     end
 
-    if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
-        return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[tostring(aura.spellId)];
+    -- Parse non crowd control debuffs
+    if aura.isHarmful then
+        return (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle")
+            and SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(aura.spellId)];
+    end
+
+    -- Parse buffs
+    if aura.isHelpful then
+        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(aura.spellId)];
     end
 end
 
@@ -35,6 +54,156 @@ local function ParseAllAurasOverride(self, forceAll)
     local batchCount = nil;
     local usePackedAura = true;
     AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
+
+    if SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy then
+        AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
+    end
+end
+
+local rowGap = 2;
+
+local function LayoutAuras(self, children, expandToHeight, verticalOffset)
+    verticalOffset = verticalOffset or 0; -- buff row will set this based on the height of the debuff row
+    local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
+
+    if verticalOffset > 0 then
+        verticalOffset = verticalOffset + rowGap;
+    end
+
+    local spacing = self.spacing or 0;
+    local childrenWidth, childrenHeight = 0, 0;
+    local hasExpandableChild = false;
+
+    -- Calculate width and height based on children
+    for i, child in ipairs(children) do
+        if not self.skipChildLayout and IsLayoutFrame(child) then
+            child:Layout();
+        end
+
+        local childWidth, childHeight = child:GetSize();
+        local leftPadding, rightPadding, topPadding, bottomPadding = self:GetChildPadding(child);
+        if (child.expand) then
+            hasExpandableChild = true;
+        end
+
+        -- Expand child height if it is set to expand and we also have an expandToHeight value.
+        if (child.expand and expandToHeight) then
+            childHeight = expandToHeight - topPadding - bottomPadding - frameTopPadding - frameBottomPadding;
+            child:SetHeight(childHeight);
+            childWidth = child:GetWidth();
+        end
+
+        if self.respectChildScale then
+            local childScale = child:GetScale();
+            childWidth = childWidth * childScale;
+            childHeight = childHeight * childScale;
+        end
+
+        childrenHeight = math.max(childrenHeight, childHeight + topPadding + bottomPadding);
+        childrenWidth = childrenWidth + childWidth + leftPadding + rightPadding;
+        if (i > 1) then
+            childrenWidth = childrenWidth + spacing;
+        end
+
+        -- Set child position
+        child:ClearAllPoints();
+
+        if self.childLayoutDirection == "rightToLeft" then
+            rightOffset = rightOffset + rightPadding;
+            if (child.align == "bottom") then
+                local bottomOffset = frameBottomPadding + bottomPadding;
+                child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset + verticalOffset);
+            elseif (child.align == "center") then
+                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+                child:SetPoint("RIGHT", -rightOffset, -topOffset + verticalOffset);
+            else
+                local topOffset = frameTopPadding + topPadding;
+                child:SetPoint("TOPRIGHT", -rightOffset, -topOffset + verticalOffset);
+            end
+            rightOffset = rightOffset + childWidth + leftPadding + spacing;
+        else
+            leftOffset = leftOffset + leftPadding;
+            if (child.align == "bottom") then
+                local bottomOffset = frameBottomPadding + bottomPadding;
+                child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
+            elseif (child.align == "center") then
+                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+                child:SetPoint("LEFT", leftOffset, -topOffset + verticalOffset);
+            else
+                local topOffset = frameTopPadding + topPadding;
+                child:SetPoint("TOPLEFT", leftOffset, -topOffset + verticalOffset);
+            end
+            leftOffset = leftOffset + childWidth + rightPadding + spacing;
+        end
+    end
+
+    return childrenWidth, childrenHeight, hasExpandableChild;
+end
+
+local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
+    -- Separate buffs and debuffs
+    local buffs = {};
+    local debuffs = {};
+    for _, child in ipairs(children) do
+        if child.isBuff then
+            table.insert(buffs, child);
+        else
+            table.insert(debuffs, child);
+        end
+    end
+
+    local debuffWidth, debuffHeight, debuffHasExpandableChild = LayoutAuras(self, debuffs, expandToHeight);
+    local buffWidth, buffHeight, buffHasExpandableChild = LayoutAuras(self, buffs, expandToHeight, debuffHeight);
+
+    return math.max(debuffWidth, buffWidth), debuffHeight + buffHeight, debuffHasExpandableChild or buffHasExpandableChild;
+end
+
+local function LayoutOverride(self)
+    local children = self:GetLayoutChildren();
+	local childrenWidth, childrenHeight, hasExpandableChild = LayoutChildrenOverride(self, children);
+
+	local frameWidth, frameHeight = self:CalculateFrameSize(childrenWidth, childrenHeight);
+
+	-- If at least one child had "expand" set and we did not already expand them, call LayoutChildren() again to expand them
+	if (hasExpandableChild) then
+		childrenWidth, childrenHeight = self:LayoutChildren(children, frameWidth, frameHeight);
+		frameWidth, frameHeight = self:CalculateFrameSize(childrenWidth, childrenHeight);
+	end
+
+	self:SetSize(frameWidth, frameHeight);
+	self:MarkClean();
+end
+
+local function EnsureGlowContainerFrame(buff)
+    if ( not buff.GlowContainerFrame ) then
+        if buff.CountFrame then
+            buff.CountFrame:SetFrameStrata("HIGH");
+        end
+        buff.GlowContainerFrame = CreateFrame("Frame", nil, buff);
+        buff.GlowContainerFrame:SetFrameStrata("MEDIUM");
+        buff.GlowContainerFrame:SetFrameLevel(9999);
+    end
+
+    return buff.GlowContainerFrame;
+end
+
+local function UpdatePurgeBorder(buff, show)
+    if show then
+        local container = EnsureGlowContainerFrame(buff);
+        if ( not container.borderPurge ) then
+            container.borderPurge = container:CreateTexture(nil, "OVERLAY");
+            container.borderPurge:SetTexture("Interface/TargetingFrame/UI-TargetingFrame-Stealable");
+            container.borderPurge:SetBlendMode("ADD");
+            container.borderPurge:SetSize(buff:GetWidth() * 1.25, buff:GetHeight() * 1.25);
+            container.borderPurge:SetPoint("CENTER", buff, "CENTER");
+            --container.borderPurge:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 10, -6);
+        end
+        container.borderPurge:Show();
+    else
+        if buff.GlowContainerFrame and buff.GlowContainerFrame.borderPurge then
+            buff.GlowContainerFrame.borderPurge:Hide();
+        end
+    end
 end
 
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
@@ -166,6 +335,21 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         else
             buff.CountFrame.Count:Hide();
         end
+
+        if buff.Border then
+            if aura.isStealable then
+                UpdatePurgeBorder(buff, true);
+                buff.Border:Hide();
+            elseif aura.isHelpful then
+                UpdatePurgeBorder(buff, false);
+                buff.Border:SetColorTexture(0.0,1.0,0.498);
+                buff.Border:Show();
+            else
+                UpdatePurgeBorder(buff, false);
+                buff.Border:Hide();
+            end
+        end
+
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
         buff:Show();
@@ -174,22 +358,22 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         return buffIndex >= BUFF_MAX_DISPLAY;
     end);
 
-    --Add Cooldowns 
-    if(auraSettings.showPersonalCooldowns and buffIndex < BUFF_MAX_DISPLAY and UnitIsUnit(unit, "player")) then 
-        local nameplateSpells = C_SpellBook.GetTrackedNameplateCooldownSpells(); 
-        for _, spellID in ipairs(nameplateSpells) do 
+    --Add Cooldowns
+    if(auraSettings.showPersonalCooldowns and buffIndex < BUFF_MAX_DISPLAY and UnitIsUnit(unit, "player")) then
+        local nameplateSpells = C_SpellBook.GetTrackedNameplateCooldownSpells();
+        for _, spellID in ipairs(nameplateSpells) do
             if (not self:HasActiveBuff(spellID) and buffIndex < BUFF_MAX_DISPLAY) then
                 local locStart, locDuration = C_Spell.GetSpellLossOfControlCooldown(spellID);
                 local cooldownInfo = C_Spell.GetSpellCooldown(spellID);
                 if ((locDuration and locDuration ~= 0) or (cooldownInfo and cooldownInfo.duration ~= 0)) then
                     local spellInfo = C_Spell.GetSpellInfo(spellID);
-                    if(spellInfo) then 
+                    if(spellInfo) then
                         local buff = self.buffPool:Acquire();
                         buff.isBuff = true;
                         buff.layoutIndex = buffIndex;
-                        buff.spellID = spellID; 
+                        buff.spellID = spellID;
                         buff.auraInstanceID = nil;
-                        buff.Icon:SetTexture(spellInfo.iconID); 
+                        buff.Icon:SetTexture(spellInfo.iconID);
 
                         local chargeInfo = C_Spell.GetSpellCharges(spellID) or {};
                         local charges, maxCharges = chargeInfo.currentCharges, chargeInfo.maxCharges;
@@ -212,10 +396,10 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                     end
                 end
             end
-        end 
+        end
     end
 
-    self:Layout();
+    LayoutOverride(self);
 end
 
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again

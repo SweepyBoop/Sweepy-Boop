@@ -323,8 +323,20 @@ if addon.PROJECT_MAINLINE then
                         order = 5,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter auras applied by myself",
-                        desc = "Show only whitelisted auras applied by myself on enemy nameplates\nCrowd controls from all source units will always show",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
+                        desc = "Show whitelisted debuffs applied by myself"
+                            .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
+                    },
+
+                    showBuffsOnEnemy = {
+                        order = 6,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",
+                        desc = "Show whitelisted buffs on enemy nameplates from all sources",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                        end
                     },
                 },
             },
@@ -345,13 +357,13 @@ if addon.PROJECT_MAINLINE then
                 end
             },
 
-            auraWhiteList = {
+            debuffWhiteList = {
                 order = 14,
                 type = "group",
-                name = "Aura whitelist",
-                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] end,
+                name = "Debuff whitelist",
+                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] end,
                 set = function(info, val) 
-                    SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList[info[#info]] = val;
+                    SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] = val;
                     SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
                     -- No need to refresh nameplates, just apply it on next UNIT_AURA
                 end,
@@ -359,12 +371,29 @@ if addon.PROJECT_MAINLINE then
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
                 end
-            }
+            },
+
+            buffWhiteList = {
+                order = 15,
+                type = "group",
+                name = "Buff whitelist",
+                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] end,
+                set = function(info, val) 
+                    SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] = val;
+                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                    -- No need to refresh nameplates, just apply it on next UNIT_AURA
+                end,
+                args = {},
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                end
+            },
         },
     };
 
     addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
-    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.auraWhiteList);
+    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.debuffWhiteList, addon.DebuffList, "debuffWhiteList");
+    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.buffWhiteList, addon.BuffList, "buffWhiteList");
 
     options.args.arenaFrames = {
         order = 5,
@@ -777,10 +806,12 @@ local defaults = {
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
             auraFilterEnabled = false,
+            showBuffsOnEnemy = false,
             highlightScale = 100,
             hideHunterSecondaryPet = true,
             filterList = {},
-            auraWhiteList = {},
+            debuffWhiteList = {},
+            buffWhiteList = {},
         },
         arenaFrames = {
             healerIndicator = true,
@@ -814,6 +845,7 @@ local defaults = {
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconScale = 125;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
+    defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
@@ -823,7 +855,8 @@ if addon.internal then -- Set default for internal version
 end
 
 addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
-addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.auraWhiteList);
+addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
+addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
 local function SetupAllSpells(profile, spellList, value)
     for spellID, spellEntry in pairs(spellList) do

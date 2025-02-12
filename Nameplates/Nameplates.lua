@@ -170,6 +170,9 @@ function SweepyBoop:SetupNameplateModules()
                                 self:UpdateBuffsByBlizzard(unit, unitAuraUpdateInfo, auraSettings);
                             end
                         end
+
+                        -- Call update once for first run experience
+                        addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
                     end
                 end
             end

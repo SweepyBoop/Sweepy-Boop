@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-addon.AuraList = { -- Use table with consecutive indexes to preserve the order
+addon.DebuffList = { -- Use table with consecutive indexes to preserve the order
     {
         classID = addon.CLASSID.DEATHKNIGHT,
         auras = {
@@ -164,15 +164,124 @@ addon.AuraList = { -- Use table with consecutive indexes to preserve the order
     },
 };
 
-addon.FillDefaultToAuraOptions = function(profile)
-    for _, classEntry in ipairs(addon.AuraList) do
+addon.BuffList = {
+    {
+        classID = addon.CLASSID.DEATHKNIGHT,
+        auras = {
+            { spellId = 48707, default = true }, -- Anti-Magic Shell
+            { spellId = 48792, default = true }, -- Icebound Fortitude
+            { spellId = 49039, default = true }, -- Lichborne
+        }
+    },
+    {
+        classID = addon.CLASSID.DEMONHUNTER,
+        auras = {
+            { spellId = 196555, default = true }, -- Netherwalk
+            { spellId = 212800, default = true }, -- Blur
+            { spellId = 209426 }, -- Darkness
+        }
+    },
+    {
+        classID = addon.CLASSID.DRUID,
+        auras = {
+            { spellId = 61336, default = true }, -- Survival Instincts
+            { spellId = 102342, default = true }, -- Ironbark
+            { spellId = 22812, default = true }, -- Barkskin
+
+            { spellId = 102352 }, -- Cenarion Ward
+            { spellId = 33763 }, -- Lifebloom
+            { spellId = 188550 }, -- Lifebloom (Undergrowth)
+        }
+    },
+    {
+        classID = addon.CLASSID.EVOKER,
+        auras = {
+            { spellId = 378464, default = true }, -- Nullifying Shroud
+            { spellId = 363916, default = true }, -- Obsidian Scales
+        }
+    },
+    {
+        classID = addon.CLASSID.HUNTER,
+        auras = {
+            { spellId = 186265, default = true }, -- Aspect of the Turtle
+            { spellId = 264735, default = true }, -- Survival of the Fittest
+        }
+    },
+    {
+        classID = addon.CLASSID.MAGE,
+        auras = {
+            { spellId = 45438, default = true }, -- Ice Block
+            { spellId = 110909, default = true }, -- Alter Time
+            { spellId = 342246, default = true }, -- Alter Time
+
+            --{ spellId = 12544, default = true }, -- Frost Armor (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
+        }
+    },
+    {
+        classID = addon.CLASSID.MONK,
+        auras = {
+            { spellId = 116849, default = true }, -- Life Cocoon
+            { spellId = 125174, default = true }, -- Touch of Karma
+            { spellId = 122783, default = true }, -- Diffuse Magic
+        }
+    },
+    {
+        classID = addon.CLASSID.PALADIN,
+        auras = {
+            { spellId = 642, default = true }, -- Divine Shield
+            { spellId = 1022, default = true }, -- Blessing of Protection
+            { spellId = 204018, default = true }, -- Blessing of Spellwarding
+            { spellId = 6940, default = true }, -- Blessing of Sacrifice
+            { spellId = 86659, default = true }, -- Guardian of Ancient Kings
+            { spellId = 184662 }, -- Shield of Vengeance
+            { spellId = 498 }, -- Divine Protection
+        }
+    },
+    {
+        classID = addon.CLASSID.PRIEST,
+        auras = {
+            { spellId = 33206, default = true }, -- Pain Suppression
+            { spellId = 47788, default = true }, -- Guardian Spirit
+            { spellId = 47585, default = true }, -- Dispersion
+        }
+    },
+    {
+        classID = addon.CLASSID.ROGUE,
+        auras = {
+            { spellId = 31224, default = true }, -- Cloak of Shadows
+            { spellId = 5277, default = true }, -- Evasion
+        }
+    },
+    {
+        classID = addon.CLASSID.SHAMAN,
+        auras = {
+            { spellId = 108271, default = true }, -- Astral Shift
+        }
+    },
+    {
+        classID = addon.CLASSID.WARLOCK,
+        auras = {
+            { spellId = 104773, default = true }, -- Unending Resolve
+        }
+    },
+    {
+        classID = addon.CLASSID.WARRIOR,
+        auras = {
+            { spellId = 118038, default = true }, -- Die by the Sword
+            { spellId = 184364, default = true }, -- Enraged Regeneration
+        }
+    }
+};
+
+addon.FillDefaultToAuraOptions = function(profile, auraList)
+    for _, classEntry in ipairs(auraList) do
         for _, auraEntry in ipairs(classEntry.auras) do
             profile[tostring(auraEntry.spellId)] = auraEntry.default;
         end
     end
 end
 
-addon.AppendAuraOptionsToGroup = function(group)
+addon.AppendAuraOptionsToGroup = function(group, auraList, profileName)
     group.args = {};
 
     group.args.reset = {
@@ -180,12 +289,13 @@ addon.AppendAuraOptionsToGroup = function(group)
         type = "execute",
         name = "Reset to default",
         func = function()
-            addon.FillDefaultToAuraOptions(SweepyBoop.db.profile.nameplatesEnemy.auraWhiteList);
+            local profile = SweepyBoop.db.profile.nameplatesEnemy[profileName];
+            addon.FillDefaultToAuraOptions(profile, auraList);
         end,
     };
 
     local index = 2;
-    for _, classEntry in ipairs(addon.AuraList) do
+    for _, classEntry in ipairs(auraList) do
         local classInfo = C_CreatureInfo.GetClassInfo(classEntry.classID);
         local classGroup = {
             order = index,
