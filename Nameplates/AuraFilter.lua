@@ -332,22 +332,20 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if buff.Border then
-            if aura.isStealable then
-                --UpdatePurgeBorder(buff, true);
-                --buff.Border:Hide();
+            if ( not isEnemy ) then
+                buff.Border:Hide();
+            elseif aura.isStealable then
                 buff.Border:SetColorTexture(1, 1, 1);
                 buff.Border:Show();
             elseif aura.isHelpful then
-                --UpdatePurgeBorder(buff, false);
                 buff.Border:SetColorTexture(0.0,1.0,0.498);
                 buff.Border:Show();
             else
-                --UpdatePurgeBorder(buff, false);
                 buff.Border:Hide();
             end
         end
 
-        if aura.customCategory == AURA_CATEGORY.CROWD_CONTROL or aura.customCategory == AURA_CATEGORY.BUFF then
+        if isEnemy and ( aura.customCategory == AURA_CATEGORY.CROWD_CONTROL or aura.customCategory == AURA_CATEGORY.BUFF ) then
             buff:SetScale(1.25);
         else
             buff:SetScale(1);
