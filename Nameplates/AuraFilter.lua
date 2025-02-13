@@ -119,10 +119,33 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
         -- Set child position
         child:ClearAllPoints();
 
-        leftOffset = leftOffset + leftPadding;
-        local bottomOffset = frameBottomPadding + bottomPadding;
-        child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
-        leftOffset = leftOffset + childWidth + rightPadding + spacing;
+        if self.childLayoutDirection == "rightToLeft" then
+            rightOffset = rightOffset + rightPadding;
+            if (child.align == "bottom") then
+                local bottomOffset = frameBottomPadding + bottomPadding;
+                child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset + verticalOffset);
+            elseif (child.align == "center") then
+                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+                child:SetPoint("RIGHT", -rightOffset, -topOffset + verticalOffset);
+            else
+                local topOffset = frameTopPadding + topPadding;
+                child:SetPoint("TOPRIGHT", -rightOffset, -topOffset + verticalOffset);
+            end
+            rightOffset = rightOffset + childWidth + leftPadding + spacing;
+        else
+            leftOffset = leftOffset + leftPadding;
+            if (child.align == "bottom") then
+                local bottomOffset = frameBottomPadding + bottomPadding;
+                child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
+            elseif (child.align == "center") then
+                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+                child:SetPoint("LEFT", leftOffset, -topOffset + verticalOffset);
+            else
+                local topOffset = frameTopPadding + topPadding;
+                child:SetPoint("TOPLEFT", leftOffset, -topOffset + verticalOffset);
+            end
+            leftOffset = leftOffset + childWidth + rightPadding + spacing;
+        end
     end
 
     return childrenWidth, childrenHeight, hasExpandableChild;
