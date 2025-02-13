@@ -78,12 +78,11 @@ local rowGap = 2;
 
 local function LayoutAuras(self, children, expandToHeight, verticalOffset)
     verticalOffset = verticalOffset or 0; -- buff row will set this based on the height of the debuff row
-    local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
-
     if verticalOffset > 0 then
         verticalOffset = verticalOffset + rowGap;
     end
 
+    local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
     local spacing = self.spacing or 0;
     local childrenWidth, childrenHeight = 0, 0;
     local hasExpandableChild = false;
