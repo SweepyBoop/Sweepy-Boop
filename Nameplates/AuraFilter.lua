@@ -140,17 +140,6 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
         end
     end
 
-    -- Sort debuffs, crowd controls first
-    table.sort(debuffs, function(a, b)
-        if a.customCategory == AURA_CATEGORY.CROWD_CONTROL and b.customCategory ~= AURA_CATEGORY.CROWD_CONTROL then
-            return true;
-        elseif a.customCategory ~= AURA_CATEGORY.CROWD_CONTROL and b.customCategory == AURA_CATEGORY.CROWD_CONTROL then
-            return false;
-        end
-
-        return a.layoutIndex < b.layoutIndex;
-    end);
-
     local debuffWidth, debuffHeight, debuffHasExpandableChild = LayoutAuras(self, debuffs, expandToHeight);
     local buffWidth, buffHeight, buffHasExpandableChild = LayoutAuras(self, buffs, expandToHeight, debuffHeight);
 
