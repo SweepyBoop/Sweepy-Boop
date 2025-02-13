@@ -25,13 +25,26 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
 
     -- Parse non crowd control debuffs
     if aura.isHarmful then
-        return (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle")
-            and SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(aura.spellId)];
+        if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
+            local spellId = aura.spellId;
+            if addon.AuraParent[spellId] then
+                spellId = addon.AuraParent[spellId];
+            end
+
+            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(spellId)];
+        else
+            return nil;
+        end
     end
 
     -- Parse buffs
     if aura.isHelpful then
-        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(aura.spellId)];
+        local spellId = aura.spellId;
+        if addon.AuraParent[spellId] then
+            spellId = addon.AuraParent[spellId];
+        end
+
+        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)];
     end
 end
 
