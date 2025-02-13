@@ -345,12 +345,6 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             end
         end
 
-        if isEnemy and ( aura.customCategory == AURA_CATEGORY.CROWD_CONTROL or aura.customCategory == AURA_CATEGORY.BUFF ) then
-            buff:SetScale(1.25);
-        else
-            buff:SetScale(1);
-        end
-
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
         buff:Show();
