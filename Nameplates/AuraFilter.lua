@@ -324,7 +324,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 buff.Border:SetColorTexture(0.0,1.0,0.498); -- Green border for other buffs
                 buff.Border:Show();
             elseif aura.customCategory == AURA_CATEGORY.CROWD_CONTROL then
-                buff.Border:SetColorTexture(1, 0, 0); -- Red border for crowd control
+                buff.Border:SetColorTexture(0.5, 0, 0.5); -- Purple border for crowd control
                 buff.Border:Show();
             else
                 buff.Border:Hide();
