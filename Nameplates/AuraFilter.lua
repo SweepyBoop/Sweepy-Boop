@@ -20,7 +20,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
 
     -- Some crowd controls are hidden by Blizzard, override the logic
     if addon.CrowdControlAuras[aura.spellId] then
-        return true;
+        return AURA_CATEGORY.CROWD_CONTROL;
     end
 
     -- Parse non crowd control debuffs
@@ -31,7 +31,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
                 spellId = addon.AuraParent[spellId];
             end
 
-            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(spellId)];
+            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(spellId)] and AURA_CATEGORY.DEBUFF;
         else
             return nil;
         end
@@ -44,7 +44,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
             spellId = addon.AuraParent[spellId];
         end
 
-        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)];
+        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)] and AURA_CATEGORY.BUFF;
     end
 end
 
@@ -56,7 +56,9 @@ local function ParseAllAurasOverride(self, forceAll)
     end
 
     local function HandleAura(aura)
-        if ShouldShowBuffOverride(self, aura, forceAll) then
+        local customCategory = ShouldShowBuffOverride(self, aura, forceAll);
+        if customCategory then
+            aura.customCategory = customCategory;
             self.auras[aura.auraInstanceID] = aura;
         end
 
@@ -166,6 +168,15 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
             table.insert(debuffs, child);
         end
     end
+    table.sort(debuffs, function (a, b)
+        if ( not a.customCategory ) then
+            return false;
+        elseif ( not b.customCategory ) then
+            return true;
+        else
+            return a.customCategory < b.customCategory;
+        end
+    end);
 
     local debuffWidth, debuffHeight, debuffHasExpandableChild = LayoutAuras(self, debuffs, expandToHeight);
     local buffWidth, buffHeight, buffHasExpandableChild = LayoutAuras(self, buffs, expandToHeight, debuffHeight);
@@ -297,6 +308,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 end
 
                 if shouldShowBuff then
+                    aura.customCategory = shouldShowBuff;
                     self.auras[aura.auraInstanceID] = aura;
                     aurasChanged = true;
                 end
@@ -307,6 +319,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
                 if self.auras[auraInstanceID] ~= nil then
                     local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
+                    newAura.customCategory = self.auras[auraInstanceID].customCategory;
                     self.auras[auraInstanceID] = newAura;
                     aurasChanged = true;
                 end
@@ -342,6 +355,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         buff.isBuff = aura.isHelpful;
         buff.layoutIndex = buffIndex;
         buff.spellID = aura.spellId;
+        buff.customCategory = aura.customCategory;
 
         buff.Icon:SetTexture(aura.icon);
         if (aura.applications > 1) then
@@ -416,7 +430,11 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
     end
 
-    LayoutOverride(self);
+    if isEnemy then
+        LayoutOverride(self);
+    else
+        self:Layout();
+    end
 end
 
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
