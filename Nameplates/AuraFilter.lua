@@ -43,9 +43,7 @@ local function ParseAllAurasOverride(self, forceAll)
     end
 
     local function HandleAura(aura)
-        local shouldShow = ShouldShowBuffOverride(self, aura, forceAll);
-        if shouldShow then
-            aura.customCategory = shouldShow;
+        if ShouldShowBuffOverride(self, aura, forceAll) then
             self.auras[aura.auraInstanceID] = aura;
         end
 
@@ -159,7 +157,7 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
     return math.max(debuffWidth, buffWidth), debuffHeight + buffHeight, debuffHasExpandableChild or buffHasExpandableChild;
 end
 
-local function LayoutOverride(self, isEnemy)
+local function LayoutOverride(self)
     local children = self:GetLayoutChildren();
 	local childrenWidth, childrenHeight, hasExpandableChild;
     if isEnemy then
@@ -288,7 +286,6 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 end
 
                 if shouldShowBuff then
-                    aura.customCategory = shouldShowBuff;
                     self.auras[aura.auraInstanceID] = aura;
                     aurasChanged = true;
                 end
@@ -299,7 +296,6 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
                 if self.auras[auraInstanceID] ~= nil then
                     local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
-                    newAura.customCategory = self.auras[auraInstanceID].customCategory;
                     self.auras[auraInstanceID] = newAura;
                     aurasChanged = true;
                 end
@@ -407,7 +403,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
     end
 
-    LayoutOverride(self, isEnemy);
+    LayoutOverride(self);
 end
 
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
