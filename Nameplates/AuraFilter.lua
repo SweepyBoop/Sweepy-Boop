@@ -106,11 +106,9 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
             childWidth = child:GetWidth();
         end
 
-        if true then -- respectChildScale
-            local childScale = child:GetScale();
-            childWidth = childWidth * childScale;
-            childHeight = childHeight * childScale;
-        end
+        local childScale = child:GetScale();
+        childWidth = childWidth * childScale;
+        childHeight = childHeight * childScale;
 
         childrenHeight = math.max(childrenHeight, childHeight + topPadding + bottomPadding);
         childrenWidth = childrenWidth + childWidth + leftPadding + rightPadding;
@@ -123,36 +121,9 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
 
         leftOffset = leftOffset + leftPadding;
         local bottomOffset = frameBottomPadding + bottomPadding;
-        child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
+        print(child.spellID, leftOffset);
+        child:SetPoint("BOTTOMLEFT", leftOffset / childScale, (bottomOffset + verticalOffset) / childScale);
         leftOffset = leftOffset + childWidth + rightPadding + spacing;
-
-        -- if self.childLayoutDirection == "rightToLeft" then
-        --     rightOffset = rightOffset + rightPadding;
-        --     if (child.align == "bottom") then
-        --         local bottomOffset = frameBottomPadding + bottomPadding;
-        --         child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset + verticalOffset);
-        --     elseif (child.align == "center") then
-        --         local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-        --         child:SetPoint("RIGHT", -rightOffset, -topOffset + verticalOffset);
-        --     else
-        --         local topOffset = frameTopPadding + topPadding;
-        --         child:SetPoint("TOPRIGHT", -rightOffset, -topOffset + verticalOffset);
-        --     end
-        --     rightOffset = rightOffset + childWidth + leftPadding + spacing;
-        -- else
-        --     leftOffset = leftOffset + leftPadding;
-        --     if (child.align == "bottom") then
-        --         local bottomOffset = frameBottomPadding + bottomPadding;
-        --         child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
-        --     elseif (child.align == "center") then
-        --         local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-        --         child:SetPoint("LEFT", leftOffset, -topOffset + verticalOffset);
-        --     else
-        --         local topOffset = frameTopPadding + topPadding;
-        --         child:SetPoint("TOPLEFT", leftOffset, -topOffset + verticalOffset);
-        --     end
-        --     leftOffset = leftOffset + childWidth + rightPadding + spacing;
-        -- end
     end
 
     return childrenWidth, childrenHeight, hasExpandableChild;
