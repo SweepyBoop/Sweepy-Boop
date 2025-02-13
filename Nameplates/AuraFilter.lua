@@ -121,7 +121,6 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
 
         leftOffset = leftOffset + leftPadding;
         local bottomOffset = frameBottomPadding + bottomPadding;
-        print(child.spellID, leftOffset);
         child:SetPoint("BOTTOMLEFT", leftOffset / childScale, (bottomOffset + verticalOffset) / childScale);
         leftOffset = leftOffset + childWidth + rightPadding + spacing;
     end
