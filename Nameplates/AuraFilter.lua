@@ -200,38 +200,6 @@ local function LayoutOverride(self)
 	self:MarkClean();
 end
 
-local function EnsureGlowContainerFrame(buff)
-    if ( not buff.GlowContainerFrame ) then
-        if buff.CountFrame then
-            buff.CountFrame:SetFrameStrata("HIGH");
-        end
-        buff.GlowContainerFrame = CreateFrame("Frame", nil, buff);
-        buff.GlowContainerFrame:SetFrameStrata("MEDIUM");
-        buff.GlowContainerFrame:SetFrameLevel(9999);
-    end
-
-    return buff.GlowContainerFrame;
-end
-
-local function UpdatePurgeBorder(buff, show)
-    if show then
-        local container = EnsureGlowContainerFrame(buff);
-        if ( not container.borderPurge ) then
-            container.borderPurge = container:CreateTexture(nil, "OVERLAY");
-            container.borderPurge:SetTexture("Interface/TargetingFrame/UI-TargetingFrame-Stealable");
-            container.borderPurge:SetBlendMode("ADD");
-            container.borderPurge:SetSize(buff:GetWidth() * 1.25, buff:GetHeight() * 1.25);
-            container.borderPurge:SetPoint("CENTER", buff, "CENTER");
-            --container.borderPurge:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 10, -6);
-        end
-        container.borderPurge:Show();
-    else
-        if buff.GlowContainerFrame and buff.GlowContainerFrame.borderPurge then
-            buff.GlowContainerFrame.borderPurge:Hide();
-        end
-    end
-end
-
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
     -- Override auraSettings because Blizzard code doesn't properly check unit hostility under Mind Control
     local isEnemy = addon.UnitIsHostile(unit);
