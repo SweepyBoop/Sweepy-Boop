@@ -3,8 +3,7 @@ local _, addon = ...;
 local AURA_CATEGORY = { -- Maybe apply different borders based on category?
     CROWD_CONTROL = 1,
     DEBUFF = 2,
-    BUFF_PURGALE = 3,
-    BUFF = 4,
+    BUFF = 3,
 };
 
 local function IsLayoutFrame(frame)
@@ -26,13 +25,26 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
 
     -- Parse non crowd control debuffs
     if aura.isHarmful then
-        return (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle")
-            and SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(aura.spellId)];
+        if (aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle") then
+            local spellId = aura.spellId;
+            if addon.AuraParent[spellId] then
+                spellId = addon.AuraParent[spellId];
+            end
+
+            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(spellId)];
+        else
+            return nil;
+        end
     end
 
     -- Parse buffs
     if aura.isHelpful then
-        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(aura.spellId)];
+        local spellId = aura.spellId;
+        if addon.AuraParent[spellId] then
+            spellId = addon.AuraParent[spellId];
+        end
+
+        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)];
     end
 end
 
@@ -337,15 +349,15 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if buff.Border then
-            if aura.isStealable then
-                UpdatePurgeBorder(buff, true);
+            if ( not isEnemy ) then
                 buff.Border:Hide();
+            elseif aura.isStealable then
+                buff.Border:SetColorTexture(1, 1, 1);
+                buff.Border:Show();
             elseif aura.isHelpful then
-                UpdatePurgeBorder(buff, false);
                 buff.Border:SetColorTexture(0.0,1.0,0.498);
                 buff.Border:Show();
             else
-                UpdatePurgeBorder(buff, false);
                 buff.Border:Hide();
             end
         end

@@ -385,7 +385,7 @@ if addon.PROJECT_MAINLINE then
                 end,
                 args = {},
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy );
                 end
             },
         },
