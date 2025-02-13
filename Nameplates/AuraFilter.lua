@@ -171,12 +171,6 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
         end
     end
 
-    local debugStr = "Before: ";
-    for _, buff in ipairs(debuffs) do
-        debugStr = debugStr .. buff.spellID .. ":" .. ( buff.customCategory or "NONE" ) or "NONE" .. ", ";
-    end
-    print(debugStr);
-
     if debuffs then
         table.sort(debuffs, function (a, b)
             if a.customCategory ~= b.customCategory then
@@ -192,12 +186,6 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
             return AuraUtil.DefaultAuraCompare(a, b);
         end)
     end
-
-    local debugStr2 = "After: ";
-    for _, buff in ipairs(debuffs) do
-        debugStr2 = debugStr2 .. buff.spellID .. ":" .. ( buff.customCategory or "NONE" ) .. ", ";
-    end
-    print(debugStr2);
 
     local debuffWidth, debuffHeight, debuffHasExpandableChild = LayoutAuras(self, debuffs, expandToHeight);
     local buffWidth, buffHeight, buffHasExpandableChild = LayoutAuras(self, buffs, expandToHeight, debuffHeight);
