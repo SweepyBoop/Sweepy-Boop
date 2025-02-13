@@ -159,12 +159,7 @@ end
 
 local function LayoutOverride(self)
     local children = self:GetLayoutChildren();
-	local childrenWidth, childrenHeight, hasExpandableChild;
-    if isEnemy then
-        childrenWidth, childrenHeight, hasExpandableChild = LayoutChildrenOverride(self, children);
-    else
-        childrenWidth, childrenHeight, hasExpandableChild = self:LayoutChildren(children);
-    end
+	local childrenWidth, childrenHeight, hasExpandableChild = LayoutChildrenOverride(self, children);
 
 	local frameWidth, frameHeight = self:CalculateFrameSize(childrenWidth, childrenHeight);
 
