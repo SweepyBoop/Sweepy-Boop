@@ -93,6 +93,9 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
         end
 
         local childWidth, childHeight = child:GetSize();
+        local scale = child:GetScale();
+        childWidth = childWidth * scale;
+        childHeight = childHeight * scale;
         local leftPadding, rightPadding, topPadding, bottomPadding = self:GetChildPadding(child);
         if (child.expand) then
             hasExpandableChild = true;
@@ -361,6 +364,8 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 buff.Border:Hide();
             end
         end
+
+        buff:SetScale(buff.isBuff and 1.25 or 1);
 
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
