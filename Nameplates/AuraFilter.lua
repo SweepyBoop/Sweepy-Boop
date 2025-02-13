@@ -50,7 +50,7 @@ end
 
 local function ParseAllAurasOverride(self, forceAll)
     if self.auras == nil then
-        self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare(a, b), TableUtil.Constants.AssociativePriorityTable);
+        self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
     else
         self.auras:Clear();
     end
