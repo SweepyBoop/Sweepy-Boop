@@ -13,7 +13,7 @@ end
 -- Return aura category if should be shown, nil otherwise
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
-        return false;
+        return nil;
     end
 
     -- Basically only show crowd controls and whitelisted debuffs applied by the player
@@ -50,7 +50,7 @@ end
 
 local function ParseAllAurasOverride(self, forceAll)
     if self.auras == nil then
-        self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
+        self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare(a, b), TableUtil.Constants.AssociativePriorityTable);
     else
         self.auras:Clear();
     end
@@ -95,9 +95,6 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
         end
 
         local childWidth, childHeight = child:GetSize();
-        local scale = child:GetScale();
-        childWidth = childWidth * scale;
-        childHeight = childHeight * scale;
         local leftPadding, rightPadding, topPadding, bottomPadding = self:GetChildPadding(child);
         if (child.expand) then
             hasExpandableChild = true;
@@ -110,7 +107,7 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
             childWidth = child:GetWidth();
         end
 
-        if self.respectChildScale then
+        if true then -- respectChildScale
             local childScale = child:GetScale();
             childWidth = childWidth * childScale;
             childHeight = childHeight * childScale;
@@ -125,33 +122,38 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
         -- Set child position
         child:ClearAllPoints();
 
-        if self.childLayoutDirection == "rightToLeft" then
-            rightOffset = rightOffset + rightPadding;
-            if (child.align == "bottom") then
-                local bottomOffset = frameBottomPadding + bottomPadding;
-                child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset + verticalOffset);
-            elseif (child.align == "center") then
-                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-                child:SetPoint("RIGHT", -rightOffset, -topOffset + verticalOffset);
-            else
-                local topOffset = frameTopPadding + topPadding;
-                child:SetPoint("TOPRIGHT", -rightOffset, -topOffset + verticalOffset);
-            end
-            rightOffset = rightOffset + childWidth + leftPadding + spacing;
-        else
-            leftOffset = leftOffset + leftPadding;
-            if (child.align == "bottom") then
-                local bottomOffset = frameBottomPadding + bottomPadding;
-                child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
-            elseif (child.align == "center") then
-                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-                child:SetPoint("LEFT", leftOffset, -topOffset + verticalOffset);
-            else
-                local topOffset = frameTopPadding + topPadding;
-                child:SetPoint("TOPLEFT", leftOffset, -topOffset + verticalOffset);
-            end
-            leftOffset = leftOffset + childWidth + rightPadding + spacing;
-        end
+        leftOffset = leftOffset + leftPadding;
+        local bottomOffset = frameBottomPadding + bottomPadding;
+        child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
+        leftOffset = leftOffset + childWidth + rightPadding + spacing;
+
+        -- if self.childLayoutDirection == "rightToLeft" then
+        --     rightOffset = rightOffset + rightPadding;
+        --     if (child.align == "bottom") then
+        --         local bottomOffset = frameBottomPadding + bottomPadding;
+        --         child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset + verticalOffset);
+        --     elseif (child.align == "center") then
+        --         local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+        --         child:SetPoint("RIGHT", -rightOffset, -topOffset + verticalOffset);
+        --     else
+        --         local topOffset = frameTopPadding + topPadding;
+        --         child:SetPoint("TOPRIGHT", -rightOffset, -topOffset + verticalOffset);
+        --     end
+        --     rightOffset = rightOffset + childWidth + leftPadding + spacing;
+        -- else
+        --     leftOffset = leftOffset + leftPadding;
+        --     if (child.align == "bottom") then
+        --         local bottomOffset = frameBottomPadding + bottomPadding;
+        --         child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
+        --     elseif (child.align == "center") then
+        --         local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
+        --         child:SetPoint("LEFT", leftOffset, -topOffset + verticalOffset);
+        --     else
+        --         local topOffset = frameTopPadding + topPadding;
+        --         child:SetPoint("TOPLEFT", leftOffset, -topOffset + verticalOffset);
+        --     end
+        --     leftOffset = leftOffset + childWidth + rightPadding + spacing;
+        -- end
     end
 
     return childrenWidth, childrenHeight, hasExpandableChild;
@@ -168,15 +170,34 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
             table.insert(debuffs, child);
         end
     end
-    table.sort(debuffs, function (a, b)
-        if ( not a.customCategory ) then
-            return false;
-        elseif ( not b.customCategory ) then
-            return true;
-        else
-            return a.customCategory < b.customCategory;
-        end
-    end);
+
+    local debugStr = "Before: ";
+    for _, buff in ipairs(debuffs) do
+        debugStr = debugStr .. buff.spellID .. ":" .. ( buff.customCategory or "NONE" ) or "NONE" .. ", ";
+    end
+    print(debugStr);
+
+    if debuffs then
+        table.sort(debuffs, function (a, b)
+            if a.customCategory ~= b.customCategory then
+                if ( not b.customCategory ) then
+                    return true;
+                elseif ( not a.customCategory ) then
+                    return false;
+                else
+                    return a.customCategory < b.customCategory;
+                end
+            end
+
+            return AuraUtil.DefaultAuraCompare(a, b);
+        end)
+    end
+
+    local debugStr2 = "After: ";
+    for _, buff in ipairs(debuffs) do
+        debugStr2 = debugStr2 .. buff.spellID .. ":" .. ( buff.customCategory or "NONE" ) .. ", ";
+    end
+    print(debugStr2);
 
     local debuffWidth, debuffHeight, debuffHasExpandableChild = LayoutAuras(self, debuffs, expandToHeight);
     local buffWidth, buffHeight, buffHasExpandableChild = LayoutAuras(self, buffs, expandToHeight, debuffHeight);
@@ -287,7 +308,9 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
                 if self.auras[auraInstanceID] ~= nil then
                     local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
-                    newAura.customCategory = self.auras[auraInstanceID].customCategory;
+                    if newAura then
+                        newAura.customCategory = self.auras[auraInstanceID].customCategory;
+                    end
                     self.auras[auraInstanceID] = newAura;
                     aurasChanged = true;
                 end
@@ -334,20 +357,24 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if buff.Border then
-            if ( not isEnemy ) then
+            if ( not isEnemy ) then -- Use Blizzard default logic for non-hostile units
                 buff.Border:Hide();
             elseif aura.isStealable then
-                buff.Border:SetColorTexture(1, 1, 1);
+                buff.Border:SetColorTexture(1, 1, 1); -- White border for purgable buffs
                 buff.Border:Show();
             elseif aura.isHelpful then
-                buff.Border:SetColorTexture(0.0,1.0,0.498);
+                buff.Border:SetColorTexture(0.0,1.0,0.498); -- Green border for other buffs
+                buff.Border:Show();
+            elseif aura.customCategory == AURA_CATEGORY.CROWD_CONTROL then
+                buff.Border:SetColorTexture(1, 0, 0); -- Red border for crowd control
                 buff.Border:Show();
             else
                 buff.Border:Hide();
             end
         end
 
-        buff:SetScale(buff.isBuff and 1.25 or 1);
+        local largeIcon = buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL;
+        buff:SetScale(largeIcon and 1.25 or 1);
 
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
