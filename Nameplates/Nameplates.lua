@@ -282,7 +282,7 @@ function SweepyBoop:RefreshAllNamePlates(hideFirst)
 end
 
 function SweepyBoop:RefreshAurasForAllNamePlates()
-    local nameplates = C_NamePlate.GetNamePlates();
+    local nameplates = C_NamePlate.GetNamePlates(issecure());
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame and nameplate.UnitFrame.BuffFrame then
