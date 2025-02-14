@@ -84,7 +84,7 @@ Show only crowd controls (from all sources) and whitelisted debuffs applied by t
 
 There is also an option to show whitelisted buffs on enemy nameplates.
 
-![image](https://github.com/user-attachments/assets/cc8c023d-e313-4f02-8ebb-995c99e73753)
+![Auras on enemy nameplates](https://github.com/user-attachments/assets/135acb5e-40e7-4069-8113-e7fb0e7f0ac3)
 
 Auras are neatly organized into debuff and buff rows:
 - On the debuff row, crowd controls are shown first with a larger scale and orange border, followed by other debuffs
