@@ -330,7 +330,8 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             end
         end
 
-        local largeIcon = buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL;
+        -- Check isEnemy, don't scale buffs on friendly units
+        local largeIcon = isEnemy and buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL;
         buff:SetScale(largeIcon and 1.25 or 1);
 
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
