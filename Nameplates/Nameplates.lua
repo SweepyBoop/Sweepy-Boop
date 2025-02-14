@@ -166,11 +166,10 @@ function SweepyBoop:SetupNameplateModules()
                         nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
                             addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
                         end
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
 
                         -- Call update once for first run experience
                         addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
-
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
                     end
                 end
             end
@@ -206,11 +205,10 @@ function SweepyBoop:SetupNameplateModules()
                         nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
                             addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
                         end
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
 
                         -- Call update once for first run experience
                         addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
-
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
                     end
                 end
             end
