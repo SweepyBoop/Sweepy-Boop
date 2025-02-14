@@ -316,7 +316,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if buff.Border then
-            if ( not isEnemy ) then -- Use Blizzard default logic for non-hostile units
+            if ( not shouldOverride ) then -- Use Blizzard default logic for non-hostile units
                 buff.Border:Hide();
             elseif aura.isStealable then
                 buff.Border:SetColorTexture(1, 1, 1); -- White border for purgable buffs
