@@ -216,7 +216,7 @@ function SweepyBoop:SetupNameplateModules()
                         end
 
                         -- Call update once after we override UpdateBuffs for the first time
-                        print("Reconciliation", nameplate.UnitFrame.unit);
+                        --print("Reconciliation", nameplate.UnitFrame.unit);
                         addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
                     end
                 end
