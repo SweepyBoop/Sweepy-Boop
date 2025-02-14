@@ -428,5 +428,5 @@ addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
         end
     end
 
-    self:UpdateBuffs(unit, unitAuraUpdateInfo, auraSettings);
+    addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
 end
