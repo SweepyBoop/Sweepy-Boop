@@ -143,6 +143,7 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+        eventFrame:RegisterEvent(addon.UNIT_AURA);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
@@ -194,6 +195,30 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 if ( not IsRestricted() ) then
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
+                end
+            end
+        elseif event == addon.UNIT_AURA then
+            -- Avoid conflicts with BetterBlizzPlates
+            if BetterBlizzPlatesDB and BetterBlizzPlatesDB.enableNameplateAuraCustomisation then return end
+
+            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
+            if nameplate and nameplate.UnitFrame then
+                if nameplate.UnitFrame:IsForbidden() then return end
+                if nameplate.UnitFrame.BuffFrame then
+                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard ) then
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
+                            if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+                                addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
+                            else
+                                self:UpdateBuffsByBlizzard(unit, unitAuraUpdateInfo, auraSettings);
+                            end
+                        end
+
+                        -- Call update once after we override UpdateBuffs for the first time
+                        print("Reconciliation", nameplate.UnitFrame.unit);
+                        addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
+                    end
                 end
             end
         end
