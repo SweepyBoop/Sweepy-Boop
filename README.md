@@ -86,8 +86,8 @@ There is also an option to show whitelisted buffs on enemy nameplates.
 
 ![image](https://github.com/user-attachments/assets/cc8c023d-e313-4f02-8ebb-995c99e73753)
 
-Auras are neatly organized into debuff and buff rows: on the debuff row:
-- Crowd controls are shown first with a larger scale and orange border, followed by other debuffs
+Auras are neatly organized into debuff and buff rows:
+- On the debuff row, crowd controls are shown first with a larger scale and orange border, followed by other debuffs
 - Buffs are shown on a separate row with a larger scale, and purgable buffs are shown with a different border (white) than other buffs (green).
 
 Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
