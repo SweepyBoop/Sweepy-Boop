@@ -252,6 +252,7 @@ addon.BuffList = {
     {
         classID = addon.CLASSID.PRIEST,
         auras = {
+            { spellId = 408558, default = true }, -- Phase Shift
             { spellId = 33206, default = true }, -- Pain Suppression
             { spellId = 47788, default = true }, -- Guardian Spirit
             { spellId = 47585, default = true }, -- Dispersion
@@ -267,6 +268,7 @@ addon.BuffList = {
     {
         classID = addon.CLASSID.SHAMAN,
         auras = {
+            { spellId = 409293, default = true }, -- Burrow
             { spellId = 108271, default = true }, -- Astral Shift
         }
     },
