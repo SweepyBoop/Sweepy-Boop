@@ -326,6 +326,11 @@ if addon.PROJECT_MAINLINE then
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
                         desc = "Show whitelisted debuffs applied by myself"
                             .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+                            SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                            SweepyBoop:RefreshAurasForAllNamePlates();
+                        end
                     },
 
                     showBuffsOnEnemy = {
@@ -336,6 +341,11 @@ if addon.PROJECT_MAINLINE then
                         desc = "Show whitelisted buffs on enemy nameplates from all sources",
                         hidden = function ()
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                        end,
+                        set = function (info, val)
+                            SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+                            SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                            SweepyBoop:RefreshAurasForAllNamePlates();
                         end
                     },
                 },

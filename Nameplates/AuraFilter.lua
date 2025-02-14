@@ -181,6 +181,8 @@ end
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
     -- Override auraSettings because Blizzard code doesn't properly check unit hostility under Mind Control
     local isEnemy = addon.UnitIsHostile(unit);
+    local shouldOverride = isEnemy and SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled;
+
     local isPlayer = UnitIsUnit("player", unit);
     local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
 
@@ -233,7 +235,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-        if isEnemy then
+        if shouldOverride then
             ParseAllAurasOverride(self, auraSettings.showAll);
         else
             self:ParseAllAuras(auraSettings.showAll);
@@ -247,7 +249,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 -- end
 
                 local shouldShowBuff;
-                if isEnemy then
+                if shouldOverride then
                     shouldShowBuff = ShouldShowBuffOverride(self, aura, auraSettings.showAll);
                 else
                     shouldShowBuff = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
@@ -383,7 +385,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
     end
 
-    if isEnemy then
+    if shouldOverride then
         LayoutOverride(self);
     else
         self:Layout();
