@@ -13,14 +13,14 @@ end
 -- Return aura category if should be shown, nil otherwise
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
-        return false;
+        return nil;
     end
 
     -- Basically only show crowd controls and whitelisted debuffs applied by the player
 
     -- Some crowd controls are hidden by Blizzard, override the logic
     if addon.CrowdControlAuras[aura.spellId] then
-        return true;
+        return AURA_CATEGORY.CROWD_CONTROL;
     end
 
     -- Parse non crowd control debuffs
@@ -31,7 +31,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
                 spellId = addon.AuraParent[spellId];
             end
 
-            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(spellId)];
+            return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[tostring(spellId)] and AURA_CATEGORY.DEBUFF;
         else
             return nil;
         end
@@ -44,7 +44,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
             spellId = addon.AuraParent[spellId];
         end
 
-        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)];
+        return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)] and AURA_CATEGORY.BUFF;
     end
 end
 
@@ -56,7 +56,9 @@ local function ParseAllAurasOverride(self, forceAll)
     end
 
     local function HandleAura(aura)
-        if ShouldShowBuffOverride(self, aura, forceAll) then
+        local customCategory = ShouldShowBuffOverride(self, aura, forceAll);
+        if customCategory then
+            aura.customCategory = customCategory;
             self.auras[aura.auraInstanceID] = aura;
         end
 
@@ -76,12 +78,11 @@ local rowGap = 2;
 
 local function LayoutAuras(self, children, expandToHeight, verticalOffset)
     verticalOffset = verticalOffset or 0; -- buff row will set this based on the height of the debuff row
-    local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
-
     if verticalOffset > 0 then
         verticalOffset = verticalOffset + rowGap;
     end
 
+    local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = self:GetPadding();
     local spacing = self.spacing or 0;
     local childrenWidth, childrenHeight = 0, 0;
     local hasExpandableChild = false;
@@ -105,11 +106,9 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
             childWidth = child:GetWidth();
         end
 
-        if self.respectChildScale then
-            local childScale = child:GetScale();
-            childWidth = childWidth * childScale;
-            childHeight = childHeight * childScale;
-        end
+        local childScale = child:GetScale();
+        childWidth = childWidth * childScale;
+        childHeight = childHeight * childScale;
 
         childrenHeight = math.max(childrenHeight, childHeight + topPadding + bottomPadding);
         childrenWidth = childrenWidth + childWidth + leftPadding + rightPadding;
@@ -120,33 +119,10 @@ local function LayoutAuras(self, children, expandToHeight, verticalOffset)
         -- Set child position
         child:ClearAllPoints();
 
-        if self.childLayoutDirection == "rightToLeft" then
-            rightOffset = rightOffset + rightPadding;
-            if (child.align == "bottom") then
-                local bottomOffset = frameBottomPadding + bottomPadding;
-                child:SetPoint("BOTTOMRIGH", -rightOffset, bottomOffset + verticalOffset);
-            elseif (child.align == "center") then
-                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-                child:SetPoint("RIGHT", -rightOffset, -topOffset + verticalOffset);
-            else
-                local topOffset = frameTopPadding + topPadding;
-                child:SetPoint("TOPRIGHT", -rightOffset, -topOffset + verticalOffset);
-            end
-            rightOffset = rightOffset + childWidth + leftPadding + spacing;
-        else
-            leftOffset = leftOffset + leftPadding;
-            if (child.align == "bottom") then
-                local bottomOffset = frameBottomPadding + bottomPadding;
-                child:SetPoint("BOTTOMLEFT", leftOffset, bottomOffset + verticalOffset);
-            elseif (child.align == "center") then
-                local topOffset = (frameTopPadding - frameBottomPadding + topPadding - bottomPadding) / 2;
-                child:SetPoint("LEFT", leftOffset, -topOffset + verticalOffset);
-            else
-                local topOffset = frameTopPadding + topPadding;
-                child:SetPoint("TOPLEFT", leftOffset, -topOffset + verticalOffset);
-            end
-            leftOffset = leftOffset + childWidth + rightPadding + spacing;
-        end
+        leftOffset = leftOffset + leftPadding;
+        local bottomOffset = frameBottomPadding + bottomPadding;
+        child:SetPoint("BOTTOMLEFT", leftOffset / childScale, (bottomOffset + verticalOffset) / childScale);
+        leftOffset = leftOffset + childWidth + rightPadding + spacing;
     end
 
     return childrenWidth, childrenHeight, hasExpandableChild;
@@ -162,6 +138,22 @@ local function LayoutChildrenOverride (self, children, ignored, expandToHeight)
         else
             table.insert(debuffs, child);
         end
+    end
+
+    if debuffs then
+        table.sort(debuffs, function (a, b)
+            if a.customCategory ~= b.customCategory then
+                if ( not b.customCategory ) then
+                    return true;
+                elseif ( not a.customCategory ) then
+                    return false;
+                else
+                    return a.customCategory < b.customCategory;
+                end
+            end
+
+            return AuraUtil.DefaultAuraCompare(a, b);
+        end)
     end
 
     local debuffWidth, debuffHeight, debuffHasExpandableChild = LayoutAuras(self, debuffs, expandToHeight);
@@ -184,38 +176,6 @@ local function LayoutOverride(self)
 
 	self:SetSize(frameWidth, frameHeight);
 	self:MarkClean();
-end
-
-local function EnsureGlowContainerFrame(buff)
-    if ( not buff.GlowContainerFrame ) then
-        if buff.CountFrame then
-            buff.CountFrame:SetFrameStrata("HIGH");
-        end
-        buff.GlowContainerFrame = CreateFrame("Frame", nil, buff);
-        buff.GlowContainerFrame:SetFrameStrata("MEDIUM");
-        buff.GlowContainerFrame:SetFrameLevel(9999);
-    end
-
-    return buff.GlowContainerFrame;
-end
-
-local function UpdatePurgeBorder(buff, show)
-    if show then
-        local container = EnsureGlowContainerFrame(buff);
-        if ( not container.borderPurge ) then
-            container.borderPurge = container:CreateTexture(nil, "OVERLAY");
-            container.borderPurge:SetTexture("Interface/TargetingFrame/UI-TargetingFrame-Stealable");
-            container.borderPurge:SetBlendMode("ADD");
-            container.borderPurge:SetSize(buff:GetWidth() * 1.25, buff:GetHeight() * 1.25);
-            container.borderPurge:SetPoint("CENTER", buff, "CENTER");
-            --container.borderPurge:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 10, -6);
-        end
-        container.borderPurge:Show();
-    else
-        if buff.GlowContainerFrame and buff.GlowContainerFrame.borderPurge then
-            buff.GlowContainerFrame.borderPurge:Hide();
-        end
-    end
 end
 
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
@@ -294,6 +254,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 end
 
                 if shouldShowBuff then
+                    aura.customCategory = shouldShowBuff;
                     self.auras[aura.auraInstanceID] = aura;
                     aurasChanged = true;
                 end
@@ -304,6 +265,9 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
                 if self.auras[auraInstanceID] ~= nil then
                     local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
+                    if newAura then
+                        newAura.customCategory = self.auras[auraInstanceID].customCategory;
+                    end
                     self.auras[auraInstanceID] = newAura;
                     aurasChanged = true;
                 end
@@ -339,6 +303,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         buff.isBuff = aura.isHelpful;
         buff.layoutIndex = buffIndex;
         buff.spellID = aura.spellId;
+        buff.customCategory = aura.customCategory;
 
         buff.Icon:SetTexture(aura.icon);
         if (aura.applications > 1) then
@@ -349,18 +314,24 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if buff.Border then
-            if ( not isEnemy ) then
+            if ( not isEnemy ) then -- Use Blizzard default logic for non-hostile units
                 buff.Border:Hide();
             elseif aura.isStealable then
-                buff.Border:SetColorTexture(1, 1, 1);
+                buff.Border:SetColorTexture(1, 1, 1); -- White border for purgable buffs
                 buff.Border:Show();
             elseif aura.isHelpful then
-                buff.Border:SetColorTexture(0.0,1.0,0.498);
+                buff.Border:SetColorTexture(0.0, 0.5, 0.0); -- Green border for other buffs
+                buff.Border:Show();
+            elseif aura.customCategory == AURA_CATEGORY.CROWD_CONTROL then
+                buff.Border:SetColorTexture(1.0000, 0.6471, 0.0000); -- Orange border for crowd control
                 buff.Border:Show();
             else
                 buff.Border:Hide();
             end
         end
+
+        local largeIcon = buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL;
+        buff:SetScale(largeIcon and 1.25 or 1);
 
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
@@ -411,7 +382,11 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
     end
 
-    LayoutOverride(self);
+    if isEnemy then
+        LayoutOverride(self);
+    else
+        self:Layout();
+    end
 end
 
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
