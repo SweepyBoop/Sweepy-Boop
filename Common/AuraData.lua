@@ -274,6 +274,7 @@ addon.BuffList = {
         classID = addon.CLASSID.WARLOCK,
         auras = {
             { spellId = 104773, default = true }, -- Unending Resolve
+            { spellId = 212295, default = true }, -- Nether Ward
         }
     },
     {
@@ -281,6 +282,7 @@ addon.BuffList = {
         auras = {
             { spellId = 118038, default = true }, -- Die by the Sword
             { spellId = 184364, default = true }, -- Enraged Regeneration
+            { spellId = 23920, default = true }, -- Spell Reflection
         }
     }
 };
