@@ -162,15 +162,11 @@ function SweepyBoop:SetupNameplateModules()
                     -- Avoid conflicts with BetterBlizzPlates
                     if BetterBlizzPlatesDB and BetterBlizzPlatesDB.enableNameplateAuraCustomisation then return end
 
-                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard ) then
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
+                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride ) then
                         nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
-                            if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-                                addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
-                            else
-                                self:UpdateBuffsByBlizzard(unit, unitAuraUpdateInfo, auraSettings);
-                            end
+                            addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
                         end
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
 
                         -- Call update once for first run experience
                         addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
@@ -205,18 +201,13 @@ function SweepyBoop:SetupNameplateModules()
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 if nameplate.UnitFrame.BuffFrame then
-                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard ) then
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffsByBlizzard = nameplate.UnitFrame.BuffFrame.UpdateBuffs;
+                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride ) then
                         nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
-                            if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-                                addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
-                            else
-                                self:UpdateBuffsByBlizzard(unit, unitAuraUpdateInfo, auraSettings);
-                            end
+                            addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
                         end
+                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
 
-                        -- Call update once after we override UpdateBuffs for the first time
-                        --print("Reconciliation", nameplate.UnitFrame.unit);
+                        -- Call update once for first run experience
                         addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
                     end
                 end
@@ -284,6 +275,17 @@ function SweepyBoop:RefreshAllNamePlates(hideFirst)
                 HideWidgets(nameplate);
             end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
+        end
+    end
+end
+
+function SweepyBoop:RefreshAurasForAllNamePlates()
+    local nameplates = C_NamePlate.GetNamePlates(issecure());
+    for i = 1, #(nameplates) do
+        local nameplate = nameplates[i];
+        if nameplate and nameplate.UnitFrame and nameplate.UnitFrame.BuffFrame then
+            if nameplate.UnitFrame:IsForbidden() then return end
+            addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
         end
     end
 end

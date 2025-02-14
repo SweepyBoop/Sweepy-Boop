@@ -181,6 +181,8 @@ end
 addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSettings)
     -- Override auraSettings because Blizzard code doesn't properly check unit hostility under Mind Control
     local isEnemy = addon.UnitIsHostile(unit);
+    local shouldOverride = isEnemy and SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled;
+
     local isPlayer = UnitIsUnit("player", unit);
     local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
 
@@ -233,7 +235,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
     local aurasChanged = false;
     if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or self.auras == nil or filterString ~= previousFilter then
-        if isEnemy then
+        if shouldOverride then
             ParseAllAurasOverride(self, auraSettings.showAll);
         else
             self:ParseAllAuras(auraSettings.showAll);
@@ -247,7 +249,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
                 -- end
 
                 local shouldShowBuff;
-                if isEnemy then
+                if shouldOverride then
                     shouldShowBuff = ShouldShowBuffOverride(self, aura, auraSettings.showAll);
                 else
                     shouldShowBuff = self:ShouldShowBuff(aura, auraSettings.showAll) and not C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, aura.auraInstanceID, filterString);
@@ -314,7 +316,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
 
         if buff.Border then
-            if ( not isEnemy ) then -- Use Blizzard default logic for non-hostile units
+            if ( not shouldOverride ) then -- Use Blizzard default logic for non-hostile units
                 buff.Border:Hide();
             elseif aura.isStealable then
                 buff.Border:SetColorTexture(1, 1, 1); -- White border for purgable buffs
@@ -330,8 +332,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
             end
         end
 
-        -- Check isEnemy, don't scale buffs on friendly units
-        local largeIcon = isEnemy and buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL;
+        local largeIcon = shouldOverride and ( buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL );
         buff:SetScale(largeIcon and 1.25 or 1);
 
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
@@ -383,7 +384,7 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
         end
     end
 
-    if isEnemy then
+    if shouldOverride then
         LayoutOverride(self);
     else
         self:Layout();

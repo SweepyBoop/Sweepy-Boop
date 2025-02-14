@@ -274,6 +274,7 @@ addon.BuffList = {
         classID = addon.CLASSID.WARLOCK,
         auras = {
             { spellId = 104773, default = true }, -- Unending Resolve
+            { spellId = 212295, default = true }, -- Nether Ward
         }
     },
     {
@@ -281,6 +282,14 @@ addon.BuffList = {
         auras = {
             { spellId = 118038, default = true }, -- Die by the Sword
             { spellId = 184364, default = true }, -- Enraged Regeneration
+            { spellId = 23920, default = true }, -- Spell Reflection
+        }
+    },
+    {
+        name = "General",
+        icon = "spell_nature_focusedmind",
+        auras = {
+            { spellId = 377362, default = true }, -- Precognition
         }
     }
 };
@@ -316,15 +325,26 @@ addon.AppendAuraOptionsToGroup = function(group, auraList, profileName)
 
     local index = 2;
     for _, classEntry in ipairs(auraList) do
-        local classInfo = C_CreatureInfo.GetClassInfo(classEntry.classID);
-        local classGroup = {
-            order = index,
-            type = "group",
-            icon = addon.ICON_ID_CLASSES,
-            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
-            name = classInfo.className,
-            args = {},
-        };
+        local classGroup;
+        if classEntry.classID then
+            local classInfo = C_CreatureInfo.GetClassInfo(classEntry.classID);
+            classGroup = {
+                order = index,
+                type = "group",
+                icon = addon.ICON_ID_CLASSES,
+                iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+                name = classInfo.className,
+                args = {},
+            };
+        else
+            classGroup = {
+                order = index,
+                type = "group",
+                icon = addon.ICON_PATH(classEntry.icon),
+                name = classEntry.name,
+                args = {},
+            };
+        end
 
         local auraIdx = 1;
         for _, auraEntry in ipairs(classEntry.auras) do
