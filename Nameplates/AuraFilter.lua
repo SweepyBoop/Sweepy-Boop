@@ -80,7 +80,7 @@ local function UpdateBuffGlow(buff, show)
 end
 
 -- Return aura category if should be shown, nil otherwise
-local function ShouldShowBuffOverride(self, aura, forceAll)
+local function ShouldShowBuffOverride(self, aura)
     if ( not aura ) or ( not aura.spellId ) then
         return nil;
     end
@@ -117,7 +117,7 @@ local function ShouldShowBuffOverride(self, aura, forceAll)
     end
 end
 
-local function ParseAllAurasOverride(self, forceAll)
+local function ParseAllAurasOverride(self)
     if self.auras == nil then
         self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
     else
@@ -125,7 +125,7 @@ local function ParseAllAurasOverride(self, forceAll)
     end
 
     local function HandleAura(aura)
-        local customCategory = ShouldShowBuffOverride(self, aura, forceAll);
+        local customCategory = ShouldShowBuffOverride(self, aura);
         if customCategory then
             aura.customCategory = customCategory;
             self.auras[aura.auraInstanceID] = aura;
@@ -136,7 +136,7 @@ local function ParseAllAurasOverride(self, forceAll)
 
     local batchCount = nil;
     local usePackedAura = true;
-    AuraUtil.ForEachAura(self.unit, self.filter, batchCount, HandleAura, usePackedAura);
+    AuraUtil.ForEachAura(self.unit, "HARMFUL", batchCount, HandleAura, usePackedAura);
 
     if SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy then
         AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
@@ -467,43 +467,79 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
     end
 end
 
--- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
--- Possibly need to override logic for isFullUpdate
-addon.OnNamePlateAuraUpdate = function (self, unit, unitAuraUpdateInfo)
-    -- Copied from BlizzardInterfaceCode but checking ( not addon.UnitIsHostile ) instead of PlayerUtil.HasFriendlyReaction
-    -- This function is only called on hostile units (factoring in Mind Control)
-    local isPlayer = UnitIsUnit("player", unit);
-    local showDebuffsOnFriendly = self.showDebuffsOnFriendly;
+local function ParseAuras(self, unit, unitAuraUpdateInfo)
+    local previousUnit = self.unit;
+    self.unit = unit;
 
-    local auraSettings =
-    {
-        helpful = false;
-        harmful = false;
-        raid = false;
-        includeNameplateOnly = false;
-        showAll = false;
-        hideAll = false;
-    };
-
-    if isPlayer then
-        auraSettings.helpful = true;
-        auraSettings.includeNameplateOnly = true;
-        auraSettings.showPersonalCooldowns = self.showPersonalCooldowns;
+    local aurasChanged = false;
+    if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit then
+        ParseAllAurasOverride(self);
+        aurasChanged = true;
     else
-        if addon.UnitIsHostile(unit) then
-            auraSettings.harmful = true;
-            auraSettings.includeNameplateOnly = true;
-        else -- Friendly units
-            if (showDebuffsOnFriendly) then
-                -- dispellable debuffs
-                auraSettings.harmful = true;
-                auraSettings.raid = true;
-                auraSettings.showAll = true;
-            else
-                auraSettings.hideAll = true;
+        if unitAuraUpdateInfo.addedAuras ~= nil then
+            for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
+                -- if aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle" then
+                --     print(aura.name, aura.spellId);
+                -- end
+
+                local customCategory = ShouldShowBuffOverride(self, aura);
+
+                if customCategory then
+                    aura.customCategory = customCategory;
+                    self.auras[aura.auraInstanceID] = aura;
+                    aurasChanged = true;
+                end
+            end
+        end
+
+        if unitAuraUpdateInfo.updatedAuraInstanceIDs ~= nil then
+            for _, auraInstanceID in ipairs(unitAuraUpdateInfo.updatedAuraInstanceIDs) do
+                if self.auras[auraInstanceID] ~= nil then
+                    local newAura = C_UnitAuras.GetAuraDataByAuraInstanceID(self.unit, auraInstanceID);
+                    if newAura then
+                        newAura.customCategory = self.auras[auraInstanceID].customCategory;
+                    end
+                    self.auras[auraInstanceID] = newAura;
+                    aurasChanged = true;
+                end
+            end
+        end
+
+        if unitAuraUpdateInfo.removedAuraInstanceIDs ~= nil then
+            for _, auraInstanceID in ipairs(unitAuraUpdateInfo.removedAuraInstanceIDs) do
+                if self.auras[auraInstanceID] ~= nil then
+                    self.auras[auraInstanceID] = nil;
+                    aurasChanged = true;
+                end
             end
         end
     end
 
-    self:UpdateBuffs(unit, unitAuraUpdateInfo, auraSettings);
+    if aurasChanged then
+        self.auras:Iterate(function(auraInstanceID, aura)
+            print(aura.name);
+        end)
+    end
+end
+
+local function UpdateBuffs(self, unit, unitAuraUpdateInfo)
+    ParseAuras(self, unit, unitAuraUpdateInfo);
+end
+
+-- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
+-- Possibly need to override logic for isFullUpdate
+addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
+    if not frame.CustomBuffFrame then
+        frame.CustomBuffFrame = CreateFrame("Frame", nil, self);
+
+        if addon.PROJECT_MAINLINE then
+            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.BuffFrame, "BOTTOMLEFT");
+        else
+            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 5);
+        end
+
+        --frame.CustomBuffFrame.auras = {};
+    end
+
+    UpdateBuffs(frame.CustomBuffFrame, unit, unitAuraUpdateInfo);
 end
