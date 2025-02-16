@@ -146,7 +146,7 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterEvent(addon.UNIT_AURA);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
-    eventFrame:SetScript("OnEvent", function (_, event, unitId)
+    eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -187,7 +187,8 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
+                local unitAuraUpdateInfo = ...;
+                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
             end
         end
     end)
