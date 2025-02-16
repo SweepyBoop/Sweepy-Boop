@@ -46,7 +46,7 @@ local function UpdatePurgableGlow(buff, show)
         local container = EnsureGlowFrame(buff);
         if not container.PurgableGlow then
             container.PurgableGlow = container:CreateTexture(nil, "ARTWORK");
-            container.PurgableGlow:SetAtlas("newplayertutorial-drag-blue");
+            container.PurgableGlow:SetAtlas("newplayertutorial-drag-slotblue");
         end
 
         container.PurgableGlow:SetPoint("TOPLEFT", buff, "TOPLEFT", -9, 6);
