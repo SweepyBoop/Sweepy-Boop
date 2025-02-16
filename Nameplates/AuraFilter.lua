@@ -499,7 +499,7 @@ local function LayoutRow(self, auras, verticalOffset)
 
         leftOffset = leftOffset + leftPadding;
         local bottomOffset = frameBottomPadding + bottomPadding;
-        print(child.spellID, childWidth, childHeight, leftOffset);
+        print(child.spellID, child:IsShown(), childScale, child.Icon:GetTexture());
         child:SetPoint("BOTTOMLEFT", leftOffset / childScale, (bottomOffset + verticalOffset) / childScale);
         leftOffset = leftOffset + childWidth + rightPadding + spacing;
     end
@@ -647,7 +647,7 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
     if blizzardBuffFrame then
         blizzardBuffFrame:SetAlpha(0);
     end
-    self:Show();
+    self:SetAlpha(1);
     CustomLayout(self);
 end
 
