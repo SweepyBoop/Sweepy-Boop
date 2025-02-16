@@ -65,6 +65,8 @@ local function UpdateBuffGlow(buff, show)
         if not container.BuffGlow then
             container.BuffGlow = container:CreateTexture(nil, "ARTWORK");
             container.BuffGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            container.BuffGlow:SetDesaturated(true);
+            container.BuffGlow:SetVertexColor(0, 1, 0); -- Green
         end
 
         container.BuffGlow:SetPoint("TOPLEFT", buff, "TOPLEFT", -9, 6);
