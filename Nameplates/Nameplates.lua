@@ -262,7 +262,7 @@ function SweepyBoop:RefreshAurasForAllNamePlates()
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame and nameplate.UnitFrame.BuffFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
-            addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
+            addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
         end
     end
 end

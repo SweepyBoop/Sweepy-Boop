@@ -264,7 +264,7 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
 
     if not aurasChanged then return end
 
-    if ( not addon.UnitIsHostile(unit) ) then
+    if ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not addon.UnitIsHostile(unit) ) then
         self:SetAlpha(0);
         if blizzardBuffFrame then
             blizzardBuffFrame:SetAlpha(1);
