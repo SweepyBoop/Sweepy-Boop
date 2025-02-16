@@ -511,10 +511,12 @@ local function CustomLayout(self)
     local buffs = {};
     local debuffs = {};
     for _, child in ipairs(self.auraFrames) do
-        if child.isBuff then
-            table.insert(buffs, child);
-        else
-            table.insert(debuffs, child);
+        if child.isActive then
+            if child.isBuff then
+                table.insert(buffs, child);
+            else
+                table.insert(debuffs, child);
+            end
         end
     end
 
@@ -593,6 +595,12 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
         return;
     end
 
+    -- Hide previous auras first
+    for _, buff in ipairs(self.auraFrames) do
+        buff:Hide();
+        buff.isActive = false;
+    end
+
     local buffIndex = 1;
     self.auras:Iterate(function(auraInstanceID, aura)
         local buff = self.auraFrames[buffIndex];
@@ -637,6 +645,7 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
 
         CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
 
+        buff.isActive = true;
         buff:Show();
 
         buffIndex = buffIndex + 1;
