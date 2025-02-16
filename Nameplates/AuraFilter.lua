@@ -10,6 +10,76 @@ local function IsLayoutFrame(frame)
     return frame.IsLayoutFrame and frame:IsLayoutFrame();
 end
 
+local function EnsureGlowFrame(buff)
+    if not buff.CustomGlowFrame then
+        buff.CustomGlowFrame = CreateFrame("Frame", nil, buff);
+        if buff.CountFrame then
+            buff.CountFrame:SetFrameLevel(999); -- Make sure the glow doesn't block the count
+        end
+    end
+
+    return buff.CustomGlowFrame;
+end
+
+local function UpdateCrowdControlGlow(buff, show)
+    if show then
+        local container = EnsureGlowFrame(buff);
+        if not container.CrowdControlGlow then
+            container.CrowdControlGlow = container:CreateTexture(nil, "ARTWORK");
+            container.CrowdControlGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            container.CrowdControlGlow:SetDesaturated(true);
+            container.CrowdControlGlow:SetVertexColor(1, 0.6471, 0); -- Orange
+        end
+
+        container.CrowdControlGlow:SetPoint("TOPLEFT", buff, "TOPLEFT", -9, 6);
+        container.CrowdControlGlow:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 9, -6);
+        container.CrowdControlGlow:Show();
+    else
+        if buff.CustomGlowFrame and buff.CustomGlowFrame.CrowdControlGlow then
+            buff.CustomGlowFrame.CrowdControlGlow:Hide();
+        end
+    end
+end
+
+local function UpdatePurgableGlow(buff, show)
+    if show then
+        local container = EnsureGlowFrame(buff);
+        if not container.PurgableGlow then
+            container.PurgableGlow = container:CreateTexture(nil, "ARTWORK");
+            container.PurgableGlow:SetAtlas("newplayertutorial-drag-blue");
+        end
+
+        container.PurgableGlow:SetPoint("TOPLEFT", buff, "TOPLEFT", -9, 6);
+        container.PurgableGlow:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 9, -6);
+        container.PurgableGlow:Show();
+    else
+        if buff.CustomGlowFrame and buff.CustomGlowFrame.PurgableGlow then
+            buff.CustomGlowFrame.PurgableGlow:Hide();
+        end
+    end
+end
+
+local function UpdateBuffGlow(buff, show)
+    if show then
+        local container = EnsureGlowFrame(buff);
+        if not container.BuffGlow then
+            container.BuffGlow = container:CreateTexture(nil, "ARTWORK");
+            container.BuffGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            container.BuffGlow:SetDesaturated(true);
+            container.BuffGlow:SetVertexColor(0, 1, 0); -- Green
+            container.BuffGlow:SetAllPoints();
+        end
+
+        container.BuffGlow:SetPoint("TOPLEFT", buff, "TOPLEFT", -9, 6);
+        container.BuffGlow:SetPoint("BOTTOMRIGHT", buff, "BOTTOMRIGHT", 9, -6);
+        container.BuffGlow:Show();
+    else
+        if buff.CustomGlowFrame and buff.CustomGlowFrame.BuffGlow then
+            buff.CustomGlowFrame.BuffGlow:Hide();
+        end
+    end
+end
+
 -- Return aura category if should be shown, nil otherwise
 local function ShouldShowBuffOverride(self, aura, forceAll)
     if ( not aura ) or ( not aura.spellId ) then
@@ -317,18 +387,25 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
 
         if buff.Border then
             if ( not shouldOverride ) then -- Use Blizzard default logic for non-hostile units
-                buff.Border:Hide();
+                UpdateCrowdControlGlow(buff, false);
+                UpdatePurgableGlow(buff, false);
+                UpdateBuffGlow(buff, false);
             elseif aura.isStealable then
-                buff.Border:SetColorTexture(1, 1, 1); -- White border for purgable buffs
-                buff.Border:Show();
+                UpdateCrowdControlGlow(buff, false);
+                UpdatePurgableGlow(buff, true);
+                UpdateBuffGlow(buff, false);
             elseif aura.isHelpful then
-                buff.Border:SetColorTexture(0.0, 0.5, 0.0); -- Green border for other buffs
-                buff.Border:Show();
+                UpdateCrowdControlGlow(buff, false);
+                UpdatePurgableGlow(buff, false);
+                UpdateBuffGlow(buff, true);
             elseif aura.customCategory == AURA_CATEGORY.CROWD_CONTROL then
-                buff.Border:SetColorTexture(1.0000, 0.6471, 0.0000); -- Orange border for crowd control
-                buff.Border:Show();
+                UpdateCrowdControlGlow(buff, true);
+                UpdatePurgableGlow(buff, false);
+                UpdateBuffGlow(buff, false);
             else
-                buff.Border:Hide();
+                UpdateCrowdControlGlow(buff, false);
+                UpdatePurgableGlow(buff, false);
+                UpdateBuffGlow(buff, false);
             end
         end
 
