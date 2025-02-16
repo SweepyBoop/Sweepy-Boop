@@ -318,6 +318,7 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
             UpdateBuffGlow(buff, false);
         end
 
+        -- Issue: icons are smaller than Blizzard default
         local largeIcon = (buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL);
         buff:SetScale(largeIcon and 1.25 or 1);
 
