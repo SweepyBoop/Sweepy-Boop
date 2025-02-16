@@ -191,21 +191,19 @@ local function CustomLayout(self)
         end
     end
 
-    --if next(debuffs) then
-        table.sort(debuffs, function (a, b)
-            if a.customCategory ~= b.customCategory then
-                if ( not b.customCategory ) then
-                    return true;
-                elseif ( not a.customCategory ) then
-                    return false;
-                else
-                    return a.customCategory < b.customCategory;
-                end
+    table.sort(debuffs, function (a, b)
+        if a.customCategory ~= b.customCategory then
+            if ( not b.customCategory ) then
+                return true;
+            elseif ( not a.customCategory ) then
+                return false;
+            else
+                return a.customCategory < b.customCategory;
             end
+        end
 
-            return AuraUtil.DefaultAuraCompare(a, b);
-        end)
-    --end
+        return AuraUtil.DefaultAuraCompare(a, b);
+    end)
 
     local _, debuffHeight = LayoutRow(self, debuffs);
     LayoutRow(self, buffs, debuffHeight);
