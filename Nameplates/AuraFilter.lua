@@ -9,10 +9,6 @@ local AURA_CATEGORY = { -- Maybe apply different borders based on category?
 local rowGap = 2;
 local spacing = 4;
 
-local function IsLayoutFrame(frame)
-    return frame.IsLayoutFrame and frame:IsLayoutFrame();
-end
-
 local function EnsureGlowFrame(buff)
     if not buff.CustomGlowFrame then
         buff.CustomGlowFrame = CreateFrame("Frame", nil, buff);
@@ -156,10 +152,6 @@ local function LayoutRow(self, auras, verticalOffset)
     local childrenWidth, childrenHeight = 0, 0;
 
     for i, child in ipairs(auras) do
-        if not self.skipChildLayout and IsLayoutFrame(child) then
-            child:Layout();
-        end
-
         local childWidth, childHeight = child:GetSize();
         local leftPadding, rightPadding, topPadding, bottomPadding = 0, 0, 0, 0;
         local childScale = child:GetScale();
