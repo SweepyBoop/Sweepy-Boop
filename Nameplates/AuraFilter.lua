@@ -210,6 +210,15 @@ local function CustomLayout(self)
 end
 
 local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
+    if ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not addon.UnitIsHostile(unit) ) then
+        self:SetAlpha(0);
+        if blizzardBuffFrame then
+            blizzardBuffFrame:SetAlpha(1);
+        end
+
+        return;
+    end
+
     local previousUnit = self.unit;
     self.unit = unit;
 
@@ -254,15 +263,6 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
     end
 
     if not aurasChanged then return end
-
-    if ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not addon.UnitIsHostile(unit) ) then
-        self:SetAlpha(0);
-        if blizzardBuffFrame then
-            blizzardBuffFrame:SetAlpha(1);
-        end
-
-        return;
-    end
 
     -- Hide previous auras first
     for _, buff in ipairs(self.auraFrames) do
