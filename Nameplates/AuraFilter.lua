@@ -342,7 +342,7 @@ end
 -- Possibly need to override logic for isFullUpdate
 addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
     if not frame.CustomBuffFrame then
-        frame.CustomBuffFrame = CreateFrame("Frame", nil, self);
+        frame.CustomBuffFrame = CreateFrame("Frame", nil, frame);
         frame.CustomBuffFrame:SetMouseClickEnabled(false);
         frame.CustomBuffFrame:SetSize(200, 28); -- Blizzard sets fixed height 14 for one row, we have 2 rows
         frame.CustomBuffFrame.auraFrames = {};
