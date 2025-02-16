@@ -499,7 +499,6 @@ local function LayoutRow(self, auras, verticalOffset)
 
         leftOffset = leftOffset + leftPadding;
         local bottomOffset = frameBottomPadding + bottomPadding;
-        print(child.spellID, child:IsShown(), childScale, child.Icon:GetTexture());
         child:SetPoint("BOTTOMLEFT", leftOffset / childScale, (bottomOffset + verticalOffset) / childScale);
         leftOffset = leftOffset + childWidth + rightPadding + spacing;
     end
@@ -656,6 +655,8 @@ end
 addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
     if not frame.CustomBuffFrame then
         frame.CustomBuffFrame = CreateFrame("Frame", nil, self);
+        frame.CustomBuffFrame:SetMouseClickEnabled(false);
+        frame.CustomBuffFrame:SetSize(200, 28); -- Blizzard sets fixed height 14 for one row, we have 2 rows
         frame.CustomBuffFrame.auraFrames = {};
 
         if addon.PROJECT_MAINLINE then
