@@ -78,17 +78,15 @@ Players can customize which units to hide / show / highlight:
 ![Nameplate filter](https://github.com/user-attachments/assets/d19f8f3f-ac53-476a-afb9-acb10b1246b2)
 
 ## Aura filter on enemy nameplates
-![Aura Filter Whitelist](https://github.com/user-attachments/assets/80c97393-cae9-43d3-aa3f-be05765dd3e1)
+![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
 
 Show only crowd controls (from all sources) and whitelisted debuffs applied by the player themselves on enemy nameplates.
 
 There is also an option to show whitelisted buffs on enemy nameplates.
 
-![Auras on enemy nameplates](https://github.com/user-attachments/assets/135acb5e-40e7-4069-8113-e7fb0e7f0ac3)
-
 Auras are neatly organized into debuff and buff rows:
-- On the debuff row, crowd controls are shown first with a larger scale and orange border, followed by other debuffs
-- Buffs are shown on a separate row with a larger scale, and purgable buffs are shown with a different border (white) than other buffs (green).
+- On the debuff row, crowd controls are shown first with a larger scale and orange border, followed by other debuffs with normal scale and no border
+- Buffs are shown on a separate row with a larger scale. Purgable buffs are shown with a different border (blue) than other buffs (green)
 
 Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
 
