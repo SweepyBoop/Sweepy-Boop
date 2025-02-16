@@ -485,6 +485,7 @@ local function ParseAuras(self, unit, unitAuraUpdateInfo)
                 local customCategory = ShouldShowBuffOverride(self, aura);
 
                 if customCategory then
+                    print(aura.name, customCategory);
                     aura.customCategory = customCategory;
                     self.auras[aura.auraInstanceID] = aura;
                     aurasChanged = true;
@@ -537,8 +538,6 @@ addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
         else
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 5);
         end
-
-        --frame.CustomBuffFrame.auras = {};
     end
 
     UpdateBuffs(frame.CustomBuffFrame, unit, unitAuraUpdateInfo);
