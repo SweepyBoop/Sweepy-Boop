@@ -189,12 +189,13 @@ local function CustomLayout(self)
     local buffs = {};
     local debuffs = {};
     for _, child in ipairs(self.auraFrames) do
-        if child.isActive then
-            if child.isBuff then
-                table.insert(buffs, child);
-            else
-                table.insert(debuffs, child);
-            end
+        if not child.isActive then
+            break
+        end
+        if child.isBuff then
+            table.insert(buffs, child)
+        else
+            table.insert(debuffs, child)
         end
     end
 
