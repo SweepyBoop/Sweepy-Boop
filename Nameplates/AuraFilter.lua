@@ -6,6 +6,9 @@ local AURA_CATEGORY = { -- Maybe apply different borders based on category?
     BUFF = 3,
 };
 
+local rowGap = 2;
+local spacing = 4;
+
 local function IsLayoutFrame(frame)
     return frame.IsLayoutFrame and frame:IsLayoutFrame();
 end
@@ -142,8 +145,6 @@ local function ParseAllAurasOverride(self)
         AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
     end
 end
-
-local rowGap = 2;
 
 local function LayoutAuras(self, children, expandToHeight, verticalOffset)
     verticalOffset = verticalOffset or 0; -- buff row will set this based on the height of the debuff row
@@ -467,7 +468,78 @@ addon.UpdateBuffsOverride = function(self, unit, unitAuraUpdateInfo, auraSetting
     end
 end
 
-local function ParseAuras(self, unit, unitAuraUpdateInfo)
+local function LayoutRow(self, auras, verticalOffset)
+    verticalOffset = verticalOffset or 0; -- buff row will set this based on the height of the debuff row
+    if verticalOffset > 0 then
+        verticalOffset = verticalOffset + rowGap;
+    end
+
+    local leftOffset, rightOffset, frameTopPadding, frameBottomPadding = 0, 0, 0, 0;
+    local childrenWidth, childrenHeight = 0, 0;
+
+    for i, child in ipairs(auras) do
+        if not self.skipChildLayout and IsLayoutFrame(child) then
+            child:Layout();
+        end
+
+        local childWidth, childHeight = child:GetSize();
+        local leftPadding, rightPadding, topPadding, bottomPadding = 0, 0, 0, 0;
+        local childScale = child:GetScale();
+        childWidth = childWidth * childScale;
+        childHeight = childHeight * childScale;
+
+        childrenHeight = math.max(childrenHeight, childHeight + topPadding + bottomPadding);
+        childrenWidth = childrenWidth + childWidth + leftPadding + rightPadding;
+        if (i > 1) then
+            childrenWidth = childrenWidth + spacing;
+        end
+
+        -- Set child position
+        child:ClearAllPoints();
+
+        leftOffset = leftOffset + leftPadding;
+        local bottomOffset = frameBottomPadding + bottomPadding;
+        print(child.spellID, childWidth, childHeight, leftOffset);
+        child:SetPoint("BOTTOMLEFT", leftOffset / childScale, (bottomOffset + verticalOffset) / childScale);
+        leftOffset = leftOffset + childWidth + rightPadding + spacing;
+    end
+
+    return childrenWidth, childrenHeight;
+end
+
+local function CustomLayout(self)
+    -- Separate buffs and debuffs
+    local buffs = {};
+    local debuffs = {};
+    for _, child in ipairs(self.auraFrames) do
+        if child.isBuff then
+            table.insert(buffs, child);
+        else
+            table.insert(debuffs, child);
+        end
+    end
+
+    if debuffs then
+        table.sort(debuffs, function (a, b)
+            if a.customCategory ~= b.customCategory then
+                if ( not b.customCategory ) then
+                    return true;
+                elseif ( not a.customCategory ) then
+                    return false;
+                else
+                    return a.customCategory < b.customCategory;
+                end
+            end
+
+            return AuraUtil.DefaultAuraCompare(a, b);
+        end)
+    end
+
+    local _, debuffHeight = LayoutRow(self, debuffs);
+    LayoutRow(self, buffs, debuffHeight);
+end
+
+local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
     local previousUnit = self.unit;
     self.unit = unit;
 
@@ -478,14 +550,9 @@ local function ParseAuras(self, unit, unitAuraUpdateInfo)
     else
         if unitAuraUpdateInfo.addedAuras ~= nil then
             for _, aura in ipairs(unitAuraUpdateInfo.addedAuras) do
-                -- if aura.sourceUnit == "player" or aura.sourceUnit == "pet" or aura.sourceUnit == "vehicle" then
-                --     print(aura.name, aura.spellId);
-                -- end
-
                 local customCategory = ShouldShowBuffOverride(self, aura);
 
                 if customCategory then
-                    print(aura.name, customCategory);
                     aura.customCategory = customCategory;
                     self.auras[aura.auraInstanceID] = aura;
                     aurasChanged = true;
@@ -516,15 +583,72 @@ local function ParseAuras(self, unit, unitAuraUpdateInfo)
         end
     end
 
-    if aurasChanged then
-        self.auras:Iterate(function(auraInstanceID, aura)
-            print(aura.name);
-        end)
-    end
-end
+    if not aurasChanged then return end
 
-local function UpdateBuffs(self, unit, unitAuraUpdateInfo)
-    ParseAuras(self, unit, unitAuraUpdateInfo);
+    if ( not addon.UnitIsHostile(unit) ) then
+        self:SetAlpha(0);
+        if blizzardBuffFrame then
+            blizzardBuffFrame:SetAlpha(1);
+        end
+
+        return;
+    end
+
+    local buffIndex = 1;
+    self.auras:Iterate(function(auraInstanceID, aura)
+        local buff = self.auraFrames[buffIndex];
+        if ( not buff ) then
+            buff = CreateFrame("Frame", nil, self, "CustomNameplateBuffButtonTemplate");
+            self.auraFrames[buffIndex] = buff;
+        end
+        buff.auraInstanceID = auraInstanceID;
+        buff.isBuff = aura.isHelpful;
+        buff.layoutIndex = buffIndex;
+        buff.spellID = aura.spellId;
+        buff.customCategory = aura.customCategory;
+
+        buff.Icon:SetTexture(aura.icon);
+        if (aura.applications > 1) then
+            buff.CountFrame.Count:SetText(aura.applications);
+            buff.CountFrame.Count:Show();
+        else
+            buff.CountFrame.Count:Hide();
+        end
+
+        if (aura.isStealable) then
+            UpdateCrowdControlGlow(buff, false);
+            UpdatePurgableGlow(buff, true);
+            UpdateBuffGlow(buff, false);
+        elseif aura.isHelpful then
+            UpdateCrowdControlGlow(buff, false);
+            UpdatePurgableGlow(buff, false);
+            UpdateBuffGlow(buff, true);
+        elseif aura.customCategory == AURA_CATEGORY.CROWD_CONTROL then
+            UpdateCrowdControlGlow(buff, true);
+            UpdatePurgableGlow(buff, false);
+            UpdateBuffGlow(buff, false);
+        else
+            UpdateCrowdControlGlow(buff, false);
+            UpdatePurgableGlow(buff, false);
+            UpdateBuffGlow(buff, false);
+        end
+
+        local largeIcon = (buff.isBuff or aura.customCategory == AURA_CATEGORY.CROWD_CONTROL);
+        buff:SetScale(largeIcon and 1.25 or 1);
+
+        CooldownFrame_Set(buff.Cooldown, aura.expirationTime - aura.duration, aura.duration, aura.duration > 0, true);
+
+        buff:Show();
+
+        buffIndex = buffIndex + 1;
+        return buffIndex >= BUFF_MAX_DISPLAY;
+    end);
+
+    if blizzardBuffFrame then
+        blizzardBuffFrame:SetAlpha(0);
+    end
+    self:Show();
+    CustomLayout(self);
 end
 
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
@@ -532,13 +656,15 @@ end
 addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
     if not frame.CustomBuffFrame then
         frame.CustomBuffFrame = CreateFrame("Frame", nil, self);
+        frame.CustomBuffFrame.auraFrames = {};
 
         if addon.PROJECT_MAINLINE then
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.BuffFrame, "BOTTOMLEFT");
+            frame.CustomBuffFrame:SetIgnoreParentAlpha(true);
         else
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 5);
         end
     end
 
-    UpdateBuffs(frame.CustomBuffFrame, unit, unitAuraUpdateInfo);
+    UpdateBuffs(frame.CustomBuffFrame, frame.BuffFrame, unit, unitAuraUpdateInfo);
 end
