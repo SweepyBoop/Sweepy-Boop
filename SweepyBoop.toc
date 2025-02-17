@@ -28,6 +28,7 @@ Common\AceGUIWidget-InlineLink.lua
 
 Core.lua
 
+Nameplates\Nameplates.xml
 Nameplates\Helpers.lua
 Nameplates\ClassIcons.lua
 Nameplates\PetIcons.lua

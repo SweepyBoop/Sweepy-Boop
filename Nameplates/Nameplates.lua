@@ -146,7 +146,7 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterEvent(addon.UNIT_AURA);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
-    eventFrame:SetScript("OnEvent", function (_, event, unitId)
+    eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -158,20 +158,7 @@ function SweepyBoop:SetupNameplateModules()
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
 
-                if nameplate.UnitFrame.BuffFrame then
-                    -- Avoid conflicts with BetterBlizzPlates
-                    if BetterBlizzPlatesDB and BetterBlizzPlatesDB.enableNameplateAuraCustomisation then return end
-
-                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride ) then
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
-                            addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
-                        end
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
-
-                        -- Call update once for first run experience
-                        addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
-                    end
-                end
+                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
             if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
@@ -200,17 +187,8 @@ function SweepyBoop:SetupNameplateModules()
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
-                if nameplate.UnitFrame.BuffFrame then
-                    if ( not nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride ) then
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffs = function (self, unit, unitAuraUpdateInfo, auraSettings)
-                            addon.UpdateBuffsOverride(self, unit, unitAuraUpdateInfo, auraSettings);
-                        end
-                        nameplate.UnitFrame.BuffFrame.UpdateBuffsOverride = true;
-
-                        -- Call update once for first run experience
-                        addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
-                    end
-                end
+                local unitAuraUpdateInfo = ...;
+                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
             end
         end
     end)
@@ -285,7 +263,7 @@ function SweepyBoop:RefreshAurasForAllNamePlates()
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame and nameplate.UnitFrame.BuffFrame then
             if nameplate.UnitFrame:IsForbidden() then return end
-            addon.OnNamePlateAuraUpdate(nameplate.UnitFrame.BuffFrame, nameplate.UnitFrame.unit);
+            addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
         end
     end
 end
