@@ -123,8 +123,6 @@ Show spec icons (or a special healer icon) on top of enemy players in both arena
 
 ![image](https://github.com/user-attachments/assets/bf5b9d81-68f6-4928-a2eb-3dfa976a7a55)
 
-(You do not need to install Details for the spec icons to work!  Other nameplate addons, e.g., BetterBlizzPlates require Details to show spec icons in battlegrounds, and the specs are detected a few sec after the first encounter with an enemy player. There is neither addon dependency nor delay with our module)
-
 ## Druid HoT helper
 ![Lifebloom pandemic glow](https://github.com/user-attachments/assets/a502695d-242a-4422-ba5c-317be20cb243)
 ![Cenarion Ward fade out before proc](https://github.com/user-attachments/assets/85bf2199-5c40-4ebb-bcf5-3f99967bec5a)
