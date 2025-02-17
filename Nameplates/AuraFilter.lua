@@ -340,7 +340,6 @@ addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
 
         if addon.PROJECT_MAINLINE then
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.BuffFrame, "BOTTOMLEFT");
-            frame.CustomBuffFrame:SetIgnoreParentAlpha(true);
         else
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 5);
         end
