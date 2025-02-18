@@ -176,7 +176,7 @@ options.args.nameplatesFriendly = {
     }
 };
 
-local beastMasteryHunterIcon = addon.PROJECT_MAINLINE and C_Spell.GetSpellTexture(267116) or C_Spell.GetSpellTexture(19574);
+local beastMasteryHunterIcon = ( addon.PROJECT_MAINLINE and C_Spell.GetSpellTexture(267116) ) or C_Spell.GetSpellTexture(19574);
 options.args.nameplatesEnemy = {
     order = 4,
     type = "group",
