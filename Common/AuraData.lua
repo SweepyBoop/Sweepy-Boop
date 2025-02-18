@@ -392,9 +392,9 @@ else
         {
             classID = addon.CLASSID.DEATHKNIGHT,
             auras = {
-                --{ spellId = 48707, default = true }, -- Anti-Magic Shell
-                -- spellId = 48792, default = true }, -- Icebound Fortitude
-                --{ spellId = 49039, default = true }, -- Lichborne
+                { spellId = 48707, default = true }, -- Anti-Magic Shell
+                { spellId = 48792, default = true }, -- Icebound Fortitude
+                { spellId = 49039, default = true }, -- Lichborne
             }
         },
         {
