@@ -2,6 +2,8 @@ local _, addon = ...;
 
 addon.TEST_MODE = false;
 
+addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
+
 addon.SPELLCATEGORY = {
     OFFENSIVE = 1,
 
@@ -168,7 +170,7 @@ end
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
-addon.ICON_ID_HEALER_ENEMY = "Healing_Red";
+addon.ICON_ID_HEALER_ENEMY = ( addon.PROJECT_MAINLINE and "Healing_Red" ) or "GreenCross";
 addon.ICON_ID_PET = addon.ICON_PATH("ability_hunter_mendpet");
 addon.ICON_CRITTER = "WildBattlePet";
 addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
@@ -191,5 +193,3 @@ addon.SPELL_DESCRIPTION = {}; -- by spellId, requested via -- https://warcraft.w
 addon.PRINT = function(message)
     DEFAULT_CHAT_FRAME:AddMessage(addon.FORMAT_ATLAS("pvptalents-warmode-swords", 16) .. " |cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
 end
-
-addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
