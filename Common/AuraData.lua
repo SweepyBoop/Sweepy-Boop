@@ -174,6 +174,8 @@ else
                 { spellId = 55095, default = true }, -- Frost Fever
                 { spellId = 55078, default = true }, -- Blood Plague
                 { spellId = 45524, default = true }, -- Chains of Ice
+                { spellId = 50435, default = true }, -- Chillblains
+                { spellId = 73975, default = true }, -- Necrotic Strike
             }
         },
         {
@@ -190,10 +192,10 @@ else
                 { spellId = 33878, default = true }, -- Mangle (Bear)
                 { spellId = 33876, default = true }, -- Mangle (Cat)
                 { spellId = 77758, default = true }, -- Thrash
+                { spellId = 45334, default = true }, -- Feral Charge (Bear)
 
                 { spellId = 58180 }, -- Infected Wounds
                 { spellId = 50259 }, -- Dazed (Feral Charge)
-                { spellId = 45334 }, -- Feral Charge (Bear)
             }
         },
         {
