@@ -42,7 +42,7 @@ local function EnsureNpcHighlight(nameplate)
             nameplate.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
         else
             nameplate.npcHighlight.glowTexture:SetAtlas("Forge-ColorSwatchSelection");
-            nameplate.npcHighlight.glowTexture:SetScale(0.48);
+            nameplate.npcHighlight.glowTexture:SetScale(0.4);
         end
         nameplate.npcHighlight.glowTexture:SetDesaturated(true);
         nameplate.npcHighlight.glowTexture:SetPoint('TOPLEFT', nameplate.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);

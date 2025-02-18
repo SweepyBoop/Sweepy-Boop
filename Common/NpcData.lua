@@ -235,9 +235,9 @@ addon.CheckNpcWhiteList = function (unitId)
     end
 
     -- Comment out when testing on a Target Dummy
-    if ( not UnitPlayerControlled(unitId) ) then
-        return addon.NpcOption.Show, false; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
-    end
+    -- if ( not UnitPlayerControlled(unitId) ) then
+    --     return addon.NpcOption.Show, false; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
+    -- end
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
     local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide

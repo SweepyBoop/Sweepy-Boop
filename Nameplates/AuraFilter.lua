@@ -29,7 +29,7 @@ local function UpdateCrowdControlGlow(buff, show)
                 container.CrowdControlGlow:SetAtlas("newplayertutorial-drag-slotgreen");
             else
                 container.CrowdControlGlow:SetAtlas("Forge-ColorSwatchSelection");
-                container.CrowdControlGlow:SetScale(0.48);
+                container.CrowdControlGlow:SetScale(0.4);
             end
             container.CrowdControlGlow:SetDesaturated(true);
             container.CrowdControlGlow:SetVertexColor(1, 0.6471, 0); -- Orange
@@ -54,7 +54,7 @@ local function UpdatePurgableGlow(buff, show)
                 container.PurgableGlow:SetAtlas("newplayertutorial-drag-slotblue");
             else
                 container.PurgableGlow:SetAtlas("Forge-ColorSwatchSelection");
-                container.PurgableGlow:SetScale(0.48);
+                container.PurgableGlow:SetScale(0.4);
             end
         end
 
@@ -77,7 +77,7 @@ local function UpdateBuffGlow(buff, show)
                 container.BuffGlow:SetAtlas("newplayertutorial-drag-slotgreen");
             else
                 container.BuffGlow:SetAtlas("Forge-ColorSwatchSelection");
-                container.BuffGlow:SetScale(0.48);
+                container.BuffGlow:SetScale(0.4);
             end
             container.BuffGlow:SetDesaturated(true);
             container.BuffGlow:SetVertexColor(0, 1, 0); -- Green
@@ -395,7 +395,7 @@ addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
         if addon.PROJECT_MAINLINE then
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.BuffFrame, "BOTTOMLEFT");
         else
-            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 21);
+            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 18);
         end
     end
 
