@@ -132,6 +132,7 @@ else
         {
             classID = addon.CLASSID.DEATHKNIGHT,
             npcs = {
+                { npcID = 27829, name = "Ebon Gargoyle", icon = 49206, default = addon.NpcOption.Highlight },
                 { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide, isCritter = true },
                 { npcID = 24207, name = "Army of the Dead", icon = 42650, default = addon.NpcOption.Hide, isCritter = true },
             }
@@ -154,26 +155,25 @@ else
                 { npcID = 19668, name = "Shadowfiend", icon = 34433, default = addon.NpcOption.Show },
             }
         },
-        -- {
-        --     classID = addon.CLASSID.SHAMAN,
-        --     npcs = {
-        --         { npcID = 5925, name = "Grounding Totem", icon = 8177, default = addon.NpcOption.Highlight },
-        --         { npcID = 53006, name = "Spirit Link Totem", icon = 98008, default = addon.NpcOption.Highlight },
-        --         { npcID = 5913, name = "Tremor Totem", icon = 8143, default = addon.NpcOption.Highlight },
-        --         { npcID = 194117, name = "Stoneskin Totem", icon = 383017, default = addon.NpcOption.Show },
-        --         { npcID = 5923, name = "Poison Cleansing Totem", icon = 383013, default = addon.NpcOption.Show },
-        --         { npcID = 194118, name = "Tranquil Air Totem", icon = 383019, default = addon.NpcOption.Show },
-        --         { npcID = 225409, name = "Surging Totem", icon = 444995, default = addon.NpcOption.Show },
-        --         { npcID = 95061, name = "Greater Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
-        --         { npcID = 61029, name = "Primal Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
-                
-        --         { npcID = 78001, name = "Cloudburst Totem", icon = 157153, default = addon.NpcOption.Hide },
-        --         { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Hide },
-        --         { npcID = 97285, name = "Wind Rush Totem", icon = 192077, default = addon.NpcOption.Hide },
-        --         { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Hide },
-        --         { npcID = 97369, name = "Liquid Magma Totem", icon = 192222, default = addon.NpcOption.Hide },
-        --     }
-        -- },
+        {
+            classID = addon.CLASSID.SHAMAN,
+            npcs = {
+                { npcID = 5925, name = "Grounding Totem", icon = 8177, default = addon.NpcOption.Highlight },
+                { npcID = 53006, name = "Spirit Link Totem", icon = 98008, default = addon.NpcOption.Highlight },
+                { npcID = 5913, name = "Tremor Totem", icon = 8143, default = addon.NpcOption.Highlight },
+                { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Show },
+                { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Show },
+                { npcID = 3579, name = "Stoneclaw Totem", icon = 5730, default = addon.NpcOption.Show },
+
+                { npcID = 15430, name = "Earth Elemental Totem", icon = 2062, default = addon.NpcOption.Show },
+                { npcID = 15439, name = "Fire Elemental Totem", icon = 2894, default = addon.NpcOption.Show },
+                { npcID = 15438, name = "Greater Fire Elemental", icon = 2894, default = addon.NpcOption.Show },
+                { npcID = 15352, name = "Greater Earth Elemental", icon = 2062, default = addon.NpcOption.Show },
+                { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Show },
+
+                { npcID = 5873, name = "Stoneskin Totem", icon = 8071, default = addon.NpcOption.Hide },                
+            }
+        },
         -- {
         --     classID = addon.CLASSID.WARLOCK,
         --     npcs = {
@@ -288,7 +288,7 @@ addon.AppendNpcOptionsToGroup = function(group)
             spell:ContinueOnSpellLoad(function()
                 addon.SPELL_DESCRIPTION[npcEntry.icon] = spell:GetSpellDescription();
             end)
-            
+
             local texture = C_Spell.GetSpellTexture(npcEntry.icon);
             classGroup.args[tostring(npcEntry.npcID)] = {
                 order = spellIdx,
