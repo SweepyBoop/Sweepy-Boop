@@ -21,13 +21,14 @@ Common\ArenaEnemyBurstSpells.lua
 Common\ArenaEnemyUtilitySpells.lua
 Common\UnitInfoHelpers.lua
 Common\NpcData.lua
-Common\CrowdControlAuras.lua
+Common\CrowdControlAuras_Cata.lua
 Common\AuraData.lua
 Common\DRList.lua
 Common\AceGUIWidget-InlineLink.lua
 
 Core.lua
 
+Nameplates\Nameplates.xml
 Nameplates\Helpers.lua
 Nameplates\ClassIcons.lua
 Nameplates\PetIcons.lua

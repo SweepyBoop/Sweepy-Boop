@@ -1,33 +1,7 @@
 $overrideFile = Join-Path -Path $PSScriptRoot -ChildPath "Internal\BigDebuffsOverride.lua"
 $addonDir = "D:\World of Warcraft\_retail_\Interface\Addons\BigDebuffs"
 $spellFile = Join-Path -Path $addonDir -ChildPath "BigDebuffs_Mainline.lua"
-
-# Check if $spellFile exists
-if (Test-Path $spellFile) {
-    # Read the content of both files
-    $spellFileContent = Get-Content $spellFile
-    $overrideFileFirstLine = Get-Content $overrideFile -First 1
-    
-    # Check if the first line of $overrideFile exists in $spellFile
-    $lineIndex = $spellFileContent.IndexOf($overrideFileFirstLine)
-    if ($lineIndex -ge 0) {
-        Write-Host "The first line of $overrideFile exists in $spellFile. Removing it and all subsequent lines..."
-        
-        # Remove all lines from the first occurrence of the line onwards
-        $updatedContent = $spellFileContent[0..($lineIndex - 1)]
-        
-        # Overwrite the $spellFile with the updated content
-        $updatedContent | Set-Content $spellFile
-        Write-Host "Lines removed successfully."
-    }
-    
-    # Append the content of $overrideFile to $spellFile
-    Write-Host "Appending content from $overrideFile to $spellFile..."
-    Get-Content $overrideFile | Add-Content $spellFile
-    Write-Host "Content from $overrideFile has been appended successfully."
-} else {
-    Write-Host "Destination file does not exist."
-}
+$spellFileCata = Join-Path -Path $addonDir -ChildPath "BigDebuffs_Cata.lua"
 
 $outputFile = Join-Path -Path $PSScriptRoot -ChildPath "Common\CrowdControlAuras.lua"
 
@@ -60,3 +34,37 @@ $outputContent += "};`n"
 # Write the output content to $outputFile
 $outputContent | Set-Content $outputFile
 Write-Host "Crowd control IDs with comments have been written to $outputFile successfully."
+
+
+
+$outputFileCata = Join-Path -Path $PSScriptRoot -ChildPath "Common\CrowdControlAuras_Cata.lua"
+
+# Initialize an empty hashtable to store the IDs and comments
+$crowdControlTableCata = @{}
+
+# Read the content of $spellFile
+$spellFileContentCata = Get-Content $spellFileCata
+
+# Loop through each line in the file content
+foreach ($line in $spellFileContentCata) {
+    if ($line -match 'type = CROWD_CONTROL' -or $line -match 'type = ROOT') {
+        # Extract the ID and comment from the line
+        if ($line -match '\[(\d+)\].*--\s*(.+)$') {
+            $id = $matches[1]
+            $commentCata = $matches[2]
+            # Add the ID and comment to the hashtable
+            $crowdControlTableCata[$id] = $commentCata
+        }
+    }
+}
+
+# Prepare the output content
+$outputContentCata = "local _, addon = ...;`n`naddon.CrowdControlAuras = {`n"
+foreach ($id in $crowdControlTableCata.Keys) {
+    $outputContentCata += "    [$id] = true, -- $($crowdControlTableCata[$id])`n"
+}
+$outputContentCata += "};`n"
+
+# Write the output content to $outputFile
+$outputContentCata | Set-Content $outputFileCata
+Write-Host "Crowd control IDs with comments have been written to $outputFileCata successfully."

@@ -6,7 +6,7 @@ local AURA_CATEGORY = { -- Maybe apply different borders based on category?
     BUFF = 3,
 };
 
-local rowGap = 2;
+local rowGap = 4;
 local spacing = 4;
 
 local function EnsureGlowFrame(buff)
@@ -25,7 +25,12 @@ local function UpdateCrowdControlGlow(buff, show)
         local container = EnsureGlowFrame(buff);
         if not container.CrowdControlGlow then
             container.CrowdControlGlow = container:CreateTexture(nil, "ARTWORK");
-            container.CrowdControlGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            if addon.PROJECT_MAINLINE then
+                container.CrowdControlGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            else
+                container.CrowdControlGlow:SetAtlas("Forge-ColorSwatchSelection");
+                container.CrowdControlGlow:SetScale(0.4);
+            end
             container.CrowdControlGlow:SetDesaturated(true);
             container.CrowdControlGlow:SetVertexColor(1, 0.6471, 0); -- Orange
         end
@@ -45,7 +50,12 @@ local function UpdatePurgableGlow(buff, show)
         local container = EnsureGlowFrame(buff);
         if not container.PurgableGlow then
             container.PurgableGlow = container:CreateTexture(nil, "ARTWORK");
-            container.PurgableGlow:SetAtlas("newplayertutorial-drag-slotblue");
+            if addon.PROJECT_MAINLINE then
+                container.PurgableGlow:SetAtlas("newplayertutorial-drag-slotblue");
+            else
+                container.PurgableGlow:SetAtlas("Forge-ColorSwatchSelection");
+                container.PurgableGlow:SetScale(0.4);
+            end
         end
 
         container.PurgableGlow:SetPoint("TOPLEFT", buff, "TOPLEFT", -9, 6);
@@ -63,7 +73,12 @@ local function UpdateBuffGlow(buff, show)
         local container = EnsureGlowFrame(buff);
         if not container.BuffGlow then
             container.BuffGlow = container:CreateTexture(nil, "ARTWORK");
-            container.BuffGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            if addon.PROJECT_MAINLINE then
+                container.BuffGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            else
+                container.BuffGlow:SetAtlas("Forge-ColorSwatchSelection");
+                container.BuffGlow:SetScale(0.4);
+            end
             container.BuffGlow:SetDesaturated(true);
             container.BuffGlow:SetVertexColor(0, 1, 0); -- Green
         end
@@ -116,9 +131,39 @@ local function ShouldShowBuffOverride(self, aura)
     end
 end
 
+local function DefaultAuraCompareClassic(a, b)
+    local aFromPlayer = (a.sourceUnit ~= nil) and UnitIsUnit("player", a.sourceUnit) or false;
+	local bFromPlayer = (b.sourceUnit ~= nil) and UnitIsUnit("player", b.sourceUnit) or false;
+	if aFromPlayer ~= bFromPlayer then
+		return aFromPlayer;
+	end
+
+	if a.canApplyAura ~= b.canApplyAura then
+		return a.canApplyAura;
+	end
+
+	return a.auraInstanceID < b.auraInstanceID;
+end
+
+local DefaultAuraCompare = AuraUtil.DefaultAuraCompare or DefaultAuraCompareClassic;
+
+local function IterateAuras(self, filter)
+    for i = 1, 255 do
+        local aura = C_UnitAuras.GetAuraDataByIndex(self.unit, i, filter);
+        if ( not aura ) or ( not aura.name ) then
+            break;
+        end
+        local customCategory = ShouldShowBuffOverride(self, aura);
+        if customCategory then
+            aura.customCategory = customCategory;
+            self.auras[aura.auraInstanceID] = aura;
+        end
+    end
+end
+
 local function ParseAllAurasOverride(self)
     if self.auras == nil then
-        self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
+        self.auras = TableUtil.CreatePriorityTable(DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
     else
         self.auras:Clear();
     end
@@ -135,10 +180,18 @@ local function ParseAllAurasOverride(self)
 
     local batchCount = nil;
     local usePackedAura = true;
-    AuraUtil.ForEachAura(self.unit, "HARMFUL", batchCount, HandleAura, usePackedAura);
+    if addon.PROJECT_MAINLINE then
+        AuraUtil.ForEachAura(self.unit, "HARMFUL", batchCount, HandleAura, usePackedAura);
+    else
+        IterateAuras(self, "HARMFUL");
+    end
 
     if SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy then
-        AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
+        if addon.PROJECT_MAINLINE then
+            AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
+        else
+            IterateAuras(self, "HELPFUL");
+        end
     end
 end
 
@@ -202,7 +255,7 @@ local function CustomLayout(self)
             end
         end
 
-        return AuraUtil.DefaultAuraCompare(a, b);
+        return DefaultAuraCompare(a, b);
     end)
 
     local _, debuffHeight = LayoutRow(self, debuffs);
@@ -223,7 +276,8 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
     self.unit = unit;
 
     local aurasChanged = false;
-    if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit then
+    if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or ( not addon.PROJECT_MAINLINE ) then
+        -- Note that classic does not have the unitAuraUpdateInfo optimization
         ParseAllAurasOverride(self);
         aurasChanged = true;
     else
@@ -341,7 +395,7 @@ addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
         if addon.PROJECT_MAINLINE then
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.BuffFrame, "BOTTOMLEFT");
         else
-            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 5);
+            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 18);
         end
     end
 

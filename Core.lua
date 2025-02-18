@@ -176,235 +176,249 @@ options.args.nameplatesFriendly = {
     }
 };
 
-if addon.PROJECT_MAINLINE then
+local beastMasteryHunterIcon = ( addon.PROJECT_MAINLINE and C_Spell.GetSpellTexture(267116) ) or C_Spell.GetSpellTexture(19574);
+options.args.nameplatesEnemy = {
+    order = 4,
+    type = "group",
+    childGroups = "tab",
+    name = "Enemy nameplates",
+    get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
+    set = function(info, val)
+        SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+        SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+        SweepyBoop:RefreshAllNamePlates();
+    end,
+    args = {
+        -- tip = {
+        --     order = 1,
+        --     width = "full",
+        --     type = "description",
+        --     name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
+        -- },
+        breaker1 = {
+            order = 2,
+            type = "header",
+            name = "",
+        },
 
-    local beastMasteryHunterIcon = C_Spell.GetSpellTexture(267116);
-    options.args.nameplatesEnemy = {
-        order = 4,
-        type = "group",
-        childGroups = "tab",
-        name = "Enemy nameplates",
-        get = function(info) return SweepyBoop.db.profile.nameplatesEnemy[info[#info]] end,
-        set = function(info, val)
-            SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-            SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-            SweepyBoop:RefreshAllNamePlates();
-        end,
-        args = {
-            -- tip = {
-            --     order = 1,
-            --     width = "full",
-            --     type = "description",
-            --     name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
-            -- },
-            breaker1 = {
-                order = 2,
-                type = "header",
-                name = "",
-            },
+        arenaNumbersEnabled = {
+            order = 3,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
+            desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
+        },
 
-            arenaNumbersEnabled = {
-                order = 3,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
-                desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
+        breaker2 = {
+            order = 4,
+            type = "header",
+            name = "Arena & battleground enemy spec icons",
+            hidden = function ()
+                return ( not addon.PROJECT_MAINLINE );
+            end
+        },
+        arenaSpecIconHealer = {
+            order = 5,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
+            desc = "Show spec icons on top of the nameplates of enemy healers",
+            hidden = function ()
+                return ( not addon.PROJECT_MAINLINE );
+            end
+        },
+        arenaSpecIconHealerIcon = {
+            order = 6,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
+            hidden = function ()
+                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+            end
+        },
+        arenaSpecIconOthers = {
+            order = 7,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
+            desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
+            hidden = function ()
+                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+            end
+        },
+        arenaSpecIconAlignment = {
+            order = 8,
+            type = "select",
+            width = 0.85,
+            name = "Alignment",
+            values = {
+                [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
+                [addon.SPEC_ICON_ALIGNMENT.LEFT] = "Left",
+                [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
             },
+            hidden = function ()
+                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+            end
+        },
+        arenaSpecIconVerticalOffset = {
+            order = 9,
+            min = -150,
+            max = 150,
+            step = 1,
+            type = "range",
+            width = 0.85,
+            name = "Vertical offset",
+            hidden = function ()
+                return ( not addon.PROJECT_MAINLINE ) or ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
+            end
+        },
+        arenaSpecIconScale = {
+            order = 10,
+            min = 50,
+            max = 300,
+            step = 1,
+            type = "range",
+            width = 0.85,
+            name = "Scale (%)",
+            hidden = function ()
+                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+            end
+        },
 
-            breaker2 = {
-                order = 4,
-                type = "header",
-                name = "Arena & battleground enemy spec icons",
-            },
-            arenaSpecIconHealer = {
-                order = 5,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-                desc = "Show spec icons on top of the nameplates of enemy healers",
-            },
-            arenaSpecIconHealerIcon = {
-                order = 6,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
-                hidden = function ()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
-                end
-            },
-            arenaSpecIconOthers = {
-                order = 7,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
-                desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
-            },
-            arenaSpecIconAlignment = {
-                order = 8,
-                type = "select",
-                width = 0.85,
-                name = "Alignment",
-                values = {
-                    [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
-                    [addon.SPEC_ICON_ALIGNMENT.LEFT] = "Left",
-                    [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
+        breaker3 = {
+            order = 11,
+            type = "header",
+            name = "Nameplate Filters & Highlights",
+        },
+
+        filterSettings = {
+            order = 12,
+            type = "group",
+            name = "General",
+            args = {
+                hideHunterSecondaryPet = {
+                    order = 1,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_TEXTURE(beastMasteryHunterIcon) .. " Hide beast mastery hunter secondary pets in arena",
+                    desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
                 },
-            },
-            arenaSpecIconVerticalOffset = {
-                order = 9,
-                min = -150,
-                max = 150,
-                step = 1,
-                type = "range",
-                width = 0.85,
-                name = "Vertical offset",
-                hidden = function ()
-                    return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
-                end
-            },
-            arenaSpecIconScale = {
-                order = 10,
-                min = 50,
-                max = 300,
-                step = 1,
-                type = "range",
-                width = 0.85,
-                name = "Scale (%)",
-            },
-
-            breaker3 = {
-                order = 11,
-                type = "header",
-                name = "Nameplate Filters & Highlights",
-            },
-
-            filterSettings = {
-                order = 12,
-                type = "group",
-                name = "General",
-                args = {
-                    hideHunterSecondaryPet = {
-                        order = 1,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(beastMasteryHunterIcon) .. " Hide beast mastery hunter secondary pets in arena",
-                        desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
-                    },
-                    filterEnabled = {
-                        order = 2,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
-                        desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
-                    },
-                    showCritterIcons = {
-                        order = 3,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
-                        desc = "Show a critter icon in place of pet nameplates hidden by the addon\nThis helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
-                        end
-                    },
-                    highlightScale = {
-                        order = 4,
-                        type = "range",
-                        name = "Highlight icon scale (%)",
-                        min = 50,
-                        max = 300,
-                        step = 1,
-                        hidden = function()
-                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
-                        end,
-                    },
-
-                    auraFilterEnabled = {
-                        order = 5,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
-                        desc = "Show whitelisted debuffs applied by myself"
-                            .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
-                        set = function (info, val)
-                            SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-                            SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-                            SweepyBoop:RefreshAurasForAllNamePlates();
-                        end
-                    },
-
-                    showBuffsOnEnemy = {
-                        order = 6,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",
-                        desc = "Show whitelisted buffs on enemy nameplates from all sources",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
-                        end,
-                        set = function (info, val)
-                            SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
-                            SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-                            SweepyBoop:RefreshAurasForAllNamePlates();
-                        end
-                    },
+                filterEnabled = {
+                    order = 2,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
+                    desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                 },
-            },
+                showCritterIcons = {
+                    order = 3,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
+                    desc = "Show a critter icon in place of pet nameplates hidden by the addon\nThis helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen",
+                    hidden = function ()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
+                    end
+                },
+                highlightScale = {
+                    order = 4,
+                    type = "range",
+                    name = "Highlight icon scale (%)",
+                    min = 50,
+                    max = 300,
+                    step = 1,
+                    hidden = function()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                    end,
+                },
 
-            filterList = {
-                order = 13,
-                type = "group",
-                name = "Unit whitelist",
-                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
-                set = function(info, val) 
-                    SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
-                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-                    SweepyBoop:RefreshAllNamePlates();
-                end,
-                args = {},
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
-                end
-            },
+                auraFilterEnabled = {
+                    order = 5,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
+                    desc = "Show whitelisted debuffs applied by myself"
+                        .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
+                    set = function (info, val)
+                        SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+                        SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                        SweepyBoop:RefreshAurasForAllNamePlates();
+                    end
+                },
 
-            debuffWhiteList = {
-                order = 14,
-                type = "group",
-                name = "Debuff whitelist",
-                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] end,
-                set = function(info, val) 
-                    SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] = val;
-                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-                    -- No need to refresh nameplates, just apply it on next UNIT_AURA
-                end,
-                args = {},
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
-                end
-            },
-
-            buffWhiteList = {
-                order = 15,
-                type = "group",
-                name = "Buff whitelist",
-                get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] end,
-                set = function(info, val) 
-                    SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] = val;
-                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
-                    -- No need to refresh nameplates, just apply it on next UNIT_AURA
-                end,
-                args = {},
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy );
-                end
+                showBuffsOnEnemy = {
+                    order = 6,
+                    type = "toggle",
+                    width = "full",
+                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",
+                    desc = "Show whitelisted buffs on enemy nameplates from all sources",
+                    hidden = function ()
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                    end,
+                    set = function (info, val)
+                        SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+                        SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                        SweepyBoop:RefreshAurasForAllNamePlates();
+                    end
+                },
             },
         },
-    };
 
-    addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
-    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.debuffWhiteList, addon.DebuffList, "debuffWhiteList");
-    addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.buffWhiteList, addon.BuffList, "buffWhiteList");
+        filterList = {
+            order = 13,
+            type = "group",
+            name = "Unit whitelist",
+            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
+            set = function(info, val) 
+                SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
+                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                SweepyBoop:RefreshAllNamePlates();
+            end,
+            args = {},
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+            end
+        },
 
+        debuffWhiteList = {
+            order = 14,
+            type = "group",
+            name = "Debuff whitelist",
+            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] end,
+            set = function(info, val) 
+                SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] = val;
+                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                -- No need to refresh nameplates, just apply it on next UNIT_AURA
+            end,
+            args = {},
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+            end
+        },
+
+        buffWhiteList = {
+            order = 15,
+            type = "group",
+            name = "Buff whitelist",
+            get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] end,
+            set = function(info, val) 
+                SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] = val;
+                SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                -- No need to refresh nameplates, just apply it on next UNIT_AURA
+            end,
+            args = {},
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy );
+            end
+        },
+    },
+};
+
+addon.AppendNpcOptionsToGroup(options.args.nameplatesEnemy.args.filterList);
+addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.debuffWhiteList, addon.DebuffList, "debuffWhiteList");
+addon.AppendAuraOptionsToGroup(options.args.nameplatesEnemy.args.buffWhiteList, addon.BuffList, "buffWhiteList");
+
+if addon.PROJECT_MAINLINE then
     options.args.arenaFrames = {
         order = 5,
         type = "group",

@@ -38,7 +38,12 @@ local function EnsureNpcHighlight(nameplate)
         local heightOffset = iconSize * offsetMultiplier;
         nameplate.npcHighlight.glowTexture = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
         nameplate.npcHighlight.glowTexture:SetBlendMode("ADD");
-        nameplate.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
+        if addon.PROJECT_MAINLINE then
+            nameplate.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
+        else
+            nameplate.npcHighlight.glowTexture:SetAtlas("Forge-ColorSwatchSelection");
+            nameplate.npcHighlight.glowTexture:SetScale(0.4);
+        end
         nameplate.npcHighlight.glowTexture:SetDesaturated(true);
         nameplate.npcHighlight.glowTexture:SetPoint('TOPLEFT', nameplate.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);
         nameplate.npcHighlight.glowTexture:SetPoint('BOTTOMRIGHT', nameplate.npcHighlight, 'BOTTOMRIGHT', widthOffset, -heightOffset);
