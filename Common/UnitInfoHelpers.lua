@@ -167,7 +167,7 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                     end
                 end
             end
-        elseif addon.PROJECT_MAINLINE then -- Battleground spec icon only supported in retail for now, as it is inefficient to look up in classic
+        else
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
                 addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
