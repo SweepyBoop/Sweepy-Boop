@@ -189,6 +189,27 @@ end
 
 addon.CritterNPCs = {};
 
+if addon.TEST_MODE then
+    local testClass;
+    if addon.PROJECT_MAINLINE then
+        testClass = {
+            classID = addon.CLASSID.DRUID,
+            npcs = {
+                { npcID = 219250, name = "PVP Training Dummy", icon = 204336, default = addon.NpcOption.Highlight },
+                { npcID = 225985, name = "Kelpfist", icon = 204336, default = addon.NpcOption.Show },
+            },
+        };
+    else
+        testClass = {
+            classID = addon.CLASSID.DRUID,
+            npcs = {
+                { npcID = 46647, name = "Training Dummy", icon = 8177, default = addon.NpcOption.Highlight },
+            },
+        };
+    end
+    table.insert(addon.importantNpcList, testClass);
+end
+
 addon.iconTexture = {};
 --for classID, spells in pairs(addon.importantNpcList) do
 for _, classEntry in ipairs(addon.importantNpcList) do
@@ -213,9 +234,10 @@ addon.CheckNpcWhiteList = function (unitId)
         return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
 
-    if ( not UnitPlayerControlled(unitId) ) then
-        return addon.NpcOption.Show, false; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
-    end
+    -- Comment out when testing on a Target Dummy
+    -- if ( not UnitPlayerControlled(unitId) ) then
+    --     return addon.NpcOption.Show, false; -- Simply show game NPCs (e.g., mobs in battlegrounds), maybe add PvE highlight and/or blacklist in the future
+    -- end
 
     local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
     local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide

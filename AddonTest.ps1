@@ -4,6 +4,8 @@ param (
 
 $addonDir = "D:\World of Warcraft\_retail_\Interface\Addons\SweepyBoop"
 $constantsFile = Join-Path -Path $addonDir -ChildPath "Common\Constants.lua"
+$addonDirCata = "D:\World of Warcraft\_classic_\Interface\Addons\SweepyBoop"
+$constantsFileCata = Join-Path -Path $addonDirCata -ChildPath "Common\Constants.lua"
 
 if (Test-Path $constantsFile) {
     $fileContent = Get-Content -Path $constantsFile -Encoding UTF8
@@ -29,3 +31,29 @@ if ($fileContent -match "addon\.TEST_MODE") {
 $fileContent | Set-Content -Path $constantsFile -Encoding UTF8
 
 Write-Output "Updated $constantsFile successfully."
+
+# Repeat the same process for the Cata version
+if (Test-Path $constantsFileCata) {
+    $fileContentCata = Get-Content -Path $constantsFileCata -Encoding UTF8
+} else {
+    Write-Error "The file '$constantsFileCata' does not exist."
+    exit 1
+}
+
+$newLineCata = if ($Off) {
+    "addon.TEST_MODE = false;"
+} else {
+    "addon.TEST_MODE = true;"
+}
+
+# Replace the line containing "addon.TEST_MODE" or add it if it doesn't exist
+if ($fileContentCata -match "addon\.TEST_MODE") {
+    $fileContentCata = $fileContentCata -replace "addon\.TEST_MODE\s*=\s*.*?;", $newLineCata
+} else {
+    $fileContentCata += $newLineCata
+}
+
+# Write the modified content back to the file
+$fileContentCata | Set-Content -Path $constantsFileCata -Encoding UTF8
+
+Write-Output "Updated $constantsFileCata successfully."
