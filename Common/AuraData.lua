@@ -464,7 +464,6 @@ else
     };
 end
 
-
 for _, classEntry in ipairs(addon.BuffList) do
     for _, auraEntry in ipairs(classEntry.auras) do
         if auraEntry.parent then
