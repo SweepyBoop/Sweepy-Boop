@@ -189,19 +189,6 @@ end
 
 addon.CritterNPCs = {};
 
-if addon.TEST_MODE then
-    local testClass = {
-        classID = addon.CLASSID.DRUID,
-        npcs = {
-            { npcID = 219250, name = "PVP Training Dummy", icon = 204336, default = addon.NpcOption.Highlight },
-            { npcID = 225985, name = "Kelpfist", icon = 204336, default = addon.NpcOption.Show },
-        },
-    }
-    table.insert(addon.importantNpcList, testClass);
-    -- addon.importantNpcList[addon.CLASSID.HUNTER][219250] = { name = "PVP Training Dummy", icon = 204336, default = addon.NpcOption.Highlight };
-    -- addon.importantNpcList[addon.CLASSID.HUNTER][225985] = { name = "Kelpfist", icon = 204336, default = addon.NpcOption.Show };
-end
-
 addon.iconTexture = {};
 --for classID, spells in pairs(addon.importantNpcList) do
 for _, classEntry in ipairs(addon.importantNpcList) do
