@@ -1,5 +1,7 @@
 local _, addon = ...;
 
+local auraFilterConflict = C_AddOns.IsAddOnLoaded("flyPlateBuffs") or C_AddOns.IsAddOnLoaded("EpicPlates");
+
 local AURA_CATEGORY = { -- Maybe apply different borders based on category?
     CROWD_CONTROL = 1,
     DEBUFF = 2,
@@ -388,6 +390,11 @@ end
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
 -- Possibly need to override logic for isFullUpdate
 addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
+    if auraFilterConflict then
+        --print("auraFilterConflict detected, disabling aura filter");
+        return;
+    end
+
     if not frame.CustomBuffFrame then
         frame.CustomBuffFrame = CreateFrame("Frame", nil, frame);
         frame.CustomBuffFrame:SetMouseClickEnabled(false);
