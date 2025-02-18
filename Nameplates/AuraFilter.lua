@@ -262,7 +262,8 @@ local function UpdateBuffs(self, blizzardBuffFrame, unit, unitAuraUpdateInfo)
     self.unit = unit;
 
     local aurasChanged = false;
-    if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit then
+    if unitAuraUpdateInfo == nil or unitAuraUpdateInfo.isFullUpdate or unit ~= previousUnit or ( not addon.PROJECT_MAINLINE ) then
+        -- Note that classic does not have the unitAuraUpdateInfo optimization
         ParseAllAurasOverride(self);
         aurasChanged = true;
     else
