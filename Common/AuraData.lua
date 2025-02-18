@@ -180,10 +180,20 @@ else
             classID = addon.CLASSID.DRUID,
             auras = {
                 { spellId = 8921, default = true }, -- Moonfire
+                { spellId = 5570, default = true }, -- Insect Swarm
+                { spellId = 93402, default = true }, -- Sunfire
+                { spellId = 91565, default = true }, -- Faerie Fire
+                { spellId = 9007, default = true }, -- Pounce Bleed
                 { spellId = 1822, default = true }, -- Rake
                 { spellId = 1079, default = true }, -- Rip
                 { spellId = 33745, default = true }, -- Lacerate
-                { spellId = 50259, default = true }, -- Feral Charge Effect
+                { spellId = 33878, default = true }, -- Mangle (Bear)
+                { spellId = 33876, default = true }, -- Mangle (Cat)
+                { spellId = 77758, default = true }, -- Thrash
+
+                { spellId = 58180 }, -- Infected Wounds
+                { spellId = 50259 }, -- Dazed (Feral Charge)
+                { spellId = 45334 }, -- Feral Charge (Bear)
             }
         },
         {

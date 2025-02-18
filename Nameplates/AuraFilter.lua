@@ -138,7 +138,7 @@ local function IterateAuras(self, filter)
         if ( not aura ) or ( not aura.name ) then
             break;
         end
-        --print(aura.name, aura.spellId);
+        print(aura.name, aura.spellId);
         local customCategory = ShouldShowBuffOverride(self, aura);
         if customCategory then
             aura.customCategory = customCategory;
