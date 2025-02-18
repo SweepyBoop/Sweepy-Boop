@@ -400,62 +400,61 @@ else
         {
             classID = addon.CLASSID.DRUID,
             auras = {
-                --{ spellId = 61336, default = true }, -- Survival Instincts
-                --{ spellId = 22812, default = true }, -- Barkskin
-                --{ spellId = 102342, default = true }, -- Ironbark
+                { spellId = 61336, default = true }, -- Survival Instincts
+                { spellId = 22812, default = true }, -- Barkskin
             }
         },
         {
             classID = addon.CLASSID.HUNTER,
             auras = {
-
+                { spellId = 19263, default = true }, -- Deterrence
             }
         },
         {
             classID = addon.CLASSID.MAGE,
             auras = {
-                --{ spellId = 45438, default = true }, -- Ice Block
+                { spellId = 45438, default = true }, -- Ice Block
             }
         },
         {
             classID = addon.CLASSID.PALADIN,
             auras = {
-                --{ spellId = 642, default = true }, -- Divine Shield
-                --{ spellId = 1022, default = true }, -- Blessing of Protection
+                { spellId = 642, default = true }, -- Divine Shield
+                { spellId = 1022, default = true }, -- Hand of Protection
             }
         },
         {
             classID = addon.CLASSID.PRIEST,
             auras = {
-                --{ spellId = 33206, default = true }, -- Pain Suppression
-                --{ spellId = 47585, default = true }, -- Dispersion
+                { spellId = 33206, default = true }, -- Pain Suppression
+                { spellId = 47585, default = true }, -- Dispersion
             }
         },
         {
             classID = addon.CLASSID.ROGUE,
             auras = {
-                --{ spellId = 31224, default = true }, -- Cloak of Shadows
-                --{ spellId = 5277, default = true }, -- Evasion
+                { spellId = 31224, default = true }, -- Cloak of Shadows
+                { spellId = 5277, default = true }, -- Evasion
             }
         },
-        {
-            classID = addon.CLASSID.SHAMAN,
-            auras = {
+        -- {
+        --     classID = addon.CLASSID.SHAMAN,
+        --     auras = {
 
-            }
-        },
-        {
-            classID = addon.CLASSID.WARLOCK,
-            auras = {
-                --{ spellId = 104773, default = true }, -- Unending Resolve
-            }
-        },
-        {
-            classID = addon.CLASSID.WARRIOR,
-            auras = {
+        --     }
+        -- },
+        -- {
+        --     classID = addon.CLASSID.WARLOCK,
+        --     auras = {
 
-            }
-        }
+        --     }
+        -- },
+        -- {
+        --     classID = addon.CLASSID.WARRIOR,
+        --     auras = {
+
+        --     }
+        -- }
     };
 end
 
