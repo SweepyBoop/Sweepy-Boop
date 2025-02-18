@@ -143,9 +143,9 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        eventFrame:RegisterEvent(addon.UNIT_AURA);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
+    eventFrame:RegisterEvent(addon.UNIT_AURA);
     eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
