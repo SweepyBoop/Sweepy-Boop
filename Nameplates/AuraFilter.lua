@@ -116,6 +116,21 @@ local function ShouldShowBuffOverride(self, aura)
     end
 end
 
+local function IterateAuras(self, filter, batchCount, handler, usePackedAura)
+    for i = 1, 255 do
+        local aura = C_UnitAuras.GetAuraDataByIndex(self.unit, i, filter);
+        if ( not aura ) or ( not aura.name ) then
+            break;
+        end
+        --print(aura.name, aura.spellId);
+        local customCategory = ShouldShowBuffOverride(self, aura);
+        if customCategory then
+            aura.customCategory = customCategory;
+            self.auras[aura.auraInstanceID] = aura;
+        end
+    end
+end
+
 local function ParseAllAurasOverride(self)
     if self.auras == nil then
         self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
@@ -135,10 +150,18 @@ local function ParseAllAurasOverride(self)
 
     local batchCount = nil;
     local usePackedAura = true;
-    AuraUtil.ForEachAura(self.unit, "HARMFUL", batchCount, HandleAura, usePackedAura);
+    if addon.PROJECT_MAINLINE then
+        AuraUtil.ForEachAura(self.unit, "HARMFUL", batchCount, HandleAura, usePackedAura);
+    else
+        IterateAuras(self, "HARMFUL", batchCount, HandleAura, usePackedAura);
+    end
 
     if SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy then
-        AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
+        if addon.PROJECT_MAINLINE then
+            AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
+        else
+            IterateAuras(self, "HELPFUL", batchCount, HandleAura, usePackedAura);
+        end
     end
 end
 
@@ -341,7 +364,7 @@ addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
         if addon.PROJECT_MAINLINE then
             frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.BuffFrame, "BOTTOMLEFT");
         else
-            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 5);
+            frame.CustomBuffFrame:SetPoint("BOTTOMLEFT", frame.healthBar, "TOPLEFT", 0, 21);
         end
     end
 

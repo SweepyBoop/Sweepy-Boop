@@ -402,6 +402,8 @@ else
             auras = {
                 { spellId = 61336, default = true }, -- Survival Instincts
                 { spellId = 22812, default = true }, -- Barkskin
+
+                { spellId = 61574, default = true }, -- Banner of the Horde (for testing)
             }
         },
         {
