@@ -174,7 +174,6 @@ else
                 { spellId = 55095, default = true }, -- Frost Fever
                 { spellId = 55078, default = true }, -- Blood Plague
                 { spellId = 45524, default = true }, -- Chains of Ice
-                { spellId = 50435, default = true }, -- Chillblains
                 { spellId = 73975, default = true }, -- Necrotic Strike
             }
         },
@@ -182,7 +181,6 @@ else
             classID = addon.CLASSID.DRUID,
             auras = {
                 { spellId = 8921, default = true }, -- Moonfire
-                { spellId = 5570, default = true }, -- Insect Swarm
                 { spellId = 93402, default = true }, -- Sunfire
                 { spellId = 91565, default = true }, -- Faerie Fire
                 { spellId = 9007, default = true }, -- Pounce Bleed
@@ -192,53 +190,63 @@ else
                 { spellId = 33878, default = true }, -- Mangle (Bear)
                 { spellId = 33876, default = true }, -- Mangle (Cat)
                 { spellId = 77758, default = true }, -- Thrash
-                { spellId = 45334, default = true }, -- Feral Charge (Bear)
-
-                { spellId = 58180 }, -- Infected Wounds
-                { spellId = 50259 }, -- Dazed (Feral Charge)
+                { spellId = 58180, default = true }, -- Infected Wounds
+                { spellId = 50259, default = true }, -- Dazed (Feral Charge)
             }
         },
         {
             classID = addon.CLASSID.HUNTER,
             auras = {
+                { spellId = 82654, default = true }, -- Widow Venom
+                { spellId = 94528, default = true }, -- Flare
+                { spellId = 1130, default = true }, -- Hunter's Mark
+                { spellId = 13797, default = true }, -- Immolation Trap
                 { spellId = 1978, default = true }, -- Serpent Sting
-                { spellId = 63468, default = true }, -- Piercing Shots
-                { spellId = 13812, default = true }, -- Explosive Trap Effect
-                { spellId = 5116, default = true }, -- Concussive Shot
+                { spellId = 2974, default = true }, -- Wing Clip
+                { spellId = 13812, default = true }, -- Explosive Trap
+                { spellId = 13810, default = true }, -- Ice Trap
             }
         },
         {
             classID = addon.CLASSID.MAGE,
             auras = {
+                { spellId = 44614, default = true }, -- Frostfire Bolt
+                { spellId = 116, default = true }, -- Frostbolt
+                { spellId = 11113, default = true }, -- Blast Wave
+                { spellId = 11366, default = true }, -- Pyroblast
+                { spellId = 92315, default = true }, -- Pyroblast!
                 { spellId = 44457, default = true }, -- Living Bomb
-                { spellId = 12654, default = true }, -- Ignite
-                { spellId = 120, default = true }, -- Cone of Cold
-                { spellId = 122, default = true }, -- Frost Nova
+                { spellId = 22959, default = true }, -- Critical Mass
+                { spellId = 83853, default = true }, -- Combustion
+                { spellId = 413841, default = true }, -- Ignite
+                { spellId = 12355, default = true }, -- Impact
+                { spellId = 64346, default = true }, -- Fiery Payback (Fire Mage Disarm)
             }
         },
         {
             classID = addon.CLASSID.PALADIN,
             auras = {
                 { spellId = 31803, default = true }, -- Censure
-                { spellId = 20066, default = true }, -- Repentance
-                { spellId = 853, default = true }, -- Hammer of Justice
             }
         },
         {
             classID = addon.CLASSID.PRIEST,
             auras = {
-                { spellId = 589, default = true }, -- Shadow Word: Pain
+                { spellId = 87178, default = true }, -- Mind Spike
+                { spellId = 2944, default = true }, -- Devouring Plague
                 { spellId = 34914, default = true }, -- Vampiric Touch
-                { spellId = 15487, default = true }, -- Silence
+                { spellId = 589, default = true }, -- Shadow Word: Pain
             }
         },
         {
             classID = addon.CLASSID.ROGUE,
             auras = {
-                { spellId = 703, default = true }, -- Garrote
                 { spellId = 1943, default = true }, -- Rupture
-                { spellId = 2818, default = true }, -- Deadly Poison
-                { spellId = 3409, default = true }, -- Crippling Poison
+                { spellId = 89775, default = true }, -- Hemorrhage Glyph Bleed
+                { spellId = 91021, default = true }, -- Find Weakness
+                { spellId = 703, default = true }, -- Garrote (Bleed)
+                { spellId = 26679, default = true }, -- Deadly Throw
+                { spellId = 8647, default = true }, -- Expose Armor
             }
         },
         {
@@ -246,26 +254,44 @@ else
             auras = {
                 { spellId = 8050, default = true }, -- Flame Shock
                 { spellId = 8056, default = true }, -- Frost Shock
-                { spellId = 63685, default = true }, -- Freeze
+                { spellId = 8042, default = true }, -- Earth Shock
+                { spellId = 3600, default = true }, -- Earth Bind
+                { spellId = 39796, default = true }, -- Stoneclaw Totem
             }
         },
         {
             classID = addon.CLASSID.WARLOCK,
             auras = {
                 { spellId = 172, default = true }, -- Corruption
-                { spellId = 980, default = true }, -- Bane of Agony
-                { spellId = 30108, default = true }, -- Unstable Affliction
+                { spellId = 87389, default = true }, -- Corruption (Seed of Corruption version)
                 { spellId = 18223, default = true }, -- Curse of Exhaustion
+                { spellId = 1490, default = true }, -- Curse of the Elements
+                { spellId = 702, default = true }, -- Curse of Exhaustion
+                { spellId = 1714, default = true }, -- Curse of Tongues
+                { spellId = 980, default = true }, -- Agony
+                { spellId = 48181, default = true }, -- Haunt
+                { spellId = 27243, default = true }, -- Seed of Corruption
+                { spellId = 47960, default = true }, -- Shadowflame
+                { spellId = 348, default = true }, -- Immolate
+                { spellId = 30108, default = true }, -- Unstable Affliction
+                { spellId = 603, default = true }, -- Bane of Doom
+                { spellId = 80240, default = true }, -- Bane of Havoc
+                { spellId = 85421, default = true }, -- Burning Embers
+                { spellId = 43523, default = true }, -- Unstable Affliction
             }
         },
         {
             classID = addon.CLASSID.WARRIOR,
             auras = {
-                { spellId = 1715, default = true }, -- Hamstring
-                { spellId = 1160, default = true }, -- Demoralizing Shout
-                { spellId = 6343, default = true }, -- Thunder Clap
+                { spellId = 94009, default = true }, -- Rend
+                { spellId = 86346, default = true }, -- Colossus Smash
+                { spellId = 12721, default = true }, -- Deep Wounds
+                { spellId = 6343, default = true }, -- Thunderclap
+                { spellId = 12809, default = true }, -- Concussion Blow
+                { spellId = 12294, default = true }, -- Mortal Strike
+                { spellId = 413763, default = true }, -- Deep Wounds
             }
-        }
+        },
     };
 end
 
