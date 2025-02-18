@@ -392,73 +392,68 @@ else
         {
             classID = addon.CLASSID.DEATHKNIGHT,
             auras = {
-                { spellId = 48707, default = true }, -- Anti-Magic Shell
-                { spellId = 48792, default = true }, -- Icebound Fortitude
-                { spellId = 49039, default = true }, -- Lichborne
+                --{ spellId = 48707, default = true }, -- Anti-Magic Shell
+                -- spellId = 48792, default = true }, -- Icebound Fortitude
+                --{ spellId = 49039, default = true }, -- Lichborne
             }
         },
         {
             classID = addon.CLASSID.DRUID,
             auras = {
-                { spellId = 61336, default = true }, -- Survival Instincts
-                { spellId = 22812, default = true }, -- Barkskin
-                { spellId = 102342, default = true }, -- Ironbark
+                --{ spellId = 61336, default = true }, -- Survival Instincts
+                --{ spellId = 22812, default = true }, -- Barkskin
+                --{ spellId = 102342, default = true }, -- Ironbark
             }
         },
         {
             classID = addon.CLASSID.HUNTER,
             auras = {
-                { spellId = 19263, default = true }, -- Deterrence
+
             }
         },
         {
             classID = addon.CLASSID.MAGE,
             auras = {
-                { spellId = 45438, default = true }, -- Ice Block
-                { spellId = 12042, default = true }, -- Arcane Power
+                --{ spellId = 45438, default = true }, -- Ice Block
             }
         },
         {
             classID = addon.CLASSID.PALADIN,
             auras = {
-                { spellId = 642, default = true }, -- Divine Shield
-                { spellId = 1022, default = true }, -- Blessing of Protection
-                { spellId = 31850, default = true }, -- Ardent Defender
+                --{ spellId = 642, default = true }, -- Divine Shield
+                --{ spellId = 1022, default = true }, -- Blessing of Protection
             }
         },
         {
             classID = addon.CLASSID.PRIEST,
             auras = {
-                { spellId = 33206, default = true }, -- Pain Suppression
-                { spellId = 47585, default = true }, -- Dispersion
+                --{ spellId = 33206, default = true }, -- Pain Suppression
+                --{ spellId = 47585, default = true }, -- Dispersion
             }
         },
         {
             classID = addon.CLASSID.ROGUE,
             auras = {
-                { spellId = 31224, default = true }, -- Cloak of Shadows
-                { spellId = 5277, default = true }, -- Evasion
+                --{ spellId = 31224, default = true }, -- Cloak of Shadows
+                --{ spellId = 5277, default = true }, -- Evasion
             }
         },
         {
             classID = addon.CLASSID.SHAMAN,
             auras = {
-                { spellId = 30823, default = true }, -- Shamanistic Rage
-                { spellId = 974, default = true }, -- Earth Shield
+
             }
         },
         {
             classID = addon.CLASSID.WARLOCK,
             auras = {
-                { spellId = 104773, default = true }, -- Unending Resolve
-                { spellId = 108416, default = true }, -- Dark Pact
+                --{ spellId = 104773, default = true }, -- Unending Resolve
             }
         },
         {
             classID = addon.CLASSID.WARRIOR,
             auras = {
-                { spellId = 871, default = true }, -- Shield Wall
-                { spellId = 12975, default = true }, -- Last Stand
+
             }
         }
     };
