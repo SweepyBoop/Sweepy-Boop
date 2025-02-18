@@ -116,7 +116,23 @@ local function ShouldShowBuffOverride(self, aura)
     end
 end
 
-local function IterateAuras(self, filter, batchCount, handler, usePackedAura)
+local function DefaultAuraCompareClassic(a, b)
+    local aFromPlayer = (a.sourceUnit ~= nil) and UnitIsUnit("player", a.sourceUnit) or false;
+	local bFromPlayer = (b.sourceUnit ~= nil) and UnitIsUnit("player", b.sourceUnit) or false;
+	if aFromPlayer ~= bFromPlayer then
+		return aFromPlayer;
+	end
+
+	if a.canApplyAura ~= b.canApplyAura then
+		return a.canApplyAura;
+	end
+
+	return a.auraInstanceID < b.auraInstanceID;
+end
+
+local DefaultAuraCompare = AuraUtil.DefaultAuraCompare or DefaultAuraCompareClassic;
+
+local function IterateAuras(self, filter)
     for i = 1, 255 do
         local aura = C_UnitAuras.GetAuraDataByIndex(self.unit, i, filter);
         if ( not aura ) or ( not aura.name ) then
@@ -133,7 +149,7 @@ end
 
 local function ParseAllAurasOverride(self)
     if self.auras == nil then
-        self.auras = TableUtil.CreatePriorityTable(AuraUtil.DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
+        self.auras = TableUtil.CreatePriorityTable(DefaultAuraCompare, TableUtil.Constants.AssociativePriorityTable);
     else
         self.auras:Clear();
     end
@@ -153,14 +169,14 @@ local function ParseAllAurasOverride(self)
     if addon.PROJECT_MAINLINE then
         AuraUtil.ForEachAura(self.unit, "HARMFUL", batchCount, HandleAura, usePackedAura);
     else
-        IterateAuras(self, "HARMFUL", batchCount, HandleAura, usePackedAura);
+        IterateAuras(self, "HARMFUL");
     end
 
     if SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy then
         if addon.PROJECT_MAINLINE then
             AuraUtil.ForEachAura(self.unit, "HELPFUL", batchCount, HandleAura, usePackedAura);
         else
-            IterateAuras(self, "HELPFUL", batchCount, HandleAura, usePackedAura);
+            IterateAuras(self, "HELPFUL");
         end
     end
 end
@@ -225,7 +241,7 @@ local function CustomLayout(self)
             end
         end
 
-        return AuraUtil.DefaultAuraCompare(a, b);
+        return DefaultAuraCompare(a, b);
     end)
 
     local _, debuffHeight = LayoutRow(self, debuffs);
