@@ -55,6 +55,8 @@ local function UpdatePurgableGlow(buff, show)
             else
                 container.PurgableGlow:SetAtlas("Forge-ColorSwatchSelection");
                 container.PurgableGlow:SetScale(0.4);
+                container.PurgableGlow:SetDesaturated(true);
+                container.PurgableGlow:SetVertexColor(1, 1, 1); -- White
             end
         end
 
