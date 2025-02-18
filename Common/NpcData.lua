@@ -181,7 +181,7 @@ else
                 { npcID = 1860, name = "Voidwalker", icon = 697, default = addon.NpcOption.Show },
                 { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.Show },
                 { npcID = 17252, name = "Felguard", icon = 30146, default = addon.NpcOption.Show },
-                -- { npcID = 143622, name = "Wild Imp", icon = 105174, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 143622, name = "Wild Imp", icon = 71521, default = addon.NpcOption.Hide, isCritter = true },
             }
         },
     };
