@@ -6,7 +6,7 @@ local AURA_CATEGORY = { -- Maybe apply different borders based on category?
     BUFF = 3,
 };
 
-local rowGap = 2;
+local rowGap = 4;
 local spacing = 4;
 
 local function EnsureGlowFrame(buff)
@@ -25,7 +25,12 @@ local function UpdateCrowdControlGlow(buff, show)
         local container = EnsureGlowFrame(buff);
         if not container.CrowdControlGlow then
             container.CrowdControlGlow = container:CreateTexture(nil, "ARTWORK");
-            container.CrowdControlGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            if addon.PROJECT_MAINLINE then
+                container.CrowdControlGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            else
+                container.CrowdControlGlow:SetAtlas("Forge-ColorSwatchSelection");
+                container.CrowdControlGlow:SetScale(0.48);
+            end
             container.CrowdControlGlow:SetDesaturated(true);
             container.CrowdControlGlow:SetVertexColor(1, 0.6471, 0); -- Orange
         end
@@ -45,7 +50,12 @@ local function UpdatePurgableGlow(buff, show)
         local container = EnsureGlowFrame(buff);
         if not container.PurgableGlow then
             container.PurgableGlow = container:CreateTexture(nil, "ARTWORK");
-            container.PurgableGlow:SetAtlas("newplayertutorial-drag-slotblue");
+            if addon.PROJECT_MAINLINE then
+                container.PurgableGlow:SetAtlas("newplayertutorial-drag-slotblue");
+            else
+                container.PurgableGlow:SetAtlas("Forge-ColorSwatchSelection");
+                container.PurgableGlow:SetScale(0.48);
+            end
         end
 
         container.PurgableGlow:SetPoint("TOPLEFT", buff, "TOPLEFT", -9, 6);
@@ -63,7 +73,12 @@ local function UpdateBuffGlow(buff, show)
         local container = EnsureGlowFrame(buff);
         if not container.BuffGlow then
             container.BuffGlow = container:CreateTexture(nil, "ARTWORK");
-            container.BuffGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            if addon.PROJECT_MAINLINE then
+                container.BuffGlow:SetAtlas("newplayertutorial-drag-slotgreen");
+            else
+                container.BuffGlow:SetAtlas("Forge-ColorSwatchSelection");
+                container.BuffGlow:SetScale(0.48);
+            end
             container.BuffGlow:SetDesaturated(true);
             container.BuffGlow:SetVertexColor(0, 1, 0); -- Green
         end
