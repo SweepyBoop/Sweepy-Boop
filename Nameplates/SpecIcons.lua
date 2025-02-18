@@ -63,10 +63,6 @@ addon.UpdateSpecIcon = function (nameplate)
                 iconFrame.border:Hide();
             elseif isHealer then
                 iconFrame.icon:SetAtlas(iconID);
-                if ( not addon.PROJECT_MAINLINE ) then
-                    iconFrame.icon:SetDesaturated(true);
-                    iconFrame.icon:SetVertexColor(1, 0, 0); -- Red cross for enemy healer
-                end
                 iconFrame.border:Show();
             else
                 iconFrame.icon:SetTexture(iconID);
