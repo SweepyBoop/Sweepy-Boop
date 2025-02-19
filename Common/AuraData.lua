@@ -181,6 +181,7 @@ else
             classID = addon.CLASSID.DRUID,
             auras = {
                 { spellId = 8921, default = true }, -- Moonfire
+                { spellId = 5570, default = true }, -- Insect Swarm
                 { spellId = 93402, default = true }, -- Sunfire
                 { spellId = 91565, default = true }, -- Faerie Fire
                 { spellId = 9007, default = true }, -- Pounce Bleed
