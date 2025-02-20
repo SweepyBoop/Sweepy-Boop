@@ -1,5 +1,6 @@
 local _, addon = ...;
 
+-- https://github.com/wardz/DRList-1.0/blob/master/DRList-1.0/Spells.lua
 if addon.PROJECT_MAINLINE then
     addon.DRList = {
         -- *** Disorient Effects ***
