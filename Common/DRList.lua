@@ -396,7 +396,7 @@ addon.DRList[81261]   = "silence"; -- Solar Beam
 
 addon.CrowdControlAuras = {};
 for spellId, drType in pairs(addon.DRList) do
-    if drType == "disorient" or drType == "incapacitate" or drType == "stun" or drType == "root" or drType == "silence" or drType == "horror" or drType == "fear" or drType == "mind_control" then
+    if ( type(drType) == "table" ) or ( drType ~= "taunt" and drType ~= "knockback" ) then
         addon.CrowdControlAuras[spellId] = true;
     end
 end
