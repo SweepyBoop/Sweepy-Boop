@@ -3,20 +3,36 @@ local _, addon = ...;
 local classAbilities = {};
 local macroPrefixes = {};
 
-classAbilities[addon.DRUID] = {
-    "Cyclone",
-    "Entangling Roots",
-    "Hibernate",
-    "Maim",
-    "Mass Entanglement",
-    "Mighty Bash",
-    "Moonfire",
-    "Rake",
-    "Skull Bash",
-    "Wild Charge",
-};
-macroPrefixes["Rake"] = "#showtooltip no\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
-macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@";
+if addon.PROJECT_MAINLINE then
+    classAbilities[addon.DRUID] = {
+        "Cyclone",
+        "Entangling Roots",
+        "Hibernate",
+        "Maim",
+        "Mass Entanglement",
+        "Mighty Bash",
+        "Moonfire",
+        "Rake",
+        "Skull Bash",
+        "Wild Charge",
+    };
+    macroPrefixes["Rake"] = "#showtooltip no\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
+    macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@";
+else
+    classAbilities[addon.DRUID] = {
+        "Cyclone",
+        "Entangling Roots",
+        "Hibernate",
+        "Maim",
+        "Bash",
+        "Moonfire",
+        "Pounce",
+        "Skull Bash(Bear Form)",
+        "Skull Bash(Cat Form)",
+        "Faerie Fire",
+        "Faerie Fire (Feral)",
+    };
+end
 
 classAbilities[addon.PRIEST] = {
     "Shadow Word: Pain",
@@ -86,7 +102,11 @@ end
 
 local frame = CreateFrame("Frame");
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+if addon.PROJECT_MAINLINE then
+    frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+else
+    frame:RegisterEvent("ARENA_OPPONENT_UPDATE");
+end
 frame:SetScript("OnEvent", function ()
     TryUpdateMacros();
 end)
