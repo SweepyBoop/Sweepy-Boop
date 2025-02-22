@@ -32,6 +32,7 @@ else
         "Faerie Fire",
         "Faerie Fire (Feral)",
     };
+    macroPrefixes["Pounce"] = "#showtooltip\n/cast [stance:0/2/4/5/6] Wild Growth\n/cast [stance:1] Enrage\n/cast [stance:3, @";
 end
 
 classAbilities[addon.PRIEST] = {
