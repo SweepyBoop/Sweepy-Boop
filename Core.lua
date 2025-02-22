@@ -635,8 +635,8 @@ if addon.PROJECT_MAINLINE then
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
-                desc = addon.EXCLAMATION .. " Uncheck \"Display Aggro Highlight\" in Interface - Raid Frames to disable PvE aggro",
-                descStyle = "inline",
+                desc = "Show an animating dotted line border when a teammate is targeted by enemy players\n\n"
+                    .. "The color of the border changes based on the number of enemies targeting the teammate",
             },
 
             druidHoTHelper = {
