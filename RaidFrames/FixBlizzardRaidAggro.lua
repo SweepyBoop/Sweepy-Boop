@@ -48,7 +48,7 @@ local function ShowCustomAggroHighlight(frame, threatCount)
         frame.customAggroHighlight, -- frame
         threatColors[threatCount], -- color
         16, -- number of frames
-        0.125, -- frequency
+        0.125, -- frequency (default is 0.25)
         nil, -- actions.glow_length,
         2 -- actions.glow_thickness,
         -- actions.glow_XOffset,
@@ -76,7 +76,6 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
                 frame.aggroHighlight:SetAlpha(1);
             end
             HideCustomAggroHighlight(frame);
-            HideCustomAggroHighlightPurple(frame);
 
             return;
         end
