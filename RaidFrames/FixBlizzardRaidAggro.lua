@@ -95,6 +95,8 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
             if frame.aggroHighlight then
                 frame.aggroHighlight:SetAlpha(1);
             end
+            HideCustomAggroHighlight(frame);
+            HideCustomAggroHighlightPurple(frame);
 
             return;
         end
@@ -104,9 +106,9 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
             if frame.aggroHighlight then
                 frame.aggroHighlight:SetAlpha(1);
             end
-
             HideCustomAggroHighlight(frame);
             HideCustomAggroHighlightPurple(frame);
+
             return;
         end
 
