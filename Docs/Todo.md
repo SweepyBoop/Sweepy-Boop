@@ -12,3 +12,5 @@
   - Healing_Red
 
 - [ ] Customize loss of control frame
+
+- [ ] Leverage AutoCastOverlayTemplate to show active glow for cd tracking
