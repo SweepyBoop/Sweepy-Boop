@@ -6,8 +6,6 @@ local _, addon = ...;
 
 local LCG = LibStub("LibCustomGlow-1.0");
 
-local throttle = 0.05;
-local scale = 1.4 * 0.85;
 local threatColors = {
     [1] = {1, 1, 0, 1}, -- yellow
     [2] = {1, 0.5, 0, 1}, -- orange
