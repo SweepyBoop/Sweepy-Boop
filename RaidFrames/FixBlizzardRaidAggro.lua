@@ -21,7 +21,7 @@ local function GetThreatCount(unit)
 
     -- Comment out for retail release
     if addon.TEST_MODE then
-        count = UnitIsUnit(unit, "target") and 2 or 0;
+        count = UnitIsUnit(unit, "focus") and 2 or 0;
         return count;
     end
 
