@@ -133,15 +133,11 @@ On Blizzard raid frames:
 - Cenarion Ward buff fades out until the actual healing procs (to extend the healing with Verdant Infusion)
 
 ## Fix Blizzard raid frame aggro highlight
-![PvP raid frame aggro highlight](https://github.com/user-attachments/assets/5fc7913f-3a96-4d2d-9939-55e6ef264ad3)
+![Raid frame aggro](https://github.com/user-attachments/assets/c85da02f-b62a-417b-96f5-68695c74f47c)
 
 Blizzard's raid frame aggro highlight only tracks PvE aggro, i.e., threat from pets inside arenas, which is basically useless.
 
-This module fixes that by highlighting the teammate who is targetted by enemy DPS players.
-
-For this module to work, uncheck the following under Interface settings so that it stops showing PvE aggro:
-
-![image](https://github.com/user-attachments/assets/39e0088e-7280-4775-a5eb-1c824987ebaa)
+This module replaces Blizzard raid frame aggro highlight with an animating dotted line border, and the color of the border changes based on how many enemy players are currently targeting a teammate.
 
 ## Miscellaneous quality-of-life features 
 ### Arena / battleground queue timer
