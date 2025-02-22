@@ -88,6 +88,9 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
             return;
         end
 
+        if frame.aggroHighlight then
+            frame.aggroHighlight:SetAlpha(0);
+        end
         local threatCount = GetThreatCount(frame.unit);
 
         if threatCount > 0 then
