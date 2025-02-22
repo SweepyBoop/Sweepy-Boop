@@ -20,10 +20,10 @@ local function GetThreatCount(unit)
     if ( not unit ) then return count end
 
     -- Comment out for retail release
-    if addon.TEST_MODE then
-        count = UnitIsUnit(unit, "focus") and 2 or 0;
-        return count;
-    end
+    -- if addon.TEST_MODE then
+    --     count = UnitIsUnit(unit, "focus") and 2 or 0;
+    --     return count;
+    -- end
 
     for i = 1, addon.MAX_ARENA_SIZE do
         if UnitIsUnit(unit, "arena" .. i .. "target") then
@@ -81,14 +81,14 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
         end
 
         -- Comment out when testing
-        -- if ( not IsActiveBattlefieldArena() ) then
-        --     if frame.aggroHighlight then
-        --         frame.aggroHighlight:SetAlpha(1);
-        --     end
-        --     HideCustomAggroHighlight(frame);
+        if ( not IsActiveBattlefieldArena() ) then
+            if frame.aggroHighlight then
+                frame.aggroHighlight:SetAlpha(1);
+            end
+            HideCustomAggroHighlight(frame);
 
-        --     return;
-        -- end
+            return;
+        end
 
         local threatCount = GetThreatCount(frame.unit);
 
