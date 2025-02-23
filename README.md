@@ -123,6 +123,13 @@ Show spec icons (or a special healer icon) on top of enemy players in both arena
 
 ![image](https://github.com/user-attachments/assets/bf5b9d81-68f6-4928-a2eb-3dfa976a7a55)
 
+## Fix Blizzard raid frame aggro highlight
+![Raid frame aggro](https://github.com/user-attachments/assets/8b617dce-10d2-4c4b-8f8b-9332b0d1e528)
+
+Blizzard's raid frame aggro highlight only tracks PvE aggro, i.e., threat from pets inside arenas, which is basically useless.
+
+This module replaces Blizzard raid frame aggro highlight with an animating dotted line border, and the color of the border changes based on how many enemy players are currently targeting a teammate.
+
 ## Druid HoT helper
 ![Lifebloom pandemic glow](https://github.com/user-attachments/assets/a502695d-242a-4422-ba5c-317be20cb243)
 ![Cenarion Ward fade out before proc](https://github.com/user-attachments/assets/85bf2199-5c40-4ebb-bcf5-3f99967bec5a)
@@ -131,13 +138,6 @@ Show spec icons (or a special healer icon) on top of enemy players in both arena
 On Blizzard raid frames:
 - Glow lifebloom buff during pandemic window for optimal refresh timing
 - Cenarion Ward buff fades out until the actual healing procs (to extend the healing with Verdant Infusion)
-
-## Fix Blizzard raid frame aggro highlight
-![Raid frame aggro](https://github.com/user-attachments/assets/c85da02f-b62a-417b-96f5-68695c74f47c)
-
-Blizzard's raid frame aggro highlight only tracks PvE aggro, i.e., threat from pets inside arenas, which is basically useless.
-
-This module replaces Blizzard raid frame aggro highlight with an animating dotted line border, and the color of the border changes based on how many enemy players are currently targeting a teammate.
 
 ## Miscellaneous quality-of-life features 
 ### Arena / battleground queue timer
