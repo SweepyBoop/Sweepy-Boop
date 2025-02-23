@@ -660,10 +660,11 @@ if addon.PROJECT_MAINLINE then
             raidFrameAggroHighlightAnimationSpeed = {
                 order = 4,
                 type = "range",
-                min = 1,
+                width = 1.5,
+                min = 0,
                 max = 25,
                 step = 1,
-                name = "Animation speed",
+                name = "Animation speed (0 for no animation)",
                 hidden = function ()
                     return ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
                 end
@@ -887,8 +888,8 @@ local defaults = {
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
-            raidFrameAggroHighlightThickness = 1,
-            raidFrameAggroHighlightAnimationSpeed = 1,
+            raidFrameAggroHighlightThickness = 2,
+            raidFrameAggroHighlightAnimationSpeed = 0,
             druidHoTHelper = true,
         },
         misc = {
@@ -910,7 +911,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
-    defaults.profile.raidFrames.raidFrameAggroHighlightThickness = 2;
     defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
