@@ -346,6 +346,8 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.HUNTER,
             auras = {
                 { spellId = 186265, default = true }, -- Aspect of the Turtle
+                { spellId = 53480, default = true }, -- Roar of Sacrifice
+                { spellId = 54216, default = true }, -- Master's Call
                 { spellId = 264735, default = true }, -- Survival of the Fittest
             }
         },
@@ -378,6 +380,8 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 204018, default = true }, -- Blessing of Spellwarding
                 { spellId = 6940, default = true }, -- Blessing of Sacrifice
                 { spellId = 86659, default = true }, -- Guardian of Ancient Kings
+                { spellId = 1044, default = true }, -- Blessing of Freedom
+                    { spellId = 305395, parent = 1044 }, -- Blessing of Freedom (Unbound Freedom)
                 { spellId = 184662 }, -- Shield of Vengeance
                 { spellId = 498 }, -- Divine Protection
             }
