@@ -42,13 +42,16 @@ local function ShowCustomAggroHighlight(frame, threatCount)
         frame.customAggroHighlight = customAggroHighlight;
     end
 
+    local thickness = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightThickness;
+    local speed = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed;
+
     LCG.PixelGlow_Start(
         frame.customAggroHighlight, -- frame
         threatColors[threatCount], -- color
         16, -- number of frames
-        0.025, -- frequency (default is 0.25)
+        0.025 * speed, -- frequency (default is 0.25)
         nil, -- actions.glow_length,
-        nil, -- actions.glow_thickness,
+        thickness, -- actions.glow_thickness,
         nil, -- actions.glow_XOffset,
         nil, -- actions.glow_YOffset,
         false -- actions.glow_border and true or false,
