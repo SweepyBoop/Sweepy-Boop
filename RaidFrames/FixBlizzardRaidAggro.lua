@@ -22,9 +22,6 @@ local function GetThreatCount(unit)
     for i = 1, addon.MAX_ARENA_SIZE do
         if UnitIsUnit(unit, "arena" .. i .. "target") then
             count = count + 1;
-            if ( count > 1 ) then
-                return count;
-            end
         end
     end
 
