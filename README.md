@@ -133,7 +133,7 @@ On Blizzard raid frames:
 - Cenarion Ward buff fades out until the actual healing procs (to extend the healing with Verdant Infusion)
 
 ## Fix Blizzard raid frame aggro highlight
-![Raid frame aggro](https://github.com/user-attachments/assets/c85da02f-b62a-417b-96f5-68695c74f47c)
+![Raid frame aggro](https://github.com/user-attachments/assets/8b617dce-10d2-4c4b-8f8b-9332b0d1e528)
 
 Blizzard's raid frame aggro highlight only tracks PvE aggro, i.e., threat from pets inside arenas, which is basically useless.
 
