@@ -19,7 +19,7 @@ local function IsRestricted()
     return restricted[instanceType];
 end
 
-local function UpdateUnitFrameVisibility(frame, show)
+local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     if ( not frame.unsetIgnoreParentAlpha ) then
         for _, region in pairs(frame) do
@@ -45,13 +45,28 @@ local function UpdateUnitFrameVisibility(frame, show)
     if addon.PROJECT_MAINLINE then
         frame.castBar:SetAlpha(alpha);
     end
+
+    if nameplate.extended then -- NeatPlates
+        -- Setting alpha on extended itself did not work, just set alpha on child elements
+        for _, region in pairs(nameplate.extended.bars) do
+            if ( type(region) == "table" ) and region.SetAlpha then
+                region:SetAlpha(alpha);
+            end
+        end
+
+        for _, region in pairs(nameplate.extended) do
+            if ( type(region) == "table" ) and region.SetAlpha then
+                region:SetAlpha(alpha);
+            end
+        end
+    end
 end
 
 local function UpdateWidgets(nameplate, frame)
     -- Don't mess with personal resource display
     if ( UnitIsUnit(frame.unit, "player") ) then
         HideWidgets(nameplate);
-        UpdateUnitFrameVisibility(frame, true);
+        UpdateUnitFrameVisibility(nameplate, frame, true);
         return;
     end
 
@@ -74,10 +89,10 @@ local function UpdateWidgets(nameplate, frame)
                 addon.HidePetIcon(nameplate);
             end
 
-            UpdateUnitFrameVisibility(frame, false); -- if class icons are enabled, all friendly units' health bars should be hidden
+            UpdateUnitFrameVisibility(nameplate, frame, false); -- if class icons are enabled, all friendly units' health bars should be hidden
         else
             addon.HideClassIcon(nameplate);
-            UpdateUnitFrameVisibility(frame, true); -- Will be overriden by nameplate filter later
+            UpdateUnitFrameVisibility(nameplate, frame, true); -- Will be overriden by nameplate filter later
         end
 
         addon.HideSpecIcon(nameplate);
@@ -97,7 +112,7 @@ local function UpdateWidgets(nameplate, frame)
 
             addon.HideNpcHighlight(nameplate);
             addon.HideCritterIcon(nameplate);
-            UpdateUnitFrameVisibility(frame, true); -- Always show enemy players
+            UpdateUnitFrameVisibility(nameplate, frame, true); -- Always show enemy players
             return;
         end
 
@@ -127,7 +142,7 @@ local function UpdateWidgets(nameplate, frame)
             addon.HideCritterIcon(nameplate);
         end
 
-        UpdateUnitFrameVisibility(frame, shouldShowUnitFrame);
+        UpdateUnitFrameVisibility(nameplate, frame, shouldShowUnitFrame);
     end
 end
 
@@ -146,7 +161,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 HideWidgets(nameplate); -- Hide previous widgets (even in restricted areas)
                 if IsRestricted() then
-                    UpdateUnitFrameVisibility(nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
+                    UpdateUnitFrameVisibility(nameplate, nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
                 else
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
