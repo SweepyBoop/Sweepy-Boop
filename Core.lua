@@ -661,7 +661,7 @@ if addon.PROJECT_MAINLINE then
                 order = 4,
                 type = "range",
                 min = 1,
-                max = 20,
+                max = 25,
                 step = 1,
                 name = "Animation speed",
                 hidden = function ()
