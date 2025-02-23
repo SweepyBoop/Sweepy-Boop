@@ -7,9 +7,9 @@ local _, addon = ...;
 local LCG = LibStub("LibCustomGlow-1.0");
 
 local threatColors = {
-    [1] = {1, 1, 0, 1}, -- yellow
-    [2] = {1, 0.5, 0, 1}, -- orange
-    [3] = {1, 0, 0, 1}, -- red
+    [1] = {1, 1, 0, 0.5}, -- yellow
+    [2] = {1, 0.5, 0, 0.5}, -- orange
+    [3] = {1, 0, 0, 0.5}, -- red
 };
 
 local function GetThreatCount(unit)
