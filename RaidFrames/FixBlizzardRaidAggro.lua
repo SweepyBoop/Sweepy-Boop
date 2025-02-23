@@ -46,7 +46,7 @@ local function ShowCustomAggroHighlight(frame, threatCount)
         frame.customAggroHighlight, -- frame
         threatColors[threatCount], -- color
         16, -- number of frames
-        0.125, -- frequency (default is 0.25)
+        0.025, -- frequency (default is 0.25)
         nil, -- actions.glow_length,
         nil, -- actions.glow_thickness,
         nil, -- actions.glow_XOffset,
