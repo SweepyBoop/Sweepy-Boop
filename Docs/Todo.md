@@ -13,4 +13,4 @@
 
 - [ ] Customize loss of control frame
 
-- [ ] Leverage AutoCastOverlayTemplate to show active glow for cd tracking
+- [ ] Leverage AnimateTexCoords (Interface\SpellActivationOverlay\IconAlertAnts or interface/transmogrify/purpleiconalertants) to show active glow for cd tracking
