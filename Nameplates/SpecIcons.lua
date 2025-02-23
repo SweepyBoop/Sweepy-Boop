@@ -75,8 +75,10 @@ addon.UpdateSpecIcon = function (nameplate)
                 if ( not addon.PROJECT_MAINLINE ) then
                     iconFrame.icon:SetDesaturated(true);
                     iconFrame.icon:SetVertexColor(1, 0, 0); -- Red
+                    iconFrame.border:Hide();
+                else
+                    iconFrame.border:Show();
                 end
-                iconFrame.border:Show();
             else
                 iconFrame.icon:SetTexture(iconID);
                 iconFrame.border:Show();
