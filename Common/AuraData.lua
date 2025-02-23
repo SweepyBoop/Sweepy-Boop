@@ -340,6 +340,7 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.EVOKER,
             auras = {
                 { spellId = 378464, default = true }, -- Nullifying Shroud
+                { spellId = 378441, default = true }, -- Time Stop
                 { spellId = 363916, default = true }, -- Obsidian Scales
             }
         },
