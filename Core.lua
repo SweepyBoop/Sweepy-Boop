@@ -887,6 +887,8 @@ local defaults = {
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
+            raidFrameAggroHighlightThickness = 1,
+            raidFrameAggroHighlightAnimationSpeed = 1,
             druidHoTHelper = true,
         },
         misc = {
