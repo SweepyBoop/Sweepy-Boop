@@ -13,6 +13,7 @@ if addon.PROJECT_MAINLINE then
     };
 end
 
+-- Suppress friendly FC icon and target highlight, as NeatPlates unregisters all UnitFrame events, causing problems for those 2 features
 local hasConflict = C_AddOns.IsAddOnLoaded("NeatPlates");
 
 local function EnsureClassIcon(nameplate)
