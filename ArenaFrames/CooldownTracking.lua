@@ -7,9 +7,7 @@ local cooldowns = addon.utilitySpells;
 local resets = addon.cooldownResets;
 local SPELLCATEGORY = addon.SPELLCATEGORY;
 
-local resetByPower = {
-    853,
-};
+local resetByPower = {};
 
 local premadeIcons = {}; -- Premake icons (regardless of class) only once and adjust if needed
 
@@ -102,7 +100,7 @@ local function ProcessCombatLogEventForUnit(self, unitId, guid, subEvent, source
 
     -- Check resets by spell cast
     if ( subEvent == addon.SPELL_CAST_SUCCESS ) and ( sourceGUID == guid ) then
-        -- Check reset by power
+        -- Check reset by power (HoJ cooldown reduction no longer exists)
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
             local iconId = unitId .. "-" .. reset;

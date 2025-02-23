@@ -241,8 +241,6 @@ addon.utilitySpells = {
         cooldown = 45,
         class = addon.PALADIN,
         category = SPELLCATEGORY.CROWDCONTROL,
-        reduce_power_type = POWERTYPE.HolyPower;
-        reduce_amount = 2, -- Each holy power spent reduces the cooldown by 2 sec.
     },
     -- Blinding Light
     [115750] = {
