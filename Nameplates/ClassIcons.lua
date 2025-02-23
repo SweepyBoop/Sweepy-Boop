@@ -13,6 +13,8 @@ if addon.PROJECT_MAINLINE then
     };
 end
 
+local hasConflict = C_AddOns.IsAddOnLoaded("NeatPlates");
+
 local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
@@ -44,7 +46,7 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
         iconID = nil;
     end
 
-    if addon.PROJECT_MAINLINE then
+    if addon.PROJECT_MAINLINE and ( not hasConflict ) then
         if ( pvpClassification ~= nil ) and ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
             iconID = flagCarrierIcons[pvpClassification];
             iconCoords = {0, 1, 0, 1};
@@ -57,7 +59,7 @@ end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local isTarget = UnitIsUnit(frame.unit, "target");
-    local featureEnabled = SweepyBoop.db.profile.nameplatesFriendly.targetHighlight;
+    local featureEnabled = SweepyBoop.db.profile.nameplatesFriendly.targetHighlight and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
             nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget and featureEnabled);

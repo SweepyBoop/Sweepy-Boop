@@ -1,9 +1,5 @@
 local _, addon = ...;
 
--- IMPORTANT!!!
--- Make sure you disable Interface -> Raid Profiles -> "Display Aggro Highlight", and do a /reload
--- If that option is enabled, the following code will not run so we don't mess with the Blizzard PVE aggro
-
 local LCG = LibStub("LibCustomGlow-1.0");
 
 local threatColors = {
