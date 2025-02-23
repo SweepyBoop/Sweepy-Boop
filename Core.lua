@@ -213,9 +213,6 @@ options.args.nameplatesEnemy = {
             order = 4,
             type = "header",
             name = "Arena & battleground enemy spec icons",
-            hidden = function ()
-                return ( not addon.PROJECT_MAINLINE );
-            end
         },
         arenaSpecIconHealer = {
             order = 5,
@@ -223,9 +220,6 @@ options.args.nameplatesEnemy = {
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
             desc = "Show spec icons on top of the nameplates of enemy healers",
-            hidden = function ()
-                return ( not addon.PROJECT_MAINLINE );
-            end
         },
         arenaSpecIconHealerIcon = {
             order = 6,
@@ -233,7 +227,7 @@ options.args.nameplatesEnemy = {
             type = "toggle",
             name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
         },
         arenaSpecIconOthers = {
@@ -243,7 +237,7 @@ options.args.nameplatesEnemy = {
             name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
         },
         arenaSpecIconAlignment = {
@@ -257,7 +251,7 @@ options.args.nameplatesEnemy = {
                 [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
             },
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
         },
         arenaSpecIconVerticalOffset = {
@@ -269,7 +263,7 @@ options.args.nameplatesEnemy = {
             width = 0.85,
             name = "Vertical offset",
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
+                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
             end
         },
         arenaSpecIconScale = {
@@ -281,7 +275,7 @@ options.args.nameplatesEnemy = {
             width = 0.85,
             name = "Scale (%)",
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
             end
         },
 
