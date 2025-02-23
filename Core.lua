@@ -640,7 +640,7 @@ if addon.PROJECT_MAINLINE then
                 order = 2,
                 width = "full",
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Enabled",
+                name = addon.FORMAT_ATLAS("pvptalents-warmode-swords") .. " Enabled",
                 desc = "Show an animating dotted line border when a teammate is targeted by enemy players\n\n"
                     .. "The color of the border changes based on the number of enemies targeting the teammate",
             },
