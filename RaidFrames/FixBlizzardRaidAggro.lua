@@ -38,7 +38,7 @@ local function ShowCustomAggroHighlight(frame, threatCount)
     local thickness = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightThickness;
     local speed = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed;
     if speed == 0 then
-        speed = 1e-10;
+        speed = 1e-10; -- Set to a very small frequency, essentially no animation
     end
 
     LCG.PixelGlow_Start(
