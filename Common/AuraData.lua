@@ -319,6 +319,7 @@ if addon.PROJECT_MAINLINE then
         {
             classID = addon.CLASSID.DEMONHUNTER,
             auras = {
+                { spellId = 354610, default = true }, -- Glimpse (Vengeful Retreat)
                 { spellId = 196555, default = true }, -- Netherwalk
                 { spellId = 212800, default = true }, -- Blur
             }
