@@ -630,17 +630,53 @@ if addon.PROJECT_MAINLINE then
         get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
         set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
         args = {
-            raidFrameAggroHighlightEnabled = {
+            header1 = {
                 order = 1,
+                type = "header",
+                name = "PvP aggro highlight",
+            },
+
+            raidFrameAggroHighlightEnabled = {
+                order = 2,
                 width = "full",
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Show PvP aggro highlight in arena",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_reincarnation")) .. " Enabled",
                 desc = "Show an animating dotted line border when a teammate is targeted by enemy players\n\n"
                     .. "The color of the border changes based on the number of enemies targeting the teammate",
             },
 
+            raidFrameAggroHighlightThickness = {
+                order = 3,
+                type = "range",
+                min = 1,
+                max = 5,
+                step = 1,
+                name = "Border thickness",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
+                end
+            },
+
+            raidFrameAggroHighlightAnimationSpeed = {
+                order = 4,
+                type = "range",
+                min = 1,
+                max = 20,
+                step = 1,
+                name = "Animation speed",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
+                end
+            },
+
+            header2 = {
+                order = 5,
+                type = "header",
+                name = "",
+            },
+
             druidHoTHelper = {
-                order = 2,
+                order = 6,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
@@ -872,6 +908,8 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
+    defaults.profile.raidFrames.raidFrameAggroHighlightThickness = 2;
+    defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 10;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
