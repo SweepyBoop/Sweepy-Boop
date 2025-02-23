@@ -168,12 +168,23 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                 end
             end
         else
-            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-            if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
-                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
+            if addon.PROJECT_MAINLINE then
+                local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+                if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
+                    addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
+                else
+                    -- There are still units with unknown spec, request info
+                    RequestBattlefieldScoreData();
+                end
             else
-                -- There are still units with unknown spec, request info
-                RequestBattlefieldScoreData();
+                -- pass Name-Server as guid in Classic
+                local numScores = GetNumBattlefieldScores();
+                for i = 1, numScores do
+                    local name, _, _, _, _, _, _, _, classToken, _, _, _, _, _, _, talentSpec = select(9, GetBattlefieldScore(i));
+                    if ( not addon.cachedBattlefieldSpec[name] ) and classToken and talentSpec then
+                        addon.cachedBattlefieldSpec[name] = specInfoByName[classToken .. "-" .. talentSpec];
+                    end
+                end
             end
         end
     end
