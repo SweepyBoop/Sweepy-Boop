@@ -152,9 +152,7 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {};
 end)
 
-addon.GetBattlefieldSpecByPlayerGuid = function (unitId)
-    local guid = UnitGUID(unitId);
-
+addon.GetBattlefieldSpecByPlayerGuid = function (guid)
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
@@ -170,25 +168,12 @@ addon.GetBattlefieldSpecByPlayerGuid = function (unitId)
                 end
             end
         else
-            if addon.PROJECT_MAINLINE then
-                local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-                if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
-                    addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
-                else
-                    -- There are still units with unknown spec, request info
-                    RequestBattlefieldScoreData();
-                end
+            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+            if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
+                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
             else
-                -- GetInspectSpecialization is only available in MoP, show no spec icons in battlegrounds for now
-                -- GetBattlefieldScore always returns empty info, and C_PvP.GetScoreInfoByPlayerGuid is added in 8.2.0
-
-                -- local specID = GetInspectSpecialization(unitId);
-                -- if specID then
-                --     local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                --     addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
-                -- else
-                --     NotifyInspect(guid);
-                -- end
+                -- There are still units with unknown spec, request info
+                RequestBattlefieldScoreData();
             end
         end
     end

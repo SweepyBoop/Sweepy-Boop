@@ -103,7 +103,8 @@ local function UpdateWidgets(nameplate, frame)
         addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
-            if SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
+            -- Need to figure out spec icon for classic, don't show for now
+            if addon.PROJECT_MAINLINE and SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers then
                 addon.ShowSpecIcon(nameplate); -- Control alpha in spec icon module for healer / non-healer
             else
                 addon.HideSpecIcon(nameplate);
@@ -150,8 +151,6 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-    else
-        eventFrame:RegisterEvent(addon.INSPECT_READY);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
@@ -179,16 +178,6 @@ function SweepyBoop:SetupNameplateModules()
                     if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
                         addon.UpdateSpecIcon(nameplate);
                     end
-                end
-            end
-        elseif event == addon.INSPECT_READY then
-            if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
-            local nameplates = C_NamePlate.GetNamePlates();
-            for i = 1, #(nameplates) do
-                local nameplate = nameplates[i];
-                if nameplate and nameplate.UnitFrame then
-                    if nameplate.UnitFrame:IsForbidden() then return end
-                    addon.UpdateSpecIcon(nameplate);
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control

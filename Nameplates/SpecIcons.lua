@@ -14,7 +14,7 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
     if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
-        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(unitId);
+        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId));
         if ( not specInfo ) then return end
         if ( specInfo.role == "HEALER" ) then
             if config.arenaSpecIconHealer then
@@ -63,13 +63,7 @@ addon.UpdateSpecIcon = function (nameplate)
                 iconFrame.border:Hide();
             elseif isHealer then
                 iconFrame.icon:SetAtlas(iconID);
-                if ( not addon.PROJECT_MAINLINE ) then
-                    iconFrame.icon:SetDesaturated(true);
-                    iconFrame.icon:SetVertexColor(1, 0, 0); -- Red
-                    iconFrame.border:Hide();
-                else
-                    iconFrame.border:Show();
-                end
+                iconFrame.border:Show();
             else
                 iconFrame.icon:SetTexture(iconID);
                 iconFrame.border:Show();
