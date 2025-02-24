@@ -188,9 +188,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
-                    if string.find(nameplate.UnitFrame.unit, "nameplate") then
-                        addon.UpdateSpecIcon(nameplate);
-                    end
+                    addon.UpdateSpecIcon(nameplate);
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
