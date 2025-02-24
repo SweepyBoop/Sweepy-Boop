@@ -176,12 +176,17 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid, unitId) -- unitId is for 
                     -- There are still units with unknown spec, request info
                     RequestBattlefieldScoreData();
                 end
-            elseif unitId then
-                local specID = GetInspectSpecialization(unitId);
-                if specID then
-                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                    addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
-                end
+            else
+                -- GetInspectSpecialization is only available in MoP, show no spec icons in battlegrounds for now
+                -- GetBattlefieldScore always returns empty info, and C_PvP.GetScoreInfoByPlayerGuid is added in 8.2.0
+
+                -- local specID = GetInspectSpecialization(unitId);
+                -- if specID then
+                --     local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                --     addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
+                -- else
+                --     NotifyInspect(guid);
+                -- end
             end
         end
     end
