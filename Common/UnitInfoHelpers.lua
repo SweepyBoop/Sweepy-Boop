@@ -152,7 +152,7 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {};
 end)
 
-addon.GetBattlefieldSpecByPlayerGuid = function (guid)
+addon.GetBattlefieldSpecByPlayerGuid = function (guid, unitId) -- unitId is for classic only
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
@@ -176,14 +176,11 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                     -- There are still units with unknown spec, request info
                     RequestBattlefieldScoreData();
                 end
-            else
-                -- pass Name-Server as guid in Classic
-                local numScores = GetNumBattlefieldScores();
-                for i = 1, numScores do
-                    local name, _, _, _, _, _, _, _, classToken, _, _, _, _, _, _, talentSpec = select(9, GetBattlefieldScore(i));
-                    if ( not addon.cachedBattlefieldSpec[name] ) and classToken and talentSpec then
-                        addon.cachedBattlefieldSpec[name] = specInfoByName[classToken .. "-" .. talentSpec];
-                    end
+            elseif unitId then
+                local specID = GetInspectSpecialization(unitId);
+                if specID then
+                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                    addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
                 end
             end
         end
