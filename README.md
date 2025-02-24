@@ -128,7 +128,7 @@ Show spec icons (or a special healer icon) on top of enemy players in both arena
 
 Blizzard's raid frame aggro highlight only tracks PvE aggro, i.e., threat from pets inside arenas, which is basically useless.
 
-This module replaces Blizzard raid frame aggro highlight with an animating dotted line border, and the color of the border changes based on how many enemy players are currently targeting a teammate.
+This module replaces Blizzard raid frame aggro highlight with an animating dotted line border (border thickness and animation speed both customizable!), and the color of the border changes based on how many enemy players are currently targeting a teammate.
 
 ## Druid HoT helper
 ![Lifebloom pandemic glow](https://github.com/user-attachments/assets/a502695d-242a-4422-ba5c-317be20cb243)
