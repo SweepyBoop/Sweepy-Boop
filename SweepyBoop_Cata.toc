@@ -35,5 +35,3 @@ Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua
 Nameplates\AuraFilter.lua
 Nameplates\Nameplates.lua
-
-Internal\FocusMacros.lua
