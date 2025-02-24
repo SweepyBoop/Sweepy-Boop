@@ -14,7 +14,7 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
     if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
-        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(UnitGUID(unitId), unitId);
+        local specInfo = addon.GetBattlefieldSpecByPlayerGuid(unitId);
         if ( not specInfo ) then return end
         if ( specInfo.role == "HEALER" ) then
             if config.arenaSpecIconHealer then

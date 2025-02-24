@@ -152,7 +152,9 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {};
 end)
 
-addon.GetBattlefieldSpecByPlayerGuid = function (guid, unitId) -- unitId is for classic only
+addon.GetBattlefieldSpecByPlayerGuid = function (unitId)
+    local guid = UnitGUID(unitId);
+
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
