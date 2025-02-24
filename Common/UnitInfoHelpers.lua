@@ -167,7 +167,10 @@ addon.GetBattlefieldSpecByPlayerGuid = function (guid)
                     end
                 end
             end
-        else
+        elseif addon.PROJECT_MAINLINE then
+            -- We can't get specs reliably in battlegrounds pre MoP
+            -- GetInspectSpecialization is available starting from MoP
+            -- GetBattlefieldScore always returns empty info, and C_PvP.GetScoreInfoByPlayerGuid is added in 8.2.0
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
                 addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
