@@ -30,5 +30,8 @@ foreach ($dir in $dirsToCopy) {
     Copy-Item -Path $dir.FullName -Destination $destPath -Recurse -Force
 }
 
-$constantsFile = Join-Path -Path $addonDir -ChildPath "Common\Constants.lua"
-"addon.internal = true;" | Out-File -FilePath $constantsFile -Append -Encoding UTF8
+$constantsFileRetail = Join-Path -Path $addonDir -ChildPath "Common\Constants.lua"
+"addon.internal = true;" | Out-File -FilePath $constantsFileRetail -Append -Encoding UTF8
+
+$constantsFileClassic = Join-Path -Path $classicDir -ChildPath "Common\Constants.lua"
+"addon.internal = true;" | Out-File -FilePath $constantsFileClassic -Append -Encoding UTF8
