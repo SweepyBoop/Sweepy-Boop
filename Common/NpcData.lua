@@ -93,7 +93,6 @@ if addon.PROJECT_MAINLINE then
 
                 { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Hide },
                 { npcID = 78001, name = "Cloudburst Totem", icon = 157153, default = addon.NpcOption.Hide },
-                { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Hide },
                 { npcID = 97285, name = "Wind Rush Totem", icon = 192077, default = addon.NpcOption.Hide },
                 { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Hide },
                 { npcID = 97369, name = "Liquid Magma Totem", icon = 192222, default = addon.NpcOption.Hide },
@@ -102,7 +101,6 @@ if addon.PROJECT_MAINLINE then
         {
             classID = addon.CLASSID.WARLOCK,
             npcs = {
-                { npcID = 107100, name = "Observer", icon = 112869, default = addon.NpcOption.Highlight },
                 { npcID = 135002, name = "Demonic Tyrant", icon = 265187, default = addon.NpcOption.Show },
                 { npcID = 107024, name = "Fel Lord", icon = 212459, default = addon.NpcOption.Show },
                 { npcID = 196111, name = "Pit Lord", icon = 138789, default = addon.NpcOption.Show },
@@ -118,12 +116,6 @@ if addon.PROJECT_MAINLINE then
                 -- Pets that should be hidden
                 { npcID = 98035, name = "Dreadstalker", icon = 104316, default = addon.NpcOption.Hide, isCritter = true },
                 { npcID = 143622, name = "Wild Imp", icon = 105174, default = addon.NpcOption.Hide, isCritter = true },
-            }
-        },
-        {
-            classID = addon.CLASSID.WARRIOR,
-            npcs = {
-                { npcID = 119052, name = "War Banner", icon = 236320, default = addon.NpcOption.Highlight },
             }
         },
     };
