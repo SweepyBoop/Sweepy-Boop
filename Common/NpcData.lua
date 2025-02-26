@@ -90,6 +90,8 @@ if addon.PROJECT_MAINLINE then
                 { npcID = 225409, name = "Surging Totem", icon = 444995, default = addon.NpcOption.Show },
                 { npcID = 95061, name = "Greater Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
                 { npcID = 61029, name = "Primal Fire Elemental", icon = 198067, default = addon.NpcOption.Show },
+                { npcID = 95072, name = "Greater Earth Elemental", icon = 19704, default = addon.NpcOption.Show },
+                { npcID = 61056, name = "Primal Earth Elemental", icon = 19704, default = addon.NpcOption.Show },
 
                 { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Hide },
                 { npcID = 78001, name = "Cloudburst Totem", icon = 157153, default = addon.NpcOption.Hide },
@@ -107,6 +109,7 @@ if addon.PROJECT_MAINLINE then
                 { npcID = 89, name = "Infernal", icon = 1122, default = addon.NpcOption.Show },
 
                 -- Primary pets (so they don't get hidden in battlegrounds)
+                { npcID = 103673, name = "Darkglare", icon = 205180, default = addon.NpcOption.Show },
                 { npcID = 416, name = "Imp", icon = 688, default = addon.NpcOption.Show },
                 { npcID = 1860, name = "Voidwalker", icon = 697, default = addon.NpcOption.Show },
                 { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.Show },
