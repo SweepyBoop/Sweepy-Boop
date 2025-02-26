@@ -11,7 +11,7 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 local checkSpellID = CreateFrame("Frame");
 checkSpellID.enabled = addon.TEST_MODE;
 
-checkSpellID.spellName = "Moonfire";
+checkSpellID.spellName = "Ancient of Lore";
 checkSpellID:RegisterEvent(addon.UNIT_AURA);
 checkSpellID:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 checkSpellID:SetScript("OnEvent", function (self, event, unitTarget)
@@ -264,6 +264,7 @@ if ( class == addon.DRUID ) then
     -- Restoration
     CreateAuraIcon(392360, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 3, nil, nil, 117679); -- Reforestation
     CreateAuraIcon(117679, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Tree of Life
+    CreateAuraIcon(493909, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 0); -- Ancient of Lore
 
     CreateAuraIcon(426790, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, nil, nil, nil, 319454); -- Call of the Elder Druid
 
