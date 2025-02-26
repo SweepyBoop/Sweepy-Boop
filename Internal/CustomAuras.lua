@@ -264,7 +264,7 @@ if ( class == addon.DRUID ) then
     -- Restoration
     CreateAuraIcon(392360, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 3, nil, nil, 117679); -- Reforestation
     CreateAuraIcon(117679, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Tree of Life
-    CreateAuraIcon(493909, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 0); -- Ancient of Lore
+    CreateAuraIcon(473909, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 0); -- Ancient of Lore
 
     CreateAuraIcon(426790, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, nil, nil, nil, 319454); -- Call of the Elder Druid
 
