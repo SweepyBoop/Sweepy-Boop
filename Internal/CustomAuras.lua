@@ -262,7 +262,7 @@ if ( class == addon.DRUID ) then
     CreateAuraIcon(382912, 50, "TOP", MultiBarRightButton1, "BOTTOM", 0, 0, nil, nil, true); -- Well-Honed Instincts
 
     -- Restoration
-    CreateAuraIcon(392360, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 3, nil, nil, 117679); -- Reforestation
+    CreateAuraIcon(392360, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 7, nil, nil, 117679); -- Reforestation
     CreateAuraIcon(117679, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Tree of Life
     CreateAuraIcon(473909, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 0); -- Ancient of Lore
 
