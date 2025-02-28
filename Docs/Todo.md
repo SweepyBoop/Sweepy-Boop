@@ -14,3 +14,5 @@
 - [ ] Customize loss of control frame
 
 - [ ] Leverage AnimateTexCoords (Interface\SpellActivationOverlay\IconAlertAnts or interface/transmogrify/purpleiconalertants) to show active glow for cd tracking
+
+- [ ] Add Ancient of Lore to buff whitelist

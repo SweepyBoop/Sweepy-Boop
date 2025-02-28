@@ -322,11 +322,13 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 354610, default = true }, -- Glimpse (Vengeful Retreat)
                 { spellId = 196555, default = true }, -- Netherwalk
                 { spellId = 212800, default = true }, -- Blur
+                { spellId = 188501, default = true }, -- Spectral Sight
             }
         },
         {
             classID = addon.CLASSID.DRUID,
             auras = {
+                { spellId = 473909, default = true }, -- Ancient of Lore
                 { spellId = 61336, default = true }, -- Survival Instincts
                 { spellId = 102342, default = true }, -- Ironbark
                 { spellId = 22812, default = true }, -- Barkskin

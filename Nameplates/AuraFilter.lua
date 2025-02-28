@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local auraFilterConflict = C_AddOns.IsAddOnLoaded("flyPlateBuffs") or C_AddOns.IsAddOnLoaded("EpicPlates");
+local auraFilterConflict = C_AddOns.IsAddOnLoaded("flyPlateBuffs") or C_AddOns.IsAddOnLoaded("EpicPlates") or C_AddOns.IsAddOnLoaded("flyPlateBuffsFixed");
 
 local AURA_CATEGORY = { -- Maybe apply different borders based on category?
     CROWD_CONTROL = 1,
