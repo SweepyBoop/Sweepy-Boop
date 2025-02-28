@@ -95,7 +95,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
 
                     local unitGUID = frame.unit and UnitGUID(frame.unit);
                     local threatCount = unitGUID and threatCounts[unitGUID];
-                    if threatCount and threatCount > 0 then
+                    if threatCount then
                         ShowCustomAggroHighlight(frame, threatCount);
                     else
                         HideCustomAggroHighlight(frame);
