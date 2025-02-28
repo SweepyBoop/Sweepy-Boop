@@ -15,4 +15,6 @@
 
 - [ ] Leverage AnimateTexCoords (Interface\SpellActivationOverlay\IconAlertAnts or interface/transmogrify/purpleiconalertants) to show active glow for cd tracking
 
-- [ ] Add Ancient of Lore to buff whitelist
+- [x] Add Ancient of Lore to buff whitelist
+
+- [ ] Add back up name when class icons are hidden by settings
