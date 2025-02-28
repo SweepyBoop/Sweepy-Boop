@@ -88,8 +88,12 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
             local threatCounts = GetThreatCounters();
             for i = 1, 6 do -- 3 players and 3 pets in arena
                 local frame = _G["CompactPartyFrameMember" .. i];
-                if frame and frame.unit then
-                    local unitGUID = UnitGUID(frame.unit);
+                if frame then
+                    if frame.aggroHighlight then
+                        frame.aggroHighlight:SetAlpha(0);
+                    end
+
+                    local unitGUID = frame.unit and UnitGUID(frame.unit);
                     local threatCount = unitGUID and threatCounts[unitGUID];
                     if threatCount and threatCount > 0 then
                         ShowCustomAggroHighlight(frame, threatCount);
