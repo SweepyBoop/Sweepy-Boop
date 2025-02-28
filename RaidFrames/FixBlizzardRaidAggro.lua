@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local LCG = LibStub("LibCustomGlow-1.0");
+local framePrefix = ( C_AddOns.IsAddOnLoaded("ElvUI") and "ElvUF_PartyGroup1UnitButton" ) or "CompactPartyFrameMember";
 
 local threatColors = {
     [1] = {1, 1, 0, 0.5}, -- yellow
@@ -76,7 +77,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
 
         if hideAll then
             for i = 1, 6 do -- 3 players and 3 pets in arena
-                local frame = _G["CompactPartyFrameMember" .. i];
+                local frame = _G[framePrefix .. i];
                 if frame then
                     if frame.aggroHighlight then
                         frame.aggroHighlight:SetAlpha(1);
@@ -87,7 +88,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
         elseif shouldUpdate then
             local threatCounts = GetThreatCounters();
             for i = 1, 6 do -- 3 players and 3 pets in arena
-                local frame = _G["CompactPartyFrameMember" .. i];
+                local frame = _G[framePrefix .. i];
                 if frame then
                     if frame.aggroHighlight then
                         frame.aggroHighlight:SetAlpha(0);
