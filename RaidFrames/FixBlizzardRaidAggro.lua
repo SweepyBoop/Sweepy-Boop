@@ -8,24 +8,17 @@ local threatColors = {
     [3] = {1, 0, 0, 0.5}, -- red
 };
 
-local function GetThreatCount(unit)
-    local count = 0;
-
-    if ( not unit ) then return count end
-
-    -- Comment out for retail release
-    -- if addon.TEST_MODE then
-    --     count = UnitIsUnit(unit, "focus") and 2 or 0;
-    --     return count;
-    -- end
+local function GetThreatCounters()
+    local threatCounters = {};
 
     for i = 1, addon.MAX_ARENA_SIZE do
-        if UnitIsUnit(unit, "arena" .. i .. "target") then
-            count = count + 1;
+        local guid = UnitGUID("arena" .. i .. "target");
+        if guid then
+            threatCounters[guid] = ( threatCounters[guid] or 0 ) + 1;
         end
     end
 
-    return count;
+    return threatCounters;
 end
 
 local function ShowCustomAggroHighlight(frame, threatCount)
@@ -62,40 +55,49 @@ local function HideCustomAggroHighlight(frame)
 end
 
 function SweepyBoop:SetupRaidFrameAggroHighlight()
-    hooksecurefunc("CompactUnitFrame_UpdateName", function (frame)
-        if frame:IsForbidden() then return end
-        if ( frame.isParentCompactPartyFrame == nil ) then
-            frame.isParentCompactPartyFrame = ( frame:GetParent() == CompactPartyFrame );
-        end
-        if ( not frame.isParentCompactPartyFrame ) then return end
-        if ( not self.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then -- If feature disabled
-            if frame.aggroHighlight then
-                frame.aggroHighlight:SetAlpha(1);
-            end
-            HideCustomAggroHighlight(frame);
+    local eventFrame = CreateFrame("Frame");
+    eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    if addon.PROJECT_MAINLINE then -- Between solo shuffle rounds (retail only)
+        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    end
+    eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
+    eventFrame:SetScript("OnEvent", function (self, event, unitId)
+        local shouldUpdate, hideAll;
 
-            return;
-        end
-
-        -- Comment out when testing
-        if ( not IsActiveBattlefieldArena() ) then
-            if frame.aggroHighlight then
-                frame.aggroHighlight:SetAlpha(1);
-            end
-            HideCustomAggroHighlight(frame);
-
-            return;
-        end
-
-        if frame.aggroHighlight then
-            frame.aggroHighlight:SetAlpha(0);
-        end
-        local threatCount = GetThreatCount(frame.unit);
-
-        if threatCount > 0 then
-            ShowCustomAggroHighlight(frame, threatCount);
+        if ( not IsActiveBattlefieldArena() ) or ( not self.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then -- not in arena or feature disabled
+            hideAll = true;
         else
-            HideCustomAggroHighlight(frame);
+            if event == addon.PLAYER_TARGET_CHANGED then
+                shouldUpdate = ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" );
+            else
+                shouldUpdate = true;
+            end
         end
-    end)
+
+        if hideAll then
+            for i = 1, 6 do -- 3 players and 3 pets in arena
+                local frame = _G["CompactPartyFrameMember" .. i];
+                if frame then
+                    if frame.aggroHighlight then
+                        frame.aggroHighlight:SetAlpha(1);
+                    end
+                    HideCustomAggroHighlight(frame);
+                end
+            end
+        elseif shouldUpdate then
+            local threatCounts = GetThreatCounters();
+            for i = 1, 6 do -- 3 players and 3 pets in arena
+                local frame = _G["CompactPartyFrameMember" .. i];
+                if frame and frame.unit then
+                    local unitGUID = UnitGUID(frame.unit);
+                    local threatCount = unitGUID and threatCounts[unitGUID];
+                    if threatCount > 0 then
+                        ShowCustomAggroHighlight(frame, threatCount);
+                    else
+                        HideCustomAggroHighlight(frame);
+                    end
+                end
+            end
+        end
+    end);
 end
