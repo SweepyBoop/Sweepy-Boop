@@ -60,14 +60,14 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     if addon.PROJECT_MAINLINE then -- Between solo shuffle rounds (retail only)
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     end
-    eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
-    eventFrame:SetScript("OnEvent", function (self, event, unitId)
+    eventFrame:RegisterEvent(addon.UNIT_TARGET);
+    eventFrame:SetScript("OnEvent", function (_, event, unitId)
         local shouldUpdate, hideAll;
 
-        if ( not IsActiveBattlefieldArena() ) or ( not self.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then -- not in arena or feature disabled
+        if ( not IsActiveBattlefieldArena() ) or ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then -- not in arena or feature disabled
             hideAll = true;
         else
-            if event == addon.PLAYER_TARGET_CHANGED then
+            if event == addon.UNIT_TARGET then
                 shouldUpdate = ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" );
             else
                 shouldUpdate = true;
@@ -91,7 +91,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
                 if frame and frame.unit then
                     local unitGUID = UnitGUID(frame.unit);
                     local threatCount = unitGUID and threatCounts[unitGUID];
-                    if threatCount > 0 then
+                    if threatCount and threatCount > 0 then
                         ShowCustomAggroHighlight(frame, threatCount);
                     else
                         HideCustomAggroHighlight(frame);
