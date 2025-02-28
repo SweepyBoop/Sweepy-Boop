@@ -243,7 +243,7 @@ options.args.nameplatesEnemy = {
             name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
             desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                return ( not addon.PROJECT_MAINLINE );
             end
         },
         arenaSpecIconAlignment = {
@@ -257,7 +257,8 @@ options.args.nameplatesEnemy = {
                 [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
             },
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                if ( not addon.PROJECT_MAINLINE ) then return true end
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
             end
         },
         arenaSpecIconVerticalOffset = {
@@ -269,7 +270,9 @@ options.args.nameplatesEnemy = {
             width = 0.85,
             name = "Vertical offset",
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
+                if ( not addon.PROJECT_MAINLINE ) then return true end
+                if ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers ) then return true end
+                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
             end
         },
         arenaSpecIconScale = {
@@ -281,7 +284,8 @@ options.args.nameplatesEnemy = {
             width = 0.85,
             name = "Scale (%)",
             hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                if ( not addon.PROJECT_MAINLINE ) then return true end
+                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
             end
         },
 
