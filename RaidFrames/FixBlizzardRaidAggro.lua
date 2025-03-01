@@ -4,9 +4,9 @@ local LCG = LibStub("LibCustomGlow-1.0");
 local framePrefix = ( C_AddOns.IsAddOnLoaded("ElvUI") and "ElvUF_PartyGroup1UnitButton" ) or "CompactPartyFrameMember";
 
 local threatColors = {
-    [1] = {1, 1, 0, 0.5}, -- yellow
-    [2] = {1, 0.5, 0, 0.5}, -- orange
-    [3] = {1, 0, 0, 0.5}, -- red
+    [1] = {r = 1, g = 1, b = 0}, -- yellow
+    [2] = {r = 1, g = 0.5, b = 0}, -- orange
+    [3] = {r = 1, g = 0, b = 0}, -- red
 };
 
 local function GetThreatCounters()
@@ -29,6 +29,7 @@ local function ShowCustomAggroHighlight(frame, threatCount)
         frame.customAggroHighlight = customAggroHighlight;
     end
 
+    local color = threatColors[threatCount];
     local thickness = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightThickness;
     local speed = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed;
     if speed == 0 then
@@ -37,7 +38,7 @@ local function ShowCustomAggroHighlight(frame, threatCount)
 
     LCG.PixelGlow_Start(
         frame.customAggroHighlight, -- frame
-        threatColors[threatCount], -- color
+        { color.r, color.g, color.b, SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightAlpha }, -- color
         16, -- number of frames
         0.025 * speed, -- frequency (default is 0.25)
         nil, -- actions.glow_length,
@@ -68,11 +69,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
         if ( not IsActiveBattlefieldArena() ) or ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then -- not in arena or feature disabled
             hideAll = true;
         else
-            if event == addon.UNIT_TARGET then
-                shouldUpdate = ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" );
-            else
-                shouldUpdate = true;
-            end
+            shouldUpdate = true;
         end
 
         if hideAll then
