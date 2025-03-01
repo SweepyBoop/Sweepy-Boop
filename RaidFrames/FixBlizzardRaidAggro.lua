@@ -63,13 +63,18 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     end
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
+    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- For cases when stealthy classes appear (we need to run an update before they change target)
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
         local shouldUpdate, hideAll;
 
         if ( not IsActiveBattlefieldArena() ) or ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then -- not in arena or feature disabled
             hideAll = true;
         else
-            shouldUpdate = true;
+            if event == addon.UNIT_TARGET then
+                shouldUpdate = ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" );
+            else
+                shouldUpdate = true;
+            end
         end
 
         if hideAll then
