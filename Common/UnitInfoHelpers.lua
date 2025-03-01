@@ -152,11 +152,18 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {};
 end)
 
-addon.GetBattlefieldSpecByPlayerGuid = function (guid)
+addon.GetBattlefieldSpecByPlayerGuid = function (unitId)
+    local guid = UnitGUID(unitId);
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
-                return { icon = 0 };
+                local specID = GetInspectSpecialization(unitId);
+                if specID then
+                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                    addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
+                else
+                    NotifyInspect(unitId);
+                end
             else
                 for i = 1, addon.MAX_ARENA_SIZE do
                     if ( guid == UnitGUID("arena" .. i) ) then
