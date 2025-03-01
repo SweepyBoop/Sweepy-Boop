@@ -877,6 +877,7 @@ local defaults = {
             classIconsEnabled = true,
             classIconStyle = addon.CLASS_ICON_STYLE.ICON,
             hideOutsidePvP = false,
+            showSpecIcons = true,
             classIconScale = 100,
             classIconOffset = 0,
             useHealerIcon = true,
