@@ -151,11 +151,13 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+        eventFrame:RegisterEvent(addon.INSPECT_READY);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
-    eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
+    eventFrame:SetScript("OnEvent", function (_, event, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
+            local unitId = ...;
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
@@ -181,6 +183,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
+            local unitId = ...;
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
@@ -189,11 +192,24 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_AURA then
+            local unitId = ...;
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
                 local unitAuraUpdateInfo = ...;
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
+            end
+        elseif event == addon.INSPECT_READY then
+            local unitGUID = ...;
+            local nameplates = C_NamePlate.GetNamePlates();
+            for i = 1, #(nameplates) do
+                local nameplate = nameplates[i];
+                if nameplate and nameplate.UnitFrame then
+                    if nameplate.UnitFrame:IsForbidden() then return end
+                    if UnitGUID(nameplate.UnitFrame.unit) == unitGUID then
+                        addon.UpdateClassIcon(nameplate);
+                    end
+                end
             end
         end
     end)
