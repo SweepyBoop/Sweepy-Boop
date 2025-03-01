@@ -41,6 +41,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     if config.showSpecIcons -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
         and ( IsActiveBattlefieldArena() or ( ( UnitInBattleground("player") ~= nil ) ) ) then
         iconID = specIconID;
+        iconCoords = {0, 1, 0, 1};
     end
 
     local isHealer = ( roleAssigned == "HEALER" );
