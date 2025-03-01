@@ -661,8 +661,21 @@ if addon.PROJECT_MAINLINE then
                 end
             },
 
-            raidFrameAggroHighlightAnimationSpeed = {
+            raidFrameAggroHighlightAlpha = {
                 order = 4,
+                type = "range",
+                isPercent = true,
+                min = 0.5,
+                max = 1,
+                step = 0.01,
+                name = "Border alpha",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
+                end
+            },
+
+            raidFrameAggroHighlightAnimationSpeed = {
+                order = 5,
                 type = "range",
                 width = 1.5,
                 min = 0,
@@ -675,13 +688,13 @@ if addon.PROJECT_MAINLINE then
             },
 
             header2 = {
-                order = 5,
+                order = 6,
                 type = "header",
                 name = "",
             },
 
             druidHoTHelper = {
-                order = 6,
+                order = 7,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
@@ -893,6 +906,7 @@ local defaults = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightEnabled = true,
             raidFrameAggroHighlightThickness = 2,
+            raidFrameAggroHighlightAlpha = 0.5,
             raidFrameAggroHighlightAnimationSpeed = 0,
             druidHoTHelper = true,
         },
