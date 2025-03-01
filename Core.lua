@@ -103,8 +103,18 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        breaker = {
+        showSpecIcons = {
             order = 7,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons instead of class icons in PvP instances",
+            hidden = function()
+                return ( not addon.PROJECT_MAINLINE ) or
+                    ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
+            end
+        },
+        breaker = {
+            order = 8,
             type = "header",
             name = "",
             hidden = function()
@@ -112,7 +122,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useHealerIcon = {
-            order = 8,
+            order = 9,
             width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healer icon instead of class icon for healers",
@@ -121,7 +131,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showHealerOnly = {
-            order = 9,
+            order = 10,
             width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healers only",
@@ -133,7 +143,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 10,
+            order = 11,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.FLAG_CARRIER_ALLIANCE_LOGO) .. " Show flag carrier icons in battlegrounds",
@@ -143,7 +153,7 @@ options.args.nameplatesFriendly = {
             end
         },
         targetHighlight = {
-            order = 11,
+            order = 12,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
@@ -152,7 +162,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 12,
+            order = 13,
             type = "range",
             min = 50,
             max = 200,
@@ -163,7 +173,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 13,
+            order = 14,
             type = "range",
             min = 0,
             max = 150,

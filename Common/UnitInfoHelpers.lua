@@ -149,7 +149,7 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedBattlefieldSpec = {};
 end)
 
-addon.GetBattlefieldSpecByPlayerGuid = function (unitId)
+addon.GetPlayerSpec = function (unitId)
     local guid = UnitGUID(unitId);
     if ( not addon.cachedBattlefieldSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
