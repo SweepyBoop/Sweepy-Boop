@@ -38,8 +38,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     iconID = addon.ICON_ID_CLASSES;
     iconCoords = CLASS_ICON_TCOORDS[class];
 
-    if config.showSpecIcons -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
-        and ( IsActiveBattlefieldArena() or ( ( UnitInBattleground("player") ~= nil ) ) ) then
+    if config.showSpecIcons then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
         iconID = specIconID;
         iconCoords = {0, 1, 0, 1};
     end
@@ -89,7 +88,9 @@ addon.UpdateClassIcon = function(nameplate, frame)
     local pvpClassification, specIconID;
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
-        specIconID = addon.GetPlayerSpec(frame.unit);
+        if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
+            specIconID = addon.GetPlayerSpec(frame.unit);
+        end
     end
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
