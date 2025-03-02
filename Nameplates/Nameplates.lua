@@ -151,7 +151,6 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        eventFrame:RegisterEvent(addon.INSPECT_READY);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
@@ -195,16 +194,6 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 local unitAuraUpdateInfo = ...;
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
-            end
-        elseif event == addon.INSPECT_READY then
-            if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then return end
-            local nameplates = C_NamePlate.GetNamePlates();
-            for i = 1, #(nameplates) do
-                local nameplate = nameplates[i];
-                if nameplate and nameplate.UnitFrame then
-                    if nameplate.UnitFrame:IsForbidden() then return end
-                    addon.UpdateClassIcon(nameplate, nameplate.UnitFrame);
-                end
             end
         end
     end)
