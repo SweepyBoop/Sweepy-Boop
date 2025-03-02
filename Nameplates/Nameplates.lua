@@ -200,15 +200,14 @@ function SweepyBoop:SetupNameplateModules()
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
             end
         elseif event == addon.INSPECT_READY then
+            if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then return end
             local unitGUID = ...;
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
-                    if UnitGUID(nameplate.UnitFrame.unit) == unitGUID then
-                        addon.UpdateClassIcon(nameplate, nameplate.UnitFrame);
-                    end
+                    addon.UpdateClassIcon(nameplate, nameplate.UnitFrame);
                 end
             end
         end

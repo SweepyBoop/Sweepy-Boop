@@ -155,6 +155,7 @@ addon.GetPlayerSpec = function (unitId)
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
                 local specID = GetInspectSpecialization(unitId);
+                print(specID);
                 if specID then
                     local iconID, role = select(4, GetSpecializationInfoByID(specID));
                     addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
