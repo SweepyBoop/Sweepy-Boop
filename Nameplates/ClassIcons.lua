@@ -38,7 +38,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     iconID = addon.ICON_ID_CLASSES;
     iconCoords = CLASS_ICON_TCOORDS[class];
 
-    if config.showSpecIcons then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
+    if config.showSpecIcons and specIconID then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
         iconID = specIconID;
         iconCoords = {0, 1, 0, 1};
     end
