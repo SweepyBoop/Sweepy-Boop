@@ -28,7 +28,7 @@ local function EnsureClassIcon(nameplate)
     end
 end
 
-local function GetIconOptions(class, pvpClassification, roleAssigned)
+local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned)
     local iconID;
     local iconCoords = {0, 1, 0, 1};
     local isSpecialIcon;
@@ -37,6 +37,11 @@ local function GetIconOptions(class, pvpClassification, roleAssigned)
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
     iconID = addon.ICON_ID_CLASSES;
     iconCoords = CLASS_ICON_TCOORDS[class];
+
+    if config.showSpecIcons and specIconID then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
+        iconID = specIconID;
+        iconCoords = {0, 1, 0, 1};
+    end
 
     local isHealer = ( roleAssigned == "HEALER" );
     if isHealer and config.useHealerIcon then
@@ -80,14 +85,24 @@ addon.UpdateClassIcon = function(nameplate, frame)
     -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
     local class = addon.GetUnitClass(frame.unit);
-    local pvpClassification;
+    local pvpClassification, specIconID;
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
+        if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
+            local specInfo = addon.GetPlayerSpec(frame.unit);
+            if specInfo then
+                specIconID = specInfo.icon;
+            end
+        end
     end
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    if ( classIconContainer.class ~= class ) or ( classIconContainer.pvpClassification ~= pvpClassification ) or ( classIconContainer.roleAssigned ~= roleAssigned ) or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, roleAssigned);
+    if ( classIconContainer.class ~= class )
+        or ( classIconContainer.pvpClassification ~= pvpClassification )
+        or ( classIconContainer.specIconID ~= specIconID )
+        or ( classIconContainer.roleAssigned ~= roleAssigned )
+        or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
+        local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
 
@@ -119,6 +134,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
         classIconContainer.class = class;
         classIconContainer.pvpClassification = pvpClassification;
+        classIconContainer.specIconID = specIconID;
         classIconContainer.roleAssigned = roleAssigned;
         classIconContainer.lastModifiedFriendly = lastModifiedFriendly;
     end
