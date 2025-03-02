@@ -155,9 +155,8 @@ function SweepyBoop:SetupNameplateModules()
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
-    eventFrame:SetScript("OnEvent", function (_, event, ...)
+    eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
-            local unitId = ...;
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
@@ -183,7 +182,6 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
-            local unitId = ...;
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
@@ -192,7 +190,6 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_AURA then
-            local unitId = ...;
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
@@ -201,7 +198,6 @@ function SweepyBoop:SetupNameplateModules()
             end
         elseif event == addon.INSPECT_READY then
             if ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then return end
-            local unitGUID = ...;
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
