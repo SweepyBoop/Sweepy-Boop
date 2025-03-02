@@ -143,13 +143,13 @@ for _, classID in pairs(addon.CLASSID) do
             local localizedClassMale = LOCALIZED_CLASS_NAMES_MALE[classFile];
             if localizedClassMale then
                 specIDByTooltip[specName .. " " .. localizedClassMale] = specID;
-                print(specName .. " " .. localizedClassMale, specID); -- Debug
+                --print(specName .. " " .. localizedClassMale, specID); -- Debug
             end
 
             local localizedClassFemale = LOCALIZED_CLASS_NAMES_FEMALE[classFile];
             if localizedClassFemale and ( localizedClassFemale ~= localizedClassMale ) then
                 specIDByTooltip[specName .. " " .. localizedClassFemale] = specID;
-                print(specName .. " " .. localizedClassFemale, specID); -- Debug
+                --print(specName .. " " .. localizedClassFemale, specID); -- Debug
             end
         end
     end
