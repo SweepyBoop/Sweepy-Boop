@@ -131,35 +131,52 @@ end
 -- There are Frost Mage and Frost DK, but the spec name is "Frost" for both...
 -- We need to append class info as well
 local specInfoByName = {};
+local specIDByTooltip = {}; -- To retrieve specID from tooltip
 for _, classID in pairs(addon.CLASSID) do
     for specIndex = 1, 4 do
-        local _, specName, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
+        local specID, specName, _, icon, role = GetSpecializationInfoForClassID(classID, specIndex);
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
         if specName and classInfo and classInfo.classFile then
-            specInfoByName[classInfo.classFile .. "-" .. specName] = { icon = icon, role = role };
+            local classFile = classInfo.classFile;
+            specInfoByName[classFile .. "-" .. specName] = { icon = icon, role = role };
+     
+            local localizedClassMale = LOCALIZED_CLASS_NAMES_MALE[classFile];
+            if localizedClassMale then
+                specIDByTooltip[localizedClassMale .. " " .. specName] = specID;
+            end
+
+            local localizedClassFemale = LOCALIZED_CLASS_NAMES_FEMALE[classFile];
+            if localizedClassFemale and ( localizedClassFemale ~= localizedClassMale ) then
+                specIDByTooltip[localizedClassFemale .. " " .. specName] = specID;
+            end
         end
     end
 end
 
 -- Battleground enemy info parser
-addon.cachedBattlefieldSpec = {};
+addon.cachedPlayerSpec = {};
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 refreshFrame:SetScript("OnEvent", function (self, event)
-    addon.cachedBattlefieldSpec = {};
+    addon.cachedPlayerSpec = {};
 end)
 
 addon.GetPlayerSpec = function (unitId)
     local guid = UnitGUID(unitId);
-    if ( not addon.cachedBattlefieldSpec[guid] ) then
+    if ( not addon.cachedPlayerSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
-                local specID = GetInspectSpecialization(unitId);
-                if specID then
-                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                    addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
-                else
-                    NotifyInspect(unitId);
+                local tooltipData = C_Tooltip.GetUnit(unitId);
+                if tooltipData then
+                    for _, line in ipairs(tooltipData.lines) do
+                        if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
+                            local specID = specIDByTooltip[line.leftText];
+                            if specID then
+                                local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                                addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
+                            end
+                        end
+                    end
                 end
             else
                 for i = 1, addon.MAX_ARENA_SIZE do
@@ -167,14 +184,14 @@ addon.GetPlayerSpec = function (unitId)
                         local specID = GetArenaOpponentSpec(i);
                         if ( not specID ) then return end
                         local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                        addon.cachedBattlefieldSpec[guid] = { icon = iconID, role = role };
+                        addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
                     end
                 end
             end
         else
             local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
             if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
-                addon.cachedBattlefieldSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
+                addon.cachedPlayerSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
             else
                 -- There are still units with unknown spec, request info
                 RequestBattlefieldScoreData();
@@ -182,5 +199,5 @@ addon.GetPlayerSpec = function (unitId)
         end
     end
 
-    return addon.cachedBattlefieldSpec[guid];
+    return addon.cachedPlayerSpec[guid];
 end
