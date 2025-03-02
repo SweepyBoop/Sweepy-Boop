@@ -97,9 +97,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
     end
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
-    if IsActiveBattlefieldArena() then
-        print(classIconContainer.specIconID, specIconID);
-    end
     if ( classIconContainer.class ~= class )
         or ( classIconContainer.pvpClassification ~= pvpClassification )
         or ( classIconContainer.specIconID ~= specIconID )
