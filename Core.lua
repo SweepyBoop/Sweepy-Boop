@@ -877,7 +877,6 @@ local defaults = {
             classIconsEnabled = true,
             classIconStyle = addon.CLASS_ICON_STYLE.ICON,
             hideOutsidePvP = false,
-            showSpecIcons = true,
             classIconScale = 100,
             classIconOffset = 0,
             useHealerIcon = true,
@@ -936,6 +935,7 @@ local defaults = {
 
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconScale = 125;
+    defaults.profile.nameplatesFriendly.showSpecIcons = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;
