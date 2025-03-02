@@ -94,23 +94,23 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        hideOutsidePvP = {
-            order = 6,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide class icons outside arenas & battlegrounds",
-            hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-            end
-        },
         showSpecIcons = {
-            order = 7,
+            order = 6,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons instead of class icons in PvP instances",
             hidden = function()
                 return ( not addon.PROJECT_MAINLINE ) or
                     ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
+            end
+        },
+        hideOutsidePvP = {
+            order = 7,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide class icons outside arenas & battlegrounds",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         breaker = {
