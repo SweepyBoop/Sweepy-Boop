@@ -103,6 +103,9 @@ local function ShouldShowBuffOverride(self, aura)
         return nil;
     end
 
+    -- Debug, comment out for retail release!
+    --print(aura.name, aura.spellId);
+
     -- Basically only show crowd controls and whitelisted debuffs applied by the player
 
     -- Some crowd controls are hidden by Blizzard, override the logic
