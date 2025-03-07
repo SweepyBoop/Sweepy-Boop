@@ -29,6 +29,7 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.DRUID,
             auras = {
                 { spellId = 164812, default = true }, -- Moonfire
+                    { spellId = 155625, parent = 164812 }, -- Moonfire (Lunar Inspiration)
                 { spellId = 164815, default = true }, -- Sunfire
                 { spellId = 155722, default = true }, -- Rake
                 { spellId = 1079, default = true }, -- Rip
