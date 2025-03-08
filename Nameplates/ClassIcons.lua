@@ -42,6 +42,7 @@ local function EnsurePlayerName(nameplate)
         nameplate.playerNameContainer.text:SetText("");
         nameplate.playerNameContainer.text:SetAllPoints();
 
+        nameplate.playerNameContainer:SetAllPoints();
         nameplate.playerNameContainer:Hide();
     end
 end
