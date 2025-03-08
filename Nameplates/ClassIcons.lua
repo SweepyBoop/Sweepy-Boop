@@ -96,12 +96,12 @@ addon.UpdateClassIcon = function(nameplate, frame)
         end
     end
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
-    local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+    local config = SweepyBoop.db.profile.nameplatesFriendly;
     if ( classIconContainer.class ~= class )
         or ( classIconContainer.pvpClassification ~= pvpClassification )
         or ( classIconContainer.specIconID ~= specIconID )
         or ( classIconContainer.roleAssigned ~= roleAssigned )
-        or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
+        or ( classIconContainer.lastModified ~= config.lastModified ) then
         local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
@@ -116,18 +116,27 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.icon:SetAlpha(1);
             iconFrame.border:SetAlpha(1);
             iconFrame.targetHighlight:SetAlpha(1);
+
+            local classColor = RAID_CLASS_COLORS[class];
+            if config.classColorBorder then
+                iconFrame.border:SetDesaturated(true);
+                iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            else
+                iconFrame.border:SetDesaturated(false);
+                iconFrame.border:SetVertexColor(1, 1, 1);
+            end
+
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
-            iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
-            iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+            iconFrame:SetScale(config.classIconScale / 100 * scaleFactor);
+            iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, config.classIconOffset);
 
-            local classColor = RAID_CLASS_COLORS[class];
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
-            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+            arrowFrame:SetScale(config.classIconScale / 100);
+            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, config.classIconOffset);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
@@ -136,7 +145,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         classIconContainer.pvpClassification = pvpClassification;
         classIconContainer.specIconID = specIconID;
         classIconContainer.roleAssigned = roleAssigned;
-        classIconContainer.lastModifiedFriendly = lastModifiedFriendly;
+        classIconContainer.lastModified = config.lastModified;
     end
 
     addon.UpdateClassIconTargetHighlight(nameplate, frame);

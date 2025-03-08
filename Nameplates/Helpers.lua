@@ -26,16 +26,16 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.mask:SetAllPoints(classIconFrame.icon);
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
-    if addon.PROJECT_MAINLINE then
-        classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
-        classIconFrame.border:SetAtlas("ui-frame-genericplayerchoice-portrait-border");
-        classIconFrame.border:SetAllPoints(classIconFrame);
-    else
+    -- if false then
+    --     classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
+    --     classIconFrame.border:SetAtlas("ui-frame-genericplayerchoice-portrait-border");
+    --     classIconFrame.border:SetAllPoints(classIconFrame);
+    -- else
         classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
         classIconFrame.border:SetAtlas("charactercreate-ring-metallight");
         classIconFrame.border:SetSize(classicBorderSize, classicBorderSize);
         classIconFrame.border:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
-    end
+    --end
 
     if isFriendly then
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
