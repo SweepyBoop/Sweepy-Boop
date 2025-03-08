@@ -912,6 +912,8 @@ local defaults = {
             showHealerOnly = false,
             useFlagCarrierIcon = true,
             targetHighlight = true,
+            classColorBorder = true,
+            showPlayerName = false,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
