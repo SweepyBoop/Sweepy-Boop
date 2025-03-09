@@ -79,19 +79,23 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
 end
 
 addon.UpdatePlayerName = function (nameplate, frame)
-    if nameplate.classIconContainer then
-        local featureEnabled = SweepyBoop.db.profile.nameplatesFriendly.showPlayerName;
+    if ( not nameplate.classIconContainer ) then return end
+
+    local container = nameplate.classIconContainer;
+    local guid = UnitGUID(frame.unit);
+
+    if ( container.currentGUID ~= guid ) then
         local name = UnitName(frame.unit) or "";
-        
+
         if nameplate.classIconContainer.FriendlyClassIcon then
             nameplate.classIconContainer.FriendlyClassIcon.name:SetText(name);
-            nameplate.classIconContainer.FriendlyClassIcon.name:SetShown(featureEnabled);
         end
 
         if nameplate.classIconContainer.FriendlyClassArrow then
             nameplate.classIconContainer.FriendlyClassArrow.name:SetText(name);
-            nameplate.classIconContainer.FriendlyClassArrow.name:SetShown(featureEnabled);
         end
+
+        container.currentGUID = guid;
     end
 end
 
@@ -149,13 +153,21 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
             iconFrame:SetScale(config.classIconScale / 100 * scaleFactor);
-            iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, config.classIconOffset);
+            local offset = config.classIconOffset;
+            if config.showPlayerName then
+                offset = offset + iconFrame.name:GetStringHeight();
+            end
+            iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
 
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
             arrowFrame:SetScale(config.classIconScale / 100);
-            arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, config.classIconOffset);
+            local offset = config.classIconOffset;
+            if config.showPlayerName then
+                offset = offset + arrowFrame.name:GetStringHeight();
+            end
+            arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
