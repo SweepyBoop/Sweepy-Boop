@@ -19,17 +19,18 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 <span style="color:#36f; font-style:italic"><strong>If you like my addon, please introduce it to your friends who play PvP!</strong></span> I'm really hoping to bring more people to (or back to) PvP with my work :)
 
 ## Friendly player / pet icons
-![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
-
-(In-game class icon style)
 
 ![Class icon with names](https://github.com/user-attachments/assets/14eaeb57-c363-4869-b827-ab0a9312abfa)
 
-(Customizations: show spec icons & class-colored borders & player names under class icons)
+(In-game class icon style with customizations: show spec icons & class-colored borders & player names)
 
 ![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/d1714ed9-0575-4576-88ff-686bd5a38733)
 
-(Class color arrow style)
+(Class-colored arrow style with player names)
+
+![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
+
+(In-game class icon style with plain border and no player names)
 
 Replace nameplates of friendly players and their primary pets with class / healer / pet icons.
 
