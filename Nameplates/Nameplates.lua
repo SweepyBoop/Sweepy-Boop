@@ -81,16 +81,18 @@ local function UpdateWidgets(nameplate, frame)
     if ( not addon.UnitIsHostile(frame.unit) ) then -- Friendly units, show class icon for friendly players and party pets
         local configFriendly = SweepyBoop.db.profile.nameplatesFriendly;
         if configFriendly.classIconsEnabled then
-            if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then
-                addon.HideClassIcon(nameplate);
-            elseif UnitIsPlayer(frame.unit) then
+            if UnitIsPlayer(frame.unit) then
                 -- Issue: a pet that's not one of the above 3 showed an icon
                 -- Maybe it was partypet2 and later someone else joined so this pet became partypet3
                 addon.ShowClassIcon(nameplate, frame);
                 addon.HidePetIcon(nameplate);
             elseif UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
                 addon.HideClassIcon(nameplate);
-                addon.ShowPetIcon(nameplate, frame);
+                if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then
+                    addon.HidePetIcon(nameplate);
+                else
+                    addon.ShowPetIcon(nameplate, frame);
+                end
             else
                 addon.HideClassIcon(nameplate);
                 addon.HidePetIcon(nameplate);
