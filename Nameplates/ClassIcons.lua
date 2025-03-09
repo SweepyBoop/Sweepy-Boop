@@ -85,7 +85,7 @@ addon.UpdatePlayerName = function (nameplate, frame)
     local guid = UnitGUID(frame.unit);
 
     if ( container.currentGUID ~= guid ) then
-        local name = UnitIsPlayer(frame.unit) and UnitName(frame.unit) or "";
+        local name = UnitName(frame.unit) or "";
         local class = addon.GetUnitClass(frame.unit);
         local classColor = class and RAID_CLASS_COLORS[class];
 
