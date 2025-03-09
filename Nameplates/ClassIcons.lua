@@ -28,18 +28,6 @@ local function EnsureClassIcon(nameplate)
         nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
     end
-
-    if ( not nameplate.classIconContainer.PlayerName ) then
-        nameplate.classIconContainer.PlayerName = CreateFrame("Frame", nil, nameplate);
-        nameplate.classIconContainer.PlayerName:SetMouseClickEnabled(false);
-        nameplate.classIconContainer.PlayerName:SetSize(200, 25);
-        nameplate.classIconContainer.PlayerName:SetPoint("BOTTOM", nameplate, "BOTTOM");
-        nameplate.classIconContainer.PlayerName.text = nameplate.classIconContainer.PlayerName:CreateFontString(nil, "ARTWORK");
-        nameplate.classIconContainer.PlayerName.text:SetFontObject("GameFontHighlightOutline");
-        nameplate.classIconContainer.PlayerName.text:SetText("");
-        nameplate.classIconContainer.PlayerName.text:SetAllPoints();
-        nameplate.classIconContainer.PlayerName:Hide();
-    end
 end
 
 local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned)
@@ -91,13 +79,19 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
 end
 
 addon.UpdatePlayerName = function (nameplate, frame)
-    if nameplate.classIconContainer and nameplate.classIconContainer.PlayerName then
-        local playerName = nameplate.classIconContainer.PlayerName;
-
+    if nameplate.classIconContainer then
+        local featureEnabled = SweepyBoop.db.profile.nameplatesFriendly.showPlayerName;
         local name = UnitName(frame.unit) or "";
-        playerName.text:SetText(name);
-        playerName:SetShown(SweepyBoop.db.profile.nameplatesFriendly.showPlayerName);
-        print(playerName:IsShown(), playerName.text:GetText());
+        
+        if nameplate.classIconContainer.FriendlyClassIcon then
+            nameplate.classIconContainer.FriendlyClassIcon.name:SetText(name);
+            nameplate.classIconContainer.FriendlyClassIcon.name:SetShown(featureEnabled);
+        end
+
+        if nameplate.classIconContainer.FriendlyClassArrow then
+            nameplate.classIconContainer.FriendlyClassArrow.name:SetText(name);
+            nameplate.classIconContainer.FriendlyClassArrow.name:SetShown(featureEnabled);
+        end
     end
 end
 

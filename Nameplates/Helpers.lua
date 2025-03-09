@@ -26,16 +26,10 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.mask:SetAllPoints(classIconFrame.icon);
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
-    -- if false then
-    --     classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
-    --     classIconFrame.border:SetAtlas("ui-frame-genericplayerchoice-portrait-border");
-    --     classIconFrame.border:SetAllPoints(classIconFrame);
-    -- else
-        classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
-        classIconFrame.border:SetAtlas("charactercreate-ring-metallight");
-        classIconFrame.border:SetSize(classicBorderSize, classicBorderSize);
-        classIconFrame.border:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
-    --end
+    classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
+    classIconFrame.border:SetAtlas("charactercreate-ring-metallight"); -- "ui-frame-genericplayerchoice-portrait-border"
+    classIconFrame.border:SetSize(classicBorderSize, classicBorderSize);
+    classIconFrame.border:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
 
     if isFriendly then
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
@@ -46,6 +40,11 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
         classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
         classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
+
+        classIconFrame.name = classIconFrame:CreateFontString(nil, "OVERLAY");
+        classIconFrame.name:SetFontObject("GameFontHighlightOutline");
+        classIconFrame.name:SetText("");
+        classIconFrame.name:SetPoint("TOP", classIconFrame.icon, "BOTTOM");
     else
         classIconFrame.border:SetVertexColor(255, 0, 0); -- Red border for hostile
         classIconFrame.border:Hide(); -- Hide initially until an actual icon is set
@@ -78,6 +77,11 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight:SetSize(arrowSize / 1.25, arrowSize);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -5);
     classIconFrame.targetHighlight:Hide();
+
+    classIconFrame.name = classIconFrame:CreateFontString(nil, "OVERLAY");
+    classIconFrame.name:SetFontObject("GameFontHighlightOutline");
+    classIconFrame.name:SetText("");
+    classIconFrame.name:SetPoint("TOP", classIconFrame.icon, "BOTTOM");
 
     return classIconFrame;
 end
