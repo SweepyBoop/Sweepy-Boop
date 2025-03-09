@@ -113,7 +113,7 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        breaker = {
+        breaker1 = {
             order = 8,
             type = "header",
             name = "",
@@ -183,6 +183,35 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
+
+        breaker2 = {
+            order = 15,
+            type = "header",
+            name = "",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        },
+
+        classColorBorder = {
+            order = 16,
+            type = "toggle",
+            width = "full",
+            name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        },
+
+        showPlayerName = {
+            order = 17,
+            type = "toggle",
+            width = "full",
+            name = addon.FORMAT_ATLAS("tokens-changeName-regular") .. " Show class-colored names under class icons",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        }
     }
 };
 
@@ -883,6 +912,8 @@ local defaults = {
             showHealerOnly = false,
             useFlagCarrierIcon = true,
             targetHighlight = true,
+            classColorBorder = true,
+            showPlayerName = false,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
@@ -936,6 +967,8 @@ local defaults = {
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconScale = 125;
     defaults.profile.nameplatesFriendly.showSpecIcons = true;
+    defaults.profile.nameplatesFriendly.classColorBorder = true;
+    defaults.profile.nameplatesFriendly.showPlayerName = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;

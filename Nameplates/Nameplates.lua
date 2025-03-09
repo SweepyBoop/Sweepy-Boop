@@ -228,6 +228,7 @@ function SweepyBoop:SetupNameplateModules()
         if isNamePlate then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
+            addon.UpdatePlayerName(frame:GetParent(), frame);
 
             if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
                 for i = 1, 3 do

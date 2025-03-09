@@ -18,10 +18,12 @@ local hasConflict = C_AddOns.IsAddOnLoaded("NeatPlates");
 
 local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
+
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
         nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
         nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
+
     if ( not nameplate.classIconContainer.FriendlyClassArrow ) then
         nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
@@ -76,6 +78,39 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     end
 end
 
+addon.UpdatePlayerName = function (nameplate, frame)
+    if ( not nameplate.classIconContainer ) then return end
+
+    local container = nameplate.classIconContainer;
+    local guid = UnitGUID(frame.unit);
+
+    if ( container.currentGUID ~= guid ) then
+        local name = UnitName(frame.unit) or "";
+        local class = addon.GetUnitClass(frame.unit);
+        local classColor = class and RAID_CLASS_COLORS[class];
+
+        if nameplate.classIconContainer.FriendlyClassIcon then
+            nameplate.classIconContainer.FriendlyClassIcon.name:SetText(name);
+            if classColor then
+                nameplate.classIconContainer.FriendlyClassIcon.name:SetTextColor(classColor.r, classColor.g, classColor.b);
+            else
+                nameplate.classIconContainer.FriendlyClassIcon.name:SetTextColor(1, 1, 1);
+            end
+        end
+
+        if nameplate.classIconContainer.FriendlyClassArrow then
+            nameplate.classIconContainer.FriendlyClassArrow.name:SetText(name);
+            if classColor then
+                nameplate.classIconContainer.FriendlyClassArrow.name:SetTextColor(classColor.r, classColor.g, classColor.b);
+            else
+                nameplate.classIconContainer.FriendlyClassArrow.name:SetTextColor(1, 1, 1);
+            end
+        end
+
+        container.currentGUID = guid;
+    end
+end
+
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
@@ -96,12 +131,12 @@ addon.UpdateClassIcon = function(nameplate, frame)
         end
     end
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
-    local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+    local config = SweepyBoop.db.profile.nameplatesFriendly;
     if ( classIconContainer.class ~= class )
         or ( classIconContainer.pvpClassification ~= pvpClassification )
         or ( classIconContainer.specIconID ~= specIconID )
         or ( classIconContainer.roleAssigned ~= roleAssigned )
-        or ( classIconContainer.lastModifiedFriendly ~= lastModifiedFriendly ) then
+        or ( classIconContainer.lastModified ~= config.lastModified ) then
         local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
@@ -116,18 +151,39 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.icon:SetAlpha(1);
             iconFrame.border:SetAlpha(1);
             iconFrame.targetHighlight:SetAlpha(1);
+
+            local classColor = RAID_CLASS_COLORS[class];
+            if config.classColorBorder then
+                iconFrame.border:SetDesaturated(true);
+                iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            else
+                iconFrame.border:SetDesaturated(false);
+                iconFrame.border:SetVertexColor(1, 1, 1);
+            end
+
+            local showPlayerName = config.showPlayerName;
+
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
-            iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
-            iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+            iconFrame:SetScale(config.classIconScale / 100 * scaleFactor);
+            iconFrame.name:SetShown(showPlayerName);
+            local offset = config.classIconOffset;
+            if showPlayerName then
+                offset = offset + iconFrame.name:GetStringHeight();
+            end
+            iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
 
-            local classColor = RAID_CLASS_COLORS[class];
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            arrowFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100);
-            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, SweepyBoop.db.profile.nameplatesFriendly.classIconOffset);
+            arrowFrame:SetScale(config.classIconScale / 100);
+            arrowFrame.name:SetShown(showPlayerName);
+            local offset = config.classIconOffset;
+            if showPlayerName then
+                offset = offset + arrowFrame.name:GetStringHeight();
+            end
+            arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
@@ -136,7 +192,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         classIconContainer.pvpClassification = pvpClassification;
         classIconContainer.specIconID = specIconID;
         classIconContainer.roleAssigned = roleAssigned;
-        classIconContainer.lastModifiedFriendly = lastModifiedFriendly;
+        classIconContainer.lastModified = config.lastModified;
     end
 
     addon.UpdateClassIconTargetHighlight(nameplate, frame);
@@ -144,6 +200,7 @@ end
 
 addon.ShowClassIcon = function (nameplate, frame)
     EnsureClassIcon(nameplate);
+    addon.UpdatePlayerName(nameplate, frame);
     addon.UpdateClassIcon(nameplate, frame);
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
