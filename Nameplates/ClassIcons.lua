@@ -18,32 +18,27 @@ local hasConflict = C_AddOns.IsAddOnLoaded("NeatPlates");
 
 local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
+
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
         nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
         nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
+
     if ( not nameplate.classIconContainer.FriendlyClassArrow ) then
         nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
     end
-end
 
-local function EnsurePlayerName(nameplate)
-    if ( not nameplate.playerNameContainer ) then
-        nameplate.playerNameContainer = CreateFrame("Frame", nil, nameplate);
-        nameplate.playerNameContainer:SetSize(200, 25);
-        nameplate.playerNameContainer:SetMouseClickEnabled(false);
-        -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
-        nameplate.playerNameContainer:SetAlpha(1);
-        nameplate.playerNameContainer:SetIgnoreParentAlpha(true);
-        -- Create font object
-        nameplate.playerNameContainer.text = nameplate.playerNameContainer:CreateFontString(nil, "ARTWORK");
-        nameplate.playerNameContainer.text:SetFontObject("GameFontHighlightHuge");
-        nameplate.playerNameContainer.text:SetText("");
-        nameplate.playerNameContainer.text:SetAllPoints();
-
-        nameplate.playerNameContainer:SetAllPoints();
-        nameplate.playerNameContainer:Hide();
+    if ( not nameplate.classIconContainer.PlayerName ) then
+        nameplate.classIconContainer.PlayerName = CreateFrame("Frame", nil, nameplate);
+        nameplate.classIconContainer.PlayerName:SetMouseClickEnabled(false);
+        nameplate.classIconContainer.PlayerName:SetSize(200, 25);
+        nameplate.classIconContainer.PlayerName:SetPoint("BOTTOM", nameplate, "BOTTOM");
+        nameplate.classIconContainer.PlayerName.text = nameplate.classIconContainer.PlayerName:CreateFontString(nil, "ARTWORK");
+        nameplate.classIconContainer.PlayerName.text:SetFontObject("GameFontHighlightOutline");
+        nameplate.classIconContainer.PlayerName.text:SetText("");
+        nameplate.classIconContainer.PlayerName.text:SetAllPoints();
+        nameplate.classIconContainer.PlayerName:Hide();
     end
 end
 
@@ -96,13 +91,13 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
 end
 
 addon.UpdatePlayerName = function (nameplate, frame)
-    if nameplate.playerNameContainer then
-        local playerNameContainer = nameplate.playerNameContainer;
+    if nameplate.classIconContainer and nameplate.classIconContainer.PlayerName then
+        local playerName = nameplate.classIconContainer.PlayerName;
 
         local name = UnitName(frame.unit) or "";
-        playerNameContainer.text:SetText(name);
-        playerNameContainer:SetShown(SweepyBoop.db.profile.nameplatesFriendly.showPlayerName);
-        print(playerNameContainer:IsShown(), playerNameContainer.text:IsShown(), nameplate.playerNameContainer.text:GetText());
+        playerName.text:SetText(name);
+        playerName:SetShown(SweepyBoop.db.profile.nameplatesFriendly.showPlayerName);
+        print(playerName:IsShown(), playerName.text:GetText());
     end
 end
 
@@ -156,22 +151,17 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border:SetVertexColor(1, 1, 1);
             end
 
-            local offset = config.classIconOffset;
-            if nameplate.playerNameContainer and nameplate.playerNameContainer:IsShown() then
-                offset = offset + nameplate.playerNameContainer.text:GetStringHeight();
-            end
-
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
             iconFrame:SetScale(config.classIconScale / 100 * scaleFactor);
-            iconFrame:SetPoint("CENTER", iconFrame:GetParent(), "CENTER", 0, offset);
+            iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, config.classIconOffset);
 
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
             arrowFrame:SetScale(config.classIconScale / 100);
-            arrowFrame:SetPoint("CENTER", arrowFrame:GetParent(), "CENTER", 0, offset);
+            arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, config.classIconOffset);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
@@ -187,7 +177,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
 end
 
 addon.ShowClassIcon = function (nameplate, frame)
-    EnsurePlayerName(nameplate);
     EnsureClassIcon(nameplate);
     addon.UpdatePlayerName(nameplate, frame);
     addon.UpdateClassIcon(nameplate, frame);
