@@ -42,7 +42,8 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
 
         classIconFrame.name = classIconFrame:CreateFontString(nil, "OVERLAY");
-        classIconFrame.name:SetFontObject("GameFontHighlightOutline");
+        classIconFrame.name:SetIgnoreParentScale(true);
+        classIconFrame.name:SetFontObject("GameFontNormalOutline");
         classIconFrame.name:SetText("");
         classIconFrame.name:SetPoint("TOP", classIconFrame.icon, "BOTTOM");
     else
@@ -79,6 +80,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight:Hide();
 
     classIconFrame.name = classIconFrame:CreateFontString(nil, "OVERLAY");
+    classIconFrame.name:SetIgnoreParentScale(true);
     classIconFrame.name:SetFontObject("GameFontHighlightOutline");
     classIconFrame.name:SetText("");
     classIconFrame.name:SetPoint("TOP", classIconFrame.icon, "BOTTOM");
