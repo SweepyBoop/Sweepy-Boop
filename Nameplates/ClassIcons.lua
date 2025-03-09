@@ -36,6 +36,12 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     local isSpecialIcon;
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
+
+    if config.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then
+        -- Hide icons but still show name
+        return iconID, iconCoords, isSpecialIcon;
+    end
+
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
     iconID = addon.ICON_ID_CLASSES;
     iconCoords = CLASS_ICON_TCOORDS[class];
