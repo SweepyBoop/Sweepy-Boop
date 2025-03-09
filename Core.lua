@@ -967,6 +967,8 @@ local defaults = {
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconScale = 125;
     defaults.profile.nameplatesFriendly.showSpecIcons = true;
+    defaults.profile.nameplatesFriendly.classColorBorder = true;
+    defaults.profile.nameplatesFriendly.showPlayerName = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.showCritterIcons = true;
