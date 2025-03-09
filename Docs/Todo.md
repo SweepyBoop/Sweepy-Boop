@@ -17,4 +17,6 @@
 
 - [x] Add Ancient of Lore to buff whitelist
 
-- [ ] Add back up name when class icons are hidden by settings
+- [x] Add back up name when class icons are hidden by settings
+
+- [x] Leverage atlas "countdown-swords" for combat indicator
