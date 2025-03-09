@@ -86,13 +86,25 @@ addon.UpdatePlayerName = function (nameplate, frame)
 
     if ( container.currentGUID ~= guid ) then
         local name = UnitName(frame.unit) or "";
+        local class = addon.GetUnitClass(frame.unit);
+        local classColor = class and RAID_CLASS_COLORS[class];
 
         if nameplate.classIconContainer.FriendlyClassIcon then
             nameplate.classIconContainer.FriendlyClassIcon.name:SetText(name);
+            if classColor then
+                nameplate.classIconContainer.FriendlyClassIcon.name:SetTextColor(classColor.r, classColor.g, classColor.b);
+            else
+                nameplate.classIconContainer.FriendlyClassIcon.name:SetTextColor(1, 1, 1);
+            end
         end
 
         if nameplate.classIconContainer.FriendlyClassArrow then
             nameplate.classIconContainer.FriendlyClassArrow.name:SetText(name);
+            if classColor then
+                nameplate.classIconContainer.FriendlyClassArrow.name:SetTextColor(classColor.r, classColor.g, classColor.b);
+            else
+                nameplate.classIconContainer.FriendlyClassArrow.name:SetTextColor(1, 1, 1);
+            end
         end
 
         container.currentGUID = guid;
@@ -149,12 +161,15 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border:SetVertexColor(1, 1, 1);
             end
 
+            local showPlayerName = config.showPlayerName;
+
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
             iconFrame:SetScale(config.classIconScale / 100 * scaleFactor);
+            iconFrame.name:SetShown(showPlayerName);
             local offset = config.classIconOffset;
-            if config.showPlayerName then
+            if showPlayerName then
                 offset = offset + iconFrame.name:GetStringHeight();
             end
             iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
@@ -163,8 +178,9 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
             arrowFrame:SetScale(config.classIconScale / 100);
+            arrowFrame.name:SetShown(showPlayerName);
             local offset = config.classIconOffset;
-            if config.showPlayerName then
+            if showPlayerName then
                 offset = offset + arrowFrame.name:GetStringHeight();
             end
             arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
