@@ -15,7 +15,7 @@ if addon.PROJECT_MAINLINE then
         target = { relativePointelativeTo = TargetFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
         focus = { relativeTo = FocusFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
     };
-else
+else -- TODO: implement for classic
 
 end
 
