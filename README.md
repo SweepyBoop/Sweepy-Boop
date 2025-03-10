@@ -155,6 +155,10 @@ This module makes the <span style="color:#36f"><strong>fewest changes to the ori
 ### Healer in crowd control reminder
 ![Healer in CC](https://github.com/user-attachments/assets/c3ba52f4-0d58-4fe8-b90d-e4298454b6c4)
 
+### Combat indicator on unit frames
+![Combat Indicator](https://github.com/user-attachments/assets/59fc92fc-9a0f-4f97-ad8e-c07bacc5a3cf)
+
+
 ### Healer indicator on Gladius / sArena frames
 ![Healer indicator on Gladius](https://github.com/user-attachments/assets/d4872859-0594-4c0c-830f-be9ce2a23d88)
 
