@@ -35,19 +35,12 @@ local function UpdateCombatIndicator(frame, unit)
     frame.combatIndicator:SetShown(UnitAffectingCombat(unit));
 end
 
-local function HideAll()
-    for _, frame in pairs(unitToFrame) do
-        if ( frame.combatIndicator ) then
-            frame.combatIndicator:Hide();
-        end
-    end
-end
-
 local eventFrame = CreateFrame("Frame");
 eventFrame:SetScript("OnEvent", function(_, event, unit)
     if ( event == addon.UNIT_FLAGS ) then
+        print("UNIT_FLAGS", unit, UnitAffectingCombat(unit));
         local frame = unitToFrame[unit];
-        if ( frame ) then
+        if frame then
             UpdateCombatIndicator(frame, unit);
         end
     else
@@ -68,6 +61,10 @@ function SweepyBoop:SetupCombatIndicator()
         end
     else
         eventFrame:UnregisterAllEvents();
-        HideAll();
+        for _, frame in pairs(unitToFrame) do
+            if frame.combatIndicator then
+                frame.combatIndicator:Hide();
+            end
+        end
     end
 end
