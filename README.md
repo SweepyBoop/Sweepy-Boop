@@ -153,7 +153,8 @@ Timer text color changes to yellow at 20s mark, then red at 10s mark, with an al
 This module makes the <span style="color:#36f"><strong>fewest changes to the original WoW UI</strong></span> compared to other similar addons (SafeQueue, BetterBlizzFrames, etc.)
 
 ### Healer in crowd control reminder
-![Healer in CC](https://github.com/user-attachments/assets/c3ba52f4-0d58-4fe8-b90d-e4298454b6c4)
+![Healer in CC](https://github.com/user-attachments/assets/4dc581ba-d65f-4ea8-9152-83da224904c8)
+
 
 ### Combat indicator on unit frames
 ![Combat Indicator](https://github.com/user-attachments/assets/59fc92fc-9a0f-4f97-ad8e-c07bacc5a3cf)
