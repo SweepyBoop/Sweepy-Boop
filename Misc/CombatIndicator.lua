@@ -33,10 +33,6 @@ local function UpdateCombatIndicator(frame, unit)
     end
 
     frame.combatIndicator:SetShown(UnitAffectingCombat(unit));
-
-    if frame == TargetFrame then
-        print("TargetFrame combat indicator updated", frame.combatIndicator:IsShown());
-    end
 end
 
 local eventFrame = CreateFrame("Frame");
