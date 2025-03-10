@@ -970,6 +970,7 @@ local defaults = {
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
             queueReminder = true,
+            combatIndicator = true,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
