@@ -44,11 +44,6 @@ local function HideAll()
 end
 
 local eventFrame = CreateFrame("Frame");
-eventFrame:Hide(); -- When hidden it won't process events
-eventFrame:RegisterUnitEvent(addon.UNIT_FLAGS, "player", "target", "focus");
-eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
-eventFrame:RegisterEvent(addon.PLAYER_FOCUS_CHANGED);
 eventFrame:SetScript("OnEvent", function(_, event, unit)
     if ( event == addon.UNIT_FLAGS ) then
         local frame = unitToFrame[unit];
@@ -64,12 +59,15 @@ end);
 
 function SweepyBoop:SetupCombatIndicator()
     if SweepyBoop.db.profile.misc.combatIndicator then
+        eventFrame:RegisterUnitEvent(addon.UNIT_FLAGS, "player", "target", "focus");
+        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+        eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
+        eventFrame:RegisterEvent(addon.PLAYER_FOCUS_CHANGED);
         for unit, frame in pairs(unitToFrame) do
             UpdateCombatIndicator(frame, unit);
         end
-        eventFrame:Show();
     else
-        eventFrame:Hide();
+        eventFrame:UnregisterAllEvents();
         HideAll();
     end
 end
