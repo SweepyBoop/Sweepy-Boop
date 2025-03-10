@@ -1104,6 +1104,8 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:HideTestArenaEnemyBurst();
         self:HideTestCooldownTracking();
+
+        self:SetupCombatIndicator();
     end
 
     local currentTime = GetTime();
