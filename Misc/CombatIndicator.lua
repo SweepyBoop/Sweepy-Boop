@@ -13,6 +13,7 @@ local function UpdateAllIndicators(frame, unit)
 end
 
 local frame = CreateFrame("Frame");
+frame:Hide(); -- When hidden it won't process events
 frame:RegisterUnitEvent(addon.UNIT_FLAGS, "player", "target", "focus");
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 frame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
@@ -29,4 +30,4 @@ frame:SetScript("OnEvent", function(self, event, unit)
         end
     end
 end);
-frame:Hide(); -- When hidden it won't process events
+
