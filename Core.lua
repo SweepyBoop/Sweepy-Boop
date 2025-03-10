@@ -942,6 +942,7 @@ local defaults = {
             arenaSpecIconAlignment = addon.SPEC_ICON_ALIGNMENT.TOP,
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
+            showCritterIcons = true,
             auraFilterEnabled = false,
             showBuffsOnEnemy = false,
             highlightScale = 100,
@@ -989,7 +990,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.showPlayerName = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
-    defaults.profile.nameplatesEnemy.showCritterIcons = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
