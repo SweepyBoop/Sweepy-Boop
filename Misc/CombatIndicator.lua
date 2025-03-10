@@ -11,9 +11,9 @@ local unitToFrame = {
 local anchors;
 if addon.PROJECT_MAINLINE then
     anchors = {
-        player = { point = "RIGHT", relativeTo = PlayerFrame.PlayerFrameContainer.PlayerPortrait, relativePoint = "LEFT" },
-        target = { point = "LEFT", relativeTo = TargetFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
-        focus = { point = "LEFT", relativeTo = FocusFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
+        player = { relativeTo = PlayerFrame.PlayerFrameContainer.PlayerPortrait, relativePoint = "LEFT" },
+        target = { relativePointelativeTo = TargetFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
+        focus = { relativeTo = FocusFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
     };
 else
 
@@ -25,7 +25,7 @@ local function UpdateCombatIndicator(frame, unit)
         frame.combatIndicator:SetMouseClickEnabled(false);
         frame.combatIndicator:SetFrameStrata("HIGH");
         frame.combatIndicator:SetSize(iconSize, iconSize);
-        frame.combatIndicator:SetPoint(anchors[unit].point, anchors[unit].relativeTo, anchors[unit].relativePoint);
+        frame.combatIndicator:SetPoint("CENTER", anchors[unit].relativeTo, anchors[unit].relativePoint);
 
         frame.combatIndicator.icon = frame.combatIndicator:CreateTexture(nil, "OVERLAY");
         frame.combatIndicator.icon:SetAtlas("countdown-swords");
