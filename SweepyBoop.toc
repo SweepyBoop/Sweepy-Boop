@@ -41,6 +41,7 @@ Misc\ArenaSurrender.lua
 Misc\DampenDisplay.lua
 Misc\HealerInCrowdControl.lua
 Misc\QueueReminder.lua
+Misc\CombatIndicator.lua
 
 ArenaFrames\IconGroupUtil.lua
 ArenaFrames\IconTemplates.lua
