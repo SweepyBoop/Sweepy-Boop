@@ -12,7 +12,7 @@ local anchors;
 if addon.PROJECT_MAINLINE then
     anchors = {
         player = { relativeTo = PlayerFrame.PlayerFrameContainer.PlayerPortrait, relativePoint = "LEFT" },
-        target = { relativePointelativeTo = TargetFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
+        target = { relativeTo = TargetFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
         focus = { relativeTo = FocusFrame.TargetFrameContainer.Portrait, relativePoint = "RIGHT" },
     };
 else -- TODO: implement for classic
@@ -33,6 +33,10 @@ local function UpdateCombatIndicator(frame, unit)
     end
 
     frame.combatIndicator:SetShown(UnitAffectingCombat(unit));
+
+    if frame == TargetFrame then
+        print("TargetFrame combat indicator updated", frame.combatIndicator:IsShown());
+    end
 end
 
 local eventFrame = CreateFrame("Frame");
@@ -51,6 +55,7 @@ end);
 
 function SweepyBoop:SetupCombatIndicator()
     if SweepyBoop.db.profile.misc.combatIndicator then
+        -- Seems like UNIT_FLAGS is only fired for units that return true for UnitPlayerControlled
         eventFrame:RegisterUnitEvent(addon.UNIT_FLAGS, "player", "target", "focus");
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
