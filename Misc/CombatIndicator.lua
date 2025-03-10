@@ -38,7 +38,6 @@ end
 local eventFrame = CreateFrame("Frame");
 eventFrame:SetScript("OnEvent", function(_, event, unit)
     if ( event == addon.UNIT_FLAGS ) then
-        print("UNIT_FLAGS", unit, UnitAffectingCombat(unit));
         local frame = unitToFrame[unit];
         if frame then
             UpdateCombatIndicator(frame, unit);
