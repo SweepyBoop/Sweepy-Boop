@@ -871,6 +871,11 @@ if addon.PROJECT_MAINLINE then
                 width = "full",
                 name = addon.FORMAT_ATLAS("countdown-swords") .. " Show combat indicator on unit frames",
                 desc = "Show combat indicator icons on Player / Target / Focus frames",
+                set = function(info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop.db.profile.misc.lastModified = GetTime();
+                    SweepyBoop:SetupCombatIndicator();
+                end,
             },
 
             header4 = {
@@ -1049,6 +1054,8 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAuraModule();
 
     self:SetupQueueReminder();
+
+    self:SetupCombatIndicator();
 end
 
 function SweepyBoop:TestArena()
