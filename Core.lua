@@ -863,17 +863,35 @@ if addon.PROJECT_MAINLINE then
             header3 = {
                 order = 12,
                 type = "header",
+                name = "",
+            },
+            combatIndicator = {
+                order = 13,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_ATLAS("countdown-swords") .. " Show combat indicator on unit frames",
+                desc = "Show combat indicator icons on Player / Target / Focus frames",
+                set = function(info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop.db.profile.misc.lastModified = GetTime();
+                    SweepyBoop:SetupCombatIndicator();
+                end,
+            },
+
+            header4 = {
+                order = 14,
+                type = "header",
                 name = "Type /afk to surrender arena",
             },
             arenaSurrenderEnabled = {
-                order = 13,
+                order = 15,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Enabled",
                 desc = "If unable to surrender, by default a confirmation dialog will pop up to confirm leaving arena",
             },
             skipLeaveArenaConfirmation = {
-                order = 14,
+                order = 16,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_cower")) .. " Leave arena directly if unable to surrender (skip confirmation dialog)",
@@ -884,13 +902,13 @@ if addon.PROJECT_MAINLINE then
                 end,
             },
 
-            header4 = {
-                order = 15,
+            header5 = {
+                order = 17,
                 type = "header",
                 name = "",
             },
             showDampenPercentage = {
-                order = 16,
+                order = 18,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
@@ -957,6 +975,7 @@ local defaults = {
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
             queueReminder = true,
+            combatIndicator = true,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
@@ -1035,6 +1054,8 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAuraModule();
 
     self:SetupQueueReminder();
+
+    self:SetupCombatIndicator();
 end
 
 function SweepyBoop:TestArena()
@@ -1083,6 +1104,8 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:HideTestArenaEnemyBurst();
         self:HideTestCooldownTracking();
+
+        self:SetupCombatIndicator();
     end
 
     local currentTime = GetTime();
