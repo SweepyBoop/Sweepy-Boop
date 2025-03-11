@@ -45,8 +45,6 @@ addon.UpdateSpecIcon = function (nameplate)
     local iconFrame = nameplate.SpecIconFrame;
     if ( not iconFrame ) then return end
 
-    -- Still seeing an empty icon with a red border between solo shuffle rounds
-    -- Repro if play some rounds with "show healer only", then switch to "show all"?
     local iconID, isHealer = GetSpecIconInfo(nameplate.UnitFrame.unit);
 
     if ( iconFrame.iconID ~= iconID ) then
