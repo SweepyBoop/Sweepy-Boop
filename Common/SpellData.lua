@@ -1451,22 +1451,17 @@ addon.SpellResets = {
     [200183] = {
         88625, -- Holy Word: Chastise
     },
-    -- Smite
-    [585] = {
-        { spellID = 88625, amount = 4 }, -- -- Holy Word: Chastise
+    -- Prayer of Mending
+    [33076] = {
+        { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
     -- Holy Fire
     [14914] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
-
-    -- Vanish (Memory of Invigorating Shadowdust, Subtlety Rogue)
-    [1856] = {
-        { spellID = 2094, amount = 15, specID = {specID.SUBTLETY} }, -- Blind
-        { spellID = 408, amount = 15, specID = {specID.SUBTLETY} }, -- Kidney Shot
-        { spellID = 212182, amount = 15, specID = {specID.SUBTLETY} }, -- Smoke Bomb
-        { spellID = 1766, amount = 15, specID = {specID.SUBTLETY} }, -- Kick
-        { spellID = 36554, amount = 15, specID = {specID.SUBTLETY} }, -- Shadowstep
+    -- Power Word: Life
+    [194384] = {
+        { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
 
     -- Power Word: Shield
