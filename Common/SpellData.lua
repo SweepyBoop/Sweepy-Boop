@@ -1443,7 +1443,7 @@ addon.SpellResets = {
         { spellID = 190319, amount = 12 }, -- Combustion
     },
     -- Cold Snap
-    [235219] = { 
+    [235219] = {
         45438, -- Ice Block
     },
 
