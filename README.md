@@ -150,8 +150,6 @@ On Blizzard raid frames:
 
 Timer text color changes to yellow at 20s mark, then red at 10s mark, with an alarm clock sound alert.
 
-This module makes the <span style="color:#36f"><strong>fewest changes to the original WoW UI</strong></span> compared to other similar addons (SafeQueue, BetterBlizzFrames, etc.)
-
 ### Healer in crowd control reminder
 ![Healer in CC](https://github.com/user-attachments/assets/4dc581ba-d65f-4ea8-9152-83da224904c8)
 
