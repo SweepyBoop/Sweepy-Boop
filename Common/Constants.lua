@@ -3,7 +3,7 @@ local _, addon = ...;
 addon.TEST_MODE = false;
 
 addon.SPELLCATEGORY = {
-    OFFENSIVE = 1,
+    BURST = 1,
 
     INTERRUPT = 2,
     DISRUPT = 3,
