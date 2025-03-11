@@ -6,6 +6,7 @@ local iconSize = addon.DEFAULT_ICON_SIZE;
 
 addon.CreateBurstIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
+    frame.template = addon.ICON_TEMPLATE.GLOW;
     frame:SetMouseClickEnabled(false);
     frame:SetSize(iconSize, iconSize);
     frame:Hide();

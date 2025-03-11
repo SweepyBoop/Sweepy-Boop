@@ -1467,3 +1467,53 @@ addon.SpellResets = {
     -- Power Word: Shield
     [17] = { { spellID = 33206, amount = 3 } }, -- Pain Suppression
 };
+
+if addon.TEST_MODE then
+    -- Test
+    -- Mark of the Wild
+    addon.SpellData[1126] = {
+        class = addon.DRUID,
+        category = category.BURST,
+        duration = 8,
+        cooldown = 30,
+        index = addon.SPELLPRIORITY.HIGH,
+    };
+    -- Regrowth
+    addon.SpellData[8936] = {
+        class = addon.DRUID,
+        category = category.BURST,
+        duration = 5,
+        cooldown = 10,
+    };
+    -- Rejuv
+    addon.SpellData[774] = {
+        class = addon.DRUID,
+        category = category.BURST,
+        cooldown = 45,
+    };
+    -- Wild Growth
+    addon.SpellData[48438] = {
+        class = addon.DRUID,
+        category = category.BURST,
+        duration = 7,
+        trackDest = true,
+        trackEvent = addon.SPELL_AURA_APPLIED,
+    };
+
+    addon.SpellData[1459] = {
+        class = addon.MAGE,
+        category = category.BURST,
+        duration = 12,
+        cooldown = 120,
+        index = addon.SPELLPRIORITY.HIGH,
+
+        resets = {
+            [133] = 2, -- Pyrokinesis
+            [314791] = 12, -- Shifting Power
+        },
+
+        -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
+        critResets = { 133, 11366, 108853, "Phoenix Flames" },
+        critResetAmount = 1,
+    };
+end

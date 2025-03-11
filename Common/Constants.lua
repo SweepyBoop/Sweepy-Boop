@@ -18,6 +18,11 @@ addon.SPELLPRIORITY = {
     LOW = 100,
 };
 
+addon.ICON_TEMPLATE = {
+    GLOW = 1, -- AWC style
+    FLASH = 2, -- OmniBar style
+};
+
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
 
 addon.SPECID = {
