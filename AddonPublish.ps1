@@ -1,5 +1,6 @@
 $workDir = "$PSScriptRoot"
-$publishDir = "${workDir}\SweepyBoop"
+$driveLetter = Split-Path -Qualifier $PSScriptRoot
+$publishDir = "${driveLetter}\SweepyBoop"
 
 # Clean up previous
 if (Test-Path -Path $publishDir) {
@@ -28,6 +29,5 @@ Get-Content -Path $inputTocPath | Where-Object {$_ -notmatch 'Internal'} | Set-C
 
 Move-Item -Path $outputTocPath -Destination $inputTocPath -Force
 
-$zipFile = "${workDir}\SweepyBoop.zip"
-Compress-Archive -Path $publishDir -DestinationPath $zipFile
+tar -a -cf SweepyBoop.zip $publishDir
 Remove-Item -Path $publishDir -Recurse -Force
