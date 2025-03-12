@@ -870,8 +870,19 @@ addon.SpellData = {
         category = category.INTERRUPT,
     },
     -- Dispel
-    [4987] = {cooldown = 8, class = addon.PALADIN, category = category.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Cleanse
-    [210256] = {cooldown = 45, class = addon.PALADIN, category = category.DISPEL}, -- Blessing of Sanctuary
+    -- Cleanse
+    [4987] = {
+        cooldown = 8,
+        class = addon.PALADIN,
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL,
+    },
+    -- Blessing of Sanctuary
+    [210256] = {
+        cooldown = 45,
+        class = addon.PALADIN,
+        category = category.DISPEL,
+    },
 
     -- Priest
     -- Mindgames
@@ -1090,16 +1101,56 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Interrupt
-    [1766] = {cooldown = 15, class = addon.ROGUE, category = category.INTERRUPT}, -- Kick
+    -- Kick
+    [1766] = {
+        cooldown = 15,
+        class = addon.ROGUE,
+        category = category.INTERRUPT,
+    },
     -- Defensive
-    [1856] = {cooldown = 120, class = addon.ROGUE, charges = true, category = category.DEFENSIVE}, -- Vanish (addition charge in class talent tree)
-    [31224] = {cooldown = 120, class = addon.ROGUE, category = category.DEFENSIVE}, -- Cloak of Shadows
-    [5277] = {cooldown = 120, class = addon.ROGUE, category = category.DEFENSIVE}, -- Evasion
+    -- Vanish (addition charge in class talent tree)
+    [1856] = {
+        cooldown = 120,
+        class = addon.ROGUE,
+        charges = true,
+        category = category.DEFENSIVE,
+    },
+    -- Cloak of Shadows
+    [31224] = {
+        cooldown = 120,
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+    },
+    -- Evasion
+    [5277] = {
+        cooldown = 120,
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+    },
     -- Crowd Control
-    [408] = {cooldown = 20, class = addon.ROGUE, category = category.CROWDCONTROL}, -- Kidney Shot
-    [2094] = {cooldown = {default = 120, [specID.OUTLAW] = 90}, class = addon.ROGUE, category = category.CROWDCONTROL}, -- Blind
-    [212182] = {cooldown = 180, class = addon.ROGUE, category = category.CROWDCONTROL}, -- Smoke Bomb
-    [359053] = {cooldown = 120, class = addon.ROGUE, category = category.CROWDCONTROL}, -- Smoke Bomb (Subtlety)
+    -- Kidney Shot
+    [408] = {
+        cooldown = 20,
+        class = addon.ROGUE,
+        category = category.CROWDCONTROL,
+    },
+    -- Blind
+    [2094] = {
+        cooldown = {default = 120, [specID.OUTLAW] = 90},
+        class = addon.ROGUE,
+        category = category.CROWDCONTROL,
+    },
+    -- Smoke Bomb
+    [212182] = {
+        cooldown = 180,
+        class = addon.ROGUE,
+        category = category.CROWDCONTROL,
+    },
+    -- Smoke Bomb (Subtlety)
+    [359053] = {
+        parent = 212182,
+        cooldown = 120,
+    },
     -- Disrupt
     [36554] = {cooldown = 30, class = addon.ROGUE, charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true}, category = category.DISRUPT}, -- Shadowstep
     [195457] = {cooldown = 30, class = addon.ROGUE, category = category.DISRUPT}, -- Grappling Hook
