@@ -509,6 +509,13 @@ addon.SpellData = {
         reduce_power_type = POWERTYPE.Focus,
         reduce_amount = 0.05, -- Every 50 focus reduces cd by 2.5s
     },
+    -- Volley
+    [260243] = {
+        class = addon.HUNTER,
+        category = category.BURST,
+        cooldown = 45,
+        duration = 6,
+    },
     -- Disrupt
     -- Feign Death
     [5384] = {
