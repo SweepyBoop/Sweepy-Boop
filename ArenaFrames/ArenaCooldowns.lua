@@ -330,12 +330,13 @@ local function ProcessUnitAura(self, event, ...)
     -- Only use UNIT_AURA to extend aura
     if ( unitTarget == self.unit ) and updateAuras and updateAuras.updatedAuraInstanceIDs then
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
-            local spellInfo = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID);
-            if spellInfo then
-                local spellID = spellInfo.spellId
-                local spell = spellData[spellID]
-                if ( not spell ) or ( not spell.extend ) or ( not self.activeMap[spellID] ) then return end
-                addon.RefreshBurstDuration(self.activeMap[spellID]);
+            local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID);
+            if auraData then
+                local spellID = auraData.spellId;
+                local spell = spellData[spellID];
+                if spell and spell.extend and self.activeMap[spellID] then
+                    addon.RefreshBurstDuration(self.activeMap[spellID], auraData.duration, auraData.expirationTime);
+                end
             end
         end
     end
