@@ -195,10 +195,8 @@ end
 
 local function StartIcon(icon)
     if icon.template == addon.ICON_TEMPLATE.GLOW then
-        print("StartBurstIcon");
         addon.StartBurstIcon(icon);
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
-        print("StartCooldownTrackingIcon");
         addon.StartCooldownTrackingIcon(icon);
     end
 end

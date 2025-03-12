@@ -75,7 +75,7 @@ local function IconGroup_Position(group)
             count = count + 1;
             local newRow = ( count >= columns )
                 or ( SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive
-                    and group.active[i - 1] and group.active[i - 1].category ~= addon.SPELLCATEGORY.DEFENSIVE and group.active[i].category == addon.SPELLCATEGORY.DEFENSIVE );
+                    and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE );
             if newRow then
                 if growDirection == "CENTER" then
                     group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
