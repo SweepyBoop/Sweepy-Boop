@@ -195,8 +195,10 @@ end
 
 local function StartIcon(icon)
     if icon.template == addon.ICON_TEMPLATE.GLOW then
+        print("StartBurstIcon");
         addon.StartBurstIcon(icon);
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
+        print("StartCooldownTrackingIcon");
         addon.StartCooldownTrackingIcon(icon);
     end
 end
@@ -477,14 +479,19 @@ local function RefreshTestMode()
     if externalTestIcons[unitId] then
         for _, icon in pairs(externalTestIcons[unitId]) do
             icon:SetScale(scale);
-            addon.SetHideCountdownNumbers(icon, SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers);
+            addon.SetHideCountdownNumbers(icon, config.hideCountDownNumbers);
         end
     else
         externalTestIcons[unitId] = {};
         local iconSize = config.arenaCooldownTrackerIconSize;
         for spellID, spell in pairs(spellData) do
-            externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
-            addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers);
+            local size = config.arenaTrackerIconSize;
+            if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
+                externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
+            else
+                externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
+            end
+            addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
         end
     end
 
