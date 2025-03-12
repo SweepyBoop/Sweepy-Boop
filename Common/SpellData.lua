@@ -244,7 +244,7 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Balance
-    -- Incarnation: Chosen of Elune (spellID has not changed in DF)
+    -- Incarnation: Chosen of Elune
     [102560] = {
         class = addon.DRUID,
         category = category.BURST,
@@ -253,6 +253,11 @@ addon.SpellData = {
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
     },
+        -- Incarnation: Chosen of Elune (Orbital Strike)
+        [390414] = {
+            parent = 102560,
+            cooldown = 120,
+        },
     -- Celestial Alignment
     [194223] = {
         class = addon.DRUID,
