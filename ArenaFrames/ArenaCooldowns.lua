@@ -237,6 +237,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                     end
                 end
 
+                --print(spellToReset, amount, self.activeMap[spellToReset]);
+
                 if self.activeMap[spellToReset] then
                     ResetCooldown(self.activeMap[spellToReset], amount);
                 end

@@ -117,7 +117,7 @@ addon.StartCooldownTrackingIcon = function (icon)
 
     StartAnimation(icon);
 
-    addon.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
+    addon.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
 end
 
 -- For spells with reduce_on_interrupt, set an internal cooldown so it doesn't reset cd multiple times
