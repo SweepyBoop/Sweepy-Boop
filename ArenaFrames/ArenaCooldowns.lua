@@ -11,7 +11,7 @@ local npcToSpellID = {
 };
 
 local resetByPower = {
-    137639, -- Storm, Earth, and Fire
+    -- 137639, -- Storm, Earth, and Fire (rarely picked)
     152173, -- Serenity
     1719, -- Recklessness
     262161, -- Warbreaker
