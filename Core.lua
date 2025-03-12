@@ -573,7 +573,7 @@ if addon.PROJECT_MAINLINE then
                         type = "execute",
                         name = "Restore default",
                         func = function ()
-                            SweepyBoop:CheckAllSpells(true);
+                            SweepyBoop:CheckDefaultArenaAbilities(true);
                         end
                     },
                     testmode = {
@@ -983,6 +983,8 @@ local function SetupAllSpells(profile, spellList)
         -- By default only check burst and defensives
         if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) then
             profile[tostring(spellID)] = true;
+        else
+            profile[tostring(spellID)] = false;
         end
     end
 end
@@ -1087,9 +1089,8 @@ function SweepyBoop:RefreshConfig()
     self:RefreshAllNamePlates(true);
 end
 
-function SweepyBoop:CheckAllSpells(value)
-    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.burstSpells, value);
-    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.utilitySpells, value);
+function SweepyBoop:CheckDefaultArenaAbilities()
+    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
 end
 
 SLASH_SweepyBoop1 = "/sb"
