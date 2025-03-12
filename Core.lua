@@ -553,6 +553,11 @@ if addon.PROJECT_MAINLINE then
                 step = 1,
                 name = "X offset",
                 desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                set = function (info, val)
+                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                    SweepyBoop:RepositionTestGroup();
+                end
             },
             arenaCooldownOffsetY = {
                 order = 10,
@@ -562,6 +567,11 @@ if addon.PROJECT_MAINLINE then
                 step = 1,
                 name = "Y offset",
                 desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                set = function (info, val)
+                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                    SweepyBoop:RepositionTestGroup();
+                end
             },
 
             spellList = {

@@ -536,3 +536,13 @@ function SweepyBoop:HideTestArenaCooldownTracker()
         externalTestGroup:Hide();
     end
 end
+
+function SweepyBoop:RepositionTestGroup()
+    if ( not externalTestGroup ) or ( not externalTestGroup:IsShown() ) then return end
+
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local grow = growOptions[config.arenaCooldownGrowDirection];
+    local setPointOptions = GetSetPointOptions(1);
+    setPointOptions.offsetX = config.arenaCooldownOffsetX;
+    addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
+end
