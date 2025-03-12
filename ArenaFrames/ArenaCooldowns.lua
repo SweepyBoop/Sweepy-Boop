@@ -221,9 +221,24 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
         -- Check regular resets
         if spellResets[spellId] then
-            for resetSpellID, amount in pairs(spellResets[spellId]) do
-                if self.activeMap[resetSpellID] then
-                    ResetCooldown(self.activeMap[resetSpellID], amount);
+            for i = 1, #(spellResets[spellId]) do
+                local reset = spellResets[spellId][i];
+
+                local spellToReset;
+                local amount;
+                if type(reset) == "table" and reset.amount then
+                    spellToReset = reset.spellID;
+                    amount = reset.amount;
+                else
+                    if type(reset) == "table" then
+                        spellToReset = reset.spellID;
+                    else
+                        spellToReset = reset;
+                    end
+                end
+
+                if self.activeMap[spellToReset] then
+                    ResetCooldown(self.activeMap[spellToReset], amount);
                 end
             end
         end

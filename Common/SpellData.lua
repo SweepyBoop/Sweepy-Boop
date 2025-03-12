@@ -1542,7 +1542,9 @@ addon.SpellResets = {
     },
 
     -- Power Word: Shield
-    [17] = { { spellID = 33206, amount = 3 } }, -- Pain Suppression
+    [17] = {
+        { spellID = 33206, amount = 3 }, -- Pain Suppression
+    },
 };
 
 if addon.TEST_MODE then
