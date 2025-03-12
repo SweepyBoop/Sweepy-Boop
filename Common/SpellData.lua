@@ -643,11 +643,16 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
-    -- Alter Time
-    [342245] = {
-        cooldown = 90,
+    -- Alter Time (Arcane)
+    [342246] = {
+        cooldown = 50,
         class = addon.MAGE,
         category = category.DEFENSIVE,
+        trackEvent = addon.SPELL_AURA_APPLIED,
+    },
+    -- Alter Time (Fire/Frost)
+    [110909] = {
+        parent = 342246,
     },
     -- Crowd Control
     -- Ring of Frost
@@ -1591,6 +1596,7 @@ for _, spell in pairs(addon.SpellData) do
         spell.cooldown = spell.cooldown or parent.cooldown;
         spell.class = spell.class or parent.class;
         spell.category = spell.category or parent.category;
-        spell.trackPet = parent.trackPet or parent.category;
+        spell.trackPet = spell.trackPet or parent.trackPet;
+        spell.trackEvent = spell.trackEvent or parent.trackEvent;
     end
 end
