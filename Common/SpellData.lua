@@ -643,6 +643,12 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Alter Time
+    [342245] = {
+        cooldown = 90,
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+    },
     -- Crowd Control
     -- Ring of Frost
     [113724] = {
