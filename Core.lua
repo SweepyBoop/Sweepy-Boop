@@ -474,108 +474,130 @@ if addon.PROJECT_MAINLINE then
             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
         end,
         args = {
-            healerIndicator = {
+            general = {
                 order = 1,
-                type = "toggle",
-                name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
-                desc = "To make it easier to identify the healer in case of class stacking",
-                width = "full",
-                hidden = function ()
-                    return ( not ( Gladius or sArena ) );
-                end
-            },
+                type = "group",
+                name = "General",
+                args = {
+                    healerIndicator = {
+                        order = 1,
+                        type = "toggle",
+                        name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
+                        desc = "To make it easier to identify the healer in case of class stacking",
+                        width = "full",
+                        hidden = function ()
+                            return ( not ( Gladius or sArena ) );
+                        end
+                    },
 
-            header1 = {
-                order = 2,
-                type = "header",
-                name = "Arena opponent cooldowns",
-            },
+                    header1 = {
+                        order = 2,
+                        type = "header",
+                        name = "Arena opponent cooldowns",
+                    },
 
-            arenaCooldownTrackerEnabled = {
-                order = 3,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enabled",
-            },
-            arenaCooldownSeparateRowForDefensive = {
-                order = 4,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Separate row for defensives",
-            },
+                    testmode = {
+                        order = 3,
+                        type = "execute",
+                        name = "Test",
+                        func = "TestArena",
+                        width = "half",
+                    },
+                    hidetest = {
+                        order = 4,
+                        type = "execute",
+                        name = "Hide",
+                        func = "HideTestArenaCooldownTracker",
+                        width = "half",
+                    },
 
-            hideCountDownNumbers = {
-                order = 5,
-                type = "toggle",
-                width = "full",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
-                desc = "Hide countdown numbers but show a more visible swiping edge",
-            },
+                    arenaCooldownTrackerEnabled = {
+                        order = 5,
+                        width = "full",
+                        type = "toggle",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enabled",
+                    },
+                    arenaCooldownSeparateRowForDefensive = {
+                        order = 6,
+                        width = "full",
+                        type = "toggle",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Separate row for defensives",
+                    },
 
-            arenaCooldownGrowDirection = {
-                order = 6,
-                type = "select",
-                width = 0.75,
-                name = "Grow direction",
-                values = {
-                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
-                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
-                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
-                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                    hideCountDownNumbers = {
+                        order = 7,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
+                        desc = "Hide countdown numbers but show a more visible swiping edge",
+                    },
+
+                    arenaCooldownGrowDirection = {
+                        order = 8,
+                        type = "select",
+                        width = 0.75,
+                        name = "Grow direction",
+                        values = {
+                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
+                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
+                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
+                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                        },
+                    },
+
+                    arenaCooldownTrackerIconSize = {
+                        order = 9,
+                        type = "range",
+                        width = 0.75,
+                        min = 16,
+                        max = 64,
+                        step = 1,
+                        name = "Icon size",
+                        desc = "Size of arena defensive cooldown icons",
+                    },
+
+                    newline = {
+                        order = 10,
+                        type = "description",
+                        name = "",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
+                        end
+                    },
+
+                    arenaCooldownOffsetX = {
+                        order = 11,
+                        type = "range",
+                        min = -300,
+                        max = 300,
+                        step = 1,
+                        name = "X offset",
+                        desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:RepositionTestGroup();
+                        end
+                    },
+                    arenaCooldownOffsetY = {
+                        order = 12,
+                        type = "range",
+                        min = -150,
+                        max = 150,
+                        step = 1,
+                        name = "Y offset",
+                        desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:RepositionTestGroup();
+                        end
+                    },
                 },
             },
 
-            arenaCooldownTrackerIconSize = {
-                order = 7,
-                type = "range",
-                width = 0.75,
-                min = 16,
-                max = 64,
-                step = 1,
-                name = "Icon size",
-                desc = "Size of arena defensive cooldown icons",
-            },
-
-            newline = {
-                order = 8,
-                type = "description",
-                name = "",
-                hidden = function ()
-                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
-                end
-            },
-
-            arenaCooldownOffsetX = {
-                order = 9,
-                type = "range",
-                min = -300,
-                max = 300,
-                step = 1,
-                name = "X offset",
-                desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
-                set = function (info, val)
-                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                    SweepyBoop:RepositionTestGroup();
-                end
-            },
-            arenaCooldownOffsetY = {
-                order = 10,
-                type = "range",
-                min = -150,
-                max = 150,
-                step = 1,
-                name = "Y offset",
-                desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
-                set = function (info, val)
-                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                    SweepyBoop:RepositionTestGroup();
-                end
-            },
-
             spellList = {
-                order = 11,
+                order = 2,
                 type = "group",
                 name = "Spells",
                 desc = "Select which abilities to track cooldown inside arenas",
@@ -587,22 +609,8 @@ if addon.PROJECT_MAINLINE then
                         type = "execute",
                         name = "Restore default",
                         func = function ()
-                            SweepyBoop:CheckDefaultArenaAbilities(true);
+                            SweepyBoop:CheckDefaultArenaAbilities();
                         end
-                    },
-                    testmode = {
-                        order = 2,
-                        type = "execute",
-                        name = "Test",
-                        func = "TestArena",
-                        width = "half",
-                    },
-                    hidetest = {
-                        order = 3,
-                        type = "execute",
-                        name = "Hide",
-                        func = "HideTestArenaCooldownTracker",
-                        width = "half",
                     },
                 },
             }
