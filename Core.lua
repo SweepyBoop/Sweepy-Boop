@@ -981,7 +981,7 @@ local function SetupAllSpells(profile, spellList)
     for spellID, spellEntry in pairs(spellList) do
         local category = spellEntry.category;
         -- By default only check burst and defensives
-        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) then
+        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) or ( category == addon.SPELLCATEGORY.DISPEL ) then
             profile[tostring(spellID)] = true;
         else
             profile[tostring(spellID)] = false;

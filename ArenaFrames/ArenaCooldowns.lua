@@ -44,7 +44,7 @@ local function EnsureIcon(unitId, spellID)
     local config = SweepyBoop.db.profile.arenaFrames;
 
     if ( not premadeIcons[unitId][spellID] ) then
-        local size = config.arenaTrackerIconSize;
+        local size = config.arenaCooldownTrackerIconSize;
         if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
             premadeIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
         else
@@ -58,7 +58,7 @@ local function EnsureIcon(unitId, spellID)
 
     -- Size was not set on creation, need to set scale and show/hide countdown numbers
     if ( premadeIcons[unitId][spellID].lastModified ~= config.lastModified ) then
-        premadeIcons[unitId][spellID]:SetScale(config.arenaTrackerIconSize / addon.DEFAULT_ICON_SIZE);
+        premadeIcons[unitId][spellID]:SetScale(config.arenaCooldownTrackerIconSize / addon.DEFAULT_ICON_SIZE);
         addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID], config.hideCountDownNumbers);
 
         premadeIcons[unitId][spellID].lastModified = config.lastModified;
