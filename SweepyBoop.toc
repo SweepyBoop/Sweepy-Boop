@@ -48,9 +48,7 @@ ArenaFrames\IconGroupUtil.lua
 ArenaFrames\IconTemplates.lua
 ArenaFrames\CooldownTracking.xml
 ArenaFrames\CooldownTrackingTemplates.lua
-#ArenaFrames\CooldownTracking.lua
 ArenaFrames\ArenaEnemyBurstTemplates.lua
-#ArenaFrames\ArenaEnemyBurst.lua
 ArenaFrames\ArenaCooldowns.lua
 ArenaFrames\HealerIndicator.lua
 
