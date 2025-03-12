@@ -523,34 +523,10 @@ if addon.PROJECT_MAINLINE then
                     [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
                     [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
                 },
-                hidden = function ()
-                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
-                end
-            },
-
-            arenaCooldownOffsetX = {
-                order = 7,
-                type = "range",
-                width = 0.75,
-                min = -300,
-                max = 300,
-                step = 1,
-                name = "X offset",
-                desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
-            },
-            arenaCooldownOffsetY = {
-                order = 8,
-                type = "range",
-                width = 0.75,
-                min = -150,
-                max = 150,
-                step = 1,
-                name = "Y offset",
-                desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
             },
 
             arenaCooldownTrackerIconSize = {
-                order = 9,
+                order = 7,
                 type = "range",
                 width = 0.75,
                 min = 16,
@@ -560,8 +536,36 @@ if addon.PROJECT_MAINLINE then
                 desc = "Size of arena defensive cooldown icons",
             },
 
-            spellList = {
+            newline = {
+                order = 8,
+                type = "description",
+                name = "",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
+                end
+            },
+
+            arenaCooldownOffsetX = {
+                order = 9,
+                type = "range",
+                min = -300,
+                max = 300,
+                step = 1,
+                name = "X offset",
+                desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
+            },
+            arenaCooldownOffsetY = {
                 order = 10,
+                type = "range",
+                min = -150,
+                max = 150,
+                step = 1,
+                name = "Y offset",
+                desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
+            },
+
+            spellList = {
+                order = 11,
                 type = "group",
                 name = "Spells",
                 desc = "Select which abilities to track cooldown inside arenas",
