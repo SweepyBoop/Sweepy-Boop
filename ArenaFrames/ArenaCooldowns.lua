@@ -304,7 +304,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use
     if self.icons[spellId] and SweepyBoop.db.profile.arenaFrames.spellList[tostring(spellId)] then
-        addon.StartIcon(self.icons[spellId]);
+        StartIcon(self.icons[spellId]);
     end
 end
 
@@ -467,7 +467,8 @@ local externalTestGroup; -- Icon group for "Toggle Test Mode"
 local function RefreshTestMode()
     addon.IconGroup_Wipe(externalTestGroup);
 
-    local scale = SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensiveIconSize / addon.DEFAULT_ICON_SIZE;
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local scale = config.arenaCooldownTrackerIconSize / addon.DEFAULT_ICON_SIZE;
     local unitId = "player";
     if externalTestIcons[unitId] then
         for _, icon in pairs(externalTestIcons[unitId]) do
@@ -476,16 +477,18 @@ local function RefreshTestMode()
         end
     else
         externalTestIcons[unitId] = {};
+        local iconSize = config.arenaCooldownTrackerIconSize;
         for spellID, spell in pairs(spellData) do
             externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
             addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], SweepyBoop.db.profile.arenaFrames.hideCountDownNumbers);
         end
     end
 
+    local grow = growOptions[config.arenaCooldownGrowDirection];
     if externalTestGroup then
-        addon.UpdateIconGroupSetPointOptions(externalTestGroup, GetSetPointOptions(1));
+        addon.UpdateIconGroupSetPointOptions(externalTestGroup, GetSetPointOptions(1), grow);
     else
-        externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), growOptions, unitId);
+        externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), grow, unitId);
     end
 
     SetupIconGroup(externalTestGroup, unitId, externalTestIcons);

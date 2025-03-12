@@ -13,7 +13,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
 
     frame.unit = unit;
     frame.spellID = spellID;
-    frame.spellInfo = addon.burstSpells[spellID];
+    frame.spellInfo = addon.SpellData[spellID];
     frame.priority = frame.spellInfo.priority;
     frame.group = group;
 
