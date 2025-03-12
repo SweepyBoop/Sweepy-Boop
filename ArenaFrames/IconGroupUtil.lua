@@ -71,7 +71,9 @@ local function IconGroup_Position(group)
             end
         else
             count = count + 1;
-            if count >= columns then
+            local newRow = ( count >= columns )
+                or ( SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive and group.active[i - 1] and group.active[i - 1].category ~= addon.DEFENSIVE and group.active[i].category == addon.DEFENSIVE );
+            if newRow then
                 if growDirection == "CENTER" then
                     group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
                 else
@@ -99,57 +101,9 @@ local function sortFunc(a, b)
     end
 end
 
-local function CalculateArenaFrameOffsetX(frameName)
-    local offsetX = 0;
-
-    if string.sub(frameName, 1, 9) == "GladiusEx" then
-        -- No change
-    elseif string.sub(frameName, 1, 7) == "Gladius" then
-        local frame = _G["GladiusButtonFramearena1"];
-        local frameRight = frame:GetRight() * frame:GetEffectiveScale();
-        local trinket = _G["GladiusTrinketFramearena1"];
-        if trinket then
-            offsetX = math.max(offsetX, trinket:GetRight() * trinket:GetEffectiveScale() - frameRight);
-        end
-        local racial = _G["GladiusRacialFramearena1"];
-        if racial then
-            offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
-        end
-    elseif string.sub(frameName, 1, 6) == "sArena" then
-        local frame = _G["sArenaEnemyFrame1"];
-        local frameRight = frame:GetRight() * frame:GetEffectiveScale();
-        if frame.Trinket then
-            local trinket = frame.Trinket;
-            if trinket then
-                offsetX = math.max(offsetX, trinket:GetRight() * trinket:GetEffectiveScale() - frameRight);
-            end
-        end
-        if frame.Racial then
-            local racial = frame.Racial;
-            if racial then
-                offsetX = math.max(offsetX, racial:GetRight() * racial:GetEffectiveScale() - frameRight);
-            end
-        end
-    end
-
-    -- We got the offsetX by comparing the GetRight values, which are values after all the scaling factors.
-    -- Now revert it to pre-scaling
-    local UIScale = UIParent:GetEffectiveScale();
-    return offsetX / UIScale + SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetX;
-end
-
 addon.IconGroup_Insert = function (group, icon, index)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then return end
-
-    -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
-    if group.setPointOptions then
-        local options = group.setPointOptions;
-        if ( not options.relativeTo ) or ( string.sub(options.relativeTo, 1, 4) == "NONE" ) then return end
-
-        options.offsetX = options.offsetX or CalculateArenaFrameOffsetX(options.relativeTo);
-        group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
-    end
 
     -- Give icon a timeStamp before inserting
     icon.timeStamp = GetTime();

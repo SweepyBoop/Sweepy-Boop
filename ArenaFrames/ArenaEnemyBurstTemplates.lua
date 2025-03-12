@@ -15,6 +15,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     frame.spellID = spellID;
     frame.spellInfo = addon.SpellData[spellID];
     frame.priority = frame.spellInfo.priority;
+    frame.category = frame.spellInfo.category;
     frame.group = group;
 
     frame.tex = frame:CreateTexture();

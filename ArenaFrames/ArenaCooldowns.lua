@@ -508,14 +508,13 @@ end
 function SweepyBoop:TestArenaCooldownTracker()
     RefreshTestMode(); -- Wipe the previous test frames first
 
-    local subEvent = addon.SPELL_AURA_APPLIED;
+    local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
     spellId = 190319; -- Combustion
-    subEvent = addon.SPELL_CAST_SUCCESS;
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
     externalTestGroup:Show();
