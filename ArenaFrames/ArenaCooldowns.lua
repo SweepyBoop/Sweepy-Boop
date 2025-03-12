@@ -351,16 +351,62 @@ local function ProcessUnitEvent(group, event, ...)
     end
 end
 
+local framePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
+local largeColumn = 100; -- Don't break line for arena tracker
+local growOptions = {
+    [addon.ARENA_ICON_GROW_DIRECTION.RIGHT_DOWN] = {
+        direction = "RIGHT",
+        anchor = "LEFT",
+        margin = 3,
+        columns = largeColumn,
+        growUpward = false,
+    },
+    [addon.ARENA_ICON_GROW_DIRECTION.RIGHT_UP] = {
+        direction = "RIGHT",
+        anchor = "LEFT",
+        margin = 3,
+        columns = largeColumn,
+        growUpward = true,
+    },
+    [addon.ARENA_ICON_GROW_DIRECTION.LEFT_DOWN] = {
+        direction = "LEFT",
+        anchor = "RIGHT",
+        margin = 3,
+        columns = largeColumn,
+        growUpward = false,
+    },
+    [addon.ARENA_ICON_GROW_DIRECTION.LEFT_UP] = {
+        direction = "LEFT",
+        anchor = "RIGHT",
+        margin = 3,
+        columns = largeColumn,
+        growUpward = true,
+    },
+}
+
+local function GetSetPointOptions(index)
+    local offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
+    local adjustedIndex = ( index == 0 and 1) or index;
+    local setPointOptions = {
+        point = "LEFT",
+        relativeTo = framePrefix .. adjustedIndex,
+        relativePoint = "RIGHT",
+        offsetY = offsetY;
+    };
+    return setPointOptions;
+end
+
 local function EnsureIconGroup(index)
+    local config = SweepyBoop.db.profile.arenaFrames;
     if ( not iconGroups[index] ) then
         local unitId = ( index == 0 and "player" ) or ( "arena" .. index );
-        iconGroups[index] = addon.CreateIconGroup(GetSetPointOptions(index), growOptions, unitId);
+        iconGroups[index] = addon.CreateIconGroup(GetSetPointOptions(index), growOptions[config.arenaCooldownGrowDirection], unitId);
         -- SetPointOptions is set but can be updated if lastModified falls behind
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        addon.UpdateIconGroupSetPointOptions(iconGroups[index], GetSetPointOptions(index));
+        addon.UpdateIconGroupSetPointOptions(iconGroups[index], GetSetPointOptions(index), growOptions[config.arenaCooldownGrowDirection]);
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 end
@@ -392,7 +438,7 @@ local function EnsureIconGroups()
 
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
                 -- Hide the external "Toggle Test Mode" group
-                SweepyBoop:HideTestArenaEnemyBurst();
+                SweepyBoop:HideTestArenaCooldownTracker();
 
                 -- This will simply update
                 EnsureIcons();
@@ -454,4 +500,11 @@ end
 
 function SweepyBoop:TestArenaCooldownTracker()
     RefreshTestMode();
+end
+
+function SweepyBoop:HideTestArenaCooldownTracker()
+    addon.IconGroup_Wipe(externalTestGroup);
+    if externalTestGroup then
+        externalTestGroup:Hide();
+    end
 end

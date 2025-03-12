@@ -1021,7 +1021,7 @@ function SweepyBoop:OnInitialize()
     -- Only nameplate modules for Classic currently
     if ( not addon.PROJECT_MAINLINE ) then return end
 
-    -- Setup arena enemy cooldown tracker
+    self:SetupArenaCooldownTracker();
 
     self:SetupHealerIndicator();
 
@@ -1067,18 +1067,15 @@ function SweepyBoop:TestArena()
         end
     end
 
-    self:TestArenaEnemyBurst();
-    self:TestCooldownTracking();
+    self:TestArenaCooldownTracker();
 end
 
 function SweepyBoop:HideTestArena()
-    self:HideTestArenaEnemyBurst();
-    self:HideTestCooldownTracking();
+    self:HideTestArenaCooldownTracker();
 end
 
 function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
-        self:HideTestArenaEnemyBurst();
         self:HideTestCooldownTracking();
 
         self:SetupCombatIndicator();

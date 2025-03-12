@@ -7,11 +7,7 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetSize(1, 1);
     -- For static relativeTo point, call SetPoint now
-    if ( relativeTo == UIParent ) or ( relativeTo == PlayerFrame ) then
-        f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
-    else
-        f.setPointOptions = setPointOptions;
-    end
+    f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
 
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
     f.growDirection = growOptions.direction;
@@ -30,15 +26,18 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     return f;
 end
 
-addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions)
+addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions, growOptions)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
-    if ( relativeTo == UIParent ) or ( relativeTo == PlayerFrame ) then
-        iconGroup:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
-    else
-        iconGroup.setPointOptions = setPointOptions;
-    end
+    iconGroup:ClearAllPoints();
+    iconGroup:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+
+    iconGroup.growDirection = growOptions.direction;
+    iconGroup.growAnchor = growOptions.anchor;
+    iconGroup.margin = growOptions.margin;
+    iconGroup.columns = growOptions.columns; -- For center alignment only
+    iconGroup.growUpward = growOptions.growUpward; -- "UP" or "DOWN"
 
     -- Leave other fields untouched, we're only updating position-related settings
 end
