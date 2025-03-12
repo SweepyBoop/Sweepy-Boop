@@ -97,8 +97,8 @@ local function IconGroup_Position(group)
 end
 
 local function sortFunc(a, b)
-    if ( (a.category == DEFENSIVE) ~= (b.category == DEFENSIVE) ) then
-        return a.category == DEFENSIVE and true or false;
+    if ( a.category ~= b.category ) then
+        return a.category < b.category;
     end
 
     if ( a.priority ~= b.priority ) then

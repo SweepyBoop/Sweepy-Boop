@@ -3,13 +3,12 @@ local _, addon = ...;
 addon.TEST_MODE = false;
 
 addon.SPELLCATEGORY = {
-    BURST = 1,
-
-    INTERRUPT = 2,
-    DISRUPT = 3,
-    CROWDCONTROL = 4,
-    DISPEL = 5,
-    DEFENSIVE = 6,
+    DEFENSIVE = 1,
+    BURST = 2,
+    CROWDCONTROL = 3,
+    INTERRUPT = 4,
+    DISRUPT = 5,
+    DISPEL = 6,
 };
 
 addon.SPELLPRIORITY = {
