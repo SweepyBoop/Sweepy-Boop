@@ -226,9 +226,7 @@ addon.SpellData = {
     },
     -- Imprison (Detainment)
     [221527] = {
-        cooldown = 45,
-        class = addon.DEMONHUNTER,
-        category = category.CROWDCONTROL,
+        parent = 217832,
     },
     -- Fel Eruption
     [211881] = {

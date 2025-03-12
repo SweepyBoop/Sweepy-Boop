@@ -615,7 +615,7 @@ if addon.PROJECT_MAINLINE then
     local function AppendSpellOptions(group, spellList)
         for spellID, spellInfo in pairs(spellList) do
             local category = spellInfo.category;
-            if ( category ~= addon.SPELLCATEGORY.INTERRUPT ) then
+            if ( category ~= addon.SPELLCATEGORY.INTERRUPT ) and ( not spellInfo.parent ) then
                 local classFile = spellInfo.class;
                 local classGroup = group.args[classFile];
                 local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
