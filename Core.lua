@@ -981,7 +981,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
-    defaults.profile.arenaFrames.arenaCooldownOffsetY = 7.5;
+    defaults.profile.arenaFrames.arenaCooldownOffsetY = 8;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
