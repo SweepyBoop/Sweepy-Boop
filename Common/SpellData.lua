@@ -267,6 +267,11 @@ addon.SpellData = {
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
     },
+        -- Celestial Alignment (Orbital Strike)
+        [383410] = {
+            parent = 194223,
+            cooldown = 120,
+        },
     -- Force of Nature
     [205636] = {
         class = addon.DRUID,
