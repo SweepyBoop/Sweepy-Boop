@@ -3,7 +3,7 @@ local _, addon = ...;
 addon.TEST_MODE = false;
 
 addon.SPELLCATEGORY = {
-    OFFENSIVE = 1,
+    BURST = 1,
 
     INTERRUPT = 2,
     DISRUPT = 3,
@@ -16,6 +16,18 @@ addon.SPELLPRIORITY = {
     DEFAULT = 50,
     HIGH = 10,
     LOW = 100,
+};
+
+addon.ICON_TEMPLATE = {
+    GLOW = 1, -- AWC style
+    FLASH = 2, -- OmniBar style
+};
+
+addon.ARENA_COOLDOWN_GROW_DIRECTION = {
+    RIGHT_DOWN = 1,
+    RIGHT_UP = 2,
+    LEFT_DOWN = 3,
+    LEFT_UP = 4,
 };
 
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";

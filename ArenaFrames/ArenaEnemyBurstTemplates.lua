@@ -6,14 +6,16 @@ local iconSize = addon.DEFAULT_ICON_SIZE;
 
 addon.CreateBurstIcon = function (unit, spellID, size, group)
     local frame = CreateFrame("Frame", nil, UIParent);
+    frame.template = addon.ICON_TEMPLATE.GLOW;
     frame:SetMouseClickEnabled(false);
     frame:SetSize(iconSize, iconSize);
     frame:Hide();
 
     frame.unit = unit;
     frame.spellID = spellID;
-    frame.spellInfo = addon.burstSpells[spellID];
+    frame.spellInfo = addon.SpellData[spellID];
     frame.priority = frame.spellInfo.priority;
+    frame.category = frame.spellInfo.category;
     frame.group = group;
 
     frame.tex = frame:CreateTexture();
@@ -144,11 +146,9 @@ addon.ResetBurstDuration = function (icon)
     addon.OnDurationTimerFinished(icon.duration);
 end
 
-addon.RefreshBurstDuration = function (icon)
+addon.RefreshBurstDuration = function (icon, duration, expirationTime)
     if ( not icon.duration ) then return end
 
-    -- Get new duration
-    local duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
     if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
         SetBurstDuration(icon, expirationTime - duration, duration);
         if icon.cooldown then

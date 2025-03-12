@@ -29,13 +29,14 @@ end
 -- An icon for a unit + spellID is only created once per session
 addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
+    frame.template = addon.ICON_TEMPLATE.FLASH;
     frame:SetMouseClickEnabled(false);
     frame.group = true; -- To add itself to parent group
     frame:Hide();
 
     frame.unit = unit;
     frame.spellID = spellID;
-    local spell = addon.utilitySpells[spellID];
+    local spell = addon.SpellData[spellID];
     frame.category = spell.category;
 
     if size then
@@ -124,11 +125,11 @@ end
 addon.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
     if internalCooldown then
         local now = GetTime();
-        if icon.info.lasteReset and ( now < icon.info.lasteReset + internalCooldown ) then
+        if icon.info.lastReset and ( now < icon.info.lastReset + internalCooldown ) then
             return;
         end
 
-        icon.info.lasteReset = now;
+        icon.info.lastReset = now;
     end
 
     addon.ResetIconCooldown(icon, amount);

@@ -20,6 +20,7 @@ Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml
 Common\Constants.lua
 Common\ArenaEnemyBurstSpells.lua
 Common\ArenaEnemyUtilitySpells.lua
+Common\SpellData.lua
 Common\UnitInfoHelpers.lua
 Common\NpcData.lua
 Common\AuraData.lua
@@ -47,9 +48,8 @@ ArenaFrames\IconGroupUtil.lua
 ArenaFrames\IconTemplates.lua
 ArenaFrames\CooldownTracking.xml
 ArenaFrames\CooldownTrackingTemplates.lua
-ArenaFrames\CooldownTracking.lua
 ArenaFrames\ArenaEnemyBurstTemplates.lua
-ArenaFrames\ArenaEnemyBurst.lua
+ArenaFrames\ArenaCooldowns.lua
 ArenaFrames\HealerIndicator.lua
 
 #RaidFrames\SortGroup.lua

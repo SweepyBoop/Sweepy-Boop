@@ -412,7 +412,7 @@ options.args.nameplatesEnemy = {
             type = "group",
             name = "Unit whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
-            set = function(info, val) 
+            set = function(info, val)
                 SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] = val;
                 SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
                 SweepyBoop:RefreshAllNamePlates();
@@ -428,7 +428,7 @@ options.args.nameplatesEnemy = {
             type = "group",
             name = "Debuff whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] end,
-            set = function(info, val) 
+            set = function(info, val)
                 SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] = val;
                 SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
                 -- No need to refresh nameplates, just apply it on next UNIT_AURA
@@ -444,7 +444,7 @@ options.args.nameplatesEnemy = {
             type = "group",
             name = "Buff whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] end,
-            set = function(info, val) 
+            set = function(info, val)
                 SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] = val;
                 SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
                 -- No need to refresh nameplates, just apply it on next UNIT_AURA
@@ -469,7 +469,7 @@ if addon.PROJECT_MAINLINE then
         name = "Arena Frames",
         handler = SweepyBoop, -- for running SweepyBoop:TestArena()
         get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
-        set = function(info, val) 
+        set = function(info, val)
             SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
         end,
@@ -481,83 +481,54 @@ if addon.PROJECT_MAINLINE then
                 desc = "To make it easier to identify the healer in case of class stacking",
                 width = "full",
                 hidden = function ()
-                    return ( not (Gladius or sArena ) );
+                    return ( not ( Gladius or sArena ) );
                 end
             },
 
             header1 = {
                 order = 2,
                 type = "header",
-                name = "Enemy burst / defensive cooldowns",
-                hidden = function ()
-                    return ( not (Gladius or sArena ) );
-                end
-            },
-            testmode = {
-                order = 3,
-                type = "execute",
-                name = "Test",
-                func = "TestArena",
-                width = "half",
-            },
-            hidetest = {
-                order = 4,
-                type = "execute",
-                name = "Hide",
-                func = "HideTestArena",
-                width = "half",
-            },
-            reloadUI = {
-                order = 5,
-                type = "execute",
-                width = 0.625,
-                name = "Reload UI",
-                func = ReloadUI,
-            },
-            desc = {
-                order = 6,
-                type = "description",
-                width = "full",
-                name = addon.EXCLAMATION .. " Changes made during an arena session require a reload to take effect",
-            },
-            breaker1 = {
-                order = 7,
-                type = "description",
-                name = "",
+                name = "Arena opponent cooldowns",
             },
 
-            arenaEnemyOffensivesEnabled = {
-                order = 8,
-                width = 1.5,
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enemy burst Cooldowns",
-                desc = "Show arena enemy burst cooldowns next to the arena frames",
-            },
-            arenaEnemyOffensiveIconSize = {
-                order = 9,
-                type = "range",
-                min = 16,
-                max = 64,
-                step = 1,
-                name = "Icon size",
-                desc = "Size of arena burst cooldown icons",
-            },
-            newline1 = {
-                order = 10,
-                type = "description",
+            arenaCooldownTrackerEnabled = {
+                order = 3,
                 width = "full",
-                name = "",
-            },
-            arenaEnemyDefensivesEnabled = {
-                order = 11,
-                width = 1.5,
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enemy defensive cooldowns",
-                desc = "Show arena enemy defensive cooldowns next to the arena frames",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enabled",
             },
-            arenaEnemyDefensiveIconSize = {
-                order = 12,
+            arenaCooldownSeparateRowForDefensive = {
+                order = 4,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Separate row for defensives",
+            },
+
+            hideCountDownNumbers = {
+                order = 5,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
+                desc = "Hide countdown numbers but show a more visible swiping edge",
+            },
+
+            arenaCooldownGrowDirection = {
+                order = 6,
+                type = "select",
+                width = 0.75,
+                name = "Grow direction",
+                values = {
+                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
+                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
+                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
+                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                },
+            },
+
+            arenaCooldownTrackerIconSize = {
+                order = 7,
                 type = "range",
+                width = 0.75,
                 min = 16,
                 max = 64,
                 step = 1,
@@ -565,55 +536,73 @@ if addon.PROJECT_MAINLINE then
                 desc = "Size of arena defensive cooldown icons",
             },
 
-            hideCountDownNumbers = {
-                order = 13,
-                type = "toggle",
-                width = "full",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
-                desc = "Hide countdown numbers but show a more visible swiping edge",
+            newline = {
+                order = 8,
+                type = "description",
+                name = "",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
+                end
             },
+
             arenaCooldownOffsetX = {
-                order = 14,
+                order = 9,
                 type = "range",
                 min = -300,
                 max = 300,
                 step = 1,
-                name = "Horizontal offset",
+                name = "X offset",
                 desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                set = function (info, val)
+                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                    SweepyBoop:RepositionTestGroup();
+                end
             },
             arenaCooldownOffsetY = {
-                order = 15,
+                order = 10,
                 type = "range",
                 min = -150,
                 max = 150,
                 step = 1,
-                name = "Vertical offset",
+                name = "Y offset",
                 desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                set = function (info, val)
+                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                    SweepyBoop:RepositionTestGroup();
+                end
             },
 
             spellList = {
-                order = 16,
+                order = 11,
                 type = "group",
                 name = "Spells",
                 desc = "Select which abilities to track cooldown inside arenas",
                 get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
                 set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
                 args = {
-                    checkAll = {
+                    restoreDefaults = {
                         order = 1,
                         type = "execute",
-                        name = "Check All",
+                        name = "Restore default",
                         func = function ()
-                            SweepyBoop:CheckAllSpells(true);
+                            SweepyBoop:CheckDefaultArenaAbilities(true);
                         end
                     },
-                    uncheckAll = {
+                    testmode = {
                         order = 2,
                         type = "execute",
-                        name = "Uncheck All",
-                        func = function ()
-                            SweepyBoop:CheckAllSpells(false);
-                        end
+                        name = "Test",
+                        func = "TestArena",
+                        width = "half",
+                    },
+                    hidetest = {
+                        order = 3,
+                        type = "execute",
+                        name = "Hide",
+                        func = "HideTestArenaCooldownTracker",
+                        width = "half",
                     },
                 },
             }
@@ -637,9 +626,10 @@ if addon.PROJECT_MAINLINE then
         indexInClassGroup[classInfo.classFile] = 1;
         groupIndex = groupIndex + 1;
     end
-    local function AppendSpellOptions(group, spellList, category)
+    local function AppendSpellOptions(group, spellList)
         for spellID, spellInfo in pairs(spellList) do
-            if ( not category ) or ( spellInfo.category == category ) then
+            local category = spellInfo.category;
+            if ( category ~= addon.SPELLCATEGORY.INTERRUPT ) and ( not spellInfo.parent ) then
                 local classFile = spellInfo.class;
                 local classGroup = group.args[classFile];
                 local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
@@ -663,8 +653,7 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
-    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
-    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
+    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.SpellData);
 
     options.args.raidFrames = {
         order = 6,
@@ -954,12 +943,12 @@ local defaults = {
         },
         arenaFrames = {
             healerIndicator = true,
+            arenaCooldownTrackerEnabled = true,
+            arenaCooldownSeparateRowForDefensive = true,
+            arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
-            arenaEnemyOffensivesEnabled = true,
-            arenaEnemyOffensiveIconSize = 32,
-            arenaEnemyDefensivesEnabled = true,
-            arenaEnemyDefensiveIconSize = 25,
+            arenaCooldownTrackerIconSize = 32,
             hideCountDownNumbers = false,
             spellList = {},
         },
@@ -1002,14 +991,19 @@ addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
 addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
 addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
-local function SetupAllSpells(profile, spellList, value)
+local function SetupAllSpells(profile, spellList)
     for spellID, spellEntry in pairs(spellList) do
-        profile[tostring(spellID)] = value;
+        local category = spellEntry.category;
+        -- By default only check burst and defensives
+        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) or ( category == addon.SPELLCATEGORY.DISPEL ) then
+            profile[tostring(spellID)] = true;
+        else
+            profile[tostring(spellID)] = false;
+        end
     end
 end
 
-SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.burstSpells, true);
-SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.utilitySpells, true);
+SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
 
 function SweepyBoop:OnInitialize()
     local currentTime = GetTime();
@@ -1043,9 +1037,7 @@ function SweepyBoop:OnInitialize()
     -- Only nameplate modules for Classic currently
     if ( not addon.PROJECT_MAINLINE ) then return end
 
-    -- Setup arena enemy cooldown icons
-    self:SetupOffensiveIcons();
-    self:SetupCooldownTrackingIcons();
+    self:SetupArenaCooldownTracker();
 
     self:SetupHealerIndicator();
 
@@ -1091,19 +1083,12 @@ function SweepyBoop:TestArena()
         end
     end
 
-    self:TestArenaEnemyBurst();
-    self:TestCooldownTracking();
-end
-
-function SweepyBoop:HideTestArena()
-    self:HideTestArenaEnemyBurst();
-    self:HideTestCooldownTracking();
+    self:TestArenaCooldownTracker();
 end
 
 function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
-        self:HideTestArenaEnemyBurst();
-        self:HideTestCooldownTracking();
+        self:HideTestArenaCooldownTracker();
 
         self:SetupCombatIndicator();
     end
@@ -1118,9 +1103,8 @@ function SweepyBoop:RefreshConfig()
     self:RefreshAllNamePlates(true);
 end
 
-function SweepyBoop:CheckAllSpells(value)
-    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.burstSpells, value);
-    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.utilitySpells, value);
+function SweepyBoop:CheckDefaultArenaAbilities()
+    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
 end
 
 SLASH_SweepyBoop1 = "/sb"
