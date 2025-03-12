@@ -1512,8 +1512,8 @@ if addon.TEST_MODE then
             [314791] = 12, -- Shifting Power
         },
 
-        -- Reduce cooldown by 1s (Phoenix Flames spellID somehow does not work)
-        critResets = { 133, 11366, 108853, "Phoenix Flames" },
+        -- Reduce cooldown by 1s
+        critResets = { 133, 11366, 108853, 2948, 257542 },
         critResetAmount = 1,
     };
 end
