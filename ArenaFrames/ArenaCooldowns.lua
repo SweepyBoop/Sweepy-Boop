@@ -398,13 +398,17 @@ local function EnsureIconGroup(index)
     local config = SweepyBoop.db.profile.arenaFrames;
     if ( not iconGroups[index] ) then
         local unitId = ( index == 0 and "player" ) or ( "arena" .. index );
-        iconGroups[index] = addon.CreateIconGroup(GetSetPointOptions(index), growOptions[config.arenaCooldownGrowDirection], unitId);
+        local setPointOptions = GetSetPointOptions(index);
+        setPointOptions.offsetX = config.arenaCooldownOffsetX;
+        iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions[config.arenaCooldownGrowDirection], unitId);
         -- SetPointOptions is set but can be updated if lastModified falls behind
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        addon.UpdateIconGroupSetPointOptions(iconGroups[index], GetSetPointOptions(index), growOptions[config.arenaCooldownGrowDirection]);
+        local setPointOptions = GetSetPointOptions(index);
+        setPointOptions.offsetX = config.arenaCooldownOffsetX;
+        addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions[config.arenaCooldownGrowDirection]);
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 end
@@ -430,7 +434,7 @@ local function EnsureIconGroups()
         eventFrame:RegisterEvent(addon.UNIT_AURA);
         eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
-            if ( not SweepyBoop.db.profile.arenaFrames.arenaEnemyOffensivesEnabled ) then
+            if ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled ) then
                 return;
             end
 
@@ -485,10 +489,12 @@ local function RefreshTestMode()
     end
 
     local grow = growOptions[config.arenaCooldownGrowDirection];
+    local setPointOptions = GetSetPointOptions(1);
+    setPointOptions.offsetX = config.arenaCooldownOffsetX;
     if externalTestGroup then
-        addon.UpdateIconGroupSetPointOptions(externalTestGroup, GetSetPointOptions(1), grow);
+        addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
     else
-        externalTestGroup = addon.CreateIconGroup(GetSetPointOptions(1), grow, unitId);
+        externalTestGroup = addon.CreateIconGroup(setPointOptions, grow, unitId);
     end
 
     SetupIconGroup(externalTestGroup, unitId, externalTestIcons);
