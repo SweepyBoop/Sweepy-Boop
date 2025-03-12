@@ -560,9 +560,6 @@ if addon.PROJECT_MAINLINE then
                         order = 10,
                         type = "description",
                         name = "",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
-                        end
                     },
 
                     arenaCooldownOffsetX = {
