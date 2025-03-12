@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local POWERTYPE = Enum.PowerType;
 local specID = addon.SPECID;
-local category = addon.category;
+local category = addon.SPELLCATEGORY;
 
 -- charges: baseline 2 charges
 -- opt_charges: optionally 2 charges
@@ -1246,10 +1246,10 @@ addon.SpellData = {
         trackPet = true,
         category = category.CROWDCONTROL,
     },
-    -- Axe Toss (Command Demon Ability) (only shows up once no matter which version is cast)
-    [119914] = {
-        parent = 89766,
-    },
+        -- Axe Toss (Command Demon Ability) (only shows up once no matter which version is cast)
+        [119914] = {
+            parent = 89766,
+        },
     -- Unending Resolve
     [104773] = {
         cooldown = 180,
@@ -1278,30 +1278,30 @@ addon.SpellData = {
         trackPet = true,
         category = category.INTERRUPT,
     },
-    -- Spell Lock (Grimoire of Sacrifice)
-    [132409] = {
-        parent = 19647,
-    },
-    -- Optical Blast (Command Demon)
-    [119911] = {
-        parent = 19647,
-    },
-    -- Optical Blast (Observer)
-    [115781] = {
-        parent = 19647,
-    },
-    -- Shadow Lock (Doomguard)
-    [171138] = {
-        parent = 19647,
-    },
-    -- Shadow Lock (Grimoire of Sacrifice)
-    [171139] = {
-        parent = 19647,
-    },
-    -- Shadow Lock (Command Demon)
-    [171140] = {
-        parent = 19647,
-    },
+        -- Spell Lock (Grimoire of Sacrifice)
+        [132409] = {
+            parent = 19647,
+        },
+        -- Optical Blast (Command Demon)
+        [119911] = {
+            parent = 19647,
+        },
+        -- Optical Blast (Observer)
+        [115781] = {
+            parent = 19647,
+        },
+        -- Shadow Lock (Doomguard)
+        [171138] = {
+            parent = 19647,
+        },
+        -- Shadow Lock (Grimoire of Sacrifice)
+        [171139] = {
+            parent = 19647,
+        },
+        -- Shadow Lock (Command Demon)
+        [171140] = {
+            parent = 19647,
+        },
     -- Call Felhunter
     [212619] = {
         cooldown = 60,
@@ -1516,4 +1516,16 @@ if addon.TEST_MODE then
         critResets = { 133, 11366, 108853, 2948, 257542 },
         critResetAmount = 1,
     };
+end
+
+for _, spell in pairs(addon.SpellData) do
+    -- Fill options from parent
+    if spell.parent then
+        local parent = addon.SpellData[spell.parent];
+
+        spell.cooldown = spell.cooldown or parent.cooldown;
+        spell.class = spell.class or parent.class;
+        spell.category = spell.category or parent.category;
+        spell.trackPet = parent.trackPet or parent.category;
+    end
 end

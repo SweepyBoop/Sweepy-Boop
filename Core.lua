@@ -612,9 +612,10 @@ if addon.PROJECT_MAINLINE then
         indexInClassGroup[classInfo.classFile] = 1;
         groupIndex = groupIndex + 1;
     end
-    local function AppendSpellOptions(group, spellList, category)
+    local function AppendSpellOptions(group, spellList)
         for spellID, spellInfo in pairs(spellList) do
-            if ( not category ) or ( spellInfo.category == category ) then
+            local category = spellInfo.category;
+            if ( category ~= addon.SPELLCATEGORY.INTERRUPT ) then
                 local classFile = spellInfo.class;
                 local classGroup = group.args[classFile];
                 local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
@@ -638,8 +639,7 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
-    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.burstSpells);
-    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.utilitySpells, addon.SPELLCATEGORY.DEFENSIVE);
+    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.SpellData);
 
     options.args.raidFrames = {
         order = 6,
@@ -977,14 +977,17 @@ addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
 addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
 addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
-local function SetupAllSpells(profile, spellList, value)
+local function SetupAllSpells(profile, spellList)
     for spellID, spellEntry in pairs(spellList) do
-        profile[tostring(spellID)] = value;
+        local category = spellEntry.category;
+        -- By default only check burst and defensives
+        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) then
+            profile[tostring(spellID)] = true;
+        end
     end
 end
 
-SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.burstSpells, true);
-SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.utilitySpells, true);
+SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
 
 function SweepyBoop:OnInitialize()
     local currentTime = GetTime();
