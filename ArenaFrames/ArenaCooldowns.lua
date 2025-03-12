@@ -155,8 +155,6 @@ local function SetupIconGroup(group, unit, testIcons)
     end
 end
 
-
-
 local function ValidateUnit(self)
     -- If unit is specified, this is a group to track a single unit, return unitGUID
     if self.unit then
@@ -354,28 +352,28 @@ end
 local framePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
 local largeColumn = 100; -- Don't break line for arena tracker
 local growOptions = {
-    [addon.ARENA_ICON_GROW_DIRECTION.RIGHT_DOWN] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = {
         direction = "RIGHT",
         anchor = "LEFT",
         margin = 3,
         columns = largeColumn,
         growUpward = false,
     },
-    [addon.ARENA_ICON_GROW_DIRECTION.RIGHT_UP] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = {
         direction = "RIGHT",
         anchor = "LEFT",
         margin = 3,
         columns = largeColumn,
         growUpward = true,
     },
-    [addon.ARENA_ICON_GROW_DIRECTION.LEFT_DOWN] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = {
         direction = "LEFT",
         anchor = "RIGHT",
         margin = 3,
         columns = largeColumn,
         growUpward = false,
     },
-    [addon.ARENA_ICON_GROW_DIRECTION.LEFT_UP] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = {
         direction = "LEFT",
         anchor = "RIGHT",
         margin = 3,
@@ -499,7 +497,19 @@ function SweepyBoop:SetupArenaCooldownTracker()
 end
 
 function SweepyBoop:TestArenaCooldownTracker()
-    RefreshTestMode();
+    RefreshTestMode(); -- Wipe the previous test frames first
+
+    local subEvent = addon.SPELL_AURA_APPLIED;
+    local sourceGUID = UnitGUID("player");
+    local destGUID = UnitGUID("player");
+    local spellId = 10060; -- Power Infusion
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+
+    spellId = 190319; -- Combustion
+    subEvent = addon.SPELL_CAST_SUCCESS;
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+
+    externalTestGroup:Show();
 end
 
 function SweepyBoop:HideTestArenaCooldownTracker()

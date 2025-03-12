@@ -587,7 +587,7 @@ if addon.PROJECT_MAINLINE then
                         order = 3,
                         type = "execute",
                         name = "Hide",
-                        func = "HideTestArena",
+                        func = "HideTestArenaCooldownTracker",
                         width = "half",
                     },
                 },
@@ -1070,13 +1070,9 @@ function SweepyBoop:TestArena()
     self:TestArenaCooldownTracker();
 end
 
-function SweepyBoop:HideTestArena()
-    self:HideTestArenaCooldownTracker();
-end
-
 function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
-        self:HideTestCooldownTracking();
+        self:HideTestArenaCooldownTracker();
 
         self:SetupCombatIndicator();
     end
