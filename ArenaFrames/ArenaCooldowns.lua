@@ -45,7 +45,7 @@ local function EnsureIcon(unitId, spellID)
 
     if ( not premadeIcons[unitId][spellID] ) then
         local size = config.arenaTrackerIconSize;
-        if spellData[spellID].category == addon.SPELLPRIORITY.BURST then
+        if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
             premadeIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
         else
             premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
@@ -195,8 +195,10 @@ end
 
 local function StartIcon(icon)
     if icon.template == addon.ICON_TEMPLATE.GLOW then
+        print("StartBurstIcon");
         addon.StartBurstIcon(icon);
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
+        print("StartCooldownTrackingIcon");
         addon.StartCooldownTrackingIcon(icon);
     end
 end
