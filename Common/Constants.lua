@@ -23,6 +23,13 @@ addon.ICON_TEMPLATE = {
     FLASH = 2, -- OmniBar style
 };
 
+addon.ARENA_COOLDOWN_GROW_DIRECTION = {
+    RIGHT_DOWN = 1,
+    RIGHT_UP = 2,
+    LEFT_DOWN = 3,
+    LEFT_UP = 4,
+};
+
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
 
 addon.SPECID = {
