@@ -517,6 +517,9 @@ function SweepyBoop:TestArenaCooldownTracker()
     spellId = 190319; -- Combustion
     ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
 
+    spellId = 45438; -- Ice Block
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+
     externalTestGroup:Show();
 end
 
