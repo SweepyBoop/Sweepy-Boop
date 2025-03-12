@@ -501,7 +501,7 @@ if addon.PROJECT_MAINLINE then
                 order = 4,
                 width = "full",
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Separate rows for offensives and defensives",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Separate row for defensives",
             },
 
             hideCountDownNumbers = {
