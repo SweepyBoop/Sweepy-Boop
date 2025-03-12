@@ -1,5 +1,7 @@
 local _, addon = ...;
 
+local DEFENSIVE = addon.SPELLCATEGORY.DEFENSIVE;
+
 addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
@@ -72,7 +74,8 @@ local function IconGroup_Position(group)
         else
             count = count + 1;
             local newRow = ( count >= columns )
-                or ( SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive and group.active[i - 1] and group.active[i - 1].category ~= addon.DEFENSIVE and group.active[i].category == addon.DEFENSIVE );
+                or ( SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive
+                    and group.active[i - 1] and group.active[i - 1].category ~= addon.SPELLCATEGORY.DEFENSIVE and group.active[i].category == addon.SPELLCATEGORY.DEFENSIVE );
             if newRow then
                 if growDirection == "CENTER" then
                     group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
@@ -94,6 +97,10 @@ local function IconGroup_Position(group)
 end
 
 local function sortFunc(a, b)
+    if ( (a.category == DEFENSIVE) ~= (b.category == DEFENSIVE) ) then
+        return a.category == DEFENSIVE and true or false;
+    end
+
     if ( a.priority ~= b.priority ) then
         return a.priority < b.priority;
     else
