@@ -163,7 +163,7 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        classIconScale = {
+        classIconSize = {
             order = 14,
             type = "range",
             isPercent = true,
@@ -175,7 +175,7 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        petIconScale = {
+        petIconSize = {
             order = 15,
             type = "range",
             isPercent = true,
@@ -973,8 +973,8 @@ local defaults = {
             classIconStyle = addon.CLASS_ICON_STYLE.ICON,
             showSpecIcons = true,
             hideOutsidePvP = false,
-            classIconScale = 1,
-            petIconScale = 0.8,
+            classIconSize = 1,
+            petIconSize = 0.8,
             classIconOffset = 0,
             useHealerIcon = true,
             showHealerOnly = false,
@@ -1036,7 +1036,7 @@ local defaults = {
 
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
-    defaults.profile.nameplatesFriendly.classIconScale = 1.25;
+    defaults.profile.nameplatesFriendly.classIconSize = 1.25;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;

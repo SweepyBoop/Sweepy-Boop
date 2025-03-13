@@ -21,7 +21,7 @@ addon.UpdatePetIcon = function(nameplate, frame)
     local iconFrame = EnsureIcon(nameplate);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.petIconScale);
+        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.petIconSize);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
     end
 

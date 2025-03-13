@@ -179,7 +179,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
-            iconFrame:SetScale(config.classIconScale * scaleFactor);
+            iconFrame:SetScale(config.classIconSize * scaleFactor);
             iconFrame:ClearAllPoints();
             if showPlayerName then
                 iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP", 0, offset);
@@ -190,7 +190,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            arrowFrame:SetScale(config.classIconScale);
+            arrowFrame:SetScale(config.classIconSize);
             arrowFrame:ClearAllPoints();
             if ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) then
                 arrowFrame:SetPoint("BOTTOM", iconFrame, "TOP", 0, -2); -- Get the arrow closer to the icon
