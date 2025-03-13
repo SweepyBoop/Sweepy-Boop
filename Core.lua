@@ -18,18 +18,6 @@ local options = {
             imageHeight = 36,
             name = "A lightweight addon to enhance your arena & battleground experience :)"
         },
-
-        -- discordLink = {
-        --     order = 2,
-        --     type = "input",
-        --     width = "full",
-        --     name = addon.FORMAT_ATLAS("UI-ChatIcon-App") .. " Join Discord for support and discussion on PvP addon / UI",
-        --     desc = "Press Ctrl+C to copy URL",
-        --     dialogControl = "Link-SweepyBoop",
-        --     get = function ()
-        --         return "https://discord.gg/SMRxeZzVwc";
-        --     end
-        -- },
     },
 };
 
@@ -912,6 +900,37 @@ if addon.PROJECT_MAINLINE then
 
 end
 
+options.args.support = {
+    order = 8,
+    type = "group",
+    name = "Support",
+    args = {
+        discordLink = {
+            order = 1,
+            type = "input",
+            width = "full",
+            name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Join Discord for PvP UI support",
+            desc = "Press Ctrl+C to copy URL",
+            dialogControl = "InlineLink-SweepyBoop",
+            get = function ()
+                return "https://discord.gg/SMRxeZzVwc";
+            end
+        },
+
+        donate = {
+            order = 2,
+            type = "input",
+            width = "full",
+            name = addon.FORMAT_ATLAS("GarrisonTroops-Health") .. " If feeling generous",
+            desc = "Press Ctrl+C to copy URL",
+            dialogControl = "InlineLink-SweepyBoop",
+            get = function ()
+                return "https://www.paypal.me/sweepyboop";
+            end
+        },
+    },
+}
+
 local defaults = {
     profile = {
         nameplatesFriendly = {
@@ -1009,7 +1028,9 @@ local function SetupAllSpells(profile, spellList)
     end
 end
 
-SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+if addon.PROJECT_MAINLINE then
+    SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+end
 
 function SweepyBoop:OnInitialize()
     local currentTime = GetTime();
