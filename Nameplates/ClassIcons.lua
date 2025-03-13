@@ -246,4 +246,7 @@ addon.HideClassIcon = function(nameplate)
     if classIconContainer.FriendlyClassArrow then
         classIconContainer.FriendlyClassArrow:Hide();
     end
+    if classIconContainer.NameFrame then
+        classIconContainer.NameFrame:Hide();
+    end
 end
