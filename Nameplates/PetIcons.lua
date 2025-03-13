@@ -1,7 +1,5 @@
 local _, addon = ...;
 
-local scaleFactor = 0.75; -- Smaller icons for pets
-
 local function EnsureIcon(nameplate)
     if ( not nameplate.FriendlyPetIcon ) then
         nameplate.FriendlyPetIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
@@ -23,7 +21,7 @@ addon.UpdatePetIcon = function(nameplate, frame)
     local iconFrame = EnsureIcon(nameplate);
     local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
     if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.classIconScale / 100 * scaleFactor);
+        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.petIconScale);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
     end
 
