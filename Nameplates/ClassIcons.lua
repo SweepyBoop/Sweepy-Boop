@@ -36,7 +36,7 @@ local function EnsureClassIcon(nameplate)
         nameplate.classIconContainer.NameFrame:SetIgnoreParentAlpha(true);
         nameplate.classIconContainer.NameFrame:SetIgnoreParentScale(true);
         nameplate.classIconContainer.NameFrame:SetSize(200, 15);
-        nameplate.classIconContainer.NameFrame:SetPoint("CENTER", nameplate, "CENTER");
+        nameplate.classIconContainer.NameFrame:SetPoint("TOP", nameplate, "CENTER");
 
         local name = nameplate.classIconContainer.NameFrame:CreateFontString(nil, "OVERLAY");
         name:SetFontObject("GameFontNormalOutline");
