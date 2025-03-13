@@ -87,6 +87,13 @@ local function UpdateWidgets(nameplate, frame)
                 addon.ShowClassIcon(nameplate, frame);
                 addon.HidePetIcon(nameplate);
             elseif UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
+                local shouldShow = true;
+                if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then
+                    shouldShow = false;
+                elseif configFriendly.showMyPetOnly and ( not UnitIsUnit(frame.unit, "pet") ) then
+                    shouldShow = false;
+                end
+
                 addon.HideClassIcon(nameplate);
                 if configFriendly.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then
                     addon.HidePetIcon(nameplate);

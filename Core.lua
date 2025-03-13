@@ -130,8 +130,18 @@ options.args.nameplatesFriendly = {
                 return ( not dependencyEnabled );
             end
         },
-        useFlagCarrierIcon = {
+        showMyPetOnly = {
             order = 11,
+            width = "full",
+            type = "toggle",
+            name = addon.FORMAT_TEXTURE(addon.ICON_ID_PET) .. " Show my pet only",
+            desc = "Hide class icons of other players' pets\nThis option is not available in arenas",
+            hidden = function ()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
+            end
+        },
+        useFlagCarrierIcon = {
+            order = 12,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.FLAG_CARRIER_ALLIANCE_LOGO) .. " Show flag carrier icons in battlegrounds",
@@ -141,7 +151,7 @@ options.args.nameplatesFriendly = {
             end
         },
         targetHighlight = {
-            order = 12,
+            order = 13,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
@@ -150,7 +160,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconScale = {
-            order = 13,
+            order = 14,
             type = "range",
             isPercent = true,
             min = 0.5,
@@ -162,7 +172,7 @@ options.args.nameplatesFriendly = {
             end
         },
         petIconScale = {
-            order = 14,
+            order = 15,
             type = "range",
             isPercent = true,
             min = 0.5,
@@ -174,7 +184,7 @@ options.args.nameplatesFriendly = {
             end
         },
         newline2 = {
-            order = 15,
+            order = 16,
             type = "description",
             name = "",
             hidden = function()
@@ -182,7 +192,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 16,
+            order = 17,
             type = "range",
             min = 0,
             max = 150,
@@ -194,7 +204,7 @@ options.args.nameplatesFriendly = {
         },
 
         breaker2 = {
-            order = 17,
+            order = 18,
             type = "header",
             name = "",
             hidden = function()
@@ -203,7 +213,7 @@ options.args.nameplatesFriendly = {
         },
 
         classColorBorder = {
-            order = 18,
+            order = 19,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
@@ -213,7 +223,7 @@ options.args.nameplatesFriendly = {
         },
 
         showPlayerName = {
-            order = 19,
+            order = 20,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("tokens-changeName-regular") .. " Show class-colored names under class icons",
