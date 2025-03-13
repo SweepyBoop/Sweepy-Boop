@@ -1028,7 +1028,9 @@ local function SetupAllSpells(profile, spellList)
     end
 end
 
-SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+if addon.PROJECT_MAINLINE then
+    SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+end
 
 function SweepyBoop:OnInitialize()
     local currentTime = GetTime();
