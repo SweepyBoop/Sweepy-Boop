@@ -217,6 +217,12 @@ addon.SpellData = {
         class = addon.DEMONHUNTER,
         category = category.DEFENSIVE
     },
+    -- Reverse Magic
+    [205604] = {
+        cooldown = 60,
+        class = addon.DEMONHUNTER,
+        category = category.DEFENSIVE,
+    },
     -- Crowd Control
     -- Imprison
     [217832] = {
@@ -557,6 +563,12 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.DEFENSIVE
     },
+    -- Exhilaration
+    [109304] = {
+        cooldown = 120,
+        class = addon.HUNTER,
+        category = category.DEFENSIVE,
+    },
     -- Interrupt
     -- Counter Shot
     [147362] = {
@@ -759,6 +771,18 @@ addon.SpellData = {
         class = addon.MONK,
         category = category.DEFENSIVE,
     },
+    -- Revival
+    [115310] = {
+        cooldown = 150,
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        index = addon.SPELLPRIORITY.HIGH,
+    },
+        -- Restoral
+        [388615] = {
+            parent = 115310,
+        },
+    -- Dispel
     -- Detox
     [115450] = {
         cooldown = 8,
@@ -1017,9 +1041,9 @@ addon.SpellData = {
         charges = true,
         index = addon.SPELLPRIORITY.HIGH,
     },
-    -- Rapture
-    [47536] = {
-        cooldown = 90,
+    -- Power Word: Barrier
+    [62618] = {
+        cooldown = 180,
         class = addon.PRIEST,
         category = category.DEFENSIVE,
     },
@@ -1327,6 +1351,7 @@ addon.SpellData = {
         [119914] = {
             parent = 89766,
         },
+    -- Defensive
     -- Unending Resolve
     [104773] = {
         cooldown = 180,
@@ -1348,6 +1373,13 @@ addon.SpellData = {
         class = addon.WARLOCK,
         category = category.DEFENSIVE,
     },
+    -- Demonic Circle: Teleport
+    [48020] = {
+        cooldown = 30,
+        class = addon.WARLOCK,
+        category = category.DEFENSIVE,
+    },
+    -- Interrupt
     -- Spell Lock (Command Demon Ability)
     [19647] = {
         cooldown = 24,
@@ -1391,6 +1423,8 @@ addon.SpellData = {
         class = addon.WARLOCK,
         category = category.DISRUPT,
     },
+
+    -- Warrior
     -- Champion's Spear
     [376079] = {
         class = addon.WARRIOR,
@@ -1482,6 +1516,12 @@ addon.SpellData = {
     -- Enraged Regeneration
     [184364] = {
         cooldown = 114,
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+    },
+    -- Rallying Cry
+    [97462] = {
+        cooldown = 180,
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
     },
