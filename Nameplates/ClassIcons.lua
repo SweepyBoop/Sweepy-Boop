@@ -172,7 +172,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
-            iconFrame:SetScale(config.classIconScale / 100 * scaleFactor);
+            iconFrame:SetScale(config.classIconScale * scaleFactor);
             iconFrame.name:SetShown(showPlayerName);
             local offset = config.classIconOffset;
             if showPlayerName then
@@ -183,7 +183,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            arrowFrame:SetScale(config.classIconScale / 100);
+            arrowFrame:SetScale(config.classIconScale);
             arrowFrame.name:SetShown(showPlayerName);
             local offset = config.classIconOffset;
             if showPlayerName then
