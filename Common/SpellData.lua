@@ -375,6 +375,12 @@ addon.SpellData = {
         class = addon.DRUID,
         category = category.DEFENSIVE
     },
+    -- Renewal
+    [108238] = {
+        cooldown = 90,
+        class = addon.DRUID,
+        category = category.DEFENSIVE
+    },
     -- Dispel
     -- Nature's Cure
     [88423] = {
