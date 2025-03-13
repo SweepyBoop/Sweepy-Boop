@@ -137,7 +137,7 @@ options.args.nameplatesFriendly = {
             name = addon.FORMAT_TEXTURE(addon.ICON_ID_PET) .. " Show my pet only",
             desc = "Hide class icons of other players' pets\nThis option is not available in arenas",
             hidden = function ()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         useFlagCarrierIcon = {
