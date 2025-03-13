@@ -12,7 +12,7 @@
 
 ---------------------------------------------------------------------------------
 
-local Type, Version = "Link-SweepyBoop", 1;
+local Type, Version = "InlineLink-SweepyBoop", 1;
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true);
 if not AceGUI or (AceGUI:GetWidgetVersion(Type) or 0) >= Version then return end
 
@@ -124,13 +124,13 @@ local methods = {
 local function Constructor()
 	local frame = CreateFrame("Frame", nil, UIParent);
 	frame:Hide();
-	frame:SetHeight(26);
+	frame:SetHeight(36);
 
-	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+	local label = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightOutline");
 	label:SetPoint("TOPLEFT");
 	label:SetJustifyH("LEFT");
-	label:SetWidth(350);
-	label:SetHeight(26);
+	label:SetWidth(250);
+	label:SetHeight(36);
 
 	local editbox = CreateFrame("EditBox", nil, frame, BackdropTemplateMixin and "BackdropTemplate" or nil);
 	editbox:SetAutoFocus(false);
