@@ -903,7 +903,7 @@ end
 options.args.support = {
     order = 8,
     type = "group",
-    name = "Support & credits",
+    name = "Support",
     args = {
         discordLink = {
             order = 1,
@@ -927,7 +927,7 @@ options.args.support = {
             get = function ()
                 return "https://www.paypal.me/sweepyboop";
             end
-        }
+        },
     },
 }
 
