@@ -174,7 +174,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
             end
 
             local showPlayerName = config.showPlayerName;
-            classIconContainer.NameFrame:SetShown(showPlayerName);
             local offset = config.classIconOffset;
 
             iconFrame.icon:SetTexture(iconID);
@@ -220,8 +219,9 @@ addon.ShowClassIcon = function (nameplate, frame)
     addon.UpdateClassIcon(nameplate, frame);
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
-
-    local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
+    local config = SweepyBoop.db.profile.nameplatesFriendly;
+    classIconContainer.NameFrame:SetShown(config.showPlayerName);
+    local style = config.classIconStyle;
     if classIconContainer.FriendlyClassIcon then
         classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW or classIconContainer.isSpecialIcon);
     end
