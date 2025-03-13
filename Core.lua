@@ -68,6 +68,10 @@ options.args.nameplatesFriendly = {
             values = {
                 [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
                 [addon.CLASS_ICON_STYLE.ARROW] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow") .. " Class color arrows",
+                [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] =
+                    addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow")
+                    .. addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid")
+                    .. " Icon + arrow",
             },
             name = "Icon style",
             hidden = function()
@@ -1031,8 +1035,8 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
+    defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
     defaults.profile.nameplatesFriendly.classIconScale = 1.25;
-    defaults.profile.nameplatesFriendly.showPlayerName = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;

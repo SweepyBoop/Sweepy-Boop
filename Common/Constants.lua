@@ -197,6 +197,7 @@ addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
 addon.CLASS_ICON_STYLE = {
     ICON = 0,
     ARROW = 1,
+    ICON_AND_ARROW = 2,
 };
 
 addon.SPELL_DESCRIPTION = {}; -- by spellId, requested via -- https://warcraft.wiki.gg/wiki/SpellMixin
