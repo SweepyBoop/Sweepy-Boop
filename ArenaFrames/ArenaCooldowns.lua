@@ -319,8 +319,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( not validateSubEvent ) then return end
 
     -- Find the icon to use (check parent too)
+    -- Config only shows parent ID, so check parent if applicable
     local config = SweepyBoop.db.profile.arenaFrames.spellList;
-    if self.icons[spellId] and ( config[tostring(spellId)] or ( spell.parent and config[tostring(spell.parent)] ) ) then
+    local configSpellId = spell.parent or spellId;
+    if self.icons[spellId] and config[tostring(configSpellId)] then
         StartIcon(self.icons[spellId]);
     end
 end
