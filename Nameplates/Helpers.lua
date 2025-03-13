@@ -2,8 +2,10 @@ local _, addon = ...;
 
 -- Sizes are fixed, players can customize by scale
 local iconSize = 40;
-local arrowWidth = 48;
-local arrowHeight = 67;
+
+-- Original size is 48 * 67, scale it up a little
+local arrowWidth = 48 * 1.1;
+local arrowHeight = 67 * 1.1;
 local highlightSize = 55;
 local classicBorderSize = 64;
 
