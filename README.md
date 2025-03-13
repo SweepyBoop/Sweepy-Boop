@@ -24,7 +24,7 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 (In-game class icon style with customizations: show spec icons & class-colored borders & player names)
 
-![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/d1714ed9-0575-4576-88ff-686bd5a38733)
+![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/0fd80425-b217-43ed-81af-beb7c7f2c3d7)
 
 (Class-colored arrow style with player names)
 
