@@ -1035,8 +1035,8 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
+    defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
     defaults.profile.nameplatesFriendly.classIconScale = 1.25;
-    defaults.profile.nameplatesFriendly.showPlayerName = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
