@@ -62,7 +62,6 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 
     frame.Icon:SetTexture(GetSpellTexture(spellID));
     frame.Icon:SetAllPoints();
-    frame.Count:SetAtlas("AdventureMapIcon-DailyQuest");
     frame.Count:SetSize(addon.CHARGE_TEXTURE_WIDTH, addon.CHARGE_TEXTURE_HEIGHT);
     frame.Count:Hide();
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);

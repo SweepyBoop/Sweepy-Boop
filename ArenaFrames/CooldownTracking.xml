@@ -29,7 +29,7 @@
                 <Texture parentKey="Icon"/>
             </Layer>
             <Layer level="ARTWORK" textureSubLevel="2">
-                <Texture parentKey="Count">
+                <Texture parentKey="Count" atlas="AdventureMapIcon-DailyQuest">
                     <Anchors>
                         <Anchor point="BOTTOMRIGHT" x="2" y="-2"/>
                     </Anchors>
