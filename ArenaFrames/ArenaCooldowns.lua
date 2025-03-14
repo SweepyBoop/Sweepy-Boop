@@ -510,6 +510,11 @@ local function RefreshTestMode()
                 externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
             end
             addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
+
+            -- For testing, always show the extra charge texture
+            if externalTestIcons[unitId].Count then
+                externalTestGroup[unitId].Count:Show();
+            end
         end
     end
 
