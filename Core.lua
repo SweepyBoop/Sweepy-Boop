@@ -11,7 +11,7 @@ local options = {
     args = {
         description = {
             order = 1,
-            type = "description",
+            type ="description",
             fontSize = "large",
             image = addon.INTERFACE_SWEEPY .. "Art/Logo",
             imageWidth = 36,
@@ -533,29 +533,22 @@ if addon.PROJECT_MAINLINE then
                         func = "HideTestArenaCooldownTracker",
                         width = "half",
                     },
-                    tooltipForExtraCharge = {
-                        order = 5,
-                        type = "description",
-                        fontSize = "medium",
-                        width = "full",
-                        name = addon.FORMAT_ATLAS("AdventureMapIcon-DailyQuest", 16) .. " on cooldown icon means there is another charge available",
-                    },
 
                     arenaCooldownTrackerEnabled = {
-                        order = 6,
+                        order = 5,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enabled",
                     },
                     arenaCooldownSeparateRowForDefensive = {
-                        order = 7,
+                        order = 6,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Separate row for defensives",
                     },
 
                     hideCountDownNumbers = {
-                        order = 8,
+                        order = 7,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
@@ -563,7 +556,7 @@ if addon.PROJECT_MAINLINE then
                     },
 
                     arenaCooldownGrowDirection = {
-                        order = 9,
+                        order = 8,
                         type = "select",
                         width = 0.75,
                         name = "Grow direction",
@@ -576,7 +569,7 @@ if addon.PROJECT_MAINLINE then
                     },
 
                     arenaCooldownTrackerIconSize = {
-                        order = 10,
+                        order = 9,
                         type = "range",
                         width = 0.75,
                         min = 16,
@@ -587,13 +580,13 @@ if addon.PROJECT_MAINLINE then
                     },
 
                     newline = {
-                        order = 11,
+                        order = 10,
                         type = "description",
                         name = "",
                     },
 
                     arenaCooldownOffsetX = {
-                        order = 12,
+                        order = 11,
                         type = "range",
                         min = -300,
                         max = 300,
@@ -603,11 +596,11 @@ if addon.PROJECT_MAINLINE then
                         set = function (info, val)
                             SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                            SweepyBoop:RepositionTestGroups();
+                            SweepyBoop:RepositionTestGroup();
                         end
                     },
                     arenaCooldownOffsetY = {
-                        order = 13,
+                        order = 12,
                         type = "range",
                         min = -150,
                         max = 150,
@@ -617,7 +610,7 @@ if addon.PROJECT_MAINLINE then
                         set = function (info, val)
                             SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                            SweepyBoop:RepositionTestGroups();
+                            SweepyBoop:RepositionTestGroup();
                         end
                     },
                 },
