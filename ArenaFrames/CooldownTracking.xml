@@ -29,11 +29,11 @@
                 <Texture parentKey="Icon"/>
             </Layer>
             <Layer level="ARTWORK" textureSubLevel="2">
-                <FontString inherits="NumberFontNormal" parentKey="Count" justifyH="RIGHT">
+                <Texture parentKey="Count">
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT" x="-2" y="2"/>
+                        <Anchor point="BOTTOMRIGHT"/>
                     </Anchors>
-                </FontString>
+                </Texture>
             </Layer>
             <Layer level="OVERLAY" textureSubLevel="1">
                 <Texture parentKey="flash" hidden="false" alpha="0" alphaMode="ADD" atlas="bags-glow-flash" useAtlasSize="true">

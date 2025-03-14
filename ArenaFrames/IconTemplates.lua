@@ -88,7 +88,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
-            icon.Count:SetText(stack and "#" or "");
+            icon.Count:SetShown(stack);
         end
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
