@@ -861,7 +861,6 @@ addon.SpellData = {
         cooldown = 240,
         class = addon.PALADIN,
         category = category.DEFENSIVE,
-        opt_charges = true,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Blessing of SpellWarding
