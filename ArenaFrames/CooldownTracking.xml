@@ -31,7 +31,7 @@
             <Layer level="ARTWORK" textureSubLevel="2">
                 <Texture parentKey="Count">
                     <Anchors>
-                        <Anchor point="BOTTOMRIGHT"/>
+                        <Anchor point="BOTTOMRIGHT" x="2" y="-2"/>
                     </Anchors>
                 </Texture>
             </Layer>
