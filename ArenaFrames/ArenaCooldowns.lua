@@ -200,7 +200,7 @@ local function StartIcon(icon)
     end
 end
 
-local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical)
+local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
     local guid = ValidateUnit(self);
     if ( not guid ) then return end
 
@@ -322,7 +322,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Config only shows parent ID, so check parent if applicable
     local config = SweepyBoop.db.profile.arenaFrames.spellList;
     local configSpellId = spell.parent or spellId;
-    if self.icons[spellId] and config[tostring(configSpellId)] then
+    if isTestGroup or ( self.icons[spellId] and config[tostring(configSpellId)] ) then
         StartIcon(self.icons[spellId]);
     end
 end
@@ -537,13 +537,16 @@ function SweepyBoop:TestArenaCooldownTracker()
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
-    spellId = 190319; -- Combustion
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+    spellId = 8122; -- Psychic Scream
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
-    spellId = 45438; -- Ice Block
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+    spellId = 33206; -- Pain Suppression
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+
+    spellId = 62618; -- Power Word: Barrier
+    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     externalTestGroup:Show();
 end
