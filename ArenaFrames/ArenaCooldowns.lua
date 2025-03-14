@@ -324,6 +324,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local configSpellId = spell.parent or spellId;
     if isTestGroup or ( self.icons[spellId] and config[tostring(configSpellId)] ) then
         StartIcon(self.icons[spellId]);
+
+        if isTestGroup and self.icons[spellId].Count then
+            self.icons[spellId].Count:Show();
+        end 
     end
 end
 
@@ -510,11 +514,6 @@ local function RefreshTestMode()
                 externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
             end
             addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
-
-            -- For testing, always show the extra charge texture
-            if externalTestIcons[unitId].Count then
-                externalTestGroup[unitId].Count:Show();
-            end
         end
     end
 
