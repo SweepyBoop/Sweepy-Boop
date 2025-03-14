@@ -33,11 +33,11 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
         if spell.charges then
-            frame.Count = frame:CreateFontString(nil, "ARTWORK");
-            frame.Count:SetFont("Fonts\\ARIALN.ttf", iconSize / 2, "OUTLINE");
-            frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -2, 2);
-            frame.Count:SetText(""); -- Call this before setting font color
-            frame.Count:SetTextColor(1, 1, 0);
+            frame.Count = frame:CreateTexture(nil, "OVERLAY");
+            frame.Count:SetAtlas("AdventureMapIcon-DailyQuest");
+            frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 2, -2);
+            frame.Count:SetSize(addon.CHARGE_TEXTURE_WIDTH, addon.CHARGE_TEXTURE_HEIGHT);
+            frame.Count:Hide();
         end
     end
 
