@@ -37,6 +37,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
             frame.Count:SetAtlas("AdventureMapIcon-DailyQuest");
             frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT");
             frame.Count:SetSize(addon.CHARGE_TEXTURE_WIDTH, addon.CHARGE_TEXTURE_HEIGHT);
+            frame.Count:Hide();
         end
     end
 
