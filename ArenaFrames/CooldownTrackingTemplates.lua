@@ -62,17 +62,19 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 
     frame.Icon:SetTexture(GetSpellTexture(spellID));
     frame.Icon:SetAllPoints();
-    
-    frame.Count = CreateFrame("Frame", nil, frame);
-    frame.Count:SetFrameLevel(10000);
-    frame.Count:SetSize(addon.CHARGE_TEXTURE_WIDTH, addon.CHARGE_TEXTURE_HEIGHT);
-    frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 2, -2);
-    
-    frame.Count.tex = frame.Count:CreateTexture(nil, "OVERLAY");
-    frame.Count.tex:SetAtlas("AdventureMapIcon-DailyQuest");
-    frame.Count.tex:SetAllPoints();
 
-    frame.Count:Hide();
+    if spell.charges or spell.opt_charges then
+        frame.Count = CreateFrame("Frame", nil, frame);
+        frame.Count:SetFrameLevel(10000);
+        frame.Count:SetSize(addon.CHARGE_TEXTURE_WIDTH, addon.CHARGE_TEXTURE_HEIGHT);
+        frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 2, -2);
+
+        frame.Count.tex = frame.Count:CreateTexture(nil, "OVERLAY");
+        frame.Count.tex:SetAtlas("AdventureMapIcon-DailyQuest");
+        frame.Count.tex:SetAllPoints();
+
+        frame.Count:Hide();
+    end
 
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
 
