@@ -486,10 +486,12 @@ local function EnsureIconGroups()
 end
 
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
-local externalTestGroup; -- Icon group for "Toggle Test Mode"
+local externalTestGroups = {}; -- Icon groups for "Toggle Test Mode"
 
 local function RefreshTestMode()
-    addon.IconGroup_Wipe(externalTestGroup);
+    for _, group in pairs(externalTestGroups) do
+        addon.IconGroup_Wipe(group);
+    end
 
     local config = SweepyBoop.db.profile.arenaFrames;
     local scale = config.arenaCooldownTrackerIconSize / addon.DEFAULT_ICON_SIZE;
@@ -514,15 +516,18 @@ local function RefreshTestMode()
     end
 
     local grow = growOptions[config.arenaCooldownGrowDirection];
-    local setPointOptions = GetSetPointOptions(1);
-    setPointOptions.offsetX = config.arenaCooldownOffsetX;
-    if externalTestGroup then
-        addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
-    else
-        externalTestGroup = addon.CreateIconGroup(setPointOptions, grow, unitId);
-    end
+    for i = 1, 2 do
+        local group = externalTestGroups[i];
+        local setPointOptions = GetSetPointOptions(i);
+        setPointOptions.offsetX = config.arenaCooldownOffsetX;
+        if group then
+            addon.UpdateIconGroupSetPointOptions(group, setPointOptions, grow);
+        else
+            group = addon.CreateIconGroup(setPointOptions, grow, unitId);
+        end
 
-    SetupIconGroup(externalTestGroup, unitId, externalTestIcons);
+        SetupIconGroup(group, unitId, externalTestIcons);
+    end
 end
 
 function SweepyBoop:SetupArenaCooldownTracker()
@@ -537,30 +542,41 @@ function SweepyBoop:TestArenaCooldownTracker()
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroups[1], subEvent, sourceGUID, destGUID, spellId);
+
+    spellId = 8122; -- Psychic Scream
+    ProcessCombatLogEvent(externalTestGroups[1], subEvent, sourceGUID, destGUID, spellId);
+
+    spellId = 33206; -- Pain Suppression
+    ProcessCombatLogEvent(externalTestGroups[1], subEvent, sourceGUID, destGUID, spellId);
 
     spellId = 190319; -- Combustion
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroups[2], subEvent, sourceGUID, destGUID, spellId);
 
     spellId = 45438; -- Ice Block
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId);
+    ProcessCombatLogEvent(externalTestGroups[2], subEvent, sourceGUID, destGUID, spellId);
 
-    externalTestGroup:Show();
-end
-
-function SweepyBoop:HideTestArenaCooldownTracker()
-    addon.IconGroup_Wipe(externalTestGroup);
-    if externalTestGroup then
-        externalTestGroup:Hide();
+    for _, group in pairs(externalTestGroups) do
+        group:Show();
     end
 end
 
-function SweepyBoop:RepositionTestGroup()
-    if ( not externalTestGroup ) or ( not externalTestGroup:IsShown() ) then return end
+function SweepyBoop:HideTestArenaCooldownTracker()
+    for _, group in pairs(externalTestGroups) do
+        addon.IconGroup_Wipe(group);
+        group:Hide();
+    end
+end
 
-    local config = SweepyBoop.db.profile.arenaFrames;
-    local grow = growOptions[config.arenaCooldownGrowDirection];
-    local setPointOptions = GetSetPointOptions(1);
-    setPointOptions.offsetX = config.arenaCooldownOffsetX;
-    addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
+function SweepyBoop:RepositionTestGroups()
+    for i = 1, 2 do
+        local externalTestGroup = externalTestGroups[i];
+        if ( not externalTestGroup ) or ( not externalTestGroup:IsShown() ) then return end
+
+        local config = SweepyBoop.db.profile.arenaFrames;
+        local grow = growOptions[config.arenaCooldownGrowDirection];
+        local setPointOptions = GetSetPointOptions(i);
+        setPointOptions.offsetX = config.arenaCooldownOffsetX;
+        addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
+    end
 end
