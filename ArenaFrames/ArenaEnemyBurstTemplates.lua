@@ -33,10 +33,15 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
         frame.cooldown:SetScript("OnCooldownDone", addon.FinishCooldownTimer);
 
         if spell.charges then
-            frame.Count = frame:CreateTexture(nil, "OVERLAY");
-            frame.Count:SetAtlas("AdventureMapIcon-DailyQuest");
-            frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 2, -2);
+            frame.Count = CreateFrame("Frame", nil, frame);
+            frame.Count:SetFrameLevel(10000);
             frame.Count:SetSize(addon.CHARGE_TEXTURE_WIDTH, addon.CHARGE_TEXTURE_HEIGHT);
+            frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 2, -2);
+            
+            frame.Count.tex = frame.Count:CreateTexture(nil, "OVERLAY");
+            frame.Count.tex:SetAtlas("AdventureMapIcon-DailyQuest");
+            frame.Count.tex:SetAllPoints();
+
             frame.Count:Hide();
         end
     end
