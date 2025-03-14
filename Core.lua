@@ -545,13 +545,13 @@ if addon.PROJECT_MAINLINE then
                         order = 6,
                         width = "full",
                         type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_fire_sealoffire")) .. " Enabled",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enabled",
                     },
                     arenaCooldownSeparateRowForDefensive = {
                         order = 7,
                         width = "full",
                         type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Separate row for defensives",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Separate row for defensives",
                     },
 
                     hideCountDownNumbers = {
