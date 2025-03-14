@@ -116,7 +116,6 @@ addon.SpellData = {
         class = addon.DEATHKNIGHT,
         category = category.DISRUPT,
         cooldown = 25,
-        --opt_charges = true,
         charges = true, -- Death's Echo is almost always picked
     },
     -- Crowd Control
