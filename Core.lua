@@ -251,133 +251,121 @@ options.args.nameplatesEnemy = {
         SweepyBoop:RefreshAllNamePlates();
     end,
     args = {
-        -- tip = {
-        --     order = 1,
-        --     width = "full",
-        --     type = "description",
-        --     name = addon.EXCLAMATION ..  " If nameplates don't refresh right after changing options, change current target to force an update",
-        -- },
-        breaker1 = {
-            order = 2,
-            type = "header",
-            name = "",
-        },
-
-        arenaNumbersEnabled = {
-            order = 3,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
-            desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
-        },
-
-        breaker2 = {
-            order = 4,
-            type = "header",
-            name = "Arena & battleground enemy spec icons",
-            hidden = function ()
-                return ( not addon.PROJECT_MAINLINE );
-            end
-        },
-        arenaSpecIconHealer = {
-            order = 5,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-            desc = "Show spec icons on top of the nameplates of enemy healers",
-            hidden = function ()
-                return ( not addon.PROJECT_MAINLINE );
-            end
-        },
-        arenaSpecIconHealerIcon = {
-            order = 6,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
-            hidden = function ()
-                return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
-            end
-        },
-        arenaSpecIconOthers = {
-            order = 7,
-            width = "full",
-            type = "toggle",
-            name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
-            desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
-            hidden = function ()
-                return ( not addon.PROJECT_MAINLINE );
-            end
-        },
-        arenaSpecIconAlignment = {
-            order = 8,
-            type = "select",
-            width = 0.85,
-            name = "Alignment",
-            values = {
-                [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
-                [addon.SPEC_ICON_ALIGNMENT.LEFT] = "Left",
-                [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
-            },
-            hidden = function ()
-                if ( not addon.PROJECT_MAINLINE ) then return true end
-                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
-            end
-        },
-        arenaSpecIconVerticalOffset = {
-            order = 9,
-            min = -150,
-            max = 150,
-            step = 1,
-            type = "range",
-            width = 0.85,
-            name = "Vertical offset",
-            hidden = function ()
-                if ( not addon.PROJECT_MAINLINE ) then return true end
-                if ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers ) then return true end
-                return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
-            end
-        },
-        arenaSpecIconScale = {
-            order = 10,
-            min = 50,
-            max = 300,
-            step = 1,
-            type = "range",
-            width = 0.85,
-            name = "Scale (%)",
-            hidden = function ()
-                if ( not addon.PROJECT_MAINLINE ) then return true end
-                return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
-            end
-        },
-
-        breaker3 = {
-            order = 11,
-            type = "header",
-            name = "Nameplate Filters & Highlights",
-        },
-
-        filterSettings = {
-            order = 12,
+        general = {
+            order = 1,
             type = "group",
             name = "General",
             args = {
-                hideHunterSecondaryPet = {
+                arenaNumbersEnabled = {
                     order = 1,
+                    width = "full",
+                    type = "toggle",
+                    name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
+                    desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
+                },
+        
+                breaker2 = {
+                    order = 2,
+                    type = "header",
+                    name = "Arena & battleground enemy spec icons",
+                    hidden = function ()
+                        return ( not addon.PROJECT_MAINLINE );
+                    end
+                },
+                arenaSpecIconHealer = {
+                    order = 3,
+                    width = "full",
+                    type = "toggle",
+                    name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
+                    desc = "Show spec icons on top of the nameplates of enemy healers",
+                    hidden = function ()
+                        return ( not addon.PROJECT_MAINLINE );
+                    end
+                },
+                arenaSpecIconHealerIcon = {
+                    order = 4,
+                    width = "full",
+                    type = "toggle",
+                    name = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY) .. " Show healer icon instead of spec icon for healers",
+                    hidden = function ()
+                        return ( not addon.PROJECT_MAINLINE ) or ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
+                    end
+                },
+                arenaSpecIconOthers = {
+                    order = 5,
+                    width = "full",
+                    type = "toggle",
+                    name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
+                    desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
+                    hidden = function ()
+                        return ( not addon.PROJECT_MAINLINE );
+                    end
+                },
+                arenaSpecIconAlignment = {
+                    order = 6,
+                    type = "select",
+                    width = 0.85,
+                    name = "Alignment",
+                    values = {
+                        [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
+                        [addon.SPEC_ICON_ALIGNMENT.LEFT] = "Left",
+                        [addon.SPEC_ICON_ALIGNMENT.RIGHT] = "Right",
+                    },
+                    hidden = function ()
+                        if ( not addon.PROJECT_MAINLINE ) then return true end
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
+                    end
+                },
+                arenaSpecIconVerticalOffset = {
+                    order = 7,
+                    min = -150,
+                    max = 150,
+                    step = 1,
+                    type = "range",
+                    width = 0.85,
+                    name = "Vertical offset",
+                    hidden = function ()
+                        if ( not addon.PROJECT_MAINLINE ) then return true end
+                        if ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers ) then return true end
+                        return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
+                    end
+                },
+                arenaSpecIconScale = {
+                    order = 8,
+                    min = 50,
+                    max = 300,
+                    step = 1,
+                    type = "range",
+                    width = 0.85,
+                    name = "Scale (%)",
+                    hidden = function ()
+                        if ( not addon.PROJECT_MAINLINE ) then return true end
+                        return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
+                    end
+                },
+        
+                breaker3 = {
+                    order = 9,
+                    type = "header",
+                    name = "Nameplate Filters & Highlights",
+                },
+
+                hideHunterSecondaryPet = {
+                    order = 10,
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_TEXTURE(beastMasteryHunterIcon) .. " Hide beast mastery hunter secondary pets in arena",
                     desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
                 },
                 filterEnabled = {
-                    order = 2,
+                    order = 11,
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_TEXTURE(pvpCursor) .. " Customize enemy units to hide / show / highlight",
                     desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                 },
                 showCritterIcons = {
-                    order = 3,
+                    order = 12,
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
@@ -387,7 +375,7 @@ options.args.nameplatesEnemy = {
                     end
                 },
                 highlightScale = {
-                    order = 4,
+                    order = 13,
                     type = "range",
                     name = "Highlight icon scale (%)",
                     min = 50,
@@ -399,7 +387,7 @@ options.args.nameplatesEnemy = {
                 },
 
                 auraFilterEnabled = {
-                    order = 5,
+                    order = 14,
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
@@ -413,7 +401,7 @@ options.args.nameplatesEnemy = {
                 },
 
                 showBuffsOnEnemy = {
-                    order = 6,
+                    order = 15,
                     type = "toggle",
                     width = "full",
                     name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",
