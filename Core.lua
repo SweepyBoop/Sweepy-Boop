@@ -263,7 +263,7 @@ options.args.nameplatesEnemy = {
                     name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
                     desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
                 },
-        
+
                 breaker2 = {
                     order = 2,
                     type = "header",
@@ -304,7 +304,7 @@ options.args.nameplatesEnemy = {
                 arenaSpecIconAlignment = {
                     order = 6,
                     type = "select",
-                    width = 0.85,
+                    width = 0.75,
                     name = "Alignment",
                     values = {
                         [addon.SPEC_ICON_ALIGNMENT.TOP] = "Top",
@@ -336,14 +336,14 @@ options.args.nameplatesEnemy = {
                     max = 300,
                     step = 1,
                     type = "range",
-                    width = 0.85,
+                    width = 0.75,
                     name = "Scale (%)",
                     hidden = function ()
                         if ( not addon.PROJECT_MAINLINE ) then return true end
                         return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
                     end
                 },
-        
+
                 breaker3 = {
                     order = 9,
                     type = "header",
@@ -377,7 +377,7 @@ options.args.nameplatesEnemy = {
                 highlightScale = {
                     order = 13,
                     type = "range",
-                    name = "Highlight icon scale (%)",
+                    name = "Nameplate highlight icon scale (%)",
                     min = 50,
                     max = 300,
                     step = 1,
@@ -419,7 +419,7 @@ options.args.nameplatesEnemy = {
         },
 
         filterList = {
-            order = 13,
+            order = 2,
             type = "group",
             name = "Unit whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
@@ -435,7 +435,7 @@ options.args.nameplatesEnemy = {
         },
 
         debuffWhiteList = {
-            order = 14,
+            order = 3,
             type = "group",
             name = "Debuff whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] end,
@@ -451,7 +451,7 @@ options.args.nameplatesEnemy = {
         },
 
         buffWhiteList = {
-            order = 15,
+            order = 4,
             type = "group",
             name = "Buff whitelist",
             get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] end,
