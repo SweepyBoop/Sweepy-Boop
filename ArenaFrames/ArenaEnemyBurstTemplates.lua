@@ -53,6 +53,8 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     frame.duration:SetDrawBling(false);
     frame.duration:SetDrawSwipe(true);
     frame.duration:SetReverse(true);
+    frame.duration:SetHideCountdownNumbers(true);
+    frame.duration.noCooldownCount = true; -- OmniCC
     frame.duration:SetAlpha(0);
 
     frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
