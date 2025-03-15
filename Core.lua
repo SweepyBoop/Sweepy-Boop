@@ -527,7 +527,7 @@ if addon.PROJECT_MAINLINE then
                         type = "description",
                         fontSize = "medium",
                         width = "full",
-                        name = addon.FORMAT_ATLAS("AdventureMapIcon-DailyQuest", 16) .. " on cooldown icon means there is another charge available",
+                        name = addon.FORMAT_ATLAS(addon.CHARGE_TEXTURE, 16) .. " on cooldown icon means there is another charge available",
                     },
 
                     arenaCooldownTrackerEnabled = {

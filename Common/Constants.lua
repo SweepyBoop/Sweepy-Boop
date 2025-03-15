@@ -144,8 +144,8 @@ addon.CLASSORDER = {
 };
 
 addon.DEFAULT_ICON_SIZE = 35;
-addon.CHARGE_TEXTURE_WIDTH = 25 / 2;
-addon.CHARGE_TEXTURE_HEIGHT = 41 / 2;
+addon.CHARGE_TEXTURE = "quest-recurring-available";
+addon.CHARGE_TEXTURE_SIZE = 16;
 
 addon.RAID_FRAME_SORT_ORDER = {
     DISABLED = 0,
