@@ -378,6 +378,7 @@ options.args.nameplatesEnemy = {
                     order = 13,
                     type = "range",
                     name = "Nameplate highlight icon scale (%)",
+                    width = 1.5,
                     min = 50,
                     max = 300,
                     step = 1,
