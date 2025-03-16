@@ -380,6 +380,12 @@ addon.SpellData = {
         class = addon.DRUID,
         category = category.DEFENSIVE
     },
+    -- Ancient of Lore
+    [473909] = {
+        class = addon.DRUID,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
     -- Dispel
     -- Nature's Cure
     [88423] = {
@@ -1275,7 +1281,8 @@ addon.SpellData = {
     [409293] = {cooldown = 120, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Burrow
     [108270] = {cooldown = 180, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Stone Bulwark Totem (can be reset by Totemic Recall)
     -- Disrupt
-    [204336] = {cooldown = 30, class = addon.SHAMAN, category = category.DISRUPT}, -- Grounding Totem
+    [204336] = {cooldown = 24, class = addon.SHAMAN, category = category.DISRUPT}, -- Grounding Totem
+    [8143] = { cooldown = 54, class = addon.SHAMAN, category = category.DISRUPT }, -- Tremor Totem
     -- Dispel
     [77130] = {cooldown = 8, class = addon.SHAMAN, category = category.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
 
