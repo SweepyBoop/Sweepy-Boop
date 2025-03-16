@@ -12,6 +12,12 @@ local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
     end,
 	OnClick = function()
         LibStub("AceConfigDialog-3.0"):Open(addonName);
+        if SweepyBoopDB then
+            SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 0;
+            if ( SweepyBoopDB.slashCommandInvoked <= 3 ) then
+                SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked + 1;
+            end
+        end
     end,
 })  
 local icon = LibStub("LibDBIcon-1.0");
@@ -1099,8 +1105,8 @@ function SweepyBoop:OnInitialize()
     -- Print message on first 3 logins with the addon enabled
     if SweepyBoopDB then
         SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 1;
-        if ( SweepyBoopDB.slashCommandInvoked <= 3 ) then
-            addon.PRINT("Thank you for supporting my addon! Type /sb to bring up the options panel. Have a wonderful PvP journey :)");
+        if ( SweepyBoopDB.slashCommandInvoked <= 1 ) then
+            addon.PRINT("Thank you for supporting my addon! Type /sb or click the minimap icon to bring up the options panel. Have a wonderful PvP journey :)");
         end
     end
 
