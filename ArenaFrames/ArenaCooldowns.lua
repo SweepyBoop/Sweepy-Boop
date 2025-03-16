@@ -507,11 +507,10 @@ local function RefreshTestMode()
         externalTestIcons[unitId] = {};
         local iconSize = config.arenaCooldownTrackerIconSize;
         for spellID, spell in pairs(spellData) do
-            local size = config.arenaTrackerIconSize;
             if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
-                externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
+                externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
             else
-                externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
+                externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
             end
             addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
         end
