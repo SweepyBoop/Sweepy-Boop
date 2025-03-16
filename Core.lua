@@ -4,7 +4,7 @@ addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
 local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {  
 	type = "data source",
-	text = "SweepyBoop",
+	text = addonName,
 	icon = addon.INTERFACE_SWEEPY .. "Art/Logo",
     OnTooltipShow = function(tooltip)
         tooltip:SetText(addon.addonTitle, 1, 1, 1);
