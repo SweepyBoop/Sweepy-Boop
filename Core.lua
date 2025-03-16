@@ -2,6 +2,19 @@ local addonName, addon = ...;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
+local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {  
+	type = "data source",
+	text = "SweepyBoop",
+	icon = addon.INTERFACE_SWEEPY .. "Art/Logo",
+    OnTooltipShow = function(tooltip)
+        tooltip:SetText(addon.addonTitle, 1, 1, 1);
+        tooltip:AddLine("Click to open options");
+    end,
+	OnClick = function()
+        LibStub("AceConfigDialog-3.0"):Open(addonName);
+    end,
+})  
+local icon = LibStub("LibDBIcon-1.0");
 
 local pvpCursor = "interface/cursor/pvp";
 
@@ -1027,6 +1040,9 @@ local defaults = {
             skipLeaveArenaConfirmation = false,
             showDampenPercentage = true,
         },
+        minimap = {
+            hide = false,
+        },
     }
 };
 
@@ -1077,6 +1093,8 @@ function SweepyBoop:OnInitialize()
     local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
+
+    icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
 
     -- Print message on first 3 logins with the addon enabled
     if SweepyBoopDB then
