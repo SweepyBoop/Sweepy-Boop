@@ -1280,14 +1280,6 @@ addon.SpellData = {
     [77130] = {cooldown = 8, class = addon.SHAMAN, category = category.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
 
     -- Warlock
-    -- Call Observer
-    [201996] = {
-        class = addon.WARLOCK,
-        category = category.BURST,
-        cooldown = 60,
-        duration = 20, -- confirm early dismiss if killed
-        index = addon.SPELLPRIORITY.HIGH,
-    },
     -- Affliction
     -- Soul Rot
     [386997] = {
