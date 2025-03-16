@@ -1277,9 +1277,9 @@ addon.SpellData = {
     [57994] = {cooldown = 12, class = addon.SHAMAN, category = category.INTERRUPT}, -- Wind Shear
     -- Defensive
     [108271] = {cooldown = 90, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Astral Shift (120s baseline, -30 Planes Traveler)
-    [98008] = {cooldown = 180, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Spirit Link Totem
+    [98008] = {cooldown = 174, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Spirit Link Totem
     [409293] = {cooldown = 120, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Burrow
-    [108270] = {cooldown = 180, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Stone Bulwark Totem (can be reset by Totemic Recall)
+    [108270] = {cooldown = 174, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Stone Bulwark Totem (can be reset by Totemic Recall)
     -- Disrupt
     [204336] = {cooldown = 24, class = addon.SHAMAN, category = category.DISRUPT}, -- Grounding Totem
     [8143] = { cooldown = 54, class = addon.SHAMAN, category = category.DISRUPT }, -- Tremor Totem
