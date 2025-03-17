@@ -24,6 +24,7 @@ checkSpellID:SetScript("OnEvent", function (self, event, unitTarget)
         local _, subEvent, _, sourceGUID = CombatLogGetCurrentEventInfo();
         if ( subEvent == addon.SPELL_AURA_APPLIED ) and ( sourceGUID == UnitGUID("player") ) then
             local spellId, spellName = select(12, CombatLogGetCurrentEventInfo());
+            print(spellName, spellId);
             if spellName == self.spellName then print("COMBATLOG", spellId) end
         end
     end
@@ -140,7 +141,7 @@ playerPortraitAuraFrame:SetScript("OnEvent", playerPortraitAuraFrame.OnEvent);
 
 
 -- glowAtStacks: nil means no glow, 0 means always glow, positive value means glow at certain stacks
-local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowAtStacks, stackFunc, alwaysShow, suppressedBy, playSound)
+local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, offsetX, offsetY, glowAtStacks, stackFunc, alwaysShow, suppressedBy, playSound, iconID)
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:SetMouseClickEnabled(false);
     frame:SetFrameStrata("HIGH");
@@ -155,7 +156,7 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     frame.suppressedBy = suppressedBy;
 
     frame.texture = frame:CreateTexture();
-    frame.texture:SetTexture(GetSpellTexture(spellID));
+    frame.texture:SetTexture(GetSpellTexture(iconID or spellID));
     frame.texture:SetAllPoints();
 
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
@@ -250,12 +251,12 @@ CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- precognition
 --CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
+local manaBar = PlayerFrame_GetManaBar();
 
 if ( class == addon.DRUID ) then
     CreateAuraIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32, 0); -- Prowl
 
     -- Track at most 4 buffs with glowing icons, more than that it sort of becomes space station UI
-    local manaBar = PlayerFrame_GetManaBar();
 
     -- Common
     CreateAuraIcon(319454, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, 0); -- Heart of the Wild
@@ -282,6 +283,9 @@ if ( class == addon.DRUID ) then
     end
 elseif ( class == addon.PRIEST ) then
     --373181 Harsh Discipline
+    CreateAuraIcon(428933, 40, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 0, 3, nil, nil, nil, nil, 186723); -- Premonition of Insight
+    CreateAuraIcon(428930, 40, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 0, 0, nil, nil, nil, nil, 194509); -- Premonition of Piety
+    CreateAuraIcon(443526, 40, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 0, 0, nil, nil, nil, nil, 200390); -- Premonition of Solace
 elseif ( class == addon.PALADIN ) then
     --247676 Aura of Reckoning
     --31884 Avenging Wrath
