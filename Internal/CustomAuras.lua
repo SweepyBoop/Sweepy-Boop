@@ -285,7 +285,7 @@ elseif ( class == addon.PRIEST ) then
     --373181 Harsh Discipline
     CreateAuraIcon(428933, 40, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 0, 3, nil, nil, nil, nil, 186723); -- Premonition of Insight
     CreateAuraIcon(428930, 40, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 0, 0, nil, nil, nil, nil, 194509); -- Premonition of Piety
-    CreateAuraIcon(443526, 40, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 0, 0, nil, nil, nil, nil, 200390); -- Premonition of Solace
+    CreateAuraIcon(428934, 40, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 0, 0, nil, nil, nil, nil, 200390); -- Premonition of Solace
 elseif ( class == addon.PALADIN ) then
     --247676 Aura of Reckoning
     --31884 Avenging Wrath
