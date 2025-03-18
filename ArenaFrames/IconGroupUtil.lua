@@ -8,7 +8,7 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
 
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetSize(1, 1);
-    -- For static relativeTo point, call SetPoint now
+    -- For in-game relativeTo points that are always present, call SetPoint now
     if ( relativeTo == UIParent ) or ( relativeTo == PlayerFrame ) then
         f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
     else
@@ -124,6 +124,7 @@ addon.IconGroup_Insert = function (group, icon, index)
         -- No need to ClearAllPoints, since we are not changing anchor family
         local options = group.setPointOptions;
         group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
+        group.setPointOptions = nil; -- Don't need to do this again until updated by UpdateIconGroupSetPointOptions 
     end
 
     -- Give icon a timeStamp before inserting
