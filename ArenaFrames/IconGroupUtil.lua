@@ -9,9 +9,10 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local f = CreateFrame("Frame", nil, UIParent);
 
     -- If relativeTo is already present, call SetPoint now
-    if relativeTo then
+    local relativeToFrame = _G[relativeTo];
+    if relativeToFrame and relativeToFrame:IsShown() then
         f:ClearAllPoints();
-        f:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+        f:SetPoint(point, relativeToFrame, relativePoint, offsetX, offsetY);
     else
         f.setPointOptions = setPointOptions;
     end
@@ -38,9 +39,10 @@ addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions, gro
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
     -- If relativeTo is already present, call SetPoint now
-    if relativeTo then
+    local relativeToFrame = _G[relativeTo];
+    if relativeToFrame and relativeToFrame:IsShown() then
         iconGroup:ClearAllPoints();
-        iconGroup:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
+        iconGroup:SetPoint(point, relativeToFrame, relativePoint, offsetX, offsetY);
     else
         iconGroup.setPointOptions = setPointOptions;
     end
