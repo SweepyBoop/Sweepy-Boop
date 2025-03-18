@@ -408,7 +408,7 @@ local growOptions = {
 
 local function GetSetPointOptions(index)
     local offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
-    local adjustedIndex = ( index == 0 and 1) or index;
+    local adjustedIndex = ( index == 0 and 1 ) or index;
     local setPointOptions = {
         point = "LEFT",
         relativeTo = framePrefix .. adjustedIndex,
