@@ -1,6 +1,6 @@
 $workDir = "$PSScriptRoot"
-$driveLetter = Split-Path -Qualifier $PSScriptRoot
-$publishDir = "${driveLetter}\SweepyBoop"
+#$driveLetter = Split-Path -Qualifier $PSScriptRoot
+$publishDir = "${workDir}\SweepyBoop"
 
 # Clean up previous
 if (Test-Path -Path $publishDir) {
@@ -29,5 +29,6 @@ Get-Content -Path $inputTocPath | Where-Object {$_ -notmatch 'Internal'} | Set-C
 
 Move-Item -Path $outputTocPath -Destination $inputTocPath -Force
 
-tar -a -cf SweepyBoop.zip $publishDir
-Remove-Item -Path $publishDir -Recurse -Force
+# Use right click and compress to zip, instead of PowerShell, seems like the package is randomly breaking for Mac users
+#tar -a -cf SweepyBoop.zip $publishDir
+#Remove-Item -Path $publishDir -Recurse -Force
