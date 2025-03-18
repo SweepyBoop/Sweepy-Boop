@@ -8,14 +8,7 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
 
     local f = CreateFrame("Frame", nil, UIParent);
 
-    -- If relativeTo is already present, call SetPoint now
-    local relativeToFrame = _G[relativeTo];
-    if relativeToFrame and relativeToFrame:IsShown() then
-        f:ClearAllPoints();
-        f:SetPoint(point, relativeToFrame, relativePoint, offsetX, offsetY);
-    else
-        f.setPointOptions = setPointOptions;
-    end
+    f.setPointOptions = setPointOptions;
 
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
     f.growDirection = growOptions.direction;
@@ -38,13 +31,12 @@ addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions, gro
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
-    -- If relativeTo is already present, call SetPoint now
+    iconGroup.setPointOptions = setPointOptions;
+    -- If relativeTo is currently shown, update the position now
     local relativeToFrame = _G[relativeTo];
     if relativeToFrame and relativeToFrame:IsShown() then
         iconGroup:ClearAllPoints();
-        iconGroup:SetPoint(point, relativeToFrame, relativePoint, offsetX, offsetY);
-    else
-        iconGroup.setPointOptions = setPointOptions;
+        iconGroup:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
     end
 
     iconGroup.growDirection = growOptions.direction;
@@ -126,7 +118,6 @@ addon.IconGroup_Insert = function (group, icon, index)
 
     -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
     if group.setPointOptions then
-        -- No need to ClearAllPoints, since we are not changing anchor family
         local options = group.setPointOptions;
         group:ClearAllPoints();
         group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
