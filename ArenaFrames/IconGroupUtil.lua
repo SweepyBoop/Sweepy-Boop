@@ -7,7 +7,7 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
     local f = CreateFrame("Frame", nil, UIParent);
-    f.SetSize(1, 1);
+    f:SetSize(1, 1);
     f.setPointOptions = setPointOptions;
 
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
