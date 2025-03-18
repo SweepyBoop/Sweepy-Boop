@@ -7,7 +7,7 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
 
     local f = CreateFrame("Frame", nil, UIParent);
-
+    f.SetSize(1, 1);
     f.setPointOptions = setPointOptions;
 
     -- e.g., grow = "LEFT", growAnchor = "BOTTOMRIGHT": set icon's bottomright to group's bottom right
@@ -35,7 +35,7 @@ addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions, gro
     -- If relativeTo is currently shown, update the position now
     local relativeToFrame = _G[relativeTo];
     if relativeToFrame and relativeToFrame:IsShown() then
-        iconGroup:ClearAllPoints();
+        --iconGroup:ClearAllPoints();
         iconGroup:SetPoint(point, relativeTo, relativePoint, offsetX, offsetY);
     end
 
@@ -119,7 +119,7 @@ addon.IconGroup_Insert = function (group, icon, index)
     -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
     if group.setPointOptions then
         local options = group.setPointOptions;
-        group:ClearAllPoints();
+        --group:ClearAllPoints();
         group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
         group.setPointOptions = nil; -- Don't need to do this again until updated by UpdateIconGroupSetPointOptions
     end
