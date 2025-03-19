@@ -945,6 +945,30 @@ if addon.PROJECT_MAINLINE then
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
             },
+
+            header6 = {
+                order = 19,
+                type = "header",
+                name = "",
+            },
+
+            showMinimapIcon = {
+                order = 20,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Logo") .. " Show minimap icon for invoking options UI",
+                set = function(info, val)
+                    SweepyBoop.db.profile.minimap.hide = ( not val );
+                    if val then
+                        icon:Show(addonName);
+                    else
+                        icon:Hide(addonName);
+                    end
+                end,
+                get = function (info)
+                    return ( not SweepyBoop.db.profile.minimap.hide );
+                end
+            }
         },
     };
 
@@ -1059,8 +1083,9 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
-    defaults.profile.arenaFrames.arenaCooldownOffsetX = 40;
-    defaults.profile.arenaFrames.arenaCooldownOffsetY = 8;
+    defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 27;
+    defaults.profile.arenaFrames.arenaCooldownOffsetX = -210;
+    defaults.profile.arenaFrames.arenaCooldownOffsetY = -40;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
@@ -1184,6 +1209,12 @@ function SweepyBoop:RefreshConfig()
     end
 
     self:RefreshAllNamePlates(true);
+
+    if self.db.profile.minimap.hide then
+        icon:Hide(addonName);
+    else
+        icon:Show(addonName);
+    end
 end
 
 function SweepyBoop:CheckDefaultArenaAbilities()
