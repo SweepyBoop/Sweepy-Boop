@@ -1209,10 +1209,10 @@ function SweepyBoop:RefreshConfig()
 
     self:RefreshAllNamePlates(true);
 
-    if self.db.profile.minimap.show then
-        icon:Show(addonName);
-    else
+    if self.db.profile.minimap.hide then
         icon:Hide(addonName);
+    else
+        icon:Show(addonName);
     end
 end
 
