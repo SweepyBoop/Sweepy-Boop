@@ -945,6 +945,30 @@ if addon.PROJECT_MAINLINE then
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
             },
+
+            header6 = {
+                order = 19,
+                type = "header",
+                name = "",
+            },
+
+            showMinimapIcon = {
+                order = 20,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Logo") .. " Show minimap icon for invoking options UI",
+                set = function(info, val)
+                    SweepyBoop.db.profile.minimap.hide = ( not val );
+                    if val then
+                        icon:Show(addonName);
+                    else
+                        icon:Hide(addonName);
+                    end
+                end,
+                get = function (info)
+                    return ( not SweepyBoop.db.profile.minimap.hide );
+                end
+            }
         },
     };
 
