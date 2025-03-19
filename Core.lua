@@ -1208,6 +1208,12 @@ function SweepyBoop:RefreshConfig()
     end
 
     self:RefreshAllNamePlates(true);
+
+    if self.db.profile.minimap.show then
+        icon:Show(addonName);
+    else
+        icon:Hide(addonName);
+    end
 end
 
 function SweepyBoop:CheckDefaultArenaAbilities()
