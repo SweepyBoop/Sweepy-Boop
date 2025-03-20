@@ -12,8 +12,9 @@ addon.SPELLCATEGORY = {
 };
 
 addon.SPELLPRIORITY = {
-    DEFAULT = 50,
+    DEADLY = 1,
     HIGH = 10,
+    DEFAULT = 50,
     LOW = 100,
 };
 

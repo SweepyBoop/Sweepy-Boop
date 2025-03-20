@@ -725,6 +725,14 @@ addon.SpellData = {
     },
 
     -- Monk
+    -- Celestial Conduit
+    [443028] = {
+        class = addon.MONK,
+        category = category.BURST,
+        cooldown = 90,
+        duration = 4,
+        index = addon.SPELLPRIORITY.DEADLY,
+    },
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
         class = addon.MONK,
@@ -744,12 +752,12 @@ addon.SpellData = {
         cooldown = 120,
         duration = 24,
     },
-    -- Dance of Chi-ji (no cooldown, aura only)
-    [325202] = {
-        class = addon.MONK,
-        category = category.BURST,
-        trackEvent = addon.SPELL_AURA_APPLIED,
-    },
+    -- -- Dance of Chi-ji (no cooldown, aura only)
+    -- [325202] = {
+    --     class = addon.MONK,
+    --     category = category.BURST,
+    --     trackEvent = addon.SPELL_AURA_APPLIED,
+    -- },
     -- Crowd Control
     -- Paralysis
     [115078] = {
@@ -1187,7 +1195,7 @@ addon.SpellData = {
         category = category.BURST,
         duration = 16, -- confirm early dismiss
         cooldown = 120,
-        index = addon.SPELLPRIORITY.HIGH,
+        index = addon.SPELLPRIORITY.DEADLY,
     },
     -- Kingsbane
     [385627] = {
