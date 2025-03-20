@@ -20,3 +20,5 @@
 - [x] Add back up name when class icons are hidden by settings
 
 - [x] Leverage atlas "countdown-swords" for combat indicator
+
+- [ ] Add ww heroic talent burst to the tracker
