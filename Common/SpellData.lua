@@ -547,6 +547,12 @@ addon.SpellData = {
         category = category.DISRUPT,
         cooldown = 30,
     },
+    -- Mending Bandage
+    [212640] = {
+        class = addon.HUNTER,
+        category = category.DISRUPT,
+        cooldown = 25,
+    },
     -- Crowd Control
     -- Intimidation
     [19577] = {
@@ -711,6 +717,12 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.DISRUPT,
     },
+    -- Greater Invisibility
+    [110959] = {
+        cooldown = 120,
+        class = addon.MAGE,
+        category = category.DISRUPT,
+    },
 
     -- Monk
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
@@ -800,6 +812,12 @@ addon.SpellData = {
         [388615] = {
             parent = 115310,
         },
+    -- Fortifying Brew
+    [115203] = {
+        cooldown = 90,
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+    },
     -- Disrupt
     -- Grapple Weapon
     [233759] = {
