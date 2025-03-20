@@ -921,6 +921,18 @@ addon.SpellData = {
         class = addon.PALADIN,
         category = category.INTERRUPT,
     },
+    -- Disrupt
+    -- Blessing of Sacrifice
+    [6940] = {
+        class = addon.PALADIN,
+        category = category.DISRUPT,
+        cooldown = 105,
+    },
+        -- Ultimate Sacrifice
+        [199448] = {
+            parent = 6940,
+            cooldown = 105,
+        },
     -- Dispel
     -- Cleanse
     [4987] = {
