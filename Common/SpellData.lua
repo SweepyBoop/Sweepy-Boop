@@ -346,6 +346,13 @@ addon.SpellData = {
         reduce_on_interrupt = 15,
         category = category.CROWDCONTROL
     },
+    -- Disrupt
+    -- Faerie Swarm
+    [209749] = {
+        class = addon.DRUID,
+        category = category.DISRUPT,
+        cooldown = 30,
+    },
     -- Interrupt
     -- Skull Bash
     [106839] = {
@@ -540,6 +547,12 @@ addon.SpellData = {
         category = category.DISRUPT,
         cooldown = 30,
     },
+    -- Mending Bandage
+    [212640] = {
+        class = addon.HUNTER,
+        category = category.DISRUPT,
+        cooldown = 25,
+    },
     -- Crowd Control
     -- Intimidation
     [19577] = {
@@ -704,6 +717,12 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.DISRUPT,
     },
+    -- Greater Invisibility
+    [110959] = {
+        cooldown = 120,
+        class = addon.MAGE,
+        category = category.DISRUPT,
+    },
 
     -- Monk
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
@@ -793,6 +812,19 @@ addon.SpellData = {
         [388615] = {
             parent = 115310,
         },
+    -- Fortifying Brew
+    [115203] = {
+        cooldown = 90,
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+    },
+    -- Disrupt
+    -- Grapple Weapon
+    [233759] = {
+        class = addon.MONK,
+        category = category.DISRUPT,
+        cooldown = 45,
+    },
     -- Dispel
     -- Detox
     [115450] = {
@@ -921,6 +953,18 @@ addon.SpellData = {
         class = addon.PALADIN,
         category = category.INTERRUPT,
     },
+    -- Disrupt
+    -- Blessing of Sacrifice
+    [6940] = {
+        class = addon.PALADIN,
+        category = category.DISRUPT,
+        cooldown = 105,
+    },
+        -- Ultimate Sacrifice
+        [199448] = {
+            parent = 6940,
+            cooldown = 105,
+        },
     -- Dispel
     -- Cleanse
     [4987] = {
@@ -1204,8 +1248,25 @@ addon.SpellData = {
         cooldown = 120,
     },
     -- Disrupt
-    [36554] = {cooldown = 30, class = addon.ROGUE, charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true}, category = category.DISRUPT}, -- Shadowstep
-    [195457] = {cooldown = 30, class = addon.ROGUE, category = category.DISRUPT}, -- Grappling Hook
+    -- Shadowstep
+    [36554] = {
+        cooldown = 30,
+        class = addon.ROGUE,
+        charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true},
+        category = category.DISRUPT
+    },
+    -- Grappling Hook
+    [195457] = {
+        cooldown = 30,
+        class = addon.ROGUE,
+        category = category.DISRUPT
+    },
+    -- Dismantle
+    [207777] = {
+        cooldown = 45,
+        class = addon.ROGUE,
+        category = category.DISRUPT
+    },
 
     -- Shaman
     -- Totem of Wrath (cannot track cooldown reliably)
@@ -1489,6 +1550,12 @@ addon.SpellData = {
     -- Heroic Leap
     [6544] = {
         cooldown = 30,
+        class = addon.WARRIOR,
+        category = category.DISRUPT,
+    },
+    -- Disarm
+    [236077] = {
+        cooldown = 45,
         class = addon.WARRIOR,
         category = category.DISRUPT,
     },
