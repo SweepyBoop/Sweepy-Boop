@@ -1195,7 +1195,7 @@ addon.SpellData = {
         category = category.BURST,
         duration = 16, -- confirm early dismiss
         cooldown = 120,
-        index = addon.SPELLPRIORITY.HIGH,
+        index = addon.SPELLPRIORITY.DEADLY,
     },
     -- Kingsbane
     [385627] = {
