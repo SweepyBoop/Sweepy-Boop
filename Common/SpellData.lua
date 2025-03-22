@@ -220,6 +220,7 @@ addon.SpellData = {
     [198589] = {
         cooldown = 60,
         class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
         category = category.DEFENSIVE
     },
     -- Netherwalk
