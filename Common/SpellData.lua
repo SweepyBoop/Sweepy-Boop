@@ -850,7 +850,7 @@ addon.SpellData = {
         duration = 23, -- Baseline: 20s, Divine Wrath: 3s
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
-        spec = { specID.RET },
+        spec = { specID.RETRIBUTION },
     },
     -- Crusade
     [231895] = {
@@ -859,7 +859,7 @@ addon.SpellData = {
         duration = 30, -- Baseline: 27s, Divine Wrath: 3s
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
-        spec = { specID.RET },
+        spec = { specID.RETRIBUTION },
     },
     -- Wake of Ashes
     [255937] = {
@@ -872,7 +872,7 @@ addon.SpellData = {
     [375576] = {
         class = addon.PALADIN,
         category = category.BURST,
-        spec = { specID.RET },
+        spec = { specID.RETRIBUTION },
         cooldown = 60,
         opt_lower_cooldown = 45,
     },
@@ -1260,7 +1260,7 @@ addon.SpellData = {
     [36554] = {
         cooldown = 30,
         class = addon.ROGUE,
-        charges = {[specID.ASSASSIN] = true, [specID.SUBTLETY] = true},
+        charges = {[specID.ASSASSINATION] = true, [specID.SUBTLETY] = true},
         category = category.DISRUPT
     },
     -- Grappling Hook
