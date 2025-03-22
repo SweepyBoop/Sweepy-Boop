@@ -1085,7 +1085,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownOffsetX = 35;
-    defaults.profile.arenaFrames.arenaCooldownOffsetY = 8;
+    defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
     defaults.profile.arenaFrames.hideCountDownNumbers = true;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;

@@ -18,8 +18,6 @@ Libs\AceConfig-3.0\AceConfig-3.0.xml
 Libs\LibCustomGlow-1.0\LibCustomGlow-1.0.xml
 
 Common\Constants.lua
-Common\ArenaEnemyBurstSpells.lua
-Common\ArenaEnemyUtilitySpells.lua
 Common\SpellData.lua
 Common\UnitInfoHelpers.lua
 Common\NpcData.lua
