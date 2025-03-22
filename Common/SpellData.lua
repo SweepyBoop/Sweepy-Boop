@@ -441,6 +441,7 @@ addon.SpellData = {
     -- Dragon Rage
     [375087] = {
         class = addon.EVOKER,
+        spec = { specID.DEVASTATION },
         category = category.BURST,
         duration = 14,
         cooldown = 120,
@@ -450,7 +451,6 @@ addon.SpellData = {
     [370553] = {
         class = addon.EVOKER,
         category = category.BURST,
-        spec = { specID.DEVASTATION, specID.AUGMENTATION },
         cooldown = 120,
         trackEvent = addon.SPELL_AURA_REMOVED,
     },
@@ -458,18 +458,21 @@ addon.SpellData = {
     -- Breath of Eons
     [403631] = {
         class = addon.EVOKER,
+        spec = { specID.AUGMENTATION },
         category = category.BURST,
         cooldown = 120,
     },
     -- Upheaval (bug: not triggered)
     [396286] = {
         class = addon.EVOKER,
+        spec = { specID.AUGMENTATION },
         category = category.BURST,
         cooldown = 40,
     },
     -- Ebon Might
     [395152] = {
         class = addon.EVOKER,
+        spec = { specID.AUGMENTATION },
         category = category.BURST,
         cooldown = 30,
         duration = 10,
@@ -493,6 +496,7 @@ addon.SpellData = {
     -- Emerald Communion
     [370960] = {
         class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
         category = category.DEFENSIVE,
         cooldown = 180,
     },
@@ -505,7 +509,7 @@ addon.SpellData = {
     -- Interrupt
     -- Quell
     [351338] = {
-        cooldown = {default = 40, [specID.DEVASTATION] = 20},
+        cooldown = { default = 40, [specID.DEVASTATION] = 20, [specID.AUGMENTATION] = 20 },
         class = addon.EVOKER,
         category = category.INTERRUPT,
     },
