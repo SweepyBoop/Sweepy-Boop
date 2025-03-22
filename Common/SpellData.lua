@@ -397,7 +397,7 @@ addon.SpellData = {
     [102342] = {
         cooldown = 90,
         class = addon.DRUID,
-        spec = { specID.RESTO_DRUID },
+        spec = { specID.RESTORATION_DRUID },
         opt_lower_cooldown = 70,
         category = category.DEFENSIVE
     },
@@ -416,7 +416,7 @@ addon.SpellData = {
     -- Ancient of Lore
     [473909] = {
         class = addon.DRUID,
-        spec = { specID.RESTO_DRUID },
+        spec = { specID.RESTORATION_DRUID },
         category = category.DEFENSIVE,
         cooldown = 90,
     },
@@ -425,7 +425,7 @@ addon.SpellData = {
     [88423] = {
         cooldown = 8,
         class = addon.DRUID,
-        spec = { specID.RESTO_DRUID },
+        spec = { specID.RESTORATION_DRUID },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL
     },
@@ -931,7 +931,7 @@ addon.SpellData = {
     -- Blessing of Summer (cannot reliably track cooldown, assume 45s * 3 = 135s perhaps)
     [388007] = {
         class = addon.PALADIN,
-        spec = { specID.HOLY },
+        spec = { specID.HOLY_PALADIN },
         category = category.BURST,
         --trackEvent = addon.SPELL_AURA_APPLIED,
         --trackDest = true,
@@ -966,7 +966,7 @@ addon.SpellData = {
     [204018] = {
         cooldown = 240,
         class = addon.PALADIN,
-        spec = { specID.HOLY },
+        spec = { specID.HOLY_PALADIN },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -981,7 +981,7 @@ addon.SpellData = {
     [498] = {
         cooldown = 60,
         class = addon.PALADIN,
-        spec = { specID.HOLY },
+        spec = { specID.HOLY_PALADIN },
         category = category.DEFENSIVE,
     },
     -- Shield of Vengeance
@@ -1036,7 +1036,7 @@ addon.SpellData = {
     [4987] = {
         cooldown = 8,
         class = addon.PALADIN,
-        spec = { specID.HOLY },
+        spec = { specID.HOLY_PALADIN },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
     },
@@ -1055,11 +1055,11 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
         duration = 7, -- Confirm early dismiss
-        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Psyfiend
     [211522] = {
         class = addon.PRIEST,
+        spec = { specID.SHADOW },
         category = category.BURST,
         spellID = 211522,
         cooldown = 45,
@@ -1087,6 +1087,7 @@ addon.SpellData = {
     [391109] = {
         category = category.BURST,
         class = addon.PRIEST,
+        spec = { specID.SHADOW },
         cooldown = 60,
         duration = 20,
     },
@@ -1094,12 +1095,14 @@ addon.SpellData = {
     [263165] = {
         category = category.BURST,
         class = addon.PRIEST,
+        spec = { specID.SHADOW },
         cooldown = 45,
     },
     -- Voidform
     [194249] = {
         category = category.BURST,
         class = addon.PRIEST,
+        spec = { specID.SHADOW },
         trackEvent = addon.SPELL_AURA_APPLIED,
         cooldown = 120, -- Reduced by Driven to Madness, cannot track reliably
         duration = addon.DURATION_DYNAMIC,
@@ -1108,15 +1111,15 @@ addon.SpellData = {
     -- Dispel
     -- Mass Dispel
     [32375] = {
-        cooldown = 45,
+        cooldown = 120,
         class = addon.PRIEST,
         category = category.DISPEL,
-        opt_lower_cooldown = 25,
     },
     -- Purify
     [527] = {
         cooldown = 8,
         class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST, specID.DISCIPLINE },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
         opt_charges = true,
@@ -1132,12 +1135,14 @@ addon.SpellData = {
     [88625] = {
         cooldown = 60,
         class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
         category = category.CROWDCONTROL,
     },
     -- Silence
     [15487] = {
         cooldown = 45,
         class = addon.PRIEST,
+        spec = { specID.SHADOW },
         category = category.CROWDCONTROL,
         opt_lower_cooldown = 30,
     },
@@ -1145,6 +1150,7 @@ addon.SpellData = {
     [64044] = {
         cooldown = 45,
         class = addon.PRIEST,
+        spec = { specID.SHADOW },
         category = category.CROWDCONTROL,
     },
     -- Defensive
@@ -1159,6 +1165,7 @@ addon.SpellData = {
     [33206] = {
         cooldown = 180,
         class = addon.PRIEST,
+        spec = { specID.DISCIPLINE },
         category = category.DEFENSIVE,
         charges = true,
         index = addon.SPELLPRIORITY.HIGH,
@@ -1167,12 +1174,14 @@ addon.SpellData = {
     [62618] = {
         cooldown = 180,
         class = addon.PRIEST,
+        spec = { specID.DISCIPLINE },
         category = category.DEFENSIVE,
     },
     -- Guardian Spirit
     [47788] = {
         cooldown = 60, -- Assume it didn't proc
         class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -1180,12 +1189,14 @@ addon.SpellData = {
     [47585] = {
         cooldown = 90,
         class = addon.PRIEST,
+        spec = { specID.SHADOW },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Restitution
     [211319] = {
         class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         cooldown = 600,
@@ -1196,6 +1207,7 @@ addon.SpellData = {
     [213610] = {
         cooldown = 45,
         class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
         category = category.DISRUPT,
     },
     -- Fade (Phase Shift)
@@ -1213,7 +1225,6 @@ addon.SpellData = {
         class = addon.ROGUE,
         category = category.BURST,
         cooldown = 45,
-        --spec = {specID.SUBTLETY},
         index = addon.SPELLPRIORITY.HIGH,
         trackEvent = addon.SPELL_AURA_REMOVED,
     },
@@ -1221,6 +1232,7 @@ addon.SpellData = {
     -- Shadow Blades
     [121471] = {
         class = addon.ROGUE,
+        spec = { specID.SUBTLETY },
         category = category.BURST,
         cooldown = 90,
         duration = 20,
@@ -1228,15 +1240,16 @@ addon.SpellData = {
     -- Shadow Dance
     [185313] = {
         class = addon.ROGUE,
+        spec = { specID.SUBTLETY },
         category = category.BURST,
         cooldown = 30, -- 2 charges but cannot track cd reliably, just divide cd by 2
         duration = 8,
-        --spec = {specID.SUBTLETY},
     },
     -- Outlaw
     -- Adrenaline Rush
     [13750] = {
         class = addon.ROGUE,
+        spec = { specID.OUTLAW },
         category = category.BURST,
         cooldown = 180,
         duration = 20,
@@ -1244,6 +1257,7 @@ addon.SpellData = {
     -- Between the Eyes
     [315341] = {
         class = addon.ROGUE,
+        spec = { specID.OUTLAW },
         category = category.BURST,
         cooldown = 45,
         duration = 21, -- Max duration, can dismiss early
@@ -1252,6 +1266,7 @@ addon.SpellData = {
     -- Death Mark
     [360194] = {
         class = addon.ROGUE,
+        spec = { specID.ASSASSINATION },
         category = category.BURST,
         duration = 16, -- confirm early dismiss
         cooldown = 120,
@@ -1260,6 +1275,7 @@ addon.SpellData = {
     -- Kingsbane
     [385627] = {
         class = addon.ROGUE,
+        spec = { specID.ASSASSINATION },
         category = category.BURST,
         duration = 14,
         index = addon.SPELLPRIORITY.HIGH,
@@ -1308,25 +1324,30 @@ addon.SpellData = {
     [212182] = {
         cooldown = 180,
         class = addon.ROGUE,
+        spec = { specID.SUBTLETY, specID.OUTLAW },
         category = category.CROWDCONTROL,
     },
     -- Smoke Bomb (Subtlety)
     [359053] = {
         parent = 212182,
         cooldown = 120,
+        spec = { specID.SUBTLETY },
     },
     -- Disrupt
     -- Shadowstep
     [36554] = {
         cooldown = 30,
         class = addon.ROGUE,
-        charges = {[specID.ASSASSINATION] = true, [specID.SUBTLETY] = true},
+        spec = { specID.SUBTLETY, specID.ASSASSINATION },
+        charges = true,
         category = category.DISRUPT
     },
     -- Grappling Hook
     [195457] = {
         cooldown = 30,
         class = addon.ROGUE,
+        spec = { specID.OUTLAW },
+        charges = true,
         category = category.DISRUPT
     },
     -- Dismantle
@@ -1350,6 +1371,7 @@ addon.SpellData = {
     -- Ascendance (Enhancement)
     [114051] = {
         class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT },
         category = category.BURST,
         cooldown = 180,
         duration = 15,
@@ -1357,6 +1379,7 @@ addon.SpellData = {
     -- Doom Winds
     [384352] = {
         class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT },
         category = category.BURST,
         duration = 8,
         cooldown = 60,
@@ -1365,6 +1388,7 @@ addon.SpellData = {
     -- Feral Spirit
     [51533] = {
         class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT },
         category = category.BURST,
         cooldown = 90,
         duration = 15,
@@ -1372,6 +1396,7 @@ addon.SpellData = {
     -- Bloodlust (Shamanism)
     [204361] = {
         class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT },
         category = category.BURST,
         duration = 10,
         trackEvent = addon.SPELL_AURA_APPLIED,
@@ -1380,6 +1405,7 @@ addon.SpellData = {
     -- Heroism (Shamanism)
     [204362] = {
         class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT },
         category = category.BURST,
         cooldown = 60,
         duration = 10,
@@ -1390,6 +1416,7 @@ addon.SpellData = {
     -- Stormkeeper
     [191634] = {
         class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL },
         category = category.BURST,
         cooldown = 60, -- reduced by Lighting Bolt and Chain Lightning
         duration = 15,
@@ -1397,23 +1424,66 @@ addon.SpellData = {
     -- Fire Elemental
     [198067] = {
         class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL },
         category = category.BURST,
         cooldown = 150,
         duration = 24,
         index = addon.SPELLPRIORITY.HIGH,
     },
     -- Interrupt
-    [57994] = {cooldown = 12, class = addon.SHAMAN, category = category.INTERRUPT}, -- Wind Shear
+    -- Wind Shear
+    [57994] = {
+        cooldown = 12,
+        class = addon.SHAMAN,
+        category = category.INTERRUPT
+    },
     -- Defensive
-    [108271] = {cooldown = 90, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Astral Shift (120s baseline, -30 Planes Traveler)
-    [98008] = {cooldown = 174, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Spirit Link Totem
-    [409293] = {cooldown = 120, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Burrow
-    [108270] = {cooldown = 174, class = addon.SHAMAN, category = category.DEFENSIVE}, -- Stone Bulwark Totem (can be reset by Totemic Recall)
+    -- Astral Shift (120s baseline, -30 Planes Traveler)
+    [108271] = {
+        cooldown = 90,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE
+    },
+    -- Spirit Link Totem
+    [98008] = {
+        cooldown = 174,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE
+    },
+    -- Burrow
+    [409293] = {
+        cooldown = 120,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE
+    },
+    -- Stone Bulwark Totem (can be reset by Totemic Recall)
+    [108270] = {
+        cooldown = 174,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE
+    },
     -- Disrupt
-    [204336] = {cooldown = 24, class = addon.SHAMAN, category = category.DISRUPT}, -- Grounding Totem
-    [8143] = { cooldown = 54, class = addon.SHAMAN, category = category.DISRUPT }, -- Tremor Totem
+    -- Grounding Totem
+    [204336] = {
+        cooldown = 24,
+        class = addon.SHAMAN,
+        category = category.DISRUPT
+    },
+    -- Tremor Totem
+    [8143] = {
+        cooldown = 54,
+        class = addon.SHAMAN,
+        category = category.DISRUPT
+    },
     -- Dispel
-    [77130] = {cooldown = 8, class = addon.SHAMAN, category = category.DISPEL, trackEvent = addon.SPELL_DISPEL}, -- Purify Spirit
+    -- Purify Spirit
+    [77130] = {
+        cooldown = 8,
+        class = addon.SHAMAN,
+        spec = { specID.RESTORATION_SHAMAN },
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL
+    },
 
     -- Warlock
     -- Affliction
