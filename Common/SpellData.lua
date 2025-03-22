@@ -784,6 +784,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 90,
         duration = 4,
+        index = addon.SPELLPRIORITY.HIGH,
     },
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
