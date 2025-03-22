@@ -773,14 +773,15 @@ addon.SpellData = {
     -- Celestial Conduit
     [443028] = {
         class = addon.MONK,
+        spec = { specID.MISTWEAVER, specID.WINDWALKER },
         category = category.BURST,
         cooldown = 90,
         duration = 4,
-        index = addon.SPELLPRIORITY.DEADLY,
     },
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
         class = addon.MONK,
+        spec = { specID.WINDWALKER },
         category = category.BURST,
         cooldown = 90,
         duration = 15,
@@ -793,6 +794,7 @@ addon.SpellData = {
     -- Invoke Xuen, the White Tiger
     [123904] = {
         class = addon.MONK,
+        spec = { specID.WINDWALKER },
         category = category.BURST,
         cooldown = 120,
         duration = 24,
@@ -817,11 +819,11 @@ addon.SpellData = {
         category = category.CROWDCONTROL,
     },
     -- Breath of Fire (Incendiary Breath)
-    [115181] = {
-        cooldown = 30,
-        class = addon.MONK,
-        category = category.CROWDCONTROL,
-    },
+    -- [115181] = {
+    --     cooldown = 30,
+    --     class = addon.MONK,
+    --     category = category.CROWDCONTROL,
+    -- },
     -- Ring of Peace
     [116844] = {
         cooldown = 45,
@@ -838,6 +840,7 @@ addon.SpellData = {
     [122470] = {
         cooldown = 90,
         class = addon.MONK,
+        spec = { specID.WINDWALKER },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -845,6 +848,7 @@ addon.SpellData = {
     [116849] = {
         cooldown = 75,
         class = addon.MONK,
+        spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -858,6 +862,7 @@ addon.SpellData = {
     [115310] = {
         cooldown = 150,
         class = addon.MONK,
+        spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -883,6 +888,7 @@ addon.SpellData = {
     [115450] = {
         cooldown = 8,
         class = addon.MONK,
+        spec = { specID.MISTWEAVER },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
     },
