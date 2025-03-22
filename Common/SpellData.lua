@@ -462,12 +462,13 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
     },
-    -- Upheaval (bug: not triggered)
-    [408092] = {
+    -- Upheaval
+    [396286] = {
         class = addon.EVOKER,
         spec = { specID.AUGMENTATION },
         category = category.BURST,
         cooldown = 40,
+        trackEvent = addon.SPELL_EMPOWER_END,
     },
     -- Ebon Might
     [395152] = {
