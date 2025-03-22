@@ -162,6 +162,11 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 40, -- Anti-Magic Barrier almost always picked
     },
+        -- Anti-Magic Shell (Spellwarden)
+        [410358] = {
+            parent = 48707,
+            cooldown = 30,
+        },
     -- Anti-Magic Zone
     [51052] = {
         class = addon.DEATHKNIGHT,
