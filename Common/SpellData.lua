@@ -257,6 +257,7 @@ addon.SpellData = {
     [211881] = {
         cooldown = 30,
         class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
         category = category.CROWDCONTROL,
     },
 
