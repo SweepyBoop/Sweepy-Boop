@@ -174,6 +174,7 @@ addon.SpellData = {
     -- Eye Beam
     [198013] = {
         class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
         category = category.BURST,
         cooldown = 40,
         index = addon.SPELLPRIORITY.LOW,
@@ -197,6 +198,7 @@ addon.SpellData = {
     -- Essence Break
     [258860] = {
         class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
         category = category.BURST,
         cooldown = 40,
         duration = 4,
@@ -219,6 +221,7 @@ addon.SpellData = {
     [196555] = {
         cooldown = 180,
         class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
         category = category.DEFENSIVE
     },
     -- Darkness
