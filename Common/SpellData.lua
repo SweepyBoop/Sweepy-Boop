@@ -882,6 +882,7 @@ addon.SpellData = {
         cooldown = 90,
         class = addon.MONK,
         category = category.DEFENSIVE,
+        index = addon.SPELLPRIORITY.LOW,
     },
     -- Disrupt
     -- Grapple Weapon
