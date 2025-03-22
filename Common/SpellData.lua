@@ -266,6 +266,7 @@ addon.SpellData = {
     -- Incarnation: Chosen of Elune
     [102560] = {
         class = addon.DRUID,
+        spec = { specID.BALANCE },
         category = category.BURST,
         cooldown = 90, -- Whirling Stars
         duration = 20,
@@ -280,6 +281,7 @@ addon.SpellData = {
     -- Celestial Alignment
     [194223] = {
         class = addon.DRUID,
+        spec = { specID.BALANCE },
         category = category.BURST,
         cooldown = 90, -- Whirling Stars
         duration = 15,
@@ -294,6 +296,7 @@ addon.SpellData = {
     -- Force of Nature
     [205636] = {
         class = addon.DRUID,
+        spec = { specID.BALANCE },
         category = category.BURST,
         cooldown = 60,
         duration = 10,
@@ -301,6 +304,7 @@ addon.SpellData = {
     -- Fury of Elune
     [202770] = {
         class = addon.DRUID,
+        spec = { specID.BALANCE },
         category = category.BURST,
         cooldown = 60,
         duration = 8,
@@ -309,6 +313,7 @@ addon.SpellData = {
     -- Berserk
     [106951] = {
         class = addon.DRUID,
+        spec = { specID.FERAL },
         category = category.BURST,
         cooldown = 120,
         duration = 20,
@@ -316,6 +321,7 @@ addon.SpellData = {
     -- Incarnation: Avatar of Ashamane
     [102543] = {
         class = addon.DRUID,
+        spec = { specID.FERAL },
         category = category.BURST,
         cooldown = 120,
         duration = 20,
@@ -323,12 +329,14 @@ addon.SpellData = {
     -- Feral Frenzy
     [274837] = {
         class = addon.DRUID,
+        spec = { specID.FERAL },
         category = category.BURST,
         cooldown = 45,
     },
     -- Tiger's Fury
     [5217] = {
         class = addon.DRUID,
+        spec = { specID.FERAL },
         category = category.BURST,
         cooldown = 30,
         duration = 20, -- can end early
@@ -357,6 +365,7 @@ addon.SpellData = {
     [78675] = {
         cooldown = 60,
         class = addon.DRUID,
+        spec = { specID.BALANCE },
         reduce_on_interrupt = 15,
         category = category.CROWDCONTROL
     },
@@ -364,6 +373,7 @@ addon.SpellData = {
     -- Faerie Swarm
     [209749] = {
         class = addon.DRUID,
+        spec = { specID.BALANCE },
         category = category.DISRUPT,
         cooldown = 30,
     },
@@ -379,6 +389,7 @@ addon.SpellData = {
     [61336] = {
         cooldown = {default = 180, [specID.GUARDIAN] = 120},
         class = addon.DRUID,
+        spec = { specID.GUARDIAN, specID.FERAL },
         charges = {[specID.GUARDIAN] = true},
         category = category.DEFENSIVE
     },
@@ -386,6 +397,7 @@ addon.SpellData = {
     [102342] = {
         cooldown = 90,
         class = addon.DRUID,
+        spec = { specID.RESTO_DRUID },
         opt_lower_cooldown = 70,
         category = category.DEFENSIVE
     },
@@ -404,6 +416,7 @@ addon.SpellData = {
     -- Ancient of Lore
     [473909] = {
         class = addon.DRUID,
+        spec = { specID.RESTO_DRUID },
         category = category.DEFENSIVE,
         cooldown = 90,
     },
@@ -412,6 +425,7 @@ addon.SpellData = {
     [88423] = {
         cooldown = 8,
         class = addon.DRUID,
+        spec = { specID.RESTO_DRUID },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL
     },
@@ -1736,6 +1750,7 @@ for _, spell in pairs(addon.SpellData) do
 
         spell.cooldown = spell.cooldown or parent.cooldown;
         spell.class = spell.class or parent.class;
+        spell.spec = spell.spec or parent.spec;
         spell.category = spell.category or parent.category;
         spell.trackPet = spell.trackPet or parent.trackPet;
         spell.trackEvent = spell.trackEvent or parent.trackEvent;
