@@ -519,6 +519,7 @@ addon.SpellData = {
     [360823] = {
         cooldown = 8,
         class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
     },
