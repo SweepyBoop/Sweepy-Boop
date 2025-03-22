@@ -24,6 +24,7 @@ addon.SpellData = {
     -- Raise Abomination
     [455395] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
         category = category.BURST,
         cooldown = 90,
         duration = 30,
@@ -32,6 +33,7 @@ addon.SpellData = {
     -- Unholy Assult
     [207289] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
         category = category.BURST,
         cooldown = 90,
         duration = 20,
@@ -39,6 +41,7 @@ addon.SpellData = {
     -- Dark Transformation
     [63560] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
         category = category.BURST,
         cooldown = 45,
         duration = 15, -- extended by Eternal Agony (need to track buff on pet, is it feasible)
@@ -46,6 +49,7 @@ addon.SpellData = {
     -- Apocalypse
     [275699] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
         category = category.BURST,
         cooldown = 45,
         duration = 20,
@@ -53,6 +57,7 @@ addon.SpellData = {
     -- Summon Gargoyle
     [49206] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
         category = category.BURST,
         cooldown = 180,
         duration = 25,
@@ -61,6 +66,7 @@ addon.SpellData = {
     -- Remorseless Winter
     [196770] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.FROST_DK },
         category = category.BURST,
         cooldown = 20,
         duration = 8,
@@ -69,6 +75,7 @@ addon.SpellData = {
     -- Pillar of Frost
     [51271] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.FROST_DK },
         category = category.BURST,
         cooldown = 60,
         duration = 12,
@@ -76,6 +83,7 @@ addon.SpellData = {
     -- Absolute zero (Frostwyrm's Fury)
     [279302] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.FROST_DK },
         category = category.BURST,
         cooldown = 90,
         duration = 10,
@@ -84,6 +92,7 @@ addon.SpellData = {
     -- Empower Rune Weapon
     [47568] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.FROST_DK },
         category = category.BURST,
         cooldown = 120,
         duration = 20,
@@ -91,6 +100,7 @@ addon.SpellData = {
     -- Chill Streak
     [305392] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.FROST_DK },
         category = category.BURST,
         cooldown = 45,
         duration = 4,
@@ -105,6 +115,7 @@ addon.SpellData = {
     -- Shambling Rush
     [91807] = {
         class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
         category = category.INTERRUPT,
         cooldown = 30,
         trackPet = true,
