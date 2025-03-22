@@ -538,6 +538,7 @@ addon.SpellData = {
     -- Bestial Wrath
     [19574] = {
         class = addon.HUNTER,
+        spec = { specID.BEASTMASTERY },
         category = category.BURST,
         cooldown = 90, -- Reduced by Barbed Shot
         duration = 15,
@@ -545,6 +546,7 @@ addon.SpellData = {
     -- Call of the Wild
     [359844] = {
         class = addon.HUNTER,
+        spec = { specID.BEASTMASTERY },
         category = category.BURST,
         cooldown = 120,
         duration = 20,
@@ -553,6 +555,7 @@ addon.SpellData = {
     -- Coordinated Assult
     [360952] = {
         class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
         category = category.BURST,
         cooldown = 60, -- Symboitic Adrenaline (almost always picked)
         duration = 20,
@@ -561,6 +564,7 @@ addon.SpellData = {
     -- Trueshot
     [288613] = {
         class = addon.HUNTER,
+        spec = { specID.MARKSMANSHIP },
         category = category.BURST,
         cooldown = 120, -- Reduced by spending focus
         duration = 15,
@@ -570,6 +574,7 @@ addon.SpellData = {
     -- Volley
     [260243] = {
         class = addon.HUNTER,
+        spec = { specID.MARKSMANSHIP },
         category = category.BURST,
         cooldown = 45,
         duration = 6,
@@ -584,13 +589,14 @@ addon.SpellData = {
     -- Mending Bandage
     [212640] = {
         class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
         category = category.DISRUPT,
         cooldown = 25,
     },
     -- Crowd Control
     -- Intimidation
     [19577] = {
-        cooldown = 60,
+        cooldown = 50,
         class = addon.HUNTER,
         category = category.CROWDCONTROL,
     },
@@ -606,7 +612,7 @@ addon.SpellData = {
         cooldown = 90,
         class = addon.HUNTER,
         category = category.DEFENSIVE,
-        charges = true
+        charges = true,
     },
     -- Aspect of the Turtle
     [186265] = {
@@ -615,7 +621,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH
     },
-    -- Roar of Sacrifice (need to confirm)
+    -- Roar of Sacrifice
     [53480] = {
         cooldown = 60,
         class = addon.HUNTER,
@@ -630,14 +636,16 @@ addon.SpellData = {
     -- Interrupt
     -- Counter Shot
     [147362] = {
-        cooldown = 24,
+        cooldown = 22,
         class = addon.HUNTER,
+        spec = { specID.MARKSMANSHIP, specID.BEASTMASTERY },
         category = category.INTERRUPT
     },
     -- Muzzle
     [187707] = {
-        cooldown = 15,
+        cooldown = 13,
         class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
         category = category.INTERRUPT
     },
 
