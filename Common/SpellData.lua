@@ -1490,12 +1490,14 @@ addon.SpellData = {
     -- Soul Rot
     [386997] = {
         class = addon.WARLOCK,
+        spec = { specID.AFFLICTION },
         category = category.BURST,
         cooldown = 60,
     },
     -- Summon Darkglare
     [205180] = {
         class = addon.WARLOCK,
+        spec = { specID.AFFLICTION },
         category = category.BURST,
         duration = 20, -- confirm early dismiss if killed
         index = addon.SPELLPRIORITY.HIGH,
@@ -1504,6 +1506,7 @@ addon.SpellData = {
     -- Summon Infernal
     [1122] = {
         class = addon.WARLOCK,
+        spec = { specID.DESTRUCTION },
         category = category.BURST,
         cooldown = 120,
         duration = 30,
@@ -1512,6 +1515,7 @@ addon.SpellData = {
     -- Summon Demonic Tyrant
     [265187] = {
         class = addon.WARLOCK,
+        spec = { specID.DEMONOLOGY },
         category = category.BURST,
         cooldown = 60,
         duration = 15,
@@ -1519,6 +1523,7 @@ addon.SpellData = {
     -- Grimoire: Felguard
     [111898] = {
         class = addon.WARLOCK,
+        spec = { specID.DEMONOLOGY },
         category = category.BURST,
         cooldown = 120,
         duration = 17,
@@ -1526,6 +1531,7 @@ addon.SpellData = {
     -- Demonic Strength
     [267171] = {
         class = addon.WARLOCK,
+        spec = { specID.DEMONOLOGY },
         category = category.BURST,
         cooldown = 60,
     },
@@ -1546,6 +1552,7 @@ addon.SpellData = {
     [89766] = {
         cooldown = 30,
         class = addon.WARLOCK,
+        spec = { specID.DEMONOLOGY },
         trackPet = true,
         category = category.CROWDCONTROL,
     },
