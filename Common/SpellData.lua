@@ -1652,6 +1652,7 @@ addon.SpellData = {
     -- Warbreaker
     [262161] = {
         class = addon.WARRIOR,
+        spec = { specID.ARMS },
         category = category.BURST,
         duration = 10,
         cooldown = 45,
@@ -1662,6 +1663,7 @@ addon.SpellData = {
     -- Colossus Smash
     [167105] = {
         class = addon.WARRIOR,
+        spec = { specID.ARMS },
         category = category.BURST,
         duration = 10,
         cooldown = 45,
@@ -1672,6 +1674,7 @@ addon.SpellData = {
     -- Recklessness
     [1719] = {
         class = addon.WARRIOR,
+        spec = { specID.FURY },
         category = category.BURST,
         cooldown = 90,
         duration = 16,
@@ -1726,12 +1729,14 @@ addon.SpellData = {
     [118038] = {
         cooldown = 85.5,
         class = addon.WARRIOR,
+        spec = { specID.ARMS },
         category = category.DEFENSIVE,
     },
     -- Enraged Regeneration
     [184364] = {
         cooldown = 114,
         class = addon.WARRIOR,
+        spec = { specID.FURY },
         category = category.DEFENSIVE,
     },
     -- Rallying Cry
