@@ -915,6 +915,7 @@ addon.SpellData = {
     -- Wake of Ashes
     [255937] = {
         class = addon.PALADIN,
+        spec = { specID.RETRIBUTION },
         category = category.BURST,
         cooldown = 30,
         index = addon.SPELLPRIORITY.HIGH, -- the new way of activating wing
@@ -930,6 +931,7 @@ addon.SpellData = {
     -- Blessing of Summer (cannot reliably track cooldown, assume 45s * 3 = 135s perhaps)
     [388007] = {
         class = addon.PALADIN,
+        spec = { specID.HOLY },
         category = category.BURST,
         --trackEvent = addon.SPELL_AURA_APPLIED,
         --trackDest = true,
@@ -940,6 +942,7 @@ addon.SpellData = {
     -- Final Reckoning
     [343721] = {
         class = addon.PALADIN,
+        spec = { specID.RETRIBUTION },
         category = category.BURST,
         cooldown = 60,
         duration = 12,
@@ -963,6 +966,7 @@ addon.SpellData = {
     [204018] = {
         cooldown = 240,
         class = addon.PALADIN,
+        spec = { specID.HOLY },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -977,12 +981,14 @@ addon.SpellData = {
     [498] = {
         cooldown = 60,
         class = addon.PALADIN,
+        spec = { specID.HOLY },
         category = category.DEFENSIVE,
     },
     -- Shield of Vengeance
     [184662] = {
         cooldown = 90,
         class = addon.PALADIN,
+        spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
     },
     -- Crowd Control
@@ -1002,6 +1008,7 @@ addon.SpellData = {
     [215652] = {
         cooldown = 45,
         class = addon.PALADIN,
+        spec = { specID.PROTECTION_PALADIN },
         category = category.CROWDCONTROL,
         trackEvent = addon.SPELL_AURA_REMOVED,
     },
@@ -1029,6 +1036,7 @@ addon.SpellData = {
     [4987] = {
         cooldown = 8,
         class = addon.PALADIN,
+        spec = { specID.HOLY },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
     },
@@ -1036,6 +1044,7 @@ addon.SpellData = {
     [210256] = {
         cooldown = 45,
         class = addon.PALADIN,
+        spec = { specID.RETRIBUTION },
         category = category.DISPEL,
     },
 
