@@ -720,12 +720,6 @@ addon.SpellData = {
         trackEvent = addon.SPELL_AURA_APPLIED,
         index = addon.SPELLPRIORITY.HIGH,
     },
-    -- Temporal Shield
-    [198111] = {
-        cooldown = 45,
-        class = addon.MAGE,
-        category = category.DEFENSIVE,
-    },
     -- Cold Snap (resets ice block)
     [235219] = {
         cooldown = 300,
