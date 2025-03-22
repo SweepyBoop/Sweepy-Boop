@@ -654,6 +654,7 @@ addon.SpellData = {
     -- Icy Veins (make sure it's not triggered by Time Anomaly)
     [12472] = {
         class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
         category = category.BURST,
         cooldown = 120,
         duration = 25,
@@ -663,6 +664,7 @@ addon.SpellData = {
     -- Ice Form
     [198144] = {
         class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
         category = category.BURST,
         cooldown = 60,
         duration = 12,
@@ -672,6 +674,7 @@ addon.SpellData = {
     -- Combustion
     [190319] = {
         class = addon.MAGE,
+        spec = { specID.FIRE },
         category = category.BURST,
         duration = 12,
         cooldown = 120,
@@ -686,6 +689,7 @@ addon.SpellData = {
     -- Arcane Surge
     [365350] = {
         class = addon.MAGE,
+        spec = { specID.ARCANE },
         category = category.BURST,
         cooldown = 90,
         duration = 15,
@@ -711,6 +715,7 @@ addon.SpellData = {
     [87024] = {
         cooldown = 300,
         class = addon.MAGE,
+        spec = { specID.FIRE },
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         index = addon.SPELLPRIORITY.HIGH,
@@ -725,6 +730,7 @@ addon.SpellData = {
     [235219] = {
         cooldown = 300,
         class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -732,12 +738,14 @@ addon.SpellData = {
     [342246] = {
         cooldown = 50,
         class = addon.MAGE,
+        spec = { specID.ARCANE },
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
     -- Alter Time (Fire/Frost)
     [110909] = {
         parent = 342246,
+        spec = { specID.FIRE, specID.FROST_MAGE },
     },
     -- Crowd Control
     -- Ring of Frost
@@ -757,6 +765,7 @@ addon.SpellData = {
     [198100] = {
         cooldown = 20,
         class = addon.MAGE,
+        spec = { specID.ARCANE },
         category = category.DISRUPT,
     },
     -- Greater Invisibility
