@@ -204,6 +204,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local guid = ValidateUnit(self);
     if ( not guid ) then return end
 
+    if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
+        print(spellName, spellId);
+    end
+
     -- Check resets by spell cast
     if ( subEvent == addon.SPELL_CAST_SUCCESS ) and ( sourceGUID == guid ) then
         -- Check reset by power

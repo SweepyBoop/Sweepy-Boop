@@ -463,7 +463,7 @@ addon.SpellData = {
         cooldown = 120,
     },
     -- Upheaval (bug: not triggered)
-    [396286] = {
+    [408092] = {
         class = addon.EVOKER,
         spec = { specID.AUGMENTATION },
         category = category.BURST,
