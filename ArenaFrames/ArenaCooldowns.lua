@@ -136,6 +136,10 @@ local function SetupIconGroup(group, unit, testIcons)
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
+        if spell.use_parent_icon then
+            goto continue;
+        end
+
         -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
         if ( not spell.class ) or ( spell.class == class ) then
             local enabled = true;
@@ -170,6 +174,8 @@ local function SetupIconGroup(group, unit, testIcons)
                 end
             end
         end
+
+        ::continue::
     end
 end
 
