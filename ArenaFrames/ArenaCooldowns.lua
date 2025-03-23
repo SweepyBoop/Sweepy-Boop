@@ -108,9 +108,17 @@ local function SetupIconGroup(group, unit, testIcons, setup)
 
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
+        local config = SweepyBoop.db.profile.arenaFrames;
         for spellID, spell in pairs(spellData) do
-            testIcons[unit][spellID].info = { cooldown = spell.cooldown };
-            addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+            if testIcons[unit][spellID] then
+                testIcons[unit][spellID].info = { cooldown = spell.cooldown };
+                addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+
+                if spell.baseline and config.showUnusedIcons then
+                    testIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
+                    addon.IconGroup_Insert(group, testIcons[unit][spellID]);
+                end
+            end
         end
 
         return;
@@ -122,6 +130,8 @@ local function SetupIconGroup(group, unit, testIcons, setup)
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class = addon.GetClassForPlayerOrArena(unit);
     if ( not class ) then return end
+
+    local config = SweepyBoop.db.profile.arenaFrames;
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
@@ -152,6 +162,11 @@ local function SetupIconGroup(group, unit, testIcons, setup)
                 premadeIcons[unit][spellID].info = GetSpecOverrides(spell);
                 addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                 --print("Populated", unit, spell.class, spellID)
+
+                if spell.baseline and config.showUnusedIcons then
+                    premadeIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
+                    addon.IconGroup_Insert(group, premadeIcons[unit][spellID]);
+                end
             end
         end
     end
@@ -474,12 +489,27 @@ local function RefreshTestMode()
         externalTestIcons[unitId] = {};
         local iconSize = config.arenaCooldownTrackerIconSize;
         for spellID, spell in pairs(spellData) do
-            if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
-                externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
-            else
-                externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
+            local isEnabled = false;
+            if spell.class == addon.PRIEST then
+                if ( not spell.spec ) then
+                    isEnabled = true;
+                else
+                    for i = 1, #(spell.spec) do
+                        if ( spell.spec[i] == addon.SPECID.DISCIPLINE ) then
+                            isEnabled = true;
+                            break;
+                        end
+                    end
+                end
             end
-            addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
+            if isEnabled then
+                if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
+                    externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
+                else
+                    externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
+                end
+                addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
+            end
         end
     end
 
