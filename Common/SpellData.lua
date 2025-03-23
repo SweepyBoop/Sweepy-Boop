@@ -920,9 +920,9 @@ addon.SpellData = {
         spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
-        -- Don't make baseline, since it can be replaced by Restoral
+        baseline = true, -- technically a talent, but always picked
     },
-        -- Restoral
+        -- Restoral (once detected, reuse Revival icon but change texture to Restoral)
         [388615] = {
             parent = 115310,
             use_parent_icon = true,
