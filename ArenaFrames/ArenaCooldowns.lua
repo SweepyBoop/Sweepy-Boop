@@ -468,6 +468,7 @@ local function EnsureIconGroup(index)
     end
 
     -- Clear previous icons
+    print("Clear previous icons");
     addon.IconGroup_Wipe(iconGroups[index]);
 end
 
