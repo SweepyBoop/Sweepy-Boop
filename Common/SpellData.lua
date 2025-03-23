@@ -204,6 +204,7 @@ addon.SpellData = {
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
         cooldown = 120,
         duration = 24,
+        baseline = true,
     },
     -- Essence Break
     [258860] = {
@@ -219,6 +220,7 @@ addon.SpellData = {
         class = addon.DEMONHUNTER,
         category = category.INTERRUPT,
         cooldown = 15,
+        baseline = true,
     },
     -- Defensive
     -- Blur
@@ -226,7 +228,8 @@ addon.SpellData = {
         cooldown = 60,
         class = addon.DEMONHUNTER,
         spec = { specID.HAVOC },
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Netherwalk
     [196555] = {
@@ -264,6 +267,7 @@ addon.SpellData = {
         class = addon.DEMONHUNTER,
         spec = { specID.HAVOC },
         category = category.CROWDCONTROL,
+        baseline = true,
     },
 
     -- Druid
@@ -417,7 +421,8 @@ addon.SpellData = {
     [22812] = {
         cooldown = 60,
         class = addon.DRUID,
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Renewal
     [108238] = {
@@ -439,7 +444,8 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.RESTORATION_DRUID },
         category = category.DISPEL,
-        trackEvent = addon.SPELL_DISPEL
+        trackEvent = addon.SPELL_DISPEL,
+        baseline = true,
     },
 
     -- Evoker
@@ -449,6 +455,7 @@ addon.SpellData = {
         class = addon.EVOKER,
         category = category.BURST,
         cooldown = 120,
+        baseline = true,
     },
     -- Dragon Rage
     [375087] = {
@@ -499,6 +506,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 90,
         charges = true,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Renewing Blaze
     [374348] = {
@@ -512,6 +520,7 @@ addon.SpellData = {
         spec = { specID.PRESERVATION },
         category = category.DEFENSIVE,
         cooldown = 180,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Cauterizing Flame
     [374251] = {
@@ -525,6 +534,7 @@ addon.SpellData = {
         cooldown = { default = 40, [specID.DEVASTATION] = 20, [specID.AUGMENTATION] = 20 },
         class = addon.EVOKER,
         category = category.INTERRUPT,
+        baeline = true, -- technically a talent, but always picked
     },
     -- Crowd Control
     -- Dispel
@@ -535,6 +545,7 @@ addon.SpellData = {
         spec = { specID.PRESERVATION },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
+        baseline = true,
     },
     -- Disrupt
     -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
@@ -543,6 +554,7 @@ addon.SpellData = {
         class = addon.EVOKER,
         category = category.DISRUPT,
         trackEvent = addon.SPELL_EMPOWER_END,
+        baseline = true,
     },
 
     -- Hunter
