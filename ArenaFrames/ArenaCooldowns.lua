@@ -208,6 +208,7 @@ local function ResetCooldown(icon, amount, internalCooldown)
 end
 
 local function StartIcon(icon)
+    icon:SetAlpha(1);
     if icon.template == addon.ICON_TEMPLATE.GLOW then
         addon.StartBurstIcon(icon);
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
