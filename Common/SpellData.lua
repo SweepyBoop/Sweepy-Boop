@@ -1522,20 +1522,23 @@ addon.SpellData = {
     [57994] = {
         cooldown = 12,
         class = addon.SHAMAN,
-        category = category.INTERRUPT
+        category = category.INTERRUPT,
+        baseline = true,
     },
     -- Defensive
     -- Astral Shift (120s baseline, -30 Planes Traveler)
     [108271] = {
         cooldown = 90,
         class = addon.SHAMAN,
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Spirit Link Totem
     [98008] = {
         cooldown = 174,
         class = addon.SHAMAN,
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Burrow
     [409293] = {
@@ -1569,7 +1572,8 @@ addon.SpellData = {
         class = addon.SHAMAN,
         spec = { specID.RESTORATION_SHAMAN },
         category = category.DISPEL,
-        trackEvent = addon.SPELL_DISPEL
+        trackEvent = addon.SPELL_DISPEL,
+        baseline = true,
     },
 
     -- Warlock
@@ -1655,6 +1659,7 @@ addon.SpellData = {
         opt_lower_cooldown = 135,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Soul Rip
     [410598] = {
@@ -1668,12 +1673,14 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.WARLOCK,
         category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Demonic Circle: Teleport
     [48020] = {
         cooldown = 30,
         class = addon.WARLOCK,
         category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Interrupt
     -- Spell Lock (Command Demon Ability)
