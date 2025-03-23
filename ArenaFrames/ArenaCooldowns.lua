@@ -69,7 +69,9 @@ local function EnsureIcons()
         local unitId = "player";
         premadeIcons[unitId] = premadeIcons[unitId] or {};
         for spellID, spell in pairs(spellData) do
-            EnsureIcon(unitId, spellID);
+            if ( not spell.use_parent_icon ) then
+                EnsureIcon(unitId, spellID);
+            end
         end
     else
         for i = 1, addon.MAX_ARENA_SIZE do
