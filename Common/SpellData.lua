@@ -71,6 +71,7 @@ addon.SpellData = {
         cooldown = 20,
         duration = 8,
         extend = true, -- Gathering Storm
+        baseline = true,
     },
     -- Pillar of Frost
     [51271] = {
@@ -111,6 +112,7 @@ addon.SpellData = {
         class = addon.DEATHKNIGHT,
         category = category.INTERRUPT,
         cooldown = 15,
+        baseline = true,
     },
     -- Shambling Rush
     [91807] = {
@@ -128,6 +130,7 @@ addon.SpellData = {
         category = category.DISRUPT,
         cooldown = 25,
         charges = true, -- Death's Echo is almost always picked
+        baseline = true,
     },
     -- Crowd Control
     -- Strangulate
@@ -155,12 +158,14 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Anti-Magic Shell
     [48707] = {
         class = addon.DEATHKNIGHT,
         category = category.DEFENSIVE,
         cooldown = 40, -- Anti-Magic Barrier almost always picked
+        -- Not set as baseline, since it can be replaced by Spellwarden
     },
         -- Anti-Magic Shell (Spellwarden)
         [410358] = {
