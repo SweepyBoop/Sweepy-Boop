@@ -351,7 +351,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local iconID = ( spell.use_parent_icon and spell.parent ) or spellId;
     if self.icons[iconID] and ( isTestGroup or config[tostring(configSpellId)] ) then
         if ( iconID ~= spellId ) then
-            self.icons[iconID].icon:SetTexture(C_Spell.GetSpellTexture(spellId));
+            self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
         end
 
         StartIcon(self.icons[iconID]);
