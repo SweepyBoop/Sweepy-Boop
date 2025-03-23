@@ -457,7 +457,7 @@ local function EnsureIconGroup(index)
     end
 end
 
-local function EnsureIconGroups(setup)
+local function EnsureIconGroups()
     if addon.TEST_MODE then
         EnsureIconGroup(0);
     else
