@@ -102,7 +102,7 @@ local function GetSpecOverrides(spell, spec)
     return overrides;
 end
 
-local function SetupIconGroup(group, unit, testIcons, setup)
+local function SetupIconGroup(group, unit, testIcons)
     -- Clear previous icons
     addon.IconGroup_Wipe(group);
 
@@ -123,9 +123,6 @@ local function SetupIconGroup(group, unit, testIcons, setup)
 
         return;
     end
-
-    -- Only populate icon group with event ARENA_PREP_OPPONENT_SPECIALIZATIONS
-    if ( not setup ) then return end
 
     -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
     local class = addon.GetClassForPlayerOrArena(unit);
@@ -462,11 +459,19 @@ end
 local function EnsureIconGroups(setup)
     if addon.TEST_MODE then
         EnsureIconGroup(0);
-        SetupIconGroup(iconGroups[0], "player", nil, setup);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i);
-            SetupIconGroup(iconGroups[i], "arena" .. i, nil, setup);
+        end
+    end
+end
+
+local function SetupIconGroups()
+    if addon.TEST_MODE then
+        SetupIconGroup(iconGroups[0], "player");
+    else
+        for i = 1, addon.MAX_ARENA_SIZE do
+            SetupIconGroup(iconGroups[i], "arena" .. i);
         end
     end
 end
@@ -587,7 +592,11 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
                 -- This will simply update
                 EnsureIcons();
-                EnsureIconGroups(event ~= addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+                EnsureIconGroups();
+
+                if ( event ~= addon.PLAYER_ENTERING_WORLD ) then
+                    SetupIconGroups();
+                end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
