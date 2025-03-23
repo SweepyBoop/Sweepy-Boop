@@ -1024,11 +1024,10 @@ addon.SpellData = {
     },
     -- Blessing of SpellWarding
     [204018] = {
-        cooldown = 240,
-        class = addon.PALADIN,
         spec = { specID.HOLY_PALADIN },
-        category = category.DEFENSIVE,
-        index = addon.SPELLPRIORITY.HIGH,
+        baseline = false, -- to avoid inheriting parent baseline property
+        parent = 1022,
+        use_parent_icon = true, -- different abilities but sharing cooldown
     },
     -- Lay on Hands
     [633] = {
@@ -1036,17 +1035,19 @@ addon.SpellData = {
         class = addon.PALADIN,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Divine Protection
     [498] = {
-        cooldown = 60,
+        cooldown = 42, -- 60 * 0.7 (Unbreakable Spirit)
         class = addon.PALADIN,
-        spec = { specID.HOLY_PALADIN },
+        spec = { specID.HOLY_PALADIN, specID.RETRIBUTION },
         category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Shield of Vengeance
     [184662] = {
-        cooldown = 90,
+        cooldown = 63,
         class = addon.PALADIN,
         spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
@@ -1057,6 +1058,7 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.PALADIN,
         category = category.CROWDCONTROL,
+        baseline = true,
     },
     -- Blinding Light
     [115750] = {
@@ -1078,6 +1080,7 @@ addon.SpellData = {
         cooldown = 15,
         class = addon.PALADIN,
         category = category.INTERRUPT,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Disrupt
     -- Blessing of Sacrifice
@@ -1085,6 +1088,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         category = category.DISRUPT,
         cooldown = 105,
+        -- Don't make baseline since it can be replaced by Ultimate Sacrifice
     },
         -- Ultimate Sacrifice
         [199448] = {
@@ -1099,6 +1103,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PALADIN },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
+        baseline = true,
     },
     -- Blessing of Sanctuary
     [210256] = {
@@ -1929,5 +1934,6 @@ for _, spell in pairs(addon.SpellData) do
         spell.trackPet = spell.trackPet or parent.trackPet;
         spell.trackEvent = spell.trackEvent or parent.trackEvent;
         spell.baseline = spell.baseline or parent.baseline;
+        spell.index = spell.index or parent.index;
     end
 end
