@@ -346,8 +346,12 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Config only shows parent ID, so check parent if applicable
     local config = SweepyBoop.db.profile.arenaFrames.spellList;
     local configSpellId = spell.parent or spellId;
-    if self.icons[spellId] and ( isTestGroup or config[tostring(configSpellId)] ) then
-        local iconID = ( spell.use_parent_icon and spell.parent ) or spellId;
+    local iconID = ( spell.use_parent_icon and spell.parent ) or spellId;
+    if self.icons[iconID] and ( isTestGroup or config[tostring(configSpellId)] ) then
+        if ( iconID ~= spellId ) then
+            self.icons[iconID].icon:SetTexture(C_Spell.GetSpellTexture(spellId));
+        end
+
         StartIcon(self.icons[iconID]);
 
         if isTestGroup and self.icons[iconID].Count then
