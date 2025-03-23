@@ -107,9 +107,6 @@ local function GetSpecOverrides(spell, spec)
 end
 
 local function SetupIconGroup(group, unit, testIcons)
-    -- Clear previous icons
-    addon.IconGroup_Wipe(group);
-
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         local config = SweepyBoop.db.profile.arenaFrames;
@@ -469,6 +466,9 @@ local function EnsureIconGroup(index)
         addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions[config.arenaCooldownGrowDirection]);
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
+
+    -- Clear previous icons
+    addon.IconGroup_Wipe(iconGroups[index]);
 end
 
 local function EnsureIconGroups()
