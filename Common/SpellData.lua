@@ -566,6 +566,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 90, -- Reduced by Barbed Shot
         duration = 15,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Call of the Wild
     [359844] = {
@@ -574,6 +575,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         duration = 20,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Survival
     -- Coordinated Assult
@@ -583,6 +585,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 60, -- Symboitic Adrenaline (almost always picked)
         duration = 20,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Marksmanship
     -- Trueshot
@@ -594,6 +597,7 @@ addon.SpellData = {
         duration = 15,
         reduce_power_type = POWERTYPE.Focus,
         reduce_amount = 0.05, -- Every 50 focus reduces cd by 2.5s
+        baseline = true, -- technically a talent, but always picked
     },
     -- Volley
     [260243] = {
@@ -609,6 +613,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.DISRUPT,
         cooldown = 30,
+        baseline = true,
     },
     -- Mending Bandage
     [212640] = {
@@ -629,6 +634,7 @@ addon.SpellData = {
         cooldown = 25,
         class = addon.HUNTER,
         category = category.CROWDCONTROL,
+        baseline = true,
     },
     -- Defensive
     -- Survival of the Fittest
@@ -637,13 +643,15 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.DEFENSIVE,
         charges = true,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Aspect of the Turtle
     [186265] = {
         cooldown = 144,
         class = addon.HUNTER,
         category = category.DEFENSIVE,
-        index = addon.SPELLPRIORITY.HIGH
+        index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Roar of Sacrifice
     [53480] = {
@@ -663,14 +671,16 @@ addon.SpellData = {
         cooldown = 22,
         class = addon.HUNTER,
         spec = { specID.MARKSMANSHIP, specID.BEASTMASTERY },
-        category = category.INTERRUPT
+        category = category.INTERRUPT,
+        baseline = true,
     },
     -- Muzzle
     [187707] = {
         cooldown = 13,
         class = addon.HUNTER,
         spec = { specID.SURVIVAL },
-        category = category.INTERRUPT
+        category = category.INTERRUPT,
+        baseline = true,
     },
 
     -- Mage
