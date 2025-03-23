@@ -166,8 +166,11 @@ local function SetupIconGroup(group, unit, testIcons)
                     --print("Populated", unit, spell.class, spellID)
 
                     if spell.baseline and config.showUnusedIcons then
-                        premadeIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
-                        addon.IconGroup_Insert(group, premadeIcons[unit][spellID]);
+                        -- Check if enabled in settings
+                        if config.spellList[tostring(spellID)] then
+                            premadeIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
+                            addon.IconGroup_Insert(group, premadeIcons[unit][spellID]);
+                        end
                     end
                 end
             end
