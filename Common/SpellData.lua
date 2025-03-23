@@ -1310,6 +1310,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 90,
         duration = 20,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Shadow Dance
     [185313] = {
@@ -1318,6 +1319,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 30, -- 2 charges but cannot track cd reliably, just divide cd by 2
         duration = 8,
+        baseline = true,
     },
     -- Outlaw
     -- Adrenaline Rush
@@ -1327,6 +1329,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 180,
         duration = 20,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Between the Eyes
     [315341] = {
@@ -1335,6 +1338,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
         duration = 21, -- Max duration, can dismiss early
+        baseline = true,
     },
     -- Assassination
     -- Death Mark
@@ -1345,6 +1349,7 @@ addon.SpellData = {
         duration = 16, -- confirm early dismiss
         cooldown = 120,
         index = addon.SPELLPRIORITY.DEADLY,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Kingsbane
     [385627] = {
@@ -1360,6 +1365,7 @@ addon.SpellData = {
         cooldown = 15,
         class = addon.ROGUE,
         category = category.INTERRUPT,
+        baseline = true,
     },
     -- Defensive
     -- Vanish (addition charge in class talent tree)
@@ -1368,18 +1374,21 @@ addon.SpellData = {
         class = addon.ROGUE,
         charges = true,
         category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Cloak of Shadows
     [31224] = {
         cooldown = 120,
         class = addon.ROGUE,
         category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Evasion
     [5277] = {
         cooldown = 120,
         class = addon.ROGUE,
         category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Crowd Control
     -- Kidney Shot
@@ -1387,12 +1396,14 @@ addon.SpellData = {
         cooldown = 20,
         class = addon.ROGUE,
         category = category.CROWDCONTROL,
+        baseline = true,
     },
     -- Blind
     [2094] = {
         cooldown = {default = 120, [specID.OUTLAW] = 90},
         class = addon.ROGUE,
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Smoke Bomb
     [212182] = {
@@ -1414,7 +1425,8 @@ addon.SpellData = {
         class = addon.ROGUE,
         spec = { specID.SUBTLETY, specID.ASSASSINATION },
         charges = true,
-        category = category.DISRUPT
+        category = category.DISRUPT,
+        baseline = true,
     },
     -- Grappling Hook
     [195457] = {
@@ -1422,7 +1434,8 @@ addon.SpellData = {
         class = addon.ROGUE,
         spec = { specID.OUTLAW },
         charges = true,
-        category = category.DISRUPT
+        category = category.DISRUPT,
+        baseline = true,
     },
     -- Dismantle
     [207777] = {
