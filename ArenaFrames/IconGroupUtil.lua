@@ -211,6 +211,9 @@ addon.IconGroup_Wipe = function (group)
         if icon.duration then
             icon.duration:SetCooldown(0, 0);
         end
+        if icon.Count then
+            icon.Count:Hide(); -- Clear state from previous show
+        end
         icon:Hide();
     end
 
