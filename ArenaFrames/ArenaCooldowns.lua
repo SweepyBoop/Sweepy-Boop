@@ -602,6 +602,8 @@ function SweepyBoop:SetupArenaCooldownTracker()
             end
 
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
+                -- We don't need to worry about PLAYER_SPECIALIZATION_CHANGED accidentally wiping out icon groups, since we can't change spec in arena
+
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
 
