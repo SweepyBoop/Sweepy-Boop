@@ -512,7 +512,9 @@ local function RefreshTestMode()
         for spellID, spell in pairs(spellData) do
             local isEnabled = false;
             if spell.class == addon.PRIEST then
-                if ( not spell.spec ) then
+                if spell.use_parent_icons then
+                    -- Don't create if using parent icon
+                elseif ( not spell.spec ) then
                     isEnabled = true;
                 else
                     for i = 1, #(spell.spec) do
