@@ -1,2 +1,4 @@
 # This is for publishing addon
 *.zip
+*VSCode*
+SweepyBoop/
