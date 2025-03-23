@@ -468,7 +468,7 @@ local function EnsureIconGroup(index)
     end
 
     -- Clear previous icons
-    print("Clear previous icons");
+    --print("Clear previous icons");
     addon.IconGroup_Wipe(iconGroups[index]);
 end
 
@@ -602,8 +602,8 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 return;
             end
 
-            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
-                -- We don't need to worry about PLAYER_SPECIALIZATION_CHANGED accidentally wiping out icon groups, since we can't change spec in arena
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
+                -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
@@ -619,7 +619,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     shouldSetup = ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS );
                 end
                 if shouldSetup then
-                    print("SetupIconGroups");
+                    --print("SetupIconGroups");
                     SetupIconGroups();
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
