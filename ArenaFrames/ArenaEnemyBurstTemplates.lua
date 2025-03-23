@@ -18,9 +18,9 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     frame.category = frame.spellInfo.category;
     frame.group = group;
 
-    frame.tex = frame:CreateTexture();
-    frame.tex:SetTexture(GetSpellTexture(spellID));
-    frame.tex:SetAllPoints();
+    frame.Icon = frame:CreateTexture();
+    frame.Icon:SetTexture(GetSpellTexture(spellID));
+    frame.Icon:SetAllPoints();
 
     -- Create duration/cooldown timers as needed
     local spell = frame.spellInfo;

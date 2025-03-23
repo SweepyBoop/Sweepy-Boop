@@ -153,7 +153,12 @@ addon.IconGroup_Insert = function (group, icon, index)
     --print(group:GetPoint());
 end
 
-addon.IconGroup_Remove = function (group, icon)
+addon.IconGroup_Remove = function (group, icon, fade)
+    if fade then
+        icon:SetAlpha(SweepyBoop.db.profile.arenaFrames.unusedIconAlpha);
+        return;
+    end
+
     -- Hide icon first, then reposition, to avoid occlusion.
     icon:Hide();
 
@@ -205,6 +210,9 @@ addon.IconGroup_Wipe = function (group)
         end
         if icon.duration then
             icon.duration:SetCooldown(0, 0);
+        end
+        if icon.Count then
+            icon.Count:Hide(); -- Clear state from previous show
         end
         icon:Hide();
     end

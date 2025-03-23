@@ -69,14 +69,18 @@ local function EnsureIcons()
         local unitId = "player";
         premadeIcons[unitId] = premadeIcons[unitId] or {};
         for spellID, spell in pairs(spellData) do
-            EnsureIcon(unitId, spellID);
+            if ( not spell.use_parent_icon ) then
+                EnsureIcon(unitId, spellID);
+            end
         end
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena"..i;
             premadeIcons[unitId] = premadeIcons[unitId] or {};
             for spellID, spell in pairs(spellData) do
-                EnsureIcon(unitId, spellID);
+                if ( not spell.use_parent_icon ) then
+                    EnsureIcon(unitId, spellID);
+                end
             end
         end
     end
@@ -103,14 +107,21 @@ local function GetSpecOverrides(spell, spec)
 end
 
 local function SetupIconGroup(group, unit, testIcons)
-    -- Clear previous icons
-    addon.IconGroup_Wipe(group);
-
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
+        local config = SweepyBoop.db.profile.arenaFrames;
         for spellID, spell in pairs(spellData) do
-            testIcons[unit][spellID].info = { cooldown = spell.cooldown };
-            addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+            if testIcons[unit][spellID] then
+                testIcons[unit][spellID].info = { cooldown = spell.cooldown };
+                -- The texture might have been set by use_parent_icon icons
+                testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+
+                if spell.baseline and config.showUnusedIcons then
+                    testIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
+                    addon.IconGroup_Insert(group, testIcons[unit][spellID]);
+                end
+            end
         end
 
         return;
@@ -120,35 +131,45 @@ local function SetupIconGroup(group, unit, testIcons)
     local class = addon.GetClassForPlayerOrArena(unit);
     if ( not class ) then return end
 
+    local config = SweepyBoop.db.profile.arenaFrames;
+
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
-        -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
-        if ( not spell.class ) or ( spell.class == class ) then
-            local enabled = true;
-            -- Does this spell filter by spec?
-            if spell.spec then
-                local specEnabled = false;
-                local spec = addon.GetSpecForPlayerOrArena(unit);
+        if premadeIcons[unit][spellID] then
+            if ( not spell.class ) or ( spell.class == class ) then
+                local enabled = true;
+                -- Does this spell filter by spec?
+                if spell.spec then
+                    local specEnabled = false;
+                    local spec = addon.GetSpecForPlayerOrArena(unit);
 
-                if ( not spec ) then
-                    specEnabled = true;
-                else
-                    for i = 1, #(spell.spec) do
-                        if ( spec == spell.spec[i] ) then
-                            specEnabled = true;
-                            break;
+                    if ( not spec ) then
+                        specEnabled = true;
+                    else
+                        for i = 1, #(spell.spec) do
+                            if ( spec == spell.spec[i] ) then
+                                specEnabled = true;
+                                break;
+                            end
                         end
                     end
+
+                    enabled = specEnabled;
                 end
 
-                enabled = specEnabled;
-            end
+                if enabled then
+                    -- Reset dynamic info before populating to group
+                    premadeIcons[unit][spellID].info = GetSpecOverrides(spell);
+                    -- The texture might have been set by use_parent_icon icons
+                    premadeIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                    addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                    --print("Populated", unit, spell.class, spellID)
 
-            if enabled then
-                -- Reset dynamic info before populating to group
-                premadeIcons[unit][spellID].info = GetSpecOverrides(spell);
-                addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
-                --print("Populated", unit, spell.class, spellID)
+                    if spell.baseline and config.showUnusedIcons and config.spellList[tostring(spellID)] then
+                        premadeIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
+                        addon.IconGroup_Insert(group, premadeIcons[unit][spellID]);
+                    end
+                end
             end
         end
     end
@@ -193,6 +214,7 @@ local function ResetCooldown(icon, amount, internalCooldown)
 end
 
 local function StartIcon(icon)
+    icon:SetAlpha(1);
     if icon.template == addon.ICON_TEMPLATE.GLOW then
         addon.StartBurstIcon(icon);
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
@@ -326,11 +348,16 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Config only shows parent ID, so check parent if applicable
     local config = SweepyBoop.db.profile.arenaFrames.spellList;
     local configSpellId = spell.parent or spellId;
-    if self.icons[spellId] and ( isTestGroup or config[tostring(configSpellId)] ) then
-        StartIcon(self.icons[spellId]);
+    local iconID = ( spell.use_parent_icon and spell.parent ) or spellId;
+    if self.icons[iconID] and ( isTestGroup or config[tostring(configSpellId)] ) then
+        if ( iconID ~= spellId ) then
+            self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
+        end
 
-        if isTestGroup and self.icons[spellId].Count then
-            self.icons[spellId].Count:Show();
+        StartIcon(self.icons[iconID]);
+
+        if isTestGroup and self.icons[iconID].Count then
+            self.icons[iconID].Count:Show();
         end 
     end
 end
@@ -439,57 +466,29 @@ local function EnsureIconGroup(index)
         addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions[config.arenaCooldownGrowDirection]);
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
+
+    -- Clear previous icons
+    --print("Clear previous icons");
+    addon.IconGroup_Wipe(iconGroups[index]);
 end
 
 local function EnsureIconGroups()
     if addon.TEST_MODE then
         EnsureIconGroup(0);
-        SetupIconGroup(iconGroups[0], "player");
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i);
-            SetupIconGroup(iconGroups[i], "arena" .. i);
         end
     end
+end
 
-    -- Refresh icon groups when zone changes, or during test mode when player switches spec
-    if ( not eventFrame ) then
-        eventFrame = CreateFrame("Frame");
-        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-        eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
-        eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
-        eventFrame:RegisterEvent(addon.UNIT_AURA);
-        eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
-        eventFrame:SetScript("OnEvent", function (frame, event, ...)
-            if ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled ) then
-                return;
-            end
-
-            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
-                -- Hide the external "Toggle Test Mode" group
-                SweepyBoop:HideTestArenaCooldownTracker();
-
-                -- This will simply update
-                EnsureIcons();
-                EnsureIconGroups();
-            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
-                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
-                local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-                for i = 0, addon.MAX_ARENA_SIZE do
-                    if iconGroups[i] then
-                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-                    end
-                end
-            elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
-                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
-                for i = 0, addon.MAX_ARENA_SIZE do
-                    if iconGroups[i] then
-                        ProcessUnitEvent(iconGroups[i], event, ...);
-                    end
-                end
-            end
-        end)
+local function SetupIconGroups()
+    if addon.TEST_MODE then
+        SetupIconGroup(iconGroups[0], "player");
+    else
+        for i = 1, addon.MAX_ARENA_SIZE do
+            SetupIconGroup(iconGroups[i], "arena" .. i);
+        end
     end
 end
 
@@ -511,12 +510,29 @@ local function RefreshTestMode()
         externalTestIcons[unitId] = {};
         local iconSize = config.arenaCooldownTrackerIconSize;
         for spellID, spell in pairs(spellData) do
-            if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
-                externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
-            else
-                externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
+            local isEnabled = false;
+            if spell.class == addon.PRIEST then
+                if spell.use_parent_icons then
+                    -- Don't create if using parent icon
+                elseif ( not spell.spec ) then
+                    isEnabled = true;
+                else
+                    for i = 1, #(spell.spec) do
+                        if ( spell.spec[i] == addon.SPECID.DISCIPLINE ) then
+                            isEnabled = true;
+                            break;
+                        end
+                    end
+                end
             end
-            addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
+            if isEnabled then
+                if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
+                    externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
+                else
+                    externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
+                end
+                addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
+            end
         end
     end
 
@@ -530,11 +546,6 @@ local function RefreshTestMode()
     end
 
     SetupIconGroup(externalTestGroup, unitId, externalTestIcons);
-end
-
-function SweepyBoop:SetupArenaCooldownTracker()
-    EnsureIcons();
-    EnsureIconGroups();
 end
 
 function SweepyBoop:TestArenaCooldownTracker()
@@ -573,4 +584,62 @@ function SweepyBoop:RepositionTestGroup()
     local setPointOptions = GetSetPointOptions(1);
     setPointOptions.offsetX = config.arenaCooldownOffsetX;
     addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
+end
+
+function SweepyBoop:SetupArenaCooldownTracker()
+    EnsureIcons();
+    EnsureIconGroups();
+
+    -- Refresh icon groups when zone changes, or during test mode when player switches spec
+    if ( not eventFrame ) then
+        eventFrame = CreateFrame("Frame");
+        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
+        eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+        eventFrame:RegisterEvent(addon.UNIT_AURA);
+        eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+        eventFrame:SetScript("OnEvent", function (frame, event, ...)
+            if ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled ) then
+                return;
+            end
+
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
+                -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
+
+                -- Hide the external "Toggle Test Mode" group
+                SweepyBoop:HideTestArenaCooldownTracker();
+
+                -- This will simply update
+                EnsureIcons();
+                EnsureIconGroups();
+
+                local shouldSetup = false;
+                if addon.TEST_MODE then
+                    shouldSetup = true;
+                else
+                    shouldSetup = ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS );
+                end
+                if shouldSetup then
+                    --print("SetupIconGroups");
+                    SetupIconGroups();
+                end
+            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+                for i = 0, addon.MAX_ARENA_SIZE do
+                    if iconGroups[i] then
+                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    end
+                end
+            elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
+                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                for i = 0, addon.MAX_ARENA_SIZE do
+                    if iconGroups[i] then
+                        ProcessUnitEvent(iconGroups[i], event, ...);
+                    end
+                end
+            end
+        end)
+    end
 end

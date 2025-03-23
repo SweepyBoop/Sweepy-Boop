@@ -50,7 +50,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         if finish then
             icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
             if icon.group then
-                addon.IconGroup_Remove(icon:GetParent(), icon);
+                addon.IconGroup_Remove(icon:GetParent(), icon, SweepyBoop.db.profile.arenaFrames.showUnusedIcons);
             end
         else
             icon.cooldown:SetCooldown(timers[1].start, timers[1].duration);
@@ -93,7 +93,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
-            addon.IconGroup_Remove(icon:GetParent(), icon);
+            addon.IconGroup_Remove(icon:GetParent(), icon, SweepyBoop.db.profile.arenaFrames.showUnusedIcons);
         end
     end
 end
@@ -109,7 +109,7 @@ addon.OnDurationTimerFinished = function(self)
         icon.cooldown:Show();
     else
         if icon.group then
-            addon.IconGroup_Remove(icon:GetParent(), icon);
+            addon.IconGroup_Remove(icon:GetParent(), icon, SweepyBoop.db.profile.arenaFrames.showUnusedIcons);
         end
     end
 end
