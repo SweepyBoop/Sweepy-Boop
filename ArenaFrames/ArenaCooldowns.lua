@@ -76,7 +76,9 @@ local function EnsureIcons()
             local unitId = "arena"..i;
             premadeIcons[unitId] = premadeIcons[unitId] or {};
             for spellID, spell in pairs(spellData) do
-                EnsureIcon(unitId, spellID);
+                if ( not spell.use_parent_icon ) then
+                    EnsureIcon(unitId, spellID);
+                end
             end
         end
     end
@@ -343,10 +345,11 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local config = SweepyBoop.db.profile.arenaFrames.spellList;
     local configSpellId = spell.parent or spellId;
     if self.icons[spellId] and ( isTestGroup or config[tostring(configSpellId)] ) then
-        StartIcon(self.icons[spellId]);
+        local iconID = ( spell.use_parent_icon and spell.parent ) or spellId;
+        StartIcon(self.icons[iconID]);
 
-        if isTestGroup and self.icons[spellId].Count then
-            self.icons[spellId].Count:Show();
+        if isTestGroup and self.icons[iconID].Count then
+            self.icons[iconID].Count:Show();
         end 
     end
 end
