@@ -138,7 +138,7 @@ local function SetupIconGroup(group, unit, testIcons)
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
-        if ( not spell.use_parent_icon ) then
+        if premadeIcons[unit][spellID] then
             if ( not spell.class ) or ( spell.class == class ) then
                 local enabled = true;
                 -- Does this spell filter by spec?
