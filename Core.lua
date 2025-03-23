@@ -562,8 +562,16 @@ if addon.PROJECT_MAINLINE then
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Separate row for defensives",
                     },
 
-                    hideCountDownNumbers = {
+                    showUnusedIcons = {
                         order = 8,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Show unused icons",
+                        desc = "Show unused icons for abilities that are not on cooldown",
+                    },
+
+                    hideCountDownNumbers = {
+                        order = 9,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
@@ -571,7 +579,7 @@ if addon.PROJECT_MAINLINE then
                     },
 
                     arenaCooldownGrowDirection = {
-                        order = 9,
+                        order = 10,
                         type = "select",
                         width = 0.75,
                         name = "Grow direction",
@@ -584,7 +592,7 @@ if addon.PROJECT_MAINLINE then
                     },
 
                     arenaCooldownTrackerIconSize = {
-                        order = 10,
+                        order = 11,
                         type = "range",
                         width = 0.75,
                         min = 16,
@@ -595,13 +603,13 @@ if addon.PROJECT_MAINLINE then
                     },
 
                     newline = {
-                        order = 11,
+                        order = 12,
                         type = "description",
                         name = "",
                     },
 
                     arenaCooldownOffsetX = {
-                        order = 12,
+                        order = 13,
                         type = "range",
                         min = -300,
                         max = 300,
@@ -615,7 +623,7 @@ if addon.PROJECT_MAINLINE then
                         end
                     },
                     arenaCooldownOffsetY = {
-                        order = 13,
+                        order = 14,
                         type = "range",
                         min = -150,
                         max = 150,
@@ -628,6 +636,18 @@ if addon.PROJECT_MAINLINE then
                             SweepyBoop:RepositionTestGroup();
                         end
                     },
+                    unusedIconAlpha = {
+                        order = 15,
+                        type = "range",
+                        isPercent = true,
+                        min = 0.5,
+                        max = 1,
+                        step = 0.1,
+                        name = "Unused icon transparency",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                        end
+                    }
                 },
             },
 
@@ -1048,6 +1068,8 @@ local defaults = {
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
             arenaCooldownTrackerIconSize = 32,
+            unusedIconAlpha = 0.5,
+            showUnusedIcons = false,
             hideCountDownNumbers = false,
             spellList = {},
         },
