@@ -1012,6 +1012,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Blessing of Protection
     [1022] = {
@@ -1019,6 +1020,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Blessing of SpellWarding
     [204018] = {
