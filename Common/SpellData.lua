@@ -925,6 +925,7 @@ addon.SpellData = {
         -- Restoral
         [388615] = {
             parent = 115310,
+            use_parent_icon = true,
         },
     -- Fortifying Brew
     [115203] = {
