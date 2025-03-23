@@ -1138,6 +1138,7 @@ addon.SpellData = {
         --trackEvent = addon.SPELL_AURA_APPLIED, -- Twins of the Sun Pristess (when casting on allies, the self buff doesn't trigger SPELL_CAST_SUCCESS)
         cooldown = 120,
         duration = 20, -- Dismissed when either aura is gone (Twins of the Sun Priestess)
+        baseline = true, -- technically a talent, but always picked
     },
     -- Shadow
     -- Mindbender (Idol of Y'Shaarj)
@@ -1188,6 +1189,7 @@ addon.SpellData = {
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
         opt_charges = true,
+        baseline = true,
     },
     -- Crowd Control
     -- Psychic Scream
@@ -1195,6 +1197,7 @@ addon.SpellData = {
         cooldown = 30,
         class = addon.PRIEST,
         category = category.CROWDCONTROL,
+        baseline = true,
     },
     -- Holy Word: Chastise
     [88625] = {
@@ -1202,6 +1205,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Silence
     [15487] = {
@@ -1210,6 +1214,7 @@ addon.SpellData = {
         spec = { specID.SHADOW },
         category = category.CROWDCONTROL,
         opt_lower_cooldown = 30,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Psychic Horror
     [64044] = {
@@ -1225,6 +1230,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Pain Suppression
     [33206] = {
@@ -1234,6 +1240,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         charges = true,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Power Word: Barrier
     [62618] = {
@@ -1249,6 +1256,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Dispersion
     [47585] = {
@@ -1257,6 +1265,7 @@ addon.SpellData = {
         spec = { specID.SHADOW },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Restitution
     [211319] = {
