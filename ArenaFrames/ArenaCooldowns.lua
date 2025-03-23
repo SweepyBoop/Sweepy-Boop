@@ -451,46 +451,6 @@ local function EnsureIconGroups()
             SetupIconGroup(iconGroups[i], "arena" .. i);
         end
     end
-
-    -- Refresh icon groups when zone changes, or during test mode when player switches spec
-    if ( not eventFrame ) then
-        eventFrame = CreateFrame("Frame");
-        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-        eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
-        eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
-        eventFrame:RegisterEvent(addon.UNIT_AURA);
-        eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
-        eventFrame:SetScript("OnEvent", function (frame, event, ...)
-            if ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled ) then
-                return;
-            end
-
-            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
-                -- Hide the external "Toggle Test Mode" group
-                SweepyBoop:HideTestArenaCooldownTracker();
-
-                -- This will simply update
-                EnsureIcons();
-                EnsureIconGroups();
-            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
-                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
-                local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-                for i = 0, addon.MAX_ARENA_SIZE do
-                    if iconGroups[i] then
-                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-                    end
-                end
-            elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
-                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
-                for i = 0, addon.MAX_ARENA_SIZE do
-                    if iconGroups[i] then
-                        ProcessUnitEvent(iconGroups[i], event, ...);
-                    end
-                end
-            end
-        end)
-    end
 end
 
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
@@ -535,6 +495,48 @@ end
 function SweepyBoop:SetupArenaCooldownTracker()
     EnsureIcons();
     EnsureIconGroups();
+
+    -- Refresh icon groups when zone changes, or during test mode when player switches spec
+    if ( not eventFrame ) then
+        eventFrame = CreateFrame("Frame");
+        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
+        eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+        eventFrame:RegisterEvent(addon.UNIT_AURA);
+        eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+        eventFrame:SetScript("OnEvent", function (frame, event, ...)
+            if ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled ) then
+                return;
+            end
+
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
+                -- Hide the external "Toggle Test Mode" group
+                SweepyBoop:HideTestArenaCooldownTracker();
+
+                -- This will simply update
+                EnsureIcons();
+                EnsureIconGroups();
+
+                -- If "Show unused icon" is checked and the event is ARENA_PREP_OPPONENT_SPECIALIZATIONS, add baseline icons to group with specified transparency
+            elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+                for i = 0, addon.MAX_ARENA_SIZE do
+                    if iconGroups[i] then
+                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    end
+                end
+            elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
+                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                for i = 0, addon.MAX_ARENA_SIZE do
+                    if iconGroups[i] then
+                        ProcessUnitEvent(iconGroups[i], event, ...);
+                    end
+                end
+            end
+        end)
+    end
 end
 
 function SweepyBoop:TestArenaCooldownTracker()
