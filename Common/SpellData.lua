@@ -1742,6 +1742,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 90,
         duration = 20,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Warbreaker
     [262161] = {
@@ -1775,6 +1776,7 @@ addon.SpellData = {
         reduce_power_type = POWERTYPE.Rage,
         reduce_amount = 0.05,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Charge
     [100] = {
@@ -1782,6 +1784,7 @@ addon.SpellData = {
         class = addon.WARRIOR,
         charges = true,
         category = category.DISRUPT,
+        baseline = true,
     },
     -- Spell Reflection
     [23920] = {
@@ -1794,6 +1797,7 @@ addon.SpellData = {
         cooldown = 30,
         class = addon.WARRIOR,
         category = category.DISRUPT,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Disarm
     [236077] = {
@@ -1803,21 +1807,24 @@ addon.SpellData = {
     },
     -- Pummel
     [6552] = {
-        cooldown = 14.25,
+        cooldown = 13, -- with both cd reduction talents
         class = addon.WARRIOR,
         category = category.INTERRUPT,
+        baseline = true,
     },
     -- Storm Bolt
     [107570] = {
         cooldown = 28.5,
         class = addon.WARRIOR,
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Intimidating Shout
     [5246] = {
         cooldown = 90,
         class = addon.WARRIOR,
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Die by the Sword
     [118038] = {
@@ -1825,6 +1832,7 @@ addon.SpellData = {
         class = addon.WARRIOR,
         spec = { specID.ARMS },
         category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Enraged Regeneration
     [184364] = {
@@ -1832,6 +1840,7 @@ addon.SpellData = {
         class = addon.WARRIOR,
         spec = { specID.FURY },
         category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Rallying Cry
     [97462] = {
