@@ -415,7 +415,8 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.RESTORATION_DRUID },
         opt_lower_cooldown = 70,
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Barkskin
     [22812] = {
