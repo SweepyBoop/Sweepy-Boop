@@ -596,7 +596,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 return;
             end
 
-            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
 
@@ -604,7 +604,13 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 EnsureIcons();
                 EnsureIconGroups();
 
-                if ( event ~= addon.PLAYER_ENTERING_WORLD ) then
+                local shouldSetup = false;
+                if addon.TEST_MODE then
+                    shouldSetup = true;
+                else
+                    shouldSetup = ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS );
+                end
+                if shouldSetup then
                     SetupIconGroups();
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
