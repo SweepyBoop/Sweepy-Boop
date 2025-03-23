@@ -694,6 +694,7 @@ addon.SpellData = {
         duration = 25,
         index = addon.SPELLPRIORITY.HIGH,
         extend = true,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Ice Form
     [198144] = {
@@ -718,6 +719,8 @@ addon.SpellData = {
         -- Fireball, Pyroblast, Fire Blast, Scorch, Phoenix Flames
         critResets = { 133, 11366, 108853, 2948, 257542 },
         critResetAmount = 1,
+
+        baseline = true, -- technically a talent, but always picked
     },
     -- Arcane
     -- Arcane Surge
@@ -728,6 +731,7 @@ addon.SpellData = {
         cooldown = 90,
         duration = 15,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Interrupt
     -- Counterspell
@@ -736,6 +740,7 @@ addon.SpellData = {
         class = addon.MAGE,
         reduce_on_interrupt = 4,
         category = category.INTERRUPT,
+        baseline = true,
     },
     -- Defensive
     -- Ice Block
@@ -744,6 +749,7 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Cauterize
     [87024] = {
@@ -753,6 +759,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Cold Snap (resets ice block)
     [235219] = {
@@ -761,6 +768,7 @@ addon.SpellData = {
         spec = { specID.FROST_MAGE },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Alter Time (Arcane)
     [342246] = {
@@ -769,6 +777,7 @@ addon.SpellData = {
         spec = { specID.ARCANE },
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Alter Time (Fire/Frost)
     [110909] = {
@@ -1904,5 +1913,6 @@ for _, spell in pairs(addon.SpellData) do
         spell.category = spell.category or parent.category;
         spell.trackPet = spell.trackPet or parent.trackPet;
         spell.trackEvent = spell.trackEvent or parent.trackEvent;
+        spell.baseline = spell.baseline or parent.baseline;
     end
 end
