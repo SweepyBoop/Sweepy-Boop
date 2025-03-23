@@ -836,6 +836,7 @@ addon.SpellData = {
         reduce_amount = 0.5, -- Every 2 Chi spent reduces the cooldown by 1 sec.
         extend = true,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
@@ -844,6 +845,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         duration = 24,
+        baseline = true, -- technically a talent, but always picked
     },
     -- -- Dance of Chi-ji (no cooldown, aura only)
     -- [325202] = {
@@ -857,12 +859,14 @@ addon.SpellData = {
         cooldown = 30,
         class = addon.MONK,
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Leg Sweep
     [119381] = {
         cooldown = 50,
         class = addon.MONK,
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Breath of Fire (Incendiary Breath)
     -- [115181] = {
@@ -875,12 +879,14 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.MONK,
         category = category.DISRUPT,
+        -- not baseline, it's on the same node as Song of Chi-Ji
     },
     -- Spear Hand Strike
     [116705] = {
         cooldown = 15,
         class = addon.MONK,
         category = category.DISRUPT,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Touch of Karma
     [122470] = {
@@ -889,6 +895,7 @@ addon.SpellData = {
         spec = { specID.WINDWALKER },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Life Cocoon (120 baseline - 45s from Chrysalis)
     [116849] = {
@@ -897,12 +904,14 @@ addon.SpellData = {
         spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Diffuse Magic
     [122783] = {
         cooldown = 90,
         class = addon.MONK,
         category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Revival
     [115310] = {
@@ -911,6 +920,7 @@ addon.SpellData = {
         spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
+        -- Don't make baseline, since it can be replaced by Restoral
     },
         -- Restoral
         [388615] = {
@@ -938,6 +948,7 @@ addon.SpellData = {
         spec = { specID.MISTWEAVER },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
+        baseline = true,
     },
 
     -- Paladin
