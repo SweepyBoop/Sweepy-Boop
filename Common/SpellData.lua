@@ -1022,13 +1022,13 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
     },
-    -- Blessing of SpellWarding
-    [204018] = {
-        spec = { specID.HOLY_PALADIN },
-        baseline = false, -- to avoid inheriting parent baseline property
-        parent = 1022,
-        use_parent_icon = true, -- different abilities but sharing cooldown
-    },
+        -- Blessing of SpellWarding
+        [204018] = {
+            spec = { specID.HOLY_PALADIN },
+            baseline = false, -- to avoid inheriting parent baseline property
+            parent = 1022,
+            use_parent_icon = true, -- different abilities but sharing cooldown
+        },
     -- Lay on Hands
     [633] = {
         cooldown = 420,
