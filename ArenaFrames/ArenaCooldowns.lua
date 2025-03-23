@@ -136,46 +136,42 @@ local function SetupIconGroup(group, unit, testIcons)
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
-        if spell.use_parent_icon then
-            goto continue;
-        end
+        if ( not spell.use_parent_icon ) then
+            -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
+            if ( not spell.class ) or ( spell.class == class ) then
+                local enabled = true;
+                -- Does this spell filter by spec?
+                if spell.spec then
+                    local specEnabled = false;
+                    local spec = addon.GetSpecForPlayerOrArena(unit);
 
-        -- A spell without class specified should always be populated, e.g., Power Infusion can be applied to any class
-        if ( not spell.class ) or ( spell.class == class ) then
-            local enabled = true;
-            -- Does this spell filter by spec?
-            if spell.spec then
-                local specEnabled = false;
-                local spec = addon.GetSpecForPlayerOrArena(unit);
-
-                if ( not spec ) then
-                    specEnabled = true;
-                else
-                    for i = 1, #(spell.spec) do
-                        if ( spec == spell.spec[i] ) then
-                            specEnabled = true;
-                            break;
+                    if ( not spec ) then
+                        specEnabled = true;
+                    else
+                        for i = 1, #(spell.spec) do
+                            if ( spec == spell.spec[i] ) then
+                                specEnabled = true;
+                                break;
+                            end
                         end
                     end
+
+                    enabled = specEnabled;
                 end
 
-                enabled = specEnabled;
-            end
+                if enabled then
+                    -- Reset dynamic info before populating to group
+                    premadeIcons[unit][spellID].info = GetSpecOverrides(spell);
+                    addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                    --print("Populated", unit, spell.class, spellID)
 
-            if enabled then
-                -- Reset dynamic info before populating to group
-                premadeIcons[unit][spellID].info = GetSpecOverrides(spell);
-                addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
-                --print("Populated", unit, spell.class, spellID)
-
-                if spell.baseline and config.showUnusedIcons then
-                    premadeIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
-                    addon.IconGroup_Insert(group, premadeIcons[unit][spellID]);
+                    if spell.baseline and config.showUnusedIcons then
+                        premadeIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
+                        addon.IconGroup_Insert(group, premadeIcons[unit][spellID]);
+                    end
                 end
             end
         end
-
-        ::continue::
     end
 end
 
