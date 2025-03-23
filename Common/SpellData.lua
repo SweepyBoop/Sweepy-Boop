@@ -790,12 +790,14 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.MAGE,
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Dragon's Breath
     [31661] = {
         cooldown = 45,
         class = addon.MAGE,
         category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Disrupt
     -- Kleptomania (now a channel with a different spellID)
