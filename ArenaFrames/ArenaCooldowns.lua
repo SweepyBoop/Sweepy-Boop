@@ -116,6 +116,8 @@ local function SetupIconGroup(group, unit, testIcons)
         for spellID, spell in pairs(spellData) do
             if testIcons[unit][spellID] then
                 testIcons[unit][spellID].info = { cooldown = spell.cooldown };
+                -- The texture might have been set by use_parent_icon icons
+                testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                 addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
 
                 if spell.baseline and config.showUnusedIcons then
@@ -161,6 +163,8 @@ local function SetupIconGroup(group, unit, testIcons)
                 if enabled then
                     -- Reset dynamic info before populating to group
                     premadeIcons[unit][spellID].info = GetSpecOverrides(spell);
+                    -- The texture might have been set by use_parent_icon icons
+                    premadeIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
                     --print("Populated", unit, spell.class, spellID)
 
