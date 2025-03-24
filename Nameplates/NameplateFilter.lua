@@ -79,10 +79,15 @@ addon.ShowNpcHighlight = function(nameplate, animation)
     local highlight = nameplate.npcHighlight;
 
     if highlight then
-        highlight.glowTexture:Show();
         highlight.customIcon:Show();
         if animation then
+            highlight.glowTexture:Show();
             highlight.animationGroup:Play();
+        else
+            highlight.glowTexture:Hide();
+            if highlight.animationGroup:IsPlaying() then
+                highlight.animationGroup:Stop();
+            end
         end
         highlight:Show();
     end
