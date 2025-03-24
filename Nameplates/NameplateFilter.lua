@@ -74,14 +74,16 @@ addon.UpdateNpcHighlight = function(nameplate)
     end
 end
 
-addon.ShowNpcHighlight = function(nameplate)
+addon.ShowNpcHighlight = function(nameplate, animation)
     addon.UpdateNpcHighlight(nameplate);
     local highlight = nameplate.npcHighlight;
 
     if highlight then
-        highlight.animationGroup:Play();
         highlight.glowTexture:Show();
         highlight.customIcon:Show();
+        if animation then
+            highlight.animationGroup:Play();
+        end
         highlight:Show();
     end
 end
@@ -89,7 +91,9 @@ end
 addon.HideNpcHighlight = function(nameplate)
     local highlight = nameplate.npcHighlight;
     if highlight then
-        highlight.animationGroup:Stop();
+        if highlight.animationGroup:IsPlaying() then
+            highlight.animationGroup:Stop();
+        end
         highlight.glowTexture:Hide();
         highlight.customIcon:Hide();
         highlight:Hide();
