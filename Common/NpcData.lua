@@ -282,8 +282,9 @@ addon.AppendNpcOptionsToGroup = function(group)
                 width = "full",
                 values = {
                     [addon.NpcOption.Hide] = "Hide",
-                    [addon.NpcOption.Show] = "Show",
-                    [addon.NpcOption.Highlight] = "Highlight",
+                    [addon.NpcOption.Show] = "Nameplate",
+                    [addon.NpcOption.ShowWithIcon] = "Nameplate + icon",
+                    [addon.NpcOption.Highlight] = "Nameplate + pulsing icon",
                 },
                 name = addon.FORMAT_TEXTURE(texture) .. " " .. npcEntry.name,
                 desc = function ()
