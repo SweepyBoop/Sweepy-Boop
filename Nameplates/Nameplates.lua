@@ -138,6 +138,8 @@ local function UpdateWidgets(nameplate, frame)
         local npcOption, isCritter = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
         if ( npcOption == addon.NpcOption.Highlight ) then
+            addon.ShowNpcHighlight(nameplate, true);
+        elseif ( npcOption == addon.NpcOption.ShowWithIcon ) then
             addon.ShowNpcHighlight(nameplate);
         elseif ( npcOption == addon.NpcOption.Show ) then
             addon.HideNpcHighlight(nameplate);

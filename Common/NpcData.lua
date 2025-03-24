@@ -112,8 +112,8 @@ if addon.PROJECT_MAINLINE then
                 { npcID = 103673, name = "Darkglare", icon = 205180, default = addon.NpcOption.Show },
                 { npcID = 416, name = "Imp", icon = 688, default = addon.NpcOption.Show },
                 { npcID = 1860, name = "Voidwalker", icon = 697, default = addon.NpcOption.Show },
-                { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.Show },
-                { npcID = 1863, name = "Sayaad", icon = 366222, default = addon.NpcOption.Show },
+                { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.ShowWithIcon },
+                { npcID = 1863, name = "Sayaad", icon = 366222, default = addon.NpcOption.ShowWithIcon },
                 { npcID = 17252, name = "Felguard", icon = 30146, default = addon.NpcOption.Show },
 
                 -- Pets that should be hidden
@@ -282,8 +282,9 @@ addon.AppendNpcOptionsToGroup = function(group)
                 width = "full",
                 values = {
                     [addon.NpcOption.Hide] = "Hide",
-                    [addon.NpcOption.Show] = "Show",
-                    [addon.NpcOption.Highlight] = "Highlight",
+                    [addon.NpcOption.Show] = "Nameplate",
+                    [addon.NpcOption.ShowWithIcon] = "Nameplate + icon",
+                    [addon.NpcOption.Highlight] = "Nameplate + pulsing icon",
                 },
                 name = addon.FORMAT_TEXTURE(texture) .. " " .. npcEntry.name,
                 desc = function ()

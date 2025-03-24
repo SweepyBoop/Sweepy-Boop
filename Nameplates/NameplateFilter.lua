@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local animationScale = 1.05;
-local animationDuration = 0.5;
+local animationDuration = 0.25;
 local iconSize = 30;
 local offsetMultiplier = 0.41;
 
@@ -74,14 +74,21 @@ addon.UpdateNpcHighlight = function(nameplate)
     end
 end
 
-addon.ShowNpcHighlight = function(nameplate)
+addon.ShowNpcHighlight = function(nameplate, animation)
     addon.UpdateNpcHighlight(nameplate);
     local highlight = nameplate.npcHighlight;
 
     if highlight then
-        highlight.animationGroup:Play();
-        highlight.glowTexture:Show();
         highlight.customIcon:Show();
+        if animation then
+            highlight.glowTexture:Show();
+            highlight.animationGroup:Play();
+        else
+            highlight.glowTexture:Hide();
+            if highlight.animationGroup:IsPlaying() then
+                highlight.animationGroup:Stop();
+            end
+        end
         highlight:Show();
     end
 end
@@ -89,7 +96,9 @@ end
 addon.HideNpcHighlight = function(nameplate)
     local highlight = nameplate.npcHighlight;
     if highlight then
-        highlight.animationGroup:Stop();
+        if highlight.animationGroup:IsPlaying() then
+            highlight.animationGroup:Stop();
+        end
         highlight.glowTexture:Hide();
         highlight.customIcon:Hide();
         highlight:Hide();

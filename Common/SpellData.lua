@@ -814,6 +814,13 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.DISRUPT,
     },
+    -- Blink
+    [1953] = {
+        cooldown = 11, -- 15s - 4s from Flow of Time
+        class = addon.MAGE,
+        category = category.DISRUPT,
+        -- Not baseline since it can be replaced by Shimmer
+    },
 
     -- Monk
     -- Celestial Conduit
