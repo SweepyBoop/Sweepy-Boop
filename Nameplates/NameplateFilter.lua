@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local animationScale = 1.05;
-local animationDuration = 0.5;
+local animationDuration = 0.25;
 local iconSize = 30;
 local offsetMultiplier = 0.41;
 
