@@ -948,6 +948,7 @@ addon.SpellData = {
         class = addon.MONK,
         spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Disrupt
     -- Grapple Weapon
