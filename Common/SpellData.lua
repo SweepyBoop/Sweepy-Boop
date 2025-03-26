@@ -942,6 +942,13 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.LOW,
     },
+    -- Transcendence: Transfer
+    [119996] = {
+        cooldown = 45,
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+    },
     -- Disrupt
     -- Grapple Weapon
     [233759] = {
