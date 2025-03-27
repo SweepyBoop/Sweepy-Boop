@@ -115,17 +115,33 @@ options.args.nameplatesFriendly = {
                     ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
             end
         },
-        hideOutsidePvP = {
+        visibilityHeader = {
             order = 7,
-            width = "full",
+            type = "header",
+            name = "Visibility",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        },
+        hideOutsidePvP = {
+            order = 8,
             type = "toggle",
-            name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide class icons outside arenas & battlegrounds",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Inv_misc_rune_01")) .. " Hide in World",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+            end
+        },
+        hideInBattlegrounds = {
+            order = 9,
+            type = "toggle",
+            width = 1.5,
+            name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide in Battlegrounds",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         breaker1 = {
-            order = 8,
+            order = 10,
             type = "header",
             name = "",
             hidden = function()
@@ -133,7 +149,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useHealerIcon = {
-            order = 9,
+            order = 11,
             width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healer icon instead of class icon for healers",
@@ -142,7 +158,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showHealerOnly = {
-            order = 10,
+            order = 12,
             width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healers only",
@@ -154,7 +170,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showMyPetOnly = {
-            order = 11,
+            order = 13,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_ID_PET) .. " Show my pet only",
@@ -164,7 +180,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 12,
+            order = 14,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.FLAG_CARRIER_ALLIANCE_LOGO) .. " Show flag carrier icons in battlegrounds",
@@ -174,7 +190,7 @@ options.args.nameplatesFriendly = {
             end
         },
         targetHighlight = {
-            order = 13,
+            order = 15,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
@@ -183,7 +199,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconSize = {
-            order = 14,
+            order = 16,
             type = "range",
             isPercent = true,
             min = 0.5,
@@ -195,7 +211,7 @@ options.args.nameplatesFriendly = {
             end
         },
         petIconSize = {
-            order = 15,
+            order = 17,
             type = "range",
             isPercent = true,
             min = 0.5,
@@ -207,7 +223,7 @@ options.args.nameplatesFriendly = {
             end
         },
         newline2 = {
-            order = 16,
+            order = 18,
             type = "description",
             name = "",
             hidden = function()
@@ -215,9 +231,9 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 17,
+            order = 19,
             type = "range",
-            min = 0,
+            min = -50,
             max = 150,
             step = 1,
             name = "Icon offset",
@@ -227,7 +243,7 @@ options.args.nameplatesFriendly = {
         },
 
         breaker2 = {
-            order = 18,
+            order = 20,
             type = "header",
             name = "",
             hidden = function()
@@ -236,7 +252,7 @@ options.args.nameplatesFriendly = {
         },
 
         classColorBorder = {
-            order = 19,
+            order = 21,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
@@ -246,7 +262,7 @@ options.args.nameplatesFriendly = {
         },
 
         showPlayerName = {
-            order = 20,
+            order = 22,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("tokens-changeName-regular") .. " Show class-colored names under class icons",
@@ -1032,6 +1048,7 @@ local defaults = {
             classIconStyle = addon.CLASS_ICON_STYLE.ICON,
             showSpecIcons = true,
             hideOutsidePvP = false,
+            hideInBattlegrounds = false;
             classIconSize = 1,
             petIconSize = 0.8,
             classIconOffset = 0,
