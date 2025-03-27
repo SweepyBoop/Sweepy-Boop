@@ -1555,6 +1555,7 @@ addon.SpellData = {
         cooldown = 174,
         class = addon.SHAMAN,
         category = category.DEFENSIVE,
+        spec = { specID.RESTORATION_SHAMAN },
         baseline = true, -- technically a talent, but always picked
     },
     -- Burrow
