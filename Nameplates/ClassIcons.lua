@@ -52,9 +52,13 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     local isSpecialIcon;
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
+    local isArena = IsActiveBattlefieldArena();
+    local isBattleground = ( UnitInBattleground("player") ~= nil );
 
-    if config.hideOutsidePvP and ( not IsActiveBattlefieldArena() ) and ( UnitInBattleground("player") == nil ) then
-        -- Hide icons but still show name
+    -- Hide icons but still show name
+    if config.hideOutsidePvP and ( not isArena ) and ( not isBattleground ) then
+        return iconID, iconCoords, isSpecialIcon;
+    elseif config.hideInBattlegrounds and ( not isBattleground ) then
         return iconID, iconCoords, isSpecialIcon;
     end
 
