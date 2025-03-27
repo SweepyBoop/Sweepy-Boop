@@ -150,6 +150,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         or ( classIconContainer.roleAssigned ~= roleAssigned )
         or ( classIconContainer.lastModified ~= config.lastModified ) then
         local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
+        local nameFrame = classIconContainer.NameFrame;
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
 
@@ -175,6 +176,9 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
             local showPlayerName = config.showPlayerName;
             local offset = config.classIconOffset;
+            if showPlayerName then
+                nameFrame:SetPoint("TOP", nameplate, "CENTER", 0, offset);
+            end
 
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
@@ -182,7 +186,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame:SetScale(config.classIconSize * scaleFactor);
             iconFrame:ClearAllPoints();
             if showPlayerName then
-                iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP", 0, offset);
+                iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
                 iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
             end
@@ -195,7 +199,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             if ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) then
                 arrowFrame:SetPoint("BOTTOM", iconFrame, "TOP", 0, -2); -- Get the arrow closer to the icon
             elseif showPlayerName then
-                arrowFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP", 0, offset);
+                arrowFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
                 arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
             end
