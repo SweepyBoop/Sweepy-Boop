@@ -58,7 +58,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     -- Hide icons but still show name
     if config.hideOutsidePvP and ( not isArena ) and ( not isBattleground ) then
         return iconID, iconCoords, isSpecialIcon;
-    elseif config.hideInBattlegrounds and isBattleground then
+    elseif config.hideInBattlegrounds and isBattleground and ( not isArena ) then
         return iconID, iconCoords, isSpecialIcon;
     end
 
