@@ -135,10 +135,9 @@ options.args.nameplatesFriendly = {
             order = 9,
             type = "toggle",
             width = 1.5,
-            name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide in battlegrounds",
-            desc = "Hide class icons in battlegrounds\nThis option is not available in arenas",
+            name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide in Battlegrounds",
             hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         breaker1 = {
