@@ -53,7 +53,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     local isArena = IsActiveBattlefieldArena();
-    local isBattleground = ( UnitInBattleground("player") ~= nil );
+    local isBattleground = ( UnitInBattleground("player") ~= nil ); -- This returns true for arenas, so for hideInBattlegrounds, we need to ensure we are not in an arena to hide icons
 
     -- Hide icons but still show name
     if config.hideOutsidePvP and ( not isArena ) and ( not isBattleground ) then
