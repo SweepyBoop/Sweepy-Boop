@@ -17,8 +17,6 @@ Libs\AceGUI-3.0\AceGUI-3.0.xml
 Libs\AceConfig-3.0\AceConfig-3.0.xml
 
 Common\Constants.lua
-Common\ArenaEnemyBurstSpells.lua
-Common\ArenaEnemyUtilitySpells.lua
 Common\UnitInfoHelpers.lua
 Common\NpcData.lua
 Common\AuraData.lua
