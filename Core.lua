@@ -265,7 +265,7 @@ options.args.nameplatesFriendly = {
             order = 22,
             type = "toggle",
             width = "full",
-            name = addon.FORMAT_ATLAS("tokens-changeName-regular") .. " Show class-colored names under class icons",
+            name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Show class-colored names under class icons",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
