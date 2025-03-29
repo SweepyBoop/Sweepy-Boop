@@ -202,8 +202,7 @@ function SweepyBoop:SetupHealerInCrowdControl()
         end)
     end
 
-    local enabled = SweepyBoop.db.profile.misc.healerInCrowdControl;
-    if enabled then
+    if SweepyBoop.db.profile.misc.healerInCrowdControl then
         updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
         updateFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
         updateFrame:RegisterEvent(addon.UNIT_AURA);
