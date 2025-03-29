@@ -832,6 +832,11 @@ if addon.PROJECT_MAINLINE then
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Enabled",
+                set = function (info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop.db.profile.misc.lastModified = GetTime();
+                    SweepyBoop:SetupHealerInCrowdControl();
+                end
             },
             healerInCrowdControlTest = {
                 order = 3,
@@ -1195,6 +1200,8 @@ function SweepyBoop:OnInitialize()
     self:SetupQueueReminder();
 
     self:SetupCombatIndicator();
+
+    self:SetupHealerInCrowdControl();
 end
 
 function SweepyBoop:TestArena()
@@ -1238,6 +1245,7 @@ function SweepyBoop:RefreshConfig()
         self:HideTestArenaCooldownTracker();
 
         self:SetupCombatIndicator();
+        self:HideTestHealerInCrowdControl();
     end
 
     local currentTime = GetTime();

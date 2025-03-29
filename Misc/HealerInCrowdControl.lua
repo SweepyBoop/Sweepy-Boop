@@ -138,64 +138,71 @@ local crowdControlPriority = { -- sort by priority first, then remaining time
     ["incapacitate"] = 80,
 };
 
-local updateFrame = CreateFrame("Frame"); -- When a frame is hidden it might not receive event, so we create a frame to catch events
-updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-updateFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-updateFrame:RegisterEvent(addon.UNIT_AURA);
-updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
-    if ( event ~= addon.UNIT_AURA ) then -- Hide when switching map or entering new round of solo shuffle
-        HideIcon(containerFrame);
-        return;
-    end
+local updateFrame;
 
-    if ( not SweepyBoop.db.profile.misc.healerInCrowdControl ) and ( not isInTest ) then
-        HideIcon(containerFrame);
-        return;
-    end
+function SweepyBoop:SetupHealerInCrowdControl()
+    if ( not updateFrame ) then
+        updateFrame = CreateFrame("Frame"); -- When a frame is hidden it might not receive event, so we create a frame to catch events
+        updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
+            if ( event ~= addon.UNIT_AURA ) then -- Hide when switching map or entering new round of solo shuffle
+                HideIcon(containerFrame);
+                return;
+            end
 
-    if ( not IsActiveBattlefieldArena() ) and ( not isInTest ) and ( not addon.TEST_MODE ) then
-        HideIcon(containerFrame);
-        return;
-    end
+            if ( not IsActiveBattlefieldArena() ) and ( not isInTest ) and ( not addon.TEST_MODE ) then
+                HideIcon(containerFrame);
+                return;
+            end
 
-    if ( UnitGroupRolesAssigned("player") == "HEALER" ) then -- do not need to show if player is playing a healing spec
-        HideIcon(containerFrame);
-        return;
-    end
+            if ( UnitGroupRolesAssigned("player") == "HEALER" ) then -- do not need to show if player is playing a healing spec
+                HideIcon(containerFrame);
+                return;
+            end
 
-    local isFriendly = unitTarget and ( UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2") );
-    local isFriendlyHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
-    if isFriendlyHealer then
-        local spellID;
-        local priority = 0; -- init with a low priority
-        local duration;
-        local expirationTime;
+            local isFriendly = unitTarget and ( UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2") );
+            local isFriendlyHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
+            if isFriendlyHealer then
+                local spellID;
+                local priority = 0; -- init with a low priority
+                local duration;
+                local expirationTime;
 
-        for i = 1, 40 do
-            local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
-            if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
-                local category = addon.DRList[auraData.spellId];
-                if crowdControlPriority[category] then -- Found a CC that should be shown
-                    if crowdControlPriority[category] > priority then -- first compare by priority
-                        priority = crowdControlPriority[category];
-                        duration = auraData.duration;
-                        expirationTime = auraData.expirationTime;
-                        spellID = auraData.spellId;
-                    elseif crowdControlPriority[category] == priority then -- same priority, use expirationTime as tie breaker
-                        if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then
-                            duration = auraData.duration;
-                            expirationTime = auraData.expirationTime;
-                            spellID = auraData.spellId;
+                for i = 1, 40 do
+                    local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
+                    if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
+                        local category = addon.DRList[auraData.spellId];
+                        if crowdControlPriority[category] then -- Found a CC that should be shown
+                            if crowdControlPriority[category] > priority then -- first compare by priority
+                                priority = crowdControlPriority[category];
+                                duration = auraData.duration;
+                                expirationTime = auraData.expirationTime;
+                                spellID = auraData.spellId;
+                            elseif crowdControlPriority[category] == priority then -- same priority, use expirationTime as tie breaker
+                                if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then
+                                    duration = auraData.duration;
+                                    expirationTime = auraData.expirationTime;
+                                    spellID = auraData.spellId;
+                                end
+                            end
                         end
                     end
                 end
-            end
-        end
 
-        if ( not spellID ) then -- No CC found, hide
-            HideIcon(containerFrame);
-        else
-            ShowIcon(C_Spell.GetSpellTexture(spellID), duration and (expirationTime - duration), duration);
-        end
+                if ( not spellID ) then -- No CC found, hide
+                    HideIcon(containerFrame);
+                else
+                    ShowIcon(C_Spell.GetSpellTexture(spellID), duration and (expirationTime - duration), duration);
+                end
+            end
+        end)
     end
-end)
+
+    if SweepyBoop.db.profile.misc.healerInCrowdControl then
+        updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+        updateFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        updateFrame:RegisterEvent(addon.UNIT_AURA);
+    else
+        updateFrame:UnregisterAllEvents();
+        HideIcon(containerFrame);
+    end
+end
