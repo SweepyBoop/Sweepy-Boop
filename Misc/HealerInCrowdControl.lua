@@ -149,11 +149,6 @@ function SweepyBoop:SetupHealerInCrowdControl()
                 return;
             end
 
-            if ( not SweepyBoop.db.profile.misc.healerInCrowdControl ) and ( not isInTest ) then
-                HideIcon(containerFrame);
-                return;
-            end
-
             if ( not IsActiveBattlefieldArena() ) and ( not isInTest ) and ( not addon.TEST_MODE ) then
                 HideIcon(containerFrame);
                 return;
