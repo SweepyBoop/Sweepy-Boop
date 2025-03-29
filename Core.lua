@@ -1245,6 +1245,7 @@ function SweepyBoop:RefreshConfig()
         self:HideTestArenaCooldownTracker();
 
         self:SetupCombatIndicator();
+        self:HideTestHealerInCrowdControl();
     end
 
     local currentTime = GetTime();
