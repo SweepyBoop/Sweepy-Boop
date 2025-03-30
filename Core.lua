@@ -2,7 +2,7 @@ local addonName, addon = ...;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
-local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {  
+local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
 	type = "data source",
 	text = addonName,
 	icon = addon.INTERFACE_SWEEPY .. "Art/Logo",
@@ -19,7 +19,7 @@ local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
             end
         end
     end,
-})  
+})
 local icon = LibStub("LibDBIcon-1.0");
 
 local pvpCursor = "interface/cursor/pvp";
@@ -1165,7 +1165,7 @@ function SweepyBoop:OnInitialize()
 
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
-    local appName = LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
 

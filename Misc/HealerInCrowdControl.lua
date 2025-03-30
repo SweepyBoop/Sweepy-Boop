@@ -154,12 +154,6 @@ function SweepyBoop:SetupHealerInCrowdControl()
                 return;
             end
 
-            -- This is not needed, don't need to check if the player themselves are in CC
-            -- if ( UnitGroupRolesAssigned("player") == "HEALER" ) then -- do not need to show if player is playing a healing spec
-            --     HideIcon(containerFrame);
-            --     return;
-            -- end
-
             local isFriendly = unitTarget and ( UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2") );
             local isFriendlyHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
             if isFriendlyHealer then
