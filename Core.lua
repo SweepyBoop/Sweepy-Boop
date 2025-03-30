@@ -1,6 +1,5 @@
 local addonName, addon = ...;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
-print(addonName);
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
 local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
@@ -20,7 +19,7 @@ local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
             end
         end
     end,
-})  
+})
 local icon = LibStub("LibDBIcon-1.0");
 
 local pvpCursor = "interface/cursor/pvp";
