@@ -84,13 +84,14 @@ options.args.nameplatesFriendly = {
         classIconStyle = {
             order = 4,
             type = "select",
+            width = 1.25,
             values = {
                 [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
                 [addon.CLASS_ICON_STYLE.ARROW] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow") .. " Class color arrows",
                 [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] =
                     addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow")
                     .. addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid")
-                    .. " Icon + arrow",
+                    .. " Icon + party arrow",
             },
             name = "Icon style",
             hidden = function()
