@@ -47,7 +47,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.iconCC = classIconFrame:CreateTexture(nil, "OVERLAY");
         classIconFrame.iconCC:SetSize(iconSize, iconSize);
         classIconFrame.iconCC:SetAllPoints(classIconFrame);
-        classIconFrame.iconCC:SetAlpha(0.5); -- So it doesn't block the original icon, less distracting
+        --classIconFrame.iconCC:SetAlpha(0.5); -- So it doesn't block the original icon, less distracting
 
         classIconFrame.maskCC = classIconFrame:CreateMaskTexture();
         classIconFrame.maskCC:SetTexture("Interface/Masks/CircleMaskScalable");
