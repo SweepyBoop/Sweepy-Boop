@@ -58,6 +58,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.cooldownCC = CreateFrame("Cooldown", nil, classIconFrame, "CooldownFrameTemplate");
         classIconFrame.cooldownCC:SetAllPoints();
         classIconFrame.cooldownCC:SetDrawEdge(true);
+        classIconFrame.cooldownCC:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
         classIconFrame.cooldownCC:SetUseCircularEdge(true);
         classIconFrame.cooldownCC:SetReverse(true);
         classIconFrame.cooldownCC:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
