@@ -53,7 +53,6 @@ options.args.nameplatesFriendly = {
     args = {
         classIconsEnabled = {
             order = 1,
-            --width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " Enabled",
             desc = "Show class/pet icons on friendly players/pets",
@@ -286,7 +285,17 @@ options.args.nameplatesFriendly = {
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
-        }
+        },
+
+        showCrowdControl = {
+            order = 24,
+            type = "toggle",
+            width = "full",
+            name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd control on class icons",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
+            end
+        },
     }
 };
 
