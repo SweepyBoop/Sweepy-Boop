@@ -96,7 +96,7 @@ Auras are neatly organized into debuff and buff rows:
 Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
 
 ## Arena enemy cooldown tracking
-![image](https://github.com/user-attachments/assets/01cebbb4-7c25-46d1-b36f-d87155938215)
+![image](https://github.com/user-attachments/assets/f2131387-a222-45d9-83ca-c1fb37079b36)
 
 A set of icons attached to (corresponding) arena enemy frames, which is very close to the AWC UI.
 
