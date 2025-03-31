@@ -137,7 +137,8 @@ end
 addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
-    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassIcon.iconCC ) or ( not classIconContainer.FriendlyClassIcon.cooldownCC ) then return end
+    -- No need to update if class icon is not shown
+    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassIcon:IsShown() ) then return end
     local iconCC = classIconContainer.FriendlyClassIcon.iconCC;
     local cooldownCC = classIconContainer.FriendlyClassIcon.cooldownCC;
 
@@ -267,7 +268,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
     end
 
     addon.UpdateClassIconTargetHighlight(nameplate, frame);
-    addon.UpdateClassIconCrowdControl(nameplate, frame);
 end
 
 addon.ShowClassIcon = function (nameplate, frame)
@@ -291,6 +291,8 @@ addon.ShowClassIcon = function (nameplate, frame)
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
+
+    addon.UpdateClassIconCrowdControl(nameplate, frame);
 end
 
 addon.HideClassIcon = function(nameplate)
