@@ -182,6 +182,8 @@ function SweepyBoop:SetupHealerInCrowdControl()
                                 spellID = auraData.spellId;
                             end
                         end
+                    else
+                        break;
                     end
                 end
 

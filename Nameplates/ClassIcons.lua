@@ -142,17 +142,29 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     local iconCC = classIconContainer.FriendlyClassIcon.iconCC;
     local cooldownCC = classIconContainer.FriendlyClassIcon.cooldownCC;
 
-    local spellID, duration, expirationTime;
+    local spellID;
+    local priority = 0; -- init with a low priority
+    local duration;
+    local expirationTime;
+
     if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and ( UnitIsUnit(frame.unit, "party1") or UnitIsUnit(frame.unit, "party2") ) then
         for i = 1, 40 do
             local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
             if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
                 local category = addon.DRList[auraData.spellId];
+                local update = false;
                 if crowdControlPriority[category] then -- Found a CC that should be shown
                     if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then -- first compare by expirationTime
-                        spellID = auraData.spellId;
+                        update = true;
+                    elseif crowdControlPriority[category] > priority then -- same expirationTime, use priority as tie breaker
+                        update = true;
+                    end
+
+                    if update then
+                        priority = crowdControlPriority[category];
                         duration = auraData.duration;
                         expirationTime = auraData.expirationTime;
+                        spellID = auraData.spellId;
                     end
                 end
             end
