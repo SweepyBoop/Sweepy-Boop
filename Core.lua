@@ -170,7 +170,6 @@ options.args.nameplatesFriendly = {
         },
         showHealerOnly = {
             order = 13,
-            --width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healers only",
             desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
