@@ -95,7 +95,7 @@ Auras are neatly organized into debuff and buff rows:
 
 Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
 
-## Arena enemy offensive/defensive cooldown tracking
+## Arena enemy cooldown tracking
 ![image](https://github.com/user-attachments/assets/01cebbb4-7c25-46d1-b36f-d87155938215)
 
 A set of icons attached to (corresponding) arena enemy frames, which is very close to the AWC UI.
@@ -105,7 +105,7 @@ This module comes with a few key features:
 - Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by crit damage
 - Detects talents tha reduce cooldowns or add charges to abilities accurately
 - Clear indicator when "an additional charge is available", e.g., Discipline Priest has 2 charges of Pain Suppression
-- Option to "Show unused icons" like Omnibar but more reliable, non-baseline abilities are only shown after they are detected
+- Option to "Show unused icons" like Omnibar but more reliable - non-baseline abilities only show after they are detected
 
 This module is designed to give you **a quick overview** of
 - Which enemy player is bursting (so you can peel accordingly if needed)
