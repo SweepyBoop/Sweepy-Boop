@@ -84,21 +84,32 @@ options.args.nameplatesFriendly = {
         classIconStyle = {
             order = 4,
             type = "select",
+            width = 1.25,
             values = {
                 [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
                 [addon.CLASS_ICON_STYLE.ARROW] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow") .. " Class color arrows",
                 [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] =
                     addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow")
                     .. addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid")
-                    .. " Icon + arrow",
+                    .. " Icon + party arrow",
             },
             name = "Icon style",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
             end
         },
-        newline1 = {
+        partyArrowDesc = {
             order = 5,
+            type = "description",
+            name = addon.EXCLAMATION .. " Class-colored party arrows only show on party members in PvP instances",
+            hidden = function()
+                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE )
+                    or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW );
+            end
+        },
+
+        newline1 = {
+            order = 6,
             type = "description",
             name = "",
             hidden = function()
@@ -106,7 +117,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showSpecIcons = {
-            order = 6,
+            order = 7,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons instead of class icons in PvP instances",
@@ -116,7 +127,7 @@ options.args.nameplatesFriendly = {
             end
         },
         visibilityHeader = {
-            order = 7,
+            order = 8,
             type = "header",
             name = "Visibility",
             hidden = function()
@@ -124,7 +135,7 @@ options.args.nameplatesFriendly = {
             end
         },
         hideOutsidePvP = {
-            order = 8,
+            order = 9,
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Inv_misc_rune_01")) .. " Hide in World",
             hidden = function()
@@ -132,7 +143,7 @@ options.args.nameplatesFriendly = {
             end
         },
         hideInBattlegrounds = {
-            order = 9,
+            order = 10,
             type = "toggle",
             width = 1.5,
             name = addon.FORMAT_TEXTURE(pvpCursor) .. " Hide in Battlegrounds",
@@ -141,7 +152,7 @@ options.args.nameplatesFriendly = {
             end
         },
         breaker1 = {
-            order = 10,
+            order = 11,
             type = "header",
             name = "",
             hidden = function()
@@ -149,17 +160,16 @@ options.args.nameplatesFriendly = {
             end
         },
         useHealerIcon = {
-            order = 11,
-            width = "full",
+            order = 12,
+            width = 1.35,
             type = "toggle",
-            name = addon.HELAER_LOGO .. " Show healer icon instead of class icon for healers",
+            name = addon.HELAER_LOGO .. " Special icon for healers",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         showHealerOnly = {
-            order = 12,
-            width = "full",
+            order = 13,
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healers only",
             desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
@@ -170,7 +180,7 @@ options.args.nameplatesFriendly = {
             end
         },
         showMyPetOnly = {
-            order = 13,
+            order = 14,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.ICON_ID_PET) .. " Show my pet only",
@@ -180,7 +190,7 @@ options.args.nameplatesFriendly = {
             end
         },
         useFlagCarrierIcon = {
-            order = 14,
+            order = 15,
             width = "full",
             type = "toggle",
             name = addon.FORMAT_TEXTURE(addon.FLAG_CARRIER_ALLIANCE_LOGO) .. " Show flag carrier icons in battlegrounds",
@@ -190,7 +200,7 @@ options.args.nameplatesFriendly = {
             end
         },
         targetHighlight = {
-            order = 15,
+            order = 16,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
@@ -199,33 +209,27 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconSize = {
-            order = 16,
-            type = "range",
-            isPercent = true,
-            min = 0.5,
-            max = 2,
-            step = 0.01,
-            name = "Class icon size",
-            hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-            end
-        },
-        petIconSize = {
             order = 17,
             type = "range",
             isPercent = true,
             min = 0.5,
             max = 2,
             step = 0.01,
-            name = "Pet icon size",
+            name = "Player size",
+            desc = "Player class icon size",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        newline2 = {
+        petIconSize = {
             order = 18,
-            type = "description",
-            name = "",
+            type = "range",
+            isPercent = true,
+            min = 0.5,
+            max = 2,
+            step = 0.01,
+            name = "Pet size",
+            desc = "Pet icon size",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -236,7 +240,8 @@ options.args.nameplatesFriendly = {
             min = -50,
             max = 150,
             step = 1,
-            name = "Icon offset",
+            name = "Offset",
+            desc = "Vertical offset of class / pet icons",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
