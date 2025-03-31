@@ -197,12 +197,12 @@ function SweepyBoop:SetupHealerInCrowdControl()
         end)
     end
 
+    updateFrame:UnregisterAllEvents();
     if SweepyBoop.db.profile.misc.healerInCrowdControl then
         updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
         updateFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
         updateFrame:RegisterEvent(addon.UNIT_AURA);
     else
-        updateFrame:UnregisterAllEvents();
         HideIcon(containerFrame);
     end
 end
