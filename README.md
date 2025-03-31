@@ -96,26 +96,22 @@ Auras are neatly organized into debuff and buff rows:
 Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
 
 ## Arena enemy offensive/defensive cooldown tracking
-![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
+![image](https://github.com/user-attachments/assets/01cebbb4-7c25-46d1-b36f-d87155938215)
 
 A set of icons attached to (corresponding) arena enemy frames, which is very close to the AWC UI.
 
 This module comes with a few key features:
-- Glows when spell is active, and shows cooldown timer otherwise
-- Sorts icons by priority/threat, e.g., on an Assassination Rogue, Deathmark will always show before other icons
+- Burst damage abilities glow during their duration, making it clear when you need to trade defensives, especially when the enemy team is cooldown stacking
 - Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by crit damage
+- Detects talents tha reduce cooldowns or add charges to abilities accurately
+- Clear indicator when "an additional charge is available", e.g., Discipline Priest has 2 charges of Pain Suppression
+- Option to "Show unused icons" like Omnibar but more reliable, non-baseline abilities are only shown after they are detected
 
 This module is designed to give you **a quick overview** of
 - Which enemy player is bursting (so you can peel accordingly if needed)
 - Which enemy player(s) ran out of defensive options (thus would be the ideal kill target for next go)
 
-[Here is my Twitch clip of the cooldown tracking module in action!](https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131)
-
-**Note**
-- This module supports all major arena frames, including Gladius, GladiusEx, sArena and built-in WoW arena frames
-- This module tracks damage offensives and defensives, and players can fully customize which cooldowns to track
-
-![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
+This module supports all major arena frames, including Gladius, GladiusEx, sArena and built-in WoW arena frames
 
 ## Arena nameplate numbers & enemy player spec icons
 ![Screenshot 2025-01-05 101115](https://github.com/user-attachments/assets/fd7731af-13ed-48c6-a1c3-bbef63a70847)
