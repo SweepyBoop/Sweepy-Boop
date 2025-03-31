@@ -234,7 +234,7 @@ options.args.nameplatesFriendly = {
             end
         },
         classIconOffset = {
-            order = 20,
+            order = 19,
             type = "range",
             min = -50,
             max = 150,
@@ -246,7 +246,7 @@ options.args.nameplatesFriendly = {
         },
 
         breaker2 = {
-            order = 21,
+            order = 20,
             type = "header",
             name = "",
             hidden = function()
@@ -255,7 +255,7 @@ options.args.nameplatesFriendly = {
         },
 
         classColorBorder = {
-            order = 22,
+            order = 21,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
@@ -265,7 +265,7 @@ options.args.nameplatesFriendly = {
         },
 
         showPlayerName = {
-            order = 23,
+            order = 22,
             type = "toggle",
             width = "full",
             name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Show class-colored names under class icons",
