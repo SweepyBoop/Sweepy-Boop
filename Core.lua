@@ -101,7 +101,7 @@ options.args.nameplatesFriendly = {
         partyArrowDesc = {
             order = 5,
             type = "description",
-            name = addon.EXCLAMATION .. " Class-colored arrows only show on party members for this style",
+            name = addon.EXCLAMATION .. " Class-colored party arrows only show on party members in PvP instances",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE )
                     or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW );

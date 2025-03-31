@@ -238,9 +238,7 @@ addon.ShowClassIcon = function (nameplate, frame)
         if style == addon.CLASS_ICON_STYLE.ARROW then
             shouldShow = ( not classIconContainer.isSpecialIcon );
         elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW then
-            -- Only show arrow for party members if the icon style is "Icon + party arrow"
-            -- What happens if a teammate is mind controlled?
-            shouldShow = ( UnitInBattleground("player") ~= nil ) or ( UnitInRaid(frame.unit) ~= nil );
+            shouldShow = ( UnitInBattleground("player") ~= nil );
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
