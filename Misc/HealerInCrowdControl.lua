@@ -39,6 +39,7 @@ local function CreateContainerFrame()
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(true);
+    frame.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
     frame.cooldown:SetUseCircularEdge(true);
     frame.cooldown:SetReverse(true);
     frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
