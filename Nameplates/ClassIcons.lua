@@ -2,6 +2,13 @@ local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
 
+local crowdControlPriority = { -- sort by priority first, then remaining time
+    ["stun"] = 100,
+    ["silence"] = 90,
+    ["disorient"] = 80,
+    ["incapacitate"] = 80,
+};
+
 local PvPUnitClassification;
 local flagCarrierIcons;
 if addon.PROJECT_MAINLINE then

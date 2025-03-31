@@ -132,7 +132,7 @@ function SweepyBoop:HideTestHealerInCrowdControl()
     HideIcon(containerFrame);
 end
 
-local crowdControlPriority = { -- sort by priority first, then remaining time
+local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
     ["silence"] = 90,
     ["disorient"] = 80,
