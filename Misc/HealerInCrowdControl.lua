@@ -98,6 +98,7 @@ local function ShowIcon(iconID, startTime, duration)
         containerFrame.cooldown:Show();
     else
         containerFrame.cooldown:SetCooldown(0, 0);
+        containerFrame.cooldown:Hide();
     end
 
     containerFrame:Show();

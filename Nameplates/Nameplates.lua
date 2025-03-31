@@ -216,6 +216,8 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate.UnitFrame:IsForbidden() then return end
                 local unitAuraUpdateInfo = ...;
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
+
+                addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
             end
         end
     end)

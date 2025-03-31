@@ -54,15 +54,15 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.maskCC:SetAllPoints(classIconFrame.iconCC);
         classIconFrame.iconCC:AddMaskTexture(classIconFrame.maskCC);
 
-        classIconFrame.cooldown = CreateFrame("Cooldown", nil, classIconFrame, "CooldownFrameTemplate");
-        classIconFrame.cooldown:SetAllPoints();
-        classIconFrame.cooldown:SetDrawEdge(true);
-        classIconFrame.cooldown:SetUseCircularEdge(true);
-        classIconFrame.cooldown:SetReverse(true);
-        classIconFrame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
-        classIconFrame.cooldown:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
-        classIconFrame.cooldown:SetHideCountdownNumbers(true);
-        classIconFrame.cooldown.noCooldownCount = true; -- hide OmniCC timers
+        classIconFrame.cooldownCC = CreateFrame("Cooldown", nil, classIconFrame, "CooldownFrameTemplate");
+        classIconFrame.cooldownCC:SetAllPoints();
+        classIconFrame.cooldownCC:SetDrawEdge(true);
+        classIconFrame.cooldownCC:SetUseCircularEdge(true);
+        classIconFrame.cooldownCC:SetReverse(true);
+        classIconFrame.cooldownCC:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
+        classIconFrame.cooldownCC:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
+        classIconFrame.cooldownCC:SetHideCountdownNumbers(true);
+        classIconFrame.cooldownCC.noCooldownCount = true; -- hide OmniCC timers
     else
         classIconFrame.border:SetVertexColor(255, 0, 0); -- Red border for hostile
         classIconFrame.border:Hide(); -- Hide initially until an actual icon is set

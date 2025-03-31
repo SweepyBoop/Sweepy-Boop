@@ -127,6 +127,47 @@ addon.UpdatePlayerName = function (nameplate, frame)
     end
 end
 
+addon.UpdateClassIconCrowdControl = function(nameplate, frame)
+    if ( not nameplate.classIconContainer ) then return end
+    local classIconContainer = nameplate.classIconContainer;
+    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassIcon.iconCC ) or ( not classIconContainer.cooldownCC ) then return end
+    local iconCC = classIconContainer.FriendlyClassIcon.iconCC;
+    local cooldownCC = classIconContainer.cooldownCC;
+
+    local spellID, duration, expirationTime;
+    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and UnitIsUnit(frame.unit, "party1") or UnitIsUnit(frame.unit, "party2") then
+        for i = 1, 40 do
+            local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
+            if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
+                local category = addon.DRList[auraData.spellId];
+                if crowdControlPriority[category] then -- Found a CC that should be shown
+                    if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then -- first compare by expirationTime
+                        spellID = auraData.spellId;
+                        duration = auraData.duration;
+                        expirationTime = auraData.expirationTime;
+                    end
+                end
+            end
+        end
+    end
+
+    if ( not spellID ) then
+        cooldownCC:SetCooldown(0, 0);
+        iconCC:Hide();
+    else
+        iconCC:SetTexture(C_Spell.GetSpellTexture(spellID));
+        iconCC:Show();
+
+        if duration then
+            cooldownCC:SetCooldown(expirationTime - duration, duration);
+            cooldownCC:Show();
+        else
+            cooldownCC:SetCooldown(0, 0);
+            cooldownCC:Hide();
+        end
+    end
+end
+
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
@@ -219,6 +260,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
     end
 
     addon.UpdateClassIconTargetHighlight(nameplate, frame);
+    addon.UpdateClassIconCrowdControl(nameplate, frame);
 end
 
 addon.ShowClassIcon = function (nameplate, frame)
