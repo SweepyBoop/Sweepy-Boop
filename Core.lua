@@ -216,6 +216,7 @@ options.args.nameplatesFriendly = {
             max = 2,
             step = 0.01,
             name = "Player size",
+            desc = "Player class icon size",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -228,6 +229,7 @@ options.args.nameplatesFriendly = {
             max = 2,
             step = 0.01,
             name = "Pet size",
+            desc = "Pet icon size",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -239,6 +241,7 @@ options.args.nameplatesFriendly = {
             max = 150,
             step = 1,
             name = "Offset",
+            desc = "Vertical offset of class / pet icons",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
