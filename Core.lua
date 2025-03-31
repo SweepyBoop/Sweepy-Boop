@@ -216,7 +216,7 @@ options.args.nameplatesFriendly = {
             min = 0.5,
             max = 2,
             step = 0.01,
-            name = "Class icon size",
+            name = "Player size",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -228,15 +228,7 @@ options.args.nameplatesFriendly = {
             min = 0.5,
             max = 2,
             step = 0.01,
-            name = "Pet icon size",
-            hidden = function()
-                return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-            end
-        },
-        newline2 = {
-            order = 19,
-            type = "description",
-            name = "",
+            name = "Pet size",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
@@ -247,7 +239,7 @@ options.args.nameplatesFriendly = {
             min = -50,
             max = 150,
             step = 1,
-            name = "Icon offset",
+            name = "Offset",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
