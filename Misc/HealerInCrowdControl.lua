@@ -166,18 +166,19 @@ function SweepyBoop:SetupHealerInCrowdControl()
                     local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
                     if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
                         local category = addon.DRList[auraData.spellId];
+                        local update = false;
                         if crowdControlPriority[category] then -- Found a CC that should be shown
-                            if crowdControlPriority[category] > priority then -- first compare by priority
+                            if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then -- first compare by expirationTime
+                                update = true;
+                            elseif crowdControlPriority[category] > priority then -- same expirationTime, use priority as tie breaker
+                                update = true;
+                            end
+
+                            if update then
                                 priority = crowdControlPriority[category];
                                 duration = auraData.duration;
                                 expirationTime = auraData.expirationTime;
                                 spellID = auraData.spellId;
-                            elseif crowdControlPriority[category] == priority then -- same priority, use expirationTime as tie breaker
-                                if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then
-                                    duration = auraData.duration;
-                                    expirationTime = auraData.expirationTime;
-                                    spellID = auraData.spellId;
-                                end
                             end
                         end
                     end
