@@ -161,16 +161,16 @@ options.args.nameplatesFriendly = {
         },
         useHealerIcon = {
             order = 12,
-            width = "full",
+            width = 1.35,
             type = "toggle",
-            name = addon.HELAER_LOGO .. " Show healer icon instead of class icon for healers",
+            name = addon.HELAER_LOGO .. " Special icon for healers",
             hidden = function()
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
         showHealerOnly = {
             order = 13,
-            width = "full",
+            --width = "full",
             type = "toggle",
             name = addon.HELAER_LOGO .. " Show healers only",
             desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
