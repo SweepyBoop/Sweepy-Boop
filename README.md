@@ -98,7 +98,7 @@ Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this
 ## Arena enemy cooldown tracking
 ![image](https://github.com/user-attachments/assets/f2131387-a222-45d9-83ca-c1fb37079b36)
 
-(Arena cooldown tracker, the blue daily quest icon on Pain Suppression clearly indicates there is another charge available)
+(Arena cooldown tracker, the daily quest icon on Pain Suppression clearly indicates there is another charge available)
 
 A set of icons attached to (corresponding) arena enemy frames, which is very close to the AWC UI.
 
