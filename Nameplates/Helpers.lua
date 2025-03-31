@@ -44,7 +44,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
         classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
 
-        classIconFrame.iconCC = classIconFrame:CreateTexture(nil, "OVERLAY");
+        classIconFrame.iconCC = classIconFrame:CreateTexture(nil, "ARTWORK"); -- above icon but doesn't block border / target highlight
         classIconFrame.iconCC:SetSize(iconSize, iconSize);
         classIconFrame.iconCC:SetAllPoints(classIconFrame);
         --classIconFrame.iconCC:SetAlpha(0.5); -- So it doesn't block the original icon, less distracting
