@@ -39,6 +39,7 @@ local function CreateContainerFrame()
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(true);
+    frame.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
     frame.cooldown:SetUseCircularEdge(true);
     frame.cooldown:SetReverse(true);
     frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
@@ -98,6 +99,7 @@ local function ShowIcon(iconID, startTime, duration)
         containerFrame.cooldown:Show();
     else
         containerFrame.cooldown:SetCooldown(0, 0);
+        containerFrame.cooldown:Hide();
     end
 
     containerFrame:Show();
@@ -131,7 +133,7 @@ function SweepyBoop:HideTestHealerInCrowdControl()
     HideIcon(containerFrame);
 end
 
-local crowdControlPriority = { -- sort by priority first, then remaining time
+local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
     ["silence"] = 90,
     ["disorient"] = 80,
@@ -164,20 +166,23 @@ function SweepyBoop:SetupHealerInCrowdControl()
 
                 for i = 1, 40 do
                     local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
-                    if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
+                    if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
+                    if addon.DRList[auraData.spellId] then
                         local category = addon.DRList[auraData.spellId];
+                        local update = false;
                         if crowdControlPriority[category] then -- Found a CC that should be shown
-                            if crowdControlPriority[category] > priority then -- first compare by priority
+                            -- No expirationTime means this aura never expires, so it should be prioritized
+                            if ( not auraData.expirationTime ) or ( expirationTime and auraData.expirationTime and auraData.expirationTime < expirationTime ) then
+                                update = true;
+                            elseif crowdControlPriority[category] > priority then -- same expirationTime, use priority as tie breaker
+                                update = true;
+                            end
+
+                            if update then
                                 priority = crowdControlPriority[category];
                                 duration = auraData.duration;
                                 expirationTime = auraData.expirationTime;
                                 spellID = auraData.spellId;
-                            elseif crowdControlPriority[category] == priority then -- same priority, use expirationTime as tie breaker
-                                if ( not expirationTime ) or ( not auraData.expirationTime ) or ( auraData.expirationTime < expirationTime) then
-                                    duration = auraData.duration;
-                                    expirationTime = auraData.expirationTime;
-                                    spellID = auraData.spellId;
-                                end
                             end
                         end
                     end

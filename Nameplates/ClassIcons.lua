@@ -2,6 +2,13 @@ local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
 
+local crowdControlPriority = { -- sort by remaining time, then priority
+    ["stun"] = 100,
+    ["silence"] = 90,
+    ["disorient"] = 80,
+    ["incapacitate"] = 80,
+};
+
 local PvPUnitClassification;
 local flagCarrierIcons;
 if addon.PROJECT_MAINLINE then
@@ -127,6 +134,62 @@ addon.UpdatePlayerName = function (nameplate, frame)
     end
 end
 
+addon.UpdateClassIconCrowdControl = function(nameplate, frame)
+    if ( not nameplate.classIconContainer ) then return end
+    local classIconContainer = nameplate.classIconContainer;
+    -- No need to update if class icon is not shown
+    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassIcon:IsShown() ) then return end
+    local iconCC = classIconContainer.FriendlyClassIcon.iconCC;
+    local cooldownCC = classIconContainer.FriendlyClassIcon.cooldownCC;
+
+    local spellID;
+    local priority = 0; -- init with a low priority
+    local duration;
+    local expirationTime;
+
+    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and UnitInParty(frame.unit) then
+        for i = 1, 40 do
+            local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
+            if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
+            if addon.DRList[auraData.spellId] then
+                local category = addon.DRList[auraData.spellId];
+                local update = false;
+                if crowdControlPriority[category] then -- Found a CC that should be shown
+                    -- No expirationTime means this aura never expires, so it should be prioritized
+                    if ( not auraData.expirationTime ) or ( expirationTime and auraData.expirationTime and auraData.expirationTime < expirationTime ) then
+                        update = true;
+                    elseif crowdControlPriority[category] > priority then -- same expirationTime, use priority as tie breaker
+                        update = true;
+                    end
+
+                    if update then
+                        priority = crowdControlPriority[category];
+                        duration = auraData.duration;
+                        expirationTime = auraData.expirationTime;
+                        spellID = auraData.spellId;
+                    end
+                end
+            end
+        end
+    end
+
+    if ( not spellID ) then
+        cooldownCC:SetCooldown(0, 0);
+        iconCC:Hide();
+    else
+        iconCC:SetTexture(C_Spell.GetSpellTexture(spellID));
+        iconCC:Show();
+
+        if duration then
+            cooldownCC:SetCooldown(expirationTime - duration, duration);
+            cooldownCC:Show();
+        else
+            cooldownCC:SetCooldown(0, 0);
+            cooldownCC:Hide();
+        end
+    end
+end
+
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
@@ -242,6 +305,8 @@ addon.ShowClassIcon = function (nameplate, frame)
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
+
+    addon.UpdateClassIconCrowdControl(nameplate, frame);
 end
 
 addon.HideClassIcon = function(nameplate)

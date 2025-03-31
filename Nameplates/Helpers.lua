@@ -43,6 +43,28 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
         classIconFrame.targetHighlight:SetDrawLayer("OVERLAY", 1);
         classIconFrame.targetHighlight:SetVertexColor(1,0.88,0);
+
+        classIconFrame.iconCC = classIconFrame:CreateTexture(nil, "ARTWORK"); -- above icon but doesn't block border / target highlight
+        classIconFrame.iconCC:SetSize(iconSize, iconSize);
+        classIconFrame.iconCC:SetAllPoints(classIconFrame);
+        --classIconFrame.iconCC:SetAlpha(0.5); -- So it doesn't block the original icon, less distracting
+
+        classIconFrame.maskCC = classIconFrame:CreateMaskTexture();
+        classIconFrame.maskCC:SetTexture("Interface/Masks/CircleMaskScalable");
+        classIconFrame.maskCC:SetSize(iconSize, iconSize);
+        classIconFrame.maskCC:SetAllPoints(classIconFrame.iconCC);
+        classIconFrame.iconCC:AddMaskTexture(classIconFrame.maskCC);
+
+        classIconFrame.cooldownCC = CreateFrame("Cooldown", nil, classIconFrame, "CooldownFrameTemplate");
+        classIconFrame.cooldownCC:SetAllPoints();
+        classIconFrame.cooldownCC:SetDrawEdge(true);
+        classIconFrame.cooldownCC:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
+        classIconFrame.cooldownCC:SetUseCircularEdge(true);
+        classIconFrame.cooldownCC:SetReverse(true);
+        classIconFrame.cooldownCC:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
+        classIconFrame.cooldownCC:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
+        classIconFrame.cooldownCC:SetHideCountdownNumbers(true);
+        classIconFrame.cooldownCC.noCooldownCount = true; -- hide OmniCC timers
     else
         classIconFrame.border:SetVertexColor(255, 0, 0); -- Red border for hostile
         classIconFrame.border:Hide(); -- Hide initially until an actual icon is set
