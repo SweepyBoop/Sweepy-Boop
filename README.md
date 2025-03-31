@@ -105,7 +105,7 @@ This module comes with a few key features:
 - Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by crit damage
 - Detects talents tha reduce cooldowns or add charges to abilities accurately
 - Clear indicator when "an additional charge is available", e.g., Discipline Priest has 2 charges of Pain Suppression
-- Option to "Show unused icons" like Omnibar but more reliable - non-baseline abilities only show after they are detected
+- Option to "Show unused icons" like Omnibar but more reliable - non-baseline abilities only show up after detected
 
 This module is designed to give you **a quick overview** of
 - Which enemy player is bursting (so you can peel accordingly if needed)
