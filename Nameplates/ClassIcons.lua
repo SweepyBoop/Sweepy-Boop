@@ -147,7 +147,7 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     local duration;
     local expirationTime;
 
-    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and UnitPlayerOrPetInParty(frame.unit) then
+    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and UnitInParty(frame.unit) then
         for i = 1, 40 do
             local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
             if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
