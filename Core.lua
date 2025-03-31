@@ -1150,6 +1150,8 @@ local defaults = {
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
     defaults.profile.nameplatesFriendly.classIconSize = 1.25;
+    defaults.profile.nameplatesFriendly.petIconSize = 1;
+    defaults.profile.nameplatesFriendly.showCrowdControl = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
@@ -1157,7 +1159,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownOffsetX = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
-    defaults.profile.arenaFrames.hideCountDownNumbers = true;
+    defaults.profile.arenaFrames.showUnusedIcons = true;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
 end
