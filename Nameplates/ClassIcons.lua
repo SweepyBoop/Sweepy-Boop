@@ -150,7 +150,8 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and ( UnitIsUnit(frame.unit, "party1") or UnitIsUnit(frame.unit, "party2") ) then
         for i = 1, 40 do
             local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
-            if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
+            if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
+            if addon.DRList[auraData.spellId] then
                 local category = addon.DRList[auraData.spellId];
                 local update = false;
                 if crowdControlPriority[category] then -- Found a CC that should be shown

@@ -165,7 +165,8 @@ function SweepyBoop:SetupHealerInCrowdControl()
 
                 for i = 1, 40 do
                     local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
-                    if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
+                    if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
+                    if addon.DRList[auraData.spellId] then
                         local category = addon.DRList[auraData.spellId];
                         local update = false;
                         if crowdControlPriority[category] then -- Found a CC that should be shown
@@ -182,8 +183,6 @@ function SweepyBoop:SetupHealerInCrowdControl()
                                 spellID = auraData.spellId;
                             end
                         end
-                    else
-                        break;
                     end
                 end
 
