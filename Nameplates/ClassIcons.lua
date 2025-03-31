@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
 
-local crowdControlPriority = { -- sort by priority first, then remaining time
+local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
     ["silence"] = 90,
     ["disorient"] = 80,
@@ -142,7 +142,7 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     local cooldownCC = classIconContainer.cooldownCC;
 
     local spellID, duration, expirationTime;
-    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and UnitIsUnit(frame.unit, "party1") or UnitIsUnit(frame.unit, "party2") then
+    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and ( UnitIsUnit(frame.unit, "party1") or UnitIsUnit(frame.unit, "party2") ) then
         for i = 1, 40 do
             local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
             if auraData and auraData.spellId and addon.DRList[auraData.spellId] then
