@@ -862,7 +862,7 @@ if addon.PROJECT_MAINLINE then
                                 type = "execute",
                                 name = "Restore default",
                                 func = function ()
-                                    SweepyBoop:CheckDefaultArenaAbilities();
+                                    SweepyBoop:CheckDefaultInterrupts();
                                 end
                             },
                         },
@@ -1488,6 +1488,10 @@ end
 
 function SweepyBoop:CheckDefaultArenaAbilities()
     SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
+end
+
+function SweepyBoop:CheckDefaultInterrupts()
+    SetupInterrupts(SweepyBoop.db.profile.arenaFrames.interrutBarSpellList, addon.SpellData);
 end
 
 SLASH_SweepyBoop1 = "/sb"
