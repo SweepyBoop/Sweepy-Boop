@@ -784,10 +784,8 @@ if addon.PROJECT_MAINLINE then
                                 width = 0.75,
                                 name = "Grow direction",
                                 values = {
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                                    [addon.INTERRUPT_GROW_DIRECTION.CENTER_UP] = "Up",
+                                    [addon.INTERRUPT_GROW_DIRECTION.CENTER_DOWN] = "Down",
                                 },
                             },
 
@@ -1280,6 +1278,17 @@ local defaults = {
             showUnusedIcons = false,
             hideCountDownNumbers = false,
             spellList = {},
+
+            interruptBarEnabled = false;
+            interruptBarSeparateRowForInterrupts = true,
+            interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
+            interruptBarOffsetX = 0,
+            interruptBarOffsetY = 0,
+            interruptBarIconSize = 40,
+            interruptBarUnusedIconAlpha = 0.5,
+            interruptBarShowUnused = false,
+            interruptBarHideCountDownNumbers = false,
+            interrutBarSpellList = {},
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
