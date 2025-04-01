@@ -432,7 +432,7 @@ end
 
 local framePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
 local largeColumn = 100; -- Don't break line for arena tracker
-local growOptions = {
+local arenaFrameGrowOptions = {
     [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = {
         direction = "RIGHT",
         anchor = "LEFT",
@@ -461,50 +461,89 @@ local growOptions = {
         columns = largeColumn,
         growUpward = true,
     },
+};
+
+local interruptBarGrowOptions = {
+    [addon.INTERRUPT_GROW_DIRECTION.CENTER_UP] = {
+        direction = "CENTER",
+        anchor = "CENTER",
+        margin = 3,
+        columns = 8,
+        growUpward = true,
+    },
+    [addon.INTERRUPT_GROW_DIRECTION.CENTER_DOWN] = {
+        direction = "CENTER",
+        anchor = "CENTER",
+        margin = 3,
+        columns = 8,
+        growUpward = false,
+    },
 }
 
-local function GetSetPointOptions(index)
-    local offsetY = SweepyBoop.db.profile.arenaFrames.arenaCooldownOffsetY;
+local function GetSetPointOptions(index, isInterruptBar)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local offsetX = isInterruptBar and config.interruptBarOffsetX or config.arenaCooldownOffsetX;
+    local offsetY = isInterruptBar and config.interruptBarOffsetY or config.arenaCooldownOffsetY;
     local adjustedIndex = ( index == 0 and 1 ) or index;
-    local setPointOptions = {
-        point = "LEFT",
-        relativeTo = framePrefix .. adjustedIndex,
-        relativePoint = "RIGHT",
-        offsetY = offsetY;
-    };
+    local setPointOptions;
+    if isInterruptBar then
+        setPointOptions = {
+            point = "CENTER",
+            relativeTo = "UIParent",
+            relativePoint = "CENTER",
+            offsetX = offsetX,
+            offsetY = offsetY;
+        };
+    else
+        setPointOptions = {
+            point = "LEFT",
+            relativeTo = framePrefix .. adjustedIndex,
+            relativePoint = "RIGHT",
+            offsetX = offsetX,
+            offsetY = offsetY;
+        };
+    end
     return setPointOptions;
 end
 
-local function EnsureIconGroup(index)
+local function EnsureIconGroup(index, isInterruptBar)
     local config = SweepyBoop.db.profile.arenaFrames;
-    if ( not iconGroups[index] ) then
-        local unitId = ( index == 0 and "player" ) or ( "arena" .. index );
-        local setPointOptions = GetSetPointOptions(index);
-        setPointOptions.offsetX = config.arenaCooldownOffsetX;
-        iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions[config.arenaCooldownGrowDirection], unitId);
+
+    local iconGroup = isInterruptBar and iconGroupInterrupt or iconGroups[index];
+
+    if ( not iconGroup ) then
+        local unitId;
+        if ( not isInterruptBar ) then
+            unitId = ( index == 0 and "player" ) or ( "arena" .. index );
+        end
+        local setPointOptions = GetSetPointOptions(index, isInterruptBar);
+        local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        iconGroup = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
         -- SetPointOptions is set but can be updated if lastModified falls behind
-        iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
+        iconGroup.lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
-    if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        local setPointOptions = GetSetPointOptions(index);
-        setPointOptions.offsetX = config.arenaCooldownOffsetX;
-        addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions[config.arenaCooldownGrowDirection]);
-        iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
+    if ( iconGroup.lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+        local setPointOptions = GetSetPointOptions(index, isInterruptBar);
+        local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        addon.UpdateIconGroupSetPointOptions(iconGroup, setPointOptions, growOptions);
+        iconGroup.lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     -- Clear previous icons
     --print("Clear previous icons");
-    addon.IconGroup_Wipe(iconGroups[index]);
+    addon.IconGroup_Wipe(iconGroup);
 end
 
 local function EnsureIconGroups()
     if addon.TEST_MODE then
         EnsureIconGroup(0);
+        EnsureIconGroup(0, true); -- Interrupt bar
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i);
         end
+        EnsureIconGroup(0, true); -- Interrupt bar
     end
 end
 
@@ -564,7 +603,7 @@ local function RefreshTestMode()
         end
     end
 
-    local grow = growOptions[config.arenaCooldownGrowDirection];
+    local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     local setPointOptions = GetSetPointOptions(1);
     setPointOptions.offsetX = config.arenaCooldownOffsetX;
     if externalTestGroup then
@@ -608,7 +647,7 @@ function SweepyBoop:RepositionTestGroup()
     if ( not externalTestGroup ) or ( not externalTestGroup:IsShown() ) then return end
 
     local config = SweepyBoop.db.profile.arenaFrames;
-    local grow = growOptions[config.arenaCooldownGrowDirection];
+    local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     local setPointOptions = GetSetPointOptions(1);
     setPointOptions.offsetX = config.arenaCooldownOffsetX;
     addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
