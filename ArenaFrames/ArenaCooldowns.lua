@@ -23,6 +23,8 @@ local resetByCrit = {
 
 local premadeIcons = {};
 local iconGroups = {}; -- One group per arena opponent
+local premadeIconsInterrupt = {};
+local iconGroupInterrupt = {}; -- One group for all arena opponents
 local eventFrame;
 
 for spellID, spell in pairs(spellData) do
@@ -39,28 +41,33 @@ for spellID, spell in pairs(spellData) do
     end
 end
 
-local function EnsureIcon(unitId, spellID)
+local function EnsureIcon(unitId, spellID, isInterruptBar)
     local config = SweepyBoop.db.profile.arenaFrames;
 
-    if ( not premadeIcons[unitId][spellID] ) then
-        local size = config.arenaCooldownTrackerIconSize;
+    local iconSet = isInterruptBar and premadeIconsInterrupt or premadeIcons;
+
+    if ( not iconSet[unitId][spellID] ) then
+        local size = isInterruptBar and config.interruptBarIconSize or config.arenaCooldownTrackerIconSize;
         if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
-            premadeIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
+            iconSet[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
         else
-            premadeIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
+            iconSet[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
         end
 
-        addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID], config.hideCountDownNumbers);
+        local hideCountDownNumbers = isInterruptBar and config.interruptBarHideCountDownNumbers or config.hideCountDownNumbers;
+        addon.SetHideCountdownNumbers(iconSet[unitId][spellID], hideCountDownNumbers);
         -- size is set on creation but can be updated if lastModified falls behind
-        premadeIcons[unitId][spellID].lastModified = config.lastModified;
+        iconSet[unitId][spellID].lastModified = config.lastModified;
     end
 
     -- Size was not set on creation, need to set scale and show/hide countdown numbers
-    if ( premadeIcons[unitId][spellID].lastModified ~= config.lastModified ) then
-        premadeIcons[unitId][spellID]:SetScale(config.arenaCooldownTrackerIconSize / addon.DEFAULT_ICON_SIZE);
-        addon.SetHideCountdownNumbers(premadeIcons[unitId][spellID], config.hideCountDownNumbers);
+    if ( iconSet[unitId][spellID].lastModified ~= config.lastModified ) then
+        local size = isInterruptBar and config.interruptBarIconSize or config.arenaCooldownTrackerIconSize;
+        iconSet[unitId][spellID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
+        local hideCountDownNumbers = isInterruptBar and config.interruptBarHideCountDownNumbers or config.hideCountDownNumbers;
+        addon.SetHideCountdownNumbers(iconSet[unitId][spellID], hideCountDownNumbers);
 
-        premadeIcons[unitId][spellID].lastModified = config.lastModified;
+        iconSet[unitId][spellID].lastModified = config.lastModified;
     end
 end
 
@@ -69,8 +76,12 @@ local function EnsureIcons()
         local unitId = "player";
         premadeIcons[unitId] = premadeIcons[unitId] or {};
         for spellID, spell in pairs(spellData) do
-            if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) and ( not spell.use_parent_icon ) then
-                EnsureIcon(unitId, spellID);
+            if ( not spell.use_parent_icon ) then
+                if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
+                    EnsureIcon(unitId, spellID, true);
+                else
+                    EnsureIcon(unitId, spellID);
+                end
             end
         end
     else
@@ -78,8 +89,12 @@ local function EnsureIcons()
             local unitId = "arena"..i;
             premadeIcons[unitId] = premadeIcons[unitId] or {};
             for spellID, spell in pairs(spellData) do
-                if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) and ( not spell.use_parent_icon ) then
-                    EnsureIcon(unitId, spellID);
+                if ( not spell.use_parent_icon ) then
+                    if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
+                        EnsureIcon(unitId, spellID, true);
+                    else
+                        EnsureIcon(unitId, spellID);
+                    end
                 end
             end
         end
