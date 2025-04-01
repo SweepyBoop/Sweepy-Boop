@@ -29,7 +29,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
             print("Top 3 Addons by CPU Usage in last PvP match:");
             for i = 1, math.min(3, #addonInfo) do
                 local info = addonInfo[i];
-                print(info.name .. ": " .. info.cpuUsage .. " ms/sec");
+                print(info.name .. ": " .. info.cpuUsage .. " ms / Sec");
             end
         end
         ResetCPUUsage();
