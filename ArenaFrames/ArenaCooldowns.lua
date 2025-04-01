@@ -135,7 +135,7 @@ local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
                 addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
 
                 local showUnusedIcons = isInterruptBar and config.showUnusedInterruptIcons or config.showUnusedIcons;
-                local unusedIconAlpha = isInterruptBar and config.unusedInterruptIconAlpha or config.unusedIconAlpha;
+                local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
                 if spell.baseline and showUnusedIcons then
                     testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
                     addon.IconGroup_Insert(group, testIcons[unit][spellID]);
@@ -186,7 +186,7 @@ local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
                     --print("Populated", unit, spell.class, spellID)
 
                     local showUnusedIcons = isInterruptBar and config.showUnusedInterruptIcons or config.showUnusedIcons;
-                    local unusedIconAlpha = isInterruptBar and config.unusedInterruptIconAlpha or config.unusedIconAlpha;
+                    local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
                     local spellList = isInterruptBar and config.interruptBarSpellList or config.spellList;
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
                         iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
