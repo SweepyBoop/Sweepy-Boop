@@ -199,27 +199,25 @@ local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
 end
 
 local function ValidateUnit(self)
-    -- If unit is specified, this is a group to track a single unit, return unitGUID
-    if self.unit then
-        -- Update icon group guid
-        if ( not self.unitGUID ) then
-            self.unitGUID = UnitGUID(self.unit);
-        end
-
-        -- If unit does not exist, will return nil
-        return self.unitGUID;
-    else
-        self.unitGUIDs = self.unitGUIDs or {};
-        for i = 1, addon.MAX_ARENA_SIZE do
-            local unitId = "arena" .. i;
-            -- We only need to cache GUIDs here, info such as specs are taken into account when populating icons
-            if ( not self.unitGUIDs[unitId] ) then
-                self.unitGUIDs[unitId] = UnitGUID(unitId);
+    if ( not self.unitGuidToId ) then
+        self.unitGuidToId = {};
+        if self.unit then
+            local unitGuid = UnitGUID(self.unit);
+            if unitGuid then
+                self.unitGuidToId[unitGuid] = self.unit;
+            end
+        else
+            for i = 1, addon.MAX_ARENA_SIZE do
+                local unitId = "arena" .. i;
+                local unitGuid = UnitGUID(unitId);
+                if unitGuid then
+                    self.unitGuidToId[unitGuid] = unitId;
+                end
             end
         end
-
-        return self.unitGUIDs;
     end
+
+    return self.unitGuidToId;
 end
 
 local function ResetCooldown(icon, amount, internalCooldown)
@@ -246,15 +244,16 @@ local function StartIcon(icon)
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
-    local guid = ValidateUnit(self);
-    if ( not guid ) then return end
+    local unitGuidToId = ValidateUnit(self);
+    -- If self.unit doesn't exist, unitGuidToId will be empty
+    if next(unitGuidToId) == nil then return end
 
     -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
     --     print(subEvent, spellName, spellId);
     -- end
 
     -- Check resets by spell cast
-    if ( subEvent == addon.SPELL_CAST_SUCCESS ) and ( sourceGUID == guid ) then
+    if ( subEvent == addon.SPELL_CAST_SUCCESS ) and ( unitGuidToId[sourceGUID] ) then
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
@@ -296,7 +295,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Check resets by crit damage (e.g., combustion)
-    if ( subEvent == addon.SPELL_DAMAGE ) and critical and ( sourceGUID == guid ) then
+    if ( subEvent == addon.SPELL_DAMAGE ) and critical and ( unitGuidToId[sourceGUID] ) then
         for i = 1, #resetByCrit do
             local reset = resetByCrit[i];
             local icon = self.activeMap[self.unit .. "-" .. reset];
@@ -315,7 +314,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Check reset by interrupts, Counterspell, solar Beam
     -- Solar Beam only reduces 15s when interrupting main target, how do we detect it? Cache last reduce time?
-    if ( subEvent == addon.SPELL_INTERRUPT ) and ( sourceGUID == guid ) then
+    if ( subEvent == addon.SPELL_INTERRUPT ) and ( unitGuidToId[sourceGUID] ) then
         local icon = self.activeMap[self.unit .. "-" .. spellId];
         local amount = icon and icon.spellInfo.reduce_on_interrupt;
         if icon and amount then
@@ -331,7 +330,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             addon.ResetBurstDuration(self.activeMap[self.unit .. "-" .. summonSpellId]);
         end
         return;
-    elseif ( subEvent == addon.SPELL_SUMMON ) and ( guid == sourceGUID ) then
+    elseif ( subEvent == addon.SPELL_SUMMON ) and ( unitGuidToId[sourceGUID] ) then
         -- We don't actually show the icon from SPELL_SUMMON, just create the mapping of mob GUID -> spellID
         local npcId = addon.GetNpcIdFromGuid(destGUID);
         local summonSpellId = npcToSpellID[npcId];
@@ -350,7 +349,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
-    if ( spellGUID ~= guid ) then return end
+    if ( not unitGuidToId[spellGUID] ) then return end
 
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) then
@@ -384,13 +383,13 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
         if isTestGroup and self.icons[iconID].Count then
             self.icons[iconID].Count:Show();
-        end 
+        end
     end
 end
 
 local function ProcessUnitSpellCast(self, event, ...)
-    local guid = ValidateUnit(self);
-    if ( not guid ) then return end
+    local guids = ValidateUnit(self);
+    if next(guids) == nil then return end
 
     local unitTarget, _, spellID = ...;
     if ( unitTarget == self.unit ) then
@@ -403,8 +402,8 @@ local function ProcessUnitSpellCast(self, event, ...)
 end
 
 local function ProcessUnitAura(self, event, ...)
-    local guid = ValidateUnit(self);
-    if ( not guid ) then return end
+    local guids = ValidateUnit(self);
+    if next(guids) == nil then return end
 
     local unitTarget, updateAuras = ...;
     -- Only use UNIT_AURA to extend aura
@@ -506,16 +505,12 @@ local function GetSetPointOptions(index, isInterruptBar)
     return setPointOptions;
 end
 
-local function EnsureIconGroup(index, isInterruptBar)
+local function EnsureIconGroup(index, unitId, isInterruptBar)
     local config = SweepyBoop.db.profile.arenaFrames;
 
     local iconGroup = isInterruptBar and iconGroupInterrupt or iconGroups[index];
 
     if ( not iconGroup ) then
-        local unitId;
-        if ( not isInterruptBar ) then
-            unitId = ( index == 0 and "player" ) or ( "arena" .. index );
-        end
         local setPointOptions = GetSetPointOptions(index, isInterruptBar);
         local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         iconGroup = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
@@ -537,24 +532,24 @@ end
 
 local function EnsureIconGroups()
     if addon.TEST_MODE then
-        EnsureIconGroup(0);
-        EnsureIconGroup(0, true); -- Interrupt bar
+        EnsureIconGroup(0, "player");
+        EnsureIconGroup(0, "player", true); -- Interrupt bar
     else
         for i = 1, addon.MAX_ARENA_SIZE do
-            EnsureIconGroup(i);
+            EnsureIconGroup(i, "arena" .. i);
         end
-        EnsureIconGroup(0, true); -- Interrupt bar
+        EnsureIconGroup(0, nil, true); -- Interrupt bar
     end
 end
 
 local function SetupIconGroups()
     if addon.TEST_MODE then
         SetupIconGroup(iconGroups[0], "player");
-        SetupIconGroup(iconGroups[0], "player", nil, true);
+        SetupIconGroup(iconGroupInterrupt, "player", nil, true);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             SetupIconGroup(iconGroups[i], "arena" .. i);
-            SetupIconGroup(iconGroups[i], "arena" .. i, nil, true);
+            SetupIconGroup(iconGroupInterrupt, "arena" .. i, nil, true);
         end
     end
 end
