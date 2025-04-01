@@ -652,7 +652,7 @@ function SweepyBoop:RepositionArenaCooldownTracker()
 end
 
 function SweepyBoop:TestArenaInterruptBar()
-    RefreshTestMode(2, externalTestIcons); -- Wipe the previous test frames first
+    RefreshTestMode(2, externalTestIconsInterrupt, true); -- Wipe the previous test frames first
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
@@ -666,7 +666,7 @@ function SweepyBoop:TestArenaInterruptBar()
     spellId = 147362; -- Counter Shot
     ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
-    externalTestGroup[1]:Show();
+    externalTestGroup[2]:Show();
 end
 
 function SweepyBoop:HideTestArenaInterruptBar()
