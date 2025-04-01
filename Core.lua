@@ -669,7 +669,7 @@ if addon.PROJECT_MAINLINE then
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionTestGroup();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
                                 end
                             },
                             arenaCooldownOffsetY = {
@@ -683,7 +683,7 @@ if addon.PROJECT_MAINLINE then
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionTestGroup();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
                                 end
                             },
                             unusedIconAlpha = {
@@ -817,7 +817,7 @@ if addon.PROJECT_MAINLINE then
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionTestGroup();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
                                 end
                             },
                             interruptBarOffsetY = {
@@ -831,7 +831,7 @@ if addon.PROJECT_MAINLINE then
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionTestGroup();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
                                 end
                             },
                             interruptBarUnusedIconAlpha = {

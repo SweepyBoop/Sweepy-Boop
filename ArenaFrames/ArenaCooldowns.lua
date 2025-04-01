@@ -638,7 +638,7 @@ function SweepyBoop:HideTestArenaCooldownTracker()
     end
 end
 
-function SweepyBoop:RepositionTestGroup()
+function SweepyBoop:RepositionArenaCooldownTracker()
     if ( not externalTestGroup[1] ) or ( not externalTestGroup[1]:IsShown() ) then return end
 
     local config = SweepyBoop.db.profile.arenaFrames;
