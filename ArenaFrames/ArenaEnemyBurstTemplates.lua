@@ -139,7 +139,7 @@ addon.StartBurstIcon = function (icon)
     end
 
     if icon.group then
-        addon.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
+        addon.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
     end
 end
 

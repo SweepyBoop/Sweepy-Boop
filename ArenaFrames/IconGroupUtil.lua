@@ -173,8 +173,8 @@ addon.IconGroup_Remove = function (group, icon, fade)
         return;
     end
 
-    if icon.spellID then
-        group.activeMap[icon.spellID] = nil;
+    if icon.unit and icon.spellID then
+        group.activeMap[icon.unit .. "-" .. icon.spellID] = nil;
     end
 
     local active = group.active;
