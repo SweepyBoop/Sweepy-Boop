@@ -551,6 +551,7 @@ if addon.PROJECT_MAINLINE then
             individual = {
                 order = 1,
                 type = "group",
+                childGroups = "tab",
                 name = "Arena frames",
                 args = {
                     testmode = {
