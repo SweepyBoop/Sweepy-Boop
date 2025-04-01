@@ -543,7 +543,7 @@ local function EnsureIconGroups()
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i);
         end
-        EnsureIconGroup(0, true); -- Interrupt bar (LUA Error)
+        EnsureIconGroup(0, true); -- Interrupt bar
     end
 end
 
