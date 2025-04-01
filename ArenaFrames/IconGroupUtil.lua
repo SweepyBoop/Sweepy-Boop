@@ -120,10 +120,12 @@ local function sortFunc(a, b)
 end
 
 addon.IconGroup_Insert = function (group, icon, index)
+    if ( not group ) then return end
+
     -- If already showing, do not need to add
-    if ( not group ) or ( icon:IsShown() ) then
+    if icon:IsShown() then
         -- baseline icon needs to be added to activeMap if not already there
-        if group and index then
+        if index then
             group.activeMap[index] = icon;
         end
         return;
