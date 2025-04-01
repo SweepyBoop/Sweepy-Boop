@@ -540,7 +540,7 @@ if addon.PROJECT_MAINLINE then
         order = 5,
         type = "group",
         childGroups = "tab",
-        name = "Arena cooldown tracker",
+        name = "Arena cooldowns",
         handler = SweepyBoop, -- for running SweepyBoop:TestArena()
         get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
         set = function(info, val)
