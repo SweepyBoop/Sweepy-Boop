@@ -69,7 +69,7 @@ local function EnsureIcons()
         local unitId = "player";
         premadeIcons[unitId] = premadeIcons[unitId] or {};
         for spellID, spell in pairs(spellData) do
-            if ( not spell.use_parent_icon ) then
+            if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) and ( not spell.use_parent_icon ) then
                 EnsureIcon(unitId, spellID);
             end
         end
@@ -78,7 +78,7 @@ local function EnsureIcons()
             local unitId = "arena"..i;
             premadeIcons[unitId] = premadeIcons[unitId] or {};
             for spellID, spell in pairs(spellData) do
-                if ( not spell.use_parent_icon ) then
+                if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) and ( not spell.use_parent_icon ) then
                     EnsureIcon(unitId, spellID);
                 end
             end
