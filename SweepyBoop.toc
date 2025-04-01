@@ -59,7 +59,7 @@ RaidFrames\DruidHoTHelper.lua
 # UI Personalization (Internal)
 #Internal\LoseControl.lua
 #Internal\Personalization.lua
-#Internal\HideHotKeys.lua
+Internal\HideHotKeys.lua
 
 # Misc (Internal)
 #Internal\DrinkMacro.lua
