@@ -540,7 +540,7 @@ if addon.PROJECT_MAINLINE then
         order = 5,
         type = "group",
         childGroups = "tab",
-        name = "Arena Frames",
+        name = "Arena cooldown tracker",
         handler = SweepyBoop, -- for running SweepyBoop:TestArena()
         get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
         set = function(info, val)
@@ -764,7 +764,7 @@ if addon.PROJECT_MAINLINE then
     options.args.raidFrames = {
         order = 6,
         type = "group",
-        name = "Raid Frames",
+        name = "Raid frames",
         get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
         set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
         args = {
