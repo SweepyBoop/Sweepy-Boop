@@ -61,3 +61,4 @@ Internal\FocusMacros.lua
 Internal\CustomAuras.xml
 Internal\CustomAuras.lua
 Internal\CustomStatusBar.lua
+Internal\CpuUsage.lua
