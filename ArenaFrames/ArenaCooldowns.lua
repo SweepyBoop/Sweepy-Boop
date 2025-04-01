@@ -7,7 +7,7 @@ local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
 local npcToSpellID = {
     [101398] = 211522, -- Psyfiend
     [62982] = 200174, -- Mindbender
-    [196111] = 387578, -- Gul'dan's Ambition (Pit Lord)
+    --[196111] = 387578, -- Gul'dan's Ambition (Pit Lord)
 };
 
 local resetByPower = {
