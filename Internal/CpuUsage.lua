@@ -7,10 +7,7 @@ eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
 eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
 eventFrame:SetScript("OnEvent", function(_, event)
-    if ( event == "PLAYER_ENTERING_WORLD" ) then
-        ResetCPUUsage();
-        lastUpdated = nil;
-    elseif ( event == "PVP_MATCH_ACTIVE" ) then
+    if event == "PVP_MATCH_ACTIVE" or ( event == "PLAYER_ENTERING_WORLD" and C_PvP.IsMatchActive() ) then
         ResetCPUUsage();
         lastUpdated = GetTime();
     elseif ( event == "PVP_MATCH_COMPLETE" ) then
