@@ -18,7 +18,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
             local addonInfo = {}; -- each entry contains name and ms spent per Sec
             for i = 1, C_AddOns.GetNumAddOns() do
                 local name = C_AddOns.GetAddOnInfo(i);
-                local cpuUsage = string.format("%.2f", GetAddOnCPUUsage(i) / elapsed);
+                local cpuUsage = tonumber(string.format("%.2f", GetAddOnCPUUsage(i) / elapsed));
                 table.insert(addonInfo, { name = name, cpuUsage = cpuUsage });
             end
 
