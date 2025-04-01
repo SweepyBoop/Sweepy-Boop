@@ -332,7 +332,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) then
         local icon = self.activeMap[self.unit .. "-" .. spellId];
-        print("Spell aura removed", self.unit .. "-" .. spellId, self.activeMap[self.unit .. "-" .. spellId]);
         if icon and ( icon.template == addon.ICON_TEMPLATE.GLOW ) then
             addon.ResetBurstDuration(icon);
             return;
@@ -359,7 +358,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
 
         StartIcon(self.icons[iconID]);
-        print(self.unit .. "-" .. spellId, self.activeMap[self.unit .. "-" .. spellId]);
 
         if isTestGroup and self.icons[iconID].Count then
             self.icons[iconID].Count:Show();
