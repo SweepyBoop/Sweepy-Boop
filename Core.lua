@@ -1386,7 +1386,8 @@ function SweepyBoop:OnInitialize()
     self:SetupNameplateModules();
 
     -- Only nameplate modules for Classic currently
-    if ( not addon.PROJECT_MAINLINE ) then return end
+    -- If only enabling nameplates, 7 ms / Sec CPU, otherwise 11 ms / Sec CPU
+    if ( addon.PROJECT_MAINLINE ) then return end
 
     self:SetupArenaCooldownTracker();
 
