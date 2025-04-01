@@ -136,7 +136,7 @@ options.args.nameplatesFriendly = {
                 return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
             end
         },
-        
+
         visibilityHeader = {
             order = 9,
             type = "header",
@@ -548,170 +548,180 @@ if addon.PROJECT_MAINLINE then
             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
         end,
         args = {
-            general = {
+            individual = {
                 order = 1,
                 type = "group",
-                name = "General",
+                name = "Arena frames",
                 args = {
-                    healerIndicator = {
-                        order = 1,
-                        type = "toggle",
-                        name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
-                        desc = "To make it easier to identify the healer in case of class stacking",
-                        width = "full",
-                        hidden = function ()
-                            return ( not ( Gladius or sArena ) );
-                        end
-                    },
-
-                    header1 = {
-                        order = 2,
-                        type = "header",
-                        name = "Arena opponent cooldowns",
-                    },
-
                     testmode = {
-                        order = 3,
+                        order = 1,
                         type = "execute",
                         name = "Test",
                         func = "TestArena",
                         width = "half",
                     },
                     hidetest = {
-                        order = 4,
+                        order = 2,
                         type = "execute",
                         name = "Hide",
                         func = "HideTestArenaCooldownTracker",
                         width = "half",
                     },
                     tooltipForExtraCharge = {
-                        order = 5,
+                        order = 3,
                         type = "description",
                         fontSize = "medium",
                         width = "full",
                         name = addon.FORMAT_ATLAS(addon.CHARGE_TEXTURE, 16) .. " on cooldown icon means there is another charge available",
                     },
 
-                    arenaCooldownTrackerEnabled = {
-                        order = 6,
-                        width = "full",
-                        type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enabled",
-                    },
-                    arenaCooldownSeparateRowForDefensive = {
-                        order = 7,
-                        width = "full",
-                        type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Separate row for defensives",
-                    },
+                    general = {
+                        order = 4,
+                        type = "group",
+                        childGroups = "tab",
+                        name = "Settings",
+                        args = {
+                            -- healerIndicator = {
+                            --     order = 1,
+                            --     type = "toggle",
+                            --     name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
+                            --     desc = "To make it easier to identify the healer in case of class stacking",
+                            --     width = "full",
+                            --     hidden = function ()
+                            --         return ( not ( Gladius or sArena ) );
+                            --     end
+                            -- },
 
-                    showUnusedIcons = {
-                        order = 8,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Show unused icons",
-                        desc = "Show unused icons for abilities that are not on cooldown",
-                    },
+                            -- header1 = {
+                            --     order = 2,
+                            --     type = "header",
+                            --     name = "Arena opponent cooldowns",
+                            -- },
 
-                    hideCountDownNumbers = {
-                        order = 9,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
-                        desc = "Hide countdown numbers but show a more visible swiping edge",
-                    },
+                            
 
-                    arenaCooldownGrowDirection = {
-                        order = 10,
-                        type = "select",
-                        width = 0.75,
-                        name = "Grow direction",
-                        values = {
-                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
-                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
-                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
-                            [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                            arenaCooldownTrackerEnabled = {
+                                order = 6,
+                                width = "full",
+                                type = "toggle",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enabled",
+                            },
+                            arenaCooldownSeparateRowForDefensive = {
+                                order = 7,
+                                width = "full",
+                                type = "toggle",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Separate row for defensives",
+                            },
+
+                            showUnusedIcons = {
+                                order = 8,
+                                type = "toggle",
+                                width = "full",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Show unused icons",
+                                desc = "Show unused icons for abilities that are not on cooldown",
+                            },
+
+                            hideCountDownNumbers = {
+                                order = 9,
+                                type = "toggle",
+                                width = "full",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
+                                desc = "Hide countdown numbers but show a more visible swiping edge",
+                            },
+
+                            arenaCooldownGrowDirection = {
+                                order = 10,
+                                type = "select",
+                                width = 0.75,
+                                name = "Grow direction",
+                                values = {
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                                },
+                            },
+
+                            arenaCooldownTrackerIconSize = {
+                                order = 11,
+                                type = "range",
+                                width = 0.75,
+                                min = 16,
+                                max = 64,
+                                step = 1,
+                                name = "Icon size",
+                                desc = "Size of arena defensive cooldown icons",
+                            },
+
+                            newline = {
+                                order = 12,
+                                type = "description",
+                                name = "",
+                            },
+
+                            arenaCooldownOffsetX = {
+                                order = 13,
+                                type = "range",
+                                min = -300,
+                                max = 300,
+                                step = 1,
+                                name = "X offset",
+                                desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionTestGroup();
+                                end
+                            },
+                            arenaCooldownOffsetY = {
+                                order = 14,
+                                type = "range",
+                                min = -150,
+                                max = 150,
+                                step = 1,
+                                name = "Y offset",
+                                desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionTestGroup();
+                                end
+                            },
+                            unusedIconAlpha = {
+                                order = 15,
+                                type = "range",
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "Unused icon transparency",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                end
+                            }
                         },
                     },
 
-                    arenaCooldownTrackerIconSize = {
-                        order = 11,
-                        type = "range",
-                        width = 0.75,
-                        min = 16,
-                        max = 64,
-                        step = 1,
-                        name = "Icon size",
-                        desc = "Size of arena defensive cooldown icons",
-                    },
-
-                    newline = {
-                        order = 12,
-                        type = "description",
-                        name = "",
-                    },
-
-                    arenaCooldownOffsetX = {
-                        order = 13,
-                        type = "range",
-                        min = -300,
-                        max = 300,
-                        step = 1,
-                        name = "X offset",
-                        desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
-                        set = function (info, val)
-                            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                            SweepyBoop:RepositionTestGroup();
-                        end
-                    },
-                    arenaCooldownOffsetY = {
-                        order = 14,
-                        type = "range",
-                        min = -150,
-                        max = 150,
-                        step = 1,
-                        name = "Y offset",
-                        desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
-                        set = function (info, val)
-                            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                            SweepyBoop:RepositionTestGroup();
-                        end
-                    },
-                    unusedIconAlpha = {
-                        order = 15,
-                        type = "range",
-                        isPercent = true,
-                        min = 0.5,
-                        max = 1,
-                        step = 0.1,
-                        name = "Unused icon transparency",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
-                        end
+                    spellList = {
+                        order = 5,
+                        type = "group",
+                        name = "Spells",
+                        desc = "Select which abilities to track cooldown inside arenas",
+                        get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
+                        set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
+                        args = {
+                            restoreDefaults = {
+                                order = 1,
+                                type = "execute",
+                                name = "Restore default",
+                                func = function ()
+                                    SweepyBoop:CheckDefaultArenaAbilities();
+                                end
+                            },
+                        },
                     }
                 },
             },
-
-            spellList = {
-                order = 2,
-                type = "group",
-                name = "Spells",
-                desc = "Select which abilities to track cooldown inside arenas",
-                get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
-                set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
-                args = {
-                    restoreDefaults = {
-                        order = 1,
-                        type = "execute",
-                        name = "Restore default",
-                        func = function ()
-                            SweepyBoop:CheckDefaultArenaAbilities();
-                        end
-                    },
-                },
-            }
         },
     };
 
@@ -720,7 +730,7 @@ if addon.PROJECT_MAINLINE then
     -- Ensure one group for each class, in order
     for _, classID in ipairs(addon.CLASSORDER) do
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
-        options.args.arenaFrames.args.spellList.args[classInfo.classFile] = {
+        options.args.arenaFrames.args.individual.args.spellList.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -759,7 +769,7 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
-    AppendSpellOptions(options.args.arenaFrames.args.spellList, addon.SpellData);
+    AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData);
 
     options.args.raidFrames = {
         order = 6,
