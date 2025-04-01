@@ -732,14 +732,14 @@ if addon.PROJECT_MAINLINE then
                         order = 1,
                         type = "execute",
                         name = "Test",
-                        --func = "TestArena",
+                        func = "TestArenaInterrupt",
                         width = "half",
                     },
                     hidetest = {
                         order = 2,
                         type = "execute",
                         name = "Hide",
-                        --func = "HideTestArenaCooldownTracker",
+                        func = "HideTestArenaInterruptBar",
                         width = "half",
                     },
 
@@ -1460,6 +1460,15 @@ function SweepyBoop:TestArena()
     end
 
     self:TestArenaCooldownTracker();
+end
+
+function SweepyBoop:TestArenaInterrupt()
+    if IsInInstance() then
+        addon.PRINT("Test mode can only be used outside instances");
+        return;
+    end
+
+    self:TestArenaInterruptBar();
 end
 
 function SweepyBoop:RefreshConfig()

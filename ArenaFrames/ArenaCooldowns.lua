@@ -555,6 +555,7 @@ local function SetupIconGroups()
 end
 
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
+local externalTestIconsInterrupt = {}; -- Premake icons for "Toggle Test Mode" interrupt bar
 local externalTestGroup = {}; -- 1 for "Arena frames", 2 for "Interrupt bar". LUA only passes table by reference
 
 local function RefreshTestMode(index, testIcons, isInterruptBar)
@@ -574,7 +575,9 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
         testIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
             local isEnabled = false;
-            if spell.class == addon.PRIEST then
+            if isInterruptBar then
+                isEnabled = ( spell.category == addon.SPELLCATEGORY.INTERRUPT );
+            elseif spell.class == addon.PRIEST then
                 if spell.use_parent_icons then
                     -- Don't create if using parent icon
                 elseif ( not spell.spec ) then
@@ -648,6 +651,41 @@ function SweepyBoop:RepositionArenaCooldownTracker()
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[1], setPointOptions, grow);
 end
 
+function SweepyBoop:TestArenaInterruptBar()
+    RefreshTestMode(2, externalTestIcons); -- Wipe the previous test frames first
+
+    local subEvent = addon.SPELL_CAST_SUCCESS;
+    local sourceGUID = UnitGUID("player");
+    local destGUID = UnitGUID("player");
+    local spellId = 1766; -- Kick
+    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+
+    spellId = 2139; -- Counterspell
+    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+
+    spellId = 147362; -- Counter Shot
+    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+
+    externalTestGroup[1]:Show();
+end
+
+function SweepyBoop:HideTestArenaInterruptBar()
+    addon.IconGroup_Wipe(externalTestGroup[2]);
+    if externalTestGroup[2] then
+        externalTestGroup[2]:Hide();
+    end
+end
+
+function SweepyBoop:RepositionArenaInterruptBar()
+    if ( not externalTestGroup[2] ) or ( not externalTestGroup[2]:IsShown() ) then return end
+
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+    local setPointOptions = GetSetPointOptions(1);
+    setPointOptions.offsetX = config.arenaCooldownOffsetX;
+    addon.UpdateIconGroupSetPointOptions(externalTestGroup[2], setPointOptions, grow);
+end
+
 function SweepyBoop:SetupArenaCooldownTracker()
     EnsureIcons();
     EnsureIconGroups();
@@ -693,6 +731,9 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     if iconGroups[i] then
                         ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                     end
+                end
+                if iconGroupInterrupt[0] then
+                    ProcessCombatLogEvent(iconGroupInterrupt[0], subEvent, sourceGUID, destGUID, spellId, spellName);
                 end
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
