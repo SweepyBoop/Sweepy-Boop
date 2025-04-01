@@ -511,9 +511,11 @@ end
 local function SetupIconGroups()
     if addon.TEST_MODE then
         SetupIconGroup(iconGroups[0], "player");
+        SetupIconGroup(iconGroups[0], "player", nil, true);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             SetupIconGroup(iconGroups[i], "arena" .. i);
+            SetupIconGroup(iconGroups[i], "arena" .. i, nil, true);
         end
     end
 end
