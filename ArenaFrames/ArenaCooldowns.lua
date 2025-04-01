@@ -24,7 +24,7 @@ local resetByCrit = {
 local premadeIcons = {};
 local iconGroups = {}; -- One group per arena opponent
 local premadeIconsInterrupt = {};
-local iconGroupInterrupt; -- One group for all arena opponents
+local iconGroupInterrupt = {}; -- One group for all arena opponents
 local eventFrame;
 
 for spellID, spell in pairs(spellData) do
@@ -508,7 +508,7 @@ end
 local function EnsureIconGroup(index, unitId, isInterruptBar)
     local config = SweepyBoop.db.profile.arenaFrames;
 
-    local iconGroup = isInterruptBar and iconGroupInterrupt or iconGroups[index];
+    local iconGroup = isInterruptBar and iconGroupInterrupt[index] or iconGroups[index];
 
     if ( not iconGroup ) then
         local setPointOptions = GetSetPointOptions(index, isInterruptBar);
@@ -545,32 +545,33 @@ end
 local function SetupIconGroups()
     if addon.TEST_MODE then
         SetupIconGroup(iconGroups[0], "player");
-        SetupIconGroup(iconGroupInterrupt, "player", nil, true);
+        SetupIconGroup(iconGroupInterrupt[0], "player", nil, true);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             SetupIconGroup(iconGroups[i], "arena" .. i);
-            SetupIconGroup(iconGroupInterrupt, "arena" .. i, nil, true);
+            SetupIconGroup(iconGroupInterrupt[0], "arena" .. i, nil, true);
         end
     end
 end
 
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
-local externalTestGroup; -- Icon group for "Toggle Test Mode"
+local externalTestGroup = {}; -- 1 for "Arena frames", 2 for "Interrupt bar". LUA only passes table by reference
 
-local function RefreshTestMode()
-    addon.IconGroup_Wipe(externalTestGroup);
+local function RefreshTestMode(index, testIcons, isInterruptBar)
+    addon.IconGroup_Wipe(externalTestGroup[index]);
 
     local config = SweepyBoop.db.profile.arenaFrames;
-    local scale = config.arenaCooldownTrackerIconSize / addon.DEFAULT_ICON_SIZE;
+    local iconSize = isInterruptBar and config.interruptBarIconSize or config.arenaCooldownTrackerIconSize;
+    local iconScale = iconSize / addon.DEFAULT_ICON_SIZE;
+    local hideCountDownNumbers = isInterruptBar and config.interruptBarHideCountDownNumbers or config.hideCountDownNumbers;
     local unitId = "player";
-    if externalTestIcons[unitId] then
-        for _, icon in pairs(externalTestIcons[unitId]) do
-            icon:SetScale(scale);
-            addon.SetHideCountdownNumbers(icon, config.hideCountDownNumbers);
+    if testIcons[unitId] then
+        for _, icon in pairs(testIcons[unitId]) do
+            icon:SetScale(iconScale);
+            addon.SetHideCountdownNumbers(icon, hideCountDownNumbers);
         end
     else
-        externalTestIcons[unitId] = {};
-        local iconSize = config.arenaCooldownTrackerIconSize;
+        testIcons[unitId] = {};
         for spellID, spell in pairs(spellData) do
             local isEnabled = false;
             if spell.class == addon.PRIEST then
@@ -589,63 +590,62 @@ local function RefreshTestMode()
             end
             if isEnabled then
                 if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
-                    externalTestIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
+                    testIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
                 else
-                    externalTestIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
+                    testIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
                 end
-                addon.SetHideCountdownNumbers(externalTestIcons[unitId][spellID], config.hideCountDownNumbers);
+                addon.SetHideCountdownNumbers(testIcons[unitId][spellID], hideCountDownNumbers);
             end
         end
     end
 
-    local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
-    local setPointOptions = GetSetPointOptions(1);
-    setPointOptions.offsetX = config.arenaCooldownOffsetX;
-    if externalTestGroup then
-        addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
+    local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+    local setPointOptions = GetSetPointOptions(1, isInterruptBar);
+    if externalTestGroup[index] then
+        addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
     else
-        externalTestGroup = addon.CreateIconGroup(setPointOptions, grow, unitId);
+        externalTestGroup[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
     end
 
-    SetupIconGroup(externalTestGroup, unitId, externalTestIcons);
+    SetupIconGroup(externalTestGroup[index], unitId, testIcons, isInterruptBar);
 end
 
 function SweepyBoop:TestArenaCooldownTracker()
-    RefreshTestMode(); -- Wipe the previous test frames first
+    RefreshTestMode(1, externalTestIcons); -- Wipe the previous test frames first
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 8122; -- Psychic Scream
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 33206; -- Pain Suppression
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 62618; -- Power Word: Barrier
-    ProcessCombatLogEvent(externalTestGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
-    externalTestGroup:Show();
+    externalTestGroup[1]:Show();
 end
 
 function SweepyBoop:HideTestArenaCooldownTracker()
-    addon.IconGroup_Wipe(externalTestGroup);
-    if externalTestGroup then
-        externalTestGroup:Hide();
+    addon.IconGroup_Wipe(externalTestGroup[1]);
+    if externalTestGroup[1] then
+        externalTestGroup[1]:Hide();
     end
 end
 
 function SweepyBoop:RepositionTestGroup()
-    if ( not externalTestGroup ) or ( not externalTestGroup:IsShown() ) then return end
+    if ( not externalTestGroup[1] ) or ( not externalTestGroup[1]:IsShown() ) then return end
 
     local config = SweepyBoop.db.profile.arenaFrames;
     local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     local setPointOptions = GetSetPointOptions(1);
     setPointOptions.offsetX = config.arenaCooldownOffsetX;
-    addon.UpdateIconGroupSetPointOptions(externalTestGroup, setPointOptions, grow);
+    addon.UpdateIconGroupSetPointOptions(externalTestGroup[1], setPointOptions, grow);
 end
 
 function SweepyBoop:SetupArenaCooldownTracker()
