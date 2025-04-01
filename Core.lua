@@ -809,8 +809,8 @@ if addon.PROJECT_MAINLINE then
                             interruptBarOffsetX = {
                                 order = 13,
                                 type = "range",
-                                min = -300,
-                                max = 300,
+                                min = -2500,
+                                max = 2500,
                                 step = 1,
                                 name = "X offset",
                                 desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
@@ -823,8 +823,8 @@ if addon.PROJECT_MAINLINE then
                             interruptBarOffsetY = {
                                 order = 14,
                                 type = "range",
-                                min = -150,
-                                max = 150,
+                                min = -1500,
+                                max = 1500,
                                 step = 1,
                                 name = "Y offset",
                                 desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
@@ -1283,7 +1283,7 @@ local defaults = {
             separateBarForInterrupts = true,
             interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
             interruptBarOffsetX = 0,
-            interruptBarOffsetY = 0,
+            interruptBarOffsetY = -150,
             interruptBarIconSize = 40,
             interruptBarUnusedIconAlpha = 0.5,
             interruptBarShowUnused = false,
@@ -1330,7 +1330,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.showUnusedIcons = true;
     defaults.profile.arenaFrames.interruptBarEnabled = true;
     defaults.profile.arenaFrames.interruptBarShowUnused = true;
-    defaults.profile.arenaFrames.interruptBarOffsetY = -150;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
 end
