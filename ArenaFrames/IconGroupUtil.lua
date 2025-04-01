@@ -120,8 +120,15 @@ local function sortFunc(a, b)
 end
 
 addon.IconGroup_Insert = function (group, icon, index)
-    -- If already showing, do not need to add
-    if ( not group ) or ( icon:IsShown() ) then return end
+    if ( not group ) then return end
+
+    if icon:IsShown() then
+        -- baseline icon needs to be added to activeMap if not already there
+        if index then
+            group.activeMap[index] = icon;
+        end
+        return;
+    end
 
     -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
     if group.setPointOptions then
