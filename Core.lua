@@ -1280,7 +1280,7 @@ local defaults = {
             spellList = {},
 
             interruptBarEnabled = false;
-            interruptBarSeparateRowForInterrupts = true,
+            separateBarForInterrupts = true,
             interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
             interruptBarOffsetX = 0,
             interruptBarOffsetY = 0,
