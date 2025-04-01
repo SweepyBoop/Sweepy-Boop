@@ -313,9 +313,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         self.npcMap[destGUID] = summonSpellId;
 
         -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
-        if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) and SweepyBoop.db.profile.arenaFrames.spellList[tostring(summonSpellId)]  then
-            StartIcon(self.icons[summonSpellId]);
-        end
+        -- if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) and SweepyBoop.db.profile.arenaFrames.spellList[tostring(summonSpellId)]  then
+        --     StartIcon(self.icons[summonSpellId]);
+        -- end
         return;
     end
 
