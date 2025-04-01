@@ -528,6 +528,12 @@ local function EnsureIconGroup(index, unitId, isInterruptBar)
     -- Clear previous icons
     --print("Clear previous icons");
     addon.IconGroup_Wipe(iconGroup);
+
+    if isInterruptBar then -- Since iconGroup is passed by value
+        iconGroupInterrupt[index] = iconGroup;
+    else
+        iconGroups[index] = iconGroup;
+    end
 end
 
 local function EnsureIconGroups()
