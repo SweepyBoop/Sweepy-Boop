@@ -177,6 +177,10 @@ local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
                     enabled = specEnabled;
                 end
 
+                if isInterruptBar then
+                    print(spellID, enabled);
+                end
+
                 if enabled then
                     -- Reset dynamic info before populating to group
                     iconSet[unit][spellID].info = GetSpecOverrides(spell);
@@ -687,7 +691,7 @@ function SweepyBoop:RepositionArenaInterruptBar()
 
     local config = SweepyBoop.db.profile.arenaFrames;
     local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
-    local setPointOptions = GetSetPointOptions(1);
+    local setPointOptions = GetSetPointOptions(1, true);
     setPointOptions.offsetX = config.arenaCooldownOffsetX;
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[2], setPointOptions, grow);
 end
@@ -739,6 +743,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     end
                 end
                 if iconGroupInterrupt[0] then
+                    print(iconGroupInterrupt[0]:GetPoint());
                     ProcessCombatLogEvent(iconGroupInterrupt[0], subEvent, sourceGUID, destGUID, spellId, spellName);
                 end
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
