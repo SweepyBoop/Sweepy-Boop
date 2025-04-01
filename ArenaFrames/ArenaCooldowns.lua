@@ -123,7 +123,7 @@ local function GetSpecOverrides(spell, spec)
     return overrides;
 end
 
-local function SetupIconGroup(group, unit, testIcons)
+local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         local config = SweepyBoop.db.profile.arenaFrames;
@@ -134,8 +134,10 @@ local function SetupIconGroup(group, unit, testIcons)
                 testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                 addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
 
-                if spell.baseline and config.showUnusedIcons then
-                    testIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
+                local showUnusedIcons = isInterruptBar and config.showUnusedInterruptIcons or config.showUnusedIcons;
+                local unusedIconAlpha = isInterruptBar and config.unusedInterruptIconAlpha or config.unusedIconAlpha;
+                if spell.baseline and showUnusedIcons then
+                    testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
                     addon.IconGroup_Insert(group, testIcons[unit][spellID]);
                 end
             end
@@ -149,10 +151,11 @@ local function SetupIconGroup(group, unit, testIcons)
     if ( not class ) then return end
 
     local config = SweepyBoop.db.profile.arenaFrames;
+    local iconSet = isInterruptBar and premadeIconsInterrupt or premadeIcons;
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
-        if premadeIcons[unit][spellID] then
+        if iconSet[unit][spellID] then
             if ( not spell.class ) or ( spell.class == class ) then
                 local enabled = true;
                 -- Does this spell filter by spec?
@@ -176,15 +179,18 @@ local function SetupIconGroup(group, unit, testIcons)
 
                 if enabled then
                     -- Reset dynamic info before populating to group
-                    premadeIcons[unit][spellID].info = GetSpecOverrides(spell);
+                    iconSet[unit][spellID].info = GetSpecOverrides(spell);
                     -- The texture might have been set by use_parent_icon icons
-                    premadeIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
-                    addon.IconGroup_PopulateIcon(group, premadeIcons[unit][spellID], spellID);
+                    iconSet[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                    addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], spellID);
                     --print("Populated", unit, spell.class, spellID)
 
-                    if spell.baseline and config.showUnusedIcons and config.spellList[tostring(spellID)] then
-                        premadeIcons[unit][spellID]:SetAlpha(config.unusedIconAlpha);
-                        addon.IconGroup_Insert(group, premadeIcons[unit][spellID]);
+                    local showUnusedIcons = isInterruptBar and config.showUnusedInterruptIcons or config.showUnusedIcons;
+                    local unusedIconAlpha = isInterruptBar and config.unusedInterruptIconAlpha or config.unusedIconAlpha;
+                    local spellList = isInterruptBar and config.interruptBarSpellList or config.spellList;
+                    if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
+                        iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
+                        addon.IconGroup_Insert(group, iconSet[unit][spellID]);
                     end
                 end
             end
