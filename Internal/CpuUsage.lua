@@ -12,8 +12,8 @@ eventFrame:SetScript("OnEvent", function(_, event)
     elseif ( event == "PVP_MATCH_COMPLETE" ) then
         local now = GetTime();
         if lastUpdated then
-            local elapsed = now - lastUpdated;
             UpdateAddOnCPUUsage();
+            local elapsed = now - lastUpdated;
 
             local addonInfo = {}; -- each entry contains name and ms spent per Sec
             for i = 1, GetNumAddOns() do
