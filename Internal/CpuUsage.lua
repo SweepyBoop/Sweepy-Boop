@@ -25,9 +25,9 @@ eventFrame:SetScript("OnEvent", function(_, event)
             -- sort by CPU usage
             table.sort(addonInfo, function(a, b) return a.cpuUsage > b.cpuUsage end);
 
-            -- print top 3 add-ons
-            print("Top 3 Addons by CPU Usage in last PvP match:");
-            for i = 1, math.min(3, #addonInfo) do
+            -- print top 5 add-ons
+            print("Top 5 Addons by CPU Usage in last PvP match:");
+            for i = 1, math.min(5, #addonInfo) do
                 local info = addonInfo[i];
                 print(info.name .. ": " .. info.cpuUsage .. " ms / Sec");
             end
