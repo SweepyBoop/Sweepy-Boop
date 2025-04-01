@@ -885,14 +885,22 @@ if addon.PROJECT_MAINLINE then
             name = classInfo.className,
             args = {},
         };
+        options.args.arenaFrames.args.interrupts.args.interrutBarSpellList.args[classInfo.classFile] = {
+            order = groupIndex,
+            type = "group",
+            icon = addon.ICON_ID_CLASSES,
+            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+            name = classInfo.className,
+            args = {},
+        };
 
         indexInClassGroup[classInfo.classFile] = 1;
         groupIndex = groupIndex + 1;
     end
-    local function AppendSpellOptions(group, spellList)
+    local function AppendSpellOptions(group, spellList, excludeCategory)
         for spellID, spellInfo in pairs(spellList) do
             local category = spellInfo.category;
-            if ( category ~= addon.SPELLCATEGORY.INTERRUPT ) and ( not spellInfo.parent ) then
+            if ( category ~= excludeCategory ) and ( not spellInfo.parent ) then
                 local classFile = spellInfo.class;
                 local classGroup = group.args[classFile];
                 local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
@@ -916,7 +924,8 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
-    AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData);
+    AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellOptions(options.args.arenaFrames.args.interrupts.args.interrutBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
 
     options.args.raidFrames = {
         order = 6,
@@ -1350,8 +1359,21 @@ local function SetupAllSpells(profile, spellList)
     end
 end
 
+local function SetupInterrupts(profile, spellList)
+    for spellID, spellEntry in pairs(spellList) do
+        local category = spellEntry.category;
+        -- By default only check interrupts
+        if ( category == addon.SPELLCATEGORY.INTERRUPT ) then
+            profile[tostring(spellID)] = true;
+        else
+            profile[tostring(spellID)] = false;
+        end
+    end
+end
+
 if addon.PROJECT_MAINLINE then
     SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+    SetupInterrupts(defaults.profile.arenaFrames.interrutBarSpellList, addon.SpellData);
 end
 
 function SweepyBoop:OnInitialize()
