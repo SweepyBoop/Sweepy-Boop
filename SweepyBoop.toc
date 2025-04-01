@@ -50,6 +50,7 @@ ArenaFrames\CooldownTracking.xml
 ArenaFrames\CooldownTrackingTemplates.lua
 ArenaFrames\ArenaEnemyBurstTemplates.lua
 ArenaFrames\ArenaCooldowns.lua
+ArenaFrames\InterruptBar.lua
 ArenaFrames\HealerIndicator.lua
 
 #RaidFrames\SortGroup.lua
