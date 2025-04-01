@@ -123,7 +123,7 @@ addon.IconGroup_Insert = function (group, icon, index)
     -- If already showing, do not need to add
     if ( not group ) or ( icon:IsShown() ) then
         -- baseline icon needs to be added to activeMap if not already there
-        if index then
+        if group and index then
             group.activeMap[index] = icon;
         end
         return;
