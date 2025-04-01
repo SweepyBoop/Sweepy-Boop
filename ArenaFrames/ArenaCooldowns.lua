@@ -549,7 +549,7 @@ local function SetupIconGroups()
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             SetupIconGroup(iconGroups[i], "arena" .. i);
-            SetupIconGroup(iconGroupInterrupt[0], "arena" .. i, nil, true);
+            SetupIconGroup(iconGroupInterrupt[0], nil, nil, true);
         end
     end
 end
