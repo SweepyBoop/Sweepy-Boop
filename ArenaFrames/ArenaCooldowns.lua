@@ -24,7 +24,7 @@ local resetByCrit = {
 local premadeIcons = {};
 local iconGroups = {}; -- One group per arena opponent
 local premadeIconsInterrupt = {};
-local iconGroupInterrupt = {}; -- One group for all arena opponents
+local iconGroupInterrupt; -- One group for all arena opponents
 local eventFrame;
 
 for spellID, spell in pairs(spellData) do
