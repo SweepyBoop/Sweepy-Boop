@@ -4,9 +4,13 @@ local lastUpdated;
 
 local eventFrame = CreateFrame("Frame");
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
 eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
 eventFrame:SetScript("OnEvent", function(_, event)
     if ( event == "PLAYER_ENTERING_WORLD" ) then
+        ResetCPUUsage();
+        lastUpdated = nil;
+    elseif ( event == "PVP_MATCH_ACTIVE" ) then
         ResetCPUUsage();
         lastUpdated = GetTime();
     elseif ( event == "PVP_MATCH_COMPLETE" ) then
