@@ -75,6 +75,7 @@ local function EnsureIcons()
     if addon.TEST_MODE then
         local unitId = "player";
         premadeIcons[unitId] = premadeIcons[unitId] or {};
+        premadeIconsInterrupt[unitId] = premadeIconsInterrupt[unitId] or {};
         for spellID, spell in pairs(spellData) do
             if ( not spell.use_parent_icon ) then
                 if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
@@ -88,6 +89,7 @@ local function EnsureIcons()
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena"..i;
             premadeIcons[unitId] = premadeIcons[unitId] or {};
+            premadeIconsInterrupt[unitId] = premadeIconsInterrupt[unitId] or {};
             for spellID, spell in pairs(spellData) do
                 if ( not spell.use_parent_icon ) then
                     if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
