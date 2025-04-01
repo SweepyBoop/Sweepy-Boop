@@ -235,11 +235,12 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
-            if self.activeMap[reset] then
+            local icon = self.activeMap[self.unit .. "-" .. reset];
+            if icon then
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
                     local amount = spellData[reset].reduce_amount * cost[1].cost;
-                    ResetCooldown(self.activeMap[reset], amount);
+                    ResetCooldown(icon, amount);
                 end
             end
         end
@@ -262,10 +263,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                     end
                 end
 
-                --print(spellToReset, amount, self.activeMap[spellToReset]);
-
-                if self.activeMap[spellToReset] then
-                    ResetCooldown(self.activeMap[spellToReset], amount);
+                --print(spellToReset, amount, self.activeMap[self.unit .. "-" .. spellToReset]);
+                local icon = self.activeMap[self.unit .. "-" .. spellToReset];
+                if icon then
+                    ResetCooldown(icon, amount);
                 end
             end
         end
@@ -275,12 +276,13 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( subEvent == addon.SPELL_DAMAGE ) and critical and ( sourceGUID == guid ) then
         for i = 1, #resetByCrit do
             local reset = resetByCrit[i];
-            if self.activeMap[reset] then
+            local icon = self.activeMap[self.unit .. "-" .. reset];
+            if icon then
                 local spells = spellData[reset].critResets;
                 for i = 1, #spells do
                     if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
                         --print(spellName, spellId, spellData[reset].critResetAmount);
-                        ResetCooldown(self.activeMap[reset], spellData[reset].critResetAmount);
+                        ResetCooldown(icon, spellData[reset].critResetAmount);
                     end
                 end
                 return;
@@ -291,7 +293,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Check reset by interrupts, Counterspell, solar Beam
     -- Solar Beam only reduces 15s when interrupting main target, how do we detect it? Cache last reduce time?
     if ( subEvent == addon.SPELL_INTERRUPT ) and ( sourceGUID == guid ) then
-        local icon = self.activeMap[spellId];
+        local icon = self.activeMap[self.unit .. "-" .. spellId];
         local amount = icon and icon.spellInfo.reduce_on_interrupt;
         if icon and amount then
             ResetCooldown(icon, amount, amount);
@@ -302,8 +304,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if addon.EVENTS_PET_DISMISS[subEvent] then
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
         local summonSpellId = self.npcMap[destGUID];
-        if summonSpellId and self.activeMap[summonSpellId] then
-            addon.ResetBurstDuration(self.activeMap[summonSpellId]);
+        if summonSpellId and self.activeMap[self.unit .. "-" .. summonSpellId] then
+            addon.ResetBurstDuration(self.activeMap[self.unit .. "-" .. summonSpellId]);
         end
         return;
     elseif ( subEvent == addon.SPELL_SUMMON ) and ( guid == sourceGUID ) then
@@ -313,8 +315,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         self.npcMap[destGUID] = summonSpellId;
 
         -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
-        -- if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[summonSpellId] ) and SweepyBoop.db.profile.arenaFrames.spellList[tostring(summonSpellId)]  then
-        --     StartIcon(self.icons[summonSpellId]);
+        -- if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[self.unit .. "-" .. summonSpellId] ) and SweepyBoop.db.profile.arenaFrames.spellList[tostring(summonSpellId)]  then
+        --     StartIcon(self.icons[self.unit .. "-" .. summonSpellId]);
         -- end
         return;
     end
@@ -329,8 +331,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) then
-        if self.activeMap[spellId] and ( self.activeMap[spellId].template == addon.ICON_TEMPLATE.GLOW ) then
-            addon.ResetBurstDuration(self.activeMap[spellId]);
+        local icon = self.activeMap[self.unit .. "-" .. spellId];
+        if icon and ( icon.template == addon.ICON_TEMPLATE.GLOW ) then
+            addon.ResetBurstDuration(icon);
             return;
         end
     end
@@ -388,8 +391,8 @@ local function ProcessUnitAura(self, event, ...)
             if auraData then
                 local spellID = auraData.spellId;
                 local spell = spellData[spellID];
-                if spell and spell.extend and self.activeMap[spellID] then
-                    addon.RefreshBurstDuration(self.activeMap[spellID], auraData.duration, auraData.expirationTime);
+                if spell and spell.extend and self.activeMap[self.unit .. "-" .. spellID] then
+                    addon.RefreshBurstDuration(self.activeMap[self.unit .. "-" .. spellID], auraData.duration, auraData.expirationTime);
                 end
             end
         end
