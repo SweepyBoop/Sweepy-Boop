@@ -653,7 +653,6 @@ function SweepyBoop:RepositionArenaCooldownTracker()
     local config = SweepyBoop.db.profile.arenaFrames;
     local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     local setPointOptions = GetSetPointOptions(1);
-    setPointOptions.offsetX = config.arenaCooldownOffsetX;
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[1], setPointOptions, grow);
 end
 
