@@ -144,6 +144,7 @@ local function SetupIconGroup(group, unit, testIcons)
                 if spell.baseline and showUnusedIcons then
                     testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
                     addon.IconGroup_Insert(group, testIcons[unit][spellID]);
+                    print("Insert unused icon", spellID);
                 end
             end
         end
@@ -600,11 +601,11 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
             local isEnabled = false;
 
             if isInterruptBar then
-                if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) and spell.baseline then
-                    isEnabled = ( interruptCount > 0 );
+                if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) and spell.baseline and ( interruptCount > 0 ) then
+                    isEnabled = true;
                     interruptCount = interruptCount - 1;
-                elseif ( spell.category == addon.SPELLCATEGORY.DISRUPT ) and spell.baseline then
-                    isEnabled = ( disruptCount > 0 );
+                elseif ( spell.category == addon.SPELLCATEGORY.DISRUPT ) and spell.baseline and ( disruptCount > 0 ) then
+                    isEnabled = true;
                     disruptCount = disruptCount - 1;
                 end
             elseif spell.class == addon.PRIEST then
