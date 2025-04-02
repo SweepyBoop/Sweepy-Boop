@@ -567,7 +567,7 @@ local interruptBarGrowOptions = {
         direction = "CENTER",
         anchor = "CENTER",
         margin = 3,
-        columns = 6,
+        columns = 100,
         growUpward = false,
     },
 }

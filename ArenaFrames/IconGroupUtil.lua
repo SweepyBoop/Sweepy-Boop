@@ -73,9 +73,30 @@ local function IconGroup_Position(group)
     local grow = group.growUpward and 1 or -1;
     local margin = group.margin;
 
+    -- If we have 2 interrupts on row 1, and 6 other abilities on row 2
+    -- We need to offset the 2 interrupts on row 1 correctly based on 2 columns
+    local interruptCount = 0;
+    local otherCount = 0;
+    local separateRowForInterrupts = group.isInterruptBar and SweepyBoop.db.profile.arenaFrames.separateBarForInterrupts;
+    if separateRowForInterrupts then
+        for i = 1, numActive do
+            interruptCount = interruptCount + ( group.active[i].category == INTERRUPT and 1 or 0 );
+            otherCount = otherCount + ( group.active[i].category ~= INTERRUPT and 1 or 0 );
+        end
+    end
+
     for i = 1, numActive do
         group.active[i]:ClearAllPoints();
-        local columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
+        local columns;
+        if separateRowForInterrupts then
+            if group.active[i].category == INTERRUPT then
+                columns = interruptCount;
+            else
+                columns = otherCount;
+            end
+        else
+            columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
+        end
         if ( i == 1 ) then
             if growDirection == "CENTER" then
                 group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, 0);
