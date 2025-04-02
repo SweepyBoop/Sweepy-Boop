@@ -893,7 +893,7 @@ addon.SpellData = {
     [116705] = {
         cooldown = 15,
         class = addon.MONK,
-        category = category.DISRUPT,
+        category = category.INTERRUPT,
         baseline = true, -- technically a talent, but always picked
     },
     -- Touch of Karma
