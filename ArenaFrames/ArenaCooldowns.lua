@@ -22,9 +22,8 @@ local resetByCrit = {
 };
 
 local premadeIcons = {};
-local iconGroups = {}; -- One group per arena opponent
+local iconGroups = {}; -- One group per arena opponent for 1~3, 100 is for interrupt bar
 local premadeIconsInterrupt = {};
-local iconGroupInterrupt = {}; -- One group for all arena opponents
 local eventFrame;
 
 for spellID, spell in pairs(spellData) do
@@ -175,10 +174,6 @@ local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
                     end
 
                     enabled = specEnabled;
-                end
-
-                if isInterruptBar then
-                    print(spellID, enabled);
                 end
 
                 if enabled then
@@ -487,7 +482,6 @@ local function GetSetPointOptions(index, isInterruptBar)
     local config = SweepyBoop.db.profile.arenaFrames;
     local offsetX = isInterruptBar and config.interruptBarOffsetX or config.arenaCooldownOffsetX;
     local offsetY = isInterruptBar and config.interruptBarOffsetY or config.arenaCooldownOffsetY;
-    local adjustedIndex = ( index == 0 and 1 ) or index;
     local setPointOptions;
     if isInterruptBar then
         setPointOptions = {
@@ -498,6 +492,7 @@ local function GetSetPointOptions(index, isInterruptBar)
             offsetY = offsetY;
         };
     else
+        local adjustedIndex = ( index == 0 and 1 ) or index;
         setPointOptions = {
             point = "LEFT",
             relativeTo = framePrefix .. adjustedIndex,
@@ -510,56 +505,49 @@ local function GetSetPointOptions(index, isInterruptBar)
 end
 
 local function EnsureIconGroup(index, unitId, isInterruptBar)
+    print("EnsureIconGroup", index, unitId, isInterruptBar);
     local config = SweepyBoop.db.profile.arenaFrames;
 
-    local iconGroup = isInterruptBar and iconGroupInterrupt[index] or iconGroups[index];
-
-    if ( not iconGroup ) then
+    if ( not iconGroups[index] ) then
         local setPointOptions = GetSetPointOptions(index, isInterruptBar);
         local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
-        iconGroup = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
+        iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
         -- SetPointOptions is set but can be updated if lastModified falls behind
-        iconGroup.lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
+        iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
-    if ( iconGroup.lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
+    if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
         local setPointOptions = GetSetPointOptions(index, isInterruptBar);
         local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
-        addon.UpdateIconGroupSetPointOptions(iconGroup, setPointOptions, growOptions);
-        iconGroup.lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
+        addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions);
+        iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     -- Clear previous icons
     --print("Clear previous icons");
-    addon.IconGroup_Wipe(iconGroup);
-
-    if isInterruptBar then -- Since iconGroup is passed by value
-        iconGroupInterrupt[index] = iconGroup;
-    else
-        iconGroups[index] = iconGroup;
-    end
+    addon.IconGroup_Wipe(iconGroups[index]);
 end
 
 local function EnsureIconGroups()
     if addon.TEST_MODE then
         EnsureIconGroup(0, "player");
-        EnsureIconGroup(0, "player", true); -- Interrupt bar
+        EnsureIconGroup(100, "player", true); -- Interrupt bar
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i, "arena" .. i);
         end
-        EnsureIconGroup(0, nil, true); -- Interrupt bar
+        EnsureIconGroup(100, nil, true); -- Interrupt bar
     end
 end
 
 local function SetupIconGroups()
     if addon.TEST_MODE then
         SetupIconGroup(iconGroups[0], "player");
-        SetupIconGroup(iconGroupInterrupt[0], "player", nil, true);
+        SetupIconGroup(iconGroups[100], "player", nil, true);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             SetupIconGroup(iconGroups[i], "arena" .. i);
-            SetupIconGroup(iconGroupInterrupt[0], nil, nil, true);
+            SetupIconGroup(iconGroups[100], nil, nil, true);
         end
     end
 end
@@ -742,9 +730,8 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                     end
                 end
-                if iconGroupInterrupt[0] then
-                    print(iconGroupInterrupt[0]:GetPoint());
-                    ProcessCombatLogEvent(iconGroupInterrupt[0], subEvent, sourceGUID, destGUID, spellId, spellName);
+                if iconGroups[100] then
+                    ProcessCombatLogEvent(iconGroups[100], subEvent, sourceGUID, destGUID, spellId, spellName);
                 end
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
