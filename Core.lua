@@ -843,7 +843,7 @@ if addon.PROJECT_MAINLINE then
                                 step = 0.1,
                                 name = "Unused icon transparency",
                                 hidden = function ()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                    return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
                                 end
                             }
                         },
