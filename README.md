@@ -4,6 +4,7 @@ A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to
 Features include:
 - Friendly player / pet icons: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
+- Advanced interrupt bar that calculates all cd reduction, even including Mage 4s cd reduction on successful Counterspell!
 - Arena offensive & defensive cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, factoring in cooldown reduction (such as combustion)
 - Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
@@ -114,6 +115,20 @@ This module is designed to give you **a quick overview** of
 - Which enemy player(s) ran out of defensive options (thus would be the ideal kill target for next go)
 
 This module supports all major arena frames, including Gladius, GladiusEx, sArena and built-in WoW arena frames
+
+## Advanced interrupt bar
+Similar functionality as OmniBar but much more accurate, factoring in all cooldown reduction mechanics in the game, e.g.,
+- Mage Counterspell cooldown is reduced by 4s if they successfully landed the interrupt
+- Mage Shifting Power reduces cooldowns of all their abilities by 12 Sec
+
+![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
+
+(Counterspell missed, cooldown is 24 Sec)
+
+![Interrupt successful](https://github.com/user-attachments/assets/2dc4970c-07e9-490b-9779-cfb1edd4871d)
+
+(Counterspell landed, cooldown becomes 20 Sec!)
+
 
 ## Arena nameplate numbers & enemy player spec icons
 ![Screenshot 2025-01-05 101115](https://github.com/user-attachments/assets/fd7731af-13ed-48c6-a1c3-bbef63a70847)
