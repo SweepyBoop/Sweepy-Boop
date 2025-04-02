@@ -135,7 +135,7 @@ local function SetupIconGroup(group, unit, testIcons)
                 testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                 addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
 
-                local showUnusedIcons = isInterruptBar and config.showUnusedInterruptIcons or config.showUnusedIcons;
+                local showUnusedIcons = isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
                 local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
                 if spell.baseline and showUnusedIcons then
                     testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
@@ -186,7 +186,7 @@ local function SetupIconGroup(group, unit, testIcons)
                     addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], spellID);
                     --print("Populated", unit, spell.class, spellID)
 
-                    local showUnusedIcons = isInterruptBar and config.showUnusedInterruptIcons or config.showUnusedIcons;
+                    local showUnusedIcons = isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
                     local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
                     local spellList = isInterruptBar and config.interruptBarSpellList or config.spellList;
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
