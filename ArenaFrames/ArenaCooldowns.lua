@@ -253,9 +253,9 @@ local function SetupIconGroup(group, unit, testIcons)
                   
                     local spellList;
                     if isInterruptBar then
-                        spellList = config.interruptBarSpellList;
+                        spellList = config.individual.interruptBarSpellList;
                     else
-                        spellList = config.spellList;
+                        spellList = config.interrupts.spellList;
                     end
 
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
@@ -470,14 +470,14 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local config = SweepyBoop.db.profile.arenaFrames;
     local spellList;
     if self.isInterruptBar then
-        spellList = config.interruptBarSpellList;
+        spellList = config.individual.interruptBarSpellList;
     else
-        spellList = config.spellList;
+        spellList = config.interrupts.spellList;
     end
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
-    print("Test", iconID, spellList[tostring(configSpellId)]);
+    print("Test", iconID, configSpellId, spellList[tostring(configSpellId)]);
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconSpellId ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
@@ -505,9 +505,9 @@ local function ProcessUnitSpellCast(self, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
             local spellList;
             if self.isInterruptBar then
-                spellList = config.interruptBarSpellList;
+                spellList = config.individual.interruptBarSpellList;
             else
-                spellList = config.spellList;
+                spellList = config.interrupts.spellList;
             end
             if spellList[tostring(spellID)] then
                 addon.StartBurstIcon(self.icons[iconID]);
