@@ -600,10 +600,10 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
             local isEnabled = false;
 
             if isInterruptBar then
-                if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
+                if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) and spell.baseline then
                     isEnabled = ( interruptCount > 0 );
                     interruptCount = interruptCount - 1;
-                elseif ( spell.category == addon.SPELLCATEGORY.DISRUPT ) then
+                elseif ( spell.category == addon.SPELLCATEGORY.DISRUPT ) and spell.baseline then
                     isEnabled = ( disruptCount > 0 );
                     disruptCount = disruptCount - 1;
                 end
