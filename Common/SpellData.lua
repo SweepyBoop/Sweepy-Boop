@@ -1976,11 +1976,6 @@ if addon.TEST_MODE then
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
 
-        resets = {
-            [133] = 2, -- Pyrokinesis
-            [314791] = 12, -- Shifting Power
-        },
-
         -- Reduce cooldown by 1s
         critResets = { 133, 11366, 108853, 2948, 257542 },
         critResetAmount = 1,
