@@ -1899,6 +1899,8 @@ addon.SpellResets = {
         { spellID = 2139, amount = 12 }, -- Counterspell
         { spellID = 45438, amount = 12 }, -- Ice Block
         { spellID = 190319, amount = 12 }, -- Combustion
+        { spellID = 12472, amount = 12 }, -- Icy Veins
+        { spellID = 365350, amount = 12 }, -- Arcane Surge
     },
     -- Cold Snap
     [235219] = {
