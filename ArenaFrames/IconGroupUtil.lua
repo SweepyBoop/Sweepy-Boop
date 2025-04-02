@@ -173,7 +173,12 @@ end
 addon.IconGroup_Remove = function (group, icon, fade)
     if fade then
         local config = SweepyBoop.db.profile.arenaFrames;
-        local alpha = group.isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
+        local alpha;
+        if group.isInterruptBar then
+            alpha = config.interruptBarUnusedIconAlpha;
+        else
+            alpha = config.unusedIconAlpha;
+        end
         icon:SetAlpha(alpha);
         return;
     end
