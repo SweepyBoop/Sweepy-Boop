@@ -52,6 +52,7 @@ local function EnsureIcon(unitId, spellID, isInterruptBar)
         else
             iconSet[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
         end
+        iconSet[unitId][spellID].isInterruptBar = isInterruptBar;
 
         local hideCountDownNumbers = isInterruptBar and config.interruptBarHideCountDownNumbers or config.hideCountDownNumbers;
         addon.SetHideCountdownNumbers(iconSet[unitId][spellID], hideCountDownNumbers);
