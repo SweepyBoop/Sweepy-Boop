@@ -383,7 +383,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
-        if ( iconID ~= spellId ) then
+        if ( iconSpellId ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
         end
 
