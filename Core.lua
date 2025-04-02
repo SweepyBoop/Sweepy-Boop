@@ -1289,7 +1289,6 @@ local defaults = {
             spellList = {},
 
             interruptBarEnabled = false;
-            separateBarForInterrupts = true,
             interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
             interruptBarOffsetX = 0,
             interruptBarOffsetY = -150,
@@ -1338,7 +1337,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
     defaults.profile.arenaFrames.showUnusedIcons = true;
     defaults.profile.arenaFrames.interruptBarEnabled = true;
-    defaults.profile.arenaFrames.interruptBarShowUnused = true;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
 end
