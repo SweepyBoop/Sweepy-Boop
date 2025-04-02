@@ -133,7 +133,7 @@ local function SetupIconGroup(group, unit, testIcons)
                 testIcons[unit][spellID].info = { cooldown = spell.cooldown };
                 -- The texture might have been set by use_parent_icon icons
                 testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
-                addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], spellID);
+                addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
 
                 local showUnusedIcons = isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
                 local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
@@ -183,7 +183,7 @@ local function SetupIconGroup(group, unit, testIcons)
                     iconSet[unit][spellID].info = GetSpecOverrides(spell);
                     -- The texture might have been set by use_parent_icon icons
                     iconSet[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
-                    addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], spellID);
+                    addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], unit .. "-" .. spellID);
                     --print("Populated", unit, spell.class, spellID)
 
                     local showUnusedIcons = isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
@@ -351,6 +351,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Validate unit
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
     if ( not unitGuidToId[spellGUID] ) then return end
+    local unit = unitGuidToId[spellGUID];
 
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) then
@@ -375,7 +376,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local config = SweepyBoop.db.profile.arenaFrames;
     local spellList = self.isInterruptBar and config.interruptBarSpellList or config.spellList;
     local configSpellId = spell.parent or spellId;
-    local iconID = ( spell.use_parent_icon and spell.parent ) or spellId;
+    local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
+    local iconID = unit .. "-" .. iconSpellId;
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconID ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
@@ -397,11 +399,12 @@ local function ProcessUnitSpellCast(self, event, ...)
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
-        if self.icons[spellID] then
+        local iconID = self.unit .. "-" .. spellID;
+        if self.icons[iconID] then
             local config = SweepyBoop.db.profile.arenaFrames;
             local spellList = self.isInterruptBar and config.interruptBarSpellList or config.spellList;
             if spellList[tostring(spellID)] then
-                addon.StartBurstIcon(self.icons[spellID]);
+                addon.StartBurstIcon(self.icons[iconID]);
             end
         end
     end
