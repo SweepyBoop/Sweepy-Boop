@@ -580,10 +580,10 @@ local function GetSetPointOptions(index, isInterruptBar)
     end
 
     local offsetY;
-    if isInterruptBar and config.interruptBarOffsetY == 0 then
-        offsetY = config.arenaCooldownOffsetY;
-    else
+    if isInterruptBar then
         offsetY = config.interruptBarOffsetY;
+    else
+        offsetY = config.arenaCooldownOffsetY;
     end
     local setPointOptions;
     if isInterruptBar then
