@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local DEFENSIVE = addon.SPELLCATEGORY.DEFENSIVE;
+local INTERRUPT = addon.SPELLCATEGORY.INTERRUPT;
 
 addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
@@ -84,9 +85,18 @@ local function IconGroup_Position(group)
             end
         else
             count = count + 1;
-            local newRow = ( count >= columns )
-                or ( SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive
-                    and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE );
+            local newRow;
+            if ( count >= columns ) then
+                newRow = true;
+            else
+                local config = SweepyBoop.db.profile.arenaFrames;
+                if group.isInterruptBar then
+                    newRow = config.separateBarForInterrupts and group.active[i - 1] and group.active[i - 1].category == INTERRUPT and group.active[i].category ~= INTERRUPT;
+                else
+                    newRow = config.arenaCooldownSeparateRowForDefensive and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE;
+                end
+            end
+
             if newRow then
                 if growDirection == "CENTER" then
                     group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
