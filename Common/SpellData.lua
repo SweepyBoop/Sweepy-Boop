@@ -855,12 +855,6 @@ addon.SpellData = {
         duration = 24,
         baseline = true, -- technically a talent, but always picked
     },
-    -- -- Dance of Chi-ji (no cooldown, aura only)
-    -- [325202] = {
-    --     class = addon.MONK,
-    --     category = category.BURST,
-    --     trackEvent = addon.SPELL_AURA_APPLIED,
-    -- },
     -- Crowd Control
     -- Paralysis
     [115078] = {
@@ -1469,15 +1463,6 @@ addon.SpellData = {
     },
 
     -- Shaman
-    -- Totem of Wrath (cannot track cooldown reliably)
-    -- [208963] = {
-    --     class = addon.SHAMAN,
-    --     cooldown = 45,
-    --     duration = 15,
-    --     category = category.BURST,
-    --     trackEvent = addon.SPELL_AURA_APPLIED,
-    --     --trackDest = true,
-    -- },
     -- Enhancement
     -- Ascendance (Enhancement)
     [114051] = {
@@ -1739,12 +1724,6 @@ addon.SpellData = {
         [171140] = {
             parent = 19647,
         },
-    -- Call Felhunter
-    [212619] = {
-        cooldown = 60,
-        class = addon.WARLOCK,
-        category = category.INTERRUPT,
-    },
     -- Nether Ward
     [212295] = {
         cooldown = 45,
