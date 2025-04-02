@@ -673,16 +673,28 @@ local function EnsureIconGroups()
     end
 end
 
-local function SetupIconGroups()
+local function SetupIconGroups(arena, interrupts)
     if addon.TEST_MODE then
         local unitId = "player";
-        SetupIconGroup(iconGroups[0], unitId);
-        SetupIconGroup(iconGroups[100], unitId);
+
+        if arena then
+            SetupIconGroup(iconGroups[0], unitId);
+        end
+
+        if interrupts then
+            SetupIconGroup(iconGroups[100], unitId);
+        end
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena" .. i;
-            SetupIconGroup(iconGroups[i], unitId);
-            SetupIconGroup(iconGroups[100], unitId); -- We're settig a single group with multiple opponents
+
+            if arena then
+                SetupIconGroup(iconGroups[i], unitId);
+            end
+
+            if interrupts then
+                SetupIconGroup(iconGroups[100], unitId); -- We're settig a single group with multiple opponents
+            end
         end
     end
 end
@@ -879,7 +891,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     shouldSetup = ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS );
                 end
                 if shouldSetup then
-                    SetupIconGroups();
+                    SetupIconGroups(arena, interrupts);
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
