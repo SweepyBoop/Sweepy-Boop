@@ -891,7 +891,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     shouldSetup = ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS );
                 end
                 if shouldSetup then
-                    SetupIconGroups(arena, interrupts);
+                    SetupIconGroups(arenaTrackerEnabled, interruptBarEnabled);
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
