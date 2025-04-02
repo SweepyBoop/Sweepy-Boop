@@ -295,6 +295,19 @@ local function ValidateUnit(self)
     return self.unitGuidToId;
 end
 
+-- Given a pet guid, return the owner unitId
+local function IsCastByPet(guid)
+    if UnitGUID("pet") == guid then
+        return "player";
+    end
+
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if UnitGUID("arenapet" .. i) == guid then
+            return "arena" .. i;
+        end
+    end
+end
+
 local function ResetCooldown(icon, amount, internalCooldown)
     if icon.template == addon.ICON_TEMPLATE.GLOW then
         addon.ResetIconCooldown(icon, amount);
@@ -424,9 +437,15 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local spell = spellData[spellId];
 
     -- Validate unit
+    local unit;
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
-    if ( not unitGuidToId[spellGUID] ) then return end
-    local unit = unitGuidToId[spellGUID];
+    if spell.trackPet then
+        unit = IsCastByPet(spellGUID);
+    else
+        unit = unitGuidToId[spellGUID];
+    end
+    print(subEvent, spellName, spellId, unit);
+    if ( not unit ) then return end
 
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) and unitGuidToId[sourceGUID] then
@@ -458,6 +477,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
+    print("Test", iconID, spellList[tostring(configSpellId)]);
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconSpellId ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
