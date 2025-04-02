@@ -1309,6 +1309,13 @@ addon.SpellData = {
         category = category.DISRUPT,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
+    -- Shadow Word: Death
+    [32379] = {
+        cooldown = 10,
+        class = addon.PRIEST,
+        category = category.DISRUPT,
+        baseline = true,
+    },
 
     -- Rogue
     -- Cold Blood
