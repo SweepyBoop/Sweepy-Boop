@@ -692,7 +692,7 @@ addon.SpellData = {
         spec = { specID.FROST_MAGE },
         category = category.BURST,
         cooldown = 120,
-        duration = 25,
+        duration = 30,
         index = addon.SPELLPRIORITY.HIGH,
         extend = true,
         baseline = true, -- technically a talent, but always picked
@@ -855,12 +855,6 @@ addon.SpellData = {
         duration = 24,
         baseline = true, -- technically a talent, but always picked
     },
-    -- -- Dance of Chi-ji (no cooldown, aura only)
-    -- [325202] = {
-    --     class = addon.MONK,
-    --     category = category.BURST,
-    --     trackEvent = addon.SPELL_AURA_APPLIED,
-    -- },
     -- Crowd Control
     -- Paralysis
     [115078] = {
@@ -893,7 +887,7 @@ addon.SpellData = {
     [116705] = {
         cooldown = 15,
         class = addon.MONK,
-        category = category.DISRUPT,
+        category = category.INTERRUPT,
         baseline = true, -- technically a talent, but always picked
     },
     -- Touch of Karma
@@ -1138,7 +1132,7 @@ addon.SpellData = {
         cooldown = 45,
         duration = 7, -- Confirm early dismiss
     },
-    -- Psyfiend
+    -- Psyfiend (triggers SPELL_AURA_REMOVED when dismissed)
     [211522] = {
         class = addon.PRIEST,
         spec = { specID.SHADOW },
@@ -1309,6 +1303,13 @@ addon.SpellData = {
         category = category.DISRUPT,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
+    -- Shadow Word: Death
+    [32379] = {
+        cooldown = 10,
+        class = addon.PRIEST,
+        category = category.DISRUPT,
+        baseline = true,
+    },
 
     -- Rogue
     -- Cold Blood
@@ -1462,15 +1463,6 @@ addon.SpellData = {
     },
 
     -- Shaman
-    -- Totem of Wrath (cannot track cooldown reliably)
-    -- [208963] = {
-    --     class = addon.SHAMAN,
-    --     cooldown = 45,
-    --     duration = 15,
-    --     category = category.BURST,
-    --     trackEvent = addon.SPELL_AURA_APPLIED,
-    --     --trackDest = true,
-    -- },
     -- Enhancement
     -- Ascendance (Enhancement)
     [114051] = {
@@ -1732,12 +1724,6 @@ addon.SpellData = {
         [171140] = {
             parent = 19647,
         },
-    -- Call Felhunter
-    [212619] = {
-        cooldown = 60,
-        class = addon.WARLOCK,
-        category = category.INTERRUPT,
-    },
     -- Nether Ward
     [212295] = {
         cooldown = 45,
@@ -1899,6 +1885,8 @@ addon.SpellResets = {
         { spellID = 2139, amount = 12 }, -- Counterspell
         { spellID = 45438, amount = 12 }, -- Ice Block
         { spellID = 190319, amount = 12 }, -- Combustion
+        { spellID = 12472, amount = 12 }, -- Icy Veins
+        { spellID = 365350, amount = 12 }, -- Arcane Surge
     },
     -- Cold Snap
     [235219] = {
@@ -1966,11 +1954,6 @@ if addon.TEST_MODE then
         duration = 12,
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
-
-        resets = {
-            [133] = 2, -- Pyrokinesis
-            [314791] = 12, -- Shifting Power
-        },
 
         -- Reduce cooldown by 1s
         critResets = { 133, 11366, 108853, 2948, 257542 },

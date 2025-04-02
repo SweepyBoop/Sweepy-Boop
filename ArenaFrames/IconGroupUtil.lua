@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local DEFENSIVE = addon.SPELLCATEGORY.DEFENSIVE;
+local INTERRUPT = addon.SPELLCATEGORY.INTERRUPT;
 
 addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
@@ -72,21 +73,50 @@ local function IconGroup_Position(group)
     local grow = group.growUpward and 1 or -1;
     local margin = group.margin;
 
+    -- If we have 2 interrupts on row 1, and 6 other abilities on row 2
+    -- We need to offset the 2 interrupts on row 1 correctly based on 2 columns
+    local interruptCount = 0;
+    local otherCount = 0;
+    local separateRowForInterrupts = group.isInterruptBar and SweepyBoop.db.profile.arenaFrames.separateBarForInterrupts;
+    if separateRowForInterrupts then
+        for i = 1, numActive do
+            interruptCount = interruptCount + ( group.active[i].category == INTERRUPT and 1 or 0 );
+            otherCount = otherCount + ( group.active[i].category ~= INTERRUPT and 1 or 0 );
+        end
+    end
+
     for i = 1, numActive do
         group.active[i]:ClearAllPoints();
-        local columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
+        local columns;
+        if separateRowForInterrupts then
+            if group.active[i].category == INTERRUPT then
+                columns = interruptCount;
+            else
+                columns = otherCount;
+            end
+        else
+            columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
+        end
         if ( i == 1 ) then
             if growDirection == "CENTER" then
-                local offsetX = (-baseIconSize-margin)*(columns-1)/2;
                 group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, 0);
             else
                 group.active[i]:SetPoint(anchor, group, anchor, 0, 0);
             end
         else
             count = count + 1;
-            local newRow = ( count >= columns )
-                or ( SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive
-                    and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE );
+            local newRow;
+            if ( count >= columns ) then
+                newRow = true;
+            else
+                local config = SweepyBoop.db.profile.arenaFrames;
+                if group.isInterruptBar then
+                    newRow = config.separateBarForInterrupts and group.active[i - 1] and group.active[i - 1].category == INTERRUPT and group.active[i].category ~= INTERRUPT;
+                else
+                    newRow = config.arenaCooldownSeparateRowForDefensive and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE;
+                end
+            end
+
             if newRow then
                 if growDirection == "CENTER" then
                     group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
@@ -122,6 +152,7 @@ end
 addon.IconGroup_Insert = function (group, icon, index)
     if ( not group ) then return end
 
+    -- If already showing, do not need to add
     if icon:IsShown() then
         -- baseline icon needs to be added to activeMap if not already there
         if index then
@@ -162,7 +193,14 @@ end
 
 addon.IconGroup_Remove = function (group, icon, fade)
     if fade then
-        icon:SetAlpha(SweepyBoop.db.profile.arenaFrames.unusedIconAlpha);
+        local config = SweepyBoop.db.profile.arenaFrames;
+        local alpha;
+        if group.isInterruptBar then
+            alpha = config.interruptBarUnusedIconAlpha;
+        else
+            alpha = config.unusedIconAlpha;
+        end
+        icon:SetAlpha(alpha);
         return;
     end
 
@@ -173,8 +211,8 @@ addon.IconGroup_Remove = function (group, icon, fade)
         return;
     end
 
-    if icon.spellID then
-        group.activeMap[icon.spellID] = nil;
+    if icon.unit and icon.spellID then
+        group.activeMap[icon.unit .. "-" .. icon.spellID] = nil;
     end
 
     local active = group.active;
@@ -228,6 +266,6 @@ addon.IconGroup_Wipe = function (group)
     wipe(group.active);
     wipe(group.activeMap);
     wipe(group.npcMap);
-    group.unitGUID = nil;
-    group.unitGUIDs = {};
+    group.unitIdToGuid = {};
+    group.unitGuidToId = {};
 end

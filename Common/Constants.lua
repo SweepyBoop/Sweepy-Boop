@@ -4,9 +4,9 @@ addon.TEST_MODE = false;
 
 addon.SPELLCATEGORY = {
     DEFENSIVE = 1,
-    BURST = 2,
-    CROWDCONTROL = 3,
-    INTERRUPT = 4,
+    INTERRUPT = 2,
+    BURST = 3,
+    CROWDCONTROL = 4,
     DISRUPT = 5,
     DISPEL = 6,
 };
@@ -28,6 +28,11 @@ addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT_UP = 2,
     LEFT_DOWN = 3,
     LEFT_UP = 4,
+};
+
+addon.INTERRUPT_GROW_DIRECTION = {
+    CENTER_UP = 1,
+    CENTER_DOWN = 2,
 };
 
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
