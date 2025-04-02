@@ -97,7 +97,7 @@ local function EnsureIcons()
                     if ( spell.category ~= addon.SPELLCATEGORY.BURST ) then
                         EnsureIcon(unitId, spellID, true);
                     end
-    
+
                     if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) then
                         EnsureIcon(unitId, spellID);
                     end
@@ -594,10 +594,19 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
         end
     else
         testIcons[unitId] = {};
+        local interruptCount = 6;
+        local disruptCount = 3;
         for spellID, spell in pairs(spellData) do
             local isEnabled = false;
+
             if isInterruptBar then
-                isEnabled = ( spell.category == addon.SPELLCATEGORY.INTERRUPT );
+                if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
+                    isEnabled = ( interruptCount > 0 );
+                    interruptCount = interruptCount - 1;
+                elseif ( spell.category == addon.SPELLCATEGORY.DISRUPT ) then
+                    isEnabled = ( disruptCount > 0 );
+                    disruptCount = disruptCount - 1;
+                end
             elseif spell.class == addon.PRIEST then
                 if spell.use_parent_icons then
                     -- Don't create if using parent icon
@@ -612,6 +621,7 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
                     end
                 end
             end
+
             if isEnabled then
                 if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
                     testIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
