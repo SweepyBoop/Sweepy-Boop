@@ -78,9 +78,11 @@ local function EnsureIcons()
         premadeIconsInterrupt[unitId] = premadeIconsInterrupt[unitId] or {};
         for spellID, spell in pairs(spellData) do
             if ( not spell.use_parent_icon ) then
-                if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
+                if ( spell.category ~= addon.SPELLCATEGORY.BURST ) then
                     EnsureIcon(unitId, spellID, true);
-                else
+                end
+
+                if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) then
                     EnsureIcon(unitId, spellID);
                 end
             end
@@ -92,9 +94,11 @@ local function EnsureIcons()
             premadeIconsInterrupt[unitId] = premadeIconsInterrupt[unitId] or {};
             for spellID, spell in pairs(spellData) do
                 if ( not spell.use_parent_icon ) then
-                    if ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) then
+                    if ( spell.category ~= addon.SPELLCATEGORY.BURST ) then
                         EnsureIcon(unitId, spellID, true);
-                    else
+                    end
+    
+                    if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) then
                         EnsureIcon(unitId, spellID);
                     end
                 end
