@@ -78,7 +78,6 @@ local function IconGroup_Position(group)
         local columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
         if ( i == 1 ) then
             if growDirection == "CENTER" then
-                local offsetX = (-baseIconSize-margin)*(columns-1)/2;
                 group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, 0);
             else
                 group.active[i]:SetPoint(anchor, group, anchor, 0, 0);
