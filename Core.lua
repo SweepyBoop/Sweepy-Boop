@@ -817,7 +817,7 @@ if addon.PROJECT_MAINLINE then
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                    SweepyBoop:RepositionArenaInterruptBar();
                                 end
                             },
                             interruptBarOffsetY = {
@@ -831,7 +831,7 @@ if addon.PROJECT_MAINLINE then
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                    SweepyBoop:RepositionArenaInterruptBar();
                                 end
                             },
                             interruptBarUnusedIconAlpha = {
