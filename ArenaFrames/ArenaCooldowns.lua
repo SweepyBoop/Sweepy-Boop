@@ -176,6 +176,10 @@ local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
                     enabled = specEnabled;
                 end
 
+                if isInterruptBar then
+                    print(spellID, enabled);
+                end
+
                 if enabled then
                     -- Reset dynamic info before populating to group
                     iconSet[unit][spellID].info = GetSpecOverrides(spell);
@@ -188,6 +192,7 @@ local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
                     local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
                     local spellList = isInterruptBar and config.interruptBarSpellList or config.spellList;
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
+                        if isInterruptBar then print("Insert", spellID) end
                         iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
                         addon.IconGroup_Insert(group, iconSet[unit][spellID]);
                     end
@@ -505,7 +510,6 @@ local function GetSetPointOptions(index, isInterruptBar)
 end
 
 local function EnsureIconGroup(index, unitId, isInterruptBar)
-    print("EnsureIconGroup", index, unitId, isInterruptBar);
     local config = SweepyBoop.db.profile.arenaFrames;
 
     if ( not iconGroups[index] ) then
@@ -526,6 +530,8 @@ local function EnsureIconGroup(index, unitId, isInterruptBar)
     -- Clear previous icons
     --print("Clear previous icons");
     addon.IconGroup_Wipe(iconGroups[index]);
+
+    print("EnsureIconGroup", iconGroups[index]:GetPoint());
 end
 
 local function EnsureIconGroups()

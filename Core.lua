@@ -849,13 +849,13 @@ if addon.PROJECT_MAINLINE then
                         },
                     },
 
-                    interrutBarSpellList = {
+                    interruptBarSpellList = {
                         order = 5,
                         type = "group",
                         name = "Spells",
                         desc = "Select which abilities to track cooldown inside arenas",
-                        get = function(info) return SweepyBoop.db.profile.arenaFrames.interrutBarSpellList[info[#info]] end,
-                        set = function(info, val) SweepyBoop.db.profile.arenaFrames.interrutBarSpellList[info[#info]] = val end,
+                        get = function(info) return SweepyBoop.db.profile.arenaFrames.interruptBarSpellList[info[#info]] end,
+                        set = function(info, val) SweepyBoop.db.profile.arenaFrames.interruptBarSpellList[info[#info]] = val end,
                         args = {
                             restoreDefaults = {
                                 order = 1,
@@ -885,7 +885,7 @@ if addon.PROJECT_MAINLINE then
             name = classInfo.className,
             args = {},
         };
-        options.args.arenaFrames.args.interrupts.args.interrutBarSpellList.args[classInfo.classFile] = {
+        options.args.arenaFrames.args.interrupts.args.interruptBarSpellList.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -925,7 +925,7 @@ if addon.PROJECT_MAINLINE then
     end
 
     AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
-    AppendSpellOptions(options.args.arenaFrames.args.interrupts.args.interrutBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+    AppendSpellOptions(options.args.arenaFrames.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
 
     options.args.raidFrames = {
         order = 6,
@@ -1297,7 +1297,7 @@ local defaults = {
             interruptBarUnusedIconAlpha = 0.5,
             interruptBarShowUnused = false,
             interruptBarHideCountDownNumbers = false,
-            interrutBarSpellList = {},
+            interruptBarSpellList = {},
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
@@ -1373,7 +1373,7 @@ end
 
 if addon.PROJECT_MAINLINE then
     SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
-    SetupInterrupts(defaults.profile.arenaFrames.interrutBarSpellList, addon.SpellData);
+    SetupInterrupts(defaults.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end
 
 function SweepyBoop:OnInitialize()
@@ -1500,7 +1500,7 @@ function SweepyBoop:CheckDefaultArenaAbilities()
 end
 
 function SweepyBoop:CheckDefaultInterrupts()
-    SetupInterrupts(SweepyBoop.db.profile.arenaFrames.interrutBarSpellList, addon.SpellData);
+    SetupInterrupts(SweepyBoop.db.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end
 
 SLASH_SweepyBoop1 = "/sb"
