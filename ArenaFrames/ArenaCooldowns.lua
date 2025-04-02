@@ -684,12 +684,12 @@ local function SetupIconGroups()
     if addon.TEST_MODE then
         local unitId = "player";
         SetupIconGroup(iconGroups[0], unitId);
-        SetupIconGroup(iconGroups[100], unitId, nil);
+        SetupIconGroup(iconGroups[100], unitId);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena" .. i;
             SetupIconGroup(iconGroups[i], unitId);
-            SetupIconGroup(iconGroups[100], unitId, nil); -- We're settig a single group with multiple opponents
+            SetupIconGroup(iconGroups[100], unitId); -- We're settig a single group with multiple opponents
         end
     end
 end
