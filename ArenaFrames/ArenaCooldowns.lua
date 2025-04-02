@@ -204,21 +204,26 @@ local function SetupIconGroup(group, unit, testIcons)
 end
 
 local function ValidateUnit(self)
-    if ( not self.unitGuidToId ) then
-        self.unitGuidToId = {};
-        if self.unit then
-            local unitGuid = UnitGUID(self.unit);
-            if unitGuid then
-                self.unitGuidToId[unitGuid] = self.unit;
+    self.unitIdToGuid = self.unitIdToGuid or {};
+
+    if self.unit then
+        if ( not self.unitIdToGuid[self.unit] ) then
+            self.unitIdToGuid[self.unit] = UnitGUID(self.unit);
+        end
+    else
+        for i = 1, addon.MAX_ARENA_SIZE do
+            local unitId = "arena" .. i;
+            if ( not self.unitIdToGuid[unitId] ) then
+                self.unitIdToGuid[unitId] = UnitGUID(unitId);
             end
-        else
-            for i = 1, addon.MAX_ARENA_SIZE do
-                local unitId = "arena" .. i;
-                local unitGuid = UnitGUID(unitId);
-                if unitGuid then
-                    self.unitGuidToId[unitGuid] = unitId;
-                end
-            end
+        end
+    end
+
+    self.unitGuidToId = self.unitGuidToId or {};
+
+    for unit, guid in pairs(self.unitIdToGuid) do
+        if ( not self.unitGuidToId[guid] ) then
+            self.unitGuidToId[guid] = unit;
         end
     end
 

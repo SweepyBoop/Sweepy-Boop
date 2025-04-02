@@ -241,5 +241,6 @@ addon.IconGroup_Wipe = function (group)
     wipe(group.active);
     wipe(group.activeMap);
     wipe(group.npcMap);
-    group.unitGuidToId = nil;
+    group.unitIdToGuid = {};
+    group.unitGuidToId = {};
 end
