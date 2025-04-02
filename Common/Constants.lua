@@ -4,9 +4,9 @@ addon.TEST_MODE = false;
 
 addon.SPELLCATEGORY = {
     DEFENSIVE = 1,
-    BURST = 2,
-    CROWDCONTROL = 3,
-    INTERRUPT = 4,
+    INTERRUPT = 2,
+    BURST = 3,
+    CROWDCONTROL = 4,
     DISRUPT = 5,
     DISPEL = 6,
 };
