@@ -1474,6 +1474,7 @@ end
 function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:HideTestArenaCooldownTracker();
+        self:HideTestArenaInterruptBar();
 
         self:SetupCombatIndicator();
         self:HideTestHealerInCrowdControl();
