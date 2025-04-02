@@ -122,7 +122,8 @@ local function GetSpecOverrides(spell, spec)
     return overrides;
 end
 
-local function SetupIconGroup(group, unit, testIcons, isInterruptBar)
+local function SetupIconGroup(group, unit, testIcons)
+    local isInterruptBar = group.isInterruptBar;
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         local config = SweepyBoop.db.profile.arenaFrames;
@@ -370,10 +371,11 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use (check parent too)
     -- Config only shows parent ID, so check parent if applicable
-    local config = SweepyBoop.db.profile.arenaFrames.spellList;
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local spellList = self.isInterruptBar and config.interruptBarSpellList or config.spellList;
     local configSpellId = spell.parent or spellId;
     local iconID = ( spell.use_parent_icon and spell.parent ) or spellId;
-    if self.icons[iconID] and ( isTestGroup or config[tostring(configSpellId)] ) then
+    if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconID ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
         end
@@ -394,8 +396,12 @@ local function ProcessUnitSpellCast(self, event, ...)
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
-        if self.icons[spellID] and SweepyBoop.db.profile.arenaFrames.spellList[tostring(spellID)] then
-            addon.StartBurstIcon(self.icons[spellID]);
+        if self.icons[spellID] then
+            local config = SweepyBoop.db.profile.arenaFrames;
+            local spellList = self.isInterruptBar and config.interruptBarSpellList or config.spellList;
+            if spellList[tostring(spellID)] then
+                addon.StartBurstIcon(self.icons[spellID]);
+            end
         end
     end
 end
@@ -511,6 +517,7 @@ local function EnsureIconGroup(index, unitId, isInterruptBar)
         local setPointOptions = GetSetPointOptions(index, isInterruptBar);
         local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
+        iconGroups[index].isInterruptBar = isInterruptBar;
         -- SetPointOptions is set but can be updated if lastModified falls behind
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
@@ -542,11 +549,11 @@ end
 local function SetupIconGroups()
     if addon.TEST_MODE then
         SetupIconGroup(iconGroups[0], "player");
-        SetupIconGroup(iconGroups[100], "player", nil, true);
+        SetupIconGroup(iconGroups[100], "player", nil);
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             SetupIconGroup(iconGroups[i], "arena" .. i);
-            SetupIconGroup(iconGroups[100], nil, nil, true);
+            SetupIconGroup(iconGroups[100], nil, nil);
         end
     end
 end
@@ -605,9 +612,10 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
         addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
     else
         externalTestGroup[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
+        externalTestGroup[index].isInterruptBar = isInterruptBar;
     end
 
-    SetupIconGroup(externalTestGroup[index], unitId, testIcons, isInterruptBar);
+    SetupIconGroup(externalTestGroup[index], unitId, testIcons);
 end
 
 function SweepyBoop:TestArenaCooldownTracker()
