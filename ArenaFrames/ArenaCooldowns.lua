@@ -255,7 +255,7 @@ end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
     local unitGuidToId = ValidateUnit(self);
-    -- If self.unit doesn't exist, unitGuidToId will be empty
+    -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
 
     -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
@@ -263,11 +263,12 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- end
 
     -- Check resets by spell cast
-    if ( subEvent == addon.SPELL_CAST_SUCCESS ) and ( unitGuidToId[sourceGUID] ) then
+    if ( subEvent == addon.SPELL_CAST_SUCCESS ) and unitGuidToId[sourceGUID] then
+        local unit = unitGuidToId[sourceGUID];
         -- Check reset by power
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
-            local icon = self.activeMap[self.unit .. "-" .. reset];
+            local icon = self.activeMap[unit .. "-" .. reset];
             if icon then
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
@@ -295,8 +296,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                     end
                 end
 
-                --print(spellToReset, amount, self.activeMap[self.unit .. "-" .. spellToReset]);
-                local icon = self.activeMap[self.unit .. "-" .. spellToReset];
+                local icon = self.activeMap[unit .. "-" .. spellToReset];
                 if icon then
                     ResetCooldown(icon, amount);
                 end
@@ -305,10 +305,11 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Check resets by crit damage (e.g., combustion)
-    if ( subEvent == addon.SPELL_DAMAGE ) and critical and ( unitGuidToId[sourceGUID] ) then
+    if ( subEvent == addon.SPELL_DAMAGE ) and critical and unitGuidToId[sourceGUID] then
+        local unit = unitGuidToId[sourceGUID];
         for i = 1, #resetByCrit do
             local reset = resetByCrit[i];
-            local icon = self.activeMap[self.unit .. "-" .. reset];
+            local icon = self.activeMap[unit .. "-" .. reset];
             if icon then
                 local spells = spellData[reset].critResets;
                 for i = 1, #spells do
@@ -324,8 +325,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Check reset by interrupts, Counterspell, solar Beam
     -- Solar Beam only reduces 15s when interrupting main target, how do we detect it? Cache last reduce time?
-    if ( subEvent == addon.SPELL_INTERRUPT ) and ( unitGuidToId[sourceGUID] ) then
-        local icon = self.activeMap[self.unit .. "-" .. spellId];
+    if ( subEvent == addon.SPELL_INTERRUPT ) and unitGuidToId[sourceGUID] then
+        local unit = unitGuidToId[sourceGUID];
+        local icon = self.activeMap[unit .. "-" .. spellId];
         local amount = icon and icon.spellInfo.reduce_on_interrupt;
         if icon and amount then
             ResetCooldown(icon, amount, amount);
@@ -335,9 +337,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Check summon / dead
     if addon.EVENTS_PET_DISMISS[subEvent] then
         -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
+        local unit = unitGuidToId[sourceGUID];
         local summonSpellId = self.npcMap[destGUID];
-        if summonSpellId and self.activeMap[self.unit .. "-" .. summonSpellId] then
-            addon.ResetBurstDuration(self.activeMap[self.unit .. "-" .. summonSpellId]);
+        if unit and summonSpellId and self.activeMap[unit .. "-" .. summonSpellId] then
+            addon.ResetBurstDuration(self.activeMap[unit .. "-" .. summonSpellId]);
         end
         return;
     elseif ( subEvent == addon.SPELL_SUMMON ) and ( unitGuidToId[sourceGUID] ) then
@@ -347,9 +350,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         self.npcMap[destGUID] = summonSpellId;
 
         -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
-        -- if summonSpellId and self.icons[summonSpellId] and ( not self.activeMap[self.unit .. "-" .. summonSpellId] ) and SweepyBoop.db.profile.arenaFrames.spellList[tostring(summonSpellId)]  then
-        --     StartIcon(self.icons[self.unit .. "-" .. summonSpellId]);
-        -- end
         return;
     end
 
@@ -363,8 +363,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local unit = unitGuidToId[spellGUID];
 
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
-    if ( subEvent == addon.SPELL_AURA_REMOVED ) then
-        local icon = self.activeMap[self.unit .. "-" .. spellId];
+    if ( subEvent == addon.SPELL_AURA_REMOVED ) and unitGuidToId[sourceGUID] then
+        local icon = self.activeMap[unitGuidToId[sourceGUID] .. "-" .. spellId];
         if icon and ( icon.template == addon.ICON_TEMPLATE.GLOW ) then
             addon.ResetBurstDuration(icon);
             return;
@@ -425,6 +425,7 @@ local function ProcessUnitAura(self, event, ...)
     if next(guids) == nil then return end
 
     local unitTarget, updateAuras = ...;
+    if ( not unitTarget ) then return end
     -- Only use UNIT_AURA to extend aura
     if ( unitTarget == self.unit ) and updateAuras and updateAuras.updatedAuraInstanceIDs then
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
