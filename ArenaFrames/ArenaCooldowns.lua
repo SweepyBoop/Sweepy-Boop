@@ -440,7 +440,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local unit;
     local spellGUID = ( spell.trackDest and destGUID ) or sourceGUID;
     if spell.trackPet then
-        unit = IsCastByPet(spellGUID);
+        unit = IsCastByPet(spellGUID) or unitGuidToId[spellGUID];
     else
         unit = unitGuidToId[spellGUID];
     end
