@@ -704,7 +704,11 @@ function SweepyBoop:SetupArenaCooldownTracker()
         eventFrame:RegisterEvent(addon.UNIT_AURA);
         eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
-            if ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled ) then
+            local config = SweepyBoop.db.profile.arenaFrames;
+            local arenaTrackerEnabled = config.arenaCooldownTrackerEnabled;
+            local interruptBarEnabled = config.interruptBarEnabled;
+
+            if ( not arenaTrackerEnabled ) and ( not interruptBarEnabled ) then
                 return;
             end
 
@@ -713,6 +717,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
+                SweepyBoop:HideTestArenaInterruptBar();
 
                 -- This will simply update
                 EnsureIcons();
@@ -725,22 +730,26 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     shouldSetup = ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS );
                 end
                 if shouldSetup then
-                    --print("SetupIconGroups");
                     SetupIconGroups();
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-                for i = 0, addon.MAX_ARENA_SIZE do
-                    if iconGroups[i] then
-                        ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+
+                if arenaTrackerEnabled then
+                    for i = 0, addon.MAX_ARENA_SIZE do
+                        if iconGroups[i] then
+                            ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                        end
                     end
                 end
-                if iconGroups[100] then
+
+                if iconGroups[100] and interruptBarEnabled then
                     ProcessCombatLogEvent(iconGroups[100], subEvent, sourceGUID, destGUID, spellId, spellName);
                 end
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                if ( not arenaTrackerEnabled ) then return end
                 for i = 0, addon.MAX_ARENA_SIZE do
                     if iconGroups[i] then
                         ProcessUnitEvent(iconGroups[i], event, ...);
