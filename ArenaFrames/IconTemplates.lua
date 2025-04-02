@@ -52,7 +52,7 @@ addon.RefreshCooldownTimer = function (self, finish)
             if icon.group then
                 local config = SweepyBoop.db.profile.arenaFrames;
                 local showUnusedIcons;
-                if self.isInterruptBar then
+                if icon.isInterruptBar then
                     showUnusedIcons = config.interruptBarShowUnused;
                 else
                     showUnusedIcons = config.showUnusedIcons;
@@ -102,7 +102,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         if icon.group then
             local config = SweepyBoop.db.profile.arenaFrames;
             local showUnusedIcons;
-            if self.isInterruptBar then
+            if icon.isInterruptBar then
                 showUnusedIcons = config.interruptBarShowUnused;
             else
                 showUnusedIcons = config.showUnusedIcons;
@@ -125,7 +125,7 @@ addon.OnDurationTimerFinished = function(self)
         if icon.group then
             local config = SweepyBoop.db.profile.arenaFrames;
             local showUnusedIcons;
-            if self.isInterruptBar then
+            if icon.isInterruptBar then
                 showUnusedIcons = config.interruptBarShowUnused;
             else
                 showUnusedIcons = config.showUnusedIcons;
