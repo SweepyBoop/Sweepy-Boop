@@ -759,7 +759,7 @@ if addon.PROJECT_MAINLINE then
                                 order = 7,
                                 width = "full",
                                 type = "toggle",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_frost_iceshock")) .. " Separate rows for interrupts and other abilities",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_groundingtotem")) .. " Separate rows for interrupts and other abilities",
                             },
 
                             interruptBarShowUnused = {
