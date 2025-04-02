@@ -10,6 +10,10 @@ local npcToSpellID = {
     --[196111] = 387578, -- Gul'dan's Ambition (Pit Lord)
 };
 
+local interruptToSpellID = {
+    [97547] = 78675, -- Solar Beam
+};
+
 local resetByPower = {
     -- 137639, -- Storm, Earth, and Fire (rarely picked)
     1719, -- Recklessness
@@ -388,7 +392,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Solar Beam only reduces 15s when interrupting main target, how do we detect it? Cache last reduce time?
     if ( subEvent == addon.SPELL_INTERRUPT ) and unitGuidToId[sourceGUID] then
         local unit = unitGuidToId[sourceGUID];
-        local icon = self.activeMap[unit .. "-" .. spellId];
+        local spellIdOveride = interruptToSpellID[spellId] or spellId;
+        local icon = self.activeMap[unit .. "-" .. spellIdOveride];
         local amount = icon and icon.spellInfo.reduce_on_interrupt;
         if icon and amount then
             ResetCooldown(icon, amount, amount);
