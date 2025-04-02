@@ -396,6 +396,7 @@ local function ProcessUnitSpellCast(self, event, ...)
     if next(guids) == nil then return end
 
     local unitTarget, _, spellID = ...;
+    if ( not unitTarget ) then return end
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
