@@ -185,7 +185,6 @@ local function SetupIconGroup(group, unit, testIcons)
                 if ( spell.baseline or group.isInterruptBar ) and showUnusedIcons then
                     testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
                     addon.IconGroup_Insert(group, testIcons[unit][spellID]);
-                    --print("Insert unused icon", spellID);
                 end
             end
         end
@@ -235,7 +234,6 @@ local function SetupIconGroup(group, unit, testIcons)
                     -- The texture might have been set by use_parent_icon icons
                     iconSet[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], unit .. "-" .. spellID);
-                    --print("Populated", unit, spell.class, spellID)
 
                     local showUnusedIcons;
                     if isInterruptBar then
@@ -392,7 +390,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                 local spells = spellData[reset].critResets;
                 for i = 1, #spells do
                     if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
-                        --print(spellName, spellId, spellData[reset].critResetAmount);
                         ResetCooldown(icon, spellData[reset].critResetAmount);
                     end
                 end
@@ -444,7 +441,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     else
         unit = unitGuidToId[spellGUID];
     end
-    print(subEvent, spellName, spellId, unit);
     if ( not unit ) then return end
 
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
@@ -477,7 +473,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
-    print("Test", iconID, configSpellId, spellList[tostring(configSpellId)]);
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconSpellId ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
@@ -663,8 +658,6 @@ local function EnsureIconGroup(index, unitId, isInterruptBar)
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
-    -- Clear previous icons
-    --print("Clear previous icons");
     addon.IconGroup_Wipe(iconGroups[index]);
 end
 
