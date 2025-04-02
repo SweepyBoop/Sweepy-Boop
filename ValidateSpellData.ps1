@@ -6,12 +6,16 @@ $spellTable = @{}
 $spellFileContent = Get-Content $spellFile
 # Loop through each line in the file content
 foreach ($line in $spellFileContent) {
-    # Extract the ID and comment from the line
-    if ($line -match '\[(\d+)\].*--\s*(.+)$') {
+    # if line contains "TEST_MODE", abort the loop
+    if ($line -match 'TEST_MODE') {
+        Write-Host "Test mode detected, aborting the loop."
+        break
+    }
+
+    if ($line -match '\[(\d+)\]') {
         $id = $matches[1]
-        $comment = $matches[2]
-        # Add the ID and comment to the hashtable
-        $spellTable[$id] = $comment
+        # Add the ID to the hashtable
+        $spellTable[$id] = $True
     }
 }
 
@@ -23,7 +27,6 @@ $spellTableOmniBar = @{}
 $spellFileContentOmniBar = Get-Content $spellFileOmniBar
 # Loop through each line in the file content
 foreach ($line in $spellFileContentOmniBar) {
-    # Extract the ID and comment from the line
     if ($line -match '\[(\d+)\].*--\s*(.+)$') {
         $id = $matches[1]
         $commentOmniBar = $matches[2]
@@ -39,6 +42,7 @@ foreach ($id in $spellTable.Keys) {
         $missingSpellIDs += $id
     }
 }
+
 # Print the missing spell IDs
 if ($missingSpellIDs.Count -eq 0) {
     Write-Host "All spell IDs from SpellData.lua are present in OmniBar_Mainline.lua."
