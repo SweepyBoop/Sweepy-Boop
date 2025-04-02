@@ -793,10 +793,13 @@ function SweepyBoop:TestArenaInterruptBar()
     local spellId = 1766; -- Kick
     ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
-    spellId = 2139; -- Counterspell
+    spellId = 57994; -- Wind Shear
     ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
-    spellId = 147362; -- Counter Shot
+    spellId = 204336; -- Grounding Totem
+    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+
+    spellId = 8143; -- Tremor Totem
     ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     externalTestGroup[2]:Show();
