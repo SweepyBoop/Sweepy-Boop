@@ -6,9 +6,9 @@ $spellTable = @{}
 $spellFileContent = Get-Content $spellFile
 # Loop through each line in the file content
 foreach ($line in $spellFileContent) {
-    # if line contains "TEST_MODE", abort the loop
-    if ($line -match 'TEST_MODE') {
-        Write-Host "Test mode detected, aborting the loop."
+    # if line contains "addon.SpellResets", abort the loop
+    if ($line -match 'addon.SpellResets') {
+        Write-Host "End of spell IDs"
         break
     }
 
