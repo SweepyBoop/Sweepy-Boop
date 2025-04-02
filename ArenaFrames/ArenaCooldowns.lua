@@ -686,9 +686,8 @@ function SweepyBoop:RepositionArenaInterruptBar()
     if ( not externalTestGroup[2] ) or ( not externalTestGroup[2]:IsShown() ) then return end
 
     local config = SweepyBoop.db.profile.arenaFrames;
-    local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+    local grow = interruptBarGrowOptions[config.interruptBarGrowDirection];
     local setPointOptions = GetSetPointOptions(1, true);
-    setPointOptions.offsetX = config.arenaCooldownOffsetX;
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[2], setPointOptions, grow);
 end
 
