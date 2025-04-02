@@ -51,7 +51,12 @@ addon.RefreshCooldownTimer = function (self, finish)
             icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
             if icon.group then
                 local config = SweepyBoop.db.profile.arenaFrames;
-                local showUnusedIcons = self.isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
+                local showUnusedIcons;
+                if self.isInterruptBar then
+                    showUnusedIcons = config.interruptBarShowUnused;
+                else
+                    showUnusedIcons = config.showUnusedIcons;
+                end
                 addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
             end
         else
@@ -96,7 +101,12 @@ addon.RefreshCooldownTimer = function (self, finish)
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
             local config = SweepyBoop.db.profile.arenaFrames;
-            local showUnusedIcons = self.isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
+            local showUnusedIcons;
+            if self.isInterruptBar then
+                showUnusedIcons = config.interruptBarShowUnused;
+            else
+                showUnusedIcons = config.showUnusedIcons;
+            end
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
@@ -114,7 +124,12 @@ addon.OnDurationTimerFinished = function(self)
     else
         if icon.group then
             local config = SweepyBoop.db.profile.arenaFrames;
-            local showUnusedIcons = self.isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
+            local showUnusedIcons;
+            if self.isInterruptBar then
+                showUnusedIcons = config.interruptBarShowUnused;
+            else
+                showUnusedIcons = config.showUnusedIcons;
+            end
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end

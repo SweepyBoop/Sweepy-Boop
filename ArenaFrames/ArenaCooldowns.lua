@@ -43,10 +43,20 @@ end
 local function EnsureIcon(unitId, spellID, isInterruptBar)
     local config = SweepyBoop.db.profile.arenaFrames;
 
-    local iconSet = isInterruptBar and premadeIconsInterrupt or premadeIcons;
+    local iconSet;
+    if isInterruptBar then
+        iconSet = premadeIconsInterrupt;
+    else
+        iconSet = premadeIcons;
+    end
 
     if ( not iconSet[unitId][spellID] ) then
-        local size = isInterruptBar and config.interruptBarIconSize or config.arenaCooldownTrackerIconSize;
+        local size;
+        if isInterruptBar then
+            size = config.interruptBarIconSize;
+        else
+            size = config.arenaCooldownTrackerIconSize;
+        end
         if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
             iconSet[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
         else
@@ -54,7 +64,12 @@ local function EnsureIcon(unitId, spellID, isInterruptBar)
         end
         iconSet[unitId][spellID].isInterruptBar = isInterruptBar;
 
-        local hideCountDownNumbers = isInterruptBar and config.interruptBarHideCountDownNumbers or config.hideCountDownNumbers;
+        local hideCountDownNumbers;
+        if isInterruptBar then
+            hideCountDownNumbers = config.interruptBarHideCountDownNumbers;
+        else
+            hideCountDownNumbers = config.hideCountDownNumbers;
+        end
         addon.SetHideCountdownNumbers(iconSet[unitId][spellID], hideCountDownNumbers);
         -- size is set on creation but can be updated if lastModified falls behind
         iconSet[unitId][spellID].lastModified = config.lastModified;
@@ -62,9 +77,20 @@ local function EnsureIcon(unitId, spellID, isInterruptBar)
 
     -- Size was not set on creation, need to set scale and show/hide countdown numbers
     if ( iconSet[unitId][spellID].lastModified ~= config.lastModified ) then
-        local size = isInterruptBar and config.interruptBarIconSize or config.arenaCooldownTrackerIconSize;
+        local size;
+        if isInterruptBar then
+            size = config.interruptBarIconSize;
+        else
+            size = config.arenaCooldownTrackerIconSize;
+        end
+
         iconSet[unitId][spellID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
-        local hideCountDownNumbers = isInterruptBar and config.interruptBarHideCountDownNumbers or config.hideCountDownNumbers;
+        local hideCountDownNumbers;
+        if isInterruptBar then
+            hideCountDownNumbers = config.interruptBarHideCountDownNumbers;
+        else
+            hideCountDownNumbers = config.hideCountDownNumbers;
+        end
         addon.SetHideCountdownNumbers(iconSet[unitId][spellID], hideCountDownNumbers);
 
         iconSet[unitId][spellID].lastModified = config.lastModified;
@@ -139,12 +165,23 @@ local function SetupIconGroup(group, unit, testIcons)
                 testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                 addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
 
-                local showUnusedIcons = isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
-                local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
+                local showUnusedIcons;
+                if isInterruptBar then
+                    showUnusedIcons = config.interruptBarShowUnused;
+                else
+                    showUnusedIcons = config.showUnusedIcons;
+                end
+
+                local unusedIconAlpha;
+                if isInterruptBar then
+                    unusedIconAlpha = config.interruptBarUnusedIconAlpha;
+                else
+                    unusedIconAlpha = config.unusedIconAlpha;
+                end
                 if spell.baseline and showUnusedIcons then
                     testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
                     addon.IconGroup_Insert(group, testIcons[unit][spellID]);
-                    print("Insert unused icon", spellID);
+                    --print("Insert unused icon", spellID);
                 end
             end
         end
@@ -157,7 +194,12 @@ local function SetupIconGroup(group, unit, testIcons)
     if ( not class ) then return end
 
     local config = SweepyBoop.db.profile.arenaFrames;
-    local iconSet = isInterruptBar and premadeIconsInterrupt or premadeIcons;
+    local iconSet;
+    if isInterruptBar then
+        iconSet = premadeIconsInterrupt;
+    else
+        iconSet = premadeIcons;
+    end
 
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
@@ -191,9 +233,27 @@ local function SetupIconGroup(group, unit, testIcons)
                     addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], unit .. "-" .. spellID);
                     --print("Populated", unit, spell.class, spellID)
 
-                    local showUnusedIcons = isInterruptBar and config.interruptBarShowUnused or config.showUnusedIcons;
-                    local unusedIconAlpha = isInterruptBar and config.interruptBarUnusedIconAlpha or config.unusedIconAlpha;
-                    local spellList = isInterruptBar and config.interruptBarSpellList or config.spellList;
+                    local showUnusedIcons;
+                    if isInterruptBar then
+                        showUnusedIcons = config.interruptBarShowUnused;
+                    else
+                        showUnusedIcons = config.showUnusedIcons;
+                    end
+
+                    local unusedIconAlpha;
+                    if isInterruptBar then
+                        unusedIconAlpha = config.interruptBarUnusedIconAlpha;
+                    else
+                        unusedIconAlpha = config.unusedIconAlpha;
+                    end
+                  
+                    local spellList;
+                    if isInterruptBar then
+                        spellList = config.interruptBarSpellList;
+                    else
+                        spellList = config.spellList;
+                    end
+
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
                         iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
                         addon.IconGroup_Insert(group, iconSet[unit][spellID]);
@@ -384,7 +444,12 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Find the icon to use (check parent too)
     -- Config only shows parent ID, so check parent if applicable
     local config = SweepyBoop.db.profile.arenaFrames;
-    local spellList = self.isInterruptBar and config.interruptBarSpellList or config.spellList;
+    local spellList;
+    if self.isInterruptBar then
+        spellList = config.interruptBarSpellList;
+    else
+        spellList = config.spellList;
+    end
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
@@ -413,7 +478,12 @@ local function ProcessUnitSpellCast(self, event, ...)
         local iconID = self.unit .. "-" .. spellID;
         if self.icons[iconID] then
             local config = SweepyBoop.db.profile.arenaFrames;
-            local spellList = self.isInterruptBar and config.interruptBarSpellList or config.spellList;
+            local spellList;
+            if self.isInterruptBar then
+                spellList = config.interruptBarSpellList;
+            else
+                spellList = config.spellList;
+            end
             if spellList[tostring(spellID)] then
                 addon.StartBurstIcon(self.icons[iconID]);
             end
@@ -502,8 +572,19 @@ local interruptBarGrowOptions = {
 
 local function GetSetPointOptions(index, isInterruptBar)
     local config = SweepyBoop.db.profile.arenaFrames;
-    local offsetX = isInterruptBar and config.interruptBarOffsetX or config.arenaCooldownOffsetX;
-    local offsetY = isInterruptBar and config.interruptBarOffsetY or config.arenaCooldownOffsetY;
+    local offsetX;
+    if isInterruptBar then
+        offsetX = config.interruptBarOffsetX;
+    else
+        offsetX = config.arenaCooldownOffsetX;
+    end
+
+    local offsetY;
+    if isInterruptBar and config.interruptBarOffsetY == 0 then
+        offsetY = config.arenaCooldownOffsetY;
+    else
+        offsetY = config.interruptBarOffsetY;
+    end
     local setPointOptions;
     if isInterruptBar then
         setPointOptions = {
@@ -531,7 +612,12 @@ local function EnsureIconGroup(index, unitId, isInterruptBar)
 
     if ( not iconGroups[index] ) then
         local setPointOptions = GetSetPointOptions(index, isInterruptBar);
-        local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        local growOptions;
+        if isInterruptBar then
+            growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+        else
+            growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        end
         iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
         iconGroups[index].isInterruptBar = isInterruptBar;
         -- SetPointOptions is set but can be updated if lastModified falls behind
@@ -540,7 +626,12 @@ local function EnsureIconGroup(index, unitId, isInterruptBar)
 
     if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
         local setPointOptions = GetSetPointOptions(index, isInterruptBar);
-        local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        local growOptions;
+        if isInterruptBar then
+            growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+        else
+            growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        end
         addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions);
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
@@ -584,9 +675,19 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
     addon.IconGroup_Wipe(externalTestGroup[index]);
 
     local config = SweepyBoop.db.profile.arenaFrames;
-    local iconSize = isInterruptBar and config.interruptBarIconSize or config.arenaCooldownTrackerIconSize;
+    local iconSize;
+    if isInterruptBar then
+        iconSize = config.interruptBarIconSize;
+    else
+        iconSize = config.arenaCooldownTrackerIconSize;
+    end
     local iconScale = iconSize / addon.DEFAULT_ICON_SIZE;
-    local hideCountDownNumbers = isInterruptBar and config.interruptBarHideCountDownNumbers or config.hideCountDownNumbers;
+    local hideCountDownNumbers;
+    if isInterruptBar then
+        hideCountDownNumbers = config.interruptBarHideCountDownNumbers;
+    else
+        hideCountDownNumbers = config.hideCountDownNumbers;
+    end
     local unitId = "player";
     if testIcons[unitId] then
         for _, icon in pairs(testIcons[unitId]) do
@@ -633,8 +734,12 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
             end
         end
     end
-
-    local growOptions = isInterruptBar and interruptBarGrowOptions[config.interruptBarGrowDirection] or arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+    local growOptions;
+    if isInterruptBar then
+        growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+    else
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+    end
     local setPointOptions = GetSetPointOptions(1, isInterruptBar);
     if externalTestGroup[index] then
         addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
