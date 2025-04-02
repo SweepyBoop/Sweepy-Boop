@@ -253,9 +253,9 @@ local function SetupIconGroup(group, unit, testIcons)
                   
                     local spellList;
                     if isInterruptBar then
-                        spellList = config.individual.interruptBarSpellList;
+                        spellList = config.interruptBarSpellList;
                     else
-                        spellList = config.interrupts.spellList;
+                        spellList = config.spellList;
                     end
 
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
@@ -470,9 +470,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local config = SweepyBoop.db.profile.arenaFrames;
     local spellList;
     if self.isInterruptBar then
-        spellList = config.individual.interruptBarSpellList;
+        spellList = config.interruptBarSpellList;
     else
-        spellList = config.interrupts.spellList;
+        spellList = config.spellList;
     end
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
@@ -505,9 +505,9 @@ local function ProcessUnitSpellCast(self, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
             local spellList;
             if self.isInterruptBar then
-                spellList = config.individual.interruptBarSpellList;
+                spellList = config.interruptBarSpellList;
             else
-                spellList = config.interrupts.spellList;
+                spellList = config.spellList;
             end
             if spellList[tostring(spellID)] then
                 addon.StartBurstIcon(self.icons[iconID]);
