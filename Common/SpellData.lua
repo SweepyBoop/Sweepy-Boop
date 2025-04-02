@@ -1138,7 +1138,7 @@ addon.SpellData = {
         cooldown = 45,
         duration = 7, -- Confirm early dismiss
     },
-    -- Psyfiend
+    -- Psyfiend (triggers SPELL_AURA_REMOVED when dismissed)
     [211522] = {
         class = addon.PRIEST,
         spec = { specID.SHADOW },
