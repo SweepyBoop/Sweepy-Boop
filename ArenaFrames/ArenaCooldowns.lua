@@ -554,18 +554,20 @@ local arenaFrameGrowOptions = {
 };
 
 local interruptBarGrowOptions = {
+    -- Set columns to 6 for center alignment
+    -- If we set to a large number, the first icon won't be centered properly
     [addon.INTERRUPT_GROW_DIRECTION.CENTER_UP] = {
         direction = "CENTER",
         anchor = "CENTER",
         margin = 3,
-        columns = 100,
+        columns = 6,
         growUpward = true,
     },
     [addon.INTERRUPT_GROW_DIRECTION.CENTER_DOWN] = {
         direction = "CENTER",
         anchor = "CENTER",
         margin = 3,
-        columns = 100,
+        columns = 6,
         growUpward = false,
     },
 }
