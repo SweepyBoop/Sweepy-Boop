@@ -413,24 +413,24 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
     end
 
-    -- Check summon / dead
-    if addon.EVENTS_PET_DISMISS[subEvent] then
-        -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
-        local unit = unitGuidToId[sourceGUID];
-        local summonSpellId = self.npcMap[destGUID];
-        if unit and summonSpellId and self.activeMap[unit .. "-" .. summonSpellId] then
-            addon.ResetBurstDuration(self.activeMap[unit .. "-" .. summonSpellId]);
-        end
-        return;
-    elseif ( subEvent == addon.SPELL_SUMMON ) and ( unitGuidToId[sourceGUID] ) then
-        -- We don't actually show the icon from SPELL_SUMMON, just create the mapping of mob GUID -> spellID
-        local npcId = addon.GetNpcIdFromGuid(destGUID);
-        local summonSpellId = npcToSpellID[npcId];
-        self.npcMap[destGUID] = summonSpellId;
+    -- Check summon / dead (doesn't seem to be working)
+    -- if addon.EVENTS_PET_DISMISS[subEvent] then
+    --     -- Might have already been dismissed by SPELL_AURA_REMOVED, e.g., Psyfiend
+    --     local unit = unitGuidToId[sourceGUID];
+    --     local summonSpellId = self.npcMap[destGUID];
+    --     if unit and summonSpellId and self.activeMap[unit .. "-" .. summonSpellId] then
+    --         addon.ResetBurstDuration(self.activeMap[unit .. "-" .. summonSpellId]);
+    --     end
+    --     return;
+    -- elseif ( subEvent == addon.SPELL_SUMMON ) and ( unitGuidToId[sourceGUID] ) then
+    --     -- We don't actually show the icon from SPELL_SUMMON, just create the mapping of mob GUID -> spellID
+    --     local npcId = addon.GetNpcIdFromGuid(destGUID);
+    --     local summonSpellId = npcToSpellID[npcId];
+    --     self.npcMap[destGUID] = summonSpellId;
 
-        -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
-        return;
-    end
+    --     -- If not added yet, add by this (e.g., Guldan's Ambition: Pit Lord)
+    --     return;
+    -- end
 
     -- Validate spell
     if ( not spellData[spellId] ) then return end
