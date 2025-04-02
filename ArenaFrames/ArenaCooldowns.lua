@@ -554,7 +554,7 @@ local function SetupIconGroups()
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             SetupIconGroup(iconGroups[i], "arena" .. i);
-            SetupIconGroup(iconGroups[100], nil, nil);
+            SetupIconGroup(iconGroups[100], nil, nil); -- We're settig a single group with multiple opponents
         end
     end
 end
