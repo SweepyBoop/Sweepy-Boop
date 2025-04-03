@@ -85,6 +85,7 @@ Similar to OmniBar but much more accurate, incorporating all cooldown reduction 
 - Balance Druid Solar Beam cooldown is reduced by 15 Sec if it successfully interrupted a spell cast
 - Mage Shifting Power reduces the cooldown of all their abilities by 12 Sec
 - Calculates ability charges more accurately, and displays them with a clear daily quest icon texture
+- Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
 
 It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter.
 
