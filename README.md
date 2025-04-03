@@ -83,19 +83,6 @@ Players can customize which units to hide / show / highlight:
 
 ![Nameplate filter](https://github.com/user-attachments/assets/d19f8f3f-ac53-476a-afb9-acb10b1246b2)
 
-## Aura filter on enemy nameplates
-![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
-
-Show only crowd controls (from all sources) and whitelisted debuffs applied by the player themselves on enemy nameplates.
-
-There is also an option to show whitelisted buffs on enemy nameplates.
-
-Auras are neatly organized into debuff and buff rows:
-- On the debuff row, crowd controls are shown first with a larger scale and orange border, followed by other debuffs with normal scale and no border
-- Buffs are shown on a separate row with a larger scale. Purgable buffs are shown with a different border (blue) than other buffs (green)
-
-Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
-
 ## Advanced interrupt bar
 Similar functionality as OmniBar but much more accurate, factoring in all cooldown reduction mechanics in the game, e.g.,
 - Mage Counterspell cooldown is reduced by 4s if they successfully landed the interrupt
@@ -108,6 +95,19 @@ Similar functionality as OmniBar but much more accurate, factoring in all cooldo
 ![Interrupt successful](https://github.com/user-attachments/assets/2dc4970c-07e9-490b-9779-cfb1edd4871d)
 
 (Counterspell landed, cooldown becomes 20 Sec!)
+
+## Aura filter on enemy nameplates
+![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
+
+Show only crowd controls (from all sources) and whitelisted debuffs applied by the player themselves on enemy nameplates.
+
+There is also an option to show whitelisted buffs on enemy nameplates.
+
+Auras are neatly organized into debuff and buff rows:
+- On the debuff row, crowd controls are shown first with a larger scale and orange border, followed by other debuffs with normal scale and no border
+- Buffs are shown on a separate row with a larger scale. Purgable buffs are shown with a different border (blue) than other buffs (green)
+
+Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
 
 ## Arena enemy cooldown tracking
 ![image](https://github.com/user-attachments/assets/f2131387-a222-45d9-83ca-c1fb37079b36)
