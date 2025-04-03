@@ -84,6 +84,7 @@ Similar to OmniBar but much more accurate, incorporating all cooldown reduction 
 - Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt
 - Balance Druid Solar Beam cooldown is reduced by 15 Sec if it successfully interrupted a spell cast
 - Mage Shifting Power reduces the cooldown of all their abilities by 12 Sec
+- Calculates ability charges more accurately, and displays them with a clear daily quest icon texture
 
 It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter.
 
@@ -94,6 +95,10 @@ It provides the "Show unused icons" option like OmniBar, but non-baseline abilit
 ![Interrupt successful](https://github.com/user-attachments/assets/2dc4970c-07e9-490b-9779-cfb1edd4871d)
 
 (Counterspell landed, cooldown becomes 20 Sec!)
+
+![image](https://github.com/user-attachments/assets/3c0b5a4b-00e8-470c-ac11-b5a97b63119c)
+
+(Clear indicator when another charge of Death Grip is available)
 
 ## Aura filter on enemy nameplates
 ![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
