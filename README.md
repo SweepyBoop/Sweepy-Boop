@@ -79,10 +79,6 @@ While in arenas / battlegrounds, customize which non-player enemy units to show,
 - Option to highlight chosen units with an animating icon!
 
 
-Players can customize which units to hide / show / highlight:
-
-![Nameplate filter](https://github.com/user-attachments/assets/d19f8f3f-ac53-476a-afb9-acb10b1246b2)
-
 ## Advanced interrupt bar
 Similar functionality as OmniBar but much more accurate, factoring in all cooldown reduction mechanics in the game, e.g.,
 - Mage Counterspell cooldown is reduced by 4s if they successfully landed the interrupt
