@@ -81,8 +81,9 @@ While in arenas / battlegrounds, customize which non-player enemy units to show,
 
 ## Advanced interrupt bar
 Similar to OmniBar but much more accurate, incorporating all cooldown reduction mechanics in the game, e.g.,
-- Mage Counterspell cooldown is reduced by 4s if they successfully landed the interrupt
-- Mage Shifting Power reduces cooldowns of all their abilities by 12 Sec
+- Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt
+- Balance Druid Solar Beam cooldown is reduced by 15 Sec if it successfully interrupted a spell cast
+- Mage Shifting Power reduces the cooldown of all their abilities by 12 Sec
 
 ![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
 
