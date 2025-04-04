@@ -1372,7 +1372,7 @@ local defaults = {
         arenaFrames = {
             healerIndicator = true,
             arenaCooldownTrackerEnabled = true,
-            arenaCooldownSecondaryBar = true,
+            arenaCooldownSecondaryBar = false,
 
             arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
             arenaCooldownOffsetX = 0,

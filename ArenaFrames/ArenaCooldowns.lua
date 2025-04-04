@@ -26,7 +26,7 @@ local resetByCrit = {
 };
 
 local premadeIcons = {};
--- 1~3: main bar for arena 1~3; 4~6: defensive bar for arena 1~3 (arena index % 3); 100: interrupt bar;
+-- 1~3: main bar for arena 1~3; 4~6: secondary bar for arena 1~3 (arena index % 3); 100: interrupt bar;
 local iconGroups = {};
 local premadeIconsInterrupt = {};
 local eventFrame;
@@ -675,12 +675,12 @@ end
 local function EnsureIconGroups()
     if addon.TEST_MODE then
         EnsureIconGroup(1, "player");
-        EnsureIconGroup(4, "player"); -- Defensive bar
+        EnsureIconGroup(4, "player"); -- Secondary bar
         EnsureIconGroup(100, "player", true); -- Interrupt bar
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i, "arena" .. i);
-            EnsureIconGroup(i + 3, "arena" .. i); -- Defensive bar
+            EnsureIconGroup(i + 3, "arena" .. i); -- Secondary bar
         end
         EnsureIconGroup(100, nil, true); -- Interrupt bar
     end
@@ -692,7 +692,7 @@ local function SetupIconGroups(arena, interrupts)
 
         if arena then
             SetupIconGroup(iconGroups[1], unitId);
-            SetupIconGroup(iconGroups[4], unitId); -- Defensive bar
+            SetupIconGroup(iconGroups[4], unitId); -- Secondary bar
         end
 
         if interrupts then
