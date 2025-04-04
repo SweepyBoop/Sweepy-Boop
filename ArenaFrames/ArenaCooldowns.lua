@@ -640,6 +640,7 @@ local interruptBarGrowOptions = {
 
 local function GetSetPointOptions(index, isInterruptBar, isSecondaryBar)
     local config = SweepyBoop.db.profile.arenaFrames;
+
     local offsetX;
     if isInterruptBar then
         offsetX = config.interruptBarOffsetX;
