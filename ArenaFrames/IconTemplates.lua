@@ -120,6 +120,22 @@ addon.OnDurationTimerFinished = function(self)
     local icon = self:GetParent();
     addon.HideOverlayGlow(icon);
     if icon.cooldown then
+        local usedIconAlpha;
+        local config = SweepyBoop.db.profile.arenaFrames;
+        if icon.isInterruptBar then
+            if config.interruptBarShowUnused then
+                usedIconAlpha = config.interruptBarUsedIconAlpha;
+            else
+                usedIconAlpha = 1;
+            end
+        else
+            if config.showUnusedIcons then
+                usedIconAlpha = config.usedIconAlpha;
+            else
+                usedIconAlpha = 1;
+            end
+        end
+        icon:SetAlpha(usedIconAlpha);
         icon.cooldown:Show();
     else
         if icon.group then

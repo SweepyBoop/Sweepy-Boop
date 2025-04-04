@@ -127,7 +127,7 @@ addon.SpellData = {
     -- Death Grip
     [49576] = {
         class = addon.DEATHKNIGHT,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         cooldown = 25,
         charges = true, -- Death's Echo is almost always picked
         baseline = true,
@@ -136,7 +136,7 @@ addon.SpellData = {
     -- Strangulate
     [47476] = {
         class = addon.DEATHKNIGHT,
-        category = category.CROWDCONTROL,
+        category = category.SILENCE,
         cooldown = 60,
     },
     -- Blinding Sleet
@@ -148,14 +148,14 @@ addon.SpellData = {
     -- Asphyxiate
     [221562] = {
         class = addon.DEATHKNIGHT,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         cooldown = 45,
     },
     -- Defensive
     -- Icebound Fortitude
     [48792] = {
         class = addon.DEATHKNIGHT,
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
@@ -266,7 +266,7 @@ addon.SpellData = {
         cooldown = 30,
         class = addon.DEMONHUNTER,
         spec = { specID.HAVOC },
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         baseline = true,
     },
 
@@ -363,13 +363,13 @@ addon.SpellData = {
     [5211] = {
         cooldown = 60,
         class = addon.DRUID,
-        category = category.CROWDCONTROL
+        category = category.STUN
     },
     -- Maim
     [22570] = {
         cooldown = 20,
         class = addon.DRUID,
-        category = category.CROWDCONTROL
+        category = category.STUN
     },
     -- Incapacitating Roar
     [99] = {
@@ -383,14 +383,14 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.BALANCE },
         reduce_on_interrupt = 15,
-        category = category.CROWDCONTROL
+        category = category.SILENCE
     },
     -- Disrupt
     -- Faerie Swarm
     [209749] = {
         class = addon.DRUID,
         spec = { specID.BALANCE },
-        category = category.DISRUPT,
+        category = category.SILENCE,
         cooldown = 30,
     },
     -- Interrupt
@@ -429,13 +429,13 @@ addon.SpellData = {
     [108238] = {
         cooldown = 90,
         class = addon.DRUID,
-        category = category.DEFENSIVE
+        category = category.HEAL
     },
     -- Ancient of Lore
     [473909] = {
         class = addon.DRUID,
         spec = { specID.RESTORATION_DRUID },
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         cooldown = 90,
     },
     -- Dispel
@@ -553,7 +553,7 @@ addon.SpellData = {
     [382266] = {
         cooldown = 30,
         class = addon.EVOKER,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         trackEvent = addon.SPELL_EMPOWER_END,
         baseline = true,
     },
@@ -612,7 +612,7 @@ addon.SpellData = {
     -- Feign Death
     [5384] = {
         class = addon.HUNTER,
-        category = category.DISRUPT,
+        category = category.DEFENSIVE,
         cooldown = 30,
         baseline = true,
     },
@@ -620,7 +620,7 @@ addon.SpellData = {
     [212640] = {
         class = addon.HUNTER,
         spec = { specID.SURVIVAL },
-        category = category.DISRUPT,
+        category = category.OTHERS,
         cooldown = 25,
     },
     -- Crowd Control
@@ -628,7 +628,7 @@ addon.SpellData = {
     [19577] = {
         cooldown = 50,
         class = addon.HUNTER,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
     },
     -- Freezing Trap
     [187650] = {
@@ -664,7 +664,7 @@ addon.SpellData = {
     [109304] = {
         cooldown = 120,
         class = addon.HUNTER,
-        category = category.DEFENSIVE,
+        category = category.HEAL,
     },
     -- Interrupt
     -- Counter Shot
@@ -748,7 +748,7 @@ addon.SpellData = {
     [45438] = {
         cooldown = 180,
         class = addon.MAGE,
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
     },
@@ -806,20 +806,26 @@ addon.SpellData = {
         cooldown = 20,
         class = addon.MAGE,
         spec = { specID.ARCANE },
-        category = category.DISRUPT,
+        category = category.OTHERS,
     },
     -- Greater Invisibility
     [110959] = {
         cooldown = 120,
         class = addon.MAGE,
-        category = category.DISRUPT,
+        category = category.OTHERS,
     },
     -- Blink
     [1953] = {
         cooldown = 11, -- 15s - 4s from Flow of Time
         class = addon.MAGE,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         -- Not baseline since it can be replaced by Shimmer
+    },
+    -- Blast Wave
+    [157981] = {
+        class = addon.MAGE,
+        category = category.KNOCKBACK,
+        cooldown = 30,
     },
 
     -- Monk
@@ -867,20 +873,14 @@ addon.SpellData = {
     [119381] = {
         cooldown = 50,
         class = addon.MONK,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         baseline = true, -- technically a talent, but always picked
     },
-    -- Breath of Fire (Incendiary Breath)
-    -- [115181] = {
-    --     cooldown = 30,
-    --     class = addon.MONK,
-    --     category = category.CROWDCONTROL,
-    -- },
     -- Ring of Peace
     [116844] = {
         cooldown = 45,
         class = addon.MONK,
-        category = category.DISRUPT,
+        category = category.KNOCKBACK,
         -- not baseline, it's on the same node as Song of Chi-Ji
     },
     -- Spear Hand Strike
@@ -948,7 +948,7 @@ addon.SpellData = {
     -- Grapple Weapon
     [233759] = {
         class = addon.MONK,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         cooldown = 45,
     },
     -- Dispel
@@ -1021,7 +1021,7 @@ addon.SpellData = {
     [642] = {
         cooldown = 210,
         class = addon.PALADIN,
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
     },
@@ -1029,7 +1029,7 @@ addon.SpellData = {
     [1022] = {
         cooldown = 240,
         class = addon.PALADIN,
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
     },
@@ -1068,7 +1068,7 @@ addon.SpellData = {
     [853] = {
         cooldown = 45,
         class = addon.PALADIN,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         baseline = true,
     },
     -- Blinding Light
@@ -1082,7 +1082,7 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.PALADIN,
         spec = { specID.PROTECTION_PALADIN },
-        category = category.CROWDCONTROL,
+        category = category.SILENCE,
         trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Interrupt
@@ -1097,7 +1097,7 @@ addon.SpellData = {
     -- Blessing of Sacrifice
     [6940] = {
         class = addon.PALADIN,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         cooldown = 105,
         -- Don't make baseline since it can be replaced by Ultimate Sacrifice
     },
@@ -1121,7 +1121,7 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.PALADIN,
         spec = { specID.RETRIBUTION },
-        category = category.DISPEL,
+        category = category.DEFENSIVE,
     },
 
     -- Priest
@@ -1190,7 +1190,7 @@ addon.SpellData = {
     [32375] = {
         cooldown = 120,
         class = addon.PRIEST,
-        category = category.DISPEL,
+        category = category.MASS_DISPEL,
     },
     -- Purify
     [527] = {
@@ -1215,7 +1215,7 @@ addon.SpellData = {
         cooldown = 60,
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         baseline = true, -- technically a talent, but always picked
     },
     -- Silence
@@ -1223,7 +1223,7 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.PRIEST,
         spec = { specID.SHADOW },
-        category = category.CROWDCONTROL,
+        category = category.SILENCE,
         opt_lower_cooldown = 30,
         baseline = true, -- technically a talent, but always picked
     },
@@ -1232,7 +1232,7 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.PRIEST,
         spec = { specID.SHADOW },
-        category = category.CROWDCONTROL,
+        category = category.STUN,
     },
     -- Defensive
     -- Void Shift
@@ -1293,21 +1293,21 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
-        category = category.DISRUPT,
+        category = category.OTHERS,
     },
     -- Fade (Phase Shift)
     [408558] = {
         cooldown = 30,
         opt_lower_cooldown = 20,
         class = addon.PRIEST,
-        category = category.DISRUPT,
+        category = category.IMMUNITY,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
     -- Shadow Word: Death
     [32379] = {
         cooldown = 10,
         class = addon.PRIEST,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         baseline = true,
     },
 
@@ -1398,7 +1398,7 @@ addon.SpellData = {
     [31224] = {
         cooldown = 120,
         class = addon.ROGUE,
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         baseline = true, -- technically a talent, but always picked
     },
     -- Evasion
@@ -1413,7 +1413,7 @@ addon.SpellData = {
     [408] = {
         cooldown = 20,
         class = addon.ROGUE,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         baseline = true,
     },
     -- Blind
@@ -1443,7 +1443,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         spec = { specID.SUBTLETY, specID.ASSASSINATION },
         charges = true,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         baseline = true,
     },
     -- Grappling Hook
@@ -1452,14 +1452,14 @@ addon.SpellData = {
         class = addon.ROGUE,
         spec = { specID.OUTLAW },
         charges = true,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         baseline = true,
     },
     -- Dismantle
     [207777] = {
         cooldown = 45,
         class = addon.ROGUE,
-        category = category.DISRUPT
+        category = category.OTHERS
     },
 
     -- Shaman
@@ -1554,7 +1554,7 @@ addon.SpellData = {
     [409293] = {
         cooldown = 120,
         class = addon.SHAMAN,
-        category = category.DEFENSIVE
+        category = category.IMMUNITY
     },
     -- Stone Bulwark Totem (can be reset by Totemic Recall)
     [108270] = {
@@ -1567,13 +1567,13 @@ addon.SpellData = {
     [204336] = {
         cooldown = 24,
         class = addon.SHAMAN,
-        category = category.DISRUPT
+        category = category.OTHERS
     },
     -- Tremor Totem
     [8143] = {
         cooldown = 54,
         class = addon.SHAMAN,
-        category = category.DISRUPT
+        category = category.OTHERS
     },
     -- Dispel
     -- Purify Spirit
@@ -1655,7 +1655,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         spec = { specID.DEMONOLOGY },
         trackPet = true,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
     },
         -- Axe Toss (Command Demon Ability) (only shows up once no matter which version is cast)
         [119914] = {
@@ -1728,7 +1728,7 @@ addon.SpellData = {
     [212295] = {
         cooldown = 45,
         class = addon.WARLOCK,
-        category = category.DISRUPT,
+        category = category.OTHERS,
     },
 
     -- Warrior
@@ -1787,27 +1787,27 @@ addon.SpellData = {
         cooldown = 17,
         class = addon.WARRIOR,
         charges = true,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         baseline = true,
     },
     -- Spell Reflection
     [23920] = {
         cooldown = 23.75,
         class = addon.WARRIOR,
-        category = category.DISRUPT,
+        category = category.OTHERS,
     },
     -- Heroic Leap
     [6544] = {
         cooldown = 30,
         class = addon.WARRIOR,
-        category = category.DISRUPT,
+        category = category.OTHERS,
         baseline = true, -- technically a talent, but always picked
     },
     -- Disarm
     [236077] = {
         cooldown = 45,
         class = addon.WARRIOR,
-        category = category.DISRUPT,
+        category = category.OTHERS,
     },
     -- Pummel
     [6552] = {
@@ -1820,7 +1820,7 @@ addon.SpellData = {
     [107570] = {
         cooldown = 28.5,
         class = addon.WARRIOR,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         baseline = true, -- technically a talent, but always picked
     },
     -- Intimidating Shout
@@ -1887,6 +1887,7 @@ addon.SpellResets = {
         { spellID = 190319, amount = 12 }, -- Combustion
         { spellID = 12472, amount = 12 }, -- Icy Veins
         { spellID = 365350, amount = 12 }, -- Arcane Surge
+        { spellID = 157981, amount = 12 }, -- Blast Wave
     },
     -- Cold Snap
     [235219] = {

@@ -25,6 +25,26 @@ function CooldownTracking_UpdateBorder(icon)
     end
 end
 
+function CooldownTracking_UpdateAlpha(icon)
+    -- When activation animation is playing, we keep the off-cooldown alpha
+    local usedIconAlpha;
+    local config = SweepyBoop.db.profile.arenaFrames;
+    if icon.isInterruptBar then
+        if config.interruptBarShowUnused then
+            usedIconAlpha = config.interruptBarUsedIconAlpha;
+        else
+            usedIconAlpha = 1;
+        end
+    else
+        if config.showUnusedIcons then
+            usedIconAlpha = config.usedIconAlpha;
+        else
+            usedIconAlpha = 1;
+        end
+    end
+    icon:SetAlpha(usedIconAlpha);
+end
+
 -- Only put static info in this function
 -- An icon for a unit + spellID is only created once per session
 addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
@@ -65,6 +85,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 
     if spell.charges or spell.opt_charges then
         frame.Count = CreateFrame("Frame", nil, frame);
+        frame.Count:SetIgnoreParentAlpha(true);
         frame.Count:SetFrameLevel(10000);
         frame.Count:SetSize(addon.CHARGE_TEXTURE_SIZE, addon.CHARGE_TEXTURE_SIZE);
         frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT");
@@ -82,6 +103,8 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 end
 
 addon.StartCooldownTrackingIcon = function (icon)
+    icon:SetAlpha(1); -- When starting the icon, always show it at full alpha
+
     local spell = icon.spellInfo; -- static spell info
     local info = icon.info; -- dynamic info for current icon
     local timers = icon.timers;

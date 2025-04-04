@@ -582,67 +582,40 @@ if addon.PROJECT_MAINLINE then
                         childGroups = "tab",
                         name = "Settings",
                         args = {
-                            -- healerIndicator = {
-                            --     order = 1,
-                            --     type = "toggle",
-                            --     name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
-                            --     desc = "To make it easier to identify the healer in case of class stacking",
-                            --     width = "full",
-                            --     hidden = function ()
-                            --         return ( not ( Gladius or sArena ) );
-                            --     end
-                            -- },
-
-                            -- header1 = {
-                            --     order = 2,
-                            --     type = "header",
-                            --     name = "Arena opponent cooldowns",
-                            -- },
-
                             arenaCooldownTrackerEnabled = {
                                 order = 6,
                                 width = "full",
                                 type = "toggle",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enabled",
                             },
-                            arenaCooldownSeparateRowForDefensive = {
+                            arenaCooldownSecondaryBar = {
                                 order = 7,
                                 width = "full",
                                 type = "toggle",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Separate row for defensives",
-                            },
-
-                            showUnusedIcons = {
-                                order = 8,
-                                type = "toggle",
-                                width = "full",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Show unused icons",
-                                desc = "Show unused icons for abilities that are not on cooldown",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Enable secondary bar",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
+                                end
                             },
 
                             hideCountDownNumbers = {
-                                order = 9,
+                                order = 8,
                                 type = "toggle",
                                 width = "full",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
                                 desc = "Hide countdown numbers but show a more visible swiping edge",
                             },
 
-                            arenaCooldownGrowDirection = {
-                                order = 10,
-                                type = "select",
-                                width = 0.75,
-                                name = "Grow direction",
-                                values = {
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
-                                },
+                            showUnusedIcons = {
+                                order = 9,
+                                type = "toggle",
+                                width = "full",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Always show icons",
+                                desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                             },
 
                             arenaCooldownTrackerIconSize = {
-                                order = 11,
+                                order = 10,
                                 type = "range",
                                 width = 0.75,
                                 min = 16,
@@ -652,14 +625,55 @@ if addon.PROJECT_MAINLINE then
                                 desc = "Size of arena defensive cooldown icons",
                             },
 
-                            newline = {
+                            unusedIconAlpha = {
+                                order = 11,
+                                type = "range",
+                                width = 0.8,
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "Off-cooldown alpha",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                end
+                            },
+
+                            usedIconAlpha = {
                                 order = 12,
-                                type = "description",
-                                name = "",
+                                type = "range",
+                                width = 0.8,
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "On-cooldown alpha",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                end
+                            },
+                            
+                            headerPosition = {
+                                order = 13,
+                                type = "header",
+                                name = "Positioning",
+                            },
+
+                            arenaCooldownGrowDirection = {
+                                order = 14,
+                                type = "select",
+                                width = 0.75,
+                                name = "Grow direction",
+                                values = {
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right",
+                                    --[addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left",
+                                    --[addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                                },
                             },
 
                             arenaCooldownOffsetX = {
-                                order = 13,
+                                order = 15,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -673,8 +687,9 @@ if addon.PROJECT_MAINLINE then
                                 end
                             },
                             arenaCooldownOffsetY = {
-                                order = 14,
+                                order = 16,
                                 type = "range",
+                                width = 0.8,
                                 min = -150,
                                 max = 150,
                                 step = 1,
@@ -686,23 +701,79 @@ if addon.PROJECT_MAINLINE then
                                     SweepyBoop:RepositionArenaCooldownTracker();
                                 end
                             },
-                            unusedIconAlpha = {
-                                order = 15,
-                                type = "range",
-                                isPercent = true,
-                                min = 0.5,
-                                max = 1,
-                                step = 0.1,
-                                name = "Unused icon transparency",
-                                hidden = function ()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                            
+                            headerPosition2 = {
+                                order = 17,
+                                type = "header",
+                                name = "Secondary bar positioning",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
-                            }
+                            },
+
+                            arenaCooldownGrowDirectionSecondary = {
+                                order = 18,
+                                type = "select",
+                                width = 0.75,
+                                name = "Grow direction",
+                                values = {
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right",
+                                    --[addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left",
+                                    --[addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                                },
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
+
+                            arenaCooldownOffsetXSecondary = {
+                                order = 19,
+                                type = "range",
+                                min = -300,
+                                max = 300,
+                                step = 1,
+                                name = "X offset",
+                                desc = "Horizontal offset of the arena cooldown defensive group relative to the right edge of the arena frame",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                end,
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
+                            arenaCooldownOffsetYSecondary = {
+                                order = 20,
+                                type = "range",
+                                width = 0.8,
+                                min = -150,
+                                max = 150,
+                                step = 1,
+                                name = "Y offset",
+                                desc = "Vertical offset of the arena cooldown defensive group relative to the right edge of the arena frame",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                end,
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
                         },
                     },
 
-                    spellList = {
+                    spellCatPriority = {
                         order = 5,
+                        type = "group",
+                        name = "Priority",
+                        args = {}, -- Fill this programatically later
+                    },
+
+                    spellList = {
+                        order = 6,
                         type = "group",
                         name = "Spells",
                         desc = "Select which abilities to track cooldown inside arenas",
@@ -718,6 +789,28 @@ if addon.PROJECT_MAINLINE then
                                 end
                             },
                         },
+                    },
+
+                    spellList2 = {
+                        order = 7,
+                        type = "group",
+                        name = "Secondary bar spells",
+                        desc = "Select which abilities to track cooldown inside arenas",
+                        get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList2[info[#info]] end,
+                        set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList2[info[#info]] = val end,
+                        args = {
+                            restoreDefaults = {
+                                order = 1,
+                                type = "execute",
+                                name = "Uncheck all",
+                                func = function ()
+                                    SweepyBoop:UncheckAllArenaAbilities();
+                                end
+                            },
+                        },
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                        end
                     }
                 },
             },
@@ -755,7 +848,7 @@ if addon.PROJECT_MAINLINE then
                                 type = "toggle",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_frost_iceshock")) .. " Enabled",
                             },
-                            separateBarForInterrupts = {
+                            separateRowForInterrupts = {
                                 order = 7,
                                 width = "full",
                                 type = "toggle",
@@ -766,8 +859,8 @@ if addon.PROJECT_MAINLINE then
                                 order = 8,
                                 type = "toggle",
                                 width = "full",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_kick")) .. " Show unused icons",
-                                desc = "Show unused icons for abilities that are not on cooldown",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_kick")) .. " Always show icons",
+                                desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                             },
 
                             interruptBarHideCountDownNumbers = {
@@ -841,11 +934,23 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Unused icon transparency",
+                                name = "Off-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
                                 end
-                            }
+                            },
+                            interruptBarUsedIconAlpha = {
+                                order = 16,
+                                type = "range",
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "On-cooldown alpha",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
+                                end
+                            },
                         },
                     },
 
@@ -878,6 +983,14 @@ if addon.PROJECT_MAINLINE then
     for _, classID in ipairs(addon.CLASSORDER) do
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
         options.args.arenaFrames.args.individual.args.spellList.args[classInfo.classFile] = {
+            order = groupIndex,
+            type = "group",
+            icon = addon.ICON_ID_CLASSES,
+            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+            name = classInfo.className,
+            args = {},
+        };
+        options.args.arenaFrames.args.individual.args.spellList2.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -924,8 +1037,29 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
+    local function AppendSpellCategoryPriority(group)
+        for i = 1, 12 do -- Can we not hard-code this
+            group[tostring(i)] = {
+                order = i,
+                type = "range",
+                name = addon.SPELLCATEGORY_NAME[i],
+                min = 1,
+                max = 100,
+                step = 1,
+                get = function(info)
+                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)];
+                end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)] = val;
+                end,
+            }
+        end
+    end
+
     AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
     AppendSpellOptions(options.args.arenaFrames.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+    AppendSpellCategoryPriority(options.args.arenaFrames.args.individual.args.spellCatPriority.args);
 
     options.args.raidFrames = {
         order = 6,
@@ -1278,15 +1412,23 @@ local defaults = {
         arenaFrames = {
             healerIndicator = true,
             arenaCooldownTrackerEnabled = true,
-            arenaCooldownSeparateRowForDefensive = true,
+            arenaCooldownSecondaryBar = false,
+
             arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
+
+            arenaCooldownGrowDirectionSecondary = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
+            arenaCooldownOffsetXSecondary = 0,
+            arenaCooldownOffsetYSecondary = -35,
+
             arenaCooldownTrackerIconSize = 32,
             unusedIconAlpha = 0.5,
+            usedIconAlpha = 1,
             showUnusedIcons = false,
             hideCountDownNumbers = false,
             spellList = {},
+            spellList2 = {},
 
             interruptBarEnabled = false;
             interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
@@ -1294,9 +1436,25 @@ local defaults = {
             interruptBarOffsetY = -150,
             interruptBarIconSize = 40,
             interruptBarUnusedIconAlpha = 0.5,
+            interruptBarUsedIconAlpha = 1,
             interruptBarShowUnused = false,
             interruptBarHideCountDownNumbers = false,
             interruptBarSpellList = {},
+
+            spellCatPriority = {
+                [tostring(addon.SPELLCATEGORY.IMMUNITY)] = 100,
+                [tostring(addon.SPELLCATEGORY.DEFENSIVE)] = 90,
+                [tostring(addon.SPELLCATEGORY.DISPEL)] = 50,
+                [tostring(addon.SPELLCATEGORY.MASS_DISPEL)] = 55,
+                [tostring(addon.SPELLCATEGORY.INTERRUPT)] = 50,
+                [tostring(addon.SPELLCATEGORY.STUN)] = 90,
+                [tostring(addon.SPELLCATEGORY.SILENCE)] = 80,
+                [tostring(addon.SPELLCATEGORY.KNOCKBACK)] = 30,
+                [tostring(addon.SPELLCATEGORY.CROWDCONTROL)] = 70,
+                [tostring(addon.SPELLCATEGORY.BURST)] = 90,
+                [tostring(addon.SPELLCATEGORY.HEAL)] = 80,
+                [tostring(addon.SPELLCATEGORY.OTHERS)] = 10,
+            },
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
@@ -1335,8 +1493,15 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownOffsetX = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
+    defaults.profile.arenaFrames.arenaCooldownOffsetXSecondary = 35;
+    defaults.profile.arenaFrames.arenaCooldownOffsetYSecondary = -25;
     defaults.profile.arenaFrames.showUnusedIcons = true;
+    defaults.profile.arenaFrames.unusedIconAlpha = 1;
+    defaults.profile.arenaFrames.usedIconAlpha = 0.5;
     defaults.profile.arenaFrames.interruptBarEnabled = true;
+    defaults.profile.arenaFrames.interruptBarShowUnused = true;
+    defaults.profile.arenaFrames.interruptBarUnusedIconAlpha = 1;
+    defaults.profile.arenaFrames.interruptBarUsedIconAlpha = 0.5;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
 end
@@ -1349,11 +1514,17 @@ local function SetupAllSpells(profile, spellList)
     for spellID, spellEntry in pairs(spellList) do
         local category = spellEntry.category;
         -- By default only check burst and defensives
-        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) then
+        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) or ( category == addon.SPELLCATEGORY.IMMUNITY ) or ( category == addon.SPELLCATEGORY.HEAL ) then
             profile[tostring(spellID)] = true;
         else
             profile[tostring(spellID)] = false;
         end
+    end
+end
+
+local function UncheckAllSpells(profile, spellList)
+    for spellID, spellEntry in pairs(spellList) do
+        profile[tostring(spellID)] = false;
     end
 end
 
@@ -1496,6 +1667,10 @@ end
 
 function SweepyBoop:CheckDefaultArenaAbilities()
     SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
+end
+
+function SweepyBoop:UncheckAllArenaAbilities()
+    UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
 end
 
 function SweepyBoop:CheckDefaultInterrupts()
