@@ -821,6 +821,12 @@ addon.SpellData = {
         category = category.OTHERS,
         -- Not baseline since it can be replaced by Shimmer
     },
+    -- Blast Wave
+    [157981] = {
+        class = addon.MAGE,
+        category = category.KNOCKBACK,
+        cooldown = 30,
+    },
 
     -- Monk
     -- Celestial Conduit
@@ -874,7 +880,7 @@ addon.SpellData = {
     [116844] = {
         cooldown = 45,
         class = addon.MONK,
-        category = category.OTHERS,
+        category = category.KNOCKBACK,
         -- not baseline, it's on the same node as Song of Chi-Ji
     },
     -- Spear Hand Strike
@@ -1881,6 +1887,7 @@ addon.SpellResets = {
         { spellID = 190319, amount = 12 }, -- Combustion
         { spellID = 12472, amount = 12 }, -- Icy Veins
         { spellID = 365350, amount = 12 }, -- Arcane Surge
+        { spellID = 157981, amount = 12 }, -- Blast Wave
     },
     -- Cold Snap
     [235219] = {
