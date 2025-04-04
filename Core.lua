@@ -625,11 +625,12 @@ if addon.PROJECT_MAINLINE then
                             unusedIconAlpha = {
                                 order = 11,
                                 type = "range",
+                                width = 0.8,
                                 isPercent = true,
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Transparency when on cooldown",
+                                name = "On-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
                                 end
@@ -638,15 +639,22 @@ if addon.PROJECT_MAINLINE then
                             usedIconAlpha = {
                                 order = 12,
                                 type = "range",
+                                width = 0.8,
                                 isPercent = true,
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Transparency when off cooldown",
+                                name = "Off-cooldown alpha",
+                            },
+                            
+                            headerPosition = {
+                                order = 13,
+                                type = "header",
+                                name = "Positioning",
                             },
 
                             arenaCooldownGrowDirection = {
-                                order = 13,
+                                order = 14,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -659,7 +667,7 @@ if addon.PROJECT_MAINLINE then
                             },
 
                             arenaCooldownOffsetX = {
-                                order = 14,
+                                order = 15,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -673,8 +681,9 @@ if addon.PROJECT_MAINLINE then
                                 end
                             },
                             arenaCooldownOffsetY = {
-                                order = 15,
+                                order = 16,
                                 type = "range",
+                                width = 0.8,
                                 min = -150,
                                 max = 150,
                                 step = 1,
@@ -687,6 +696,66 @@ if addon.PROJECT_MAINLINE then
                                 end
                             },
                             
+                            headerPosition2 = {
+                                order = 17,
+                                type = "header",
+                                name = "Defensive row positioning",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                end
+                            },
+
+                            arenaCooldownGrowDirectionDefensive = {
+                                order = 18,
+                                type = "select",
+                                width = 0.75,
+                                name = "Grow direction",
+                                values = {
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right down",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left down",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                                },
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                end
+                            },
+
+                            arenaCooldownOffsetXDefensive = {
+                                order = 19,
+                                type = "range",
+                                min = -300,
+                                max = 300,
+                                step = 1,
+                                name = "X offset",
+                                desc = "Horizontal offset of the arena cooldown defensive group relative to the right edge of the arena frame",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                end,
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                end
+                            },
+                            arenaCooldownOffsetYDefensive = {
+                                order = 20,
+                                type = "range",
+                                width = 0.8,
+                                min = -150,
+                                max = 150,
+                                step = 1,
+                                name = "Y offset",
+                                desc = "Vertical offset of the arena cooldown defensive group relative to the right edge of the arena frame",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                end,
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                end
+                            },
                         },
                     },
 
@@ -837,7 +906,7 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Transparency when on cooldown",
+                                name = "On-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
                                 end
@@ -849,7 +918,7 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Transparency when off cooldown",
+                                name = "Off-cooldown alpha",
                             },
                         },
                     },
@@ -1304,9 +1373,15 @@ local defaults = {
             healerIndicator = true,
             arenaCooldownTrackerEnabled = true,
             arenaCooldownSeparateRowForDefensive = true,
+
             arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
+
+            arenaCooldownGrowDirectionDefensive = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
+            arenaCooldownOffsetXDefensive = 0,
+            arenaCooldownOffsetYDefensive = -35,
+
             arenaCooldownTrackerIconSize = 32,
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
