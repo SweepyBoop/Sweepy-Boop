@@ -122,6 +122,7 @@ local function EnsureIcons()
 
                 if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) then
                     EnsureIcon(unitId, spellID);
+                    EnsureIcon(unitId, spellID, false, true);
                 end
             end
         end
@@ -217,6 +218,8 @@ local function SetupIconGroup(group, unit, testIcons)
         iconSet = premadeIcons;
     end
 
+    print("Pre-populate icons for", unit, class, isInterruptBar, isSecondaryBar);
+
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
         if iconSet[unit][spellID] then
@@ -272,6 +275,7 @@ local function SetupIconGroup(group, unit, testIcons)
                     end
 
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
+                        if isSecondaryBar then print ("Secondary bar icon:", unit, spellID) end
                         iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
                         addon.IconGroup_Insert(group, iconSet[unit][spellID]);
                     end
@@ -700,12 +704,12 @@ end
 local function EnsureIconGroups()
     if addon.TEST_MODE then
         EnsureIconGroup(1, "player");
-        EnsureIconGroup(4, "player"); -- Secondary bar
+        EnsureIconGroup(4, "player", false, true); -- Secondary bar
         EnsureIconGroup(100, "player", true); -- Interrupt bar
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i, "arena" .. i);
-            EnsureIconGroup(i + 3, "arena" .. i); -- Secondary bar
+            EnsureIconGroup(i + 3, "arena" .. i, false, true); -- Secondary bar
         end
         EnsureIconGroup(100, nil, true); -- Interrupt bar
     end
