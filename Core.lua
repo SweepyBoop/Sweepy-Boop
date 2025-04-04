@@ -633,7 +633,7 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "On-cooldown alpha",
+                                name = "Off-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
                                 end
@@ -647,7 +647,7 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Off-cooldown alpha",
+                                name = "On-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
                                 end
@@ -934,7 +934,7 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "On-cooldown alpha",
+                                name = "Off-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
                                 end
@@ -946,7 +946,7 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Off-cooldown alpha",
+                                name = "On-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
                                 end
