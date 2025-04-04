@@ -123,9 +123,17 @@ addon.OnDurationTimerFinished = function(self)
         local usedIconAlpha;
         local config = SweepyBoop.db.profile.arenaFrames;
         if icon.isInterruptBar then
-            usedIconAlpha = config.interruptBarUsedIconAlpha;
+            if config.interruptBarShowUnused then
+                usedIconAlpha = config.interruptBarUsedIconAlpha;
+            else
+                usedIconAlpha = 1;
+            end
         else
-            usedIconAlpha = config.usedIconAlpha;
+            if config.showUnusedIcons then
+                usedIconAlpha = config.usedIconAlpha;
+            else
+                usedIconAlpha = 1;
+            end
         end
         icon:SetAlpha(usedIconAlpha);
         icon.cooldown:Show();
