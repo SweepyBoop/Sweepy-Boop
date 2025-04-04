@@ -755,8 +755,6 @@ local externalTestIconsInterrupt = {}; -- Premake icons for "Toggle Test Mode" i
 local externalTestGroup = {}; -- 1 for "Arena frames", 2 for "Interrupt bar", 4 for "Secondary bar". LUA only passes table by reference
 
 local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
-    addon.IconGroup_Wipe(externalTestGroup[index]);
-
     local config = SweepyBoop.db.profile.arenaFrames;
     local iconSize;
     if isInterruptBar then
@@ -842,12 +840,12 @@ end
 function SweepyBoop:TestArenaCooldownTracker()
     local secondaryBarEnabled = SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar;
 
-     -- Wipe the previous test frames first
+    addon.IconGroup_Wipe(externalTestGroup[1]);
+    addon.IconGroup_Wipe(externalTestGroup[4]); -- Secondary bar
+
     RefreshTestMode(1, externalTestIcons);
     if secondaryBarEnabled then
         RefreshTestMode(4, externalTestIcons, false, true);
-    elseif externalTestGroup[4] then
-        addon.IconGroup_Wipe(externalTestGroup[4]);
     end
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
@@ -908,7 +906,8 @@ function SweepyBoop:RepositionArenaCooldownTracker()
 end
 
 function SweepyBoop:TestArenaInterruptBar()
-    RefreshTestMode(2, externalTestIconsInterrupt, true); -- Wipe the previous test frames first
+    addon.IconGroup_Wipe(externalTestGroup[2]);
+    RefreshTestMode(2, externalTestIconsInterrupt, true);
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
