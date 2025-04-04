@@ -970,6 +970,9 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         if iconGroups[i] then
                             ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                         end
+                        if iconGroups[i + 3] then
+                            ProcessCombatLogEvent(iconGroups[i + 3], subEvent, sourceGUID, destGUID, spellId, spellName, critical); -- Secondary bar
+                        end
                     end
                 end
 
@@ -982,6 +985,9 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 for i = 1, addon.MAX_ARENA_SIZE do
                     if iconGroups[i] then
                         ProcessUnitEvent(iconGroups[i], event, ...);
+                    end
+                    if iconGroups[i + 3] then
+                        ProcessUnitEvent(iconGroups[i + 3], event, ...); -- Secondary bar
                     end
                 end
             end
