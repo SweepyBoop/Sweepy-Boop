@@ -67,6 +67,9 @@ local function EnsureIcon(unitId, spellID, isInterruptBar)
             iconSet[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
         end
         iconSet[unitId][spellID].isInterruptBar = isInterruptBar;
+        iconSet[unitId][spellID].isInterrupt = ( spellData[spellID].category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ); -- Solar Beam
+        iconSet[unitId][spellID].isDefensive = ( spellData[spellID].category == addon.SPELLCATEGORY.DEFENSIVE )
+            or ( spellData[spellID].category == addon.SPELLCATEGORY.IMMUNITY ) or ( spellData[spellID].category == addon.SPELLCATEGORY.HEAL );
 
         local hideCountDownNumbers;
         if isInterruptBar then
@@ -248,7 +251,7 @@ local function SetupIconGroup(group, unit, testIcons)
                     else
                         unusedIconAlpha = config.unusedIconAlpha;
                     end
-                  
+
                     local spellList;
                     if isInterruptBar then
                         spellList = config.interruptBarSpellList;
@@ -756,6 +759,11 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
                 else
                     testIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
                 end
+
+                testIcons[unitId][spellID].isInterrupt = ( spellData[spellID].category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ); -- Solar Beam
+                testIcons[unitId][spellID].isDefensive = ( spellData[spellID].category == addon.SPELLCATEGORY.DEFENSIVE )
+                    or ( spellData[spellID].category == addon.SPELLCATEGORY.IMMUNITY ) or ( spellData[spellID].category == addon.SPELLCATEGORY.HEAL );
+
                 addon.SetHideCountdownNumbers(testIcons[unitId][spellID], hideCountDownNumbers);
             end
         end
@@ -894,8 +902,14 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     SetupIconGroups(arenaTrackerEnabled, interruptBarEnabled);
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
-                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                --if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+
+                if sourceGUID == UnitGUID("party1") then
+                    local pts = GetUnitChargedPowerPoints("party1");
+                    local numChargedPowerPoints = pts and #pts or 0;
+                    print("Charged Power Points: " .. numChargedPowerPoints);
+                end
 
                 if arenaTrackerEnabled then
                     for i = 0, addon.MAX_ARENA_SIZE do
