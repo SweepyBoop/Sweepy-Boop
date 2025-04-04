@@ -26,6 +26,7 @@ local resetByCrit = {
 };
 
 local premadeIcons = {};
+local premadeIconsSecondary = {};
 -- 1~3: main bar for arena 1~3; 4~6: secondary bar for arena 1~3 (arena index % 3); 100: interrupt bar;
 local iconGroups = {};
 local premadeIconsInterrupt = {};
@@ -45,12 +46,14 @@ for spellID, spell in pairs(spellData) do
     end
 end
 
-local function EnsureIcon(unitId, spellID, isInterruptBar)
+local function EnsureIcon(unitId, spellID, isInterruptBar, isSecondaryBar)
     local config = SweepyBoop.db.profile.arenaFrames;
 
     local iconSet;
     if isInterruptBar then
         iconSet = premadeIconsInterrupt;
+    elseif isSecondaryBar then
+        iconSet = premadeIconsSecondary;
     else
         iconSet = premadeIcons;
     end
@@ -109,6 +112,7 @@ local function EnsureIcons()
     if addon.TEST_MODE then
         local unitId = "player";
         premadeIcons[unitId] = premadeIcons[unitId] or {};
+        premadeIconsSecondary[unitId] = premadeIconsSecondary[unitId] or {};
         premadeIconsInterrupt[unitId] = premadeIconsInterrupt[unitId] or {};
         for spellID, spell in pairs(spellData) do
             if ( not spell.use_parent_icon ) then
@@ -125,6 +129,7 @@ local function EnsureIcons()
         for i = 1, addon.MAX_ARENA_SIZE do
             local unitId = "arena"..i;
             premadeIcons[unitId] = premadeIcons[unitId] or {};
+            premadeIconsSecondary[unitId] = premadeIconsSecondary[unitId] or {};
             premadeIconsInterrupt[unitId] = premadeIconsInterrupt[unitId] or {};
             for spellID, spell in pairs(spellData) do
                 if ( not spell.use_parent_icon ) then
@@ -134,6 +139,7 @@ local function EnsureIcons()
 
                     if ( spell.category ~= addon.SPELLCATEGORY.INTERRUPT ) then
                         EnsureIcon(unitId, spellID);
+                        EnsureIcon(unitId, spellID, false, true);
                     end
                 end
             end
@@ -163,6 +169,7 @@ end
 
 local function SetupIconGroup(group, unit, testIcons)
     local isInterruptBar = group.isInterruptBar;
+    local isSecondaryBar = group.isSecondaryBar;
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if testIcons then
         local config = SweepyBoop.db.profile.arenaFrames;
@@ -204,6 +211,8 @@ local function SetupIconGroup(group, unit, testIcons)
     local iconSet;
     if isInterruptBar then
         iconSet = premadeIconsInterrupt;
+    elseif isSecondaryBar then
+        iconSet = premadeIconsSecondary;
     else
         iconSet = premadeIcons;
     end
@@ -256,6 +265,8 @@ local function SetupIconGroup(group, unit, testIcons)
                     local spellList;
                     if isInterruptBar then
                         spellList = config.interruptBarSpellList;
+                    elseif isSecondaryBar then
+                        spellList = config.spellList2;
                     else
                         spellList = config.spellList;
                     end
@@ -479,6 +490,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local spellList;
     if self.isInterruptBar then
         spellList = config.interruptBarSpellList;
+    elseif self.isSecondaryBar then
+        spellList = config.spellList2;
     else
         spellList = config.spellList;
     end
@@ -513,6 +526,8 @@ local function ProcessUnitSpellCast(self, event, ...)
             local spellList;
             if self.isInterruptBar then
                 spellList = config.interruptBarSpellList;
+            elseif self.isSecondaryBar then
+                spellList = config.spellList2;
             else
                 spellList = config.spellList;
             end
@@ -604,11 +619,13 @@ local interruptBarGrowOptions = {
     },
 }
 
-local function GetSetPointOptions(index, isInterruptBar)
+local function GetSetPointOptions(index, isInterruptBar, isSecondaryBar)
     local config = SweepyBoop.db.profile.arenaFrames;
     local offsetX;
     if isInterruptBar then
         offsetX = config.interruptBarOffsetX;
+    elseif isSecondaryBar then
+        offsetX = config.arenaCooldownOffsetXSecondary;
     else
         offsetX = config.arenaCooldownOffsetX;
     end
@@ -616,6 +633,8 @@ local function GetSetPointOptions(index, isInterruptBar)
     local offsetY;
     if isInterruptBar then
         offsetY = config.interruptBarOffsetY;
+    elseif isSecondaryBar then
+        offsetY = config.arenaCooldownOffsetYSecondary;
     else
         offsetY = config.arenaCooldownOffsetY;
     end
@@ -641,28 +660,33 @@ local function GetSetPointOptions(index, isInterruptBar)
     return setPointOptions;
 end
 
-local function EnsureIconGroup(index, unitId, isInterruptBar)
+local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
     local config = SweepyBoop.db.profile.arenaFrames;
 
     if ( not iconGroups[index] ) then
-        local setPointOptions = GetSetPointOptions(index, isInterruptBar);
+        local setPointOptions = GetSetPointOptions(index, isInterruptBar, isSecondaryBar);
         local growOptions;
         if isInterruptBar then
             growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+        elseif isSecondaryBar then
+            growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
         else
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         end
         iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
         iconGroups[index].isInterruptBar = isInterruptBar;
+        iconGroups[index].isSecondaryBar = isSecondaryBar;
         -- SetPointOptions is set but can be updated if lastModified falls behind
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
 
     if ( iconGroups[index].lastModified ~= SweepyBoop.db.profile.arenaFrames.lastModified ) then
-        local setPointOptions = GetSetPointOptions(index, isInterruptBar);
+        local setPointOptions = GetSetPointOptions(index, isInterruptBar, isSecondaryBar);
         local growOptions;
         if isInterruptBar then
             growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+        elseif isSecondaryBar then
+            growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
         else
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         end
@@ -719,7 +743,7 @@ local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
 local externalTestIconsInterrupt = {}; -- Premake icons for "Toggle Test Mode" interrupt bar
 local externalTestGroup = {}; -- 1 for "Arena frames", 2 for "Interrupt bar". LUA only passes table by reference
 
-local function RefreshTestMode(index, testIcons, isInterruptBar)
+local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
     addon.IconGroup_Wipe(externalTestGroup[index]);
 
     local config = SweepyBoop.db.profile.arenaFrames;
@@ -784,22 +808,27 @@ local function RefreshTestMode(index, testIcons, isInterruptBar)
     local growOptions;
     if isInterruptBar then
         growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+    elseif isSecondaryBar then
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
     else
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     end
-    local setPointOptions = GetSetPointOptions(1, isInterruptBar);
+    local setPointOptions = GetSetPointOptions(1, isInterruptBar, isSecondaryBar);
     if externalTestGroup[index] then
         addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
     else
         externalTestGroup[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
         externalTestGroup[index].isInterruptBar = isInterruptBar;
+        externalTestGroup[index].isSecondaryBar = isSecondaryBar;
     end
 
     SetupIconGroup(externalTestGroup[index], unitId, testIcons);
 end
 
 function SweepyBoop:TestArenaCooldownTracker()
-    RefreshTestMode(1, externalTestIcons); -- Wipe the previous test frames first
+     -- Wipe the previous test frames first
+    RefreshTestMode(1, externalTestIcons);
+    RefreshTestMode(4, externalTestIcons, false, true);
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
@@ -812,11 +841,16 @@ function SweepyBoop:TestArenaCooldownTracker()
 
     spellId = 33206; -- Pain Suppression
     ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 62618; -- Power Word: Barrier
     ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     externalTestGroup[1]:Show();
+    if SweepyBoop.db.profile.arenaFrames.showSecondaryBar then
+        externalTestGroup[4]:Show();
+    end
 end
 
 function SweepyBoop:HideTestArenaCooldownTracker()
@@ -824,15 +858,28 @@ function SweepyBoop:HideTestArenaCooldownTracker()
     if externalTestGroup[1] then
         externalTestGroup[1]:Hide();
     end
+    if externalTestGroup[4] then
+        externalTestGroup[4]:Hide();
+    end
+end
+
+local function RepositionExternalTestGroup(index, isSecondaryBar)
+    if ( not externalTestGroup[index] ) or ( not externalTestGroup[index]:IsShown() ) then return end
+
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local growOptions;
+    if isSecondaryBar then
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
+    else
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+    end
+    local setPointOptions = GetSetPointOptions(1, isSecondaryBar);
+    addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
 end
 
 function SweepyBoop:RepositionArenaCooldownTracker()
-    if ( not externalTestGroup[1] ) or ( not externalTestGroup[1]:IsShown() ) then return end
-
-    local config = SweepyBoop.db.profile.arenaFrames;
-    local grow = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
-    local setPointOptions = GetSetPointOptions(1);
-    addon.UpdateIconGroupSetPointOptions(externalTestGroup[1], setPointOptions, grow);
+    RepositionExternalTestGroup(1);
+    RepositionExternalTestGroup(4, true); -- Secondary bar
 end
 
 function SweepyBoop:TestArenaInterruptBar()
