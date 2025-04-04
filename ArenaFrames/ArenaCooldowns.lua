@@ -848,9 +848,13 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
 end
 
 function SweepyBoop:TestArenaCooldownTracker()
+    local secondaryBarEnabled = SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar;
+
      -- Wipe the previous test frames first
     RefreshTestMode(1, externalTestIcons);
-    RefreshTestMode(4, externalTestIcons, false, true);
+    if secondaryBarEnabled then
+        RefreshTestMode(4, externalTestIcons, false, true);
+    end
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
@@ -863,11 +867,15 @@ function SweepyBoop:TestArenaCooldownTracker()
 
     spellId = 33206; -- Pain Suppression
     ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
-    ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    if secondaryBarEnabled then
+        ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    end
 
     spellId = 62618; -- Power Word: Barrier
     ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
-    ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    if secondaryBarEnabled then
+        ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    end
 
     externalTestGroup[1]:Show();
     print("Show test arena cooldown tracker", externalTestGroup[1]:GetPoint());
@@ -900,7 +908,7 @@ local function RepositionExternalTestGroup(index, isSecondaryBar)
     end
     local setPointOptions = GetSetPointOptions(index, false, isSecondaryBar);
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
-    print("Reposition", externalTestGroup[index]:GetPoint());
+    print("Reposition", isSecondaryBar, externalTestGroup[index]:GetPoint());
 end
 
 function SweepyBoop:RepositionArenaCooldownTracker()
