@@ -859,8 +859,8 @@ if addon.PROJECT_MAINLINE then
                                 order = 8,
                                 type = "toggle",
                                 width = "full",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_kick")) .. " Show unused icons",
-                                desc = "Show unused icons for abilities that are not on cooldown",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_kick")) .. " Always show icons",
+                                desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                             },
 
                             interruptBarHideCountDownNumbers = {
