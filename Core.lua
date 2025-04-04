@@ -701,8 +701,15 @@ if addon.PROJECT_MAINLINE then
                         },
                     },
 
-                    spellList = {
+                    spellPriority = {
                         order = 5,
+                        type = "group",
+                        name = "Priority",
+                        args = {}, -- Fill this programatically later
+                    },
+
+                    spellList = {
+                        order = 6,
                         type = "group",
                         name = "Spells",
                         desc = "Select which abilities to track cooldown inside arenas",
@@ -924,8 +931,29 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
+    local function AppendSpellCategoryPriority(group)
+        for i = 1, 12 do -- Can we not hard-code this
+            local name = addon.SPELLCATEGORY_NAME[i];
+            group[name] = {
+                order = i,
+                type = "range",
+                name = name,
+                min = 1,
+                max = 100,
+                step = 1,
+                get = function(info)
+                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[info[#info]];
+                end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[info[#info]] = val;
+                end,
+            }
+        end
+    end
+
     AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
     AppendSpellOptions(options.args.arenaFrames.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+    AppendSpellCategoryPriority(options.args.arenaFrames.args.individual.args.spellPriority.args);
 
     options.args.raidFrames = {
         order = 6,
@@ -1297,6 +1325,21 @@ local defaults = {
             interruptBarShowUnused = false,
             interruptBarHideCountDownNumbers = false,
             interruptBarSpellList = {},
+
+            spellCatPriority = {
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.IMMUNITY]] = 100,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.DEFENSIVE]] = 90,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.DISPEL]] = 50,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.MASS_DISPEL]] = 55,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.INTERRUPT]] = 50,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.STUN]] = 90,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.SILENCE]] = 80,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.KNOCKBACK]] = 30,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.CROWDCONTROL]] = 70,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.BURST]] = 90,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.HEAL]] = 80,
+                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.OTHERS]] = 10,
+            },
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,

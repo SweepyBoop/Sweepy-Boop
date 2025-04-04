@@ -3,12 +3,33 @@ local _, addon = ...;
 addon.TEST_MODE = false;
 
 addon.SPELLCATEGORY = {
-    DEFENSIVE = 1,
-    INTERRUPT = 2,
-    BURST = 3,
-    CROWDCONTROL = 4,
-    DISRUPT = 5,
-    DISPEL = 6,
+    IMMUNITY = 1,
+    DEFENSIVE = 2,
+    DISPEL = 3,
+    MASS_DISPEL = 4,
+    INTERRUPT = 5,
+    STUN = 6,
+    SILENCE = 7,
+    KNOCKBACK = 8,
+    CROWDCONTROL = 9,
+    BURST = 10,
+    HEAL = 11,
+    OTHERS = 12, -- Gap closers, etc.
+};
+
+addon.SPELLCATEGORY_NAME = {
+    [addon.SPELLCATEGORY.IMMUNITY] = "Immunity",
+    [addon.SPELLCATEGORY.DEFENSIVE] = "Defensive",
+    [addon.SPELLCATEGORY.DISPEL] = "Dispel",
+    [addon.SPELLCATEGORY.MASS_DISPEL] = "Mass Dispel",
+    [addon.SPELLCATEGORY.INTERRUPT] = "Interrupt",
+    [addon.SPELLCATEGORY.STUN] = "Stun",
+    [addon.SPELLCATEGORY.SILENCE] = "Silence",
+    [addon.SPELLCATEGORY.KNOCKBACK] = "Knockback",
+    [addon.SPELLCATEGORY.CROWDCONTROL] = "Crowd Control",
+    [addon.SPELLCATEGORY.BURST] = "Burst",
+    [addon.SPELLCATEGORY.HEAL] = "Heal",
+    [addon.SPELLCATEGORY.OTHERS] = "Others",
 };
 
 addon.SPELLPRIORITY = {
