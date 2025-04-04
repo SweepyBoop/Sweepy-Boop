@@ -26,7 +26,8 @@ local resetByCrit = {
 };
 
 local premadeIcons = {};
-local iconGroups = {}; -- One group per arena opponent for 1~3, 100 is for interrupt bar
+-- 1~3: main bar for arena 1~3; 4~6: defensive bar for arena 1~3 (arena index % 3); 100: interrupt bar;
+local iconGroups = {};
 local premadeIconsInterrupt = {};
 local eventFrame;
 
@@ -628,10 +629,9 @@ local function GetSetPointOptions(index, isInterruptBar)
             offsetY = offsetY;
         };
     else
-        local adjustedIndex = ( index == 0 and 1 ) or index;
         setPointOptions = {
             point = "LEFT",
-            relativeTo = framePrefix .. adjustedIndex,
+            relativeTo = framePrefix .. index,
             relativePoint = "RIGHT",
             offsetX = offsetX,
             offsetY = offsetY;
@@ -674,11 +674,13 @@ end
 
 local function EnsureIconGroups()
     if addon.TEST_MODE then
-        EnsureIconGroup(0, "player");
+        EnsureIconGroup(1, "player");
+        EnsureIconGroup(4, "player");
         EnsureIconGroup(100, "player", true); -- Interrupt bar
     else
         for i = 1, addon.MAX_ARENA_SIZE do
             EnsureIconGroup(i, "arena" .. i);
+            EnsureIconGroup(i + 3, "arena" .. i); -- Defensive bar
         end
         EnsureIconGroup(100, nil, true); -- Interrupt bar
     end
@@ -689,7 +691,8 @@ local function SetupIconGroups(arena, interrupts)
         local unitId = "player";
 
         if arena then
-            SetupIconGroup(iconGroups[0], unitId);
+            SetupIconGroup(iconGroups[1], unitId);
+            SetupIconGroup(iconGroups[4], unitId); -- Defensive bar
         end
 
         if interrupts then
@@ -914,7 +917,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
 
                 if arenaTrackerEnabled then
-                    for i = 0, addon.MAX_ARENA_SIZE do
+                    for i = 1, addon.MAX_ARENA_SIZE do
                         if iconGroups[i] then
                             ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                         end
@@ -927,7 +930,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 if ( not arenaTrackerEnabled ) then return end
-                for i = 0, addon.MAX_ARENA_SIZE do
+                for i = 1, addon.MAX_ARENA_SIZE do
                     if iconGroups[i] then
                         ProcessUnitEvent(iconGroups[i], event, ...);
                     end
