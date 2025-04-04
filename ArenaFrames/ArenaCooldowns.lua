@@ -657,6 +657,9 @@ local function GetSetPointOptions(index, isInterruptBar, isSecondaryBar)
         };
     else
         index = index % 3;
+        if index == 0 then
+            index = 3;
+        end
         setPointOptions = {
             point = "LEFT",
             relativeTo = framePrefix .. index,
