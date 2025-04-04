@@ -42,7 +42,6 @@ function CooldownTracking_UpdateAlpha(icon)
             usedIconAlpha = 1;
         end
     end
-    print("CooldownTracking_UpdateAlpha", config.interruptBarUsedIconAlpha, config.usedIconAlpha, "Set to", usedIconAlpha);
     icon:SetAlpha(usedIconAlpha);
 end
 
