@@ -103,6 +103,8 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 end
 
 addon.StartCooldownTrackingIcon = function (icon)
+    icon:SetAlpha(1); -- When starting the icon, always show it at full alpha
+
     local spell = icon.spellInfo; -- static spell info
     local info = icon.info; -- dynamic info for current icon
     local timers = icon.timers;
