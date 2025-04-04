@@ -21,4 +21,6 @@
 
 - [x] Leverage atlas "countdown-swords" for combat indicator
 
-- [ ] Add ww heroic talent burst to the tracker
+- [x] Add ww heroic talent burst to the tracker
+
+- [ ] Leverage GetUnitChargedPowerPoints(unit) to detect outlaw rogue cd reduction
