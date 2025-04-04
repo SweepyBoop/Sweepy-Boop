@@ -645,6 +645,9 @@ if addon.PROJECT_MAINLINE then
                                 max = 1,
                                 step = 0.1,
                                 name = "Off-cooldown alpha",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                end
                             },
                             
                             headerPosition = {
@@ -941,6 +944,9 @@ if addon.PROJECT_MAINLINE then
                                 max = 1,
                                 step = 0.1,
                                 name = "Off-cooldown alpha",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
+                                end
                             },
                         },
                     },
