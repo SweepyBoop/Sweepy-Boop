@@ -790,7 +790,7 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
 
             if isInterruptBar then
                 if spell.class == addon.SHAMAN or spell.class == addon.ROGUE then
-                    isEnabled = ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) or ( spell.category == addon.SPELLCATEGORY.DISRUPT );
+                    isEnabled = ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) or ( spell.category == addon.SPELLCATEGORY.OTHERS );
                 end
             else
                 if spell.class == addon.PRIEST then
