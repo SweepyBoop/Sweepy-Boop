@@ -810,6 +810,7 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
                     testIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
                 end
 
+                testIcons[unitId][spellID].isInterruptBar = isInterruptBar;
                 testIcons[unitId][spellID].isInterrupt = ( spellData[spellID].category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ); -- Solar Beam
                 testIcons[unitId][spellID].isDefensive = ( spellData[spellID].category == addon.SPELLCATEGORY.DEFENSIVE )
                     or ( spellData[spellID].category == addon.SPELLCATEGORY.IMMUNITY ) or ( spellData[spellID].category == addon.SPELLCATEGORY.HEAL );
