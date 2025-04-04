@@ -675,7 +675,7 @@ end
 local function EnsureIconGroups()
     if addon.TEST_MODE then
         EnsureIconGroup(1, "player");
-        EnsureIconGroup(4, "player");
+        EnsureIconGroup(4, "player"); -- Defensive bar
         EnsureIconGroup(100, "player", true); -- Interrupt bar
     else
         for i = 1, addon.MAX_ARENA_SIZE do

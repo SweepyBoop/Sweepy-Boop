@@ -588,11 +588,11 @@ if addon.PROJECT_MAINLINE then
                                 type = "toggle",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enabled",
                             },
-                            arenaCooldownSeparateRowForDefensive = {
+                            arenaCooldownSecondaryBar = {
                                 order = 7,
                                 width = "full",
                                 type = "toggle",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Separate row for defensives",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Enable secondary bar",
                             },
 
                             hideCountDownNumbers = {
@@ -701,11 +701,11 @@ if addon.PROJECT_MAINLINE then
                                 type = "header",
                                 name = "Defensive row positioning",
                                 hidden = function()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
                             },
 
-                            arenaCooldownGrowDirectionDefensive = {
+                            arenaCooldownGrowDirectionSecondary = {
                                 order = 18,
                                 type = "select",
                                 width = 0.75,
@@ -717,11 +717,11 @@ if addon.PROJECT_MAINLINE then
                                     [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
                                 },
                                 hidden = function()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
                             },
 
-                            arenaCooldownOffsetXDefensive = {
+                            arenaCooldownOffsetXSecondary = {
                                 order = 19,
                                 type = "range",
                                 min = -300,
@@ -735,10 +735,10 @@ if addon.PROJECT_MAINLINE then
                                     SweepyBoop:RepositionArenaCooldownTracker();
                                 end,
                                 hidden = function()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
                             },
-                            arenaCooldownOffsetYDefensive = {
+                            arenaCooldownOffsetYSecondary = {
                                 order = 20,
                                 type = "range",
                                 width = 0.8,
@@ -753,7 +753,7 @@ if addon.PROJECT_MAINLINE then
                                     SweepyBoop:RepositionArenaCooldownTracker();
                                 end,
                                 hidden = function()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive );
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
                             },
                         },
@@ -1372,15 +1372,15 @@ local defaults = {
         arenaFrames = {
             healerIndicator = true,
             arenaCooldownTrackerEnabled = true,
-            arenaCooldownSeparateRowForDefensive = true,
+            arenaCooldownSecondaryBar = true,
 
             arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
 
-            arenaCooldownGrowDirectionDefensive = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
-            arenaCooldownOffsetXDefensive = 0,
-            arenaCooldownOffsetYDefensive = -35,
+            arenaCooldownGrowDirectionSecondary = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
+            arenaCooldownOffsetXSecondary = 0,
+            arenaCooldownOffsetYSecondary = -35,
 
             arenaCooldownTrackerIconSize = 32,
             unusedIconAlpha = 0.5,
