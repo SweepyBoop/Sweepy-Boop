@@ -112,8 +112,6 @@ local function IconGroup_Position(group)
                 local config = SweepyBoop.db.profile.arenaFrames;
                 if group.isInterruptBar then
                     newRow = config.separateRowForInterrupts and group.active[i - 1] and group.active[i - 1].category == INTERRUPT and group.active[i].category ~= INTERRUPT;
-                else
-                    newRow = config.arenaCooldownSeparateRowForDefensive and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE;
                 end
             end
 
