@@ -629,6 +629,7 @@ local function GetSetPointOptions(index, isInterruptBar)
             offsetY = offsetY;
         };
     else
+        index = index % 3;
         setPointOptions = {
             point = "LEFT",
             relativeTo = framePrefix .. index,
@@ -704,6 +705,7 @@ local function SetupIconGroups(arena, interrupts)
 
             if arena then
                 SetupIconGroup(iconGroups[i], unitId);
+                SetupIconGroup(iconGroups[i + 3], unitId); -- Secondary bar
             end
 
             if interrupts then
