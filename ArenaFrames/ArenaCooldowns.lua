@@ -846,6 +846,8 @@ function SweepyBoop:TestArenaCooldownTracker()
     RefreshTestMode(1, externalTestIcons);
     if secondaryBarEnabled then
         RefreshTestMode(4, externalTestIcons, false, true);
+    else
+        externalTestGroup[4]:Hide();
     end
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
