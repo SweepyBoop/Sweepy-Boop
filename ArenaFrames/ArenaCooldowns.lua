@@ -233,8 +233,6 @@ local function SetupIconGroup(group, unit, testIcons)
         iconSet = premadeIcons;
     end
 
-    print("Pre-populate icons for", unit, class, isInterruptBar, isSecondaryBar);
-
     -- Pre-populate icons
     for spellID, spell in pairs(spellData) do
         if iconSet[unit][spellID] then
@@ -290,7 +288,6 @@ local function SetupIconGroup(group, unit, testIcons)
                     end
 
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
-                        if isSecondaryBar then print ("Secondary bar icon:", unit, spellID) end
                         iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
                         addon.IconGroup_Insert(group, iconSet[unit][spellID]);
                     end
@@ -878,10 +875,8 @@ function SweepyBoop:TestArenaCooldownTracker()
     end
 
     externalTestGroup[1]:Show();
-    print("Show test arena cooldown tracker", externalTestGroup[1]:GetPoint());
     if SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar then
         externalTestGroup[4]:Show();
-        print("Show test arena cooldown tracker secondary bar", externalTestGroup[4]:GetPoint());
     end
 end
 
@@ -908,7 +903,6 @@ local function RepositionExternalTestGroup(index, isSecondaryBar)
     end
     local setPointOptions = GetSetPointOptions(index, false, isSecondaryBar);
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
-    print("Reposition", isSecondaryBar, externalTestGroup[index]:GetPoint());
 end
 
 function SweepyBoop:RepositionArenaCooldownTracker()
