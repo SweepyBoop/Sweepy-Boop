@@ -182,7 +182,11 @@ local function SetupIconGroup(group, unit, testIcons)
                 elseif isSecondaryBar then
                     shouldSetup = ( spell.category == addon.SPELLCATEGORY.DEFENSIVE );
                 else
-                    shouldSetup = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
+                    if config.arenaCooldownSecondaryBar then
+                        shouldSetup = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
+                    else
+                        shouldSetup = true;
+                    end
                 end
 
                 if shouldSetup then
@@ -865,8 +869,10 @@ function SweepyBoop:TestArenaCooldownTracker()
     ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     externalTestGroup[1]:Show();
+    print("Show test arena cooldown tracker", externalTestGroup[1]:GetPoint());
     if SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar then
         externalTestGroup[4]:Show();
+        print("Show test arena cooldown tracker secondary bar", externalTestGroup[4]:GetPoint());
     end
 end
 
@@ -891,8 +897,9 @@ local function RepositionExternalTestGroup(index, isSecondaryBar)
     else
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     end
-    local setPointOptions = GetSetPointOptions(index, isSecondaryBar);
+    local setPointOptions = GetSetPointOptions(index, false, isSecondaryBar);
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
+    print("Reposition", externalTestGroup[index]:GetPoint());
 end
 
 function SweepyBoop:RepositionArenaCooldownTracker()
