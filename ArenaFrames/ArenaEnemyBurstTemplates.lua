@@ -34,6 +34,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
 
         if spell.charges or spell.opt_charges then
             frame.Count = CreateFrame("Frame", nil, frame);
+            frame.Count:SetIgnoreParentAlpha(true);
             frame.Count:SetFrameLevel(10000);
             frame.Count:SetSize(addon.CHARGE_TEXTURE_SIZE, addon.CHARGE_TEXTURE_SIZE);
             frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT");
@@ -76,6 +77,8 @@ local function SetBurstDuration(icon, startTime, duration)
 end
 
 addon.StartBurstIcon = function (icon)
+    icon:SetAlpha(1); -- Set to used alpha once glow ends
+
     local spell = icon.spellInfo;
     local timers = icon.timers;
     local info = icon.info;

@@ -353,17 +353,8 @@ end
 
 local function StartIcon(icon)
     if icon.template == addon.ICON_TEMPLATE.GLOW then
-        icon:SetAlpha(1); -- Set to used alpha once glow ends
         addon.StartBurstIcon(icon);
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
-        local usedIconAlpha;
-        local config = SweepyBoop.db.profile.arenaFrames;
-        if icon.isInterruptBar then
-            usedIconAlpha = config.interruptBarUsedIconAlpha;
-        else
-            usedIconAlpha = config.usedIconAlpha;
-        end
-        icon:SetAlpha(usedIconAlpha);
         addon.StartCooldownTrackingIcon(icon);
     end
 end

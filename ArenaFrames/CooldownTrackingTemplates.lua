@@ -83,6 +83,23 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
 end
 
 addon.StartCooldownTrackingIcon = function (icon)
+    local usedIconAlpha;
+    local config = SweepyBoop.db.profile.arenaFrames;
+    if icon.isInterruptBar then
+        if config.interruptBarShowUnused then
+            usedIconAlpha = config.interruptBarUsedIconAlpha;
+        else
+            usedIconAlpha = 1;
+        end
+    else
+        if config.showUnusedIcons then
+            usedIconAlpha = config.usedIconAlpha;
+        else
+            usedIconAlpha = 1;
+        end
+    end
+    icon:SetAlpha(usedIconAlpha);
+
     local spell = icon.spellInfo; -- static spell info
     local info = icon.info; -- dynamic info for current icon
     local timers = icon.timers;
