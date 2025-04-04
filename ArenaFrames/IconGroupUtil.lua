@@ -77,7 +77,7 @@ local function IconGroup_Position(group)
     -- We need to offset the 2 interrupts on row 1 correctly based on 2 columns
     local interruptCount = 0;
     local otherCount = 0;
-    local separateRowForInterrupts = group.isInterruptBar and SweepyBoop.db.profile.arenaFrames.separateBarForInterrupts;
+    local separateRowForInterrupts = group.isInterruptBar and SweepyBoop.db.profile.arenaFrames.separateRowForInterrupts;
     if separateRowForInterrupts then
         for i = 1, numActive do
             interruptCount = interruptCount + ( group.active[i].category == INTERRUPT and 1 or 0 );
@@ -111,7 +111,7 @@ local function IconGroup_Position(group)
             else
                 local config = SweepyBoop.db.profile.arenaFrames;
                 if group.isInterruptBar then
-                    newRow = config.separateBarForInterrupts and group.active[i - 1] and group.active[i - 1].category == INTERRUPT and group.active[i].category ~= INTERRUPT;
+                    newRow = config.separateRowForInterrupts and group.active[i - 1] and group.active[i - 1].category == INTERRUPT and group.active[i].category ~= INTERRUPT;
                 else
                     newRow = config.arenaCooldownSeparateRowForDefensive and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE;
                 end
@@ -137,16 +137,32 @@ local function IconGroup_Position(group)
     end
 end
 
-local function sortFunc(a, b)
-    if ( a.category ~= b.category ) then
-        return a.category < b.category;
+local function sortFuncArenaFrames(a, b)
+    local config = SweepyBoop.db.profile.arenaFrames.spellCatPriority;
+    local catPriorityA = config[tostring(a.category)];
+    local catPriorityB = config[tostring(b.category)];
+
+    if ( catPriorityA ~= catPriorityB ) then
+        return catPriorityA > catPriorityB;
     end
 
     if ( a.priority ~= b.priority ) then
         return a.priority < b.priority;
-    else
-        return a.timeStamp < b.timeStamp;
     end
+
+    return a.timeStamp < b.timeStamp;
+end
+
+local function sortFuncInterruptBarOneRow(a, b)
+    return a.timeStamp < b.timeStamp;
+end
+
+local function sortFuncInterruptBarTwoRows(a, b)
+    if ( a.isInterrupt ~= b.isInterrupt ) then
+        return a.isInterrupt; -- interrupts go first
+    end
+
+    return a.timeStamp < b.timeStamp;
 end
 
 addon.IconGroup_Insert = function (group, icon, index)
@@ -180,7 +196,15 @@ addon.IconGroup_Insert = function (group, icon, index)
         group.activeMap[index] = icon;
     end
 
-    table.sort(active, sortFunc);
+    if group.isInterruptBar then
+        if SweepyBoop.db.profile.arenaFrames.separateRowForInterrupts then
+            table.sort(active, sortFuncInterruptBarTwoRows);
+        else
+            table.sort(active, sortFuncInterruptBarOneRow);
+        end
+    else
+        table.sort(active, sortFuncArenaFrames);
+    end
 
     IconGroup_Position(group);
 

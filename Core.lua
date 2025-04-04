@@ -762,7 +762,7 @@ if addon.PROJECT_MAINLINE then
                                 type = "toggle",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_frost_iceshock")) .. " Enabled",
                             },
-                            separateBarForInterrupts = {
+                            separateRowForInterrupts = {
                                 order = 7,
                                 width = "full",
                                 type = "toggle",
@@ -933,19 +933,18 @@ if addon.PROJECT_MAINLINE then
 
     local function AppendSpellCategoryPriority(group)
         for i = 1, 12 do -- Can we not hard-code this
-            local name = addon.SPELLCATEGORY_NAME[i];
-            group[name] = {
+            group[tostring(i)] = {
                 order = i,
                 type = "range",
-                name = name,
+                name = addon.SPELLCATEGORY_NAME[i],
                 min = 1,
                 max = 100,
                 step = 1,
                 get = function(info)
-                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[info[#info]];
+                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)];
                 end,
                 set = function(info, val)
-                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[info[#info]] = val;
+                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)] = val;
                 end,
             }
         end
@@ -1327,18 +1326,18 @@ local defaults = {
             interruptBarSpellList = {},
 
             spellCatPriority = {
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.IMMUNITY]] = 100,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.DEFENSIVE]] = 90,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.DISPEL]] = 50,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.MASS_DISPEL]] = 55,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.INTERRUPT]] = 50,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.STUN]] = 90,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.SILENCE]] = 80,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.KNOCKBACK]] = 30,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.CROWDCONTROL]] = 70,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.BURST]] = 90,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.HEAL]] = 80,
-                [addon.SPELLCATEGORY_NAME[addon.SPELLCATEGORY.OTHERS]] = 10,
+                [tostring(addon.SPELLCATEGORY.IMMUNITY)] = 100,
+                [tostring(addon.SPELLCATEGORY.DEFENSIVE)] = 90,
+                [tostring(addon.SPELLCATEGORY.DISPEL)] = 50,
+                [tostring(addon.SPELLCATEGORY.MASS_DISPEL)] = 55,
+                [tostring(addon.SPELLCATEGORY.INTERRUPT)] = 50,
+                [tostring(addon.SPELLCATEGORY.STUN)] = 90,
+                [tostring(addon.SPELLCATEGORY.SILENCE)] = 80,
+                [tostring(addon.SPELLCATEGORY.KNOCKBACK)] = 30,
+                [tostring(addon.SPELLCATEGORY.CROWDCONTROL)] = 70,
+                [tostring(addon.SPELLCATEGORY.BURST)] = 90,
+                [tostring(addon.SPELLCATEGORY.HEAL)] = 80,
+                [tostring(addon.SPELLCATEGORY.OTHERS)] = 10,
             },
         },
         raidFrames = {
