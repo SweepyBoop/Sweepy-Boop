@@ -188,7 +188,7 @@ local function SetupIconGroup(group, unit, testIcons)
                         shouldSetup = true;
                     end
                 end
-
+                -- When going from one row to 2 rows, all icons show properly; but the other way around, Void Shift doesn't show initially and only shows on 2nd click
                 if shouldSetup then
                     testIcons[unit][spellID].info = { cooldown = spell.cooldown };
                     -- The texture might have been set by use_parent_icon icons
