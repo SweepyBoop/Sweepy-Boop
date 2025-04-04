@@ -593,6 +593,9 @@ if addon.PROJECT_MAINLINE then
                                 width = "full",
                                 type = "toggle",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Enable secondary bar",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownTrackerEnabled );
+                                end
                             },
 
                             hideCountDownNumbers = {
