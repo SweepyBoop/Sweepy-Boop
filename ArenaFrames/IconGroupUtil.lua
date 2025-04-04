@@ -111,7 +111,7 @@ local function IconGroup_Position(group)
             else
                 local config = SweepyBoop.db.profile.arenaFrames;
                 if group.isInterruptBar then
-                    newRow = config.separateRowForInterrupts and group.active[i - 1] and group.active[i - 1].category == INTERRUPT and group.active[i].category ~= INTERRUPT;
+                    newRow = config.separateRowForInterrupts and group.active[i - 1] and group.active[i - 1].isInterrupt and ( not group.active[i].isInterrupt );
                 end
             end
 

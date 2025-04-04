@@ -582,23 +582,6 @@ if addon.PROJECT_MAINLINE then
                         childGroups = "tab",
                         name = "Settings",
                         args = {
-                            -- healerIndicator = {
-                            --     order = 1,
-                            --     type = "toggle",
-                            --     name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
-                            --     desc = "To make it easier to identify the healer in case of class stacking",
-                            --     width = "full",
-                            --     hidden = function ()
-                            --         return ( not ( Gladius or sArena ) );
-                            --     end
-                            -- },
-
-                            -- header1 = {
-                            --     order = 2,
-                            --     type = "header",
-                            --     name = "Arena opponent cooldowns",
-                            -- },
-
                             arenaCooldownTrackerEnabled = {
                                 order = 6,
                                 width = "full",
@@ -612,24 +595,58 @@ if addon.PROJECT_MAINLINE then
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Separate row for defensives",
                             },
 
-                            showUnusedIcons = {
-                                order = 8,
-                                type = "toggle",
-                                width = "full",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Show unused icons",
-                                desc = "Show unused icons for abilities that are not on cooldown",
-                            },
-
                             hideCountDownNumbers = {
-                                order = 9,
+                                order = 8,
                                 type = "toggle",
                                 width = "full",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
                                 desc = "Hide countdown numbers but show a more visible swiping edge",
                             },
 
-                            arenaCooldownGrowDirection = {
+                            showUnusedIcons = {
+                                order = 9,
+                                type = "toggle",
+                                width = "full",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Always show icons",
+                                desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
+                            },
+
+                            arenaCooldownTrackerIconSize = {
                                 order = 10,
+                                type = "range",
+                                width = 0.75,
+                                min = 16,
+                                max = 64,
+                                step = 1,
+                                name = "Icon size",
+                                desc = "Size of arena defensive cooldown icons",
+                            },
+
+                            unusedIconAlpha = {
+                                order = 11,
+                                type = "range",
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "Transparency when on cooldown",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                end
+                            },
+
+                            usedIconAlpha = {
+                                order = 12,
+                                type = "range",
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "Transparency when off cooldown",
+                            },
+
+                            arenaCooldownGrowDirection = {
+                                order = 13,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -641,25 +658,8 @@ if addon.PROJECT_MAINLINE then
                                 },
                             },
 
-                            arenaCooldownTrackerIconSize = {
-                                order = 11,
-                                type = "range",
-                                width = 0.75,
-                                min = 16,
-                                max = 64,
-                                step = 1,
-                                name = "Icon size",
-                                desc = "Size of arena defensive cooldown icons",
-                            },
-
-                            newline = {
-                                order = 12,
-                                type = "description",
-                                name = "",
-                            },
-
                             arenaCooldownOffsetX = {
-                                order = 13,
+                                order = 14,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -673,7 +673,7 @@ if addon.PROJECT_MAINLINE then
                                 end
                             },
                             arenaCooldownOffsetY = {
-                                order = 14,
+                                order = 15,
                                 type = "range",
                                 min = -150,
                                 max = 150,
@@ -686,18 +686,7 @@ if addon.PROJECT_MAINLINE then
                                     SweepyBoop:RepositionArenaCooldownTracker();
                                 end
                             },
-                            unusedIconAlpha = {
-                                order = 15,
-                                type = "range",
-                                isPercent = true,
-                                min = 0.5,
-                                max = 1,
-                                step = 0.1,
-                                name = "Unused icon transparency",
-                                hidden = function ()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
-                                end
-                            }
+                            
                         },
                     },
 
@@ -848,11 +837,20 @@ if addon.PROJECT_MAINLINE then
                                 min = 0.5,
                                 max = 1,
                                 step = 0.1,
-                                name = "Unused icon transparency",
+                                name = "Transparency when on cooldown",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
                                 end
-                            }
+                            },
+                            interruptBarUsedIconAlpha = {
+                                order = 16,
+                                type = "range",
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "Transparency when off cooldown",
+                            },
                         },
                     },
 
@@ -1311,6 +1309,7 @@ local defaults = {
             arenaCooldownOffsetY = 0,
             arenaCooldownTrackerIconSize = 32,
             unusedIconAlpha = 0.5,
+            usedIconAlpha = 1,
             showUnusedIcons = false,
             hideCountDownNumbers = false,
             spellList = {},
@@ -1321,6 +1320,7 @@ local defaults = {
             interruptBarOffsetY = -150,
             interruptBarIconSize = 40,
             interruptBarUnusedIconAlpha = 0.5,
+            interruptBarUsedIconAlpha = 1,
             interruptBarShowUnused = false,
             interruptBarHideCountDownNumbers = false,
             interruptBarSpellList = {},
