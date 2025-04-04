@@ -1494,7 +1494,12 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.arenaCooldownOffsetX = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
     defaults.profile.arenaFrames.showUnusedIcons = true;
+    defaults.profile.arenaFrames.unusedIconAlpha = 1;
+    defaults.profile.arenaFrames.usedIconAlpha = 0.5;
     defaults.profile.arenaFrames.interruptBarEnabled = true;
+    defaults.profile.arenaFrames.interruptBarShowUnused = true;
+    defaults.profile.arenaFrames.interruptBarUnusedIconAlpha = 1;
+    defaults.profile.arenaFrames.interruptBarUsedIconAlpha = 0.5;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
 end
