@@ -16,7 +16,7 @@
                 <Scripts>
                     <OnFinished>
                         local icon = self:GetParent()
-                        CooldownTracking_UpdateBorder(icon)
+                        CooldownTracking_UpdateAlpha(icon)
                     </OnFinished>
                 </Scripts>
             </AnimationGroup>
