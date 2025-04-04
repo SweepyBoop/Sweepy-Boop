@@ -699,7 +699,7 @@ if addon.PROJECT_MAINLINE then
                             headerPosition2 = {
                                 order = 17,
                                 type = "header",
-                                name = "Defensive row positioning",
+                                name = "Secondary bar positioning",
                                 hidden = function()
                                     return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
