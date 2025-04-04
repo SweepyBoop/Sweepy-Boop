@@ -765,7 +765,7 @@ if addon.PROJECT_MAINLINE then
                         },
                     },
 
-                    spellPriority = {
+                    spellCatPriority = {
                         order = 5,
                         type = "group",
                         name = "Priority",
@@ -1059,7 +1059,7 @@ if addon.PROJECT_MAINLINE then
     AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
     AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
     AppendSpellOptions(options.args.arenaFrames.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
-    AppendSpellCategoryPriority(options.args.arenaFrames.args.individual.args.spellPriority.args);
+    AppendSpellCategoryPriority(options.args.arenaFrames.args.individual.args.spellCatPriority.args);
 
     options.args.raidFrames = {
         order = 6,
