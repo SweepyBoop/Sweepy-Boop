@@ -180,7 +180,7 @@ local function SetupIconGroup(group, unit, testIcons)
                 if isInterruptBar then
                     shouldSetup = true;
                 elseif isSecondaryBar then
-                    shouldSetup = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
+                    shouldSetup = ( spell.category == addon.SPELLCATEGORY.DEFENSIVE );
                 else
                     shouldSetup = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
                 end
@@ -830,7 +830,7 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
     else
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     end
-    local setPointOptions = GetSetPointOptions(1, isInterruptBar, isSecondaryBar);
+    local setPointOptions = GetSetPointOptions(index, isInterruptBar, isSecondaryBar);
     if externalTestGroup[index] then
         addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
     else
@@ -872,6 +872,7 @@ end
 
 function SweepyBoop:HideTestArenaCooldownTracker()
     addon.IconGroup_Wipe(externalTestGroup[1]);
+    addon.IconGroup_Wipe(externalTestGroup[4]); -- Secondary bar
     if externalTestGroup[1] then
         externalTestGroup[1]:Hide();
     end
@@ -890,7 +891,7 @@ local function RepositionExternalTestGroup(index, isSecondaryBar)
     else
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     end
-    local setPointOptions = GetSetPointOptions(1, isSecondaryBar);
+    local setPointOptions = GetSetPointOptions(index, isSecondaryBar);
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
 end
 
