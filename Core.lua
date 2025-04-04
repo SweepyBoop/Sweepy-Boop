@@ -1493,6 +1493,8 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownOffsetX = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
+    defaults.profile.arenaFrames.arenaCooldownOffsetXSecondary = 35;
+    defaults.profile.arenaFrames.arenaCooldownOffsetYSecondary = -25;
     defaults.profile.arenaFrames.showUnusedIcons = true;
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
