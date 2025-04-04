@@ -902,14 +902,8 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     SetupIconGroups(arenaTrackerEnabled, interruptBarEnabled);
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
-                --if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-
-                if sourceGUID == UnitGUID("party1") then
-                    local pts = GetUnitChargedPowerPoints("party1");
-                    local numChargedPowerPoints = pts and #pts or 0;
-                    print("Charged Power Points: " .. numChargedPowerPoints);
-                end
 
                 if arenaTrackerEnabled then
                     for i = 0, addon.MAX_ARENA_SIZE do
