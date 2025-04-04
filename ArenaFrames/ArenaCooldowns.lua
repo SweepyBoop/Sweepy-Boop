@@ -176,27 +176,38 @@ local function SetupIconGroup(group, unit, testIcons)
         local config = SweepyBoop.db.profile.arenaFrames;
         for spellID, spell in pairs(spellData) do
             if testIcons[unit][spellID] then
-                testIcons[unit][spellID].info = { cooldown = spell.cooldown };
-                -- The texture might have been set by use_parent_icon icons
-                testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
-                addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
-
-                local showUnusedIcons;
+                local shouldSetup;
                 if isInterruptBar then
-                    showUnusedIcons = config.interruptBarShowUnused;
+                    shouldSetup = true;
+                elseif isSecondaryBar then
+                    shouldSetup = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
                 else
-                    showUnusedIcons = config.showUnusedIcons;
+                    shouldSetup = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
                 end
 
-                local unusedIconAlpha;
-                if isInterruptBar then
-                    unusedIconAlpha = config.interruptBarUnusedIconAlpha;
-                else
-                    unusedIconAlpha = config.unusedIconAlpha;
-                end
-                if ( spell.baseline or group.isInterruptBar ) and showUnusedIcons then
-                    testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
-                    addon.IconGroup_Insert(group, testIcons[unit][spellID]);
+                if shouldSetup then
+                    testIcons[unit][spellID].info = { cooldown = spell.cooldown };
+                    -- The texture might have been set by use_parent_icon icons
+                    testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                    addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
+
+                    local showUnusedIcons;
+                    if isInterruptBar then
+                        showUnusedIcons = config.interruptBarShowUnused;
+                    else
+                        showUnusedIcons = config.showUnusedIcons;
+                    end
+
+                    local unusedIconAlpha;
+                    if isInterruptBar then
+                        unusedIconAlpha = config.interruptBarUnusedIconAlpha;
+                    else
+                        unusedIconAlpha = config.unusedIconAlpha;
+                    end
+                    if ( spell.baseline or group.isInterruptBar ) and showUnusedIcons then
+                        testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
+                        addon.IconGroup_Insert(group, testIcons[unit][spellID]);
+                    end
                 end
             end
         end
@@ -745,7 +756,7 @@ end
 
 local externalTestIcons = {}; -- Premake icons for "Toggle Test Mode"
 local externalTestIconsInterrupt = {}; -- Premake icons for "Toggle Test Mode" interrupt bar
-local externalTestGroup = {}; -- 1 for "Arena frames", 2 for "Interrupt bar". LUA only passes table by reference
+local externalTestGroup = {}; -- 1 for "Arena frames", 2 for "Interrupt bar", 4 for "Secondary bar". LUA only passes table by reference
 
 local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
     addon.IconGroup_Wipe(externalTestGroup[index]);
@@ -779,16 +790,18 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
                 if spell.class == addon.SHAMAN or spell.class == addon.ROGUE then
                     isEnabled = ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) or ( spell.category == addon.SPELLCATEGORY.DISRUPT );
                 end
-            elseif spell.class == addon.PRIEST then
-                if spell.use_parent_icons then
-                    -- Don't create if using parent icon
-                elseif ( not spell.spec ) then
-                    isEnabled = true;
-                else
-                    for i = 1, #(spell.spec) do
-                        if ( spell.spec[i] == addon.SPECID.DISCIPLINE ) then
-                            isEnabled = true;
-                            break;
+            else
+                if spell.class == addon.PRIEST then
+                    if spell.use_parent_icons then
+                        -- Don't create if using parent icon
+                    elseif ( not spell.spec ) then
+                        isEnabled = true;
+                    else
+                        for i = 1, #(spell.spec) do
+                            if ( spell.spec[i] == addon.SPECID.DISCIPLINE ) then
+                                isEnabled = true;
+                                break;
+                            end
                         end
                     end
                 end
@@ -852,7 +865,7 @@ function SweepyBoop:TestArenaCooldownTracker()
     ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     externalTestGroup[1]:Show();
-    if SweepyBoop.db.profile.arenaFrames.showSecondaryBar then
+    if SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar then
         externalTestGroup[4]:Show();
     end
 end
