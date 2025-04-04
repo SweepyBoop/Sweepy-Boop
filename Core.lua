@@ -783,6 +783,28 @@ if addon.PROJECT_MAINLINE then
                                 end
                             },
                         },
+                    },
+
+                    spellList2 = {
+                        order = 7,
+                        type = "group",
+                        name = "Secondary bar spells",
+                        desc = "Select which abilities to track cooldown inside arenas",
+                        get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList2[info[#info]] end,
+                        set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList2[info[#info]] = val end,
+                        args = {
+                            restoreDefaults = {
+                                order = 1,
+                                type = "execute",
+                                name = "Uncheck all",
+                                func = function ()
+                                    SweepyBoop:UncheckAllArenaAbilities();
+                                end
+                            },
+                        },
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                        end
                     }
                 },
             },
@@ -959,6 +981,14 @@ if addon.PROJECT_MAINLINE then
             name = classInfo.className,
             args = {},
         };
+        options.args.arenaFrames.args.individual.args.spellList2.args[classInfo.classFile] = {
+            order = groupIndex,
+            type = "group",
+            icon = addon.ICON_ID_CLASSES,
+            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+            name = classInfo.className,
+            args = {},
+        };
         options.args.arenaFrames.args.interrupts.args.interruptBarSpellList.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
@@ -1018,6 +1048,7 @@ if addon.PROJECT_MAINLINE then
     end
 
     AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellOptions(options.args.arenaFrames.args.individual.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
     AppendSpellOptions(options.args.arenaFrames.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
     AppendSpellCategoryPriority(options.args.arenaFrames.args.individual.args.spellPriority.args);
 
@@ -1388,6 +1419,7 @@ local defaults = {
             showUnusedIcons = false,
             hideCountDownNumbers = false,
             spellList = {},
+            spellList2 = {},
 
             interruptBarEnabled = false;
             interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
@@ -1471,6 +1503,12 @@ local function SetupAllSpells(profile, spellList)
         else
             profile[tostring(spellID)] = false;
         end
+    end
+end
+
+local function UncheckAllSpells(profile, spellList)
+    for spellID, spellEntry in pairs(spellList) do
+        profile[tostring(spellID)] = false;
     end
 end
 
@@ -1613,6 +1651,10 @@ end
 
 function SweepyBoop:CheckDefaultArenaAbilities()
     SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
+end
+
+function SweepyBoop:UncheckAllArenaAbilities()
+    UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
 end
 
 function SweepyBoop:CheckDefaultInterrupts()
