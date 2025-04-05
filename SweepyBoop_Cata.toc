@@ -35,3 +35,4 @@ Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua
 Nameplates\AuraFilter.lua
 Nameplates\Nameplates.lua
+Nameplates\Options.lua

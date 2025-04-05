@@ -1,5 +1,6 @@
 local _, addon = ...;
 
+addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
 addon.TEST_MODE = false;
 
 addon.SPELLCATEGORY = {
@@ -254,6 +255,7 @@ addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLAS
 addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
 addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
 addon.ICON_ID_FLAG_CARRIER_NEUTRAL = addon.ICON_PATH("inv_bannerpvp_03");
+addon.ICON_ID_PVP_CURSOR = "interface/cursor/pvp";
 
 -- https://warcraft.wiki.gg/wiki/UI_escape_sequences
 addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
@@ -271,5 +273,3 @@ addon.SPELL_DESCRIPTION = {}; -- by spellId, requested via -- https://warcraft.w
 addon.PRINT = function(message)
     DEFAULT_CHAT_FRAME:AddMessage(addon.FORMAT_ATLAS("pvptalents-warmode-swords", 16) .. " |cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
 end
-
-addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
