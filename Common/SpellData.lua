@@ -779,19 +779,13 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
     },
-    -- Alter Time (Arcane)
+    -- Alter Time (all specs)
     [342246] = {
         cooldown = 50,
         class = addon.MAGE,
-        spec = { specID.ARCANE },
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         baseline = true, -- technically a talent, but always picked
-    },
-    -- Alter Time (Fire/Frost)
-    [110909] = {
-        parent = 342246,
-        spec = { specID.FIRE, specID.FROST_MAGE },
     },
     -- Crowd Control
     -- Ring of Frost
