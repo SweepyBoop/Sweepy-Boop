@@ -46,7 +46,7 @@ function SweepyBoop:TestArenaInterrupt()
 end
 
 addon.GetArenaFrameOptions = function(order)
-    local group = {
+    local optionGroup = {
         order = order,
         type = "group",
         childGroups = "tab",
@@ -492,7 +492,7 @@ addon.GetArenaFrameOptions = function(order)
     -- Ensure one group for each class, in order
     for _, classID in ipairs(addon.CLASSORDER) do
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
-        group.args.individual.args.spellList.args[classInfo.classFile] = {
+        optionGroup.args.individual.args.spellList.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -500,7 +500,7 @@ addon.GetArenaFrameOptions = function(order)
             name = classInfo.className,
             args = {},
         };
-        group.args.individual.args.spellList2.args[classInfo.classFile] = {
+        optionGroup.args.individual.args.spellList2.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -508,7 +508,7 @@ addon.GetArenaFrameOptions = function(order)
             name = classInfo.className,
             args = {},
         };
-        group.args.interrupts.args.interruptBarSpellList.args[classInfo.classFile] = {
+        optionGroup.args.interrupts.args.interruptBarSpellList.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -549,27 +549,29 @@ addon.GetArenaFrameOptions = function(order)
 
     local function AppendSpellCategoryPriority(group)
         for i = 1, 12 do -- Can we not hard-code this
-            group[tostring(i)] = {
-                order = i,
-                type = "range",
-                name = addon.SPELLCATEGORY_NAME[i],
-                min = 1,
-                max = 100,
-                step = 1,
-                get = function(info)
-                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)];
-                end,
-                set = function(info, val)
-                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)] = val;
-                end,
-            }
+            if i ~= addon.SPELLCATEGORY.INTERRUPT then
+                group[tostring(i)] = {
+                    order = i,
+                    type = "range",
+                    name = addon.SPELLCATEGORY_NAME[i],
+                    min = 1,
+                    max = 100,
+                    step = 1,
+                    get = function(info)
+                        return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)];
+                    end,
+                    set = function(info, val)
+                        SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)] = val;
+                    end,
+                }
+            end
         end
     end
 
-    AppendSpellOptions(group.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
-    AppendSpellOptions(group.args.individual.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
-    AppendSpellOptions(group.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
-    AppendSpellCategoryPriority(group.args.individual.args.spellCatPriority.args);
+    AppendSpellOptions(optionGroup.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellOptions(optionGroup.args.individual.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellOptions(optionGroup.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+    AppendSpellCategoryPriority(optionGroup.args.individual.args.spellCatPriority.args);
 
-    return group;
+    return optionGroup;
 end

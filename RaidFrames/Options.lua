@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 addon.GetRaidFrameOptions = function(order)
-    local group = {
+    local optionGroup = {
         order = order,
         type = "group",
         name = "Raid frames",
@@ -78,5 +78,5 @@ addon.GetRaidFrameOptions = function(order)
         },
     };
 
-    return group;
+    return optionGroup;
 end
