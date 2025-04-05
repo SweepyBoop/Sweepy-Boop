@@ -528,7 +528,6 @@ local function ProcessUnitSpellCast(self, event, ...)
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
-        spellID = spell.parent or spellID;
         local iconID = self.unit .. "-" .. spellID;
         if self.icons[iconID] then
             local config = SweepyBoop.db.profile.arenaFrames;
