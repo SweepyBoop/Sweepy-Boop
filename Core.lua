@@ -107,7 +107,6 @@ local defaults = {
             buffWhiteList = {},
         },
         arenaFrames = {
-            healerIndicator = true,
             arenaCooldownTrackerEnabled = true,
             arenaCooldownSecondaryBar = false,
 
@@ -170,6 +169,7 @@ local defaults = {
             combatIndicator = true,
             arenaSurrenderEnabled = true,
             skipLeaveArenaConfirmation = false,
+            healerIndicator = true,
             showDampenPercentage = true,
         },
         minimap = {
