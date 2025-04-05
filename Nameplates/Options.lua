@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 addon.GetFriendlyNameplateOptions = function(order)
-    local group = {
+    local optionGroup = {
         order = order,
         type = "group",
         name = "Friendly class icons",
@@ -261,12 +261,12 @@ addon.GetFriendlyNameplateOptions = function(order)
         }
     };
 
-    return group;
+    return optionGroup;
 end
 
 addon.GetEnemyNameplateOptions = function(order)
     local beastMasteryHunterIcon = ( addon.PROJECT_MAINLINE and C_Spell.GetSpellTexture(267116) ) or C_Spell.GetSpellTexture(19574);
-    local group = {
+    local optionGroup = {
         order = order,
         type = "group",
         childGroups = "tab",
@@ -496,9 +496,9 @@ addon.GetEnemyNameplateOptions = function(order)
         },
     };
 
-    addon.AppendNpcOptionsToGroup(group.args.filterList);
-    addon.AppendAuraOptionsToGroup(group.args.debuffWhiteList, addon.DebuffList, "debuffWhiteList");
-    addon.AppendAuraOptionsToGroup(group.args.buffWhiteList, addon.BuffList, "buffWhiteList");
+    addon.AppendNpcOptionsToGroup(optionGroup.args.filterList);
+    addon.AppendAuraOptionsToGroup(optionGroup.args.debuffWhiteList, addon.DebuffList, "debuffWhiteList");
+    addon.AppendAuraOptionsToGroup(optionGroup.args.buffWhiteList, addon.BuffList, "buffWhiteList");
 
-    return group;
+    return optionGroup;
 end
