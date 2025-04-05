@@ -277,6 +277,22 @@ addon.SpellData = {
         category = category.STUN,
         baseline = true,
     },
+    -- Others
+    -- Consume Magic
+    [278326] = {
+        cooldown = 10,
+        class = addon.DEMONHUNTER,
+        category = category.OTHERS,
+        baseline = true,
+    },
+    -- Vengeful Retreat
+    [198793] = {
+        class = addon.DEMONHUNTER,
+        category = category.OTHERS,
+        cooldown = { default = 20, [specID.VENGEANCE] = 25 },
+        charges = true, -- Vengeful Retreat (Vengeful Retreat)
+        baseline = true,
+    },
 
     -- Druid
     -- Convoke the Spirits
@@ -446,6 +462,29 @@ addon.SpellData = {
         category = category.IMMUNITY,
         cooldown = 90,
     },
+    -- Nature's Swiftness
+    [132158] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.HEAL,
+        cooldown = 60,
+        charges = true,
+        baseline = true,
+    },
+    -- Overgrowth
+    [203651] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.HEAL,
+        cooldown = 60,
+    },
+    -- Tranquility
+    [740] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.HEAL,
+        cooldown = 180,
+    },
     -- Dispel
     -- Nature's Cure
     [88423] = {
@@ -534,6 +573,27 @@ addon.SpellData = {
     -- Cauterizing Flame
     [374251] = {
         class = addon.EVOKER,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Nullifying Shroud
+    [378464] = {
+        class = addon.EVOKER,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+        baseline = true,
+    },
+    -- Time Stop
+    [378441] = {
+        class = addon.EVOKER,
+        category = category.DEFENSIVE,
+        cooldown = 45,
+        priority = addon.SPELLPRIORITY.HIGH,
+    },
+    -- Dream Projection
+    [377509] = {
+        class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
         category = category.DEFENSIVE,
         cooldown = 60,
     },
