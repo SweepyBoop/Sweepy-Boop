@@ -549,22 +549,20 @@ addon.GetArenaFrameOptions = function(order)
 
     local function AppendSpellCategoryPriority(group)
         for i = 1, 12 do -- Can we not hard-code this
-            if i ~= addon.SPELLCATEGORY.INTERRUPT then
-                group[tostring(i)] = {
-                    order = i,
-                    type = "range",
-                    name = addon.SPELLCATEGORY_NAME[i],
-                    min = 1,
-                    max = 100,
-                    step = 1,
-                    get = function(info)
-                        return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)];
-                    end,
-                    set = function(info, val)
-                        SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)] = val;
-                    end,
-                }
-            end
+            group[tostring(i)] = {
+                order = i,
+                type = "range",
+                name = addon.SPELLCATEGORY_NAME[i],
+                min = 1,
+                max = 100,
+                step = 1,
+                get = function(info)
+                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)];
+                end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(i)] = val;
+                end,
+            }
         end
     end
 
