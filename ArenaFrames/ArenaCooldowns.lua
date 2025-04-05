@@ -287,6 +287,7 @@ local function SetupIconGroup(group, unit, testIcons)
                         spellList = config.spellList;
                     end
 
+                    spellID = spell.parent or spellID;
                     if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
                         iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
                         addon.IconGroup_Insert(group, iconSet[unit][spellID]);
@@ -527,6 +528,7 @@ local function ProcessUnitSpellCast(self, event, ...)
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
+        spellID = spell.parent or spellID;
         local iconID = self.unit .. "-" .. spellID;
         if self.icons[iconID] then
             local config = SweepyBoop.db.profile.arenaFrames;
@@ -538,6 +540,7 @@ local function ProcessUnitSpellCast(self, event, ...)
             else
                 spellList = config.spellList;
             end
+
             if spellList[tostring(spellID)] then
                 addon.StartBurstIcon(self.icons[iconID]);
             end
