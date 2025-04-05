@@ -170,21 +170,33 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 type = "header",
                 name = "",
             },
-            showDampenPercentage = {
+
+            healerIndicator = {
                 order = 18,
+                type = "toggle",
+                name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
+                desc = "To make it easier to identify the healer in case of class stacking",
+                width = "full",
+                hidden = function ()
+                    return ( not ( Gladius or sArena ) );
+                end
+            },
+
+            showDampenPercentage = {
+                order = 19,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
             },
 
             header6 = {
-                order = 19,
+                order = 20,
                 type = "header",
                 name = "",
             },
 
             showMinimapIcon = {
-                order = 20,
+                order = 21,
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Logo") .. " Show minimap icon for invoking options UI",
