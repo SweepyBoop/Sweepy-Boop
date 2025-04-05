@@ -287,8 +287,8 @@ local function SetupIconGroup(group, unit, testIcons)
                         spellList = config.spellList;
                     end
 
-                    spellID = spell.parent or spellID;
-                    if spell.baseline and showUnusedIcons and spellList[tostring(spellID)] then
+                    local configSpellID = spell.parent or spellID;
+                    if spell.baseline and showUnusedIcons and spellList[tostring(configSpellID)] then
                         iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
                         addon.IconGroup_Insert(group, iconSet[unit][spellID]);
                     end
@@ -541,7 +541,8 @@ local function ProcessUnitSpellCast(self, event, ...)
                 spellList = config.spellList;
             end
 
-            if spellList[tostring(spellID)] then
+            local configSpellID = spell.parent or spellID;
+            if spellList[tostring(configSpellID)] then
                 addon.StartBurstIcon(self.icons[iconID]);
             end
         end
