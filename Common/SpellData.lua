@@ -597,6 +597,13 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
+    -- Time Dilation
+    [357170] = {
+        class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
     -- Interrupt
     -- Quell
     [351338] = {
@@ -718,6 +725,20 @@ addon.SpellData = {
         category = category.STUN,
         baseline = true,
     },
+    -- Scatter Shot
+    [213691] = {
+        cooldown = 30,
+        class = addon.HUNTER,
+        category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Chimaeral Sting
+    [356719] = {
+        cooldown = 60,
+        class = addon.HUNTER,
+        category = category.SILENCE,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Defensive
     -- Survival of the Fittest
     [264735] = {
@@ -762,6 +783,21 @@ addon.SpellData = {
         class = addon.HUNTER,
         spec = { specID.SURVIVAL },
         category = category.INTERRUPT,
+        baseline = true,
+    },
+    -- Others
+    -- Master's Call
+    [53271] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 45,
+    },
+    -- Harpoon
+    [190925] = {
+        class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
+        category = category.OTHERS,
+        cooldown = 20,
         baseline = true,
     },
 
@@ -858,6 +894,33 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Blazing Barrier
+    [235313] = {
+        class = addon.MAGE,
+        spec = { specID.FIRE },
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        index = addon.SPELLPRIORITY.LOW,
+        baseline = true,
+    },
+    -- Prismatic Barrier
+    [235450] = {
+        class = addon.MAGE,
+        spec = { specID.ARCANE },
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        index = addon.SPELLPRIORITY.LOW,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Ice Barrier
+    [11426] = {
+        class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        index = addon.SPELLPRIORITY.LOW,
         baseline = true, -- technically a talent, but always picked
     },
     -- Crowd Control
@@ -1026,12 +1089,26 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         baseline = true,
     },
+    -- Thunder Focus Tea
+    [116680] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 30,
+    },
     -- Disrupt
     -- Grapple Weapon
     [233759] = {
         class = addon.MONK,
         category = category.OTHERS,
         cooldown = 45,
+    },
+    -- Tiger's Lust
+    [116841] = {
+        class = addon.MONK,
+        category = category.OTHERS,
+        cooldown = 30,
+        baseline = true,
     },
     -- Dispel
     -- Detox
