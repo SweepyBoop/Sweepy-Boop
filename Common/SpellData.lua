@@ -631,6 +631,12 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 25,
     },
+    -- Tar Trap
+    [187698] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 25,
+    },
     -- Crowd Control
     -- Intimidation
     [19577] = {
@@ -643,6 +649,13 @@ addon.SpellData = {
         cooldown = 25,
         class = addon.HUNTER,
         category = category.CROWDCONTROL,
+        baseline = true,
+    },
+    -- Binding Shot
+    [109248] = {
+        cooldown = 45,
+        class = addon.HUNTER,
+        category = category.STUN,
         baseline = true,
     },
     -- Defensive
@@ -828,6 +841,13 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.KNOCKBACK,
         cooldown = 30,
+    },
+    -- Frost Nova
+    [122] = {
+        class = addon.MAGE,
+        category = category.OTHERS,
+        cooldown = 30,
+        baseline = true, -- technically a talent, but always picked
     },
 
     -- Monk
@@ -1063,6 +1083,13 @@ addon.SpellData = {
         cooldown = 63,
         class = addon.PALADIN,
         spec = { specID.RETRIBUTION },
+        category = category.DEFENSIVE,
+    },
+    -- Searing Glare
+    [410126] = {
+        cooldown = 45,
+        class = addon.PALADIN,
+        spec = { specID.PROTECTION_PALADIN },
         category = category.DEFENSIVE,
     },
     -- Crowd Control
@@ -1576,6 +1603,21 @@ addon.SpellData = {
         cooldown = 54,
         class = addon.SHAMAN,
         category = category.OTHERS
+    },
+    -- Crowd Control
+    -- Hex
+    [51514] = {
+        cooldown = 30,
+        class = addon.SHAMAN,
+        category = category.CROWDCONTROL,
+        baseline = true,
+    },
+    -- Static Field Totem
+    [355580] = {
+        cooldown = 84,
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Dispel
     -- Purify Spirit
