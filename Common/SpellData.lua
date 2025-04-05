@@ -290,7 +290,6 @@ addon.SpellData = {
         class = addon.DEMONHUNTER,
         category = category.OTHERS,
         cooldown = { default = 20, [specID.VENGEANCE] = 25 },
-        charges = true, -- Vengeful Retreat (Vengeful Retreat)
         baseline = true,
     },
 
