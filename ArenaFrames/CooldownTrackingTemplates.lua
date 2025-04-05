@@ -17,14 +17,6 @@ local function OnCooldownTimerFinished(self)
     addon.FinishCooldownTimer(self);
 end
 
--- function CooldownTracking_UpdateBorder(icon)
---     if UnitIsUnit(icon.unit, "target") then
---         icon.TargetHighlight:SetAlpha(1);
---     else
---         icon.TargetHighlight:SetAlpha(0);
---     end
--- end
-
 function CooldownTracking_OnAnimationFinished(icon)
     -- Wait for animation to finish to set used alpha
     addon.SetUsedIconAlpha(icon);
@@ -32,7 +24,7 @@ end
 
 -- Only put static info in this function
 -- An icon for a unit + spellID is only created once per session
-addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
+addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame.template = addon.ICON_TEMPLATE.FLASH;
     frame:SetMouseClickEnabled(false);
@@ -47,10 +39,6 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, hideHighlight)
     if size then
         local scale = size / addon.DEFAULT_ICON_SIZE;
         frame:SetScale(scale);
-    end
-
-    if hideHighlight then
-        frame.TargetHighlight:Hide();
     end
 
     -- Fill in static info here
