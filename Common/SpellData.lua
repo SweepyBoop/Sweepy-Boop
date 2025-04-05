@@ -1272,6 +1272,13 @@ addon.SpellData = {
             parent = 6940,
             cooldown = 105,
         },
+    -- Blessing of Freedom
+    [1044] = {
+        cooldown = 25,
+        class = addon.PALADIN,
+        category = category.OTHERS,
+        baseline = true,
+    },
     -- Dispel
     -- Cleanse
     [4987] = {
@@ -1453,6 +1460,13 @@ addon.SpellData = {
         cooldown = 600,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Divine Ascension
+    [328530] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
     -- Disrupt
     -- Holy Ward
     [213610] = {
@@ -1475,6 +1489,19 @@ addon.SpellData = {
         class = addon.PRIEST,
         category = category.OTHERS,
         baseline = true,
+    },
+    -- Leap of Faith
+    [73325] = {
+        cooldown = 60,
+        class = addon.PRIEST,
+        category = category.OTHERS,
+        baseline = true,
+    },
+    -- Thoughtsteal
+    [316262] = {
+        cooldown = 90,
+        class = addon.PRIEST,
+        category = category.OTHERS,
     },
 
     -- Rogue
@@ -1602,6 +1629,13 @@ addon.SpellData = {
         cooldown = 120,
         spec = { specID.SUBTLETY },
     },
+    -- Gouge
+    [1776] = {
+        cooldown = 25,
+        class = addon.ROGUE,
+        category = category.CROWDCONTROL,
+        baseline = true,
+    },
     -- Disrupt
     -- Shadowstep
     [36554] = {
@@ -1716,6 +1750,21 @@ addon.SpellData = {
         spec = { specID.RESTORATION_SHAMAN },
         baseline = true, -- technically a talent, but always picked
     },
+    -- Spirit Walk
+    [58875] = {
+        cooldown = 60,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Spirit Walker's Grace
+    [79206] = {
+        cooldown = 120,
+        opt_lower_cooldown = 90,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Burrow
     [409293] = {
         cooldown = 120,
@@ -1740,6 +1789,20 @@ addon.SpellData = {
         cooldown = 54,
         class = addon.SHAMAN,
         category = category.OTHERS
+    },
+    -- Thunderstorm
+    [51490] = {
+        cooldown = 30,
+        class = addon.SHAMAN,
+        category = category.KNOCKBACK,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Earthgrab Totem
+    [51485] = {
+        cooldown = 24,
+        class = addon.SHAMAN,
+        category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Crowd Control
     -- Hex
@@ -1825,6 +1888,13 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 60,
     },
+    -- Haunt
+    [48181] = {
+        class = addon.WARLOCK,
+        spec = { specID.AFFLICTION },
+        category = category.BURST,
+        cooldown = 15,
+    },
     -- Crowd Control
     -- Mortal Coil
     [6789] = {
@@ -1850,6 +1920,12 @@ addon.SpellData = {
         [119914] = {
             parent = 89766,
         },
+    -- Shadowfury
+    [30283] = {
+        cooldown = 60,
+        class = addon.WARLOCK,
+        category = category.STUN,
+    },
     -- Defensive
     -- Unending Resolve
     [104773] = {
@@ -1918,6 +1994,15 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.WARLOCK,
         category = category.OTHERS,
+    },
+    -- Others
+    -- Havoc
+    [80240] = {
+        class = addon.WARLOCK,
+        spec = { specID.DESTRUCTION },
+        category = category.OTHERS,
+        cooldown = 30,
+        baseline = true,
     },
 
     -- Warrior
@@ -2048,6 +2133,23 @@ addon.SpellData = {
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
     },
+    -- Berserker Rage
+    [18499] = {
+        cooldown = 60,
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
+        -- Berserker Shout
+        [210872] = {
+            parent = 18499,
+            use_parent_icon = true,
+        },
+        -- Berserker Roar
+        [1219201] = {
+            parent = 18499,
+            use_parent_icon = true,
+        },
 };
 
 addon.SpellResets = {
