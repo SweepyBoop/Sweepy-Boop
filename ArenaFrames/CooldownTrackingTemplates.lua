@@ -25,24 +25,9 @@ end
 --     end
 -- end
 
-function CooldownTracking_UpdateAlpha(icon)
-    -- When activation animation is playing, we keep the off-cooldown alpha
-    local usedIconAlpha;
-    local config = SweepyBoop.db.profile.arenaFrames;
-    if icon.isInterruptBar then
-        if config.interruptBarShowUnused then
-            usedIconAlpha = config.interruptBarUsedIconAlpha;
-        else
-            usedIconAlpha = 1;
-        end
-    else
-        if config.showUnusedIcons then
-            usedIconAlpha = config.usedIconAlpha;
-        else
-            usedIconAlpha = 1;
-        end
-    end
-    icon:SetAlpha(usedIconAlpha);
+function CooldownTracking_OnAnimationFinished(icon)
+    -- Wait for animation to finish to set used alpha
+    addon.SetUsedIconAlpha(icon);
 end
 
 -- Only put static info in this function
