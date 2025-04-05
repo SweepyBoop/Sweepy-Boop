@@ -1598,7 +1598,7 @@ addon.SpellData = {
     [305483] = {
         cooldown = 45,
         class = addon.SHAMAN,
-        category = category.CROWDCONTROL,
+        category = category.STUN,
         baseline = true, -- technically a talent, but always picked
     },
 
