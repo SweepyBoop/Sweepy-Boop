@@ -17,13 +17,13 @@ local function OnCooldownTimerFinished(self)
     addon.FinishCooldownTimer(self);
 end
 
-function CooldownTracking_UpdateBorder(icon)
-    if UnitIsUnit(icon.unit, "target") then
-        icon.TargetHighlight:SetAlpha(1);
-    else
-        icon.TargetHighlight:SetAlpha(0);
-    end
-end
+-- function CooldownTracking_UpdateBorder(icon)
+--     if UnitIsUnit(icon.unit, "target") then
+--         icon.TargetHighlight:SetAlpha(1);
+--     else
+--         icon.TargetHighlight:SetAlpha(0);
+--     end
+-- end
 
 function CooldownTracking_UpdateAlpha(icon)
     -- When activation animation is playing, we keep the off-cooldown alpha
