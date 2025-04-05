@@ -2,15 +2,16 @@ local addonName, addon = ...;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
+
 local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
-	type = "data source",
-	text = addonName,
-	icon = addon.INTERFACE_SWEEPY .. "Art/Logo",
+    type = "data source",
+    text = addonName,
+    icon = addon.INTERFACE_SWEEPY .. "Art/Logo",
     OnTooltipShow = function(tooltip)
         tooltip:SetText(addon.addonTitle, 1, 1, 1);
         tooltip:AddLine("Click to open options");
     end,
-	OnClick = function()
+    OnClick = function()
         LibStub("AceConfigDialog-3.0"):Open(addonName);
         if SweepyBoopDB then
             SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 0;
@@ -248,7 +249,7 @@ function SweepyBoop:OnInitialize()
     if addon.PROJECT_MAINLINE then
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
-        options.args.misc = addon.GetMiscOptions(7);
+        options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
     end
 
     local currentTime = GetTime();

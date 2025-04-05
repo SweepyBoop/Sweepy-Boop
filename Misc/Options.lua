@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-addon.GetMiscOptions = function (order)
+addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
     local group = {
         order = order,
         type = "group",

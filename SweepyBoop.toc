@@ -44,6 +44,7 @@ Misc\DampenDisplay.lua
 Misc\HealerInCrowdControl.lua
 Misc\QueueReminder.lua
 Misc\CombatIndicator.lua
+Misc\Options.lua
 
 ArenaFrames\IconGroupUtil.lua
 ArenaFrames\IconTemplates.lua
@@ -57,6 +58,7 @@ ArenaFrames\Options.lua
 #RaidFrames\SortGroup.lua
 RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\DruidHoTHelper.lua
+RaidFrames\Options.lua
 
 Internal\HideHotKeys.lua
 Internal\FocusMacros.lua
