@@ -97,6 +97,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         if icon.Count then
             icon.Count:SetShown(stack);
         end
+        addon.SetUsedIconAlpha(icon);
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
