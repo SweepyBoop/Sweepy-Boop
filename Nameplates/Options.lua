@@ -33,7 +33,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                         ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
                 end
             },
-    
+
             description1 = {
                 order = 3,
                 width = "full",
@@ -52,7 +52,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( C_CVar.GetCVar("nameplateShowFriendlyPets") == "1" );
                 end
             },
-    
+
             newline1 = {
                 order = 5,
                 type = "description",
@@ -61,7 +61,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-    
+
             classIconStyle = {
                 order = 6,
                 type = "select",
@@ -88,7 +88,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                         or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW );
                 end
             },
-    
+
             newline2 = {
                 order = 8,
                 type = "description",
@@ -97,7 +97,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-    
+
             visibilityHeader = {
                 order = 9,
                 type = "header",
@@ -218,7 +218,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-    
+
             breaker2 = {
                 order = 21,
                 type = "header",
@@ -227,7 +227,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-    
+
             classColorBorder = {
                 order = 22,
                 type = "toggle",
@@ -237,7 +237,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-    
+
             showPlayerName = {
                 order = 23,
                 type = "toggle",
@@ -247,7 +247,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-    
+
             showCrowdControl = {
                 order = 24,
                 type = "toggle",

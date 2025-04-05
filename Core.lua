@@ -155,7 +155,7 @@ if addon.PROJECT_MAINLINE then
                                     return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
                                 end
                             },
-                            
+
                             headerPosition = {
                                 order = 13,
                                 type = "header",
@@ -204,7 +204,7 @@ if addon.PROJECT_MAINLINE then
                                     SweepyBoop:RepositionArenaCooldownTracker();
                                 end
                             },
-                            
+
                             headerPosition2 = {
                                 order = 17,
                                 type = "header",
