@@ -1,5 +1,50 @@
 local _, addon = ...;
 
+function SweepyBoop:TestArena()
+    if IsInInstance() then
+        addon.PRINT("Test mode can only be used outside instances");
+        return;
+    end
+
+    if GladiusEx then
+        local frame = _G["GladiusExButtonFramearena1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+            GladiusEx:SetTesting(3);
+        end
+    elseif Gladius then
+        local frame = _G["GladiusButtonFramearena1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+            if SlashCmdList["GLADIUS"] then
+                SlashCmdList["GLADIUS"]("test 3")
+            end
+        end
+    elseif sArena then
+        local frame = _G["sArenaEnemyFrame1"];
+        if ( not frame ) or ( not frame:IsShown() ) then
+            sArena:Test();
+        end
+    else
+        -- Use Blizzard arena frames
+        if ( not CompactArenaFrame:IsShown() ) then
+            CompactArenaFrame:Show();
+            for i = 1, addon.MAX_ARENA_SIZE do
+                _G["CompactArenaFrameMember" .. i]:Show();
+            end
+        end
+    end
+
+    self:TestArenaCooldownTracker();
+end
+
+function SweepyBoop:TestArenaInterrupt()
+    if IsInInstance() then
+        addon.PRINT("Test mode can only be used outside instances");
+        return;
+    end
+
+    self:TestArenaInterruptBar();
+end
+
 addon.GetArenaFrameOptions = function(order)
     local group = {
         order = order,
