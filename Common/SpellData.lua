@@ -269,6 +269,14 @@ addon.SpellData = {
         category = category.STUN,
         baseline = true,
     },
+    -- Chaos Nova
+    [179057] = {
+        cooldown = 45,
+        class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
+        category = category.STUN,
+        baseline = true,
+    },
 
     -- Druid
     -- Convoke the Spirits
@@ -1585,6 +1593,14 @@ addon.SpellData = {
         trackEvent = addon.SPELL_DISPEL,
         baseline = true,
     },
+    -- Crowd Control
+    -- Lightning Lasso
+    [305483] = {
+        cooldown = 45,
+        class = addon.SHAMAN,
+        category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
+    },
 
     -- Warlock
     -- Affliction
@@ -1819,6 +1835,13 @@ addon.SpellData = {
     -- Storm Bolt
     [107570] = {
         cooldown = 28.5,
+        class = addon.WARRIOR,
+        category = category.STUN,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Shockwave
+    [46968] = {
+        cooldown = 40,
         class = addon.WARRIOR,
         category = category.STUN,
         baseline = true, -- technically a talent, but always picked
