@@ -45,6 +45,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
         duration = 15, -- extended by Eternal Agony (need to track buff on pet, is it feasible)
+        baseline = true,
     },
     -- Apocalypse
     [275699] = {
@@ -425,7 +426,8 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.BALANCE },
         reduce_on_interrupt = 15,
-        category = category.SILENCE
+        category = category.SILENCE,
+        baseline = true,
     },
     -- Disrupt
     -- Faerie Swarm
@@ -449,7 +451,8 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.GUARDIAN, specID.FERAL },
         charges = {[specID.GUARDIAN] = true},
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Ironbark
     [102342] = {
