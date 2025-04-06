@@ -147,7 +147,7 @@ addon.GetArenaFrameOptions = function(order)
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                    SweepyBoop:RepositionArenaCooldownTracker(true);
                                 end
                             },
 
@@ -437,7 +437,7 @@ addon.GetArenaFrameOptions = function(order)
                                 set = function (info, val)
                                     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                                     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionArenaInterruptBar();
+                                    SweepyBoop:RepositionArenaInterruptBar(true);
                                 end
                             },
 

@@ -57,7 +57,7 @@ addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions, gro
 end
 
 
-local function IconGroup_Position(group)
+addon.IconGroup_Position = function(group)
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
     end
@@ -204,7 +204,7 @@ addon.IconGroup_Insert = function (group, icon, index)
         table.sort(active, sortFuncArenaFrames);
     end
 
-    IconGroup_Position(group);
+    addon.IconGroup_Position(group);
 
     -- Reposition first, then show, to avoid new icon occluding previously shown ones.
     icon:Show();
@@ -248,7 +248,7 @@ addon.IconGroup_Remove = function (group, icon, fade)
 
     if index then
         table.remove(active, index);
-        IconGroup_Position(group);
+        addon.IconGroup_Position(group);
     end
 end
 
