@@ -623,14 +623,12 @@ local interruptBarGrowOptions = {
     [addon.INTERRUPT_GROW_DIRECTION.CENTER_UP] = {
         direction = "CENTER",
         anchor = "CENTER",
-        margin = 3,
         columns = 100,
         growUpward = true,
     },
     [addon.INTERRUPT_GROW_DIRECTION.CENTER_DOWN] = {
         direction = "CENTER",
         anchor = "CENTER",
-        margin = 3,
         columns = 100,
         growUpward = false,
     },
@@ -689,10 +687,13 @@ local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
         local growOptions;
         if isInterruptBar then
             growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+            growOptions.margin = config.interruptBarIconPadding;
         elseif isSecondaryBar then
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
+            growOptions.margin = config.arenaCooldownTrackerIconPadding;
         else
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+            growOptions.margin = config.arenaCooldownTrackerIconPadding;
         end
         iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
         iconGroups[index].isInterruptBar = isInterruptBar;
@@ -706,10 +707,13 @@ local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
         local growOptions;
         if isInterruptBar then
             growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+            growOptions.margin = config.interruptBarIconPadding;
         elseif isSecondaryBar then
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
+            growOptions.margin = config.arenaCooldownTrackerIconPadding;
         else
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+            growOptions.margin = config.arenaCooldownTrackerIconPadding;
         end
         addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions);
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
@@ -830,10 +834,13 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
     local growOptions;
     if isInterruptBar then
         growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+        growOptions.margin = config.interruptBarIconPadding;
     elseif isSecondaryBar then
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
+        growOptions.margin = config.arenaCooldownTrackerIconPadding;
     else
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        growOptions.margin = config.arenaCooldownTrackerIconPadding;
     end
     local setPointOptions = GetSetPointOptions(index, isInterruptBar, isSecondaryBar);
     if externalTestGroup[index] then
@@ -906,13 +913,19 @@ local function RepositionExternalTestGroup(index, isSecondaryBar)
     else
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     end
+    growOptions.margin = config.arenaCooldownTrackerIconPadding;
     local setPointOptions = GetSetPointOptions(index, false, isSecondaryBar);
     addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
 end
 
-function SweepyBoop:RepositionArenaCooldownTracker()
+function SweepyBoop:RepositionArenaCooldownTracker(layoutIcons)
     RepositionExternalTestGroup(1);
     RepositionExternalTestGroup(4, true); -- Secondary bar
+
+    if layoutIcons then
+        addon.IconGroup_Position(externalTestGroup[1]);
+        addon.IconGroup_Position(externalTestGroup[4]); -- Secondary bar
+    end
 end
 
 function SweepyBoop:TestArenaInterruptBar()
@@ -944,13 +957,18 @@ function SweepyBoop:HideTestArenaInterruptBar()
     end
 end
 
-function SweepyBoop:RepositionArenaInterruptBar()
+function SweepyBoop:RepositionArenaInterruptBar(layoutIcons)
     if ( not externalTestGroup[2] ) or ( not externalTestGroup[2]:IsShown() ) then return end
 
     local config = SweepyBoop.db.profile.arenaFrames;
-    local grow = interruptBarGrowOptions[config.interruptBarGrowDirection];
+    local growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
+    growOptions.margin = config.interruptBarIconPadding;
     local setPointOptions = GetSetPointOptions(1, true);
-    addon.UpdateIconGroupSetPointOptions(externalTestGroup[2], setPointOptions, grow);
+    addon.UpdateIconGroupSetPointOptions(externalTestGroup[2], setPointOptions, growOptions);
+
+    if layoutIcons then
+        addon.IconGroup_Position(externalTestGroup[2]);
+    end
 end
 
 function SweepyBoop:SetupArenaCooldownTracker()
