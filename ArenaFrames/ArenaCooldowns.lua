@@ -530,7 +530,8 @@ local function ProcessUnitSpellCast(self, event, ...)
     if ( unitTarget == self.unit ) then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
-        local iconID = self.unit .. "-" .. spellID;
+        local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
+        local iconID = self.unit .. "-" .. iconSpellID;
         if self.icons[iconID] then
             local config = SweepyBoop.db.profile.arenaFrames;
             local spellList;
@@ -563,8 +564,12 @@ local function ProcessUnitAura(self, event, ...)
             if auraData then
                 local spellID = auraData.spellId;
                 local spell = spellData[spellID];
-                if spell and spell.extend and self.activeMap[self.unit .. "-" .. spellID] then
-                    addon.RefreshBurstDuration(self.activeMap[self.unit .. "-" .. spellID], auraData.duration, auraData.expirationTime);
+                if spell and spell.extend then
+                    local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
+                    local iconID = unitTarget .. "-" .. iconSpellID;
+                    if self.activeMap[iconID] then
+                        addon.RefreshBurstDuration(self.activeMap[iconID], auraData.duration, auraData.expirationTime);
+                    end
                 end
             end
         end
@@ -791,7 +796,7 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
                 end
             else
                 if spell.class == addon.PRIEST then
-                    if spell.use_parent_icons then
+                    if spell.use_parent_icon then
                         -- Don't create if using parent icon
                     elseif ( not spell.spec ) then
                         isEnabled = true;
