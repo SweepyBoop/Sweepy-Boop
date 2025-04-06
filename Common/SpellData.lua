@@ -790,6 +790,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.OTHERS,
         cooldown = 45,
+        trackPet = true,
     },
     -- Harpoon
     [190925] = {
@@ -1088,12 +1089,13 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         baseline = true,
     },
-    -- Thunder Focus Tea
-    [116680] = {
+    -- Zen Focus Tea
+    [209584] = {
         class = addon.MONK,
         spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
         cooldown = 30,
+        trackEvent = addon.SPELL_AURA_APPLIED,
     },
     -- Disrupt
     -- Grapple Weapon
