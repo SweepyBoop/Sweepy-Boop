@@ -45,6 +45,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
         duration = 15, -- extended by Eternal Agony (need to track buff on pet, is it feasible)
+        baseline = true,
     },
     -- Apocalypse
     [275699] = {
@@ -80,6 +81,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 60,
         duration = 12,
+        baseline = true,
     },
     -- Absolute zero (Frostwyrm's Fury)
     [279302] = {
@@ -185,6 +187,14 @@ addon.SpellData = {
         cooldown = 120,
         opt_lower_cooldown = 90, -- Assimilation
     },
+    -- Lichborne
+    [49039] = {
+        class = addon.DEATHKNIGHT,
+        category = category.IMMUNITY,
+        cooldown = 120,
+        index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
+    },
 
     -- Demon Hunter
     -- Eye Beam
@@ -194,6 +204,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 40,
         index = addon.SPELLPRIORITY.LOW,
+        baseline = true,
         -- Cooldown reduced by Blade dance, Chaos Strike, Glaive Tempest
         -- Cooldown reset by activating Metamorphosis
     },
@@ -202,6 +213,7 @@ addon.SpellData = {
         class = addon.DEMONHUNTER,
         category = category.BURST,
         cooldown = 90,
+        baseline = true,
     },
     -- Metamorphosis (have to track with UNIT_SPELLCAST_SUCCEEDED to exclude auto proc from Eye Beam)
     [191427] = {
@@ -242,13 +254,15 @@ addon.SpellData = {
         cooldown = 180,
         class = addon.DEMONHUNTER,
         spec = { specID.HAVOC },
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Darkness
     [196718] = {
         cooldown = 180,
         class = addon.DEMONHUNTER,
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Reverse Magic
     [205604] = {
@@ -412,7 +426,8 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.BALANCE },
         reduce_on_interrupt = 15,
-        category = category.SILENCE
+        category = category.SILENCE,
+        baseline = true,
     },
     -- Disrupt
     -- Faerie Swarm
@@ -436,7 +451,8 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.GUARDIAN, specID.FERAL },
         charges = {[specID.GUARDIAN] = true},
-        category = category.DEFENSIVE
+        category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Ironbark
     [102342] = {
@@ -970,6 +986,7 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.KNOCKBACK,
         cooldown = 30,
+        baseline = true,
     },
     -- Frost Nova
     [122] = {
