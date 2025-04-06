@@ -2142,7 +2142,7 @@ addon.SpellData = {
         baseline = true, -- technically a talent, but always picked
     },
         -- Berserker Shout
-        [210872] = {
+        [384100] = {
             parent = 18499,
             use_parent_icon = true,
         },
