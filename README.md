@@ -87,7 +87,7 @@ Similar to OmniBar but much more accurate, incorporating all cooldown reduction 
 - Calculates ability charges more accurately, and displays them with a clear daily quest icon texture
 - Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
 
-It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter.
+It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
 
 ![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
 
@@ -100,6 +100,12 @@ It provides the "Show unused icons" option like OmniBar, but non-baseline abilit
 ![image](https://github.com/user-attachments/assets/3c0b5a4b-00e8-470c-ac11-b5a97b63119c)
 
 (Clear indicator when another charge of Death Grip is available)
+
+![Unused icon alpha](https://github.com/user-attachments/assets/f85b4bdd-123b-4d3d-a784-f600f3d3d6d3) ![Used icon alpha](https://github.com/user-attachments/assets/2a4c82f6-2d4c-43c8-9ab6-082904f3cfd3)
+
+(Icons fade out when off cooldown vs. fade out when on cooldown)
+
+
 
 ## Aura filter on enemy nameplates
 ![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
