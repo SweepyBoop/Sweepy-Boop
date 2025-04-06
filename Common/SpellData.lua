@@ -986,6 +986,7 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.KNOCKBACK,
         cooldown = 30,
+        baseline = true,
     },
     -- Frost Nova
     [122] = {
