@@ -135,8 +135,25 @@ addon.GetArenaFrameOptions = function(order)
                                 desc = "Size of arena defensive cooldown icons",
                             },
 
-                            unusedIconAlpha = {
+                            arenaCooldownTrackerIconPadding = {
                                 order = 11,
+                                type = "range",
+                                width = 0.75,
+                                min = 0,
+                                max = 5,
+                                step = 1,
+                                name = "Padding",
+                                desc = "Space between icons",
+                            },
+
+                            newline = {
+                                order = 12,
+                                type = "description",
+                                name = "",
+                            },
+
+                            unusedIconAlpha = {
+                                order = 13,
                                 type = "range",
                                 width = 0.8,
                                 isPercent = true,
@@ -150,7 +167,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             usedIconAlpha = {
-                                order = 12,
+                                order = 14,
                                 type = "range",
                                 width = 0.8,
                                 isPercent = true,
@@ -164,13 +181,13 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             headerPosition = {
-                                order = 13,
+                                order = 15,
                                 type = "header",
                                 name = "Positioning",
                             },
 
                             arenaCooldownGrowDirection = {
-                                order = 14,
+                                order = 16,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -183,7 +200,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetX = {
-                                order = 15,
+                                order = 17,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -197,7 +214,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetY = {
-                                order = 16,
+                                order = 18,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,
@@ -213,7 +230,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             headerPosition2 = {
-                                order = 17,
+                                order = 19,
                                 type = "header",
                                 name = "Secondary bar positioning",
                                 hidden = function()
@@ -222,7 +239,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownGrowDirectionSecondary = {
-                                order = 18,
+                                order = 20,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -238,7 +255,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetXSecondary = {
-                                order = 19,
+                                order = 21,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -255,7 +272,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetYSecondary = {
-                                order = 20,
+                                order = 22,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,
@@ -403,14 +420,25 @@ addon.GetArenaFrameOptions = function(order)
                                 desc = "Size of arena defensive cooldown icons",
                             },
 
-                            newline = {
+                            interruptBarIconPadding = {
                                 order = 12,
+                                type = "range",
+                                width = 0.75,
+                                min = 0,
+                                max = 5,
+                                step = 1,
+                                name = "Padding",
+                                desc = "Space between icons",
+                            },
+
+                            newline = {
+                                order = 13,
                                 type = "description",
                                 name = "",
                             },
 
                             interruptBarOffsetX = {
-                                order = 13,
+                                order = 14,
                                 type = "range",
                                 min = -2500,
                                 max = 2500,
@@ -424,7 +452,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             interruptBarOffsetY = {
-                                order = 14,
+                                order = 15,
                                 type = "range",
                                 min = -1500,
                                 max = 1500,
@@ -438,7 +466,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             interruptBarUnusedIconAlpha = {
-                                order = 15,
+                                order = 16,
                                 type = "range",
                                 isPercent = true,
                                 min = 0.5,
@@ -450,7 +478,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             interruptBarUsedIconAlpha = {
-                                order = 16,
+                                order = 17,
                                 type = "range",
                                 isPercent = true,
                                 min = 0.5,
