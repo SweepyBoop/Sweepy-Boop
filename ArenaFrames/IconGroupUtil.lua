@@ -281,6 +281,7 @@ addon.IconGroup_Wipe = function (group)
         if icon.Count then
             icon.Count:Hide(); -- Clear state from previous show
         end
+        icon.started = nil;
         icon:Hide();
     end
 

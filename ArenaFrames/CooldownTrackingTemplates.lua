@@ -92,7 +92,7 @@ addon.StartCooldownTrackingIcon = function (icon)
         table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
-    if icon:IsShown() then
+    if icon:IsShown() and icon.started then
         if spell.opt_lower_cooldown then
             info.cooldown = math.min(info.cooldown, spell.opt_lower_cooldown);
         end

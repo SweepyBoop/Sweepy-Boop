@@ -94,7 +94,7 @@ addon.StartBurstIcon = function (icon)
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
         -- Update opt_lower_cooldown
-        if icon:IsShown() and spell.opt_lower_cooldown then
+        if icon:IsShown() and icon.started and spell.opt_lower_cooldown then
             info.cooldown = spell.opt_lower_cooldown;
         end
 

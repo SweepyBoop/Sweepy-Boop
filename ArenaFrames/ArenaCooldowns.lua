@@ -358,6 +358,8 @@ local function StartIcon(icon)
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
         addon.StartCooldownTrackingIcon(icon);
     end
+
+    icon.started = true;
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
