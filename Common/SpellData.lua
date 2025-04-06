@@ -1878,6 +1878,7 @@ addon.SpellData = {
         category = category.BURST,
         duration = 20, -- confirm early dismiss if killed
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     },
     -- Destruction
     -- Summon Infernal
@@ -1887,6 +1888,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         duration = 30,
+        baseline = true,
     },
     -- Demonology
     -- Summon Demonic Tyrant
@@ -1896,6 +1898,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 60,
         duration = 15,
+        baseline = true,
     },
     -- Grimoire: Felguard
     [111898] = {
