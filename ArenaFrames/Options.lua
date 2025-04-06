@@ -144,6 +144,11 @@ addon.GetArenaFrameOptions = function(order)
                                 step = 1,
                                 name = "Padding",
                                 desc = "Space between icons",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionArenaCooldownTracker();
+                                end
                             },
 
                             newline = {
@@ -429,6 +434,11 @@ addon.GetArenaFrameOptions = function(order)
                                 step = 1,
                                 name = "Padding",
                                 desc = "Space between icons",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionArenaInterruptBar();
+                                end
                             },
 
                             newline = {
