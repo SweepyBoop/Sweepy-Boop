@@ -96,6 +96,9 @@ addon.RefreshCooldownTimer = function (self, finish)
         icon.cooldown:SetCooldown(start, duration);
         if icon.Count then
             icon.Count:SetShown(stack);
+            if stack then -- There is a charge available, treat as unused (off cooldown) icon
+                addon.SetUnusedIconAlpha(icon);
+            end
         end
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
@@ -116,26 +119,55 @@ addon.FinishCooldownTimer = function (self)
     addon.RefreshCooldownTimer(self, true);
 end
 
+addon.SetUnusedIconAlpha = function (icon)
+    local unusedIconAlpha;
+    local config = SweepyBoop.db.profile.arenaFrames;
+    if icon.isInterruptBar then
+        if config.interruptBarShowUnused then
+            unusedIconAlpha = config.interruptBarUnusedIconAlpha;
+        else
+            unusedIconAlpha = 1;
+        end
+    else
+        if config.showUnusedIcons then
+            unusedIconAlpha = config.unusedIconAlpha;
+        else
+            unusedIconAlpha = 1;
+        end
+    end
+    icon:SetAlpha(unusedIconAlpha);
+end
+
+addon.SetUsedIconAlpha = function (icon)
+    if icon.Count and icon.Count:IsShown() then
+        -- There is still a charge available, keep unused alpha
+        addon.SetUnusedIconAlpha(icon);
+        return;
+    end
+
+    local usedIconAlpha;
+    local config = SweepyBoop.db.profile.arenaFrames;
+    if icon.isInterruptBar then
+        if config.interruptBarShowUnused then
+            usedIconAlpha = config.interruptBarUsedIconAlpha;
+        else
+            usedIconAlpha = 1;
+        end
+    else
+        if config.showUnusedIcons then
+            usedIconAlpha = config.usedIconAlpha;
+        else
+            usedIconAlpha = 1;
+        end
+    end
+    icon:SetAlpha(usedIconAlpha);
+end
+
 addon.OnDurationTimerFinished = function(self)
     local icon = self:GetParent();
     addon.HideOverlayGlow(icon);
     if icon.cooldown then
-        local usedIconAlpha;
-        local config = SweepyBoop.db.profile.arenaFrames;
-        if icon.isInterruptBar then
-            if config.interruptBarShowUnused then
-                usedIconAlpha = config.interruptBarUsedIconAlpha;
-            else
-                usedIconAlpha = 1;
-            end
-        else
-            if config.showUnusedIcons then
-                usedIconAlpha = config.usedIconAlpha;
-            else
-                usedIconAlpha = 1;
-            end
-        end
-        icon:SetAlpha(usedIconAlpha);
+        addon.SetUsedIconAlpha(icon);
         icon.cooldown:Show();
     else
         if icon.group then

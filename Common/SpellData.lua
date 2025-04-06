@@ -277,6 +277,21 @@ addon.SpellData = {
         category = category.STUN,
         baseline = true,
     },
+    -- Others
+    -- Consume Magic
+    [278326] = {
+        cooldown = 10,
+        class = addon.DEMONHUNTER,
+        category = category.OTHERS,
+        baseline = true,
+    },
+    -- Vengeful Retreat
+    [198793] = {
+        class = addon.DEMONHUNTER,
+        category = category.OTHERS,
+        cooldown = { default = 20, [specID.VENGEANCE] = 25 },
+        baseline = true,
+    },
 
     -- Druid
     -- Convoke the Spirits
@@ -446,6 +461,29 @@ addon.SpellData = {
         category = category.IMMUNITY,
         cooldown = 90,
     },
+    -- Nature's Swiftness
+    [132158] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.HEAL,
+        cooldown = 60,
+        charges = true,
+        baseline = true,
+    },
+    -- Overgrowth
+    [203651] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.HEAL,
+        cooldown = 60,
+    },
+    -- Tranquility
+    [740] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.HEAL,
+        cooldown = 180,
+    },
     -- Dispel
     -- Nature's Cure
     [88423] = {
@@ -534,6 +572,34 @@ addon.SpellData = {
     -- Cauterizing Flame
     [374251] = {
         class = addon.EVOKER,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Nullifying Shroud
+    [378464] = {
+        class = addon.EVOKER,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+        baseline = true,
+    },
+    -- Time Stop
+    [378441] = {
+        class = addon.EVOKER,
+        category = category.DEFENSIVE,
+        cooldown = 45,
+        priority = addon.SPELLPRIORITY.HIGH,
+    },
+    -- Dream Projection
+    [377509] = {
+        class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Time Dilation
+    [357170] = {
+        class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
         category = category.DEFENSIVE,
         cooldown = 60,
     },
@@ -631,6 +697,12 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 25,
     },
+    -- Tar Trap
+    [187698] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 25,
+    },
     -- Crowd Control
     -- Intimidation
     [19577] = {
@@ -644,6 +716,27 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.CROWDCONTROL,
         baseline = true,
+    },
+    -- Binding Shot
+    [109248] = {
+        cooldown = 45,
+        class = addon.HUNTER,
+        category = category.STUN,
+        baseline = true,
+    },
+    -- Scatter Shot
+    [213691] = {
+        cooldown = 30,
+        class = addon.HUNTER,
+        category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Chimaeral Sting
+    [356719] = {
+        cooldown = 60,
+        class = addon.HUNTER,
+        category = category.SILENCE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Defensive
     -- Survival of the Fittest
@@ -689,6 +782,22 @@ addon.SpellData = {
         class = addon.HUNTER,
         spec = { specID.SURVIVAL },
         category = category.INTERRUPT,
+        baseline = true,
+    },
+    -- Others
+    -- Master's Call
+    [53271] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 45,
+        trackPet = true,
+    },
+    -- Harpoon
+    [190925] = {
+        class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
+        category = category.OTHERS,
+        cooldown = 20,
         baseline = true,
     },
 
@@ -787,6 +896,33 @@ addon.SpellData = {
         trackEvent = addon.SPELL_AURA_APPLIED,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Blazing Barrier
+    [235313] = {
+        class = addon.MAGE,
+        spec = { specID.FIRE },
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        index = addon.SPELLPRIORITY.LOW,
+        baseline = true,
+    },
+    -- Prismatic Barrier
+    [235450] = {
+        class = addon.MAGE,
+        spec = { specID.ARCANE },
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        index = addon.SPELLPRIORITY.LOW,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Ice Barrier
+    [11426] = {
+        class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        index = addon.SPELLPRIORITY.LOW,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Crowd Control
     -- Ring of Frost
     [113724] = {
@@ -828,6 +964,13 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.KNOCKBACK,
         cooldown = 30,
+    },
+    -- Frost Nova
+    [122] = {
+        class = addon.MAGE,
+        category = category.OTHERS,
+        cooldown = 30,
+        baseline = true, -- technically a talent, but always picked
     },
 
     -- Monk
@@ -946,12 +1089,27 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         baseline = true,
     },
+    -- Zen Focus Tea
+    [209584] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 30,
+        trackEvent = addon.SPELL_AURA_APPLIED,
+    },
     -- Disrupt
     -- Grapple Weapon
     [233759] = {
         class = addon.MONK,
         category = category.OTHERS,
         cooldown = 45,
+    },
+    -- Tiger's Lust
+    [116841] = {
+        class = addon.MONK,
+        category = category.OTHERS,
+        cooldown = 30,
+        baseline = true,
     },
     -- Dispel
     -- Detox
@@ -1065,6 +1223,13 @@ addon.SpellData = {
         spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
     },
+    -- Searing Glare
+    [410126] = {
+        cooldown = 45,
+        class = addon.PALADIN,
+        spec = { specID.PROTECTION_PALADIN },
+        category = category.DEFENSIVE,
+    },
     -- Crowd Control
     -- Hammer of Justice
     [853] = {
@@ -1108,6 +1273,13 @@ addon.SpellData = {
             parent = 6940,
             cooldown = 105,
         },
+    -- Blessing of Freedom
+    [1044] = {
+        cooldown = 25,
+        class = addon.PALADIN,
+        category = category.OTHERS,
+        baseline = true,
+    },
     -- Dispel
     -- Cleanse
     [4987] = {
@@ -1289,6 +1461,13 @@ addon.SpellData = {
         cooldown = 600,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Divine Ascension
+    [328530] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
     -- Disrupt
     -- Holy Ward
     [213610] = {
@@ -1311,6 +1490,19 @@ addon.SpellData = {
         class = addon.PRIEST,
         category = category.OTHERS,
         baseline = true,
+    },
+    -- Leap of Faith
+    [73325] = {
+        cooldown = 60,
+        class = addon.PRIEST,
+        category = category.OTHERS,
+        baseline = true,
+    },
+    -- Thoughtsteal
+    [316262] = {
+        cooldown = 90,
+        class = addon.PRIEST,
+        category = category.OTHERS,
     },
 
     -- Rogue
@@ -1438,6 +1630,13 @@ addon.SpellData = {
         cooldown = 120,
         spec = { specID.SUBTLETY },
     },
+    -- Gouge
+    [1776] = {
+        cooldown = 25,
+        class = addon.ROGUE,
+        category = category.CROWDCONTROL,
+        baseline = true,
+    },
     -- Disrupt
     -- Shadowstep
     [36554] = {
@@ -1552,6 +1751,21 @@ addon.SpellData = {
         spec = { specID.RESTORATION_SHAMAN },
         baseline = true, -- technically a talent, but always picked
     },
+    -- Spirit Walk
+    [58875] = {
+        cooldown = 60,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Spirit Walker's Grace
+    [79206] = {
+        cooldown = 120,
+        opt_lower_cooldown = 90,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Burrow
     [409293] = {
         cooldown = 120,
@@ -1576,6 +1790,35 @@ addon.SpellData = {
         cooldown = 54,
         class = addon.SHAMAN,
         category = category.OTHERS
+    },
+    -- Thunderstorm
+    [51490] = {
+        cooldown = 30,
+        class = addon.SHAMAN,
+        category = category.KNOCKBACK,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Earthgrab Totem
+    [51485] = {
+        cooldown = 24,
+        class = addon.SHAMAN,
+        category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
+    },
+    -- Crowd Control
+    -- Hex
+    [51514] = {
+        cooldown = 30,
+        class = addon.SHAMAN,
+        category = category.CROWDCONTROL,
+        baseline = true,
+    },
+    -- Static Field Totem
+    [355580] = {
+        cooldown = 84,
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Dispel
     -- Purify Spirit
@@ -1646,6 +1889,13 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 60,
     },
+    -- Haunt
+    [48181] = {
+        class = addon.WARLOCK,
+        spec = { specID.AFFLICTION },
+        category = category.BURST,
+        cooldown = 15,
+    },
     -- Crowd Control
     -- Mortal Coil
     [6789] = {
@@ -1671,6 +1921,12 @@ addon.SpellData = {
         [119914] = {
             parent = 89766,
         },
+    -- Shadowfury
+    [30283] = {
+        cooldown = 60,
+        class = addon.WARLOCK,
+        category = category.STUN,
+    },
     -- Defensive
     -- Unending Resolve
     [104773] = {
@@ -1739,6 +1995,15 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.WARLOCK,
         category = category.OTHERS,
+    },
+    -- Others
+    -- Havoc
+    [80240] = {
+        class = addon.WARLOCK,
+        spec = { specID.DESTRUCTION },
+        category = category.OTHERS,
+        cooldown = 30,
+        baseline = true,
     },
 
     -- Warrior
@@ -1869,6 +2134,23 @@ addon.SpellData = {
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
     },
+    -- Berserker Rage
+    [18499] = {
+        cooldown = 60,
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
+        -- Berserker Shout
+        [384100] = {
+            parent = 18499,
+            use_parent_icon = true,
+        },
+        -- Berserker Roar
+        [1219201] = {
+            parent = 18499,
+            use_parent_icon = true,
+        },
 };
 
 addon.SpellResets = {

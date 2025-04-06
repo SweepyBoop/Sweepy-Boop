@@ -68,7 +68,7 @@ local function EnsureIcon(unitId, spellID, isInterruptBar, isSecondaryBar)
         if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
             iconSet[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, size, true);
         else
-            iconSet[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size, true);
+            iconSet[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, size);
         end
         iconSet[unitId][spellID].isInterruptBar = isInterruptBar;
         iconSet[unitId][spellID].isInterrupt = ( spellData[spellID].category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ); -- Solar Beam
@@ -358,6 +358,8 @@ local function StartIcon(icon)
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
         addon.StartCooldownTrackingIcon(icon);
     end
+
+    icon.started = true;
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
@@ -808,7 +810,7 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
                 if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
                     testIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
                 else
-                    testIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize, true);
+                    testIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
                 end
 
                 testIcons[unitId][spellID].isInterruptBar = isInterruptBar;
