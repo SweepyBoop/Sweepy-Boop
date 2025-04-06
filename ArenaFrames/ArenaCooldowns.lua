@@ -564,8 +564,12 @@ local function ProcessUnitAura(self, event, ...)
             if auraData then
                 local spellID = auraData.spellId;
                 local spell = spellData[spellID];
-                if spell and spell.extend and self.activeMap[self.unit .. "-" .. spellID] then
-                    addon.RefreshBurstDuration(self.activeMap[self.unit .. "-" .. spellID], auraData.duration, auraData.expirationTime);
+                if spell and spell.extend then
+                    local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
+                    local iconID = unitTarget .. "-" .. iconSpellID;
+                    if self.activeMap[iconID] then
+                        addon.RefreshBurstDuration(self.activeMap[iconID], auraData.duration, auraData.expirationTime);
+                    end
                 end
             end
         end
