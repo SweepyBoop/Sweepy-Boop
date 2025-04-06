@@ -151,6 +151,12 @@ addon.SpellData = {
         category = category.STUN,
         cooldown = 45,
     },
+    -- Dark Simulacrum
+    [77606] = {
+        class = addon.DEATHKNIGHT,
+        category = category.OTHERS,
+        cooldown = 20,
+    },
     -- Defensive
     -- Icebound Fortitude
     [48792] = {
