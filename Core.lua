@@ -119,6 +119,7 @@ local defaults = {
             arenaCooldownOffsetYSecondary = -35,
 
             arenaCooldownTrackerIconSize = 32,
+            arenaCooldownTrackerIconPadding = 2,
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
             showUnusedIcons = false,
@@ -131,6 +132,7 @@ local defaults = {
             interruptBarOffsetX = 0,
             interruptBarOffsetY = -150,
             interruptBarIconSize = 40,
+            interruptBarIconPadding = 2,
             interruptBarUnusedIconAlpha = 0.5,
             interruptBarUsedIconAlpha = 1,
             interruptBarShowUnused = false,
