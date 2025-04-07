@@ -1,8 +1,5 @@
 local _, addon = ...;
 
-local DEFENSIVE = addon.SPELLCATEGORY.DEFENSIVE;
-local INTERRUPT = addon.SPELLCATEGORY.INTERRUPT;
-
 addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
@@ -89,7 +86,7 @@ addon.IconGroup_Position = function(group)
         group.active[i]:ClearAllPoints();
         local columns;
         if separateRowForInterrupts then
-            if group.active[i].category == INTERRUPT then
+            if group.active[i].isInterrupt then
                 columns = interruptCount;
             else
                 columns = otherCount;
