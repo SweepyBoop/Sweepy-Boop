@@ -2117,6 +2117,14 @@ addon.SpellData = {
         category = category.INTERRUPT,
         baseline = true,
     },
+    -- Disrupting Shout
+    [386071] = {
+        cooldown = 90,
+        class = addon.WARRIOR,
+        spec = { specID.PROTECTION_WARRIOR },
+        category = category.INTERRUPT,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Storm Bolt
     [107570] = {
         cooldown = 28.5,
