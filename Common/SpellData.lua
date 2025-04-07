@@ -2255,23 +2255,26 @@ if addon.TEST_MODE then
     -- Mark of the Wild
     addon.SpellData[1126] = {
         class = addon.DRUID,
-        category = category.BURST,
+        category = category.INTERRUPT,
         duration = 8,
         cooldown = 30,
         index = addon.SPELLPRIORITY.HIGH,
+        baseline = true,
     };
     -- Regrowth
     addon.SpellData[8936] = {
         class = addon.DRUID,
-        category = category.BURST,
+        category = category.INTERRUPT,
         duration = 5,
         cooldown = 10,
+        baseline = true,
     };
     -- Rejuv
     addon.SpellData[774] = {
         class = addon.DRUID,
-        category = category.BURST,
+        category = category.DEFENSIVE,
         cooldown = 45,
+        baseline = true,
     };
     -- Wild Growth
     addon.SpellData[48438] = {
