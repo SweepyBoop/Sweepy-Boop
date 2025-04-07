@@ -77,8 +77,11 @@ addon.IconGroup_Position = function(group)
     local separateRowForInterrupts = group.isInterruptBar and SweepyBoop.db.profile.arenaFrames.separateRowForInterrupts;
     if separateRowForInterrupts then
         for i = 1, numActive do
-            interruptCount = interruptCount + ( group.active[i].isInterrupt and 1 or 0 );
-            otherCount = otherCount + ( ( not group.active[i].isInterrupt ) and 1 or 0 );
+            if group.active[i].isInterrupt then
+                interruptCount = interruptCount + 1;
+            else
+                otherCount = otherCount + 1;
+            end
         end
     end
 
