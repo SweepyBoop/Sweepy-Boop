@@ -430,9 +430,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
                 local icon = self.activeMap[unit .. "-" .. spellToReset];
                 if icon then
-                    print("Icon cooldown before reduction:", icon.timers[1].duration);
+                    --print("Icon cooldown before reduction:", icon.timers[1].duration);
                     ResetCooldown(icon, amount);
-                    print("Icon cooldown after reduction:", icon.timers[1].duration);
+                    --print("Icon cooldown after reduction:", icon.timers[1].duration);
                 end
             end
         end
