@@ -682,7 +682,7 @@ addon.SpellData = {
         baseline = true,
     },
     -- Oppressing Roar
-    [372048] = {
+    [406971] = {
         class = addon.EVOKER,
         category = category.OTHERS,
         cooldown = 120,
