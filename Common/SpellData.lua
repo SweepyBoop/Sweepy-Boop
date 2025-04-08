@@ -915,6 +915,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
         duration = 12,
+        baseline = true,
     },
     -- Interrupt
     -- Counterspell
