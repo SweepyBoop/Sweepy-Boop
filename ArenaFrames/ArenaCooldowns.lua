@@ -1038,7 +1038,8 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 elseif ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
                     shouldSetup = true;
                 elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
-                    shouldSetup = false;
+                    local matchState = C_PvP.GetActiveMatchState();
+                    shouldSetup = ( matchState < Enum.PvPMatchState.StartUp );
                 end
                 if shouldSetup then
                     SetupIconGroups(arenaTrackerEnabled, interruptBarEnabled);
