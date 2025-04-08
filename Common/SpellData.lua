@@ -297,6 +297,12 @@ addon.SpellData = {
         category = category.STUN,
         baseline = true,
     },
+    -- Sigil of Misery
+    [207684] = {
+        cooldown = 90,
+        class = addon.DEMONHUNTER,
+        category = category.CROWDCONTROL,
+    },
     -- Others
     -- Consume Magic
     [278326] = {
@@ -653,6 +659,21 @@ addon.SpellData = {
         trackEvent = addon.SPELL_EMPOWER_END,
         baseline = true,
     },
+    -- Rescue
+    [370665] = {
+        class = addon.EVOKER,
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Rewind
+    [363534] = {
+        class = addon.EVOKER,
+        category = category.OTHERS,
+        cooldown = 240,
+        opt_lower_cooldown = 180,
+        baseline = true,
+    },
 
     -- Hunter
     -- Beast Mastery
@@ -872,6 +893,14 @@ addon.SpellData = {
         duration = 15,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+    },
+    -- Touch of the Magi
+    [321507] = {
+        class = addon.MAGE,
+        spec = { specID.ARCANE },
+        category = category.BURST,
+        cooldown = 45,
+        duration = 12,
     },
     -- Interrupt
     -- Counterspell
@@ -1491,6 +1520,41 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
+    -- Ultimate Penitence
+    [421453] = {
+        class = addon.PRIEST,
+        spec = { specID.DISCIPLINE },
+        category = category.DEFENSIVE,
+        cooldown = 240,
+    },
+    -- Apotheosis
+    [200183] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Spirit of Redemption
+    [215769] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Evangelism
+    [472433] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
+    -- Ray of Hope
+    [197268] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
     -- Disrupt
     -- Holy Ward
     [213610] = {
@@ -1984,6 +2048,12 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Demonic Healthstone
+    [452930] = {
+        cooldown = 60,
+        class = addon.WARLOCK,
+        category = category.HEAL,
+    },
     -- Interrupt
     -- Spell Lock (Command Demon Ability)
     [19647] = {
@@ -2097,6 +2167,14 @@ addon.SpellData = {
         class = addon.WARRIOR,
         category = category.OTHERS,
     },
+    -- Bladestorm
+    [227847] = {
+        cooldown = 60,
+        class = addon.WARRIOR,
+        spec = { specID.ARMS, specID.FURY },
+        category = category.IMMUNITY,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Heroic Leap
     [6544] = {
         cooldown = 30,
@@ -2167,6 +2245,13 @@ addon.SpellData = {
         cooldown = 180,
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
+    },
+    -- Impending Victory
+    [202168] = {
+        cooldown = 25,
+        class = addon.WARRIOR,
+        category = category.HEAL,
+        baseline = true,
     },
     -- Berserker Rage
     [18499] = {
