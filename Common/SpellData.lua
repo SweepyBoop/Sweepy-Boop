@@ -2355,9 +2355,9 @@ addon.SpellResets = {
 };
 
 addon.SpellResetsAffectedByApotheosis = {
-    [14914] = true, -- Holy Fire
-    [585] = true, -- Smite
-    [132157] = true, -- Holy Nova
+    [14914] = 2, -- Holy Fire (nerfed in PvP)
+    [585] = 3, -- Smite
+    [132157] = 3, -- Holy Nova
 };
 
 if addon.TEST_MODE then

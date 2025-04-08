@@ -421,12 +421,11 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                 end
 
                 if addon.SpellResetsAffectedByApotheosis[spellId] and apotheosisUnits[unit] then
-                    amount = amount * 3;
+                    amount = amount * addon.SpellResetsAffectedByApotheosis[spellId];
                 end
 
                 local icon = self.activeMap[unit .. "-" .. spellToReset];
                 if icon then
-                    print("Resetting cooldown for", icon.unit, icon.spellID, amount);
                     ResetCooldown(icon, amount);
                 end
             end
