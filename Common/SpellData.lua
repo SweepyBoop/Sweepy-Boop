@@ -302,6 +302,7 @@ addon.SpellData = {
         cooldown = 90,
         class = addon.DEMONHUNTER,
         category = category.CROWDCONTROL,
+        baseline = true,
     },
     -- Others
     -- Consume Magic
