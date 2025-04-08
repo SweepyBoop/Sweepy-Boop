@@ -481,7 +481,8 @@ addon.SpellData = {
     [108238] = {
         cooldown = 90,
         class = addon.DRUID,
-        category = category.HEAL
+        category = category.HEAL,
+        baseline = true,
     },
     -- Ancient of Lore
     [473909] = {
