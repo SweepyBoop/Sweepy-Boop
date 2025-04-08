@@ -2335,16 +2335,16 @@ addon.SpellResets = {
     [200183] = {
         88625, -- Holy Word: Chastise
     },
-    -- Prayer of Mending
-    [33076] = {
-        { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
-    },
     -- Holy Fire
     [14914] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
-    -- Power Word: Life
-    [194384] = {
+    -- Smite
+    [585] = {
+        { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
+    },
+    -- Holy Nova
+    [132157] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
 
