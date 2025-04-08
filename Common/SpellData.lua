@@ -674,6 +674,20 @@ addon.SpellData = {
         opt_lower_cooldown = 180,
         baseline = true,
     },
+    -- Landslide
+    [358385] = {
+        class = addon.EVOKER,
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Oppressing Roar
+    [372048] = {
+        class = addon.EVOKER,
+        category = category.OTHERS,
+        cooldown = 120,
+        opt_lower_cooldown = 90,
+    },
 
     -- Hunter
     -- Beast Mastery
