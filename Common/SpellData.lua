@@ -1541,6 +1541,7 @@ addon.SpellData = {
         spec = { specID.DISCIPLINE },
         category = category.DEFENSIVE,
         cooldown = 240,
+        baseline = true,
     },
     -- Apotheosis
     [200183] = {
@@ -1548,6 +1549,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         cooldown = 120,
+        baseline = true,
     },
     -- Spirit of Redemption
     [215769] = {
@@ -1562,6 +1564,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.HEAL,
         cooldown = 90,
+        baseline = true,
     },
     -- Ray of Hope
     [197268] = {
