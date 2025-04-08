@@ -367,9 +367,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
 
-    if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
-        print(subEvent, spellName, spellId);
-    end
+    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
+    --     print(subEvent, spellName, spellId);
+    -- end
 
     -- Check resets by spell cast
     if ( subEvent == addon.SPELL_CAST_SUCCESS ) and unitGuidToId[sourceGUID] then
