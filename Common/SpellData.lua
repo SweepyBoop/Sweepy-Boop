@@ -1559,7 +1559,7 @@ addon.SpellData = {
     [472433] = {
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
-        category = category.DEFENSIVE,
+        category = category.HEAL,
         cooldown = 90,
     },
     -- Ray of Hope
