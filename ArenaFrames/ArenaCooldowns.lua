@@ -426,6 +426,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
                 local icon = self.activeMap[unit .. "-" .. spellToReset];
                 if icon then
+                    print("Resetting cooldown for", icon.unit, icon.spellID, amount);
                     ResetCooldown(icon, amount);
                 end
             end
