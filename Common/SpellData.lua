@@ -1561,7 +1561,7 @@ addon.SpellData = {
     -- Evangelism
     [472433] = {
         class = addon.PRIEST,
-        spec = { specID.HOLY_PRIEST },
+        spec = { specID.DISCIPLINE },
         category = category.HEAL,
         cooldown = 90,
         baseline = true,
