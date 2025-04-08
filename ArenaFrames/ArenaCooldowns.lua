@@ -422,10 +422,11 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
                 if addon.SpellResetsAffectedByApotheosis[spellId] and apotheosisUnits[unit] then
                     local now = GetTime();
-                    if ( now > apotheosisUnits[unit] ) then -- in case we didn't catch SPELL_AURA_REMOVED
+                    if ( now > apotheosisUnits[unit] ) then -- in case we didn't catch SPELL_AURA_REMOVED, use the expirationTime to uncheck the buff
                         apotheosisUnits[unit] = nil;
                     end
-                    amount = amount * addon.SpellResetsAffectedByApotheosis[spellId];
+                    local modifier = apotheosisUnits[unit] or 1;
+                    amount = amount * modifier;
                 end
 
                 local icon = self.activeMap[unit .. "-" .. spellToReset];
