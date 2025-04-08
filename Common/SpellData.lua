@@ -1454,7 +1454,7 @@ addon.SpellData = {
     },
     -- Holy Word: Chastise
     [88625] = {
-        cooldown = 60,
+        cooldown = 45, -- Baseline 45 Sec cooldown now?
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
         category = category.STUN,
@@ -2335,16 +2335,16 @@ addon.SpellResets = {
     [200183] = {
         88625, -- Holy Word: Chastise
     },
-    -- Prayer of Mending
-    [33076] = {
-        { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
-    },
     -- Holy Fire
     [14914] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
-    -- Power Word: Life
-    [194384] = {
+    -- Smite
+    [585] = {
+        { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
+    },
+    -- Holy Nova
+    [132157] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
 
@@ -2352,6 +2352,12 @@ addon.SpellResets = {
     [17] = {
         { spellID = 33206, amount = 3 }, -- Pain Suppression
     },
+};
+
+addon.SpellResetsAffectedByApotheosis = {
+    [14914] = 2, -- Holy Fire (nerfed in PvP)
+    [585] = 3, -- Smite
+    [132157] = 3, -- Holy Nova
 };
 
 if addon.TEST_MODE then
