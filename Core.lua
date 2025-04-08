@@ -244,6 +244,50 @@ if addon.PROJECT_MAINLINE then
     SetupInterrupts(defaults.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end
 
+function SweepyBoop:SetupBlizzardOptions()
+    local interfaceOptionPanel = CreateFrame("Frame", nil, UIParent);
+    interfaceOptionPanel.name = addonName;
+    interfaceOptionPanel:Hide();
+
+    interfaceOptionPanel:SetScript("OnShow", function(self)
+        local title = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
+        title:SetPoint("TOPLEFT", 16, -16);
+        title:SetText("SweepyBoop's PvP Helper");
+
+        local context = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall");
+        context:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8);
+        context:SetText("Type /sb or click the minimap icon to open the option panel.");
+
+        local open = CreateFrame("Button", nil, self, "UIPanelButtonTemplate");
+        open:SetText("Open Option Panel");
+        open:SetWidth(177);
+        open:SetHeight(24);
+        open:SetPoint("TOPLEFT", context, "BOTTOMLEFT", 0, -30);
+        open.tooltipText = "";
+        open:SetScript("OnClick", function()
+            LibStub("AceConfigDialog-3.0"):Open(addonName);
+        end)
+
+        self:SetScript("OnShow", nil);
+    end)
+
+    if Settings and Settings.RegisterCanvasLayoutCategory then
+        local category = Settings.RegisterCanvasLayoutCategory(interfaceOptionPanel, addonName);
+        Settings.RegisterAddOnCategory(category);
+    else
+        InterfaceOptions_AddCategory(interfaceOptionPanel);
+    end
+
+    SLASH_SweepyBoop1 = "/sb";
+    SlashCmdList.SweepyBoop = function(msg)
+        -- This opens the in-game options panel that is not moveable or resizable
+        -- if Settings and Settings.OpenToCategory then
+        --     Settings.OpenToCategory(SweepyBoop.categoryID);
+        -- end
+        LibStub("AceConfigDialog-3.0"):Open(addonName);
+    end
+end
+
 function SweepyBoop:OnInitialize()
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
@@ -265,7 +309,12 @@ function SweepyBoop:OnInitialize()
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
-    self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
+
+    -- We don't add settings UI to game Options as it freezes after we modify settings then try to invoke options
+    -- OmniBar has the same issue
+    --self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
+
+    self:SetupBlizzardOptions();
 
     icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
 
@@ -338,19 +387,4 @@ end
 
 function SweepyBoop:CheckDefaultInterrupts()
     SetupInterrupts(SweepyBoop.db.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
-end
-
-SLASH_SweepyBoop1 = "/sb"
-SlashCmdList.SweepyBoop = function(msg)
-    -- This opens the in-game options panel that is not moveable or resizable
-    -- if Settings and Settings.OpenToCategory then
-    --     Settings.OpenToCategory(SweepyBoop.categoryID);
-    -- end
-    LibStub("AceConfigDialog-3.0"):Open(addonName);
-    if SweepyBoopDB then
-        SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked or 0;
-        if ( SweepyBoopDB.slashCommandInvoked <= 3 ) then
-            SweepyBoopDB.slashCommandInvoked = SweepyBoopDB.slashCommandInvoked + 1;
-        end
-    end
 end
