@@ -421,12 +421,18 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                 end
 
                 if addon.SpellResetsAffectedByApotheosis[spellId] and apotheosisUnits[unit] then
+                    local now = GetTime();
+                    if ( now > apotheosisUnits[unit] ) then -- in case we didn't catch SPELL_AURA_REMOVED
+                        apotheosisUnits[unit] = nil;
+                    end
                     amount = amount * addon.SpellResetsAffectedByApotheosis[spellId];
                 end
 
                 local icon = self.activeMap[unit .. "-" .. spellToReset];
                 if icon then
+                    print("Icon cooldown before reduction:", icon.timers[1].duration);
                     ResetCooldown(icon, amount);
+                    print("Icon cooldown after reduction:", icon.timers[1].duration);
                 end
             end
         end
