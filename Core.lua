@@ -21,7 +21,7 @@ local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
         end
     end,
 })
-local icon = LibStub("LibDBIcon-1.0");
+local icon = LibStub("LibDBIcon-1.0", true);
 
 local options = {
     name = addon.addonTitle,
@@ -267,7 +267,9 @@ function SweepyBoop:OnInitialize()
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
     self.optionsFrame, self.categoryID = LibStub("AceConfigDialog-3.0"):AddToBlizOptions(addonName, addon.addonTitle); -- Can we open to the friendly class icons page instead of the first empty page?
 
-    icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
+    if icon then
+        icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
+    end
 
     -- Print message on first 3 logins with the addon enabled
     if SweepyBoopDB then
