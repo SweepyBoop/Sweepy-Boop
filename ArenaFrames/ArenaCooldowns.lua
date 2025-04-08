@@ -32,6 +32,9 @@ local iconGroups = {};
 local premadeIconsInterrupt = {};
 local eventFrame;
 
+-- Record expirationTime when buff is applied, in case we missed SPELL_AURA_REMOVED
+local apotheosisUnits = {};
+
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
     spell.priority = spell.index or addon.SPELLPRIORITY.DEFAULT;
@@ -367,6 +370,18 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
 
+    -- Apotheosis
+    if spellId == 200183 and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if subEvent == addon.SPELL_AURA_APPLIED then
+                apotheosisUnits[unit] = GetTime() + 20; -- 20s duration
+            else
+                apotheosisUnits[unit] = nil;
+            end
+        end
+    end
+
     -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
     --     print(subEvent, spellName, spellId);
     -- end
@@ -403,6 +418,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                     else
                         spellToReset = reset;
                     end
+                end
+
+                if addon.SpellResetsAffectedByApotheosis[spellId] and apotheosisUnits[unit] then
+                    amount = amount * 3;
                 end
 
                 local icon = self.activeMap[unit .. "-" .. spellToReset];
@@ -995,6 +1014,8 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
+
+                apotheosisUnits = {};
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();

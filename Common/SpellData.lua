@@ -1454,7 +1454,7 @@ addon.SpellData = {
     },
     -- Holy Word: Chastise
     [88625] = {
-        cooldown = 60,
+        cooldown = 45, -- Baseline 45 Sec cooldown now?
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
         category = category.STUN,
@@ -2352,6 +2352,12 @@ addon.SpellResets = {
     [17] = {
         { spellID = 33206, amount = 3 }, -- Pain Suppression
     },
+};
+
+addon.SpellResetsAffectedByApotheosis = {
+    [14914] = true, -- Holy Fire
+    [585] = true, -- Smite
+    [132157] = true, -- Holy Nova
 };
 
 if addon.TEST_MODE then
