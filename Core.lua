@@ -240,13 +240,13 @@ end
 
 function SweepyBoop:SetupBlizzardOptions()
     local interfaceOptionPanel = CreateFrame("Frame", nil, UIParent);
-    interfaceOptionPanel.name = addonName;
+    interfaceOptionPanel.name = addon.addonTitle;
     interfaceOptionPanel:Hide();
 
     interfaceOptionPanel:SetScript("OnShow", function(self)
         local title = self:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge");
         title:SetPoint("TOPLEFT", 16, -16);
-        title:SetText("SweepyBoop's PvP Helper");
+        title:SetText(addon.addonTitle);
 
         local context = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall");
         context:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8);
@@ -266,7 +266,7 @@ function SweepyBoop:SetupBlizzardOptions()
     end)
 
     if Settings and Settings.RegisterCanvasLayoutCategory then
-        local category = Settings.RegisterCanvasLayoutCategory(interfaceOptionPanel, addonName);
+        local category = Settings.RegisterCanvasLayoutCategory(interfaceOptionPanel, addon.addonTitle);
         Settings.RegisterAddOnCategory(category);
     else
         InterfaceOptions_AddCategory(interfaceOptionPanel);
