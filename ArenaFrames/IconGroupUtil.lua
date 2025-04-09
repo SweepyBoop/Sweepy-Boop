@@ -214,6 +214,8 @@ addon.IconGroup_Insert = function (group, icon, index)
 end
 
 addon.IconGroup_Remove = function (group, icon, fade)
+    icon.started = false;
+
     if fade then
         local config = SweepyBoop.db.profile.arenaFrames;
         local alpha;
@@ -223,11 +225,11 @@ addon.IconGroup_Remove = function (group, icon, fade)
             alpha = config.unusedIconAlpha;
         end
         icon:SetAlpha(alpha);
-    else
-        -- Hide icon first, then reposition, to avoid occlusion.
-        icon:Hide();
+        return;
     end
-    icon.started = nil;
+
+    -- Hide icon first, then reposition, to avoid occlusion.
+    icon:Hide();
 
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
