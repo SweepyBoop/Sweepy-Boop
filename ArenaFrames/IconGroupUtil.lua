@@ -223,11 +223,10 @@ addon.IconGroup_Remove = function (group, icon, fade)
             alpha = config.unusedIconAlpha;
         end
         icon:SetAlpha(alpha);
-        return;
+    else
+        -- Hide icon first, then reposition, to avoid occlusion.
+        icon:Hide();
     end
-
-    -- Hide icon first, then reposition, to avoid occlusion.
-    icon:Hide();
 
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
@@ -248,7 +247,9 @@ addon.IconGroup_Remove = function (group, icon, fade)
 
     if index then
         table.remove(active, index);
-        addon.IconGroup_Position(group);
+        if not fade then
+            addon.IconGroup_Position(group);
+        end
     end
 end
 
