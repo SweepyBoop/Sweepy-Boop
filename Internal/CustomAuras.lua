@@ -250,8 +250,9 @@ end
 CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- precognition
---CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
-local manaBar = PlayerFrame_GetManaBar();
+if addon.TEST_MODE then -- Test with Rejuvenation
+    CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
+end
 
 if ( class == addon.DRUID ) then
     CreateAuraIcon(5215, 64, "RIGHT", PlayerFrame.portrait, "LEFT", 0, 0, 0); -- Prowl
@@ -366,6 +367,10 @@ local personalDefensiveBuffs = {
     184364, -- Enraged Regeneration
     97463, -- Rallying Cry
 };
+if addon.TEST_MODE then
+    table.insert(teamDefensiveBuffs, 774); -- test with Rejuvenation
+    table.insert(personalDefensiveBuffs, 774); -- test with Rejuvenation
+end
 
 local function ShouldDisplayDefensiveBuff(icon, aura)
     if icon.external then
