@@ -254,32 +254,32 @@ CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil
 local manaBar = PlayerFrame_GetManaBar();
 
 if ( class == addon.DRUID ) then
-    CreateAuraIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32, 0); -- Prowl
+    CreateAuraIcon(5215, 64, "RIGHT", PlayerFrame.portrait, "LEFT", 0, 0, 0); -- Prowl
 
     -- Track at most 4 buffs with glowing icons, more than that it sort of becomes space station UI
 
     -- Common
-    CreateAuraIcon(319454, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, 0); -- Heart of the Wild
+    CreateAuraIcon(319454, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -70, 0); -- Heart of the Wild
     CreateAuraIcon(382912, 50, "TOP", MultiBarRightButton1, "BOTTOM", 0, 0, nil, nil, true); -- Well-Honed Instincts
 
     -- Restoration
-    CreateAuraIcon(392360, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 7, nil, nil, 117679); -- Reforestation
-    CreateAuraIcon(117679, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Tree of Life
-    CreateAuraIcon(473909, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 0); -- Ancient of Lore
+    CreateAuraIcon(392360, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 7, nil, nil, 117679); -- Reforestation
+    CreateAuraIcon(117679, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 0); -- Tree of Life
+    CreateAuraIcon(473909, 28, "TOPRIGHT", manaBar, "BOTTOM", -5, -35, 0); -- Ancient of Lore
 
-    CreateAuraIcon(426790, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, nil, nil, nil, 319454); -- Call of the Elder Druid
+    CreateAuraIcon(426790, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -70, nil, nil, nil, 319454); -- Call of the Elder Druid
 
     -- Feral
-    CreateAuraIcon(145152, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 3, nil); -- Blood Talons (max 3 stacks)
-    CreateAuraIcon(5217, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -100, 0); -- Tiger's Fury
-    CreateAuraIcon(106951, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Berserk
-    CreateAuraIcon(102543, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Incarnation: Avatar of Ashamane
+    CreateAuraIcon(145152, 28, "TOPRIGHT", manaBar, "BOTTOM", -5, -35, 3, nil); -- Blood Talons (max 3 stacks)
+    CreateAuraIcon(5217, 28, "TOPRIGHT", manaBar, "BOTTOM", -5, -70, 0); -- Tiger's Fury
+    CreateAuraIcon(106951, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 0); -- Berserk
+    CreateAuraIcon(102543, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 0); -- Incarnation: Avatar of Ashamane
 
     if addon.TEST_MODE then -- Test all 4 icons with Rejuvenation
-        CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -50, 0);
-        CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -100, 0);
-        CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -50, 0); -- test with Rejuvenation
-        CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -100, 0); -- test with Rejuvenation
+        CreateAuraIcon(774, 28, "TOPLEFT", manaBar, "BOTTOM", 0, -35, 0);
+        CreateAuraIcon(774, 28, "TOPLEFT", manaBar, "BOTTOM", 0, -65, 0);
+        CreateAuraIcon(774, 28, "TOPRIGHT", manaBar, "BOTTOM", 0, -35, 0); -- test with Rejuvenation
+        CreateAuraIcon(774, 28, "TOPRIGHT", manaBar, "BOTTOM", 0, -65, 0); -- test with Rejuvenation
     end
 elseif ( class == addon.PRIEST ) then
     --373181 Harsh Discipline
