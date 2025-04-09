@@ -2317,14 +2317,14 @@ addon.SpellResets = {
 
     -- Shifting Power
     [382445] = { -- Spell ID for Shifting Power each tick
-        { spellID = 31661, amount = 12 }, -- Dragon's Breath
-        { spellID = 113724, amount = 12 }, -- Ring of Frost
-        { spellID = 2139, amount = 12 }, -- Counterspell
-        { spellID = 45438, amount = 12 }, -- Ice Block
-        { spellID = 190319, amount = 12 }, -- Combustion
-        { spellID = 12472, amount = 12 }, -- Icy Veins
-        { spellID = 365350, amount = 12 }, -- Arcane Surge
-        { spellID = 157981, amount = 12 }, -- Blast Wave
+        { spellID = 31661, amount = 3 }, -- Dragon's Breath
+        { spellID = 113724, amount = 3 }, -- Ring of Frost
+        { spellID = 2139, amount = 3 }, -- Counterspell
+        { spellID = 45438, amount = 3 }, -- Ice Block
+        { spellID = 190319, amount = 3 }, -- Combustion
+        { spellID = 12472, amount = 3 }, -- Icy Veins
+        { spellID = 365350, amount = 3 }, -- Arcane Surge
+        { spellID = 157981, amount = 3 }, -- Blast Wave
     },
     -- Cold Snap
     [235219] = {
