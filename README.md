@@ -6,7 +6,7 @@ Features include:
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
 - Advanced interrupt bar that calculates all cd reduction, even including Mage 4s cd reduction on successful Counterspell!
 - Arena enemy cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, with cooldown reduction (e.g., Combustion from Kindling, Holy Word: Chastise from Smite / Holy Nova / Holy Fire, including extra reduction during Apotheosis)
-- Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
+- Raid frames: show real PvP aggro highlight on raid frames; Restoration Druid HoT helper to glow Lifebloom during pandemic window and fade out Cenarion Ward before the actual healing procs
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
 
 <span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for help and discussion on PvP addon / UI</strong></span>.
