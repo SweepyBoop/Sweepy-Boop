@@ -1301,7 +1301,7 @@ addon.SpellData = {
     -- Crowd Control
     -- Hammer of Justice
     [853] = {
-        cooldown = 45,
+        cooldown = 30,
         class = addon.PALADIN,
         category = category.STUN,
         baseline = true,
