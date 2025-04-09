@@ -5,7 +5,7 @@ Features include:
 - Friendly player / pet icons: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
 - Advanced interrupt bar that calculates all cd reduction, even including Mage 4s cd reduction on successful Counterspell!
-- Arena offensive & defensive cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, factoring in cooldown reduction (such as combustion)
+- Arena enemy cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, factoring in cooldown reduction (such as Combustion, Holy Word: Chastise including extra reduction during Apotheosis)
 - Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
 
