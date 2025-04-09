@@ -1296,7 +1296,6 @@ addon.SpellData = {
     [410126] = {
         cooldown = 45,
         class = addon.PALADIN,
-        spec = { specID.PROTECTION_PALADIN },
         category = category.DEFENSIVE,
     },
     -- Crowd Control
