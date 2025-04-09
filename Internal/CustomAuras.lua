@@ -266,7 +266,7 @@ if ( class == addon.DRUID ) then
     -- Restoration
     CreateAuraIcon(392360, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 7, nil, nil, 117679); -- Reforestation
     CreateAuraIcon(117679, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Tree of Life
-    CreateAuraIcon(473909, 32, "TOPRIGHT", manaBar, "BOTTOM", -5, -35, 0); -- Ancient of Lore
+    CreateAuraIcon(473909, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Ancient of Lore
 
     
 
