@@ -97,6 +97,10 @@ It provides the "Show unused icons" option like OmniBar, but non-baseline abilit
 
 (Counterspell landed, cooldown becomes 20 Sec!)
 
+![shifting](https://github.com/user-attachments/assets/b77eb7a2-b5d3-4490-9f60-e132d9840a95)
+
+(Shifting Power cooldown reduction, accurate even if Shifting Power was interrupted!)
+
 ![image](https://github.com/user-attachments/assets/3c0b5a4b-00e8-470c-ac11-b5a97b63119c)
 
 (Clear indicator when another charge of Death Grip is available)
