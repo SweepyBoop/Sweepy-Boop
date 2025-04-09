@@ -2316,7 +2316,7 @@ addon.SpellResets = {
     },
 
     -- Shifting Power
-    [382440] = {
+    [382445] = { -- Spell ID for Shifting Power each tick
         { spellID = 31661, amount = 12 }, -- Dragon's Breath
         { spellID = 113724, amount = 12 }, -- Ring of Frost
         { spellID = 2139, amount = 12 }, -- Counterspell
