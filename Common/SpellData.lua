@@ -2315,17 +2315,6 @@ addon.SpellResets = {
         { spellID = 19574, amount = 12 }, -- Bestial Wrath
     },
 
-    -- Shifting Power
-    [382445] = { -- Spell ID for Shifting Power each tick
-        { spellID = 31661, amount = 3 }, -- Dragon's Breath
-        { spellID = 113724, amount = 3 }, -- Ring of Frost
-        { spellID = 2139, amount = 3 }, -- Counterspell
-        { spellID = 45438, amount = 3 }, -- Ice Block
-        { spellID = 190319, amount = 3 }, -- Combustion
-        { spellID = 12472, amount = 3 }, -- Icy Veins
-        { spellID = 365350, amount = 3 }, -- Arcane Surge
-        { spellID = 157981, amount = 3 }, -- Blast Wave
-    },
     -- Cold Snap
     [235219] = {
         45438, -- Ice Block
@@ -2353,6 +2342,15 @@ addon.SpellResets = {
         { spellID = 33206, amount = 3 }, -- Pain Suppression
     },
 };
+
+addon.SpellResets[382445] = {}; -- Shifting Power each tick
+-- Reduce each Mage spell by 3 Sec
+-- Fill the entries programatically from addon.Spells
+for spellID, spell in pairs(addon.SpellData) do
+    if spell.class == addon.MAGE then
+        table.insert(addon.SpellResets[382445], { spellID = spellID, amount = 3 });
+    end
+end
 
 addon.SpellResetsAffectedByApotheosis = {
     [14914] = 2, -- Holy Fire (nerfed in PvP)
