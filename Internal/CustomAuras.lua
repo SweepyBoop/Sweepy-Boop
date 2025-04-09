@@ -259,33 +259,34 @@ if ( class == addon.DRUID ) then
     -- Track at most 4 buffs with glowing icons, more than that it sort of becomes space station UI
 
     -- Common
-    CreateAuraIcon(319454, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -70, 0); -- Heart of the Wild
+    CreateAuraIcon(319454, 32, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0); -- Heart of the Wild
+    CreateAuraIcon(426790, 32, "BOTTOM", MultiBarBottomRightButton6, "TOP", 0, 5, nil, nil, nil, 319454); -- Call of the Elder Druid
     CreateAuraIcon(382912, 50, "TOP", MultiBarRightButton1, "BOTTOM", 0, 0, nil, nil, true); -- Well-Honed Instincts
 
     -- Restoration
-    CreateAuraIcon(392360, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 7, nil, nil, 117679); -- Reforestation
-    CreateAuraIcon(117679, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 0); -- Tree of Life
-    CreateAuraIcon(473909, 28, "TOPRIGHT", manaBar, "BOTTOM", -5, -35, 0); -- Ancient of Lore
+    CreateAuraIcon(392360, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 7, nil, nil, 117679); -- Reforestation
+    CreateAuraIcon(117679, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Tree of Life
+    CreateAuraIcon(473909, 32, "TOPRIGHT", manaBar, "BOTTOM", -5, -35, 0); -- Ancient of Lore
 
-    CreateAuraIcon(426790, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -70, nil, nil, nil, 319454); -- Call of the Elder Druid
+    
 
     -- Feral
-    CreateAuraIcon(145152, 28, "TOPRIGHT", manaBar, "BOTTOM", -5, -35, 3, nil); -- Blood Talons (max 3 stacks)
-    CreateAuraIcon(5217, 28, "TOPRIGHT", manaBar, "BOTTOM", -5, -70, 0); -- Tiger's Fury
-    CreateAuraIcon(106951, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 0); -- Berserk
-    CreateAuraIcon(102543, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 0); -- Incarnation: Avatar of Ashamane
+    CreateAuraIcon(145152, 32, "BOTTOM", MultiBarBottomRightButton2, "TOP", 0, 5, 3, nil); -- Blood Talons (max 3 stacks)
+    CreateAuraIcon(5217, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Tiger's Fury
+    CreateAuraIcon(106951, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0); -- Berserk
+    CreateAuraIcon(102543, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0); -- Incarnation: Avatar of Ashamane
 
     if addon.TEST_MODE then -- Test all 4 icons with Rejuvenation
-        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0);
-        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0);
-        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0);
-        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton6, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton6, "TOP", 0, 5, 0);
     end
 elseif ( class == addon.PRIEST ) then
     --373181 Harsh Discipline
-    CreateAuraIcon(428933, 40, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 0, 3, nil, nil, nil, nil, 186723); -- Premonition of Insight
-    CreateAuraIcon(428930, 40, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 0, 0, nil, nil, nil, nil, 194509); -- Premonition of Piety
-    CreateAuraIcon(428934, 40, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 0, 0, nil, nil, nil, nil, 200390); -- Premonition of Solace
+    CreateAuraIcon(428933, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 3, nil, nil, nil, nil, 186723); -- Premonition of Insight
+    CreateAuraIcon(428930, 32, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0, nil, nil, nil, nil, 194509); -- Premonition of Piety
+    CreateAuraIcon(428934, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0, nil, nil, nil, nil, 200390); -- Premonition of Solace
 elseif ( class == addon.PALADIN ) then
     --247676 Aura of Reckoning
     --31884 Avenging Wrath
