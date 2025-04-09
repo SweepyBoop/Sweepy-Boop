@@ -248,9 +248,7 @@ addon.IconGroup_Remove = function (group, icon, fade)
 
     if index then
         table.remove(active, index);
-        if not fade then
-            addon.IconGroup_Position(group);
-        end
+        addon.IconGroup_Position(group);
     end
 end
 
