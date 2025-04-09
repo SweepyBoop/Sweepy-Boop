@@ -276,10 +276,10 @@ if ( class == addon.DRUID ) then
     CreateAuraIcon(102543, 28, "TOPLEFT", manaBar, "BOTTOM", 5, -35, 0); -- Incarnation: Avatar of Ashamane
 
     if addon.TEST_MODE then -- Test all 4 icons with Rejuvenation
-        CreateAuraIcon(774, 28, "TOPLEFT", manaBar, "BOTTOM", 0, -35, 0);
-        CreateAuraIcon(774, 28, "TOPLEFT", manaBar, "BOTTOM", 0, -65, 0);
-        CreateAuraIcon(774, 28, "TOPRIGHT", manaBar, "BOTTOM", 0, -35, 0); -- test with Rejuvenation
-        CreateAuraIcon(774, 28, "TOPRIGHT", manaBar, "BOTTOM", 0, -65, 0); -- test with Rejuvenation
+        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 28, "BOTTOM", MultiBarBottomRightButton6, "TOP", 0, 5, 0);
     end
 elseif ( class == addon.PRIEST ) then
     --373181 Harsh Discipline
