@@ -227,6 +227,7 @@ addon.IconGroup_Remove = function (group, icon, fade)
         -- Hide icon first, then reposition, to avoid occlusion.
         icon:Hide();
     end
+    icon.started = nil;
 
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
