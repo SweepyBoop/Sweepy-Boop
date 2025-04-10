@@ -34,6 +34,7 @@ local eventFrame;
 
 -- Record expirationTime when buff is applied, in case we missed SPELL_AURA_REMOVED
 local apotheosisUnits = {};
+local guardianSpiritSaved = {};
 
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
@@ -341,7 +342,9 @@ local function IsCastByPet(guid)
     end
 end
 
-local function ResetCooldown(icon, amount, internalCooldown)
+local function ResetCooldown(icon, amount, internalCooldown, resetTo) -- if resetTo is set, reset duration to amount, instead of reduce by amount
+    if ( not icon.started ) then return end
+
     if icon.template == addon.ICON_TEMPLATE.GLOW then
         addon.ResetIconCooldown(icon, amount);
 
@@ -351,7 +354,7 @@ local function ResetCooldown(icon, amount, internalCooldown)
             icon.cooldown:Hide();
         end
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
-        addon.ResetCooldownTrackingCooldown(icon, amount, internalCooldown);
+        addon.ResetCooldownTrackingCooldown(icon, amount, internalCooldown, resetTo);
     end
 end
 
@@ -366,6 +369,10 @@ local function StartIcon(icon)
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
+    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
+    --     print(subEvent, spellName, spellId);
+    -- end
+
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
@@ -382,9 +389,31 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
     end
 
-    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
-    --     print(subEvent, spellName, spellId);
-    -- end
+    -- Guardian Spirit saved their teammate thus should be put on a longer cooldown (+120s)
+    if ( spellId == 48153 ) and ( subEvent == addon.SPELL_HEAL ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            guardianSpiritSaved[unit] = true;
+        end
+
+        return;
+    end
+    -- Now check if we need to reduce Guardian Spirit cooldown
+    if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( spellId == 47788 ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if ( not guardianSpiritSaved[unit] ) then
+                local icon = self.activeMap[unit .. "-" .. spellId];
+                if icon then
+                    ResetCooldown(icon, 72, nil, true); -- reduce CD to 1 min + 12 Sec full duration, not reducing by a fixed amount
+                end
+            end
+
+            guardianSpiritSaved[unit] = nil;
+        end
+
+        return;
+    end
 
     -- Check resets by spell cast
     if ( subEvent == addon.SPELL_CAST_SUCCESS ) and unitGuidToId[sourceGUID] then
@@ -1023,6 +1052,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
 
                 apotheosisUnits = {};
+                guardianSpiritSaved = {};
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();

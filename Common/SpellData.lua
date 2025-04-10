@@ -1504,7 +1504,7 @@ addon.SpellData = {
     },
     -- Guardian Spirit
     [47788] = {
-        cooldown = 60, -- Assume it didn't proc
+        cooldown = 180, -- reduce to 1 min if it didn't proc
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,

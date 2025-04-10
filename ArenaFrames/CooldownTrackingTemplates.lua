@@ -130,7 +130,7 @@ end
 
 -- For spells with reduce_on_interrupt, set an internal cooldown so it doesn't reset cd multiple times
 -- This is basically only for solar beam
-addon.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
+addon.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown, resetTo)
     if internalCooldown then
         local now = GetTime();
         if icon.info.lastReset and ( now < icon.info.lastReset + internalCooldown ) then
@@ -140,5 +140,5 @@ addon.ResetCooldownTrackingCooldown = function (icon, amount, internalCooldown)
         icon.info.lastReset = now;
     end
 
-    addon.ResetIconCooldown(icon, amount);
+    addon.ResetIconCooldown(icon, amount, resetTo);
 end

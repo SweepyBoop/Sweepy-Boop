@@ -214,7 +214,7 @@ addon.IconGroup_Insert = function (group, icon, index)
 end
 
 addon.IconGroup_Remove = function (group, icon, fade)
-    icon.started = false;
+    icon.started = nil;
 
     if fade then
         local config = SweepyBoop.db.profile.arenaFrames;

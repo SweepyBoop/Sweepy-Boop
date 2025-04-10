@@ -203,7 +203,7 @@ addon.CheckTimerToStart = function (timers)
     return index;
 end
 
-addon.ResetIconCooldown = function (icon, amount)
+addon.ResetIconCooldown = function (icon, amount, resetTo)
     if ( not icon.cooldown ) then return end
 
     local timers = icon.timers;
@@ -227,7 +227,11 @@ addon.ResetIconCooldown = function (icon, amount)
         timers[index] = { start = 0, duration = 0, finish = 0};
         finish = true;
     else
-        timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - amount);
+        if resetTo then
+            timers[index].duration, timers[index].finish = amount, timers[index].start + amount;
+        else
+            timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - amount);
+        end
         if ( timers[index].duration < 0 ) then
             timers[index] = { start = 0, duration = 0, finish = 0};
             finish = true;
