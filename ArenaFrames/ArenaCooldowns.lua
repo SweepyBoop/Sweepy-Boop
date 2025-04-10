@@ -342,7 +342,7 @@ local function IsCastByPet(guid)
     end
 end
 
-local function ResetCooldown(icon, amount, internalCooldown)
+local function ResetCooldown(icon, amount, internalCooldown, resetTo) -- if resetTo is set, reset duration to amount, instead of reduce by amount
     if ( not icon.started ) then return end
 
     if icon.template == addon.ICON_TEMPLATE.GLOW then
@@ -354,7 +354,7 @@ local function ResetCooldown(icon, amount, internalCooldown)
             icon.cooldown:Hide();
         end
     elseif icon.template == addon.ICON_TEMPLATE.FLASH then
-        addon.ResetCooldownTrackingCooldown(icon, amount, internalCooldown);
+        addon.ResetCooldownTrackingCooldown(icon, amount, internalCooldown, resetTo);
     end
 end
 
@@ -405,7 +405,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             if ( not guardianSpiritSaved[unit] ) then
                 local icon = self.activeMap[unit .. "-" .. spellId];
                 if icon then
-                    ResetCooldown(icon, 120); -- reduce from 3 min to 1 min
+                    ResetCooldown(icon, 60, nil, true); -- reduce CD to 1min, not reducing by a fixed amount
                 end
             end
 
