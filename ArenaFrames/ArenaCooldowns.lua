@@ -156,13 +156,13 @@ local function GetSpecOverrides(spell, spec)
 
     overrides.spec = spec;
 
-    if type(spell.cooldown) == "table" then
+    if ( type(spell.cooldown) == "table" ) and spec then
         overrides.cooldown = spell.cooldown[spec] or spell.cooldown.default;
     else
         overrides.cooldown = spell.cooldown;
     end
 
-    if type(spell.charges) == "table" then
+    if ( type(spell.charges) == "table" ) and spec then
         overrides.charges = spell.charges[spec];
     else
         overrides.charges = spell.charges;
@@ -241,10 +241,10 @@ local function SetupIconGroup(group, unit, testIcons)
         if iconSet[unit][spellID] then
             if ( not spell.class ) or ( spell.class == class ) then
                 local enabled = true;
+                local spec = addon.GetSpecForPlayerOrArena(unit);
                 -- Does this spell filter by spec?
                 if spell.spec then
                     local specEnabled = false;
-                    local spec = addon.GetSpecForPlayerOrArena(unit);
 
                     if ( not spec ) then
                         specEnabled = true;
@@ -262,7 +262,7 @@ local function SetupIconGroup(group, unit, testIcons)
 
                 if enabled then
                     -- Reset dynamic info before populating to group
-                    iconSet[unit][spellID].info = GetSpecOverrides(spell);
+                    iconSet[unit][spellID].info = GetSpecOverrides(spell, spec);
                     -- The texture might have been set by use_parent_icon icons
                     iconSet[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], unit .. "-" .. spellID);
