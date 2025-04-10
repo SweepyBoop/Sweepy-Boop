@@ -34,6 +34,7 @@ local eventFrame;
 
 -- Record expirationTime when buff is applied, in case we missed SPELL_AURA_REMOVED
 local apotheosisUnits = {};
+local guardianSpiritSaved = {};
 
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
@@ -392,11 +393,24 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( spellId == 48153 ) and ( subEvent == addon.SPELL_HEAL ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
-            local icon = self.activeMap[unit .. "-" .. 47788];
-            if icon then
-                ResetCooldown(icon, -120); -- can we put negative value here
+            guardianSpiritSaved[unit] = true;
+        end
+
+        return;
+    end
+    -- Now check if we need to reduce Guardian Spirit cooldown
+    if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( spellId == 47788 ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if guardianSpiritSaved[unit] then
+                local icon = self.activeMap[unit .. "-" .. spellId];
+                if icon then
+                    ResetCooldown(icon, 120); -- reduce from 3 min to 1 min
+                end
+                guardianSpiritSaved[unit] = nil;
             end
         end
+
         return;
     end
 
@@ -1037,6 +1051,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
 
                 apotheosisUnits = {};
+                guardianSpiritSaved = {};
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
