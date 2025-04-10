@@ -777,6 +777,7 @@ local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
     end
 
     addon.IconGroup_Wipe(iconGroups[index]);
+    iconGroups[index].guardianSpiritSaved = {};
 end
 
 local function EnsureIconGroups()
@@ -1054,7 +1055,6 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
 
                 apotheosisUnits = {};
-                guardianSpiritSaved = {};
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
