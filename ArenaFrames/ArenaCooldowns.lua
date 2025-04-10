@@ -369,9 +369,9 @@ local function StartIcon(icon)
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
-    if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
-        print(subEvent, spellName, spellId);
-    end
+    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
+    --     print(subEvent, spellName, spellId);
+    -- end
 
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
@@ -402,13 +402,14 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( spellId == 47788 ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
-            if guardianSpiritSaved[unit] then
+            if ( not guardianSpiritSaved[unit] ) then
                 local icon = self.activeMap[unit .. "-" .. spellId];
                 if icon then
                     ResetCooldown(icon, 120); -- reduce from 3 min to 1 min
                 end
-                guardianSpiritSaved[unit] = nil;
             end
+
+            guardianSpiritSaved[unit] = nil;
         end
 
         return;
