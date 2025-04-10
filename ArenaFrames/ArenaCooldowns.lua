@@ -34,7 +34,6 @@ local eventFrame;
 
 -- Record expirationTime when buff is applied, in case we missed SPELL_AURA_REMOVED
 local apotheosisUnits = {};
-local guardianSpiritSaved = {};
 
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
@@ -370,7 +369,7 @@ end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
     -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
-    --     print(subEvent, spellName, spellId);
+    --     print(subEvent, spellName, spellId, sourceGUID, destGUID);
     -- end
 
     local unitGuidToId = ValidateUnit(self);
@@ -393,22 +392,23 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( spellId == 48153 ) and ( subEvent == addon.SPELL_HEAL ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
-            guardianSpiritSaved[unit] = true;
+            self.guardianSpiritSaved[unit] = true;
         end
 
         return;
     end
     -- Now check if we need to reduce Guardian Spirit cooldown
     -- SPELL_AURA_REMOVED is fired twice, causing GS to be reset even if the healing proc
+    -- Workaround by checking timestamp now vs. last aura removed
     if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( spellId == 47788 ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
-            if guardianSpiritSaved[unit] then
-                guardianSpiritSaved[unit] = nil;
+            if self.guardianSpiritSaved[unit] then
+                self.guardianSpiritSaved[unit] = nil;
             else
                 local icon = self.activeMap[unit .. "-" .. spellId];
                 if icon then
-                    ResetCooldown(icon, 72, nil, true); -- reduce CD to 1 min + 12 Sec full duration, not reducing by a fixed amount
+                    ResetCooldown(icon, 60, nil, true); -- reduce CD to 1 min starting from now, not reducing by a fixed amount
                 end
             end
         end
@@ -754,6 +754,7 @@ local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
         iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
         iconGroups[index].isInterruptBar = isInterruptBar;
         iconGroups[index].isSecondaryBar = isSecondaryBar;
+        iconGroups[index].guardianSpiritSaved = {}; -- Have to cache this per group
         -- SetPointOptions is set but can be updated if lastModified falls behind
         iconGroups[index].lastModified = SweepyBoop.db.profile.arenaFrames.lastModified;
     end
@@ -776,6 +777,7 @@ local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
     end
 
     addon.IconGroup_Wipe(iconGroups[index]);
+    iconGroups[index].guardianSpiritSaved = {};
 end
 
 local function EnsureIconGroups()
@@ -1053,7 +1055,6 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
 
                 apotheosisUnits = {};
-                guardianSpiritSaved = {};
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();

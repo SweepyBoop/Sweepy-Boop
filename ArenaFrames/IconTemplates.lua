@@ -228,7 +228,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         finish = true;
     else
         if resetTo then
-            timers[index].duration, timers[index].finish = amount, timers[index].start + amount;
+            timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
         else
             timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - amount);
         end
