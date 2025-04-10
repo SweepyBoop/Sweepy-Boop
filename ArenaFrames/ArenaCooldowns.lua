@@ -369,9 +369,9 @@ local function StartIcon(icon)
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
-    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
-    --     print(subEvent, spellName, spellId);
-    -- end
+    if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
+        print(subEvent, spellName, spellId);
+    end
 
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
