@@ -399,17 +399,18 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         return;
     end
     -- Now check if we need to reduce Guardian Spirit cooldown
+    -- SPELL_AURA_REMOVED is fired twice, causing GS to be reset even if the healing proc
     if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( spellId == 47788 ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
-            if ( not guardianSpiritSaved[unit] ) then
+            if guardianSpiritSaved[unit] then
+                guardianSpiritSaved[unit] = nil;
+            else
                 local icon = self.activeMap[unit .. "-" .. spellId];
                 if icon then
                     ResetCooldown(icon, 72, nil, true); -- reduce CD to 1 min + 12 Sec full duration, not reducing by a fixed amount
                 end
             end
-
-            guardianSpiritSaved[unit] = nil;
         end
 
         return;
