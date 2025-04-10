@@ -342,6 +342,8 @@ local function IsCastByPet(guid)
 end
 
 local function ResetCooldown(icon, amount, internalCooldown)
+    if ( not icon.started ) then return end
+
     if icon.template == addon.ICON_TEMPLATE.GLOW then
         addon.ResetIconCooldown(icon, amount);
 
@@ -366,6 +368,10 @@ local function StartIcon(icon)
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
+    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
+    --     print(subEvent, spellName, spellId);
+    -- end
+
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
@@ -382,9 +388,17 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
     end
 
-    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
-    --     print(subEvent, spellName, spellId);
-    -- end
+    -- Guardian Spirit saved their teammate thus should be put on a longer cooldown (+120s)
+    if ( spellId == 48153 ) and ( subEvent == addon.SPELL_HEAL ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            local icon = self.activeMap[unit .. "-" .. 47788];
+            if icon then
+                ResetCooldown(icon, -120); -- can we put negative value here
+            end
+        end
+        return;
+    end
 
     -- Check resets by spell cast
     if ( subEvent == addon.SPELL_CAST_SUCCESS ) and unitGuidToId[sourceGUID] then
