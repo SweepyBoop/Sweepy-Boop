@@ -408,7 +408,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             else
                 local icon = self.activeMap[unit .. "-" .. spellId];
                 if icon then
-                    ResetCooldown(icon, 72, nil, true); -- reduce CD to 1 min + 12 Sec full duration, not reducing by a fixed amount
+                    ResetCooldown(icon, 60, nil, true); -- reduce CD to 1 min starting from now, not reducing by a fixed amount
                 end
             end
         end
