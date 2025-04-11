@@ -36,13 +36,13 @@ function SweepyBoop:TestArena()
     self:TestArenaCooldownTracker();
 end
 
-function SweepyBoop:TestArenaStandaloneBars()
+function SweepyBoop:TestArenaStandalone()
     if IsInInstance() then
         addon.PRINT("Test mode can only be used outside instances");
         return;
     end
 
-    self:TestArenaStandaloneBarsInternal();
+    self:TestArenaStandaloneBars();
 end
 
 addon.GetArenaFrameOptions = function(order)
@@ -357,12 +357,14 @@ addon.GetArenaFrameOptions = function(order)
                         order = 1,
                         type = "execute",
                         name = "Test all",
+                        func = "TestArenaStandaloneBars",
                         width = "half",
                     },
                     hidetest = {
                         order = 2,
                         type = "execute",
                         name = "Hide all",
+                        func = "HideTestArenaStandaloneBars",
                         width = "half",
                     },
                 },

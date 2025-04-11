@@ -780,7 +780,7 @@ function SweepyBoop:RepositionArenaCooldownTracker(layoutIcons)
     end
 end
 
-function SweepyBoop:TestArenaInterruptBar()
+function SweepyBoop:TestArenaStandaloneBars()
     addon.IconGroup_Wipe(iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"]);
     SetupIconGroup(ICON_SET_ID.INTERRUPT, "player", true);
     local iconGroup = iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"];
@@ -803,19 +803,13 @@ function SweepyBoop:TestArenaInterruptBar()
     iconGroup:Show();
 end
 
-function SweepyBoop:HideTestArenaInterruptBar()
-    -- local iconGroup = iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"];
-    -- addon.IconGroup_Wipe(iconGroup);
-    -- if iconGroup then
-    --     iconGroup:Hide();
-    -- end
-end
-
-function SweepyBoop:RepositionArenaInterruptBar(layoutIcons)
-    RepositionExternalTestGroup(ICON_SET_ID.INTERRUPT .. "-player-test");
-
-    if layoutIcons then
-        addon.IconGroup_Position(iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"]);
+function SweepyBoop:HideTestArenaStandaloneBars()
+    for i = 1, 6 do
+        local iconGroup = iconGroups["Bar " .. i .. "-test"];
+        if iconGroup then
+            addon.IconGroup_Wipe(iconGroup);
+            iconGroup:Hide();
+        end
     end
 end
 
@@ -847,7 +841,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
-                SweepyBoop:HideTestArenaInterruptBar();
+                SweepyBoop:HideTestArenaStandaloneBars();
 
                 ClearAllIconGroups();
 
