@@ -332,7 +332,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
     local remainingTest = 8;
     for spellID, spell in pairs(spellData) do
         if ( not spell.use_parent_icon ) and ( ( not spell.class ) or ( spell.class == class ) ) then
-            local enabled;
+            local enabled = true;
             local spec = addon.GetSpecForPlayerOrArena(unit);
 
             -- For arena frame bars test groups, show priest abilities
