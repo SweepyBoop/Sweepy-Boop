@@ -300,18 +300,16 @@ local function GetIconConfig(iconSetID)
 end
 
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
-    local class = addon.GetClassForPlayerOrArena(unit);
-    if ( not class ) then return end
-
     local group = GetIconGroup(iconSetID, unit, isTestGroup);
     local config = SweepyBoop.db.profile.arenaFrames;
     local iconConfig = GetIconConfig(iconSetID);
 
+    local class = addon.GetClassForPlayerOrArena(unit);
+    local spec = addon.GetSpecForPlayerOrArena(unit);
     local remainingTest = 8;
     for spellID, spell in pairs(spellData) do
-        if ( not spell.use_parent_icon ) and ( ( not spell.class ) or ( spell.class == class ) ) then
-            local enabled = true;
-            local spec = addon.GetSpecForPlayerOrArena(unit);
+        if ( not spell.use_parent_icon ) then
+            local enabled = false;
 
             -- For arena frame bars test groups, show priest abilities
             if isTestGroup and ARENA_FRAME_BARS[iconSetID] then
@@ -326,7 +324,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                         enabled = (spell.category == addon.SPELLCATEGORY.DEFENSIVE );
                     end
                 end
-            else
+            elseif class and ( ( not spell.class ) or ( spell.class == class ) ) then
                 -- Fill enabled abilities, but for test groups, show 8 at most
                 if isTestGroup and remainingTest <= 0 then
                     -- We hit the limit of 8 icons
@@ -350,20 +348,20 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                         enabled = specEnabled;
                     end
                 end
+            end
 
-                if enabled then
-                    local icon = GetIcon(iconSetID, unit, spellID, isTestGroup);
-                    icon.info = GetSpecOverrides(spell, spec);
-                    -- The texture might have been set by use_parent_icon icons
-                    icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
-                    addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
-                    print("Populated icon", iconSetID, unit, spellID);
+            if enabled then
+                local icon = GetIcon(iconSetID, unit, spellID, isTestGroup);
+                icon.info = GetSpecOverrides(spell, spec);
+                -- The texture might have been set by use_parent_icon icons
+                icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
+                print("Populated icon", iconSetID, unit, spellID);
 
-                    local configSpellID = spell.parent or spellID;
-                    if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
-                        icon:SetAlpha(iconConfig.unusedIconAlpha);
-                        addon.IconGroup_Insert(group, icon);
-                    end
+                local configSpellID = spell.parent or spellID;
+                if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
+                    icon:SetAlpha(iconConfig.unusedIconAlpha);
+                    addon.IconGroup_Insert(group, icon);
                 end
             end
         end
