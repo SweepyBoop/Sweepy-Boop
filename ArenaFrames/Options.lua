@@ -371,19 +371,13 @@ addon.GetArenaFrameOptions = function(order)
     };
 
     -- Append options for standalone bars
-    for i = 3, 8 do
-        optionGroup.args.standaloneBars.args[tostring(i)] = {
+    for i = 1, 6 do
+        local groupName = "Bar " .. i;
+        optionGroup.args.standaloneBars.args[groupName] = {
             order = i,
             type = "group",
-            get = function(info)
-            end,
-            set = function (info, val)
-                SweepyBoop.db.profile.arenaFrames.standaloneBars[info[#info]] = val;
-                SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-            end,
-            name = function(info)
-                return SweepyBoop.db.profile.arenaFrames.standaloneBars[info[#info]].name;
-            end,
+            childGroups = "tab",
+            name = groupName,
             args = {
                 general = {
                     order = 1,
@@ -514,8 +508,9 @@ addon.GetArenaFrameOptions = function(order)
             name = classInfo.className,
             args = {},
         };
-        for i = 3, 8 do
-            optionGroup.args.standaloneBars.args[tostring(i)].args.spellList.args[classInfo.classFile] = {
+        for i = 1, 6 do
+            local groupName = "Bar " .. i;
+            optionGroup.args.standaloneBars.args[groupName].args.spellList.args[classInfo.classFile] = {
                 order = groupIndex,
                 type = "group",
                 icon = addon.ICON_ID_CLASSES,
@@ -578,8 +573,9 @@ addon.GetArenaFrameOptions = function(order)
     AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
     AppendSpellCategoryPriority(optionGroup.args.arenaFrameBars.args.spellCatPriority.args);
 
-    for i = 3, 8 do
-        AppendSpellOptions(optionGroup.args.standaloneBars.args[tostring(i)].args.spellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+    for i = 1, 6 do
+        local groupName = "Bar " .. i;
+        AppendSpellOptions(optionGroup.args.standaloneBars.args[groupName].args.spellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
     end
 
     return optionGroup;

@@ -20,15 +20,15 @@ local resetByCrit = {
 };
 
 local ICON_SET_ID = {
-    ARENA_MAIN = 1,
-    ARENA_SECONDARY = 2,
+    ARENA_MAIN = "Arena",
+    ARENA_SECONDARY = "ArenaSecondary",
 
-    STANDALONE_1 = 3,
-    STANDALONE_2 = 4,
-    STANDALONE_3 = 5,
-    STANDALONE_4 = 6,
-    STANDALONE_5 = 7,
-    STANDALONE_6 = 8,
+    STANDALONE_1 = "Bar 1",
+    STANDALONE_2 = "Bar 2",
+    STANDALONE_3 = "Bar 3",
+    STANDALONE_4 = "Bar 4",
+    STANDALONE_5 = "Bar 5",
+    STANDALONE_6 = "Bar 6",
 };
 
 local ICON_SET_ID_MIN = 1;
@@ -389,7 +389,7 @@ end
 
 local function SetupAllIconGroups()
     print("Setup all icon groups");
-    for iconSetID = ICON_SET_ID_MIN, 3 do
+    for _, iconSetID in pairs(ICON_SET_ID) do
         if GetIconGroupEnabled(iconSetID) then
             if addon.TEST_MODE then
                 SetupIconGroup(iconSetID, "player");

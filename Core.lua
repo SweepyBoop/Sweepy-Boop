@@ -164,7 +164,8 @@ local defaults = {
 
 defaults.profile.arenaFrames.standaloneBars = {};
 for i = 1, 6 do
-    defaults.profile.arenaFrames.standaloneBars[i] = {
+    local groupName = "Bar ".. i;
+    defaults.profile.arenaFrames.standaloneBars[groupName] = {
         name = "Bar ".. i,
         enabled = true,
 
@@ -291,15 +292,6 @@ function SweepyBoop:SetupBlizzardOptions()
 end
 
 function SweepyBoop:OnInitialize()
-    options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
-    options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
-
-    if addon.PROJECT_MAINLINE then
-        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
-        options.args.raidFrames = addon.GetRaidFrameOptions(6);
-        options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
-    end
-
     local currentTime = GetTime();
     for _, category in pairs(defaults) do
         if type(category) == "table" then
@@ -309,6 +301,16 @@ function SweepyBoop:OnInitialize()
 
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
+
+    options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
+    options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
+
+    if addon.PROJECT_MAINLINE then
+        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
+        options.args.raidFrames = addon.GetRaidFrameOptions(6);
+        options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
+    end
+
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
 
