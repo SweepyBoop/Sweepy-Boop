@@ -287,8 +287,63 @@ local function GetSpecOverrides(spell, spec)
     return overrides;
 end
 
-local function SetupIconGroup(group, unit, isTestGroup)
-    local iconSetID = group.iconSetID;
+local function SetupIconGroup(iconSetID, unit, isTestGroup)
+    local group = GetIconGroup(iconSetID, unit, isTestGroup);
+    local config = SweepyBoop.db.profile.arenaFrames;
+
+    local remainingTest = 8;
+    for spellID, spell in pairs(spellData) do
+        if ( not spell.use_parent_icon ) then
+            local enabled;
+            local spec = addon.GetSpecForPlayerOrArena(unit);
+
+            -- For arena frame bars test groups, show priest abilities
+            if isTestGroup and ARENA_FRAME_BARS[iconSetID] then
+                if spell.class == addon.PRIEST then
+                    if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
+                        if config.arenaCooldownSecondaryBar then
+                            enabled = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
+                        else
+                            enabled = true;
+                        end
+                    else
+                        enabled = (spell.category == addon.SPELLCATEGORY.DEFENSIVE );
+                    end
+                end
+            else
+                -- Fill enabled abilities, but for test groups, show 8 at most
+                if isTestGroup and remainingTest <= 0 then
+                    -- We hit the limit of 8 icons
+                else
+                    -- Does this spell filter by spec?
+                    if spell.spec then
+                        local specEnabled = false;
+
+                        if ( not spec ) then
+                            specEnabled = true;
+                        else
+                            for i = 1, #(spell.spec) do
+                                if ( spec == spell.spec[i] ) then
+                                    specEnabled = true;
+                                    break;
+                                end
+                            end
+                        end
+
+                        enabled = specEnabled;
+                    end
+                end
+
+                if enabled then
+                    local icon = GetIcon(iconSetID, unit, spellID, isTestGroup);
+                    icon.info = GetSpecOverrides(spell, spec);
+                    -- The texture might have been set by use_parent_icon icons
+                    icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                    addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
+                end
+            end
+        end
+    end
     -- For external "Toggle Test Mode" icons, no filtering is needed
     if isTestGroup then
         local config = SweepyBoop.db.profile.arenaFrames;
@@ -314,6 +369,7 @@ local function SetupIconGroup(group, unit, isTestGroup)
                 end
 
                 if isEnabled then
+                    local icon = GetIcon(iconSetID, unit, spellID, )
                     testIcons[unit][spellID].info = { cooldown = spell.cooldown };
                     -- The texture might have been set by use_parent_icon icons
                     testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
