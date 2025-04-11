@@ -31,9 +31,6 @@ local ICON_SET_ID = {
     STANDALONE_6 = "Bar 6",
 };
 
-local ICON_SET_ID_MIN = 1;
-local ICON_SET_ID_MAX = 8;
-
 local ARENA_FRAME_BARS = {
     [ICON_SET_ID.ARENA_MAIN] = true,
     [ICON_SET_ID.ARENA_SECONDARY] = true,
@@ -51,6 +48,8 @@ for spellID, spell in pairs(spellData) do
     if spell.class and ( type(spell.class) ~= "string" ) then
         print("Invalid class for spellID:", spellID);
     end
+
+    -- Should we allow entries without class specified?
 end
 
 -- iconPool[iconSetID][unitID-spellID] (this works for arena frame bars too)
@@ -214,7 +213,7 @@ local function GetGrowOptions(iconSetID)
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     else
         local growDirection = config.standaloneBars[iconSetID].growDirection;
@@ -291,10 +290,10 @@ local function GetIconConfig(iconSetID)
         iconConfig.showUnusedIcons = config.showUnusedIcons;
         iconConfig.unusedIconAlpha = config.unusedIconAlpha;
     else
-        local extraBarConfig = config.standaloneBars[iconSetID];
-        iconConfig.spellList = extraBarConfig.spellList;
-        iconConfig.showUnusedIcons = extraBarConfig.showUnusedIcons;
-        iconConfig.unusedIconAlpha = extraBarConfig.unusedIconAlpha;
+        local standaloneConfig = config.standaloneBars[iconSetID];
+        iconConfig.spellList = standaloneConfig.spellList;
+        iconConfig.showUnusedIcons = standaloneConfig.showUnusedIcons;
+        iconConfig.unusedIconAlpha = standaloneConfig.unusedIconAlpha;
     end
     return iconConfig;
 end
@@ -356,7 +355,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                 -- The texture might have been set by use_parent_icon icons
                 icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                 addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
-                print("Populated icon", iconSetID, unit, spellID);
+                --print("Populated icon", iconSetID, unit, spellID);
 
                 local configSpellID = spell.parent or spellID;
                 if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
@@ -381,12 +380,11 @@ end
 
 local function ClearAllIconGroups()
     for _, iconGroup in pairs(iconGroups) do
-        addon.IconGroup_Wipe(iconGroup);
+        addon.IconGroup_Wipe(iconGroup); -- null check is included in IconGroup_Wipe
     end
 end
 
 local function SetupAllIconGroups()
-    print("Setup all icon groups");
     for _, iconSetID in pairs(ICON_SET_ID) do
         if GetIconGroupEnabled(iconSetID) then
             if addon.TEST_MODE then
