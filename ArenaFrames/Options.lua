@@ -372,7 +372,7 @@ addon.GetArenaFrameOptions = function(order)
 
     -- Append options for standalone bars
     for i = 3, 8 do
-        optionGroup.args.standaloneBars.args[i] = {
+        optionGroup.args.standaloneBars.args[tostring(i)] = {
             order = i,
             type = "group",
             get = function(info)
@@ -515,7 +515,7 @@ addon.GetArenaFrameOptions = function(order)
             args = {},
         };
         for i = 3, 8 do
-            optionGroup.args.standaloneBars.args[i].args.spellList.args[classInfo.classFile] = {
+            optionGroup.args.standaloneBars.args[tostring(i)].args.spellList.args[classInfo.classFile] = {
                 order = groupIndex,
                 type = "group",
                 icon = addon.ICON_ID_CLASSES,
@@ -556,7 +556,7 @@ addon.GetArenaFrameOptions = function(order)
     end
 
     local function AppendSpellCategoryPriority(group)
-        for i = 1, 12 do -- Can we not hard-code this
+        for i = 1, 12 do -- Can we not hard-code this   
             group[tostring(i)] = {
                 order = i,
                 type = "range",
@@ -579,7 +579,7 @@ addon.GetArenaFrameOptions = function(order)
     AppendSpellCategoryPriority(optionGroup.args.arenaFrameBars.args.spellCatPriority.args);
 
     for i = 3, 8 do
-        AppendSpellOptions(optionGroup.args.standaloneBars.args[i].args.spellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+        AppendSpellOptions(optionGroup.args.standaloneBars.args[tostring(i)].args.spellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
     end
 
     return optionGroup;
