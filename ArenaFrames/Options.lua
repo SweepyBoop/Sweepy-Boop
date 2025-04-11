@@ -378,7 +378,13 @@ addon.GetArenaFrameOptions = function(order)
             type = "group",
             childGroups = "tab",
             name = function(info)
-                return SweepyBoop.db.profile.arenaFrames.standaloneBars[info[#info]].name;
+                return SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].name;
+            end,
+            get = function(info)
+            end,
+            set = function(info, val)
+                SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName][info[#info]] = val;
+                SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
             end,
             args = {
                 general = {

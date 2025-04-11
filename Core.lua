@@ -166,7 +166,7 @@ defaults.profile.arenaFrames.standaloneBars = {};
 for i = 1, 6 do
     local groupName = "Bar ".. i;
     defaults.profile.arenaFrames.standaloneBars[groupName] = {
-        name = "Bar ".. i,
+        name = groupName,
         enabled = true,
 
         growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
