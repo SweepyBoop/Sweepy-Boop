@@ -377,7 +377,9 @@ addon.GetArenaFrameOptions = function(order)
             order = i,
             type = "group",
             childGroups = "tab",
-            name = groupName,
+            name = function(info)
+                return SweepyBoop.db.profile.arenaFrames.standaloneBars[info[#info]].name;
+            end,
             args = {
                 general = {
                     order = 1,

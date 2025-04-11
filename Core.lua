@@ -298,9 +298,7 @@ function SweepyBoop:OnInitialize()
             category.lastModified = currentTime;
         end
     end
-
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
-    options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
 
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
@@ -311,6 +309,7 @@ function SweepyBoop:OnInitialize()
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
     end
 
+    options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
 
