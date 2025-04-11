@@ -399,6 +399,12 @@ local function GetIconGroupEnabled(iconSetID)
     end
 end
 
+local function ClearAllIconGroups()
+    for _, iconGroup in pairs(iconGroups) do
+        addon.IconGroup_Wipe(iconGroup);
+    end
+end
+
 local function SetupAllIconGroups()
     for iconSetID = ICON_SET_ID_MIN, 3 do
         if GetIconGroupEnabled(iconSetID) then
@@ -407,9 +413,7 @@ local function SetupAllIconGroups()
             else
                 for unitIndex = 1, addon.MAX_ARENA_SIZE do
                     local unit = "arena" .. unitIndex;
-                    if GetIconGroupEnabled(iconSetID) then
-                        SetupIconGroup(iconSetID, unit);
-                    end
+                    SetupIconGroup(iconSetID, unit);
                 end
             end
         end
@@ -865,6 +869,8 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
                 SweepyBoop:HideTestArenaInterruptBar();
+
+                ClearAllIconGroups();
 
                 local shouldSetup = false;
                 if addon.TEST_MODE then
