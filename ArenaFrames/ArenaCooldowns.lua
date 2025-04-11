@@ -310,7 +310,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
         if ( not spell.use_parent_icon ) then
             local enabled = false;
 
-            -- For arena frame bars test groups, show priest abilities
+            -- For arena frame bars test groups, show disc priest abilities
             if isTestGroup and ARENA_FRAME_BARS[iconSetID] then
                 if spell.class == addon.PRIEST then
                     local specEnabled = false;
@@ -362,8 +362,6 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                             end
                         end
 
-                        print(spellID, specEnabled);
-
                         -- Put all icons for the class into the group whether enabled or not
                         enabled = specEnabled;
                     end
@@ -379,7 +377,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                 --print("Populated icon", iconSetID, unit, spellID);
 
                 local configSpellID = spell.parent or spellID;
-                if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
+                if spell.baseline and iconConfig.showUnusedIcons and ( isTestGroup or iconConfig.spellList[tostring(configSpellID)] ) then
                     icon:SetAlpha(iconConfig.unusedIconAlpha);
                     addon.IconGroup_Insert(group, icon);
                 end
