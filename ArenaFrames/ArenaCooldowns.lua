@@ -322,13 +322,16 @@ local function GetIconConfig(iconSetID)
 end
 
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
+    local class = addon.GetClassForPlayerOrArena(unit);
+    if ( not class ) then return end
+
     local group = GetIconGroup(iconSetID, unit, isTestGroup);
     local config = SweepyBoop.db.profile.arenaFrames;
     local iconConfig = GetIconConfig(iconSetID);
 
     local remainingTest = 8;
     for spellID, spell in pairs(spellData) do
-        if ( not spell.use_parent_icon ) then
+        if ( not spell.use_parent_icon ) and ( ( not spell.class ) or ( spell.class == class ) ) then
             local enabled;
             local spec = addon.GetSpecForPlayerOrArena(unit);
 
@@ -376,6 +379,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                     -- The texture might have been set by use_parent_icon icons
                     icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
+                    --print("Populated icon", iconSetID, unit, spellID);
 
                     local configSpellID = spell.parent or spellID;
                     if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
@@ -406,6 +410,7 @@ local function ClearAllIconGroups()
 end
 
 local function SetupAllIconGroups()
+    print("Setup all icon groups");
     for iconSetID = ICON_SET_ID_MIN, 3 do
         if GetIconGroupEnabled(iconSetID) then
             if addon.TEST_MODE then
