@@ -287,9 +287,35 @@ local function GetSpecOverrides(spell, spec)
     return overrides;
 end
 
+-- spellList, showUnusedIcons, unusedIconAlpha
+local function GetIconConfig(iconSetID)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local iconConfig = {};
+    if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
+        iconConfig.spellList = config.spellList;
+        iconConfig.showUnusedIcons = config.showUnusedIcons;
+        iconConfig.unusedIconAlpha = config.unusedIconAlpha;
+    elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
+        iconConfig.spellList = config.spellList2;
+        iconConfig.showUnusedIcons = config.showUnusedIcons;
+        iconConfig.unusedIconAlpha = config.unusedIconAlpha;
+    elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
+        iconConfig.spellList = config.interruptBarSpellList;
+        iconConfig.showUnusedIcons = config.interruptBarShowUnused;
+        iconConfig.unusedIconAlpha = config.interruptBarUnusedIconAlpha;
+    else
+        local extraBarConfig = config.extraBars[iconSetID];
+        iconConfig.spellList = extraBarConfig.spellList;
+        iconConfig.showUnusedIcons = extraBarConfig.showUnusedIcons;
+        iconConfig.unusedIconAlpha = extraBarConfig.unusedIconAlpha;
+    end
+    return iconConfig;
+end
+
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
     local group = GetIconGroup(iconSetID, unit, isTestGroup);
     local config = SweepyBoop.db.profile.arenaFrames;
+    local iconConfig = GetIconConfig(iconSetID);
 
     local remainingTest = 8;
     for spellID, spell in pairs(spellData) do
@@ -330,7 +356,12 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                             end
                         end
 
-                        enabled = specEnabled;
+                        if specEnabled then
+                            -- Check if spell is enabled in config
+                            if iconConfig.spellList[tostring(spellID)] then
+                                enabled = true;
+                            end
+                        end
                     end
                 end
 
@@ -340,137 +371,11 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                     -- The texture might have been set by use_parent_icon icons
                     icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
-                end
-            end
-        end
-    end
-    -- For external "Toggle Test Mode" icons, no filtering is needed
-    if isTestGroup then
-        local config = SweepyBoop.db.profile.arenaFrames;
-        for spellID, spell in pairs(spellData) do
-            if ( not spell.use_parent_icon ) then
-                local isEnabled;
-                if group.isInterruptBar then
-                    if spell.class == addon.SHAMAN or spell.class == addon.ROGUE then
-                        isEnabled = ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) or ( spell.category == addon.SPELLCATEGORY.OTHERS );
-                    end
-                elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
-                    isEnabled = (spell.class == addon.PRIEST) and ( spell.category == addon.SPELLCATEGORY.DEFENSIVE );
-                elseif ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
-                    if spell.class == addon.PRIEST then
-                        if config.arenaCooldownSecondaryBar then
-                            isEnabled = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
-                        else
-                            isEnabled = true;
-                        end
-                    end
-                else
-                    -- Extra bars, show up to 8 enabled abilities
-                end
-
-                if isEnabled then
-                    local icon = GetIcon(iconSetID, unit, spellID, )
-                    testIcons[unit][spellID].info = { cooldown = spell.cooldown };
-                    -- The texture might have been set by use_parent_icon icons
-                    testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
-                    addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
-
-                    local showUnusedIcons;
-                    if isInterruptBar then
-                        showUnusedIcons = config.interruptBarShowUnused;
-                    else
-                        showUnusedIcons = config.showUnusedIcons;
-                    end
-
-                    local unusedIconAlpha;
-                    if isInterruptBar then
-                        unusedIconAlpha = config.interruptBarUnusedIconAlpha;
-                    else
-                        unusedIconAlpha = config.unusedIconAlpha;
-                    end
-                    if ( spell.baseline or group.isInterruptBar ) and showUnusedIcons then
-                        testIcons[unit][spellID]:SetAlpha(unusedIconAlpha);
-                        addon.IconGroup_Insert(group, testIcons[unit][spellID]);
-                    end
-                end
-            end
-        end
-
-        return;
-    end
-
-    -- In arena prep phase, UnitExists returns false since enemies are not visible, but we can check spec and populate icons
-    local class = addon.GetClassForPlayerOrArena(unit);
-    if ( not class ) then return end
-
-    local config = SweepyBoop.db.profile.arenaFrames;
-    local iconSet;
-    if isInterruptBar then
-        iconSet = premadeIconsInterrupt;
-    elseif isSecondaryBar then
-        iconSet = premadeIconsSecondary;
-    else
-        iconSet = premadeIcons;
-    end
-
-    -- Pre-populate icons
-    for spellID, spell in pairs(spellData) do
-        if iconSet[unit][spellID] then
-            if ( not spell.class ) or ( spell.class == class ) then
-                local enabled = true;
-                local spec = addon.GetSpecForPlayerOrArena(unit);
-                -- Does this spell filter by spec?
-                if spell.spec then
-                    local specEnabled = false;
-
-                    if ( not spec ) then
-                        specEnabled = true;
-                    else
-                        for i = 1, #(spell.spec) do
-                            if ( spec == spell.spec[i] ) then
-                                specEnabled = true;
-                                break;
-                            end
-                        end
-                    end
-
-                    enabled = specEnabled;
-                end
-
-                if enabled then
-                    -- Reset dynamic info before populating to group
-                    iconSet[unit][spellID].info = GetSpecOverrides(spell, spec);
-                    -- The texture might have been set by use_parent_icon icons
-                    iconSet[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
-                    addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], unit .. "-" .. spellID);
-
-                    local showUnusedIcons;
-                    if isInterruptBar then
-                        showUnusedIcons = config.interruptBarShowUnused;
-                    else
-                        showUnusedIcons = config.showUnusedIcons;
-                    end
-
-                    local unusedIconAlpha;
-                    if isInterruptBar then
-                        unusedIconAlpha = config.interruptBarUnusedIconAlpha;
-                    else
-                        unusedIconAlpha = config.unusedIconAlpha;
-                    end
-
-                    local spellList;
-                    if isInterruptBar then
-                        spellList = config.interruptBarSpellList;
-                    elseif isSecondaryBar then
-                        spellList = config.spellList2;
-                    else
-                        spellList = config.spellList;
-                    end
 
                     local configSpellID = spell.parent or spellID;
-                    if spell.baseline and showUnusedIcons and spellList[tostring(configSpellID)] then
-                        iconSet[unit][spellID]:SetAlpha(unusedIconAlpha);
-                        addon.IconGroup_Insert(group, iconSet[unit][spellID]);
+                    if spell.baseline and iconConfig.showUnusedIcons then
+                        icon:SetAlpha(iconConfig.unusedIconAlpha);
+                        addon.IconGroup_Insert(group, icon);
                     end
                 end
             end
