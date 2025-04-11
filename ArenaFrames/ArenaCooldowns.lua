@@ -173,7 +173,7 @@ local function GetSetPointOptions(iconSetID, unitID)
 
     local offsetX;
     if iconSetID == ICON_SET_ID.ARENA_MAIN then
-        offsetX = config.arenaCooldownTrackerOffsetX;
+        offsetX = config.arenaCooldownOffsetX;
     elseif iconSetID == ICON_SET_ID.ARENA_SECONDARY then
         offsetX = config.arenaCooldownOffsetXSecondary;
     elseif iconSetID == ICON_SET_ID.INTERRUPT then
@@ -184,7 +184,7 @@ local function GetSetPointOptions(iconSetID, unitID)
 
     local offsetY;
     if iconSetID == ICON_SET_ID.ARENA_MAIN then
-        offsetY = config.arenaCooldownTrackerOffsetY;
+        offsetY = config.arenaCooldownOffsetY;
     elseif iconSetID == ICON_SET_ID.ARENA_SECONDARY then
         offsetY = config.arenaCooldownOffsetYSecondary;
     elseif iconSetID == ICON_SET_ID.INTERRUPT then
