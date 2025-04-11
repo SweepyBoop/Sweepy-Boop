@@ -495,9 +495,13 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     --     print(subEvent, spellName, spellId, sourceGUID, destGUID);
     -- end
 
+    print("Group unit", self.unit);
+
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
+
+    print("Test");
 
     -- Apotheosis
     if spellId == 200183 and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
@@ -636,6 +640,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
     if ( not unit ) then return end
 
+    print("Unit validated");
+
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) and unitGuidToId[sourceGUID] then
         local icon = self.activeMap[unitGuidToId[sourceGUID] .. "-" .. spellId];
@@ -656,11 +662,11 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use (check parent too)
     -- Config only shows parent ID, so check parent if applicable
-    local config = SweepyBoop.db.profile.arenaFrames;
     local spellList = GetIconConfig(self.iconSetID).spellList;
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
+    print("Icon ID:", iconID, "Spell ID:", spellId, "Config Spell ID:", configSpellId, "Parent Spell ID:", iconSpellId);
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconSpellId ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
@@ -849,13 +855,6 @@ function SweepyBoop:SetupArenaCooldownTracker()
         eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
-            local arenaTrackerEnabled = config.arenaCooldownTrackerEnabled;
-            local interruptBarEnabled = config.interruptBarEnabled;
-
-            if ( not arenaTrackerEnabled ) and ( not interruptBarEnabled ) then
-                return;
-            end
-
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
 
@@ -882,32 +881,72 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-                local secondaryBarEnabled = config.arenaCooldownSecondaryBar;
-                if arenaTrackerEnabled then
+                
+                -- Process arena frame bars if enabled
+                if addon.TEST_MODE then
+                    local arenaMain = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player"];
+                    if arenaMain and GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN) then
+                        ProcessCombatLogEvent(arenaMain, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    end
+
+                    local arenaSecondary = iconGroups[ICON_SET_ID.ARENA_SECONDARY .. "-player"];
+                    if arenaSecondary and GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY) then
+                        ProcessCombatLogEvent(arenaSecondary, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    end
+                else
+                    local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
+                    local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
+
                     for i = 1, addon.MAX_ARENA_SIZE do
-                        if iconGroups[i] then
-                            ProcessCombatLogEvent(iconGroups[i], subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                        local unit = "arena" .. i;
+                        local iconGroupID = ICON_SET_ID.ARENA_MAIN .. "-" .. unit;
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup and arenaMainEnabled then
+                            ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                         end
-                        if secondaryBarEnabled and iconGroups[i + 3] then
-                            ProcessCombatLogEvent(iconGroups[i + 3], subEvent, sourceGUID, destGUID, spellId, spellName, critical); -- Secondary bar
+
+                        if config.arenaCooldownSecondaryBar then
+                            iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
+                            iconGroup = iconGroups[iconGroupID];
+                            if iconGroup and arenaSecondaryEnabled then
+                                ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                            end
                         end
                     end
                 end
 
-                if iconGroups[100] and interruptBarEnabled then
-                    ProcessCombatLogEvent(iconGroups[100], subEvent, sourceGUID, destGUID, spellId, spellName);
+                for i = 1, 6 do
+                    local iconGroupID = "Bar " .. i;
+                    if addon.TEST_MODE then
+                        iconGroupID = iconGroupID .. "-player";
+                    end
+                    local iconGroup = iconGroups[iconGroupID];
+                    if iconGroup then
+                        ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    end
                 end
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
-                if ( not arenaTrackerEnabled ) then return end
-                local secondaryBarEnabled = config.arenaCooldownSecondaryBar;
-                for i = 1, addon.MAX_ARENA_SIZE do
-                    if iconGroups[i] then
-                        ProcessUnitEvent(iconGroups[i], event, ...);
-                    end
-                    if secondaryBarEnabled and iconGroups[i + 3] then
-                        ProcessUnitEvent(iconGroups[i + 3], event, ...); -- Secondary bar
-                    end
+
+                local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
+                local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
+                
+                local arenaMainGroupID = ICON_SET_ID.ARENA_MAIN;
+                if addon.TEST_MODE then
+                    arenaMainGroupID = arenaMainGroupID .. "-player";
+                end
+                local arenaMain = iconGroups[arenaMainGroupID];
+                if arenaMain and arenaMainEnabled then
+                    ProcessUnitEvent(arenaMain, event, ...);
+                end
+
+                local arenaSecondaryGroupID = ICON_SET_ID.ARENA_SECONDARY;
+                if addon.TEST_MODE then
+                    arenaSecondaryGroupID = arenaSecondaryGroupID .. "-player";
+                end
+                local arenaSecondary = iconGroups[arenaSecondaryGroupID];
+                if arenaSecondary and arenaSecondaryEnabled then
+                    ProcessUnitEvent(arenaSecondary, event, ...);
                 end
             end
         end)
