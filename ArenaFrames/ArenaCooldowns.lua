@@ -809,26 +809,27 @@ function SweepyBoop:RepositionArenaCooldownTracker(layoutIcons)
 end
 
 function SweepyBoop:TestArenaStandaloneBars()
-    addon.IconGroup_Wipe(iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"]);
-    SetupIconGroup(ICON_SET_ID.INTERRUPT, "player", true);
-    local iconGroup = iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"];
+    for i = 1, 6 do
+        local iconSetID = "Bar " .. i;
+        local iconGroupID = iconSetID .. "-player-test";
+        addon.IconGroup_Wipe(iconGroups[iconGroupID]);
+        
+        if GetIconGroupEnabled(iconSetID) then
+            SetupIconGroup(iconSetID, "player", true);
+            local iconGroup = iconGroups[iconGroupID];
+            
+            -- Fire an event with every spellID in that group
+            local subEvent = addon.SPELL_CAST_SUCCESS;
+            local sourceGUID = UnitGUID("player");
+            local destGUID = UnitGUID("player");
+            for _, icon in pairs(iconGroup.icons) do
+                
+                ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, icon.spellID, nil, nil, true);
+            end
 
-    local subEvent = addon.SPELL_CAST_SUCCESS;
-    local sourceGUID = UnitGUID("player");
-    local destGUID = UnitGUID("player");
-    local spellId = 1766; -- Kick
-    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
-
-    spellId = 57994; -- Wind Shear
-    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
-
-    spellId = 204336; -- Grounding Totem
-    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
-
-    spellId = 8143; -- Tremor Totem
-    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
-
-    iconGroup:Show();
+            iconGroup:Show();
+        end
+    end
 end
 
 function SweepyBoop:HideTestArenaStandaloneBars()
