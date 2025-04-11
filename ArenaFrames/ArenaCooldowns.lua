@@ -313,20 +313,39 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
             -- For arena frame bars test groups, show priest abilities
             if isTestGroup and ARENA_FRAME_BARS[iconSetID] then
                 if spell.class == addon.PRIEST then
-                    if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
-                        if config.arenaCooldownSecondaryBar then
-                            enabled = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
-                        else
-                            enabled = true;
-                        end
+                    local specEnabled = false;
+                    if ( not spell.spec ) then
+                        specEnabled = true;
                     else
-                        enabled = (spell.category == addon.SPELLCATEGORY.DEFENSIVE );
+                        for i = 1, #(spell.spec) do
+                            if ( spell.spec[i] == addon.SPECID.DISCIPLINE ) then
+                                specEnabled = true;
+                                break;
+                            end
+                        end
+                    end
+
+                    if specEnabled then
+                        if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
+                            if config.arenaCooldownSecondaryBar then
+                                enabled = ( spell.category ~= addon.SPELLCATEGORY.DEFENSIVE );
+                            else
+                                enabled = true;
+                            end
+                        else
+                            enabled = (spell.category == addon.SPELLCATEGORY.DEFENSIVE );
+                        end
                     end
                 end
             elseif class and ( ( not spell.class ) or ( spell.class == class ) ) then
+                enabled = true;
                 -- Fill enabled abilities, but for test groups, show 8 at most
-                if isTestGroup and remainingTest <= 0 then
-                    -- We hit the limit of 8 icons
+                if isTestGroup then
+                    if remainingTest > 0 then
+                        remainingTest = remainingTest - 1;
+                    else
+                        enabled = false;
+                    end
                 else
                     -- Does this spell filter by spec?
                     if spell.spec then
@@ -342,6 +361,8 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                                 end
                             end
                         end
+
+                        print(spellID, specEnabled);
 
                         -- Put all icons for the class into the group whether enabled or not
                         enabled = specEnabled;
