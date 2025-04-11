@@ -23,18 +23,16 @@ local ICON_SET_ID = {
     ARENA_MAIN = 1,
     ARENA_SECONDARY = 2,
 
-    INTERRUPT = 3,
-
-    STANDALONE_1 = 4,
-    STANDALONE_2 = 5,
-    STANDALONE_3 = 6,
-    STANDALONE_4 = 7,
-    STANDALONE_5 = 8,
-    STANDALONE_6 = 9,
+    STANDALONE_1 = 3,
+    STANDALONE_2 = 4,
+    STANDALONE_3 = 5,
+    STANDALONE_4 = 6,
+    STANDALONE_5 = 7,
+    STANDALONE_6 = 8,
 };
 
 local ICON_SET_ID_MIN = 1;
-local ICON_SET_ID_MAX = 9;
+local ICON_SET_ID_MAX = 8;
 
 local ARENA_FRAME_BARS = {
     [ICON_SET_ID.ARENA_MAIN] = true,
@@ -63,10 +61,8 @@ local function GetIconSize(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     if ARENA_FRAME_BARS[iconSetID] then
         return config.arenaCooldownTrackerIconSize;
-    elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
-        return config.interruptBarIconSize;
     else
-        return config.extraBars[iconSetID].iconSize;
+        return config.standaloneBars[iconSetID].iconSize;
     end
 end
 
@@ -74,10 +70,8 @@ local function GetIconHideCountDownNumbers(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     if ARENA_FRAME_BARS[iconSetID] then
         return config.hideCountDownNumbers;
-    elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
-        return config.interruptBarHideCountDownNumbers;
     else
-        return config.extraBars[iconSetID].hideCountDownNumbers;
+        return config.standaloneBars[iconSetID].hideCountDownNumbers;
     end
 end
 
@@ -97,9 +91,6 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         else
             iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
         end
-
-        iconPool[iconSetID][iconID].isInterruptBar = ( iconSetID == ICON_SET_ID.INTERRUPT );
-        iconPool[iconSetID][iconID].isInterrupt = ( spellData[spellID].category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ); -- Solar Beam
 
         local hideCountDownNumbers = GetIconHideCountDownNumbers(iconSetID);
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], hideCountDownNumbers);
@@ -176,10 +167,8 @@ local function GetSetPointOptions(iconSetID, unitID)
         offsetX = config.arenaCooldownOffsetX;
     elseif iconSetID == ICON_SET_ID.ARENA_SECONDARY then
         offsetX = config.arenaCooldownOffsetXSecondary;
-    elseif iconSetID == ICON_SET_ID.INTERRUPT then
-        offsetX = config.interruptBarOffsetX;
     else
-        offsetX = config.extraBars[iconSetID].offsetX;
+        offsetX = config.standaloneBars[iconSetID].offsetX;
     end
 
     local offsetY;
@@ -187,10 +176,8 @@ local function GetSetPointOptions(iconSetID, unitID)
         offsetY = config.arenaCooldownOffsetY;
     elseif iconSetID == ICON_SET_ID.ARENA_SECONDARY then
         offsetY = config.arenaCooldownOffsetYSecondary;
-    elseif iconSetID == ICON_SET_ID.INTERRUPT then
-        offsetY = config.interruptBarOffsetY;
     else
-        offsetY = config.extraBars[iconSetID].offsetY;
+        offsetY = config.standaloneBars[iconSetID].offsetY;
     end
 
     local setPointOptions;
@@ -229,13 +216,10 @@ local function GetGrowOptions(iconSetID)
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
-    elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
-        growOptions = arenaFrameGrowOptions[config.interruptBarGrowDirection];
-        growOptions.margin = config.interruptBarIconPadding;
     else
-        local growDirection = config.extraBars[iconSetID].growDirection;
+        local growDirection = config.standaloneBars[iconSetID].growDirection;
         growOptions = standaloneBarGrowOptions[growDirection];
-        growOptions.margin = config.extraBars[iconSetID].iconPadding;
+        growOptions.margin = config.standaloneBars[iconSetID].iconPadding;
     end
 
     return growOptions;
@@ -257,8 +241,6 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         local growOptions = GetGrowOptions(iconSetID);
         iconGroups[iconGroupID] = addon.CreateIconGroup(setPointOptions, growOptions, unitID);
         iconGroups[iconGroupID].iconSetID = iconSetID;
-        -- Due to "Separate row for interrupts" option, checked by IconGroupUtil for layout
-        iconGroups[iconGroupID].isInterruptBar = ( iconSetID == ICON_SET_ID.INTERRUPT );
         iconGroups[iconGroupID].guardianSpiritSaved = {}; -- Have to cache this per group
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
@@ -308,12 +290,8 @@ local function GetIconConfig(iconSetID)
         iconConfig.spellList = config.spellList2;
         iconConfig.showUnusedIcons = config.showUnusedIcons;
         iconConfig.unusedIconAlpha = config.unusedIconAlpha;
-    elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
-        iconConfig.spellList = config.interruptBarSpellList;
-        iconConfig.showUnusedIcons = config.interruptBarShowUnused;
-        iconConfig.unusedIconAlpha = config.interruptBarUnusedIconAlpha;
     else
-        local extraBarConfig = config.extraBars[iconSetID];
+        local extraBarConfig = config.standaloneBars[iconSetID];
         iconConfig.spellList = extraBarConfig.spellList;
         iconConfig.showUnusedIcons = extraBarConfig.showUnusedIcons;
         iconConfig.unusedIconAlpha = extraBarConfig.unusedIconAlpha;
@@ -398,10 +376,8 @@ local function GetIconGroupEnabled(iconSetID)
         return config.arenaCooldownTrackerEnabled;
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
         return config.arenaCooldownSecondaryBar;
-    elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
-        return config.interruptBarEnabled;
     else
-        return config.extraBars[iconSetID].enabled;
+        return config.standaloneBars[iconSetID].enabled;
     end
 end
 
@@ -832,11 +808,11 @@ function SweepyBoop:TestArenaInterruptBar()
 end
 
 function SweepyBoop:HideTestArenaInterruptBar()
-    local iconGroup = iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"];
-    addon.IconGroup_Wipe(iconGroup);
-    if iconGroup then
-        iconGroup:Hide();
-    end
+    -- local iconGroup = iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"];
+    -- addon.IconGroup_Wipe(iconGroup);
+    -- if iconGroup then
+    --     iconGroup:Hide();
+    -- end
 end
 
 function SweepyBoop:RepositionArenaInterruptBar(layoutIcons)

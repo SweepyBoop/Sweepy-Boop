@@ -58,7 +58,7 @@ addon.GetArenaFrameOptions = function(order)
             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
         end,
         args = {
-            individual = {
+            arenaFrameBars = {
                 order = 1,
                 type = "group",
                 childGroups = "tab",
@@ -347,190 +347,158 @@ addon.GetArenaFrameOptions = function(order)
                 },
             },
 
-            interrupts = {
+            standaloneBars = {
                 order = 2,
                 type = "group",
                 childGroups = "tab",
-                name = "Interrupt bar",
+                name = "Standalone bars",
                 args = {
                     testmode = {
                         order = 1,
                         type = "execute",
-                        name = "Test",
-                        func = "TestArenaInterrupt",
+                        name = "Test all",
                         width = "half",
                     },
                     hidetest = {
                         order = 2,
                         type = "execute",
-                        name = "Hide",
-                        func = "HideTestArenaInterruptBar",
+                        name = "Hide all",
                         width = "half",
                     },
-
-                    general = {
-                        order = 4,
-                        type = "group",
-                        childGroups = "tab",
-                        name = "Settings",
-                        args = {
-                            interruptBarEnabled = {
-                                order = 6,
-                                width = "full",
-                                type = "toggle",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_frost_iceshock")) .. " Enabled",
-                            },
-                            separateRowForInterrupts = {
-                                order = 7,
-                                width = "full",
-                                type = "toggle",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_groundingtotem")) .. " Separate rows for interrupts and other abilities",
-                            },
-
-                            interruptBarShowUnused = {
-                                order = 8,
-                                type = "toggle",
-                                width = "full",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_kick")) .. " Always show icons",
-                                desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
-                            },
-
-                            interruptBarHideCountDownNumbers = {
-                                order = 9,
-                                type = "toggle",
-                                width = "full",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
-                                desc = "Hide countdown numbers but show a more visible swiping edge",
-                            },
-
-                            interruptBarGrowDirection = {
-                                order = 10,
-                                type = "select",
-                                width = 0.75,
-                                name = "Grow direction",
-                                values = {
-                                    [addon.STANDALONE_GROW_DIRECTION.CENTER_UP] = "Up",
-                                    [addon.STANDALONE_GROW_DIRECTION.CENTER_DOWN] = "Down",
-                                },
-                            },
-
-                            interruptBarIconSize = {
-                                order = 11,
-                                type = "range",
-                                width = 0.75,
-                                min = 16,
-                                max = 64,
-                                step = 1,
-                                name = "Icon size",
-                                desc = "Size of arena defensive cooldown icons",
-                            },
-
-                            interruptBarIconPadding = {
-                                order = 12,
-                                type = "range",
-                                width = 0.75,
-                                min = 0,
-                                max = 10,
-                                step = 1,
-                                name = "Padding",
-                                desc = "Space between icons",
-                                set = function (info, val)
-                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionArenaInterruptBar(true);
-                                end
-                            },
-
-                            newline = {
-                                order = 13,
-                                type = "description",
-                                name = "",
-                            },
-
-                            interruptBarOffsetX = {
-                                order = 14,
-                                type = "range",
-                                min = -2500,
-                                max = 2500,
-                                step = 1,
-                                name = "X offset",
-                                desc = "Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame",
-                                set = function (info, val)
-                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionArenaInterruptBar();
-                                end
-                            },
-                            interruptBarOffsetY = {
-                                order = 15,
-                                type = "range",
-                                min = -1500,
-                                max = 1500,
-                                step = 1,
-                                name = "Y offset",
-                                desc = "Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame",
-                                set = function (info, val)
-                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                                    SweepyBoop:RepositionArenaInterruptBar();
-                                end
-                            },
-                            interruptBarUnusedIconAlpha = {
-                                order = 16,
-                                type = "range",
-                                isPercent = true,
-                                min = 0.5,
-                                max = 1,
-                                step = 0.1,
-                                name = "Off-cooldown alpha",
-                                hidden = function ()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
-                                end
-                            },
-                            interruptBarUsedIconAlpha = {
-                                order = 17,
-                                type = "range",
-                                isPercent = true,
-                                min = 0.5,
-                                max = 1,
-                                step = 0.1,
-                                name = "On-cooldown alpha",
-                                hidden = function ()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.interruptBarShowUnused );
-                                end
-                            },
-                        },
-                    },
-
-                    interruptBarSpellList = {
-                        order = 5,
-                        type = "group",
-                        name = "Spells",
-                        desc = "Select which abilities to track cooldown inside arenas",
-                        get = function(info) return SweepyBoop.db.profile.arenaFrames.interruptBarSpellList[info[#info]] end,
-                        set = function(info, val) SweepyBoop.db.profile.arenaFrames.interruptBarSpellList[info[#info]] = val end,
-                        args = {
-                            restoreDefaults = {
-                                order = 1,
-                                type = "execute",
-                                name = "Restore default",
-                                func = function ()
-                                    SweepyBoop:CheckDefaultInterrupts();
-                                end
-                            },
-                        },
-                    }
                 },
-            }
+            },
         },
     };
+
+    -- Append options for standalone bars
+    for i = 3, 8 do
+        optionGroup.args.standaloneBars.args[i] = {
+            order = i,
+            type = "group",
+            get = function(info)
+            end,
+            set = function (info, val)
+                SweepyBoop.db.profile.arenaFrames.standaloneBars[info[#info]] = val;
+                SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+            end,
+            name = function(info)
+                return SweepyBoop.db.profile.arenaFrames.standaloneBars[info[#info]].name;
+            end,
+            args = {
+                general = {
+                    order = 1,
+                    type = "group",
+                    name = "Settings",
+                    args = {
+                        name = {
+                            order = 1,
+                            type = "input",
+                            name = "Name",
+                        },
+        
+                        enabled = {
+                            order = 2,
+                            type = "toggle",
+                            name = "Enabled",
+                        },
+        
+                        -- Do we need grow direction here
+        
+                        iconSize = {
+                            order = 4,
+                            type = "range",
+                            min = 16,
+                            max = 64,
+                            step = 1,
+                            name = "Icon size",
+                        },
+        
+                        iconPadding = {
+                            order = 5,
+                            type = "range",
+                            min = 0,
+                            max = 10,
+                            step = 1,
+                            name = "Padding",
+                        },
+        
+                        offsetX = {
+                            order = 6,
+                            type = "range",
+                            min = -2500,
+                            max = 2500,
+                            step = 1,
+                            name = "X offset",
+                        },
+        
+                        offsetY = {
+                            order = 7,
+                            type = "range",
+                            min = -1500,
+                            max = 1500,
+                            step = 1,
+                            name = "Y offset",
+                        },
+        
+                        showUnusedIcons = {
+                            order = 8,
+                            type = "toggle",
+                            name = "Always show icons",
+                            desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
+                        },
+        
+                        unusedIconAlpha = {
+                            order = 9,
+                            type = "range",
+                            width = 0.8,
+                            isPercent = true,
+                            min = 0.5,
+                            max = 1,
+                            step = 0.1,
+                            name = "Off-cooldown alpha",
+                        },
+        
+                        usedIconAlpha = {
+                            order = 10,
+                            type = "range",
+                            width = 0.8,
+                            isPercent = true,
+                            min = 0.5,
+                            max = 1,
+                            step = 0.1,
+                            name = "On-cooldown alpha",
+                        },
+                    },
+                },
+
+                spellList = {
+                    order = 2,
+                    type = "group",
+                    name = "Spells",
+                    desc = "Select which abilities to track cooldown inside arenas",
+                    get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
+                    set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
+                    args = {
+                        restoreDefaults = {
+                            order = 1,
+                            type = "execute",
+                            name = "Restore default",
+                            func = function ()
+                                SweepyBoop:CheckDefaultArenaAbilities();
+                            end
+                        },
+                    },
+                },
+            },
+        };
+    end
 
     local indexInClassGroup = {};
     local groupIndex = 3;
     -- Ensure one group for each class, in order
     for _, classID in ipairs(addon.CLASSORDER) do
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
-        optionGroup.args.individual.args.spellList.args[classInfo.classFile] = {
+        optionGroup.args.arenaFrameBars.args.spellList.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -538,7 +506,7 @@ addon.GetArenaFrameOptions = function(order)
             name = classInfo.className,
             args = {},
         };
-        optionGroup.args.individual.args.spellList2.args[classInfo.classFile] = {
+        optionGroup.args.arenaFrameBars.args.spellList2.args[classInfo.classFile] = {
             order = groupIndex,
             type = "group",
             icon = addon.ICON_ID_CLASSES,
@@ -546,14 +514,16 @@ addon.GetArenaFrameOptions = function(order)
             name = classInfo.className,
             args = {},
         };
-        optionGroup.args.interrupts.args.interruptBarSpellList.args[classInfo.classFile] = {
-            order = groupIndex,
-            type = "group",
-            icon = addon.ICON_ID_CLASSES,
-            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
-            name = classInfo.className,
-            args = {},
-        };
+        for i = 3, 8 do
+            optionGroup.args.standaloneBars.args[i].args.spellList.args[classInfo.classFile] = {
+                order = groupIndex,
+                type = "group",
+                icon = addon.ICON_ID_CLASSES,
+                iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+                name = classInfo.className,
+                args = {},
+            };
+        end
 
         indexInClassGroup[classInfo.classFile] = 1;
         groupIndex = groupIndex + 1;
@@ -604,10 +574,13 @@ addon.GetArenaFrameOptions = function(order)
         end
     end
 
-    AppendSpellOptions(optionGroup.args.individual.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
-    AppendSpellOptions(optionGroup.args.individual.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
-    AppendSpellOptions(optionGroup.args.interrupts.args.interruptBarSpellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
-    AppendSpellCategoryPriority(optionGroup.args.individual.args.spellCatPriority.args);
+    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellCategoryPriority(optionGroup.args.arenaFrameBars.args.spellCatPriority.args);
+
+    for i = 3, 8 do
+        AppendSpellOptions(optionGroup.args.standaloneBars.args[i].args.spellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+    end
 
     return optionGroup;
 end

@@ -121,18 +121,6 @@ local defaults = {
             spellList = {},
             spellList2 = {},
 
-            interruptBarEnabled = false;
-            interruptBarGrowDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
-            interruptBarOffsetX = 0,
-            interruptBarOffsetY = -150,
-            interruptBarIconSize = 40,
-            interruptBarIconPadding = 2,
-            interruptBarUnusedIconAlpha = 0.5,
-            interruptBarUsedIconAlpha = 1,
-            interruptBarShowUnused = false,
-            interruptBarHideCountDownNumbers = false,
-            interruptBarSpellList = {},
-
             spellCatPriority = {
                 [tostring(addon.SPELLCATEGORY.IMMUNITY)] = 100,
                 [tostring(addon.SPELLCATEGORY.DEFENSIVE)] = 90,
@@ -173,6 +161,26 @@ local defaults = {
         },
     }
 };
+
+defaults.profile.arenaFrames.standaloneBars = {};
+for i = 1, 6 do
+    defaults.profile.arenaFrames.standaloneBars[i] = {
+        name = "Bar ".. i,
+        enabled = true,
+
+        growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
+        offsetX = 0,
+        offsetY = 0,
+
+        iconSize = 32,
+        iconPadding = 2,
+        unusedIconAlpha = 0.5,
+        usedIconAlpha = 1,
+        showUnusedIcons = false,
+        hideCountDownNumbers = false,
+        spellList = {},
+    };
+end
 
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
@@ -235,7 +243,7 @@ end
 
 if addon.PROJECT_MAINLINE then
     SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
-    SetupInterrupts(defaults.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
+    --SetupInterrupts(defaults.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end
 
 function SweepyBoop:SetupBlizzardOptions()
