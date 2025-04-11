@@ -357,7 +357,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                     -- The texture might have been set by use_parent_icon icons
                     icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
-                    --print("Populated icon", iconSetID, unit, spellID);
+                    print("Populated icon", iconSetID, unit, spellID);
 
                     local configSpellID = spell.parent or spellID;
                     if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
@@ -720,9 +720,9 @@ function SweepyBoop:TestArenaCooldownTracker()
     addon.IconGroup_Wipe(iconGroups[mainBarID]);
     addon.IconGroup_Wipe(iconGroups[secondaryBarID]); -- Secondary bar
 
-    SetupIconGroup(mainBarID, "player", true);
+    SetupIconGroup(ICON_SET_ID.ARENA_MAIN, "player", true);
     if secondaryBarEnabled then
-        SetupIconGroup(secondaryBarID, "player", true);
+        SetupIconGroup(ICON_SET_ID.ARENA_SECONDARY, "player", true);
     end
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
