@@ -356,12 +356,8 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                             end
                         end
 
-                        if specEnabled then
-                            -- Check if spell is enabled in config
-                            if iconConfig.spellList[tostring(spellID)] then
-                                enabled = true;
-                            end
-                        end
+                        -- Put all icons for the class into the group whether enabled or not
+                        enabled = specEnabled;
                     end
                 end
 
@@ -373,7 +369,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                     addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
 
                     local configSpellID = spell.parent or spellID;
-                    if spell.baseline and iconConfig.showUnusedIcons then
+                    if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
                         icon:SetAlpha(iconConfig.unusedIconAlpha);
                         addon.IconGroup_Insert(group, icon);
                     end
@@ -619,14 +615,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Find the icon to use (check parent too)
     -- Config only shows parent ID, so check parent if applicable
     local config = SweepyBoop.db.profile.arenaFrames;
-    local spellList;
-    if self.isInterruptBar then
-        spellList = config.interruptBarSpellList;
-    elseif self.isSecondaryBar then
-        spellList = config.spellList2;
-    else
-        spellList = config.spellList;
-    end
+    local spellList = GetIconConfig(self.iconSetID).spellList;
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
@@ -656,14 +645,7 @@ local function ProcessUnitSpellCast(self, event, ...)
         local iconID = self.unit .. "-" .. iconSpellID;
         if self.icons[iconID] then
             local config = SweepyBoop.db.profile.arenaFrames;
-            local spellList;
-            if self.isInterruptBar then
-                spellList = config.interruptBarSpellList;
-            elseif self.isSecondaryBar then
-                spellList = config.spellList2;
-            else
-                spellList = config.spellList;
-            end
+            local spellList = GetIconConfig(self.iconSetID).spellList;
 
             local configSpellID = spell.parent or spellID;
             if spellList[tostring(configSpellID)] then
@@ -706,138 +688,58 @@ local function ProcessUnitEvent(group, event, ...)
     end
 end
 
-local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
-    local config = SweepyBoop.db.profile.arenaFrames;
-    local iconSize;
-    if isInterruptBar then
-        iconSize = config.interruptBarIconSize;
-    else
-        iconSize = config.arenaCooldownTrackerIconSize;
-    end
-    local iconScale = iconSize / addon.DEFAULT_ICON_SIZE;
-    local hideCountDownNumbers;
-    if isInterruptBar then
-        hideCountDownNumbers = config.interruptBarHideCountDownNumbers;
-    else
-        hideCountDownNumbers = config.hideCountDownNumbers;
-    end
-    local unitId = "player";
-    if testIcons[unitId] then
-        for _, icon in pairs(testIcons[unitId]) do
-            icon:SetScale(iconScale);
-            addon.SetHideCountdownNumbers(icon, hideCountDownNumbers);
-        end
-    else
-        testIcons[unitId] = {};
-        for spellID, spell in pairs(spellData) do
-            local isEnabled = false;
-
-            if isInterruptBar then
-                if spell.class == addon.SHAMAN or spell.class == addon.ROGUE then
-                    isEnabled = ( spell.category == addon.SPELLCATEGORY.INTERRUPT ) or ( spell.category == addon.SPELLCATEGORY.OTHERS );
-                end
-            else
-                if spell.class == addon.PRIEST then
-                    if spell.use_parent_icon then
-                        -- Don't create if using parent icon
-                    elseif ( not spell.spec ) then
-                        isEnabled = true;
-                    else
-                        for i = 1, #(spell.spec) do
-                            if ( spell.spec[i] == addon.SPECID.DISCIPLINE ) then
-                                isEnabled = true;
-                                break;
-                            end
-                        end
-                    end
-                end
-            end
-
-            if isEnabled then
-                if spellData[spellID].category == addon.SPELLCATEGORY.BURST then
-                    testIcons[unitId][spellID] = addon.CreateBurstIcon(unitId, spellID, iconSize, true);
-                else
-                    testIcons[unitId][spellID] = addon.CreateCooldownTrackingIcon(unitId, spellID, iconSize);
-                end
-
-                testIcons[unitId][spellID].isInterruptBar = isInterruptBar;
-                testIcons[unitId][spellID].isInterrupt = ( spellData[spellID].category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ); -- Solar Beam
-                testIcons[unitId][spellID].isDefensive = ( spellData[spellID].category == addon.SPELLCATEGORY.DEFENSIVE )
-                    or ( spellData[spellID].category == addon.SPELLCATEGORY.IMMUNITY ) or ( spellData[spellID].category == addon.SPELLCATEGORY.HEAL );
-
-                addon.SetHideCountdownNumbers(testIcons[unitId][spellID], hideCountDownNumbers);
-            end
-        end
-    end
-    local growOptions;
-    if isInterruptBar then
-        growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
-        growOptions.margin = config.interruptBarIconPadding;
-    elseif isSecondaryBar then
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
-        growOptions.margin = config.arenaCooldownTrackerIconPadding;
-    else
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
-        growOptions.margin = config.arenaCooldownTrackerIconPadding;
-    end
-    local setPointOptions = GetSetPointOptions(index, isInterruptBar, isSecondaryBar);
-    if externalTestGroup[index] then
-        addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
-    else
-        externalTestGroup[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
-        externalTestGroup[index].isInterruptBar = isInterruptBar;
-        externalTestGroup[index].isSecondaryBar = isSecondaryBar;
-    end
-
-    SetupIconGroup(externalTestGroup[index], unitId, testIcons);
-end
-
 function SweepyBoop:TestArenaCooldownTracker()
     local secondaryBarEnabled = SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar;
 
-    addon.IconGroup_Wipe(externalTestGroup[1]);
-    addon.IconGroup_Wipe(externalTestGroup[4]); -- Secondary bar
+    local mainBarID = ICON_SET_ID.ARENA_MAIN .. "-player-test";
+    local secondaryBarID = ICON_SET_ID.ARENA_SECONDARY .. "-player-test";
 
-    RefreshTestMode(1, externalTestIcons);
+    addon.IconGroup_Wipe(iconGroups[mainBarID]);
+    addon.IconGroup_Wipe(iconGroups[secondaryBarID]); -- Secondary bar
+
+    SetupIconGroup(mainBarID, "player", true);
     if secondaryBarEnabled then
-        RefreshTestMode(4, externalTestIcons, false, true);
+        SetupIconGroup(secondaryBarID, "player", true);
     end
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 10060; -- Power Infusion
-    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroups[mainBarID], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 8122; -- Psychic Scream
-    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroups[mainBarID], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 33206; -- Pain Suppression
-    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroups[mainBarID], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
     if secondaryBarEnabled then
-        ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+        ProcessCombatLogEvent(iconGroups[secondaryBarID], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
     end
 
     spellId = 62618; -- Power Word: Barrier
-    ProcessCombatLogEvent(externalTestGroup[1], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroups[mainBarID], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
     if secondaryBarEnabled then
-        ProcessCombatLogEvent(externalTestGroup[4], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+        ProcessCombatLogEvent(iconGroups[secondaryBarID], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
     end
 
-    externalTestGroup[1]:Show();
+    iconGroups[mainBarID]:Show();
     if SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar then
-        externalTestGroup[4]:Show();
+        iconGroups[secondaryBarID]:Show();
     end
 end
 
 function SweepyBoop:HideTestArenaCooldownTracker()
-    addon.IconGroup_Wipe(externalTestGroup[1]);
-    addon.IconGroup_Wipe(externalTestGroup[4]); -- Secondary bar
-    if externalTestGroup[1] then
-        externalTestGroup[1]:Hide();
+    local mainBar = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player-test"];
+    local secondaryBar = iconGroups[ICON_SET_ID.ARENA_SECONDARY .. "-player-test"]; -- Secondary bar
+
+    addon.IconGroup_Wipe(mainBar);
+    addon.IconGroup_Wipe(secondaryBar);
+    if mainBar then
+        mainBar:Hide();
     end
-    if externalTestGroup[4] then
-        externalTestGroup[4]:Hide();
+    if secondaryBar then
+        secondaryBar:Hide();
     end
 end
 
@@ -938,10 +840,6 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
                 SweepyBoop:HideTestArenaInterruptBar();
-
-                -- This will simply update
-                EnsureIcons();
-                EnsureIconGroups();
 
                 local shouldSetup = false;
                 if addon.TEST_MODE then
