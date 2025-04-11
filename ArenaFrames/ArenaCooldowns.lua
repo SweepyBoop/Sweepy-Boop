@@ -309,6 +309,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
     for spellID, spell in pairs(spellData) do
         if ( not spell.use_parent_icon ) then
             local enabled = false;
+            local skipSpellListCheck = false;
 
             -- For arena frame bars test groups, show disc priest abilities
             if isTestGroup and ARENA_FRAME_BARS[iconSetID] then
@@ -336,6 +337,8 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                             enabled = (spell.category == addon.SPELLCATEGORY.DEFENSIVE );
                         end
                     end
+
+                    skipSpellListCheck = true;
                 end
             elseif class and ( ( not spell.class ) or ( spell.class == class ) ) then
                 enabled = true;
@@ -377,7 +380,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                 --print("Populated icon", iconSetID, unit, spellID);
 
                 local configSpellID = spell.parent or spellID;
-                if spell.baseline and iconConfig.showUnusedIcons and ( isTestGroup or iconConfig.spellList[tostring(configSpellID)] ) then
+                if spell.baseline and iconConfig.showUnusedIcons and ( skipSpellListCheck or iconConfig.spellList[tostring(configSpellID)] ) then
                     icon:SetAlpha(iconConfig.unusedIconAlpha);
                     addon.IconGroup_Insert(group, icon);
                 end
