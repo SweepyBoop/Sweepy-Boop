@@ -2391,6 +2391,7 @@ if addon.TEST_MODE then
         duration = 7,
         trackDest = true,
         trackEvent = addon.SPELL_AURA_APPLIED,
+        baseline = true,
     };
 
     addon.SpellData[1459] = {

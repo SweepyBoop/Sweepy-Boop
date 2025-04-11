@@ -394,8 +394,10 @@ end
 
 local function GetIconGroupEnabled(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
-    if ARENA_FRAME_BARS[iconSetID] then
+    if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
         return config.arenaCooldownTrackerEnabled;
+    elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
+        return config.arenaCooldownSecondaryBar;
     elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
         return config.interruptBarEnabled;
     else
