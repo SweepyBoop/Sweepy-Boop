@@ -409,8 +409,8 @@ addon.GetArenaFrameOptions = function(order)
                                 width = 0.75,
                                 name = "Grow direction",
                                 values = {
-                                    [addon.INTERRUPT_GROW_DIRECTION.CENTER_UP] = "Up",
-                                    [addon.INTERRUPT_GROW_DIRECTION.CENTER_DOWN] = "Down",
+                                    [addon.STANDALONE_GROW_DIRECTION.CENTER_UP] = "Up",
+                                    [addon.STANDALONE_GROW_DIRECTION.CENTER_DOWN] = "Down",
                                 },
                             },
 

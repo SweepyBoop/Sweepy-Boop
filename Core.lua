@@ -122,7 +122,7 @@ local defaults = {
             spellList2 = {},
 
             interruptBarEnabled = false;
-            interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
+            interruptBarGrowDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
             interruptBarOffsetX = 0,
             interruptBarOffsetY = -150,
             interruptBarIconSize = 40,

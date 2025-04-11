@@ -33,6 +33,9 @@ local ICON_SET_ID = {
     STANDALONE_6 = 9,
 };
 
+local ICON_SET_ID_MIN = 1;
+local ICON_SET_ID_MAX = 9;
+
 local ARENA_FRAME_BARS = {
     [ICON_SET_ID.ARENA_MAIN] = true,
     [ICON_SET_ID.ARENA_SECONDARY] = true,
@@ -165,7 +168,7 @@ local standaloneBarGrowOptions = {
     },
 };
 
-local function GetSetPointOptions(iconSetID, unitIndex)
+local function GetSetPointOptions(iconSetID, unitID)
     local config = SweepyBoop.db.profile.arenaFrames;
 
     local offsetX;
@@ -173,6 +176,8 @@ local function GetSetPointOptions(iconSetID, unitIndex)
         offsetX = config.arenaCooldownTrackerOffsetX;
     elseif iconSetID == ICON_SET_ID.ARENA_SECONDARY then
         offsetX = config.arenaCooldownOffsetXSecondary;
+    elseif iconSetID == ICON_SET_ID.INTERRUPT then
+        offsetX = config.interruptBarOffsetX;
     else
         offsetX = config.extraBars[iconSetID].offsetX;
     end
@@ -182,14 +187,18 @@ local function GetSetPointOptions(iconSetID, unitIndex)
         offsetY = config.arenaCooldownTrackerOffsetY;
     elseif iconSetID == ICON_SET_ID.ARENA_SECONDARY then
         offsetY = config.arenaCooldownOffsetYSecondary;
+    elseif iconSetID == ICON_SET_ID.INTERRUPT then
+        offsetY = config.interruptBarOffsetY;
     else
         offsetY = config.extraBars[iconSetID].offsetY;
     end
 
     local setPointOptions;
     if ARENA_FRAME_BARS[iconSetID] then
-        unitIndex = unitIndex % 3;
-        if unitIndex == 0 then unitIndex = 3 end
+        local unitIndex = "1";
+        if unitID and unitID ~= "player" then
+            unitIndex = string.sub(unitID, -1);
+        end
         setPointOptions = {
             point = "LEFT",
             relativeTo = framePrefix .. unitIndex,
@@ -215,10 +224,10 @@ local function GetGrowOptions(iconSetID)
     local growOptions;
 
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownTrackerGrowDirection];
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
         growOptions = arenaFrameGrowOptions[config.interruptBarGrowDirection];
@@ -372,6 +381,34 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                     if spell.baseline and iconConfig.showUnusedIcons and iconConfig.spellList[tostring(configSpellID)] then
                         icon:SetAlpha(iconConfig.unusedIconAlpha);
                         addon.IconGroup_Insert(group, icon);
+                    end
+                end
+            end
+        end
+    end
+end
+
+local function GetIconGroupEnabled(iconSetID)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    if ARENA_FRAME_BARS[iconSetID] then
+        return config.arenaCooldownTrackerEnabled;
+    elseif ( iconSetID == ICON_SET_ID.INTERRUPT ) then
+        return config.interruptBarEnabled;
+    else
+        return config.extraBars[iconSetID].enabled;
+    end
+end
+
+local function SetupAllIconGroups()
+    for iconSetID = ICON_SET_ID_MIN, 3 do
+        if GetIconGroupEnabled(iconSetID) then
+            if addon.TEST_MODE then
+                SetupIconGroup(iconSetID, "player");
+            else
+                for unitIndex = 1, addon.MAX_ARENA_SIZE do
+                    local unit = "arena" .. unitIndex;
+                    if GetIconGroupEnabled(iconSetID) then
+                        SetupIconGroup(iconSetID, unit);
                     end
                 end
             end
@@ -644,7 +681,6 @@ local function ProcessUnitSpellCast(self, event, ...)
         local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
         local iconID = self.unit .. "-" .. iconSpellID;
         if self.icons[iconID] then
-            local config = SweepyBoop.db.profile.arenaFrames;
             local spellList = GetIconConfig(self.iconSetID).spellList;
 
             local configSpellID = spell.parent or spellID;
@@ -743,71 +779,60 @@ function SweepyBoop:HideTestArenaCooldownTracker()
     end
 end
 
-local function RepositionExternalTestGroup(index, isSecondaryBar)
-    if ( not externalTestGroup[index] ) or ( not externalTestGroup[index]:IsShown() ) then return end
+local function RepositionExternalTestGroup(iconGroupID, unitIndex)
+    if ( not iconGroups[iconGroupID] ) or ( not iconGroups[iconGroupID]:IsShown() ) then return end
 
-    local config = SweepyBoop.db.profile.arenaFrames;
-    local growOptions;
-    if isSecondaryBar then
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
-    else
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
-    end
-    growOptions.margin = config.arenaCooldownTrackerIconPadding;
-    local setPointOptions = GetSetPointOptions(index, false, isSecondaryBar);
-    addon.UpdateIconGroupSetPointOptions(externalTestGroup[index], setPointOptions, growOptions);
+    local growOptions = GetGrowOptions(iconGroups[iconGroupID].iconSetID);
+    local setPointOptions = GetSetPointOptions(iconGroups[iconGroupID].iconSetID, unitIndex);
+    addon.UpdateIconGroupSetPointOptions(iconGroups[iconGroupID], setPointOptions, growOptions);
 end
 
 function SweepyBoop:RepositionArenaCooldownTracker(layoutIcons)
-    RepositionExternalTestGroup(1);
-    RepositionExternalTestGroup(4, true); -- Secondary bar
+    RepositionExternalTestGroup(ICON_SET_ID.ARENA_MAIN .. "-player-test", 1);
+    RepositionExternalTestGroup(ICON_SET_ID.ARENA_SECONDARY .. "-player-test", 1);
 
     if layoutIcons then
-        addon.IconGroup_Position(externalTestGroup[1]);
-        addon.IconGroup_Position(externalTestGroup[4]); -- Secondary bar
+        addon.IconGroup_Position(iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player-test"]);
+        addon.IconGroup_Position(iconGroups[ICON_SET_ID.ARENA_SECONDARY .. "-player-test"]);
     end
 end
 
 function SweepyBoop:TestArenaInterruptBar()
-    addon.IconGroup_Wipe(externalTestGroup[2]);
-    RefreshTestMode(2, externalTestIconsInterrupt, true);
+    addon.IconGroup_Wipe(iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"]);
+    SetupIconGroup(ICON_SET_ID.INTERRUPT, "player", true);
+    local iconGroup = iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"];
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
     local sourceGUID = UnitGUID("player");
     local destGUID = UnitGUID("player");
     local spellId = 1766; -- Kick
-    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 57994; -- Wind Shear
-    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 204336; -- Grounding Totem
-    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
     spellId = 8143; -- Tremor Totem
-    ProcessCombatLogEvent(externalTestGroup[2], subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
+    ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, nil, nil, true);
 
-    externalTestGroup[2]:Show();
+    iconGroup:Show();
 end
 
 function SweepyBoop:HideTestArenaInterruptBar()
-    addon.IconGroup_Wipe(externalTestGroup[2]);
-    if externalTestGroup[2] then
-        externalTestGroup[2]:Hide();
+    local iconGroup = iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"];
+    addon.IconGroup_Wipe(iconGroup);
+    if iconGroup then
+        iconGroup:Hide();
     end
 end
 
 function SweepyBoop:RepositionArenaInterruptBar(layoutIcons)
-    if ( not externalTestGroup[2] ) or ( not externalTestGroup[2]:IsShown() ) then return end
-
-    local config = SweepyBoop.db.profile.arenaFrames;
-    local growOptions = interruptBarGrowOptions[config.interruptBarGrowDirection];
-    growOptions.margin = config.interruptBarIconPadding;
-    local setPointOptions = GetSetPointOptions(1, true);
-    addon.UpdateIconGroupSetPointOptions(externalTestGroup[2], setPointOptions, growOptions);
+    RepositionExternalTestGroup(ICON_SET_ID.INTERRUPT .. "-player-test");
 
     if layoutIcons then
-        addon.IconGroup_Position(externalTestGroup[2]);
+        addon.IconGroup_Position(iconGroups[ICON_SET_ID.INTERRUPT .. "-player-test"]);
     end
 end
 
@@ -851,7 +876,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     shouldSetup = ( matchState < Enum.PvPMatchState.Engaged );
                 end
                 if shouldSetup then
-                    SetupIconGroups(arenaTrackerEnabled, interruptBarEnabled);
+                    SetupAllIconGroups();
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
