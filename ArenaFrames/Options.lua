@@ -383,6 +383,7 @@ addon.GetArenaFrameOptions = function(order)
                 return SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].name;
             end,
             get = function(info)
+                return SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName][info[#info]];
             end,
             set = function(info, val)
                 SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName][info[#info]] = val;
@@ -399,15 +400,15 @@ addon.GetArenaFrameOptions = function(order)
                             type = "input",
                             name = "Name",
                         },
-        
+
                         enabled = {
                             order = 2,
                             type = "toggle",
                             name = "Enabled",
                         },
-        
+
                         -- Do we need grow direction here
-        
+
                         iconSize = {
                             order = 4,
                             type = "range",
@@ -416,7 +417,7 @@ addon.GetArenaFrameOptions = function(order)
                             step = 1,
                             name = "Icon size",
                         },
-        
+
                         iconPadding = {
                             order = 5,
                             type = "range",
@@ -425,7 +426,7 @@ addon.GetArenaFrameOptions = function(order)
                             step = 1,
                             name = "Padding",
                         },
-        
+
                         offsetX = {
                             order = 6,
                             type = "range",
@@ -434,7 +435,7 @@ addon.GetArenaFrameOptions = function(order)
                             step = 1,
                             name = "X offset",
                         },
-        
+
                         offsetY = {
                             order = 7,
                             type = "range",
@@ -443,14 +444,14 @@ addon.GetArenaFrameOptions = function(order)
                             step = 1,
                             name = "Y offset",
                         },
-        
+
                         showUnusedIcons = {
                             order = 8,
                             type = "toggle",
                             name = "Always show icons",
                             desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                         },
-        
+
                         unusedIconAlpha = {
                             order = 9,
                             type = "range",
@@ -461,7 +462,7 @@ addon.GetArenaFrameOptions = function(order)
                             step = 0.1,
                             name = "Off-cooldown alpha",
                         },
-        
+
                         usedIconAlpha = {
                             order = 10,
                             type = "range",
@@ -561,7 +562,7 @@ addon.GetArenaFrameOptions = function(order)
     end
 
     local function AppendSpellCategoryPriority(group)
-        for i = 1, 12 do -- Can we not hard-code this   
+        for i = 1, 12 do -- Can we not hard-code this
             group[tostring(i)] = {
                 order = i,
                 type = "range",
