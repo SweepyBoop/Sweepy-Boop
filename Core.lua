@@ -208,43 +208,15 @@ if addon.internal then -- Set default for internal version
     defaults.profile.misc.healerInCrowdControl = true;
 end
 
-addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
-addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
-addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
+local function FillDefaults()
+    addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
+    addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
+    addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
-local function SetupAllSpells(profile, spellList)
-    for spellID, spellEntry in pairs(spellList) do
-        local category = spellEntry.category;
-        -- By default only check burst and defensives
-        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) or ( category == addon.SPELLCATEGORY.IMMUNITY ) or ( category == addon.SPELLCATEGORY.HEAL ) then
-            profile[tostring(spellID)] = true;
-        else
-            profile[tostring(spellID)] = false;
-        end
+    if addon.PROJECT_MAINLINE then
+        addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+        addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, addon.SpellData);
     end
-end
-
-local function UncheckAllSpells(profile, spellList)
-    for spellID, spellEntry in pairs(spellList) do
-        profile[tostring(spellID)] = false;
-    end
-end
-
-local function SetupInterrupts(profile, spellList)
-    for spellID, spellEntry in pairs(spellList) do
-        local category = spellEntry.category;
-        -- By default only check interrupts
-        if ( category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ) then
-            profile[tostring(spellID)] = true;
-        else
-            profile[tostring(spellID)] = false;
-        end
-    end
-end
-
-if addon.PROJECT_MAINLINE then
-    SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
-    --SetupInterrupts(defaults.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end
 
 function SweepyBoop:SetupBlizzardOptions()
@@ -292,6 +264,7 @@ function SweepyBoop:SetupBlizzardOptions()
 end
 
 function SweepyBoop:OnInitialize()
+    FillDefaults();
     local currentTime = GetTime();
     for _, category in pairs(defaults) do
         if type(category) == "table" then
@@ -370,16 +343,4 @@ function SweepyBoop:RefreshConfig()
     else
         icon:Show(addonName);
     end
-end
-
-function SweepyBoop:CheckDefaultArenaAbilities()
-    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
-end
-
-function SweepyBoop:UncheckAllArenaAbilities()
-    UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
-end
-
-function SweepyBoop:CheckDefaultInterrupts()
-    SetupInterrupts(SweepyBoop.db.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end

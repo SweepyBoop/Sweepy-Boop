@@ -45,6 +45,36 @@ function SweepyBoop:TestArenaStandalone()
     self:TestArenaStandaloneBars();
 end
 
+addon.SetupAllSpells = function (profile, spellList)
+    for spellID, spellEntry in pairs(spellList) do
+        local category = spellEntry.category;
+        -- By default only check burst and defensives
+        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) or ( category == addon.SPELLCATEGORY.IMMUNITY ) or ( category == addon.SPELLCATEGORY.HEAL ) then
+            profile[tostring(spellID)] = true;
+        else
+            profile[tostring(spellID)] = false;
+        end
+    end
+end
+
+addon.UncheckAllSpells = function (profile, spellList)
+    for spellID, spellEntry in pairs(spellList) do
+        profile[tostring(spellID)] = false;
+    end
+end
+
+addon.SetupInterrupts = function (profile, spellList)
+    for spellID, spellEntry in pairs(spellList) do
+        local category = spellEntry.category;
+        -- By default only check interrupts
+        if ( category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ) then
+            profile[tostring(spellID)] = true;
+        else
+            profile[tostring(spellID)] = false;
+        end
+    end
+end
+
 addon.GetArenaFrameOptions = function(order)
     local optionGroup = {
         order = order,
@@ -317,7 +347,16 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "execute",
                                 name = "Restore default",
                                 func = function ()
-                                    SweepyBoop:CheckDefaultArenaAbilities();
+                                    addon.SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
+                                end
+                            },
+
+                            uncheckAll = {
+                                order = 2,
+                                type = "execute",
+                                name = "Uncheck all",
+                                func = function ()
+                                    addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
                                 end
                             },
                         },
@@ -334,9 +373,18 @@ addon.GetArenaFrameOptions = function(order)
                             restoreDefaults = {
                                 order = 1,
                                 type = "execute",
+                                name = "Restore default",
+                                func = function ()
+                                    addon.SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
+                                end
+                            },
+
+                            unsetAll = {
+                                order = 2,
+                                type = "execute",
                                 name = "Uncheck all",
                                 func = function ()
-                                    SweepyBoop:UncheckAllArenaAbilities();
+                                    addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
                                 end
                             },
                         },
@@ -480,7 +528,6 @@ addon.GetArenaFrameOptions = function(order)
                     order = 2,
                     type = "group",
                     name = "Spells",
-                    desc = "Select which abilities to track cooldown inside arenas",
                     get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
                     set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
                     args = {
@@ -489,7 +536,16 @@ addon.GetArenaFrameOptions = function(order)
                             type = "execute",
                             name = "Restore default",
                             func = function ()
-                                SweepyBoop:CheckDefaultArenaAbilities();
+                                addon.SetupInterrupts(SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList, addon.SpellData);
+                            end
+                        },
+
+                        uncheckAll = {
+                            order = 2,
+                            type = "execute",
+                            name = "Uncheck all",
+                            func = function ()
+                                addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList, addon.SpellData);
                             end
                         },
                     },
