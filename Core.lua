@@ -296,8 +296,8 @@ function SweepyBoop:OnInitialize()
     icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
-    self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
     self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig");
+    self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
 
     -- Nameplate module needs optimization to eat less CPU
     -- Setup nameplate modules
