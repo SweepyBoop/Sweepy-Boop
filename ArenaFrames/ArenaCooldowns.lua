@@ -374,8 +374,8 @@ local function GetIconGroupEnabled(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
         return config.arenaCooldownTrackerEnabled;
-    elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
-        return config.arenaCooldownSecondaryBar;
+    elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then -- secondary bar depends on main bar being enabled
+        return config.arenaCooldownTrackerEnabled and config.arenaCooldownSecondaryBar;
     else
         return config.standaloneBars[iconSetID].enabled;
     end
@@ -764,17 +764,17 @@ function SweepyBoop:HideTestArenaCooldownTracker()
     end
 end
 
-local function RepositionExternalTestGroup(iconGroupID, unitIndex)
+local function RepositionExternalTestGroup(iconGroupID, unitID)
     if ( not iconGroups[iconGroupID] ) or ( not iconGroups[iconGroupID]:IsShown() ) then return end
 
     local growOptions = GetGrowOptions(iconGroups[iconGroupID].iconSetID);
-    local setPointOptions = GetSetPointOptions(iconGroups[iconGroupID].iconSetID, unitIndex);
+    local setPointOptions = GetSetPointOptions(iconGroups[iconGroupID].iconSetID, unitID);
     addon.UpdateIconGroupSetPointOptions(iconGroups[iconGroupID], setPointOptions, growOptions);
 end
 
 function SweepyBoop:RepositionArenaCooldownTracker(layoutIcons)
-    RepositionExternalTestGroup(ICON_SET_ID.ARENA_MAIN .. "-player-test", 1);
-    RepositionExternalTestGroup(ICON_SET_ID.ARENA_SECONDARY .. "-player-test", 1);
+    RepositionExternalTestGroup(ICON_SET_ID.ARENA_MAIN .. "-player-test", "player");
+    RepositionExternalTestGroup(ICON_SET_ID.ARENA_SECONDARY .. "-player-test", "player");
 
     if layoutIcons then
         addon.IconGroup_Position(iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player-test"]);
