@@ -42,6 +42,8 @@ end
 -- For test icons, use "spellID-test"
 local iconPool = {};
 
+-- Arena frame bars and standalone bars have different names for some config
+-- Ideally we want to keep them the same but it's disruptive to change config name since it would mess up players' current settings
 local function GetIconSize(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     if ARENA_FRAME_BARS[iconSetID] then
@@ -51,13 +53,28 @@ local function GetIconSize(iconSetID)
     end
 end
 
-local function GetIconHideCountDownNumbers(iconSetID)
-    local config = SweepyBoop.db.profile.arenaFrames;
-    if ARENA_FRAME_BARS[iconSetID] then
-        return config.hideCountDownNumbers;
+addon.GetSpellListConfig = function (iconSetID)
+    local spellList;
+    if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
+        spellList = SweepyBoop.db.profile.arenaFrames.spellList;
+    elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
+        spellList = SweepyBoop.db.profile.arenaFrames.spellList2;
     else
-        return config.standaloneBars[iconSetID].hideCountDownNumbers;
+        spellList = SweepyBoop.db.profile.arenaFrames.standaloneBars[iconSetID].spellList;
     end
+    return spellList;
+end
+
+-- showUnusedIcons, unusedIconAlpha, usedIconAlpha
+addon.GetIconSetConfig = function(iconSetID)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local iconSetConfig;
+    if ARENA_FRAME_BARS[iconSetID] then
+        iconSetConfig = config;
+    else
+        iconSetConfig = config.standaloneBars[iconSetID];
+    end
+    return iconSetConfig;
 end
 
 local function GetIcon(iconSetID, unitID, spellID, test)
@@ -68,6 +85,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
     end
 
     local config = SweepyBoop.db.profile.arenaFrames;
+    local iconSetConfig = addon.GetIconSetConfig(iconSetID);
 
     if ( not iconPool[iconSetID][iconID] ) then
         local size = GetIconSize(iconSetID);
@@ -77,8 +95,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
             iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
         end
 
-        local hideCountDownNumbers = GetIconHideCountDownNumbers(iconSetID);
-        addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], hideCountDownNumbers);
+        addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
         iconPool[iconSetID][iconID].iconSetID = iconSetID;
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
     end
@@ -86,11 +103,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
     if ( iconPool[iconSetID][iconID].lastModified ~= config.lastModified ) then
         local size = GetIconSize(iconSetID);
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
-        local hideCountDownNumbers = GetIconHideCountDownNumbers(iconSetID);
-        addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], hideCountDownNumbers);
-
-        local hideCountDownNumbers = GetIconHideCountDownNumbers(iconSetID);
-        addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], hideCountDownNumbers);
+        addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
 
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
     end
@@ -262,30 +275,6 @@ local function GetSpecOverrides(spell, spec)
     end
 
     return overrides;
-end
-
-addon.GetSpellListConfig = function (iconSetID)
-    local spellList;
-    if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
-        spellList = SweepyBoop.db.profile.arenaFrames.spellList;
-    elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
-        spellList = SweepyBoop.db.profile.arenaFrames.spellList2;
-    else
-        spellList = SweepyBoop.db.profile.arenaFrames.standaloneBars[iconSetID].spellList;
-    end
-    return spellList;
-end
-
--- showUnusedIcons, unusedIconAlpha, usedIconAlpha
-addon.GetIconSetConfig = function(iconSetID)
-    local config = SweepyBoop.db.profile.arenaFrames;
-    local iconSetConfig;
-    if ARENA_FRAME_BARS[iconSetID] then
-        iconSetConfig = config;
-    else
-        iconSetConfig = config.standaloneBars[iconSetID];
-    end
-    return iconSetConfig;
 end
 
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
