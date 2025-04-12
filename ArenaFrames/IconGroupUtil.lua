@@ -79,8 +79,6 @@ addon.IconGroup_Position = function(group)
             else
                 group.active[i]:SetPoint(anchor, group, anchor, 0, 0);
             end
-
-            print(group.active[i].spellID, group.active[i]:GetPoint());
         else
             count = count + 1;
 
