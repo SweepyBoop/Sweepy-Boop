@@ -528,8 +528,8 @@ addon.GetArenaFrameOptions = function(order)
                     order = 2,
                     type = "group",
                     name = "Spells",
-                    get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
-                    set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
+                    get = function(info) return SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList[info[#info]] end,
+                    set = function(info, val) SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList[info[#info]] = val end,
                     args = {
                         restoreDefaults = {
                             order = 1,
