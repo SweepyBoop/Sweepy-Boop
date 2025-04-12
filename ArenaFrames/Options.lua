@@ -524,6 +524,9 @@ addon.GetArenaFrameOptions = function(order)
                             max = 1,
                             step = 0.1,
                             name = "Off-cooldown alpha",
+                            hidden = function()
+                                return ( not SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].showUnusedIcons );
+                            end
                         },
 
                         usedIconAlpha = {
@@ -535,6 +538,9 @@ addon.GetArenaFrameOptions = function(order)
                             max = 1,
                             step = 0.1,
                             name = "On-cooldown alpha",
+                            hidden = function()
+                                return ( not SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].showUnusedIcons );
+                            end
                         },
                     },
                 },
