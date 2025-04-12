@@ -327,15 +327,15 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                     skipSpellListCheck = true;
                 end
             else
-                enabled = false;
                 -- Fill enabled abilities, but for test groups, show 8 at most
                 if isTestGroup then -- a test group need to populate all icons toggled for all classes
-                    if remainingTest > 0 then
+                    if ( remainingTest > 0 ) and iconConfig.spellList[tostring(spellID)] then
+                        enabled = true;
                         remainingTest = remainingTest - 1;
                     else
                         enabled = false;
                     end
-                elseif ( not class ) or ( spell.class == class ) then
+                elseif ( not spell.class ) or ( spell.class == class ) then
                     enabled = true;
                     -- Does this spell filter by spec?
                     if spell.spec then
