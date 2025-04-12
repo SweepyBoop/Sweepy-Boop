@@ -115,8 +115,9 @@ end
 -- Append "-test" if it's a test group
 local iconGroups = {};
 
+-- Find the first arena frame (addon) to use for anchors
 local framePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
-local LARGE_COLUMN = 100; -- Don't break line for arena tracker
+local LARGE_COLUMN = 100; -- Don't break line for each bar
 local arenaFrameGrowOptions = {
     [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = {
         direction = "RIGHT",
@@ -182,7 +183,7 @@ local function GetSetPointOptions(iconSetID, unitID)
     local setPointOptions;
     if ARENA_FRAME_BARS[iconSetID] then
         local unitIndex = "1";
-        if unitID and unitID ~= "player" then
+        if unitID and unitID ~= "player" then -- arena 1/2/3
             unitIndex = string.sub(unitID, -1);
         end
         setPointOptions = {
@@ -331,7 +332,7 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                     end
                 elseif ( not spell.class ) or ( spell.class == class ) then
                     enabled = true;
-                    -- Does this spell filter by spec?
+
                     if spell.spec then
                         local specEnabled = false;
 
@@ -346,7 +347,6 @@ local function SetupIconGroup(iconSetID, unit, isTestGroup)
                             end
                         end
 
-                        -- Put all icons for the class into the group whether enabled or not
                         enabled = specEnabled;
                     end
                 end
@@ -795,17 +795,17 @@ function SweepyBoop:TestArenaStandaloneBars()
         local iconSetID = "Bar " .. i;
         local iconGroupID = iconSetID .. "-player-test";
         addon.IconGroup_Wipe(iconGroups[iconGroupID]);
-        
+
         if GetIconGroupEnabled(iconSetID) then
             SetupIconGroup(iconSetID, "player", true);
             local iconGroup = iconGroups[iconGroupID];
-            
+
             -- Fire an event with every spellID in that group
             local subEvent = addon.SPELL_CAST_SUCCESS;
             local sourceGUID = UnitGUID("player");
             local destGUID = UnitGUID("player");
             for _, icon in pairs(iconGroup.icons) do
-                
+
                 ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, icon.spellID, nil, nil, true);
             end
 
@@ -864,7 +864,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
-                
+
                 -- Process arena frame bars if enabled
                 if addon.TEST_MODE then
                     local arenaMain = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player"];
@@ -913,7 +913,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
                 local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
                 local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
-                
+
                 local arenaMainGroupID = ICON_SET_ID.ARENA_MAIN;
                 if addon.TEST_MODE then
                     arenaMainGroupID = arenaMainGroupID .. "-player";
