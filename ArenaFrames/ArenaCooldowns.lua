@@ -813,7 +813,7 @@ end
 
 function SweepyBoop:HideTestArenaStandaloneBars()
     for i = 1, 6 do
-        local iconGroup = iconGroups["Bar " .. i .. "-test"];
+        local iconGroup = iconGroups["Bar " .. i .. "-player-test"];
         if iconGroup then
             addon.IconGroup_Wipe(iconGroup);
             iconGroup:Hide();
