@@ -252,7 +252,6 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
 
-    addon.IconGroup_Wipe(iconGroups[iconGroupID]);
     iconGroups[iconGroupID].guardianSpiritSaved = {};
 
     return iconGroups[iconGroupID];
@@ -279,7 +278,6 @@ local function GetSpecOverrides(spell, spec)
 end
 
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
-    print("SetupIconGroup", iconSetID, unit, isTestGroup);
     local group = GetIconGroup(iconSetID, unit, isTestGroup);
     local config = SweepyBoop.db.profile.arenaFrames;
     local spellList = addon.GetSpellListConfig(iconSetID);
