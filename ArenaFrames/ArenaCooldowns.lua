@@ -38,8 +38,8 @@ for spellID, spell in pairs(spellData) do
     -- Should we allow entries without class specified?
 end
 
--- iconPool[iconSetID][unitID-spellID] (this works for arena frame bars too)
--- For test icons, use "spellID-test"
+-- iconPool[iconSetID][unitID-spellID]
+-- For test icons, iconPool[iconSetID][unitID-spellID-test]
 local iconPool = {};
 
 -- Arena frame bars and standalone bars have different names for some config
@@ -65,7 +65,7 @@ addon.GetSpellListConfig = function (iconSetID)
     return spellList;
 end
 
--- showUnusedIcons, unusedIconAlpha, usedIconAlpha
+-- all the other configs that have the same name b/w arena frame bars and standalone bars
 addon.GetIconSetConfig = function(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     local iconSetConfig;
