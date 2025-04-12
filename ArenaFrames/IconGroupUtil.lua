@@ -70,33 +70,9 @@ addon.IconGroup_Position = function(group)
     local grow = group.growUpward and 1 or -1;
     local margin = group.margin;
 
-    -- If we have 2 interrupts on row 1, and 6 other abilities on row 2
-    -- We need to offset the 2 interrupts on row 1 correctly based on 2 columns
-    local interruptCount = 0;
-    local otherCount = 0;
-    local separateRowForInterrupts = group.isInterruptBar and SweepyBoop.db.profile.arenaFrames.separateRowForInterrupts;
-    if separateRowForInterrupts then
-        for i = 1, numActive do
-            if group.active[i].isInterrupt then
-                interruptCount = interruptCount + 1;
-            else
-                otherCount = otherCount + 1;
-            end
-        end
-    end
-
     for i = 1, numActive do
         group.active[i]:ClearAllPoints();
-        local columns;
-        if separateRowForInterrupts then
-            if group.active[i].isInterrupt then
-                columns = interruptCount;
-            else
-                columns = otherCount;
-            end
-        else
-            columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
-        end
+        local columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
         if ( i == 1 ) then
             if growDirection == "CENTER" then
                 group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, 0);
@@ -105,17 +81,8 @@ addon.IconGroup_Position = function(group)
             end
         else
             count = count + 1;
-            local newRow;
-            if ( count >= columns ) then
-                newRow = true;
-            else
-                local config = SweepyBoop.db.profile.arenaFrames;
-                if group.isInterruptBar then
-                    newRow = config.separateRowForInterrupts and group.active[i - 1] and group.active[i - 1].isInterrupt and ( not group.active[i].isInterrupt );
-                end
-            end
 
-            if newRow then
+            if ( count >= columns ) then
                 if growDirection == "CENTER" then
                     group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
                 else
