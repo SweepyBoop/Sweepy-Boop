@@ -192,28 +192,28 @@ local function FillDefaults()
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
-    defaults.profile.arenaFrames.standaloneBars = {};
-    for i = 1, 6 do
-        local groupName = "Bar ".. i;
-        defaults.profile.arenaFrames.standaloneBars[groupName] = {
-            name = groupName,
-            enabled = false,
-
-            growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
-            offsetX = 0,
-            offsetY = 0,
-
-            iconSize = 32,
-            iconPadding = 2,
-            unusedIconAlpha = 0.5,
-            usedIconAlpha = 1,
-            showUnusedIcons = false,
-            hideCountDownNumbers = false,
-            spellList = {},
-        };
-    end
-
     if addon.PROJECT_MAINLINE then
+        defaults.profile.arenaFrames.standaloneBars = {};
+        for i = 1, 6 do
+            local groupName = "Bar ".. i;
+            defaults.profile.arenaFrames.standaloneBars[groupName] = {
+                name = groupName,
+                enabled = false,
+
+                growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
+                offsetX = 0,
+                offsetY = 0,
+
+                iconSize = 32,
+                iconPadding = 2,
+                unusedIconAlpha = 0.5,
+                usedIconAlpha = 1,
+                showUnusedIcons = false,
+                hideCountDownNumbers = false,
+                spellList = {},
+            };
+        end
+
         addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
         addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, addon.SpellData);
     end
