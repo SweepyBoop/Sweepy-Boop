@@ -813,10 +813,10 @@ function SweepyBoop:TestArenaStandaloneBars()
             SetupIconGroup(iconGroup, "player");
 
             -- Fire an event with every spellID in that group
-            local subEvent = addon.SPELL_CAST_SUCCESS;
             local sourceGUID = UnitGUID("player");
             local destGUID = UnitGUID("player");
             for _, icon in pairs(iconGroup.icons) do
+                local subEvent = icon.spellInfo.trackEvent or addon.SPELL_CAST_SUCCESS;
                 ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, icon.spellID, nil, nil, true);
             end
 
