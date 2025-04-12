@@ -131,13 +131,13 @@ local arenaFrameGrowOptions = {
 };
 local standaloneBarGrowOptions = {
     [addon.STANDALONE_GROW_DIRECTION.CENTER_UP] = {
-        direction = "UP",
+        direction = "CENTER",
         anchor = "CENTER",
         columns = LARGE_COLUMN,
         growUpward = true,
     },
     [addon.STANDALONE_GROW_DIRECTION.CENTER_DOWN] = {
-        direction = "DOWN",
+        direction = "CENTER",
         anchor = "CENTER",
         columns = LARGE_COLUMN,
         growUpward = false,
@@ -481,13 +481,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     --     print(subEvent, spellName, spellId, sourceGUID, destGUID);
     -- end
 
-    print("Group unit", self.unit);
-
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
-
-    print("Test");
 
     -- Apotheosis
     if spellId == 200183 and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
@@ -626,8 +622,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
     if ( not unit ) then return end
 
-    print("Unit validated");
-
     -- Check spell dismiss (check by sourceGUID unless trackDest is specified)
     if ( subEvent == addon.SPELL_AURA_REMOVED ) and unitGuidToId[sourceGUID] then
         local icon = self.activeMap[unitGuidToId[sourceGUID] .. "-" .. spellId];
@@ -652,7 +646,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
-    print("Icon ID:", iconID, "Spell ID:", spellId, "Config Spell ID:", configSpellId, "Parent Spell ID:", iconSpellId);
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconSpellId ~= spellId ) then
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
