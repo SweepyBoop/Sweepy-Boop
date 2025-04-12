@@ -611,10 +611,9 @@ addon.GetArenaFrameOptions = function(order)
         indexInClassGroup[classInfo.classFile] = 1;
         groupIndex = groupIndex + 1;
     end
-    local function AppendSpellOptions(group, spellList, excludeCategory)
+    local function AppendSpellOptions(group, spellList)
         for spellID, spellInfo in pairs(spellList) do
-            local category = spellInfo.category;
-            if ( category ~= excludeCategory ) and ( not spellInfo.parent ) then
+            if ( not spellInfo.parent ) then
                 local classFile = spellInfo.class;
                 local classGroup = group.args[classFile];
                 local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
@@ -657,13 +656,13 @@ addon.GetArenaFrameOptions = function(order)
         end
     end
 
-    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
-    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList2, addon.SpellData, addon.SPELLCATEGORY.INTERRUPT);
+    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList, addon.SpellData);
+    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList2, addon.SpellData);
     AppendSpellCategoryPriority(optionGroup.args.arenaFrameBars.args.spellCatPriority.args);
 
     for i = 1, 6 do
         local groupName = "Bar " .. i;
-        AppendSpellOptions(optionGroup.args.standaloneBars.args[groupName].args.spellList, addon.SpellData, addon.SPELLCATEGORY.BURST);
+        AppendSpellOptions(optionGroup.args.standaloneBars.args[groupName].args.spellList, addon.SpellData);
     end
 
     return optionGroup;
