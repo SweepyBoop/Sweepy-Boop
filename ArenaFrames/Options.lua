@@ -405,7 +405,7 @@ addon.GetArenaFrameOptions = function(order)
                         order = 1,
                         type = "execute",
                         name = "Test all",
-                        func = "TestArenaStandaloneBars",
+                        func = "TestArenaStandalone",
                         width = "half",
                     },
                     hidetest = {
