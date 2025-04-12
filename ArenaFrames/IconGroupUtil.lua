@@ -174,7 +174,7 @@ addon.IconGroup_Remove = function (group, icon, fade)
     icon.started = nil;
 
     if fade then
-        local alpha = addon.GetIconConfig(group.iconSetID).unusedIconAlpha;
+        local alpha = addon.GetIconSetConfig(group.iconSetID).unusedIconAlpha;
         icon:SetAlpha(alpha);
         return;
     end

@@ -265,7 +265,7 @@ local function GetSpecOverrides(spell, spec)
 end
 
 -- spellList, showUnusedIcons, unusedIconAlpha
-addon.GetIconConfig = function(iconSetID)
+addon.GetIconSetConfig = function(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     local iconConfig = {};
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
@@ -291,7 +291,7 @@ end
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
     local group = GetIconGroup(iconSetID, unit, isTestGroup);
     local config = SweepyBoop.db.profile.arenaFrames;
-    local iconConfig = addon.GetIconConfig(iconSetID);
+    local iconConfig = addon.GetIconSetConfig(iconSetID);
 
     local class = addon.GetClassForPlayerOrArena(unit);
     local spec = addon.GetSpecForPlayerOrArena(unit);
@@ -647,7 +647,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use (check parent too)
     -- Config only shows parent ID, so check parent if applicable
-    local spellList = addon.GetIconConfig(self.iconSetID).spellList;
+    local spellList = addon.GetIconSetConfig(self.iconSetID).spellList;
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
@@ -676,7 +676,7 @@ local function ProcessUnitSpellCast(self, event, ...)
         local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
         local iconID = self.unit .. "-" .. iconSpellID;
         if self.icons[iconID] then
-            local spellList = addon.GetIconConfig(self.iconSetID).spellList;
+            local spellList = addon.GetIconSetConfig(self.iconSetID).spellList;
 
             local configSpellID = spell.parent or spellID;
             if spellList[tostring(configSpellID)] then

@@ -50,7 +50,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         if finish then
             icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
             if icon.group then
-                local showUnusedIcons = addon.GetIconConfig(icon.iconSetID).showUnusedIcons;
+                local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
                 addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
             end
         else
@@ -97,7 +97,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
-            local showUnusedIcons = addon.GetIconConfig(icon.iconSetID).showUnusedIcons;
+            local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
@@ -109,7 +109,7 @@ end
 
 addon.SetUnusedIconAlpha = function (icon)
     local unusedIconAlpha;
-    local config = addon.GetIconConfig(icon.iconSetID);
+    local config = addon.GetIconSetConfig(icon.iconSetID);
     if config.showUnusedIcons then
         unusedIconAlpha = config.unusedIconAlpha;
     else
@@ -126,7 +126,7 @@ addon.SetUsedIconAlpha = function (icon)
     end
 
     local usedIconAlpha;
-    local config = addon.GetIconConfig(icon.iconSetID);
+    local config = addon.GetIconSetConfig(icon.iconSetID);
     if config.showUnusedIcons then
         usedIconAlpha = config.usedIconAlpha;
     else
@@ -143,7 +143,7 @@ addon.OnDurationTimerFinished = function(self)
         icon.cooldown:Show();
     else
         if icon.group then
-            local showUnusedIcons = addon.GetIconConfig(icon.iconSetID).showUnusedIcons;
+            local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
