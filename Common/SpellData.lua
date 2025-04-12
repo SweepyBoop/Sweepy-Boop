@@ -1381,7 +1381,6 @@ addon.SpellData = {
         category = category.BURST,
         spellID = 211522,
         cooldown = 45,
-        --duration = 12, -- If killed early, UNIT_DIED is triggered
     },
     -- Power Infusion
     [10060] = {
