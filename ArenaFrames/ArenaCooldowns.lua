@@ -241,6 +241,7 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         local growOptions = GetGrowOptions(iconSetID);
         iconGroups[iconGroupID] = addon.CreateIconGroup(setPointOptions, growOptions, unitID);
         iconGroups[iconGroupID].iconSetID = iconSetID;
+        iconGroups[iconGroupID].isTestGroup = isTestGroup;
         iconGroups[iconGroupID].guardianSpiritSaved = {}; -- Have to cache this per group
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
@@ -280,8 +281,8 @@ end
 -- Don't call IconGroup_Wipe here
 -- Since for standalone bars we are using one group for all units and don't want to lose icons between setting up arena1 and arena2
 -- Callers of this function should make sure to IconGroup_Wipe properly
-local function SetupIconGroup(iconSetID, unit, isTestGroup)
-    local group = GetIconGroup(iconSetID, unit, isTestGroup);
+local function SetupIconGroup(group, unit)
+    local iconSetID, isTestGroup = group.iconSetID, group.isTestGroup;
     local config = SweepyBoop.db.profile.arenaFrames;
     local spellList = addon.GetSpellListConfig(iconSetID);
     local iconSetConfig = addon.GetIconSetConfig(iconSetID);
@@ -393,11 +394,13 @@ local function SetupAllIconGroups()
     for _, iconSetID in pairs(ICON_SET_ID) do
         if GetIconGroupEnabled(iconSetID) then
             if addon.TEST_MODE then
-                SetupIconGroup(iconSetID, "player");
+                local unit = "player";
+                SetupIconGroup(GetIconGroup(iconSetID, unit), unit);
             else
+                local group = GetIconGroup(iconSetID);
                 for unitIndex = 1, addon.MAX_ARENA_SIZE do
                     local unit = "arena" .. unitIndex;
-                    SetupIconGroup(iconSetID, unit);
+                    SetupIconGroup(group, unit);
                 end
             end
         end
@@ -720,9 +723,9 @@ function SweepyBoop:TestArenaCooldownTracker()
     addon.IconGroup_Wipe(iconGroups[mainBarID]);
     addon.IconGroup_Wipe(iconGroups[secondaryBarID]); -- Secondary bar
 
-    SetupIconGroup(ICON_SET_ID.ARENA_MAIN, "player", true);
+    SetupIconGroup(GetIconGroup(ICON_SET_ID.ARENA_MAIN, "player", true), "player");
     if secondaryBarEnabled then
-        SetupIconGroup(ICON_SET_ID.ARENA_SECONDARY, "player", true);
+        SetupIconGroup(GetIconGroup(ICON_SET_ID.ARENA_SECONDARY, "player", true), "player");
     end
 
     local subEvent = addon.SPELL_CAST_SUCCESS;
@@ -799,15 +802,14 @@ function SweepyBoop:TestArenaStandaloneBars()
         addon.IconGroup_Wipe(iconGroups[iconGroupID]);
 
         if GetIconGroupEnabled(iconSetID) then
-            SetupIconGroup(iconSetID, "player", true);
-            local iconGroup = iconGroups[iconGroupID];
+            local iconGroup = GetIconGroup(iconSetID, "player", true);
+            SetupIconGroup(iconGroup, "player");
 
             -- Fire an event with every spellID in that group
             local subEvent = addon.SPELL_CAST_SUCCESS;
             local sourceGUID = UnitGUID("player");
             local destGUID = UnitGUID("player");
             for _, icon in pairs(iconGroup.icons) do
-
                 ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, icon.spellID, nil, nil, true);
             end
 
