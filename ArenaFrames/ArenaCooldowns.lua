@@ -79,6 +79,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
         local hideCountDownNumbers = GetIconHideCountDownNumbers(iconSetID);
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], hideCountDownNumbers);
+        iconPool[iconSetID][iconID].iconSetID = iconSetID;
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
     end
 
@@ -271,15 +272,18 @@ addon.GetIconConfig = function(iconSetID)
         iconConfig.spellList = config.spellList;
         iconConfig.showUnusedIcons = config.showUnusedIcons;
         iconConfig.unusedIconAlpha = config.unusedIconAlpha;
+        iconConfig.usedIconAlpha = config.usedIconAlpha;
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
         iconConfig.spellList = config.spellList2;
         iconConfig.showUnusedIcons = config.showUnusedIcons;
         iconConfig.unusedIconAlpha = config.unusedIconAlpha;
+        iconConfig.usedIconAlpha = config.usedIconAlpha;
     else
         local standaloneConfig = config.standaloneBars[iconSetID];
         iconConfig.spellList = standaloneConfig.spellList;
         iconConfig.showUnusedIcons = standaloneConfig.showUnusedIcons;
         iconConfig.unusedIconAlpha = standaloneConfig.unusedIconAlpha;
+        iconConfig.usedIconAlpha = standaloneConfig.usedIconAlpha;
     end
     return iconConfig;
 end

@@ -162,27 +162,6 @@ local defaults = {
     }
 };
 
-defaults.profile.arenaFrames.standaloneBars = {};
-for i = 1, 6 do
-    local groupName = "Bar ".. i;
-    defaults.profile.arenaFrames.standaloneBars[groupName] = {
-        name = groupName,
-        enabled = false,
-
-        growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
-        offsetX = 0,
-        offsetY = 0,
-
-        iconSize = 32,
-        iconPadding = 2,
-        unusedIconAlpha = 0.5,
-        usedIconAlpha = 1,
-        showUnusedIcons = false,
-        hideCountDownNumbers = false,
-        spellList = {},
-    };
-end
-
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
     defaults.profile.nameplatesFriendly.classIconSize = 1.25;
@@ -212,6 +191,27 @@ local function FillDefaults()
     addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
+
+    defaults.profile.arenaFrames.standaloneBars = {};
+    for i = 1, 6 do
+        local groupName = "Bar ".. i;
+        defaults.profile.arenaFrames.standaloneBars[groupName] = {
+            name = groupName,
+            enabled = false,
+
+            growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
+            offsetX = 0,
+            offsetY = 0,
+
+            iconSize = 32,
+            iconPadding = 2,
+            unusedIconAlpha = 0.5,
+            usedIconAlpha = 1,
+            showUnusedIcons = false,
+            hideCountDownNumbers = false,
+            spellList = {},
+        };
+    end
 
     if addon.PROJECT_MAINLINE then
         addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
