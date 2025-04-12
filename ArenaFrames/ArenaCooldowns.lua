@@ -793,6 +793,14 @@ function SweepyBoop:RepositionArenaCooldownTracker(layoutIcons)
     end
 end
 
+function SweepyBoop:RepositionArenaStandaloneBar(groupName, layoutIcons)
+    local iconGroupID = groupName .. "-player-test";
+    RepositionExternalTestGroup(iconGroupID);
+    if layoutIcons then
+        addon.IconGroup_Position(iconGroups[iconGroupID]);
+    end
+end
+
 function SweepyBoop:TestArenaStandaloneBars()
     for i = 1, 6 do
         local iconSetID = "Bar " .. i;

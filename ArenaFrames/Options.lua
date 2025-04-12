@@ -473,6 +473,11 @@ addon.GetArenaFrameOptions = function(order)
                             max = 10,
                             step = 1,
                             name = "Padding",
+                            set = function(info, val)
+                                SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName][info[#info]] = val;
+                                SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                SweepyBoop:RepositionArenaStandaloneBar(groupName, true);
+                            end
                         },
 
                         offsetX = {
@@ -482,6 +487,11 @@ addon.GetArenaFrameOptions = function(order)
                             max = 2500,
                             step = 1,
                             name = "X offset",
+                            set = function(info, val)
+                                SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName][info[#info]] = val;
+                                SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                SweepyBoop:RepositionArenaStandaloneBar(groupName);
+                            end
                         },
 
                         offsetY = {
@@ -491,6 +501,11 @@ addon.GetArenaFrameOptions = function(order)
                             max = 1500,
                             step = 1,
                             name = "Y offset",
+                            set = function(info, val)
+                                SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName][info[#info]] = val;
+                                SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                SweepyBoop:RepositionArenaStandaloneBar(groupName);
+                            end
                         },
 
                         showUnusedIcons = {
