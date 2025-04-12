@@ -277,6 +277,9 @@ local function GetSpecOverrides(spell, spec)
     return overrides;
 end
 
+-- Don't call IconGroup_Wipe here
+-- Since for standalone bars we are using one group for all units and don't want to lose icons between setting up arena1 and arena2
+-- Callers of this function should make sure to IconGroup_Wipe properly
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
     local group = GetIconGroup(iconSetID, unit, isTestGroup);
     local config = SweepyBoop.db.profile.arenaFrames;
