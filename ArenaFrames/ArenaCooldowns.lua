@@ -393,14 +393,21 @@ end
 local function SetupAllIconGroups()
     for _, iconSetID in pairs(ICON_SET_ID) do
         if GetIconGroupEnabled(iconSetID) then
-            if addon.TEST_MODE then
+            if addon.TEST_MODE then -- debug mode only tracks player
                 local unit = "player";
                 SetupIconGroup(GetIconGroup(iconSetID, unit), unit);
             else
-                local group = GetIconGroup(iconSetID);
-                for unitIndex = 1, addon.MAX_ARENA_SIZE do
-                    local unit = "arena" .. unitIndex;
-                    SetupIconGroup(group, unit);
+                if ARENA_FRAME_BARS[iconSetID] then -- one group, one unit
+                    for unitIndex = 1, addon.MAX_ARENA_SIZE do
+                        local unit = "arena" .. unitIndex;
+                        SetupIconGroup(GetIconGroup(iconSetID, unit), unit);
+                    end
+                else -- one group for all units
+                    local group = GetIconGroup(iconSetID);
+                    for unitIndex = 1, addon.MAX_ARENA_SIZE do
+                        local unit = "arena" .. unitIndex;
+                        SetupIconGroup(group, unit);
+                    end
                 end
             end
         end
