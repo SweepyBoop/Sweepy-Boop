@@ -19,22 +19,8 @@ local resetByCrit = {
     190319, -- Combustion
 };
 
-local ICON_SET_ID = {
-    ARENA_MAIN = "Arena",
-    ARENA_SECONDARY = "ArenaSecondary",
-
-    STANDALONE_1 = "Bar 1",
-    STANDALONE_2 = "Bar 2",
-    STANDALONE_3 = "Bar 3",
-    STANDALONE_4 = "Bar 4",
-    STANDALONE_5 = "Bar 5",
-    STANDALONE_6 = "Bar 6",
-};
-
-local ARENA_FRAME_BARS = {
-    [ICON_SET_ID.ARENA_MAIN] = true,
-    [ICON_SET_ID.ARENA_SECONDARY] = true,
-};
+local ICON_SET_ID = addon.ICON_SET_ID;
+local ARENA_FRAME_BARS = addon.ARENA_FRAME_BARS;
 
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
@@ -278,7 +264,7 @@ local function GetSpecOverrides(spell, spec)
 end
 
 -- spellList, showUnusedIcons, unusedIconAlpha
-local function GetIconConfig(iconSetID)
+addon.GetIconConfig = function(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     local iconConfig = {};
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
@@ -301,7 +287,7 @@ end
 local function SetupIconGroup(iconSetID, unit, isTestGroup)
     local group = GetIconGroup(iconSetID, unit, isTestGroup);
     local config = SweepyBoop.db.profile.arenaFrames;
-    local iconConfig = GetIconConfig(iconSetID);
+    local iconConfig = addon.GetIconConfig(iconSetID);
 
     local class = addon.GetClassForPlayerOrArena(unit);
     local spec = addon.GetSpecForPlayerOrArena(unit);
@@ -662,7 +648,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
     -- Find the icon to use (check parent too)
     -- Config only shows parent ID, so check parent if applicable
-    local spellList = GetIconConfig(self.iconSetID).spellList;
+    local spellList = addon.GetIconConfig(self.iconSetID).spellList;
     local configSpellId = spell.parent or spellId;
     local iconSpellId = ( spell.use_parent_icon and spell.parent ) or spellId;
     local iconID = unit .. "-" .. iconSpellId;
@@ -692,7 +678,7 @@ local function ProcessUnitSpellCast(self, event, ...)
         local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
         local iconID = self.unit .. "-" .. iconSpellID;
         if self.icons[iconID] then
-            local spellList = GetIconConfig(self.iconSetID).spellList;
+            local spellList = addon.GetIconConfig(self.iconSetID).spellList;
 
             local configSpellID = spell.parent or spellID;
             if spellList[tostring(configSpellID)] then

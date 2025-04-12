@@ -151,15 +151,7 @@ local function sortFuncArenaFrames(a, b)
     return a.timeStamp < b.timeStamp;
 end
 
-local function sortFuncInterruptBarOneRow(a, b)
-    return a.timeStamp < b.timeStamp;
-end
-
-local function sortFuncInterruptBarTwoRows(a, b)
-    if ( a.isInterrupt ~= b.isInterrupt ) then
-        return a.isInterrupt; -- interrupts go first
-    end
-
+local function sortFuncStandaloneBars(a, b)
     return a.timeStamp < b.timeStamp;
 end
 
@@ -194,14 +186,12 @@ addon.IconGroup_Insert = function (group, icon, index)
         group.activeMap[index] = icon;
     end
 
-    if group.isInterruptBar then
-        if SweepyBoop.db.profile.arenaFrames.separateRowForInterrupts then
-            table.sort(active, sortFuncInterruptBarTwoRows);
-        else
-            table.sort(active, sortFuncInterruptBarOneRow);
-        end
-    else
+    if addon.ARENA_FRAME_BARS[group.iconSetID] then
+        -- Sort by category priority then time stamp
         table.sort(active, sortFuncArenaFrames);
+    else
+        -- Sort by timeStamp only
+        table.sort(active, sortFuncStandaloneBars);
     end
 
     addon.IconGroup_Position(group);
@@ -217,13 +207,7 @@ addon.IconGroup_Remove = function (group, icon, fade)
     icon.started = nil;
 
     if fade then
-        local config = SweepyBoop.db.profile.arenaFrames;
-        local alpha;
-        if group.isInterruptBar then
-            alpha = config.interruptBarUnusedIconAlpha;
-        else
-            alpha = config.unusedIconAlpha;
-        end
+        local alpha = addon.GetIconConfig(group.iconSetID).unusedIconAlpha;
         icon:SetAlpha(alpha);
         return;
     end
