@@ -585,7 +585,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         for i = 1, #resetByCrit do
             local spellToReset = resetByCrit[i];
             local icon = self.activeMap[unit .. "-" .. spellToReset];
-            if icon and spellData[spellToReset].critResets and spellData[spellToReset].critResets[spellId] and ( subEvent == addon.SPELL_DAMAGE ) and critical then
+            if icon and icon.started and spellData[spellToReset].critResets and spellData[spellToReset].critResets[spellId] and ( subEvent == addon.SPELL_DAMAGE ) and critical then
                 ResetCooldown(icon, spellData[spellToReset].critResets[spellId]);
                 return;
             end
