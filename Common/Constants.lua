@@ -47,8 +47,9 @@ addon.ICON_TEMPLATE = {
 
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT = 1,
-    CENTER = 2,
     LEFT = 3,
+
+    CENTER = 4, -- Probably will never include this option
 };
 
 addon.STANDALONE_GROW_DIRECTION = {
