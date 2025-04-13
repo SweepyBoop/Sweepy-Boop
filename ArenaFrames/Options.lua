@@ -488,8 +488,14 @@ addon.GetArenaFrameOptions = function(order)
                             },
                         },
 
-                        offsetX = {
+                        growUpward = {
                             order = 6,
+                            type = "toggle",
+                            name = "Grow upward",
+                        },
+
+                        offsetX = {
+                            order = 7,
                             type = "range",
                             min = -2500,
                             max = 2500,
@@ -503,7 +509,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         offsetY = {
-                            order = 7,
+                            order = 8,
                             type = "range",
                             min = -1500,
                             max = 1500,
@@ -514,12 +520,6 @@ addon.GetArenaFrameOptions = function(order)
                                 SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
                                 SweepyBoop:RepositionArenaStandaloneBar(groupName);
                             end
-                        },
-
-                        growUpward = {
-                            order = 8,
-                            type = "toggle",
-                            name = "Grow upward",
                         },
 
                         showUnusedIcons = {
