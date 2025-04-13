@@ -201,7 +201,7 @@ local function FillDefaults()
                 name = groupName,
                 enabled = false,
 
-                growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
+                growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER,
                 offsetX = 0,
                 offsetY = 0,
                 growUpward = true,
