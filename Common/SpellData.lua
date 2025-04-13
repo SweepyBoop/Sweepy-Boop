@@ -788,6 +788,7 @@ addon.SpellData = {
         cooldown = 50,
         class = addon.HUNTER,
         category = category.STUN,
+        baseline = true,
     },
         -- Intimidation (Marksman)
         [474421] = {
