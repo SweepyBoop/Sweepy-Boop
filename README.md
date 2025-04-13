@@ -80,8 +80,8 @@ While in arenas / battlegrounds, customize which non-player enemy units to show,
 - Option to highlight chosen units with an animating icon!
 
 
-## Advanced interrupt bar
-Similar to OmniBar but much more accurate, incorporating all cooldown reduction mechanics in the game, e.g.,
+## Advanced arena cooldown tracking
+Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics in the game, e.g.,
 - Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt
 - Balance Druid Solar Beam cooldown is reduced by 15 Sec if it successfully interrupted a spell cast
 - Mage Shifting Power reduces the cooldown of all their abilities by 12 Sec
@@ -110,7 +110,11 @@ It provides the "Show unused icons" option like OmniBar, but non-baseline abilit
 
 (Icons fade out when off cooldown vs. fade out when on cooldown)
 
+Players can have 2 per-opponent bars attached to the corresponding arena opponent, and up to 6 standalone bars that track all opponents:
 
+![New UI](https://github.com/user-attachments/assets/37222f4d-0d8c-44bc-a515-e027365e24fe)
+
+The arena frame groups will anchor to the first arena frame addon found, if none is found they will anchor to Blizzard default arena frames.
 
 ## Aura filter on enemy nameplates
 ![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
@@ -124,26 +128,6 @@ Auras are neatly organized into debuff and buff rows:
 - Buffs are shown on a separate row with a larger scale. Purgable buffs are shown with a different border (blue) than other buffs (green)
 
 Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
-
-## Arena enemy cooldown tracking
-![image](https://github.com/user-attachments/assets/f2131387-a222-45d9-83ca-c1fb37079b36)
-
-(Arena cooldown tracker, the daily quest icon on Pain Suppression clearly indicates there is another charge available)
-
-A set of icons attached to (corresponding) arena enemy frames, which is very close to the AWC UI.
-
-This module comes with a few key features:
-- Burst damage abilities glow during their duration, making it clear when you need to trade defensives, especially when the enemy team is cooldown stacking
-- Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by crit damage
-- Detects talents tha reduce cooldowns or add charges to abilities accurately
-- Clear indicator when "an additional charge is available", e.g., Discipline Priest has 2 charges of Pain Suppression
-- Option to "Show unused icons" like Omnibar but more reliable - non-baseline abilities only show up after detected
-
-This module is designed to give you **a quick overview** of
-- Which enemy player is bursting (so you can peel accordingly if needed)
-- Which enemy player(s) ran out of defensive options (thus would be the ideal kill target for next go)
-
-This module supports all major arena frames, including Gladius, GladiusEx, sArena and built-in WoW arena frames
 
 
 ## Arena nameplate numbers & enemy player spec icons
