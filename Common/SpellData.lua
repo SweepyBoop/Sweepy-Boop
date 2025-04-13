@@ -436,6 +436,18 @@ addon.SpellData = {
         category = category.SILENCE,
         baseline = true,
     },
+    -- Mass Entanglement
+    [102359] = {
+        cooldown = 30,
+        class = addon.DRUID,
+        category = category.CROWDCONTROL,
+    },
+    -- Ursol's Vortex
+    [102793] = {
+        cooldown = 60,
+        class = addon.DRUID,
+        category = category.CROWDCONTROL,
+    },
     -- Disrupt
     -- Faerie Swarm
     [209749] = {
@@ -523,6 +535,14 @@ addon.SpellData = {
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
         baseline = true,
+    },
+    -- Remove Corruption
+    [2782] = {
+        cooldown = 8,
+        class = addon.DRUID,
+        spec = { specID.FERAL, specID.GUARDIAN, specID.BALANCE },
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL,
     },
 
     -- Evoker
@@ -1006,6 +1026,25 @@ addon.SpellData = {
         category = category.CROWDCONTROL,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Mass Polymorph
+    [383121] = {
+        cooldown = 60,
+        class = addon.MAGE,
+        category = category.CROWDCONTROL,
+    },
+    -- Snowdrift
+    [389794] = {
+        cooldown = 45,
+        class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
+        category = category.STUN,
+    },
+    -- Ice Wall
+    [352278] = {
+        cooldown = 90,
+        class = addon.MAGE,
+        category = category.OTHERS,
+    },
     -- Disrupt
     -- Kleptomania (now a channel with a different spellID)
     [198100] = {
@@ -1190,6 +1229,14 @@ addon.SpellData = {
         trackEvent = addon.SPELL_DISPEL,
         baseline = true,
     },
+    -- Detox
+    [218164] = {
+        cooldown = 8,
+        class = addon.MONK,
+        spec = { specID.WINDWALKER, specID.BREWMASTER },
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL,
+    },
 
     -- Paladin
     -- Avenging Wrath
@@ -1358,6 +1405,14 @@ addon.SpellData = {
         trackEvent = addon.SPELL_DISPEL,
         baseline = true,
     },
+    -- Cleanse Toxins
+    [213644] = {
+        cooldown = 8,
+        class = addon.PALADIN,
+        spec = { specID.PROTECTION_PALADIN, specID.RETRIBUTION },
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL,
+    },
     -- Blessing of Sanctuary
     [210256] = {
         cooldown = 45,
@@ -1442,6 +1497,14 @@ addon.SpellData = {
         trackEvent = addon.SPELL_DISPEL,
         opt_charges = true,
         baseline = true,
+    },
+    -- Purify Disease
+    [213634] = {
+        cooldown = 8,
+        class = addon.PRIEST,
+        spec = { specID.SHADOW },
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL,
     },
     -- Crowd Control
     -- Psychic Scream
@@ -1912,6 +1975,12 @@ addon.SpellData = {
         category = category.CROWDCONTROL,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Greater Purge
+    [378773] = {
+        cooldown = 12,
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+    },
     -- Crowd Control
     -- Hex
     [51514] = {
@@ -1936,6 +2005,14 @@ addon.SpellData = {
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
         baseline = true,
+    },
+    -- Cleanse Spirit
+    [51886] = {
+        cooldown = 8,
+        class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT, specID.ELEMENTAL },
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL,
     },
     -- Crowd Control
     -- Lightning Lasso
@@ -2037,6 +2114,13 @@ addon.SpellData = {
         cooldown = 60,
         class = addon.WARLOCK,
         category = category.STUN,
+    },
+    -- Seduction
+    [6358] = {
+        cooldown = 30,
+        class = addon.WARLOCK,
+        trackPet = true,
+        category = category.CROWDCONTROL,
     },
     -- Defensive
     -- Unending Resolve
