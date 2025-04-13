@@ -935,6 +935,17 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 if arenaSecondary and arenaSecondaryEnabled then
                     ProcessUnitEvent(arenaSecondary, event, ...);
                 end
+
+                for i = 1, 6 do
+                    local iconGroupID = "Bar " .. i;
+                    if addon.TEST_MODE then
+                        iconGroupID = iconGroupID .. "-player";
+                    end
+                    local iconGroup = iconGroups[iconGroupID];
+                    if iconGroup then
+                        ProcessUnitSpellCast(iconGroup, event, ...);
+                    end
+                end
             end
         end)
     end

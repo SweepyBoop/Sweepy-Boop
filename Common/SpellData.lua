@@ -788,7 +788,13 @@ addon.SpellData = {
         cooldown = 50,
         class = addon.HUNTER,
         category = category.STUN,
+        baseline = true,
     },
+        -- Intimidation (Marksman)
+        [474421] = {
+            parent = 19577,
+            use_parent_icon = true,
+        },
     -- Freezing Trap
     [187650] = {
         cooldown = 25,
@@ -951,7 +957,8 @@ addon.SpellData = {
     -- Defensive
     -- Ice Block
     [45438] = {
-        cooldown = 180,
+        cooldown = 240,
+        opt_lower_cooldown = 180,
         class = addon.MAGE,
         category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
