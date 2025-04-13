@@ -104,11 +104,11 @@ local defaults = {
             arenaCooldownTrackerEnabled = true,
             arenaCooldownSecondaryBar = false,
 
-            arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
+            growDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
 
-            arenaCooldownGrowDirectionSecondary = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
+            arenaCooldownGrowDirectionSecondary = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT,
             arenaCooldownOffsetXSecondary = 0,
             arenaCooldownOffsetYSecondary = -35,
 
@@ -204,6 +204,7 @@ local function FillDefaults()
                 growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
                 offsetX = 0,
                 offsetY = 0,
+                growUpward = true,
 
                 iconSize = 32,
                 iconPadding = 2,

@@ -221,16 +221,14 @@ addon.GetArenaFrameOptions = function(order)
                                 name = "Positioning",
                             },
 
-                            arenaCooldownGrowDirection = {
+                            growDirection = {
                                 order = 16,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
                                 values = {
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right",
-                                    --[addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left",
-                                    --[addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT] = "Right",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT] = "Left",
                                 },
                             },
 
@@ -279,9 +277,9 @@ addon.GetArenaFrameOptions = function(order)
                                 width = 0.75,
                                 name = "Grow direction",
                                 values = {
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = "Right",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT] = "Right",
                                     --[addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = "Right up",
-                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = "Left",
+                                    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT] = "Left",
                                     --[addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = "Left up",
                                 },
                                 hidden = function()
@@ -455,10 +453,8 @@ addon.GetArenaFrameOptions = function(order)
                             name = "Enabled",
                         },
 
-                        -- Do we need grow direction here
-
                         iconSize = {
-                            order = 4,
+                            order = 3,
                             type = "range",
                             min = 16,
                             max = 64,
@@ -467,7 +463,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         iconPadding = {
-                            order = 5,
+                            order = 4,
                             type = "range",
                             min = 0,
                             max = 10,
@@ -478,6 +474,18 @@ addon.GetArenaFrameOptions = function(order)
                                 SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
                                 SweepyBoop:RepositionArenaStandaloneBar(groupName, true);
                             end
+                        },
+
+                        growDirection = {
+                            order = 5,
+                            type = "select",
+                            width = 0.75,
+                            name = "Grow direction",
+                            values = {
+                                [addon.STANDALONE_GROW_DIRECTION.CENTER] = "Center",
+                                [addon.STANDALONE_GROW_DIRECTION.LEFT] = "Left",
+                                [addon.STANDALONE_GROW_DIRECTION.RIGHT] = "Right",
+                            },
                         },
 
                         offsetX = {
@@ -508,15 +516,21 @@ addon.GetArenaFrameOptions = function(order)
                             end
                         },
 
-                        showUnusedIcons = {
+                        growUpward = {
                             order = 8,
+                            type = "toggle",
+                            name = "Grow upward",
+                        },
+
+                        showUnusedIcons = {
+                            order = 9,
                             type = "toggle",
                             name = "Always show icons",
                             desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                         },
 
                         unusedIconAlpha = {
-                            order = 9,
+                            order = 10,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
@@ -530,7 +544,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         usedIconAlpha = {
-                            order = 10,
+                            order = 11,
                             type = "range",
                             width = 0.8,
                             isPercent = true,

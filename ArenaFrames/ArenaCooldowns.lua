@@ -123,43 +123,31 @@ local iconGroups = {};
 local framePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
 local LARGE_COLUMN = 100; -- Don't break line for each bar
 local arenaFrameGrowOptions = {
-    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT] = {
         direction = "RIGHT",
         anchor = "LEFT",
         columns = LARGE_COLUMN,
         growUpward = false,
     },
-    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_UP] = {
-        direction = "RIGHT",
-        anchor = "LEFT",
-        columns = LARGE_COLUMN,
-        growUpward = true,
-    },
-    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT] = {
         direction = "LEFT",
         anchor = "RIGHT",
         columns = LARGE_COLUMN,
         growUpward = false,
-    },
-    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_UP] = {
-        direction = "LEFT",
-        anchor = "RIGHT",
-        columns = LARGE_COLUMN,
-        growUpward = true,
     },
 };
 local standaloneBarGrowOptions = {
-    [addon.STANDALONE_GROW_DIRECTION.CENTER_UP] = {
+    [addon.STANDALONE_GROW_DIRECTION.CENTER] = {
         direction = "CENTER",
         anchor = "CENTER",
-        columns = LARGE_COLUMN,
-        growUpward = true,
     },
-    [addon.STANDALONE_GROW_DIRECTION.CENTER_DOWN] = {
-        direction = "CENTER",
-        anchor = "CENTER",
-        columns = LARGE_COLUMN,
-        growUpward = false,
+    [addon.STANDALONE_GROW_DIRECTION.LEFT] = {
+        direction = "LEFT",
+        anchor = "RIGHT",
+    },
+    [addon.STANDALONE_GROW_DIRECTION.RIGHT] = {
+        direction = "RIGHT",
+        anchor = "LEFT",
     },
 };
 
@@ -215,7 +203,7 @@ local function GetGrowOptions(iconSetID)
     local growOptions;
 
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
-        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
+        growOptions = arenaFrameGrowOptions[config.growDirection];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
@@ -224,6 +212,8 @@ local function GetGrowOptions(iconSetID)
         local growDirection = config.standaloneBars[iconSetID].growDirection;
         growOptions = standaloneBarGrowOptions[growDirection];
         growOptions.margin = config.standaloneBars[iconSetID].iconPadding;
+        growOptions.columns = config.standaloneBars[iconSetID].columns;
+        growOptions.growUpward = config.standaloneBars[iconSetID].growUpward;
     end
 
     return growOptions;
