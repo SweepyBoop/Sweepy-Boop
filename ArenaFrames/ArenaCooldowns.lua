@@ -510,7 +510,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Now check if we need to reduce Guardian Spirit cooldown
     -- SPELL_AURA_REMOVED is fired twice, causing GS to be reset even if the healing proc
     -- Workaround by checking timestamp now vs. last aura removed
-    if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( spellId == 47788 ) then
+    if ( spellId == 47788 ) and ( subEvent == addon.SPELL_AURA_REMOVED ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if self.guardianSpiritSaved[unit] then
