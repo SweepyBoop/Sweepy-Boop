@@ -903,13 +903,16 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 end
 
                 for i = 1, 6 do
-                    local iconGroupID = "Bar " .. i;
-                    if addon.TEST_MODE then
-                        iconGroupID = iconGroupID .. "-player";
-                    end
-                    local iconGroup = iconGroups[iconGroupID];
-                    if iconGroup then
-                        ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    local iconSetID = "Bar " .. i;
+                    if GetIconGroupEnabled(iconSetID) then
+                        local iconGroupID = iconSetID;
+                        if addon.TEST_MODE then
+                            iconGroupID = iconGroupID .. "-player";
+                        end
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup then
+                            ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                        end
                     end
                 end
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
@@ -937,13 +940,16 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 end
 
                 for i = 1, 6 do
-                    local iconGroupID = "Bar " .. i;
-                    if addon.TEST_MODE then
-                        iconGroupID = iconGroupID .. "-player";
-                    end
-                    local iconGroup = iconGroups[iconGroupID];
-                    if iconGroup then
-                        ProcessUnitSpellCast(iconGroup, event, ...);
+                    local iconSetID = "Bar " .. i;
+                    if GetIconGroupEnabled(iconSetID) then
+                        local iconGroupID = iconSetID;
+                        if addon.TEST_MODE then
+                            iconGroupID = iconGroupID .. "-player";
+                        end
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup then
+                            ProcessUnitSpellCast(iconGroup, event, ...);
+                        end
                     end
                 end
             end
