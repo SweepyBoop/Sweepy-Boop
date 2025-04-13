@@ -580,18 +580,13 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Check resets by crit damage (e.g., combustion)
-    if ( subEvent == addon.SPELL_DAMAGE ) and critical and unitGuidToId[sourceGUID] then
+    if unitGuidToId[sourceGUID] then
         local unit = unitGuidToId[sourceGUID];
         for i = 1, #resetByCrit do
-            local reset = resetByCrit[i];
-            local icon = self.activeMap[unit .. "-" .. reset];
-            if icon then
-                local spells = spellData[reset].critResets;
-                for i = 1, #spells do
-                    if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
-                        ResetCooldown(icon, spellData[reset].critResetAmount);
-                    end
-                end
+            local spellToReset = resetByCrit[i];
+            local icon = self.activeMap[unit .. "-" .. spellToReset];
+            if icon and spellData[spellToReset].critResets and spellData[spellToReset].critResets[spellId] and ( subEvent == addon.SPELL_DAMAGE ) and critical then
+                ResetCooldown(icon, spellData[spellToReset].critResets[spellId]);
                 return;
             end
         end
