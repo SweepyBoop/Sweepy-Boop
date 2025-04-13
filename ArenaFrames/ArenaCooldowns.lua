@@ -487,7 +487,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if next(unitGuidToId) == nil then return end
 
     -- Apotheosis
-    if spellId == 200183 and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+    if ( spellId == 200183 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if subEvent == addon.SPELL_AURA_APPLIED then
