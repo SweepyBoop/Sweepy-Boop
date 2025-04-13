@@ -662,6 +662,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
         -- Premonition cooldown reduction
         -- This can be implemented reliably SPELL_AURA_REMOVED arrives after SPELL_CAST_SUCCESS, and we don't reset preminitionUnits here
+        -- Ensure this doesn't affect the wrong units - iconID is built with unit, and we are checking premonitionUnits[unit]
         if premonitionUnits[unit] then
             ResetCooldown(self.icons[iconID], 7);
         end
