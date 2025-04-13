@@ -487,7 +487,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if next(unitGuidToId) == nil then return end
 
     -- Apotheosis
-    if spellId == 200183 and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+    if ( spellId == 200183 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if subEvent == addon.SPELL_AURA_APPLIED then
@@ -510,7 +510,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Now check if we need to reduce Guardian Spirit cooldown
     -- SPELL_AURA_REMOVED is fired twice, causing GS to be reset even if the healing proc
     -- Workaround by checking timestamp now vs. last aura removed
-    if ( subEvent == addon.SPELL_AURA_REMOVED ) and ( spellId == 47788 ) then
+    if ( spellId == 47788 ) and ( subEvent == addon.SPELL_AURA_REMOVED ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if self.guardianSpiritSaved[unit] then
@@ -533,7 +533,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
             local icon = self.activeMap[unit .. "-" .. reset];
-            if icon then
+            if icon and icon.started then -- ResetCooldown has started check, but here we check to skip the power calculation, which could be costly
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
                     local amount = spellData[reset].reduce_amount * cost[1].cost;
@@ -580,18 +580,13 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Check resets by crit damage (e.g., combustion)
-    if ( subEvent == addon.SPELL_DAMAGE ) and critical and unitGuidToId[sourceGUID] then
+    if unitGuidToId[sourceGUID] then
         local unit = unitGuidToId[sourceGUID];
         for i = 1, #resetByCrit do
-            local reset = resetByCrit[i];
-            local icon = self.activeMap[unit .. "-" .. reset];
-            if icon then
-                local spells = spellData[reset].critResets;
-                for i = 1, #spells do
-                    if ( spellId == spells[i] ) or ( spellName == spells[i] ) then
-                        ResetCooldown(icon, spellData[reset].critResetAmount);
-                    end
-                end
+            local spellToReset = resetByCrit[i];
+            local icon = self.activeMap[unit .. "-" .. spellToReset];
+            if icon and icon.started and spellData[spellToReset].critResets and spellData[spellToReset].critResets[spellId] and ( subEvent == addon.SPELL_DAMAGE ) and critical then
+                ResetCooldown(icon, spellData[spellToReset].critResets[spellId]);
                 return;
             end
         end
@@ -903,13 +898,16 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 end
 
                 for i = 1, 6 do
-                    local iconGroupID = "Bar " .. i;
-                    if addon.TEST_MODE then
-                        iconGroupID = iconGroupID .. "-player";
-                    end
-                    local iconGroup = iconGroups[iconGroupID];
-                    if iconGroup then
-                        ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                    local iconSetID = "Bar " .. i;
+                    if GetIconGroupEnabled(iconSetID) then
+                        local iconGroupID = iconSetID;
+                        if addon.TEST_MODE then
+                            iconGroupID = iconGroupID .. "-player";
+                        end
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup then
+                            ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
+                        end
                     end
                 end
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
@@ -937,13 +935,16 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 end
 
                 for i = 1, 6 do
-                    local iconGroupID = "Bar " .. i;
-                    if addon.TEST_MODE then
-                        iconGroupID = iconGroupID .. "-player";
-                    end
-                    local iconGroup = iconGroups[iconGroupID];
-                    if iconGroup then
-                        ProcessUnitSpellCast(iconGroup, event, ...);
+                    local iconSetID = "Bar " .. i;
+                    if GetIconGroupEnabled(iconSetID) then
+                        local iconGroupID = iconSetID;
+                        if addon.TEST_MODE then
+                            iconGroupID = iconGroupID .. "-player";
+                        end
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup then
+                            ProcessUnitSpellCast(iconGroup, event, ...);
+                        end
                     end
                 end
             end

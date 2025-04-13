@@ -918,10 +918,13 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
 
-        -- Reduce cooldown by 1s
-        -- Fireball, Pyroblast, Fire Blast, Scorch, Phoenix Flames
-        critResets = { 133, 11366, 108853, 2948, 257542 },
-        critResetAmount = 1,
+        critResets = {
+            [133] = 1, -- Fireball
+            [11366] = 1, -- Pyroblast
+            [108853] = 1, -- Fire Blast
+            [2948] = 1, -- Scorch
+            [257542] = 1, -- Phoenix Flames
+        },
 
         baseline = true, -- technically a talent, but always picked
     },
@@ -2507,9 +2510,14 @@ if addon.TEST_MODE then
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
 
-        -- Reduce cooldown by 1s
-        critResets = { 133, 11366, 108853, 2948, 257542 },
-        critResetAmount = 1,
+        -- Fireball, Pyroblast, Fire Blast, Scorch, Phoenix Flames
+        critResets = {
+            [133] = 1,
+            [11366] = 1,
+            [108853] = 1,
+            [2948] = 1,
+            [257542] = 1,
+        }
     };
 end
 
