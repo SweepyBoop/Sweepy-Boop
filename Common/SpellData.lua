@@ -2441,6 +2441,12 @@ addon.SpellResets = {
     [17] = {
         { spellID = 33206, amount = 3 }, -- Pain Suppression
     },
+
+    -- Kill Command
+    [34026] = {
+        { spellID = 19577, amount = 0.5 }, -- Intimidation
+        { spellID = 109248, amount = 0.5 }, -- Binding Shot
+    }
 };
 
 addon.SpellResets[382445] = {}; -- Shifting Power each tick
