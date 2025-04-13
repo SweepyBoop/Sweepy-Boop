@@ -643,7 +643,7 @@ end
 local framePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
 local largeColumn = 100; -- Don't break line for arena tracker
 local arenaFrameGrowOptions = {
-    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN] = {
         direction = "RIGHT",
         anchor = "LEFT",
         margin = 3,
@@ -657,7 +657,7 @@ local arenaFrameGrowOptions = {
         columns = largeColumn,
         growUpward = true,
     },
-    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT] = {
+    [addon.ARENA_COOLDOWN_GROW_DIRECTION.LEFT_DOWN] = {
         direction = "LEFT",
         anchor = "RIGHT",
         margin = 3,
@@ -748,7 +748,7 @@ local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
             growOptions.margin = config.arenaCooldownTrackerIconPadding;
         else
-            growOptions = arenaFrameGrowOptions[config.growDirection];
+            growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
             growOptions.margin = config.arenaCooldownTrackerIconPadding;
         end
         iconGroups[index] = addon.CreateIconGroup(setPointOptions, growOptions, unitId);
@@ -769,7 +769,7 @@ local function EnsureIconGroup(index, unitId, isInterruptBar, isSecondaryBar)
             growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
             growOptions.margin = config.arenaCooldownTrackerIconPadding;
         else
-            growOptions = arenaFrameGrowOptions[config.growDirection];
+            growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
             growOptions.margin = config.arenaCooldownTrackerIconPadding;
         end
         addon.UpdateIconGroupSetPointOptions(iconGroups[index], setPointOptions, growOptions);
@@ -897,7 +897,7 @@ local function RefreshTestMode(index, testIcons, isInterruptBar, isSecondaryBar)
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     else
-        growOptions = arenaFrameGrowOptions[config.growDirection];
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     end
     local setPointOptions = GetSetPointOptions(index, isInterruptBar, isSecondaryBar);
@@ -969,7 +969,7 @@ local function RepositionExternalTestGroup(index, isSecondaryBar)
     if isSecondaryBar then
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
     else
-        growOptions = arenaFrameGrowOptions[config.growDirection];
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
     end
     growOptions.margin = config.arenaCooldownTrackerIconPadding;
     local setPointOptions = GetSetPointOptions(index, false, isSecondaryBar);
