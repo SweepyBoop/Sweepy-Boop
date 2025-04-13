@@ -478,7 +478,7 @@ end
 local apotheosisUnits = {};
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
-    -- if addon.TEST_MODE and sourceGUID == UnitGUID("player") then
+    -- if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") ) then
     --     print(subEvent, spellName, spellId, sourceGUID, destGUID);
     -- end
 

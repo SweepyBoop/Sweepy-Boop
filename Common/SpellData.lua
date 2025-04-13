@@ -1080,6 +1080,13 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Remove Curse
+    [475] = {
+        cooldown = 8,
+        class = addon.MAGE,
+        category = category.DISPEL,
+        trackEvent = addon.SPELL_DISPEL,
+    },
 
     -- Monk
     -- Celestial Conduit
