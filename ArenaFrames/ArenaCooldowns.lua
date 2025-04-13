@@ -236,7 +236,10 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         iconGroups[iconGroupID] = addon.CreateIconGroup(setPointOptions, growOptions, unitID);
         iconGroups[iconGroupID].iconSetID = iconSetID;
         iconGroups[iconGroupID].isTestGroup = isTestGroup;
-        iconGroups[iconGroupID].guardianSpiritSaved = {}; -- Have to cache this per group
+        -- Have to cache this per group so that they don't interfere with each other
+        iconGroups[iconGroupID].guardianSpiritSaved = {};
+        iconGroups[iconGroupID].apotheosisUnits = {};
+        iconGroups[iconGroupID].premonitionUnits = {};
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
 
@@ -246,8 +249,6 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         addon.UpdateIconGroupSetPointOptions(iconGroups[iconGroupID], setPointOptions, growOptions);
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
-
-    iconGroups[iconGroupID].guardianSpiritSaved = {};
 
     return iconGroups[iconGroupID];
 end
@@ -474,10 +475,6 @@ local function StartIcon(icon)
     icon.started = true;
 end
 
--- Record expirationTime when buff is applied, in case we missed SPELL_AURA_REMOVED
-local apotheosisUnits = {};
-local premonitionUnits = {};
-
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
     if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") ) then
         if (subEvent == addon.SPELL_CAST_SUCCESS or subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED) and ( spellId == 47540 or spellId == 428933 ) then
@@ -494,9 +491,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if subEvent == addon.SPELL_AURA_APPLIED then
-                apotheosisUnits[unit] = true;
+                self.apotheosisUnits[unit] = true;
             else
-                apotheosisUnits[unit] = nil;
+                self.apotheosisUnits[unit] = nil;
             end
         end
     end
@@ -506,9 +503,9 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if subEvent == addon.SPELL_AURA_APPLIED then -- We probably don't need the 20s timer for apotheosis either
-                premonitionUnits[unit] = true;
+                self.premonitionUnits[unit] = true;
             else
-                premonitionUnits[unit] = nil;
+                self.premonitionUnits[unit] = nil;
             end
         end
     end
@@ -576,7 +573,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                 end
 
                 if addon.SpellResetsAffectedByApotheosis[spellId] then
-                    local modifier = ( apotheosisUnits[unit] and addon.SpellResetsAffectedByApotheosis[spellId] ) or 1;
+                    local modifier = ( self.apotheosisUnits[unit] and addon.SpellResetsAffectedByApotheosis[spellId] ) or 1;
                     amount = amount * modifier;
                 end
 
@@ -663,7 +660,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         -- Premonition cooldown reduction
         -- This can be implemented reliably SPELL_AURA_REMOVED arrives after SPELL_CAST_SUCCESS, and we don't reset preminitionUnits here
         -- Ensure this doesn't affect the wrong units - iconID is built with unit, and we are checking premonitionUnits[unit]
-        if premonitionUnits[unit] then
+        if self.premonitionUnits[unit] then
             ResetCooldown(self.icons[iconID], 7);
         end
 
@@ -858,9 +855,6 @@ function SweepyBoop:SetupArenaCooldownTracker()
             local config = SweepyBoop.db.profile.arenaFrames;
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
-
-                apotheosisUnits = {};
-                premonitionUnits = {};
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
