@@ -9,7 +9,7 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- To find the spellID of an aura
 local checkSpellID = CreateFrame("Frame");
-checkSpellID.enabled = addon.TEST_MODE;
+checkSpellID.enabled = false;
 
 checkSpellID.spellName = "Ancient of Lore";
 checkSpellID:RegisterEvent(addon.UNIT_AURA);

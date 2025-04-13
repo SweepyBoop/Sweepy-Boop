@@ -476,11 +476,14 @@ end
 
 -- Record expirationTime when buff is applied, in case we missed SPELL_AURA_REMOVED
 local apotheosisUnits = {};
+local premonitionUnits = {};
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
-    -- if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") ) then
-    --     print(subEvent, spellName, spellId, sourceGUID, destGUID);
-    -- end
+    if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") ) then
+        if (subEvent == addon.SPELL_CAST_SUCCESS or subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED) and ( spellId == 47540 or spellId == 428933 ) then
+            print(subEvent, spellName, spellId, sourceGUID, destGUID);
+        end
+    end
 
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
@@ -494,6 +497,18 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                 apotheosisUnits[unit] = GetTime() + 20; -- 20s duration
             else
                 apotheosisUnits[unit] = nil;
+            end
+        end
+    end
+
+    -- Premonition of Insight
+    if ( spellId == 428933 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if subEvent == addon.SPELL_AURA_APPLIED then -- We probably don't need the 20s timer for apotheosis either
+                premonitionUnits[unit] = true;
+            else
+                premonitionUnits[unit] = nil;
             end
         end
     end
@@ -648,6 +663,12 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
 
         StartIcon(self.icons[iconID]);
+
+        -- Premonition cooldown reduction
+        -- This can be implemented reliably SPELL_AURA_REMOVED arrives after SPELL_CAST_SUCCESS, and we don't reset preminitionUnits here
+        if premonitionUnits[unit] then
+            ResetCooldown(self.icons[iconID], 7);
+        end
 
         if isTestGroup and self.icons[iconID].Count then
             self.icons[iconID].Count:Show();
@@ -842,6 +863,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
 
                 apotheosisUnits = {};
+                premonitionUnits = {};
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
