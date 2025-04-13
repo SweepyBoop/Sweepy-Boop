@@ -244,4 +244,9 @@ addon.IconGroup_Wipe = function (group)
     wipe(group.npcMap);
     group.unitIdToGuid = {};
     group.unitGuidToId = {};
+
+    -- For tracking special cdr
+    group.apotheosisUnits = {};
+    group.guardianSpiritSaved = {};
+    group.premonitionUnits = {};
 end

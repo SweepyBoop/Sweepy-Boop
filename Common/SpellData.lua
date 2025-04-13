@@ -1970,7 +1970,8 @@ addon.SpellData = {
     [204336] = {
         cooldown = 24,
         class = addon.SHAMAN,
-        category = category.OTHERS
+        category = category.OTHERS,
+        baseline = true,
     },
     -- Tremor Totem
     [8143] = {
