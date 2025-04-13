@@ -46,15 +46,16 @@ addon.ICON_TEMPLATE = {
 };
 
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
-    RIGHT_DOWN = 1,
-    RIGHT_UP = 2,
-    LEFT_DOWN = 3,
-    LEFT_UP = 4,
+    RIGHT = 1,
+    LEFT = 3,
+
+    CENTER = 4, -- Probably will never include this option
 };
 
 addon.STANDALONE_GROW_DIRECTION = {
-    CENTER_UP = 1,
-    CENTER_DOWN = 2,
+    CENTER = 1,
+    LEFT = 2,
+    RIGHT = 3,
 };
 
 addon.ICON_SET_ID = {

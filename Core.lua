@@ -104,11 +104,11 @@ local defaults = {
             arenaCooldownTrackerEnabled = true,
             arenaCooldownSecondaryBar = false,
 
-            arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
+            arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
 
-            arenaCooldownGrowDirectionSecondary = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT_DOWN,
+            arenaCooldownGrowDirectionSecondary = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT,
             arenaCooldownOffsetXSecondary = 0,
             arenaCooldownOffsetYSecondary = -35,
 
@@ -201,7 +201,9 @@ local function FillDefaults()
                 name = groupName,
                 enabled = false,
 
-                growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
+                growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER,
+                columns = 8,
+                growUpward = true,
                 offsetX = 0,
                 offsetY = 0,
 
