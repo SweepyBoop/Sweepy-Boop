@@ -4,8 +4,9 @@ A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to
 Features include:
 - Friendly player / pet icons: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
-- Advanced interrupt bar that calculates all cd reduction, even including Mage 4s cd reduction on successful Counterspell!
-- Arena enemy cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, with cooldown reduction (e.g., Combustion from Kindling, Holy Word: Chastise from Smite / Holy Nova / Holy Fire, including extra reduction during Apotheosis)
+- Advanced arena cooldown tracking: arena frame cooldown icons attached to each opponent + up to 6 standalone bars that track all opponents. These icons are highly accurate including
+  - Cooldown reduction: 4s reduction from Mage's succesful Counterspell (similar with Solar Beam); Holy Word: Chastise cooldown reduction, even including the extra reduction during Apotheosis; Shifting Power cooldown reduction, that is accurate even if Shifting Power was interrupted; Combustion cd reduction from Kindling, etc.
+  - Lower cooldown detection: e.g., if a Shadow Priest is playing 30 Sec Silence
 - Raid frames: show real PvP aggro highlight on raid frames; Restoration Druid HoT helper to glow Lifebloom during pandemic window and fade out Cenarion Ward before the actual healing procs
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
 
