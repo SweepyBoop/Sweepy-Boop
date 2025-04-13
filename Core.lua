@@ -202,9 +202,10 @@ local function FillDefaults()
                 enabled = false,
 
                 growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER,
+                columns = 8,
+                growUpward = true,
                 offsetX = 0,
                 offsetY = 0,
-                growUpward = true,
 
                 iconSize = 32,
                 iconPadding = 2,

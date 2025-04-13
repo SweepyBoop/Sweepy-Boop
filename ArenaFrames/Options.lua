@@ -488,14 +488,23 @@ addon.GetArenaFrameOptions = function(order)
                             },
                         },
 
-                        growUpward = {
+                        columns = {
                             order = 6,
+                            type = "range",
+                            min = 2,
+                            max = 16,
+                            step = 1,
+                            name = "Columns",
+                        },
+
+                        growUpward = {
+                            order = 7,
                             type = "toggle",
                             name = "Grow upward",
                         },
 
                         offsetX = {
-                            order = 7,
+                            order = 8,
                             type = "range",
                             min = -2500,
                             max = 2500,
@@ -509,7 +518,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         offsetY = {
-                            order = 8,
+                            order = 9,
                             type = "range",
                             min = -1500,
                             max = 1500,
@@ -523,14 +532,14 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         showUnusedIcons = {
-                            order = 9,
+                            order = 10,
                             type = "toggle",
                             name = "Always show icons",
                             desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                         },
 
                         unusedIconAlpha = {
-                            order = 10,
+                            order = 11,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
@@ -544,7 +553,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         usedIconAlpha = {
-                            order = 11,
+                            order = 12,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
