@@ -533,7 +533,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         for i = 1, #resetByPower do
             local reset = resetByPower[i];
             local icon = self.activeMap[unit .. "-" .. reset];
-            if icon then
+            if icon and icon.started then -- ResetCooldown has started check, but here we check to skip the power calculation, which could be costly
                 local cost = GetSpellPowerCost(spellId);
                 if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
                     local amount = spellData[reset].reduce_amount * cost[1].cost;
