@@ -1958,6 +1958,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         spec = { specID.AFFLICTION },
         category = category.BURST,
+        cooldown = 120,
         duration = 20, -- confirm early dismiss if killed
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,

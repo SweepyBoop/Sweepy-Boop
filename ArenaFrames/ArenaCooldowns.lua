@@ -30,6 +30,10 @@ for spellID, spell in pairs(spellData) do
         print("Invalid spellID:", spellID);
     end
 
+    if ( not spell.cooldown ) then
+        print("Spell missing cooldown:", spellID);
+    end
+
     -- Class should be a string of capital letters
     if spell.class and ( type(spell.class) ~= "string" ) then
         print("Invalid class for spellID:", spellID);
