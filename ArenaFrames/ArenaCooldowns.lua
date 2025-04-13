@@ -494,7 +494,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if subEvent == addon.SPELL_AURA_APPLIED then
-                apotheosisUnits[unit] = GetTime() + 20; -- 20s duration
+                apotheosisUnits[unit] = true;
             else
                 apotheosisUnits[unit] = nil;
             end
@@ -575,11 +575,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                     end
                 end
 
-                if addon.SpellResetsAffectedByApotheosis[spellId] and apotheosisUnits[unit] then
-                    local now = GetTime();
-                    if ( now > apotheosisUnits[unit] ) then -- in case we didn't catch SPELL_AURA_REMOVED, use the expirationTime to uncheck the buff
-                        apotheosisUnits[unit] = nil;
-                    end
+                if addon.SpellResetsAffectedByApotheosis[spellId] then
                     local modifier = ( apotheosisUnits[unit] and addon.SpellResetsAffectedByApotheosis[spellId] ) or 1;
                     amount = amount * modifier;
                 end
