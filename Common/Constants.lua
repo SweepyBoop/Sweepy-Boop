@@ -52,9 +52,26 @@ addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     LEFT_UP = 4,
 };
 
-addon.INTERRUPT_GROW_DIRECTION = {
+addon.STANDALONE_GROW_DIRECTION = {
     CENTER_UP = 1,
     CENTER_DOWN = 2,
+};
+
+addon.ICON_SET_ID = {
+    ARENA_MAIN = "Arena",
+    ARENA_SECONDARY = "ArenaSecondary",
+
+    STANDALONE_1 = "Bar 1",
+    STANDALONE_2 = "Bar 2",
+    STANDALONE_3 = "Bar 3",
+    STANDALONE_4 = "Bar 4",
+    STANDALONE_5 = "Bar 5",
+    STANDALONE_6 = "Bar 6",
+};
+
+addon.ARENA_FRAME_BARS = {
+    [addon.ICON_SET_ID.ARENA_MAIN] = true,
+    [addon.ICON_SET_ID.ARENA_SECONDARY] = true,
 };
 
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";

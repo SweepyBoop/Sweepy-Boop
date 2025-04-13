@@ -121,18 +121,6 @@ local defaults = {
             spellList = {},
             spellList2 = {},
 
-            interruptBarEnabled = false;
-            interruptBarGrowDirection = addon.INTERRUPT_GROW_DIRECTION.CENTER_UP,
-            interruptBarOffsetX = 0,
-            interruptBarOffsetY = -150,
-            interruptBarIconSize = 40,
-            interruptBarIconPadding = 2,
-            interruptBarUnusedIconAlpha = 0.5,
-            interruptBarUsedIconAlpha = 1,
-            interruptBarShowUnused = false,
-            interruptBarHideCountDownNumbers = false,
-            interruptBarSpellList = {},
-
             spellCatPriority = {
                 [tostring(addon.SPELLCATEGORY.IMMUNITY)] = 100,
                 [tostring(addon.SPELLCATEGORY.DEFENSIVE)] = 90,
@@ -183,6 +171,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
+    defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownOffsetX = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
@@ -199,43 +188,36 @@ if addon.internal then -- Set default for internal version
     defaults.profile.misc.healerInCrowdControl = true;
 end
 
-addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
-addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
-addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
+local function FillDefaults()
+    addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
+    addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
+    addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
-local function SetupAllSpells(profile, spellList)
-    for spellID, spellEntry in pairs(spellList) do
-        local category = spellEntry.category;
-        -- By default only check burst and defensives
-        if ( category == addon.SPELLCATEGORY.BURST ) or ( category == addon.SPELLCATEGORY.DEFENSIVE ) or ( category == addon.SPELLCATEGORY.IMMUNITY ) or ( category == addon.SPELLCATEGORY.HEAL ) then
-            profile[tostring(spellID)] = true;
-        else
-            profile[tostring(spellID)] = false;
+    if addon.PROJECT_MAINLINE then
+        defaults.profile.arenaFrames.standaloneBars = {};
+        for i = 1, 6 do
+            local groupName = "Bar ".. i;
+            defaults.profile.arenaFrames.standaloneBars[groupName] = {
+                name = groupName,
+                enabled = false,
+
+                growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER_UP,
+                offsetX = 0,
+                offsetY = 0,
+
+                iconSize = 32,
+                iconPadding = 2,
+                unusedIconAlpha = 0.5,
+                usedIconAlpha = 1,
+                showUnusedIcons = false,
+                hideCountDownNumbers = false,
+                spellList = {},
+            };
         end
-    end
-end
 
-local function UncheckAllSpells(profile, spellList)
-    for spellID, spellEntry in pairs(spellList) do
-        profile[tostring(spellID)] = false;
+        addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+        addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, addon.SpellData);
     end
-end
-
-local function SetupInterrupts(profile, spellList)
-    for spellID, spellEntry in pairs(spellList) do
-        local category = spellEntry.category;
-        -- By default only check interrupts
-        if ( category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ) then
-            profile[tostring(spellID)] = true;
-        else
-            profile[tostring(spellID)] = false;
-        end
-    end
-end
-
-if addon.PROJECT_MAINLINE then
-    SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
-    SetupInterrupts(defaults.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end
 
 function SweepyBoop:SetupBlizzardOptions()
@@ -283,6 +265,15 @@ function SweepyBoop:SetupBlizzardOptions()
 end
 
 function SweepyBoop:OnInitialize()
+    FillDefaults();
+    local currentTime = GetTime();
+    for _, category in pairs(defaults) do
+        if type(category) == "table" then
+            category.lastModified = currentTime;
+        end
+    end
+    self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
+
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
@@ -292,14 +283,6 @@ function SweepyBoop:OnInitialize()
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
     end
 
-    local currentTime = GetTime();
-    for _, category in pairs(defaults) do
-        if type(category) == "table" then
-            category.lastModified = currentTime;
-        end
-    end
-
-    self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
     LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
@@ -313,6 +296,7 @@ function SweepyBoop:OnInitialize()
     icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
+    self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig");
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
 
     -- Nameplate module needs optimization to eat less CPU
@@ -341,7 +325,7 @@ end
 function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:HideTestArenaCooldownTracker();
-        self:HideTestArenaInterruptBar();
+        self:HideTestArenaStandaloneBars();
 
         self:SetupCombatIndicator();
         self:HideTestHealerInCrowdControl();
@@ -361,16 +345,4 @@ function SweepyBoop:RefreshConfig()
     else
         icon:Show(addonName);
     end
-end
-
-function SweepyBoop:CheckDefaultArenaAbilities()
-    SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
-end
-
-function SweepyBoop:UncheckAllArenaAbilities()
-    UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
-end
-
-function SweepyBoop:CheckDefaultInterrupts()
-    SetupInterrupts(SweepyBoop.db.profile.arenaFrames.interruptBarSpellList, addon.SpellData);
 end

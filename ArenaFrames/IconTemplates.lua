@@ -50,13 +50,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         if finish then
             icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
             if icon.group then
-                local config = SweepyBoop.db.profile.arenaFrames;
-                local showUnusedIcons;
-                if icon.isInterruptBar then
-                    showUnusedIcons = config.interruptBarShowUnused;
-                else
-                    showUnusedIcons = config.showUnusedIcons;
-                end
+                local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
                 addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
             end
         else
@@ -103,13 +97,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
-            local config = SweepyBoop.db.profile.arenaFrames;
-            local showUnusedIcons;
-            if icon.isInterruptBar then
-                showUnusedIcons = config.interruptBarShowUnused;
-            else
-                showUnusedIcons = config.showUnusedIcons;
-            end
+            local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
@@ -121,19 +109,11 @@ end
 
 addon.SetUnusedIconAlpha = function (icon)
     local unusedIconAlpha;
-    local config = SweepyBoop.db.profile.arenaFrames;
-    if icon.isInterruptBar then
-        if config.interruptBarShowUnused then
-            unusedIconAlpha = config.interruptBarUnusedIconAlpha;
-        else
-            unusedIconAlpha = 1;
-        end
+    local config = addon.GetIconSetConfig(icon.iconSetID);
+    if config.showUnusedIcons then
+        unusedIconAlpha = config.unusedIconAlpha;
     else
-        if config.showUnusedIcons then
-            unusedIconAlpha = config.unusedIconAlpha;
-        else
-            unusedIconAlpha = 1;
-        end
+        unusedIconAlpha = 1;
     end
     icon:SetAlpha(unusedIconAlpha);
 end
@@ -146,19 +126,11 @@ addon.SetUsedIconAlpha = function (icon)
     end
 
     local usedIconAlpha;
-    local config = SweepyBoop.db.profile.arenaFrames;
-    if icon.isInterruptBar then
-        if config.interruptBarShowUnused then
-            usedIconAlpha = config.interruptBarUsedIconAlpha;
-        else
-            usedIconAlpha = 1;
-        end
+    local config = addon.GetIconSetConfig(icon.iconSetID);
+    if config.showUnusedIcons then
+        usedIconAlpha = config.usedIconAlpha;
     else
-        if config.showUnusedIcons then
-            usedIconAlpha = config.usedIconAlpha;
-        else
-            usedIconAlpha = 1;
-        end
+        usedIconAlpha = 1;
     end
     icon:SetAlpha(usedIconAlpha);
 end
@@ -171,13 +143,7 @@ addon.OnDurationTimerFinished = function(self)
         icon.cooldown:Show();
     else
         if icon.group then
-            local config = SweepyBoop.db.profile.arenaFrames;
-            local showUnusedIcons;
-            if icon.isInterruptBar then
-                showUnusedIcons = config.interruptBarShowUnused;
-            else
-                showUnusedIcons = config.showUnusedIcons;
-            end
+            local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
