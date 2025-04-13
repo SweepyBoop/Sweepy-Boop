@@ -221,7 +221,7 @@ addon.GetArenaFrameOptions = function(order)
                                 name = "Positioning",
                             },
 
-                            growDirection = {
+                            arenaCooldownGrowDirection = {
                                 order = 16,
                                 type = "select",
                                 width = 0.75,

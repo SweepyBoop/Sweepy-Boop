@@ -104,7 +104,7 @@ local defaults = {
             arenaCooldownTrackerEnabled = true,
             arenaCooldownSecondaryBar = false,
 
-            growDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT,
+            arenaCooldownGrowDirection = addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT,
             arenaCooldownOffsetX = 0,
             arenaCooldownOffsetY = 0,
 

@@ -203,7 +203,7 @@ local function GetGrowOptions(iconSetID)
     local growOptions;
 
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
-        growOptions = arenaFrameGrowOptions[config.growDirection];
+        growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirection];
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
