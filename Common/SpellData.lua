@@ -139,7 +139,7 @@ addon.SpellData = {
     [47476] = {
         class = addon.DEATHKNIGHT,
         category = category.SILENCE,
-        cooldown = 60,
+        cooldown = 45,
     },
     -- Blinding Sleet
     [207167] = {
@@ -1348,6 +1348,11 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
     },
+        -- Lay on Hands (Empyreal Ward)
+        [471195] = {
+            parent = 633,
+            use_parent_icon = true,
+        },
     -- Divine Protection
     [498] = {
         cooldown = 42, -- 60 * 0.7 (Unbreakable Spirit)
@@ -2306,14 +2311,16 @@ addon.SpellData = {
     },
     -- Bladestorm
     [227847] = {
-        cooldown = 60,
+        cooldown = 90,
         class = addon.WARRIOR,
         spec = { specID.ARMS, specID.FURY },
         category = category.IMMUNITY,
         baseline = true, -- technically a talent, but always picked
+        reduce_power_type = POWERTYPE.Rage,
+        reduce_amount = 0.05,
     },
     -- Heroic Leap
-    [6544] = {
+    [52174] = {
         cooldown = 30,
         class = addon.WARRIOR,
         category = category.OTHERS,
