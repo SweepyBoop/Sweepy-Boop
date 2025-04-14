@@ -2384,6 +2384,13 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Intervene
+    [3411] = {
+        cooldown = 28.5,
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        baseline = true,
+    },
     -- Rallying Cry
     [97462] = {
         cooldown = 180,
