@@ -139,7 +139,7 @@ addon.SpellData = {
     [47476] = {
         class = addon.DEATHKNIGHT,
         category = category.SILENCE,
-        cooldown = 60,
+        cooldown = 45,
     },
     -- Blinding Sleet
     [207167] = {
