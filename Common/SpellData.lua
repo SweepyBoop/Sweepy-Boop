@@ -1963,6 +1963,14 @@ addon.SpellData = {
         class = addon.SHAMAN,
         category = category.DEFENSIVE
     },
+    -- Totemic Recall
+    [108285] = {
+        cooldown = 180,
+        opt_lower_cooldown = 120,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Disrupt
     -- Grounding Totem
     [204336] = {
