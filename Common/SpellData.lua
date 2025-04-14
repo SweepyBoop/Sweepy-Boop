@@ -1021,6 +1021,13 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.LOW,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Mass Barrier
+    [414660] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Crowd Control
     -- Ring of Frost
     [113724] = {
