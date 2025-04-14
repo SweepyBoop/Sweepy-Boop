@@ -1661,13 +1661,11 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.OTHERS,
     },
-    -- Fade (Phase Shift)
-    [408558] = {
-        cooldown = 30,
-        opt_lower_cooldown = 20,
+    -- Fade
+    [586] = {
+        cooldown = 20,
         class = addon.PRIEST,
         category = category.IMMUNITY,
-        trackEvent = addon.SPELL_AURA_APPLIED,
     },
     -- Shadow Word: Death
     [32379] = {
