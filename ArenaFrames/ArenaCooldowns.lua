@@ -13,6 +13,7 @@ local resetByPower = {
     1719, -- Recklessness
     262161, -- Warbreaker
     167105, -- Colossus Smash
+    227847, -- Bladestorm
 };
 
 local resetByCrit = {

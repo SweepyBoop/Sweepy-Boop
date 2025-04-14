@@ -2311,9 +2311,11 @@ addon.SpellData = {
         spec = { specID.ARMS, specID.FURY },
         category = category.IMMUNITY,
         baseline = true, -- technically a talent, but always picked
+        reduce_power_type = POWERTYPE.Rage,
+        reduce_amount = 0.05,
     },
     -- Heroic Leap
-    [6544] = {
+    [52174] = {
         cooldown = 30,
         class = addon.WARRIOR,
         category = category.OTHERS,
