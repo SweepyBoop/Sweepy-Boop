@@ -1673,6 +1673,7 @@ addon.SpellData = {
         cooldown = 20,
         class = addon.PRIEST,
         category = category.IMMUNITY,
+        baseline = true,
     },
     -- Shadow Word: Death
     [32379] = {
