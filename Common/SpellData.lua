@@ -1348,6 +1348,11 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
     },
+        -- Lay on Hands (Empyreal Ward)
+        [471195] = {
+            parent = 633,
+            use_parent_icon = true,
+        },
     -- Divine Protection
     [498] = {
         cooldown = 42, -- 60 * 0.7 (Unbreakable Spirit)
