@@ -2311,7 +2311,7 @@ addon.SpellData = {
     },
     -- Bladestorm
     [227847] = {
-        cooldown = 60,
+        cooldown = 90,
         class = addon.WARRIOR,
         spec = { specID.ARMS, specID.FURY },
         category = category.IMMUNITY,
