@@ -1021,6 +1021,13 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.LOW,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Mass Barrier
+    [414660] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Crowd Control
     -- Ring of Frost
     [113724] = {
@@ -1661,13 +1668,12 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.OTHERS,
     },
-    -- Fade (Phase Shift)
-    [408558] = {
-        cooldown = 30,
-        opt_lower_cooldown = 20,
+    -- Fade
+    [586] = {
+        cooldown = 20,
         class = addon.PRIEST,
         category = category.IMMUNITY,
-        trackEvent = addon.SPELL_AURA_APPLIED,
+        baseline = true,
     },
     -- Shadow Word: Death
     [32379] = {
@@ -1964,6 +1970,14 @@ addon.SpellData = {
         cooldown = 174,
         class = addon.SHAMAN,
         category = category.DEFENSIVE
+    },
+    -- Totemic Recall
+    [108285] = {
+        cooldown = 180,
+        opt_lower_cooldown = 120,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
     },
     -- Disrupt
     -- Grounding Totem
