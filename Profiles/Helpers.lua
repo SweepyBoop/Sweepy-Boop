@@ -55,6 +55,13 @@ function SweepyBoop:ShowImport(module)
 	importDialog.editBox:SetFocus();
 end
 
+function SweepyBoop:ShowExport()
+    self.exportDialog.editBox:SetText(self:ExportProfile());
+	self.exportDialog:Show();
+	self.exportDialog.editBox:SetFocus();
+	self.exportDialog.editBox:HighlightText();
+end
+
 addon.CreateExportDialog = function()
     local export = AceGUI:Create("Frame");
 

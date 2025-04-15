@@ -86,8 +86,7 @@ end
 addon.GetArenaFrameOptions = function(order)
     addon.importDialogs = addon.importDialogs or {};
     addon.importDialogs["arenaFrames"] = addon.CreateImportDialog("arenaFrames");
-    addon.exportDialogs = addon.exportDialogs or {};
-    addon.exportDialogs["arenaFrames"] = addon.CreateExportDialog();
+    addon.exportDialog = addon.exportDialog or addon.CreateExportDialog(); -- One shared dialog for exporting
 
     local optionGroup = {
         order = order,
@@ -119,7 +118,7 @@ addon.GetArenaFrameOptions = function(order)
                 name = "Export",
                 desc = "Export your profile to a string",
                 func = function()
-
+                    
                 end,
             },
 
