@@ -566,7 +566,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                 local cost = GetSpellPowerCost(spellId, spellData[spellToReset].reduce_power_type);
                 if cost > 0 then
                     local amount = spellData[spellToReset].reduce_amount * cost;
-                    print("Resetting cooldown for", spellToReset, "by", amount, "for", spellId);
+                    --print("Resetting cooldown for", spellToReset, "by", amount, "for", spellId);
                     ResetCooldown(icon, amount);
                 end
             end
