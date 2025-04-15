@@ -1,6 +1,22 @@
 local _, addon = ...;
 local AceGUI = LibStub("AceGUI-3.0");
 
+function SweepyBoop:Decode(encoded, module)
+    local importDialog = addon.importDialogs and addon.importDialogs[module]; -- module = "" for importing the entire profile, it's valid to use "" as table key
+    if ( not importDialog ) then return end
+
+    local LibDeflate = LibStub:GetLibrary("LibDeflate");
+	local decoded = LibDeflate:DecodeForPrint(encoded);
+	if (not decoded) then return self:ImportError(importDialog, "DecodeForPrint") end
+
+	local decompressed = LibDeflate:DecompressZlib(decoded);
+	if (not decompressed) then return self:ImportError(importDialog, "DecompressZlib") end
+
+	local success, deserialized = self:Deserialize(decompressed);
+	if ( not success ) then return self:ImportError(importDialog, "Deserialize") end
+	return deserialized;
+end
+
 -- For export, just export the entire profile
 -- Then we can selectively import for certain modules only
 function SweepyBoop:ExportProfile()
@@ -122,7 +138,7 @@ addon.CreateImportDialog = function(module)
     import:AddChild(importButton);
     import.button = importButton;
     importEditBox:SetCallback("OnTextChanged", function(widget)
-        local data = SweepyBoop:Decode(widget:GetText());
+        local data = SweepyBoop:Decode(widget:GetText(), module);
         if (not data) then return end
         import.statustext:SetTextColor(0,1,0);
         import:SetStatusText("Ready to import");
