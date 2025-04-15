@@ -75,14 +75,6 @@ addon.SetupInterrupts = function (profile, spellList)
     end
 end
 
-function SweepyBoop:ShowImportArenaCooldowns()
-    self.importArenaCooldowns.editBox:SetText("");
-	self:ImportError();
-	self.importArenaCooldowns:Show();
-	self.importArenaCooldowns.button:SetDisabled(true);
-	self.importArenaCooldowns.editBox:SetFocus();
-end
-
 addon.GetArenaFrameOptions = function(order)
     addon.importDialogs = addon.importDialogs or {};
     addon.importDialogs["arenaFrames"] = addon.CreateImportDialog("arenaFrames");
