@@ -76,6 +76,10 @@ addon.SetupInterrupts = function (profile, spellList)
 end
 
 addon.GetArenaFrameOptions = function(order)
+    addon.importDialogs = addon.importDialogs or {};
+    addon.importDialogs["arenaFrames"] = addon.CreateImportDialog("arenaFrames");
+    addon.exportDialog = addon.exportDialog or addon.CreateExportDialog(); -- One shared dialog for exporting
+
     local optionGroup = {
         order = order,
         type = "group",
@@ -88,8 +92,30 @@ addon.GetArenaFrameOptions = function(order)
             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
         end,
         args = {
-            arenaFrameBars = {
+            import = {
                 order = 1,
+                type = "execute",
+                width = 0.75,
+                name = "Import",
+                desc = "Import a profile from an export string",
+                func = function()
+                    SweepyBoop:ShowImport("arenaFrames");
+                end,
+            },
+
+            export = {
+                order = 2,
+                type = "execute",
+                width = 0.75,
+                name = "Export",
+                desc = "Export your profile to a string",
+                func = function()
+                    SweepyBoop:ShowExport();
+                end,
+            },
+
+            arenaFrameBars = {
+                order = 3,
                 type = "group",
                 childGroups = "tab",
                 name = "Arena frames",
@@ -124,13 +150,13 @@ addon.GetArenaFrameOptions = function(order)
                         args = {
                             arenaCooldownTrackerEnabled = {
                                 order = 6,
-                                width = "full",
+                                width = 1,
                                 type = "toggle",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enabled",
                             },
                             arenaCooldownSecondaryBar = {
                                 order = 7,
-                                width = "full",
+                                width = 1.5,
                                 type = "toggle",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_painsupression")) .. " Enable secondary bar",
                                 hidden = function()
@@ -138,8 +164,14 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
 
-                            hideCountDownNumbers = {
+                            breaker1 = {
                                 order = 8,
+                                type = "description",
+                                name = "",
+                            },
+
+                            hideCountDownNumbers = {
+                                order = 9,
                                 type = "toggle",
                                 width = "full",
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
@@ -147,15 +179,49 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             showUnusedIcons = {
-                                order = 9,
+                                order = 10,
                                 type = "toggle",
-                                width = "full",
+                                width = 1,
                                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Always show icons",
                                 desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                             },
 
+                            unusedIconAlpha = {
+                                order = 11,
+                                type = "range",
+                                width = 0.8,
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "Off-cooldown alpha",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                end
+                            },
+
+                            usedIconAlpha = {
+                                order = 12,
+                                type = "range",
+                                width = 0.8,
+                                isPercent = true,
+                                min = 0.5,
+                                max = 1,
+                                step = 0.1,
+                                name = "On-cooldown alpha",
+                                hidden = function ()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
+                                end
+                            },
+
+                            breaker2 = {
+                                order = 13,
+                                type = "description",
+                                name = "",
+                            },
+
                             arenaCooldownTrackerIconSize = {
-                                order = 10,
+                                order = 14,
                                 type = "range",
                                 width = 0.75,
                                 min = 16,
@@ -166,7 +232,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownTrackerIconPadding = {
-                                order = 11,
+                                order = 15,
                                 type = "range",
                                 width = 0.75,
                                 min = 0,
@@ -181,48 +247,20 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
 
-                            newline = {
-                                order = 12,
+                            breaker3 = {
+                                order = 16,
                                 type = "description",
                                 name = "",
                             },
 
-                            unusedIconAlpha = {
-                                order = 13,
-                                type = "range",
-                                width = 0.8,
-                                isPercent = true,
-                                min = 0.5,
-                                max = 1,
-                                step = 0.1,
-                                name = "Off-cooldown alpha",
-                                hidden = function ()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
-                                end
-                            },
-
-                            usedIconAlpha = {
-                                order = 14,
-                                type = "range",
-                                width = 0.8,
-                                isPercent = true,
-                                min = 0.5,
-                                max = 1,
-                                step = 0.1,
-                                name = "On-cooldown alpha",
-                                hidden = function ()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
-                                end
-                            },
-
                             headerPosition = {
-                                order = 15,
+                                order = 17,
                                 type = "header",
                                 name = "Positioning",
                             },
 
                             arenaCooldownGrowDirection = {
-                                order = 16,
+                                order = 18,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -233,7 +271,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetX = {
-                                order = 17,
+                                order = 19,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -247,7 +285,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetY = {
-                                order = 18,
+                                order = 20,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,
@@ -263,7 +301,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             headerPosition2 = {
-                                order = 19,
+                                order = 21,
                                 type = "header",
                                 name = "Secondary bar positioning",
                                 hidden = function()
@@ -272,7 +310,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownGrowDirectionSecondary = {
-                                order = 20,
+                                order = 22,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -288,7 +326,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetXSecondary = {
-                                order = 21,
+                                order = 23,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -305,7 +343,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetYSecondary = {
-                                order = 22,
+                                order = 24,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,
@@ -394,7 +432,7 @@ addon.GetArenaFrameOptions = function(order)
             },
 
             standaloneBars = {
-                order = 2,
+                order = 4,
                 type = "group",
                 childGroups = "tab",
                 name = "Standalone bars",
@@ -415,6 +453,8 @@ addon.GetArenaFrameOptions = function(order)
                     },
                 },
             },
+
+            -- TODO: Tab for shared top player profiles for quicker import
         },
     };
 
