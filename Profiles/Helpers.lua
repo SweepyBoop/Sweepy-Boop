@@ -52,7 +52,7 @@ function SweepyBoop:ImportProfile(data, module)
     local profile = string.format("Imported (%s)", date());
 
     if ( module ~= "" ) then
-        self.db.profile[module] = data.profile;
+        self.db.profile[module] = data.profile[module];
     else
         self.db.profile = data.profile;
     end
