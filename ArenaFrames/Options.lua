@@ -108,7 +108,7 @@ addon.GetArenaFrameOptions = function(order)
                 name = "Import",
                 desc = "Import a profile from an export string",
                 func = function()
-
+                    SweepyBoop:ShowImport("arenaFrames");
                 end,
             },
 

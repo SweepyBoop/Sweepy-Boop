@@ -28,9 +28,10 @@ Common\NpcData.lua
 Common\AuraData.lua
 Common\DRList.lua
 Common\AceGUIWidget-InlineLink.lua
-Common\AceGUIProfileExportImport.lua
 
 Core.lua
+
+Profiles\Helpers.lua
 
 Nameplates\Nameplates.xml
 Nameplates\Helpers.lua
