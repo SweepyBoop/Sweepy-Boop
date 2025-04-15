@@ -2,7 +2,23 @@ local _, addon = ...;
 
 local spellData = addon.SpellData;
 local spellResets = addon.SpellResets;
-local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
+
+-- This should never change, thus caching it to avoid more calls to game API
+local cachedSpellPowerCost = {};
+local function GetSpellPowerCost(spellId, powerType)
+    cachedSpellPowerCost[spellId] = cachedSpellPowerCost[spellId] or {};
+
+    if ( cachedSpellPowerCost[spellId][powerType] == nil ) then
+        local cost = C_Spell.GetSpellPowerCost(spellId);
+        if cost and cost[1] and ( cost[1].type == powerType ) then
+            cachedSpellPowerCost[spellId][powerType] = cost[1].cost;
+        else
+            cachedSpellPowerCost[spellId][powerType] = 0; -- set to 0 so we don't call C_Spell.GetSpellPowerCost again
+        end
+    end
+
+    return cachedSpellPowerCost[spellId][powerType];
+end
 
 local interruptToSpellID = {
     [97547] = 78675, -- Solar Beam
@@ -544,12 +560,12 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         local unit = unitGuidToId[sourceGUID];
         -- Check reset by power
         for i = 1, #resetByPower do
-            local reset = resetByPower[i];
-            local icon = self.activeMap[unit .. "-" .. reset];
+            local spellToReset = resetByPower[i];
+            local icon = self.activeMap[unit .. "-" .. spellToReset];
             if icon and icon.started then -- ResetCooldown has started check, but here we check to skip the power calculation, which could be costly
-                local cost = GetSpellPowerCost(spellId);
-                if cost and cost[1] and ( cost[1].type == spellData[reset].reduce_power_type ) then
-                    local amount = spellData[reset].reduce_amount * cost[1].cost;
+                local cost = GetSpellPowerCost(spellId, spellData[spellToReset]);
+                if cost > 0 then
+                    local amount = spellData[spellToReset].reduce_amount * cost;
                     ResetCooldown(icon, amount);
                 end
             end
