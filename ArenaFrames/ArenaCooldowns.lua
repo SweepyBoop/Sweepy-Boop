@@ -563,9 +563,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             local spellToReset = resetByPower[i];
             local icon = self.activeMap[unit .. "-" .. spellToReset];
             if icon and icon.started then -- ResetCooldown has started check, but here we check to skip the power calculation, which could be costly
-                local cost = GetSpellPowerCost(spellId, spellData[spellToReset]);
+                local cost = GetSpellPowerCost(spellId, spellData[spellToReset].reduce_power_type);
                 if cost > 0 then
                     local amount = spellData[spellToReset].reduce_amount * cost;
+                    print("Resetting cooldown for", spellToReset, "by", amount, "for", spellId);
                     ResetCooldown(icon, amount);
                 end
             end
