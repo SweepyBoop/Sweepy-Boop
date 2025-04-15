@@ -76,6 +76,9 @@ addon.SetupInterrupts = function (profile, spellList)
 end
 
 addon.GetArenaFrameOptions = function(order)
+    addon.exportArenaCooldowns = addon.CreateExportDialog();
+    addon.importArenaCooldowns = addon.CreateImportDialog("arenaFrames");
+
     local optionGroup = {
         order = order,
         type = "group",
