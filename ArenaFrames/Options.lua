@@ -418,6 +418,13 @@ addon.GetArenaFrameOptions = function(order)
                     },
                 },
             },
+
+            profileExport = {
+                order = 3,
+                type = "group",
+                name = "Profile sharing",
+                args = {},
+            }
         },
     };
 
