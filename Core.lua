@@ -349,10 +349,12 @@ function SweepyBoop:RefreshConfig()
     end
 end
 
-function SweepyBoop:ExportProfile(module)
+-- For export, just export the entire profile
+-- Then we can selectively import for certain modules only
+function SweepyBoop:ExportProfile()
     local LibDeflate = LibStub:GetLibrary("LibDeflate");
     local data = {
-        profile = self.db.profile[module], -- e.g., arenaFrames
+        profile = self.db.profile,
         version = 1,
     };
     local serialized = self:Serialize(data);
@@ -362,5 +364,30 @@ function SweepyBoop:ExportProfile(module)
     return LibDeflate:EncodeForPrint(compressed);
 end
 
-function SweepyBoop:ImportError(message)
+function SweepyBoop:ImportError(importDialog, message)
+    if ( not message ) or ( importDialog.editBox.editBox:GetNumLetters() == 0 ) then
+		importDialog.statustext:SetTextColor(1, 0.82, 0);
+		importDialog:SetStatusText("Paste code to import a profile");
+	else
+		importDialog.statustext:SetTextColor(1, 0, 0);
+		importDialog:SetStatusText(string.format("Import failed (%s)", message));
+	end
+	importDialog.button:SetDisabled(true);
+end
+
+function SweepyBoop:ImportProfile(data, module)
+    local importDialog = addon.importDialogs[module]; -- module = "" for importing the entire profile, it's valid to use "" as table key
+    if ( not importDialog ) then return end
+
+    if ( data.version ~= 1 ) then return self:ImportError(importDialog, "Invalid version") end
+
+    local profile = string.format("Imported (%s)", date());
+
+    if ( module ~= "" ) then
+        self.db.profile[module] = data.profile;
+    else
+        self.db.profile = data.profile;
+    end
+
+    self:RefreshConfig();
 end

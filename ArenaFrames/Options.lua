@@ -75,9 +75,19 @@ addon.SetupInterrupts = function (profile, spellList)
     end
 end
 
+function SweepyBoop:ShowImportArenaCooldowns()
+    self.importArenaCooldowns.editBox:SetText("");
+	self:ImportError();
+	self.importArenaCooldowns:Show();
+	self.importArenaCooldowns.button:SetDisabled(true);
+	self.importArenaCooldowns.editBox:SetFocus();
+end
+
 addon.GetArenaFrameOptions = function(order)
-    addon.exportArenaCooldowns = addon.CreateExportDialog();
-    addon.importArenaCooldowns = addon.CreateImportDialog("arenaFrames");
+    addon.importDialogs = addon.importDialogs or {};
+    addon.importDialogs["arenaFrames"] = addon.CreateImportDialog("arenaFrames");
+    addon.exportDialogs = addon.exportDialogs or {};
+    addon.exportDialogs["arenaFrames"] = addon.CreateExportDialog();
 
     local optionGroup = {
         order = order,
@@ -91,8 +101,30 @@ addon.GetArenaFrameOptions = function(order)
             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
         end,
         args = {
-            arenaFrameBars = {
+            import = {
                 order = 1,
+                type = "execute",
+                width = 0.75,
+                name = "Import",
+                desc = "Import a profile from an export string",
+                func = function()
+
+                end,
+            },
+
+            export = {
+                order = 2,
+                type = "execute",
+                width = 0.75,
+                name = "Export",
+                desc = "Export your profile to a string",
+                func = function()
+
+                end,
+            },
+
+            arenaFrameBars = {
+                order = 3,
                 type = "group",
                 childGroups = "tab",
                 name = "Arena frames",
@@ -409,7 +441,7 @@ addon.GetArenaFrameOptions = function(order)
             },
 
             standaloneBars = {
-                order = 2,
+                order = 4,
                 type = "group",
                 childGroups = "tab",
                 name = "Standalone bars",
@@ -432,9 +464,9 @@ addon.GetArenaFrameOptions = function(order)
             },
 
             profileExport = {
-                order = 3,
+                order = 5,
                 type = "group",
-                name = "Profile sharing",
+                name = "Shared profiles",
                 args = {},
             }
         },
