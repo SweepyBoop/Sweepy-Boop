@@ -49,8 +49,6 @@ function SweepyBoop:ImportProfile(data, module)
 
     if ( data.version ~= addon.PROFILE_VERSION ) then return self:ImportError(importDialog, "Invalid version") end
 
-    local profile = string.format("Imported (%s)", date());
-
     if ( module ~= "" ) then
         self.db.profile[module] = data.profile[module];
     else
