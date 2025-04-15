@@ -6,6 +6,7 @@ Features include:
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
 - Advanced arena cooldown tracking: arena frame cooldown icons attached to each opponent + up to 6 standalone bars that track all opponents. These icons are highly accurate including
   - Cooldown reduction: 4s reduction from Mage's succesful Counterspell (similar with Solar Beam); Holy Word: Chastise cooldown reduction, even including the extra reduction during Apotheosis; Shifting Power cooldown reduction, that is accurate even if Shifting Power was interrupted; Combustion cd reduction from Kindling, etc.
+  - Per-spec cooldown tracking, e.g., Outlaw Rogue has 90 Sec Blind instead of 120 Sec, Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec
   - Lower cooldown detection: e.g., if a Shadow Priest is playing 30 Sec Silence
 - Raid frames: show real PvP aggro highlight on raid frames; Restoration Druid HoT helper to glow Lifebloom during pandemic window and fade out Cenarion Ward before the actual healing procs
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
@@ -82,9 +83,9 @@ While in arenas / battlegrounds, customize which non-player enemy units to show,
 
 ## Advanced arena cooldown tracking
 Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics in the game, e.g.,
-- Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt
-- Balance Druid Solar Beam cooldown is reduced by 15 Sec if it successfully interrupted a spell cast
+- Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt (similar with Solar Beam)
 - Mage Shifting Power reduces the cooldown of all their abilities by 12 Sec
+- Per-spec cooldown tracking, e.g., Outlaw Rogue has 90 Sec Blind instead of 120 Sec, Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec
 - Calculates ability charges more accurately, and displays them with a clear daily quest icon texture
 - Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
 
