@@ -454,12 +454,7 @@ addon.GetArenaFrameOptions = function(order)
                 },
             },
 
-            profileExport = {
-                order = 5,
-                type = "group",
-                name = "Shared profiles",
-                args = {},
-            }
+            -- TODO: Tab for shared top player profiles for quicker import
         },
     };
 
