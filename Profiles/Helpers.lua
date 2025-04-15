@@ -58,6 +58,7 @@ function SweepyBoop:ImportProfile(data, module)
     end
 
     self:RefreshConfig(); -- TODO: optimize this to only refresh the module that was imported
+    return true;
 end
 
 function SweepyBoop:ShowImport(module)
