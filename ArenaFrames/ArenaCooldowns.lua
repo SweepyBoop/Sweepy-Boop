@@ -965,3 +965,16 @@ function SweepyBoop:SetupArenaCooldownTracker()
         end)
     end
 end
+
+function SweepyBoop:ExportProfileArenaCooldowns()
+    local LibDeflate = LibStub:GetLibrary("LibDeflate");
+    local data = {
+        profile = self.db.profile.arenaFrames,
+        version = 1,
+    };
+    local serialized = self:Serialize(data);
+    if ( not serialized ) then return end
+    local compressed = LibDeflate:CompressZlib(serialized);
+    if ( not compressed ) then return end
+    return LibDeflate:EncodeForPrint(compressed);
+end

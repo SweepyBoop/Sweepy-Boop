@@ -1925,6 +1925,13 @@ addon.SpellData = {
         duration = 24,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Primoridal Wave
+    [375982] = {
+        class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL },
+        category = category.BURST,
+        cooldown = 30,
+    },
     -- Interrupt
     -- Wind Shear
     [57994] = {
