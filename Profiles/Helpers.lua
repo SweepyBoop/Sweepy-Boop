@@ -23,7 +23,7 @@ function SweepyBoop:ExportProfile()
     local LibDeflate = LibStub:GetLibrary("LibDeflate");
     local data = {
         profile = self.db.profile,
-        version = 1,
+        version = addon.PROFILE_VERSION,
     };
     local serialized = self:Serialize(data);
     if ( not serialized ) then return end
@@ -47,7 +47,7 @@ function SweepyBoop:ImportProfile(data, module)
     local importDialog = addon.importDialogs and addon.importDialogs[module]; -- module = "" for importing the entire profile, it's valid to use "" as table key
     if ( not importDialog ) then return end
 
-    if ( data.version ~= 1 ) then return self:ImportError(importDialog, "Invalid version") end
+    if ( data.version ~= addon.PROFILE_VERSION ) then return self:ImportError(importDialog, "Invalid version") end
 
     local profile = string.format("Imported (%s)", date());
 
