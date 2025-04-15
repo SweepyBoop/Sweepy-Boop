@@ -28,6 +28,7 @@ Common\NpcData.lua
 Common\AuraData.lua
 Common\DRList.lua
 Common\AceGUIWidget-InlineLink.lua
+Common\AceGUIExportImport.lua
 
 Core.lua
 

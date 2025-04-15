@@ -348,3 +348,19 @@ function SweepyBoop:RefreshConfig()
         icon:Show(addonName);
     end
 end
+
+function SweepyBoop:ExportProfile(module)
+    local LibDeflate = LibStub:GetLibrary("LibDeflate");
+    local data = {
+        profile = self.db.profile[module], -- e.g., arenaFrames
+        version = 1,
+    };
+    local serialized = self:Serialize(data);
+    if ( not serialized ) then return end
+    local compressed = LibDeflate:CompressZlib(serialized);
+    if ( not compressed ) then return end
+    return LibDeflate:EncodeForPrint(compressed);
+end
+
+function SweepyBoop:ImportError(message)
+end
