@@ -1931,6 +1931,7 @@ addon.SpellData = {
         spec = { specID.ELEMENTAL },
         category = category.BURST,
         cooldown = 30,
+        baseline = true,
     },
     -- Interrupt
     -- Wind Shear
