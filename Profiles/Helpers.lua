@@ -56,10 +56,16 @@ function SweepyBoop:ShowImport(module)
 end
 
 function SweepyBoop:ShowExport()
-    self.exportDialog.editBox:SetText(self:ExportProfile());
-	self.exportDialog:Show();
-	self.exportDialog.editBox:SetFocus();
-	self.exportDialog.editBox:HighlightText();
+    local exportDialog = addon.exportDialog;
+    if ( not exportDialog ) then return end
+
+    local data = self:ExportProfile();
+    if ( not data ) then return end
+
+    exportDialog.editBox:SetText(self:ExportProfile());
+	exportDialog:Show();
+	exportDialog.editBox:SetFocus();
+	exportDialog.editBox:HighlightText();
 end
 
 addon.CreateExportDialog = function()

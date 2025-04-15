@@ -1,7 +1,7 @@
 local addonName, addon = ...;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 
-SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0");
+SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceSerializer-3.0");
 
 local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
     type = "data source",

@@ -118,7 +118,7 @@ addon.GetArenaFrameOptions = function(order)
                 name = "Export",
                 desc = "Export your profile to a string",
                 func = function()
-                    
+                    SweepyBoop:ShowExport();
                 end,
             },
 
