@@ -31,10 +31,6 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 
 (Class-colored arrow style with player names)
 
-![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
-
-(In-game class icon style with plain border and no player names)
-
 Replace nameplates of friendly players and their primary pets with class / healer / pet icons.
 
 Important: to use friendly icons, <span style="color:#36f"><strong>enable the following settings in Options - Interface - Nameplates</strong></span>:
