@@ -1357,7 +1357,15 @@ addon.SpellData = {
     [498] = {
         cooldown = 42, -- 60 * 0.7 (Unbreakable Spirit)
         class = addon.PALADIN,
-        spec = { specID.HOLY_PALADIN, specID.RETRIBUTION },
+        spec = { specID.HOLY_PALADIN },
+        category = category.DEFENSIVE,
+        baseline = true,
+    },
+    -- Divine Protection (Retribution)
+    [403876] = {
+        cooldown = 63, -- 90 * 0.7 (Unbreakable Spirit)
+        class = addon.PALADIN,
+        spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
         baseline = true,
     },
