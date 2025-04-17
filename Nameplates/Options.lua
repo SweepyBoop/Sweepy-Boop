@@ -414,9 +414,21 @@ addon.GetEnemyNameplateOptions = function(order)
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                         end,
                     },
+                    npcHighlightOffset = {
+                        order = 14,
+                        type = "range",
+                        name = "Highlight icon offset",
+                        width = 1,
+                        min = -50,
+                        max = 150,
+                        step = 1,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                        end,
+                    },
 
                     auraFilterEnabled = {
-                        order = 14,
+                        order = 15,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
@@ -430,7 +442,7 @@ addon.GetEnemyNameplateOptions = function(order)
                     },
 
                     showBuffsOnEnemy = {
-                        order = 15,
+                        order = 16,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",

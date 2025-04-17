@@ -24,12 +24,14 @@ local function SetupAnimation(frameWithAnimations)
 end
 
 local function EnsureNpcHighlight(nameplate)
+    local config = SweepyBoop.db.profile.nameplatesEnemy;
+
     if ( not nameplate.npcHighlight ) then
         nameplate.npcHighlight = CreateFrame("Frame", nil, nameplate);
         nameplate.npcHighlight:SetMouseClickEnabled(false);
         nameplate.npcHighlight:SetSize(iconSize, iconSize);
         nameplate.npcHighlight:SetFrameStrata("HIGH");
-        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP");
+        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", 0, config.npcHighlightOffset);
 
         nameplate.npcHighlight.customIcon = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
         nameplate.npcHighlight.customIcon:SetAllPoints(nameplate.npcHighlight);
@@ -54,9 +56,9 @@ local function EnsureNpcHighlight(nameplate)
         nameplate.npcHighlight:Hide();
     end
 
-    local config = SweepyBoop.db.profile.nameplatesEnemy;
     if ( nameplate.npcHighlight.lastModified ~= config.lastModified ) then
         nameplate.npcHighlight:SetScale(config.npcHighlightScale);
+        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", 0, config.npcHighlightOffset);
         nameplate.npcHighlight.lastModified = config.lastModified;
     end
 
