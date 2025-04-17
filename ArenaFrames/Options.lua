@@ -134,8 +134,17 @@ addon.GetArenaFrameOptions = function(order)
                         func = "HideTestArenaCooldownTracker",
                         width = "half",
                     },
-                    tooltipForExtraCharge = {
+
+                    tooltipTestIcons = {
                         order = 3,
+                        type = "description",
+                        fontSize = "medium",
+                        width = "full",
+                        name = addon.EXCLAMATION .. "Test icons showing arena 1 only, arena 2 & 3 will be automatically set up",
+                    },
+
+                    tooltipForExtraCharge = {
+                        order = 4,
                         type = "description",
                         fontSize = "medium",
                         width = "full",
@@ -143,7 +152,7 @@ addon.GetArenaFrameOptions = function(order)
                     },
 
                     general = {
-                        order = 4,
+                        order = 5,
                         type = "group",
                         childGroups = "tab",
                         name = "Settings",
@@ -364,14 +373,14 @@ addon.GetArenaFrameOptions = function(order)
                     },
 
                     spellCatPriority = {
-                        order = 5,
+                        order = 6,
                         type = "group",
                         name = "Priority",
                         args = {}, -- Fill this programatically later
                     },
 
                     spellList = {
-                        order = 6,
+                        order = 7,
                         type = "group",
                         name = "Spells",
                         desc = "Select which abilities to track cooldown inside arenas",
@@ -399,7 +408,7 @@ addon.GetArenaFrameOptions = function(order)
                     },
 
                     spellList2 = {
-                        order = 7,
+                        order = 8,
                         type = "group",
                         name = "Secondary bar spells",
                         desc = "Select which abilities to track cooldown inside arenas",
