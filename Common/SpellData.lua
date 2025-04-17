@@ -659,7 +659,7 @@ addon.SpellData = {
         cooldown = { default = 40, [specID.DEVASTATION] = 20, [specID.AUGMENTATION] = 20 },
         class = addon.EVOKER,
         category = category.INTERRUPT,
-        baeline = true, -- technically a talent, but always picked
+        baseline = true, -- technically a talent, but always picked
     },
     -- Crowd Control
     -- Dispel
