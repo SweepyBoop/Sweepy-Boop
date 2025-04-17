@@ -401,13 +401,14 @@ addon.GetEnemyNameplateOptions = function(order)
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
                         end
                     },
-                    highlightScale = {
+                    npcHighlightScale = {
                         order = 13,
                         type = "range",
-                        name = "Nameplate highlight icon scale (%)",
-                        width = 1.5,
-                        min = 50,
-                        max = 300,
+                        name = "Highlight icon scale",
+                        width = 1,
+                        min = 0.5,
+                        max = 3,
+                        isPercent = true,
                         step = 1,
                         hidden = function()
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );

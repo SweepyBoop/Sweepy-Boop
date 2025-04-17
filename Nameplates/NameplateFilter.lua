@@ -56,7 +56,7 @@ local function EnsureNpcHighlight(nameplate)
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
     if ( nameplate.npcHighlight.lastModified ~= config.lastModified ) then
-        nameplate.npcHighlight:SetScale(config.highlightScale / 100);
+        nameplate.npcHighlight:SetScale(config.npcHighlightScale);
         nameplate.npcHighlight.lastModified = config.lastModified;
     end
 
