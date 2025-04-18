@@ -1083,6 +1083,13 @@ addon.SpellData = {
         category = category.OTHERS,
         -- Not baseline since it can be replaced by Shimmer
     },
+    -- Shimmer
+    [212653] = {
+        cooldown = 25,
+        class = addon.MAGE,
+        category = category.OTHERS,
+        charges = true,
+    },
     -- Blast Wave
     [157981] = {
         class = addon.MAGE,
