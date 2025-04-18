@@ -2494,8 +2494,7 @@ addon.SpellResets = {
     -- Apotheosis
     [200183] = {
         88625, -- Holy Word: Chastise
-
-        { spellID = 2050, amount = 45 }, -- Grants one charge, i.e., reduce by 45 sec
+        2050, -- Grants one charge of Holy Word: Serenity
     },
 
     -- Holy Fire

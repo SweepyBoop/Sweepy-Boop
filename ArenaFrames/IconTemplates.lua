@@ -171,17 +171,20 @@ end
 
 addon.ResetIconCooldown = function (icon, amount, resetTo)
     if ( not icon.cooldown ) then return end
-    local amountCached = amount;
 
     local timers = icon.timers;
     -- Find the first thing that's on cooldown
     local now = GetTime();
     local index;
-    for i = 1, #(timers) do
-        -- Timer set to inf hasn't started cooldown progress yet, so we ignore it
-        if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
-            index = i;
-            break;
+    if ( not amount ) and ( #(timers) > 1 ) then
+        index = 2; -- For full reset, if we have 2 charges, we always reset the extra charge that was paused
+    else
+        for i = 1, #(timers) do
+            -- Timer set to inf hasn't started cooldown progress yet, so we ignore it
+            if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
+                index = i;
+                break;
+            end
         end
     end
 
@@ -193,23 +196,22 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         -- Fully reset if no amount specified
         timers[index] = { start = 0, duration = 0, finish = 0 };
 
-        -- If only one charge, or we just reset 2nd charge
-        finish = ( #(timers) < 2 ) or ( index == 2 );
-
-        -- Granting charge = reset by "cooldown" amount, not just reset current charge
+        -- If only one charge, or both charges are fully reset
+        finish = ( #(timers) < 2 ) or ( timers[1].finish == 0 and timers[2].finish == 0 );
     else
+        print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
         else
             local actualReducedAmount = math.min(amount, timers[index].finish - now);
             timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
             amount = amount - actualReducedAmount;
-            print("timers[1] reduced by", actualReducedAmount);
         end
         if ( timers[index].finish <= now ) then
             timers[index] = { start = 0, duration = 0, finish = 0 };
             finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
         end
+        print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
 
         -- If there are 2 charges and we just reset charge one
         -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
