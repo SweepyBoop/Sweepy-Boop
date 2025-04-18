@@ -140,7 +140,7 @@ addon.GetArenaFrameOptions = function(order)
                         type = "description",
                         fontSize = "medium",
                         width = "full",
-                        name = addon.EXCLAMATION .. "Test icons showing arena 1 only, arena 2 & 3 will be automatically set up",
+                        name = addon.EXCLAMATION .. " Test icons showing arena 1 only, arena 2 & 3 will be automatically set up",
                     },
 
                     tooltipForExtraCharge = {
