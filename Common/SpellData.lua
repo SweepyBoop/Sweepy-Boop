@@ -1680,13 +1680,19 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
     },
-    -- Serenity
+    -- Holy Word: Serenity
     [2050] = {
         class = addon.PRIEST,
         spec = { specID.HOLY_PRIEST },
         category = category.HEAL,
         cooldown = 45,
         charges = true,
+    },
+    -- Power Word: Life
+    [373481] = {
+        class = addon.PRIEST,
+        category = category.HEAL,
+        cooldown = 12,
     },
     -- Disrupt
     -- Holy Ward
