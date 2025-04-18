@@ -176,11 +176,21 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     -- Find the first thing that's on cooldown
     local now = GetTime();
     local index;
-    for i = 1, #(timers) do
-        -- Timer set to inf is hasn't started cooldown progress yet, so we ignore it
-        if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
-            index = i;
-            break;
+    if ( not amount ) and ( #(timers) > 1 ) then
+        -- if extra charge is paused (both charges are currently on cd), reset it
+        if ( timers[2].finish == math.huge ) then
+            index = 2;
+        else
+            -- Only default charge is on cooldown, reset it
+            index = 1;
+        end
+    else
+        for i = 1, #(timers) do
+            -- Timer set to inf hasn't started cooldown progress yet, so we ignore it
+            if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
+                index = i;
+                break;
+            end
         end
     end
 
@@ -190,21 +200,32 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     local finish;
     if ( not amount ) then
         -- Fully reset if no amount specified
-        timers[index] = { start = 0, duration = 0, finish = 0};
-        finish = true;
+        --print("full reset timers", index);
+        timers[index] = { start = 0, duration = 0, finish = 0 };
     else
+        --print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
         else
-            timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - amount);
+            local actualReducedAmount = math.min(amount, timers[index].finish - now);
+            timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
+            amount = amount - actualReducedAmount;
         end
-        if ( timers[index].duration < 0 ) then
-            timers[index] = { start = 0, duration = 0, finish = 0};
-            finish = true;
+        if ( timers[index].finish <= now ) then
+            timers[index] = { start = 0, duration = 0, finish = 0 };
+        end
+        --print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
+
+        -- If there are 2 charges and we just reset charge one, and charge 2 is on cooldown
+        -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
+        if ( #(timers) > 1 ) and ( index == 1 ) and ( timers[1].finish == 0 ) and ( timers[2].finish == math.huge ) then
+            timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
+            --print("timers[2] reduced by", amount);
+            -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
     end
 
-    addon.RefreshCooldownTimer(icon.cooldown, finish);
+    addon.RefreshCooldownTimer(icon.cooldown);
 end
 
 addon.SetHideCountdownNumbers = function (frame, hide)

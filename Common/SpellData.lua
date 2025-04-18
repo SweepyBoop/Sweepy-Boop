@@ -1083,6 +1083,13 @@ addon.SpellData = {
         category = category.OTHERS,
         -- Not baseline since it can be replaced by Shimmer
     },
+    -- Shimmer (for testing purpose only, too complicated to get this right with 2 charges)
+    -- [212653] = {
+    --     cooldown = 25,
+    --     class = addon.MAGE,
+    --     category = category.OTHERS,
+    --     charges = true,
+    -- },
     -- Blast Wave
     [157981] = {
         class = addon.MAGE,
@@ -1672,6 +1679,22 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         cooldown = 120,
+    },
+    -- Holy Word: Serenity
+    [2050] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.HEAL,
+        cooldown = 45,
+        charges = true,
+        baseline = true,
+    },
+    -- Power Word: Life
+    [440678] = {
+        class = addon.PRIEST,
+        category = category.HEAL,
+        cooldown = 12,
+        priority = addon.SPELLPRIORITY.LOW,
     },
     -- Disrupt
     -- Holy Ward
@@ -2471,7 +2494,9 @@ addon.SpellResets = {
     -- Apotheosis
     [200183] = {
         88625, -- Holy Word: Chastise
+        2050, -- Grants one charge of Holy Word: Serenity
     },
+
     -- Holy Fire
     [14914] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
@@ -2483,6 +2508,23 @@ addon.SpellResets = {
     -- Holy Nova
     [132157] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
+    },
+
+    -- Prayer of Mending
+    [33076] = {
+        { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
+    },
+    -- Power Word: Life
+    [440678] = {
+        { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
+    },
+    -- Heal
+    [2060] = {
+        { spellID = 2050, amount = 6 }, -- Holy Word: Serenity
+    },
+    -- Flash Heal
+    [2061] = {
+        { spellID = 2050, amount = 6 }, -- Holy Word: Serenity
     },
 
     -- Power Word: Shield
@@ -2510,6 +2552,11 @@ addon.SpellResetsAffectedByApotheosis = {
     [14914] = 2, -- Holy Fire (nerfed in PvP)
     [585] = 3, -- Smite
     [132157] = 3, -- Holy Nova
+
+    [33076] = 3, -- Prayer of Mending
+    [440678] = 3, -- Power Word: Life
+    [2060] = 3, -- Heal
+    [2061] = 3, -- Flash Heal
 };
 
 if addon.TEST_MODE then
