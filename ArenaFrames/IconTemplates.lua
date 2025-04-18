@@ -171,13 +171,14 @@ end
 
 addon.ResetIconCooldown = function (icon, amount, resetTo)
     if ( not icon.cooldown ) then return end
+    local amountCached = amount;
 
     local timers = icon.timers;
     -- Find the first thing that's on cooldown
     local now = GetTime();
     local index;
     for i = 1, #(timers) do
-        -- Timer set to inf is hasn't started cooldown progress yet, so we ignore it
+        -- Timer set to inf hasn't started cooldown progress yet, so we ignore it
         if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
             index = i;
             break;
@@ -203,6 +204,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             local actualReducedAmount = math.min(amount, timers[index].finish - now);
             timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
             amount = amount - actualReducedAmount;
+            print("timers[1] reduced by", actualReducedAmount);
         end
         if ( timers[index].finish <= now ) then
             timers[index] = { start = 0, duration = 0, finish = 0 };
@@ -212,12 +214,14 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         -- If there are 2 charges, we just reset charge one and there is amount remaining
         -- Then use the remaining amount to reduce the second charge
         -- We have previously paused the second charge (finish set to inf), thus we need to unpause it
-        if ( #(timers) > 1 ) and ( index == 1 ) and ( amount > 0 ) then
+        if ( #(timers) > 1 ) and ( index == 1 ) and ( amount >= 0 ) then
             timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
+            print("timers[2] reduced by", amount);
             -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
     end
 
+    print("ResetIconCooldown", index, amountCached, finish);
     addon.RefreshCooldownTimer(icon.cooldown, finish);
 end
 
