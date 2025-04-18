@@ -64,11 +64,11 @@ addon.RefreshCooldownTimer = function (self, finish)
     if finish then
         -- We previously set the finish of this timer to infinity so it will start over when the other timer comes off cooldown
         -- now restart the timer's cooldown progress
-        if ( timers[2].finish == math.huge ) then
-            timers[2].start = now;
-            timers[2].duration = icon.info.cooldown;
-            timers[2].finish = now + icon.info.cooldown;
-        end
+        -- if ( timers[2].finish == math.huge ) then
+        --     timers[2].start = now;
+        --     timers[2].duration = icon.info.cooldown;
+        --     timers[2].finish = now + icon.info.cooldown;
+        -- end
 
         -- Reset whichever timer is closer to finish
         -- It's possible this has been done prior to calling this function, but check here to make sure
@@ -211,17 +211,15 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
         end
 
-        -- If there are 2 charges, we just reset charge one and there is amount remaining
-        -- Then use the remaining amount to reduce the second charge
-        -- We have previously paused the second charge (finish set to inf), thus we need to unpause it
-        if ( #(timers) > 1 ) and ( index == 1 ) and ( amount >= 0 ) then
+        -- If there are 2 charges and we just reset charge one
+        -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
+        if ( #(timers) > 1 ) and ( timers[1].finish == 0 ) then
             timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
             print("timers[2] reduced by", amount);
             -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
     end
 
-    print("ResetIconCooldown", index, amountCached, finish);
     addon.RefreshCooldownTimer(icon.cooldown, finish);
 end
 
