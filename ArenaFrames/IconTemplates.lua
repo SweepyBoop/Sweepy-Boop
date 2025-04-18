@@ -190,18 +190,29 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     local finish;
     if ( not amount ) then
         -- Fully reset if no amount specified
-        timers[index] = { start = 0, duration = 0, finish = 0};
-        finish = true;
+        timers[index] = { start = 0, duration = 0, finish = 0 };
+
+        -- If only one charge, or we just reset 2nd charge
+        finish = ( #(timers) < 2 ) or ( index == 2 );
     else
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
         else
-            timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - amount);
+            local actualReducedAmount = math.min(amount, timers[index].finish - now);
+            timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - actualReducedAmount);
+            amount = amount - actualReducedAmount;
         end
-        if ( timers[index].duration < 0 ) then
-            timers[index] = { start = 0, duration = 0, finish = 0};
-            finish = true;
+        if ( timers[index].finish <= now ) then
+            timers[index] = { start = 0, duration = 0, finish = 0 };
+            finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
         end
+    end
+
+    -- If there are 2 charges, we just reset charge one and there is amount remaining
+    -- Then use the remaining amount to reduce the second charge
+    if ( #(timers) > 1 ) and ( index == 1 ) and ( amount > 0 ) then
+        timers[2].duration, timers[2].finish = (timers[2].duration - amount), (timers[2].finish - amount);
+        -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
     end
 
     addon.RefreshCooldownTimer(icon.cooldown, finish);
