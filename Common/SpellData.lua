@@ -2555,7 +2555,7 @@ addon.SpellResetsAffectedByApotheosis = {
     [132157] = 3, -- Holy Nova
 
     [33076] = 3, -- Prayer of Mending
-    [373481] = 3, -- Power Word: Life
+    [440678] = 3, -- Power Word: Life
     [2060] = 3, -- Heal
     [2061] = 3, -- Flash Heal
 };
