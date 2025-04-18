@@ -1,7 +1,9 @@
 # SweepyBoop's PvP Helper
 A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to-set-up</strong></span> addon to enhance arena gameplay with <span style="color:#36f; font-style:italic"><strong>minimal changes to original WoW UI</strong></span>.
 
-Features include:
+<span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for help and discussion on PvP addon / UI</strong></span>.
+
+Addon features include:
 - Friendly player / pet icons: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
 - Advanced arena cooldown tracking: arena frame cooldown icons attached to each opponent + up to 6 standalone bars that track all opponents. These icons are highly accurate including
@@ -10,8 +12,6 @@ Features include:
   - Lower cooldown detection: e.g., if a Shadow Priest is playing 30 Sec Silence
 - Raid frames: show real PvP aggro highlight on raid frames; Restoration Druid HoT helper to glow Lifebloom during pandemic window and fade out Cenarion Ward before the actual healing procs
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
-
-<span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for help and discussion on PvP addon / UI</strong></span>.
 
 If you encounter any [issues](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) or have [feature requests](https://github.com/SweepyBoop/Sweepy-Boop/issues/new).
 
