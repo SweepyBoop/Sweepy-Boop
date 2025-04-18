@@ -1693,6 +1693,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         category = category.HEAL,
         cooldown = 12,
+        priority = addon.SPELLPRIORITY.LOW,
     },
     -- Disrupt
     -- Holy Ward
@@ -2492,6 +2493,7 @@ addon.SpellResets = {
     -- Apotheosis
     [200183] = {
         88625, -- Holy Word: Chastise
+        2050, -- Holy Word: Serenity
     },
     -- Holy Fire
     [14914] = {
@@ -2504,6 +2506,14 @@ addon.SpellResets = {
     -- Holy Nova
     [132157] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
+    },
+    -- Prayer of Mending
+    [33076] = {
+        { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
+    },
+    -- Power Word: Life
+    [373481] = {
+        { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
     },
 
     -- Power Word: Shield
@@ -2531,6 +2541,9 @@ addon.SpellResetsAffectedByApotheosis = {
     [14914] = 2, -- Holy Fire (nerfed in PvP)
     [585] = 3, -- Smite
     [132157] = 3, -- Holy Nova
+
+    [33076] = 3, -- Prayer of Mending
+    [373481] = 3, -- Power Word: Life
 };
 
 if addon.TEST_MODE then
