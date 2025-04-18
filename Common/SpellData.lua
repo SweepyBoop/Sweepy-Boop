@@ -1083,13 +1083,13 @@ addon.SpellData = {
         category = category.OTHERS,
         -- Not baseline since it can be replaced by Shimmer
     },
-    -- Shimmer
-    [212653] = {
-        cooldown = 25,
-        class = addon.MAGE,
-        category = category.OTHERS,
-        charges = true,
-    },
+    -- Shimmer (for testing purpose only, too complicated to get this right with 2 charges)
+    -- [212653] = {
+    --     cooldown = 25,
+    --     class = addon.MAGE,
+    --     category = category.OTHERS,
+    --     charges = true,
+    -- },
     -- Blast Wave
     [157981] = {
         class = addon.MAGE,
@@ -1679,6 +1679,14 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         cooldown = 120,
+    },
+    -- Serenity
+    [2050] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.HEAL,
+        cooldown = 45,
+        charges = true,
     },
     -- Disrupt
     -- Holy Ward
