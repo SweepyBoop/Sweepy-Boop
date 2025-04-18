@@ -2496,6 +2496,7 @@ addon.SpellResets = {
         88625, -- Holy Word: Chastise
         2050, -- Holy Word: Serenity
     },
+
     -- Holy Fire
     [14914] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
@@ -2508,6 +2509,7 @@ addon.SpellResets = {
     [132157] = {
         { spellID = 88625, amount = 4 }, -- Holy Word: Chastise
     },
+
     -- Prayer of Mending
     [33076] = {
         { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
@@ -2515,6 +2517,14 @@ addon.SpellResets = {
     -- Power Word: Life
     [440678] = {
         { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
+    },
+    -- Heal
+    [2060] = {
+        { spellID = 2050, amount = 6 }, -- Holy Word: Serenity
+    },
+    -- Flash Heal
+    [2061] = {
+        { spellID = 2050, amount = 6 }, -- Holy Word: Serenity
     },
 
     -- Power Word: Shield
@@ -2545,6 +2555,8 @@ addon.SpellResetsAffectedByApotheosis = {
 
     [33076] = 3, -- Prayer of Mending
     [373481] = 3, -- Power Word: Life
+    [2060] = 3, -- Heal
+    [2061] = 3, -- Flash Heal
 };
 
 if addon.TEST_MODE then

@@ -194,6 +194,8 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
 
         -- If only one charge, or we just reset 2nd charge
         finish = ( #(timers) < 2 ) or ( index == 2 );
+
+        -- Granting charge = reset by "cooldown" amount, not just reset current charge
     else
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
