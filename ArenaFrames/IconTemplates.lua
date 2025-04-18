@@ -200,13 +200,13 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     local finish;
     if ( not amount ) then
         -- Fully reset if no amount specified
-        print("full reset timers", index);
+        --print("full reset timers", index);
         timers[index] = { start = 0, duration = 0, finish = 0 };
 
         -- If only one charge, or both charges are fully reset
         --finish = ( #(timers) < 2 ) or ( timers[1].finish == 0 and timers[2].finish == 0 );
     else
-        print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
+        --print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
         else
@@ -218,13 +218,13 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             timers[index] = { start = 0, duration = 0, finish = 0 };
             --finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
         end
-        print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
+        --print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
 
         -- If there are 2 charges and we just reset charge one
         -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
         if ( #(timers) > 1 ) and ( index == 1 ) and ( timers[1].finish == 0 ) then
             timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
-            print("timers[2] reduced by", amount);
+            --print("timers[2] reduced by", amount);
             -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
     end
