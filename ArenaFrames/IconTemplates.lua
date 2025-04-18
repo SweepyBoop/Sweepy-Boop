@@ -64,11 +64,11 @@ addon.RefreshCooldownTimer = function (self, finish)
     if finish then
         -- We previously set the finish of this timer to infinity so it will start over when the other timer comes off cooldown
         -- now restart the timer's cooldown progress
-        -- if ( timers[2].finish == math.huge ) then
-        --     timers[2].start = now;
-        --     timers[2].duration = icon.info.cooldown;
-        --     timers[2].finish = now + icon.info.cooldown;
-        -- end
+        if ( timers[2].finish == math.huge ) then
+            timers[2].start = now;
+            timers[2].duration = icon.info.cooldown;
+            timers[2].finish = now + icon.info.cooldown;
+        end
 
         -- Reset whichever timer is closer to finish
         -- It's possible this has been done prior to calling this function, but check here to make sure
@@ -177,7 +177,13 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     local now = GetTime();
     local index;
     if ( not amount ) and ( #(timers) > 1 ) then
-        index = 2; -- For full reset, if we have 2 charges, we always reset the extra charge that was paused
+        -- if extra charge is paused (both charges are currently on cd), reset it
+        if ( timers[2].finish == math.huge ) then
+            index = 2;
+        else
+            -- Only default charge is on cooldown, reset it
+            index = 1;
+        end
     else
         for i = 1, #(timers) do
             -- Timer set to inf hasn't started cooldown progress yet, so we ignore it
@@ -197,7 +203,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         timers[index] = { start = 0, duration = 0, finish = 0 };
 
         -- If only one charge, or both charges are fully reset
-        finish = ( #(timers) < 2 ) or ( timers[1].finish == 0 and timers[2].finish == 0 );
+        --finish = ( #(timers) < 2 ) or ( timers[1].finish == 0 and timers[2].finish == 0 );
     else
         print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
@@ -209,7 +215,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         end
         if ( timers[index].finish <= now ) then
             timers[index] = { start = 0, duration = 0, finish = 0 };
-            finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
+            --finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
         end
         print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
 
@@ -222,7 +228,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         end
     end
 
-    addon.RefreshCooldownTimer(icon.cooldown, finish);
+    addon.RefreshCooldownTimer(icon.cooldown);
 end
 
 addon.SetHideCountdownNumbers = function (frame, hide)
