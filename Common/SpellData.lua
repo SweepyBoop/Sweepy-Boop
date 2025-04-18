@@ -1690,7 +1690,7 @@ addon.SpellData = {
         baseline = true,
     },
     -- Power Word: Life
-    [373481] = {
+    [440678] = {
         class = addon.PRIEST,
         category = category.HEAL,
         cooldown = 12,
@@ -2513,7 +2513,7 @@ addon.SpellResets = {
         { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
     },
     -- Power Word: Life
-    [373481] = {
+    [440678] = {
         { spellID = 2050, amount = 4 }, -- Holy Word: Serenity
     },
 
