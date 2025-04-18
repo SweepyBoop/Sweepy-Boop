@@ -211,7 +211,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     -- If there are 2 charges, we just reset charge one and there is amount remaining
     -- Then use the remaining amount to reduce the second charge
     -- We have previously paused the second charge (finish set to inf), thus we need to unpause it
-    if ( #(timers) > 1 ) and ( index == 1 ) and ( amount > 0 ) then
+    if ( #(timers) > 1 ) and ( index == 1 ) and ( amount and amount > 0 ) then
         timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
         -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
     end
