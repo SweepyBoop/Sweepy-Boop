@@ -201,7 +201,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
         else
             local actualReducedAmount = math.min(amount, timers[index].finish - now);
-            timers[index].duration, timers[index].finish = (timers[index].duration - amount), (timers[index].finish - actualReducedAmount);
+            timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
             amount = amount - actualReducedAmount;
         end
         if ( timers[index].finish <= now ) then
