@@ -202,9 +202,6 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         -- Fully reset if no amount specified
         --print("full reset timers", index);
         timers[index] = { start = 0, duration = 0, finish = 0 };
-
-        -- If only one charge, or both charges are fully reset
-        --finish = ( #(timers) < 2 ) or ( timers[1].finish == 0 and timers[2].finish == 0 );
     else
         --print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
@@ -216,7 +213,6 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         end
         if ( timers[index].finish <= now ) then
             timers[index] = { start = 0, duration = 0, finish = 0 };
-            --finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
         end
         --print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
 
