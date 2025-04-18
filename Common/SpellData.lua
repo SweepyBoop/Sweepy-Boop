@@ -1687,6 +1687,7 @@ addon.SpellData = {
         category = category.HEAL,
         cooldown = 45,
         charges = true,
+        baseline = true,
     },
     -- Power Word: Life
     [373481] = {
