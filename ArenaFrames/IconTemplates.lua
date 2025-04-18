@@ -194,6 +194,11 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
 
         -- If only one charge, or we just reset 2nd charge
         finish = ( #(timers) < 2 ) or ( index == 2 );
+
+        -- If there are 2 charges and we reset the first one, then unpause charge 2
+        if ( #(timers) > 1 ) and ( index == 1 ) then
+            timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown, now + icon.info.cooldown;
+        end
     else
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
@@ -206,14 +211,14 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             timers[index] = { start = 0, duration = 0, finish = 0 };
             finish = ( #(timers) < 2 ) or ( index == 2 ); -- If only one charge, or we just reset 2nd charge
         end
-    end
 
-    -- If there are 2 charges, we just reset charge one and there is amount remaining
-    -- Then use the remaining amount to reduce the second charge
-    -- We have previously paused the second charge (finish set to inf), thus we need to unpause it
-    if ( #(timers) > 1 ) and ( index == 1 ) and ( amount and amount > 0 ) then
-        timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
-        -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
+        -- If there are 2 charges, we just reset charge one and there is amount remaining
+        -- Then use the remaining amount to reduce the second charge
+        -- We have previously paused the second charge (finish set to inf), thus we need to unpause it
+        if ( #(timers) > 1 ) and ( index == 1 ) and ( amount > 0 ) then
+            timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
+            -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
+        end
     end
 
     addon.RefreshCooldownTimer(icon.cooldown, finish);
