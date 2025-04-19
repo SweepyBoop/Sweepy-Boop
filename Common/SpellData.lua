@@ -677,9 +677,18 @@ addon.SpellData = {
     [357208] = {
         cooldown = 30,
         class = addon.EVOKER,
+        spec = { specID.DEVASTATION, specID.AUGMENTATION },
         category = category.OTHERS,
         trackEvent = addon.SPELL_EMPOWER_END,
         baseline = true,
+    },
+    -- Fire Breath (Preservation)
+    [382266] = {
+        cooldown = 30,
+        class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
+        category = category.OTHERS,
+        trackEvent = addon.SPELL_EMPOWER_END,
     },
     -- Rescue
     [370665] = {
