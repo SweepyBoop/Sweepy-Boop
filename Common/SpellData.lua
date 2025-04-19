@@ -674,9 +674,20 @@ addon.SpellData = {
     },
     -- Disrupt
     -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
+    -- Issue: Tip the Scales empowered Fire Breath still doesn't trigger cooldown
+    [357208] = {
+        cooldown = 30,
+        class = addon.EVOKER,
+        spec = { specID.DEVASTATION, specID.AUGMENTATION },
+        category = category.OTHERS,
+        trackEvent = addon.SPELL_EMPOWER_END,
+        baseline = true,
+    },
+    -- Fire Breath (Preservation)
     [382266] = {
         cooldown = 30,
         class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
         category = category.OTHERS,
         trackEvent = addon.SPELL_EMPOWER_END,
         baseline = true,
@@ -2184,6 +2195,7 @@ addon.SpellData = {
         -- Axe Toss (Command Demon Ability) (only shows up once no matter which version is cast)
         [119914] = {
             parent = 89766,
+            use_parent_icon = true, -- Shouldn't show 2 icons, since they share cd
         },
     -- Shadowfury
     [30283] = {

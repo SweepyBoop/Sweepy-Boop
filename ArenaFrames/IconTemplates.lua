@@ -197,7 +197,6 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     if ( not index ) then return end
 
     -- Reduce the timer
-    local finish;
     if ( not amount ) then
         -- Fully reset if no amount specified
         --print("full reset timers", index);
