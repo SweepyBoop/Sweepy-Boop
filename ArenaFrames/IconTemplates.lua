@@ -85,26 +85,27 @@ addon.RefreshCooldownTimer = function (self, finish)
             start, duration = timers[i].start, timers[i].duration;
         end
     end
-    print(icon.spellID, stack);
 
     if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
-        if ( #(icon.timers) > 1 ) and icon.Count then -- Only do this if we've actually detected charges in case of opt_charges
-            icon.Count.text:SetText(stack);
-            if stack then -- There is a charge available, treat as unused (off cooldown) icon
-                icon.Count:Show();
-                addon.SetUnusedIconAlpha(icon);
-                addon.SetHideCountdownNumbers(icon, true);
-            else
-                icon.Count:Hide();
-                addon.SetHideCountdownNumbers(icon, false);
-            end
-        end
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
             local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
+        end
+    end
+
+    -- Update charge display for both cases above
+    if ( #(icon.timers) > 1 ) and icon.Count then
+        if stack == 0 then
+            icon.Count:Hide();
+            addon.SetHideCountdownNumbers(icon, false);
+        else
+            icon.Count.text:SetText(stack);
+            icon.Count:Show();
+            addon.SetUnusedIconAlpha(icon);
+            addon.SetHideCountdownNumbers(icon, true);
         end
     end
 end
