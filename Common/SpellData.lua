@@ -689,6 +689,7 @@ addon.SpellData = {
         spec = { specID.PRESERVATION },
         category = category.OTHERS,
         trackEvent = addon.SPELL_EMPOWER_END,
+        baseline = true,
     },
     -- Rescue
     [370665] = {
