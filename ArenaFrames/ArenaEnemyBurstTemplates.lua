@@ -39,9 +39,10 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
             frame.Count:SetSize(addon.CHARGE_TEXTURE_SIZE, addon.CHARGE_TEXTURE_SIZE);
             frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT");
 
-            frame.Count.tex = frame.Count:CreateTexture(nil, "OVERLAY");
-            frame.Count.tex:SetAtlas(addon.CHARGE_TEXTURE);
-            frame.Count.tex:SetAllPoints();
+            frame.Count.text = frame.Count:CreateFontString(nil, "OVERLAY", "NumberFontNormal");
+            frame.Count.text:SetPoint("CENTER", frame.Count, "CENTER");
+            frame.Count.text:SetText("");
+            frame.Count.text:SetTextColor(1, 1, 1);
 
             frame.Count:Hide();
         end

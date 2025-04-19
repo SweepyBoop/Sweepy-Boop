@@ -76,7 +76,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         timers[index].finish = 0;
     end
 
-    local stack = ( now >= timers[1].finish ) or ( now >= timers[2].finish );
+    local stack = ( now >= timers[1].finish and 1 or 0 ) + ( now >= timers[2].finish and 1 or 0 );
     -- Show the timer on cooldown; if both on cooldown, show the one closer to finish
     -- Exclude paused timers (finish == math.huge)
     local start, duration = math.huge, math.huge;
@@ -88,17 +88,24 @@ addon.RefreshCooldownTimer = function (self, finish)
 
     if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
-        if icon.Count then
-            icon.Count:SetShown(stack);
-            if stack then -- There is a charge available, treat as unused (off cooldown) icon
-                addon.SetUnusedIconAlpha(icon);
-            end
-        end
     else
         icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
         if icon.group then
             local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
+        end
+    end
+
+    -- Update charge display for both cases above
+    if ( #(icon.timers) > 1 ) and icon.Count then
+        -- Show for 0 charge case as well
+        icon.Count.text:SetText(stack);
+        icon.Count:Show();
+        if stack == 0 then
+            addon.SetHideCountdownNumbers(icon, false);
+        else
+            addon.SetUnusedIconAlpha(icon);
+            addon.SetHideCountdownNumbers(icon, true);
         end
     end
 end

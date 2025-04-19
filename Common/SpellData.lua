@@ -2594,8 +2594,9 @@ if addon.TEST_MODE then
     addon.SpellData[774] = {
         class = addon.DRUID,
         category = category.DEFENSIVE,
-        cooldown = 45,
+        cooldown = 8,
         baseline = true,
+        opt_charges = true,
     };
     -- Wild Growth
     addon.SpellData[48438] = {

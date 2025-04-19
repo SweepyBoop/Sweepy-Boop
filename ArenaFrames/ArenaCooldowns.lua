@@ -378,6 +378,10 @@ local function SetupIconGroup(group, unit)
                 local configSpellID = spell.parent or spellID;
                 if spell.baseline and iconSetConfig.showUnusedIcons and ( skipSpellListCheck or spellList[tostring(configSpellID)] ) then
                     icon:SetAlpha(iconSetConfig.unusedIconAlpha);
+                    if spell.charges and icon.Count then -- If charges baseline, show the charge icon to start with
+                        icon.Count.text:SetText("2");
+                        icon.Count:Show();
+                    end
                     addon.IconGroup_Insert(group, icon);
                 end
             end
@@ -680,10 +684,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         -- Ensure this doesn't affect the wrong units - iconID is built with unit, and we are checking premonitionUnits[unit]
         if self.premonitionUnits[unit] then
             ResetCooldown(self.icons[iconID], 7);
-        end
-
-        if isTestGroup and self.icons[iconID].Count then
-            self.icons[iconID].Count:Show();
         end
     end
 end
