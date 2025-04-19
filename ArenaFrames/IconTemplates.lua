@@ -98,12 +98,12 @@ addon.RefreshCooldownTimer = function (self, finish)
 
     -- Update charge display for both cases above
     if ( #(icon.timers) > 1 ) and icon.Count then
+        -- Show for 0 charge case as well
+        icon.Count.text:SetText(stack);
+        icon.Count:Show();
         if stack == 0 then
-            icon.Count:Hide();
             addon.SetHideCountdownNumbers(icon, false);
         else
-            icon.Count.text:SetText(stack);
-            icon.Count:Show();
             addon.SetUnusedIconAlpha(icon);
             addon.SetHideCountdownNumbers(icon, true);
         end
