@@ -2184,6 +2184,7 @@ addon.SpellData = {
         -- Axe Toss (Command Demon Ability) (only shows up once no matter which version is cast)
         [119914] = {
             parent = 89766,
+            use_parent_icon = true, -- Shouldn't show 2 icons, since they share cd
         },
     -- Shadowfury
     [30283] = {
