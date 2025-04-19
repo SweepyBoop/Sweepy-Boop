@@ -685,11 +685,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         if self.premonitionUnits[unit] then
             ResetCooldown(self.icons[iconID], 7);
         end
-
-        if isTestGroup and self.icons[iconID].Count then
-            self.icons[iconID].Count.text:SetText("1"); -- To showcase charge display on test icons
-            self.icons[iconID].Count:Show();
-        end
     end
 end
 

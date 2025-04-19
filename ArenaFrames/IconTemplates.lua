@@ -85,6 +85,7 @@ addon.RefreshCooldownTimer = function (self, finish)
             start, duration = timers[i].start, timers[i].duration;
         end
     end
+    print(icon.spellID, stack);
 
     if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
