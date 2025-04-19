@@ -232,7 +232,7 @@ addon.IconGroup_Wipe = function (group)
             icon.duration:SetCooldown(0, 0);
         end
         if icon.Count then -- Clear state from previous show
-            icon.Count:SetText("");
+            icon.Count.text:SetText("");
             icon.Count:Hide();
         end
         icon.started = nil;

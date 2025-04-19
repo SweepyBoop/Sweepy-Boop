@@ -379,7 +379,7 @@ local function SetupIconGroup(group, unit)
                 if spell.baseline and iconSetConfig.showUnusedIcons and ( skipSpellListCheck or spellList[tostring(configSpellID)] ) then
                     icon:SetAlpha(iconSetConfig.unusedIconAlpha);
                     if spell.charges and icon.Count then -- If charges baseline, show the charge icon to start with
-                        icon.Count:SetText("2");
+                        icon.Count.text:SetText("2");
                         icon.Count:Show();
                     end
                     addon.IconGroup_Insert(group, icon);
@@ -687,7 +687,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
 
         if isTestGroup and self.icons[iconID].Count then
-            self.icons[iconID].Count:SetText("2");
+            self.icons[iconID].Count.text:SetText("1"); -- To showcase charge display on test icons
             self.icons[iconID].Count:Show();
         end
     end

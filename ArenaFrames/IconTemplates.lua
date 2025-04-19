@@ -76,7 +76,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         timers[index].finish = 0;
     end
 
-    local stack = ( now >= timers[1].finish ) + ( now >= timers[2].finish );
+    local stack = ( now >= timers[1].finish and 1 or 0 ) + ( now >= timers[2].finish and 1 or 0 );
     -- Show the timer on cooldown; if both on cooldown, show the one closer to finish
     -- Exclude paused timers (finish == math.huge)
     local start, duration = math.huge, math.huge;
@@ -89,7 +89,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     if ( start ~= math.huge ) and ( duration ~= math.huge ) then
         icon.cooldown:SetCooldown(start, duration);
         if ( #(icon.timers) > 1 ) and icon.Count then -- Only do this if we've actually detected charges in case of opt_charges
-            icon.Count:SetText(stack);
+            icon.Count.text:SetText(stack);
             if stack then -- There is a charge available, treat as unused (off cooldown) icon
                 icon.Count:Show();
                 addon.SetUnusedIconAlpha(icon);
