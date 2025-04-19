@@ -674,6 +674,7 @@ addon.SpellData = {
     },
     -- Disrupt
     -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
+    -- Issue: Tip the Scales empowered Fire Breath still doesn't trigger cooldown
     [357208] = {
         cooldown = 30,
         class = addon.EVOKER,
