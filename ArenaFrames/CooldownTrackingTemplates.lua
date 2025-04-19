@@ -63,10 +63,10 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
         frame.Count:SetSize(addon.CHARGE_TEXTURE_SIZE, addon.CHARGE_TEXTURE_SIZE);
         frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT");
 
-        frame.Count.text = frame.Count:CreateFontString(nil, "OVERLAY", "NumberFontNormalLarge");
+        frame.Count.text = frame.Count:CreateFontString(nil, "OVERLAY", "NumberFontNormal");
         frame.Count.text:SetPoint("CENTER", frame.Count, "CENTER");
         frame.Count.text:SetText("");
-        frame.Count.text:SetTextColor(0, 0.75, 1);
+        frame.Count.text:SetTextColor(1, 1, 1);
 
         frame.Count:Hide();
     end
