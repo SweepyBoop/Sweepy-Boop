@@ -2596,6 +2596,7 @@ if addon.TEST_MODE then
         category = category.DEFENSIVE,
         cooldown = 45,
         baseline = true,
+        opt_charges = true,
     };
     -- Wild Growth
     addon.SpellData[48438] = {
