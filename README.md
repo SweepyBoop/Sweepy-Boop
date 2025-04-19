@@ -1,7 +1,7 @@
 # SweepyBoop's PvP Helper
 A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to-set-up</strong></span> addon to enhance arena gameplay with <span style="color:#36f; font-style:italic"><strong>minimal changes to original WoW UI</strong></span>.
 
-<span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for help and discussion on PvP addon / UI</strong></span>.
+<span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for support and discussion on PvP addon / UI</strong></span>.
 
 Addon features include:
 - Friendly player / pet icons: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
@@ -20,6 +20,42 @@ There might be conflicts with other nameplate addons (Plater, Threat Plates, Bet
 Type **/sb** in game to bring up the options panel. Default settings should work great out of the box, though each module can be toggled on/off and customized.
 
 <span style="color:#36f; font-style:italic"><strong>If you like my addon, please introduce it to your friends who play PvP!</strong></span> I'm really hoping to bring more people to (or back to) PvP with my work :)
+
+## Advanced arena cooldown tracking
+Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics in the game, e.g.,
+- Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt (similar with Solar Beam)
+- Mage Shifting Power reduces the cooldown of all their abilities by 12 Sec
+- Per-spec cooldown tracking, e.g., Outlaw Rogue has 90 Sec Blind instead of 120 Sec, Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec
+- Calculates ability charges more accurately, and displays them with a clear daily quest icon texture
+- Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
+
+It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
+
+![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
+
+(Counterspell missed, cooldown is 24 Sec)
+
+![Interrupt successful](https://github.com/user-attachments/assets/2dc4970c-07e9-490b-9779-cfb1edd4871d)
+
+(Counterspell landed, cooldown becomes 20 Sec!)
+
+![shifting](https://github.com/user-attachments/assets/b77eb7a2-b5d3-4490-9f60-e132d9840a95)
+
+(Shifting Power cooldown reduction, accurate even if Shifting Power was interrupted!)
+
+![Updated charge display](https://github.com/user-attachments/assets/9f30a129-0fd7-426e-84fd-e1feb1d8f61b)
+
+(Ability charge display as you would see on the action bar)
+
+![Unused icon alpha](https://github.com/user-attachments/assets/f85b4bdd-123b-4d3d-a784-f600f3d3d6d3) ![Used icon alpha](https://github.com/user-attachments/assets/2a4c82f6-2d4c-43c8-9ab6-082904f3cfd3)
+
+(Icons fade out when off cooldown vs. fade out when on cooldown)
+
+Players can have 2 per-opponent bars attached to the corresponding arena opponent, and up to 6 standalone bars that track all opponents:
+
+![Arena cooldowns](https://github.com/user-attachments/assets/83d4d0bf-2fc6-48cd-a047-2a6e9788b482)
+
+The arena frame groups will anchor to the first arena frame addon found, if none is found they will anchor to Blizzard default arena frames.
 
 ## Friendly player / pet icons
 
@@ -76,42 +112,6 @@ While in arenas / battlegrounds, customize which non-player enemy units to show,
 - Option to choose which non-player hostile units to show nameplates in arenas/battlegrounds
 - Option to highlight chosen units with an animating icon!
 
-
-## Advanced arena cooldown tracking
-Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics in the game, e.g.,
-- Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt (similar with Solar Beam)
-- Mage Shifting Power reduces the cooldown of all their abilities by 12 Sec
-- Per-spec cooldown tracking, e.g., Outlaw Rogue has 90 Sec Blind instead of 120 Sec, Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec
-- Calculates ability charges more accurately, and displays them with a clear daily quest icon texture
-- Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
-
-It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
-
-![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
-
-(Counterspell missed, cooldown is 24 Sec)
-
-![Interrupt successful](https://github.com/user-attachments/assets/2dc4970c-07e9-490b-9779-cfb1edd4871d)
-
-(Counterspell landed, cooldown becomes 20 Sec!)
-
-![shifting](https://github.com/user-attachments/assets/b77eb7a2-b5d3-4490-9f60-e132d9840a95)
-
-(Shifting Power cooldown reduction, accurate even if Shifting Power was interrupted!)
-
-![image](https://github.com/user-attachments/assets/3c0b5a4b-00e8-470c-ac11-b5a97b63119c)
-
-(Clear indicator when another charge of Death Grip is available)
-
-![Unused icon alpha](https://github.com/user-attachments/assets/f85b4bdd-123b-4d3d-a784-f600f3d3d6d3) ![Used icon alpha](https://github.com/user-attachments/assets/2a4c82f6-2d4c-43c8-9ab6-082904f3cfd3)
-
-(Icons fade out when off cooldown vs. fade out when on cooldown)
-
-Players can have 2 per-opponent bars attached to the corresponding arena opponent, and up to 6 standalone bars that track all opponents:
-
-![Arena cooldowns](https://github.com/user-attachments/assets/83d4d0bf-2fc6-48cd-a047-2a6e9788b482)
-
-The arena frame groups will anchor to the first arena frame addon found, if none is found they will anchor to Blizzard default arena frames.
 
 ## Aura filter on enemy nameplates
 ![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
