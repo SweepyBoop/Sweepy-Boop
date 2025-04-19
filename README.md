@@ -53,7 +53,7 @@ It provides the "Show unused icons" option like OmniBar, but non-baseline abilit
 
 Players can have 2 per-opponent bars attached to the corresponding arena opponent, and up to 6 standalone bars that track all opponents:
 
-![Arena cooldowns](https://github.com/user-attachments/assets/83d4d0bf-2fc6-48cd-a047-2a6e9788b482)
+![Arena cooldowns](https://github.com/user-attachments/assets/c006da9b-6207-41bb-8588-35d6988c2f60)
 
 The arena frame groups will anchor to the first arena frame addon found, if none is found they will anchor to Blizzard default arena frames.
 
