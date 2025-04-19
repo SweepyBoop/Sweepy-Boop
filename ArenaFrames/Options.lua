@@ -143,14 +143,6 @@ addon.GetArenaFrameOptions = function(order)
                         name = addon.EXCLAMATION .. " Test icons showing arena 1 only, arena 2 & 3 will be automatically set up",
                     },
 
-                    tooltipForExtraCharge = {
-                        order = 4,
-                        type = "description",
-                        fontSize = "medium",
-                        width = "full",
-                        name = addon.FORMAT_ATLAS(addon.CHARGE_TEXTURE, 16) .. " on cooldown icon means there is another charge available",
-                    },
-
                     general = {
                         order = 5,
                         type = "group",
