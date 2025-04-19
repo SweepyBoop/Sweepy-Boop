@@ -66,7 +66,8 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
         frame.Count.text = frame.Count:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall");
         frame.Count.text:SetPoint("CENTER", frame.Count, "CENTER");
         frame.Count.text:SetText("");
-        frame.Count.text:Hide();
+
+        frame.Count:Hide();
     end
 
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
