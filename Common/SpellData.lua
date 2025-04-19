@@ -674,7 +674,7 @@ addon.SpellData = {
     },
     -- Disrupt
     -- Fire Breath (Scouring Flame which purges 1 buff per empower level)
-    [382266] = {
+    [357208] = {
         cooldown = 30,
         class = addon.EVOKER,
         category = category.OTHERS,
