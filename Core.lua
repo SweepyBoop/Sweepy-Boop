@@ -323,6 +323,8 @@ function SweepyBoop:OnInitialize()
     self:SetupCombatIndicator();
 
     self:SetupHealerInCrowdControl();
+
+    self:SetupArenaSurrender();
 end
 
 function SweepyBoop:RefreshConfig()
