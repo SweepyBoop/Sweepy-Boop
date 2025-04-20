@@ -152,8 +152,8 @@ local defaults = {
             healerInCrowdControlOffsetY = 250,
             queueReminder = true,
             combatIndicator = true,
+            hideBlizzArenaFrames = true,
             arenaSurrenderEnabled = true,
-            skipLeaveArenaConfirmation = false,
             healerIndicator = true,
             showDampenPercentage = true,
         },
@@ -318,11 +318,12 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAggroHighlight();
     self:SetupRaidFrameAuraModule();
 
+
     self:SetupQueueReminder();
-
     self:SetupCombatIndicator();
-
     self:SetupHealerInCrowdControl();
+    self:SetupArenaSurrender();
+    self:SetupHideBlizzArenaFrames();
 end
 
 function SweepyBoop:RefreshConfig()
