@@ -1,6 +1,9 @@
 local _, addon = ...;
 
 local OriginalParent; -- Only need to set once, I don't think Blizzard changes the parent of CompactArenaFrame
+local HiddenFrame = CreateFrame("Frame");
+HiddenFrame:Hide(); -- Frame is hidden but still listens to events (different from OnUpdate)
+
 local function UpdateBlizzArenaFrames(hide)
     if hide then
         OriginalParent = OriginalParent or CompactArenaFrame:GetParent();
@@ -11,11 +14,9 @@ local function UpdateBlizzArenaFrames(hide)
 end
 
 -- We hide Blizzard arena frames by parenting it to a hidden frame
-local HiddenFrame = CreateFrame("Frame");
 HiddenFrame:SetScript("OnEvent", function(self, event, ...)
     UpdateBlizzArenaFrames(true);
 end);
-HiddenFrame:Hide(); -- Frame is hidden but still listens to events (different from OnUpdate)
 
 function SweepyBoop:SetupHideBlizzArenaFrames()
     if SweepyBoop.db.profile.misc.hideBlizzArenaFrames then
