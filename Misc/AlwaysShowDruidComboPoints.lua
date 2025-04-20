@@ -19,7 +19,6 @@ local function UpdateComboPoints(frame)
             point.deactivateAnim:Stop();
         end
 
-        print("Combo point", i, "isActive", i <= cp);
         local isActive = (i <= cp);
         local activeAlpha = ( isActive and 1 ) or 0;
         point.Point_Icon:SetAlpha(activeAlpha);
