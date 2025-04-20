@@ -152,6 +152,7 @@ local defaults = {
             healerInCrowdControlOffsetY = 250,
             queueReminder = true,
             combatIndicator = true,
+            alwaysShowDruidComboPoints = true,
             hideBlizzArenaFrames = true,
             arenaSurrenderEnabled = true,
             healerIndicator = true,
@@ -324,6 +325,7 @@ function SweepyBoop:OnInitialize()
     self:SetupHealerInCrowdControl();
     self:SetupArenaSurrender();
     self:SetupHideBlizzArenaFrames();
+    self:SetupAlwaysShowDruidComboPoints();
 end
 
 function SweepyBoop:RefreshConfig()

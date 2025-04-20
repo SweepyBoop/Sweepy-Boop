@@ -49,6 +49,7 @@ Misc\HealerInCrowdControl.lua
 Misc\QueueReminder.lua
 Misc\CombatIndicator.lua
 Misc\HideBlizzArenaFrames.lua
+Misc\AlwaysShowDruidComboPoints.lua
 Misc\Options.lua
 
 ArenaFrames\IconGroupUtil.lua
