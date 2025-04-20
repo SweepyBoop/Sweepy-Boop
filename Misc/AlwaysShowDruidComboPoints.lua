@@ -1,12 +1,14 @@
 local _, addon = ...;
 
-local function UpdateComboPoints(self)
-    if ( GetShapeshiftForm() == 1 ) then return end -- Currrently in Cat Form, let Blizzard handle it
+local function UpdateComboPoints(frame)
+    if ( GetShapeshiftForm() == 1 ) then
+        return; -- Currrently in Cat Form, let Blizzard handle it
+    end
 
-    local cp = GetComboPoints("player", self.powerType);
-    self:SetShown(cp > 0);
+    local cp = UnitPower("player", frame.powerType);
+    frame:SetShown(cp > 0);
 
-    for i, point in ipairs(self.classResourceButtonTable) do
+    for i, point in ipairs(frame.classResourceButtonTable) do
         -- Keep track of Blizzard patch notes, in case of breaking changes
 
         -- While we're at it, show combo points instantly
@@ -17,6 +19,7 @@ local function UpdateComboPoints(self)
             point.deactivateAnim:Stop();
         end
 
+        print("Combo point", i, "isActive", i <= cp);
         local isActive = (i <= cp);
         local activeAlpha = ( isActive and 1 ) or 0;
         point.Point_Icon:SetAlpha(activeAlpha);
@@ -27,7 +30,7 @@ local function UpdateComboPoints(self)
 end
 
 function SweepyBoop:SetupAlwaysShowDruidComboPoints()
-    if addon.GetUnitClass("player") ~= addon.DRUID then return end
+    if ( addon.GetUnitClass("player") ~= addon.DRUID ) then return end
 
     local comboPointFrame = DruidComboPointBarFrame;
 
