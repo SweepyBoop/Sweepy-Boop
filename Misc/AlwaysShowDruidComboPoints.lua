@@ -1,10 +1,6 @@
 local _, addon = ...;
 
 local function UpdateComboPoints(frame)
-    if ( GetShapeshiftForm() == 1 ) then
-        return; -- Currrently in Cat Form, let Blizzard handle it
-    end
-
     local cp = UnitPower("player", frame.powerType);
     frame:SetShown(cp > 0);
 
