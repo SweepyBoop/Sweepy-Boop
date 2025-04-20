@@ -152,8 +152,8 @@ local defaults = {
             healerInCrowdControlOffsetY = 250,
             queueReminder = true,
             combatIndicator = true,
+            hideBlizzArenaFrames = true,
             arenaSurrenderEnabled = true,
-            skipLeaveArenaConfirmation = false,
             healerIndicator = true,
             showDampenPercentage = true,
         },
@@ -187,7 +187,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.interruptBarUsedIconAlpha = 0.5;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
-    defaults.profile.misc.hideBlizzArenaFrames = true;
 end
 
 local function FillDefaults()

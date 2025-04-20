@@ -19,7 +19,7 @@ HiddenFrame:SetScript("OnEvent", function(self, event, ...)
 end);
 
 function SweepyBoop:SetupHideBlizzArenaFrames()
-    if SweepyBoop.db.profile.misc.hideBlizzArenaFrames then
+    if SweepyBoop.db.profile.misc.hideBlizzArenaFrames and ( Gladius or GladiusEx or sArena ) then
         HiddenFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Don't need ZONE_CHANGED_NEW_AREA
 
         -- According to Blizzard interface code, these are the events that are likely to reshow CompactArenaFrame
