@@ -1,15 +1,13 @@
 local _, addon = ...;
 
-local OriginalParent; -- Only need to set once, I don't think Blizzard changes the parent of CompactArenaFrame
 local HiddenFrame = CreateFrame("Frame");
 HiddenFrame:Hide(); -- Frame is hidden but still listens to events (different from OnUpdate)
 
 local function UpdateBlizzArenaFrames(hide)
     if hide then
-        OriginalParent = OriginalParent or CompactArenaFrame:GetParent();
         CompactArenaFrame:SetParent(HiddenFrame);
-    elseif OriginalParent then
-        CompactArenaFrame:SetParent(OriginalParent);
+    else
+        CompactArenaFrame:SetParent(UIParent);
     end
 end
 
