@@ -155,6 +155,9 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     SweepyBoop.db.profile.misc[info[#info]] = val;
                     SweepyBoop.db.profile.misc.lastModified = GetTime();
                     SweepyBoop:SetupHideBlizzArenaFrames();
+                end,
+                hidden = function ()
+                    return ( not ( Gladius or GladiusEx or sArena ) );
                 end
             },
             arenaSurrenderEnabled = {
