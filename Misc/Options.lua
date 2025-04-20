@@ -132,7 +132,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 order = 13,
                 type = "toggle",
                 width = "full",
-                name = addon.FORMAT_ATLAS("countdown-swords") .. " Show combat indicator on unit frames",
+                name = addon.FORMAT_ATLAS("countdown-swords") .. " Show combat indicators on unit frames",
                 desc = "Show combat indicator icons on Player / Target / Focus frames",
                 set = function(info, val)
                     SweepyBoop.db.profile.misc[info[#info]] = val;
@@ -144,35 +144,17 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
             header4 = {
                 order = 14,
                 type = "header",
-                name = "Type /afk to surrender arena",
+                name = "Arena",
             },
             arenaSurrenderEnabled = {
                 order = 15,
                 width = "full",
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Enabled",
-                desc = "If unable to surrender, by default a confirmation dialog will pop up to confirm leaving arena",
-            },
-            skipLeaveArenaConfirmation = {
-                order = 16,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_cower")) .. " Leave arena directly if unable to surrender (skip confirmation dialog)",
-                desc = addon.EXCLAMATION .. " Leaving arena before entering combat might result in deserter status",
-                descStyle = "inline",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.misc.arenaSurrenderEnabled );
-                end,
-            },
-
-            header5 = {
-                order = 17,
-                type = "header",
-                name = "",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Type /afk to surrender, type /gg to leave without confirmation",
             },
 
             healerIndicator = {
-                order = 18,
+                order = 16,
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
                 desc = "To make it easier to identify the healer in case of class stacking",
@@ -183,20 +165,20 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
             },
 
             showDampenPercentage = {
-                order = 19,
+                order = 17,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
             },
 
             header6 = {
-                order = 20,
+                order = 18,
                 type = "header",
                 name = "",
             },
 
             showMinimapIcon = {
-                order = 21,
+                order = 19,
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Logo") .. " Show minimap icon for invoking options UI",
