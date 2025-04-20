@@ -13,11 +13,10 @@ function SweepyBoop:SetupArenaSurrender()
         end
     end
 
-    SlashCmdList["CHAT_GG"] = function(msg)
+    SLASH_ArenaGG1 = "/gg";
+    SlashCmdList.ArenaGG = function(msg)
         if IsActiveBattlefieldArena() and SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
             LeaveBattlefield();
-        else
-            SendChatMessage(msg, "GG");
         end
     end
 end
