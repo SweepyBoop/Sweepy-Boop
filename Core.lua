@@ -187,6 +187,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.interruptBarUsedIconAlpha = 0.5;
     defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
+    defaults.profile.misc.hideBlizzArenaFrames = true;
 end
 
 local function FillDefaults()
