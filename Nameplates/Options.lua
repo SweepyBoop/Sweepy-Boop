@@ -146,9 +146,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = addon.HELAER_LOGO .. " Show healers only",
                 desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
                 hidden = function ()
-                    local config = SweepyBoop.db.profile.nameplatesFriendly;
-                    local dependencyEnabled = config.classIconsEnabled and config.useHealerIcon;
-                    return ( not dependencyEnabled );
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
             showMyPetOnly = {
