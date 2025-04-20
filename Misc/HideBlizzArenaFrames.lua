@@ -18,7 +18,7 @@ end);
 HiddenFrame:Hide(); -- Frame is hidden but still listens to events (different from OnUpdate)
 
 function SweepyBoop:SetupHideBlizzArenaFrames()
-    if SweepyBoopDB.profile.misc.hideBlizzArenaFrames then
+    if SweepyBoop.db.profile.misc.hideBlizzArenaFrames then
         HiddenFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
         HiddenFrame:RegisterEvent(addon.ZONE_CHANGED_NEW_AREA); -- Do we need this event?
 
