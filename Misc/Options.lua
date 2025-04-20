@@ -151,6 +151,11 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_arena_3v3_3")) .. " Hide Blizzard arena frames",
+                set = function (info, val)
+                    SweepyBoop.db.profile.misc[info[#info]] = val;
+                    SweepyBoop.db.profile.misc.lastModified = GetTime();
+                    SweepyBoop:SetupHideBlizzArenaFrames();
+                end
             },
             arenaSurrenderEnabled = {
                 order = 16,
