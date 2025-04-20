@@ -20,8 +20,7 @@ end);
 
 function SweepyBoop:SetupHideBlizzArenaFrames()
     if SweepyBoop.db.profile.misc.hideBlizzArenaFrames then
-        HiddenFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        --HiddenFrame:RegisterEvent(addon.ZONE_CHANGED_NEW_AREA); -- This event is not needed, as PLAYER_ENTERING_WORLD is fired when entering an arena
+        HiddenFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Don't need ZONE_CHANGED_NEW_AREA
 
         -- According to Blizzard interface code, these are the events that are likely to reshow CompactArenaFrame
         HiddenFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
