@@ -1,8 +1,9 @@
 local _, addon = ...;
 
 local function UpdateComboPoints(frame)
+    local isCatForm = ( GetShapeshiftForm() == 2 );
     local cp = UnitPower("player", frame.powerType);
-    frame:SetShown(cp > 0);
+    frame:SetShown(isCatForm or ( cp > 0 ) );
 
     for i, point in ipairs(frame.classResourceButtonTable) do
         -- Keep track of Blizzard patch notes, in case of breaking changes
