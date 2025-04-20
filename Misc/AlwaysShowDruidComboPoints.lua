@@ -6,7 +6,7 @@ local function UpdateComboPoints(self)
     local cp = GetComboPoints("player", self.powerType);
     self:SetShown(cp > 0);
 
-    for i, point in ipairs(self.classResourceButtonTbale) do
+    for i, point in ipairs(self.classResourceButtonTable) do
         -- Keep track of Blizzard patch notes, in case of breaking changes
 
         -- While we're at it, show combo points instantly
