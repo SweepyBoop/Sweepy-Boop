@@ -189,7 +189,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         local finish;
         -- If both charges are on cooldown, reset default charge, and put remaining cooldown on the extra charge
         if ( timers[2].finish == math.huge ) then
-            --timers[2] = { start = timers[1].start, duration = timers[1].duration, finish = timers[1].finish };
+            -- Next press will consume timers[2] while timers[1] continues its cooldown progress
             timers[2] = { start = 0, duration = 0, finish = 0 };
         else
             -- If only default charge is on cooldown, reset it
@@ -239,6 +239,8 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
         if ( #(timers) > 1 ) and ( index == 1 ) and ( timers[1].finish == 0 ) and ( timers[2].finish == math.huge ) then
             timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
+            -- swap timers so that next press will consume timers[2] while timers[1] continues its cooldown progress
+            timers[1], timers[2] = timers[2], timers[1];
             print("timers[2] reduced by", amount);
             -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
