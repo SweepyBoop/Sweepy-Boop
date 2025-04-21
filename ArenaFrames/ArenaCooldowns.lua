@@ -574,7 +574,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
                     if ( now - self.alterTimeApplied[unit] ) > 9.99 then -- If Alter Time buff expired naturally (i.e., full 10s duration), reset Blink / Shimmer
                         local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
                         if icon then
-                            ResetCooldown(icon);
+                            ResetCooldown(icon, 25); -- It's granting a charge of 25s (not the 21s after taking Flow of Time)
                         end
                     else
                         self.alterTimeRemoved[unit] = now; -- Track time of buff removed, and do reset if followed by a SPELL_CAST_SUCCESS event
@@ -583,19 +583,16 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
                 self.alterTimeApplied[unit] = nil;
             end
-
-            print("Alter Time", self, unit, subEvent, self.alterTimeApplied[unit], self.alterTimeRemoved[unit]);
         end
     elseif ( spellId == 342247 ) and ( subEvent == addon.SPELL_CAST_SUCCESS ) then -- Second Alter Time press
         local unit = unitGuidToId[sourceGUID];
         if unit then
             if self.alterTimeRemoved[unit] then
                 local now = GetTime();
-                print("Alter Time second press", self.alterTimeRemoved[unit], now);
                 if ( now - self.alterTimeRemoved[unit] ) < 1 then -- If this event happens within 1s after Alter Time buff removed, reset Blink / Shimmer
                     local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
                     if icon then
-                        ResetCooldown(icon);
+                        ResetCooldown(icon, 25); -- It's granting a charge of 25s (not the 21s after taking Flow of Time)
                     end
                 end
 
