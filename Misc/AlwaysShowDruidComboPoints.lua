@@ -29,6 +29,7 @@ local comboPointFrame;
 local eventFrame;
 
 function SweepyBoop:SetupAlwaysShowDruidComboPoints()
+    -- DruidComboPointBarFrame is created regardless of class, so we need to check if the player is a druid
     if ( addon.GetUnitClass("player") ~= addon.DRUID ) then return end
 
     if ( not comboPointFrame ) then -- Make sure to only init once

@@ -378,7 +378,7 @@ local function SetupIconGroup(group, unit)
                 local configSpellID = spell.parent or spellID;
                 if spell.baseline and iconSetConfig.showUnusedIcons and ( skipSpellListCheck or spellList[tostring(configSpellID)] ) then
                     icon:SetAlpha(iconSetConfig.unusedIconAlpha);
-                    if spell.charges and icon.Count then -- If charges baseline, show the charge icon to start with
+                    if icon.info.charges and icon.Count then -- If charges baseline, show the charge icon to start with
                         icon.Count.text:SetText("2");
                         icon.Count:Show();
                     end

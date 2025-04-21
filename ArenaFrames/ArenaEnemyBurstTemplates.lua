@@ -88,7 +88,7 @@ addon.StartBurstIcon = function (icon)
         table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
-    if spell.charges and #(timers) < 2 then
+    if info.charges and #(timers) < 2 then -- take from dynamic icon info
         table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
