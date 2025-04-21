@@ -60,6 +60,8 @@ addon.RefreshCooldownTimer = function (self, finish)
         return;
     end
 
+    print("timers[2].finish", timers[2].finish);
+
     local now = GetTime();
     if finish then
         -- We previously set the finish of this timer to infinity so it will start over when the other timer comes off cooldown
