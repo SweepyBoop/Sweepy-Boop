@@ -250,4 +250,6 @@ addon.IconGroup_Wipe = function (group)
     group.apotheosisUnits = {};
     group.guardianSpiritSaved = {};
     group.premonitionUnits = {};
+    group.alterTimeApplied = {};
+    group.alterTimeRemoved = {};
 end

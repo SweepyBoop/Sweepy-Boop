@@ -257,6 +257,8 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         iconGroups[iconGroupID].guardianSpiritSaved = {};
         iconGroups[iconGroupID].apotheosisUnits = {};
         iconGroups[iconGroupID].premonitionUnits = {};
+        iconGroups[iconGroupID].alterTimeApplied = {};
+        iconGroups[iconGroupID].alterTimeRemoved = {};
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
 
@@ -497,12 +499,6 @@ local function StartIcon(icon)
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
-    if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") ) then
-        if (subEvent == addon.SPELL_CAST_SUCCESS or subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED) and ( spellId == 47540 or spellId == 428933 ) then
-            print(subEvent, spellName, spellId, sourceGUID, destGUID);
-        end
-    end
-
     local unitGuidToId = ValidateUnit(self);
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
@@ -557,6 +553,51 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
 
         return;
+    end
+
+    -- Blink / Shimmer reset by Alter Time
+    -- Order of events on 1st press: SPELL_AURA_APPLIED, SPELL_CAST_SUCCESS, SPELL_SUMMON
+    -- Order of events on 2nd press: SPELL_AURA_REMOVED, SPELL_CAST_SUCCESS
+    -- Order of events on Alter Time being purged: SPELL_AURA_REMOVED, SPELL_DISPEL
+    -- Track time of Alter Time buff applied / removed -> if it's full duration 10s, then it naturally expired hence it's a reset
+    -- If it expires prematurely, track buff removed time, and check following event (if SPELL_CAST_SUCCESS then reset; otherwise don't, including right click cancel case)
+    if ( spellId == 342246 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            self.alterTimeRemoved[unit] = nil;
+            if subEvent == addon.SPELL_AURA_APPLIED then
+                self.alterTimeApplied[unit] = GetTime();
+            else
+                if self.alterTimeApplied[unit] then
+                    local now = GetTime();
+                    if ( now - self.alterTimeApplied[unit] ) > 9.99 then -- If Alter Time buff expired naturally (i.e., full 10s duration), reset Blink / Shimmer
+                        local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
+                        if icon then
+                            ResetCooldown(icon, 25); -- It's granting a charge of 25s (not the 21s after taking Flow of Time)
+                        end
+                    else
+                        self.alterTimeRemoved[unit] = now; -- Track time of buff removed, and do reset if followed by a SPELL_CAST_SUCCESS event
+                    end
+                end
+
+                self.alterTimeApplied[unit] = nil;
+            end
+        end
+    elseif ( spellId == 342247 ) and ( subEvent == addon.SPELL_CAST_SUCCESS ) then -- Second Alter Time press
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if self.alterTimeRemoved[unit] then
+                local now = GetTime();
+                if ( now - self.alterTimeRemoved[unit] ) < 1 then -- If this event happens within 1s after Alter Time buff removed, reset Blink / Shimmer
+                    local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
+                    if icon then
+                        ResetCooldown(icon, 25); -- It's granting a charge of 25s (not the 21s after taking Flow of Time)
+                    end
+                end
+
+                self.alterTimeRemoved[unit] = nil;
+            end
+        end
     end
 
     -- Check resets by spell cast

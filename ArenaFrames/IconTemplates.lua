@@ -240,7 +240,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         -- If there are 2 charges and we just reset charge one, and charge 2 is on cooldown
         -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
         if ( #(timers) > 1 ) and ( index == 1 ) and ( timers[1].finish == 0 ) and ( timers[2].finish == math.huge ) then
-            timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
+            timers[2] = { start = now - amount, duration = icon.info.cooldown, finish = now + icon.info.cooldown - amount };
             -- swap timers so that next press will consume timers[2] while timers[1] continues its cooldown progress
             timers[1], timers[2] = timers[2], timers[1];
             --print("timers[2] reduced by", amount);
