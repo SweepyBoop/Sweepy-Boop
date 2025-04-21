@@ -1094,7 +1094,7 @@ addon.SpellData = {
         category = category.OTHERS,
         -- Not baseline since it can be replaced by Shimmer
     },
-    -- Shimmer (for testing purpose only, too complicated to get this right with 2 charges)
+    -- Shimmer
     [212653] = {
         cooldown = 21, -- 25s - 4s from Flow of Time
         class = addon.MAGE,
