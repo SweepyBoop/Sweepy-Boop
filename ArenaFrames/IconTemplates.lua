@@ -68,6 +68,9 @@ addon.RefreshCooldownTimer = function (self, finish)
             timers[2].start = now;
             timers[2].duration = icon.info.cooldown;
             timers[2].finish = now + icon.info.cooldown;
+
+            -- Swap timers[1] and timers[2] so that next press will consume timers[2] while timers[1] continues its cooldown progress
+            timers[1], timers[2] = timers[2], timers[1];
         end
 
         -- Reset whichever timer is closer to finish
