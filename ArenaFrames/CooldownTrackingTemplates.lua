@@ -109,6 +109,7 @@ addon.StartCooldownTrackingIcon = function (icon)
 
     -- Check which one should be used
     local index = addon.CheckTimerToStart(timers);
+    --print("Use timers", index);
     timers[index].start = now;
     timers[index].duration = info.cooldown;
     timers[index].finish = timers[index].start + timers[index].duration;
@@ -116,9 +117,11 @@ addon.StartCooldownTrackingIcon = function (icon)
     if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
         -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
         -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
+        --print("Pause timers[2]");
         timers[2].finish = math.huge;
     elseif ( index == 2 ) then
         -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
+        --print("Pause timers[2]");
         timers[2].finish = math.huge;
     end
 

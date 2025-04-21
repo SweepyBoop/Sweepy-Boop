@@ -68,6 +68,9 @@ addon.RefreshCooldownTimer = function (self, finish)
             timers[2].start = now;
             timers[2].duration = icon.info.cooldown;
             timers[2].finish = now + icon.info.cooldown;
+
+            -- Swap timers[1] and timers[2] so that next press will consume timers[2] while timers[1] continues its cooldown progress
+            timers[1], timers[2] = timers[2], timers[1];
         end
 
         -- Reset whichever timer is closer to finish
@@ -81,7 +84,8 @@ addon.RefreshCooldownTimer = function (self, finish)
     -- Exclude paused timers (finish == math.huge)
     local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
-        if ( timers[i].finish ~= 0 ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].start + timers[i].duration ) then
+        if ( timers[i].finish ~= math.huge ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].finish ) then
+            --print("Timer updated to show", i, "with finish", timers[i].finish - now);
             start, duration = timers[i].start, timers[i].duration;
         end
     end
@@ -102,6 +106,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         icon.Count.text:SetText(stack);
         icon.Count:Show();
         if stack == 0 then
+            -- SetUsedIconAlpha will be called by either CooldownTracking_OnAnimationFinished or addon.OnDurationTimerFinished (burst icon)
             addon.SetHideCountdownNumbers(icon, false);
         else
             addon.SetUnusedIconAlpha(icon);
@@ -126,7 +131,7 @@ addon.SetUnusedIconAlpha = function (icon)
 end
 
 addon.SetUsedIconAlpha = function (icon)
-    if icon.Count and icon.Count:IsShown() then
+    if icon.Count and icon.Count:IsShown() and ( icon.Count.text:GetText() ~= "0" ) then
         -- There is still a charge available, keep unused alpha
         addon.SetUnusedIconAlpha(icon);
         return;
@@ -180,58 +185,70 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     if ( not icon.cooldown ) then return end
 
     local timers = icon.timers;
-    -- Find the first thing that's on cooldown
     local now = GetTime();
-    local index;
+
+    -- Special case for full reset on abilities with 2 charges
     if ( not amount ) and ( #(timers) > 1 ) then
-        -- if extra charge is paused (both charges are currently on cd), reset it
+        local finish;
+        -- If both charges are on cooldown, reset default charge, and put remaining cooldown on the extra charge
         if ( timers[2].finish == math.huge ) then
-            index = 2;
+            -- Next press will consume timers[2] while timers[1] continues its cooldown progress
+            timers[2] = { start = 0, duration = 0, finish = 0 };
         else
-            -- Only default charge is on cooldown, reset it
-            index = 1;
+            -- If only default charge is on cooldown, reset it
+            timers[1] = { start = 0, duration = 0, finish = 0 };
+            finish = true;
         end
-    else
-        for i = 1, #(timers) do
-            -- Timer set to inf hasn't started cooldown progress yet, so we ignore it
-            if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
-                index = i;
-                break;
-            end
+
+        addon.RefreshCooldownTimer(icon.cooldown, finish);
+        return;
+    end
+
+    -- Find the first timer that is on cooldown
+    local index;
+    for i = 1, #(timers) do
+        -- Timers with inf finish are paused, ignore them
+        if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
+            index = i;
+            break;
         end
     end
 
     if ( not index ) then return end
 
     -- Reduce the timer
+    local finish;
     if ( not amount ) then
         -- Fully reset if no amount specified
         --print("full reset timers", index);
         timers[index] = { start = 0, duration = 0, finish = 0 };
+        finish = true; -- full reset with 2 charges already covered above
     else
-        --print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
-            timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
+            timers[index] = { start = now, duration = amount, finish = ( now + amount ) };
         else
             local actualReducedAmount = math.min(amount, timers[index].finish - now);
-            timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
+            timers[index].start = timers[index].start - actualReducedAmount; -- reduce start time instead to keep the duration, so it looks more natural
+            timers[index].finish = timers[index].finish - actualReducedAmount;
+            --print("timers", index, "reduced by", actualReducedAmount);
             amount = amount - actualReducedAmount;
         end
         if ( timers[index].finish <= now ) then
             timers[index] = { start = 0, duration = 0, finish = 0 };
         end
-        --print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
 
         -- If there are 2 charges and we just reset charge one, and charge 2 is on cooldown
         -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
         if ( #(timers) > 1 ) and ( index == 1 ) and ( timers[1].finish == 0 ) and ( timers[2].finish == math.huge ) then
             timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
+            -- swap timers so that next press will consume timers[2] while timers[1] continues its cooldown progress
+            timers[1], timers[2] = timers[2], timers[1];
             --print("timers[2] reduced by", amount);
             -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
     end
 
-    addon.RefreshCooldownTimer(icon.cooldown);
+    addon.RefreshCooldownTimer(icon.cooldown, finish);
 end
 
 addon.SetHideCountdownNumbers = function (frame, hide)
