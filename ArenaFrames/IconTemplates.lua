@@ -225,7 +225,6 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             timers[index] = { start = now, duration = amount, finish = ( now + amount ) };
         else
             local actualReducedAmount = math.min(amount, timers[index].finish - now);
-            --timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
             timers[index].start = timers[index].start - actualReducedAmount; -- reduce start time instead to keep the duration, so it looks more natural
             timers[index].finish = timers[index].finish - actualReducedAmount;
             --print("timers", index, "reduced by", actualReducedAmount);
