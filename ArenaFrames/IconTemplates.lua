@@ -102,6 +102,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         icon.Count.text:SetText(stack);
         icon.Count:Show();
         if stack == 0 then
+            addon.SetUsedIconAlpha(icon);
             addon.SetHideCountdownNumbers(icon, false);
         else
             addon.SetUnusedIconAlpha(icon);
@@ -126,7 +127,7 @@ addon.SetUnusedIconAlpha = function (icon)
 end
 
 addon.SetUsedIconAlpha = function (icon)
-    if icon.Count and icon.Count:IsShown() then
+    if icon.Count and icon.Count:IsShown() and ( icon.Count:GetText() ~= "0" ) then
         -- There is still a charge available, keep unused alpha
         addon.SetUnusedIconAlpha(icon);
         return;
