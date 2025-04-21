@@ -257,6 +257,7 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         iconGroups[iconGroupID].guardianSpiritSaved = {};
         iconGroups[iconGroupID].apotheosisUnits = {};
         iconGroups[iconGroupID].premonitionUnits = {};
+        iconGroups[iconGroupID].alterTimeUnits = {}; -- Record the time of SPELL_AURA_APPLIED and check later for 2nd Alter Time press or SPELL_AURA_REMOVED
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
 
@@ -557,6 +558,43 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
 
         return;
+    end
+
+    -- Blink / Shimmer reset by Alter Time
+    if ( spellId == 342246 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if subEvent == addon.SPELL_AURA_APPLIED then
+                self.alterTimeUnits[unit] = GetTime();
+            else
+                if self.alterTimeUnits[unit] then
+                    local now = GetTime();
+                    if ( now - self.alterTimeUnits[unit] ) < 9.99 then -- If Alter Time buff expired naturally (i.e., didn't get purged), reset Blink / Shimmer
+                        local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
+                        if icon then
+                            ResetCooldown(icon);
+                        end
+                    end
+                end
+
+                self.alterTimeUnits[unit] = nil;
+            end
+        end
+    elseif ( spellId == 342247 ) and ( subEvent == addon.SPELL_CAST_SUCCESS ) then -- Second Alter Time press
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if self.alterTimeUnits[unit] then
+                local now = GetTime();
+                if ( now - self.alterTimeUnits[unit] ) < 9.99 then -- If Alter Time buff expired naturally (i.e., didn't get purged), reset Blink / Shimmer
+                    local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
+                    if icon then
+                        ResetCooldown(icon);
+                    end
+                end
+
+                self.alterTimeUnits[unit] = nil;
+            end
+        end
     end
 
     -- Check resets by spell cast
