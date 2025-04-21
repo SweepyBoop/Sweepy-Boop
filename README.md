@@ -7,6 +7,7 @@ Addon features include:
 - Advanced arena cooldown tracking: enemy cooldown icons attached to each opponent + up to 6 standalone bars that track all opponents. These icons are highly accurate including
   - Cooldown reduction: 4s reduction from Mage's succesful Counterspell (similar with Solar Beam); Holy Word: Chastise cooldown reduction, even including the extra reduction during Apotheosis; Shifting Power cooldown reduction, that is accurate even if Shifting Power was interrupted; Combustion cd reduction from Kindling; cooldown reduction from Premonition, etc.
   - Per-spec cooldown tracking, e.g., Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec, Outlaw Rogue has 90 Sec Blind instead of 120 Sec
+  - Accurate cooldown timer for Guardian Spirit (starts with 3 min cooldown and updates to 1 min if it didn't proc)
   - Lower cooldown detection: e.g., if a Shadow Priest is playing 30 Sec Silence
 - Friendly player / pet icons: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
@@ -25,6 +26,7 @@ Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics
 - Mage Shifting Power reduces the cooldown of all their abilities; this is accurate even if Shifting Power was interrupted
 - Per-spec cooldown tracking, e.g., Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec, Outlaw Rogue has 90 Sec Blind instead of 120 Sec
 - Calculates ability charges more accurately, and displays them the same way you would see on your action bars
+- Accurate cooldown timer for Guardian Spirit (starts with 3 min cooldown and updates to 1 min if it didn't proc)
 - Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
 
 It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
