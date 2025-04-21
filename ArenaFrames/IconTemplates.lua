@@ -81,7 +81,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     -- Exclude paused timers (finish == math.huge)
     local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
-        if ( timers[i].finish ~= math.huge ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].start + timers[i].duration ) then
+        if ( timers[i].finish ~= math.huge ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].finish ) then
             --print("Timer updated to show", i, "with finish", timers[i].finish - now);
             start, duration = timers[i].start, timers[i].duration;
         end
