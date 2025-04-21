@@ -84,12 +84,8 @@ addon.StartBurstIcon = function (icon)
     local timers = icon.timers;
     local info = icon.info;
 
-    if #(timers) == 0 then
-        table.insert(timers, {start = 0, duration = 0, finish = 0});
-    end
-
-    if info.charges and #(timers) < 2 then -- take from dynamic icon info
-        table.insert(timers, {start = 0, duration = 0, finish = 0});
+    if ( not timers.start ) then
+        timers = { start = 0, duration = 0, finish = 0, maxCharges = info.maxCharges, charges = info.charges };
     end
 
     -- If there is a cooldown, start the cooldown timer
