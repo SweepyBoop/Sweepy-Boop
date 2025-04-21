@@ -127,7 +127,7 @@ addon.SetUnusedIconAlpha = function (icon)
 end
 
 addon.SetUsedIconAlpha = function (icon)
-    if icon.Count and icon.Count:IsShown() and ( icon.Count:GetText() ~= "0" ) then
+    if icon.Count and icon.Count:IsShown() and ( icon.Count.text:GetText() ~= "0" ) then
         -- There is still a charge available, keep unused alpha
         addon.SetUnusedIconAlpha(icon);
         return;
@@ -205,10 +205,12 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     if ( not index ) then return end
 
     -- Reduce the timer
+    local finish;
     if ( not amount ) then
         -- Fully reset if no amount specified
         --print("full reset timers", index);
         timers[index] = { start = 0, duration = 0, finish = 0 };
+        finish = ( #(timers) < 2 ); -- for single charge ability, fully reset means we need to call IconGroup_Remove
     else
         --print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
@@ -232,7 +234,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         end
     end
 
-    addon.RefreshCooldownTimer(icon.cooldown);
+    addon.RefreshCooldownTimer(icon.cooldown, finish);
 end
 
 addon.SetHideCountdownNumbers = function (frame, hide)
