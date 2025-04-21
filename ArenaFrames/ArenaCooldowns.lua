@@ -561,24 +561,27 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Blink / Shimmer reset by Alter Time
-    if ( spellId == 342246 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+    -- Order of events on 1st press: SPELL_AURA_APPLIED, SPELL_CAST_SUCCESS, SPELL_SUMMON
+    -- => we can't use SPELL_AURA_APPLIED to record Alter Time buff applied time since SPELL_CAST_SUCCESS will immediately consume the buff
+    if ( spellId == 342245 ) and ( subEvent == addon.SPELL_SUMMON ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
-            if subEvent == addon.SPELL_AURA_APPLIED then
-                self.alterTimeUnits[unit] = GetTime();
-            else
-                if self.alterTimeUnits[unit] then
-                    local now = GetTime();
-                    if ( now - self.alterTimeUnits[unit] ) < 9.99 then -- If Alter Time buff expired naturally (i.e., didn't get purged), reset Blink / Shimmer
-                        local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
-                        if icon then
-                            ResetCooldown(icon);
-                        end
+            self.alterTimeUnits[unit] = GetTime(); -- Record the time of Alter Time 1st cast
+        end
+    elseif ( spellId == 342246 ) and ( subEvent == addon.SPELL_AURA_REMOVED ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            if self.alterTimeUnits[unit] then
+                local now = GetTime();
+                if ( now - self.alterTimeUnits[unit] ) < 9.99 then -- If Alter Time buff expired naturally (i.e., didn't get purged), reset Blink / Shimmer
+                    local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
+                    if icon then
+                        ResetCooldown(icon);
                     end
                 end
-
-                self.alterTimeUnits[unit] = nil;
             end
+
+            self.alterTimeUnits[unit] = nil;
         end
     elseif ( spellId == 342247 ) and ( subEvent == addon.SPELL_CAST_SUCCESS ) then -- Second Alter Time press
         local unit = unitGuidToId[sourceGUID];
