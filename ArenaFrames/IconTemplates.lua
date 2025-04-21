@@ -82,7 +82,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
         if ( timers[i].finish ~= math.huge ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].start + timers[i].duration ) then
-            print("Timer updated to show", i, "with finish", timers[i].finish - now);
+            --print("Timer updated to show", i, "with finish", timers[i].finish - now);
             start, duration = timers[i].start, timers[i].duration;
         end
     end
@@ -228,7 +228,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             --timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
             timers[index].start = timers[index].start - actualReducedAmount; -- reduce start time instead to keep the duration, so it looks more natural
             timers[index].finish = timers[index].finish - actualReducedAmount;
-            print("timers", index, "reduced by", actualReducedAmount);
+            --print("timers", index, "reduced by", actualReducedAmount);
             amount = amount - actualReducedAmount;
         end
         if ( timers[index].finish <= now ) then
@@ -241,7 +241,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
             timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
             -- swap timers so that next press will consume timers[2] while timers[1] continues its cooldown progress
             timers[1], timers[2] = timers[2], timers[1];
-            print("timers[2] reduced by", amount);
+            --print("timers[2] reduced by", amount);
             -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
     end
