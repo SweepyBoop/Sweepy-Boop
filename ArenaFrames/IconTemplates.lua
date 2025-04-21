@@ -60,8 +60,6 @@ addon.RefreshCooldownTimer = function (self, finish)
         return;
     end
 
-    print("timers[2].finish", timers[2].finish);
-
     local now = GetTime();
     if finish then
         -- We previously set the finish of this timer to infinity so it will start over when the other timer comes off cooldown
@@ -84,7 +82,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
         if ( timers[i].finish ~= math.huge ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].start + timers[i].duration ) then
-            print("Timer updated to show", i, "with finish", timers[i].finish);
+            print("Timer updated to show", i, "with finish", timers[i].finish - now);
             start, duration = timers[i].start, timers[i].duration;
         end
     end
@@ -191,8 +189,8 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         local finish;
         -- If both charges are on cooldown, reset default charge, and put remaining cooldown on the extra charge
         if ( timers[2].finish == math.huge ) then
-            timers[2] = { start = timers[1].start, duration = timers[1].duration, finish = timers[1].finish };
-            timers[1] = { start = 0, duration = 0, finish = 0 };
+            --timers[2] = { start = timers[1].start, duration = timers[1].duration, finish = timers[1].finish };
+            timers[2] = { start = 0, duration = 0, finish = 0 };
         else
             -- If only default charge is on cooldown, reset it
             timers[1] = { start = 0, duration = 0, finish = 0 };
@@ -224,10 +222,12 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         finish = true; -- full reset with 2 charges already covered above
     else
         if resetTo then
-            timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
+            timers[index] = { start = now, duration = amount, finish = ( now + amount ) };
         else
             local actualReducedAmount = math.min(amount, timers[index].finish - now);
-            timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
+            --timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
+            timers[index].start = timers[index].start - actualReducedAmount; -- reduce start time instead to keep the duration, so it looks more natural
+            timers[index].finish = timers[index].finish - actualReducedAmount;
             print("timers", index, "reduced by", actualReducedAmount);
             amount = amount - actualReducedAmount;
         end
