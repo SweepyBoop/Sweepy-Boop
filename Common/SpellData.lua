@@ -2507,7 +2507,6 @@ addon.SpellResets = {
     [200183] = {
         88625, -- Holy Word: Chastise
         2050, -- Grants one charge of Holy Word: Serenity
-        --{ spellID = 2050, amount = 45 },
     },
 
     -- Holy Fire
