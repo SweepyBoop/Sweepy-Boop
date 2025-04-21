@@ -82,6 +82,7 @@ addon.RefreshCooldownTimer = function (self, finish)
     local start, duration = math.huge, math.huge;
     for i = 1, #(timers) do
         if ( timers[i].finish ~= 0 ) and ( timers[i].start + timers[i].duration < start + duration ) and ( now < timers[i].start + timers[i].duration ) then
+            print("Timer updated to show", i);
             start, duration = timers[i].start, timers[i].duration;
         end
     end
@@ -212,24 +213,23 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         timers[index] = { start = 0, duration = 0, finish = 0 };
         finish = ( #(timers) < 2 ); -- for single charge ability, fully reset means we need to call IconGroup_Remove
     else
-        --print("Before reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
         else
             local actualReducedAmount = math.min(amount, timers[index].finish - now);
             timers[index].duration, timers[index].finish = (timers[index].duration - actualReducedAmount), (timers[index].finish - actualReducedAmount);
+            print("timers", index, "reduced by", actualReducedAmount);
             amount = amount - actualReducedAmount;
         end
         if ( timers[index].finish <= now ) then
             timers[index] = { start = 0, duration = 0, finish = 0 };
         end
-        --print("After reduce, timers", index, timers[index].start, timers[index].duration, timers[index].finish);
 
         -- If there are 2 charges and we just reset charge one, and charge 2 is on cooldown
         -- Need to unpause charge 2, and reduce charge 2 if there is amount remaining
         if ( #(timers) > 1 ) and ( index == 1 ) and ( timers[1].finish == 0 ) and ( timers[2].finish == math.huge ) then
             timers[2].start, timers[2].duration, timers[2].finish = now, icon.info.cooldown - amount, now + icon.info.cooldown - amount;
-            --print("timers[2] reduced by", amount);
+            print("timers[2] reduced by", amount);
             -- It's unlikely second charge is completely reset with the remaining cooldown, so let's skip checking for "finish"
         end
     end
