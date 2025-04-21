@@ -561,7 +561,6 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- Order of events on Alter Time being purged: SPELL_AURA_REMOVED, SPELL_DISPEL
     -- Track time of Alter Time buff applied / removed -> if it's full duration 10s, then it naturally expired hence it's a reset
     -- If it expires prematurely, track buff removed time, and check following event (if SPELL_CAST_SUCCESS then reset; otherwise don't, including right click cancel case)
-    -- => we can't use SPELL_AURA_APPLIED to record Alter Time buff applied time since SPELL_CAST_SUCCESS will immediately consume the buff
     if ( spellId == 342246 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
         local unit = unitGuidToId[sourceGUID];
         if unit then
