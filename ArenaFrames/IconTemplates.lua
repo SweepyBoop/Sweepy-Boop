@@ -103,7 +103,7 @@ addon.RefreshCooldownTimer = function (self, finish)
         icon.Count.text:SetText(stack);
         icon.Count:Show();
         if stack == 0 then
-            addon.SetUsedIconAlpha(icon);
+            -- SetUsedIconAlpha will be called by either CooldownTracking_OnAnimationFinished or addon.OnDurationTimerFinished (burst icon)
             addon.SetHideCountdownNumbers(icon, false);
         else
             addon.SetUnusedIconAlpha(icon);
