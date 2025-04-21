@@ -281,15 +281,11 @@ local function GetSpecOverrides(spell, spec)
         overrides.cooldown = spell.cooldown;
     end
 
-    local hasCharges = false;
     if ( type(spell.charges) == "table" ) and spec then
-        hasCharges = spell.charges[spec];
+        overrides.charges = spell.charges[spec];
     else
-        hasCharges = spell.charges;
+        overrides.charges = spell.charges;
     end
-
-    overrides.maxCharges = hasCharges and 2 or 1;
-    overrides.charges = hasCharges and 2 or 1;
 
     return overrides;
 end
