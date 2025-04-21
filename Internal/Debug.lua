@@ -6,7 +6,7 @@ local eventFrame = CreateFrame("Frame");
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
 eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
-eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+--eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 eventFrame:SetScript("OnEvent", function(_, event)
     if event == "PVP_MATCH_ACTIVE" or ( event == "PLAYER_ENTERING_WORLD" and C_PvP.IsMatchActive() ) then
         ResetCPUUsage();
