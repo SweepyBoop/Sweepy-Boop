@@ -184,24 +184,32 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
     if ( not icon.cooldown ) then return end
 
     local timers = icon.timers;
-    -- Find the first thing that's on cooldown
     local now = GetTime();
-    local index;
+
+    -- Special case for full reset on abilities with 2 charges
     if ( not amount ) and ( #(timers) > 1 ) then
-        -- if extra charge is paused (both charges are currently on cd), reset it
+        local finish;
+        -- If both charges are on cooldown, reset default charge, and put remaining cooldown on the extra charge
         if ( timers[2].finish == math.huge ) then
-            index = 2;
+            timers[2] = { start = timers[1].start, duration = timers[1].duration, finish = timers[1].finish };
+            timers[1] = { start = 0, duration = 0, finish = 0 };
         else
-            -- Only default charge is on cooldown, reset it
-            index = 1;
+            -- If only default charge is on cooldown, reset it
+            timers[1] = { start = 0, duration = 0, finish = 0 };
+            finish = true;
         end
-    else
-        for i = 1, #(timers) do
-            -- Timer set to inf hasn't started cooldown progress yet, so we ignore it
-            if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
-                index = i;
-                break;
-            end
+
+        addon.RefreshCooldownTimer(icon.cooldown, finish);
+        return;
+    end
+
+    -- Find the first timer that is on cooldown
+    local index;
+    for i = 1, #(timers) do
+        -- Timers with inf finish are paused, ignore them
+        if ( timers[i].finish ~= math.huge ) and ( now < timers[i].finish ) then
+            index = i;
+            break;
         end
     end
 
@@ -213,7 +221,7 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         -- Fully reset if no amount specified
         --print("full reset timers", index);
         timers[index] = { start = 0, duration = 0, finish = 0 };
-        finish = ( #(timers) < 2 ); -- for single charge ability, fully reset means we need to call IconGroup_Remove
+        finish = true; -- full reset with 2 charges already covered above
     else
         if resetTo then
             timers[index].start, timers[index].duration, timers[index].finish = now, amount, ( now + amount );
