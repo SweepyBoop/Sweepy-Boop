@@ -508,7 +508,7 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.RESTORATION_DRUID },
         category = category.HEAL,
-        cooldown = 60,
+        cooldown = 48, -- Passing Seasons
         charges = true,
         baseline = true,
     },
