@@ -235,6 +235,9 @@ addon.ResetIconCooldown = function (icon, amount, resetTo)
         end
         if ( timers[index].finish <= now ) then
             timers[index] = { start = 0, duration = 0, finish = 0 };
+
+            -- Trigger finish if there is only one timer
+            finish = ( #(timers) < 2 );
         end
 
         -- If there are 2 charges and we just reset charge one, and charge 2 is on cooldown
