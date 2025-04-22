@@ -19,7 +19,10 @@ end
 
 function CooldownTracking_OnAnimationFinished(icon)
     -- Wait for animation to finish to set used alpha
-    addon.SetUsedIconAlpha(icon);
+    -- Has another ability reset this icon's cooldown while animation was playing?
+    if icon.started then
+        addon.SetUsedIconAlpha(icon);
+    end
 end
 
 -- Only put static info in this function
