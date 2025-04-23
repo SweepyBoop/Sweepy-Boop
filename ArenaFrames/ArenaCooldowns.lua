@@ -628,6 +628,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 
         return;
     elseif ( spellId == 102693 ) and ( subEvent == addon.UNIT_DIED ) then
+        -- Grove Guardian being killed doesn't fire this event, so this is not actually working
+        -- Maybe check every 1 Sec for existence of destGUID?
         local unit = self.groveGuardianOwner[destGUID];
         if unit then
             if self.activeMap[unit .. "-" .. 33891] then
