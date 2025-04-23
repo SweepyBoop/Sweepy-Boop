@@ -252,4 +252,5 @@ addon.IconGroup_Wipe = function (group)
     group.premonitionUnits = {};
     group.alterTimeApplied = {};
     group.alterTimeRemoved = {};
+    group.groveGuardianOwners = {};
 end

@@ -496,6 +496,13 @@ addon.SpellData = {
         category = category.HEAL,
         baseline = true,
     },
+    -- Incarnation: Tree of Life
+    [33891] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
     -- Ancient of Lore
     [473909] = {
         class = addon.DRUID,

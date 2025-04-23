@@ -7,6 +7,7 @@ eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
 eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
 eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+eventFrame:RegisterEvent(addon.UNIT_PET);
 eventFrame:SetScript("OnEvent", function(_, event)
     if event == "PVP_MATCH_ACTIVE" or ( event == "PLAYER_ENTERING_WORLD" and C_PvP.IsMatchActive() ) then
         ResetCPUUsage();
@@ -41,5 +42,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
         if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") or destGUID == UnitGUID("target") or addon.EVENTS_PET_DISMISS[subEvent] ) then
             print("Combat log event:", subEvent, spellName, spellID);
         end
+    elseif event == addon.UNIT_PET then
+        print("UNIT_PET", UnitGUID("pet"));
     end
 end)

@@ -259,6 +259,7 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         iconGroups[iconGroupID].premonitionUnits = {};
         iconGroups[iconGroupID].alterTimeApplied = {};
         iconGroups[iconGroupID].alterTimeRemoved = {};
+        iconGroups[iconGroupID].groveGuardianOwner = {}; -- Map destGUID to owner unitID
         iconGroups[iconGroupID].lastModified = config.lastModified;
     end
 
@@ -601,6 +602,25 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     end
 
     -- Cooldown reduction from Grove Guardians
+    if ( spellId == 102693 ) and ( subEvent == addon.SPELL_SUMMON ) then
+        local unit = unitGuidToId[sourceGUID];
+        if unit then
+            self.groveGuardianOwner[destGUID] = unit;
+        end
+
+        return;
+    elseif ( spellId == 102693 ) and ( subEvent == addon.UNIT_DIED ) then
+        local unit = self.groveGuardianOwner[destGUID];
+        if unit then
+            local icon = self.activeMap[unit .. "-" .. 33891] or self.activeMap[unit .. "-" .. 473909];
+            if icon then
+                ResetCooldown(icon, 5);
+            end
+        end
+
+        self.groveGuardianOwner[destGUID] = nil;
+        return;
+    end
 
     -- Check resets by spell cast
     if ( subEvent == addon.SPELL_CAST_SUCCESS ) and unitGuidToId[sourceGUID] then
