@@ -1975,6 +1975,16 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
+    -- Ascendance (Elemental)
+    [114050] = {
+        class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL },
+        category = category.BURST,
+        cooldown = 180,
+        opt_lower_cooldown = 120, -- Talent that is not picked often
+        duration = 15,
+        baseline = true,
+    },
     -- Interrupt
     -- Wind Shear
     [57994] = {
@@ -2055,6 +2065,11 @@ addon.SpellData = {
         category = category.KNOCKBACK,
         baseline = true, -- technically a talent, but always picked
     },
+        -- Thunderstorm (Traveling Thunders)
+        [204406] = {
+            parent = 51490,
+            use_parent_icon = true,
+        },
     -- Earthgrab Totem
     [51485] = {
         cooldown = 24,
