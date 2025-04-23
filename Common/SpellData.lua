@@ -1975,6 +1975,14 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
+    -- Ascendance (Elemental)
+    [114050] = {
+        class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 15,
+    },
     -- Interrupt
     -- Wind Shear
     [57994] = {
