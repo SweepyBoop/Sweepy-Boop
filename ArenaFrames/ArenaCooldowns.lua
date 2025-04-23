@@ -627,20 +627,19 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
 
         return;
-    elseif ( spellId == 102693 ) and ( subEvent == addon.UNIT_DIED ) then
-        -- Grove Guardian being killed doesn't fire this event, so this is not actually working
-        -- Maybe check every 1 Sec for existence of destGUID?
-        local unit = self.groveGuardianOwner[destGUID];
-        if unit then
-            if self.activeMap[unit .. "-" .. 33891] then
-                ResetCooldown(self.activeMap[unit .. "-" .. 33891], 5);
-            elseif self.activeMap[unit .. "-" .. 473909] then
-                ResetCooldown(self.activeMap[unit .. "-" .. 473909], 2.5); -- reduced by half for Ancient of Lore?
-            end
-        end
+    -- elseif ( spellId == 102693 ) and ( subEvent == addon.UNIT_DIED ) then
+    --     -- Grove Guardian being killed doesn't fire this event, so this is not actually working
+    --     local unit = self.groveGuardianOwner[destGUID];
+    --     if unit then
+    --         if self.activeMap[unit .. "-" .. 33891] then
+    --             ResetCooldown(self.activeMap[unit .. "-" .. 33891], 5);
+    --         elseif self.activeMap[unit .. "-" .. 473909] then
+    --             ResetCooldown(self.activeMap[unit .. "-" .. 473909], 2.5); -- reduced by half for Ancient of Lore?
+    --         end
+    --     end
 
-        self.groveGuardianOwner[destGUID] = nil;
-        return;
+    --     self.groveGuardianOwner[destGUID] = nil;
+    --     return;
     end
 
     -- Check resets by spell cast
