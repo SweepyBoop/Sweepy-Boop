@@ -476,8 +476,6 @@ end
 local function ResetCooldown(icon, amount, internalCooldown, resetTo) -- if resetTo is set, reset duration to amount, instead of reduce by amount
     if ( not icon.started ) then return end
 
-    print("Reduce cooldown by", amount);
-
     if icon.template == addon.ICON_TEMPLATE.GLOW then
         addon.ResetIconCooldown(icon, amount);
 
