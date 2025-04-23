@@ -2063,6 +2063,11 @@ addon.SpellData = {
         category = category.KNOCKBACK,
         baseline = true, -- technically a talent, but always picked
     },
+        -- Thunderstorm (Traveling Thunders)
+        [204406] = {
+            parent = 51490,
+            use_parent_icon = true,
+        },
     -- Earthgrab Totem
     [51485] = {
         cooldown = 24,
