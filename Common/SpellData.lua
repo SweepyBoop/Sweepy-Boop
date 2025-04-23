@@ -1230,6 +1230,7 @@ addon.SpellData = {
         class = addon.MONK,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.LOW,
+        baseline = true,
     },
     -- Transcendence: Transfer
     [119996] = {
