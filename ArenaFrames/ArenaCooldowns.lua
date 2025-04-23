@@ -476,6 +476,8 @@ end
 local function ResetCooldown(icon, amount, internalCooldown, resetTo) -- if resetTo is set, reset duration to amount, instead of reduce by amount
     if ( not icon.started ) then return end
 
+    print("Reduce cooldown by", amount);
+
     if icon.template == addon.ICON_TEMPLATE.GLOW then
         addon.ResetIconCooldown(icon, amount);
 
@@ -497,6 +499,19 @@ local function StartIcon(icon)
     end
 
     icon.started = true;
+end
+
+local function ProcessCooldownReductionFromGroveGuardian(group, destGUID)
+    local unit = group.groveGuardianOwner[destGUID]; -- If Grove Guardian is killed before expiring, this will be set to nil by UNIT_DIED event processor
+    if unit then
+        if group.activeMap[unit .. "-" .. 33891] then
+            ResetCooldown(group.activeMap[unit .. "-" .. 33891], 5);
+        elseif group.activeMap[unit .. "-" .. 473909] then
+            ResetCooldown(group.activeMap[unit .. "-" .. 473909], 2.5); -- reduced by half for Ancient of Lore?
+        end
+
+        group.groveGuardianOwner[destGUID] = nil;
+    end
 end
 
 local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spellId, spellName, critical, isTestGroup)
@@ -606,15 +621,19 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         local unit = unitGuidToId[sourceGUID];
         if unit then
             self.groveGuardianOwner[destGUID] = unit;
+            C_Timer.After(15, function()
+                ProcessCooldownReductionFromGroveGuardian(self, destGUID);
+            end);
         end
 
         return;
     elseif ( spellId == 102693 ) and ( subEvent == addon.UNIT_DIED ) then
         local unit = self.groveGuardianOwner[destGUID];
         if unit then
-            local icon = self.activeMap[unit .. "-" .. 33891] or self.activeMap[unit .. "-" .. 473909];
-            if icon then
-                ResetCooldown(icon, 5);
+            if self.activeMap[unit .. "-" .. 33891] then
+                ResetCooldown(self.activeMap[unit .. "-" .. 33891], 5);
+            elseif self.activeMap[unit .. "-" .. 473909] then
+                ResetCooldown(self.activeMap[unit .. "-" .. 473909], 2.5); -- reduced by half for Ancient of Lore?
             end
         end
 
