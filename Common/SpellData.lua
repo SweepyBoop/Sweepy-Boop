@@ -2099,6 +2099,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         category = category.OTHERS,
         baseline = true,
+        trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Crowd Control
     -- Hex
