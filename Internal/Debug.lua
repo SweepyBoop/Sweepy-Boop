@@ -38,7 +38,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
         lastUpdated = now;
     elseif event == addon.COMBAT_LOG_EVENT_UNFILTERED then
         local _, subEvent, _, sourceGUID, _, _, _, destGUID, destName, destFlags, _, spellID, spellName = CombatLogGetCurrentEventInfo();
-        if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") or destGUID == UnitGUID("target") ) then
+        if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") or destGUID == UnitGUID("target") or addon.EVENTS_PET_DISMISS[subEvent] ) then
             print("Combat log event:", subEvent, spellName, spellID);
         end
     end

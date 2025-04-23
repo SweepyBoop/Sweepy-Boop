@@ -600,6 +600,8 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         end
     end
 
+    -- Cooldown reduction from Grove Guardians
+
     -- Check resets by spell cast
     if ( subEvent == addon.SPELL_CAST_SUCCESS ) and unitGuidToId[sourceGUID] then
         local unit = unitGuidToId[sourceGUID];
