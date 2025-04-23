@@ -1981,6 +1981,7 @@ addon.SpellData = {
         spec = { specID.ELEMENTAL },
         category = category.BURST,
         cooldown = 180,
+        opt_lower_cooldown = 120, -- Talent that is not picked often
         duration = 15,
     },
     -- Interrupt
