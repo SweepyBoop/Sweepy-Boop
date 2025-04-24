@@ -47,15 +47,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
     end
 
     -- Fill in static info here
-    frame.spellInfo = {
-        cooldown = spell.cooldown,
-        opt_lower_cooldown = spell.opt_lower_cooldown,
-        charges = spell.charges,
-        opt_charges = spell.opt_charges,
-        reduce_on_interrupt = spell.reduce_on_interrupt,
-        trackEvent = spell.trackEvent,
-        trackPet = spell.trackPet,
-    };
+    frame.spellInfo = spell;
     frame.priority = spell.priority;
 
     frame.Icon:SetTexture(GetSpellTexture(spellID));

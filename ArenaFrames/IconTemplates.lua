@@ -43,6 +43,7 @@ addon.UpdateTargetHighlight = function (icon)
     if icon.TargetHighlight then
         local show;
         if icon.isTestGroup then
+            print( addon.GetUnitClass("target"), icon.spellInfo.class );
             show = ( addon.GetUnitClass("target") == icon.spellInfo.class );
         else
             show = UnitIsUnit("target", icon.unit);
