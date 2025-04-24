@@ -118,7 +118,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
         -- https://warcraft.wiki.gg/wiki/API_TextureBase_SetTexCoord
         if iconSetConfig.hideBorder then
-            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9); -- values suggested by GitHub Copilot...
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875); -- values copied from Blizzard Interface code
         else
             iconPool[iconSetID][iconID].Icon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1); -- topleft, bottomleft, topright, bottomright
         end
@@ -139,7 +139,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
 
         if iconSetConfig.hideBorder then
-            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9);
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875);
         else
             iconPool[iconSetID][iconID].Icon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1);
         end
