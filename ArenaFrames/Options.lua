@@ -601,19 +601,30 @@ addon.GetArenaFrameOptions = function(order)
                         hideBorder = {
                             order = 13,
                             type = "toggle",
-                            width = "full",
                             name = "Hide border",
                         },
 
-                        showUnusedIcons = {
+                        showTargetHighlight = {
                             order = 14,
+                            type = "toggle",
+                            name = "Target highlight",
+                        },
+
+                        breaker4 = {
+                            order = 15,
+                            type = "description",
+                            name = "",
+                        },
+
+                        showUnusedIcons = {
+                            order = 16,
                             type = "toggle",
                             name = "Always show icons",
                             desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                         },
 
                         unusedIconAlpha = {
-                            order = 15,
+                            order = 17,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
@@ -627,7 +638,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         usedIconAlpha = {
-                            order = 16,
+                            order = 18,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
