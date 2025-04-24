@@ -1100,11 +1100,11 @@ function SweepyBoop:SetupArenaCooldownTracker()
                             if iconGroup then
                                 UpdateAllHighlights(iconGroup);
                             end
-                        end
-
-                        local testGroup = iconGroups[iconSetID .. "player-test"];
-                        if testGroup then
-                            UpdateAllHighlights(testGroup);
+                        else
+                            local testGroup = iconGroups[iconSetID .. "player-test"];
+                            if testGroup then
+                                UpdateAllHighlights(testGroup);
+                            end
                         end
                     end
                 end
