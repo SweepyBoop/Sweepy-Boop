@@ -496,6 +496,13 @@ addon.SpellData = {
         category = category.HEAL,
         baseline = true,
     },
+    -- Incarnation: Tree of Life
+    [33891] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
     -- Ancient of Lore
     [473909] = {
         class = addon.DRUID,
@@ -1230,6 +1237,7 @@ addon.SpellData = {
         class = addon.MONK,
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.LOW,
+        baseline = true,
     },
     -- Transcendence: Transfer
     [119996] = {
@@ -2044,6 +2052,15 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Healing Tide Totem
+    [108280] = {
+        cooldown = 180,
+        opt_lower_cooldown = 135,
+        class = addon.SHAMAN,
+        category = category.HEAL,
+        spec = { specID.RESTORATION_SHAMAN },
+        baseline = true,
+    },
     -- Disrupt
     -- Grounding Totem
     [204336] = {
@@ -2082,6 +2099,14 @@ addon.SpellData = {
         cooldown = 12,
         class = addon.SHAMAN,
         category = category.OTHERS,
+    },
+    -- Nature's Swiftness
+    [378081] = {
+        cooldown = 60,
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        baseline = true,
+        trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Crowd Control
     -- Hex
