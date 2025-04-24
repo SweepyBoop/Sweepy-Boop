@@ -602,7 +602,7 @@ addon.GetArenaFrameOptions = function(order)
                             order = 13,
                             type = "toggle",
                             width = "full",
-                            name = addon.FORMAT_ATLAS("UI-HUD-ActionBar-IconFrame") .. " Hide border",
+                            name = "Hide border",
                         },
 
                         showUnusedIcons = {

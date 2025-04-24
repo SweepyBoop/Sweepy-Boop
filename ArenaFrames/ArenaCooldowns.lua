@@ -118,9 +118,9 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
         -- https://warcraft.wiki.gg/wiki/API_TextureBase_SetTexCoord
         if iconSetConfig.hideBorder then
-            iconPool[iconSetID][iconID].Icon:SetTexCoords(0.1, 0.9, 0.1, 0.9); -- values suggested by GitHub Copilot...
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9); -- values suggested by GitHub Copilot...
         else
-            iconPool[iconSetID][iconID].Icon:SetTexCoords(0, 0, 0, 1, 1, 0, 1, 1); -- topleft, bottomleft, topright, bottomright
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1); -- topleft, bottomleft, topright, bottomright
         end
 
         if iconPool[iconSetID][iconID].TargetHighlight then
