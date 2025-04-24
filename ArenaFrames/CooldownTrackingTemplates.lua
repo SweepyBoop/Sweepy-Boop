@@ -18,6 +18,8 @@ local function OnCooldownTimerFinished(self)
 end
 
 function CooldownTracking_OnAnimationFinished(icon)
+    addon.UpdateTargetHighlight(icon);
+
     -- Wait for animation to finish to set used alpha
     -- Has another ability reset this icon's cooldown while animation was playing?
     if icon.started then

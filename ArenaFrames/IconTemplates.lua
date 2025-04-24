@@ -39,6 +39,12 @@ addon.HideOverlayGlow = function (button)
 	end
 end
 
+addon.UpdateTargetHighlight = function (icon)
+    if icon.TargetHighlight then
+        icon.TargetHighlight:SetShown(UnitIsUnit(icon.unit, "target"));
+    end
+end
+
 -- Call this after modifying timers
 addon.RefreshCooldownTimer = function (self, finish)
     local icon = self:GetParent();

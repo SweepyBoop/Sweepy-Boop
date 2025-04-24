@@ -40,13 +40,13 @@
                     </Anchors>
                 </Texture>
             </Layer>
-            <!-- <Layer level="BACKGROUND" textureSubLevel="-1">
-                <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
+            <Layer level="BACKGROUND" textureSubLevel="-1">
+                <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true" ignoreParentAlpha="true">
                     <Anchors>
                         <Anchor point="CENTER"/>
                     </Anchors>
                 </Texture>
-            </Layer> -->
+            </Layer>
         </Layers>
         <Frames>
             <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">

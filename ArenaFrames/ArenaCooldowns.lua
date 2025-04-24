@@ -116,6 +116,18 @@ local function GetIcon(iconSetID, unitID, spellID, test)
             iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
         end
 
+        -- https://warcraft.wiki.gg/wiki/API_TextureBase_SetTexCoord
+        if iconSetConfig.hideBorder then
+            iconPool[iconSetID][iconID].Icon:SetTexCoords(0.1, 0.9, 0.1, 0.9); -- values suggested by GitHub Copilot...
+        else
+            iconPool[iconSetID][iconID].Icon:SetTexCoords(0, 0, 0, 1, 1, 0, 1, 1); -- topleft, bottomleft, topright, bottomright
+        end
+
+        if iconPool[iconSetID][iconID].TargetHighlight then
+            local showTargetHighlight = ( not iconSetID == ICON_SET_ID.ARENA_MAIN ) and iconSetConfig.showTargetHighlight;
+            iconPool[iconSetID][iconID].TargetHighlight:SetAlpha(showTargetHighlight and 1 or 0);
+        end
+
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
         iconPool[iconSetID][iconID].iconSetID = iconSetID;
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
@@ -124,6 +136,12 @@ local function GetIcon(iconSetID, unitID, spellID, test)
     if ( iconPool[iconSetID][iconID].lastModified ~= config.lastModified ) then
         local size = GetIconSize(iconSetID);
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
+
+        if iconPool[iconSetID][iconID].TargetHighlight then
+            local showTargetHighlight = ( not iconSetID == ICON_SET_ID.ARENA_MAIN ) and iconSetConfig.showTargetHighlight;
+            iconPool[iconSetID][iconID].TargetHighlight:SetAlpha(showTargetHighlight and 1 or 0);
+        end
+
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
 
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
