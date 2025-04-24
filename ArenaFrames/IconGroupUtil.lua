@@ -235,9 +235,6 @@ addon.IconGroup_Wipe = function (group)
             icon.Count.text:SetText("");
             icon.Count:Hide();
         end
-        if icon.TargetHighlight then
-            icon.TargetHighlight:SetAlpha(0);
-        end
         icon.started = nil;
         icon:Hide();
     end

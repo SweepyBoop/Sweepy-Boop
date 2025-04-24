@@ -41,7 +41,7 @@
                 </Texture>
             </Layer>
             <Layer level="BACKGROUND" textureSubLevel="-1">
-                <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
+                <Texture parentKey="TargetHighlight" hidden="true" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
                     <Anchors>
                         <Anchor point="CENTER"/>
                     </Anchors>
