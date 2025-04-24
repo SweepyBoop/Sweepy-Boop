@@ -39,8 +39,14 @@ addon.HideOverlayGlow = function (button)
 	end
 end
 
-addon.UpdateTargetHighlight = function (icon, show)
+addon.UpdateTargetHighlight = function (icon)
     if icon.TargetHighlight then
+        local show;
+        if icon.isTestGroup then
+            show = ( addon.GetUnitClass("target") == icon.spellInfo.class );
+        else
+            show = UnitIsUnit("target", icon.unit);
+        end
         icon.TargetHighlight:SetShown(show);
     end
 end

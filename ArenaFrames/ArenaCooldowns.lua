@@ -130,6 +130,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
         iconPool[iconSetID][iconID].iconSetID = iconSetID;
+        iconPool[iconSetID][iconID].isTestGroup = test;
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
     end
 
@@ -843,16 +844,8 @@ local function ProcessUnitEvent(group, event, ...)
 end
 
 local function UpdateAllHighlights(group)
-    local targetClass = addon.GetUnitClass("target");
     for i = 1, #(group.active) do
-        local icon = group.active[i];
-        local showTargetHighlight;
-        if group.isTestGroup then
-            showTargetHighlight = ( targetClass == icon.spellInfo.class );
-        else
-            showTargetHighlight = UnitIsUnit("target", icon.unit);
-        end
-        addon.UpdateTargetHighlight(group.active[i], showTargetHighlight);
+        addon.UpdateTargetHighlight(group.active[i]);
     end
 end
 
