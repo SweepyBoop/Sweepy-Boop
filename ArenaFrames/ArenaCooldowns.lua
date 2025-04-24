@@ -124,7 +124,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         end
 
         if iconPool[iconSetID][iconID].TargetHighlight then
-            local showTargetHighlight = ( not iconSetID == ICON_SET_ID.ARENA_MAIN ) and iconSetConfig.showTargetHighlight;
+            local showTargetHighlight = ( not addon.ARENA_FRAME_BARS[iconSetID] ) and iconSetConfig.showTargetHighlight;
             iconPool[iconSetID][iconID].TargetHighlight:SetAlpha(showTargetHighlight and 1 or 0);
         end
 
@@ -842,7 +842,7 @@ local function ProcessUnitEvent(group, event, ...)
     end
 end
 
-local function UpdateAllBorders(group)
+local function UpdateAllHighlights(group)
     for i = 1, #(group.active) do
         addon.UpdateTargetHighlight(group.active[i]);
     end
@@ -1096,7 +1096,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         end
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup then
-                            UpdateAllBorders(iconGroup);
+                            UpdateAllHighlights(iconGroup);
                         end
                     end
                 end
