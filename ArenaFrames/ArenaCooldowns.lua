@@ -124,7 +124,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         end
 
         if iconPool[iconSetID][iconID].TargetHighlight then
-            iconPool[iconSetID][iconID].TargetHighlight:SetVertexColor(0.6, 0, 0.8, 1); -- purple
+            iconPool[iconSetID][iconID].TargetHighlight:SetVertexColor(0.6745, 0.2902, 0.8392, 1); -- purple
         end
 
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
