@@ -47,7 +47,7 @@ addon.UpdateTargetHighlight = function (icon)
         else
             show = UnitIsUnit("target", icon.unit);
         end
-        icon.TargetHighlight:SetShown(show);
+        icon.TargetHighlight:SetAlpha(show and 1 or 0);
     end
 end
 

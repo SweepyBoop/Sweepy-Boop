@@ -125,7 +125,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
         if iconPool[iconSetID][iconID].TargetHighlight then
             local showTargetHighlight = ( not addon.ARENA_FRAME_BARS[iconSetID] ) and iconSetConfig.showTargetHighlight;
-            iconPool[iconSetID][iconID].TargetHighlight:SetAlpha(showTargetHighlight and 1 or 0);
+            iconPool[iconSetID][iconID].TargetHighlight:SetShown(showTargetHighlight);
         end
 
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
@@ -146,7 +146,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
         if iconPool[iconSetID][iconID].TargetHighlight then
             local showTargetHighlight = ( not iconSetID == ICON_SET_ID.ARENA_MAIN ) and iconSetConfig.showTargetHighlight;
-            iconPool[iconSetID][iconID].TargetHighlight:SetAlpha(showTargetHighlight and 1 or 0);
+            iconPool[iconSetID][iconID].TargetHighlight:SetShown(showTargetHighlight);
         end
 
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);

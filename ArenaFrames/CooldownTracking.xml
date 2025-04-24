@@ -3,7 +3,7 @@
     <!-- Is it possible to make the button click through? -->
     <Button name="CooldownTrackingButtonTemplate" hidden="true" virtual="true">
         <Size>
-            <AbsDimension x="37" y="37"/>
+            <AbsDimension x="36" y="36"/>
         </Size>
         <Anchors>
             <Anchor point="CENTER"/>
@@ -41,7 +41,7 @@
                 </Texture>
             </Layer>
             <Layer level="BACKGROUND" textureSubLevel="-1">
-                <Texture parentKey="TargetHighlight" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
+                <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" ignoreParentAlpha="true" atlas="bags-glow-purple" useAtlasSize="true">
                     <Anchors>
                         <Anchor point="CENTER"/>
                     </Anchors>
@@ -50,10 +50,13 @@
         </Layers>
         <Frames>
             <Cooldown inherits="CooldownFrameTemplate" parentKey="cooldown" reverse="true" drawBling="false" drawEdge="false" hidden="true">
-                <Size x="37" y="37"/>
+                <Size x="36" y="36"/>
                 <Anchors>
                     <Anchor point="CENTER"/>
                 </Anchors>
+                <SwipeTexture>
+	                <Color r="0" g="0" b="0" a="0.8"/>
+	            </SwipeTexture>
             </Cooldown>
         </Frames>
     </Button>

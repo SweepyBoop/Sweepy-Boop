@@ -232,7 +232,7 @@ addon.CLASSORDER = {
     addon.CLASSID.WARRIOR,
 };
 
-addon.DEFAULT_ICON_SIZE = 37;
+addon.DEFAULT_ICON_SIZE = 36;
 addon.CHARGE_TEXTURE = "Crosshair_Recurring_32"; -- TODO: make it available for classic: https://github.com/seblindfors/WoWAtlasExtract/blob/master/README.md
 addon.CHARGE_TEXTURE_SIZE = 16;
 
