@@ -842,6 +842,12 @@ local function ProcessUnitEvent(group, event, ...)
     end
 end
 
+local function UpdateAllBorders(group)
+    for i = 1, #(group.active) do
+        addon.UpdateTargetHighlight(group.active[i]);
+    end
+end
+
 function SweepyBoop:TestArenaCooldownTracker()
     local secondaryBarEnabled = SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar;
 
@@ -968,6 +974,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
         eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
         eventFrame:RegisterEvent(addon.UNIT_AURA);
         eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+        eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
@@ -1074,6 +1081,43 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup then
                             ProcessUnitSpellCast(iconGroup, event, ...);
+                        end
+                    end
+                end
+            elseif ( event == addon.PLAYER_TARGET_CHANGED ) then
+                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+
+                local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
+                local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
+
+                local arenaMainGroupID = ICON_SET_ID.ARENA_MAIN;
+                if addon.TEST_MODE then
+                    arenaMainGroupID = arenaMainGroupID .. "-player";
+                end
+                local arenaMain = iconGroups[arenaMainGroupID];
+                if arenaMain and arenaMainEnabled then
+                    UpdateAllBorders(arenaMain);
+                end
+
+                local arenaSecondaryGroupID = ICON_SET_ID.ARENA_SECONDARY;
+                if addon.TEST_MODE then
+                    arenaSecondaryGroupID = arenaSecondaryGroupID .. "-player";
+                end
+                local arenaSecondary = iconGroups[arenaSecondaryGroupID];
+                if arenaSecondary and arenaSecondaryEnabled then
+                    UpdateAllBorders(arenaSecondary);
+                end
+
+                for i = 1, 6 do
+                    local iconSetID = "Bar " .. i;
+                    if GetIconGroupEnabled(iconSetID) then
+                        local iconGroupID = iconSetID;
+                        if addon.TEST_MODE then
+                            iconGroupID = iconGroupID .. "-player";
+                        end
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup then
+                            UpdateAllBorders(iconGroup);
                         end
                     end
                 end
