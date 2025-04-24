@@ -620,6 +620,7 @@ addon.GetArenaFrameOptions = function(order)
                             order = 16,
                             type = "toggle",
                             name = "Always show icons",
+                            width = 0.9,
                             desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                         },
 
