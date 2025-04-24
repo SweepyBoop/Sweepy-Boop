@@ -843,8 +843,16 @@ local function ProcessUnitEvent(group, event, ...)
 end
 
 local function UpdateAllHighlights(group)
+    local targetClass = addon.GetUnitClass("target");
     for i = 1, #(group.active) do
-        addon.UpdateTargetHighlight(group.active[i]);
+        local icon = group.active[i];
+        local showTargetHighlight;
+        if group.isTestGroup then
+            showTargetHighlight = ( targetClass == icon.spellInfo.class );
+        else
+            showTargetHighlight = UnitIsUnit("target", icon.unit);
+        end
+        addon.UpdateTargetHighlight(group.active[i], showTargetHighlight);
     end
 end
 

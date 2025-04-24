@@ -39,13 +39,9 @@ addon.HideOverlayGlow = function (button)
 	end
 end
 
-addon.UpdateTargetHighlight = function (icon, override)
+addon.UpdateTargetHighlight = function (icon, show)
     if icon.TargetHighlight then
-        if override ~= nil then
-            icon.TargetHighlight:SetShown(override);
-        else
-            icon.TargetHighlight:SetShown(UnitIsUnit(icon.unit, "target"));
-        end
+        icon.TargetHighlight:SetShown(show);
     end
 end
 
