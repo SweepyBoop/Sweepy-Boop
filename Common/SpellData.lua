@@ -2386,6 +2386,13 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Death Wish
+    [199261] = {
+        class = addon.WARRIOR,
+        spec = { specID.FURY },
+        category = category.OTHERS,
+        cooldown = 15,
+    },
     -- Charge
     [100] = {
         cooldown = 17,
