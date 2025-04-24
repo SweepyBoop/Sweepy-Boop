@@ -123,10 +123,9 @@ local function GetIcon(iconSetID, unitID, spellID, test)
             iconPool[iconSetID][iconID].Icon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1); -- topleft, bottomleft, topright, bottomright
         end
 
-        -- if iconPool[iconSetID][iconID].TargetHighlight then
-        --     local showTargetHighlight = ( not addon.ARENA_FRAME_BARS[iconSetID] ) and iconSetConfig.showTargetHighlight;
-        --     iconPool[iconSetID][iconID].TargetHighlight:SetShown(showTargetHighlight);
-        -- end
+        if iconPool[iconSetID][iconID].TargetHighlight then
+            iconPool[iconSetID][iconID].TargetHighlight:SetVertexColor(0.6, 0, 0.8, 1); -- purple
+        end
 
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
         iconPool[iconSetID][iconID].iconSetID = iconSetID;

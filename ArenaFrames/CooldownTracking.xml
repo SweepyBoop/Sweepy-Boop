@@ -28,6 +28,13 @@
             <Layer level="BACKGROUND">
                 <Texture parentKey="Icon"/>
             </Layer>
+            <!-- <Layer level="ARTWORK" textureSubLevel="1">
+                <Texture inherits="ActionBarFlyoutButton-IconFrame" parentKey="TargetHighlight" hidden="true">
+                    <Anchors>
+                        <Anchor point="CENTER"/>
+                    </Anchors>
+                </Texture>
+            </Layer> -->
             <Layer level="OVERLAY" textureSubLevel="1">
                 <Texture parentKey="flash" hidden="false" alpha="0" alphaMode="ADD" atlas="bags-glow-flash" useAtlasSize="true">
                     <Anchors>
@@ -41,7 +48,8 @@
                 </Texture>
             </Layer>
             <Layer level="BACKGROUND" textureSubLevel="-1">
-                <Texture parentKey="TargetHighlight" alpha="0" alphaMode="ADD" atlas="bags-glow-purple" useAtlasSize="true">
+                <Texture file="Interface\Buttons\UI-ActionButton-Border" parentKey="TargetHighlight" hidden="true" alphaMode="ADD" alpha="1" ignoreParentAlpha="true">
+                    <Size x="72" y="72"/>
                     <Anchors>
                         <Anchor point="CENTER"/>
                     </Anchors>
@@ -55,8 +63,8 @@
                     <Anchor point="CENTER"/>
                 </Anchors>
                 <SwipeTexture>
-	                <Color r="0" g="0" b="0" a="0.8"/>
-	            </SwipeTexture>
+                    <Color r="0" g="0" b="0" a="0.8"/>
+                </SwipeTexture>
             </Cooldown>
         </Frames>
     </Button>
