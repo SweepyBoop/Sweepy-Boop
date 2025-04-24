@@ -1086,21 +1086,23 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     end
                 end
             elseif ( event == addon.PLAYER_TARGET_CHANGED ) then
-                if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+                local isArena = IsActiveBattlefieldArena() or addon.TEST_MODE;
 
                 for i = 1, 6 do
                     local iconSetID = "Bar " .. i;
                     if GetIconGroupEnabled(iconSetID) then
-                        local iconGroupID = iconSetID;
-                        if addon.TEST_MODE then
-                            iconGroupID = iconGroupID .. "-player";
-                        end
-                        local iconGroup = iconGroups[iconGroupID];
-                        if iconGroup then
-                            UpdateAllHighlights(iconGroup);
+                        if isArena then
+                            local iconGroupID = iconSetID;
+                            if addon.TEST_MODE then
+                                iconGroupID = iconGroupID .. "-player";
+                            end
+                            local iconGroup = iconGroups[iconGroupID];
+                            if iconGroup then
+                                UpdateAllHighlights(iconGroup);
+                            end
                         end
 
-                        local testGroup = iconGroups[iconGroupID .. "-player-test"];
+                        local testGroup = iconGroups[iconSetID .. "player-test"];
                         if testGroup then
                             UpdateAllHighlights(testGroup);
                         end
