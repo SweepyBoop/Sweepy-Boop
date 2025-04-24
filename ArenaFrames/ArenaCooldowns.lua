@@ -138,6 +138,12 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         local size = GetIconSize(iconSetID);
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
 
+        if iconSetConfig.hideBorder then
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.1, 0.9, 0.1, 0.9);
+        else
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1);
+        end
+
         if iconPool[iconSetID][iconID].TargetHighlight then
             local showTargetHighlight = ( not iconSetID == ICON_SET_ID.ARENA_MAIN ) and iconSetConfig.showTargetHighlight;
             iconPool[iconSetID][iconID].TargetHighlight:SetAlpha(showTargetHighlight and 1 or 0);
