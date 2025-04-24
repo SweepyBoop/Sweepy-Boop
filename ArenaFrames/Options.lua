@@ -607,7 +607,7 @@ addon.GetArenaFrameOptions = function(order)
                         showTargetHighlight = {
                             order = 14,
                             type = "toggle",
-                            name = "Target highlight",
+                            name = "Highlight target",
                         },
 
                         breaker4 = {
