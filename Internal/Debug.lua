@@ -42,7 +42,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
         if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") or destGUID == UnitGUID("target") or addon.EVENTS_PET_DISMISS[subEvent] ) then
             print("Combat log event:", subEvent, spellName, spellID);
         end
-    elseif event == addon.UNIT_PET then
+    elseif ( event == addon.UNIT_PET ) and ( addon.TEST_MODE ) then
         print("UNIT_PET", UnitGUID("pet"));
     end
 end)

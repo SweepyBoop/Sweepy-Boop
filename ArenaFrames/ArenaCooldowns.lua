@@ -116,14 +116,33 @@ local function GetIcon(iconSetID, unitID, spellID, test)
             iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
         end
 
+        -- https://warcraft.wiki.gg/wiki/API_TextureBase_SetTexCoord
+        if iconSetConfig.hideBorder then
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875); -- values copied from Blizzard Interface code
+        else
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1); -- topleft, bottomleft, topright, bottomright
+        end
+
+        if iconPool[iconSetID][iconID].TargetHighlight then
+            iconPool[iconSetID][iconID].TargetHighlight:SetVertexColor(0.6745, 0.2902, 0.8392, 1); -- purple
+        end
+
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
         iconPool[iconSetID][iconID].iconSetID = iconSetID;
+        iconPool[iconSetID][iconID].isTestGroup = test;
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
     end
 
     if ( iconPool[iconSetID][iconID].lastModified ~= config.lastModified ) then
         local size = GetIconSize(iconSetID);
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
+
+        if iconSetConfig.hideBorder then
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875);
+        else
+            iconPool[iconSetID][iconID].Icon:SetTexCoord(0, 0, 0, 1, 1, 0, 1, 1);
+        end
+
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
 
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
@@ -824,6 +843,12 @@ local function ProcessUnitEvent(group, event, ...)
     end
 end
 
+local function UpdateAllHighlights(group)
+    for i = 1, #(group.active) do
+        addon.UpdateTargetHighlight(group.active[i]);
+    end
+end
+
 function SweepyBoop:TestArenaCooldownTracker()
     local secondaryBarEnabled = SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar;
 
@@ -950,6 +975,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
         eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
         eventFrame:RegisterEvent(addon.UNIT_AURA);
         eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+        eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
@@ -1056,6 +1082,29 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup then
                             ProcessUnitSpellCast(iconGroup, event, ...);
+                        end
+                    end
+                end
+            elseif ( event == addon.PLAYER_TARGET_CHANGED ) then
+                local isArena = IsActiveBattlefieldArena() or addon.TEST_MODE;
+
+                for i = 1, 6 do
+                    local iconSetID = "Bar " .. i;
+                    if GetIconGroupEnabled(iconSetID) then
+                        if isArena then
+                            local iconGroupID = iconSetID;
+                            if addon.TEST_MODE then
+                                iconGroupID = iconGroupID .. "-player";
+                            end
+                            local iconGroup = iconGroups[iconGroupID];
+                            if iconGroup then
+                                UpdateAllHighlights(iconGroup);
+                            end
+                        else
+                            local testGroup = iconGroups[iconSetID .. "-player-test"];
+                            if testGroup then
+                                UpdateAllHighlights(testGroup);
+                            end
                         end
                     end
                 end
