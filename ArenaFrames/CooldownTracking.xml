@@ -42,9 +42,9 @@
             </Layer>
             <Layer level="BACKGROUND" textureSubLevel="-1">
                 <Texture file="Interface\Buttons\UI-ActionButton-Border" parentKey="TargetHighlight" hidden="true" alphaMode="ADD" alpha="1" ignoreParentAlpha="true">
-                    <Size x="72" y="72"/>
+                    <Size x="73" y="73"/>
                     <Anchors>
-                        <Anchor point="CENTER"/>
+                        <Anchor point="CENTER" x="1" y="1"/>
                     </Anchors>
                 </Texture>
             </Layer>
