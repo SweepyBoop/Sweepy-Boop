@@ -39,9 +39,9 @@ It provides the "Show unused icons" option like OmniBar, but non-baseline abilit
 
 (Counterspell landed, cooldown becomes 20 Sec!)
 
-![shifting](https://github.com/user-attachments/assets/b77eb7a2-b5d3-4490-9f60-e132d9840a95)
+![Accurate shimmer cooldown](https://github.com/user-attachments/assets/122d5e3f-76bc-4497-8ab4-c60a0670bfd7)
 
-(Shifting Power cooldown reduction, accurate even if Shifting Power was interrupted!)
+(Shimmer cooldown reduction from Alter Time and Shifting Power)
 
 ![Updated charge display](https://github.com/user-attachments/assets/9f30a129-0fd7-426e-84fd-e1feb1d8f61b)
 
