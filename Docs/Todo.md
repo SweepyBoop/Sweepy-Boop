@@ -24,3 +24,5 @@
 - [x] Add ww heroic talent burst to the tracker
 
 - [ ] Leverage GetUnitChargedPowerPoints(unit) to detect outlaw rogue cd reduction
+
+- [ ] Reclone timer: use "UI-LFG-DeclineMark" atlas, C_Spell.GetSpellInfo("Cyclone") already considers current haste
