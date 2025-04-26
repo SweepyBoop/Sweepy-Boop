@@ -1425,7 +1425,7 @@ addon.SpellData = {
     },
     -- Blinding Light
     [115750] = {
-        cooldown = 90,
+        cooldown = 75,
         class = addon.PALADIN,
         category = category.CROWDCONTROL,
     },
