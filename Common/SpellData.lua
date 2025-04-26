@@ -800,6 +800,13 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 25,
     },
+    -- Stick Tar Bomb
+    [407028] = {
+        class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
+        category = category.OTHERS,
+        cooldown = 45,
+    },
     -- Crowd Control
     -- Intimidation
     [19577] = {
@@ -1418,7 +1425,7 @@ addon.SpellData = {
     },
     -- Blinding Light
     [115750] = {
-        cooldown = 90,
+        cooldown = 75,
         class = addon.PALADIN,
         category = category.CROWDCONTROL,
     },

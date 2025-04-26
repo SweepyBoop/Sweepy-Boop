@@ -137,9 +137,15 @@ addon.IconGroup_Insert = function (group, icon, index)
     -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
     if group.setPointOptions then
         local options = group.setPointOptions;
-        group:ClearAllPoints();
-        group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
-        group.setPointOptions = nil; -- Don't need to do this again until updated by UpdateIconGroupSetPointOptions
+
+        -- Getting LUA errors "Couldn't find region named GladiusButtonFramearena3", is it erroring in 2v2 games?
+        -- If still not visible, delay SetPoint again
+        local relativeToFrame = _G[options.relativeTo];
+        if relativeToFrame and relativeToFrame:IsShown() then
+            group:ClearAllPoints();
+            group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
+            group.setPointOptions = nil; -- Don't need to do this again until updated by UpdateIconGroupSetPointOptions
+        end
     end
 
     -- Give icon a timeStamp before inserting
