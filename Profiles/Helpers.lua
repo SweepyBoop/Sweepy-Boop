@@ -91,7 +91,7 @@ addon.CreateExportDialog = function()
     export:SetStatusText("");
     export:SetLayout("Flow");
     export:SetTitle("Export");
-    export:SetStatusText("Copy this code to share this profile");
+    export:SetStatusText("Copy code to share this profile");
     export:Hide();
     local exportEditBox = AceGUI:Create("MultiLineEditBox");
     exportEditBox:SetLabel("");

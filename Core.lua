@@ -62,7 +62,7 @@ options.args.support = {
             end
         },
     },
-}
+};
 
 local defaults = {
     profile = {
@@ -286,6 +286,35 @@ function SweepyBoop:OnInitialize()
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
     end
+
+    addon.importDialogs = addon.importDialogs or {};
+    addon.importDialogs[""] = addon.CreateImportDialog("");
+    addon.exportDialog = addon.exportDialog or addon.CreateExportDialog(); -- One shared dialog for exporting
+    options.args.profileSharing = {
+        order = 9,
+        type = "group",
+        name = "Profile sharing",
+        args = {
+            import = {
+                order = 1,
+                type = "execute",
+                name = "Import Profile",
+                desc = "Import a profile from another user.",
+                func = function()
+                    SweepyBoop:ShowImport("");
+                end,
+            },
+            export = {
+                order = 2,
+                type = "execute",
+                name = "Export Profile",
+                desc = "Export your profile to share with others.",
+                func = function()
+                    SweepyBoop:ShowExport();
+                end,
+            },
+        },
+    };
 
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
