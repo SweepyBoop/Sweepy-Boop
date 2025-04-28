@@ -2218,6 +2218,14 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 15,
     },
+    -- Malevolence
+    [442726] = {
+        class = addon.WARLOCK,
+        spec = { specID.AFFLICTION, specID.DESTRUCTION },
+        category = category.BURST,
+        cooldown = 60,
+        duration = 15,
+    },
     -- Crowd Control
     -- Mortal Coil
     [6789] = {
