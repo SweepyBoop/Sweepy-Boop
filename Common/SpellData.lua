@@ -334,8 +334,8 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.BALANCE },
         category = category.BURST,
-        cooldown = 90, -- Whirling Stars
-        duration = 20,
+        cooldown = 100, -- Whirling Stars
+        duration = 16,
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -343,14 +343,15 @@ addon.SpellData = {
         [390414] = {
             parent = 102560,
             cooldown = 120,
+            duration = 20,
         },
     -- Celestial Alignment
     [194223] = {
         class = addon.DRUID,
         spec = { specID.BALANCE },
         category = category.BURST,
-        cooldown = 90, -- Whirling Stars
-        duration = 15,
+        cooldown = 100, -- Whirling Stars
+        duration = 12,
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
     },
@@ -358,6 +359,7 @@ addon.SpellData = {
         [383410] = {
             parent = 194223,
             cooldown = 120,
+            duration = 15,
         },
     -- Force of Nature
     [205636] = {

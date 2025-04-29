@@ -104,17 +104,8 @@ addon.RefreshCooldownTimer = function (self, finish)
         end
     end
 
-    if ( start ~= math.huge ) and ( duration ~= math.huge ) then
-        icon.cooldown:SetCooldown(start, duration);
-    else
-        icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
-        if icon.group then
-            local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
-            addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
-        end
-    end
-
     -- Update charge display for both cases above
+    -- Set noCooldownCount before calling SetCooldown so timers get refreshed in OmniCC (if enabled)
     if ( #(icon.timers) > 1 ) and icon.Count then
         -- Show for 0 charge case as well
         icon.Count.text:SetText(stack);
@@ -125,6 +116,16 @@ addon.RefreshCooldownTimer = function (self, finish)
         else
             addon.SetUnusedIconAlpha(icon);
             addon.SetHideCountdownNumbers(icon, true);
+        end
+    end
+
+    if ( start ~= math.huge ) and ( duration ~= math.huge ) then
+        icon.cooldown:SetCooldown(start, duration);
+    else
+        icon.cooldown:SetCooldown(0, 0); -- This triggers a cooldown finish effect
+        if icon.group then
+            local showUnusedIcons = addon.GetIconSetConfig(icon.iconSetID).showUnusedIcons;
+            addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
 end
