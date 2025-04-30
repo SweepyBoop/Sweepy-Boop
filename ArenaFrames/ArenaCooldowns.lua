@@ -67,8 +67,10 @@ local iconPool = {};
 -- Ideally we want to keep them the same but it's disruptive to change config name since it would mess up players' current settings
 local function GetIconSize(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
-    if ARENA_FRAME_BARS[iconSetID] then
+    if ( iconSetID == addon.ICON_SET_ID.ARENA_MAIN ) then
         return config.arenaCooldownTrackerIconSize;
+    elseif ( iconSetID == addon.ICON_SET_ID.ARENA_SECONDARY ) then
+        return config.arenaCooldownTrackerIconSizeSecondary;
     else
         return config.standaloneBars[iconSetID].iconSize;
     end
