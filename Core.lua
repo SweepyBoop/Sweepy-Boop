@@ -114,6 +114,7 @@ local defaults = {
             arenaCooldownOffsetYSecondary = -35,
 
             arenaCooldownTrackerIconSize = 32,
+            arenaCooldownTrackerIconSizeSecondary = 32,
             arenaCooldownTrackerIconPadding = 2,
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
