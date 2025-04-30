@@ -239,8 +239,22 @@ addon.GetArenaFrameOptions = function(order)
                                 desc = "Size of arena defensive cooldown icons",
                             },
 
-                            arenaCooldownTrackerIconPadding = {
+                            arenaCooldownTrackerIconSizeSecondary = {
                                 order = 16,
+                                type = "range",
+                                width = 1,
+                                min = 16,
+                                max = 64,
+                                step = 1,
+                                name = "Icon size (secondary bar)",
+                                desc = "Size of arena defensive cooldown icons",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
+
+                            arenaCooldownTrackerIconPadding = {
+                                order = 17,
                                 type = "range",
                                 width = 0.75,
                                 min = 0,
@@ -256,19 +270,19 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             breaker3 = {
-                                order = 17,
+                                order = 18,
                                 type = "description",
                                 name = "",
                             },
 
                             headerPosition = {
-                                order = 18,
+                                order = 19,
                                 type = "header",
                                 name = "Positioning",
                             },
 
                             arenaCooldownGrowDirection = {
-                                order = 19,
+                                order = 20,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -279,7 +293,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetX = {
-                                order = 20,
+                                order = 21,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -293,7 +307,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetY = {
-                                order = 21,
+                                order = 22,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,
@@ -309,7 +323,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             headerPosition2 = {
-                                order = 22,
+                                order = 23,
                                 type = "header",
                                 name = "Secondary bar positioning",
                                 hidden = function()
@@ -318,7 +332,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownGrowDirectionSecondary = {
-                                order = 23,
+                                order = 24,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -334,7 +348,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetXSecondary = {
-                                order = 24,
+                                order = 25,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -351,7 +365,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetYSecondary = {
-                                order = 25,
+                                order = 26,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,

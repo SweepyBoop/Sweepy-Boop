@@ -114,6 +114,7 @@ local defaults = {
             arenaCooldownOffsetYSecondary = -35,
 
             arenaCooldownTrackerIconSize = 32,
+            arenaCooldownTrackerIconSizeSecondary = 32,
             arenaCooldownTrackerIconPadding = 2,
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
@@ -175,6 +176,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
+    defaults.profile.arenaFrames.arenaCooldownTrackerIconSizeSecondary = 28;
     defaults.profile.arenaFrames.arenaCooldownOffsetX = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
     defaults.profile.arenaFrames.arenaCooldownOffsetXSecondary = 35;
