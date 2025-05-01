@@ -1065,7 +1065,7 @@ addon.SpellData = {
     },
     -- Dragon's Breath
     [31661] = {
-        cooldown = 45,
+        cooldown = { default = 45, [specID.FROST_MAGE] = 31.5 },
         class = addon.MAGE,
         category = category.CROWDCONTROL,
         baseline = true, -- technically a talent, but always picked
