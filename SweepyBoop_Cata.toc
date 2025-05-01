@@ -27,6 +27,8 @@ Common\AceGUIWidget-InlineLink.lua
 
 Core.lua
 
+Profiles\Helpers.lua
+
 Nameplates\Nameplates.xml
 Nameplates\Helpers.lua
 Nameplates\ClassIcons.lua
