@@ -10,6 +10,8 @@ local soTFSpells = {
     [155777] = true, -- Germination
 };
 
+local sotfSpellID = 114108;
+
 local lifebloomInstances = {};
 local lifebloomAuras = {};
 
@@ -68,6 +70,40 @@ local function GlowLifeBloom(aura, buffFrame)
     end
 end
 
+local sotfExpirationTime = 0;
+local playerGUID;
+local softEventFrame = CreateFrame("Frame");
+softEventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+softEventFrame:RegisterEvent(addon.PLAYER_DEAD);
+softEventFrame:SetScript("OnEvent", function(self, event, ...)
+    if ( event == addon.PLAYER_DEAD ) then
+        sotfExpirationTime = 0;
+    elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
+        local timestamp, subevent, _, sourceGuid, _, _, _, destGuid, _, destFlags, _, spellId = CombatLogGetCurrentEventInfo();
+
+        if ( spellId ~= sotfSpellID ) then return end
+        playerGUID = playerGUID or UnitGUID("player");
+        if ( sourceGuid ~= playerGUID ) then return end
+        -- cast on a non-player or an outsider
+        if ( bit.band(destFlags, COMBATLOG_OBJECT_TYPE_PLAYER) == 0 ) or ( bit.band(destFlags, COMBATLOG_OBJECT_AFFILIATION_OUTSIDER) ~= 0 ) then return end
+
+        if ( subevent == addon.SPELL_AURA_APPLIED ) or ( subevent == addon.SPELL_AURA_REFRESH ) then
+            local spellData = C_UnitAuras.GetPlayerAuraBySpellID(spellId);
+            if spellData then
+                sotfExpirationTime = spellData.expirationTime;
+                print("SoTF applied to " .. spellData.name .. " on " .. destGuid .. " with expiration time: " .. sotfExpirationTime);
+            end
+        elseif ( subevent == addon.SPELL_AURA_REMOVED ) then
+            sotfExpirationTime = 0;
+            print("SoTF removed from " .. destGuid);
+        end
+    end
+end);
+
+local function GlowSoTF(aura, buffFrame)
+    
+end
+
 local isDruid = ( addon.GetUnitClass("player") == addon.DRUID ); -- this won't change for a login session
 
 local function HandleRaidFrameAuras(buffFrame, aura)
@@ -91,8 +127,7 @@ local function HandleRaidFrameAuras(buffFrame, aura)
 
     EnsureGlowFrame(buffFrame);
     GlowLifeBloom(aura, buffFrame);
-
-    -- Don't do SoTF for now, it's just a guess based on the timing of SoTF buff being consumed
+    GlowSoTF(aura, buffFrame);
 end
 
 function SweepyBoop:SetupRaidFrameAuraModule()
