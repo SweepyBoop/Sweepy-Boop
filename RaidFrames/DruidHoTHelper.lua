@@ -13,6 +13,15 @@ local soTFSpells = {
 local lifebloomInstances = {};
 local lifebloomAuras = {};
 
+local function EnsureGlowFrame(buffFrame)
+    if ( not buffFrame.glowFrame ) then
+        local glowFrame = CreateFrame("Frame", nil, buffFrame, "ActionBarButtonSpellActivationAlert");
+        glowFrame:SetAllPoints();
+        glowFrame:Hide();
+        buffFrame.glowFrame = glowFrame;
+    end
+end
+
 local lifebloomUpdate = CreateFrame("Frame");
 lifebloomUpdate.timer = 0;
 lifebloomUpdate:SetScript("OnUpdate", function (self, elapsed)
@@ -35,6 +44,7 @@ lifebloomUpdate:SetScript("OnUpdate", function (self, elapsed)
                 local refreshTime = aura.duration * 0.3
 
                 if (timeRemaining <= refreshTime) then
+                    EnsureGlowFrame(buffFrame);
                     addon.ShowOverlayGlow(buffFrame);
                 else
                     addon.HideOverlayGlow(buffFrame);
@@ -47,14 +57,7 @@ lifebloomUpdate:SetScript("OnUpdate", function (self, elapsed)
     end
 end)
 
-local function EnsureGlowFrame(buffFrame)
-    if ( not buffFrame.glowFrame ) then
-        local glowFrame = CreateFrame("Frame", nil, buffFrame, "ActionBarButtonSpellActivationAlert");
-        glowFrame:SetAllPoints();
-        glowFrame:Hide();
-        buffFrame.glowFrame = glowFrame;
-    end
-end
+
 
 local function EnsureHighlight(buffFrame)
     if ( not buffFrame.highlight ) then
