@@ -125,7 +125,6 @@ local function HandleRaidFrameAuras(buffFrame, aura)
         end
     end
 
-    EnsureGlowFrame(buffFrame);
     GlowLifeBloom(aura, buffFrame);
     GlowSoTF(aura, buffFrame);
 end
