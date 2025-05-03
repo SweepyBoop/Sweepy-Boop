@@ -711,6 +711,7 @@ addon.SpellData = {
     -- Rewind
     [363534] = {
         class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
         category = category.OTHERS,
         cooldown = 240,
         opt_lower_cooldown = 180,
