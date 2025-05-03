@@ -57,30 +57,6 @@ lifebloomUpdate:SetScript("OnUpdate", function (self, elapsed)
     end
 end)
 
-
-
-local function EnsureHighlight(buffFrame)
-    if ( not buffFrame.highlight ) then
-        local borderFrame = CreateFrame("Frame", nil, buffFrame);
-        borderFrame:SetAllPoints();
-        borderFrame:SetFrameLevel(buffFrame:GetFrameLevel() + 10);
-
-        local highlight = borderFrame:CreateTexture(nil, "OVERLAY");
-        highlight:SetAtlas("newplayertutorial-drag-slotgreen");
-        highlight:SetDesaturated(true);
-        highlight:SetAllPoints();
-        highlight:SetTexCoord(.24, .76, .24, .76);
-
-        buffFrame.highlight = highlight;
-    end
-end
-
-local function HideHighlight(buffFrame)
-    if ( buffFrame.highlight ) then
-        buffFrame.highlight:Hide();
-    end
-end
-
 local function GlowLifeBloom(aura, buffFrame)
     if lifeblooms[aura.spellId] and (aura.sourceUnit == "player") then
         lifebloomInstances[aura.auraInstanceID] = true;
