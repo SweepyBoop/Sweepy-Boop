@@ -52,7 +52,10 @@ function SweepyBoop:ImportProfile(data, module)
     if ( module ~= "" ) then
         self.db.profile[module] = data.profile[module];
     else
-        self.db.profile = data.profile;
+        -- Setting self.db.profile = data.profile will not work, it will reset to default on reload / logout
+        local profile = string.format("Imported (%s)", date());
+        self.db.profiles[profile] = data.profile;
+        self.db:SetProfile(profile);
     end
 
     self:RefreshConfig(); -- TODO: optimize this to only refresh the module that was imported
