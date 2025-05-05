@@ -15,6 +15,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 45524, default = true }, -- Chains of Ice
 
                 { spellId = 356528 }, -- Necrotic Wound
+                { spellId = 390276 }, -- Rotten Touch
             }
         },
         {
