@@ -13,6 +13,8 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 55078, default = true }, -- Blood Plague
 
                 { spellId = 45524, default = true }, -- Chains of Ice
+
+                { spellId = 356528 }, -- Necrotic Wound
             }
         },
         {
