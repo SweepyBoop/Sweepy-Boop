@@ -426,6 +426,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 118038, default = true }, -- Die by the Sword
                 { spellId = 184364, default = true }, -- Enraged Regeneration
                 { spellId = 23920, default = true }, -- Spell Reflection
+                { spellId = 227847, default = true }, -- Bladestorm
             }
         },
         {
