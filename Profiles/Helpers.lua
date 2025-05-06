@@ -59,6 +59,7 @@ function SweepyBoop:ImportProfile(data, module)
     end
 
     self:RefreshConfig(); -- TODO: optimize this to only refresh the module that was imported
+    LibStub("AceConfigRegistry-3.0"):NotifyChange("SweepyBoop"); -- To trigger UI update, e.g., enabled spells in the arena cooldown tracker
     return true;
 end
 
