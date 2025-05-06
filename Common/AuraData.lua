@@ -72,7 +72,7 @@ if addon.PROJECT_MAINLINE then
 
                 { spellId = 12654 }, -- Ignite
                 { spellId = 217694 }, -- Living Bomb
-                { spellId = 244813 }, -- Living Bomb
+                    { spellId = 244813, parent = 217694 }, -- Living Bomb
             }
         },
         {
@@ -432,6 +432,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 184364, default = true }, -- Enraged Regeneration
                 { spellId = 23920, default = true }, -- Spell Reflection
                 { spellId = 227847, default = true }, -- Bladestorm
+                    { spellId = 446035, parent = 227847 }, -- Bladestorm
             }
         },
         {
