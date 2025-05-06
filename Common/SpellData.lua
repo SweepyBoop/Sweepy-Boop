@@ -37,7 +37,6 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 90,
         duration = 20,
-        default = true,
     },
     -- Dark Transformation
     [63560] = {
@@ -55,7 +54,6 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
         duration = 20,
-        default = true,
     },
     -- Summon Gargoyle
     [49206] = {
@@ -516,7 +514,6 @@ addon.SpellData = {
         class = addon.DRUID,
         category = category.HEAL,
         baseline = true,
-        default = true,
     },
     -- Incarnation: Tree of Life
     [33891] = {
@@ -542,7 +539,6 @@ addon.SpellData = {
         cooldown = 48, -- Passing Seasons
         charges = true,
         baseline = true,
-        default = true,
     },
     -- Overgrowth
     [203651] = {
@@ -1043,6 +1039,7 @@ addon.SpellData = {
         trackEvent = addon.SPELL_AURA_APPLIED,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Cold Snap (resets ice block)
     [235219] = {
@@ -2378,6 +2375,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Demonic Circle: Teleport
     [48020] = {
@@ -2601,6 +2599,7 @@ addon.SpellData = {
         cooldown = 180,
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
+        default = true,
     },
     -- Impending Victory
     [202168] = {
