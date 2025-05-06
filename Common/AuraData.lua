@@ -399,6 +399,7 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.PRIEST,
             auras = {
                 { spellId = 408558, default = true }, -- Phase Shift
+                { spellId = 421453, default = true }, -- Ultimate Penitence
                 { spellId = 33206, default = true }, -- Pain Suppression
                 { spellId = 47788, default = true }, -- Guardian Spirit
                 { spellId = 47585, default = true }, -- Dispersion
