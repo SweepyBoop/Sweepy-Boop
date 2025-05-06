@@ -15,7 +15,7 @@ local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
         LibStub("AceConfigDialog-3.0"):Open(addonName);
     end,
 })
-local icon = LibStub("LibDBIcon-1.0");
+local icon = LibStub("LibDBIcon-1.0", true);
 
 local options = {
     name = addon.addonTitle,
@@ -328,7 +328,9 @@ function SweepyBoop:OnInitialize()
 
     self:SetupBlizzardOptions();
 
-    icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
+    if icon then
+        icon:Register(addonName, SweepyBoopLDB, self.db.profile.minimap);
+    end
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig");
