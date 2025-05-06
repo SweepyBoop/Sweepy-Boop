@@ -907,7 +907,6 @@ addon.SpellData = {
         cooldown = 120,
         class = addon.HUNTER,
         category = category.HEAL,
-        default = true,
     },
     -- Interrupt
     -- Counter Shot
@@ -1186,7 +1185,6 @@ addon.SpellData = {
         cooldown = 90,
         duration = 4,
         index = addon.SPELLPRIORITY.HIGH,
-        default = true,
     },
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
@@ -1201,7 +1199,6 @@ addon.SpellData = {
         extend = true,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
-        default = true,
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
@@ -1211,7 +1208,6 @@ addon.SpellData = {
         cooldown = 120,
         duration = 24,
         baseline = true, -- technically a talent, but always picked
-        default = true,
     },
     -- Crowd Control
     -- Paralysis
@@ -2598,7 +2594,6 @@ addon.SpellData = {
         cooldown = 180,
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
-        default = true,
     },
     -- Impending Victory
     [202168] = {
