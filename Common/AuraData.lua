@@ -58,6 +58,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 5116, default = true }, -- Concussive Shot
 
                 { spellId = 217200 }, -- Barbed Shot
+                { spellId = 468572 }, -- Black Arrow
             }
         },
         {
@@ -106,8 +107,6 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 214621, default = true }, -- Schism
                 { spellId = 375901, default = true }, -- Mindgames
                 { spellId = 323716, default = true }, -- Thoughtsteal
-
-                -- { spellId = 199845 }, -- Psyflay (Psyfiend)
             }
         },
         {
@@ -136,6 +135,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 197209, default = true }, -- Lightning Rod
 
                 { spellId = 3600 }, -- Earthbind
+                { spellId = 334168 }, -- Lashing Flames
             }
         },
         {
@@ -166,6 +166,8 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 354788, default = true }, -- Slaughterhouse
 
                 { spellId = 388539 }, -- Rend
+                { spellId = 383704 }, -- Fatal Mark
+                { spellId = 397364 }, -- Thunderous Roar
             }
         },
     };
