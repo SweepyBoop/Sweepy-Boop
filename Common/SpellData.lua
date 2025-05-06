@@ -667,6 +667,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 90,
         baseline = true,
+        default = true,
     },
     -- Time Stop
     [378441] = {
@@ -778,6 +779,7 @@ addon.SpellData = {
         cooldown = 120,
         duration = 20,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Survival
     -- Coordinated Assult
@@ -788,6 +790,7 @@ addon.SpellData = {
         cooldown = 60, -- Symboitic Adrenaline (almost always picked)
         duration = 20,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Marksmanship
     -- Trueshot
@@ -800,6 +803,7 @@ addon.SpellData = {
         reduce_power_type = POWERTYPE.Focus,
         reduce_amount = 0.05, -- Every 50 focus reduces cd by 2.5s
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Volley
     [260243] = {
@@ -886,6 +890,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         charges = true,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Aspect of the Turtle
     [186265] = {
@@ -894,6 +899,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Roar of Sacrifice
     [53480] = {
@@ -906,6 +912,7 @@ addon.SpellData = {
         cooldown = 120,
         class = addon.HUNTER,
         category = category.HEAL,
+        default = true,
     },
     -- Interrupt
     -- Counter Shot
@@ -953,6 +960,7 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
         extend = true,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Ice Form
     [198144] = {
@@ -982,6 +990,7 @@ addon.SpellData = {
         },
 
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Arcane
     -- Arcane Surge
@@ -993,6 +1002,7 @@ addon.SpellData = {
         duration = 15,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Touch of the Magi
     [321507] = {
@@ -1002,6 +1012,7 @@ addon.SpellData = {
         cooldown = 45,
         duration = 12,
         baseline = true,
+        default = true,
     },
     -- Interrupt
     -- Counterspell
@@ -1021,6 +1032,7 @@ addon.SpellData = {
         category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Cauterize
     [87024] = {
@@ -1040,6 +1052,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Alter Time (all specs)
     [342246] = {
@@ -1048,6 +1061,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Blazing Barrier
     [235313] = {
@@ -1176,6 +1190,7 @@ addon.SpellData = {
         cooldown = 90,
         duration = 4,
         index = addon.SPELLPRIORITY.HIGH,
+        default = true,
     },
     -- Storm, Earth, and Fire (icon is strange when testing with a monk probably because the icon changes after spell is cast...)
     [137639] = {
@@ -1190,6 +1205,7 @@ addon.SpellData = {
         extend = true,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Invoke Xuen, the White Tiger
     [123904] = {
@@ -1199,6 +1215,7 @@ addon.SpellData = {
         cooldown = 120,
         duration = 24,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Crowd Control
     -- Paralysis
@@ -1237,6 +1254,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Life Cocoon (120 baseline - 45s from Chrysalis)
     [116849] = {
@@ -1246,6 +1264,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Diffuse Magic
     [122783] = {
@@ -1262,6 +1281,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
         -- Restoral (once detected, reuse Revival icon but change texture to Restoral)
         [388615] = {
@@ -1275,6 +1295,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.LOW,
         baseline = true,
+        default = true,
     },
     -- Transcendence: Transfer
     [119996] = {
