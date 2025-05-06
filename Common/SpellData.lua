@@ -37,6 +37,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 90,
         duration = 20,
+        default = true,
     },
     -- Dark Transformation
     [63560] = {
@@ -54,6 +55,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
         duration = 20,
+        default = true,
     },
     -- Summon Gargoyle
     [49206] = {
@@ -82,6 +84,7 @@ addon.SpellData = {
         cooldown = 60,
         duration = 12,
         baseline = true,
+        default = true,
     },
     -- Absolute zero (Frostwyrm's Fury)
     [279302] = {
@@ -167,12 +170,14 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Anti-Magic Shell
     [48707] = {
         class = addon.DEATHKNIGHT,
         category = category.DEFENSIVE,
         cooldown = 40, -- Anti-Magic Barrier almost always picked
+        default = true,
         -- Not set as baseline, since it can be replaced by Spellwarden
     },
         -- Anti-Magic Shell (Spellwarden)
@@ -186,6 +191,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
         opt_lower_cooldown = 90, -- Assimilation
+        default = true,
     },
     -- Lichborne
     [49039] = {
@@ -194,6 +200,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
 
     -- Demon Hunter
@@ -223,6 +230,7 @@ addon.SpellData = {
         cooldown = 120,
         duration = 24,
         baseline = true,
+        default = true,
     },
     -- Essence Break
     [258860] = {
@@ -248,6 +256,7 @@ addon.SpellData = {
         spec = { specID.HAVOC },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Netherwalk
     [196555] = {
@@ -256,6 +265,7 @@ addon.SpellData = {
         spec = { specID.HAVOC },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Darkness
     [196718] = {
@@ -263,12 +273,14 @@ addon.SpellData = {
         class = addon.DEMONHUNTER,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Reverse Magic
     [205604] = {
         cooldown = 60,
         class = addon.DEMONHUNTER,
         category = category.DEFENSIVE,
+        default = true,
     },
     -- Crowd Control
     -- Imprison
@@ -338,6 +350,7 @@ addon.SpellData = {
         duration = 16,
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
+        default = true,
     },
         -- Incarnation: Chosen of Elune (Orbital Strike)
         [390414] = {
@@ -354,6 +367,7 @@ addon.SpellData = {
         duration = 12,
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
+        default = true,
     },
         -- Celestial Alignment (Orbital Strike)
         [383410] = {
@@ -385,6 +399,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         duration = 20,
+        default = true,
     },
     -- Incarnation: Avatar of Ashamane
     [102543] = {
@@ -393,6 +408,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         duration = 20,
+        default = true,
     },
     -- Feral Frenzy
     [274837] = {
@@ -474,6 +490,7 @@ addon.SpellData = {
         charges = {[specID.GUARDIAN] = true},
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Ironbark
     [102342] = {
@@ -483,6 +500,7 @@ addon.SpellData = {
         opt_lower_cooldown = 70,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Barkskin
     [22812] = {
@@ -490,6 +508,7 @@ addon.SpellData = {
         class = addon.DRUID,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Renewal
     [108238] = {
@@ -497,6 +516,7 @@ addon.SpellData = {
         class = addon.DRUID,
         category = category.HEAL,
         baseline = true,
+        default = true,
     },
     -- Incarnation: Tree of Life
     [33891] = {
@@ -504,6 +524,7 @@ addon.SpellData = {
         spec = { specID.RESTORATION_DRUID },
         category = category.DEFENSIVE,
         cooldown = 180,
+        default = true,
     },
     -- Ancient of Lore
     [473909] = {
@@ -511,6 +532,7 @@ addon.SpellData = {
         spec = { specID.RESTORATION_DRUID },
         category = category.IMMUNITY,
         cooldown = 90,
+        default = true,
     },
     -- Nature's Swiftness
     [132158] = {
@@ -520,6 +542,7 @@ addon.SpellData = {
         cooldown = 48, -- Passing Seasons
         charges = true,
         baseline = true,
+        default = true,
     },
     -- Overgrowth
     [203651] = {
@@ -571,6 +594,7 @@ addon.SpellData = {
         duration = 14,
         cooldown = 120,
         extend = true, -- Animosity
+        default = true,
     },
     -- Tip the Scales
     [370553] = {
@@ -578,6 +602,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         trackEvent = addon.SPELL_AURA_REMOVED,
+        default = true,
     },
     -- Augmentation
     -- Breath of Eons
@@ -613,6 +638,7 @@ addon.SpellData = {
         cooldown = 90,
         charges = true,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Renewing Blaze
     [374348] = {
@@ -627,6 +653,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Cauterizing Flame
     [374251] = {
@@ -2713,5 +2740,6 @@ for _, spell in pairs(addon.SpellData) do
         spell.trackEvent = spell.trackEvent or parent.trackEvent;
         spell.baseline = spell.baseline or parent.baseline;
         spell.index = spell.index or parent.index;
+        spell.default = spell.default or parent.default;
     end
 end
