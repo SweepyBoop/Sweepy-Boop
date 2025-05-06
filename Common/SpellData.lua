@@ -2089,6 +2089,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Spirit Link Totem
     [98008] = {
@@ -2097,6 +2098,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         spec = { specID.RESTORATION_SHAMAN },
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Ascendance (Restoration)
     [114052] = {
@@ -2126,7 +2128,8 @@ addon.SpellData = {
     [409293] = {
         cooldown = 120,
         class = addon.SHAMAN,
-        category = category.IMMUNITY
+        category = category.IMMUNITY,
+        default = true,
     },
     -- Stone Bulwark Totem (can be reset by Totemic Recall)
     [108270] = {
@@ -2258,6 +2261,7 @@ addon.SpellData = {
         duration = 20, -- confirm early dismiss if killed
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Destruction
     -- Summon Infernal
@@ -2268,6 +2272,7 @@ addon.SpellData = {
         cooldown = 120,
         duration = 30,
         baseline = true,
+        default = true,
     },
     -- Demonology
     -- Summon Demonic Tyrant
@@ -2278,6 +2283,7 @@ addon.SpellData = {
         cooldown = 60,
         duration = 15,
         baseline = true,
+        default = true,
     },
     -- Grimoire: Felguard
     [111898] = {
@@ -2357,6 +2363,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Soul Rip
     [410598] = {
@@ -2571,6 +2578,7 @@ addon.SpellData = {
         spec = { specID.ARMS },
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Enraged Regeneration
     [184364] = {
@@ -2579,6 +2587,7 @@ addon.SpellData = {
         spec = { specID.FURY },
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Intervene
     [3411] = {
