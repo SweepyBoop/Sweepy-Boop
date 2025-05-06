@@ -82,6 +82,7 @@ addon.SpellData = {
         cooldown = 60,
         duration = 12,
         baseline = true,
+        default = true,
     },
     -- Absolute zero (Frostwyrm's Fury)
     [279302] = {
@@ -167,12 +168,14 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Anti-Magic Shell
     [48707] = {
         class = addon.DEATHKNIGHT,
         category = category.DEFENSIVE,
         cooldown = 40, -- Anti-Magic Barrier almost always picked
+        default = true,
         -- Not set as baseline, since it can be replaced by Spellwarden
     },
         -- Anti-Magic Shell (Spellwarden)
@@ -186,6 +189,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
         opt_lower_cooldown = 90, -- Assimilation
+        default = true,
     },
     -- Lichborne
     [49039] = {
@@ -194,6 +198,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
 
     -- Demon Hunter
@@ -223,6 +228,7 @@ addon.SpellData = {
         cooldown = 120,
         duration = 24,
         baseline = true,
+        default = true,
     },
     -- Essence Break
     [258860] = {
@@ -248,6 +254,7 @@ addon.SpellData = {
         spec = { specID.HAVOC },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Netherwalk
     [196555] = {
@@ -256,6 +263,7 @@ addon.SpellData = {
         spec = { specID.HAVOC },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Darkness
     [196718] = {
@@ -263,12 +271,14 @@ addon.SpellData = {
         class = addon.DEMONHUNTER,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Reverse Magic
     [205604] = {
         cooldown = 60,
         class = addon.DEMONHUNTER,
         category = category.DEFENSIVE,
+        default = true,
     },
     -- Crowd Control
     -- Imprison
@@ -338,6 +348,7 @@ addon.SpellData = {
         duration = 16,
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
+        default = true,
     },
         -- Incarnation: Chosen of Elune (Orbital Strike)
         [390414] = {
@@ -354,6 +365,7 @@ addon.SpellData = {
         duration = 12,
         charges = true, -- Whirling Stars
         index = addon.SPELLPRIORITY.HIGH,
+        default = true,
     },
         -- Celestial Alignment (Orbital Strike)
         [383410] = {
@@ -385,6 +397,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         duration = 20,
+        default = true,
     },
     -- Incarnation: Avatar of Ashamane
     [102543] = {
@@ -393,6 +406,7 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         duration = 20,
+        default = true,
     },
     -- Feral Frenzy
     [274837] = {
@@ -474,6 +488,7 @@ addon.SpellData = {
         charges = {[specID.GUARDIAN] = true},
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Ironbark
     [102342] = {
@@ -483,6 +498,7 @@ addon.SpellData = {
         opt_lower_cooldown = 70,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Barkskin
     [22812] = {
@@ -490,6 +506,7 @@ addon.SpellData = {
         class = addon.DRUID,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Renewal
     [108238] = {
@@ -504,6 +521,7 @@ addon.SpellData = {
         spec = { specID.RESTORATION_DRUID },
         category = category.DEFENSIVE,
         cooldown = 180,
+        default = true,
     },
     -- Ancient of Lore
     [473909] = {
@@ -511,6 +529,7 @@ addon.SpellData = {
         spec = { specID.RESTORATION_DRUID },
         category = category.IMMUNITY,
         cooldown = 90,
+        default = true,
     },
     -- Nature's Swiftness
     [132158] = {
@@ -571,6 +590,7 @@ addon.SpellData = {
         duration = 14,
         cooldown = 120,
         extend = true, -- Animosity
+        default = true,
     },
     -- Tip the Scales
     [370553] = {
@@ -613,6 +633,7 @@ addon.SpellData = {
         cooldown = 90,
         charges = true,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Renewing Blaze
     [374348] = {
@@ -627,6 +648,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Cauterizing Flame
     [374251] = {
@@ -640,6 +662,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 90,
         baseline = true,
+        default = true,
     },
     -- Time Stop
     [378441] = {
@@ -751,6 +774,7 @@ addon.SpellData = {
         cooldown = 120,
         duration = 20,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Survival
     -- Coordinated Assult
@@ -761,6 +785,7 @@ addon.SpellData = {
         cooldown = 60, -- Symboitic Adrenaline (almost always picked)
         duration = 20,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Marksmanship
     -- Trueshot
@@ -773,6 +798,7 @@ addon.SpellData = {
         reduce_power_type = POWERTYPE.Focus,
         reduce_amount = 0.05, -- Every 50 focus reduces cd by 2.5s
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Volley
     [260243] = {
@@ -859,6 +885,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         charges = true,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Aspect of the Turtle
     [186265] = {
@@ -867,6 +894,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Roar of Sacrifice
     [53480] = {
@@ -926,6 +954,7 @@ addon.SpellData = {
         index = addon.SPELLPRIORITY.HIGH,
         extend = true,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Ice Form
     [198144] = {
@@ -955,6 +984,7 @@ addon.SpellData = {
         },
 
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Arcane
     -- Arcane Surge
@@ -966,6 +996,7 @@ addon.SpellData = {
         duration = 15,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Touch of the Magi
     [321507] = {
@@ -975,6 +1006,7 @@ addon.SpellData = {
         cooldown = 45,
         duration = 12,
         baseline = true,
+        default = true,
     },
     -- Interrupt
     -- Counterspell
@@ -994,6 +1026,7 @@ addon.SpellData = {
         category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Cauterize
     [87024] = {
@@ -1004,6 +1037,7 @@ addon.SpellData = {
         trackEvent = addon.SPELL_AURA_APPLIED,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Cold Snap (resets ice block)
     [235219] = {
@@ -1013,6 +1047,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Alter Time (all specs)
     [342246] = {
@@ -1021,6 +1056,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         trackEvent = addon.SPELL_AURA_APPLIED,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Blazing Barrier
     [235313] = {
@@ -1210,6 +1246,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Life Cocoon (120 baseline - 45s from Chrysalis)
     [116849] = {
@@ -1219,6 +1256,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Diffuse Magic
     [122783] = {
@@ -1226,6 +1264,7 @@ addon.SpellData = {
         class = addon.MONK,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Revival
     [115310] = {
@@ -1235,6 +1274,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
         -- Restoral (once detected, reuse Revival icon but change texture to Restoral)
         [388615] = {
@@ -1248,6 +1288,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.LOW,
         baseline = true,
+        default = true,
     },
     -- Transcendence: Transfer
     [119996] = {
@@ -1307,6 +1348,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RETRIBUTION },
+        default = true,
     },
     -- Crusade
     [231895] = {
@@ -1316,6 +1358,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RETRIBUTION },
+        default = true,
     },
     -- Wake of Ashes
     [255937] = {
@@ -1360,6 +1403,7 @@ addon.SpellData = {
         category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Blessing of Protection
     [1022] = {
@@ -1368,6 +1412,7 @@ addon.SpellData = {
         category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
         -- Blessing of SpellWarding
         [204018] = {
@@ -1383,6 +1428,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
         -- Lay on Hands (Empyreal Ward)
         [471195] = {
@@ -1396,6 +1442,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PALADIN },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Divine Protection (Retribution)
     [403876] = {
@@ -1404,6 +1451,7 @@ addon.SpellData = {
         spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Shield of Vengeance
     [184662] = {
@@ -1411,6 +1459,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
+        default = true,
     },
     -- Searing Glare
     [410126] = {
@@ -1536,6 +1585,7 @@ addon.SpellData = {
         spec = { specID.SHADOW },
         cooldown = 60,
         duration = 20,
+        default = true,
     },
     -- Void Torrent
     [263165] = {
@@ -1553,6 +1603,7 @@ addon.SpellData = {
         cooldown = 120, -- Reduced by Driven to Madness, cannot track reliably
         duration = addon.DURATION_DYNAMIC,
         extend = true,
+        default = true,
     },
     -- Dispel
     -- Mass Dispel
@@ -1619,6 +1670,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Pain Suppression
     [33206] = {
@@ -1629,6 +1681,7 @@ addon.SpellData = {
         charges = true,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Power Word: Barrier
     [62618] = {
@@ -1636,6 +1689,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         spec = { specID.DISCIPLINE },
         category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Guardian Spirit
     [47788] = {
@@ -1645,6 +1699,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Dispersion
     [47585] = {
@@ -1654,6 +1709,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Restitution
     [211319] = {
@@ -1686,6 +1742,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
         baseline = true,
+        default = true,
     },
     -- Spirit of Redemption
     [215769] = {
@@ -1693,6 +1750,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         cooldown = 120,
+        default = true,
     },
     -- Evangelism
     [472433] = {
@@ -1798,6 +1856,7 @@ addon.SpellData = {
         cooldown = 180,
         duration = 20,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Between the Eyes
     [315341] = {
@@ -1818,6 +1877,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.DEADLY,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Kingsbane
     [385627] = {
@@ -1844,6 +1904,7 @@ addon.SpellData = {
         charges = true,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Cloak of Shadows
     [31224] = {
@@ -1851,6 +1912,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         category = category.IMMUNITY,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Evasion
     [5277] = {
@@ -1858,6 +1920,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Crowd Control
     -- Kidney Shot
@@ -2018,6 +2081,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Spirit Link Totem
     [98008] = {
@@ -2026,6 +2090,16 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         spec = { specID.RESTORATION_SHAMAN },
         baseline = true, -- technically a talent, but always picked
+        default = true,
+    },
+    -- Ascendance (Restoration)
+    [114052] = {
+        class = addon.SHAMAN,
+        spec = { specID.RESTORATION_SHAMAN },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        opt_lower_cooldown = 120,
+        baseline = true,
     },
     -- Spirit Walk
     [58875] = {
@@ -2046,7 +2120,8 @@ addon.SpellData = {
     [409293] = {
         cooldown = 120,
         class = addon.SHAMAN,
-        category = category.IMMUNITY
+        category = category.IMMUNITY,
+        default = true,
     },
     -- Stone Bulwark Totem (can be reset by Totemic Recall)
     [108270] = {
@@ -2178,6 +2253,7 @@ addon.SpellData = {
         duration = 20, -- confirm early dismiss if killed
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Destruction
     -- Summon Infernal
@@ -2188,6 +2264,7 @@ addon.SpellData = {
         cooldown = 120,
         duration = 30,
         baseline = true,
+        default = true,
     },
     -- Demonology
     -- Summon Demonic Tyrant
@@ -2198,6 +2275,7 @@ addon.SpellData = {
         cooldown = 60,
         duration = 15,
         baseline = true,
+        default = true,
     },
     -- Grimoire: Felguard
     [111898] = {
@@ -2277,6 +2355,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Soul Rip
     [410598] = {
@@ -2291,6 +2370,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Demonic Circle: Teleport
     [48020] = {
@@ -2361,6 +2441,7 @@ addon.SpellData = {
         cooldown = 90,
         duration = 6,
         index = addon.SPELLPRIORITY.HIGH,
+        default = true,
     },
     -- Avatar
     [107574] = {
@@ -2491,6 +2572,7 @@ addon.SpellData = {
         spec = { specID.ARMS },
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Enraged Regeneration
     [184364] = {
@@ -2499,6 +2581,7 @@ addon.SpellData = {
         spec = { specID.FURY },
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Intervene
     [3411] = {
@@ -2704,5 +2787,6 @@ for _, spell in pairs(addon.SpellData) do
         spell.trackEvent = spell.trackEvent or parent.trackEvent;
         spell.baseline = spell.baseline or parent.baseline;
         spell.index = spell.index or parent.index;
+        spell.default = spell.default or parent.default;
     end
 end
