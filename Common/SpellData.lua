@@ -598,7 +598,6 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 120,
         trackEvent = addon.SPELL_AURA_REMOVED,
-        default = true,
     },
     -- Augmentation
     -- Breath of Eons
