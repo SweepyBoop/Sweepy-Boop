@@ -2441,6 +2441,7 @@ addon.SpellData = {
         cooldown = 90,
         duration = 6,
         index = addon.SPELLPRIORITY.HIGH,
+        default = true,
     },
     -- Avatar
     [107574] = {
