@@ -2027,6 +2027,15 @@ addon.SpellData = {
         spec = { specID.RESTORATION_SHAMAN },
         baseline = true, -- technically a talent, but always picked
     },
+    -- Ascendance (Restoration)
+    [114052] = {
+        class = addon.SHAMAN,
+        spec = { specID.RESTORATION_SHAMAN },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        opt_lower_cooldown = 120,
+        baseline = true,
+    },
     -- Spirit Walk
     [58875] = {
         cooldown = 60,
