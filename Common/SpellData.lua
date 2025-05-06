@@ -1272,6 +1272,7 @@ addon.SpellData = {
         class = addon.MONK,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Revival
     [115310] = {
@@ -1355,6 +1356,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RETRIBUTION },
+        default = true,
     },
     -- Crusade
     [231895] = {
@@ -1364,6 +1366,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.HIGH,
         spec = { specID.RETRIBUTION },
+        default = true,
     },
     -- Wake of Ashes
     [255937] = {
@@ -1408,6 +1411,7 @@ addon.SpellData = {
         category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
     -- Blessing of Protection
     [1022] = {
@@ -1416,6 +1420,7 @@ addon.SpellData = {
         category = category.IMMUNITY,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
         -- Blessing of SpellWarding
         [204018] = {
@@ -1431,6 +1436,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true,
+        default = true,
     },
         -- Lay on Hands (Empyreal Ward)
         [471195] = {
@@ -1444,6 +1450,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PALADIN },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Divine Protection (Retribution)
     [403876] = {
@@ -1452,6 +1459,7 @@ addon.SpellData = {
         spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Shield of Vengeance
     [184662] = {
@@ -1459,6 +1467,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         spec = { specID.RETRIBUTION },
         category = category.DEFENSIVE,
+        default = true,
     },
     -- Searing Glare
     [410126] = {
@@ -1584,6 +1593,7 @@ addon.SpellData = {
         spec = { specID.SHADOW },
         cooldown = 60,
         duration = 20,
+        default = true,
     },
     -- Void Torrent
     [263165] = {
@@ -1601,6 +1611,7 @@ addon.SpellData = {
         cooldown = 120, -- Reduced by Driven to Madness, cannot track reliably
         duration = addon.DURATION_DYNAMIC,
         extend = true,
+        default = true,
     },
     -- Dispel
     -- Mass Dispel
@@ -1667,6 +1678,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Pain Suppression
     [33206] = {
@@ -1677,6 +1689,7 @@ addon.SpellData = {
         charges = true,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Power Word: Barrier
     [62618] = {
@@ -1684,6 +1697,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         spec = { specID.DISCIPLINE },
         category = category.DEFENSIVE,
+        baseline = true,
     },
     -- Guardian Spirit
     [47788] = {
@@ -1693,6 +1707,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Dispersion
     [47585] = {
@@ -1702,6 +1717,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Restitution
     [211319] = {
@@ -1734,6 +1750,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
         baseline = true,
+        default = true,
     },
     -- Spirit of Redemption
     [215769] = {
@@ -1741,6 +1758,7 @@ addon.SpellData = {
         spec = { specID.HOLY_PRIEST },
         category = category.DEFENSIVE,
         cooldown = 120,
+        default = true,
     },
     -- Evangelism
     [472433] = {
@@ -1846,6 +1864,7 @@ addon.SpellData = {
         cooldown = 180,
         duration = 20,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Between the Eyes
     [315341] = {
@@ -1866,6 +1885,7 @@ addon.SpellData = {
         cooldown = 120,
         index = addon.SPELLPRIORITY.DEADLY,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Kingsbane
     [385627] = {
@@ -1892,6 +1912,7 @@ addon.SpellData = {
         charges = true,
         category = category.DEFENSIVE,
         baseline = true,
+        default = true,
     },
     -- Cloak of Shadows
     [31224] = {
@@ -1899,6 +1920,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         category = category.IMMUNITY,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Evasion
     [5277] = {
@@ -1906,6 +1928,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         category = category.DEFENSIVE,
         baseline = true, -- technically a talent, but always picked
+        default = true,
     },
     -- Crowd Control
     -- Kidney Shot
