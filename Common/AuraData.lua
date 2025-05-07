@@ -375,6 +375,7 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.MONK,
             auras = {
                 { spellId = 353319, default = true }, -- PeaceWeaver
+                { spellId = 456499, default = true }, -- Absolute Serenity
                 { spellId = 209584, default = true }, -- Zen Focus Tea
                 { spellId = 116849, default = true }, -- Life Cocoon
                 { spellId = 125174, default = true }, -- Touch of Karma
