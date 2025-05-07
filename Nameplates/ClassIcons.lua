@@ -255,7 +255,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             if showPlayerName then
                 iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
-                iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
+                iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
             end
 
             arrowFrame.icon:SetAlpha(1);
@@ -268,7 +268,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             elseif showPlayerName then
                 arrowFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
-                arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
+                arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
             end
         end
 

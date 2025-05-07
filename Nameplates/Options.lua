@@ -257,6 +257,17 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
                 end
             },
+
+            keepHealthBar = {
+                order = 25,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_ATLAS("MainPet-HealthBarFill") .. " Keep health bar",
+                desc = "Keep Blizzard health bars while showing class icons",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
         }
     };
 
