@@ -229,7 +229,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             classColorBorder = {
                 order = 22,
                 type = "toggle",
-                width = "full",
+                width = 1.25,
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -239,8 +239,9 @@ addon.GetFriendlyNameplateOptions = function(order)
             showPlayerName = {
                 order = 23,
                 type = "toggle",
-                width = "full",
-                name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Show class-colored names under class icons",
+                width = 1.25,
+                name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Class-colored names",
+                desc = "Show class-colored names under class icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
