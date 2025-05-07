@@ -1925,7 +1925,7 @@ addon.SpellData = {
     -- Crowd Control
     -- Kidney Shot
     [408] = {
-        cooldown = 20,
+        cooldown = 30,
         class = addon.ROGUE,
         category = category.STUN,
         baseline = true,
