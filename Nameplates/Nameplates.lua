@@ -39,6 +39,8 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
         frame.unsetIgnoreParentAlpha = true;
     end
 
+    show = show or SweepyBoop.db.profile.nameplatesFriendly.keepHealthBar;
+
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
 
