@@ -229,15 +229,27 @@ addon.GetFriendlyNameplateOptions = function(order)
             classColorBorder = {
                 order = 22,
                 type = "toggle",
-                width = "full",
+                width = 1.25,
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
 
-            showCrowdControl = {
+            showPlayerName = {
                 order = 23,
+                type = "toggle",
+                width = 1.25,
+                name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Class-colored names",
+                desc = "Show class-colored names under class icons",
+                hidden = function()
+                    local config = SweepyBoop.db.profile.nameplatesFriendly;
+                    return ( not config.classIconsEnabled ) or config.keepHealthBar;
+                end
+            },
+
+            showCrowdControl = {
+                order = 24,
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",
@@ -248,25 +260,13 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             keepHealthBar = {
-                order = 24,
+                order = 25,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("MainPet-HealthBarFill") .. " Keep Blizzard health bar",
                 desc = "Keep Blizzard health bars while showing class icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-
-            showPlayerName = {
-                order = 25,
-                type = "toggle",
-                width = 1.25,
-                name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Class-colored names",
-                desc = "Show class-colored names under class icons",
-                hidden = function()
-                    local config = SweepyBoop.db.profile.nameplatesFriendly;
-                    return ( not config.classIconsEnabled ) or config.keepHealthBar;
                 end
             },
         }
