@@ -56,6 +56,7 @@ end
 local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned)
     local iconID;
     local iconCoords = {0, 1, 0, 1};
+    local iconScale = 1;
     local isSpecialIcon;
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
@@ -64,9 +65,9 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
 
     -- Hide icons but still show name
     if config.hideOutsidePvP and ( not isArena ) and ( not isBattleground ) then
-        return iconID, iconCoords, isSpecialIcon;
+        return iconID, iconCoords, iconScale, isSpecialIcon;
     elseif config.hideInBattlegrounds and isBattleground and ( not isArena ) then
-        return iconID, iconCoords, isSpecialIcon;
+        return iconID, iconCoords, iconScale, isSpecialIcon;
     end
 
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
@@ -82,6 +83,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     if isHealer and config.useHealerIcon then
         iconID = addon.ICON_ID_HEALER;
         iconCoords = addon.ICON_COORDS_HEALER;
+        iconScale = config.healerIconSize;
         isSpecialIcon = true;
     elseif ( not isHealer ) and config.showHealerOnly then
         iconID = nil;
@@ -91,11 +93,12 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
         if ( pvpClassification ~= nil ) and ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
             iconID = flagCarrierIcons[pvpClassification];
             iconCoords = {0, 1, 0, 1};
+            iconScale = config.flagCarrierIconSize;
             isSpecialIcon = true;
         end
     end
 
-    return iconID, iconCoords, isSpecialIcon;
+    return iconID, iconCoords, iconScale, isSpecialIcon;
 end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
@@ -216,7 +219,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         or ( classIconContainer.specIconID ~= specIconID )
         or ( classIconContainer.roleAssigned ~= roleAssigned )
         or ( classIconContainer.lastModified ~= config.lastModified ) then
-        local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
+        local iconID, iconCoords, iconScale, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
         local nameFrame = classIconContainer.NameFrame;
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
@@ -249,8 +252,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
-            local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
-            iconFrame:SetScale(config.classIconSize * scaleFactor);
+            iconFrame:SetScale(iconScale);
             iconFrame:ClearAllPoints();
             if showPlayerName then
                 iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
