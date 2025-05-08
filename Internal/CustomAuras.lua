@@ -11,7 +11,7 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 local checkSpellID = CreateFrame("Frame");
 checkSpellID.enabled = addon.TEST_MODE;
 
-checkSpellID.spellName = "Ancient of Lore";
+checkSpellID.spellName = "Bladestorm";
 checkSpellID:RegisterEvent(addon.UNIT_AURA);
 checkSpellID:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 checkSpellID:SetScript("OnEvent", function (self, event, unitTarget)

@@ -590,6 +590,7 @@ addon.SpellData = {
         duration = 14,
         cooldown = 120,
         extend = true, -- Animosity
+        baseline = true,
         default = true,
     },
     -- Tip the Scales
