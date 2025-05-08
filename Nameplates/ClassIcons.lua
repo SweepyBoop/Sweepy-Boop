@@ -77,6 +77,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     if config.showSpecIcons and specIconID then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
         iconID = specIconID;
         iconCoords = {0, 1, 0, 1};
+        iconScale = config.classIconSize;
     end
 
     local isHealer = ( roleAssigned == "HEALER" );
@@ -263,7 +264,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            arrowFrame:SetScale(config.classIconSize);
+            arrowFrame:SetScale(iconScale);
             arrowFrame:ClearAllPoints();
             if ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) then
                 arrowFrame:SetPoint("BOTTOM", iconFrame, "TOP", 0, -2); -- Get the arrow closer to the icon
