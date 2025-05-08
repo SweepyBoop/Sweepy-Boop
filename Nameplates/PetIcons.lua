@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local function EnsureIcon(nameplate)
     if ( not nameplate.FriendlyPetIcon ) then
-        nameplate.FriendlyPetIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+        nameplate.FriendlyPetIcon = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "BOTTOM", true);
         nameplate.FriendlyPetIcon.icon:SetTexture(addon.ICON_ID_PET);
         nameplate.FriendlyPetIcon:Hide();
     end
@@ -23,7 +23,7 @@ addon.UpdatePetIcon = function(nameplate, frame)
     local lastModifiedFriendly = config.lastModified;
     if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
         iconFrame:SetScale(config.petIconSize);
-        iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, config.classIconOffset);
+        iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, config.classIconOffset);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
     end
 

@@ -27,7 +27,7 @@ local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
 
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
-        nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+        nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "BOTTOM", true);
         nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
 
