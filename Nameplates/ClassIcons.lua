@@ -241,7 +241,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border:SetVertexColor(1, 1, 1);
             end
 
-            local showPlayerName = config.showPlayerName;
+            local showPlayerName = config.showPlayerName and ( not config.keepHealthBar );
             local offset = config.classIconOffset;
             if showPlayerName then
                 nameFrame:SetPoint("TOP", nameplate, "CENTER", 0, offset);
@@ -291,7 +291,7 @@ addon.ShowClassIcon = function (nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     local config = SweepyBoop.db.profile.nameplatesFriendly;
-    classIconContainer.NameFrame:SetShown(config.showPlayerName);
+    classIconContainer.NameFrame:SetShown(config.showPlayerName and ( not config.keepHealthBar ) );
     local style = config.classIconStyle;
     if classIconContainer.FriendlyClassIcon then
         classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW or classIconContainer.isSpecialIcon);
