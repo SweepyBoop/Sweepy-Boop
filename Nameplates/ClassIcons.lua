@@ -56,7 +56,7 @@ end
 local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned)
     local iconID;
     local iconCoords = {0, 1, 0, 1};
-    local iconScale = 1;
+    local iconScale;
     local isSpecialIcon;
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
@@ -73,6 +73,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
     iconID = addon.ICON_ID_CLASSES;
     iconCoords = CLASS_ICON_TCOORDS[class];
+    iconScale = config.classIconSize;
 
     if config.showSpecIcons and specIconID then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
         iconID = specIconID;
