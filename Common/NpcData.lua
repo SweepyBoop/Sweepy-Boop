@@ -41,6 +41,7 @@ if addon.PROJECT_MAINLINE then
         {
             classID = addon.CLASSID.MAGE,
             npcs = {
+                { npcID = 178819, name = "Ice Wall", icon = 352278, default = addon.NpcOption.Show },
                 { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide, isCritter = true },
             }
         },
