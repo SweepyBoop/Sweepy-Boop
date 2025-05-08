@@ -178,47 +178,84 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-            classIconSize = {
-                order = 18,
-                type = "range",
-                isPercent = true,
-                min = 0.5,
-                max = 2,
-                step = 0.01,
-                name = "Player size",
-                desc = "Player class icon size",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-            petIconSize = {
-                order = 19,
-                type = "range",
-                isPercent = true,
-                min = 0.5,
-                max = 2,
-                step = 0.01,
-                name = "Pet size",
-                desc = "Pet icon size",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
             classIconOffset = {
-                order = 20,
+                order = 18,
                 type = "range",
                 min = -50,
                 max = 150,
                 step = 1,
-                name = "Offset",
+                name = "Icon offset",
                 desc = "Vertical offset of class / pet icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
 
-            breaker2 = {
+            header1 = {
+                order = 19,
+                type = "header",
+                name = "Icon size",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            classIconSize = {
+                order = 20,
+                type = "range",
+                width = 0.675,
+                isPercent = true,
+                min = 0.5,
+                max = 2,
+                step = 0.01,
+                name = "Player",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            healerIconSize = {
                 order = 21,
+                type = "range",
+                width = 0.675,
+                isPercent = true,
+                min = 0.5,
+                max = 2,
+                step = 0.01,
+                name = "Healer",
+                hidden = function()
+                    local config = SweepyBoop.db.profile.nameplatesFriendly;
+                    return ( not config.classIconsEnabled ) or ( not config.useHealerIcon );
+                end
+            },
+            flagCarrierIconSize = {
+                order = 22,
+                type = "range",
+                width = 0.675,
+                isPercent = true,
+                min = 0.5,
+                max = 2,
+                step = 0.01,
+                name = "Flag carrier",
+                hidden = function()
+                    local config = SweepyBoop.db.profile.nameplatesFriendly;
+                    return ( not config.classIconsEnabled ) or ( not config.useFlagCarrierIcon ) or ( not addon.PROJECT_MAINLINE );
+                end
+            },
+            petIconSize = {
+                order = 23,
+                type = "range",
+                width = 0.675,
+                isPercent = true,
+                min = 0.5,
+                max = 2,
+                step = 0.01,
+                name = "Pet",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+
+            breaker2 = {
+                order = 24,
                 type = "header",
                 name = "",
                 hidden = function()
@@ -227,7 +264,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             classColorBorder = {
-                order = 22,
+                order = 25,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
@@ -237,7 +274,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             showPlayerName = {
-                order = 23,
+                order = 26,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Class-colored names",
@@ -249,7 +286,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             showCrowdControl = {
-                order = 24,
+                order = 27,
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",
@@ -260,7 +297,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             keepHealthBar = {
-                order = 25,
+                order = 28,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("MainPet-HealthBarFill") .. " Keep Blizzard health bar",
