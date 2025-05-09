@@ -84,13 +84,14 @@ end
 local function ShowIcon(iconID, startTime, duration)
     containerFrame = containerFrame or CreateContainerFrame();
 
-    if ( containerFrame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
-        local config = SweepyBoop.db.profile.misc;
+    local config = SweepyBoop.db.profile.misc;
+
+    if ( containerFrame.lastModified ~= config.lastModified ) then
         local scale = config.healerInCrowdControlSize / iconSize;
         containerFrame:SetScale(scale);
         containerFrame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
 
-        containerFrame.lastModified = SweepyBoop.db.profile.misc.lastModified;
+        containerFrame.lastModified = config.lastModified;
     end
 
     containerFrame.icon:SetTexture(iconID);
@@ -102,8 +103,11 @@ local function ShowIcon(iconID, startTime, duration)
         containerFrame.cooldown:Hide();
     end
 
-    containerFrame:Show();
+    if ( not containerFrame:IsShown() ) and config.healerInCrowdControlSound then
+        PlaySoundFile(569006, "master"); -- spell_uni_sonarping_01
+    end
 
+    containerFrame:Show();
 end
 
 function SweepyBoop:TestHealerInCrowdControl()
