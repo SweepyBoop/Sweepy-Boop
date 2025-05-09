@@ -1725,6 +1725,13 @@ addon.SpellData = {
         baseline = true, -- technically a talent, but always picked
         default = true,
     },
+    -- Desperate Prayer
+    [19236] = {
+        cooldown = 70,
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        baseline = true,
+    },
     -- Power Word: Barrier
     [62618] = {
         cooldown = 180,
@@ -1824,6 +1831,29 @@ addon.SpellData = {
         category = category.HEAL,
         cooldown = 12,
         priority = addon.SPELLPRIORITY.LOW,
+    },
+    -- Symbol of Hope
+    [64901] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Vampiric Embrace
+    [15286] = {
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+        baseline = true,
+    },
+    -- Divine Hymn
+    [64843] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.HEAL,
+        cooldown = 120,
+        baseline = true,
     },
     -- Disrupt
     -- Holy Ward
@@ -2185,6 +2215,14 @@ addon.SpellData = {
         opt_lower_cooldown = 135,
         class = addon.SHAMAN,
         category = category.HEAL,
+        spec = { specID.RESTORATION_SHAMAN },
+        baseline = true,
+    },
+    -- Earthen Wall Totem
+    [198838] = {
+        cooldown = 54,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
         spec = { specID.RESTORATION_SHAMAN },
         baseline = true,
     },
