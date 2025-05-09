@@ -1352,6 +1352,7 @@ addon.SpellData = {
     [122278] = {
         cooldown = 120,
         class = addon.MONK,
+        spec = { specID.BREWMASTER },
         category = category.DEFENSIVE,
     },
     -- Disrupt
