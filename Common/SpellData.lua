@@ -1536,15 +1536,15 @@ addon.SpellData = {
     [414273] = {
         cooldown = 90,
         class = addon.PALADIN,
-        category = category.DEFENSIVE,
         spec = { specID.HOLY_PALADIN },
+        category = category.DEFENSIVE,
     },
     -- Avenging Crusader
     [216331] = {
         cooldown = 60,
         class = addon.PALADIN,
-        category = category.DEFENSIVE,
         spec = { specID.HOLY_PALADIN },
+        category = category.DEFENSIVE,
     },
     -- Crowd Control
     -- Hammer of Justice
