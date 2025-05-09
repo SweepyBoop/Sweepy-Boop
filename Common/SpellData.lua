@@ -698,6 +698,13 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
+    -- Stasis
+    [370537] = {
+        class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
     -- Interrupt
     -- Quell
     [351338] = {
@@ -1325,6 +1332,26 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 30,
         trackEvent = addon.SPELL_AURA_APPLIED,
+    },
+    -- Invoke Yu'lon, the Jade Serpent
+    [322118] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Invoke Chi-Ji, the Red Crane
+    [325197] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Dampen Harm
+    [122278] = {
+        cooldown = 120,
+        class = addon.MONK,
+        category = category.DEFENSIVE,
     },
     -- Disrupt
     -- Grapple Weapon
