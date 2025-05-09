@@ -20,7 +20,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
             healerInCrowdControl = {
                 order = 2,
                 type = "toggle",
-                width = "full",
+                width = 0.675,
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Enabled",
                 set = function (info, val)
                     SweepyBoop.db.profile.misc[info[#info]] = val;
@@ -28,8 +28,17 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     SweepyBoop:SetupHealerInCrowdControl();
                 end
             },
-            healerInCrowdControlTest = {
+            healerInCrowdControlSound = {
                 order = 3,
+                type = "toggle",
+                width = 0.75,
+                name = addon.FORMAT_ATLAS("chatframe-button-icon-voicechat") .. " Play sound",
+                hidden = function ()
+                    return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                end
+            },
+            healerInCrowdControlTest = {
+                order = 4,
                 type = "execute",
                 width = "half",
                 name = "Test",
@@ -39,7 +48,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 end
             },
             healerInCrowdControlHide = {
-                order = 4,
+                order = 5,
                 type = "execute",
                 width = "half",
                 name = "Hide",
@@ -49,7 +58,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 end
             },
             newline = {
-                order = 5,
+                order = 6,
                 type = "description",
                 width = "full",
                 name = "",
@@ -58,7 +67,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 end
             },
             healerInCrowdControlSize = {
-                order = 6,
+                order = 7,
                 type = "range",
                 min = 30,
                 max = 200,
@@ -74,7 +83,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 end
             },
             healerInCrowdControlOffsetX = {
-                order = 7,
+                order = 8,
                 type = "range",
                 min = -500,
                 max = 500,
@@ -90,7 +99,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 end
             },
             healerInCrowdControlOffsetY = {
-                order = 8,
+                order = 9,
                 type = "range",
                 min = -500,
                 max = 500,
