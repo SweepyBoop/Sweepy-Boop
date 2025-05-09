@@ -200,6 +200,18 @@ addon.SpellData = {
         baseline = true,
         default = true,
     },
+    -- Death Pact
+    [48743] = {
+        class = addon.DEATHKNIGHT,
+        category = category.HEAL,
+        cooldown = 120,
+    },
+    -- Sacrificial Pact
+    [327574] = {
+        class = addon.DEATHKNIGHT,
+        category = category.HEAL,
+        cooldown = 120,
+    },
 
     -- Demon Hunter
     -- Eye Beam
