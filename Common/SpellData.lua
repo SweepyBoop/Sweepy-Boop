@@ -698,12 +698,13 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
-    -- Stasis (not accurate, cooldown starts when buff is consumed)
+    -- Stasis (after 3 casts, aura is removed and cooldown starts, before we press it again or the new aura expires / is purged)
     [370537] = {
         class = addon.EVOKER,
         spec = { specID.PRESERVATION },
         category = category.DEFENSIVE,
         cooldown = 90,
+        trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Interrupt
     -- Quell
