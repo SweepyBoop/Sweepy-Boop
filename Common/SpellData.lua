@@ -1881,7 +1881,6 @@ addon.SpellData = {
         class = addon.PRIEST,
         category = category.DEFENSIVE,
         cooldown = 90,
-        baseline = true,
     },
     -- Divine Hymn
     [64843] = {
