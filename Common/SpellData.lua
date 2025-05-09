@@ -2569,7 +2569,14 @@ addon.SpellData = {
     [236077] = {
         cooldown = 45,
         class = addon.WARRIOR,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+    },
+    -- Duel
+    [236273] = {
+        cooldown = 60,
+        class = addon.WARRIOR,
+        spec = { specID.ARMS },
+        category = category.DEFENSIVE,
     },
     -- Pummel
     [6552] = {
