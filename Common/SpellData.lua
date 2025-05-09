@@ -698,7 +698,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
-    -- Stasis
+    -- Stasis (not accurate, cooldown starts when buff is consumed)
     [370537] = {
         class = addon.EVOKER,
         spec = { specID.PRESERVATION },
