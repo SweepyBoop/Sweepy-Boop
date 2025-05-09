@@ -1105,6 +1105,13 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Mirror Image
+    [55342] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Crowd Control
     -- Ring of Frost
     [113724] = {
