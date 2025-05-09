@@ -1480,6 +1480,35 @@ addon.SpellData = {
         class = addon.PALADIN,
         category = category.DEFENSIVE,
     },
+    -- Tyr's Deliverance
+    [200652] = {
+        cooldown = 90,
+        class = addon.PALADIN,
+        category = category.HEAL,
+        spec = { specID.HOLY_PALADIN },
+        baseline = true,
+    },
+    -- Aura Mastery
+    [31821] = {
+        cooldown = 120,
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        baseline = true,
+    },
+    -- Hand of Divinity
+    [414273] = {
+        cooldown = 90,
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        spec = { specID.HOLY_PALADIN },
+    },
+    -- Avenging Crusader
+    [216331] = {
+        cooldown = 60,
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        spec = { specID.HOLY_PALADIN },
+    },
     -- Crowd Control
     -- Hammer of Justice
     [853] = {
