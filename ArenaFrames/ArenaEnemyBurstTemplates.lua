@@ -34,7 +34,6 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
 
         if spell.charges or spell.opt_charges then
             frame.Count = CreateFrame("Frame", nil, frame);
-            frame.Count:SetIgnoreParentAlpha(true);
             frame.Count:SetFrameLevel(10000);
             frame.Count:SetSize(addon.CHARGE_TEXTURE_SIZE, addon.CHARGE_TEXTURE_SIZE);
             frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT");

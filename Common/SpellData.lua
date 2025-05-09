@@ -200,6 +200,18 @@ addon.SpellData = {
         baseline = true,
         default = true,
     },
+    -- Death Pact
+    [48743] = {
+        class = addon.DEATHKNIGHT,
+        category = category.HEAL,
+        cooldown = 120,
+    },
+    -- Sacrificial Pact
+    [327574] = {
+        class = addon.DEATHKNIGHT,
+        category = category.HEAL,
+        cooldown = 120,
+    },
 
     -- Demon Hunter
     -- Eye Beam
@@ -686,6 +698,14 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
+    -- Stasis (after 3 casts, aura is removed and cooldown starts, before we press it again or the new aura expires / is purged)
+    [370537] = {
+        class = addon.EVOKER,
+        spec = { specID.PRESERVATION },
+        category = category.DEFENSIVE,
+        cooldown = 90,
+        trackEvent = addon.SPELL_AURA_REMOVED,
+    },
     -- Interrupt
     -- Quell
     [351338] = {
@@ -1093,6 +1113,13 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Mirror Image
+    [55342] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Crowd Control
     -- Ring of Frost
     [113724] = {
@@ -1307,6 +1334,27 @@ addon.SpellData = {
         cooldown = 30,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
+    -- Invoke Yu'lon, the Jade Serpent
+    [322118] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Invoke Chi-Ji, the Red Crane
+    [325197] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Dampen Harm
+    [122278] = {
+        cooldown = 120,
+        class = addon.MONK,
+        spec = { specID.BREWMASTER },
+        category = category.DEFENSIVE,
+    },
     -- Disrupt
     -- Grapple Weapon
     [233759] = {
@@ -1466,6 +1514,36 @@ addon.SpellData = {
     [410126] = {
         cooldown = 45,
         class = addon.PALADIN,
+        category = category.DEFENSIVE,
+    },
+    -- Tyr's Deliverance
+    [200652] = {
+        cooldown = 90,
+        class = addon.PALADIN,
+        spec = { specID.HOLY_PALADIN },
+        category = category.HEAL,
+        baseline = true,
+    },
+    -- Aura Mastery
+    [31821] = {
+        cooldown = 120,
+        class = addon.PALADIN,
+        spec = { specID.HOLY_PALADIN },
+        category = category.DEFENSIVE,
+        baseline = true,
+    },
+    -- Hand of Divinity
+    [414273] = {
+        cooldown = 90,
+        class = addon.PALADIN,
+        spec = { specID.HOLY_PALADIN },
+        category = category.DEFENSIVE,
+    },
+    -- Avenging Crusader
+    [216331] = {
+        cooldown = 60,
+        class = addon.PALADIN,
+        spec = { specID.HOLY_PALADIN },
         category = category.DEFENSIVE,
     },
     -- Crowd Control
@@ -1684,6 +1762,13 @@ addon.SpellData = {
         baseline = true, -- technically a talent, but always picked
         default = true,
     },
+    -- Desperate Prayer
+    [19236] = {
+        cooldown = 70,
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        baseline = true,
+    },
     -- Power Word: Barrier
     [62618] = {
         cooldown = 180,
@@ -1783,6 +1868,28 @@ addon.SpellData = {
         category = category.HEAL,
         cooldown = 12,
         priority = addon.SPELLPRIORITY.LOW,
+    },
+    -- Symbol of Hope
+    [64901] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Vampiric Embrace
+    [15286] = {
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
+    -- Divine Hymn
+    [64843] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.HEAL,
+        cooldown = 120,
+        baseline = true,
     },
     -- Disrupt
     -- Holy Ward
@@ -2144,6 +2251,14 @@ addon.SpellData = {
         opt_lower_cooldown = 135,
         class = addon.SHAMAN,
         category = category.HEAL,
+        spec = { specID.RESTORATION_SHAMAN },
+        baseline = true,
+    },
+    -- Earthen Wall Totem
+    [198838] = {
+        cooldown = 54,
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
         spec = { specID.RESTORATION_SHAMAN },
         baseline = true,
     },
@@ -2528,7 +2643,14 @@ addon.SpellData = {
     [236077] = {
         cooldown = 45,
         class = addon.WARRIOR,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+    },
+    -- Duel
+    [236273] = {
+        cooldown = 60,
+        class = addon.WARRIOR,
+        spec = { specID.ARMS },
+        category = category.DEFENSIVE,
     },
     -- Pummel
     [6552] = {
