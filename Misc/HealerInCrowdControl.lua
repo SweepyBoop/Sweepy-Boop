@@ -78,6 +78,7 @@ local function CreateContainerFrame()
         end
     end)
 
+    frame:Hide(); -- Hide initially
     return frame;
 end
 
