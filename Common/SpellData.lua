@@ -1520,14 +1520,15 @@ addon.SpellData = {
     [200652] = {
         cooldown = 90,
         class = addon.PALADIN,
-        category = category.HEAL,
         spec = { specID.HOLY_PALADIN },
+        category = category.HEAL,
         baseline = true,
     },
     -- Aura Mastery
     [31821] = {
         cooldown = 120,
         class = addon.PALADIN,
+        spec = { specID.HOLY_PALADIN },
         category = category.DEFENSIVE,
         baseline = true,
     },
