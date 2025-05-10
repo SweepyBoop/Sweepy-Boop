@@ -116,9 +116,7 @@ local function ShowIcon(spellID, startTime, duration)
     local breakers = addon.CrowdControlBreakers[spellID];
     if breakers then
         for candidate, _ in pairs(breakers) do
-            print("Checking candidate spell", candidate);
             if IsSpellKnown(candidate) or IsSpellKnown(candidate, true) then
-                print("Spell is known", candidate);
                 local cooldown = C_Spell.GetSpellCooldown(candidate);
                 if cooldown and cooldown.duration == 0 then
                     breakerSpellID = candidate;
