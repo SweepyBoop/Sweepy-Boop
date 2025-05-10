@@ -606,7 +606,7 @@ if addon.PROJECT_MAINLINE then
     breakers[32375] = { -- Mass Dispel
         [360806]  = "disorient", -- Sleep Walk
         [1513]    = "disorient", -- Scare Beast
-        [605]     = "disorient", -- Mind Control
+        --[605]     = "disorient", -- Mind Control (We can purge Mind Control, so don't show Mass Dispel for it)
         [8122]    = "disorient", -- Psychic Scream
         [118699]  = "disorient", -- Fear
         [130616]  = "disorient", -- Fear (Horrify)

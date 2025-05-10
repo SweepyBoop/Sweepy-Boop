@@ -1,4 +1,5 @@
 local _, addon = ...;
+local LCG = LibStub("LibCustomGlow-1.0");
 
 local iconSize = addon.DEFAULT_ICON_SIZE;
 local borderSize = iconSize * 1.25;
@@ -25,9 +26,11 @@ local function CreateContainerFrame()
     frame.icon:SetSize(iconSize, iconSize);
     frame.icon:SetAllPoints(frame);
 
-    frame.breakericon = frame:CreateTexture(nil, "BORDER");
+    frame.breakericon = CreateFrame("Frame", nil, frame);
     frame.breakericon:SetSize(iconSize / 1.5, iconSize / 1.5);
     frame.breakericon:SetPoint("LEFT", frame.icon, "RIGHT");
+    frame.breakericonTexture = frame.breakericon:CreateTexture(nil, "BORDER");
+    frame.breakericonTexture:SetAllPoints();
 
     frame.mask = frame:CreateMaskTexture();
     frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
@@ -113,7 +116,9 @@ local function ShowIcon(spellID, startTime, duration)
     local breakers = addon.CrowdControlBreakers[spellID];
     if breakers then
         for candidate, _ in pairs(breakers) do
-            if IsSpellKnown(candidate, true)  then
+            print("Checking candidate spell", candidate);
+            if IsSpellKnown(candidate) or IsSpellKnown(candidate, true) then
+                print("Spell is known", candidate);
                 local cooldown = C_Spell.GetSpellCooldown(candidate);
                 if cooldown and cooldown.duration == 0 then
                     breakerSpellID = candidate;
@@ -124,9 +129,11 @@ local function ShowIcon(spellID, startTime, duration)
     end
     if breakerSpellID then
         local breakerIconID = C_Spell.GetSpellTexture(breakerSpellID);
-        containerFrame.breakericon:SetTexture(breakerIconID);
+        containerFrame.breakericonTexture:SetTexture(breakerIconID);
+        LCG.ButtonGlow_Start(containerFrame.breakericon);
         containerFrame.breakericon:Show();
     else
+        LCG.ButtonGlow_Stop(containerFrame.breakericon);
         containerFrame.breakericon:Hide();
     end
 
