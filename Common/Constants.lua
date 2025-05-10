@@ -1,14 +1,37 @@
 local _, addon = ...;
-
 addon.TEST_MODE = false;
 
+addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
+addon.PROFILE_VERSION = 1.0; -- To validate export string
+
 addon.SPELLCATEGORY = {
-    DEFENSIVE = 1,
-    BURST = 2,
-    CROWDCONTROL = 3,
-    INTERRUPT = 4,
-    DISRUPT = 5,
-    DISPEL = 6,
+    IMMUNITY = 1,
+    DEFENSIVE = 2,
+    DISPEL = 3,
+    MASS_DISPEL = 4,
+    INTERRUPT = 5,
+    STUN = 6,
+    SILENCE = 7,
+    KNOCKBACK = 8,
+    CROWDCONTROL = 9,
+    BURST = 10,
+    HEAL = 11,
+    OTHERS = 12, -- Gap closers, etc.
+};
+
+addon.SPELLCATEGORY_NAME = {
+    [addon.SPELLCATEGORY.IMMUNITY] = "Immunity",
+    [addon.SPELLCATEGORY.DEFENSIVE] = "Defensive",
+    [addon.SPELLCATEGORY.DISPEL] = "Dispel",
+    [addon.SPELLCATEGORY.MASS_DISPEL] = "Mass Dispel",
+    [addon.SPELLCATEGORY.INTERRUPT] = "Interrupt",
+    [addon.SPELLCATEGORY.STUN] = "Stun",
+    [addon.SPELLCATEGORY.SILENCE] = "Silence",
+    [addon.SPELLCATEGORY.KNOCKBACK] = "Knockback",
+    [addon.SPELLCATEGORY.CROWDCONTROL] = "Crowd Control",
+    [addon.SPELLCATEGORY.BURST] = "Burst",
+    [addon.SPELLCATEGORY.HEAL] = "Heal",
+    [addon.SPELLCATEGORY.OTHERS] = "Others",
 };
 
 addon.SPELLPRIORITY = {
@@ -24,10 +47,33 @@ addon.ICON_TEMPLATE = {
 };
 
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
-    RIGHT_DOWN = 1,
-    RIGHT_UP = 2,
-    LEFT_DOWN = 3,
-    LEFT_UP = 4,
+    RIGHT = 1,
+    LEFT = 3,
+
+    CENTER = 4, -- Probably will never include this option
+};
+
+addon.STANDALONE_GROW_DIRECTION = {
+    CENTER = 1,
+    LEFT = 2,
+    RIGHT = 3,
+};
+
+addon.ICON_SET_ID = {
+    ARENA_MAIN = "Arena",
+    ARENA_SECONDARY = "ArenaSecondary",
+
+    STANDALONE_1 = "Bar 1",
+    STANDALONE_2 = "Bar 2",
+    STANDALONE_3 = "Bar 3",
+    STANDALONE_4 = "Bar 4",
+    STANDALONE_5 = "Bar 5",
+    STANDALONE_6 = "Bar 6",
+};
+
+addon.ARENA_FRAME_BARS = {
+    [addon.ICON_SET_ID.ARENA_MAIN] = true,
+    [addon.ICON_SET_ID.ARENA_SECONDARY] = true,
 };
 
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
@@ -91,16 +137,20 @@ addon.BAG_UPDATE = "BAG_UPDATE";
 addon.LOSS_OF_CONTROL_ADDED = "LOSS_OF_CONTROL_ADDED";
 addon.LOSS_OF_CONTROL_UPDATE = "LOSS_OF_CONTROL_UPDATE";
 addon.PLAYER_ENTERING_WORLD = "PLAYER_ENTERING_WORLD";
+addon.ZONE_CHANGED_NEW_AREA = "ZONE_CHANGED_NEW_AREA";
 addon.PLAYER_TARGET_CHANGED = "PLAYER_TARGET_CHANGED";
 addon.PLAYER_FOCUS_CHANGED = "PLAYER_FOCUS_CHANGED";
 addon.PLAYER_REGEN_ENABLED = "PLAYER_REGEN_ENABLED";
 addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS = "ARENA_PREP_OPPONENT_SPECIALIZATIONS";
+addon.ARENA_OPPONENT_UPDATE = "ARENA_OPPONENT_UPDATE";
+addon.PVP_MATCH_STATE_CHANGED = "PVP_MATCH_STATE_CHANGED";
 addon.PLAYER_SPECIALIZATION_CHANGED = "PLAYER_SPECIALIZATION_CHANGED";
 addon.UNIT_SPELLCAST_SUCCEEDED = "UNIT_SPELLCAST_SUCCEEDED";
 addon.UNIT_AURA = "UNIT_AURA";
 addon.UNIT_TARGET = "UNIT_TARGET";
 addon.UNIT_HEALTH = "UNIT_HEALTH";
 addon.UNIT_MAXHEALTH = "UNIT_MAXHEALTH";
+addon.UNIT_POWER_UPDATE = "UNIT_POWER_UPDATE";
 addon.UNIT_POWER_FREQUENT = "UNIT_POWER_FREQUENT";
 addon.UNIT_MAXPOWER = "UNIT_MAXPOWER";
 addon.UNIT_PET = "UNIT_PET";
@@ -124,6 +174,7 @@ addon.UNIT_DESTROYED = "UNIT_DESTROYED";
 addon.UNIT_DISSIPATES = "UNIT_DISSIPATES";
 addon.SPELL_DISPEL = "SPELL_DISPEL";
 addon.SPELL_INTERRUPT = "SPELL_INTERRUPT";
+addon.SPELL_HEAL = "SPELL_HEAL";
 addon.UPDATE_BATTLEFIELD_SCORE = "UPDATE_BATTLEFIELD_SCORE";
 addon.UNIT_FACTION = "UNIT_FACTION";
 
@@ -181,7 +232,7 @@ addon.CLASSORDER = {
     addon.CLASSID.WARRIOR,
 };
 
-addon.DEFAULT_ICON_SIZE = 35;
+addon.DEFAULT_ICON_SIZE = 36;
 addon.CHARGE_TEXTURE = "Crosshair_Recurring_32"; -- TODO: make it available for classic: https://github.com/seblindfors/WoWAtlasExtract/blob/master/README.md
 addon.CHARGE_TEXTURE_SIZE = 16;
 
@@ -228,6 +279,7 @@ addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLAS
 addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
 addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
 addon.ICON_ID_FLAG_CARRIER_NEUTRAL = addon.ICON_PATH("inv_bannerpvp_03");
+addon.ICON_ID_PVP_CURSOR = "interface/cursor/pvp";
 
 -- https://warcraft.wiki.gg/wiki/UI_escape_sequences
 addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
@@ -245,5 +297,3 @@ addon.SPELL_DESCRIPTION = {}; -- by spellId, requested via -- https://warcraft.w
 addon.PRINT = function(message)
     DEFAULT_CHAT_FRAME:AddMessage(addon.FORMAT_ATLAS("pvptalents-warmode-swords", 16) .. " |cff00c0ffSweepyBoop's PvP Helper:|r " .. message);
 end
-
-addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);

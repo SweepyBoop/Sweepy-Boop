@@ -94,5 +94,4 @@ local frame = CreateFrame("Frame");
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 frame:SetScript("OnEvent", function ()
     HideHotKeys();
-    CompactPartyFrame:SetScale(1.25);
 end)

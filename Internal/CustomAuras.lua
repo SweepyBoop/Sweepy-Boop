@@ -11,7 +11,7 @@ local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 local checkSpellID = CreateFrame("Frame");
 checkSpellID.enabled = addon.TEST_MODE;
 
-checkSpellID.spellName = "Ancient of Lore";
+checkSpellID.spellName = "Bladestorm";
 checkSpellID:RegisterEvent(addon.UNIT_AURA);
 checkSpellID:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 checkSpellID:SetScript("OnEvent", function (self, event, unitTarget)
@@ -250,42 +250,44 @@ end
 CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
 
 CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- precognition
---CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
-local manaBar = PlayerFrame_GetManaBar();
+if addon.TEST_MODE then -- Test with Rejuvenation
+    CreateAuraIcon(774, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- test with Rejuvenation
+end
 
 if ( class == addon.DRUID ) then
-    CreateAuraIcon(5215, 64, "TOP", PlayerFrame.portrait, "BOTTOM", 0, -32, 0); -- Prowl
+    CreateAuraIcon(5215, 64, "RIGHT", PlayerFrame.portrait, "LEFT", 0, 0, 0); -- Prowl
 
     -- Track at most 4 buffs with glowing icons, more than that it sort of becomes space station UI
 
     -- Common
-    CreateAuraIcon(319454, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, 0); -- Heart of the Wild
+    CreateAuraIcon(319454, 32, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0); -- Heart of the Wild
+    CreateAuraIcon(426790, 32, "BOTTOM", MultiBarBottomRightButton6, "TOP", 0, 5, nil, nil, nil, 319454); -- Call of the Elder Druid
     CreateAuraIcon(382912, 50, "TOP", MultiBarRightButton1, "BOTTOM", 0, 0, nil, nil, true); -- Well-Honed Instincts
 
     -- Restoration
-    CreateAuraIcon(392360, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 7, nil, nil, 117679); -- Reforestation
-    CreateAuraIcon(117679, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Tree of Life
-    CreateAuraIcon(473909, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 0); -- Ancient of Lore
+    CreateAuraIcon(392360, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 7, nil, nil, 117679); -- Reforestation
+    CreateAuraIcon(117679, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Tree of Life
+    CreateAuraIcon(473909, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Ancient of Lore
 
-    CreateAuraIcon(426790, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -100, nil, nil, nil, 319454); -- Call of the Elder Druid
+    
 
     -- Feral
-    CreateAuraIcon(145152, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -50, 3, nil); -- Blood Talons (max 3 stacks)
-    CreateAuraIcon(5217, 40, "TOPRIGHT", manaBar, "BOTTOM", -5, -100, 0); -- Tiger's Fury
-    CreateAuraIcon(106951, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Berserk
-    CreateAuraIcon(102543, 40, "TOPLEFT", manaBar, "BOTTOM", 5, -50, 0); -- Incarnation: Avatar of Ashamane
+    CreateAuraIcon(145152, 32, "BOTTOM", MultiBarBottomRightButton2, "TOP", 0, 5, 3, nil); -- Blood Talons (max 3 stacks)
+    CreateAuraIcon(5217, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Tiger's Fury
+    CreateAuraIcon(106951, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0); -- Berserk
+    CreateAuraIcon(102543, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0); -- Incarnation: Avatar of Ashamane
 
     if addon.TEST_MODE then -- Test all 4 icons with Rejuvenation
-        CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -50, 0);
-        CreateAuraIcon(774, 40, "TOPLEFT", manaBar, "BOTTOM", 0, -100, 0);
-        CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -50, 0); -- test with Rejuvenation
-        CreateAuraIcon(774, 40, "TOPRIGHT", manaBar, "BOTTOM", 0, -100, 0); -- test with Rejuvenation
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0);
+        CreateAuraIcon(774, 32, "BOTTOM", MultiBarBottomRightButton6, "TOP", 0, 5, 0);
     end
 elseif ( class == addon.PRIEST ) then
     --373181 Harsh Discipline
-    CreateAuraIcon(428933, 40, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 0, 3, nil, nil, nil, nil, 186723); -- Premonition of Insight
-    CreateAuraIcon(428930, 40, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 0, 0, nil, nil, nil, nil, 194509); -- Premonition of Piety
-    CreateAuraIcon(428934, 40, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 0, 0, nil, nil, nil, nil, 200390); -- Premonition of Solace
+    CreateAuraIcon(428933, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 3, nil, nil, nil, nil, 186723); -- Premonition of Insight
+    CreateAuraIcon(428930, 32, "BOTTOM", MultiBarBottomRightButton5, "TOP", 0, 5, 0, nil, nil, nil, nil, 194509); -- Premonition of Piety
+    CreateAuraIcon(428934, 32, "BOTTOM", MultiBarBottomRightButton3, "TOP", 0, 5, 0, nil, nil, nil, nil, 200390); -- Premonition of Solace
 elseif ( class == addon.PALADIN ) then
     --247676 Aura of Reckoning
     --31884 Avenging Wrath
@@ -365,6 +367,10 @@ local personalDefensiveBuffs = {
     184364, -- Enraged Regeneration
     97463, -- Rallying Cry
 };
+if addon.TEST_MODE then
+    table.insert(teamDefensiveBuffs, 774); -- test with Rejuvenation
+    table.insert(personalDefensiveBuffs, 774); -- test with Rejuvenation
+end
 
 local function ShouldDisplayDefensiveBuff(icon, aura)
     if icon.external then

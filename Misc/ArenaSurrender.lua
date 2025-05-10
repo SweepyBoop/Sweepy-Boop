@@ -1,15 +1,22 @@
 local _, addon = ...;
 
-SlashCmdList["CHAT_AFK"] = function(msg)
-    if IsActiveBattlefieldArena() and SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
-        if CanSurrenderArena() then
-            SurrenderArena();
-        elseif SweepyBoop.db.profile.misc.skipLeaveArenaConfirmation then
-            LeaveBattlefield();
+function SweepyBoop:SetupArenaSurrender()
+    SlashCmdList["CHAT_AFK"] = function(msg)
+        if IsActiveBattlefieldArena() and SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
+            if CanSurrenderArena() then
+                SurrenderArena();
+            else
+                ConfirmOrLeaveBattlefield();
+            end
         else
-            ConfirmOrLeaveBattlefield();
+            SendChatMessage(msg, "AFK");
         end
-    else
-        SendChatMessage(msg, "AFK");
+    end
+
+    SLASH_ArenaGG1 = "/gg";
+    SlashCmdList.ArenaGG = function(msg)
+        if IsActiveBattlefieldArena() and SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
+            LeaveBattlefield();
+        end
     end
 end

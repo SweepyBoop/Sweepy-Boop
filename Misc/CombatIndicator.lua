@@ -50,6 +50,7 @@ eventFrame:SetScript("OnEvent", function(_, event, unit)
 end);
 
 function SweepyBoop:SetupCombatIndicator()
+    eventFrame:UnregisterAllEvents();
     if SweepyBoop.db.profile.misc.combatIndicator then
         -- Seems like UNIT_FLAGS is only fired for units that return true for UnitPlayerControlled
         eventFrame:RegisterUnitEvent(addon.UNIT_FLAGS, "player", "target", "focus");
@@ -60,7 +61,6 @@ function SweepyBoop:SetupCombatIndicator()
             UpdateCombatIndicator(frame, unit);
         end
     else
-        eventFrame:UnregisterAllEvents();
         for _, frame in pairs(unitToFrame) do
             if frame.combatIndicator then
                 frame.combatIndicator:Hide();

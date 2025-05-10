@@ -13,6 +13,9 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 55078, default = true }, -- Blood Plague
 
                 { spellId = 45524, default = true }, -- Chains of Ice
+
+                { spellId = 356528 }, -- Necrotic Wound
+                { spellId = 390276 }, -- Rotten Touch
             }
         },
         {
@@ -55,6 +58,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 5116, default = true }, -- Concussive Shot
 
                 { spellId = 217200 }, -- Barbed Shot
+                { spellId = 468572 }, -- Black Arrow
             }
         },
         {
@@ -68,7 +72,7 @@ if addon.PROJECT_MAINLINE then
 
                 { spellId = 12654 }, -- Ignite
                 { spellId = 217694 }, -- Living Bomb
-                { spellId = 244813 }, -- Living Bomb
+                    { spellId = 244813, parent = 217694 }, -- Living Bomb
             }
         },
         {
@@ -103,8 +107,6 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 214621, default = true }, -- Schism
                 { spellId = 375901, default = true }, -- Mindgames
                 { spellId = 323716, default = true }, -- Thoughtsteal
-
-                -- { spellId = 199845 }, -- Psyflay (Psyfiend)
             }
         },
         {
@@ -133,6 +135,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 197209, default = true }, -- Lightning Rod
 
                 { spellId = 3600 }, -- Earthbind
+                { spellId = 334168 }, -- Lashing Flames
             }
         },
         {
@@ -163,6 +166,8 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 354788, default = true }, -- Slaughterhouse
 
                 { spellId = 388539 }, -- Rend
+                { spellId = 383704 }, -- Fatal Mark
+                { spellId = 397364 }, -- Thunderous Roar
             }
         },
     };
@@ -370,6 +375,7 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.MONK,
             auras = {
                 { spellId = 353319, default = true }, -- PeaceWeaver
+                { spellId = 456499, default = true }, -- Absolute Serenity
                 { spellId = 209584, default = true }, -- Zen Focus Tea
                 { spellId = 116849, default = true }, -- Life Cocoon
                 { spellId = 125174, default = true }, -- Touch of Karma
@@ -394,6 +400,7 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.PRIEST,
             auras = {
                 { spellId = 408558, default = true }, -- Phase Shift
+                { spellId = 421453, default = true }, -- Ultimate Penitence
                 { spellId = 33206, default = true }, -- Pain Suppression
                 { spellId = 47788, default = true }, -- Guardian Spirit
                 { spellId = 47585, default = true }, -- Dispersion
@@ -426,6 +433,8 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 118038, default = true }, -- Die by the Sword
                 { spellId = 184364, default = true }, -- Enraged Regeneration
                 { spellId = 23920, default = true }, -- Spell Reflection
+                { spellId = 227847, default = true }, -- Bladestorm
+                    { spellId = 446035, parent = 227847 }, -- Bladestorm
             }
         },
         {

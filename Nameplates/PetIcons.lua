@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local function EnsureIcon(nameplate)
     if ( not nameplate.FriendlyPetIcon ) then
-        nameplate.FriendlyPetIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+        nameplate.FriendlyPetIcon = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "BOTTOM", true);
         nameplate.FriendlyPetIcon.icon:SetTexture(addon.ICON_ID_PET);
         nameplate.FriendlyPetIcon:Hide();
     end
@@ -19,9 +19,11 @@ end
 addon.UpdatePetIcon = function(nameplate, frame)
     -- Only update if config changes (we have separated out pet icon from class / healer / flag carrier icons, and pet icon has fixed texture)
     local iconFrame = EnsureIcon(nameplate);
-    local lastModifiedFriendly = SweepyBoop.db.profile.nameplatesFriendly.lastModified;
+    local config = SweepyBoop.db.profile.nameplatesFriendly;
+    local lastModifiedFriendly = config.lastModified;
     if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
-        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesFriendly.petIconSize);
+        iconFrame:SetScale(config.petIconSize);
+        iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, config.classIconOffset);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
     end
 

@@ -2,6 +2,13 @@ local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
 
+local crowdControlPriority = { -- sort by remaining time, then priority
+    ["stun"] = 100,
+    ["silence"] = 90,
+    ["disorient"] = 80,
+    ["incapacitate"] = 80,
+};
+
 local PvPUnitClassification;
 local flagCarrierIcons;
 if addon.PROJECT_MAINLINE then
@@ -20,7 +27,7 @@ local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
 
     if ( not nameplate.classIconContainer.FriendlyClassIcon ) then
-        nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "CENTER", "CENTER", true);
+        nameplate.classIconContainer.FriendlyClassIcon = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "BOTTOM", true);
         nameplate.classIconContainer.FriendlyClassIcon:Hide();
     end
 
@@ -49,6 +56,7 @@ end
 local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned)
     local iconID;
     local iconCoords = {0, 1, 0, 1};
+    local iconScale;
     local isSpecialIcon;
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
@@ -57,14 +65,15 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
 
     -- Hide icons but still show name
     if config.hideOutsidePvP and ( not isArena ) and ( not isBattleground ) then
-        return iconID, iconCoords, isSpecialIcon;
+        return iconID, iconCoords, iconScale, isSpecialIcon;
     elseif config.hideInBattlegrounds and isBattleground and ( not isArena ) then
-        return iconID, iconCoords, isSpecialIcon;
+        return iconID, iconCoords, iconScale, isSpecialIcon;
     end
 
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
     iconID = addon.ICON_ID_CLASSES;
     iconCoords = CLASS_ICON_TCOORDS[class];
+    iconScale = config.classIconSize;
 
     if config.showSpecIcons and specIconID then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
         iconID = specIconID;
@@ -75,6 +84,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     if isHealer and config.useHealerIcon then
         iconID = addon.ICON_ID_HEALER;
         iconCoords = addon.ICON_COORDS_HEALER;
+        iconScale = config.healerIconSize;
         isSpecialIcon = true;
     elseif ( not isHealer ) and config.showHealerOnly then
         iconID = nil;
@@ -84,11 +94,12 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
         if ( pvpClassification ~= nil ) and ( flagCarrierIcons[pvpClassification] ) and config.useFlagCarrierIcon then
             iconID = flagCarrierIcons[pvpClassification];
             iconCoords = {0, 1, 0, 1};
+            iconScale = config.flagCarrierIconSize;
             isSpecialIcon = true;
         end
     end
 
-    return iconID, iconCoords, isSpecialIcon;
+    return iconID, iconCoords, iconScale, isSpecialIcon;
 end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
@@ -127,6 +138,62 @@ addon.UpdatePlayerName = function (nameplate, frame)
     end
 end
 
+addon.UpdateClassIconCrowdControl = function(nameplate, frame)
+    if ( not nameplate.classIconContainer ) then return end
+    local classIconContainer = nameplate.classIconContainer;
+    -- No need to update if class icon is not shown
+    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassIcon:IsShown() ) then return end
+    local iconCC = classIconContainer.FriendlyClassIcon.iconCC;
+    local cooldownCC = classIconContainer.FriendlyClassIcon.cooldownCC;
+
+    local spellID;
+    local priority = 0; -- init with a low priority
+    local duration;
+    local expirationTime;
+
+    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and UnitInParty(frame.unit) then
+        for i = 1, 40 do
+            local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
+            if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
+            if addon.DRList[auraData.spellId] then
+                local category = addon.DRList[auraData.spellId];
+                local update = false;
+                if crowdControlPriority[category] then -- Found a CC that should be shown
+                    -- No expirationTime means this aura never expires, so it should be prioritized
+                    if ( not auraData.expirationTime ) or ( expirationTime and auraData.expirationTime and auraData.expirationTime < expirationTime ) then
+                        update = true;
+                    elseif crowdControlPriority[category] > priority then -- same expirationTime, use priority as tie breaker
+                        update = true;
+                    end
+
+                    if update then
+                        priority = crowdControlPriority[category];
+                        duration = auraData.duration;
+                        expirationTime = auraData.expirationTime;
+                        spellID = auraData.spellId;
+                    end
+                end
+            end
+        end
+    end
+
+    if ( not spellID ) then
+        cooldownCC:SetCooldown(0, 0);
+        iconCC:Hide();
+    else
+        iconCC:SetTexture(C_Spell.GetSpellTexture(spellID));
+        iconCC:Show();
+
+        if duration then
+            cooldownCC:SetCooldown(expirationTime - duration, duration);
+            cooldownCC:Show();
+        else
+            cooldownCC:SetCooldown(0, 0);
+            cooldownCC:Hide();
+        end
+    end
+end
+
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
@@ -153,7 +220,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         or ( classIconContainer.specIconID ~= specIconID )
         or ( classIconContainer.roleAssigned ~= roleAssigned )
         or ( classIconContainer.lastModified ~= config.lastModified ) then
-        local iconID, iconCoords, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
+        local iconID, iconCoords, iconScale, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
         local nameFrame = classIconContainer.NameFrame;
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
@@ -178,7 +245,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border:SetVertexColor(1, 1, 1);
             end
 
-            local showPlayerName = config.showPlayerName;
+            local showPlayerName = config.showPlayerName and ( not config.keepHealthBar );
             local offset = config.classIconOffset;
             if showPlayerName then
                 nameFrame:SetPoint("TOP", nameplate, "CENTER", 0, offset);
@@ -186,26 +253,25 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
-            local scaleFactor = ( isSpecialIcon and specialIconScaleFactor ) or 1;
-            iconFrame:SetScale(config.classIconSize * scaleFactor);
+            iconFrame:SetScale(iconScale);
             iconFrame:ClearAllPoints();
             if showPlayerName then
                 iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
-                iconFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
+                iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
             end
 
             arrowFrame.icon:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            arrowFrame:SetScale(config.classIconSize);
+            arrowFrame:SetScale(iconScale);
             arrowFrame:ClearAllPoints();
             if ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) then
                 arrowFrame:SetPoint("BOTTOM", iconFrame, "TOP", 0, -2); -- Get the arrow closer to the icon
             elseif showPlayerName then
                 arrowFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
-                arrowFrame:SetPoint("CENTER", nameplate, "CENTER", 0, offset);
+                arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
             end
         end
 
@@ -228,7 +294,7 @@ addon.ShowClassIcon = function (nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     local config = SweepyBoop.db.profile.nameplatesFriendly;
-    classIconContainer.NameFrame:SetShown(config.showPlayerName);
+    classIconContainer.NameFrame:SetShown(config.showPlayerName and ( not config.keepHealthBar ) );
     local style = config.classIconStyle;
     if classIconContainer.FriendlyClassIcon then
         classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW or classIconContainer.isSpecialIcon);
@@ -238,10 +304,12 @@ addon.ShowClassIcon = function (nameplate, frame)
         if style == addon.CLASS_ICON_STYLE.ARROW then
             shouldShow = ( not classIconContainer.isSpecialIcon );
         elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW then
-            shouldShow = true;
+            shouldShow = ( UnitInBattleground("player") ~= nil );
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
+
+    addon.UpdateClassIconCrowdControl(nameplate, frame);
 end
 
 addon.HideClassIcon = function(nameplate)

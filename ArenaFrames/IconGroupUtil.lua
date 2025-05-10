@@ -1,7 +1,5 @@
 local _, addon = ...;
 
-local DEFENSIVE = addon.SPELLCATEGORY.DEFENSIVE;
-
 addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
         setPointOptions.point, setPointOptions.relativeTo, setPointOptions.relativePoint, setPointOptions.offsetX, setPointOptions.offsetY;
@@ -56,7 +54,7 @@ addon.UpdateIconGroupSetPointOptions = function (iconGroup, setPointOptions, gro
 end
 
 
-local function IconGroup_Position(group)
+addon.IconGroup_Position = function(group)
     if ( not group ) or ( #(group.active) == 0 ) then
         return;
     end
@@ -77,17 +75,14 @@ local function IconGroup_Position(group)
         local columns = ( group.columns and group.columns < numActive and group.columns ) or numActive;
         if ( i == 1 ) then
             if growDirection == "CENTER" then
-                local offsetX = (-baseIconSize-margin)*(columns-1)/2;
                 group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, 0);
             else
                 group.active[i]:SetPoint(anchor, group, anchor, 0, 0);
             end
         else
             count = count + 1;
-            local newRow = ( count >= columns )
-                or ( SweepyBoop.db.profile.arenaFrames.arenaCooldownSeparateRowForDefensive
-                    and group.active[i - 1] and group.active[i - 1].category == DEFENSIVE and group.active[i].category ~= DEFENSIVE );
-            if newRow then
+
+            if ( count >= columns ) then
                 if growDirection == "CENTER" then
                     group.active[i]:SetPoint(anchor, group, anchor, (-baseIconSize-margin)*(columns-1)/2, (baseIconSize+margin)*rows*grow);
                 else
@@ -107,28 +102,50 @@ local function IconGroup_Position(group)
     end
 end
 
-local function sortFunc(a, b)
-    if ( a.category ~= b.category ) then
-        return a.category < b.category;
+local function sortFuncArenaFrames(a, b)
+    local config = SweepyBoop.db.profile.arenaFrames.spellCatPriority;
+    local catPriorityA = config[tostring(a.category)];
+    local catPriorityB = config[tostring(b.category)];
+
+    if ( catPriorityA ~= catPriorityB ) then
+        return catPriorityA > catPriorityB;
     end
 
     if ( a.priority ~= b.priority ) then
         return a.priority < b.priority;
-    else
-        return a.timeStamp < b.timeStamp;
     end
+
+    return a.timeStamp < b.timeStamp;
+end
+
+local function sortFuncStandaloneBars(a, b)
+    return a.timeStamp < b.timeStamp;
 end
 
 addon.IconGroup_Insert = function (group, icon, index)
+    if ( not group ) then return end
+
     -- If already showing, do not need to add
-    if ( not group ) or ( icon:IsShown() ) then return end
+    if icon:IsShown() then
+        -- baseline icon needs to be added to activeMap if not already there
+        if index then
+            group.activeMap[index] = icon;
+        end
+        return;
+    end
 
     -- Re-adjust positioning if this group attaches to an arena frame, since arena frames can change position
     if group.setPointOptions then
         local options = group.setPointOptions;
-        group:ClearAllPoints();
-        group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
-        group.setPointOptions = nil; -- Don't need to do this again until updated by UpdateIconGroupSetPointOptions
+
+        -- Getting LUA errors "Couldn't find region named GladiusButtonFramearena3", is it erroring in 2v2 games?
+        -- If still not visible, delay SetPoint again
+        local relativeToFrame = _G[options.relativeTo];
+        if relativeToFrame then
+            group:ClearAllPoints();
+            group:SetPoint(options.point, options.relativeTo, options.relativePoint, options.offsetX, options.offsetY);
+            group.setPointOptions = nil; -- Don't need to do this again until updated by UpdateIconGroupSetPointOptions
+        end
     end
 
     -- Give icon a timeStamp before inserting
@@ -142,9 +159,15 @@ addon.IconGroup_Insert = function (group, icon, index)
         group.activeMap[index] = icon;
     end
 
-    table.sort(active, sortFunc);
+    if addon.ARENA_FRAME_BARS[group.iconSetID] then
+        -- Sort by category priority then time stamp
+        table.sort(active, sortFuncArenaFrames);
+    else
+        -- Sort by timeStamp only
+        table.sort(active, sortFuncStandaloneBars);
+    end
 
-    IconGroup_Position(group);
+    addon.IconGroup_Position(group);
 
     -- Reposition first, then show, to avoid new icon occluding previously shown ones.
     icon:Show();
@@ -154,8 +177,11 @@ addon.IconGroup_Insert = function (group, icon, index)
 end
 
 addon.IconGroup_Remove = function (group, icon, fade)
+    icon.started = nil;
+
     if fade then
-        icon:SetAlpha(SweepyBoop.db.profile.arenaFrames.unusedIconAlpha);
+        local alpha = addon.GetIconSetConfig(group.iconSetID).unusedIconAlpha;
+        icon:SetAlpha(alpha);
         return;
     end
 
@@ -166,8 +192,8 @@ addon.IconGroup_Remove = function (group, icon, fade)
         return;
     end
 
-    if icon.spellID then
-        group.activeMap[icon.spellID] = nil;
+    if icon.unit and icon.spellID then
+        group.activeMap[icon.unit .. "-" .. icon.spellID] = nil;
     end
 
     local active = group.active;
@@ -181,7 +207,7 @@ addon.IconGroup_Remove = function (group, icon, fade)
 
     if index then
         table.remove(active, index);
-        IconGroup_Position(group);
+        addon.IconGroup_Position(group);
     end
 end
 
@@ -211,9 +237,14 @@ addon.IconGroup_Wipe = function (group)
         if icon.duration then
             icon.duration:SetCooldown(0, 0);
         end
-        if icon.Count then
-            icon.Count:Hide(); -- Clear state from previous show
+        if icon.Count then -- Clear state from previous show
+            icon.Count.text:SetText("");
+            icon.Count:Hide();
         end
+        if icon.TargetHighlight then
+            icon.TargetHighlight:Hide();
+        end
+        icon.started = nil;
         icon:Hide();
     end
 
@@ -221,6 +252,14 @@ addon.IconGroup_Wipe = function (group)
     wipe(group.active);
     wipe(group.activeMap);
     wipe(group.npcMap);
-    group.unitGUID = nil;
-    group.unitGUIDs = {};
+    group.unitIdToGuid = {};
+    group.unitGuidToId = {};
+
+    -- For tracking special cdr
+    group.apotheosisUnits = {};
+    group.guardianSpiritSaved = {};
+    group.premonitionUnits = {};
+    group.alterTimeApplied = {};
+    group.alterTimeRemoved = {};
+    group.groveGuardianOwners = {};
 end

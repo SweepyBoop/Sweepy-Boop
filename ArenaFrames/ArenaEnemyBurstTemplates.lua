@@ -38,9 +38,10 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
             frame.Count:SetSize(addon.CHARGE_TEXTURE_SIZE, addon.CHARGE_TEXTURE_SIZE);
             frame.Count:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT");
 
-            frame.Count.tex = frame.Count:CreateTexture(nil, "OVERLAY");
-            frame.Count.tex:SetAtlas(addon.CHARGE_TEXTURE);
-            frame.Count.tex:SetAllPoints();
+            frame.Count.text = frame.Count:CreateFontString(nil, "OVERLAY", "NumberFontNormal");
+            frame.Count.text:SetPoint("CENTER", frame.Count, "CENTER");
+            frame.Count.text:SetText("");
+            frame.Count.text:SetTextColor(1, 1, 1);
 
             frame.Count:Hide();
         end
@@ -53,6 +54,7 @@ addon.CreateBurstIcon = function (unit, spellID, size, group)
     frame.duration:SetDrawBling(false);
     frame.duration:SetDrawSwipe(true);
     frame.duration:SetReverse(true);
+    frame.duration.noCooldownCount = true;
     frame.duration:SetAlpha(0);
 
     frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
@@ -76,6 +78,8 @@ local function SetBurstDuration(icon, startTime, duration)
 end
 
 addon.StartBurstIcon = function (icon)
+    icon:SetAlpha(1); -- Set to used alpha once glow ends
+
     local spell = icon.spellInfo;
     local timers = icon.timers;
     local info = icon.info;
@@ -84,14 +88,14 @@ addon.StartBurstIcon = function (icon)
         table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
-    if spell.charges and #(timers) < 2 then
+    if info.charges and #(timers) < 2 then -- take from dynamic icon info
         table.insert(timers, {start = 0, duration = 0, finish = 0});
     end
 
     -- If there is a cooldown, start the cooldown timer
     if icon.cooldown then
         -- Update opt_lower_cooldown
-        if icon:IsShown() and spell.opt_lower_cooldown then
+        if icon:IsShown() and icon.started and spell.opt_lower_cooldown then
             info.cooldown = spell.opt_lower_cooldown;
         end
 
@@ -100,15 +104,18 @@ addon.StartBurstIcon = function (icon)
 
         -- Check which one should be used
         local index = addon.CheckTimerToStart(timers);
+        --print("Use timers", index);
         timers[index].start = now;
         timers[index].duration = info.cooldown;
         timers[index].finish = now + info.cooldown;
         -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
         -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
         if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
+            --print("Pause timers[2]");
             timers[2].finish = math.huge;
         elseif ( index == 2 ) then
             -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
+            --print("Pause timers[2]");
             timers[2].finish = math.huge;
         end
 
@@ -139,7 +146,7 @@ addon.StartBurstIcon = function (icon)
     end
 
     if icon.group then
-        addon.IconGroup_Insert(icon:GetParent(), icon, icon.spellID);
+        addon.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
     end
 end
 

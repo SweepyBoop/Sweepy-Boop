@@ -93,7 +93,7 @@ function SweepyBoop:SetupHealerIndicator()
     frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     frame:SetScript("OnEvent", function ()
-        if ( not SweepyBoop.db.profile.arenaFrames.healerIndicator ) or ( not ( Gladius or sArena ) ) then
+        if ( not SweepyBoop.db.profile.misc.healerIndicator ) or ( not ( Gladius or sArena ) ) then -- take away the option, always enabled
             HideHealerIndicator();
             return;
         end

@@ -1,22 +1,61 @@
 # SweepyBoop's PvP Helper
 A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to-set-up</strong></span> addon to enhance arena gameplay with <span style="color:#36f; font-style:italic"><strong>minimal changes to original WoW UI</strong></span>.
 
-Features include:
+<span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for support and discussion on PvP addon / UI</strong></span>.
+
+Addon features include:
+- Advanced arena cooldown tracking: enemy cooldown icons attached to each opponent + up to 6 standalone bars that track all opponents. These icons are highly accurate including
+  - Cooldown reduction: 4s reduction from Mage's succesful Counterspell (similar with Solar Beam); Holy Word: Chastise cooldown reduction, even including the extra reduction during Apotheosis; Shifting Power cooldown reduction, that is accurate even if Shifting Power was interrupted; Combustion cd reduction from Kindling; cooldown reduction from Premonition, etc.
+  - Per-spec cooldown tracking, e.g., Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec, Outlaw Rogue has 90 Sec Blind instead of 120 Sec
+  - Accurate cooldown timer for Guardian Spirit (starts with 3 min cooldown and updates to 1 min if it didn't proc)
+  - Lower cooldown detection: e.g., if a Shadow Priest is playing 30 Sec Silence
 - Friendly player / pet icons: replace friendly nameplates with class icons with target highlight, making it much easier to track teammates' positioning without adding clutter on the screen
 - Enemy nameplates: enemy player spec (healer) icons; pulsing totem indicators; customize which enemy units to hide / show; filter auras by whitelists; hide beast master hunters' secondary pets
-- Arena offensive & defensive cooldown tracking: cooldown timers attached to each arena frame that are more advanced and accurate, factoring in cooldown reduction (such as combustion)
-- Raid frames: sort raid frames in arenas; show real PvP aggro highlight on raid frames
+- Raid frames: show real PvP aggro highlight on raid frames; Restoration Druid HoT helper to glow Lifebloom during pandemic window and fade out Cenarion Ward before the actual healing procs
 - Misc quality-of-life improvements: queue timer with alert sounds, healer in CC alert, /afk surrender in arena, dampen display, and more
 
-<span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for help and discussion on PvP addon / UI</strong></span>.
-
 If you encounter any [issues](https://github.com/SweepyBoop/Sweepy-Boop/issues/new) or have [feature requests](https://github.com/SweepyBoop/Sweepy-Boop/issues/new).
-
-There might be conflicts with other nameplate addons (Plater, Threat Plates, BetterBlizzPlates), but this addon's got every essential nameplate element for PvP, thus you shouldn't need another full nameplate addon. If there are specific features missing from my addon, I'd be happy to fill in the feature gap.
 
 Type **/sb** in game to bring up the options panel. Default settings should work great out of the box, though each module can be toggled on/off and customized.
 
 <span style="color:#36f; font-style:italic"><strong>If you like my addon, please introduce it to your friends who play PvP!</strong></span> I'm really hoping to bring more people to (or back to) PvP with my work :)
+
+## Advanced arena cooldown tracking
+Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics in the game, e.g.,
+- Mage Counterspell cooldown is reduced by 4 Sec if they successfully landed the interrupt (similar with Solar Beam)
+- Mage Shifting Power reduces the cooldown of all their abilities; this is accurate even if Shifting Power was interrupted
+- Per-spec cooldown tracking, e.g., Devastation / Augmentation Evokers have 20 Sec Quell instead of 40 Sec, Outlaw Rogue has 90 Sec Blind instead of 120 Sec
+- Calculates ability charges more accurately, and displays them the same way you would see on your action bars
+- Accurate cooldown timer for Guardian Spirit (starts with 3 min cooldown and updates to 1 min if it didn't proc)
+- Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
+
+It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
+
+![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
+
+(Counterspell missed, cooldown is 24 Sec)
+
+![Interrupt successful](https://github.com/user-attachments/assets/2dc4970c-07e9-490b-9779-cfb1edd4871d)
+
+(Counterspell landed, cooldown becomes 20 Sec!)
+
+![Accurate shimmer cooldown](https://github.com/user-attachments/assets/122d5e3f-76bc-4497-8ab4-c60a0670bfd7)
+
+(Shimmer cooldown reduction from Alter Time and Shifting Power)
+
+![Updated charge display](https://github.com/user-attachments/assets/9f30a129-0fd7-426e-84fd-e1feb1d8f61b)
+
+(Ability charge display as you would see on the action bar)
+
+![Unused icon alpha](https://github.com/user-attachments/assets/f85b4bdd-123b-4d3d-a784-f600f3d3d6d3) ![Used icon alpha](https://github.com/user-attachments/assets/2a4c82f6-2d4c-43c8-9ab6-082904f3cfd3)
+
+(Icons fade out when off cooldown vs. fade out when on cooldown)
+
+Players can have 2 per-opponent bars attached to the corresponding arena opponent, and up to 6 standalone bars that track all opponents:
+
+![Arena cooldowns](https://github.com/user-attachments/assets/c006da9b-6207-41bb-8588-35d6988c2f60)
+
+The arena frame groups will anchor to the first arena frame addon found, if none is found they will anchor to Blizzard default arena frames.
 
 ## Friendly player / pet icons
 
@@ -27,10 +66,6 @@ Type **/sb** in game to bring up the options panel. Default settings should work
 ![Arena Friendly Markers Thin](https://github.com/user-attachments/assets/0fd80425-b217-43ed-81af-beb7c7f2c3d7)
 
 (Class-colored arrow style with player names)
-
-![ClassIcons](https://github.com/user-attachments/assets/2fcdfdd5-f853-4288-b33b-62beba4ca0d4)
-
-(In-game class icon style with plain border and no player names)
 
 Replace nameplates of friendly players and their primary pets with class / healer / pet icons.
 
@@ -78,10 +113,6 @@ While in arenas / battlegrounds, customize which non-player enemy units to show,
 - Option to highlight chosen units with an animating icon!
 
 
-Players can customize which units to hide / show / highlight:
-
-![Nameplate filter](https://github.com/user-attachments/assets/d19f8f3f-ac53-476a-afb9-acb10b1246b2)
-
 ## Aura filter on enemy nameplates
 ![Auras on enemy nameplates](https://github.com/user-attachments/assets/0124adf6-6fe9-4d40-853f-4f0ed2a27f75)
 
@@ -95,27 +126,6 @@ Auras are neatly organized into debuff and buff rows:
 
 Bonus: racial crowd controls are not shown by Blizzard on enemy nameplates, this module also fixes that.
 
-## Arena enemy offensive/defensive cooldown tracking
-![image](https://github.com/user-attachments/assets/7e7a7368-84c6-4eb7-ac46-c69eb0f73ce0)
-
-A set of icons attached to (corresponding) arena enemy frames, which is very close to the AWC UI.
-
-This module comes with a few key features:
-- Glows when spell is active, and shows cooldown timer otherwise
-- Sorts icons by priority/threat, e.g., on an Assassination Rogue, Deathmark will always show before other icons
-- Cooldown reduction: for instance, Fury Warrior's Relentlessness cooldown reduced by spending rage, Fire Mage Combustion cooldown reduced by crit damage
-
-This module is designed to give you **a quick overview** of
-- Which enemy player is bursting (so you can peel accordingly if needed)
-- Which enemy player(s) ran out of defensive options (thus would be the ideal kill target for next go)
-
-[Here is my Twitch clip of the cooldown tracking module in action!](https://github.com/user-attachments/assets/c4438f23-2e91-415d-9da5-f2860b727131)
-
-**Note**
-- This module supports all major arena frames, including Gladius, GladiusEx, sArena and built-in WoW arena frames
-- This module tracks damage offensives and defensives, and players can fully customize which cooldowns to track
-
-![Cooldown tracking spell list](https://github.com/user-attachments/assets/b379bf63-861f-4c85-adba-92654df9a193)
 
 ## Arena nameplate numbers & enemy player spec icons
 ![Screenshot 2025-01-05 101115](https://github.com/user-attachments/assets/fd7731af-13ed-48c6-a1c3-bbef63a70847)
@@ -151,8 +161,9 @@ On Blizzard raid frames:
 Timer text color changes to yellow at 20s mark, then red at 10s mark, with an alarm clock sound alert.
 
 ### Healer in crowd control reminder
-![Healer in CC](https://github.com/user-attachments/assets/4dc581ba-d65f-4ea8-9152-83da224904c8)
+![Healer in CC alert Small](https://github.com/user-attachments/assets/2adcb402-b41e-492f-8ef3-487c16b1279a)
 
+An alert when friendly healer is crowd controlled in arena, and a glowing icon next to it if there is an ability currently available to remove that crowd control.
 
 ### Combat indicator on unit frames
 ![Combat Indicator](https://github.com/user-attachments/assets/59fc92fc-9a0f-4f97-ad8e-c07bacc5a3cf)
