@@ -144,13 +144,26 @@ local function ShowIcon(spellID, startTime, duration)
     containerFrame:Show();
 end
 
+local class = addon.GetUnitClass("player");
+local testIcons = {
+    [addon.DRUID] = 51514, -- Hex
+    [addon.EVOKER] = 51514, -- Hex
+    [addon.HUNTER] = 605, -- Mind Control
+    [addon.MAGE] = 51514, -- Hex
+    [addon.MONK] = 356727, -- Spider Venom
+    [addon.PALADIN] = 356727, -- Spider Venom
+    [addon.PRIEST] = 605, -- Mind Control
+    [addon.SHAMAN] = 8122, -- Psychic Scream
+};
+local testSpellID = testIcons[class] or 118; -- Polymorph
+
 function SweepyBoop:TestHealerInCrowdControl()
     if IsInInstance() then
         addon.PRINT("Cannot run textest mode inside an instance");
         return;
     end
 
-    ShowIcon(118, GetTime(), 8); -- https://www.wowhead.com/spell=118/polymorph
+    ShowIcon(testSpellID, GetTime(), 8);
     isInTest = true;
 end
 

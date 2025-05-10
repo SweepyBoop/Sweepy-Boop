@@ -478,6 +478,10 @@ if addon.PROJECT_MAINLINE then
         [210141]  = "stun", -- Zombie Explosion (Disease)
     };
 
+    breakers[19801] = { -- Tranqulizer Shot
+        [605]     = "disorient", -- Mind Control
+    };
+
     breakers[475] = { -- Remove Curse
         [51514]   = "incapacitate", -- Hex
         [196942]  = "incapacitate", -- Hex (Voodoo Totem)
