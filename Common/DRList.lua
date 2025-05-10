@@ -21,6 +21,7 @@ if addon.PROJECT_MAINLINE then
         [118699]  = "disorient", -- Fear
         [130616]  = "disorient", -- Fear (Horrify)
         [5484]    = "disorient", -- Howl of Terror
+        [353084]  = "disorient", -- Ring of Fire
         [261589]  = "disorient", -- Seduction (Grimoire of Sacrifice)
         [6358]    = "disorient", -- Seduction (Succubus)
         [5246]    = "disorient", -- Intimidating Shout
@@ -144,7 +145,7 @@ if addon.PROJECT_MAINLINE then
         [355689]  = "root", -- Landslide
         [393456]  = "root", -- Entrapment (Tar Trap)
         [162480]  = "root", -- Steel Trap
-        --      [190927]  = "root", -- Harpoon (has no DR)
+--      [190927]  = "root", -- Harpoon (has no DR)
         [212638]  = "root", -- Tracker's Net
         [201158]  = "root", -- Super Sticky Tar
         [122]     = "root", -- Frost Nova
@@ -170,7 +171,7 @@ if addon.PROJECT_MAINLINE then
         [47476]   = "silence", -- Strangulate
         [374776]  = "silence", -- Tightening Grasp
         [204490]  = "silence", -- Sigil of Silence
-        --      [78675]   = "silence", -- Solar Beam (has no DR)
+--      [78675]   = "silence", -- Solar Beam (has no DR)
         [410065]  = "silence", -- Reactive Resin
         [202933]  = "silence", -- Spider Sting
         [356727]  = "silence", -- Spider Venom
