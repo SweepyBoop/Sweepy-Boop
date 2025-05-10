@@ -764,13 +764,16 @@ if addon.PROJECT_MAINLINE then
         [15487]   = "silence", -- Silence
     };
 
+    addon.CrowdControlBreakers = {};
+
     -- write logic to fill addon.CrowdControlBreakers, e.g.,
     -- given breakers[123] = 456, fill addon.CrowdControlBreakers[456][123] = true
     for breaker, spells in pairs(breakers) do
         if type(spells) == "table" then
-            for _, spell in ipairs(spells) do
-                addon.CrowdControlBreakers[spell] = addon.CrowdControlBreakers[spell] or {};
-                addon.CrowdControlBreakers[spell][breaker] = true;
+            for spellID, _ in pairs(spells) do
+                addon.CrowdControlBreakers[spellID] = addon.CrowdControlBreakers[spellID] or {};
+                addon.CrowdControlBreakers[spellID][breaker] = true;
+                --print("Spell", spellID, "can be broken by", breaker);
             end
         end
     end

@@ -109,6 +109,27 @@ local function ShowIcon(spellID, startTime, duration)
         containerFrame.cooldown:Hide();
     end
 
+    local breakerSpellID;
+    local breakers = addon.CrowdControlBreakers[spellID];
+    if breakers then
+        for candidate, _ in pairs(breakers) do
+            if IsSpellKnown(candidate, true)  then
+                local cooldown = C_Spell.GetSpellCooldown(candidate);
+                if cooldown and cooldown.duration == 0 then
+                    breakerSpellID = candidate;
+                    break;
+                end
+            end
+        end
+    end
+    if breakerSpellID then
+        local breakerIconID = C_Spell.GetSpellTexture(breakerSpellID);
+        containerFrame.breakericon:SetTexture(breakerIconID);
+        containerFrame.breakericon:Show();
+    else
+        containerFrame.breakericon:Hide();
+    end
+
     if ( not containerFrame:IsShown() ) and config.healerInCrowdControlSound then
         PlaySoundFile(569006, "master"); -- spell_uni_sonarping_01
     end
