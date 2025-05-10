@@ -101,7 +101,6 @@ local function ShowIcon(spellID, startTime, duration)
     end
 
     containerFrame.icon:SetTexture(iconID);
-    containerFrame.breakericon:SetTexture(iconID);
     if duration then
         containerFrame.cooldown:SetCooldown(startTime, duration);
         containerFrame.cooldown:Show();
