@@ -25,6 +25,10 @@ local function CreateContainerFrame()
     frame.icon:SetSize(iconSize, iconSize);
     frame.icon:SetAllPoints(frame);
 
+    frame.breakericon = frame:CreateTexture(nil, "BORDER");
+    frame.breakericon:SetSize(iconSize / 1.5, iconSize / 1.5);
+    frame.breakericon:SetPoint("LEFT", frame.icon, "RIGHT");
+
     frame.mask = frame:CreateMaskTexture();
     frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
     frame.mask:SetSize(iconSize, iconSize);
@@ -82,8 +86,9 @@ local function CreateContainerFrame()
     return frame;
 end
 
-local function ShowIcon(iconID, startTime, duration)
+local function ShowIcon(spellID, startTime, duration)
     containerFrame = containerFrame or CreateContainerFrame();
+    local iconID = C_Spell.GetSpellTexture(spellID);
 
     local config = SweepyBoop.db.profile.misc;
 
@@ -96,6 +101,7 @@ local function ShowIcon(iconID, startTime, duration)
     end
 
     containerFrame.icon:SetTexture(iconID);
+    containerFrame.breakericon:SetTexture(iconID);
     if duration then
         containerFrame.cooldown:SetCooldown(startTime, duration);
         containerFrame.cooldown:Show();
@@ -117,7 +123,7 @@ function SweepyBoop:TestHealerInCrowdControl()
         return;
     end
 
-    ShowIcon(addon.ICON_PATH("spell_nature_polymorph"), GetTime(), 8);
+    ShowIcon(118, GetTime(), 8); -- https://www.wowhead.com/spell=118/polymorph
     isInTest = true;
 end
 
@@ -196,7 +202,7 @@ function SweepyBoop:SetupHealerInCrowdControl()
                 if ( not spellID ) then -- No CC found, hide
                     HideIcon(containerFrame);
                 else
-                    ShowIcon(C_Spell.GetSpellTexture(spellID), duration and (expirationTime - duration), duration);
+                    ShowIcon(spellID, duration and (expirationTime - duration), duration);
                 end
             end
         end)
