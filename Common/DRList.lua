@@ -507,8 +507,6 @@ if addon.PROJECT_MAINLINE then
         [130616]  = "disorient", -- Fear (Horrify)
         [5484]    = "disorient", -- Howl of Terror
         [5246]    = "disorient", -- Intimidating Shout
-        [316593]  = "disorient", -- Intimidating Shout (Menace Main Target)
-        [316595]  = "disorient", -- Intimidating Shout (Menace Other Targets)
         [210141]  = "stun", -- Zombie Explosion
         [377048]  = "stun", -- Absolute Zero (Breath of Sindragosa)
         [108194]  = "stun", -- Asphyxiate (Unholy)
@@ -594,5 +592,186 @@ if addon.PROJECT_MAINLINE then
         [20549]   = "stun", -- War Stomp (Racial, Tauren)
         [255723]  = "stun", -- Bull Rush (Racial, Highmountain Tauren)
         [287712]  = { "stun", "knockback" }, -- Haymaker (Racial, Kul Tiran)
+        [1330]    = "silence", -- Garrote
     };
+
+    breakers[213634] = { -- Purify Disease
+        [210141]  = "stun", -- Zombie Explosion (Disease)
+    };
+
+    breakers[528] = { -- Dispel Magic
+        [605]     = "disorient", -- Mind Control
+    };
+
+    breakers[32375] = { -- Mass Dispel
+        [360806]  = "disorient", -- Sleep Walk
+        [1513]    = "disorient", -- Scare Beast
+        [605]     = "disorient", -- Mind Control
+        [8122]    = "disorient", -- Psychic Scream
+        [118699]  = "disorient", -- Fear
+        [130616]  = "disorient", -- Fear (Horrify)
+        [5484]    = "disorient", -- Howl of Terror
+        [353084]  = "disorient", -- Ring of Fire
+        [261589]  = "disorient", -- Seduction (Grimoire of Sacrifice)
+        [6358]    = "disorient", -- Seduction (Succubus)
+        [217832]  = "incapacitate", -- Imprison
+        [2637]    = "incapacitate", -- Hibernate
+        [3355]    = "incapacitate", -- Freezing Trap
+        [383121]  = "incapacitate", -- Mass Polymorph
+        [118]     = "incapacitate", -- Polymorph
+        [28271]   = "incapacitate", -- Polymorph (Turtle)
+        [28272]   = "incapacitate", -- Polymorph (Pig)
+        [61025]   = "incapacitate", -- Polymorph (Snake)
+        [61305]   = "incapacitate", -- Polymorph (Black Cat)
+        [61780]   = "incapacitate", -- Polymorph (Turkey)
+        [61721]   = "incapacitate", -- Polymorph (Rabbit)
+        [126819]  = "incapacitate", -- Polymorph (Porcupine)
+        [161353]  = "incapacitate", -- Polymorph (Polar Bear Cub)
+        [161354]  = "incapacitate", -- Polymorph (Monkey)
+        [161355]  = "incapacitate", -- Polymorph (Penguin)
+        [161372]  = "incapacitate", -- Polymorph (Peacock)
+        [277787]  = "incapacitate", -- Polymorph (Baby Direhorn)
+        [277792]  = "incapacitate", -- Polymorph (Bumblebee)
+        [321395]  = "incapacitate", -- Polymorph (Mawrat)
+        [391622]  = "incapacitate", -- Polymorph (Duck)
+        [460396]  = "incapacitate", -- Polymorph (Mosswool)
+        [461489]  = "incapacitate", -- Polymorph (Mosswool) 2
+        [82691]   = "incapacitate", -- Ring of Frost
+        [20066]   = "incapacitate", -- Repentance
+        [9484]    = "incapacitate", -- Shackle Undead
+        [6789]    = "incapacitate", -- Mortal Coil
+        [211881]  = "stun", -- Fel Eruption
+        [853]     = "stun", -- Hammer of Justice
+        [64044]   = "stun", -- Psychic Horror
+        [15487]   = "silence", -- Silence
+
+        -- Extra compared to Reverse Magic
+        [33786]   = "disorient", -- Cyclone
+        [203337]  = "incapacitate", -- Freezing Trap (Honor talent)
+        [78675]   = "silence", -- Solar Beam (has no DR)
+    };
+
+    breakers[370] = { -- Purge
+        [605]     = "disorient", -- Mind Control
+    };
+
+    breakers[8143] = { -- Tremor Totem
+        [360806]  = "disorient", -- Sleep Walk
+        [1513]    = "disorient", -- Scare Beast
+        [8122]    = "disorient", -- Psychic Scream
+        [118699]  = "disorient", -- Fear
+        [130616]  = "disorient", -- Fear (Horrify)
+        [5484]    = "disorient", -- Howl of Terror
+        [5246]    = "disorient", -- Intimidating Shout
+    };
+
+    breakers[51886] = { -- Cleanse Spirit
+        [51514]   = "incapacitate", -- Hex
+        [196942]  = "incapacitate", -- Hex (Voodoo Totem)
+        [210873]  = "incapacitate", -- Hex (Raptor)
+        [211004]  = "incapacitate", -- Hex (Spider)
+        [211010]  = "incapacitate", -- Hex (Snake)
+        [211015]  = "incapacitate", -- Hex (Cockroach)
+        [269352]  = "incapacitate", -- Hex (Skeletal Hatchling)
+        [309328]  = "incapacitate", -- Hex (Living Honey)
+        [277778]  = "incapacitate", -- Hex (Zandalari Tendonripper)
+        [277784]  = "incapacitate", -- Hex (Wicker Mongrel)
+    };
+
+    breakers[119905] = { -- Singe Magic
+        [360806]  = "disorient", -- Sleep Walk
+        [1513]    = "disorient", -- Scare Beast
+        [605]     = "disorient", -- Mind Control
+        [8122]    = "disorient", -- Psychic Scream
+        [118699]  = "disorient", -- Fear
+        [130616]  = "disorient", -- Fear (Horrify)
+        [5484]    = "disorient", -- Howl of Terror
+        [353084]  = "disorient", -- Ring of Fire
+        [261589]  = "disorient", -- Seduction (Grimoire of Sacrifice)
+        [6358]    = "disorient", -- Seduction (Succubus)
+        [217832]  = "incapacitate", -- Imprison
+        [2637]    = "incapacitate", -- Hibernate
+        [3355]    = "incapacitate", -- Freezing Trap
+        [383121]  = "incapacitate", -- Mass Polymorph
+        [118]     = "incapacitate", -- Polymorph
+        [28271]   = "incapacitate", -- Polymorph (Turtle)
+        [28272]   = "incapacitate", -- Polymorph (Pig)
+        [61025]   = "incapacitate", -- Polymorph (Snake)
+        [61305]   = "incapacitate", -- Polymorph (Black Cat)
+        [61780]   = "incapacitate", -- Polymorph (Turkey)
+        [61721]   = "incapacitate", -- Polymorph (Rabbit)
+        [126819]  = "incapacitate", -- Polymorph (Porcupine)
+        [161353]  = "incapacitate", -- Polymorph (Polar Bear Cub)
+        [161354]  = "incapacitate", -- Polymorph (Monkey)
+        [161355]  = "incapacitate", -- Polymorph (Penguin)
+        [161372]  = "incapacitate", -- Polymorph (Peacock)
+        [277787]  = "incapacitate", -- Polymorph (Baby Direhorn)
+        [277792]  = "incapacitate", -- Polymorph (Bumblebee)
+        [321395]  = "incapacitate", -- Polymorph (Mawrat)
+        [391622]  = "incapacitate", -- Polymorph (Duck)
+        [460396]  = "incapacitate", -- Polymorph (Mosswool)
+        [461489]  = "incapacitate", -- Polymorph (Mosswool) 2
+        [82691]   = "incapacitate", -- Ring of Frost
+        [20066]   = "incapacitate", -- Repentance
+        [9484]    = "incapacitate", -- Shackle Undead
+        [6789]    = "incapacitate", -- Mortal Coil
+        [211881]  = "stun", -- Fel Eruption
+        [853]     = "stun", -- Hammer of Justice
+        [64044]   = "stun", -- Psychic Horror
+        [15487]   = "silence", -- Silence
+    };
+
+    breakers[132411] = { -- Singe Magic (Grimoire of Sacrifice)
+        [360806]  = "disorient", -- Sleep Walk
+        [1513]    = "disorient", -- Scare Beast
+        [605]     = "disorient", -- Mind Control
+        [8122]    = "disorient", -- Psychic Scream
+        [118699]  = "disorient", -- Fear
+        [130616]  = "disorient", -- Fear (Horrify)
+        [5484]    = "disorient", -- Howl of Terror
+        [353084]  = "disorient", -- Ring of Fire
+        [261589]  = "disorient", -- Seduction (Grimoire of Sacrifice)
+        [6358]    = "disorient", -- Seduction (Succubus)
+        [217832]  = "incapacitate", -- Imprison
+        [2637]    = "incapacitate", -- Hibernate
+        [3355]    = "incapacitate", -- Freezing Trap
+        [383121]  = "incapacitate", -- Mass Polymorph
+        [118]     = "incapacitate", -- Polymorph
+        [28271]   = "incapacitate", -- Polymorph (Turtle)
+        [28272]   = "incapacitate", -- Polymorph (Pig)
+        [61025]   = "incapacitate", -- Polymorph (Snake)
+        [61305]   = "incapacitate", -- Polymorph (Black Cat)
+        [61780]   = "incapacitate", -- Polymorph (Turkey)
+        [61721]   = "incapacitate", -- Polymorph (Rabbit)
+        [126819]  = "incapacitate", -- Polymorph (Porcupine)
+        [161353]  = "incapacitate", -- Polymorph (Polar Bear Cub)
+        [161354]  = "incapacitate", -- Polymorph (Monkey)
+        [161355]  = "incapacitate", -- Polymorph (Penguin)
+        [161372]  = "incapacitate", -- Polymorph (Peacock)
+        [277787]  = "incapacitate", -- Polymorph (Baby Direhorn)
+        [277792]  = "incapacitate", -- Polymorph (Bumblebee)
+        [321395]  = "incapacitate", -- Polymorph (Mawrat)
+        [391622]  = "incapacitate", -- Polymorph (Duck)
+        [460396]  = "incapacitate", -- Polymorph (Mosswool)
+        [461489]  = "incapacitate", -- Polymorph (Mosswool) 2
+        [82691]   = "incapacitate", -- Ring of Frost
+        [20066]   = "incapacitate", -- Repentance
+        [9484]    = "incapacitate", -- Shackle Undead
+        [6789]    = "incapacitate", -- Mortal Coil
+        [211881]  = "stun", -- Fel Eruption
+        [853]     = "stun", -- Hammer of Justice
+        [64044]   = "stun", -- Psychic Horror
+        [15487]   = "silence", -- Silence
+    };
+
+    -- write logic to fill addon.CrowdControlBreakers, e.g.,
+    -- given breakers[123] = 456, fill addon.CrowdControlBreakers[456][123] = true
+    for breaker, spells in pairs(breakers) do
+        if type(spells) == "table" then
+            for _, spell in ipairs(spells) do
+                addon.CrowdControlBreakers[spell] = addon.CrowdControlBreakers[spell] or {};
+                addon.CrowdControlBreakers[spell][breaker] = true;
+            end
+        end
+    end
 end
