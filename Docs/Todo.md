@@ -26,3 +26,7 @@
 - [ ] Leverage GetUnitChargedPowerPoints(unit) to detect outlaw rogue cd reduction
 
 - [ ] Reclone timer: use "UI-LFG-DeclineMark" atlas, C_Spell.GetSpellInfo("Cyclone") already considers current haste
+
+- [x] Investigate the way to check if a spell is known: IsSpellKnown
+
+- [x] Investigate the way to check if a spell is on cooldown: C_Spell.GetSpellCooldown
