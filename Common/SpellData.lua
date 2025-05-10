@@ -2654,7 +2654,7 @@ addon.SpellData = {
     },
     -- Pummel
     [6552] = {
-        cooldown = 13, -- with both cd reduction talents
+        cooldown = 13.3, -- with both cd reduction talents
         class = addon.WARRIOR,
         category = category.INTERRUPT,
         baseline = true,
