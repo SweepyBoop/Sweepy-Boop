@@ -163,7 +163,7 @@ Timer text color changes to yellow at 20s mark, then red at 10s mark, with an al
 ### Healer in crowd control reminder
 ![Healer in CC alert Small](https://github.com/user-attachments/assets/2adcb402-b41e-492f-8ef3-487c16b1279a)
 
-An alert when friendly healer is crowd controlled in arena, and show an glowing icon next to it if there is an ability currently available to remove that crowd control.
+An alert when friendly healer is crowd controlled in arena, and a glowing icon next to it if there is an ability currently available to remove that crowd control.
 
 ### Combat indicator on unit frames
 ![Combat Indicator](https://github.com/user-attachments/assets/59fc92fc-9a0f-4f97-ad8e-c07bacc5a3cf)
