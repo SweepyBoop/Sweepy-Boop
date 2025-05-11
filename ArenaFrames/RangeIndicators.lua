@@ -1,10 +1,12 @@
 local _, addon = ...;
 
 local function EnsureIndicator(frame)
+    local config = SweepyBoop.db.profile.misc;
+
     if not frame.rangeIndicator then
         frame.rangeIndicator = CreateFrame("Frame", nil, frame);
         frame.rangeIndicator:SetSize(32, 32);
-        frame.rangeIndicator:SetPoint("CENTER", frame, "CENTER");
+        frame.rangeIndicator:SetPoint("CENTER", frame, "CENTER", config.rangeIndicatorOffsetX, config.rangeIndicatorOffsetY);
         frame.rangeIndicator:SetMouseClickEnabled(false);
 
         frame.rangeIndicator.tex = frame.rangeIndicator:CreateTexture(nil, "OVERLAY");
@@ -32,7 +34,7 @@ local function UpdateIndicators()
     for i = 1, addon.MAX_ARENA_SIZE do
         local frame = _G[arenaFramePrefix .. i];
         if frame and frame:IsShown() then
-            EnsureIndicator(frame);
+            
         end
     end
 end
