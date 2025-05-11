@@ -379,6 +379,7 @@ function SweepyBoop:OnInitialize()
     self:SetupArenaSurrender();
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
+    self:SetupRangeChecker();
 end
 
 function SweepyBoop:RefreshConfig()
