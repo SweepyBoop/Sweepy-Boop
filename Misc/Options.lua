@@ -262,6 +262,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         set = function (info, val)
                             SweepyBoop.db.profile.misc[info[#info]] = val;
                             SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:SetupRangeChecker();
                         end
                     },
 
