@@ -150,10 +150,10 @@ function SweepyBoop:SetupRangeChecker()
         eventFrame:SetScript("OnEvent", function (self, event)
             local isEnabled = SweepyBoop.db.profile.misc.rangeCheckerEnabled;
             if event == "PLAYER_ENTERING_WORLD" then
-                refreshFrame:SetShown(isEnabled and IsActiveBattlefieldArena());
+                refreshFrame:SetShown(isEnabled and IsActiveBattlefieldArena()); -- If somehow we loaded during an arena game
                 HideAll(); -- Hide test indicators
             elseif event == "PVP_MATCH_ACTIVE" then
-                refreshFrame:SetShown(isEnabled and IsActiveBattlefieldArena());
+                refreshFrame:SetShown(isEnabled and IsActiveBattlefieldArena()); -- This should be the proper handler to start tracking
             elseif event == "PVP_MATCH_COMPLETE" then
                 refreshFrame:Hide();
                 HideAll();
@@ -161,5 +161,6 @@ function SweepyBoop:SetupRangeChecker()
         end)
     end
 
+    -- If somehow we loaded during an arena game
     refreshFrame:SetShown(SweepyBoop.db.profile.misc.rangeCheckerEnabled and IsActiveBattlefieldArena());
 end
