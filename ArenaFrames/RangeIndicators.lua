@@ -8,8 +8,9 @@ local function EnsureIndicator(frame)
 
     if not frame.rangeIndicator then
         frame.rangeIndicator = CreateFrame("Frame", nil, frame);
-        frame.rangeIndicator:SetSize(32, 32);
-        frame.rangeIndicator:SetPoint("CENTER", frame, "CENTER", config.rangeIndicatorOffsetX, config.rangeIndicatorOffsetY);
+        local size = config.rangeCheckerSize;
+        frame.rangeIndicator:SetSize(size, size);
+        frame.rangeIndicator:SetPoint("CENTER", frame, "CENTER", config.rangeCheckerOffsetX, config.rangeCheckerOffsetY);
         frame.rangeIndicator:SetMouseClickEnabled(false);
 
         frame.rangeIndicator.tex = frame.rangeIndicator:CreateTexture(nil, "OVERLAY");
@@ -18,6 +19,15 @@ local function EnsureIndicator(frame)
         frame.rangeIndicator.tex:SetVertexColor(0, 1, 0); -- Green
 
         frame.rangeIndicator:Hide();
+
+        frame.rangeIndicator.lastModified = config.lastModified;
+    end
+
+    if frame.rangeIndicator.lastModified ~= config.lastModified then
+        local size = config.rangeCheckerSize;
+        frame.rangeIndicator:SetSize(size, size);
+        frame.rangeIndicator:SetPoint("CENTER", frame, "CENTER", config.rangeCheckerOffsetX, config.rangeCheckerOffsetY);
+        frame.rangeIndicator.lastModified = config.lastModified;
     end
 end
 
@@ -103,6 +113,19 @@ function SweepyBoop:HideTestRangeChecker()
     HideAll();
 end
 
+function SweepyBoop:RefreshRangeCheckerTestMode()
+    if IsInInstance() then -- Test mode can only be used outside instances
+        return;
+    end
+
+    for i = 1, addon.MAX_ARENA_SIZE do
+        local frame = _G[arenaFramePrefix .. i];
+        if frame and frame.rangeIndicator and frame.rangeIndicator:IsShown() then
+            EnsureIndicator(frame);
+        end
+    end
+end
+
 local refreshFrame;
 local eventFrame;
 function SweepyBoop:SetupRangeChecker()
@@ -127,6 +150,7 @@ function SweepyBoop:SetupRangeChecker()
         eventFrame:SetScript("OnEvent", function (self, event)
             local isEnabled = SweepyBoop.db.profile.misc.rangeCheckerEnabled;
             if event == "PLAYER_ENTERING_WORLD" then
+                HideAll(); -- Hide test indicators
                 refreshFrame:SetShown(isEnabled and IsActiveBattlefieldArena());
             elseif event == "PVP_MATCH_ACTIVE" then
                 refreshFrame:SetShown(isEnabled);
