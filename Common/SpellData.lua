@@ -1961,7 +1961,7 @@ addon.SpellData = {
         spec = { specID.SUBTLETY },
         category = category.BURST,
         cooldown = 30,
-        duration = 8,
+        duration = 10,
         baseline = true,
     },
     -- Outlaw
@@ -1976,7 +1976,7 @@ addon.SpellData = {
         default = true,
     },
     -- Killing Spree
-    [194364] = {
+    [51690] = {
         class = addon.ROGUE,
         spec = { specID.OUTLAW },
         category = category.BURST,
