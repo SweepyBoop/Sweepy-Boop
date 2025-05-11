@@ -59,6 +59,7 @@ ArenaFrames\CooldownTrackingTemplates.lua
 ArenaFrames\ArenaEnemyBurstTemplates.lua
 ArenaFrames\ArenaCooldowns.lua
 ArenaFrames\HealerIndicator.lua
+ArenaFrames\RangeIndicators.lua
 ArenaFrames\Options.lua
 
 #RaidFrames\SortGroup.lua
