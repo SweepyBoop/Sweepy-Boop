@@ -29,12 +29,21 @@ local function HideIndicator(frame)
     end
 end
 
+local class = addon.GetUnitClass("player");
 local arenaFramePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
 local function UpdateIndicators()
+    local config = SweepyBoop.db.profile.misc;
     for i = 1, addon.MAX_ARENA_SIZE do
         local frame = _G[arenaFramePrefix .. i];
         if frame and frame:IsShown() then
-            
+            local spell = config.rangeCheckerSpells[class];
+            if C_Spell.IsSpellInRange(spell, "arena" .. i) then
+                ShowIndicator(frame);
+            else
+                HideIndicator(frame);
+            end
+        else
+            HideIndicator(frame);
         end
     end
 end
