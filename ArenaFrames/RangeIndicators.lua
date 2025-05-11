@@ -163,4 +163,7 @@ function SweepyBoop:SetupRangeChecker()
 
     -- If somehow we loaded during an arena game
     refreshFrame:SetShown(SweepyBoop.db.profile.misc.rangeCheckerEnabled and IsActiveBattlefieldArena());
+    -- Hide initially, in case we are disabling the feature
+    -- The next frame will refresh them if we are in an arena with feature enabled
+    HideAll();
 end
