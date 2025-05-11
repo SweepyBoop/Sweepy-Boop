@@ -242,16 +242,85 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 type = "group",
                 name = "Range checker",
                 args = {
-                    rangeCheckerEnabled = {
+                    supportGismo = {
                         order = 1,
-                        type = "toggle",
+                        type = "input",
                         width = "full",
+                        name = addon.FORMAT_ATLAS("GarrisonTroops-Health") .. " Support the original WA author",
+                        desc = "Press Ctrl+C to copy URL",
+                        dialogControl = "InlineLink-SweepyBoop",
+                        get = function ()
+                            return "https://www.twitch.tv/gismodruid";
+                        end
+                    },
+
+                    rangeCheckerEnabled = {
+                        order = 2,
+                        type = "toggle",
+                        width = 0.8,
                         name = addon.FORMAT_ATLAS("CircleMaskScalable") .. " Enabled",
                         set = function (info, val)
                             SweepyBoop.db.profile.misc[info[#info]] = val;
                             SweepyBoop.db.profile.misc.lastModified = GetTime();
                         end
                     },
+
+                    rangeCheckerShowTest = {
+                        order = 3,
+                        type = "execute",
+                        name = "Test",
+                        width = 0.8,
+                        func = "TestRangeChecker",
+                    },
+                    rangeCheckerHideTest = {
+                        order = 4,
+                        type = "execute",
+                        name = "Hide",
+                        width = 0.8,
+                        func = "HideTestRangeChecker",
+                    },
+
+                    breaker1 = {
+                        order = 5,
+                        type = "description",
+                        name = "",
+                    },
+
+                    rangeCheckerSize = {
+                        order = 6,
+                        type = "range",
+                        width = 0.8,
+                        min = 16,
+                        max = 64,
+                        step = 1,
+                        name = "Indicator size",
+                    },
+                    rangeCheckerOffsetX = {
+                        order = 7,
+                        type = "range",
+                        width = 0.8,
+                        min = -250,
+                        max = 250,
+                        step = 1,
+                        name = "X offset",
+                    },
+                    rangeCheckerOffsetY = {
+                        order = 8,
+                        type = "range",
+                        width = 0.8,
+                        min = -250,
+                        max = 250,
+                        step = 1,
+                        name = "Y offset",
+                    },
+
+                    breaker2 = {
+                        order = 9,
+                        type = "header",
+                        name = "Tracked spells",
+                    },
+
+                    
                 },
             }
         },
