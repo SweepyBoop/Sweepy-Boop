@@ -295,6 +295,11 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         max = 64,
                         step = 1,
                         name = "Indicator size",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:RefreshRangeCheckerTestMode();
+                        end,
                     },
                     rangeCheckerOffsetX = {
                         order = 7,
@@ -304,6 +309,11 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         max = 250,
                         step = 1,
                         name = "X offset",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:RefreshRangeCheckerTestMode();
+                        end,
                     },
                     rangeCheckerOffsetY = {
                         order = 8,
@@ -313,6 +323,11 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         max = 250,
                         step = 1,
                         name = "Y offset",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:RefreshRangeCheckerTestMode();
+                        end,
                     },
 
                     breaker2 = {
