@@ -1955,6 +1955,15 @@ addon.SpellData = {
         duration = 8,
         baseline = true,
     },
+    -- Symbols of Death
+    [212283] = {
+        class = addon.ROGUE,
+        spec = { specID.SUBTLETY },
+        category = category.BURST,
+        cooldown = 30,
+        duration = 10,
+        baseline = true,
+    },
     -- Outlaw
     -- Adrenaline Rush
     [13750] = {
@@ -1965,6 +1974,15 @@ addon.SpellData = {
         duration = 20,
         baseline = true, -- technically a talent, but always picked
         default = true,
+    },
+    -- Killing Spree
+    [51690] = {
+        class = addon.ROGUE,
+        spec = { specID.OUTLAW },
+        category = category.BURST,
+        cooldown = 90,
+        duration = 3,
+        baseline = true,
     },
     -- Between the Eyes
     [315341] = {
