@@ -2005,15 +2005,6 @@ addon.SpellData = {
         baseline = true, -- technically a talent, but always picked
         default = true,
     },
-    -- Vendetta
-    [79140] = {
-        class = addon.ROGUE,
-        spec = { specID.ASSASSINATION },
-        category = category.BURST,
-        duration = 20, 
-        cooldown = 120,
-        baseline = true, -- technically a talent, but always picked
-    },
     -- Kingsbane
     [385627] = {
         class = addon.ROGUE,
