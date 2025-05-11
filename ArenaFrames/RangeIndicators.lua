@@ -150,10 +150,10 @@ function SweepyBoop:SetupRangeChecker()
         eventFrame:SetScript("OnEvent", function (self, event)
             local isEnabled = SweepyBoop.db.profile.misc.rangeCheckerEnabled;
             if event == "PLAYER_ENTERING_WORLD" then
-                HideAll(); -- Hide test indicators
                 refreshFrame:SetShown(isEnabled and IsActiveBattlefieldArena());
+                HideAll(); -- Hide test indicators
             elseif event == "PVP_MATCH_ACTIVE" then
-                refreshFrame:SetShown(isEnabled);
+                refreshFrame:SetShown(isEnabled and IsActiveBattlefieldArena());
             elseif event == "PVP_MATCH_COMPLETE" then
                 refreshFrame:Hide();
                 HideAll();
