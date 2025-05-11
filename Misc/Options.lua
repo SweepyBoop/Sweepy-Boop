@@ -327,14 +327,17 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
     local offset = 9;
     for _, classID in ipairs(addon.CLASSORDER) do
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
-        local className = classInfo.classFile;
-        optionGroup.args.gismo.args[classInfo.classFile] = {
+        local classFile = classInfo.classFile;
+        optionGroup.args.gismo.args[classFile] = {
             order = classID + offset,
             type = "input",
             width = 0.8,
             name = classInfo.className,
+            get = function (info)
+                return tostring(SweepyBoop.db.profile.misc.rangeCheckerSpells[info[#info]]);
+            end,
             set = function (info, val)
-                SweepyBoop.db.profile.misc[info[#info]] = val;
+                SweepyBoop.db.profile.misc.rangeCheckerSpells[info[#info]] = val;
                 SweepyBoop.db.profile.misc.lastModified = GetTime();
             end
         };

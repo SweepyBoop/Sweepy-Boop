@@ -160,6 +160,26 @@ local defaults = {
             arenaSurrenderEnabled = true,
             healerIndicator = true,
             showDampenPercentage = true,
+
+            rangeCheckerSize = 32,
+            rangeCheckerOffsetX = 0,
+            rangeCheckerOffsetY = 0,
+
+            rangeCheckerSpells = {
+                [addon.DEATHKNIGHT] = 49576, -- Death Grip
+                [addon.DEMONHUNTER] = 217832, -- Imprison
+                [addon.DRUID] = 33786, -- Cyclone
+                [addon.EVOKER] = 360806, -- Sleep Walk
+                [addon.HUNTER] = 213691, -- Scatter Shot
+                [addon.MAGE] = 118, -- Polymorph
+                [addon.MONK] = 115078, -- Paralysis
+                [addon.PALADIN] = 20066, -- Repentance
+                [addon.PRIEST] = 605, -- Mind Control
+                [addon.ROGUE] = 36554, -- Shadowstep
+                [addon.SHAMAN] = 51514, -- Hex
+                [addon.WARLOCK] = 5782, -- Fear
+                [addon.WARRIOR] = 107570, -- Storm Bolt
+            },
         },
         minimap = {
             hide = false,
