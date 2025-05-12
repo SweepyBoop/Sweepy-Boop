@@ -2652,12 +2652,12 @@ addon.SpellData = {
         reduce_amount = 0.05,
     },
         -- Bladestorm
-        [446035] = {
-            parent = 227847,
-            use_parent_icon = true,
-            reduce_power_type = POWERTYPE.Rage,
-            reduce_amount = 0.05,
-        },
+        -- [446035] = {
+        --     parent = 227847,
+        --     use_parent_icon = true,
+        --     reduce_power_type = POWERTYPE.Rage,
+        --     reduce_amount = 0.05,
+        -- },
     -- Heroic Leap
     [52174] = {
         cooldown = 30,
