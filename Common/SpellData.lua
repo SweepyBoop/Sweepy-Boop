@@ -2651,7 +2651,7 @@ addon.SpellData = {
         reduce_power_type = POWERTYPE.Rage,
         reduce_amount = 0.05,
     },
-        -- Bladestorm
+        -- Bladestorm (Slayer)
         -- [446035] = {
         --     parent = 227847,
         --     use_parent_icon = true,
