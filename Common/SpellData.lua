@@ -835,6 +835,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.DEFENSIVE,
         cooldown = 30,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
         baseline = true,
     },
     -- Mending Bandage
