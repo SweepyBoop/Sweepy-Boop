@@ -189,7 +189,7 @@ addon.GetArenaFrameOptions = function(order)
                                 order = 11,
                                 type = "toggle",
                                 width = 1,
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Always show icons",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Show off-CD icons",
                                 desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                             },
 
@@ -632,7 +632,7 @@ addon.GetArenaFrameOptions = function(order)
                         showUnusedIcons = {
                             order = 16,
                             type = "toggle",
-                            name = "Always show icons",
+                            name = "Show off-CD icons",
                             width = 0.9,
                             desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                         },
