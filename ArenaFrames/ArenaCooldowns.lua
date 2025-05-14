@@ -807,7 +807,7 @@ local function ProcessUnitSpellCast(self, event, ...)
 
         local configSpellID = spell.parent or spellID;
         if spellList[tostring(configSpellID)] then
-            addon.StartBurstIcon(self.icons[iconID]);
+            StartIcon(self.icons[iconID]);
         end
     end
 end
