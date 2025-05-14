@@ -1054,25 +1054,26 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
 
-                local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
-                local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
+                if GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN) then
+                    local arenaMainGroupID = ICON_SET_ID.ARENA_MAIN;
+                    if addon.TEST_MODE then
+                        arenaMainGroupID = arenaMainGroupID .. "-player";
+                    end
+                    local arenaMain = iconGroups[arenaMainGroupID];
+                    if arenaMain then
+                        ProcessUnitEvent(arenaMain, event, ...);
+                    end
+                end
 
-                local arenaMainGroupID = ICON_SET_ID.ARENA_MAIN;
-                if addon.TEST_MODE then
-                    arenaMainGroupID = arenaMainGroupID .. "-player";
-                end
-                local arenaMain = iconGroups[arenaMainGroupID];
-                if arenaMain and arenaMainEnabled then
-                    ProcessUnitEvent(arenaMain, event, ...);
-                end
-
-                local arenaSecondaryGroupID = ICON_SET_ID.ARENA_SECONDARY;
-                if addon.TEST_MODE then
-                    arenaSecondaryGroupID = arenaSecondaryGroupID .. "-player";
-                end
-                local arenaSecondary = iconGroups[arenaSecondaryGroupID];
-                if arenaSecondary and arenaSecondaryEnabled then
-                    ProcessUnitEvent(arenaSecondary, event, ...);
+                if GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY) then
+                    local arenaSecondaryGroupID = ICON_SET_ID.ARENA_SECONDARY;
+                    if addon.TEST_MODE then
+                        arenaSecondaryGroupID = arenaSecondaryGroupID .. "-player";
+                    end
+                    local arenaSecondary = iconGroups[arenaSecondaryGroupID];
+                    if arenaSecondary then
+                        ProcessUnitEvent(arenaSecondary, event, ...);
+                    end
                 end
 
                 for i = 1, 6 do
