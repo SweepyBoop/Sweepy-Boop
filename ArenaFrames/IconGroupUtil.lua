@@ -115,11 +115,19 @@ local function sortFuncArenaFrames(a, b)
         return a.priority < b.priority;
     end
 
-    return a.timeStamp < b.timeStamp;
+    if ( a.timeStamp ~= b.timeStamp ) then
+        return a.timeStamp < b.timeStamp;
+    end
+
+    return a.spellID < b.spellID; -- If all the above are tied, sort by spellID
 end
 
 local function sortFuncStandaloneBars(a, b)
-    return a.timeStamp < b.timeStamp;
+    if ( a.timeStamp ~= b.timeStamp ) then
+        return a.timeStamp < b.timeStamp;
+    end
+
+    return a.spellID < b.spellID;
 end
 
 addon.IconGroup_Insert = function (group, icon, index)
