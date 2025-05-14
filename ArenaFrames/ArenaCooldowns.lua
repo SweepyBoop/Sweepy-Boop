@@ -113,7 +113,7 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
     if ( not iconPool[iconSetID][iconID] ) then
         local size = GetIconSize(iconSetID);
-        if ( spellData[spellID].category == addon.SPELLCATEGORY.BURST ) and ARENA_FRAME_BARS[iconSetID] then
+        if ( spellData[spellID].category == addon.SPELLCATEGORY.BURST ) then
             iconPool[iconSetID][iconID] = addon.CreateBurstIcon(unitID, spellID, size, true);
         else
             iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
