@@ -810,18 +810,19 @@ local function ProcessUnitSpellCast(self, event, ...)
 
     local unitTarget, _, spellID = ...;
     if ( not unitTarget ) then return end
-    if validUnitIDs[unitTarget] then
-        local spell = spellData[spellID];
-        if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
-        local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
-        local iconID = unitTarget .. "-" .. iconSpellID;
-        if self.icons[iconID] then
-            local spellList = addon.GetSpellListConfig(self.iconSetID);
+    if self.unit and unitTarget ~= self.unit then return end
+    if ( not validUnitIDs[unitTarget] ) then return end
 
-            local configSpellID = spell.parent or spellID;
-            if spellList[tostring(configSpellID)] then
-                addon.StartBurstIcon(self.icons[iconID]);
-            end
+    local spell = spellData[spellID];
+    if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
+    local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
+    local iconID = unitTarget .. "-" .. iconSpellID;
+    if self.icons[iconID] then
+        local spellList = addon.GetSpellListConfig(self.iconSetID);
+
+        local configSpellID = spell.parent or spellID;
+        if spellList[tostring(configSpellID)] then
+            addon.StartBurstIcon(self.icons[iconID]);
         end
     end
 end
@@ -832,8 +833,11 @@ local function ProcessUnitAura(self, event, ...)
 
     local unitTarget, updateAuras = ...;
     if ( not unitTarget ) then return end
+    if self.unit and unitTarget ~= self.unit then return end
+    if ( not validUnitIDs[unitTarget] ) then return end
+
     -- Only use UNIT_AURA to extend aura
-    if validUnitIDs[unitTarget] and updateAuras and updateAuras.updatedAuraInstanceIDs then
+    if updateAuras and updateAuras.updatedAuraInstanceIDs then
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID);
             if auraData then
