@@ -37,19 +37,6 @@ local resetByCrit = {
     190319, -- Combustion
 };
 
-local validUnitIDs;
-if addon.TEST_MODE then
-    validUnitIDs = {
-        ["player"] = true,
-    };
-else
-    validUnitIDs = {
-        ["arena1"] = true,
-        ["arena2"] = true,
-        ["arena3"] = true,
-    };
-end
-
 local ICON_SET_ID = addon.ICON_SET_ID;
 local ARENA_FRAME_BARS = addon.ARENA_FRAME_BARS;
 
@@ -805,13 +792,11 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 end
 
 local function ProcessUnitSpellCast(self, event, ...)
-    local guids = ValidateUnit(self);
-    if next(guids) == nil then return end
+    ValidateUnit(self);
+    if next(self.unitIdToGuid) == nil then return end
 
     local unitTarget, _, spellID = ...;
-    if ( not unitTarget ) then return end
-    if self.unit and unitTarget ~= self.unit then return end
-    if ( not validUnitIDs[unitTarget] ) then return end
+    if ( not unitTarget ) or ( not self.unitIdToGuid[unitTarget] ) then return end
 
     local spell = spellData[spellID];
     if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
@@ -828,13 +813,11 @@ local function ProcessUnitSpellCast(self, event, ...)
 end
 
 local function ProcessUnitAura(self, event, ...)
-    local guids = ValidateUnit(self);
-    if next(guids) == nil then return end
+    ValidateUnit(self);
+    if next(self.unitIdToGuid) == nil then return end
 
     local unitTarget, updateAuras = ...;
-    if ( not unitTarget ) then return end
-    if self.unit and unitTarget ~= self.unit then return end
-    if ( not validUnitIDs[unitTarget] ) then return end
+    if ( not unitTarget ) or ( not self.unitIdToGuid[unitTarget] ) then return end
 
     -- Only use UNIT_AURA to extend aura
     if updateAuras and updateAuras.updatedAuraInstanceIDs then
