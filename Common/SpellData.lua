@@ -238,7 +238,7 @@ addon.SpellData = {
         category = category.BURST,
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
         cooldown = 120,
-        duration = 24,
+        duration = 20,
         baseline = true,
         default = true,
     },
