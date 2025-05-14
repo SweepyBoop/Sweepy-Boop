@@ -1074,14 +1074,14 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         local iconGroupID = ICON_SET_ID.ARENA_MAIN .. "-" .. unit;
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup and arenaMainEnabled then
-                            ProcessUnitEvent(iconGroup, ...);
+                            ProcessUnitEvent(iconGroup, event, ...);
                         end
 
                         if config.arenaCooldownSecondaryBar then
                             iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
                             iconGroup = iconGroups[iconGroupID];
                             if iconGroup and arenaSecondaryEnabled then
-                                ProcessUnitEvent(iconGroup, ...);
+                                ProcessUnitEvent(iconGroup, event, ...);
                             end
                         end
                     end
