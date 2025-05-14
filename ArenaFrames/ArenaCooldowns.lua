@@ -1054,25 +1054,36 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
 
-                if GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN) then
-                    local arenaMainGroupID = ICON_SET_ID.ARENA_MAIN;
-                    if addon.TEST_MODE then
-                        arenaMainGroupID = arenaMainGroupID .. "-player";
-                    end
-                    local arenaMain = iconGroups[arenaMainGroupID];
-                    if arenaMain then
+                -- Process arena frame bars if enabled
+                if addon.TEST_MODE then
+                    local arenaMain = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player"];
+                    if arenaMain and GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN) then
                         ProcessUnitEvent(arenaMain, event, ...);
                     end
-                end
 
-                if GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY) then
-                    local arenaSecondaryGroupID = ICON_SET_ID.ARENA_SECONDARY;
-                    if addon.TEST_MODE then
-                        arenaSecondaryGroupID = arenaSecondaryGroupID .. "-player";
-                    end
-                    local arenaSecondary = iconGroups[arenaSecondaryGroupID];
-                    if arenaSecondary then
+                    local arenaSecondary = iconGroups[ICON_SET_ID.ARENA_SECONDARY .. "-player"];
+                    if arenaSecondary and GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY) then
                         ProcessUnitEvent(arenaSecondary, event, ...);
+                    end
+                else
+                    local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
+                    local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
+
+                    for i = 1, addon.MAX_ARENA_SIZE do
+                        local unit = "arena" .. i;
+                        local iconGroupID = ICON_SET_ID.ARENA_MAIN .. "-" .. unit;
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup and arenaMainEnabled then
+                            ProcessUnitEvent(iconGroup, ...);
+                        end
+
+                        if config.arenaCooldownSecondaryBar then
+                            iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
+                            iconGroup = iconGroups[iconGroupID];
+                            if iconGroup and arenaSecondaryEnabled then
+                                ProcessUnitEvent(iconGroup, ...);
+                            end
+                        end
                     end
                 end
 
