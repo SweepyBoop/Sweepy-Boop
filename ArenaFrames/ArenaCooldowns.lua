@@ -792,35 +792,35 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
 end
 
 local function ProcessUnitSpellCast(self, event, ...)
-    local guids = ValidateUnit(self);
-    if next(guids) == nil then return end
+    ValidateUnit(self);
+    if next(self.unitIdToGuid) == nil then return end
 
     local unitTarget, _, spellID = ...;
-    if ( not unitTarget ) then return end
-    if ( unitTarget == self.unit ) then
-        local spell = spellData[spellID];
-        if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
-        local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
-        local iconID = self.unit .. "-" .. iconSpellID;
-        if self.icons[iconID] then
-            local spellList = addon.GetSpellListConfig(self.iconSetID);
+    if ( not unitTarget ) or ( not self.unitIdToGuid[unitTarget] ) then return end
 
-            local configSpellID = spell.parent or spellID;
-            if spellList[tostring(configSpellID)] then
-                addon.StartBurstIcon(self.icons[iconID]);
-            end
+    local spell = spellData[spellID];
+    if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
+    local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
+    local iconID = unitTarget .. "-" .. iconSpellID;
+    if self.icons[iconID] then
+        local spellList = addon.GetSpellListConfig(self.iconSetID);
+
+        local configSpellID = spell.parent or spellID;
+        if spellList[tostring(configSpellID)] then
+            StartIcon(self.icons[iconID]);
         end
     end
 end
 
 local function ProcessUnitAura(self, event, ...)
-    local guids = ValidateUnit(self);
-    if next(guids) == nil then return end
+    ValidateUnit(self);
+    if next(self.unitIdToGuid) == nil then return end
 
     local unitTarget, updateAuras = ...;
-    if ( not unitTarget ) then return end
+    if ( not unitTarget ) or ( not self.unitIdToGuid[unitTarget] ) then return end
+
     -- Only use UNIT_AURA to extend aura
-    if ( unitTarget == self.unit ) and updateAuras and updateAuras.updatedAuraInstanceIDs then
+    if updateAuras and updateAuras.updatedAuraInstanceIDs then
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID);
             if auraData then
@@ -1028,12 +1028,10 @@ function SweepyBoop:SetupArenaCooldownTracker()
                             ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                         end
 
-                        if config.arenaCooldownSecondaryBar then
-                            iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
-                            iconGroup = iconGroups[iconGroupID];
-                            if iconGroup and arenaSecondaryEnabled then
-                                ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-                            end
+                        iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
+                        iconGroup = iconGroups[iconGroupID];
+                        if iconGroup and arenaSecondaryEnabled then
+                            ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                         end
                     end
                 end
@@ -1054,25 +1052,35 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
 
-                local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
-                local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
-
-                local arenaMainGroupID = ICON_SET_ID.ARENA_MAIN;
+                -- Process arena frame bars if enabled
                 if addon.TEST_MODE then
-                    arenaMainGroupID = arenaMainGroupID .. "-player";
-                end
-                local arenaMain = iconGroups[arenaMainGroupID];
-                if arenaMain and arenaMainEnabled then
-                    ProcessUnitEvent(arenaMain, event, ...);
-                end
+                    local arenaMain = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player"];
+                    if arenaMain and GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN) then
+                        ProcessUnitEvent(arenaMain, event, ...);
+                    end
 
-                local arenaSecondaryGroupID = ICON_SET_ID.ARENA_SECONDARY;
-                if addon.TEST_MODE then
-                    arenaSecondaryGroupID = arenaSecondaryGroupID .. "-player";
-                end
-                local arenaSecondary = iconGroups[arenaSecondaryGroupID];
-                if arenaSecondary and arenaSecondaryEnabled then
-                    ProcessUnitEvent(arenaSecondary, event, ...);
+                    local arenaSecondary = iconGroups[ICON_SET_ID.ARENA_SECONDARY .. "-player"];
+                    if arenaSecondary and GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY) then
+                        ProcessUnitEvent(arenaSecondary, event, ...);
+                    end
+                else
+                    local arenaMainEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN);
+                    local arenaSecondaryEnabled = GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY);
+
+                    for i = 1, addon.MAX_ARENA_SIZE do
+                        local unit = "arena" .. i;
+                        local iconGroupID = ICON_SET_ID.ARENA_MAIN .. "-" .. unit;
+                        local iconGroup = iconGroups[iconGroupID];
+                        if iconGroup and arenaMainEnabled then
+                            ProcessUnitEvent(iconGroup, event, ...);
+                        end
+
+                        iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
+                        iconGroup = iconGroups[iconGroupID];
+                        if iconGroup and arenaSecondaryEnabled then
+                            ProcessUnitEvent(iconGroup, event, ...);
+                        end
+                    end
                 end
 
                 for i = 1, 6 do
