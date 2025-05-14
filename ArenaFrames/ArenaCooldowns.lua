@@ -1028,12 +1028,10 @@ function SweepyBoop:SetupArenaCooldownTracker()
                             ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                         end
 
-                        if config.arenaCooldownSecondaryBar then
-                            iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
-                            iconGroup = iconGroups[iconGroupID];
-                            if iconGroup and arenaSecondaryEnabled then
-                                ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
-                            end
+                        iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
+                        iconGroup = iconGroups[iconGroupID];
+                        if iconGroup and arenaSecondaryEnabled then
+                            ProcessCombatLogEvent(iconGroup, subEvent, sourceGUID, destGUID, spellId, spellName, critical);
                         end
                     end
                 end
@@ -1077,12 +1075,10 @@ function SweepyBoop:SetupArenaCooldownTracker()
                             ProcessUnitEvent(iconGroup, event, ...);
                         end
 
-                        if config.arenaCooldownSecondaryBar then
-                            iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
-                            iconGroup = iconGroups[iconGroupID];
-                            if iconGroup and arenaSecondaryEnabled then
-                                ProcessUnitEvent(iconGroup, event, ...);
-                            end
+                        iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
+                        iconGroup = iconGroups[iconGroupID];
+                        if iconGroup and arenaSecondaryEnabled then
+                            ProcessUnitEvent(iconGroup, event, ...);
                         end
                     end
                 end
