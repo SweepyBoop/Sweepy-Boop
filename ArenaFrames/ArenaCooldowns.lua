@@ -37,6 +37,19 @@ local resetByCrit = {
     190319, -- Combustion
 };
 
+local validUnitIDs;
+if addon.TEST_MODE then
+    validUnitIDs = {
+        ["player"] = true,
+    };
+else
+    validUnitIDs = {
+        ["arena1"] = true,
+        ["arena2"] = true,
+        ["arena3"] = true,
+    };
+end
+
 local ICON_SET_ID = addon.ICON_SET_ID;
 local ARENA_FRAME_BARS = addon.ARENA_FRAME_BARS;
 
@@ -797,11 +810,11 @@ local function ProcessUnitSpellCast(self, event, ...)
 
     local unitTarget, _, spellID = ...;
     if ( not unitTarget ) then return end
-    if ( unitTarget == self.unit ) then
+    if validUnitIDs[unitTarget] then
         local spell = spellData[spellID];
         if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
         local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
-        local iconID = self.unit .. "-" .. iconSpellID;
+        local iconID = unitTarget .. "-" .. iconSpellID;
         if self.icons[iconID] then
             local spellList = addon.GetSpellListConfig(self.iconSetID);
 
@@ -820,7 +833,7 @@ local function ProcessUnitAura(self, event, ...)
     local unitTarget, updateAuras = ...;
     if ( not unitTarget ) then return end
     -- Only use UNIT_AURA to extend aura
-    if ( unitTarget == self.unit ) and updateAuras and updateAuras.updatedAuraInstanceIDs then
+    if validUnitIDs[unitTarget] and updateAuras and updateAuras.updatedAuraInstanceIDs then
         for _, instanceID in ipairs(updateAuras.updatedAuraInstanceIDs) do
             local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unitTarget, instanceID);
             if auraData then
