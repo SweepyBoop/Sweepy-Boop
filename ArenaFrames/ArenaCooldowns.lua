@@ -1084,7 +1084,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         end
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup then
-                            ProcessUnitSpellCast(iconGroup, event, ...);
+                            ProcessUnitEvent(iconGroup, event, ...);
                         end
                     end
                 end
