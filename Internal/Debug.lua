@@ -47,6 +47,8 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
         print("UNIT_PET", UnitGUID("pet"));
     elseif ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) and ( addon.TEST_MODE ) then
         local unit, _, spellID = ...;
-        print("UNIT_SPELLCAST_SUCCEEDED", unit, spellID);
+        if ( unit == "player") then
+            print("UNIT_SPELLCAST_SUCCEEDED", unit, spellID);
+        end
     end
 end)
