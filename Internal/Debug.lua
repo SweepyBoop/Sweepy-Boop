@@ -6,9 +6,10 @@ local eventFrame = CreateFrame("Frame");
 eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
 eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
 eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
-eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+--eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 eventFrame:RegisterEvent(addon.UNIT_PET);
-eventFrame:SetScript("OnEvent", function(_, event)
+eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+eventFrame:SetScript("OnEvent", function(_, event, ...)
     if event == "PVP_MATCH_ACTIVE" or ( event == "PLAYER_ENTERING_WORLD" and C_PvP.IsMatchActive() ) then
         ResetCPUUsage();
         lastUpdated = GetTime();
@@ -44,5 +45,8 @@ eventFrame:SetScript("OnEvent", function(_, event)
         end
     elseif ( event == addon.UNIT_PET ) and ( addon.TEST_MODE ) then
         print("UNIT_PET", UnitGUID("pet"));
+    elseif ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) and ( addon.TEST_MODE ) then
+        local unit, _, spellID = ...;
+        print("UNIT_SPELLCAST_SUCCEEDED", unit, spellID);
     end
 end)
