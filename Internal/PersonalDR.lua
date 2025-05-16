@@ -254,7 +254,7 @@ local function CreateDRIcon(category)
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetMouseClickEnabled(false);
     f:Hide();
-    f.category = category;
+    f.spellID = category;
     f.priority = categoryPriority[category];
     f.stacks = 0;
     f:SetSize(25, 25);
