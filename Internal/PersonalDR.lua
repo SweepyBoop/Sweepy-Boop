@@ -272,7 +272,6 @@ local function CreateDRIcon(category)
     f.cooldown:SetAllPoints();
     f.cooldown:SetDrawEdge(true);
     f.cooldown:SetAlpha(1);
-    f.cooldown:SetReverse(true);
     f.cooldown:SetHideCountdownNumbers(true);
     f.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
