@@ -260,7 +260,7 @@ function SweepyBoop:SetupBlizzardOptions()
 
         local context = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall");
         context:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8);
-        context:SetText("Type /sb or click the minimap icon to open the option panel.");
+        context:SetText("\124cFF00FF00Type /sb\124r or click the minimap icon to open the option panel.");
 
         local open = CreateFrame("Button", nil, self, "UIPanelButtonTemplate");
         open:SetText("Open Option Panel");
