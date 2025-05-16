@@ -1582,7 +1582,7 @@ addon.SpellData = {
     [6940] = {
         class = addon.PALADIN,
         category = category.OTHERS,
-        cooldown = 60,
+        cooldown = 105,
         baseline = true,
     },
         -- Ultimate Sacrifice
