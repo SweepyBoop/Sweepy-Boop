@@ -1582,13 +1582,13 @@ addon.SpellData = {
     [6940] = {
         class = addon.PALADIN,
         category = category.OTHERS,
-        cooldown = 105,
-        -- Don't make baseline since it can be replaced by Ultimate Sacrifice
+        cooldown = 60,
+        baseline = true,
     },
         -- Ultimate Sacrifice
         [199448] = {
             parent = 6940,
-            cooldown = 105,
+            use_parent_icon = true,
         },
     -- Blessing of Freedom
     [1044] = {
