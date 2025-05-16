@@ -22,6 +22,7 @@ local spellList = {
     [118699]  = "disorient", -- Fear
     [130616]  = "disorient", -- Fear (Horrify)
     [5484]    = "disorient", -- Howl of Terror
+    [353084]  = "disorient", -- Ring of Fire
     [261589]  = "disorient", -- Seduction (Grimoire of Sacrifice)
     [6358]    = "disorient", -- Seduction (Succubus)
     [5246]    = "disorient", -- Intimidating Shout
@@ -256,7 +257,7 @@ local function CreateDRIcon(category)
     f.category = category;
     f.priority = categoryPriority[category];
     f.stacks = 0;
-    f:SetSize(27, 27);
+    f:SetSize(25, 25);
 
     f.texture = f:CreateTexture();
     f.texture:SetTexture(categoryIcon[category]);
@@ -284,13 +285,13 @@ local function CreateDRIcon(category)
 end
 
 local setPointOptions = {
-    point = "BOTTOMRIGHT",
-    relativeTo = _G["PlayerFrame"],
-    relativePoint = "TOPRIGHT",
-    offsetX = -25,
-    offsetY = -38,
+    point = "CENTER",
+    relativeTo = "UIParent",
+    relativePoint = "CENTER",
+    offsetX = 0,
+    offsetY = 225,
 };
-local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
+local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "CENTER", anchor = "CENTER", margin = 8 });
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
