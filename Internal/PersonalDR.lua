@@ -1,4 +1,5 @@
 local _, addon = ...;
+local LCG = LibStub("LibCustomGlow-1.0");
 
 local test = addon.TEST_MODE;
 
@@ -247,15 +248,21 @@ local playerGUID = UnitGUID("player");
 
 local function HideIconDR(icon)
     icon.stacks = 0;
-    addon.IconGroup_Remove(icon:GetParent(), icon);
+    icon.border:Hide();
+
+    if icon.glow then
+        LCG.ButtonGlow_Start(icon);
+    else
+        addon.IconGroup_Remove(icon:GetParent(), icon);
+    end
 end
 
-local function CreateDRIcon(category)
+local function CreateDRIcon(category, glow)
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetMouseClickEnabled(false);
     f:Hide();
     f.spellID = categoryPriority[category];
-    f.priority = categoryPriority[category];
+    f.glow = glow;
     f.stacks = 0;
     f:SetSize(25, 25);
 
@@ -292,11 +299,17 @@ local setPointOptions = {
     offsetY = -12.5,
 };
 local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
-addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
+local stunIcon = CreateDRIcon("stun", true);
+addon.IconGroup_PopulateIcon(drIconGroup, stunIcon, categoryPriority["stun"]);
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
+-- Insert stun DR icon and call HideIconDR to glow it
+addon.IconGroup_Insert(drIconGroup, stunIcon);
+HideIconDR(drIconGroup.icons[categoryPriority["stun"]]);
 
 local function ShowIconDR(icon)
+    LCG.ButtonGlow_Stop(icon);
+
     icon.stacks = icon.stacks + 1;
     -- Set border color
     if icon.stacks == 1 then
