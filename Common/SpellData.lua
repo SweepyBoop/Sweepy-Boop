@@ -2068,7 +2068,7 @@ addon.SpellData = {
     [212182] = {
         cooldown = 180,
         class = addon.ROGUE,
-        spec = { specID.SUBTLETY, specID.OUTLAW },
+        spec = { specID.ASSASSINATION, specID.OUTLAW },
         category = category.CROWDCONTROL,
     },
     -- Smoke Bomb (Subtlety)
