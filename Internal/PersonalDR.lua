@@ -271,6 +271,7 @@ local function CreateDRIcon(category)
     f.cooldown = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
     f.cooldown:SetDrawEdge(true);
+    f.cooldown:SetSwipeColor(0, 0, 0, 0.5);
     f.cooldown:SetAlpha(1);
     f.cooldown:SetHideCountdownNumbers(true);
     f.cooldown:SetScript("OnCooldownDone", function (self)
@@ -284,13 +285,13 @@ local function CreateDRIcon(category)
 end
 
 local setPointOptions = {
-    point = "CENTER",
-    relativeTo = "UIParent",
-    relativePoint = "CENTER",
-    offsetX = 0,
-    offsetY = 225,
+    point = "RIGHT",
+    relativeTo = "PlayerFrame",
+    relativePoint = "RIGHT",
+    offsetX = -25,
+    offsetY = -12.5,
 };
-local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "CENTER", anchor = "CENTER", margin = 8 });
+local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 8 });
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("stun"), categoryPriority["stun"]);
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("incapacitate"), categoryPriority["incapacitate"]);
 addon.IconGroup_PopulateIcon(drIconGroup, CreateDRIcon("disorient"), categoryPriority["disorient"]);
