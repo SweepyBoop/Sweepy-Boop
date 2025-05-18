@@ -64,15 +64,16 @@ function SweepyBoop:SetupFixBlizzardCastbars()
             TargetFrameSpellBar,
             FocusFrameSpellBar,
         };
-        if sArena then -- We load after sArena, so no need to worry about if sArena has been loaded here, what if we need to fix another addon that's loaded after us?
-            for i = 1, addon.MAX_ARENA_SIZE do
-                local frame = _G["ArenaEnemyFrame"..i];
-                if frame and frame.CastBar then
-                    frame.CastBar.sArenaCastBar = true;
-                    tinsert(castBars, frame.CastBar);
-                end
-            end
-        end
+        -- Seems sArena has already fixed their cast bars
+        -- if sArena then -- We load after sArena, so no need to worry about if sArena has been loaded here, what if we need to fix another addon that's loaded after us?
+        --     for i = 1, addon.MAX_ARENA_SIZE do
+        --         local frame = _G["ArenaEnemyFrame"..i];
+        --         if frame and frame.CastBar then
+        --             frame.CastBar.sArenaCastBar = true;
+        --             tinsert(castBars, frame.CastBar);
+        --         end
+        --     end
+        -- end
         for _, castBar in ipairs(castBars) do
             FixBlizzardCastBar(castBar);
         end
