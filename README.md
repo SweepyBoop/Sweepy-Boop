@@ -29,7 +29,9 @@ Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics
 - Accurate cooldown timer for Guardian Spirit (starts with 3 min cooldown and updates to 1 min if it didn't proc)
 - Tracks dispels properly: dispels are put on cooldown only if it dispels some debuffs, i.e., if enemy healer presses dispel after their DPS trinkets and dispeled nothing it should not trigger cooldown
 
-It provides the "Show unused icons" option like OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
+It provides an option to show icons that are off cooldown, similar to OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
+
+Burst damage cooldowns will glow for their duration, making it easier to trade at high HP during the enemy team's burst window.
 
 ![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
 
