@@ -33,6 +33,10 @@ It provides an option to show icons that are off cooldown, similar to OmniBar, b
 
 Burst damage cooldowns will glow for their duration, making it easier to trade at high HP during the enemy team's burst window.
 
+![Spell duration](https://github.com/user-attachments/assets/8f7f3917-460d-4ca8-b4d6-ac8fd634d7da)
+
+(Burst cooldowns glow for their active duration)
+
 ![Interrupt missed](https://github.com/user-attachments/assets/c602311a-f873-426c-be5e-b4497b05c075)
 
 (Counterspell missed, cooldown is 24 Sec)
