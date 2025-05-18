@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local castBarTexture = "Interface/RaidFrame/Raid-Bar-Hp-Fill";
+local sArenaBarTexture = "Interface/RaidFrame/Raid-Bar-Hp-Fill";
 
 -- This needs to be called once only per cast bar
 local function FixBlizzardCastBar(self)
@@ -10,10 +10,22 @@ local function FixBlizzardCastBar(self)
         if frame:IsForbidden() then return end
         if ( frame.barType == "uninterruptible" ) then
             if frame.NumStages then -- Set up by CastingBarMixin:AddStages
-                frame:SetStatusBarTexture("ui-castingbar-uninterruptable");
+                -- https://github.com/Sammers21/sArena_Updated2_by_sammers/blob/master/sArena.lua
+                -- Keep sArena visuals as possible
+                if frame.sArenaCastBar then
+                    frame:SetStatusBarTexture(sArenaBarTexture);
+                    frame:SetStatusBarColor(0.7, 0.7, 0.7, 1);
+                else
+                    frame:SetStatusBarTexture("ui-castingbar-uninterruptable");
+                end
             end
         elseif ( frame.barType == "empowered" ) then
-            frame:SetStatusBarTexture("ui-castingbar-filling-standard");
+            if frame.sArenaCastBar then
+                frame:SetStatusBarTexture(sArenaBarTexture);
+                frame:SetStatusBarColor(1.0, 0.7, 0.0, 1);
+            else
+                frame:SetStatusBarTexture("ui-castingbar-filling-standard");
+            end
         end
 
         -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/25276211effd4b92effa1c2c6671b5e68db85e84/Interface/AddOns/Blizzard_UIPanels_Game/Mainline/CastingBarFrame.lua#L908
