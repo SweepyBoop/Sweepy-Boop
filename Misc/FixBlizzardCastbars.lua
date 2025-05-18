@@ -9,15 +9,13 @@ local function FixBlizzardCastBar(self)
     self:HookScript("OnEvent", function(frame)
         if frame:IsForbidden() then return end
         if ( frame.barType == "uninterruptible" ) then
-            if frame.NumStages then -- Set up by CastingBarMixin:AddStages
-                -- https://github.com/Sammers21/sArena_Updated2_by_sammers/blob/master/sArena.lua
-                -- Keep sArena visuals as possible
-                if frame.sArenaCastBar then
-                    frame:SetStatusBarTexture(sArenaBarTexture);
-                    frame:SetStatusBarColor(0.7, 0.7, 0.7, 1);
-                else
-                    frame:SetStatusBarTexture("ui-castingbar-uninterruptable");
-                end
+            -- https://github.com/Sammers21/sArena_Updated2_by_sammers/blob/master/sArena.lua
+            -- Keep sArena visuals as possible
+            if frame.sArenaCastBar then
+                frame:SetStatusBarTexture(sArenaBarTexture);
+                frame:SetStatusBarColor(0.7, 0.7, 0.7, 1);
+            else
+                frame:SetStatusBarTexture("ui-castingbar-uninterruptable");
             end
         elseif ( frame.barType == "empowered" ) then
             if frame.sArenaCastBar then
@@ -29,11 +27,11 @@ local function FixBlizzardCastBar(self)
         end
 
         -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/25276211effd4b92effa1c2c6671b5e68db85e84/Interface/AddOns/Blizzard_UIPanels_Game/Mainline/CastingBarFrame.lua#L908
-        -- Should be using self.NumStages instead of hard-coded 4 here, but self.NumStages is not set yet when we call FixBlizzardCastBar
-        -- Just need to fix if the value 4 changes in the future...
-        for i = 1, 4 do
-            if self["ChargeTier"..i] then
-                self["ChargeTier"..i]:Hide();
+        if self.NumStages then
+            for i = 1,self.NumStages-1,1 do
+                if self["ChargeTier"..i] then
+                    self["ChargeTier"..i]:Hide();
+                end
             end
         end
     end);
