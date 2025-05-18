@@ -6,15 +6,6 @@ local castBarTexture = "Interface/RaidFrame/Raid-Bar-Hp-Fill";
 local function FixBlizzardCastBar(self)
     if self.blizzardCastBarFixed then return end
 
-    -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/25276211effd4b92effa1c2c6671b5e68db85e84/Interface/AddOns/Blizzard_UIPanels_Game/Mainline/CastingBarFrame.lua#L908
-    -- Should be using self.NumStages instead of hard-coded 4 here, but self.NumStages is not set yet when we call FixBlizzardCastBar
-    -- Just need to fix if the value 4 changes in the future...
-    for i = 1, 4 do
-        if self["ChargeTier"..i] then
-            self["ChargeTier"..i]:SetAlpha(0);
-        end
-    end
-
     self:HookScript("OnEvent", function(frame)
         if frame:IsForbidden() then return end
         if ( frame.barType == "uninterruptible" ) then
@@ -23,6 +14,15 @@ local function FixBlizzardCastBar(self)
             end
         elseif ( frame.barType == "empowered" ) then
             frame:SetStatusBarTexture("ui-castingbar-filling-standard");
+        end
+
+        -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/25276211effd4b92effa1c2c6671b5e68db85e84/Interface/AddOns/Blizzard_UIPanels_Game/Mainline/CastingBarFrame.lua#L908
+        -- Should be using self.NumStages instead of hard-coded 4 here, but self.NumStages is not set yet when we call FixBlizzardCastBar
+        -- Just need to fix if the value 4 changes in the future...
+        for i = 1, 4 do
+            if self["ChargeTier"..i] then
+                self["ChargeTier"..i]:Hide();
+            end
         end
     end);
 
@@ -38,7 +38,7 @@ local function FixNamePlateCastBar(unit)
 end
 
 local eventFrame;
-function SetupFixBlizzardCastbars()
+function SweepyBoop:SetupFixBlizzardCastbars()
     if ( not eventFrame ) then
         eventFrame = CreateFrame("Frame");
         eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
