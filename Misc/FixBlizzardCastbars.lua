@@ -44,8 +44,9 @@ local function FixBlizzardCastBar(self)
         end
 
         -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/25276211effd4b92effa1c2c6671b5e68db85e84/Interface/AddOns/Blizzard_UIPanels_Game/Mainline/CastingBarFrame.lua#L908
-        if hideChargeTiers and self.NumStages then
-            for i = 1,self.NumStages-1,1 do
+        if hideChargeTiers then
+            local numStages = self.NumStages or 5;
+            for i = 1,numStages-1,1 do
                 if self["ChargeTier"..i] then
                     self["ChargeTier"..i]:Hide();
                 end
