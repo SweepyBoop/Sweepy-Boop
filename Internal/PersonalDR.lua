@@ -264,18 +264,18 @@ local function CreateDRIcon(category, glow)
     f.spellID = categoryPriority[category];
     f.glow = glow;
     f.stacks = 0;
-    f:SetSize(24, 24);
+    f:SetSize(27, 27);
 
     f.texture = f:CreateTexture();
     f.texture:SetTexture(categoryIcon[category]);
     f.texture:SetAllPoints();
-    
+
     f.border = f:CreateTexture(nil, "OVERLAY");
     f.border:SetAtlas("Forge-ColorSwatchSelection");
     f.border:SetScale(0.4);
     f.border:SetDesaturated(true);
-    f.border:SetPoint("TOPLEFT", f, "TOPLEFT", -6, 4);
-    f.border:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 6, -4);
+    f.border:SetPoint("TOPLEFT", f, "TOPLEFT", -6.75, 4.5);
+    f.border:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 6.75, -4.5);
 
     -- Assign frame name BoopHideTimer* to hide timer by OmniCC
     f.cooldown = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate");
@@ -299,7 +299,7 @@ local setPointOptions = {
     relativeTo = "PlayerFrame",
     relativePoint = "RIGHT",
     offsetX = -25,
-    offsetY = 0,
+    offsetY = -5,
 };
 local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 3 });
 local stunIcon = CreateDRIcon("stun", true);
