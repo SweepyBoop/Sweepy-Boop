@@ -1,7 +1,28 @@
 local _, addon = ...;
 
 -- https://github.com/Sammers21/sArena_Updated2_by_sammers/blob/master/sArena.lua
-local sArenaBarTexture = "Interface/RaidFrame/Raid-Bar-Hp-Fill";
+-- sArena should have the correct texture and color already, we just need to hide the charge tiers
+--[[
+-- default bars, will get overwritten from layouts
+local typeInfoTexture = "Interface\\RaidFrame\\Raid-Bar-Hp-Fill";
+sArenaCastingBarExtensionMixin.typeInfo = {
+    filling = typeInfoTexture,
+    full = typeInfoTexture,
+    glow = typeInfoTexture
+}
+
+local actionColors = {
+    applyingcrafting = { 1.0, 0.7, 0.0, 1 },
+    applyingtalents = { 1.0, 0.7, 0.0, 1 },
+    filling = { 1.0, 0.7, 0.0, 1 },
+    full = { 0.0, 1.0, 0.0, 1 },
+    standard = { 1.0, 0.7, 0.0, 1 },
+    empowered = { 1.0, 0.7, 0.0, 1 },
+    channel = { 0.0, 1.0, 0.0, 1 },
+    uninterruptable = { 0.7, 0.7, 0.7, 1 },
+    interrupted = { 1.0, 0.0, 0.0, 1 }
+}
+--]]
 
 -- This needs to be called once only per cast bar
 local function FixBlizzardCastBar(self)
@@ -12,17 +33,11 @@ local function FixBlizzardCastBar(self)
         if ( frame.barType == "uninterruptible" ) then
             -- https://github.com/Sammers21/sArena_Updated2_by_sammers/blob/master/sArena.lua
             -- Keep sArena visuals as possible
-            if frame.sArenaCastBar then
-                frame:SetStatusBarTexture(sArenaBarTexture);
-                frame:SetStatusBarColor(0.7, 0.7, 0.7, 1);
-            else
+            if ( not frame.sArenaCastBar ) then
                 frame:SetStatusBarTexture("ui-castingbar-uninterruptable");
             end
         elseif ( frame.barType == "empowered" ) then
-            if frame.sArenaCastBar then
-                frame:SetStatusBarTexture(sArenaBarTexture);
-                frame:SetStatusBarColor(1.0, 0.7, 0.0, 1);
-            else
+            if ( not frame.sArenaCastBar ) then
                 frame:SetStatusBarTexture("ui-castingbar-filling-standard");
             end
         end
@@ -64,16 +79,15 @@ function SweepyBoop:SetupFixBlizzardCastbars()
             TargetFrameSpellBar,
             FocusFrameSpellBar,
         };
-        -- Seems sArena has already fixed their cast bars
-        -- if sArena then -- We load after sArena, so no need to worry about if sArena has been loaded here, what if we need to fix another addon that's loaded after us?
-        --     for i = 1, addon.MAX_ARENA_SIZE do
-        --         local frame = _G["ArenaEnemyFrame"..i];
-        --         if frame and frame.CastBar then
-        --             frame.CastBar.sArenaCastBar = true;
-        --             tinsert(castBars, frame.CastBar);
-        --         end
-        --     end
-        -- end
+        if sArena then -- We load after sArena, so no need to worry about if sArena has been loaded here, what if we need to fix another addon that's loaded after us?
+            for i = 1, addon.MAX_ARENA_SIZE do
+                local frame = _G["ArenaEnemyFrame"..i];
+                if frame and frame.CastBar then
+                    frame.CastBar.sArenaCastBar = true;
+                    tinsert(castBars, frame.CastBar);
+                end
+            end
+        end
         for _, castBar in ipairs(castBars) do
             FixBlizzardCastBar(castBar);
         end
