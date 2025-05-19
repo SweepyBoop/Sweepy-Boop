@@ -30,18 +30,21 @@ local function FixBlizzardCastBar(self)
 
     self:HookScript("OnEvent", function(frame)
         if frame:IsForbidden() or ( not SweepyBoop.db.profile.misc.fixEvokerCastBars ) then return end
+        local hideChargeTiers;
         if ( frame.barType == "uninterruptible" ) then
             if ( not frame.sArenaCastBar ) then
                 frame:SetStatusBarTexture("ui-castingbar-uninterruptable");
             end
+            hideChargeTiers = true;
         elseif ( frame.barType == "empowered" ) then
             if ( not frame.sArenaCastBar ) then
                 frame:SetStatusBarTexture("ui-castingbar-filling-standard");
             end
+            hideChargeTiers = true;
         end
 
         -- https://github.com/tomrus88/BlizzardInterfaceCode/blob/25276211effd4b92effa1c2c6671b5e68db85e84/Interface/AddOns/Blizzard_UIPanels_Game/Mainline/CastingBarFrame.lua#L908
-        if self.NumStages then
+        if hideChargeTiers and self.NumStages then
             for i = 1,self.NumStages-1,1 do
                 if self["ChargeTier"..i] then
                     self["ChargeTier"..i]:Hide();
