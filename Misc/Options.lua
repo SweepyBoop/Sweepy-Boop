@@ -123,7 +123,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
                         end
                     },
-        
+
                     header2 = {
                         order = 10,
                         type = "header",
@@ -140,7 +140,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             SweepyBoop:SetupQueueReminder();
                         end
                     },
-        
+
                     header3 = {
                         order = 12,
                         type = "header",
@@ -169,14 +169,25 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             SweepyBoop:SetupAlwaysShowDruidComboPoints();
                         end,
                     },
-        
-                    header4 = {
+                    fixEvokerCastBars = {
                         order = 15,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. " Fix Evoker cast bars",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            --SweepyBoop:SetupFixEvokerCastbars();
+                        end,
+                    },
+
+                    header4 = {
+                        order = 16,
                         type = "header",
                         name = "Arena",
                     },
                     hideBlizzArenaFrames = {
-                        order = 16,
+                        order = 17,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_arena_3v3_3")) .. " Hide Blizzard arena frames",
@@ -190,21 +201,21 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end
                     },
                     arenaSurrenderEnabled = {
-                        order = 17,
+                        order = 18,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Type /afk to surrender, type /gg to leave without confirmation",
                     },
-        
+
                     showDampenPercentage = {
-                        order = 18,
+                        order = 19,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
                     },
-        
+
                     healerIndicator = {
-                        order = 19,
+                        order = 20,
                         type = "toggle",
                         name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
                         desc = "To make it easier to identify the healer in case of class stacking",
@@ -213,15 +224,15 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not ( Gladius or sArena ) );
                         end
                     },
-        
+
                     header6 = {
-                        order = 20,
+                        order = 21,
                         type = "header",
                         name = "",
                     },
-        
+
                     showMinimapIcon = {
-                        order = 21,
+                        order = 22,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Logo") .. " Show minimap icon for invoking options UI",
