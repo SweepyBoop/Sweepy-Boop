@@ -156,6 +156,7 @@ local defaults = {
             queueReminder = true,
             combatIndicator = true,
             alwaysShowDruidComboPoints = true,
+            fixEvokerCastBars = true,
             hideBlizzArenaFrames = true,
             arenaSurrenderEnabled = true,
             healerIndicator = true,

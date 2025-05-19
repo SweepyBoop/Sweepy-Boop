@@ -29,10 +29,8 @@ local function FixBlizzardCastBar(self)
     if self.blizzardCastBarFixed then return end
 
     self:HookScript("OnEvent", function(frame)
-        if frame:IsForbidden() then return end
+        if frame:IsForbidden() or ( not SweepyBoop.db.profile.misc.fixEvokerCastBars ) then return end
         if ( frame.barType == "uninterruptible" ) then
-            -- https://github.com/Sammers21/sArena_Updated2_by_sammers/blob/master/sArena.lua
-            -- Keep sArena visuals as possible
             if ( not frame.sArenaCastBar ) then
                 frame:SetStatusBarTexture("ui-castingbar-uninterruptable");
             end
