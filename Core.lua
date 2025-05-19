@@ -156,6 +156,7 @@ local defaults = {
             queueReminder = true,
             combatIndicator = true,
             alwaysShowDruidComboPoints = true,
+            fixEvokerCastBars = true,
             hideBlizzArenaFrames = true,
             arenaSurrenderEnabled = true,
             healerIndicator = true,
@@ -380,6 +381,7 @@ function SweepyBoop:OnInitialize()
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
+    self:SetupFixBlizzardCastbars();
 end
 
 function SweepyBoop:RefreshConfig()
