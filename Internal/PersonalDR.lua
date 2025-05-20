@@ -260,11 +260,12 @@ end
 local function CreateDRIcon(category, glow)
     local f = CreateFrame("Frame", nil, UIParent);
     f:SetMouseClickEnabled(false);
+    f:SetFrameStrata("HIGH");
     f:Hide();
     f.spellID = categoryPriority[category];
     f.glow = glow;
     f.stacks = 0;
-    f:SetSize(27, 27);
+    f:SetSize(32, 32);
 
     f.texture = f:CreateTexture();
     f.texture:SetTexture(categoryIcon[category]);
@@ -274,16 +275,17 @@ local function CreateDRIcon(category, glow)
     f.border:SetAtlas("Forge-ColorSwatchSelection");
     f.border:SetScale(0.4);
     f.border:SetDesaturated(true);
-    f.border:SetPoint("TOPLEFT", f, "TOPLEFT", -6.75, 4.5);
-    f.border:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 6.75, -4.5);
+    f.border:SetPoint("TOPLEFT", f, "TOPLEFT", -8, 16 / 3);
+    f.border:SetPoint("BOTTOMRIGHT", f, "BOTTOMRIGHT", 8, -16 / 3);
 
     -- Assign frame name BoopHideTimer* to hide timer by OmniCC
     f.cooldown = CreateFrame("Cooldown", nil, f, "CooldownFrameTemplate");
     f.cooldown:SetAllPoints();
     f.cooldown:SetDrawEdge(true);
+    f.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
     f.cooldown:SetSwipeColor(0, 0, 0, 0.5);
+    f.cooldown:SetCountdownFont("SystemFont_Small");
     f.cooldown:SetAlpha(1);
-    f.cooldown:SetHideCountdownNumbers(true);
     f.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent then
@@ -299,7 +301,7 @@ local setPointOptions = {
     relativeTo = "PlayerFrame",
     relativePoint = "RIGHT",
     offsetX = -25,
-    offsetY = -5,
+    offsetY = -8,
 };
 local drIconGroup = addon.CreateIconGroup(setPointOptions, { direction = "LEFT", anchor = "BOTTOMRIGHT", margin = 3 });
 local stunIcon = CreateDRIcon("stun", true);
