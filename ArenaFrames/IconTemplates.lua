@@ -174,6 +174,8 @@ addon.OnDurationTimerFinished = function(self)
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
+
+    addon.UpdateTargetHighlight(icon);
 end
 
 addon.CheckTimerToStart = function (timers)
