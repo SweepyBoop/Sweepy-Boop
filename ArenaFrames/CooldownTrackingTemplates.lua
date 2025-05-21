@@ -182,16 +182,20 @@ addon.StartCooldownTrackingIcon = function (icon)
         elseif spell.duration == addon.DURATION_DYNAMIC then
             local expirationTime;
             duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
-            startTime = expirationTime - duration;
+            if duration and expirationTime then
+                startTime = expirationTime - duration;
+            end
         else
             duration = spell.duration;
         end
 
-        SetGlowDuration(icon, startTime, duration);
-        if icon.cooldown then
-            icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
+        if startTime and duration then
+            SetGlowDuration(icon, startTime, duration);
+            if icon.cooldown then
+                icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
+            end
+            addon.ShowOverlayGlow(icon);
         end
-        addon.ShowOverlayGlow(icon);
     end
 
     addon.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
