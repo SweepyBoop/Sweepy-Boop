@@ -152,6 +152,13 @@ addon.SetUsedIconAlpha = function (icon)
         return;
     end
 
+    if ( not icon.started ) then
+        -- Icon cooldown was reset while duration timer was running
+        -- e.g., pressed Cold Snap while Ice Block is active
+        addon.SetUnusedIconAlpha(icon);
+        return;
+    end
+
     local usedIconAlpha;
     local config = addon.GetIconSetConfig(icon.iconSetID);
     if config.showUnusedIcons then

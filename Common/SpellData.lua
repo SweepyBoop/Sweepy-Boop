@@ -1043,6 +1043,7 @@ addon.SpellData = {
     -- Ice Block
     [45438] = {
         cooldown = 240,
+        duration = 10,
         opt_lower_cooldown = 180,
         class = addon.MAGE,
         category = category.IMMUNITY,
