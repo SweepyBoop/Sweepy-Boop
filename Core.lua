@@ -237,7 +237,6 @@ local function FillDefaults()
                 offsetX = 0,
                 offsetY = 0,
 
-                glow = true,
                 iconSize = 32,
                 iconPadding = 2,
                 unusedIconAlpha = 0.5,
