@@ -1043,7 +1043,7 @@ addon.SpellData = {
     -- Ice Block
     [45438] = {
         cooldown = 240,
-        duration = 10,
+        --duration = 10, -- TODO: enable duration for defensives
         opt_lower_cooldown = 180,
         class = addon.MAGE,
         category = category.IMMUNITY,
@@ -2935,6 +2935,7 @@ for _, spell in pairs(addon.SpellData) do
         local parent = addon.SpellData[spell.parent];
 
         spell.cooldown = spell.cooldown or parent.cooldown;
+        spell.duration = spell.duration or parent.duration;
         spell.class = spell.class or parent.class;
         spell.spec = spell.spec or parent.spec;
         spell.category = spell.category or parent.category;
