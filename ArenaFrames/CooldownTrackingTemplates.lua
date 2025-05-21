@@ -167,7 +167,7 @@ addon.StartCooldownTrackingIcon = function (icon)
 
         addon.RefreshCooldownTimer(icon.cooldown);
 
-        if ( icon.template == addon.ICON_TEMPLATE.FLASH ) then
+        if ( icon.template == addon.ICON_TEMPLATE.FLASH ) or ( not spell.duration ) then
             StartAnimation(icon);
         end
     end

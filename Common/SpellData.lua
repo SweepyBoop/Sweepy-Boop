@@ -2924,6 +2924,11 @@ if addon.TEST_MODE then
 end
 
 for _, spell in pairs(addon.SpellData) do
+    -- Fill default glow duration for burst abilities
+    if spell.category == category.BURST and ( not spell.duration ) then
+        spell.duration = 3;
+    end
+
     -- Fill options from parent
     if spell.parent then
         local parent = addon.SpellData[spell.parent];
