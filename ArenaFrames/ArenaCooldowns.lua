@@ -756,7 +756,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     if ( subEvent == addon.SPELL_AURA_REMOVED ) and unitGuidToId[sourceGUID] then
         local icon = self.activeMap[unitGuidToId[sourceGUID] .. "-" .. spellId];
         if icon and ( icon.template == addon.ICON_TEMPLATE.GLOW ) then
-            addon.ResetBurstDuration(icon);
+            addon.ResetGlowDuration(icon);
             return;
         end
     end
@@ -831,7 +831,7 @@ local function ProcessUnitAura(self, event, ...)
                     local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
                     local iconID = unitTarget .. "-" .. iconSpellID;
                     if self.activeMap[iconID] then
-                        addon.RefreshBurstDuration(self.activeMap[iconID], auraData.duration, auraData.expirationTime);
+                        addon.RefreshGlowDuration(self.activeMap[iconID], auraData.duration, auraData.expirationTime);
                     end
                 end
             end
