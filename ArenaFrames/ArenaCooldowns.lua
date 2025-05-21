@@ -77,6 +77,17 @@ local function GetIconSize(iconSetID)
     end
 end
 
+local function GetIconGlow(iconSetID)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    if ( iconSetID == addon.ICON_SET_ID.ARENA_MAIN ) then
+        return config.arenaCooldownTrackerGlow;
+    elseif ( iconSetID == addon.ICON_SET_ID.ARENA_SECONDARY ) then
+        return config.arenaCooldownTrackerGlowSecondary;
+    else
+        return config.standaloneBars[iconSetID].glow;
+    end
+end
+
 addon.GetSpellListConfig = function (iconSetID)
     local spellList;
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
@@ -113,11 +124,9 @@ local function GetIcon(iconSetID, unitID, spellID, test)
 
     if ( not iconPool[iconSetID][iconID] ) then
         local size = GetIconSize(iconSetID);
-        if ( spellData[spellID].category == addon.SPELLCATEGORY.BURST ) then
-            iconPool[iconSetID][iconID] = addon.CreateBurstIcon(unitID, spellID, size, true);
-        else
-            iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
-        end
+        local glow = GetIconGlow(iconSetID);
+        iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
+        iconPool[iconSetID][iconID].template = ( glow and addon.ICON_TEMPLATE.GLOW ) or addon.ICON_TEMPLATE.FLASH;
 
         -- https://warcraft.wiki.gg/wiki/API_TextureBase_SetTexCoord
         if iconSetConfig.hideBorder then
@@ -246,7 +255,7 @@ local function GetGrowOptions(iconSetID)
         growOptions.margin = config.arenaCooldownTrackerIconPadding;
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then
         growOptions = arenaFrameGrowOptions[config.arenaCooldownGrowDirectionSecondary];
-        growOptions.margin = config.arenaCooldownTrackerIconPadding;
+        growOptions.margin = config.arenaCooldownTrackerIconPaddingSecondary;
     else
         local growDirection = config.standaloneBars[iconSetID].growDirection;
         growOptions = standaloneBarGrowOptions[growDirection];
@@ -511,16 +520,6 @@ local function ResetCooldown(icon, amount, internalCooldown, resetTo) -- if rese
     end
 end
 
-local function StartIcon(icon)
-    if icon.template == addon.ICON_TEMPLATE.GLOW then
-        addon.StartBurstIcon(icon);
-    elseif icon.template == addon.ICON_TEMPLATE.FLASH then
-        addon.StartCooldownTrackingIcon(icon);
-    end
-
-    icon.started = true;
-end
-
 local function ProcessCooldownReductionFromGroveGuardian(group, destGUID)
     local unit = group.groveGuardianOwner[destGUID]; -- If Grove Guardian is killed before expiring, this will be set to nil by UNIT_DIED event processor
     if unit then
@@ -780,7 +779,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
         end
 
-        StartIcon(self.icons[iconID]);
+        addon.StartCooldownTrackingIcon(self.icons[iconID]);
 
         -- Premonition cooldown reduction
         -- This can be implemented reliably SPELL_AURA_REMOVED arrives after SPELL_CAST_SUCCESS, and we don't reset preminitionUnits here
@@ -807,7 +806,7 @@ local function ProcessUnitSpellCast(self, event, ...)
 
         local configSpellID = spell.parent or spellID;
         if spellList[tostring(configSpellID)] then
-            StartIcon(self.icons[iconID]);
+            addon.StartCooldownTrackingIcon(self.icons[iconID]);
         end
     end
 end
