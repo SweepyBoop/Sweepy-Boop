@@ -2929,7 +2929,9 @@ for _, spell in pairs(addon.SpellData) do
     if spell.category == category.BURST and ( not spell.duration ) then
         spell.duration = 3;
     end
+end
 
+for _, spell in pairs(addon.SpellData) do
     -- Fill options from parent
     if spell.parent then
         local parent = addon.SpellData[spell.parent];
