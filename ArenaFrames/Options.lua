@@ -244,7 +244,7 @@ addon.GetArenaFrameOptions = function(order)
                                 name = "Primary bar",
                             },
 
-                            arenaCooldownGlow = {
+                            arenaCooldownTrackerGlow = {
                                 order = 19,
                                 type = "toggle",
                                 width = 0.5,
@@ -334,7 +334,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
 
-                            arenaCooldownGlowSecondary = {
+                            arenaCooldownTrackerGlowSecondary = {
                                 order = 27,
                                 type = "toggle",
                                 width = 0.5,
