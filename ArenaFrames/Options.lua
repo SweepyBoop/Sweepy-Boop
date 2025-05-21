@@ -667,26 +667,36 @@ addon.GetArenaFrameOptions = function(order)
                             name = "",
                         },
 
-                        hideBorder = {
+                        glow = {
                             order = 13,
                             type = "toggle",
+                            width = 0.5,
+                            name = "Glow",
+                            desc = "Glow icons when active for offensive and defensive abilities",
+                        },
+
+                        hideBorder = {
+                            order = 14,
+                            type = "toggle",
+                            width = 0.75,
                             name = "Hide border",
                         },
 
                         showTargetHighlight = {
-                            order = 14,
+                            order = 15,
                             type = "toggle",
+                            width = 0.75,
                             name = "Highlight target",
                         },
 
                         breaker4 = {
-                            order = 15,
+                            order = 16,
                             type = "description",
                             name = "",
                         },
 
                         showUnusedIcons = {
-                            order = 16,
+                            order = 17,
                             type = "toggle",
                             name = "Show off-CD icons",
                             width = 0.9,
@@ -694,7 +704,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         unusedIconAlpha = {
-                            order = 17,
+                            order = 18,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
@@ -708,7 +718,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         usedIconAlpha = {
-                            order = 18,
+                            order = 19,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
