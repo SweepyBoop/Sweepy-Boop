@@ -171,6 +171,7 @@ end
 
 addon.OnDurationTimerFinished = function(self)
     local icon = self:GetParent();
+    addon.UpdateTargetHighlight(icon);
     addon.HideOverlayGlow(icon);
     if icon.cooldown then
         addon.SetUsedIconAlpha(icon);
@@ -181,8 +182,6 @@ addon.OnDurationTimerFinished = function(self)
             addon.IconGroup_Remove(icon:GetParent(), icon, showUnusedIcons);
         end
     end
-
-    addon.UpdateTargetHighlight(icon);
 end
 
 addon.CheckTimerToStart = function (timers)
