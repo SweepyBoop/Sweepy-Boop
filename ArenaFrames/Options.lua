@@ -249,7 +249,7 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "toggle",
                                 width = 0.5,
                                 name = "Glow",
-                                desc = "Glow icons when active for offensive and defensive abilities",
+                                desc = "Glow icons when active for offensive abilities",
                             },
 
                             arenaCooldownTrackerIconSize = {
@@ -339,7 +339,7 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "toggle",
                                 width = 0.5,
                                 name = "Glow",
-                                desc = "Glow icons when active for offensive and defensive abilities",
+                                desc = "Glow icons when active for offensive abilities",
                                 hidden = function()
                                     return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
@@ -672,7 +672,7 @@ addon.GetArenaFrameOptions = function(order)
                             type = "toggle",
                             width = 0.5,
                             name = "Glow",
-                            desc = "Glow icons when active for offensive and defensive abilities",
+                            desc = "Glow icons when active for offensive abilities",
                         },
 
                         hideBorder = {
