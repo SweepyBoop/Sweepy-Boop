@@ -118,6 +118,9 @@ local defaults = {
             arenaCooldownTrackerIconSize = 32,
             arenaCooldownTrackerIconSizeSecondary = 32,
             arenaCooldownTrackerIconPadding = 2,
+            arenaCooldownTrackerIconPaddingSecondary = 2,
+            arenaCooldownTrackerGlow = true,
+            arenaCooldownTrackerGlowSecondary = true,
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
             showUnusedIcons = false,
@@ -343,7 +346,7 @@ function SweepyBoop:OnInitialize()
 
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 640);
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 660);
 
     -- We don't add settings UI to game Options as it freezes after we modify settings then try to invoke options
     -- OmniBar has the same issue

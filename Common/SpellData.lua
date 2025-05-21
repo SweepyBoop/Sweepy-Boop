@@ -1043,6 +1043,7 @@ addon.SpellData = {
     -- Ice Block
     [45438] = {
         cooldown = 240,
+        --duration = 10, -- TODO: enable duration for defensives
         opt_lower_cooldown = 180,
         class = addon.MAGE,
         category = category.IMMUNITY,
@@ -2924,11 +2925,19 @@ if addon.TEST_MODE then
 end
 
 for _, spell in pairs(addon.SpellData) do
+    -- Fill default glow duration for burst abilities
+    if spell.category == category.BURST and ( not spell.duration ) then
+        spell.duration = 3;
+    end
+end
+
+for _, spell in pairs(addon.SpellData) do
     -- Fill options from parent
     if spell.parent then
         local parent = addon.SpellData[spell.parent];
 
         spell.cooldown = spell.cooldown or parent.cooldown;
+        spell.duration = spell.duration or parent.duration;
         spell.class = spell.class or parent.class;
         spell.spec = spell.spec or parent.spec;
         spell.category = spell.category or parent.category;

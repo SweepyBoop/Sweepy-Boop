@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local GetSpellTexture = C_Spell.GetSpellTexture;
+local iconSize = addon.DEFAULT_ICON_SIZE;
 
 local function StartAnimation(icon)
     icon.FlashAnimation:Play();
@@ -15,6 +16,30 @@ end
 local function OnCooldownTimerFinished(self)
     StopAnimation(self:GetParent());
     addon.FinishCooldownTimer(self);
+end
+
+local function SetGlowDuration(icon, startTime, duration)
+    icon.duration:SetCooldown(startTime, duration);
+    icon.duration.finish = startTime + duration;
+end
+
+-- Early dismissal of icon glow due to aura being dispelled, right clicking the buff, etc.
+addon.ResetGlowDuration = function (icon)
+    if ( not icon.duration ) then return end
+
+    SetGlowDuration(icon, 0, 0);
+    addon.OnDurationTimerFinished(icon.duration);
+end
+
+addon.RefreshGlowDuration = function (icon, duration, expirationTime)
+    if ( not icon.duration ) then return end
+
+    if ( expirationTime - GetTime() > 1 ) then -- Don't bother extending if less than 1 sec left
+        SetGlowDuration(icon, expirationTime - duration, duration);
+        if icon.cooldown then
+            icon.cooldown:Hide(); -- Duration OnCooldownDone callback will show the cooldown timer
+        end
+    end
 end
 
 function CooldownTracking_OnAnimationFinished(icon)
@@ -42,7 +67,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
     frame.category = spell.category;
 
     if size then
-        local scale = size / addon.DEFAULT_ICON_SIZE;
+        local scale = size / iconSize;
         frame:SetScale(scale);
     end
 
@@ -68,6 +93,24 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
     end
 
     frame.cooldown:SetScript("OnCooldownDone", OnCooldownTimerFinished);
+
+    if spell.duration then
+        frame.duration = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+        frame.duration:SetAllPoints();
+        frame.duration:SetDrawEdge(false);
+        frame.duration:SetDrawBling(false);
+        frame.duration:SetDrawSwipe(true);
+        frame.duration:SetReverse(true);
+        frame.duration.noCooldownCount = true;
+        frame.duration:SetAlpha(0);
+
+        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+        frame.spellActivationAlert:SetSize(iconSize * 1.4, iconSize * 1.4);
+        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
+        frame.spellActivationAlert:Hide();
+
+        frame.duration:SetScript("OnCooldownDone", addon.OnDurationTimerFinished);
+    end
 
     return frame;
 end
@@ -103,29 +146,57 @@ addon.StartCooldownTrackingIcon = function (icon)
     -- Always use timers[1] since it will be either off cooldown, or closet to come off cooldown
     local now = GetTime();
 
-    -- Check which one should be used
-    local index = addon.CheckTimerToStart(timers);
-    --print("Use timers", index);
-    timers[index].start = now;
-    timers[index].duration = info.cooldown;
-    timers[index].finish = timers[index].start + timers[index].duration;
+    if spell.cooldown then
+        -- Check which one should be used
+        local index = addon.CheckTimerToStart(timers);
+        --print("Use timers", index);
+        timers[index].start = now;
+        timers[index].duration = info.cooldown;
+        timers[index].finish = timers[index].start + timers[index].duration;
 
-    if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
-        -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
-        -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
-        --print("Pause timers[2]");
-        timers[2].finish = math.huge;
-    elseif ( index == 2 ) then
-        -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
-        --print("Pause timers[2]");
-        timers[2].finish = math.huge;
+        if ( index == 1 ) and timers[2] and ( now < timers[2].finish ) then
+            -- If we use timers[1] while timers[2] is already on cooldown, it will suspend timers[2]'s cooldown progress until timers[1] recovers
+            -- So here we set it to a positive infinity, and while default comes back, we'll resume its cooldown progress
+            --print("Pause timers[2]");
+            timers[2].finish = math.huge;
+        elseif ( index == 2 ) then
+            -- If we use 2nd charge, also set it to infinity, since it will only start recovering when default charge comes back
+            --print("Pause timers[2]");
+            timers[2].finish = math.huge;
+        end
+
+        addon.RefreshCooldownTimer(icon.cooldown);
+
+        if ( icon.template == addon.ICON_TEMPLATE.FLASH ) or ( not spell.duration ) then
+            StartAnimation(icon);
+        end
     end
 
-    addon.RefreshCooldownTimer(icon.cooldown);
+    if spell.duration and ( icon.template == addon.ICON_TEMPLATE.GLOW ) then
+        -- Decide duration
+        local startTime = now;
+        local duration;
+        if spell.duration == addon.DURATION_DYNAMIC then
+            local expirationTime;
+            duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
+            if duration and expirationTime then
+                startTime = expirationTime - duration;
+            end
+        else
+            duration = spell.duration;
+        end
 
-    StartAnimation(icon);
+        if startTime and duration then
+            SetGlowDuration(icon, startTime, duration);
+            if icon.cooldown then
+                icon.cooldown:Hide(); -- Hide the cooldown timer until duration is over
+            end
+            addon.ShowOverlayGlow(icon);
+        end
+    end
 
     addon.IconGroup_Insert(icon:GetParent(), icon, icon.unit .. "-" .. icon.spellID);
+    icon.started = true;
 end
 
 -- For spells with reduce_on_interrupt, set an internal cooldown so it doesn't reset cd multiple times

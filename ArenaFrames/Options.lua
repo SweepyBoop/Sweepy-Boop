@@ -152,7 +152,7 @@ addon.GetArenaFrameOptions = function(order)
                                 order = 6,
                                 width = 1,
                                 type = "toggle",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enabled",
+                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Spell_holy_powerinfusion")) .. " Enable Primary bar",
                             },
                             arenaCooldownSecondaryBar = {
                                 order = 7,
@@ -170,31 +170,36 @@ addon.GetArenaFrameOptions = function(order)
                                 name = "",
                             },
 
-                            hideCountDownNumbers = {
+                            hideBorder = {
                                 order = 9,
                                 type = "toggle",
-                                width = "full",
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " Hide countdown numbers",
+                                name = "Hide border",
+                            },
+
+                            hideCountDownNumbers = {
+                                order = 10,
+                                type = "toggle",
+                                width = 1.25,
+                                name = "Hide countdown numbers",
                                 desc = "Hide countdown numbers but show a more visible swiping edge",
                             },
 
-                            hideBorder = {
-                                order = 10,
-                                type = "toggle",
-                                width = "full",
-                                name = addon.FORMAT_ATLAS("UI-HUD-ActionBar-IconFrame") .. " Hide border",
+                            breaker2 = {
+                                order = 11,
+                                type = "description",
+                                name = "",
                             },
 
                             showUnusedIcons = {
-                                order = 11,
+                                order = 12,
                                 type = "toggle",
                                 width = 1,
-                                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_deathknight_iceboundfortitude")) .. " Show off-CD icons",
+                                name = "Show off-CD icons",
                                 desc = "Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected",
                             },
 
                             unusedIconAlpha = {
-                                order = 12,
+                                order = 13,
                                 type = "range",
                                 width = 0.8,
                                 isPercent = true,
@@ -208,7 +213,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             usedIconAlpha = {
-                                order = 13,
+                                order = 14,
                                 type = "range",
                                 width = 0.8,
                                 isPercent = true,
@@ -221,39 +226,44 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
 
-                            breaker2 = {
-                                order = 14,
+                            breaker3 = {
+                                order = 15,
                                 type = "description",
                                 name = "",
                             },
 
+                            breaker4 = {
+                                order = 17,
+                                type = "description",
+                                name = "",
+                            },
+
+                            headerPosition = {
+                                order = 18,
+                                type = "header",
+                                name = "Primary bar",
+                            },
+
+                            arenaCooldownTrackerGlow = {
+                                order = 19,
+                                type = "toggle",
+                                width = 0.5,
+                                name = "Glow",
+                                desc = "Glow icons when active for offensive abilities",
+                            },
+
                             arenaCooldownTrackerIconSize = {
-                                order = 15,
+                                order = 20,
                                 type = "range",
                                 width = 0.75,
                                 min = 16,
                                 max = 64,
                                 step = 1,
                                 name = "Icon size",
-                                desc = "Size of arena defensive cooldown icons",
-                            },
-
-                            arenaCooldownTrackerIconSizeSecondary = {
-                                order = 16,
-                                type = "range",
-                                width = 1,
-                                min = 16,
-                                max = 64,
-                                step = 1,
-                                name = "Icon size (secondary bar)",
-                                desc = "Size of arena defensive cooldown icons",
-                                hidden = function()
-                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
-                                end
                             },
 
                             arenaCooldownTrackerIconPadding = {
-                                order = 17,
+                                order = 21,
                                 type = "range",
                                 width = 0.75,
                                 min = 0,
@@ -268,20 +278,14 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
 
-                            breaker3 = {
-                                order = 18,
+                            breaker5 = {
+                                order = 22,
                                 type = "description",
                                 name = "",
                             },
 
-                            headerPosition = {
-                                order = 19,
-                                type = "header",
-                                name = "Positioning",
-                            },
-
                             arenaCooldownGrowDirection = {
-                                order = 20,
+                                order = 23,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -292,7 +296,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetX = {
-                                order = 21,
+                                order = 24,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -306,7 +310,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetY = {
-                                order = 22,
+                                order = 25,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,
@@ -322,16 +326,68 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             headerPosition2 = {
-                                order = 23,
+                                order = 26,
                                 type = "header",
-                                name = "Secondary bar positioning",
+                                name = "Secondary bar",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
+
+                            arenaCooldownTrackerGlowSecondary = {
+                                order = 27,
+                                type = "toggle",
+                                width = 0.5,
+                                name = "Glow",
+                                desc = "Glow icons when active for offensive abilities",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
+
+                            arenaCooldownTrackerIconSizeSecondary = {
+                                order = 28,
+                                type = "range",
+                                width = 0.75,
+                                min = 16,
+                                max = 64,
+                                step = 1,
+                                name = "Icon size",
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
+
+                            arenaCooldownTrackerIconPaddingSecondary = {
+                                order = 29,
+                                type = "range",
+                                width = 0.75,
+                                min = 0,
+                                max = 10,
+                                step = 1,
+                                name = "Padding",
+                                desc = "Space between icons",
+                                set = function (info, val)
+                                    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                                    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                                    SweepyBoop:RepositionArenaCooldownTracker(true);
+                                end,
+                                hidden = function()
+                                    return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
+                                end
+                            },
+
+                            breaker6 = {
+                                order = 30,
+                                type = "description",
+                                name = "",
                                 hidden = function()
                                     return ( not SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar );
                                 end
                             },
 
                             arenaCooldownGrowDirectionSecondary = {
-                                order = 24,
+                                order = 31,
                                 type = "select",
                                 width = 0.75,
                                 name = "Grow direction",
@@ -347,7 +403,7 @@ addon.GetArenaFrameOptions = function(order)
                             },
 
                             arenaCooldownOffsetXSecondary = {
-                                order = 25,
+                                order = 32,
                                 type = "range",
                                 min = -300,
                                 max = 300,
@@ -364,7 +420,7 @@ addon.GetArenaFrameOptions = function(order)
                                 end
                             },
                             arenaCooldownOffsetYSecondary = {
-                                order = 26,
+                                order = 33,
                                 type = "range",
                                 width = 0.8,
                                 min = -150,
@@ -394,7 +450,7 @@ addon.GetArenaFrameOptions = function(order)
                     spellList = {
                         order = 7,
                         type = "group",
-                        name = "Spells",
+                        name = "Primary bar spells",
                         desc = "Select which abilities to track cooldown inside arenas",
                         get = function(info) return SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] end,
                         set = function(info, val) SweepyBoop.db.profile.arenaFrames.spellList[info[#info]] = val end,
@@ -611,26 +667,36 @@ addon.GetArenaFrameOptions = function(order)
                             name = "",
                         },
 
-                        hideBorder = {
+                        glow = {
                             order = 13,
                             type = "toggle",
+                            width = 0.5,
+                            name = "Glow",
+                            desc = "Glow icons when active for offensive abilities",
+                        },
+
+                        hideBorder = {
+                            order = 14,
+                            type = "toggle",
+                            width = 0.75,
                             name = "Hide border",
                         },
 
                         showTargetHighlight = {
-                            order = 14,
+                            order = 15,
                             type = "toggle",
+                            width = 0.75,
                             name = "Highlight target",
                         },
 
                         breaker4 = {
-                            order = 15,
+                            order = 16,
                             type = "description",
                             name = "",
                         },
 
                         showUnusedIcons = {
-                            order = 16,
+                            order = 17,
                             type = "toggle",
                             name = "Show off-CD icons",
                             width = 0.9,
@@ -638,7 +704,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         unusedIconAlpha = {
-                            order = 17,
+                            order = 18,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
@@ -652,7 +718,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         usedIconAlpha = {
-                            order = 18,
+                            order = 19,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
