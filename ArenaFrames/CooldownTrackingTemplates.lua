@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local GetSpellTexture = C_Spell.GetSpellTexture;
+local iconSize = addon.DEFAULT_ICON_SIZE;
 
 local function StartAnimation(icon)
     icon.FlashAnimation:Play();
@@ -66,7 +67,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
     frame.category = spell.category;
 
     if size then
-        local scale = size / addon.DEFAULT_ICON_SIZE;
+        local scale = size / iconSize;
         frame:SetScale(scale);
     end
 

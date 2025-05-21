@@ -148,6 +148,8 @@ local function GetIcon(iconSetID, unitID, spellID, test)
     if ( iconPool[iconSetID][iconID].lastModified ~= config.lastModified ) then
         local size = GetIconSize(iconSetID);
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
+        local glow = GetIconGlow(iconSetID);
+        iconPool[iconSetID][iconID].template = ( glow and addon.ICON_TEMPLATE.GLOW ) or addon.ICON_TEMPLATE.FLASH;
 
         if iconSetConfig.hideBorder then
             iconPool[iconSetID][iconID].Icon:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875);
