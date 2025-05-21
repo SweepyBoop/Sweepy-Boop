@@ -176,10 +176,7 @@ addon.StartCooldownTrackingIcon = function (icon)
         -- Decide duration
         local startTime = now;
         local duration;
-        if ( not spell.duration ) then
-            -- Default glow duration
-            duration = 3;
-        elseif spell.duration == addon.DURATION_DYNAMIC then
+        if spell.duration == addon.DURATION_DYNAMIC then
             local expirationTime;
             duration, expirationTime = select(5, AuraUtil.UnpackAuraData(addon.Util_GetUnitBuff(icon.unit, icon.spellID)));
             if duration and expirationTime then
