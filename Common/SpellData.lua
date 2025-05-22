@@ -2855,6 +2855,8 @@ addon.SpellResets[382445] = {}; -- Shifting Power each tick
 for spellID, spell in pairs(addon.SpellData) do
     if spell.class == addon.MAGE then
         table.insert(addon.SpellResets[382445], { spellID = spellID, amount = 3 });
+    elseif ( spell.class == addon.DRUID and spellID ~= 740 ) then
+        table.insert(addon.SpellResets[740], { spellID = spellID, amount = 5 });
     end
 end
 
