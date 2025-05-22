@@ -122,7 +122,8 @@ function SweepyBoop:ValidateImport()
     if import.profileNameEditBox then
         local profileName = import.profileName;
         if ( profileName == "" ) then
-            self:ImportError(import, "Specify a profile name");
+            import.statustext:SetTextColor(1, 0.82, 0);
+		    import:SetStatusText("Specify a profile name");
             return;
         elseif ( self.db.profiles[profileName] ) then
             self:ImportError(import, "Profile name already exists");
