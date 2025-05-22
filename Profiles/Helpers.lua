@@ -43,6 +43,31 @@ function SweepyBoop:ImportError(importDialog, message)
 	importDialog.button:SetDisabled(true);
 end
 
+function SweepyBoop:ValidateImport()
+    local import = addon.importDialogs and addon.importDialogs[""];
+    if ( not import ) then return end
+
+    if ( not import.data ) then
+        return;
+    end
+
+    if import.profileNameEditBox then
+        local profileName = import.profileName;
+        if ( profileName == "" ) then
+            import.statustext:SetTextColor(1, 0.82, 0);
+		    import:SetStatusText("Specify a profile name");
+            return;
+        elseif ( self.db.profiles[profileName] ) then
+            self:ImportError(import, "Profile name already exists");
+            return;
+        end
+    end
+
+    import.statustext:SetTextColor(0,1,0);
+    import:SetStatusText("Ready to import");
+    import.button:SetDisabled(false);
+end
+
 function SweepyBoop:ImportProfile(data, module)
     local importDialog = addon.importDialogs and addon.importDialogs[module]; -- module = "" for importing the entire profile, it's valid to use "" as table key
     if ( not importDialog ) then return end
@@ -53,7 +78,8 @@ function SweepyBoop:ImportProfile(data, module)
         self.db.profile[module] = data.profile[module];
     else
         -- Setting self.db.profile = data.profile will not work, it will reset to default on reload / logout
-        local profile = string.format("Imported (%s)", date());
+        local profile = importDialog.profileName;
+        self:ValidateImport(); -- Validate again to be safe
         self.db.profiles[profile] = data.profile;
         self.db:SetProfile(profile);
     end
@@ -109,31 +135,6 @@ addon.CreateExportDialog = function()
     export.editBox = exportEditBox;
 
     return export;
-end
-
-function SweepyBoop:ValidateImport()
-    local import = addon.importDialogs and addon.importDialogs[""];
-    if ( not import ) then return end
-
-    if ( not import.data ) then
-        return;
-    end
-
-    if import.profileNameEditBox then
-        local profileName = import.profileName;
-        if ( profileName == "" ) then
-            import.statustext:SetTextColor(1, 0.82, 0);
-		    import:SetStatusText("Specify a profile name");
-            return;
-        elseif ( self.db.profiles[profileName] ) then
-            self:ImportError(import, "Profile name already exists");
-            return;
-        end
-    end
-
-    import.statustext:SetTextColor(0,1,0);
-    import:SetStatusText("Ready to import");
-    import.button:SetDisabled(false);
 end
 
 addon.CreateImportDialog = function(module)
