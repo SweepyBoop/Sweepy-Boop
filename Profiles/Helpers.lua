@@ -94,8 +94,10 @@ function SweepyBoop:ShowImport(module)
     local importDialog = addon.importDialogs and addon.importDialogs[module];
     if ( not importDialog ) then return end
 
+    importDialog.data = nil;
     importDialog.editBox:SetText("");
     if importDialog.profileNameEditBox then
+        importDialog.profileName = nil;
         importDialog.profileNameEditBox:SetText("");
     end
     self:ImportError(importDialog);
