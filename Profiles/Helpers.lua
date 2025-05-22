@@ -114,7 +114,11 @@ end
 addon.CreateImportDialog = function(module)
     local import = AceGUI:Create("Frame");
 
-    import:SetWidth(550);
+    import:SetWidth(600);
+    if ( module == "" ) then
+        import:SetHeight(525);
+    end
+
     import:EnableResize(false);
     import:SetStatusText("");
     import:SetLayout("Flow");
@@ -125,11 +129,21 @@ addon.CreateImportDialog = function(module)
     importEditBox:SetNumLines(25);
     importEditBox:SetText("");
     importEditBox:SetFullWidth(true);
-    importEditBox:SetWidth(500);
+    importEditBox:SetWidth(550);
     importEditBox.button:Hide();
     importEditBox.frame:SetClipsChildren(true);
     import:AddChild(importEditBox);
     import.editBox = importEditBox;
+
+    if ( module == "" ) then
+        local profileName = AceGUI:Create("EditBox");
+        profileName:SetLabel("Profile name");
+        profileName:SetText("");
+        profileName:SetWidth(250);
+        import:AddChild(profileName);
+        import.profileName = profileName;
+    end
+
     local importButton = AceGUI:Create("Button");
     importButton:SetWidth(100);
     importButton:SetText("Import");
