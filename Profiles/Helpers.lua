@@ -43,8 +43,8 @@ function SweepyBoop:ImportError(importDialog, message)
     importDialog.button:SetDisabled(true);
 end
 
-function SweepyBoop:ValidateImport()
-    local import = addon.importDialogs and addon.importDialogs[""];
+function SweepyBoop:ValidateImport(module)
+    local import = addon.importDialogs and addon.importDialogs[module];
     if ( not import ) then return end
 
     if ( not import.data ) then
@@ -188,12 +188,12 @@ addon.CreateImportDialog = function(module)
         local data = SweepyBoop:Decode(widget:GetText(), module);
         if (not data) then return end
         import.data = data;
-        SweepyBoop:ValidateImport();
+        SweepyBoop:ValidateImport(module);
     end)
     if import.profileNameEditBox then
         import.profileNameEditBox:SetCallback("OnTextChanged", function(widget)
             import.profileName = widget:GetText();
-            SweepyBoop:ValidateImport();
+            SweepyBoop:ValidateImport(module);
         end)
     end
 
