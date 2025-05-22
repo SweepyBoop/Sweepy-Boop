@@ -6,15 +6,15 @@ function SweepyBoop:Decode(encoded, module)
     if ( not importDialog ) then return end
 
     local LibDeflate = LibStub:GetLibrary("LibDeflate");
-	local decoded = LibDeflate:DecodeForPrint(encoded);
-	if (not decoded) then return self:ImportError(importDialog, "DecodeForPrint") end
+    local decoded = LibDeflate:DecodeForPrint(encoded);
+    if (not decoded) then return self:ImportError(importDialog, "DecodeForPrint") end
 
-	local decompressed = LibDeflate:DecompressZlib(decoded);
-	if (not decompressed) then return self:ImportError(importDialog, "DecompressZlib") end
+    local decompressed = LibDeflate:DecompressZlib(decoded);
+    if (not decompressed) then return self:ImportError(importDialog, "DecompressZlib") end
 
-	local success, deserialized = self:Deserialize(decompressed);
-	if ( not success ) then return self:ImportError(importDialog, "Deserialize") end
-	return deserialized;
+    local success, deserialized = self:Deserialize(decompressed);
+    if ( not success ) then return self:ImportError(importDialog, "Deserialize") end
+    return deserialized;
 end
 
 -- For export, just export the entire profile
@@ -34,13 +34,13 @@ end
 
 function SweepyBoop:ImportError(importDialog, message)
     if ( not message ) or ( importDialog.editBox.editBox:GetNumLetters() == 0 ) then
-		importDialog.statustext:SetTextColor(1, 0.82, 0);
-		importDialog:SetStatusText("Paste code to import a profile");
-	else
-		importDialog.statustext:SetTextColor(1, 0, 0);
-		importDialog:SetStatusText(string.format("Import failed (%s)", message));
-	end
-	importDialog.button:SetDisabled(true);
+        importDialog.statustext:SetTextColor(1, 0.82, 0);
+        importDialog:SetStatusText("Paste code to import a profile");
+    else
+        importDialog.statustext:SetTextColor(1, 0, 0);
+        importDialog:SetStatusText(string.format("Import failed (%s)", message));
+    end
+    importDialog.button:SetDisabled(true);
 end
 
 function SweepyBoop:ValidateImport()
@@ -55,7 +55,7 @@ function SweepyBoop:ValidateImport()
         local profileName = import.profileName;
         if ( profileName == nil ) or ( profileName == "" ) then
             import.statustext:SetTextColor(1, 0.82, 0);
-		    import:SetStatusText("Specify a profile name");
+            import:SetStatusText("Specify a profile name");
             return;
         elseif ( self.db.profiles[profileName] ) then
             self:ImportError(import, "Profile name already exists");
@@ -97,10 +97,10 @@ function SweepyBoop:ShowImport(module)
     if importDialog.profileNameEditBox then
         importDialog.profileNameEditBox:SetText("");
     end
-	self:ImportError(importDialog);
-	importDialog:Show();
-	importDialog.button:SetDisabled(true);
-	importDialog.editBox:SetFocus();
+    self:ImportError(importDialog);
+    importDialog:Show();
+    importDialog.button:SetDisabled(true);
+    importDialog.editBox:SetFocus();
 end
 
 function SweepyBoop:ShowExport()
@@ -111,9 +111,9 @@ function SweepyBoop:ShowExport()
     if ( not data ) then return end
 
     exportDialog.editBox:SetText(self:ExportProfile());
-	exportDialog:Show();
-	exportDialog.editBox:SetFocus();
-	exportDialog.editBox:HighlightText();
+    exportDialog:Show();
+    exportDialog.editBox:SetFocus();
+    exportDialog.editBox:HighlightText();
 end
 
 addon.CreateExportDialog = function()
