@@ -2857,7 +2857,7 @@ for spellID, spell in pairs(addon.SpellData) do
     if spell.class == addon.MAGE then
         table.insert(addon.SpellResets[382445], { spellID = spellID, amount = 3 });
     elseif ( spell.class == addon.DRUID and spellID ~= 740 ) then
-        table.insert(addon.SpellResets[157982], { spellID = spellID, amount = 5 });
+        table.insert(addon.SpellResets[157982], { spellID = spellID, amount = 4 });
     end
 end
 
