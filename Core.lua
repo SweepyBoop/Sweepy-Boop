@@ -346,7 +346,7 @@ function SweepyBoop:OnInitialize()
 
     options.args.profiles = LibStub("AceDBOptions-3.0"):GetOptionsTable(self.db);
     LibStub("AceConfig-3.0"):RegisterOptionsTable(addonName, options);
-    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 750, 660);
+    LibStub("AceConfigDialog-3.0"):SetDefaultSize(addonName, 760, 660);
 
     -- We don't add settings UI to game Options as it freezes after we modify settings then try to invoke options
     -- OmniBar has the same issue

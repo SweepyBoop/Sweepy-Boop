@@ -2850,11 +2850,14 @@ addon.SpellResets = {
 };
 
 addon.SpellResets[382445] = {}; -- Shifting Power each tick
+addon.SpellResets[157982] = {}; -- Tranquility each tick
 -- Reduce each Mage spell by 3 Sec
 -- Fill the entries programatically from addon.Spells
 for spellID, spell in pairs(addon.SpellData) do
     if spell.class == addon.MAGE then
         table.insert(addon.SpellResets[382445], { spellID = spellID, amount = 3 });
+    elseif ( spell.class == addon.DRUID and spellID ~= 740 ) then
+        table.insert(addon.SpellResets[157982], { spellID = spellID, amount = 4 });
     end
 end
 
@@ -2901,6 +2904,7 @@ if addon.TEST_MODE then
         class = addon.DRUID,
         category = category.BURST,
         duration = 7,
+        cooldown = 30,
         trackDest = true,
         trackEvent = addon.SPELL_AURA_APPLIED,
         baseline = true,
