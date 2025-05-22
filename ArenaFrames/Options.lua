@@ -1,4 +1,5 @@
 local _, addon = ...;
+local yellowColor = "cFFFFFF00";
 
 function SweepyBoop:TestArena()
     if IsInInstance() then
@@ -816,7 +817,16 @@ addon.GetArenaFrameOptions = function(order)
                     width = "full", -- otherwise the icon might look strange vertically
                     name = addon.FORMAT_TEXTURE(icon) .. " " .. name,
                     desc = function ()
-                        return addon.SPELL_DESCRIPTION[spellID] or "";
+                        local description = addon.SPELL_DESCRIPTION[spellID] or "";
+                        local cooldown;
+                        if ( type(spellInfo.cooldown) == "number" ) then
+                            cooldown = spellInfo.cooldown;
+                        else
+                            cooldown = spellInfo.cooldown.default;
+                        end
+                        local additionalInfo = "\n\n|" .. yellowColor .. "Cooldown".."|r "..SecondsToTime(cooldown)..
+								"\n\n|" .. yellowColor .. "Spell ID" .. "|r "..spellID;
+                        return description .. additionalInfo;
                     end
                 };
 
