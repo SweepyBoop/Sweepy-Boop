@@ -79,7 +79,7 @@ function SweepyBoop:ImportProfile(data, module)
         self.db.profile[module] = data.profile[module];
     else
         -- Setting self.db.profile = data.profile will not work, it will reset to default on reload / logout
-        if ( not self:ValidateImport() ) then return end -- Validate again to be safe
+        if ( not self:ValidateImport(module) ) then return end -- Validate again to be safe
         local profile = importDialog.profileName;
         self.db.profiles[profile] = data.profile;
         self.db:SetProfile(profile);
