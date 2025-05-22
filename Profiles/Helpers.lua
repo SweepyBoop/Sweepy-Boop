@@ -66,6 +66,7 @@ function SweepyBoop:ValidateImport(module)
     import.statustext:SetTextColor(0,1,0);
     import:SetStatusText("Ready to import");
     import.button:SetDisabled(false);
+    return true;
 end
 
 function SweepyBoop:ImportProfile(data, module)
@@ -78,7 +79,7 @@ function SweepyBoop:ImportProfile(data, module)
         self.db.profile[module] = data.profile[module];
     else
         -- Setting self.db.profile = data.profile will not work, it will reset to default on reload / logout
-        self:ValidateImport(); -- Validate again to be safe
+        if ( not self:ValidateImport() ) then return end -- Validate again to be safe
         local profile = importDialog.profileName;
         self.db.profiles[profile] = data.profile;
         self.db:SetProfile(profile);
