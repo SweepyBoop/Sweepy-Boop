@@ -94,6 +94,9 @@ function SweepyBoop:ShowImport(module)
     if ( not importDialog ) then return end
 
     importDialog.editBox:SetText("");
+    if importDialog.profileNameEditBox then
+        importDialog.profileNameEditBox:SetText("");
+    end
 	self:ImportError(importDialog);
 	importDialog:Show();
 	importDialog.button:SetDisabled(true);
