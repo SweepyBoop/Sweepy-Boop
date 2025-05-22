@@ -6,15 +6,15 @@ function SweepyBoop:Decode(encoded, module)
     if ( not importDialog ) then return end
 
     local LibDeflate = LibStub:GetLibrary("LibDeflate");
-	local decoded = LibDeflate:DecodeForPrint(encoded);
-	if (not decoded) then return self:ImportError(importDialog, "DecodeForPrint") end
+    local decoded = LibDeflate:DecodeForPrint(encoded);
+    if (not decoded) then return self:ImportError(importDialog, "DecodeForPrint") end
 
-	local decompressed = LibDeflate:DecompressZlib(decoded);
-	if (not decompressed) then return self:ImportError(importDialog, "DecompressZlib") end
+    local decompressed = LibDeflate:DecompressZlib(decoded);
+    if (not decompressed) then return self:ImportError(importDialog, "DecompressZlib") end
 
-	local success, deserialized = self:Deserialize(decompressed);
-	if ( not success ) then return self:ImportError(importDialog, "Deserialize") end
-	return deserialized;
+    local success, deserialized = self:Deserialize(decompressed);
+    if ( not success ) then return self:ImportError(importDialog, "Deserialize") end
+    return deserialized;
 end
 
 -- For export, just export the entire profile
@@ -34,13 +34,39 @@ end
 
 function SweepyBoop:ImportError(importDialog, message)
     if ( not message ) or ( importDialog.editBox.editBox:GetNumLetters() == 0 ) then
-		importDialog.statustext:SetTextColor(1, 0.82, 0);
-		importDialog:SetStatusText("Paste code to import a profile");
-	else
-		importDialog.statustext:SetTextColor(1, 0, 0);
-		importDialog:SetStatusText(string.format("Import failed (%s)", message));
-	end
-	importDialog.button:SetDisabled(true);
+        importDialog.statustext:SetTextColor(1, 0.82, 0);
+        importDialog:SetStatusText("Paste code to import a profile");
+    else
+        importDialog.statustext:SetTextColor(1, 0, 0);
+        importDialog:SetStatusText(string.format("Import failed (%s)", message));
+    end
+    importDialog.button:SetDisabled(true);
+end
+
+function SweepyBoop:ValidateImport(module)
+    local import = addon.importDialogs and addon.importDialogs[module];
+    if ( not import ) then return end
+
+    if ( not import.data ) then
+        return;
+    end
+
+    if import.profileNameEditBox then
+        local profileName = import.profileName;
+        if ( profileName == nil ) or ( profileName == "" ) then
+            import.statustext:SetTextColor(1, 0.82, 0);
+            import:SetStatusText("Specify a profile name");
+            return;
+        elseif ( self.db.profiles[profileName] ) then
+            self:ImportError(import, "Profile name already exists");
+            return;
+        end
+    end
+
+    import.statustext:SetTextColor(0,1,0);
+    import:SetStatusText("Ready to import");
+    import.button:SetDisabled(false);
+    return true;
 end
 
 function SweepyBoop:ImportProfile(data, module)
@@ -53,7 +79,8 @@ function SweepyBoop:ImportProfile(data, module)
         self.db.profile[module] = data.profile[module];
     else
         -- Setting self.db.profile = data.profile will not work, it will reset to default on reload / logout
-        local profile = string.format("Imported (%s)", date());
+        if ( not self:ValidateImport(module) ) then return end -- Validate again to be safe
+        local profile = importDialog.profileName;
         self.db.profiles[profile] = data.profile;
         self.db:SetProfile(profile);
     end
@@ -67,11 +94,16 @@ function SweepyBoop:ShowImport(module)
     local importDialog = addon.importDialogs and addon.importDialogs[module];
     if ( not importDialog ) then return end
 
+    importDialog.data = nil;
     importDialog.editBox:SetText("");
-	self:ImportError(importDialog);
-	importDialog:Show();
-	importDialog.button:SetDisabled(true);
-	importDialog.editBox:SetFocus();
+    if importDialog.profileNameEditBox then
+        importDialog.profileName = nil;
+        importDialog.profileNameEditBox:SetText("");
+    end
+    self:ImportError(importDialog);
+    importDialog:Show();
+    importDialog.button:SetDisabled(true);
+    importDialog.editBox:SetFocus();
 end
 
 function SweepyBoop:ShowExport()
@@ -82,9 +114,9 @@ function SweepyBoop:ShowExport()
     if ( not data ) then return end
 
     exportDialog.editBox:SetText(self:ExportProfile());
-	exportDialog:Show();
-	exportDialog.editBox:SetFocus();
-	exportDialog.editBox:HighlightText();
+    exportDialog:Show();
+    exportDialog.editBox:SetFocus();
+    exportDialog.editBox:HighlightText();
 end
 
 addon.CreateExportDialog = function()
@@ -114,7 +146,11 @@ end
 addon.CreateImportDialog = function(module)
     local import = AceGUI:Create("Frame");
 
-    import:SetWidth(550);
+    import:SetWidth(600);
+    if ( module == "" ) then
+        import:SetHeight(525);
+    end
+
     import:EnableResize(false);
     import:SetStatusText("");
     import:SetLayout("Flow");
@@ -125,11 +161,22 @@ addon.CreateImportDialog = function(module)
     importEditBox:SetNumLines(25);
     importEditBox:SetText("");
     importEditBox:SetFullWidth(true);
-    importEditBox:SetWidth(500);
+    importEditBox:SetWidth(550);
     importEditBox.button:Hide();
     importEditBox.frame:SetClipsChildren(true);
     import:AddChild(importEditBox);
     import.editBox = importEditBox;
+
+    if ( module == "" ) then
+        local profileNameEditBox = AceGUI:Create("EditBox");
+        profileNameEditBox:SetLabel("Profile name");
+        profileNameEditBox:SetText("");
+        profileNameEditBox:SetWidth(250);
+        profileNameEditBox:DisableButton(true);
+        import:AddChild(profileNameEditBox);
+        import.profileNameEditBox = profileNameEditBox;
+    end
+
     local importButton = AceGUI:Create("Button");
     importButton:SetWidth(100);
     importButton:SetText("Import");
@@ -143,11 +190,15 @@ addon.CreateImportDialog = function(module)
     importEditBox:SetCallback("OnTextChanged", function(widget)
         local data = SweepyBoop:Decode(widget:GetText(), module);
         if (not data) then return end
-        import.statustext:SetTextColor(0,1,0);
-        import:SetStatusText("Ready to import");
-        importButton:SetDisabled(false);
         import.data = data;
+        SweepyBoop:ValidateImport(module);
     end)
+    if import.profileNameEditBox then
+        import.profileNameEditBox:SetCallback("OnTextChanged", function(widget)
+            import.profileName = widget:GetText();
+            SweepyBoop:ValidateImport(module);
+        end)
+    end
 
     return import;
 end
