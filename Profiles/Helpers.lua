@@ -53,7 +53,7 @@ function SweepyBoop:ValidateImport()
 
     if import.profileNameEditBox then
         local profileName = import.profileName;
-        if ( profileName == "" ) then
+        if ( profileName == nil ) or ( profileName == "" ) then
             import.statustext:SetTextColor(1, 0.82, 0);
 		    import:SetStatusText("Specify a profile name");
             return;
