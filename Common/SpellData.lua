@@ -1625,6 +1625,18 @@ addon.SpellData = {
     },
 
     -- Priest
+    -- Shadow Crash
+    [205385] = {
+        class = addon.PRIEST,
+        spec = { specID.SHADOW },
+        category = category.BURST,
+        cooldown = 20,
+    },
+    -- Shadow Crash
+        [457042] = {
+            parent = 205385,
+            use_parent_icon = true,
+        },
     -- Mindgames
     [375901] = {
         class = addon.PRIEST,
