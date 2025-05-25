@@ -2723,6 +2723,7 @@ addon.SpellData = {
     -- Intimidating Shout
     [5246] = {
         cooldown = 90,
+        opt_lower_cooldown = 75, -- Battlefield Commander
         class = addon.WARRIOR,
         category = category.CROWDCONTROL,
         baseline = true, -- technically a talent, but always picked
