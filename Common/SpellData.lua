@@ -963,6 +963,13 @@ addon.SpellData = {
         cooldown = 20,
         baseline = true,
     },
+    -- Tranquilizing Shot
+    [19801] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 10,
+        baseline = true,
+    },
 
     -- Mage
     -- Frost
@@ -2579,6 +2586,14 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 30,
         baseline = true,
+    },
+    -- Devour Magic
+    [19505] = {
+        cooldown = 15,
+        class = addon.WARLOCK,
+        category = category.OTHERS,
+        trackPet = true,
+        -- Not baseline since the enemy player is not necessarily playing Felhunter
     },
 
     -- Warrior
