@@ -2592,6 +2592,7 @@ addon.SpellData = {
         cooldown = 15,
         class = addon.WARLOCK,
         category = category.OTHERS,
+        trackPet = true,
         -- Not baseline since the enemy player is not necessarily playing Felhunter
     },
 
