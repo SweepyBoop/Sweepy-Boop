@@ -49,7 +49,8 @@ if addon.PROJECT_MAINLINE then
             classID = addon.CLASSID.MONK,
             npcs = {
                 { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide, isCritter = true },
-                { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 69791, name = "Storm, Earth and Fire (Red)", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 69792, name = "Storm, Earth and Fire (Green)", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
             }
         },
         {
