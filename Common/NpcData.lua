@@ -43,13 +43,15 @@ if addon.PROJECT_MAINLINE then
             npcs = {
                 { npcID = 178819, name = "Ice Wall", icon = 352278, default = addon.NpcOption.Show },
                 { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 31216, name = "Mirror Image", icon = 55342, default = addon.NpcOption.Hide },
             }
         },
         {
             classID = addon.CLASSID.MONK,
             npcs = {
                 { npcID = 63508, name = "Xuen", icon = 123904, default = addon.NpcOption.Hide, isCritter = true },
-                { npcID = 69791, name = "Storm, Earth and Fire", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 69791, name = "Storm, Earth and Fire (Red)", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 69792, name = "Storm, Earth and Fire (Green)", icon = 137639, default = addon.NpcOption.Hide, isCritter = true },
             }
         },
         {
