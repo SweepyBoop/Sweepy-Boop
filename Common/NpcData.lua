@@ -43,6 +43,7 @@ if addon.PROJECT_MAINLINE then
             npcs = {
                 { npcID = 178819, name = "Ice Wall", icon = 352278, default = addon.NpcOption.Show },
                 { npcID = 208441, name = "Water Elemental", icon = 12472, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 31216, name = "Mirror Image", icon = 55342, default = addon.NpcOption.Hide },
             }
         },
         {
