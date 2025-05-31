@@ -251,7 +251,14 @@ local function HideIconDR(icon)
     icon.border:Hide();
 
     if icon.glow then
-        LCG.ButtonGlow_Start(icon);
+        LCG.PixelGlow_Start(
+            icon,
+            { 0, 1, 0, 1 }, -- Green
+            nil,
+            0.5,
+            nil,
+            3
+        );
     else
         addon.IconGroup_Remove(icon:GetParent(), icon);
     end
@@ -313,7 +320,7 @@ addon.IconGroup_Insert(drIconGroup, stunIcon);
 HideIconDR(drIconGroup.icons[categoryPriority["stun"]]);
 
 local function ShowIconDR(icon)
-    LCG.ButtonGlow_Stop(icon);
+    LCG.PixelGlow_Stop(icon);
 
     icon.stacks = icon.stacks + 1;
     -- Set border color
