@@ -254,8 +254,8 @@ local function HideIconDR(icon)
         LCG.PixelGlow_Start(
             icon,
             { 0, 1, 0, 1 }, -- Green
-            nil,
-            0.5,
+            16,
+            0.25,
             nil,
             3
         );
