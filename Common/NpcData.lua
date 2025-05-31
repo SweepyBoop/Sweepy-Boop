@@ -24,6 +24,12 @@ if addon.PROJECT_MAINLINE then
             }
         },
         {
+            classID = addon.CLASSID.DRUID,
+            npcs = {
+                { npcID = 54983, name = "Treant", icon = 102693, default = addon.NpcOption.Hide },
+            }
+        },
+        {
             classID = addon.CLASSID.EVOKER,
             npcs = {
                 { npcID = 185800, name = "Past Self", icon = 371869, default = addon.NpcOption.Show },
