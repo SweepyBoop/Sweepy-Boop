@@ -484,6 +484,13 @@ addon.SpellData = {
         category = category.SILENCE,
         cooldown = 30,
     },
+    -- Typhoon
+    [132469] = {
+        class = addon.DRUID,
+        category = category.OTHERS,
+        cooldown = 30,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
+    },
     -- Interrupt
     -- Skull Bash
     [106839] = {
@@ -969,6 +976,12 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 10,
         baseline = true,
+    },
+    -- High Explosive Trap
+    [236776] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 35,
     },
 
     -- Mage
