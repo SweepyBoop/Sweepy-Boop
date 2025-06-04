@@ -260,6 +260,21 @@ addon.SpellData = {
         cooldown = 40,
         duration = 4,
     },
+    -- Fel Barrage
+    [258925] = {
+        class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
+        category = category.BURST,
+        cooldown = 90,
+        duration = 8,
+    },
+    -- Rain from Above
+    [206803] = {
+        class = addon.DEMONHUNTER,
+        spec = { specID.HAVOC },
+        category = category.IMMUNITY,
+        cooldown = 90,
+    },
     -- Interrupt
     -- Disrupt
     [183752] = {
@@ -500,6 +515,12 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 30,
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
+    },
+    -- Innervate
+    [29166] = {
+        class = addon.DRUID,
+        category = category.OTHERS,
+        cooldown = 180,
     },
     -- Interrupt
     -- Skull Bash
@@ -1269,6 +1290,13 @@ addon.SpellData = {
         duration = 24,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Strike of the Windlord
+    [392983] = {
+        class = addon.MONK,
+        spec = { specID.WINDWALKER },
+        category = category.BURST,
+        cooldown = 30,
+    },
     -- Crowd Control
     -- Paralysis
     [115078] = {
@@ -1970,6 +1998,12 @@ addon.SpellData = {
         class = addon.PRIEST,
         category = category.OTHERS,
     },
+    -- Void Tendrils
+    [108920] = {
+        cooldown = 60,
+        class = addon.PRIEST,
+        category = category.OTHERS,
+    },
 
     -- Rogue
     -- Cold Blood
@@ -2007,6 +2041,21 @@ addon.SpellData = {
         cooldown = 30,
         duration = 10,
         baseline = true,
+    },
+    -- Secret Technique
+    [280719] = {
+        class = addon.ROGUE,
+        spec = { specID.SUBTLETY },
+        category = category.BURST,
+        cooldown = 45,
+    },
+    -- Flagellation
+    [384631] = {
+        class = addon.ROGUE,
+        spec = { specID.SUBTLETY },
+        category = category.BURST,
+        cooldown = 90,
+        duration = 12,
     },
     -- Outlaw
     -- Adrenaline Rush
@@ -2151,6 +2200,13 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.ROGUE,
         category = category.OTHERS
+    },
+    -- Sprint
+    [2983] = {
+        cooldown = 60,
+        class = addon.ROGUE,
+        category = category.OTHERS,
+        baseline = true,
     },
 
     -- Shaman
@@ -2412,6 +2468,19 @@ addon.SpellData = {
         category = category.STUN,
         baseline = true, -- technically a talent, but always picked
     },
+    -- Unleash Shield
+    [356736] = {
+        cooldown = 30,
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+    },
+    -- Capacitor Totem
+    [192058] = {
+        cooldown = 54,
+        class = addon.SHAMAN,
+        category = category.CROWDCONTROL,
+        baseline = true, -- technically a talent, but always picked
+    },
 
     -- Warlock
     -- Affliction
@@ -2670,6 +2739,14 @@ addon.SpellData = {
         reduce_amount = 0.05,
         index = addon.SPELLPRIORITY.HIGH,
         baseline = true, -- technically a talent, but always picked
+    },
+    -- Thunderous Roar
+    [384318] = {
+        class = addon.WARRIOR,
+        spec = { specID.FURY },
+        category = category.BURST,
+        cooldown = 45,
+        duration = 8,
     },
     -- Death Wish
     [199261] = {
