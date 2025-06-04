@@ -274,6 +274,7 @@ addon.SpellData = {
         spec = { specID.HAVOC },
         category = category.IMMUNITY,
         cooldown = 90,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Interrupt
     -- Disrupt
