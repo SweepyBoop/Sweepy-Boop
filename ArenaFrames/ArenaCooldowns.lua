@@ -37,6 +37,13 @@ local resetByCrit = {
     190319, -- Combustion
 };
 
+local petUnitIdToOwnerId = {
+    ["pet"] = "player",
+    ["arenapet1"] = "arena1",
+    ["arenapet2"] = "arena2",
+    ["arenapet3"] = "arena3",
+};
+
 local ICON_SET_ID = addon.ICON_SET_ID;
 local ARENA_FRAME_BARS = addon.ARENA_FRAME_BARS;
 
@@ -797,10 +804,14 @@ local function ProcessUnitSpellCast(self, event, ...)
     if next(self.unitIdToGuid) == nil then return end
 
     local unitTarget, _, spellID = ...;
-    if ( not unitTarget ) or ( not self.unitIdToGuid[unitTarget] ) then return end
-
+    if ( not unitTarget ) then return end
     local spell = spellData[spellID];
     if ( not spell ) or ( spell.trackEvent ~= addon.UNIT_SPELLCAST_SUCCEEDED ) then return end
+    if spell.trackPet then
+        unitTarget = petUnitIdToOwnerId[unitTarget] or unitTarget;
+    end
+    if ( not self.unitIdToGuid[unitTarget] ) then return end
+
     local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
     local iconID = unitTarget .. "-" .. iconSpellID;
     if self.icons[iconID] then
