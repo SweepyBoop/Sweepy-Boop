@@ -810,6 +810,7 @@ local function ProcessUnitSpellCast(self, event, ...)
     if spell.trackPet then
         unitTarget = petUnitIdToOwnerId[unitTarget] or unitTarget;
     end
+    if ( not self.unitIdToGuid[unitTarget] ) then return end
 
     local iconSpellID = ( spell.use_parent_icon and spell.parent ) or spellID;
     local iconID = unitTarget .. "-" .. iconSpellID;
