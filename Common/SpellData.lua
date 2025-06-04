@@ -276,6 +276,12 @@ addon.SpellData = {
         cooldown = 90,
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
+    -- Sigil of Spite
+    [390163] = {
+        class = addon.DEMONHUNTER,
+        category = category.BURST,
+        cooldown = 60,
+    },
     -- Interrupt
     -- Disrupt
     [183752] = {
