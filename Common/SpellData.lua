@@ -160,6 +160,16 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 20,
     },
+    -- Gnaw
+    [47481] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
+        category = category.CROWDCONTROL,
+        cooldown = 90,
+        trackPet = true,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
+        baseline = true,
+    },
     -- Defensive
     -- Icebound Fortitude
     [48792] = {
