@@ -123,6 +123,10 @@ local function sortFuncArenaFrames(a, b)
 end
 
 local function sortFuncStandaloneBars(a, b)
+    if ( a.unit ~= b.unit ) then
+        return a.unit < b.unit; -- Sort by unit first, so that all icons for the same unit are grouped together
+    end
+
     if ( a.timeStamp ~= b.timeStamp ) then
         return a.timeStamp < b.timeStamp;
     end
