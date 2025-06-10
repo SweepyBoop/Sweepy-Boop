@@ -21,6 +21,7 @@ function SweepyBoop:SetupArenaSurrender()
             end
         end
     else
+        hash_SlashCmdList["/gg"] = nil;
         SLASH_ArenaGG1 = nil;
     end
 end
