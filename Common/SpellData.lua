@@ -2149,12 +2149,12 @@ addon.SpellData = {
         default = true,
     },
     -- Feint
-    [1966] = {
-        cooldown = 7.5, -- 15s with 2 charges
-        class = addon.ROGUE,
-        category = category.DEFENSIVE,
-        baseline = true, -- technically a talent, but always picked
-    },
+    -- [1966] = {
+    --     cooldown = 7.5, -- 15s with 2 charges
+    --     class = addon.ROGUE,
+    --     category = category.DEFENSIVE,
+    --     baseline = true, -- technically a talent, but always picked
+    -- },
     -- Crowd Control
     -- Kidney Shot
     [408] = {
@@ -2768,6 +2768,13 @@ addon.SpellData = {
         spec = { specID.FURY },
         category = category.OTHERS,
         cooldown = 15,
+    },
+    -- Demolish
+    [436358] = {
+        class = addon.WARRIOR,
+        spec = { specID.ARMS, specID.FURY },
+        category = category.BURST,
+        cooldown = 45,
     },
     -- Charge
     [100] = {
