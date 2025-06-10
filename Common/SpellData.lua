@@ -2148,6 +2148,13 @@ addon.SpellData = {
         baseline = true, -- technically a talent, but always picked
         default = true,
     },
+    -- Feint
+    [1966] = {
+        cooldown = 7.5, -- 15s with 2 charges
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+        baseline = true, -- technically a talent, but always picked
+    },
     -- Crowd Control
     -- Kidney Shot
     [408] = {
