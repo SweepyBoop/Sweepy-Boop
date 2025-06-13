@@ -2701,6 +2701,12 @@ addon.SpellData = {
         trackPet = true,
         -- Not baseline since the enemy player is not necessarily playing Felhunter
     },
+    -- Amplify Curse
+    [328774] = {
+        cooldown = 45,
+        class = addon.WARLOCK,
+        category = category.OTHERS,
+    },
 
     -- Warrior
     -- Champion's Spear
