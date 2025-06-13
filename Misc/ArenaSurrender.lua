@@ -13,10 +13,12 @@ function SweepyBoop:SetupArenaSurrender()
         end
     end
 
-    SLASH_ArenaGG1 = "/gg";
-    SlashCmdList.ArenaGG = function(msg)
-        if IsActiveBattlefieldArena() and SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
-            LeaveBattlefield();
+    if SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
+        SLASH_ArenaGG1 = "/gg";
+        SlashCmdList.ArenaGG = function(msg)
+            if IsActiveBattlefieldArena() then
+                LeaveBattlefield();
+            end
         end
     end
 end
