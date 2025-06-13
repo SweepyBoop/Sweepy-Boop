@@ -2706,6 +2706,7 @@ addon.SpellData = {
         cooldown = 45,
         class = addon.WARLOCK,
         category = category.OTHERS,
+        trackEvent = addon.SPELL_AURA_REMOVED,
     },
 
     -- Warrior
