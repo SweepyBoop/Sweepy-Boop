@@ -205,6 +205,14 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Type /afk to surrender, type /gg to leave without confirmation",
+                        desc = "Disabling this option requires a UI reload to take effect",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            if ( val == false ) then
+                                ReloadUI();
+                            end
+                        end,
                     },
 
                     showDampenPercentage = {
