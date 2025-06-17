@@ -179,7 +179,7 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     end
 
     if glowAtStacks then
-        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionButtonSpellAlertTemplate");
         frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
         frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
         frame.spellActivationAlert:Hide();
@@ -246,8 +246,8 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     return frame;
 end
 
--- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
-CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
+-- The first ActionButtonSpellAlertTemplate created seems to be corrupted by other icons, so we create a dummy here that does nothing
+CreateFrame("Frame", nil, UIParent, "ActionButtonSpellAlertTemplate");
 
 CreateAuraIcon(377362, 35, "CENTER", UIParent, "CENTER", 0, 60, 0, nil, nil, nil, true); -- precognition
 if addon.TEST_MODE then -- Test with Rejuvenation
@@ -401,7 +401,7 @@ local function CreateGlowingDefensiveBuffs(spells, size, point, relativeTo, rela
     frame.cooldown:SetDrawSwipe(true);
     frame.cooldown:SetReverse(true);
 
-    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionButtonSpellAlertTemplate");
     frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
     frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
     frame.spellActivationAlert:Hide();

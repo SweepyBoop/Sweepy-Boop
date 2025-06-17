@@ -104,7 +104,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
         frame.duration.noCooldownCount = true;
         frame.duration:SetAlpha(0);
 
-        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionButtonSpellAlertTemplate");
         frame.spellActivationAlert:SetSize(iconSize * 1.4, iconSize * 1.4);
         frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
         frame.spellActivationAlert:Hide();

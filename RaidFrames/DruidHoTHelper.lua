@@ -49,7 +49,7 @@ end)
 
 local function EnsureGlowFrame(buffFrame)
     if ( not buffFrame.glowFrame ) then
-        local glowFrame = CreateFrame("Frame", nil, buffFrame, "ActionBarButtonSpellActivationAlert");
+        local glowFrame = CreateFrame("Frame", nil, buffFrame, "ActionButtonSpellAlertTemplate");
         glowFrame:SetAllPoints();
         glowFrame:Hide();
         buffFrame.glowFrame = glowFrame;
