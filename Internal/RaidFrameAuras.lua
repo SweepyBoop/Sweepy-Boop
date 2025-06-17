@@ -94,7 +94,7 @@ local function SetAuraFrame(frame, buffSize, overlayGlow)
     frame.cooldown:SetReverse(true);
 
     if overlayGlow then
-        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionBarButtonSpellActivationAlert");
+        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionButtonSpellAlertTemplate");
         frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
         frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
         frame.spellActivationAlert:Hide();

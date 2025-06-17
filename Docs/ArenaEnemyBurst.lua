@@ -2,8 +2,8 @@ local _, addon = ...;
 
 local GetSpellPowerCost = C_Spell.GetSpellPowerCost;
 
--- The first ActionBarButtonSpellActivationAlert created seems to be corrupted by other icons, so we create a dummy here that does nothing
-CreateFrame("Frame", nil, UIParent, "ActionBarButtonSpellActivationAlert");
+-- The first ActionButtonSpellAlertTemplate created seems to be corrupted by other icons, so we create a dummy here that does nothing
+CreateFrame("Frame", nil, UIParent, "ActionButtonSpellAlertTemplate");
 
 local test = addon.TEST_MODE;
 
