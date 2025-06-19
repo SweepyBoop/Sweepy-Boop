@@ -28,6 +28,8 @@ function SweepyBoop:SetupHideBlizzArenaFrames()
         end
 
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Don't need ZONE_CHANGED_NEW_AREA
+
+        -- According to Blizzard interface code, these are the events that are likely to reshow CompactArenaFrame
         eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
         eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
