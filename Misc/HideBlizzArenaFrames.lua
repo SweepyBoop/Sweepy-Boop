@@ -33,7 +33,9 @@ function SweepyBoop:SetupHideBlizzArenaFrames()
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
         UpdateBlizzArenaFrames(true); -- Do one-off hide initially
     else
-        eventFrame:UnregisterAllEvents();
+        if eventFrame then
+            eventFrame:UnregisterAllEvents();
+        end
         UpdateBlizzArenaFrames(false); -- Restore Blizzard arena frames
     end
 end
