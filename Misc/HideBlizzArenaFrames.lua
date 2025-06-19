@@ -19,18 +19,16 @@ function SweepyBoop:SetupHideBlizzArenaFrames()
         if ( not eventFrame ) then
             eventFrame = CreateFrame("Frame");
             eventFrame:SetScript("OnEvent", function(self, event, ...)
+                -- LUA errors if trying to do it during combat
+                -- 1x [ADDON_ACTION_BLOCKED] AddOn 'SweepyBoop' tried to call the protected function 'UNKNOWN()'.
+                if InCombatLockdown() then return end
                 UpdateBlizzArenaFrames(true);
             end);
         end
 
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- Don't need ZONE_CHANGED_NEW_AREA
-
-        -- According to Blizzard interface code, these are the events that are likely to reshow CompactArenaFrame
-        -- This is causing the following error in 11.1.7:
-        -- 1x [ADDON_ACTION_BLOCKED] AddOn 'SweepyBoop' tried to call the protected function 'UNKNOWN()'.
-        --eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
-        --eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
-
+        eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
+        eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
         UpdateBlizzArenaFrames(true); -- Do one-off hide initially
     else
