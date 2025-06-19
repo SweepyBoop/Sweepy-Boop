@@ -4,6 +4,10 @@ local HiddenFrame = CreateFrame("Frame");
 HiddenFrame:Hide();
 
 local function UpdateBlizzArenaFrames(hide)
+    -- LUA errors if trying to do it during combat
+    -- 1x [ADDON_ACTION_BLOCKED] AddOn 'SweepyBoop' tried to call the protected function 'UNKNOWN()'.
+    if InCombatLockdown() then return end
+
     if hide then
         CompactArenaFrame:SetParent(HiddenFrame);
     else
@@ -19,9 +23,6 @@ function SweepyBoop:SetupHideBlizzArenaFrames()
         if ( not eventFrame ) then
             eventFrame = CreateFrame("Frame");
             eventFrame:SetScript("OnEvent", function(self, event, ...)
-                -- LUA errors if trying to do it during combat
-                -- 1x [ADDON_ACTION_BLOCKED] AddOn 'SweepyBoop' tried to call the protected function 'UNKNOWN()'.
-                if InCombatLockdown() then return end
                 UpdateBlizzArenaFrames(true);
             end);
         end
