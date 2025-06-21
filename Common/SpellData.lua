@@ -2578,6 +2578,7 @@ addon.SpellData = {
     -- Howl of Terror
     [5484] = {
         cooldown = 40,
+        opt_lower_cooldown = 25,
         class = addon.WARLOCK,
         category = category.CROWDCONTROL,
     },
