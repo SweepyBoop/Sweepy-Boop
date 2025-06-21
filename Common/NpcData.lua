@@ -131,7 +131,7 @@ if addon.PROJECT_MAINLINE then
             }
         },
     };
-else
+elseif addon.PROJECT_CATA then
     addon.importantNpcList = {
         {
             classID = addon.CLASSID.DEATHKNIGHT,
@@ -189,6 +189,8 @@ else
             }
         },
     };
+else
+    addon.importantNpcList = {};
 end
 
 addon.CritterNPCs = {};
