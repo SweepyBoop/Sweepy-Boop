@@ -171,7 +171,7 @@ if addon.PROJECT_MAINLINE then
             }
         },
     };
-else
+elseif addon.PROJECT_CATA then
     addon.DebuffList = {
         {
             classID = addon.CLASSID.DEATHKNIGHT,
@@ -299,6 +299,8 @@ else
             }
         },
     };
+else
+    addon.DebuffList = {};
 end
 
 for _, classEntry in ipairs(addon.DebuffList) do
@@ -446,7 +448,7 @@ if addon.PROJECT_MAINLINE then
             }
         }
     };
-else
+elseif addon.PROJECT_CATA then
     addon.BuffList = {
         {
             classID = addon.CLASSID.DEATHKNIGHT,
@@ -517,6 +519,8 @@ else
         --     }
         -- }
     };
+else
+    addon.BuffList = {};
 end
 
 for _, classEntry in ipairs(addon.BuffList) do
