@@ -120,10 +120,7 @@ addon.GetArenaFrameOptions = function(order)
                 childGroups = "tab",
                 name = "Arena frames",
                 disabled = function ()
-                    if ( not addon.PROJECT_MAINLINE ) then
-                        local supported = GladiusEx or Gladius or sArena;
-                        return ( not supported );
-                    end
+                    return ( not addon.ARENA_FRAME_BARS_SUPPORTED() );
                 end,
                 args = {
                     testmode = {

@@ -77,6 +77,14 @@ addon.ARENA_FRAME_BARS = {
     [addon.ICON_SET_ID.ARENA_SECONDARY] = true,
 };
 
+addon.ARENA_FRAME_BARS_SUPPORTED = function()
+    if addon.PROJECT_MAINLINE then
+        return true;
+    else
+        return GladiusEx or Gladius or sArena;
+    end
+end
+
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
 
 addon.SPECID = {

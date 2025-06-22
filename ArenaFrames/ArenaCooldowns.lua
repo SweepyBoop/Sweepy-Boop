@@ -435,9 +435,9 @@ end
 local function GetIconGroupEnabled(iconSetID)
     local config = SweepyBoop.db.profile.arenaFrames;
     if ( iconSetID == ICON_SET_ID.ARENA_MAIN ) then
-        return config.arenaCooldownTrackerEnabled;
+        return config.arenaCooldownTrackerEnabled and addon.ARENA_FRAME_BARS_SUPPORTED();
     elseif ( iconSetID == ICON_SET_ID.ARENA_SECONDARY ) then -- secondary bar depends on main bar being enabled
-        return config.arenaCooldownTrackerEnabled and config.arenaCooldownSecondaryBar;
+        return config.arenaCooldownTrackerEnabled and config.arenaCooldownSecondaryBar and addon.ARENA_FRAME_BARS_SUPPORTED();
     else
         return config.standaloneBars[iconSetID].enabled;
     end
