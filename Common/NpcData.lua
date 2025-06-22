@@ -218,6 +218,16 @@ else
                 { npcID = 62982, name = "Mindbender", icon = 123040, default = addon.NpcOption.Show },
             }
         },
+        {
+            classID = addon.CLASSID.WARLOCK,
+            npcs = {
+                { npcID = 416, name = "Imp", icon = 688, default = addon.NpcOption.Show },
+                { npcID = 1860, name = "Voidwalker", icon = 697, default = addon.NpcOption.Show },
+                { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.Show },
+                { npcID = 17252, name = "Felguard", icon = 30146, default = addon.NpcOption.Show },
+                --{ npcID = 143622, name = "Wild Imp", icon = 71521, default = addon.NpcOption.Hide, isCritter = true },
+            }
+        },
     };
 end
 
