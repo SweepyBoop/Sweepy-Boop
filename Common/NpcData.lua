@@ -150,7 +150,7 @@ elseif addon.PROJECT_CATA then
         {
             classID = addon.CLASSID.MAGE,
             npcs = {
-                { npcID = 510, name = "Water Elemental", icon = 31687, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 510, name = "Water Elemental", icon = 31687, default = addon.NpcOption.Show, isCritter = true },
             }
         },
         {
@@ -190,7 +190,28 @@ elseif addon.PROJECT_CATA then
         },
     };
 else
-    addon.importantNpcList = {};
+    addon.importantNpcList = {
+        {
+            classID = addon.CLASSID.DEATHKNIGHT,
+            npcs = {
+                { npcID = 27829, name = "Ebon Gargoyle", icon = 49206, default = addon.NpcOption.Highlight },
+                { npcID = 26125, name = "Raise Dead", icon = 46585, default = addon.NpcOption.Hide, isCritter = true },
+                { npcID = 24207, name = "Army of the Dead", icon = 42650, default = addon.NpcOption.Hide, isCritter = true },
+            }
+        },
+        {
+            classID = addon.CLASSID.HUNTER,
+            npcs = {
+                { npcID = addon.HUNTERPET, name = "Pet", icon = 883, default = addon.NpcOption.Show, isCritter = true },
+            }
+        },
+        {
+            classID = addon.CLASSID.MAGE,
+            npcs = {
+                { npcID = 510, name = "Water Elemental", icon = 31687, default = addon.NpcOption.Show, isCritter = true },
+            }
+        },
+    };
 end
 
 addon.CritterNPCs = {};
