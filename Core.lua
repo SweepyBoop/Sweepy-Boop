@@ -223,7 +223,7 @@ local function FillDefaults()
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
-    if addon.PROJECT_MAINLINE then
+    if ( not addon.PROJECT_CATA ) then
         defaults.profile.arenaFrames.standaloneBars = {};
         for i = 1, 6 do
             local groupName = "Bar ".. i;
@@ -393,10 +393,12 @@ function SweepyBoop:OnInitialize()
 end
 
 function SweepyBoop:RefreshConfig()
-    if addon.PROJECT_MAINLINE then
+    if ( not addon.PROJECT_CATA ) then
         self:HideTestArenaCooldownTracker();
         self:HideTestArenaStandaloneBars();
+    end
 
+    if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
         self:HideTestHealerInCrowdControl();
     end
