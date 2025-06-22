@@ -211,6 +211,13 @@ else
                 { npcID = 510, name = "Water Elemental", icon = 31687, default = addon.NpcOption.Show, isCritter = true },
             }
         },
+        {
+            classID = addon.CLASSID.PRIEST,
+            npcs = {
+                { npcID = 19668, name = "Shadowfiend", icon = 34433, default = addon.NpcOption.Show },
+                { npcID = 62982, name = "Mindbender", icon = 123040, default = addon.NpcOption.Show },
+            }
+        },
     };
 end
 
