@@ -226,25 +226,28 @@ else
                 { npcID = 62982, name = "Mindbender", icon = 123040, default = addon.NpcOption.Show },
             }
         },
-        -- {
-        --     classID = addon.CLASSID.SHAMAN,
-        --     npcs = {
-        --         { npcID = 5925, name = "Grounding Totem", icon = 8177, default = addon.NpcOption.Highlight },
-        --         { npcID = 53006, name = "Spirit Link Totem", icon = 98008, default = addon.NpcOption.Highlight },
-        --         { npcID = 5913, name = "Tremor Totem", icon = 8143, default = addon.NpcOption.Highlight },
-        --         { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Show },
-        --         { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Show },
-        --         { npcID = 3579, name = "Stoneclaw Totem", icon = 5730, default = addon.NpcOption.Show },
+        {
+            classID = addon.CLASSID.SHAMAN,
+            npcs = {
+                { npcID = 5925, name = "Grounding Totem", icon = 8177, default = addon.NpcOption.Highlight },
+                { npcID = 53006, name = "Spirit Link Totem", icon = 98008, default = addon.NpcOption.Highlight },
+                { npcID = 5913, name = "Tremor Totem", icon = 8143, default = addon.NpcOption.Highlight },
 
-        --         { npcID = 15430, name = "Earth Elemental Totem", icon = 2062, default = addon.NpcOption.Show },
-        --         { npcID = 15439, name = "Fire Elemental Totem", icon = 2894, default = addon.NpcOption.Show },
-        --         { npcID = 15438, name = "Greater Fire Elemental", icon = 2894, default = addon.NpcOption.Show },
-        --         { npcID = 15352, name = "Greater Earth Elemental", icon = 2062, default = addon.NpcOption.Show },
-        --         { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Show },
+                { npcID = 59764, name = "Healing Tide Totem", icon = 108280, default = addon.NpcOption.Show },
+                { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Show },
+                { npcID = 10467, name = "Mana Tide Totem", icon = 16191, default = addon.NpcOption.Show },
 
-        --         { npcID = 5873, name = "Stoneskin Totem", icon = 8071, default = addon.NpcOption.Hide },                
-        --     }
-        -- },
+                { npcID = 15430, name = "Earth Elemental Totem", icon = 2062, default = addon.NpcOption.Show },
+                { npcID = 15439, name = "Fire Elemental Totem", icon = 2894, default = addon.NpcOption.Show },
+                { npcID = 15438, name = "Greater Fire Elemental", icon = 2894, default = addon.NpcOption.Show },
+                { npcID = 5929, name = "Magma Totem", icon = 8190, default = addon.NpcOption.Show },
+                { npcID = 2523, name = "Searing Totem", icon = 3599, default = addon.NpcOption.Show },
+
+                { npcID = 15352, name = "Greater Earth Elemental", icon = 2062, default = addon.NpcOption.Show },
+                { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Show },
+                { npcID = 60561, name = "Earthgrab Totem", icon = 51485, default = addon.NpcOption.Show },
+            }
+        },
         {
             classID = addon.CLASSID.WARLOCK,
             npcs = {
