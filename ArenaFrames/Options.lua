@@ -91,12 +91,6 @@ addon.GetArenaFrameOptions = function(order)
             SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
         end,
-        disabled = function ()
-            if ( not addon.PROJECT_MAINLINE ) then
-                local supported = GladiusEx or Gladius or sArena;
-                return ( not supported );
-            end
-        end,
         args = {
             import = {
                 order = 1,
@@ -125,6 +119,12 @@ addon.GetArenaFrameOptions = function(order)
                 type = "group",
                 childGroups = "tab",
                 name = "Arena frames",
+                disabled = function ()
+                    if ( not addon.PROJECT_MAINLINE ) then
+                        local supported = GladiusEx or Gladius or sArena;
+                        return ( not supported );
+                    end
+                end,
                 args = {
                     testmode = {
                         order = 1,
