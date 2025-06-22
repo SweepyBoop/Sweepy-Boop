@@ -309,8 +309,11 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
-    if addon.PROJECT_MAINLINE then
+    if ( not addon.PROJECT_CATA ) then
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
+    end
+
+    if addon.PROJECT_MAINLINE then
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
     end
