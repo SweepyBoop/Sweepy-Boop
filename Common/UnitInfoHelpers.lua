@@ -104,9 +104,14 @@ end
 
 addon.GetSpecForPlayerOrArena = function(unit)
     if ( unit == "player" ) then
-        local currentSpec = GetSpecialization();
-        if currentSpec then
-            return GetSpecializationInfo(currentSpec);
+        if addon.PROJECT_MAINLINE then
+            local currentSpec = GetSpecialization();
+            if currentSpec then
+                return GetSpecializationInfo(currentSpec);
+            end
+        else
+            -- Temporary solution for MoP Classic, GetSpecialization is not yet in place (as it should)
+            return 256; -- Discipline (https://warcraft.wiki.gg/wiki/SpecializationID)
         end
     else
         local arenaIndex = string.sub(unit, -1, -1);
