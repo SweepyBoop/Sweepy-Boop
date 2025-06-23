@@ -1402,6 +1402,132 @@ addon.SpellData = {
         duration = 20,
         baseline = true,
     },
+
+    -- Warrior
+    -- Berserker Rage
+    [18499] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Charge
+    [100] = {
+        class = addon.WARRIOR,
+        category = category.OTHERS,
+        cooldown = 20,
+        baseline = true,
+    },
+    -- Colossus Smash
+    [86346] = {
+        class = addon.WARRIOR,
+        spec = { specID.ARMS, specID.FURY },
+        category = category.BURST,
+        cooldown = 20,
+        duration = 6,
+        baseline = true,
+    },
+    -- Commanding Shout
+    [469] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Die by the Sword
+    [118038] = {
+        class = addon.WARRIOR,
+        spec = { specID.ARMS, specID.FURY },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Disarm
+    [676] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Heroic Leap
+    [6544] = {
+        class = addon.WARRIOR,
+        category = category.OTHERS,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Intervene
+    [3411] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Intimidating Shout
+    [5246] = {
+        class = addon.WARRIOR,
+        category = category.CROWDCONTROL,
+        cooldown = 90,
+        baseline = true,
+    },
+    -- Pummel
+    [6552] = {
+        class = addon.WARRIOR,
+        category = category.INTERRUPT,
+        cooldown = 15,
+        baseline = true,
+    },
+    -- Rallying Cry
+    [97462] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Recklessness
+    [1719] = {
+        class = addon.WARRIOR,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 12,
+        baseline = true,
+    },
+    -- Shattering Throw
+    [64382] = {
+        class = addon.WARRIOR,
+        category = category.OTHERS,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Shield Wall
+    [871] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Spell Reflection
+    [23920] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        baseline = true,
+    },
+    -- Demoralizing Banner
+    [114203] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Skull Banner
+    [114207] = {
+        class = addon.WARRIOR,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 10,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
