@@ -3,9 +3,9 @@ local _, addon = ...;
 local lastUpdated;
 
 local eventFrame = CreateFrame("Frame");
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
-eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
+--eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+--eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
+--eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
 eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 eventFrame:RegisterEvent(addon.UNIT_PET);
 eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);

@@ -48,3 +48,5 @@ ArenaFrames\ArenaCooldowns.lua
 ArenaFrames\HealerIndicator.lua
 ArenaFrames\RangeIndicators.lua
 ArenaFrames\Options.lua
+
+Internal\Debug.lua

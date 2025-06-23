@@ -253,7 +253,7 @@ addon.SpellData = {
         cooldown = 50,
     },
     -- Heart of the Wild
-    [108288] = {
+    [108292] = {
         class = addon.DRUID,
         category = category.BURST,
         cooldown = 360,
@@ -271,7 +271,12 @@ addon.SpellData = {
         spec = { specID.FERAL, specID.GUARDIAN },
         category = category.INTERRUPT,
         cooldown = 15,
+        baseline = true,
     },
+        [80964] = {
+            parent = 80965,
+            use_parent_icon = true,
+        },
     -- Restoration
     -- Ironbark
     [102342] = {
