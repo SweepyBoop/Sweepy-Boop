@@ -10,7 +10,6 @@ local category = addon.SPELLCATEGORY;
 
 addon.SpellData = {
     -- Death Knight
-
     -- Anti-Magic Shell
     [48707] = {
         class = addon.DEATHKNIGHT,
@@ -111,7 +110,6 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
     },
-
     -- Unholy
     -- Summon Gargoyle
     [49206] = {
@@ -280,7 +278,6 @@ addon.SpellData = {
         category = category.INTERRUPT,
         cooldown = 15,
     },
-
     -- Restoration
     -- Ironbark
     [102342] = {
@@ -427,7 +424,6 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
     },
-
     -- Marksmanship
     -- Silencing Shot
     [34490] = {
@@ -526,7 +522,6 @@ addon.SpellData = {
         cooldown = 120,
         trackEvent = addon.SPELL_AURA_APPLIED,
     },
-
     -- Fire
     -- Combustion
     [11129] = {
@@ -667,7 +662,6 @@ addon.SpellData = {
         cooldown = 180,
         duration = 45,
     },
-
     -- Windwalker
     -- Energizing Brew
     [115288] = {
@@ -700,6 +694,138 @@ addon.SpellData = {
         spec = { specID.MISTWEAVER },
         category = category.HEAL,
         cooldown = 180,
+        baseline = true,
+    },
+
+    -- Paladin
+    -- Avenging Wrath
+    [31884] = {
+        class = addon.PALADIN,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 20,
+        baseline = true,
+    },
+    -- Blindiong Light
+    [105750] = {
+        class = addon.PALADIN,
+        category = category.CROWDCONTROL,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Cleanse
+    [4987] = {
+        class = addon.PALADIN,
+        category = category.DISPEL,
+        cooldown = 8,
+        baseline = true,
+    },
+    -- Devotion Aura
+    [31821] = {
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Divine Protection
+    [498] = {
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Divine Shield
+    [642] = {
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Hammer of Justice
+    [853] = {
+        class = addon.PALADIN,
+        category = category.STUN,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Hand of Freedom
+    [1044] = {
+        class = addon.PALADIN,
+        category = category.OTHERS,
+        cooldown = 25,
+        baseline = true,
+    },
+    -- Hand of Protection
+    [1022] = {
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Rebuke
+    [96231] = {
+        class = addon.PALADIN,
+        category = category.INTERRUPT,
+        cooldown = 15,
+        baseline = true,
+    },
+    -- Hand of Sacrifice
+    [6940] = {
+        class = addon.PALADIN,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Holy
+    -- Divine Favor
+    [31842] = {
+        class = addon.PALADIN,
+        spec = { specID.HOLY },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Divine Plea
+    [54428] = {
+        class = addon.PALADIN,
+        spec = { specID.HOLY },
+        category = category.OTHERS,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Guardian of Ancient Kings
+    [86669] = {
+        class = addon.PALADIN,
+        spec = { specID.HOLY },
+        category = category.HEAL,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Protection
+    -- Ardent Defender
+    [31850] = {
+        class = addon.PALADIN,
+        spec = { specID.PROTECTION },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Guardian of Ancient Kings
+    [86659] = {
+        class = addon.PALADIN,
+        spec = { specID.PROTECTION },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Retribution
+    -- Guardian of Ancient Kings
+    [86698] = {
+        class = addon.PALADIN,
+        spec = { specID.RETRIBUTION },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
         baseline = true,
     },
 };
