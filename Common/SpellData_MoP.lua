@@ -473,7 +473,7 @@ addon.SpellData = {
 
     -- Mage
     -- Alter Time
-    [108978] = {
+    [127140] = {
         class = addon.MAGE,
         category = category.DEFENSIVE,
         cooldown = 180,
