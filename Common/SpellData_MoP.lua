@@ -182,6 +182,7 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 60,
         baseline = true,
+        trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Stampeding Roar
     [106898] = {
@@ -231,13 +232,7 @@ addon.SpellData = {
         class = addon.DRUID,
         category = category.KNOCKBACK,
         cooldown = 30,
-    },
-    -- Incarnation
-    [106731] = {
-        class = addon.DRUID,
-        category = category.BURST,
-        cooldown = 180,
-        duration = 30,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Disorienting Roar
     [99] = {
@@ -294,6 +289,13 @@ addon.SpellData = {
         cooldown = 8,
         baseline = true,
     },
+    -- Incarnation: Tree of Life
+    [33891] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
     -- Feral
     -- Tiger's Fury
     [5217] = {
@@ -302,6 +304,15 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 30,
         duration = 6,
+        baseline = true,
+    },
+    -- Incarnation: King of the Jungle
+    [102543] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
         baseline = true,
     },
 
