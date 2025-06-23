@@ -273,6 +273,13 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 90,
     },
+    -- Skull Bash
+    [106839] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL, specID.GUARDIAN },
+        category = category.INTERRUPT,
+        cooldown = 15,
+    },
 
     -- Restoration
     -- Ironbark
