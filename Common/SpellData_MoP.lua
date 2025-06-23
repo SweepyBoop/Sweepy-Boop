@@ -846,6 +846,7 @@ addon.SpellData = {
         category = category.HEAL,
         cooldown = 180,
         baseline = true,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Protection
     -- Ardent Defender
@@ -863,6 +864,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Retribution
     -- Guardian of Ancient Kings
@@ -873,6 +875,7 @@ addon.SpellData = {
         cooldown = 180,
         duration = 30,
         baseline = true,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
 
     -- Priest
