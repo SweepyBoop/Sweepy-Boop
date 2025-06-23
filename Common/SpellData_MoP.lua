@@ -1525,9 +1525,9 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
-        -- Safeguard
+        -- Safeguard (need test)
         [114029] = {
-            parent = 3411, -- Intervene
+            parent = 3411,
             use_parent_icon = true,
         },
     -- Intimidating Shout
@@ -1632,7 +1632,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
-    -- Vigilance
+    -- Vigilance (need test)
     [114030] = {
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
