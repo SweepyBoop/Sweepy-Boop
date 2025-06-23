@@ -376,6 +376,50 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
+    -- Bining Shot
+    [109248] = {
+        class = addon.HUNTER,
+        category = category.STUN,
+        cooldown = 45,
+    },
+    -- Wyvern Sting
+    [19386] = {
+        class = addon.HUNTER,
+        category = category.CROWDCONTROL,
+        cooldown = 45,
+    },
+    -- Intimidation
+    [19577] = {
+        class = addon.HUNTER,
+        category = category.STUN,
+        cooldown = 60,
+    },
+    -- Exhilaration
+    [109304] = {
+        class = addon.HUNTER,
+        category = category.HEAL,
+        cooldown = 120,
+    },
+    -- A Murder of Crows
+    [131894] = {
+        class = addon.HUNTER,
+        category = category.BURST,
+        cooldown = 120,
+        duration = 30,
+    },
+    -- Lynx Rush
+    [120697] = {
+        class = addon.HUNTER,
+        category = category.BURST,
+        cooldown = 90,
+        duration = 4,
+    },
+    -- Powershot
+    [109259] = {
+        class = addon.HUNTER,
+        category = category.BURST,
+        cooldown = 45,
+    },
 
     -- Marksmanship
     -- Silencing Shot
