@@ -1427,12 +1427,11 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
-    -- Grimoire of Service
-    [108501] = {
+    -- Grimoire of Service (Felhunter)
+    [111897] = {
         class = addon.WARLOCK,
-        category = category.BURST,
+        category = category.INTERRUPT,
         cooldown = 120,
-        duration = 20,
     },
     -- Demonology
     -- Dark Soul: Knowledge
