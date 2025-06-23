@@ -1533,7 +1533,7 @@ addon.SpellData = {
         cooldown = 120,
         baseline = true,
     },
-    -- Disarm (need test)
+    -- Disarm
     [676] = {
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
