@@ -1151,6 +1151,47 @@ addon.SpellData = {
         cooldown = 120,
         baseline = true,
     },
+
+    -- Shaman
+    -- Capacitor Totem
+    [108269] = {
+        class = addon.SHAMAN,
+        category = category.STUN,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Grounding Totem
+    [8177] = {
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        baseline = true,
+    },
+    -- Ascendance
+    [114049] = {
+        class = addon.SHAMAN,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 15,
+        baseline = true,
+    },
+    -- Fire Elemental Totem
+    [2894] = {
+        class = addon.SHAMAN,
+        category = category.BURST,
+        cooldown = 300,
+        duration = 60,
+        baseline = true,
+    },
+    -- Restoration
+    -- Spirit Link Totem
+    [98008] = {
+        class = addon.SHAMAN,
+        spec = { specID.RESTORATION },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
