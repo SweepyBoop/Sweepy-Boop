@@ -178,7 +178,7 @@ addon.SpellData = {
     -- Nature's Swiftness
     [132158] = {
         class = addon.DRUID,
-        spec = { specID.RESTORATION, specID.BALANCE, specID.FERAL },
+        spec = { specID.RESTORATION_DRUID, specID.BALANCE, specID.FERAL },
         category = category.OTHERS,
         cooldown = 60,
         baseline = true,
@@ -281,7 +281,7 @@ addon.SpellData = {
     -- Ironbark
     [102342] = {
         class = addon.DRUID,
-        spec = { specID.RESTORATION },
+        spec = { specID.RESTORATION_DRUID },
         category = category.DEFENSIVE,
         cooldown = 60,
         baseline = true,
@@ -289,7 +289,7 @@ addon.SpellData = {
     -- Nature's Cure
     [88423] = {
         class = addon.DRUID,
-        spec = { specID.RESTORATION },
+        spec = { specID.RESTORATION_DRUID },
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
@@ -1274,7 +1274,7 @@ addon.SpellData = {
     -- Spirit Link Totem
     [98008] = {
         class = addon.SHAMAN,
-        spec = { specID.RESTORATION },
+        spec = { specID.RESTORATION_SHAMAN },
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true,
@@ -1282,7 +1282,7 @@ addon.SpellData = {
     -- Purify Spirit
     [77130] = {
         class = addon.SHAMAN,
-        spec = { specID.RESTORATION },
+        spec = { specID.RESTORATION_SHAMAN },
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
