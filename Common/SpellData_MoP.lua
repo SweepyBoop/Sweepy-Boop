@@ -1235,7 +1235,7 @@ addon.SpellData = {
         duration = 60,
         baseline = true,
     },
-    -- Hex
+    -- Hex (need test)
     [51514] = {
         class = addon.SHAMAN,
         category = category.CROWDCONTROL,
@@ -1257,7 +1257,7 @@ addon.SpellData = {
         baseline = true,
     },
     -- Mana Tide Totem
-    [16191] = {
+    [16190] = {
         class = addon.SHAMAN,
         category = category.OTHERS,
         cooldown = 180,
