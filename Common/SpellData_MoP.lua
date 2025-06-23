@@ -1434,6 +1434,37 @@ addon.SpellData = {
         category = category.INTERRUPT,
         cooldown = 120,
     },
+    -- Spell Lock (Command Demon Ability)
+    [19647] = {
+        cooldown = 24,
+        class = addon.WARLOCK,
+        trackPet = true,
+        category = category.INTERRUPT,
+    },
+        -- Spell Lock (Grimoire of Sacrifice)
+        [132409] = {
+            parent = 19647,
+        },
+        -- Optical Blast (Command Demon)
+        [119911] = {
+            parent = 19647,
+        },
+        -- Optical Blast (Observer)
+        [115781] = {
+            parent = 19647,
+        },
+        -- Shadow Lock (Doomguard)
+        [171138] = {
+            parent = 19647,
+        },
+        -- Shadow Lock (Grimoire of Sacrifice)
+        [171139] = {
+            parent = 19647,
+        },
+        -- Shadow Lock (Command Demon)
+        [171140] = {
+            parent = 19647,
+        },
     -- Demonology
     -- Dark Soul: Knowledge
     [113861] = {
