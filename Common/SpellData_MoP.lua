@@ -320,6 +320,24 @@ addon.SpellData = {
         duration = 30,
         baseline = true,
     },
+    -- Balance
+    -- Celestial Alignment
+    [112071] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 15,
+        baseline = true,
+    },
+    -- Incarnation: Chosen of Elune
+    [102560] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
+    },
 
     -- Hunter
     -- Camouflage
