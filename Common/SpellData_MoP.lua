@@ -472,7 +472,7 @@ addon.SpellData = {
     },
 
     -- Mage
-    -- Alter Time
+    -- Alter Time (bugged, same spell ID for 1st and 2nd press)
     [127140] = {
         class = addon.MAGE,
         category = category.DEFENSIVE,
@@ -514,12 +514,19 @@ addon.SpellData = {
         cooldown = 300,
         baseline = true,
     },
+    -- Cold Snap
+    [11958] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
     -- Remove Curse
     [475] = {
         class = addon.MAGE,
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
+        trackEvent = addon.SPELL_DISPEL,
     },
     -- Presence of Mind
     [12043] = {
@@ -552,13 +559,13 @@ addon.SpellData = {
         category = category.SILENCE,
         cooldown = 20,
     },
-    -- Cauterize
-    [87024] = {
-        class = addon.MAGE,
-        category = category.DEFENSIVE,
-        cooldown = 120,
-        trackEvent = addon.SPELL_AURA_APPLIED,
-    },
+    -- Cauterize (almost never picked since on the same node with Code Snap)
+    -- [87024] = {
+    --     class = addon.MAGE,
+    --     category = category.DEFENSIVE,
+    --     cooldown = 120,
+    --     trackEvent = addon.SPELL_AURA_APPLIED,
+    -- },
     -- Fire
     -- Combustion
     [11129] = {
