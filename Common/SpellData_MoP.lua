@@ -430,6 +430,95 @@ addon.SpellData = {
         cooldown = 24,
         baseline = true,
     },
+
+    -- Mage
+    -- Alter Time
+    [108978] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Blink
+    [1953] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 15,
+        baseline = true,
+    },
+    -- Counterspell
+    [2139] = {
+        class = addon.MAGE,
+        category = category.INTERRUPT,
+        cooldown = 24,
+        baseline = true,
+    },
+    -- Deep Freeze
+    [44572] = {
+        class = addon.MAGE,
+        category = category.STUN,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Evocation
+    [12051] = {
+        class = addon.MAGE,
+        category = category.OTHERS,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Ice Block
+    [45438] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Remove Curse
+    [475] = {
+        class = addon.MAGE,
+        category = category.DISPEL,
+        cooldown = 8,
+        baseline = true,
+    },
+
+    -- Fire
+    -- Combustion
+    [11129] = {
+        class = addon.MAGE,
+        spec = { specID.FIRE },
+        category = category.BURST,
+        cooldown = 45,
+        duration = 3,
+        baseline = true,
+    },
+    -- Dragon's Breath
+    [31661] = {
+        class = addon.MAGE,
+        spec = { specID.FIRE },
+        category = category.CROWDCONTROL,
+        cooldown = 20,
+        baseline = true,
+    },
+    -- Arcane
+    -- Arcane Power
+    [12042] = {
+        class = addon.MAGE,
+        spec = { specID.ARCANE },
+        category = category.BURST,
+        cooldown = 90,
+        duration = 15,
+        baseline = true,
+    },
+    -- Icy Veins
+    [12472] = {
+        class = addon.MAGE,
+        spec = { specID.FROST },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 20,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
