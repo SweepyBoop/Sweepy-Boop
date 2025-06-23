@@ -557,6 +557,144 @@ addon.SpellData = {
         duration = 20,
         baseline = true,
     },
+
+    -- Monk
+    -- Detox
+    [115450] = {
+        class = addon.MONK,
+        category = category.DISPEL,
+        cooldown = 8,
+        baseline = true,
+    },
+    -- Fortifying Brew
+    [115203] = {
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Grapple Weapon
+    [117368] = {
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Nimble Brew
+    [137562] = {
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Paralysis
+    [115078] = {
+        class = addon.MONK,
+        category = category.CROWDCONTROL,
+        cooldown = 15,
+        baseline = true,
+    },
+    -- Spear Hand Strike
+    [116705] = {
+        class = addon.MONK,
+        category = category.INTERRUPT,
+        cooldown = 15,
+        baseline = true,
+    },
+    -- Tiger's Lust
+    [116841] = {
+        class = addon.MONK,
+        category = category.OTHERS,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Touch of Death
+    [115080] = {
+        class = addon.MONK,
+        category = category.BURST,
+        cooldown = 90,
+        baseline = true,
+    },
+    -- Transcendence: Transfer
+    [119996] = {
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        cooldown = 25,
+        baseline = true,
+    },
+    -- Zen Meditation
+    [115176] = {
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Leg Sweep
+    [119381] = {
+        class = addon.MONK,
+        category = category.STUN,
+        cooldown = 45,
+    },
+    -- Ring of Peace
+    [116844] = {
+        class = addon.MONK,
+        category = category.KNOCKBACK,
+        cooldown = 45,
+    },
+    -- Dampen Harm
+    [122278] = {
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
+    -- Diffuse Magic
+    [122783] = {
+        class = addon.MONK,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
+    -- Invoke Xuen, the White Tiger
+    [123904] = {
+        class = addon.MONK,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 45,
+    },
+
+    -- Windwalker
+    -- Energizing Brew
+    [115288] = {
+        class = addon.MONK,
+        spec = { specID.WINDWALKER },
+        category = category.BURST,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Touch of Karma
+    [122470] = {
+        class = addon.MONK,
+        spec = { specID.WINDWALKER },
+        category = category.DEFENSIVE,
+        cooldown = 90,
+        baseline = true,
+    },
+    -- Mistweaver
+    -- Life Cocoon
+    [116849] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Revival
+    [115310] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.HEAL,
+        cooldown = 180,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
