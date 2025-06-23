@@ -764,6 +764,7 @@ addon.SpellData = {
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
+        trackEvent = addon.SPELL_DISPEL,
     },
     -- Devotion Aura
     [31821] = {
@@ -814,7 +815,7 @@ addon.SpellData = {
         cooldown = 15,
         baseline = true,
     },
-    -- Hand of Sacrifice
+    -- Hand of Sacrifice (need test)
     [6940] = {
         class = addon.PALADIN,
         category = category.DEFENSIVE,
