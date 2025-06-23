@@ -1339,6 +1339,7 @@ addon.SpellData = {
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
+        trackEvent = addon.SPELL_DISPEL,
     },
     -- Elemental
     -- Thunderstorm
@@ -1356,6 +1357,15 @@ addon.SpellData = {
         spec = { specID.ENHANCEMENT },
         category = category.OTHERS,
         cooldown = 60,
+        baseline = true,
+    },
+    -- Feral Spirit
+    [51533] = {
+        class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT },
+        category = category.BURST,
+        cooldown = 120,
+        duration = 30,
         baseline = true,
     },
 
