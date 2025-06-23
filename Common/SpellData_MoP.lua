@@ -852,7 +852,7 @@ addon.SpellData = {
     -- Ardent Defender
     [31850] = {
         class = addon.PALADIN,
-        spec = { specID.PROTECTION },
+        spec = { specID.PROTECTION_PALADIN },
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true,
@@ -860,7 +860,7 @@ addon.SpellData = {
     -- Guardian of Ancient Kings
     [86659] = {
         class = addon.PALADIN,
-        spec = { specID.PROTECTION },
+        spec = { specID.PROTECTION_PALADIN },
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true,
@@ -893,7 +893,7 @@ addon.SpellData = {
         cooldown = 360,
         baseline = true,
     },
-    -- Leap of Faith
+    -- Leap of Faith (need test)
     [73325] = {
         class = addon.PRIEST,
         category = category.DEFENSIVE,
@@ -928,20 +928,22 @@ addon.SpellData = {
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
+        trackEvent = addon.SPELL_DISPEL,
     },
-    -- Shadow Word: Death
-    [32379] = {
-        class = addon.PRIEST,
-        category = category.OTHERS,
-        cooldown = 8,
-        baseline = true,
-    },
-    -- Void Shift
+    -- Void Shift (need test)
     [108968] = {
         class = addon.PRIEST,
         spec = { specID.DISCIPLINE, specID.HOLY_PRIEST },
         category = category.OTHERS,
         cooldown = 300,
+        baseline = true,
+    },
+    -- Power Infusion
+    [10060] = {
+        class = addon.PRIEST,
+        category = category.BURST,
+        cooldown = 120,
+        duration = 20,
         baseline = true,
     },
     -- Discipline
@@ -984,6 +986,7 @@ addon.SpellData = {
         cooldown = 60,
         baseline = true,
     },
+    -- Holy
     -- Divine Hymn
     [64843] = {
         class = addon.PRIEST,
