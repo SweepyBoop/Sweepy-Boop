@@ -266,7 +266,7 @@ addon.SpellData = {
         cooldown = 90,
     },
     -- Skull Bash
-    [106839] = {
+    [80965] = {
         class = addon.DRUID,
         spec = { specID.FERAL, specID.GUARDIAN },
         category = category.INTERRUPT,
