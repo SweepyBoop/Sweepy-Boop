@@ -481,6 +481,13 @@ addon.SpellData = {
         cooldown = 8,
         baseline = true,
     },
+    -- Presence of Mind
+    [12043] = {
+        class = addon.MAGE,
+        category = category.BURST,
+        cooldown = 90,
+        trackEvent = addon.SPELL_AURA_REMOVED,
+    },
 
     -- Fire
     -- Combustion
