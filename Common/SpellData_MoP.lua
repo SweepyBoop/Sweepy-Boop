@@ -611,6 +611,7 @@ addon.SpellData = {
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
+        trackEvent = addon.SPELL_DISPEL,
     },
     -- Fortifying Brew
     [115203] = {
@@ -619,7 +620,7 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true,
     },
-    -- Grapple Weapon
+    -- Grapple Weapon (need test)
     [117368] = {
         class = addon.MONK,
         category = category.DEFENSIVE,
@@ -751,7 +752,7 @@ addon.SpellData = {
         baseline = true,
     },
     -- Blindiong Light
-    [105750] = {
+    [115750] = {
         class = addon.PALADIN,
         category = category.CROWDCONTROL,
         cooldown = 120,
