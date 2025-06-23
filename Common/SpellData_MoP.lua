@@ -332,6 +332,14 @@ addon.SpellData = {
         cooldown = 180,
         duration = 30,
     },
+    -- Solar Beam
+    [78675] = {
+        cooldown = 60,
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.SILENCE,
+        baseline = true,
+    },
 
     -- Hunter
     -- Camouflage
