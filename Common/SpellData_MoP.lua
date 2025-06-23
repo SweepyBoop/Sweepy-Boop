@@ -1504,7 +1504,7 @@ addon.SpellData = {
         cooldown = 120,
         baseline = true,
     },
-    -- Disarm
+    -- Disarm (need test)
     [676] = {
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
@@ -1512,7 +1512,7 @@ addon.SpellData = {
         baseline = true,
     },
     -- Heroic Leap
-    [6544] = {
+    [52174] = {
         class = addon.WARRIOR,
         category = category.OTHERS,
         cooldown = 45,

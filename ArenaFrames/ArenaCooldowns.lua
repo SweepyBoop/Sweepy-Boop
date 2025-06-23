@@ -20,22 +20,28 @@ local function GetSpellPowerCost(spellId, powerType)
     return cachedSpellPowerCost[spellId][powerType];
 end
 
-local interruptToSpellID = {
-    [97547] = 78675, -- Solar Beam
-};
+local interruptToSpellID, resetByPower, resetByCrit;
+if addon.PROJECT_MAINLINE then
+    interruptToSpellID = {
+        [97547] = 78675, -- Solar Beam
+    };
 
-local resetByPower = {
-    -- 137639, -- Storm, Earth, and Fire (rarely picked)
-    1719, -- Recklessness
-    262161, -- Warbreaker
-    167105, -- Colossus Smash
-    227847, -- Bladestorm
-    446035, -- Bladestorm (Slayer)
-};
-
-local resetByCrit = {
-    190319, -- Combustion
-};
+    resetByPower = {
+        -- 137639, -- Storm, Earth, and Fire (rarely picked)
+        1719, -- Recklessness
+        262161, -- Warbreaker
+        167105, -- Colossus Smash
+        227847, -- Bladestorm
+        446035, -- Bladestorm (Slayer)
+    };
+    resetByCrit = {
+        190319, -- Combustion
+    };
+else
+    interruptToSpellID = {};
+    resetByPower = {};
+    resetByCrit = {};
+end
 
 local petUnitIdToOwnerId = {
     ["pet"] = "player",
@@ -547,127 +553,131 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     -- If units don't exist, unitGuidToId will be empty
     if next(unitGuidToId) == nil then return end
 
-    -- Apotheosis
-    if ( spellId == 200183 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
-        local unit = unitGuidToId[sourceGUID];
-        if unit then
-            if subEvent == addon.SPELL_AURA_APPLIED then
-                self.apotheosisUnits[unit] = true;
-            else
-                self.apotheosisUnits[unit] = nil;
-            end
-        end
-    end
+    if addon.PROJECT_MAINLINE then
 
-    -- Premonition of Insight
-    if ( spellId == 428933 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
-        local unit = unitGuidToId[sourceGUID];
-        if unit then
-            if subEvent == addon.SPELL_AURA_APPLIED then -- We probably don't need the 20s timer for apotheosis either
-                self.premonitionUnits[unit] = true;
-            else
-                self.premonitionUnits[unit] = nil;
-            end
-        end
-    end
-
-    -- Guardian Spirit saved their teammate thus should be put on a longer cooldown (+120s)
-    if ( spellId == 48153 ) and ( subEvent == addon.SPELL_HEAL ) then
-        local unit = unitGuidToId[sourceGUID];
-        if unit then
-            self.guardianSpiritSaved[unit] = true;
-        end
-
-        return;
-    end
-    -- Now check if we need to reduce Guardian Spirit cooldown
-    -- SPELL_AURA_REMOVED is fired twice, causing GS to be reset even if the healing proc
-    -- Workaround by checking timestamp now vs. last aura removed
-    if ( spellId == 47788 ) and ( subEvent == addon.SPELL_AURA_REMOVED ) then
-        local unit = unitGuidToId[sourceGUID];
-        if unit then
-            if self.guardianSpiritSaved[unit] then
-                self.guardianSpiritSaved[unit] = nil;
-            else
-                local icon = self.activeMap[unit .. "-" .. spellId];
-                if icon then
-                    ResetCooldown(icon, 60, nil, true); -- reduce CD to 1 min starting from now, not reducing by a fixed amount
+        -- Apotheosis
+        if ( spellId == 200183 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                if subEvent == addon.SPELL_AURA_APPLIED then
+                    self.apotheosisUnits[unit] = true;
+                else
+                    self.apotheosisUnits[unit] = nil;
                 end
             end
         end
 
-        return;
-    end
+        -- Premonition of Insight
+        if ( spellId == 428933 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                if subEvent == addon.SPELL_AURA_APPLIED then -- We probably don't need the 20s timer for apotheosis either
+                    self.premonitionUnits[unit] = true;
+                else
+                    self.premonitionUnits[unit] = nil;
+                end
+            end
+        end
 
-    -- Blink / Shimmer reset by Alter Time
-    -- Order of events on 1st press: SPELL_AURA_APPLIED, SPELL_CAST_SUCCESS, SPELL_SUMMON
-    -- Order of events on 2nd press: SPELL_AURA_REMOVED, SPELL_CAST_SUCCESS
-    -- Order of events on Alter Time being purged: SPELL_AURA_REMOVED, SPELL_DISPEL
-    -- Track time of Alter Time buff applied / removed -> if it's full duration 10s, then it naturally expired hence it's a reset
-    -- If it expires prematurely, track buff removed time, and check following event (if SPELL_CAST_SUCCESS then reset; otherwise don't, including right click cancel case)
-    if ( spellId == 342246 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
-        local unit = unitGuidToId[sourceGUID];
-        if unit then
-            self.alterTimeRemoved[unit] = nil;
-            if subEvent == addon.SPELL_AURA_APPLIED then
-                self.alterTimeApplied[unit] = GetTime();
-            else
-                if self.alterTimeApplied[unit] then
+        -- Guardian Spirit saved their teammate thus should be put on a longer cooldown (+120s)
+        if ( spellId == 48153 ) and ( subEvent == addon.SPELL_HEAL ) then
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                self.guardianSpiritSaved[unit] = true;
+            end
+
+            return;
+        end
+        -- Now check if we need to reduce Guardian Spirit cooldown
+        -- SPELL_AURA_REMOVED is fired twice, causing GS to be reset even if the healing proc
+        -- Workaround by checking timestamp now vs. last aura removed
+        if ( spellId == 47788 ) and ( subEvent == addon.SPELL_AURA_REMOVED ) then
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                if self.guardianSpiritSaved[unit] then
+                    self.guardianSpiritSaved[unit] = nil;
+                else
+                    local icon = self.activeMap[unit .. "-" .. spellId];
+                    if icon then
+                        ResetCooldown(icon, 60, nil, true); -- reduce CD to 1 min starting from now, not reducing by a fixed amount
+                    end
+                end
+            end
+
+            return;
+        end
+
+        -- Blink / Shimmer reset by Alter Time
+        -- Order of events on 1st press: SPELL_AURA_APPLIED, SPELL_CAST_SUCCESS, SPELL_SUMMON
+        -- Order of events on 2nd press: SPELL_AURA_REMOVED, SPELL_CAST_SUCCESS
+        -- Order of events on Alter Time being purged: SPELL_AURA_REMOVED, SPELL_DISPEL
+        -- Track time of Alter Time buff applied / removed -> if it's full duration 10s, then it naturally expired hence it's a reset
+        -- If it expires prematurely, track buff removed time, and check following event (if SPELL_CAST_SUCCESS then reset; otherwise don't, including right click cancel case)
+        if ( spellId == 342246 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                self.alterTimeRemoved[unit] = nil;
+                if subEvent == addon.SPELL_AURA_APPLIED then
+                    self.alterTimeApplied[unit] = GetTime();
+                else
+                    if self.alterTimeApplied[unit] then
+                        local now = GetTime();
+                        if ( now - self.alterTimeApplied[unit] ) > 9.99 then -- If Alter Time buff expired naturally (i.e., full 10s duration), reset Blink / Shimmer
+                            local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
+                            if icon then
+                                ResetCooldown(icon, 25); -- It's granting a charge of 25s (not the 21s after taking Flow of Time)
+                            end
+                        else
+                            self.alterTimeRemoved[unit] = now; -- Track time of buff removed, and do reset if followed by a SPELL_CAST_SUCCESS event
+                        end
+                    end
+
+                    self.alterTimeApplied[unit] = nil;
+                end
+            end
+        elseif ( spellId == 342247 ) and ( subEvent == addon.SPELL_CAST_SUCCESS ) then -- Second Alter Time press
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                if self.alterTimeRemoved[unit] then
                     local now = GetTime();
-                    if ( now - self.alterTimeApplied[unit] ) > 9.99 then -- If Alter Time buff expired naturally (i.e., full 10s duration), reset Blink / Shimmer
+                    if ( now - self.alterTimeRemoved[unit] ) < 1 then -- If this event happens within 1s after Alter Time buff removed, reset Blink / Shimmer
                         local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
                         if icon then
                             ResetCooldown(icon, 25); -- It's granting a charge of 25s (not the 21s after taking Flow of Time)
                         end
-                    else
-                        self.alterTimeRemoved[unit] = now; -- Track time of buff removed, and do reset if followed by a SPELL_CAST_SUCCESS event
                     end
-                end
 
-                self.alterTimeApplied[unit] = nil;
+                    self.alterTimeRemoved[unit] = nil;
+                end
             end
         end
-    elseif ( spellId == 342247 ) and ( subEvent == addon.SPELL_CAST_SUCCESS ) then -- Second Alter Time press
-        local unit = unitGuidToId[sourceGUID];
-        if unit then
-            if self.alterTimeRemoved[unit] then
-                local now = GetTime();
-                if ( now - self.alterTimeRemoved[unit] ) < 1 then -- If this event happens within 1s after Alter Time buff removed, reset Blink / Shimmer
-                    local icon = self.activeMap[unit .. "-" .. 1953] or self.activeMap[unit .. "-" .. 212653];
-                    if icon then
-                        ResetCooldown(icon, 25); -- It's granting a charge of 25s (not the 21s after taking Flow of Time)
-                    end
-                end
 
-                self.alterTimeRemoved[unit] = nil;
+        -- Cooldown reduction from Grove Guardians
+        if ( spellId == 102693 ) and ( subEvent == addon.SPELL_SUMMON ) then
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                self.groveGuardianOwner[destGUID] = unit;
+                C_Timer.After(15, function()
+                    ProcessCooldownReductionFromGroveGuardian(self, destGUID);
+                end);
             end
+
+            return;
+        -- elseif ( spellId == 102693 ) and ( subEvent == addon.UNIT_DIED ) then
+        --     -- Grove Guardian being killed doesn't fire this event, so this is not actually working
+        --     local unit = self.groveGuardianOwner[destGUID];
+        --     if unit then
+        --         if self.activeMap[unit .. "-" .. 33891] then
+        --             ResetCooldown(self.activeMap[unit .. "-" .. 33891], 5);
+        --         elseif self.activeMap[unit .. "-" .. 473909] then
+        --             ResetCooldown(self.activeMap[unit .. "-" .. 473909], 2.5); -- reduced by half for Ancient of Lore?
+        --         end
+        --     end
+
+        --     self.groveGuardianOwner[destGUID] = nil;
+        --     return;
         end
-    end
 
-    -- Cooldown reduction from Grove Guardians
-    if ( spellId == 102693 ) and ( subEvent == addon.SPELL_SUMMON ) then
-        local unit = unitGuidToId[sourceGUID];
-        if unit then
-            self.groveGuardianOwner[destGUID] = unit;
-            C_Timer.After(15, function()
-                ProcessCooldownReductionFromGroveGuardian(self, destGUID);
-            end);
-        end
-
-        return;
-    -- elseif ( spellId == 102693 ) and ( subEvent == addon.UNIT_DIED ) then
-    --     -- Grove Guardian being killed doesn't fire this event, so this is not actually working
-    --     local unit = self.groveGuardianOwner[destGUID];
-    --     if unit then
-    --         if self.activeMap[unit .. "-" .. 33891] then
-    --             ResetCooldown(self.activeMap[unit .. "-" .. 33891], 5);
-    --         elseif self.activeMap[unit .. "-" .. 473909] then
-    --             ResetCooldown(self.activeMap[unit .. "-" .. 473909], 2.5); -- reduced by half for Ancient of Lore?
-    --         end
-    --     end
-
-    --     self.groveGuardianOwner[destGUID] = nil;
-    --     return;
     end
 
     -- Check resets by spell cast
