@@ -597,7 +597,7 @@ addon.SpellData = {
     -- Icy Veins
     [12472] = {
         class = addon.MAGE,
-        spec = { specID.FROST },
+        spec = { specID.FROST_MAGE },
         category = category.BURST,
         cooldown = 180,
         duration = 20,
