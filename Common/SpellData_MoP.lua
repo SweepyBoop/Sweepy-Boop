@@ -1183,6 +1183,49 @@ addon.SpellData = {
         duration = 60,
         baseline = true,
     },
+    -- Hex
+    [51514] = {
+        class = addon.SHAMAN,
+        category = category.CROWDCONTROL,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Spiritwalker's Grace
+    [79206] = {
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Healing Tide Totem
+    [108280] = {
+        class = addon.SHAMAN,
+        category = category.HEAL,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Mana Tide Totem
+    [16191] = {
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Shamanistic Rage
+    [30823] = {
+        class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT, specID.ELEMENTAL },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Wind Shear
+    [57994] = {
+        class = addon.SHAMAN,
+        category = category.INTERRUPT,
+        cooldown = 12,
+        baseline = true,
+    },
     -- Restoration
     -- Spirit Link Totem
     [98008] = {
@@ -1192,6 +1235,34 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true,
     },
+    -- Purify Spirit
+    [77130] = {
+        class = addon.SHAMAN,
+        spec = { specID.RESTORATION },
+        category = category.DISPEL,
+        cooldown = 8,
+        baseline = true,
+    },
+    -- Elemental
+    -- Thunderstorm
+    [51490] = {
+        class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL },
+        category = category.KNOCKBACK,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Enhancement
+    -- Spirit Walk
+    [58875] = {
+        class = addon.SHAMAN,
+        spec = { specID.ENHANCEMENT },
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
+
+    
 };
 
 addon.SpellResets = {
