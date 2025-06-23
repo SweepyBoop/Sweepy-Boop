@@ -386,7 +386,7 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
-    -- Stampede
+    -- Stampede (bugged)
     [121818] = {
         class = addon.HUNTER,
         category = category.BURST,
@@ -452,12 +452,21 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
     },
+    -- Bestial Wrath
+    [19574] = {
+        class = addon.HUNTER,
+        spec = { specID.BEASTMASTERY },
+        category = category.BURST,
+        cooldown = 60,
+        duration = 10,
+        baseline = true,
+    },
     -- Marksmanship
     -- Silencing Shot
     [34490] = {
         class = addon.HUNTER,
         spec = { specID.MARKSMANSHIP },
-        category = category.INTERRUPT,
+        category = category.SILENCE,
         cooldown = 24,
         baseline = true,
     },
