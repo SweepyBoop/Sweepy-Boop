@@ -131,6 +131,18 @@ addon.SpellData = {
         duration = 30,
         baseline = true,
     },
+    -- Frost
+    -- Pillar of Frost
+    [51271] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.FROST },
+        category = category.BURST,
+        cooldown = 60,
+        duration = 20,
+        baseline = true,
+    },
+
+    
 };
 
 addon.SpellResets = {
