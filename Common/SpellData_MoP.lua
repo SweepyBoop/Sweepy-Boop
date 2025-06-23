@@ -1069,7 +1069,7 @@ addon.SpellData = {
         cooldown = 60,
         baseline = true,
     },
-    -- Dismantle (need test)
+    -- Dismantle
     [51722] = {
         class = addon.ROGUE,
         category = category.DEFENSIVE,
