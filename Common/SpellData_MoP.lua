@@ -1697,7 +1697,18 @@ addon.SpellResets = {
 
     -- Call of the Elements
     [108285] = {
+        108269, -- Capacitor Totem
+        8177, -- Grounding Totem
+        108270, -- Stone Bulwark Totem
+        51485, -- Earthgrab Totem
+    },
 
+    -- Preparation
+    [14185] = {
+        2983, -- Sprint
+        1856, -- Vanish
+        5277, -- Evasion
+        51722, -- Dismantle
     },
 };
 
