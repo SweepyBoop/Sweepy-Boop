@@ -7,7 +7,7 @@ $constantsFile = Join-Path -Path $addonDir -ChildPath "Common\Constants.lua"
 $addonDirCata = "D:\World of Warcraft\_classic_\Interface\Addons\SweepyBoop"
 $constantsFileCata = Join-Path -Path $addonDirCata -ChildPath "Common\Constants.lua"
 $addonDirMop = "D:\World of Warcraft\_classic_beta_\Interface\Addons\SweepyBoop"
-$constantsFileMop = Join-Path -Path $addonDirMop -ChildPath
+$constantsFileMop = Join-Path -Path $addonDirMop -ChildPath "Common\Constants.lua"
 
 if (Test-Path $constantsFile) {
     $fileContent = Get-Content -Path $constantsFile -Encoding UTF8
