@@ -488,6 +488,37 @@ addon.SpellData = {
         cooldown = 90,
         trackEvent = addon.SPELL_AURA_REMOVED,
     },
+    -- Temporal Shield
+    [115610] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 25,
+    },
+    -- Ice Barrier
+    [11426] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 25,
+    },
+    -- Ring of Frost
+    [113724] = {
+        class = addon.MAGE,
+        category = category.CROWDCONTROL,
+        cooldown = 45,
+    },
+    -- Frostjaw
+    [102051] = {
+        class = addon.MAGE,
+        category = category.SILENCE,
+        cooldown = 20,
+    },
+    -- Cauterize
+    [87024] = {
+        class = addon.MAGE,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        trackEvent = addon.SPELL_AURA_APPLIED,
+    },
 
     -- Fire
     -- Combustion
