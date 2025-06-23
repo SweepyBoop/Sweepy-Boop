@@ -1417,6 +1417,7 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 20,
         baseline = true,
+        opt_charges = true,
     },
     -- Colossus Smash
     [86346] = {
@@ -1463,6 +1464,11 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
+        -- Safeguard
+        [114029] = {
+            parent = 3411, -- Intervene
+            use_parent_icon = true,
+        },
     -- Intimidating Shout
     [5246] = {
         class = addon.WARRIOR,
@@ -1527,6 +1533,69 @@ addon.SpellData = {
         cooldown = 180,
         duration = 10,
         baseline = true,
+    },
+    -- Enraged Regeneration
+    [55694] = {
+        class = addon.WARRIOR,
+        category = category.HEAL,
+        cooldown = 60,
+    },
+    -- Disrupting Shout
+    [102060] = {
+        class = addon.WARRIOR,
+        category = category.INTERRUPT,
+        cooldown = 40,
+    },
+    -- Bladestorm
+    [46924] = {
+        class = addon.WARRIOR,
+        category = category.BURST,
+        cooldown = 60,
+        duration = 6,
+    },
+    -- Shockwave
+    [46968] = {
+        class = addon.WARRIOR,
+        category = category.STUN,
+        cooldown = 40,
+    },
+    -- Dragon Roar
+    [118000] = {
+        class = addon.WARRIOR,
+        category = category.KNOCKBACK,
+        cooldown = 60,
+    },
+    -- Mass Spell Reflection
+    [114028] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Vigilance
+    [114030] = {
+        class = addon.WARRIOR,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Avatar
+    [107574] = {
+        class = addon.WARRIOR,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 24,
+    },
+    -- Bloodbath
+    [12292] = {
+        class = addon.WARRIOR,
+        category = category.BURST,
+        cooldown = 60,
+        duration = 12,
+    },
+    -- Storm Bolt
+    [107570] = {
+        class = addon.WARRIOR,
+        category = category.STUN,
+        cooldown = 30,
     },
 };
 
