@@ -92,6 +92,25 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 120,
     },
+    -- Gorefiend's Grasp
+    [108199] = {
+        class = addon.DEATHKNIGHT,
+        category = category.OTHERS,
+        cooldown = 60,
+    },
+    -- Remorseless Winter
+    [108200] = {
+        class = addon.DEATHKNIGHT,
+        category = category.BURST,
+        cooldown = 60,
+        duration = 8,
+    },
+    -- Desecrated Ground
+    [108201] = {
+        class = addon.DEATHKNIGHT,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
 
     -- Unholy
     -- Summon Gargoyle
