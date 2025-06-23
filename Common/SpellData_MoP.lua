@@ -1000,6 +1000,157 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true,
     },
+
+    -- Rogue
+    -- Blind
+    [2094] = {
+        class = addon.ROGUE,
+        category = category.CROWDCONTROL,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Cloak of Shadows
+    [31224] = {
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Dismantle
+    [51722] = {
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Evasion
+    [5277] = {
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Gouge
+    [1776] = {
+        class = addon.ROGUE,
+        category = category.CROWDCONTROL,
+        cooldown = 10,
+        baseline = true,
+    },
+    -- Kick
+    [1766] = {
+        class = addon.ROGUE,
+        category = category.INTERRUPT,
+        cooldown = 15,
+        baseline = true,
+    },
+    -- Kidney Shot
+    [408] = {
+        class = addon.ROGUE,
+        category = category.STUN,
+        cooldown = 20,
+        baseline = true,
+    },
+    -- Preparation
+    [14185] = {
+        class = addon.ROGUE,
+        category = category.OTHERS,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Shadow Blades
+    [121471] = {
+        class = addon.ROGUE,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 12,
+        baseline = true,
+    },
+    -- Shroud of Concealment
+    [114018] = {
+        class = addon.ROGUE,
+        category = category.OTHERS,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Smoke Bomb
+    [76577] = {
+        class = addon.ROGUE,
+        category = category.OTHERS,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Sprint
+    [2983] = {
+        class = addon.ROGUE,
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Vanish
+    [1856] = {
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Combat Readiness
+    [74001] = {
+        class = addon.ROGUE,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Shadowstep
+    [36554] = {
+        class = addon.ROGUE,
+        category = category.OTHERS,
+        cooldown = 20,
+        baseline = true,
+    },
+    -- Marked for Death
+    [137619] = {
+        class = addon.ROGUE,
+        category = category.BURST,
+        cooldown = 60,
+    },
+    -- Subtlety
+    -- Shadow Dance
+    [51713] = {
+        class = addon.ROGUE,
+        spec = { specID.SUBTLETY },
+        category = category.BURST,
+        cooldown = 60,
+        duration = 8,
+        baseline = true,
+    },
+    -- Assassination
+    -- Vendetta
+    [79140] = {
+        class = addon.ROGUE,
+        spec = { specID.ASSASSINATION },
+        category = category.BURST,
+        cooldown = 120,
+        duration = 20,
+        baseline = true,
+    },
+    -- Combat (Outlaw)
+    -- Adrenaline Rush
+    [13750] = {
+        class = addon.ROGUE,
+        spec = { specID.OUTLAW },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 15,
+        baseline = true,
+    },
+    -- Killing Spree
+    [51690] = {
+        class = addon.ROGUE,
+        spec = { specID.OUTLAW },
+        category = category.BURST,
+        cooldown = 120,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
