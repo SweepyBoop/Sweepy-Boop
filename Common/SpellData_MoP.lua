@@ -1307,7 +1307,101 @@ addon.SpellData = {
         baseline = true,
     },
 
-
+    -- Warlock
+    -- Demonic Circle: Teleport
+    [48020] = {
+        class = addon.WARLOCK,
+        category = category.DEFENSIVE,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Howl of Terror
+    [5484] = {
+        class = addon.WARLOCK,
+        category = category.CROWDCONTROL,
+        cooldown = 40,
+        baseline = true,
+    },
+    -- Unending Resolve
+    [104773] = {
+        class = addon.WARLOCK,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Dark Regeneration
+    [108359] = {
+        class = addon.WARLOCK,
+        category = category.HEAL,
+        cooldown = 120,
+    },
+    -- Mortal Coil
+    [6789] = {
+        class = addon.WARLOCK,
+        category = category.HEAL,
+        cooldown = 45,
+    },
+    -- Shadowfury
+    [30283] = {
+        class = addon.WARLOCK,
+        category = category.STUN,
+        cooldown = 30,
+    },
+    -- Saceificial Pact
+    [108416] = {
+        class = addon.WARLOCK,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Dark Bargain
+    [110913] = {
+        class = addon.WARLOCK,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
+    -- Unbound Will
+    [108482] = {
+        class = addon.WARLOCK,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Grimoire of Service
+    [108501] = {
+        class = addon.WARLOCK,
+        category = category.BURST,
+        cooldown = 120,
+        duration = 20,
+    },
+    -- Demonology
+    -- Dark Soul: Knowledge
+    [113861] = {
+        class = addon.WARLOCK,
+        spec = { specID.DEMONOLOGY },
+        category = category.BURST,
+        cooldown = 120,
+        duration = 20,
+        baseline = true,
+    },
+    -- Affliction
+    -- Dark Soul: Misery
+    [113860] = {
+        class = addon.WARLOCK,
+        spec = { specID.AFFLICTION },
+        category = category.BURST,
+        cooldown = 120,
+        duration = 20,
+        baseline = true,
+    },
+    -- Destruction
+    -- Dark Soul: Instability
+    [113858] = {
+        class = addon.WARLOCK,
+        spec = { specID.DESTRUCTION },
+        category = category.BURST,
+        cooldown = 120,
+        duration = 20,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
