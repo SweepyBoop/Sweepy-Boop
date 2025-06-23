@@ -1226,6 +1226,51 @@ addon.SpellData = {
         cooldown = 12,
         baseline = true,
     },
+    -- Stone Bulwark Totem
+    [108270] = {
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Astral Shift
+    [108271] = {
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
+    -- Earthgrab Totem
+    [51485] = {
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        cooldown = 30,
+    },
+    -- Call of the Elements
+    [108285] = {
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        cooldown = 180,
+    },
+    -- Elemental Mastery
+    [16166] = {
+        class = addon.SHAMAN,
+        category = category.BURST,
+        cooldown = 120,
+        duration = 20,
+    },
+    -- Ancestral Swiftness
+    [16188] = {
+        class = addon.SHAMAN,
+        category = category.BURST,
+        cooldown = 120,
+        duration = 10,
+    },
+    -- Ancestral Guidance
+    [108281] = {
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        cooldown = 120,
+    },
+    -- Elemental 
     -- Restoration
     -- Spirit Link Totem
     [98008] = {
@@ -1262,7 +1307,7 @@ addon.SpellData = {
         baseline = true,
     },
 
-    
+
 };
 
 addon.SpellResets = {
