@@ -1441,9 +1441,10 @@ addon.SpellData = {
         trackPet = true,
         category = category.INTERRUPT,
     },
-        -- Spell Lock (Grimoire of Sacrifice)
-        [132409] = {
+        -- Spell Lock (Special Ability)
+        [119910] = {
             parent = 19647,
+            use_parent_icon = true,
         },
         -- Optical Blast (Command Demon)
         [119911] = {
@@ -1451,18 +1452,6 @@ addon.SpellData = {
         },
         -- Optical Blast (Observer)
         [115781] = {
-            parent = 19647,
-        },
-        -- Shadow Lock (Doomguard)
-        [171138] = {
-            parent = 19647,
-        },
-        -- Shadow Lock (Grimoire of Sacrifice)
-        [171139] = {
-            parent = 19647,
-        },
-        -- Shadow Lock (Command Demon)
-        [171140] = {
             parent = 19647,
         },
     -- Demonology
