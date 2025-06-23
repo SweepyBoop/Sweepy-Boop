@@ -67,7 +67,7 @@ addon.SetupInterrupts = function (profile, spellList)
     for spellID, spellEntry in pairs(spellList) do
         local category = spellEntry.category;
         -- By default only check interrupts
-        if ( category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ) then
+        if ( category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ) or ( spellID == 34490 ) then
             profile[tostring(spellID)] = true;
         else
             profile[tostring(spellID)] = false;

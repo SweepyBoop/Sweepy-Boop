@@ -301,6 +301,91 @@ addon.SpellData = {
         duration = 6,
         baseline = true,
     },
+
+    -- Hunter
+    -- Camouflage
+    [51753] = {
+        class = addon.HUNTER,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Counter Shot
+    [147362] = {
+        class = addon.HUNTER,
+        spec = { specID.BEASTMASTERY, specID.SURVIVAL },
+        category = category.INTERRUPT,
+        cooldown = 24,
+        baseline = true,
+    },
+    -- Deterrence
+    [19263] = {
+        class = addon.HUNTER,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Feign Death
+    [5384] = {
+        class = addon.HUNTER,
+        category = category.DEFENSIVE,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Master's Call
+    [53271] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Rapid Fire
+    [3045] = {
+        class = addon.HUNTER,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 15,
+        baseline = true,
+    },
+    -- Scatter Shot
+    [19503] = {
+        class = addon.HUNTER,
+        category = category.CROWDCONTROL,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Stampede
+    [121818] = {
+        class = addon.HUNTER,
+        category = category.BURST,
+        cooldown = 300,
+        duration = 20,
+        baseline = true,
+    },
+    -- Explosive Trap
+    [13813] = {
+        class = addon.HUNTER,
+        category = category.KNOCKBACK,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Freezing Trap
+    [1499] = {
+        class = addon.HUNTER,
+        category = category.CROWDCONTROL,
+        cooldown = 30,
+        baseline = true,
+    },
+
+    -- Marksmanship
+    -- Silencing Shot
+    [34490] = {
+        class = addon.HUNTER,
+        spec = { specID.MARKSMANSHIP },
+        category = category.INTERRUPT,
+        cooldown = 24,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
