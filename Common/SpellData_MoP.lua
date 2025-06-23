@@ -621,7 +621,7 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true,
     },
-    -- Grapple Weapon (need test)
+    -- Grapple Weapon
     [117368] = {
         class = addon.MONK,
         category = category.DEFENSIVE,
