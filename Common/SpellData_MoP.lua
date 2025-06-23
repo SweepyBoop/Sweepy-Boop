@@ -252,13 +252,6 @@ addon.SpellData = {
         category = category.STUN,
         cooldown = 50,
     },
-    -- Heart of the Wild
-    [108292] = {
-        class = addon.DRUID,
-        category = category.BURST,
-        cooldown = 360,
-        duration = 45,
-    },
     -- Nature's Vigil
     [124974] = {
         class = addon.DRUID,
@@ -293,6 +286,7 @@ addon.SpellData = {
         category = category.DISPEL,
         cooldown = 8,
         baseline = true,
+        trackEvent = addon.SPELL_DISPEL,
     },
     -- Incarnation: Tree of Life
     [33891] = {
