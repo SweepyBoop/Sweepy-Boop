@@ -780,7 +780,7 @@ addon.SpellData = {
     -- Divine Favor
     [31842] = {
         class = addon.PALADIN,
-        spec = { specID.HOLY },
+        spec = { specID.HOLY_PALADIN },
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true,
@@ -788,7 +788,7 @@ addon.SpellData = {
     -- Divine Plea
     [54428] = {
         class = addon.PALADIN,
-        spec = { specID.HOLY },
+        spec = { specID.HOLY_PALADIN },
         category = category.OTHERS,
         cooldown = 120,
         baseline = true,
@@ -796,7 +796,7 @@ addon.SpellData = {
     -- Guardian of Ancient Kings
     [86669] = {
         class = addon.PALADIN,
-        spec = { specID.HOLY },
+        spec = { specID.HOLY_PALADIN },
         category = category.HEAL,
         cooldown = 180,
         baseline = true,
@@ -826,6 +826,178 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 180,
         duration = 30,
+        baseline = true,
+    },
+
+    -- Priest
+    -- Fear Ward
+    [6346] = {
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Hymn of Hope
+    [64901] = {
+        class = addon.PRIEST,
+        category = category.OTHERS,
+        cooldown = 360,
+        baseline = true,
+    },
+    -- Leap of Faith
+    [73325] = {
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        cooldown = 90,
+        baseline = true,
+    },
+    -- Mass Dispel
+    [32375] = {
+        class = addon.PRIEST,
+        category = category.DISPEL,
+        cooldown = 15,
+        baseline = true,
+    },
+    -- Mindbender
+    [123040] = {
+        class = addon.PRIEST,
+        category = category.BURST,
+        cooldown = 60,
+        duration = 15,
+    },
+    -- Psychic Scream
+    [8122] = {
+        class = addon.PRIEST,
+        category = category.CROWDCONTROL,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Purify
+    [527] = {
+        class = addon.PRIEST,
+        spec = { specID.DISCIPLINE, specID.HOLY_PRIEST },
+        category = category.DISPEL,
+        cooldown = 8,
+        baseline = true,
+    },
+    -- Shadow Word: Death
+    [32379] = {
+        class = addon.PRIEST,
+        category = category.OTHERS,
+        cooldown = 8,
+        baseline = true,
+    },
+    -- Void Shift
+    [108968] = {
+        class = addon.PRIEST,
+        spec = { specID.DISCIPLINE, specID.HOLY_PRIEST },
+        category = category.OTHERS,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Discipline
+    -- Archangel
+    [81700] = {
+        class = addon.PRIEST,
+        spec = { specID.DISCIPLINE },
+        category = category.HEAL,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Inner Focus
+    [89485] = {
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Pain Suppression
+    [33206] = {
+        class = addon.PRIEST,
+        spec = { specID.DISCIPLINE },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Power Word: Barrier
+    [62618] = {
+        class = addon.PRIEST,
+        spec = { specID.DISCIPLINE },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Spirit Shell
+    [109964] = {
+        class = addon.PRIEST,
+        spec = { specID.DISCIPLINE },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Divine Hymn
+    [64843] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.HEAL,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Guardian Spirit
+    [47788] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.HEAL,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Holy Word: Chastise
+    [88625] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.CROWDCONTROL,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Lightwell
+    [126135] = {
+        class = addon.PRIEST,
+        spec = { specID.HOLY_PRIEST },
+        category = category.HEAL,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Shadow
+    -- Dispersion
+    [47585] = {
+        class = addon.PRIEST,
+        spec = { specID.SHADOW },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Psychic Horror
+    [64044] = {
+        class = addon.PRIEST,
+        spec = { specID.SHADOW },
+        category = category.STUN,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Silence
+    [15487] = {
+        class = addon.PRIEST,
+        spec = { specID.SHADOW },
+        category = category.SILENCE,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Vampiric Embrace
+    [15286] = {
+        class = addon.PRIEST,
+        spec = { specID.SHADOW },
+        category = category.HEAL,
+        cooldown = 180,
         baseline = true,
     },
 };
