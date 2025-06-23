@@ -9,7 +9,29 @@ local category = addon.SPELLCATEGORY;
 -- opt_lower_cooldown: this spell has a optionally lower cd, e.g., outlaw rogue blind, priest fear
 
 addon.SpellData = {
-    
+    -- Death Knight
+
+    -- Anti-Magic Shell
+    [48707] = {
+        class = addon.DEATHKNIGHT,
+        category = category.DEFENSIVE,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Dark Simulacrum
+    [77606] = {
+        class = addon.DEATHKNIGHT,
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Death Grip
+    [49576] = {
+        class = addon.DEATHKNIGHT,
+        category = category.OTHERS,
+        cooldown = 25,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
