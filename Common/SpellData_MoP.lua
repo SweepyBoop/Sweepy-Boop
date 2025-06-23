@@ -519,6 +519,7 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.DEFENSIVE,
         cooldown = 180,
+        baseline = true,
     },
     -- Remove Curse
     [475] = {
@@ -1671,6 +1672,8 @@ addon.SpellResets = {
 
     },
 };
+
+addon.SpellResetsAffectedByApotheosis = {};
 
 for _, spell in pairs(addon.SpellData) do
     -- Fill default glow duration for burst abilities
