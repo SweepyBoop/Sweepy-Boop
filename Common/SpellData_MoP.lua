@@ -142,7 +142,165 @@ addon.SpellData = {
         baseline = true,
     },
 
-    
+    -- Druid
+    -- Barkskin
+    [22812] = {
+        class = addon.DRUID,
+        category = category.DEFENSIVE,
+        cooldown = 45,
+        baseline = true,
+    },
+    -- Innervate
+    [29166] = {
+        class = addon.DRUID,
+        category = category.OTHERS,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Maim
+    [22570] = {
+        class = addon.DRUID,
+        category = category.STUN,
+        cooldown = 10,
+        baseline = true,
+    },
+    -- Might of Ursoc
+    [106922] = {
+        class = addon.DRUID,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Nature's Grasp
+    [16689] = {
+        class = addon.DRUID,
+        category = category.CROWDCONTROL,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Nature's Swiftness
+    [132158] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION, specID.BALANCE, specID.FERAL },
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Stampeding Roar
+    [106898] = {
+        class = addon.DRUID,
+        category = category.OTHERS,
+        cooldown = 120,
+        baseline = true,
+    },
+    -- Tranquility
+    [740] = {
+        class = addon.DRUID,
+        category = category.HEAL,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Berserk
+    [106951] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL, specID.GUARDIAN },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 15,
+        baseline = true,
+    },
+    -- Survival Instincts
+    [61336] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL, specID.GUARDIAN },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Displacer Beast
+    [102280] = {
+        class = addon.DRUID,
+        category = category.OTHERS,
+        cooldown = 30,
+    },
+    -- Renewal
+    [108238] = {
+        class = addon.DRUID,
+        category = category.HEAL,
+        cooldown = 120,
+    },
+    -- Typhoon
+    [132469] = {
+        class = addon.DRUID,
+        category = category.KNOCKBACK,
+        cooldown = 30,
+    },
+    -- Incarnation
+    [106731] = {
+        class = addon.DRUID,
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
+    },
+    -- Disorienting Roar
+    [99] = {
+        class = addon.DRUID,
+        category = category.CROWDCONTROL,
+        cooldown = 30,
+    },
+    -- Ursol's Vortex
+    [102793] = {
+        class = addon.DRUID,
+        category = category.OTHERS,
+        cooldown = 60,
+    },
+    -- Mighty Bash
+    [5211] = {
+        class = addon.DRUID,
+        category = category.STUN,
+        cooldown = 50,
+    },
+    -- Heart of the Wild
+    [108288] = {
+        class = addon.DRUID,
+        category = category.BURST,
+        cooldown = 360,
+        duration = 45,
+    },
+    -- Nature's Vigil
+    [124974] = {
+        class = addon.DRUID,
+        category = category.OTHERS,
+        cooldown = 90,
+    },
+
+    -- Restoration
+    -- Ironbark
+    [102342] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Nature's Cure
+    [88423] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION },
+        category = category.DISPEL,
+        cooldown = 8,
+        baseline = true,
+    },
+    -- Feral
+    -- Tiger's Fury
+    [5217] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.BURST,
+        cooldown = 30,
+        duration = 6,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
