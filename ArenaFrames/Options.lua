@@ -67,7 +67,7 @@ addon.SetupInterrupts = function (profile, spellList)
     for spellID, spellEntry in pairs(spellList) do
         local category = spellEntry.category;
         -- By default only check interrupts
-        if ( category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ) then
+        if ( category == addon.SPELLCATEGORY.INTERRUPT ) or ( spellID == 78675 ) or ( spellID == 34490 ) then
             profile[tostring(spellID)] = true;
         else
             profile[tostring(spellID)] = false;
@@ -119,6 +119,9 @@ addon.GetArenaFrameOptions = function(order)
                 type = "group",
                 childGroups = "tab",
                 name = "Arena frames",
+                disabled = function ()
+                    return ( not addon.ARENA_FRAME_BARS_SUPPORTED() );
+                end,
                 args = {
                     testmode = {
                         order = 1,
@@ -769,25 +772,8 @@ addon.GetArenaFrameOptions = function(order)
     -- Ensure one group for each class, in order
     for _, classID in ipairs(addon.CLASSORDER) do
         local classInfo = C_CreatureInfo.GetClassInfo(classID);
-        optionGroup.args.arenaFrameBars.args.spellList.args[classInfo.classFile] = {
-            order = groupIndex,
-            type = "group",
-            icon = addon.ICON_ID_CLASSES,
-            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
-            name = classInfo.className,
-            args = {},
-        };
-        optionGroup.args.arenaFrameBars.args.spellList2.args[classInfo.classFile] = {
-            order = groupIndex,
-            type = "group",
-            icon = addon.ICON_ID_CLASSES,
-            iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
-            name = classInfo.className,
-            args = {},
-        };
-        for i = 1, 6 do
-            local groupName = "Bar " .. i;
-            optionGroup.args.standaloneBars.args[groupName].args.spellList.args[classInfo.classFile] = {
+        if classInfo then
+            optionGroup.args.arenaFrameBars.args.spellList.args[classInfo.classFile] = {
                 order = groupIndex,
                 type = "group",
                 icon = addon.ICON_ID_CLASSES,
@@ -795,10 +781,29 @@ addon.GetArenaFrameOptions = function(order)
                 name = classInfo.className,
                 args = {},
             };
-        end
+            optionGroup.args.arenaFrameBars.args.spellList2.args[classInfo.classFile] = {
+                order = groupIndex,
+                type = "group",
+                icon = addon.ICON_ID_CLASSES,
+                iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+                name = classInfo.className,
+                args = {},
+            };
+            for i = 1, 6 do
+                local groupName = "Bar " .. i;
+                optionGroup.args.standaloneBars.args[groupName].args.spellList.args[classInfo.classFile] = {
+                    order = groupIndex,
+                    type = "group",
+                    icon = addon.ICON_ID_CLASSES,
+                    iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+                    name = classInfo.className,
+                    args = {},
+                };
+            end
 
-        indexInClassGroup[classInfo.classFile] = 1;
-        groupIndex = groupIndex + 1;
+            indexInClassGroup[classInfo.classFile] = 1;
+            groupIndex = groupIndex + 1;
+        end
     end
     local function AppendSpellOptions(group, spellList)
         for spellID, spellInfo in pairs(spellList) do
