@@ -53,6 +53,65 @@ addon.SpellData = {
         cooldown = 15,
         baseline = true,
     },
+    -- Strangulate
+    [47476] = {
+        class = addon.DEATHKNIGHT,
+        category = category.SILENCE,
+        cooldown = 60,
+        baseline = true,
+    },
+    -- Unholy Blight
+    [115989] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
+        category = category.BURST,
+        cooldown = 90,
+        duration = 10,
+    },
+    -- Lichborne
+    [49039] = {
+        class = addon.DEATHKNIGHT,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Anti-Magic Zone
+    [51052] = {
+        class = addon.DEATHKNIGHT,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Asphyxiate
+    [108194] = {
+        class = addon.DEATHKNIGHT,
+        category = category.STUN,
+        cooldown = 30,
+    },
+    -- Death Pact
+    [48743] = {
+        class = addon.DEATHKNIGHT,
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+
+    -- Unholy
+    -- Summon Gargoyle
+    [49206] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
+        baseline = true,
+    },
+    -- Unholy Frenzy
+    [49016] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
