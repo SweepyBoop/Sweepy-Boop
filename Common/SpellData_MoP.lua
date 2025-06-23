@@ -1449,11 +1449,19 @@ addon.SpellData = {
         -- Optical Blast (Command Demon)
         [119911] = {
             parent = 19647,
+            use_parent_icon = true,
         },
         -- Optical Blast (Observer)
         [115781] = {
             parent = 19647,
+            use_parent_icon = true,
         },
+    -- Grimoire of Sacrifice
+    [132409] = {
+        class = addon.WARLOCK,
+        category = category.INTERRUPT,
+        cooldown = 24,
+    },
     -- Demonology
     -- Dark Soul: Knowledge
     [113861] = {
