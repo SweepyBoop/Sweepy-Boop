@@ -1236,7 +1236,7 @@ addon.SpellData = {
         duration = 60,
         baseline = true,
     },
-    -- Hex (need test)
+    -- Hex
     [51514] = {
         class = addon.SHAMAN,
         category = category.CROWDCONTROL,
