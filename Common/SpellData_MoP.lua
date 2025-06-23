@@ -62,7 +62,6 @@ addon.SpellData = {
     -- Unholy Blight
     [115989] = {
         class = addon.DEATHKNIGHT,
-        spec = { specID.UNHOLY },
         category = category.BURST,
         cooldown = 90,
         duration = 10,
