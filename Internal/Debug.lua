@@ -3,9 +3,9 @@ local _, addon = ...;
 local lastUpdated;
 
 local eventFrame = CreateFrame("Frame");
---eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
---eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
---eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
+eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
 eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
 eventFrame:RegisterEvent(addon.UNIT_PET);
 eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
@@ -41,7 +41,7 @@ eventFrame:SetScript("OnEvent", function(_, event, ...)
     elseif event == addon.COMBAT_LOG_EVENT_UNFILTERED then
         local _, subEvent, _, sourceGUID, _, _, _, destGUID, destName, destFlags, _, spellID, spellName = CombatLogGetCurrentEventInfo();
         if addon.TEST_MODE and ( sourceGUID == UnitGUID("player") or sourceGUID == UnitGUID("pet") or destGUID == UnitGUID("target") or addon.EVENTS_PET_DISMISS[subEvent] ) then
-            print("Combat log event:", subEvent, sourceGUID, spellName, spellID);
+            print("Combat log event:", subEvent, spellName, spellID);
         end
     elseif ( event == addon.UNIT_PET ) and ( addon.TEST_MODE ) then
         print("UNIT_PET", UnitGUID("pet"));
