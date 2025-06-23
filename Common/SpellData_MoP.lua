@@ -1456,12 +1456,12 @@ addon.SpellData = {
             parent = 19647,
             use_parent_icon = true,
         },
-    -- Grimoire of Sacrifice
-    [132409] = {
-        class = addon.WARLOCK,
-        category = category.INTERRUPT,
-        cooldown = 24,
-    },
+
+        -- Grimoire of Sacrifice
+        [132409] = {
+            parent = 19647,
+            -- Do NOT share icon with Spell Lock
+        },
     -- Demonology
     -- Dark Soul: Knowledge
     [113861] = {
