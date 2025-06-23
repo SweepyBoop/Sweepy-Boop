@@ -32,6 +32,27 @@ addon.SpellData = {
         cooldown = 25,
         baseline = true,
     },
+    -- Empower Rune Weapon
+    [47568] = {
+        class = addon.DEATHKNIGHT,
+        category = category.BURST,
+        cooldown = 300,
+        baseline = true,
+    },
+    -- Icebound Fortitude
+    [48792] = {
+        class = addon.DEATHKNIGHT,
+        category = category.DEFENSIVE,
+        cooldown = 180,
+        baseline = true,
+    },
+    -- Mind Freeze
+    [47528] = {
+        class = addon.DEATHKNIGHT,
+        category = category.INTERRUPT,
+        cooldown = 15,
+        baseline = true,
+    },
 };
 
 addon.SpellResets = {
