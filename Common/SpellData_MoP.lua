@@ -362,6 +362,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 30,
         baseline = true,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Master's Call
     [53271] = {
