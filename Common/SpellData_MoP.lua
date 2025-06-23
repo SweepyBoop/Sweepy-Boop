@@ -603,6 +603,7 @@ addon.SpellData = {
         duration = 15,
         baseline = true,
     },
+    -- Frost
     -- Icy Veins
     [12472] = {
         class = addon.MAGE,
@@ -610,6 +611,15 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 180,
         duration = 20,
+        baseline = true,
+    },
+    -- Frozen Orb
+    [84714] = {
+        class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
+        category = category.BURST,
+        cooldown = 60,
+        duration = 10,
         baseline = true,
     },
 
@@ -1228,6 +1238,13 @@ addon.SpellData = {
         cooldown = 25,
         baseline = true,
     },
+    -- Tremor Totem
+    [8143] = {
+        class = addon.SHAMAN,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+        baseline = true,
+    },
     -- Ascendance
     [114049] = {
         class = addon.SHAMAN,
@@ -1709,6 +1726,7 @@ addon.SpellResets = {
         8177, -- Grounding Totem
         108270, -- Stone Bulwark Totem
         51485, -- Earthgrab Totem
+        8143, -- Tremor Totem
     },
 
     -- Preparation
