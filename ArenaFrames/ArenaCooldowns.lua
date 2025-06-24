@@ -1003,8 +1003,9 @@ function SweepyBoop:SetupArenaCooldownTracker()
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
-            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE ) then
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE and addon.PROJECT_MAINLINE ) then
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
+                -- PLAYER_SPECIALIZATION_CHANGED is triggered by Stampede in MoP, we should only process it for retail...
 
                 -- Hide the external "Toggle Test Mode" group
                 SweepyBoop:HideTestArenaCooldownTracker();
