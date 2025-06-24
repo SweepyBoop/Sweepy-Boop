@@ -480,12 +480,13 @@ addon.SpellData = {
     },
 
     -- Mage
-    -- Alter Time (bugged, same spell ID for 1st and 2nd press)
-    [127140] = {
+    -- Alter Time
+    [110909] = {
         class = addon.MAGE,
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true,
+        trackEvent = addon.SPELL_AURA_REMOVED, -- cooldown starts once buff is gone
     },
     -- Blink
     [1953] = {
