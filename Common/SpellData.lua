@@ -192,6 +192,7 @@ addon.SpellData = {
         [410358] = {
             parent = 48707,
             cooldown = 30,
+            use_parent_icon = true,
         },
     -- Anti-Magic Zone
     [51052] = {
@@ -3107,7 +3108,6 @@ for _, spell in pairs(addon.SpellData) do
         spell.category = spell.category or parent.category;
         spell.trackPet = spell.trackPet or parent.trackPet;
         spell.trackEvent = spell.trackEvent or parent.trackEvent;
-        spell.baseline = spell.baseline or parent.baseline;
         spell.index = spell.index or parent.index;
         spell.default = spell.default or parent.default;
     end
