@@ -909,14 +909,17 @@ addon.SpellData = {
     [19577] = {
         cooldown = 50,
         class = addon.HUNTER,
+        spec = { specID.BEASTMASTERY, specID.SURVIVAL },
         category = category.STUN,
         baseline = true,
     },
         -- Intimidation (Marksman)
         [474421] = {
-            parent = 19577,
-            use_parent_icon = true,
-            replace_parent_icon = true,
+            cooldown = 50,
+            class = addon.HUNTER,
+            spec = { specID.MARKSMANSHIP },
+            category = category.STUN,
+            baseline = true,
         },
     -- Freezing Trap
     [187650] = {
