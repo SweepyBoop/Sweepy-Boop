@@ -186,7 +186,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 40, -- Anti-Magic Barrier almost always picked
         default = true,
-        -- Not set as baseline, since it can be replaced by Spellwarden
+        baseline = true,
     },
         -- Anti-Magic Shell (Spellwarden)
         [410358] = {
@@ -915,6 +915,7 @@ addon.SpellData = {
         [474421] = {
             parent = 19577,
             use_parent_icon = true,
+            replace_parent_icon = true,
         },
     -- Freezing Trap
     [187650] = {
@@ -1375,6 +1376,7 @@ addon.SpellData = {
         [388615] = {
             parent = 115310,
             use_parent_icon = true,
+            replace_parent_icon = true,
         },
     -- Fortifying Brew
     [115203] = {
@@ -1536,6 +1538,7 @@ addon.SpellData = {
             baseline = false, -- to avoid inheriting parent baseline property
             parent = 1022,
             use_parent_icon = true, -- different abilities but sharing cooldown
+            replace_parent_icon = true,
         },
     -- Lay on Hands
     [633] = {
