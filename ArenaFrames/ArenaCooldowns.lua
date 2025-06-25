@@ -798,7 +798,10 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             if spell.replace_parent_icon then
                 self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
             end
-            self.icons[iconID].spellInfo.cooldown = spell.cooldown; -- e.g., Anti-Magic Shell (Spellwarden) modifies cooldown as well
+
+            if self.icons[iconID].info then
+                self.icons[iconID].info.cooldown = spell.cooldown; -- e.g., Anti-Magic Shell (Spellwarden) modifies cooldown as well
+            end
         end
 
         addon.StartCooldownTrackingIcon(self.icons[iconID]);
