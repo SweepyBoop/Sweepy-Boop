@@ -795,7 +795,15 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local iconID = unit .. "-" .. iconSpellId;
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconSpellId ~= spellId ) then
-            self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
+            if spell.replace_parent_icon then
+                -- if icon texture is different
+                -- for some spells, we intentionally don't replace the texture, e.g., Skull Bash (Bear Form)
+                self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
+            end
+
+            if self.icons[iconID].info then -- e.g., Anti-Magic Shell (Spellwarden) modifies cooldown as well
+                self.icons[iconID].info.cooldown = spell.cooldown;
+            end
         end
 
         addon.StartCooldownTrackingIcon(self.icons[iconID]);
