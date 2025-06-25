@@ -486,7 +486,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 90, -- 180s baseline and 90s reduction from tier set
         baseline = true,
-        trackEvent = addon.SPELL_AURA_REMOVED, -- cooldown starts once buff is gone
+        trackEvent = addon.SPELL_AURA_APPLIED,
     },
     -- Blink
     [1953] = {
