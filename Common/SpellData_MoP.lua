@@ -1340,7 +1340,7 @@ addon.SpellData = {
     [16188] = {
         class = addon.SHAMAN,
         category = category.BURST,
-        cooldown = 120,
+        cooldown = 90,
         duration = 10,
     },
     -- Ancestral Guidance
