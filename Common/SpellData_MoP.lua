@@ -1341,7 +1341,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         category = category.BURST,
         cooldown = 90,
-        duration = 10,
+        trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Ancestral Guidance
     [108281] = {
