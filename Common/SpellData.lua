@@ -1536,7 +1536,6 @@ addon.SpellData = {
         -- Blessing of SpellWarding
         [204018] = {
             -- Available to all specs
-            baseline = false, -- to avoid inheriting parent baseline property
             parent = 1022,
             use_parent_icon = true, -- different abilities but sharing cooldown
             replace_parent_icon = true,
