@@ -1027,7 +1027,15 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 elseif ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
                     shouldSetup = true;
                 elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
-                    shouldSetup = IsActiveBattlefieldArena() and ( C_PvP.GetActiveMatchState() < Enum.PvPMatchState.Engaged );
+                    if addon.PROJECT_MAINLINE then
+                        shouldSetup = IsActiveBattlefieldArena() and ( C_PvP.GetActiveMatchState() < Enum.PvPMatchState.Engaged );
+                    else
+                        -- Classic doesn't have C_PvP.GetActiveMatchState, we need to check the Preparation buff
+                        if IsActiveBattlefieldArena() then
+                            local auraData = C_UnitAuras.GetPlayerAuraBySpellID(44521);
+                            shouldSetup = auraData and auraData.name;
+                        end
+                    end
                 end
                 if shouldSetup then
                     SetupAllIconGroups();
