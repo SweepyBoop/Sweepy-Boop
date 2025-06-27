@@ -934,6 +934,18 @@ addon.SpellData = {
         cooldown = 60,
         duration = 15,
     },
+    -- Desperate Prayer
+    [19236] = {
+        class = addon.PRIEST,
+        category = category.HEAL,
+        cooldown = 120,
+    },
+    -- Spectral Guise
+    [112833] = {
+        class = addon.PRIEST,
+        category = category.DEFENSIVE,
+        cooldown = 30,
+    },
     -- Psychic Scream
     [8122] = {
         class = addon.PRIEST,
