@@ -41,7 +41,7 @@ addon.SpellData = {
     -- Icebound Fortitude
     [48792] = {
         class = addon.DEATHKNIGHT,
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         cooldown = 180,
         baseline = true,
     },
@@ -137,6 +137,21 @@ addon.SpellData = {
         cooldown = 60,
         duration = 20,
         baseline = true,
+    },
+    -- Symbiosis/Wild Mashroom: Plague
+    [113516] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.FROST_DK, specID.UNHOLY },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
+    },
+    -- Symbiosis/Might of Ursoc
+    [113072] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.BLOOD },
+        category = category.DEFENSIVE,
+        cooldown = 180,
     },
 
     -- Druid
@@ -340,6 +355,172 @@ addon.SpellData = {
         category = category.SILENCE,
         baseline = true,
     },
+    -- Symbiosis (Balance)
+    -- Anti-Magic Shell
+    [110570] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.DEFENSIVE,
+        cooldown = 45,
+    },
+    -- Grapple Weapon
+    [126458] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
+    -- Hammer of Justice
+    [110698] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.STUN,
+        cooldown = 60,
+    },
+    -- Mass Dispel
+    [110707] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.DISPEL,
+        cooldown = 60,
+    },
+    -- Cloak of Shadows
+    [110788] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.DEFENSIVE,
+        cooldown = 120,
+    },
+    -- Unending Resolve
+    [122291] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
+    -- Intervene
+    [122292] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE },
+        category = category.DEFENSIVE,
+        cooldown = 30,
+    },
+    -- Symbiosis/Feral
+    -- Play Dead
+    [110597] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.DEFENSIVE,
+        cooldown = 30,
+    },
+    -- Clash
+    [126449] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.OTHERS,
+        cooldown = 35,
+    },
+    -- Divine Shield
+    [110700] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.IMMUNITY,
+        cooldown = 300,
+    },
+    -- Dispersion
+    [110715] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
+    -- Feral Spirit
+    [110807] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.BURST,
+        cooldown = 120,
+        duration = 30,
+    },
+    -- Shattering Blow
+    [112997] = {
+        class = addon.DRUID,
+        spec = { specID.FERAL },
+        category = category.OTHERS,
+        cooldown = 300,
+    },
+    -- Symbiosis/Restoration
+    -- Icebound Fortitude
+    [110575] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.IMMUNITY,
+        cooldown = 180,
+    },
+    -- Deterrence
+    [110617] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
+    -- Ice Block
+    [110696] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.IMMUNITY,
+        cooldown = 300,
+    },
+    -- Fortifying Brew
+    [126456] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
+    -- Cleanse
+    [122288] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DISPEL,
+        cooldown = 8,
+        trackEvent = addon.SPELL_DISPEL,
+    },
+    -- Leap of Faith
+    [110718] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 90,
+    },
+    -- Evasion
+    [110791] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
+    -- Spirit Walker's Grace
+    [110806] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.OTHERS,
+        cooldown = 120,
+    },
+    -- Demonic Circle: Teleport
+    [112970] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.DEFENSIVE,
+        cooldown = 30,
+    },
+    -- Intimidating Roar
+    [113004] = {
+        class = addon.DRUID,
+        spec = { specID.RESTORATION_DRUID },
+        category = category.CROWDCONTROL,
+        cooldown = 90,
+    },
 
     -- Hunter
     -- Camouflage
@@ -519,7 +700,7 @@ addon.SpellData = {
     -- Ice Block
     [45438] = {
         class = addon.MAGE,
-        category = category.DEFENSIVE,
+        category = category.IMMUNITY,
         cooldown = 300,
         baseline = true,
     },
@@ -761,6 +942,20 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true,
     },
+    -- Symbiosis/Bear Hug
+    [127361] = {
+        class = addon.MONK,
+        spec = { specID.WINDWALKER },
+        category = category.STUN,
+        cooldown = 60,
+    },
+    -- Symbiosis/Survival Instincts
+    [113306] = {
+        class = addon.MONK,
+        spec = { specID.BREWMASTER },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
 
     -- Paladin
     -- Avenging Wrath
@@ -896,6 +1091,13 @@ addon.SpellData = {
         duration = 30,
         baseline = true,
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
+    },
+    -- Symbiosis/Barkskin
+    [113075] = {
+        class = addon.PALADIN,
+        spec = { specID.PROTECTION_PALADIN },
+        category = category.DEFENSIVE,
+        cooldown = 60,
     },
 
     -- Priest
@@ -1406,6 +1608,13 @@ addon.SpellData = {
         cooldown = 120,
         duration = 30,
         baseline = true,
+    },
+    -- Symbiosis/Solar Beam
+    [113286] = {
+        class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL, specID.ENHANCEMENT },
+        category = category.SILENCE,
+        cooldown = 60,
     },
 
     -- Warlock
