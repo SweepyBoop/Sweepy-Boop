@@ -1051,22 +1051,22 @@ addon.SpellData = {
     },
     -- Protection
     -- Ardent Defender
-    [31850] = {
-        class = addon.PALADIN,
-        spec = { specID.PROTECTION_PALADIN },
-        category = category.DEFENSIVE,
-        cooldown = 180,
-        baseline = true,
-    },
+    -- [31850] = {
+    --     class = addon.PALADIN,
+    --     spec = { specID.PROTECTION_PALADIN },
+    --     category = category.DEFENSIVE,
+    --     cooldown = 180,
+    --     baseline = true,
+    -- },
     -- Guardian of Ancient Kings
-    [86659] = {
-        class = addon.PALADIN,
-        spec = { specID.PROTECTION_PALADIN },
-        category = category.DEFENSIVE,
-        cooldown = 180,
-        baseline = true,
-        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
-    },
+    -- [86659] = {
+    --     class = addon.PALADIN,
+    --     spec = { specID.PROTECTION_PALADIN },
+    --     category = category.DEFENSIVE,
+    --     cooldown = 180,
+    --     baseline = true,
+    --     trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
+    -- },
     -- Retribution
     -- Guardian of Ancient Kings
     [86698] = {
@@ -1079,12 +1079,12 @@ addon.SpellData = {
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Symbiosis/Barkskin
-    [113075] = {
-        class = addon.PALADIN,
-        spec = { specID.PROTECTION_PALADIN },
-        category = category.DEFENSIVE,
-        cooldown = 60,
-    },
+    -- [113075] = {
+    --     class = addon.PALADIN,
+    --     spec = { specID.PROTECTION_PALADIN },
+    --     category = category.DEFENSIVE,
+    --     cooldown = 60,
+    -- },
 
     -- Priest
     -- Fear Ward
