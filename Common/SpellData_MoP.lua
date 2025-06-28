@@ -138,6 +138,21 @@ addon.SpellData = {
         duration = 20,
         baseline = true,
     },
+    -- Symbiosis/Wild Mashroom: Plague
+    [113516] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.FROST_DK, specID.UNHOLY },
+        category = category.BURST,
+        cooldown = 180,
+        duration = 30,
+    },
+    -- Symbiosis/Might of Ursoc
+    [113072] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.BLOOD },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
 
     -- Druid
     -- Barkskin
