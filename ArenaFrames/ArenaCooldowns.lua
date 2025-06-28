@@ -183,7 +183,6 @@ end
 local iconGroups = {};
 
 -- Find the first arena frame (addon) to use for anchors
-local framePrefix = ( GladiusEx and "GladiusExButtonFramearena" ) or ( Gladius and "GladiusButtonFramearena" ) or ( sArena and "sArenaEnemyFrame" ) or "CompactArenaFrameMember";
 local LARGE_COLUMN = 100; -- Don't break line for each bar
 local arenaFrameGrowOptions = {
     [addon.ARENA_COOLDOWN_GROW_DIRECTION.RIGHT] = {
@@ -241,6 +240,9 @@ local function GetSetPointOptions(iconSetID, unitID)
         if unitID and unitID ~= "player" then -- arena 1/2/3
             unitIndex = string.sub(unitID, -1);
         end
+
+        local framePrefix = addon.GET_ARENA_FRAME_PREFIX();
+
         setPointOptions = {
             point = "LEFT",
             relativeTo = framePrefix .. unitIndex,

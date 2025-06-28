@@ -85,6 +85,18 @@ addon.ARENA_FRAME_BARS_SUPPORTED = function()
     end
 end
 
+addon.GET_ARENA_FRAME_PREFIX = function()
+    if addon.ARENA_FRAME_PREFIX == nil then
+        addon.ARENA_FRAME_PREFIX =
+            ( GladiusEx and "GladiusExButtonFramearena" )
+            or ( Gladius and "GladiusButtonFramearena" )
+            or ( sArena and "sArenaEnemyFrame" )
+            or "CompactArenaFrameMember";
+    end
+
+    return addon.ARENA_FRAME_PREFIX;
+end
+
 addon.DURATION_DYNAMIC = "DURATION_DYNAMIC";
 
 addon.SPECID = {
