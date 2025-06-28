@@ -146,13 +146,6 @@ addon.SpellData = {
         cooldown = 180,
         duration = 30,
     },
-    -- Symbiosis/Might of Ursoc
-    [113072] = {
-        class = addon.DEATHKNIGHT,
-        spec = { specID.BLOOD },
-        category = category.DEFENSIVE,
-        cooldown = 180,
-    },
 
     -- Druid
     -- Barkskin
@@ -948,13 +941,6 @@ addon.SpellData = {
         spec = { specID.WINDWALKER },
         category = category.STUN,
         cooldown = 60,
-    },
-    -- Symbiosis/Survival Instincts
-    [113306] = {
-        class = addon.MONK,
-        spec = { specID.BREWMASTER },
-        category = category.DEFENSIVE,
-        cooldown = 180,
     },
 
     -- Paladin
