@@ -942,6 +942,20 @@ addon.SpellData = {
         cooldown = 180,
         baseline = true,
     },
+    -- Symbiosis/Bear Hug
+    [127361] = {
+        class = addon.MONK,
+        spec = { specID.WINDWALKER },
+        category = category.STUN,
+        cooldown = 60,
+    },
+    -- Symbiosis/Survival Instincts
+    [113306] = {
+        class = addon.MONK,
+        spec = { specID.BREWMASTER },
+        category = category.DEFENSIVE,
+        cooldown = 180,
+    },
 
     -- Paladin
     -- Avenging Wrath
@@ -1077,6 +1091,13 @@ addon.SpellData = {
         duration = 30,
         baseline = true,
         trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
+    },
+    -- Symbiosis/Barkskin
+    [113075] = {
+        class = addon.PALADIN,
+        spec = { specID.PROTECTION_PALADIN },
+        category = category.DEFENSIVE,
+        cooldown = 60,
     },
 
     -- Priest
@@ -1587,6 +1608,13 @@ addon.SpellData = {
         cooldown = 120,
         duration = 30,
         baseline = true,
+    },
+    -- Symbiosis/Solar Beam
+    [113286] = {
+        class = addon.SHAMAN,
+        spec = { specID.ELEMENTAL, specID.ENHANCEMENT },
+        category = category.SILENCE,
+        cooldown = 60,
     },
 
     -- Warlock
