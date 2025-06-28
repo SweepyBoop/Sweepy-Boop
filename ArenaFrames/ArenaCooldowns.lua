@@ -1036,7 +1036,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         --     local auraData = C_UnitAuras.GetPlayerAuraBySpellID(44521);
                         --     shouldSetup = auraData and auraData.name;
                         -- end
-                        shouldSetup = true;
+                        shouldSetup = IsActiveBattlefieldArena();
                     end
                 end
                 if shouldSetup then
