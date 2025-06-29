@@ -144,7 +144,7 @@ for _, classID in pairs(addon.CLASSID) do
         if specName and classInfo and classInfo.classFile then
             local classFile = classInfo.classFile;
             specInfoByName[classFile .. "-" .. specName] = { icon = icon, role = role };
-
+     
             local localizedClassMale = LOCALIZED_CLASS_NAMES_MALE[classFile];
             if localizedClassMale then
                 specIDByTooltip[specName .. " " .. localizedClassMale] = specID;
@@ -170,7 +170,6 @@ end)
 
 addon.GetPlayerSpec = function (unitId)
     local guid = UnitGUID(unitId);
-
     if ( not addon.cachedPlayerSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
