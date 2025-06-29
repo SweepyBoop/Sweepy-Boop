@@ -224,17 +224,13 @@ addon.GetPlayerSpec = function (unitId)
                     -- There are still units with unknown spec, request info
                     RequestBattlefieldScoreData();
                 end
-            else -- C_PvP.GetScoreInfoByPlayerGuid was introduced in TWW and is not available in Classic
-                local numScores = GetNumBattlefieldScores();
-                for i = 1, numScores do
-                    local name, _, _, _, _, _, _, _, classToken, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(i);
-                    if ( not name ) then
-                        RequestBattlefieldScoreData();
-                        break;
-                    end
-                    if ( not addon.cachedPlayerSpec[name] ) then
-                        addon.cachedPlayerSpec[name] = specInfoByName[classToken .. "-" .. talentSpec];
-                    end
+            else -- In Classic, GetNumBattlefieldScores does not actually return talentSpec, so we only do it for friendly players
+                local specID = GetInspectSpecialization(unitId);
+                if ( specID ~= 0 ) then
+                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                    addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
+                else
+                    NotifyInspect(unitId); -- Request spec info
                 end
             end
         end
