@@ -174,26 +174,16 @@ addon.GetPlayerSpec = function (unitId)
     if ( not addon.cachedPlayerSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
-                if addon.PROJECT_MAINLINE then
-                    local tooltipData = C_TooltipInfo.GetUnit(unitId);
-                    if tooltipData then
-                        for _, line in ipairs(tooltipData.lines) do
-                            if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
-                                local specID = specIDByTooltip[line.leftText];
-                                if specID then
-                                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                                    addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
-                                end
+                local tooltipData = C_TooltipInfo.GetUnit(unitId);
+                if tooltipData then
+                    for _, line in ipairs(tooltipData.lines) do
+                        if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
+                            local specID = specIDByTooltip[line.leftText];
+                            if specID then
+                                local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                                addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
                             end
                         end
-                    end
-                else
-                    local specID = GetInspectSpecialization(unitId);
-                    if ( specID ~= 0 ) then
-                        local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                        addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
-                    else
-                        NotifyInspect(unitId); -- Request spec info
                     end
                 end
             else
@@ -207,22 +197,12 @@ addon.GetPlayerSpec = function (unitId)
                 end
             end
         else
-            if addon.PROJECT_MAINLINE then
-                local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-                if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
-                    addon.cachedPlayerSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
-                else
-                    -- There are still units with unknown spec, request info
-                    RequestBattlefieldScoreData();
-                end
-            else -- In Classic, GetNumBattlefieldScores does not actually return talentSpec, so we only do it for friendly players
-                local specID = GetInspectSpecialization(unitId);
-                if ( specID ~= 0 ) then
-                    local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                    addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
-                else
-                    NotifyInspect(unitId); -- Request spec info
-                end
+            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+            if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
+                addon.cachedPlayerSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
+            else
+                -- There are still units with unknown spec, request info
+                RequestBattlefieldScoreData();
             end
         end
     end

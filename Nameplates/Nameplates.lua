@@ -219,6 +219,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.INSPECT_READY then
+            print("INSPECT_READY", unitId);
             if ( UnitInBattleground("player") == nil ) then return end -- Returns true for both arena and battlegrounds
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
