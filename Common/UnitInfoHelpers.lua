@@ -215,7 +215,7 @@ addon.GetPlayerSpec = function (unitId)
                     RequestBattlefieldScoreData();
                 end
             else -- C_PvP.GetScoreInfoByPlayerGuid was introduced in TWW and is not available in Classic
-
+                -- Cache by unit names here instead
             end
         end
     end
