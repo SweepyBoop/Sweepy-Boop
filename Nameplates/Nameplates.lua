@@ -187,7 +187,7 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then -- In MoP Classic, GetBattlefieldScore does not return talentSpec
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-    else -- In Classic, we can't get friendly player spec from tooltip, have to retrieve it async from NotifyInspect
+    elseif ( not addon.PROJECT_CATA ) then -- In Classic, we can't get friendly player spec from tooltip, have to retrieve it async from NotifyInspect
         eventFrame:RegisterEvent(addon.INSPECT_READY);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
