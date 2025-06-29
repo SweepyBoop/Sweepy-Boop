@@ -220,7 +220,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.INSPECT_READY then
-            if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
+            if ( UnitInBattleground("player") == nil ) then return end -- Returns true for both arena and battlegrounds
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
