@@ -213,7 +213,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
-                    if IsNamePlate(nameplate.UnitFrame) then
+                    if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
                         addon.UpdateSpecIcon(nameplate);
                     end
                 end
