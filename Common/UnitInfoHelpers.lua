@@ -169,16 +169,7 @@ refreshFrame:SetScript("OnEvent", function (self, event)
 end)
 
 addon.GetPlayerSpec = function (unitId)
-    local guid;
-    if addon.PROJECT_MAINLINE then
-        guid = UnitGUID(unitId);
-    else -- For Classic, we use player name + realm since this is what GetBattlefieldScore returns
-        local name, realm = UnitName(unitId);
-        guid = name;
-        if realm then
-            guid = guid .. "-" .. realm; -- Ensure unique name in case of cross-realm
-        end
-    end
+    local guid = UnitGUID(unitId);
 
     if ( not addon.cachedPlayerSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
