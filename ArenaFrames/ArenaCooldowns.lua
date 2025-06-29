@@ -524,8 +524,8 @@ end
 local function ResetCooldown(icon, amount, internalCooldown, resetTo) -- if resetTo is set, reset duration to amount, instead of reduce by amount
     if ( not icon.started ) then return end
 
-    if ( icon.template == addon.ICON_TEMPLATE.GLOW ) and icon.info and icon.info.duration then
-        addon.ResetIconCooldown(icon, amount);
+    if ( icon.template == addon.ICON_TEMPLATE.GLOW ) then
+        addon.ResetIconCooldown(icon, amount, resetTo);
 
         -- Duration has more than 1s left, hide cooldown
         -- Duration frame's finish event handler will show the cooldown
