@@ -19,6 +19,10 @@ local function IsRestricted()
     return restricted[instanceType];
 end
 
+local function IsNamePlate(frame)
+    return frame.optionTable.showPvPClassificationIndicator or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
+end
+
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     if ( not frame.unsetIgnoreParentAlpha ) then
@@ -176,6 +180,9 @@ function SweepyBoop:SetupNameplateModules()
     if ( not addon.PROJECT_CATA ) then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     end
+    if ( not addon.PROJECT_MAINLINE ) then
+        eventFrame:RegisterEvent(addon.INSPECT_READY);
+    end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
     eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
@@ -199,7 +206,19 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
-                    if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
+                    if IsNamePlate(nameplate.UnitFrame) then
+                        addon.UpdateSpecIcon(nameplate);
+                    end
+                end
+            end
+        elseif event == addon.INSPECT_READY then
+            if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
+            local nameplates = C_NamePlate.GetNamePlates();
+            for i = 1, #(nameplates) do
+                local nameplate = nameplates[i];
+                if nameplate and nameplate.UnitFrame then
+                    if nameplate.UnitFrame:IsForbidden() then return end
+                    if IsNamePlate(nameplate.UnitFrame) then
                         addon.UpdateSpecIcon(nameplate);
                     end
                 end
@@ -242,9 +261,7 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
 
-        -- Less efficient check for classic as showPvPClassificationIndicator is not available
-        local isNamePlate = frame.optionTable.showPvPClassificationIndicator or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
-        if isNamePlate then
+        if IsNamePlate(frame) then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePlayerName(frame:GetParent(), frame);
