@@ -181,7 +181,7 @@ end
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    if addon.PROJECT_MAINLINE then -- In MoP Classic, GetBattlefieldScore does not return talentSpec
+    if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
