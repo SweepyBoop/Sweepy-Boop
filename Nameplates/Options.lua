@@ -342,7 +342,7 @@ addon.GetEnemyNameplateOptions = function(order)
                     breaker2 = {
                         order = 2,
                         type = "header",
-                        name = "Arena & battleground enemy spec icons",
+                        name = ( addon.PROJECT_MAINLINE and "Arena & battleground enemy spec icons" ) or "Arena enemy spec icons",
                         hidden = function ()
                             return addon.PROJECT_CATA;
                         end
