@@ -169,7 +169,17 @@ refreshFrame:SetScript("OnEvent", function (self, event)
 end)
 
 addon.GetPlayerSpec = function (unitId)
-    local guid = UnitGUID(unitId);
+    local guid;
+    if addon.PROJECT_MAINLINE then
+        guid = UnitGUID(unitId);
+    else -- For Classic, we use player name + realm since this is what GetBattlefieldScore returns
+        local name, realm = UnitName(unitId);
+        guid = name;
+        if realm then
+            guid = guid .. "-" .. realm; -- Ensure unique name in case of cross-realm
+        end
+    end
+
     if ( not addon.cachedPlayerSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
@@ -215,7 +225,17 @@ addon.GetPlayerSpec = function (unitId)
                     RequestBattlefieldScoreData();
                 end
             else -- C_PvP.GetScoreInfoByPlayerGuid was introduced in TWW and is not available in Classic
-                -- Cache by unit names here instead
+                local numScores = GetNumBattlefieldScores();
+                for i = 1, numScores do
+                    local name, _, _, _, _, _, _, _, classToken, _, _, _, _, _, _, talentSpec = GetBattlefieldScore(i);
+                    if ( not name ) then
+                        RequestBattlefieldScoreData();
+                        break;
+                    end
+                    if ( not addon.cachedPlayerSpec[name] ) then
+                        addon.cachedPlayerSpec[name] = specInfoByName[classToken .. "-" .. talentSpec];
+                    end
+                end
             end
         end
     end
