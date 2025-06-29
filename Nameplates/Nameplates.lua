@@ -226,7 +226,7 @@ function SweepyBoop:SetupNameplateModules()
                 if nameplate and nameplate.UnitFrame then
                     if nameplate.UnitFrame:IsForbidden() then return end
                     if IsNamePlate(nameplate.UnitFrame) then
-                        addon.UpdateClassIcon(nameplate);
+                        addon.UpdateClassIcon(nameplate, nameplate.UnitFrame);
                     end
                 end
             end
