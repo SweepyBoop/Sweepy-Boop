@@ -126,7 +126,7 @@ local function UpdateWidgets(nameplate, frame)
 
         if UnitIsPlayer(frame.unit) then
             -- Need to figure out spec icon for classic, don't show for now
-            if addon.PROJECT_MAINLINE and ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers ) then
+            if ( not addon.PROJECT_CATA ) and ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers ) then
                 addon.ShowSpecIcon(nameplate); -- Control alpha in spec icon module for healer / non-healer
             else
                 addon.HideSpecIcon(nameplate);
@@ -173,7 +173,7 @@ end
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
-    if addon.PROJECT_MAINLINE then
+    if ( not addon.PROJECT_CATA ) then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);

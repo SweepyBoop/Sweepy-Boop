@@ -206,6 +206,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
     local pvpClassification, specIconID;
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
+    end
+    if ( not addon.PROJECT_CATA ) then
         if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
             local specInfo = addon.GetPlayerSpec(frame.unit);
             if specInfo then
