@@ -125,8 +125,16 @@ local function UpdateWidgets(nameplate, frame)
         addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
-            -- Need to figure out spec icon for classic, don't show for now
-            if addon.PROJECT_MAINLINE and ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer or SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers ) then
+            -- For Classic version, only show in arena
+            local shouldShowSpecIcon;
+            local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
+            if addon.PROJECT_MAINLINE then
+                shouldShowSpecIcon = configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers;
+            elseif ( not addon.PROJECT_CATA ) then
+                shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
+            end
+
+            if shouldShowSpecIcon then
                 addon.ShowSpecIcon(nameplate); -- Control alpha in spec icon module for healer / non-healer
             else
                 addon.HideSpecIcon(nameplate);

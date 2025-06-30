@@ -293,7 +293,13 @@ end
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
 addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
-addon.ICON_ID_HEALER_ENEMY = "Healing_Red";
+if addon.PROJECT_MAINLINE then
+    addon.ICON_ID_HEALER_ENEMY = "Healing_Red";
+    addon.SPEC_ICON_ENEMY_HEALER_LOGO = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY);
+else
+    addon.ICON_ID_HEALER_ENEMY = "GreenCross";
+    addon.SPEC_ICON_ENEMY_HEALER_LOGO = format("|A:%s:20:20:0:0:255:0:0|a", addon.ICON_ID_HEALER_ENEMY);
+end
 addon.ICON_ID_PET = addon.ICON_PATH("ability_hunter_mendpet");
 addon.ICON_CRITTER = "WildBattlePet";
 addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
