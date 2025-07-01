@@ -223,33 +223,31 @@ local function FillDefaults()
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.buffWhiteList, addon.BuffList);
 
-    if ( not addon.PROJECT_CATA ) then
-        defaults.profile.arenaFrames.standaloneBars = {};
-        for i = 1, 6 do
-            local groupName = "Bar ".. i;
-            defaults.profile.arenaFrames.standaloneBars[groupName] = {
-                name = groupName,
-                enabled = false,
+    defaults.profile.arenaFrames.standaloneBars = {};
+    for i = 1, 6 do
+        local groupName = "Bar ".. i;
+        defaults.profile.arenaFrames.standaloneBars[groupName] = {
+            name = groupName,
+            enabled = false,
 
-                growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER,
-                columns = 8,
-                growUpward = true,
-                offsetX = 0,
-                offsetY = 0,
+            growDirection = addon.STANDALONE_GROW_DIRECTION.CENTER,
+            columns = 8,
+            growUpward = true,
+            offsetX = 0,
+            offsetY = 0,
 
-                iconSize = 32,
-                iconPadding = 2,
-                unusedIconAlpha = 0.5,
-                usedIconAlpha = 1,
-                showUnusedIcons = false,
-                hideCountDownNumbers = false,
-                spellList = {},
-            };
-        end
-
-        addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
-        addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, addon.SpellData);
+            iconSize = 32,
+            iconPadding = 2,
+            unusedIconAlpha = 0.5,
+            usedIconAlpha = 1,
+            showUnusedIcons = false,
+            hideCountDownNumbers = false,
+            spellList = {},
+        };
     end
+
+    addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+    addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, addon.SpellData);
 end
 
 function SweepyBoop:SetupBlizzardOptions()
@@ -309,9 +307,7 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
-    if ( not addon.PROJECT_CATA ) then
-        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
-    end
+    options.args.arenaFrames = addon.GetArenaFrameOptions(5);
 
     if addon.PROJECT_MAINLINE then
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
@@ -367,9 +363,7 @@ function SweepyBoop:OnInitialize()
     -- Setup nameplate modules
     self:SetupNameplateModules();
 
-    if ( not addon.PROJECT_CATA ) then
-        self:SetupArenaCooldownTracker();
-    end
+    self:SetupArenaCooldownTracker();
 
     -- Only nameplate modules for Classic currently
     -- If only enabling nameplates, 7 ms / Sec CPU, otherwise 11 ms / Sec CPU
@@ -393,10 +387,8 @@ function SweepyBoop:OnInitialize()
 end
 
 function SweepyBoop:RefreshConfig()
-    if ( not addon.PROJECT_CATA ) then
-        self:HideTestArenaCooldownTracker();
-        self:HideTestArenaStandaloneBars();
-    end
+    self:HideTestArenaCooldownTracker();
+    self:HideTestArenaStandaloneBars();
 
     if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
