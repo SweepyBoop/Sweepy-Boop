@@ -918,6 +918,14 @@ addon.SpellData = {
         cooldown = 90,
         baseline = true,
     },
+    -- Fists of Fury
+    [113656] = {
+        class = addon.MONK,
+        spec = { specID.WINDWALKER },
+        category = category.STUN,
+        cooldown = 25,
+        baseline = true,
+    },
     -- Mistweaver
     -- Life Cocoon
     [116849] = {
