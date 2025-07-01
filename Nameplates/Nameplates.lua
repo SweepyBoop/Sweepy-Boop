@@ -130,7 +130,7 @@ local function UpdateWidgets(nameplate, frame)
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
             if addon.PROJECT_MAINLINE then
                 shouldShowSpecIcon = configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers;
-            elseif ( not addon.PROJECT_CATA ) then
+            else
                 shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
             end
 

@@ -2,7 +2,6 @@ local _, addon = ...;
 addon.TEST_MODE = false;
 
 addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
-addon.PROJECT_CATA = (WOW_PROJECT_ID == WOW_PROJECT_CATACLYSM_CLASSIC);
 addon.PROFILE_VERSION = 1.0; -- To validate export string
 
 addon.SPELLCATEGORY = {
