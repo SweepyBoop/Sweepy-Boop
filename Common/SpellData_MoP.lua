@@ -537,6 +537,7 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 180,
         baseline = true,
+        charges = true,
     },
     -- Feign Death
     [5384] = {
