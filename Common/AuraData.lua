@@ -189,10 +189,10 @@ else
                 { spellId = 770, default = true }, -- Faerie Fire
                 { spellId = 33745, default = true }, -- Lacerate
                 { spellId = 8921, default = true }, -- Moonfire
-                --{ spellId = 155722, default = true }, -- Rake
+                { spellId = 1822, default = true }, -- Rake
                 { spellId = 1079, default = true }, -- Rip
-                --{ spellId = 405233, default = true}, -- Thrash
-                { spellId = 48484, default = true }, -- Infected Wounds
+                { spellId = 77758, default = true}, -- Thrash
+                { spellId = 58180, default = true }, -- Infected Wounds
                 { spellId = 93402, default = true }, -- Sunfire
             },
         }
