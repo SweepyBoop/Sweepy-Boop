@@ -196,6 +196,16 @@ else
                 { spellId = 58180, default = true }, -- Infected Wounds
                 { spellId = 93402, default = true }, -- Sunfire
             },
+        },
+        {
+            classID = addon.CLASSID.HUNTER,
+            auras = {
+                { spellId = 5116, default = true }, -- Concussive Shot
+                { spellId = 1130, default = true }, -- Hunter's Mark
+                { spellId = 118253, default = true }, -- Serpent Sting
+                { spellId = 82654, default = true }, -- Widow Venom
+                { spellId = 53301, default = true }, -- Explosive Shot
+            },
         }
     };
 end
