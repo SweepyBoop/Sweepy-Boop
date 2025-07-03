@@ -172,7 +172,24 @@ if addon.PROJECT_MAINLINE then
         },
     };
 else
-    addon.DebuffList = {};
+    addon.DebuffList = {
+        {
+            classID = addon.CLASSID.DEATHKNIGHT,
+            auras = {
+                { spellId = 55078, default = true }, -- Blood Plague
+                { spellId = 55095, default = true }, -- Frost Fever
+                { spellId = 73975, default = true }, -- Necrotic Strike
+
+                { spellId = 45524, default = true }, -- Chains of Ice
+            }
+        },
+        {
+            classID = addon.CLASSID.DRUID,
+            auras = {
+                
+            },
+        }
+    };
 end
 
 for _, classEntry in ipairs(addon.DebuffList) do
@@ -211,7 +228,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 61336, default = true }, -- Survival Instincts
                 { spellId = 102342, default = true }, -- Ironbark
                 { spellId = 22812, default = true }, -- Barkskin
-    
+
                 { spellId = 102352 }, -- Cenarion Ward
                 { spellId = 33763 }, -- Lifebloom
                     { spellId = 188550, parent = 33763 }, -- Lifebloom (Undergrowth)
@@ -241,7 +258,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 110909, default = true }, -- Alter Time
                     { spellId = 342246, parent = 110909 }, -- Alter Time
                 { spellId = 198144, default = true }, -- Ice Form (immune to stuns)
-    
+
                 --{ spellId = 12544, parent = 45438 }, -- Frost Armor (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
             }
         },
