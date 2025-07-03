@@ -191,7 +191,8 @@ else
                 { spellId = 8921, default = true }, -- Moonfire
                 { spellId = 1822, default = true }, -- Rake
                 { spellId = 1079, default = true }, -- Rip
-                { spellId = 77758, default = true}, -- Thrash
+                { spellId = 77758, default = true}, -- Thrash (Bear Form)
+                { spellId = 106830, default = true }, -- Thrash (Cat Form)
                 { spellId = 58180, default = true }, -- Infected Wounds
                 { spellId = 93402, default = true }, -- Sunfire
             },
