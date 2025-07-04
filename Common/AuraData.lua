@@ -276,8 +276,8 @@ else
             auras = {
                 { spellId = 8050, default = true }, -- Flame Shock
                 { spellId = 8056, default = true }, -- Frost Shock
-                { spellId = 61882, default = true }, -- Earthquake
 
+                { spellId = 61882 }, -- Earthquake
                 { spellId = 51490 }, -- Thunderstorm
                 { spellId = 17364 }, -- Stormstrike
             },
