@@ -214,10 +214,13 @@ else
                 { spellId = 44614, default = true }, -- Frostfire Bolt
                 { spellId = 31589, default = true }, -- Slow
                 { spellId = 113092, default = true }, -- Frost Bomb (Slow)
+                { spellId = 116, default = true }, -- Frostbolt
 
                 { spellId = 114923 }, -- Nether Tempest
                 { spellId = 44457 }, -- Living Bomb
                 { spellId = 112948 }, -- Frost Bomb
+                { spellId = 413841 }, -- Ignite
+                { spellId = 11366 }, -- Pyroblast
 
                 { spellId = 2120 }, -- Flamestrike
             }
