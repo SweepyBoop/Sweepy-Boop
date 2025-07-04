@@ -551,13 +551,21 @@ else
         {
             classID = addon.CLASSID.WARLOCK,
             auras = {
-
+                { spellId = 104773, default = true }, -- Unending Resolve
+                { spellId = 110913, default = true }, -- Dark Bargain
             },
         },
         {
             classID = addon.CLASSID.WARRIOR,
             auras = {
-                
+                { spellId = 18499, default = true }, -- Berserker Rage
+                { spellId = 118038, default = true }, -- Die by the Sword
+                { spellId = 55694, default = true }, -- Enraged Regeneration
+                { spellId = 114028, default = true }, -- Mass Spell Reflection
+                { spellId = 23920, default = true }, -- Spell Reflection
+                { spellId = 871, default = true }, -- Shield Wall
+
+                { spellId = 97463 }, -- Rallying Cry
             },
         },
     };
