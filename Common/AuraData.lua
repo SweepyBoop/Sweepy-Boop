@@ -315,7 +315,7 @@ else
                 { spellId = 64382 }, -- Shattering Throw
                 { spellId = 113746 }, -- Weakened Armor
             },
-        }
+        },
     };
 end
 
