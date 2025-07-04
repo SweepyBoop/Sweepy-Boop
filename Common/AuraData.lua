@@ -292,6 +292,8 @@ else
                 { spellId = 48181, default = true }, -- Haunt
                 { spellId = 27243, default = true }, -- Seed of Corruption
                 { spellId = 30108, default = true }, -- Unstable Affliction
+                { spellId = 47960, default = true }, -- Shadowflame
+                
 
                 -- Curses
                 { spellId = 109466 }, -- Curse of Enfeeblement
