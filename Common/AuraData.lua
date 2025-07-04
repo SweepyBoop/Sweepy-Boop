@@ -526,9 +526,40 @@ else
         {
             classID = addon.CLASSID.PRIEST,
             auras = {
+                { spellId = 6346, default = true }, -- Fear Ward
+                { spellId = 33206, default = true }, -- Pain Suppression
+                { spellId = 47788, default = true }, -- Guardian Spirit
+                { spellId = 47585, default = true }, -- Dispersion
+
+                { spellId = 15286 }, -- Vampiric Embrace
+            },
+        },
+        {
+            classID = addon.CLASSID.ROGUE,
+            auras = {
+                { spellId = 31224, default = true }, -- Cloak of Shadows
+                { spellId = 5277, default = true }, -- Evasion
+                { spellId = 1966, default = true }, -- Feint
+            },
+        },
+        {
+            classID = addon.CLASSID.SHAMAN,
+            auras = {
+                { spellId = 108271, default = true }, -- Astral Shift
+            },
+        },
+        {
+            classID = addon.CLASSID.WARLOCK,
+            auras = {
+
+            },
+        },
+        {
+            classID = addon.CLASSID.WARRIOR,
+            auras = {
                 
             },
-        }
+        },
     };
 end
 
