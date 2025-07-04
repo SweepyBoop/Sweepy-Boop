@@ -251,6 +251,24 @@ else
                 { spellId = 2944, default = true }, -- Devouring Plague
                 { spellId = 34914, default = true }, -- Vampiric Touch
             },
+        },
+        {
+            classID = addon.CLASSID.ROGUE,
+            auras = {
+                { spellId = 1943, default = true }, -- Rupture
+                { spellId = 703, default = true }, -- Garrote
+                { spellId = 122233, default = true }, -- Crimson Tempest
+                { spellId = 89775, default = true }, -- Hemmorrhage
+                { spellId = 137619, default = true }, -- Marked for Death
+
+                { spellId = 84617 }, -- Revealing Strike
+                { spellId = 113746 }, -- Weakened Armor
+
+                { spellId = 2818 }, -- Deadly Poison
+                { spellId = 8680 }, -- Wound Poison
+                { spellId = 5760 }, -- Numbing Poison
+                { spellId = 3409 }, -- Crippling Poison
+            },
         }
     };
 end
