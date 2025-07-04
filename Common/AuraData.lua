@@ -473,6 +473,61 @@ else
                 { spellId = 48792, default = true }, -- Icebound Fortitude
                 { spellId = 49039, default = true }, -- Lichborne
             },
+        },
+        {
+            classID = addon.CLASSID.DRUID,
+            auras = {
+                { spellId = 22812, default = true }, -- Barkskin
+                { spellId = 102342, default = true }, -- Ironbark
+                { spellId = 61336, default = true }, -- Survival Instincts
+            },
+        },
+        {
+            classID = addon.CLASSID.HUNTER,
+            auras = {
+                { spellId = 19263, default = true }, -- Deterrence
+                { spellId = 54216, default = true }, -- Master's Call
+                { spellId = 53480, default = true }, -- Roar of Sacrifice
+            },
+        },
+        {
+            classID = addon.CLASSID.MAGE,
+            auras = {
+                { spellId = 45438, default = true }, -- Ice Block
+                { spellId = 110909, default = true }, -- Alter Time
+                { spellId = 115610, default = true }, -- Temporal Shield
+            },
+        },
+        {
+            classID = addon.CLASSID.MONK,
+            auras = {
+                { spellId = 120954, default = true }, -- Fortifying Brew
+                { spellId = 125174, default = true }, -- Touch of Karma
+                { spellId = 116849, default = true }, -- Life Cocoon
+                { spellId = 137562, default = true }, -- Nimble Brew
+
+                { spellId = 122278 }, -- Dampen Harm
+            },
+        },
+        {
+            classID = addon.CLASSID.PALADIN,
+            auras = {
+                { spellId = 31821, default = true }, -- Devotion Aura
+                { spellId = 642, default = true }, -- Divine Shield
+                { spellId = 498, default = true }, -- Divine Protection
+                { spellId = 1044, default = true }, -- Blessing of Freedom
+                { spellId = 1022, default = true }, -- Blessing of Protection
+                { spellId = 6940, default = true }, -- Blessing of Sacrifice
+
+                { spellId = 86669 }, -- Guardian of Ancient Kings
+                { spellId = 31842 }, -- Divine Favor
+            },
+        },
+        {
+            classID = addon.CLASSID.PRIEST,
+            auras = {
+                
+            },
         }
     };
 end
