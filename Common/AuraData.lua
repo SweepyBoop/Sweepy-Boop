@@ -186,6 +186,7 @@ else
         {
             classID = addon.CLASSID.DRUID,
             auras = {
+                { spellId = 6795, default = true }, -- Growl
                 { spellId = 770, default = true }, -- Faerie Fire
                 { spellId = 33745, default = true }, -- Lacerate
                 { spellId = 8921, default = true }, -- Moonfire
@@ -224,6 +225,15 @@ else
 
                 { spellId = 2120 }, -- Flamestrike
             }
+        },
+        {
+            classID = addon.CLASSID.MONK,
+            auras = {
+                { spellId = 116095, default = true }, -- Disable
+                { spellId = 116189, default = true }, -- Provoke
+
+                { spellId = 122470 }, -- Touch of Karma
+            },
         }
     };
 end
