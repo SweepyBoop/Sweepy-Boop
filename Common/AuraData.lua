@@ -465,7 +465,16 @@ if addon.PROJECT_MAINLINE then
         }
     };
 else
-    addon.BuffList = {};
+    addon.BuffList = {
+        {
+            classID = addon.CLASSID.DEATHKNIGHT,
+            auras = {
+                { spellId = 48707, default = true }, -- Anti-Magic Shell
+                { spellId = 48792, default = true }, -- Icebound Fortitude
+                { spellId = 49039, default = true }, -- Lichborne
+            },
+        }
+    };
 end
 
 for _, classEntry in ipairs(addon.BuffList) do
