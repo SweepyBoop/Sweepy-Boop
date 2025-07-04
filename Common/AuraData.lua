@@ -206,6 +206,21 @@ else
                 { spellId = 82654, default = true }, -- Widow Venom
                 { spellId = 53301, default = true }, -- Explosive Shot
             },
+        },
+        {
+            classID = addon.CLASSID.MAGE,
+            auras = {
+                { spellId = 120, default = true }, -- Cone of Cold
+                { spellId = 44614, default = true }, -- Frostfire Bolt
+                { spellId = 31589, default = true }, -- Slow
+                { spellId = 113092, default = true }, -- Frost Bomb (Slow)
+
+                { spellId = 114923 }, -- Nether Tempest
+                { spellId = 44457 }, -- Living Bomb
+                { spellId = 112948 }, -- Frost Bomb
+
+                { spellId = 2120 }, -- Flamestrike
+            }
         }
     };
 end
