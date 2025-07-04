@@ -293,12 +293,27 @@ else
                 { spellId = 27243, default = true }, -- Seed of Corruption
                 { spellId = 30108, default = true }, -- Unstable Affliction
                 { spellId = 47960, default = true }, -- Shadowflame
-                
+
 
                 -- Curses
                 { spellId = 109466 }, -- Curse of Enfeeblement
                 { spellId = 1490 }, -- Curse of the Elements
                 { spellId = 18223 }, -- Curse of Exhaustion
+            },
+        },
+        {
+            classID = addon.CLASSID.WARRIOR,
+            auras = {
+                { spellId = 1715, default = true }, -- Hamstring
+                { spellId = 86346, default = true }, -- Colossus Smash
+                { spellId = 355, default = true }, -- Taunt
+
+                { spellId = 115767 }, -- Deep Wounds
+                { spellId = 7922 }, -- Charge Stun
+                { spellId = 113344 }, -- Bloodbath
+                { spellId = 147531 }, -- Bloodbath
+                { spellId = 64382 }, -- Shattering Throw
+                { spellId = 113746 }, -- Weakened Armor
             },
         }
     };
