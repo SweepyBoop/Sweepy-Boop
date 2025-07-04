@@ -260,6 +260,7 @@ else
                 { spellId = 122233, default = true }, -- Crimson Tempest
                 { spellId = 89775, default = true }, -- Hemmorrhage
                 { spellId = 137619, default = true }, -- Marked for Death
+                { spellId = 79140, default = true }, -- Vendetta
 
                 { spellId = 84617 }, -- Revealing Strike
                 { spellId = 113746 }, -- Weakened Armor
@@ -269,7 +270,18 @@ else
                 { spellId = 5760 }, -- Numbing Poison
                 { spellId = 3409 }, -- Crippling Poison
             },
-        }
+        },
+        {
+            classID = addon.CLASSID.SHAMAN,
+            auras = {
+                { spellId = 8050, default = true }, -- Flame Shock
+                { spellId = 8056, default = true }, -- Frost Shock
+                { spellId = 61882, default = true }, -- Earthquake
+
+                { spellId = 51490 }, -- Thunderstorm
+                { spellId = 17364 }, -- Stormstrike
+            },
+        },
     };
 end
 
