@@ -234,6 +234,23 @@ else
 
                 { spellId = 122470 }, -- Touch of Karma
             },
+        },
+        {
+            classID = addon.CLASSID.PALADIN,
+            auras = {
+                { spellId = 62124, default = true }, -- Hand of Reckoning
+                { spellId = 20170, default = true }, -- Seal of Justice
+            },
+        },
+        {
+            classID = addon.CLASSID.PRIEST,
+            auras = {
+                { spellId = 14914, default = true }, -- Holy Fire
+                { spellId = 589, default = true }, -- Shadow Word: Pain
+
+                { spellId = 2944, default = true }, -- Devouring Plague
+                { spellId = 34914, default = true }, -- Vampiric Touch
+            },
         }
     };
 end
