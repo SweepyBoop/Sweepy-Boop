@@ -1004,6 +1004,12 @@ addon.SpellData = {
         cooldown = 60,
         baseline = true,
     },
+        -- Fist of Justice
+        [105593] = {
+            parent = 853,
+            use_parent_icon = true,
+            cooldown = 30,
+        },
     -- Hand of Freedom
     [1044] = {
         class = addon.PALADIN,
