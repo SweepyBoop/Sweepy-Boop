@@ -172,7 +172,151 @@ if addon.PROJECT_MAINLINE then
         },
     };
 else
-    addon.DebuffList = {};
+    addon.DebuffList = {
+        {
+            classID = addon.CLASSID.DEATHKNIGHT,
+            auras = {
+                { spellId = 55078, default = true }, -- Blood Plague
+                { spellId = 55095, default = true }, -- Frost Fever
+                { spellId = 73975, default = true }, -- Necrotic Strike
+
+                { spellId = 45524, default = true }, -- Chains of Ice
+            }
+        },
+        {
+            classID = addon.CLASSID.DRUID,
+            auras = {
+                { spellId = 6795, default = true }, -- Growl
+                { spellId = 770, default = true }, -- Faerie Fire
+                { spellId = 33745, default = true }, -- Lacerate
+                { spellId = 8921, default = true }, -- Moonfire
+                { spellId = 1822, default = true }, -- Rake
+                { spellId = 1079, default = true }, -- Rip
+                { spellId = 77758, default = true}, -- Thrash (Bear Form)
+                { spellId = 106830, default = true }, -- Thrash (Cat Form)
+                { spellId = 58180, default = true }, -- Infected Wounds
+                { spellId = 93402, default = true }, -- Sunfire
+            },
+        },
+        {
+            classID = addon.CLASSID.HUNTER,
+            auras = {
+                { spellId = 5116, default = true }, -- Concussive Shot
+                { spellId = 1130, default = true }, -- Hunter's Mark
+                { spellId = 118253, default = true }, -- Serpent Sting
+                { spellId = 82654, default = true }, -- Widow Venom
+                { spellId = 53301, default = true }, -- Explosive Shot
+            },
+        },
+        {
+            classID = addon.CLASSID.MAGE,
+            auras = {
+                { spellId = 120, default = true }, -- Cone of Cold
+                { spellId = 44614, default = true }, -- Frostfire Bolt
+                { spellId = 31589, default = true }, -- Slow
+                { spellId = 113092, default = true }, -- Frost Bomb (Slow)
+                { spellId = 116, default = true }, -- Frostbolt
+
+                { spellId = 114923 }, -- Nether Tempest
+                { spellId = 44457 }, -- Living Bomb
+                { spellId = 112948 }, -- Frost Bomb
+                { spellId = 413841 }, -- Ignite
+                { spellId = 11366 }, -- Pyroblast
+
+                { spellId = 2120 }, -- Flamestrike
+            }
+        },
+        {
+            classID = addon.CLASSID.MONK,
+            auras = {
+                { spellId = 116095, default = true }, -- Disable
+                { spellId = 116189, default = true }, -- Provoke
+
+                { spellId = 122470 }, -- Touch of Karma
+            },
+        },
+        {
+            classID = addon.CLASSID.PALADIN,
+            auras = {
+                { spellId = 62124, default = true }, -- Hand of Reckoning
+                { spellId = 20170, default = true }, -- Seal of Justice
+            },
+        },
+        {
+            classID = addon.CLASSID.PRIEST,
+            auras = {
+                { spellId = 14914, default = true }, -- Holy Fire
+                { spellId = 589, default = true }, -- Shadow Word: Pain
+
+                { spellId = 2944, default = true }, -- Devouring Plague
+                { spellId = 34914, default = true }, -- Vampiric Touch
+            },
+        },
+        {
+            classID = addon.CLASSID.ROGUE,
+            auras = {
+                { spellId = 1943, default = true }, -- Rupture
+                { spellId = 703, default = true }, -- Garrote
+                { spellId = 122233, default = true }, -- Crimson Tempest
+                { spellId = 89775, default = true }, -- Hemmorrhage
+                { spellId = 137619, default = true }, -- Marked for Death
+                { spellId = 79140, default = true }, -- Vendetta
+
+                { spellId = 84617 }, -- Revealing Strike
+                { spellId = 113746 }, -- Weakened Armor
+
+                { spellId = 2818 }, -- Deadly Poison
+                { spellId = 8680 }, -- Wound Poison
+                { spellId = 5760 }, -- Numbing Poison
+                { spellId = 3409 }, -- Crippling Poison
+            },
+        },
+        {
+            classID = addon.CLASSID.SHAMAN,
+            auras = {
+                { spellId = 8050, default = true }, -- Flame Shock
+                { spellId = 8056, default = true }, -- Frost Shock
+
+                { spellId = 61882 }, -- Earthquake
+                { spellId = 51490 }, -- Thunderstorm
+                { spellId = 17364 }, -- Stormstrike
+            },
+        },
+        {
+            classID = addon.CLASSID.WARLOCK,
+            auras = {
+                { spellId = 348, default = true }, -- Immolate
+                { spellId = 80240, default = true }, -- Havoc
+                { spellId = 980, default = true }, -- Agony
+                { spellId = 146739, default = true }, -- Corruption
+                { spellId = 48181, default = true }, -- Haunt
+                { spellId = 27243, default = true }, -- Seed of Corruption
+                { spellId = 30108, default = true }, -- Unstable Affliction
+                { spellId = 47960, default = true }, -- Shadowflame
+
+
+                -- Curses
+                { spellId = 109466 }, -- Curse of Enfeeblement
+                { spellId = 1490 }, -- Curse of the Elements
+                { spellId = 18223 }, -- Curse of Exhaustion
+            },
+        },
+        {
+            classID = addon.CLASSID.WARRIOR,
+            auras = {
+                { spellId = 1715, default = true }, -- Hamstring
+                { spellId = 86346, default = true }, -- Colossus Smash
+                { spellId = 355, default = true }, -- Taunt
+
+                { spellId = 115767 }, -- Deep Wounds
+                { spellId = 7922 }, -- Charge Stun
+                { spellId = 113344 }, -- Bloodbath
+                { spellId = 147531 }, -- Bloodbath
+                { spellId = 64382 }, -- Shattering Throw
+                { spellId = 113746 }, -- Weakened Armor
+            },
+        },
+    };
 end
 
 for _, classEntry in ipairs(addon.DebuffList) do
@@ -211,7 +355,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 61336, default = true }, -- Survival Instincts
                 { spellId = 102342, default = true }, -- Ironbark
                 { spellId = 22812, default = true }, -- Barkskin
-    
+
                 { spellId = 102352 }, -- Cenarion Ward
                 { spellId = 33763 }, -- Lifebloom
                     { spellId = 188550, parent = 33763 }, -- Lifebloom (Undergrowth)
@@ -241,7 +385,7 @@ if addon.PROJECT_MAINLINE then
                 { spellId = 110909, default = true }, -- Alter Time
                     { spellId = 342246, parent = 110909 }, -- Alter Time
                 { spellId = 198144, default = true }, -- Ice Form (immune to stuns)
-    
+
                 --{ spellId = 12544, parent = 45438 }, -- Frost Armor (For testing, mobs near Stone Cairn Lake in Elywnn Forest)
             }
         },
@@ -321,7 +465,110 @@ if addon.PROJECT_MAINLINE then
         }
     };
 else
-    addon.BuffList = {};
+    addon.BuffList = {
+        {
+            classID = addon.CLASSID.DEATHKNIGHT,
+            auras = {
+                { spellId = 48707, default = true }, -- Anti-Magic Shell
+                { spellId = 48792, default = true }, -- Icebound Fortitude
+                { spellId = 49039, default = true }, -- Lichborne
+            },
+        },
+        {
+            classID = addon.CLASSID.DRUID,
+            auras = {
+                { spellId = 22812, default = true }, -- Barkskin
+                { spellId = 102342, default = true }, -- Ironbark
+                { spellId = 61336, default = true }, -- Survival Instincts
+            },
+        },
+        {
+            classID = addon.CLASSID.HUNTER,
+            auras = {
+                { spellId = 19263, default = true }, -- Deterrence
+                { spellId = 54216, default = true }, -- Master's Call
+                { spellId = 53480, default = true }, -- Roar of Sacrifice
+            },
+        },
+        {
+            classID = addon.CLASSID.MAGE,
+            auras = {
+                { spellId = 45438, default = true }, -- Ice Block
+                { spellId = 110909, default = true }, -- Alter Time
+                { spellId = 115610, default = true }, -- Temporal Shield
+            },
+        },
+        {
+            classID = addon.CLASSID.MONK,
+            auras = {
+                { spellId = 120954, default = true }, -- Fortifying Brew
+                { spellId = 125174, default = true }, -- Touch of Karma
+                { spellId = 116849, default = true }, -- Life Cocoon
+                { spellId = 137562, default = true }, -- Nimble Brew
+
+                { spellId = 122278 }, -- Dampen Harm
+            },
+        },
+        {
+            classID = addon.CLASSID.PALADIN,
+            auras = {
+                { spellId = 31821, default = true }, -- Devotion Aura
+                { spellId = 642, default = true }, -- Divine Shield
+                { spellId = 498, default = true }, -- Divine Protection
+                { spellId = 1044, default = true }, -- Blessing of Freedom
+                { spellId = 1022, default = true }, -- Blessing of Protection
+                { spellId = 6940, default = true }, -- Blessing of Sacrifice
+
+                { spellId = 86669 }, -- Guardian of Ancient Kings
+                { spellId = 31842 }, -- Divine Favor
+            },
+        },
+        {
+            classID = addon.CLASSID.PRIEST,
+            auras = {
+                { spellId = 6346, default = true }, -- Fear Ward
+                { spellId = 33206, default = true }, -- Pain Suppression
+                { spellId = 47788, default = true }, -- Guardian Spirit
+                { spellId = 47585, default = true }, -- Dispersion
+
+                { spellId = 15286 }, -- Vampiric Embrace
+            },
+        },
+        {
+            classID = addon.CLASSID.ROGUE,
+            auras = {
+                { spellId = 31224, default = true }, -- Cloak of Shadows
+                { spellId = 5277, default = true }, -- Evasion
+                { spellId = 1966, default = true }, -- Feint
+            },
+        },
+        {
+            classID = addon.CLASSID.SHAMAN,
+            auras = {
+                { spellId = 108271, default = true }, -- Astral Shift
+            },
+        },
+        {
+            classID = addon.CLASSID.WARLOCK,
+            auras = {
+                { spellId = 104773, default = true }, -- Unending Resolve
+                { spellId = 110913, default = true }, -- Dark Bargain
+            },
+        },
+        {
+            classID = addon.CLASSID.WARRIOR,
+            auras = {
+                { spellId = 18499, default = true }, -- Berserker Rage
+                { spellId = 118038, default = true }, -- Die by the Sword
+                { spellId = 55694, default = true }, -- Enraged Regeneration
+                { spellId = 114028, default = true }, -- Mass Spell Reflection
+                { spellId = 23920, default = true }, -- Spell Reflection
+                { spellId = 871, default = true }, -- Shield Wall
+
+                { spellId = 97463 }, -- Rallying Cry
+            },
+        },
+    };
 end
 
 for _, classEntry in ipairs(addon.BuffList) do

@@ -6,6 +6,8 @@ $addonDir = "D:\World of Warcraft\_retail_\Interface\Addons\SweepyBoop"
 $constantsFile = Join-Path -Path $addonDir -ChildPath "Common\Constants.lua"
 $addonDirCata = "D:\World of Warcraft\_classic_\Interface\Addons\SweepyBoop"
 $constantsFileCata = Join-Path -Path $addonDirCata -ChildPath "Common\Constants.lua"
+$addonDirMists = "D:\World of Warcraft\_classic_beta_\Interface\Addons\SweepyBoop"
+$constantsFileMists = Join-Path -Path $addonDirMists -ChildPath "Common\Constants.lua"
 
 if (Test-Path $constantsFile) {
     $fileContent = Get-Content -Path $constantsFile -Encoding UTF8
@@ -57,3 +59,28 @@ if ($fileContentCata -match "addon\.TEST_MODE") {
 $fileContentCata | Set-Content -Path $constantsFileCata -Encoding UTF8
 
 Write-Output "Updated $constantsFileCata successfully."
+
+# Repeat the same process for the Mists version
+if (Test-Path $constantsFileMists) {
+    $fileContentMists = Get-Content -Path $constantsFileMists -Encoding UTF8
+} else {
+    Write-Error "The file '$constantsFileMists' does not exist."
+    exit 1
+}
+$newLineMists = if ($Off) {
+    "addon.TEST_MODE = false;"
+} else {
+    "addon.TEST_MODE = true;"
+}
+
+# Replace the line containing "addon.TEST_MODE" or add it if it doesn't exist
+if ($fileContentMists -match "addon\.TEST_MODE") {
+    $fileContentMists = $fileContentMists -replace "addon\.TEST_MODE\s*=\s*.*?;", $newLineMists
+} else {
+    $fileContentMists += $newLineMists
+}
+
+# Write the modified content back to the file
+$fileContentMists | Set-Content -Path $constantsFileMists -Encoding UTF8
+
+Write-Output "Updated $constantsFileMists successfully."
