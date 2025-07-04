@@ -282,6 +282,22 @@ else
                 { spellId = 17364 }, -- Stormstrike
             },
         },
+        {
+            classID = addon.CLASSID.WARLOCK,
+            auras = {
+                { spellId = 348, default = true }, -- Immolate
+                { spellId = 80240, default = true }, -- Havoc
+                { spellId = 980, default = true }, -- Agony
+                { spellId = 146739, default = true }, -- Corruption
+                { spellId = 48181, default = true }, -- Haunt
+                { spellId = 27243, default = true }, -- Seed of Corruption
+
+                -- Curses
+                { spellId = 109466 }, -- Curse of Enfeeblement
+                { spellId = 1490 }, -- Curse of the Elements
+                { spellId = 18223 }, -- Curse of Exhaustion
+            },
+        }
     };
 end
 
