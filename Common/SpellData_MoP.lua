@@ -1,6 +1,5 @@
 local _, addon = ...;
 
-local POWERTYPE = Enum.PowerType;
 local specID = addon.SPECID;
 local category = addon.SPELLCATEGORY;
 
