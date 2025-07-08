@@ -480,6 +480,18 @@ else
                 { spellId = 22812, default = true }, -- Barkskin
                 { spellId = 102342, default = true }, -- Ironbark
                 { spellId = 61336, default = true }, -- Survival Instincts
+
+                -- Symbiosis
+                { spellId = 110570, default = true }, -- Anti-Magic Shell
+                { spellId = 110788, default = true }, -- Cloak of Shadows
+                { spellId = 122291, default = true }, -- Unending Resolve
+                { spellId = 110700, default = true }, -- Divine Shield
+                { spellId = 110715, default = true }, -- Dispersion
+                { spellId = 110575, default = true }, -- Icebound Fortitude
+                { spellId = 110617, default = true }, -- Deterrence
+                { spellId = 110696, default = true }, -- Ice Block
+                { spellId = 126456, default = true }, -- Fortifying Brew
+                { spellId = 110791, default = true }, -- Evasion
             },
         },
         {

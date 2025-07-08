@@ -110,7 +110,7 @@ addon.GetSpecForPlayerOrArena = function(unit)
                 return GetSpecializationInfo(currentSpec);
             end
         else
-            -- Temporary solution for MoP Classic, GetSpecialization is not yet in place (as it should)
+            -- Temporary solution for MoP Classic, GetSpecialization is not yet in place (as it should be)
             return 269; -- Hard code spec ID in test (https://warcraft.wiki.gg/wiki/SpecializationID)
         end
     else
