@@ -829,8 +829,9 @@ addon.GetArenaFrameOptions = function(order)
                         else
                             cooldown = spellInfo.cooldown.default;
                         end
-                        local additionalInfo = "\n\n|" .. yellowColor .. "Cooldown".."|r "..SecondsToTime(cooldown)..
-								"\n\n|" .. yellowColor .. "Spell ID" .. "|r "..spellID;
+                        local additionalInfo = "\n\n|" .. yellowColor .. "Cooldown".."|r ".. SecondsToTime(cooldown) ..
+								"\n\n|" .. yellowColor .. "Spell ID" .. "|r ".. spellID ..
+                                "\n\n|" .. yellowColor .. "Category" .. "|r " .. addon.SPELLCATEGORY_NAME[spellInfo.category];
                         return description .. additionalInfo;
                     end
                 };
