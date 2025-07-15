@@ -675,6 +675,7 @@ addon.SpellData = {
         category = category.INTERRUPT,
         cooldown = 24,
         baseline = true,
+        reduce_on_interrupt = 4,
     },
     -- Deep Freeze
     [44572] = {
