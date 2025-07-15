@@ -283,7 +283,7 @@ addon.SpellData = {
         class = addon.DRUID,
         spec = { specID.RESTORATION_DRUID },
         category = category.DEFENSIVE,
-        cooldown = 60,
+        cooldown = 30,
         baseline = true,
     },
     -- Nature's Cure
