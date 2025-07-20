@@ -427,7 +427,7 @@ local function SetupIconGroup(group, unit)
                 -- The texture might have been set by use_parent_icon icons
                 icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
                 if isTestGroup then
-                    icon.Name:SetText("SweepyBoop");
+                    icon.Name:SetText("SweepyBoop"); -- When hiding test icons then showing again, the test name is not showing up
                 end
                 addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
                 --print("Populated icon", iconSetID, unit, spellID);
