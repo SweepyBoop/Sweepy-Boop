@@ -893,11 +893,11 @@ end
 local unitNames = {};
 
 local function UpdateUnitNames(group)
-    for i = 1, #(group.active) do
-        local unit = group.active[i].unit;
+    for i = 1, #(group.icons) do
+        local unit = group.icons[i].unit;
         if unit then
             local name = unitNames[unit] or "";
-            group.active[i].Name:SetText(name);
+            group.icons[i].Name:SetText(name);
         end
     end
 end
@@ -1125,17 +1125,11 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 if addon.TEST_MODE then
                     local arenaMain = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player"];
                     if arenaMain and GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN) then
-                        if nameUpdated then
-                            UpdateUnitNames(arenaMain);
-                        end
                         ProcessUnitEvent(arenaMain, event, ...);
                     end
 
                     local arenaSecondary = iconGroups[ICON_SET_ID.ARENA_SECONDARY .. "-player"];
                     if arenaSecondary and GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY) then
-                        if nameUpdated then
-                            UpdateUnitNames(arenaSecondary);
-                        end
                         ProcessUnitEvent(arenaSecondary, event, ...);
                     end
                 else
