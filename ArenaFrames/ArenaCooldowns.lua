@@ -426,6 +426,9 @@ local function SetupIconGroup(group, unit)
                 icon.info = GetSpecOverrides(spell, spec);
                 -- The texture might have been set by use_parent_icon icons
                 icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                if isTestGroup then
+                    icon.Name:SetText("SweepyBoop");
+                end
                 addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
                 --print("Populated icon", iconSetID, unit, spellID);
 
