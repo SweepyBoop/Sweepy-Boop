@@ -1022,6 +1022,8 @@ end
 
 local eventFrame;
 
+local unitNames = {};
+
 function SweepyBoop:SetupArenaCooldownTracker()
     -- Refresh icon groups when zone changes, or during test mode when player switches spec
     if ( not eventFrame ) then
@@ -1043,6 +1045,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 SweepyBoop:HideTestArenaCooldownTracker();
                 SweepyBoop:HideTestArenaStandaloneBars();
 
+                unitNames = {};
                 ClearAllIconGroups();
 
                 local shouldSetup = false;
