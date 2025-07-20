@@ -138,7 +138,8 @@ local function GetIcon(iconSetID, unitID, spellID, test)
     if ( not iconPool[iconSetID][iconID] ) then
         local size = GetIconSize(iconSetID);
         local glow = GetIconGlow(iconSetID);
-        iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
+        local showName = iconSetConfig.showName and ( not addon.ARENA_FRAME_BARS[iconSetID] );
+        iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size, showName);
         iconPool[iconSetID][iconID].template = ( glow and addon.ICON_TEMPLATE.GLOW ) or addon.ICON_TEMPLATE.FLASH;
 
         -- https://warcraft.wiki.gg/wiki/API_TextureBase_SetTexCoord
@@ -163,6 +164,8 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
         local glow = GetIconGlow(iconSetID);
         iconPool[iconSetID][iconID].template = ( glow and addon.ICON_TEMPLATE.GLOW ) or addon.ICON_TEMPLATE.FLASH;
+        local showName = iconSetConfig.showName and ( not addon.ARENA_FRAME_BARS[iconSetID] );
+        iconPool[iconSetID][iconID].Name:SetShown(showName);
 
         if iconSetConfig.hideBorder then
             iconPool[iconSetID][iconID].Icon:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875);
@@ -423,6 +426,9 @@ local function SetupIconGroup(group, unit)
                 icon.info = GetSpecOverrides(spell, spec);
                 -- The texture might have been set by use_parent_icon icons
                 icon.Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                if isTestGroup then
+                    icon.Name:SetText("SweepyBoop"); -- When hiding test icons then showing again, the test name is not showing up
+                end
                 addon.IconGroup_PopulateIcon(group, icon, unit .. "-" .. spellID);
                 --print("Populated icon", iconSetID, unit, spellID);
 
@@ -884,6 +890,18 @@ local function UpdateAllHighlights(group)
     end
 end
 
+local unitNames = {};
+
+local function UpdateUnitNames(group)
+    for _, icon in pairs(group.icons) do
+        local unit = icon.unit;
+        if unit then
+            local name = unitNames[unit] or "";
+            icon.Name:SetText(name);
+        end
+    end
+end
+
 function SweepyBoop:TestArenaCooldownTracker()
     local secondaryBarEnabled = SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar;
 
@@ -1021,6 +1039,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 SweepyBoop:HideTestArenaCooldownTracker();
                 SweepyBoop:HideTestArenaStandaloneBars();
 
+                unitNames = {};
                 ClearAllIconGroups();
 
                 local shouldSetup = false;
@@ -1095,6 +1114,15 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
 
+                local nameUpdated = false;
+                local unitTarget = ...;
+                if ( not unitNames[unitTarget] ) then
+                    unitNames[unitTarget] = UnitName(unitTarget);
+                    if unitNames[unitTarget] then
+                        nameUpdated = true;
+                    end
+                end
+
                 -- Process arena frame bars if enabled
                 if addon.TEST_MODE then
                     local arenaMain = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player"];
@@ -1135,6 +1163,9 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         end
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup then
+                            if nameUpdated then
+                                UpdateUnitNames(iconGroup);
+                            end
                             ProcessUnitEvent(iconGroup, event, ...);
                         end
                     end

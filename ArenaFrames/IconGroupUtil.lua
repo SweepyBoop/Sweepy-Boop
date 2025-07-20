@@ -256,6 +256,10 @@ addon.IconGroup_Wipe = function (group)
         if icon.TargetHighlight then
             icon.TargetHighlight:Hide();
         end
+        if icon.Name then
+            icon.Name:SetText("");
+            -- Visibility is updated on creation / config change, don't hide here
+        end
         icon.started = nil;
         icon:Hide();
     end
