@@ -890,18 +890,14 @@ local function UpdateAllHighlights(group)
     end
 end
 
-local function UpdateUnitNames(group)
-    local unitNames = {};
-    for i = 1, addon.MAX_ARENA_SIZE do
-        unitNames[i] = UnitName("arena" .. i);
-    end
+local unitNames = {};
 
+local function UpdateUnitNames(group)
     for i = 1, #(group.active) do
-        local unit = group.active[i];
-        if UnitExists(unit) then
-            group.active[i].Name.text:SetText(UnitName(unit));
-        else
-            group.active[i].Name.text:SetText("");
+        local unit = group.active[i].unit;
+        if unit then
+            local name = unitNames[unit] or "";
+            group.active[i].Name:SetText(name);
         end
     end
 end
@@ -1022,8 +1018,6 @@ end
 
 local eventFrame;
 
-local unitNames = {};
-
 function SweepyBoop:SetupArenaCooldownTracker()
     -- Refresh icon groups when zone changes, or during test mode when player switches spec
     if ( not eventFrame ) then
@@ -1120,15 +1114,28 @@ function SweepyBoop:SetupArenaCooldownTracker()
             elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
 
+                local nameUpdated = false;
+                local unitTarget = ...;
+                if ( not unitNames[unitTarget] ) then
+                    unitNames[unitTarget] = UnitName(unitTarget);
+                    nameUpdated = true;
+                end
+
                 -- Process arena frame bars if enabled
                 if addon.TEST_MODE then
                     local arenaMain = iconGroups[ICON_SET_ID.ARENA_MAIN .. "-player"];
                     if arenaMain and GetIconGroupEnabled(ICON_SET_ID.ARENA_MAIN) then
+                        if nameUpdated then
+                            UpdateUnitNames(arenaMain);
+                        end
                         ProcessUnitEvent(arenaMain, event, ...);
                     end
 
                     local arenaSecondary = iconGroups[ICON_SET_ID.ARENA_SECONDARY .. "-player"];
                     if arenaSecondary and GetIconGroupEnabled(ICON_SET_ID.ARENA_SECONDARY) then
+                        if nameUpdated then
+                            UpdateUnitNames(arenaSecondary);
+                        end
                         ProcessUnitEvent(arenaSecondary, event, ...);
                     end
                 else
@@ -1140,12 +1147,18 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         local iconGroupID = ICON_SET_ID.ARENA_MAIN .. "-" .. unit;
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup and arenaMainEnabled then
+                            if nameUpdated then
+                                UpdateUnitNames(iconGroup);
+                            end
                             ProcessUnitEvent(iconGroup, event, ...);
                         end
 
                         iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
                         iconGroup = iconGroups[iconGroupID];
                         if iconGroup and arenaSecondaryEnabled then
+                            if nameUpdated then
+                                UpdateUnitNames(iconGroup);
+                            end
                             ProcessUnitEvent(iconGroup, event, ...);
                         end
                     end
