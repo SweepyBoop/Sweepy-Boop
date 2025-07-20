@@ -887,6 +887,22 @@ local function UpdateAllHighlights(group)
     end
 end
 
+local function UpdateUnitNames(group)
+    local unitNames = {};
+    for i = 1, addon.MAX_ARENA_SIZE do
+        unitNames[i] = UnitName("arena" .. i);
+    end
+
+    for i = 1, #(group.active) do
+        local unit = group.active[i];
+        if UnitExists(unit) then
+            group.active[i].Name.text:SetText(UnitName(unit));
+        else
+            group.active[i].Name.text:SetText("");
+        end
+    end
+end
+
 function SweepyBoop:TestArenaCooldownTracker()
     local secondaryBarEnabled = SweepyBoop.db.profile.arenaFrames.arenaCooldownSecondaryBar;
 
