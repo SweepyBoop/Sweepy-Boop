@@ -893,11 +893,11 @@ end
 local unitNames = {};
 
 local function UpdateUnitNames(group)
-    for i = 1, #(group.icons) do
-        local unit = group.icons[i].unit;
+    for _, icon in pairs(group.icons) do
+        local unit = icon.unit;
         if unit then
             local name = unitNames[unit] or "";
-            group.icons[i].Name:SetText(name);
+            icon.Name:SetText(name);
         end
     end
 end
@@ -1118,7 +1118,9 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 local unitTarget = ...;
                 if ( not unitNames[unitTarget] ) then
                     unitNames[unitTarget] = UnitName(unitTarget);
-                    nameUpdated = true;
+                    if unitNames[unitTarget] then
+                        nameUpdated = true;
+                    end
                 end
 
                 -- Process arena frame bars if enabled
@@ -1162,7 +1164,6 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup then
                             if nameUpdated then
-                                print("UpdateUnitNames");
                                 UpdateUnitNames(iconGroup);
                             end
                             ProcessUnitEvent(iconGroup, event, ...);
