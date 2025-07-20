@@ -1141,18 +1141,12 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         local iconGroupID = ICON_SET_ID.ARENA_MAIN .. "-" .. unit;
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup and arenaMainEnabled then
-                            if nameUpdated then
-                                UpdateUnitNames(iconGroup);
-                            end
                             ProcessUnitEvent(iconGroup, event, ...);
                         end
 
                         iconGroupID = ICON_SET_ID.ARENA_SECONDARY .. "-" .. unit;
                         iconGroup = iconGroups[iconGroupID];
                         if iconGroup and arenaSecondaryEnabled then
-                            if nameUpdated then
-                                UpdateUnitNames(iconGroup);
-                            end
                             ProcessUnitEvent(iconGroup, event, ...);
                         end
                     end
@@ -1167,6 +1161,10 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         end
                         local iconGroup = iconGroups[iconGroupID];
                         if iconGroup then
+                            if nameUpdated then
+                                print("UpdateUnitNames");
+                                UpdateUnitNames(iconGroup);
+                            end
                             ProcessUnitEvent(iconGroup, event, ...);
                         end
                     end
