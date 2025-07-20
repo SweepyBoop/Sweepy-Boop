@@ -277,6 +277,15 @@ addon.SpellData = {
             parent = 80965,
             use_parent_icon = true,
         },
+    -- Remove Corruption
+    [2782] = {
+        class = addon.DRUID,
+        spec = { specID.BALANCE, specID.FERAL },
+        category = category.DISPEL,
+        cooldown = 8,
+        baseline = true,
+        trackEvent = addon.SPELL_DISPEL,
+    },
     -- Restoration
     -- Ironbark
     [102342] = {
