@@ -138,7 +138,8 @@ local function GetIcon(iconSetID, unitID, spellID, test)
     if ( not iconPool[iconSetID][iconID] ) then
         local size = GetIconSize(iconSetID);
         local glow = GetIconGlow(iconSetID);
-        iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size);
+        local showName = iconSetConfig.showName and ( not addon.ARENA_FRAME_BARS[iconSetID] );
+        iconPool[iconSetID][iconID] = addon.CreateCooldownTrackingIcon(unitID, spellID, size, showName);
         iconPool[iconSetID][iconID].template = ( glow and addon.ICON_TEMPLATE.GLOW ) or addon.ICON_TEMPLATE.FLASH;
 
         -- https://warcraft.wiki.gg/wiki/API_TextureBase_SetTexCoord
@@ -163,6 +164,8 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         iconPool[iconSetID][iconID]:SetScale(size / addon.DEFAULT_ICON_SIZE);
         local glow = GetIconGlow(iconSetID);
         iconPool[iconSetID][iconID].template = ( glow and addon.ICON_TEMPLATE.GLOW ) or addon.ICON_TEMPLATE.FLASH;
+        local showName = iconSetConfig.showName and ( not addon.ARENA_FRAME_BARS[iconSetID] );
+        iconPool[iconSetID][iconID].Name:SetShown(showName);
 
         if iconSetConfig.hideBorder then
             iconPool[iconSetID][iconID].Icon:SetTexCoord(0.078125, 0.921875, 0.078125, 0.921875);
