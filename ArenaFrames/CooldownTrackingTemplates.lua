@@ -78,6 +78,9 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
     frame.Icon:SetTexture(GetSpellTexture(spellID));
     frame.Icon:SetAllPoints();
 
+    -- Player name
+    frame.Name:SetText("SweepyBoop");
+
     if spell.charges or spell.opt_charges then
         frame.Count = CreateFrame("Frame", nil, frame);
         frame.Count:SetFrameLevel(10000);
