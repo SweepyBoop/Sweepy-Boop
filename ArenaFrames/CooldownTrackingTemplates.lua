@@ -54,7 +54,7 @@ end
 
 -- Only put static info in this function
 -- An icon for a unit + spellID is only created once per session
-addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
+addon.CreateCooldownTrackingIcon = function (unit, spellID, size, showName)
     local frame = CreateFrame("Button", nil, UIParent, "CooldownTrackingButtonTemplate");
     frame.template = addon.ICON_TEMPLATE.FLASH;
     frame:SetMouseClickEnabled(false);
@@ -71,15 +71,14 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size)
         frame:SetScale(scale);
     end
 
+    frame.Name:SetShown(showName);
+
     -- Fill in static info here
     frame.spellInfo = spell;
     frame.priority = spell.priority;
 
     frame.Icon:SetTexture(GetSpellTexture(spellID));
     frame.Icon:SetAllPoints();
-
-    -- Player name
-    frame.Name:SetText("SweepyBoop");
 
     if spell.charges or spell.opt_charges then
         frame.Count = CreateFrame("Frame", nil, frame);

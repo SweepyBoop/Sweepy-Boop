@@ -679,28 +679,41 @@ addon.GetArenaFrameOptions = function(order)
                             desc = "Glow icons when active for offensive abilities",
                         },
 
-                        hideBorder = {
+                        showName = {
                             order = 14,
+                            type = "toggle",
+                            width = 0.75,
+                            name = "Show name",
+                        },
+
+                        breaker4 = {
+                            order = 15,
+                            type = "description",
+                            name = "",
+                        },
+
+                        hideBorder = {
+                            order = 16,
                             type = "toggle",
                             width = 0.75,
                             name = "Hide border",
                         },
 
                         showTargetHighlight = {
-                            order = 15,
+                            order = 17,
                             type = "toggle",
                             width = 0.75,
                             name = "Highlight target",
                         },
 
-                        breaker4 = {
-                            order = 16,
+                        breaker5 = {
+                            order = 18,
                             type = "description",
                             name = "",
                         },
 
                         showUnusedIcons = {
-                            order = 17,
+                            order = 19,
                             type = "toggle",
                             name = "Show off-CD icons",
                             width = 0.9,
@@ -708,7 +721,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         unusedIconAlpha = {
-                            order = 18,
+                            order = 20,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
@@ -722,7 +735,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         usedIconAlpha = {
-                            order = 19,
+                            order = 21,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
