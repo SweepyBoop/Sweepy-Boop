@@ -115,6 +115,7 @@ addon.SpellData = {
         class = addon.DEATHKNIGHT,
         category = category.INTERRUPT,
         cooldown = 15,
+        reduce_on_interrupt = 3,
         baseline = true,
     },
     -- Shambling Rush
