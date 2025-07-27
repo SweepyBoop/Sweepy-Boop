@@ -871,6 +871,22 @@ addon.GetArenaFrameOptions = function(order)
                 end,
             }
         end
+
+        local otherCategory = addon.SPELLCATEGORY.OTHERS;
+        group[tostring(otherCategory)] = {
+                order = otherCategory,
+                type = "range",
+                name = addon.SPELLCATEGORY_NAME[otherCategory],
+                min = 1,
+                max = 100,
+                step = 1,
+                get = function(info)
+                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(otherCategory)];
+                end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(otherCategory)] = val;
+                end,
+            }
     end
 
     AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList, addon.SpellData);
