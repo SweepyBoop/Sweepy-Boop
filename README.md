@@ -31,7 +31,7 @@ Accurate arena cooldown tracking, incorporating all cooldown reduction mechanics
 
 It provides an option to show icons that are off cooldown, similar to OmniBar, but non-baseline abilities will not show until first usage, i.e., you won't see a Spell Lock icon if the opponent warlock is not playing Fel Hunter. Icon transparency when on / off cooldown is customizable, i.e., you can fade out icons when they are off cooldown like OmniBar, or do the opposite like GladiusEx!
 
-Burst damage cooldowns will glow for their duration, making it easier to trade at high HP during the enemy team's burst window.
+Burst damage cooldowns come with the option to glow for their duration, making it easier to trade at high HP during the enemy team's burst window.
 
 ![Spell duration](https://github.com/user-attachments/assets/8f7f3917-460d-4ca8-b4d6-ac8fd634d7da)
 
