@@ -321,7 +321,7 @@ addon.CLASS_ICON_STYLE = {
 };
 
 addon.GetSpellTexture = function(spellId)
-    local _, originalIconID = addon.GetSpellTexture(spellId);
+    local _, originalIconID = C_Spell.GetSpellTexture(spellId);
     return originalIconID;
 end
 
