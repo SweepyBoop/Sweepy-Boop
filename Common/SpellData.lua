@@ -365,7 +365,7 @@ addon.SpellData = {
     [278326] = {
         cooldown = 10,
         class = addon.DEMONHUNTER,
-        category = category.OTHERS,
+        category = category.DISPEL,
         baseline = true,
     },
     -- Vengeful Retreat
@@ -795,7 +795,7 @@ addon.SpellData = {
     -- Rescue
     [370665] = {
         class = addon.EVOKER,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         cooldown = 60,
         baseline = true,
     },
@@ -1014,7 +1014,7 @@ addon.SpellData = {
     -- Tranquilizing Shot
     [19801] = {
         class = addon.HUNTER,
-        category = category.OTHERS,
+        category = category.DISPEL,
         cooldown = 10,
         baseline = true,
     },
@@ -1457,6 +1457,13 @@ addon.SpellData = {
         spec = { specID.WINDWALKER, specID.BREWMASTER },
         category = category.DISPEL,
         trackEvent = addon.SPELL_DISPEL,
+    },
+    -- Clash
+    [324312] = {
+        class = addon.MONK,
+        category = category.MOBILITY,
+        cooldown = 60,
+        baseline = true, -- technically a talent, but always picked
     },
 
     -- Paladin
@@ -2435,7 +2442,7 @@ addon.SpellData = {
     [378773] = {
         cooldown = 12,
         class = addon.SHAMAN,
-        category = category.OTHERS,
+        category = category.DISPEL,
     },
     -- Nature's Swiftness
     [378081] = {
@@ -2793,7 +2800,7 @@ addon.SpellData = {
         cooldown = 17,
         class = addon.WARRIOR,
         charges = true,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         baseline = true,
     },
     -- Spell Reflection
@@ -2823,7 +2830,7 @@ addon.SpellData = {
     [52174] = {
         cooldown = 30,
         class = addon.WARRIOR,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         baseline = true, -- technically a talent, but always picked
     },
     -- Disarm

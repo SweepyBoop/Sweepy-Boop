@@ -16,7 +16,8 @@ addon.SPELLCATEGORY = {
     CROWDCONTROL = 9,
     BURST = 10,
     HEAL = 11,
-    OTHERS = 12, -- Gap closers, etc.
+    MOBILITY = 12,
+    OTHERS = 100,
 };
 
 addon.SPELLCATEGORY_NAME = {
@@ -31,6 +32,7 @@ addon.SPELLCATEGORY_NAME = {
     [addon.SPELLCATEGORY.CROWDCONTROL] = "Crowd Control",
     [addon.SPELLCATEGORY.BURST] = "Burst",
     [addon.SPELLCATEGORY.HEAL] = "Heal",
+    [addon.SPELLCATEGORY.MOBILITY] = "Mobility",
     [addon.SPELLCATEGORY.OTHERS] = "Others",
 };
 
