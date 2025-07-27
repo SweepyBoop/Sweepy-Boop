@@ -140,6 +140,7 @@ local defaults = {
                 [tostring(addon.SPELLCATEGORY.CROWDCONTROL)] = 70,
                 [tostring(addon.SPELLCATEGORY.BURST)] = 90,
                 [tostring(addon.SPELLCATEGORY.HEAL)] = 80,
+                [tostring(addon.SPELLCATEGORY.MOBILITY)] = 70,
                 [tostring(addon.SPELLCATEGORY.OTHERS)] = 10,
             },
         },
