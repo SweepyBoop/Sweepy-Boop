@@ -320,6 +320,11 @@ addon.CLASS_ICON_STYLE = {
     ICON_AND_ARROW = 2,
 };
 
+addon.GetSpellTexture = function(spellId)
+    local _, originalIconID = C_Spell.GetSpellTexture(spellId);
+    return originalIconID;
+end
+
 addon.SPELL_DESCRIPTION = {}; -- by spellId, requested via -- https://warcraft.wiki.gg/wiki/SpellMixin
 
 addon.PRINT = function(message)

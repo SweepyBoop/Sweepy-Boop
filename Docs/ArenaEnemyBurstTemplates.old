@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local GetSpellTexture = C_Spell.GetSpellTexture;
+local GetSpellTexture = addon.GetSpellTexture;
 
 local iconSize = addon.DEFAULT_ICON_SIZE;
 

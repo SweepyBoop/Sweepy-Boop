@@ -823,7 +823,7 @@ addon.GetArenaFrameOptions = function(order)
             if ( not spellInfo.parent ) then
                 local classFile = spellInfo.class;
                 local classGroup = group.args[classFile];
-                local icon, name = C_Spell.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
+                local icon, name = addon.GetSpellTexture(spellID), C_Spell.GetSpellName(spellID);
                 -- https://warcraft.wiki.gg/wiki/SpellMixin
                 local spell = Spell:CreateFromSpellID(spellID);
                 spell:ContinueOnSpellLoad(function()
@@ -874,19 +874,19 @@ addon.GetArenaFrameOptions = function(order)
 
         local otherCategory = addon.SPELLCATEGORY.OTHERS;
         group[tostring(otherCategory)] = {
-                order = otherCategory,
-                type = "range",
-                name = addon.SPELLCATEGORY_NAME[otherCategory],
-                min = 1,
-                max = 100,
-                step = 1,
-                get = function(info)
-                    return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(otherCategory)];
-                end,
-                set = function(info, val)
-                    SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(otherCategory)] = val;
-                end,
-            }
+            order = otherCategory,
+            type = "range",
+            name = addon.SPELLCATEGORY_NAME[otherCategory],
+            min = 1,
+            max = 100,
+            step = 1,
+            get = function(info)
+                return SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(otherCategory)];
+            end,
+            set = function(info, val)
+                SweepyBoop.db.profile.arenaFrames.spellCatPriority[tostring(otherCategory)] = val;
+            end,
+        }
     end
 
     AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList, addon.SpellData);
