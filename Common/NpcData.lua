@@ -230,7 +230,7 @@ addon.iconTexture = {};
 for _, classEntry in ipairs(addon.importantNpcList) do
     for _, npcEntry in ipairs(classEntry.npcs) do
         -- Convert npcID to string since this returns string GUID: local npcID = select(6, strsplit("-", guid));
-        local npcID, icon = tostring(npcEntry.npcID), C_Spell.GetSpellTexture(npcEntry.icon);
+        local npcID, icon = tostring(npcEntry.npcID), addon.GetSpellTexture(npcEntry.icon);
         addon.iconTexture[npcID] = icon;
     end
 end
@@ -295,7 +295,7 @@ addon.AppendNpcOptionsToGroup = function(group)
                 addon.SPELL_DESCRIPTION[npcEntry.icon] = spell:GetSpellDescription();
             end)
 
-            local texture = C_Spell.GetSpellTexture(npcEntry.icon);
+            local texture = addon.GetSpellTexture(npcEntry.icon);
             classGroup.args[tostring(npcEntry.npcID)] = {
                 order = spellIdx,
                 type = "select",

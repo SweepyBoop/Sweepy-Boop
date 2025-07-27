@@ -195,7 +195,7 @@ local function SetupIconGroup(group, unit, testIcons)
                 if shouldSetup then
                     testIcons[unit][spellID].info = { cooldown = spell.cooldown };
                     -- The texture might have been set by use_parent_icon icons
-                    testIcons[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                    testIcons[unit][spellID].Icon:SetTexture(addon.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, testIcons[unit][spellID], unit .. "-" .. spellID);
 
                     local showUnusedIcons;
@@ -264,7 +264,7 @@ local function SetupIconGroup(group, unit, testIcons)
                     -- Reset dynamic info before populating to group
                     iconSet[unit][spellID].info = GetSpecOverrides(spell, spec);
                     -- The texture might have been set by use_parent_icon icons
-                    iconSet[unit][spellID].Icon:SetTexture(C_Spell.GetSpellTexture(spellID));
+                    iconSet[unit][spellID].Icon:SetTexture(addon.GetSpellTexture(spellID));
                     addon.IconGroup_PopulateIcon(group, iconSet[unit][spellID], unit .. "-" .. spellID);
 
                     local showUnusedIcons;
@@ -566,7 +566,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
     local iconID = unit .. "-" .. iconSpellId;
     if self.icons[iconID] and ( isTestGroup or spellList[tostring(configSpellId)] ) then
         if ( iconSpellId ~= spellId ) then
-            self.icons[iconID].Icon:SetTexture(C_Spell.GetSpellTexture(spellId));
+            self.icons[iconID].Icon:SetTexture(addon.GetSpellTexture(spellId));
         end
 
         StartIcon(self.icons[iconID]);

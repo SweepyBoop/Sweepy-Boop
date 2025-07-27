@@ -233,9 +233,9 @@ if test then
 end
 
 local categoryIcon = {
-    ["stun"] = C_Spell.GetSpellTexture(1833), -- Cheap Shot
-    ["disorient"] = C_Spell.GetSpellTexture(5782), -- Fear
-    ["incapacitate"] = C_Spell.GetSpellTexture(118), -- Polymorph
+    ["stun"] = addon.GetSpellTexture(1833), -- Cheap Shot
+    ["disorient"] = addon.GetSpellTexture(5782), -- Fear
+    ["incapacitate"] = addon.GetSpellTexture(118), -- Polymorph
 };
 
 local categoryPriority = {

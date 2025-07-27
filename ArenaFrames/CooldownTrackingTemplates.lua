@@ -1,6 +1,5 @@
 local _, addon = ...;
 
-local GetSpellTexture = C_Spell.GetSpellTexture;
 local iconSize = addon.DEFAULT_ICON_SIZE;
 
 local function StartAnimation(icon)

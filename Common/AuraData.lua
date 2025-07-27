@@ -645,7 +645,7 @@ addon.AppendAuraOptionsToGroup = function(group, auraList, profileName)
                     addon.SPELL_DESCRIPTION[auraEntry.spellId] = spell:GetSpellDescription();
                 end)
 
-                local texture = C_Spell.GetSpellTexture(auraEntry.spellId);
+                local texture = addon.GetSpellTexture(auraEntry.spellId);
                 classGroup.args[tostring(auraEntry.spellId)] = {
                     order = auraIdx,
                     type = "toggle",

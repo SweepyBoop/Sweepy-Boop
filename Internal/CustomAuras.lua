@@ -1,6 +1,6 @@
 local _, addon = ...
 
-local GetSpellTexture = C_Spell.GetSpellTexture;
+local GetSpellTexture = addon.GetSpellTexture;
 local GetPlayerAuraBySpellID = C_UnitAuras.GetPlayerAuraBySpellID;
 
 -- https://wowpedia.fandom.com/wiki/FileDataID

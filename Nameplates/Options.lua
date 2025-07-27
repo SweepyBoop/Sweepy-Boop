@@ -313,7 +313,7 @@ addon.GetFriendlyNameplateOptions = function(order)
 end
 
 addon.GetEnemyNameplateOptions = function(order)
-    local beastMasteryHunterIcon = ( addon.PROJECT_MAINLINE and C_Spell.GetSpellTexture(267116) ) or C_Spell.GetSpellTexture(19574);
+    local beastMasteryHunterIcon = ( addon.PROJECT_MAINLINE and addon.GetSpellTexture(267116) ) or addon.GetSpellTexture(19574);
     local optionGroup = {
         order = order,
         type = "group",
