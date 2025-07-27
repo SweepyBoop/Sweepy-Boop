@@ -76,7 +76,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, showName)
     frame.spellInfo = spell;
     frame.priority = spell.priority;
 
-    frame.Icon:SetTexture(GetSpellTexture(spellID));
+    frame.Icon:SetTexture(addon.GetSpellTexture(spellID));
     frame.Icon:SetAllPoints();
 
     if spell.charges or spell.opt_charges then
