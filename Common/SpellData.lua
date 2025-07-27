@@ -131,7 +131,7 @@ addon.SpellData = {
     -- Death Grip
     [49576] = {
         class = addon.DEATHKNIGHT,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         cooldown = 25,
         charges = true, -- Death's Echo is almost always picked
         baseline = true,
@@ -371,7 +371,7 @@ addon.SpellData = {
     -- Vengeful Retreat
     [198793] = {
         class = addon.DEMONHUNTER,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         cooldown = { default = 20, [specID.VENGEANCE] = 25 },
         baseline = true,
     },
@@ -1007,7 +1007,7 @@ addon.SpellData = {
     [190925] = {
         class = addon.HUNTER,
         spec = { specID.SURVIVAL },
-        category = category.OTHERS,
+        category = category.MOBILITY,
         cooldown = 20,
         baseline = true,
     },
@@ -1235,14 +1235,14 @@ addon.SpellData = {
     [1953] = {
         cooldown = 11, -- 15s - 4s from Flow of Time
         class = addon.MAGE,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         -- Not baseline since it can be replaced by Shimmer
     },
     -- Shimmer
     [212653] = {
         cooldown = 21, -- 25s - 4s from Flow of Time
         class = addon.MAGE,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         charges = true,
     },
     -- Blast Wave
@@ -1436,7 +1436,7 @@ addon.SpellData = {
     -- Tiger's Lust
     [116841] = {
         class = addon.MONK,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         cooldown = 30,
         baseline = true,
     },
@@ -1671,7 +1671,7 @@ addon.SpellData = {
     [1044] = {
         cooldown = 25,
         class = addon.PALADIN,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         baseline = true,
     },
     -- Dispel
@@ -2208,7 +2208,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         spec = { specID.SUBTLETY, specID.ASSASSINATION },
         charges = true,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         baseline = true,
     },
     -- Grappling Hook
@@ -2217,7 +2217,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         spec = { specID.OUTLAW },
         charges = true,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         baseline = true,
     },
     -- Dismantle
@@ -2230,7 +2230,7 @@ addon.SpellData = {
     [2983] = {
         cooldown = 60,
         class = addon.ROGUE,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         baseline = true,
     },
 
