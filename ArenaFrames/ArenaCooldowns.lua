@@ -425,7 +425,7 @@ local function SetupIconGroup(group, unit)
                 local icon = GetIcon(iconSetID, unit, spellID, isTestGroup);
                 icon.info = GetSpecOverrides(spell, spec);
                 -- The texture might have been set by use_parent_icon icons
-                icon.Icon:SetTexture(C_Spell.addon.GetSpellTexture(spellID));
+                icon.Icon:SetTexture(addon.GetSpellTexture(spellID));
                 if isTestGroup then
                     icon.Name:SetText("SweepyBoop"); -- When hiding test icons then showing again, the test name is not showing up
                 end
@@ -806,7 +806,7 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             if spell.replace_parent_icon then
                 -- if icon texture is different
                 -- for some spells, we intentionally don't replace the texture, e.g., Skull Bash (Bear Form)
-                self.icons[iconID].Icon:SetTexture(C_Spell.addon.GetSpellTexture(spellId));
+                self.icons[iconID].Icon:SetTexture(addon.GetSpellTexture(spellId));
             end
 
             if self.icons[iconID].info then -- e.g., Anti-Magic Shell (Spellwarden) modifies cooldown as well
