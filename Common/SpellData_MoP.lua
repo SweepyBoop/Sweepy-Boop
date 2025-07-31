@@ -661,6 +661,26 @@ addon.SpellData = {
         cooldown = 24,
         baseline = true,
     },
+    -- Disengage
+    [781] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 20,
+        baseline = true,
+    },
+    -- Flare
+    [1543] = {
+        class = addon.HUNTER,
+        category = category.OTHERS,
+        cooldown = 20,
+        baseline = true,
+    },
+    -- Roar of Sacrifice
+    [53480] = {
+        class = addon.HUNTER,
+        category = category.DEFENSIVE,
+        cooldown = 60,
+    },
 
     -- Mage
     -- Alter Time
