@@ -926,6 +926,11 @@ addon.SpellData = {
         category = category.CROWDCONTROL,
         baseline = true,
     },
+        -- Diamond Ice
+        [203340] = {
+            parent = 187650,
+            use_parent_icon = true,
+        },
     -- Binding Shot
     [109248] = {
         cooldown = 45,

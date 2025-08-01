@@ -592,6 +592,11 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
+        -- Explosive Trap (Trap Launcher)
+        [82939] = {
+            parent = 13813,
+            use_parent_icon = true,
+        },
     -- Freezing Trap
     [1499] = {
         class = addon.HUNTER,
@@ -599,6 +604,11 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
+        -- Freezing Trap (Trap Launcher)
+        [60192] = {
+            parent = 1499,
+            use_parent_icon = true,
+        },
     -- Bining Shot
     [109248] = {
         class = addon.HUNTER,
