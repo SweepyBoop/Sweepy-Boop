@@ -51,6 +51,15 @@ addon.SpellData = {
         cooldown = 15,
         baseline = true,
     },
+    -- Shambling Rush
+    [91807] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.UNHOLY },
+        category = category.INTERRUPT,
+        cooldown = 30,
+        trackPet = true,
+        trackEvent = addon.SPELL_AURA_APPLIED,
+    },
     -- Strangulate
     [47476] = {
         class = addon.DEATHKNIGHT,
