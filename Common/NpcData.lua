@@ -195,9 +195,15 @@ else
             classID = addon.CLASSID.WARLOCK,
             npcs = {
                 { npcID = 416, name = "Imp", icon = 688, default = addon.NpcOption.Show },
+                { npcID = 58959, name = "Fel Imp", icon = 688, default = addon.NpcOption.Show },
                 { npcID = 1860, name = "Voidwalker", icon = 697, default = addon.NpcOption.Show },
+                { npcID = 58960, name = "Voidlord", icon = 697, default = addon.NpcOption.Show },
                 { npcID = 417, name = "Felhunter", icon = 691, default = addon.NpcOption.ShowWithIcon },
+                { npcID = 58964, name = "Observer", icon = 691, default = addon.NpcOption.ShowWithIcon },
+                { npcID = 1863, name = "Succubus", icon = 712, default = addon.NpcOption.ShowWithIcon },
+                { npcID = 58963, name = "Shivarra", icon = 712, default = addon.NpcOption.ShowWithIcon },
                 { npcID = 17252, name = "Felguard", icon = 30146, default = addon.NpcOption.Show },
+                { npcID = 58965, name = "Wrathguard", icon = 30146, default = addon.NpcOption.Show },
             }
         },
     };
