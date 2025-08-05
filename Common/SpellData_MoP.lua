@@ -811,6 +811,7 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.CROWDCONTROL,
         cooldown = 25,
+        baseline = true,
     },
     -- Cauterize (almost never picked since on the same node with Code Snap)
     -- [87024] = {
