@@ -295,6 +295,12 @@ addon.SpellData = {
         baseline = true,
         trackEvent = addon.SPELL_DISPEL,
     },
+    -- Mass Entanglement
+    [102359] = {
+        class = addon.DRUID,
+        category = category.CROWDCONTROL,
+        cooldown = 30,
+    },
     -- Restoration
     -- Ironbark
     [102342] = {
@@ -662,6 +668,14 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 45,
     },
+    -- Snake Trap
+    [34600] = {
+        class = addon.HUNTER,
+        category = category.BURST,
+        cooldown = { default = 30, [specID.SURVIVAL] = 24 },
+        baseline = true,
+    },
+    -- Beast Mastery
     -- Bestial Wrath
     [19574] = {
         class = addon.HUNTER,
@@ -792,6 +806,12 @@ addon.SpellData = {
         category = category.SILENCE,
         cooldown = 20,
     },
+    -- Frost Nova
+    [122] = {
+        class = addon.MAGE,
+        category = category.CROWDCONTROL,
+        cooldown = 25,
+    },
     -- Cauterize (almost never picked since on the same node with Code Snap)
     -- [87024] = {
     --     class = addon.MAGE,
@@ -845,6 +865,14 @@ addon.SpellData = {
         cooldown = 60,
         duration = 10,
         baseline = true,
+    },
+    -- Freeze (Water Elemental)
+    [33395] = {
+        class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
+        category = category.CROWDCONTROL,
+        cooldown = 25,
+        trackPet = true,
     },
 
     -- Monk
@@ -949,6 +977,12 @@ addon.SpellData = {
         category = category.BURST,
         cooldown = 180,
         duration = 45,
+    },
+    -- Charging Ox Wave
+    [119392] = {
+        class = addon.MONK,
+        category = category.CROWDCONTROL,
+        cooldown = 30,
     },
     -- Windwalker
     -- Energizing Brew
@@ -1150,11 +1184,24 @@ addon.SpellData = {
     -- },
 
     -- Priest
+    -- Void Tendrils
+    [108920] = {
+        class = addon.PRIEST,
+        category = category.OTHERS,
+        cooldown = 30,
+    },
+    -- Psyfiend
+    [108921] = {
+        class = addon.PRIEST,
+        category = category.BURST,
+        cooldown = 45,
+    },
     -- Fear Ward
     [6346] = {
         class = addon.PRIEST,
         category = category.DEFENSIVE,
         cooldown = 180,
+        opt_lower_cooldown = 120,
         baseline = true,
     },
     -- Hymn of Hope
@@ -1201,7 +1248,7 @@ addon.SpellData = {
     [8122] = {
         class = addon.PRIEST,
         category = category.CROWDCONTROL,
-        cooldown = 30,
+        cooldown = 27,
         baseline = true,
     },
     -- Purify
@@ -1612,6 +1659,25 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 120,
     },
+    -- Windwalk Totem
+    [108273] = {
+        class = addon.SHAMAN,
+        category = category.OTHERS,
+        cooldown = 60,
+    },
+    -- Stormlash Totem
+    [120668] = {
+        class = addon.SHAMAN,
+        category = category.BURST,
+        cooldown = 300,
+    },
+    -- Healing Stream Totem
+    [5394] = {
+        class = addon.SHAMAN,
+        category = category.HEAL,
+        cooldown = 30,
+        baseline = true,
+    },
     -- Elemental 
     -- Restoration
     -- Spirit Link Totem
@@ -1667,6 +1733,12 @@ addon.SpellData = {
     },
 
     -- Warlock
+    -- Blood Horror
+    [111397] = {
+        class = addon.WARLOCK,
+        category = category.DEFENSIVE,
+        cooldown = 30,
+    },
     -- Demonic Circle: Teleport
     [48020] = {
         class = addon.WARLOCK,
@@ -1982,6 +2054,12 @@ addon.SpellData = {
         class = addon.WARRIOR,
         category = category.STUN,
         cooldown = 30,
+    },
+    -- Staggering Shout
+    [107566] = {
+        class = addon.WARRIOR,
+        category = category.OTHERS,
+        cooldown = 40,
     },
 };
 
