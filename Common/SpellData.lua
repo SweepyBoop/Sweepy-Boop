@@ -574,6 +574,13 @@ addon.SpellData = {
         category = category.HEAL,
         baseline = true,
     },
+    -- Frenzied Regeneration
+    [22842] = {
+        cooldown = 28,
+        class = addon.DRUID,
+        category = category.HEAL,
+        baseline = true,
+    },
     -- Incarnation: Tree of Life
     [33891] = {
         class = addon.DRUID,
