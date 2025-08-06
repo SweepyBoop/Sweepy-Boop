@@ -92,6 +92,11 @@ function SweepyBoop:TestRangeChecker()
         if ( not frame ) or ( not frame:IsShown() ) then
             sArena:Test();
         end
+    elseif ArenaLiveUnitFrames then
+        local frame = _G["ALUF_ArenaEnemyFramesArenaEnemyFrame1"];
+        if ( not frame ) or ( not frame:IsVisible() ) then
+            ArenaLiveUnitFrames:Test();
+        end
     else
         -- Use Blizzard arena frames
         if ( not CompactArenaFrame:IsShown() ) then
