@@ -189,6 +189,7 @@ else
                 { npcID = 15352, name = "Greater Earth Elemental", icon = 2062, default = addon.NpcOption.Show },
                 { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Show },
                 { npcID = 60561, name = "Earthgrab Totem", icon = 51485, default = addon.NpcOption.Show },
+                { npcID = 59717, name = "Windwalk Totem", icon = 108273, default = addon.NpcOption.Show },
             }
         },
         {

@@ -539,6 +539,13 @@ addon.SpellData = {
     },
 
     -- Hunter
+    -- Nether Shock
+    [50479] = {
+        class = addon.HUNTER,
+        category = category.INTERRUPT,
+        cooldown = 40,
+        trackPet = true,
+    },
     -- Camouflage
     [51753] = {
         class = addon.HUNTER,
