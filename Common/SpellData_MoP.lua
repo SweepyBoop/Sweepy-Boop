@@ -582,7 +582,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.OTHERS,
         cooldown = 45,
-        baseline = true,
+        trackPet = true,
     },
     -- Rapid Fire
     [3045] = {
