@@ -720,6 +720,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         category = category.DEFENSIVE,
         cooldown = 60,
+        trackPet = true,
     },
 
     -- Mage
