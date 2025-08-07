@@ -206,6 +206,12 @@ else
                 { npcID = 58965, name = "Wrathguard", icon = 30146, default = addon.NpcOption.Show },
             }
         },
+        {
+            classID = addon.CLASSID.WARRIOR,
+            npcs = {
+                { npcID = 59399, name = "Skull Banner", icon = 114207, default = addon.NpcOption.Show },
+            }
+        }
     };
 end
 
