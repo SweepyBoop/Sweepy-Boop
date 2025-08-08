@@ -355,7 +355,7 @@ local function SetupIconGroup(group, unit)
 
     local class = addon.GetClassForPlayerOrArena(unit);
     local spec = addon.GetSpecForPlayerOrArena(unit);
-    local remainingTest = 8;
+    local remainingTest = 32;
     for spellID, spell in pairs(spellData) do
         if ( not spell.use_parent_icon ) then
             local enabled = false;
@@ -391,7 +391,7 @@ local function SetupIconGroup(group, unit)
                     skipSpellListCheck = true;
                 end
             else
-                -- Fill enabled abilities, but for test groups, show 8 at most
+                -- Fill enabled abilities, but for test groups, show 32 at most
                 if isTestGroup then -- a test group need to populate all icons toggled for all classes
                     if ( remainingTest > 0 ) and spellList[tostring(spellID)] then
                         enabled = true;

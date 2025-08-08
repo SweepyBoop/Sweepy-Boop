@@ -620,7 +620,7 @@ addon.GetArenaFrameOptions = function(order)
                             type = "range",
                             width = 0.75,
                             min = 1,
-                            max = 16,
+                            max = 32,
                             step = 1,
                             name = "Columns",
                         },
