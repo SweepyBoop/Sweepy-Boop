@@ -640,6 +640,13 @@ addon.SpellData = {
     },
 
     -- Evoker
+    -- Verdant Embrace
+    [360995] = {
+        class = addon.EVOKER,
+        category = category.DEFENSIVE,
+        cooldown = 16, -- 24s baseline, -2s from 4-piece bonus (4s but 50% in PvP), -6 from talent Wind Rider
+        baseline = true,
+    },
     -- Devastation
     -- Deep Breath
     [357210] = {

@@ -1193,6 +1193,13 @@ addon.SpellData = {
     -- },
 
     -- Priest
+    -- Shadow Word: Death
+    [32379] = {
+        class = addon.PRIEST,
+        category = category.OTHERS,
+        cooldown = 8,
+        baseline = true,
+    },
     -- Void Tendrils
     [108920] = {
         class = addon.PRIEST,
@@ -1393,6 +1400,13 @@ addon.SpellData = {
     },
 
     -- Rogue
+    -- Redirect
+    [73981] = {
+        class = addon.ROGUE,
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
     -- Blind
     [2094] = {
         class = addon.ROGUE,
