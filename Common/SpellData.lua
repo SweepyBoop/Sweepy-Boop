@@ -479,7 +479,7 @@ addon.SpellData = {
     },
     -- Maim
     [22570] = {
-        cooldown = 20,
+        cooldown = 30,
         class = addon.DRUID,
         category = category.STUN
     },
