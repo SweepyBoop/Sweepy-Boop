@@ -175,6 +175,7 @@ else
                 { npcID = 5925, name = "Grounding Totem", icon = 8177, default = addon.NpcOption.Highlight },
                 { npcID = 53006, name = "Spirit Link Totem", icon = 98008, default = addon.NpcOption.Highlight },
                 { npcID = 5913, name = "Tremor Totem", icon = 8143, default = addon.NpcOption.Highlight },
+                { npcID = 61245, name = "Capacitor Totem", icon = 108269, default = addon.NpcOption.Highlight },
 
                 { npcID = 59764, name = "Healing Tide Totem", icon = 108280, default = addon.NpcOption.Show },
                 { npcID = 3527, name = "Healing Stream Totem", icon = 5394, default = addon.NpcOption.Show },
