@@ -63,7 +63,7 @@ local function UpdateIndicators()
             else
                 HideIndicator(frame);
             end
-        else
+        elseif frame then
             HideIndicator(frame);
         end
     end
