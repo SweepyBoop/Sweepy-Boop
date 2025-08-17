@@ -1,6 +1,10 @@
 local _, addon = ...;
 
-addon.MAX_ARENA_SIZE = 3;
+if addon.PROJECT_MAINLINE then
+    addon.MAX_ARENA_SIZE = 3;
+else
+    addon.MAX_ARENA_SIZE = 5; -- MoP Classic
+end
 
 local UnitAura = C_UnitAuras.GetAuraDataByIndex;
 local maxAuras = 255;
