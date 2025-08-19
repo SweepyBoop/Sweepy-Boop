@@ -198,7 +198,6 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 60,
         baseline = true,
-        trackEvent = addon.SPELL_AURA_REMOVED,
     },
     -- Stampeding Roar
     [106898] = {
