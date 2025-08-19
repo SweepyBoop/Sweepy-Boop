@@ -194,7 +194,7 @@ addon.SpellData = {
     -- Nature's Swiftness
     [132158] = {
         class = addon.DRUID,
-        spec = { specID.RESTORATION_DRUID, specID.BALANCE, specID.FERAL },
+        spec = { specID.RESTORATION_DRUID, specID.BALANCE },
         category = category.OTHERS,
         cooldown = 60,
         baseline = true,
