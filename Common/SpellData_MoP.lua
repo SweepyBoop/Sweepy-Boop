@@ -787,7 +787,7 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.BURST,
         cooldown = 90,
-        trackEvent = addon.SPELL_AURA_REMOVED,
+        -- trackEvent = addon.SPELL_AURA_REMOVED, -- This event is not reliable, just track on press
     },
     -- Temporal Shield
     [115610] = {
@@ -1680,7 +1680,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         category = category.BURST,
         cooldown = 90,
-        trackEvent = addon.SPELL_AURA_REMOVED,
+        -- trackEvent = addon.SPELL_AURA_REMOVED, -- This event is not reliable, just track on press
     },
     -- Ancestral Guidance
     [108281] = {
