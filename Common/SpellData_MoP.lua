@@ -198,6 +198,7 @@ addon.SpellData = {
         category = category.OTHERS,
         cooldown = 60,
         baseline = true,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Stampeding Roar
     [106898] = {
@@ -787,7 +788,7 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.BURST,
         cooldown = 90,
-        -- trackEvent = addon.SPELL_AURA_REMOVED, -- This event is not reliable, just track on press
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Temporal Shield
     [115610] = {
@@ -1680,7 +1681,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         category = category.BURST,
         cooldown = 90,
-        -- trackEvent = addon.SPELL_AURA_REMOVED, -- This event is not reliable, just track on press
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
     -- Ancestral Guidance
     [108281] = {
