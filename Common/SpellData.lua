@@ -869,6 +869,22 @@ addon.SpellData = {
         baseline = true, -- technically a talent, but always picked
         default = true,
     },
+    -- Flanking Strike
+    [269751] = {
+        class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
+        category = category.BURST,
+        cooldown = 30,
+        baseline = true,
+    },
+    -- Fury of the Eagle
+    [203415] = {
+        class = addon.HUNTER,
+        spec = { specID.SURVIVAL },
+        category = category.BURST,
+        cooldown = 45,
+        baseline = true,
+    },
     -- Marksmanship
     -- Trueshot
     [288613] = {
