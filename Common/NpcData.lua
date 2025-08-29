@@ -191,6 +191,7 @@ else
                 { npcID = 2630, name = "Earthbind Totem", icon = 2484, default = addon.NpcOption.Show },
                 { npcID = 60561, name = "Earthgrab Totem", icon = 51485, default = addon.NpcOption.Show },
                 { npcID = 59717, name = "Windwalk Totem", icon = 108273, default = addon.NpcOption.Show },
+                { npcID = 62002, name = "Stormlash Totem", icon = 120668, default = addon.NpcOption.Show },
             }
         },
         {
@@ -212,6 +213,7 @@ else
             classID = addon.CLASSID.WARRIOR,
             npcs = {
                 { npcID = 59399, name = "Skull Banner", icon = 114207, default = addon.NpcOption.Show },
+                { npcID = 59398, name = "Demoralizing Banner", icon = 114203, default = addon.NpcOption.Show },
             }
         }
     };
