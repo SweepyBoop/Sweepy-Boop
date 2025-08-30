@@ -10,6 +10,7 @@ if addon.PROJECT_MAINLINE then
         [360806]  = "disorient", -- Sleep Walk
         [1513]    = "disorient", -- Scare Beast
         [31661]   = "disorient", -- Dragon's Breath
+        [353084]  = "disorient", -- Ring of Fire
         [198909]  = "disorient", -- Song of Chi-ji
         [202274]  = "disorient", -- Hot Trub
         [105421]  = "disorient", -- Blinding Light
@@ -21,7 +22,6 @@ if addon.PROJECT_MAINLINE then
         [118699]  = "disorient", -- Fear
         [130616]  = "disorient", -- Fear (Horrify)
         [5484]    = "disorient", -- Howl of Terror
-        [353084]  = "disorient", -- Ring of Fire
         [261589]  = "disorient", -- Seduction (Grimoire of Sacrifice)
         [6358]    = "disorient", -- Seduction (Succubus)
         [5246]    = "disorient", -- Intimidating Shout
@@ -251,6 +251,7 @@ else
         [19503]  = "disorient", -- Scatter Shot
         [31661]  = "disorient", -- Dragon's Breath
         [123393] = "disorient", -- Glyph of Breath of Fire
+        [105421] = "disorient", -- Blinding Light
         [88625]  = "disorient", -- Holy Word: Chastise
 
         -- *** Controlled Stun Effects ***
@@ -291,6 +292,7 @@ else
         [30283]  = "stun", -- Shadowfury
         [132168] = "stun", -- Shockwave
         [107570] = "stun", -- Storm Bolt
+        [132169] = "stun", -- Storm Bolt 2
         [20549]  = "stun", -- War Stomp (Racial)
 
         -- *** Non-controlled Stun Effects ***
@@ -322,6 +324,7 @@ else
         [96294]  = "root", -- Chains of Ice (Chilblains Root)
         [339]    = "root", -- Entangling Roots
         [113275] = "root", -- Entangling Roots (Symbiosis)
+        [113770] = "root", -- Entangling Roots (Treants)
         [102359] = "root", -- Mass Entanglement
         [19975]  = "root", -- Nature's Grasp
         [128405] = "root", -- Narrow Escape
