@@ -730,14 +730,6 @@ addon.SpellData = {
         category = category.DEFENSIVE,
         cooldown = 60,
     },
-    -- Nullifying Shroud
-    [378464] = {
-        class = addon.EVOKER,
-        category = category.DEFENSIVE,
-        cooldown = 90,
-        baseline = true,
-        default = true,
-    },
     -- Time Stop
     [378441] = {
         class = addon.EVOKER,
