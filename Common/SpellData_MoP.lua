@@ -885,13 +885,6 @@ addon.SpellData = {
     },
 
     -- Monk
-    -- Dematerialize
-    [122465] = {
-        class = addon.MONK,
-        spec = { specID.MISTWEAVER },
-        category = category.IMMUNITY,
-        cooldown = 10,
-    },
     -- Detox
     [115450] = {
         class = addon.MONK,
@@ -1048,6 +1041,20 @@ addon.SpellData = {
         spec = { specID.WINDWALKER },
         category = category.STUN,
         cooldown = 60,
+    },
+    -- Dematerialize
+    [122465] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.IMMUNITY,
+        cooldown = 10,
+    },
+    -- Thunder Focus Tea
+    [116680] = {
+        class = addon.MONK,
+        spec = { specID.MISTWEAVER },
+        category = category.DEFENSIVE,
+        cooldown = 45,
     },
 
     -- Paladin
