@@ -153,6 +153,14 @@ local function GetIcon(iconSetID, unitID, spellID, test)
             iconPool[iconSetID][iconID].TargetHighlight:SetVertexColor(0.6745, 0.2902, 0.8392, 1); -- purple
         end
 
+        local classColorName = iconSetConfig.classColorName and ( not addon.ARENA_FRAME_BARS[iconSetID] );
+        if ( not classColorName ) or ( not iconPool[iconSetID][iconID].class ) then
+            iconPool[iconSetID][iconID].Name:SetTextColor(1, 1, 1);
+        else
+            local color = RAID_CLASS_COLORS[iconPool[iconSetID][iconID].class];
+            iconPool[iconSetID][iconID].Name:SetTextColor(color.r, color.g, color.b);
+        end
+
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
         iconPool[iconSetID][iconID].iconSetID = iconSetID;
         iconPool[iconSetID][iconID].isTestGroup = test;
@@ -165,6 +173,13 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         local glow = GetIconGlow(iconSetID);
         iconPool[iconSetID][iconID].template = ( glow and addon.ICON_TEMPLATE.GLOW ) or addon.ICON_TEMPLATE.FLASH;
         local showName = iconSetConfig.showName and ( not addon.ARENA_FRAME_BARS[iconSetID] );
+        local classColorName = iconSetConfig.classColorName and ( not addon.ARENA_FRAME_BARS[iconSetID] );
+        if ( not classColorName ) or ( not iconPool[iconSetID][iconID].class ) then
+            iconPool[iconSetID][iconID].Name:SetTextColor(1, 1, 1);
+        else
+            local color = RAID_CLASS_COLORS[iconPool[iconSetID][iconID].class];
+            iconPool[iconSetID][iconID].Name:SetTextColor(color.r, color.g, color.b);
+        end
         iconPool[iconSetID][iconID].Name:SetShown(showName);
 
         if iconSetConfig.hideBorder then

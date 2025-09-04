@@ -691,34 +691,44 @@ addon.GetArenaFrameOptions = function(order)
                             name = "Show name",
                         },
 
-                        breaker4 = {
+                        classColorName = {
                             order = 15,
+                            type = "toggle",
+                            width = 1,
+                            name = "Class-colored name",
+                            hidden = function()
+                                return ( not SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].showName );
+                            end
+                        },
+
+                        breaker4 = {
+                            order = 16,
                             type = "description",
                             name = "",
                         },
 
                         hideBorder = {
-                            order = 16,
+                            order = 17,
                             type = "toggle",
                             width = 0.75,
                             name = "Hide border",
                         },
 
                         showTargetHighlight = {
-                            order = 17,
+                            order = 18,
                             type = "toggle",
                             width = 0.75,
                             name = "Highlight target",
                         },
 
                         breaker5 = {
-                            order = 18,
+                            order = 19,
                             type = "description",
                             name = "",
                         },
 
                         showUnusedIcons = {
-                            order = 19,
+                            order = 20,
                             type = "toggle",
                             name = "Show off-CD icons",
                             width = 0.9,
@@ -726,7 +736,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         unusedIconAlpha = {
-                            order = 20,
+                            order = 21,
                             type = "range",
                             width = 0.8,
                             isPercent = true,
@@ -740,7 +750,7 @@ addon.GetArenaFrameOptions = function(order)
                         },
 
                         usedIconAlpha = {
-                            order = 21,
+                            order = 22,
                             type = "range",
                             width = 0.8,
                             isPercent = true,

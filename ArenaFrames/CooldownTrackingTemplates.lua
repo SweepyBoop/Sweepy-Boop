@@ -75,6 +75,7 @@ addon.CreateCooldownTrackingIcon = function (unit, spellID, size, showName)
     -- Fill in static info here
     frame.spellInfo = spell;
     frame.priority = spell.priority;
+    frame.class = spell.class;
 
     frame.Icon:SetTexture(addon.GetSpellTexture(spellID));
     frame.Icon:SetAllPoints();
