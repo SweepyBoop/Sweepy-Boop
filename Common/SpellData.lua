@@ -85,22 +85,6 @@ addon.SpellData = {
         duration = 10,
         index = addon.SPELLPRIORITY.HIGH,
     },
-    -- Empower Rune Weapon
-    [47568] = {
-        class = addon.DEATHKNIGHT,
-        spec = { specID.FROST_DK },
-        category = category.BURST,
-        cooldown = 120,
-        duration = 20,
-    },
-    -- Chill Streak
-    [305392] = {
-        class = addon.DEATHKNIGHT,
-        spec = { specID.FROST_DK },
-        category = category.BURST,
-        cooldown = 45,
-        duration = 4,
-    },
     -- Interrupt
     -- Mind Freeze
     [47528] = {
