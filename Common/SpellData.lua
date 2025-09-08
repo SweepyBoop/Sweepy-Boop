@@ -12,14 +12,6 @@ addon.SpellData = {
     -- General
 
     -- Death Knight
-    -- Abomination Limb
-    [383269] = {
-        class = addon.DEATHKNIGHT,
-        category = category.BURST,
-        cooldown = 120,
-        duration = 12,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
     -- Unholy
     -- Raise Abomination
     [455395] = {
@@ -92,22 +84,6 @@ addon.SpellData = {
         cooldown = 90,
         duration = 10,
         index = addon.SPELLPRIORITY.HIGH,
-    },
-    -- Empower Rune Weapon
-    [47568] = {
-        class = addon.DEATHKNIGHT,
-        spec = { specID.FROST_DK },
-        category = category.BURST,
-        cooldown = 120,
-        duration = 20,
-    },
-    -- Chill Streak
-    [305392] = {
-        class = addon.DEATHKNIGHT,
-        spec = { specID.FROST_DK },
-        category = category.BURST,
-        cooldown = 45,
-        duration = 4,
     },
     -- Interrupt
     -- Mind Freeze
