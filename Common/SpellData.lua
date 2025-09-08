@@ -12,14 +12,6 @@ addon.SpellData = {
     -- General
 
     -- Death Knight
-    -- Abomination Limb
-    [383269] = {
-        class = addon.DEATHKNIGHT,
-        category = category.BURST,
-        cooldown = 120,
-        duration = 12,
-        index = addon.SPELLPRIORITY.HIGH,
-    },
     -- Unholy
     -- Raise Abomination
     [455395] = {
