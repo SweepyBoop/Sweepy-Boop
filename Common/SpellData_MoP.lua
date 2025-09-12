@@ -1946,7 +1946,7 @@ addon.SpellData = {
         baseline = true,
     },
     -- Heroic Leap
-    [6544] = {
+    [52174] = {
         class = addon.WARRIOR,
         category = category.OTHERS,
         cooldown = 45,
