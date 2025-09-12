@@ -20,7 +20,7 @@ addon.SpellData = {
     [77606] = {
         class = addon.DEATHKNIGHT,
         category = category.OTHERS,
-        cooldown = 60,
+        cooldown = 30, -- baseline 60s, glyph to reduce to 30s
         baseline = true,
     },
     -- Death Grip
