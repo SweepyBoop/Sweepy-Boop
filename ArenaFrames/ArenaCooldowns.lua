@@ -322,6 +322,7 @@ local function GetIconGroup(iconSetID, unitID, isTestGroup)
         -- Have to cache this per group so that they don't interfere with each other
         iconGroups[iconGroupID].guardianSpiritSaved = {};
         iconGroups[iconGroupID].apotheosisUnits = {};
+        iconGroups[iconGroupID].combustionUnits = {};
         iconGroups[iconGroupID].premonitionUnits = {};
         iconGroups[iconGroupID].alterTimeApplied = {};
         iconGroups[iconGroupID].alterTimeRemoved = {};
@@ -602,6 +603,18 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
             end
         end
 
+        -- Combustion
+        if ( spellId == 190319 ) and ( subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_AURA_REMOVED ) then
+            local unit = unitGuidToId[sourceGUID];
+            if unit then
+                if subEvent == addon.SPELL_AURA_APPLIED then
+                    self.combustionUnits[unit] = true;
+                else
+                    self.combustionUnits[unit] = nil;
+                end
+            end
+        end
+
         -- Guardian Spirit saved their teammate thus should be put on a longer cooldown (+120s)
         if ( spellId == 48153 ) and ( subEvent == addon.SPELL_HEAL ) then
             local unit = unitGuidToId[sourceGUID];
@@ -759,8 +772,16 @@ local function ProcessCombatLogEvent(self, subEvent, sourceGUID, destGUID, spell
         for i = 1, #resetByCrit do
             local spellToReset = resetByCrit[i];
             local icon = self.activeMap[unit .. "-" .. spellToReset];
-            if icon and icon.started and spellData[spellToReset].critResets and spellData[spellToReset].critResets[spellId] and ( subEvent == addon.SPELL_DAMAGE ) and critical then
-                ResetCooldown(icon, spellData[spellToReset].critResets[spellId]);
+            if icon and icon.started and spellData[spellToReset].critResets and spellData[spellToReset].critResets[spellId] then
+                if ( subEvent == addon.SPELL_DAMAGE ) and critical then
+                    ResetCooldown(icon, spellData[spellToReset].critResets[spellId]);
+                end
+
+                -- Extra CDR if Combustion is currently active (Unleashed Inferno)
+                if self.combustionUnits[unit] and ( subEvent == addon.SPELL_CAST_SUCCESS ) then
+                    ResetCooldown(icon, 1.25);
+                end
+
                 return;
             end
         end
