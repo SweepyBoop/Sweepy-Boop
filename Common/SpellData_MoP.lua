@@ -1613,7 +1613,7 @@ addon.SpellData = {
     [51514] = {
         class = addon.SHAMAN,
         category = category.CROWDCONTROL,
-        cooldown = 45,
+        cooldown = 35, -- 45s baseline, 10s reduction with Glyph of Hex
         baseline = true,
     },
     -- Spiritwalker's Grace
@@ -1740,7 +1740,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         spec = { specID.ELEMENTAL },
         category = category.KNOCKBACK,
-        cooldown = 45,
+        cooldown = 22.5, -- 45s baseline, 22.5s from PvP set bonus
         baseline = true,
     },
     -- Enhancement
