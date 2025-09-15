@@ -883,6 +883,14 @@ addon.SpellData = {
         cooldown = 25,
         trackPet = true,
     },
+    -- Summon Water Elemental
+    [31687] = {
+        class = addon.MAGE,
+        spec = { specID.FROST_MAGE },
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
 
     -- Monk
     -- Detox
