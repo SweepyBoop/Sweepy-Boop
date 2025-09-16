@@ -32,7 +32,7 @@ function SweepyBoop:TestArena()
     elseif SlashCmdList.GLADDY then
         local frame = _G["GladdyButtonFrame1"];
         if ( not frame ) or ( not frame:IsVisible() ) then
-            SlashCmdList["GLADDY"]("test3")
+            SlashCmdList["GLADDY"]("test3");
         end
     else
         -- Use Blizzard arena frames
