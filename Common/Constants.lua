@@ -82,7 +82,7 @@ addon.ARENA_FRAME_BARS_SUPPORTED = function()
     if addon.PROJECT_MAINLINE then
         return true;
     else
-        return GladiusEx or Gladius or sArena or ArenaLiveUnitFrames;
+        return GladiusEx or Gladius or sArena or ArenaLiveUnitFrames or SlashCmdList.GLADDY;
     end
 end
 
@@ -93,6 +93,7 @@ addon.GET_ARENA_FRAME_PREFIX = function()
             or ( Gladius and "GladiusButtonFramearena" )
             or ( sArena and "sArenaEnemyFrame" )
             or ( ArenaLiveUnitFrames and "ALUF_ArenaEnemyFramesArenaEnemyFrame" )
+            or ( SlashCmdList.GLADDY and "GladdyButtonFrame" )
             or "CompactArenaFrameMember";
     end
 
