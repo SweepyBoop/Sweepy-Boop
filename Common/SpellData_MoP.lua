@@ -896,7 +896,7 @@ addon.SpellData = {
     -- Roll
     [109132] = {
         class = addon.MONK,
-        category = category.OTHERS,
+        category = category.MOBILITY,
         cooldown = 20,
         baseline = true,
     charges = true,
