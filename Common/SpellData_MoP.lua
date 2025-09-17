@@ -1974,13 +1974,10 @@ addon.SpellData = {
         class = addon.WARRIOR,
         category = category.OTHERS,
         cooldown = 45,
+        opt_lower_cooldown = 30,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
         baseline = true,
     },
-        [51274] = {
-            parent = 6544,
-            use_parent_icon = true,
-            cooldown = 30,
-        },
     -- Intervene
     [3411] = {
         class = addon.WARRIOR,
