@@ -893,6 +893,14 @@ addon.SpellData = {
     },
 
     -- Monk
+    -- Roll
+    [109132] = {
+        class = addon.MONK,
+        category = category.OTHERS,
+        cooldown = 20,
+        baseline = true,
+    charges = true,
+    },
     -- Detox
     [115450] = {
         class = addon.MONK,
@@ -1002,6 +1010,14 @@ addon.SpellData = {
         cooldown = 30,
     },
     -- Windwalker
+    -- Flying Serpent Kick
+    [101545] = {
+        class = addon.MONK,
+        spec = { specID.WINDWALKER },
+        category = category.MOBILITY,
+        cooldown = 25,
+        baseline = true,
+    },
     -- Energizing Brew
     [115288] = {
         class = addon.MONK,
@@ -1960,6 +1976,11 @@ addon.SpellData = {
         cooldown = 45,
         baseline = true,
     },
+        [51274] = {
+            parent = 6544,
+            use_parent_icon = true,
+            cooldown = 30,
+        },
     -- Intervene
     [3411] = {
         class = addon.WARRIOR,
