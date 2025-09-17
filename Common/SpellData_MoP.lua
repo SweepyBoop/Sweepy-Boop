@@ -899,7 +899,7 @@ addon.SpellData = {
         category = category.MOBILITY,
         cooldown = 20,
         baseline = true,
-    charges = true,
+        charges = true,
     },
     -- Detox
     [115450] = {
