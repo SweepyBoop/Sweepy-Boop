@@ -1,7 +1,7 @@
 $workDir = $PSScriptRoot
 $addonDir = "D:\World of Warcraft\_retail_\Interface\Addons\SweepyBoop"
 $classicDir = "D:\World of Warcraft\_classic_\Interface\Addons\SweepyBoop"
-$mopDir = "D:\World of Warcraft\_classic_beta_\Interface\Addons\SweepyBoop"
+$mopDir = "D:\World of Warcraft\_classic_ptr_\Interface\Addons\SweepyBoop"
 
 if (Test-Path -Path $addonDir) {
     Remove-Item -Path $addonDir -Recurse -Force
