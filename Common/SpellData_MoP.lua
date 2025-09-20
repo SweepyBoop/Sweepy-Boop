@@ -1232,11 +1232,15 @@ addon.SpellData = {
 
     -- Priest
     -- Shadow Word: Death
+    [32379] = {
+    class = addon.PRIEST,
+    category = category.OTHERS,
+    cooldown = 8,
+    baseline = true,
+    },
     [129176] = {
-        class = addon.PRIEST,
-        category = category.OTHERS,
-        cooldown = 8,
-        baseline = true,
+    parent = 32379,
+    use_parent_icon = true,
     },
     -- Void Tendrils
     [108920] = {
