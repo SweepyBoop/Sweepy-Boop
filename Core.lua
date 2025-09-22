@@ -359,15 +359,9 @@ function SweepyBoop:OnInitialize()
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig");
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
-
-    -- Nameplate module needs optimization to eat less CPU
-    -- Setup nameplate modules
     self:SetupNameplateModules();
-
     self:SetupArenaCooldownTracker();
 
-    -- Only nameplate modules for Classic currently
-    -- If only enabling nameplates, 7 ms / Sec CPU, otherwise 11 ms / Sec CPU
     if ( not addon.PROJECT_MAINLINE ) then return end
 
     self:SetupHealerIndicator();
@@ -375,7 +369,6 @@ function SweepyBoop:OnInitialize()
     -- Setup raid frame modules
     self:SetupRaidFrameAggroHighlight();
     self:SetupRaidFrameAuraModule();
-
 
     self:SetupQueueReminder();
     self:SetupCombatIndicator();
