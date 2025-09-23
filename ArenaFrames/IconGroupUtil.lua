@@ -1,4 +1,6 @@
-local _, addon = ...;
+local addonName, addon = ...;
+
+local Masque = LibStub and LibStub("Masque", true);
 
 addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     local point, relativeTo, relativePoint, offsetX, offsetY =
@@ -181,6 +183,28 @@ addon.IconGroup_Insert = function (group, icon, index)
 
     addon.IconGroup_Position(group);
 
+    if Masque then
+        icon.MasqueGroup = Masque:Group(addonName, tostring(icon.spellID));
+        icon.MasqueGroup:AddButton(icon, {
+            FloatingBG = false,
+			Icon = icon.Icon,
+			Cooldown = icon.cooldown,
+			Flash = false,
+			Pushed = false,
+			Normal = icon:GetNormalTexture(),
+			Disabled = false,
+			Checked = false,
+			Border = false,
+			AutoCastable = false,
+			Highlight = false,
+			Hotkey = false,
+			Count = false,
+			Name = false,
+			Duration = false,
+			AutoCast = false,
+        });
+    end
+
     -- Reposition first, then show, to avoid new icon occluding previously shown ones.
     icon:Show();
     --print(icon:IsShown());
@@ -262,6 +286,10 @@ addon.IconGroup_Wipe = function (group)
         end
         icon.started = nil;
         icon:Hide();
+
+        if icon.MasqueGroup then
+            icon.MasqueGroup = nil;
+        end
     end
 
     wipe(group.icons);
