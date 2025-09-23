@@ -193,6 +193,10 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
     end
 
+    if iconPool[iconSetID][iconID].MasqueGroup then
+        iconPool[iconSetID][iconID].MasqueGroup:ReSkin();
+    end
+
     return iconPool[iconSetID][iconID];
 end
 
