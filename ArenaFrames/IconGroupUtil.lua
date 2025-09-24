@@ -184,25 +184,27 @@ addon.IconGroup_Insert = function (group, icon, index)
     addon.IconGroup_Position(group);
 
     if Masque then
-        icon.MasqueGroup = Masque:Group(addonName, tostring(icon.spellID));
-        icon.MasqueGroup:AddButton(icon, {
-            FloatingBG = false,
-			Icon = icon.Icon,
-			Cooldown = icon.cooldown,
-			Flash = false,
-			Pushed = false,
-			Normal = icon.NormalTexture,
-			Disabled = false,
-			Checked = false,
-			Border = false,
-			AutoCastable = false,
-			Highlight = false,
-			Hotkey = false,
-			Count = false,
-			Name = false,
-			Duration = false,
-			AutoCast = false,
-        });
+        if ( not icon.MasqueGroup ) then
+            icon.MasqueGroup = Masque:Group(addonName, tostring(icon.spellID));
+            icon.MasqueGroup:AddButton(icon, {
+                FloatingBG = false,
+                Icon = icon.Icon,
+                Cooldown = icon.cooldown,
+                Flash = false,
+                Pushed = false,
+                Normal = icon.NormalTexture,
+                Disabled = false,
+                Checked = false,
+                Border = false,
+                AutoCastable = false,
+                Highlight = false,
+                Hotkey = false,
+                Count = false,
+                Name = false,
+                Duration = false,
+                AutoCast = false,
+            });
+        end
     end
 
     -- Reposition first, then show, to avoid new icon occluding previously shown ones.
