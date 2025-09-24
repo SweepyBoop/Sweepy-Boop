@@ -287,9 +287,9 @@ addon.IconGroup_Wipe = function (group)
         icon.started = nil;
         icon:Hide();
 
-        if icon.MasqueGroup then
-            icon.MasqueGroup = nil;
-        end
+        -- if icon.MasqueGroup then
+        --     icon.MasqueGroup = nil;
+        -- end
     end
 
     wipe(group.icons);
