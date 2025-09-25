@@ -165,6 +165,8 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         iconPool[iconSetID][iconID].iconSetID = iconSetID;
         iconPool[iconSetID][iconID].isTestGroup = test;
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
+
+        addon.MasqueAddIcon(iconPool[iconSetID][iconID], iconPool[iconSetID][iconID].Icon);
     end
 
     if ( iconPool[iconSetID][iconID].lastModified ~= config.lastModified ) then
@@ -191,11 +193,9 @@ local function GetIcon(iconSetID, unitID, spellID, test)
         addon.SetHideCountdownNumbers(iconPool[iconSetID][iconID], iconSetConfig.hideCountDownNumbers);
 
         iconPool[iconSetID][iconID].lastModified = config.lastModified;
-    end
 
-    -- if iconPool[iconSetID][iconID].MasqueGroup then
-    --     iconPool[iconSetID][iconID].MasqueGroup:ReSkin();
-    -- end
+        addon.MasqueReskinIcon();
+    end
 
     return iconPool[iconSetID][iconID];
 end

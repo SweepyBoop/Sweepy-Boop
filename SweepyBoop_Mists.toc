@@ -27,6 +27,7 @@ Common\UnitInfoHelpers.lua
 Common\NpcData.lua
 Common\AuraData.lua
 Common\DRList.lua
+Common\MasqueHelper.lua
 Common\AceGUIWidget-InlineLink.lua
 
 Core.lua
