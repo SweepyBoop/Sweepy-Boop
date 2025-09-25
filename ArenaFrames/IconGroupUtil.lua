@@ -204,6 +204,8 @@ addon.IconGroup_Insert = function (group, icon, index)
                 Duration = false,
                 AutoCast = false,
             });
+        else
+            icon.MasqueGroup:ReSkin();
         end
     end
 
