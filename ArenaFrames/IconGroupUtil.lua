@@ -145,6 +145,10 @@ addon.IconGroup_Insert = function (group, icon, index)
         if index then
             group.activeMap[index] = icon;
         end
+
+        if icon.MasqueGroup then
+            icon.MasqueGroup:ReSkin();
+        end
         return;
     end
 
