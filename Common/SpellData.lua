@@ -12,6 +12,12 @@ addon.SpellData = {
     -- General
 
     -- Death Knight
+    [439843] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.BLOOD, specID.FROST_DK },
+        category = category.BURST,
+        cooldown = 30,
+    },
     -- Unholy
     -- Raise Abomination
     [455395] = {
