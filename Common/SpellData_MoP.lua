@@ -807,7 +807,13 @@ addon.SpellData = {
         class = addon.MAGE,
         category = category.CROWDCONTROL,
         cooldown = 45,
+        trackEvent = addon.UNIT_SPELLCAST_SUCCEEDED,
     },
+        -- Ring of frost with PoM
+        [140376] = {
+            parent = 113724,
+            use_parent_icon = true,
+        },
     -- Frostjaw
     [102051] = {
         class = addon.MAGE,
