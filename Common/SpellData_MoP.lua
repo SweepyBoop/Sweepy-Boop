@@ -1925,6 +1925,14 @@ addon.SpellData = {
         duration = 20,
         baseline = true,
     },
+    -- Flame of Xoroth
+    [120451] = {
+        class = addon.WARLOCK,
+        spec = { specID.DESTRUCTION },
+        category = category.OTHERS,
+        cooldown = 60,
+        baseline = true,
+    },
 
     -- Warrior
     -- Berserker Rage
