@@ -217,9 +217,9 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "range",
                                 width = 0.8,
                                 isPercent = true,
-                                min = 0.5,
+                                min = 0.25,
                                 max = 1,
-                                step = 0.1,
+                                step = 0.05,
                                 name = "Off-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
@@ -231,9 +231,9 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "range",
                                 width = 0.8,
                                 isPercent = true,
-                                min = 0.5,
+                                min = 0.25,
                                 max = 1,
-                                step = 0.1,
+                                step = 0.05,
                                 name = "On-cooldown alpha",
                                 hidden = function ()
                                     return ( not SweepyBoop.db.profile.arenaFrames.showUnusedIcons );
@@ -745,9 +745,9 @@ addon.GetArenaFrameOptions = function(order)
                             type = "range",
                             width = 0.8,
                             isPercent = true,
-                            min = 0.5,
+                            min = 0.25,
                             max = 1,
-                            step = 0.1,
+                            step = 0.05,
                             name = "Off-cooldown alpha",
                             hidden = function()
                                 return ( not SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].showUnusedIcons );
@@ -759,9 +759,9 @@ addon.GetArenaFrameOptions = function(order)
                             type = "range",
                             width = 0.8,
                             isPercent = true,
-                            min = 0.5,
+                            min = 0.25,
                             max = 1,
-                            step = 0.1,
+                            step = 0.05,
                             name = "On-cooldown alpha",
                             hidden = function()
                                 return ( not SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].showUnusedIcons );
