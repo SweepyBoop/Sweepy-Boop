@@ -631,6 +631,18 @@ addon.SpellData = {
             parent = 1499,
             use_parent_icon = true,
         },
+    -- Ice Trap
+    [13809] = {
+        class = addon.HUNTER,
+        category = category.CROWDCONTROL,
+        cooldown = 30,
+        baseline = true,
+    },
+        -- Ice Trap (Trap Launcher)
+        [82941] = {
+            parent = 13809,
+            use_parent_icon = true,
+        },
     -- Bining Shot
     [109248] = {
         class = addon.HUNTER,
