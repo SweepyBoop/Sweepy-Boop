@@ -1376,6 +1376,7 @@ addon.SpellData = {
     -- Revival
     [115310] = {
         cooldown = 150,
+        opt_lower_cooldown = 126,
         class = addon.MONK,
         spec = { specID.MISTWEAVER },
         category = category.DEFENSIVE,
@@ -1388,6 +1389,7 @@ addon.SpellData = {
             parent = 115310,
             use_parent_icon = true,
             replace_parent_icon = true,
+            opt_lower_cooldown = 126,
         },
     -- Fortifying Brew
     [115203] = {
