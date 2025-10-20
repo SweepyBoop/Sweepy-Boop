@@ -359,6 +359,12 @@ addon.SpellData = {
     },
 
     -- Druid
+    -- Wild Charge
+    [102401] = {
+        class = addon.DRUID,
+        category = category.MOBILITY,
+        cooldown = 15,
+    },
     -- Convoke the Spirits
     [391528] = {
         class = addon.DRUID,
