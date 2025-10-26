@@ -1761,7 +1761,7 @@ addon.SpellData = {
         cooldown = 30,
         baseline = true,
     },
-    -- Elemental 
+    -- Elemental
     -- Restoration
     -- Spirit Link Totem
     [98008] = {
@@ -2068,6 +2068,7 @@ addon.SpellData = {
         class = addon.WARRIOR,
         category = category.DEFENSIVE,
         cooldown = 25,
+        opt_lower_cooldown = 20, -- Glyph of Spell Reflection
         baseline = true,
     },
     -- Demoralizing Banner
