@@ -156,6 +156,12 @@ addon.SpellData = {
     },
 
     -- Druid
+    -- Displacer Beast
+    [102280] = {
+        class = addon.DRUID,
+        category = category.MOBILITY,
+        cooldown = 30,
+    },
     -- Barkskin
     [22812] = {
         class = addon.DRUID,
