@@ -91,6 +91,13 @@ addon.SpellData = {
         duration = 10,
         index = addon.SPELLPRIORITY.HIGH,
     },
+    -- Reaper's Mark
+    [439843] = {
+        class = addon.DEATHKNIGHT,
+        spec = { specID.BLOOD, specID.FROST_DK },
+        category = category.BURST,
+        cooldown = 30,
+    },
     -- Interrupt
     -- Mind Freeze
     [47528] = {
