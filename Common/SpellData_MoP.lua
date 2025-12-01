@@ -742,6 +742,12 @@ addon.SpellData = {
     },
 
     -- Mage
+    -- Incanter's Ward
+    [1463] = {
+        class = addon.MAGE,
+        category = category.OTHERS,
+        cooldown = 25,
+    },
     -- Alter Time
     [110909] = {
         class = addon.MAGE,
