@@ -22,11 +22,18 @@ end
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     if ( not frame.unsetIgnoreParentAlpha ) then
-        -- for _, region in pairs(frame) do
-        --     if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-        --         region:SetIgnoreParentAlpha(false);
-        --     end
-        -- end
+        for key, region in pairs(frame) do
+            if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                --print("[SweepyBoop] frame key:", key, "type:", type(region.SetIgnoreParentAlpha), "hasGetObjectType:", region.GetObjectType ~= nil);
+                if addon.PROJECT_MAINLINE then
+                    if (key == "HealthBarsContainer") then
+                        region:SetIgnoreParentAlpha(false);
+                    end
+                else
+                    region.SetIgnoreParentAlpha(false);
+                end
+            end
+        end
 
         if addon.PROJECT_MAINLINE then
             for _, region in pairs(frame.castBar) do
