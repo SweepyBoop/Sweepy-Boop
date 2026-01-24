@@ -221,7 +221,7 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
                     else
                         stacks = aura.applications;
                     end
-                    
+
                     self.text:SetText( (stacks and stacks >= self.glowAtStacks and "") or stacks );
                     shouldGlow = ( stacks == glowAtStacks );
                 end
@@ -269,7 +269,7 @@ if ( class == addon.DRUID ) then
     CreateAuraIcon(117679, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Tree of Life
     CreateAuraIcon(473909, 32, "BOTTOM", MultiBarBottomRightButton4, "TOP", 0, 5, 0); -- Ancient of Lore
 
-    
+
 
     -- Feral
     CreateAuraIcon(145152, 32, "BOTTOM", MultiBarBottomRightButton2, "TOP", 0, 5, 3, nil); -- Blood Talons (max 3 stacks)

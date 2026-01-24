@@ -1,4 +1,4 @@
-## Interface: 110207
+## Interface: 120000, 120001
 ## Title: SweepyBoop's PvP Helper
 ## Author: SweepyBoop
 ## Version: @project-version@
@@ -70,8 +70,3 @@ RaidFrames\Options.lua
 
 Internal\HideHotKeys.lua
 Internal\FocusMacros.lua
-Internal\CustomAuras.xml
-Internal\CustomAuras.lua
-Internal\CustomStatusBar.lua
-Internal\PersonalDR.lua
-Internal\Debug.lua
