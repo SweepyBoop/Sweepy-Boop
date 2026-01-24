@@ -62,6 +62,7 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     frame:SetAlpha(alpha);
 
     if addon.PROJECT_MAINLINE then
+        frame.name:SetAlpha(alpha);
         frame.HealthBarsContainer:SetAlpha(alpha);
         frame.castBar:SetAlpha(alpha);
     end
