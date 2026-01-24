@@ -7,167 +7,167 @@ if addon.PROJECT_MAINLINE then
         {
             classID = addon.CLASSID.DEATHKNIGHT,
             auras = {
-                { spellId = 191587, default = true }, -- Virulent Plague
-                { spellId = 194310, default = true }, -- Festering Wound
-                { spellId = 55095, default = true }, -- Frost Fever
-                { spellId = 55078, default = true }, -- Blood Plague
+                -- { spellId = 191587, default = true }, -- Virulent Plague
+                -- { spellId = 194310, default = true }, -- Festering Wound
+                -- { spellId = 55095, default = true }, -- Frost Fever
+                -- { spellId = 55078, default = true }, -- Blood Plague
 
-                { spellId = 45524, default = true }, -- Chains of Ice
+                -- { spellId = 45524, default = true }, -- Chains of Ice
 
-                { spellId = 356528 }, -- Necrotic Wound
-                { spellId = 390276 }, -- Rotten Touch
+                -- { spellId = 356528 }, -- Necrotic Wound
+                -- { spellId = 390276 }, -- Rotten Touch
             }
         },
         {
             classID = addon.CLASSID.DEMONHUNTER,
             auras = {
-                { spellId = 390155, default = true }, -- Serrated Glaive
-                { spellId = 391191, default = true }, -- Burning Wound
+                -- { spellId = 390155, default = true }, -- Serrated Glaive
+                -- { spellId = 391191, default = true }, -- Burning Wound
 
-                { spellId = 390181 }, -- Soulscar
-                { spellId = 213405 }, -- Master of the Glaive
+                -- { spellId = 390181 }, -- Soulscar
+                -- { spellId = 213405 }, -- Master of the Glaive
             }
         },
         {
             classID = addon.CLASSID.DRUID,
             auras = {
-                { spellId = 164812, default = true }, -- Moonfire
-                    { spellId = 155625, parent = 164812 }, -- Moonfire (Lunar Inspiration)
-                { spellId = 164815, default = true }, -- Sunfire
-                { spellId = 155722, default = true }, -- Rake
-                { spellId = 1079, default = true }, -- Rip
-                { spellId = 391889, default = true }, -- Adaptive Swarm
-                { spellId = 405233, default = true}, -- Thrash
+                -- { spellId = 164812, default = true }, -- Moonfire
+                --     { spellId = 155625, parent = 164812 }, -- Moonfire (Lunar Inspiration)
+                -- { spellId = 164815, default = true }, -- Sunfire
+                -- { spellId = 155722, default = true }, -- Rake
+                -- { spellId = 1079, default = true }, -- Rip
+                -- { spellId = 391889, default = true }, -- Adaptive Swarm
+                -- { spellId = 405233, default = true}, -- Thrash
 
-                { spellId = 236021 }, -- Ferocious Wound
-                { spellId = 274838 }, -- Feral Frenzy
-                { spellId = 439531 }, -- Bloodseeker Vines
+                -- { spellId = 236021 }, -- Ferocious Wound
+                -- { spellId = 274838 }, -- Feral Frenzy
+                -- { spellId = 439531 }, -- Bloodseeker Vines
             }
         },
         {
             classID = addon.CLASSID.EVOKER,
             auras = {
-                { spellId = 357209, default = true }, -- Fire Breath
+                -- { spellId = 357209, default = true }, -- Fire Breath
             }
         },
         {
             classID = addon.CLASSID.HUNTER,
             auras = {
-                { spellId = 212431, default = true }, -- Explosive Shot
-                { spellId = 271788, default = true }, -- Serpent Sting
-                { spellId = 5116, default = true }, -- Concussive Shot
+                -- { spellId = 212431, default = true }, -- Explosive Shot
+                -- { spellId = 271788, default = true }, -- Serpent Sting
+                -- { spellId = 5116, default = true }, -- Concussive Shot
 
-                { spellId = 217200 }, -- Barbed Shot
-                { spellId = 468572 }, -- Black Arrow
+                -- { spellId = 217200 }, -- Barbed Shot
+                -- { spellId = 468572 }, -- Black Arrow
             }
         },
         {
             classID = addon.CLASSID.MAGE,
             auras = {
-                { spellId = 210824, default = true }, -- Touch of the Magi
-                { spellId = 31589, default = true }, -- Slow
+                -- { spellId = 210824, default = true }, -- Touch of the Magi
+                -- { spellId = 31589, default = true }, -- Slow
 
-                { spellId = 205708 }, -- Chilled
-                { spellId = 228358 }, -- Winter's Chill
+                -- { spellId = 205708 }, -- Chilled
+                -- { spellId = 228358 }, -- Winter's Chill
 
-                { spellId = 12654 }, -- Ignite
-                { spellId = 217694 }, -- Living Bomb
-                    { spellId = 244813, parent = 217694 }, -- Living Bomb
+                -- { spellId = 12654 }, -- Ignite
+                -- { spellId = 217694 }, -- Living Bomb
+                --     { spellId = 244813, parent = 217694 }, -- Living Bomb
             }
         },
         {
             classID = addon.CLASSID.MONK,
             auras = {
-                { spellId = 116095, default = true }, -- Disable
+                -- { spellId = 116095, default = true }, -- Disable
 
-                { spellId = 228287 }, -- Mark of the Crane
-                { spellId = 451433}, -- Acclamation
-                { spellId = 392983 }, -- Strike of the Windlord
-                { spellId = 122470 }, -- Touch of Karma
-                { spellId = 115804 }, -- Mortal Wounds
+                -- { spellId = 228287 }, -- Mark of the Crane
+                -- { spellId = 451433}, -- Acclamation
+                -- { spellId = 392983 }, -- Strike of the Windlord
+                -- { spellId = 122470 }, -- Touch of Karma
+                -- { spellId = 115804 }, -- Mortal Wounds
             }
         },
         {
             classID = addon.CLASSID.PALADIN,
             auras = {
-                { spellId = 343721, default = true }, -- Final Reckoning
-                { spellId = 197277, default = true }, -- Judgment
-                { spellId = 403695, default = true }, -- Truth's Wake
-                { spellId = 383346, default = true }, -- Expurgation
+                -- { spellId = 343721, default = true }, -- Final Reckoning
+                -- { spellId = 197277, default = true }, -- Judgment
+                -- { spellId = 403695, default = true }, -- Truth's Wake
+                -- { spellId = 383346, default = true }, -- Expurgation
 
-                { spellId = 408383 }, -- Judgment of Justice
+                -- { spellId = 408383 }, -- Judgment of Justice
             }
         },
         {
             classID = addon.CLASSID.PRIEST,
             auras = {
-                { spellId = 589, default = true }, -- Shadow Word: Pain
-                { spellId = 34914, default = true }, -- Vampiric Touch
-                { spellId = 335467, default = true }, -- Devouring Plague
-                { spellId = 214621, default = true }, -- Schism
-                { spellId = 375901, default = true }, -- Mindgames
-                { spellId = 323716, default = true }, -- Thoughtsteal
+                -- { spellId = 589, default = true }, -- Shadow Word: Pain
+                -- { spellId = 34914, default = true }, -- Vampiric Touch
+                -- { spellId = 335467, default = true }, -- Devouring Plague
+                -- { spellId = 214621, default = true }, -- Schism
+                -- { spellId = 375901, default = true }, -- Mindgames
+                -- { spellId = 323716, default = true }, -- Thoughtsteal
             }
         },
         {
             classID = addon.CLASSID.ROGUE,
             auras = {
-                { spellId = 703, default = true }, -- Garrote
-                { spellId = 1943, default = true }, -- Rupture
-                { spellId = 360194, default = true }, -- Deathmark
-                { spellId = 121411, default = true }, -- Crimson Tempest
-                { spellId = 394036, default = true }, -- Serrated Bone Spike
+                -- { spellId = 703, default = true }, -- Garrote
+                -- { spellId = 1943, default = true }, -- Rupture
+                -- { spellId = 360194, default = true }, -- Deathmark
+                -- { spellId = 121411, default = true }, -- Crimson Tempest
+                -- { spellId = 394036, default = true }, -- Serrated Bone Spike
 
-                { spellId = 381628 }, -- Internal Bleeding
-                { spellId = 385627 }, -- Kingsbane
-                { spellId = 5760 }, -- Numbing Poison
-                { spellId = 3409 }, -- Crippling Poison
-                { spellId = 383414 }, -- Amplifying Poison
-                { spellId = 2818 }, -- Deadly Poison
-                { spellId = 8680 }, -- Wound Poison
+                -- { spellId = 381628 }, -- Internal Bleeding
+                -- { spellId = 385627 }, -- Kingsbane
+                -- { spellId = 5760 }, -- Numbing Poison
+                -- { spellId = 3409 }, -- Crippling Poison
+                -- { spellId = 383414 }, -- Amplifying Poison
+                -- { spellId = 2818 }, -- Deadly Poison
+                -- { spellId = 8680 }, -- Wound Poison
             }
         },
         {
             classID = addon.CLASSID.SHAMAN,
             auras = {
-                { spellId = 188389, default = true }, -- Flame Shock
-                { spellId = 196840, default = true }, -- Frost Shock
-                { spellId = 197209, default = true }, -- Lightning Rod
+                -- { spellId = 188389, default = true }, -- Flame Shock
+                -- { spellId = 196840, default = true }, -- Frost Shock
+                -- { spellId = 197209, default = true }, -- Lightning Rod
 
-                { spellId = 3600 }, -- Earthbind
-                { spellId = 334168 }, -- Lashing Flames
+                -- { spellId = 3600 }, -- Earthbind
+                -- { spellId = 334168 }, -- Lashing Flames
             }
         },
         {
             classID = addon.CLASSID.WARLOCK,
             auras = {
-                { spellId = 316099, default = true }, -- Unstable Affliction
-                { spellId = 980, default = true }, -- Agony
-                { spellId = 146739, default = true }, -- Corruption
-                { spellId = 27243, default = true }, -- Seed of Corruption
-                { spellId = 48181, default = true }, -- Haunt
-                { spellId = 205179, default = true }, -- Phantom Singularity
-                { spellId = 702, default = true }, -- Curse of Weakness
-                { spellId = 1714, default = true}, -- Curse of Tongues
+                -- { spellId = 316099, default = true }, -- Unstable Affliction
+                -- { spellId = 980, default = true }, -- Agony
+                -- { spellId = 146739, default = true }, -- Corruption
+                -- { spellId = 27243, default = true }, -- Seed of Corruption
+                -- { spellId = 48181, default = true }, -- Haunt
+                -- { spellId = 205179, default = true }, -- Phantom Singularity
+                -- { spellId = 702, default = true }, -- Curse of Weakness
+                -- { spellId = 1714, default = true}, -- Curse of Tongues
 
-                { spellId = 157736 }, -- Immolate
-                { spellId = 386997 }, -- Soul Rot
+                -- { spellId = 157736 }, -- Immolate
+                -- { spellId = 386997 }, -- Soul Rot
 
-                { spellId = 334275 }, -- Curse of Exhaustion
-                { spellId = 410598 }, -- Soul Rip
+                -- { spellId = 334275 }, -- Curse of Exhaustion
+                -- { spellId = 410598 }, -- Soul Rip
             }
         },
         {
             classID = addon.CLASSID.WARRIOR,
             auras = {
-                { spellId = 1715, default = true }, -- Hamstring
-                { spellId = 376080, default = true }, -- Champion's Spear
-                { spellId = 208086, default = true }, -- Colossus Smash (Warbreaker)
-                { spellId = 354788, default = true }, -- Slaughterhouse
+                -- { spellId = 1715, default = true }, -- Hamstring
+                -- { spellId = 376080, default = true }, -- Champion's Spear
+                -- { spellId = 208086, default = true }, -- Colossus Smash (Warbreaker)
+                -- { spellId = 354788, default = true }, -- Slaughterhouse
 
-                { spellId = 388539 }, -- Rend
-                { spellId = 383704 }, -- Fatal Mark
-                { spellId = 397364 }, -- Thunderous Roar
+                -- { spellId = 388539 }, -- Rend
+                -- { spellId = 383704 }, -- Fatal Mark
+                -- { spellId = 397364 }, -- Thunderous Roar
             }
         },
     };
