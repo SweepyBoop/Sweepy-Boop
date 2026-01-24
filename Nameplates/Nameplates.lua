@@ -24,13 +24,15 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     if ( not frame.unsetIgnoreParentAlpha ) then
         for key, region in pairs(frame) do
             if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-                --print("[SweepyBoop] frame key:", key, "type:", type(region.SetIgnoreParentAlpha), "hasGetObjectType:", region.GetObjectType ~= nil);
+                print("[SweepyBoop] frame key:", key, "type:", type(region.SetIgnoreParentAlpha), "hasGetObjectType:", region.GetObjectType ~= nil);
                 if addon.PROJECT_MAINLINE then
                     if (key == "HealthBarsContainer") then
                         region:SetIgnoreParentAlpha(false);
                     end
                 else
-                    region.SetIgnoreParentAlpha(false);
+                    if (key == "healthBar" or key == "selectionHighlight") then
+                        region:SetIgnoreParentAlpha(false);
+                    end
                 end
             end
         end
