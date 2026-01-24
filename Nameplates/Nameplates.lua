@@ -22,11 +22,11 @@ end
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     if ( not frame.unsetIgnoreParentAlpha ) then
-        for _, region in pairs(frame) do
-            if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-                region:SetIgnoreParentAlpha(false);
-            end
-        end
+        -- for _, region in pairs(frame) do
+        --     if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+        --         region:SetIgnoreParentAlpha(false);
+        --     end
+        -- end
 
         if addon.PROJECT_MAINLINE then
             for _, region in pairs(frame.castBar) do
