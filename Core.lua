@@ -308,7 +308,9 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
-    options.args.arenaFrames = addon.GetArenaFrameOptions(5);
+    if ( not addon.PROJECT_MAINLINE ) then
+        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
+    end
 
     if addon.PROJECT_MAINLINE then
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
@@ -360,7 +362,10 @@ function SweepyBoop:OnInitialize()
     self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig");
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
     self:SetupNameplateModules();
-    self:SetupArenaCooldownTracker();
+
+    if ( not addon.PROJECT_MAINLINE ) then
+        self:SetupArenaCooldownTracker();
+    end
 
     if ( not addon.PROJECT_MAINLINE ) then return end
 
@@ -377,7 +382,6 @@ function SweepyBoop:OnInitialize()
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
-    self:SetupFixBlizzardCastbars();
 end
 
 function SweepyBoop:RefreshConfig()

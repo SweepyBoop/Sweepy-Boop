@@ -22,11 +22,11 @@ end
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     if ( not frame.unsetIgnoreParentAlpha ) then
-        for _, region in pairs(frame) do
-            if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-                region:SetIgnoreParentAlpha(false);
-            end
-        end
+        -- for _, region in pairs(frame) do
+        --     if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+        --         region:SetIgnoreParentAlpha(false);
+        --     end
+        -- end
 
         if addon.PROJECT_MAINLINE then
             for _, region in pairs(frame.castBar) do
@@ -234,18 +234,18 @@ function SweepyBoop:SetupNameplateModules()
 
     -- When flag is picked up / dropped
     -- Issue, not immediately updated to flag carrier icon when someone picked up the flag
-    if addon.PROJECT_MAINLINE then
-        hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
-            -- This will only be applied to nameplates in PvP instances
-            if frame:IsForbidden() then return end
-            if frame.optionTable.showPvPClassificationIndicator then
-                -- UpdateClassIcon should include UpdateTargetHighlight
-                -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
-                -- Consequently we can't guarantee the target highlight is up-to-date on FC
-                addon.UpdateClassIcon(frame:GetParent(), frame);
-            end
-        end)
-    end
+    -- if addon.PROJECT_MAINLINE then
+    --     hooksecurefunc("CompactUnitFrame_UpdatePvPClassificationIndicator", function (frame)
+    --         -- This will only be applied to nameplates in PvP instances
+    --         if frame:IsForbidden() then return end
+    --         if frame.optionTable.showPvPClassificationIndicator then
+    --             -- UpdateClassIcon should include UpdateTargetHighlight
+    --             -- Otherwise we can't guarantee the order of events CompactUnitFrame_UpdateClassificationIndicator and CompactUnitFrame_UpdateName
+    --             -- Consequently we can't guarantee the target highlight is up-to-date on FC
+    --             addon.UpdateClassIcon(frame:GetParent(), frame);
+    --         end
+    --     end)
+    -- end
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if frame:IsForbidden() then return end
@@ -269,16 +269,16 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    if addon.PROJECT_MAINLINE then
-        hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
-            if self:IsForbidden() then return end
-            if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
-                self:EnableMouse(false);
-            else
-                self:EnableMouse(true);
-            end
-        end)
-    end
+    -- if addon.PROJECT_MAINLINE then
+    --     hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
+    --         if self:IsForbidden() then return end
+    --         if SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled then
+    --             self:EnableMouse(false);
+    --         else
+    --             self:EnableMouse(true);
+    --         end
+    --     end)
+    -- end
 end
 
 function SweepyBoop:RefreshAllNamePlates(hideFirst)
