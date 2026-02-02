@@ -2,6 +2,7 @@ local _, addon = ...;
 addon.TEST_MODE = false;
 
 addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
+addon.PROJECT_TBC = (WOW_PROJECT_ID == 5);
 addon.PROFILE_VERSION = 1.0; -- To validate export string
 
 addon.SPELLCATEGORY = {

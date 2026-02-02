@@ -1063,7 +1063,11 @@ function SweepyBoop:SetupArenaCooldownTracker()
     if ( not eventFrame ) then
         eventFrame = CreateFrame("Frame");
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        if addon.PROJECT_TBC then
+            eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
+        else
+            eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        end
         eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
         eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
         eventFrame:RegisterEvent(addon.UNIT_AURA);
@@ -1071,7 +1075,14 @@ function SweepyBoop:SetupArenaCooldownTracker()
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
-            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE and addon.PROJECT_MAINLINE ) then
+            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.ARENA_OPPONENT_UPDATE ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE and addon.PROJECT_MAINLINE ) then
+                if ( event == addon.ARENA_OPPONENT_UPDATE ) then
+                    local unit, reason = ...;
+                    if ( reason ~= "cleared" ) then
+                        return;
+                    end
+                end
+
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
                 -- PLAYER_SPECIALIZATION_CHANGED is triggered by Stampede in MoP, we should only process it for retail...
 

@@ -305,8 +305,10 @@ function SweepyBoop:OnInitialize()
     end
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
 
-    options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
-    options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
+    if ( not addon.PROJECT_TBC) then
+        options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
+        options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
+    end
 
     if ( not addon.PROJECT_MAINLINE ) then
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
