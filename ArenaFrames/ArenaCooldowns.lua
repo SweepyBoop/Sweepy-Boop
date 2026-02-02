@@ -374,7 +374,10 @@ local function SetupIconGroup(group, unit)
     local iconSetConfig = addon.GetIconSetConfig(iconSetID);
 
     local class = addon.GetClassForPlayerOrArena(unit);
-    local spec = addon.GetSpecForPlayerOrArena(unit);
+    local spec;
+    if ( not addon.PROJECT_TBC ) then
+        spec = addon.GetSpecForPlayerOrArena(unit);
+    end
     local remainingTest = 32;
     for spellID, spell in pairs(spellData) do
         if ( not spell.use_parent_icon ) then
