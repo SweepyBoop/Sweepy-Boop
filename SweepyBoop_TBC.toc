@@ -1,4 +1,4 @@
-## Interface: 20504
+## Interface: 20505
 ## Title: SweepyBoop's PvP Helper
 ## Author: SweepyBoop
 ## Version: @project-version@
