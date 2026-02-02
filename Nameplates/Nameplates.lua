@@ -45,12 +45,6 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
                     region:SetIgnoreParentAlpha(false);
                 end
             end
-
-            for _, region in pairs(frame.HealthBarsContainer) do
-                if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-                    region:SetIgnoreParentAlpha(false);
-                end
-            end
         end
 
         frame.unsetIgnoreParentAlpha = true;
@@ -62,8 +56,6 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     frame:SetAlpha(alpha);
 
     if addon.PROJECT_MAINLINE then
-        frame.name:SetAlpha(alpha);
-        frame.HealthBarsContainer:SetAlpha(alpha);
         frame.castBar:SetAlpha(alpha);
     end
 
