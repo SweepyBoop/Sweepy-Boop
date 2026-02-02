@@ -55,9 +55,9 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
 
-    -- if addon.PROJECT_MAINLINE then
-    --     frame.castBar:SetAlpha(alpha);
-    -- end
+    if addon.PROJECT_MAINLINE then
+        frame.castBar:SetAlpha(alpha);
+    end
 
     if nameplate.extended then -- NeatPlates
         -- Setting alpha on extended itself did not work, just set alpha on child elements
