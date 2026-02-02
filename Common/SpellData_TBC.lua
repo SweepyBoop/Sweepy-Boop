@@ -377,6 +377,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 24,
         category = category.INTERRUPT,
+        trackPet = true,
     },
         [19647] = { parent = 19244 }, -- Spell Lock (Rank 2)
 
