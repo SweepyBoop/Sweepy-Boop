@@ -5,6 +5,12 @@ local specID = addon.SPECID;
 local category = addon.SPELLCATEGORY;
 
 addon.SpellData = {
+    -- Priest
+    [33206] = { -- Pain Suppression
+        class = addon.PRIEST,
+        cooldown = 120,
+        category = category.DEFENSIVE,
+    },
 };
 
 addon.SpellResets = {
