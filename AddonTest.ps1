@@ -43,6 +43,7 @@ $addonDirs = @(
     (Join-Path $gameDir "_retail_\Interface\Addons\SweepyBoop"),
     (Join-Path $gameDir "_classic_\Interface\Addons\SweepyBoop"),
     (Join-Path $gameDir "_classic_ptr_\Interface\Addons\SweepyBoop")
+    (Join-Path $gameDir "_anniversary_\Interface\Addons\SweepyBoop"),
 )
 
 foreach ($dir in $addonDirs) {
