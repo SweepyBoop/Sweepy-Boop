@@ -45,12 +45,6 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
                     region:SetIgnoreParentAlpha(false);
                 end
             end
-
-            for _, region in pairs(frame.HealthBarsContainer) do
-                if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-                    region:SetIgnoreParentAlpha(false);
-                end
-            end
         end
 
         frame.unsetIgnoreParentAlpha = true;
@@ -61,11 +55,9 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
 
-    if addon.PROJECT_MAINLINE then
-        frame.name:SetAlpha(alpha);
-        frame.HealthBarsContainer:SetAlpha(alpha);
-        frame.castBar:SetAlpha(alpha);
-    end
+    -- if addon.PROJECT_MAINLINE then
+    --     frame.castBar:SetAlpha(alpha);
+    -- end
 
     if nameplate.extended then -- NeatPlates
         -- Setting alpha on extended itself did not work, just set alpha on child elements
