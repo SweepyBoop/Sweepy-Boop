@@ -953,7 +953,7 @@ addon.SpellData = {
     [34490] = { -- Silencing Shot
         class = addon.HUNTER,
         cooldown = 20,
-        category = category.SILENCE,
+        category = category.OTHERS,
     },
 
     [34600] = { -- Snake Trap
