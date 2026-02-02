@@ -377,6 +377,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 24,
         default = true,
+        category = category.OTHERS,
     },
         [19647] = { parent = 19244 }, -- Spell Lock (Rank 2)
 
@@ -462,6 +463,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         cooldown = 5,
         default = true,
+        category = category.OTHERS,
     },
         [8044] = { parent = 8042 }, -- Earth Shock (Rank 2)
         [8045] = { parent = 8042 }, -- Earth Shock (Rank 3)
@@ -1192,6 +1194,7 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 15,
         default = true,
+        category = category.OTHERS,
     },
 
     [17116] = { -- Nature's Swiftness
@@ -1316,6 +1319,7 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 24,
         default = true,
+        category = category.OTHERS,
     },
 
     [6143] = { -- Frost Ward (Rank 1)
@@ -1440,6 +1444,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         cooldown = 10,
         default = true,
+        category = category.OTHERS,
     },
         [1767] = { parent = 1766 }, -- Kick (Rank 2)
         [1768] = { parent = 1766 }, -- Kick (Rank 3)
@@ -1657,6 +1662,7 @@ addon.SpellData = {
         class = addon.WARRIOR,
         cooldown = 10,
         default = true,
+        category = category.OTHERS,
     },
         [6554] = { parent = 6552 }, -- Pummel (Rank 2)
         [72] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 1)
