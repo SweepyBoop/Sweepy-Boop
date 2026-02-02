@@ -7,23 +7,6 @@ local category = addon.SPELLCATEGORY;
 addon.SpellData = {
     -- Priest
 
-    [17] = { -- Power Word: Shield (Rank 1)
-        class = addon.PRIEST,
-        cooldown = 4,
-        category = category.OTHERS,
-    },
-        [592] = { parent = 17 }, -- Power Word: Shield (Rank 2)
-        [600] = { parent = 17 }, -- Power Word: Shield (Rank 3)
-        [3747] = { parent = 17 }, -- Power Word: Shield (Rank 4)
-        [6065] = { parent = 17 }, -- Power Word: Shield (Rank 5)
-        [6066] = { parent = 17 }, -- Power Word: Shield (Rank 6)
-        [10898] = { parent = 17 }, -- Power Word: Shield (Rank 7)
-        [10899] = { parent = 17 }, -- Power Word: Shield (Rank 8)
-        [10900] = { parent = 17 }, -- Power Word: Shield (Rank 9)
-        [10901] = { parent = 17 }, -- Power Word: Shield (Rank 10)
-        [25217] = { parent = 17 }, -- Power Word: Shield (Rank 11)
-        [25218] = { parent = 17 }, -- Power Word: Shield (Rank 12)
-
     [586] = { -- Fade (Rank 1)
         class = addon.PRIEST,
         cooldown = 30,
@@ -146,12 +129,6 @@ addon.SpellData = {
     [15286] = { -- Vampiric Embrace
         class = addon.PRIEST,
         cooldown = 10,
-        category = category.OTHERS,
-    },
-
-    [15473] = { -- Shadowform
-        class = addon.PRIEST,
-        cooldown = 1,
         category = category.OTHERS,
     },
 
@@ -322,33 +299,11 @@ addon.SpellData = {
 
     -- Warlock Pets
 
-    [3716] = { -- Torment (Rank 1)
-        class = addon.WARLOCK,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [7809] = { parent = 3716 }, -- Torment (Rank 2)
-        [7810] = { parent = 3716 }, -- Torment (Rank 3)
-        [7811] = { parent = 3716 }, -- Torment (Rank 4)
-        [11774] = { parent = 3716 }, -- Torment (Rank 5)
-        [11775] = { parent = 3716 }, -- Torment (Rank 6)
-        [27270] = { parent = 3716 }, -- Torment (Rank 7)
-
     [4511] = { -- Phase Shift
         class = addon.WARLOCK,
         cooldown = 10,
         category = category.OTHERS,
     },
-
-    [6360] = { -- Soothing Kiss (Rank 1)
-        class = addon.WARLOCK,
-        cooldown = 4,
-        category = category.OTHERS,
-    },
-        [7813] = { parent = 6360 }, -- Soothing Kiss (Rank 2)
-        [11784] = { parent = 6360 }, -- Soothing Kiss (Rank 3)
-        [11785] = { parent = 6360 }, -- Soothing Kiss (Rank 4)
-        [27275] = { parent = 6360 }, -- Soothing Kiss (Rank 5)
 
     [7814] = { -- Lash of Pain (Rank 1)
         class = addon.WARLOCK,
@@ -393,17 +348,6 @@ addon.SpellData = {
         [27277] = { parent = 19505 }, -- Devour Magic (Rank 6)
 
     -- Shaman
-
-    [421] = { -- Chain Lightning (Rank 1)
-        class = addon.SHAMAN,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [930] = { parent = 421 }, -- Chain Lightning (Rank 2)
-        [2860] = { parent = 421 }, -- Chain Lightning (Rank 3)
-        [10605] = { parent = 421 }, -- Chain Lightning (Rank 4)
-        [25439] = { parent = 421 }, -- Chain Lightning (Rank 5)
-        [25442] = { parent = 421 }, -- Chain Lightning (Rank 6)
 
     [556] = { -- Astral Recall
         class = addon.SHAMAN,
@@ -458,31 +402,6 @@ addon.SpellData = {
         [10427] = { parent = 5730 }, -- Stoneclaw Totem (Rank 5)
         [10428] = { parent = 5730 }, -- Stoneclaw Totem (Rank 6)
         [25525] = { parent = 5730 }, -- Stoneclaw Totem (Rank 7)
-
-    [8042] = { -- Earth Shock (Rank 1)
-        class = addon.SHAMAN,
-        cooldown = 5,
-        category = category.INTERRUPT,
-    },
-        [8044] = { parent = 8042 }, -- Earth Shock (Rank 2)
-        [8045] = { parent = 8042 }, -- Earth Shock (Rank 3)
-        [8046] = { parent = 8042 }, -- Earth Shock (Rank 4)
-        [10412] = { parent = 8042 }, -- Earth Shock (Rank 5)
-        [10413] = { parent = 8042 }, -- Earth Shock (Rank 6)
-        [10414] = { parent = 8042 }, -- Earth Shock (Rank 7)
-        [25454] = { parent = 8042 }, -- Earth Shock (Rank 8)
-        [8050] = { parent = 8042 }, -- Flame Shock (Rank 1)
-        [8052] = { parent = 8042 }, -- Flame Shock (Rank 2)
-        [8053] = { parent = 8042 }, -- Flame Shock (Rank 3)
-        [10447] = { parent = 8042 }, -- Flame Shock (Rank 4)
-        [10448] = { parent = 8042 }, -- Flame Shock (Rank 5)
-        [29228] = { parent = 8042 }, -- Flame Shock (Rank 6)
-        [25457] = { parent = 8042 }, -- Flame Shock (Rank 7)
-        [8056] = { parent = 8042 }, -- Frost Shock (Rank 1)
-        [8058] = { parent = 8042 }, -- Frost Shock (Rank 2)
-        [10472] = { parent = 8042 }, -- Frost Shock (Rank 3)
-        [10473] = { parent = 8042 }, -- Frost Shock (Rank 4)
-        [25464] = { parent = 8042 }, -- Frost Shock (Rank 5)
 
     [8177] = { -- Grounding Totem
         class = addon.SHAMAN,
@@ -676,15 +595,6 @@ addon.SpellData = {
         [20928] = { parent = 20925 }, -- Holy Shield (Rank 3)
         [27179] = { parent = 20925 }, -- Holy Shield (Rank 4)
 
-    [24275] = { -- Hammer of Wrath (Rank 1)
-        class = addon.PALADIN,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [24274] = { parent = 24275 }, -- Hammer of Wrath (Rank 2)
-        [24239] = { parent = 24275 }, -- Hammer of Wrath (Rank 3)
-        [27180] = { parent = 24275 }, -- Hammer of Wrath (Rank 4)
-
     [31789] = { -- Righteous Defense
         class = addon.PALADIN,
         cooldown = 15,
@@ -711,32 +621,7 @@ addon.SpellData = {
         [32699] = { parent = 31935 }, -- Avenger's Shield (Rank 2)
         [32700] = { parent = 31935 }, -- Avenger's Shield (Rank 3)
 
-    [35395] = { -- Crusader Strike
-        class = addon.PALADIN,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-
     -- Hunter
-
-    [781] = { -- Disengage (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [14272] = { parent = 781 }, -- Disengage (Rank 2)
-        [14273] = { parent = 781 }, -- Disengage (Rank 3)
-        [27015] = { parent = 781 }, -- Disengage (Rank 4)
-
-    [1495] = { -- Mongoose Bite (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [14269] = { parent = 1495 }, -- Mongoose Bite (Rank 2)
-        [14270] = { parent = 1495 }, -- Mongoose Bite (Rank 3)
-        [14271] = { parent = 1495 }, -- Mongoose Bite (Rank 4)
-        [36916] = { parent = 1495 }, -- Mongoose Bite (Rank 5)
 
     [1499] = { -- Freezing Trap (Rank 1)
         class = addon.HUNTER,
@@ -780,20 +665,6 @@ addon.SpellData = {
         [25294] = { parent = 2643 }, -- Multi-Shot (Rank 5)
         [27021] = { parent = 2643 }, -- Multi-Shot (Rank 6)
 
-    [2973] = { -- Raptor Strike (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [14260] = { parent = 2973 }, -- Raptor Strike (Rank 2)
-        [14261] = { parent = 2973 }, -- Raptor Strike (Rank 3)
-        [14262] = { parent = 2973 }, -- Raptor Strike (Rank 4)
-        [14263] = { parent = 2973 }, -- Raptor Strike (Rank 5)
-        [14264] = { parent = 2973 }, -- Raptor Strike (Rank 6)
-        [14265] = { parent = 2973 }, -- Raptor Strike (Rank 7)
-        [14266] = { parent = 2973 }, -- Raptor Strike (Rank 8)
-        [27014] = { parent = 2973 }, -- Raptor Strike (Rank 9)
-
     [3034] = { -- Viper Sting (Rank 1)
         class = addon.HUNTER,
         cooldown = 15,
@@ -802,20 +673,6 @@ addon.SpellData = {
         [14279] = { parent = 3034 }, -- Viper Sting (Rank 2)
         [14280] = { parent = 3034 }, -- Viper Sting (Rank 3)
         [27018] = { parent = 3034 }, -- Viper Sting (Rank 4)
-
-    [3044] = { -- Arcane Shot (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [14281] = { parent = 3044 }, -- Arcane Shot (Rank 2)
-        [14282] = { parent = 3044 }, -- Arcane Shot (Rank 3)
-        [14283] = { parent = 3044 }, -- Arcane Shot (Rank 4)
-        [14284] = { parent = 3044 }, -- Arcane Shot (Rank 5)
-        [14285] = { parent = 3044 }, -- Arcane Shot (Rank 6)
-        [14286] = { parent = 3044 }, -- Arcane Shot (Rank 7)
-        [14287] = { parent = 3044 }, -- Arcane Shot (Rank 8)
-        [27019] = { parent = 3044 }, -- Arcane Shot (Rank 9)
 
     [3045] = { -- Rapid Fire
         class = addon.HUNTER,
@@ -879,15 +736,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
 
-    [19306] = { -- Counterattack (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [20909] = { parent = 19306 }, -- Counterattack (Rank 2)
-        [20910] = { parent = 19306 }, -- Counterattack (Rank 3)
-        [27067] = { parent = 19306 }, -- Counterattack (Rank 4)
-
     [19386] = { -- Wyvern Sting (Rank 1)
         class = addon.HUNTER,
         cooldown = 120,
@@ -896,18 +744,6 @@ addon.SpellData = {
         [24132] = { parent = 19386 }, -- Wyvern Sting (Rank 2)
         [24133] = { parent = 19386 }, -- Wyvern Sting (Rank 3)
         [27068] = { parent = 19386 }, -- Wyvern Sting (Rank 4)
-
-    [19434] = { -- Aimed Shot (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [20900] = { parent = 19434 }, -- Aimed Shot (Rank 2)
-        [20901] = { parent = 19434 }, -- Aimed Shot (Rank 3)
-        [20902] = { parent = 19434 }, -- Aimed Shot (Rank 4)
-        [20903] = { parent = 19434 }, -- Aimed Shot (Rank 5)
-        [20904] = { parent = 19434 }, -- Aimed Shot (Rank 6)
-        [27065] = { parent = 19434 }, -- Aimed Shot (Rank 7)
 
     [19503] = { -- Scatter Shot
         class = addon.HUNTER,
@@ -939,12 +775,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
 
-    [34026] = { -- Kill Command
-        class = addon.HUNTER,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-
     [34477] = { -- Misdirection
         class = addon.HUNTER,
         cooldown = 120,
@@ -964,31 +794,6 @@ addon.SpellData = {
     },
 
     -- Hunter Pets
-
-    [1742] = { -- Cower (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [1753] = { parent = 1742 }, -- Cower (Rank 2)
-        [1754] = { parent = 1742 }, -- Cower (Rank 3)
-        [1755] = { parent = 1742 }, -- Cower (Rank 4)
-        [1756] = { parent = 1742 }, -- Cower (Rank 5)
-        [16697] = { parent = 1742 }, -- Cower (Rank 6)
-        [27048] = { parent = 1742 }, -- Cower (Rank 7)
-
-    [2649] = { -- Growl (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [14916] = { parent = 2649 }, -- Growl (Rank 2)
-        [14917] = { parent = 2649 }, -- Growl (Rank 3)
-        [14918] = { parent = 2649 }, -- Growl (Rank 4)
-        [14919] = { parent = 2649 }, -- Growl (Rank 5)
-        [14920] = { parent = 2649 }, -- Growl (Rank 6)
-        [14921] = { parent = 2649 }, -- Growl (Rank 7)
-        [27047] = { parent = 2649 }, -- Growl (Rank 8)
 
     [7371] = { -- Charge (Rank 1)
         class = addon.HUNTER,
@@ -1038,16 +843,6 @@ addon.SpellData = {
     },
         [24452] = { parent = 24450 }, -- Prowl (Rank 2)
         [24453] = { parent = 24450 }, -- Prowl (Rank 3)
-
-    [24640] = { -- Scorpid Poison (Rank 1)
-        class = addon.HUNTER,
-        cooldown = 4,
-        category = category.OTHERS,
-    },
-        [24583] = { parent = 24640 }, -- Scorpid Poison (Rank 2)
-        [24586] = { parent = 24640 }, -- Scorpid Poison (Rank 3)
-        [24587] = { parent = 24640 }, -- Scorpid Poison (Rank 4)
-        [27060] = { parent = 24640 }, -- Scorpid Poison (Rank 5)
 
     [24604] = { -- Furious Howl (Rank 1)
         class = addon.HUNTER,
@@ -1170,16 +965,6 @@ addon.SpellData = {
         [17329] = { parent = 16689 }, -- Nature's Grasp (Rank 6)
         [27009] = { parent = 16689 }, -- Nature's Grasp (Rank 7)
 
-    [16857] = { -- Faerie Fire (Feral) (Rank 1)
-        class = addon.DRUID,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [17390] = { parent = 16857 }, -- Faerie Fire (Feral) (Rank 2)
-        [17391] = { parent = 16857 }, -- Faerie Fire (Feral) (Rank 3)
-        [17392] = { parent = 16857 }, -- Faerie Fire (Feral) (Rank 4)
-        [27011] = { parent = 16857 }, -- Faerie Fire (Feral) (Rank 5)
-
     [16914] = { -- Hurricane (Rank 1)
         class = addon.DRUID,
         cooldown = 60,
@@ -1244,14 +1029,6 @@ addon.SpellData = {
         cooldown = 180,
         category = category.OTHERS,
     },
-
-    [33878] = { -- Mangle (Bear) (Rank 1)
-        class = addon.DRUID,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [33986] = { parent = 33878 }, -- Mangle (Bear) (Rank 2)
-        [33987] = { parent = 33878 }, -- Mangle (Bear) (Rank 3)
 
     -- Mage
 
@@ -1537,12 +1314,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
 
-    [14251] = { -- Riposte
-        class = addon.ROGUE,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-
     [14278] = { -- Ghostly Strike
         class = addon.ROGUE,
         cooldown = 20,
@@ -1618,12 +1389,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
 
-    [2565] = { -- Shield Block
-        class = addon.WARRIOR,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-
     [2687] = { -- Bloodrage
         class = addon.WARRIOR,
         cooldown = 60,
@@ -1642,18 +1407,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
 
-    [6343] = { -- Thunder Clap (Rank 1)
-        class = addon.WARRIOR,
-        cooldown = 4,
-        category = category.OTHERS,
-    },
-        [8198] = { parent = 6343 }, -- Thunder Clap (Rank 2)
-        [8204] = { parent = 6343 }, -- Thunder Clap (Rank 3)
-        [8205] = { parent = 6343 }, -- Thunder Clap (Rank 4)
-        [11580] = { parent = 6343 }, -- Thunder Clap (Rank 5)
-        [11581] = { parent = 6343 }, -- Thunder Clap (Rank 6)
-        [25264] = { parent = 6343 }, -- Thunder Clap (Rank 7)
-
     [6552] = { -- Pummel (Rank 1)
         class = addon.WARRIOR,
         cooldown = 10,
@@ -1665,44 +1418,11 @@ addon.SpellData = {
         [1672] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 3)
         [29704] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 4)
 
-    [6572] = { -- Revenge (Rank 1)
-        class = addon.WARRIOR,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [6574] = { parent = 6572 }, -- Revenge (Rank 2)
-        [7379] = { parent = 6572 }, -- Revenge (Rank 3)
-        [11600] = { parent = 6572 }, -- Revenge (Rank 4)
-        [11601] = { parent = 6572 }, -- Revenge (Rank 5)
-        [25288] = { parent = 6572 }, -- Revenge (Rank 6)
-        [25269] = { parent = 6572 }, -- Revenge (Rank 7)
-        [30357] = { parent = 6572 }, -- Revenge (Rank 8)
-
-    [7384] = { -- Overpower (Rank 1)
-        class = addon.WARRIOR,
-        cooldown = 5,
-        category = category.OTHERS,
-    },
-        [7887] = { parent = 7384 }, -- Overpower (Rank 2)
-        [11584] = { parent = 7384 }, -- Overpower (Rank 3)
-        [11585] = { parent = 7384 }, -- Overpower (Rank 4)
-
     [12292] = { -- Death Wish
         class = addon.WARRIOR,
         cooldown = 180,
         category = category.OTHERS,
     },
-
-    [12294] = { -- Mortal Strike (Rank 1)
-        class = addon.WARRIOR,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [21551] = { parent = 12294 }, -- Mortal Strike (Rank 2)
-        [21552] = { parent = 12294 }, -- Mortal Strike (Rank 3)
-        [21553] = { parent = 12294 }, -- Mortal Strike (Rank 4)
-        [25248] = { parent = 12294 }, -- Mortal Strike (Rank 5)
-        [30330] = { parent = 12294 }, -- Mortal Strike (Rank 6)
 
     [12328] = { -- Sweeping Strikes
         class = addon.WARRIOR,
@@ -1744,33 +1464,12 @@ addon.SpellData = {
         [25272] = { parent = 20252 }, -- Intercept (Rank 4)
         [25275] = { parent = 20252 }, -- Intercept (Rank 5)
 
-    [23881] = { -- Bloodthirst (Rank 1)
-        class = addon.WARRIOR,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [23892] = { parent = 23881 }, -- Bloodthirst (Rank 2)
-        [23893] = { parent = 23881 }, -- Bloodthirst (Rank 3)
-        [23894] = { parent = 23881 }, -- Bloodthirst (Rank 4)
-        [25251] = { parent = 23881 }, -- Bloodthirst (Rank 5)
-        [30335] = { parent = 23881 }, -- Bloodthirst (Rank 6)
-
     [23920] = { -- Spell Reflection
         class = addon.WARRIOR,
         cooldown = 10,
         category = category.OTHERS,
     },
 
-    [23922] = { -- Shield Slam (Rank 1)
-        class = addon.WARRIOR,
-        cooldown = 6,
-        category = category.OTHERS,
-    },
-        [23923] = { parent = 23922 }, -- Shield Slam (Rank 2)
-        [23924] = { parent = 23922 }, -- Shield Slam (Rank 3)
-        [23925] = { parent = 23922 }, -- Shield Slam (Rank 4)
-        [25258] = { parent = 23922 }, -- Shield Slam (Rank 5)
-        [30356] = { parent = 23922 }, -- Shield Slam (Rank 6)
 };
 
 addon.SpellResets = {
