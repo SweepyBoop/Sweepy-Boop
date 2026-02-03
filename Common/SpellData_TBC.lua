@@ -37,7 +37,8 @@ addon.SpellData = {
     [2944] = { -- Devouring Plague (Rank 1)
         class = addon.PRIEST,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 24,
+        category = category.BURST,
     },
         [19276] = { parent = 2944 }, -- Devouring Plague (Rank 2)
         [19277] = { parent = 2944 }, -- Devouring Plague (Rank 3)
@@ -80,7 +81,8 @@ addon.SpellData = {
     [10060] = { -- Power Infusion
         class = addon.PRIEST,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [10797] = { -- Starshards (Rank 1)
@@ -172,7 +174,7 @@ addon.SpellData = {
     [34433] = { -- Shadowfiend
         class = addon.PRIEST,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [44041] = { -- Chastise (Rank 1)
@@ -194,12 +196,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
         [30910] = { parent = 603 }, -- Curse of Doom (Rank 2)
-
-    [1122] = { -- Inferno
-        class = addon.WARLOCK,
-        cooldown = 3600,
-        category = category.OTHERS,
-    },
 
     [5484] = { -- Howl of Terror (Rank 1)
         class = addon.WARLOCK,
@@ -238,7 +234,7 @@ addon.SpellData = {
     [17877] = { -- Shadowburn (Rank 1)
         class = addon.WARLOCK,
         cooldown = 15,
-        category = category.OTHERS,
+        category = category.BURST,
     },
         [18867] = { parent = 17877 }, -- Shadowburn (Rank 2)
         [18868] = { parent = 17877 }, -- Shadowburn (Rank 3)
@@ -366,12 +362,6 @@ addon.SpellData = {
         [11315] = { parent = 1535 }, -- Fire Nova Totem (Rank 5)
         [25546] = { parent = 1535 }, -- Fire Nova Totem (Rank 6)
         [25547] = { parent = 1535 }, -- Fire Nova Totem (Rank 7)
-
-    [2062] = { -- Earth Elemental Totem
-        class = addon.SHAMAN,
-        cooldown = 1200,
-        category = category.OTHERS,
-    },
 
     [2484] = { -- Earthbind Totem
         class = addon.SHAMAN,
