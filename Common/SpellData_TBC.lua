@@ -37,7 +37,8 @@ addon.SpellData = {
     [2944] = { -- Devouring Plague (Rank 1)
         class = addon.PRIEST,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 24,
+        category = category.BURST,
     },
         [19276] = { parent = 2944 }, -- Devouring Plague (Rank 2)
         [19277] = { parent = 2944 }, -- Devouring Plague (Rank 3)
@@ -80,7 +81,8 @@ addon.SpellData = {
     [10060] = { -- Power Infusion
         class = addon.PRIEST,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [10797] = { -- Starshards (Rank 1)
@@ -172,7 +174,7 @@ addon.SpellData = {
     [34433] = { -- Shadowfiend
         class = addon.PRIEST,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [44041] = { -- Chastise (Rank 1)
@@ -194,12 +196,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
         [30910] = { parent = 603 }, -- Curse of Doom (Rank 2)
-
-    [1122] = { -- Inferno
-        class = addon.WARLOCK,
-        cooldown = 3600,
-        category = category.OTHERS,
-    },
 
     [5484] = { -- Howl of Terror (Rank 1)
         class = addon.WARLOCK,
@@ -238,7 +234,7 @@ addon.SpellData = {
     [17877] = { -- Shadowburn (Rank 1)
         class = addon.WARLOCK,
         cooldown = 15,
-        category = category.OTHERS,
+        category = category.BURST,
     },
         [18867] = { parent = 17877 }, -- Shadowburn (Rank 2)
         [18868] = { parent = 17877 }, -- Shadowburn (Rank 3)
@@ -367,12 +363,6 @@ addon.SpellData = {
         [25546] = { parent = 1535 }, -- Fire Nova Totem (Rank 6)
         [25547] = { parent = 1535 }, -- Fire Nova Totem (Rank 7)
 
-    [2062] = { -- Earth Elemental Totem
-        class = addon.SHAMAN,
-        cooldown = 1200,
-        category = category.OTHERS,
-    },
-
     [2484] = { -- Earthbind Totem
         class = addon.SHAMAN,
         cooldown = 15,
@@ -382,7 +372,8 @@ addon.SpellData = {
     [2825] = { -- Bloodlust
         class = addon.SHAMAN,
         cooldown = 600,
-        category = category.OTHERS,
+        duration = 40,
+        category = category.BURST,
     },
 
     [2894] = { -- Fire Elemental Totem
@@ -433,12 +424,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
 
-    [20608] = { -- Reincarnation
-        class = addon.SHAMAN,
-        cooldown = 3600,
-        category = category.OTHERS,
-    },
-
     [30823] = { -- Shamanistic Rage
         class = addon.SHAMAN,
         cooldown = 120,
@@ -448,7 +433,8 @@ addon.SpellData = {
     [32182] = { -- Heroism
         class = addon.SHAMAN,
         cooldown = 600,
-        category = category.OTHERS,
+        duration = 40,
+        category = category.BURST,
     },
 
     -- Paladin
@@ -610,7 +596,8 @@ addon.SpellData = {
     [31884] = { -- Avenging Wrath
         class = addon.PALADIN,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 20,
+        category = category.BURST,
     },
 
     [31935] = { -- Avenger's Shield (Rank 1)
@@ -634,7 +621,8 @@ addon.SpellData = {
     [1510] = { -- Volley (Rank 1)
         class = addon.HUNTER,
         cooldown = 60,
-        category = category.OTHERS,
+        duration = 6,
+        category = category.BURST,
     },
         [14294] = { parent = 1510 }, -- Volley (Rank 2)
         [14295] = { parent = 1510 }, -- Volley (Rank 3)
@@ -677,7 +665,8 @@ addon.SpellData = {
     [3045] = { -- Rapid Fire
         class = addon.HUNTER,
         cooldown = 300,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [5116] = { -- Concussive Shot
@@ -754,7 +743,8 @@ addon.SpellData = {
     [19574] = { -- Bestial Wrath
         class = addon.HUNTER,
         cooldown = 120,
-        category = category.OTHERS,
+        duration = 18,
+        category = category.BURST,
     },
 
     [19577] = { -- Intimidation
@@ -1122,7 +1112,7 @@ addon.SpellData = {
     [11129] = { -- Combustion
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [11426] = { -- Ice Barrier (Rank 1)
@@ -1145,13 +1135,14 @@ addon.SpellData = {
     [12042] = { -- Arcane Power
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [12043] = { -- Presence of Mind
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [12051] = { -- Evocation
@@ -1163,7 +1154,8 @@ addon.SpellData = {
     [12472] = { -- Icy Veins
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 20,
+        category = category.BURST,
     },
 
     [31661] = { -- Dragon's Breath (Rank 1)
@@ -1287,19 +1279,21 @@ addon.SpellData = {
     [13750] = { -- Adrenaline Rush
         class = addon.ROGUE,
         cooldown = 300,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [13877] = { -- Blade Flurry
         class = addon.ROGUE,
         cooldown = 120,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [14177] = { -- Cold Blood
         class = addon.ROGUE,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [14183] = { -- Premeditation
@@ -1473,6 +1467,30 @@ addon.SpellData = {
 };
 
 addon.SpellResets = {
+    -- Cold Snap
+    [11958] = {
+        11426, -- Ice Barrier
+        6143, -- Frost Ward
+        122, -- Frost Nova
+        45438, -- Ice Block
+        12472, -- Icy Veins
+        31687, -- Summon Water Elemental
+    },
+
+    -- Preparation
+    [14185] = {
+        5277, -- Evasion
+        2983, -- Sprint
+        1856, -- Vanish
+        14177, -- Cold Blood
+        36554, -- Shadowstep
+        14183, -- Premeditation
+    },
+
+    -- Summon Felhunter
+    [691] = {
+        19244, -- Spell Lock
+    },
 };
 
 for _, spell in pairs(addon.SpellData) do
