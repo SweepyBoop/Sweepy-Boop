@@ -1279,19 +1279,21 @@ addon.SpellData = {
     [13750] = { -- Adrenaline Rush
         class = addon.ROGUE,
         cooldown = 300,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [13877] = { -- Blade Flurry
         class = addon.ROGUE,
         cooldown = 120,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [14177] = { -- Cold Blood
         class = addon.ROGUE,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [14183] = { -- Premeditation
