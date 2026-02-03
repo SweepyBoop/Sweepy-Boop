@@ -372,7 +372,8 @@ addon.SpellData = {
     [2825] = { -- Bloodlust
         class = addon.SHAMAN,
         cooldown = 600,
-        category = category.OTHERS,
+        duration = 40,
+        category = category.BURST,
     },
 
     [2894] = { -- Fire Elemental Totem
@@ -423,12 +424,6 @@ addon.SpellData = {
         category = category.OTHERS,
     },
 
-    [20608] = { -- Reincarnation
-        class = addon.SHAMAN,
-        cooldown = 3600,
-        category = category.OTHERS,
-    },
-
     [30823] = { -- Shamanistic Rage
         class = addon.SHAMAN,
         cooldown = 120,
@@ -438,7 +433,8 @@ addon.SpellData = {
     [32182] = { -- Heroism
         class = addon.SHAMAN,
         cooldown = 600,
-        category = category.OTHERS,
+        duration = 40,
+        category = category.BURST,
     },
 
     -- Paladin
@@ -600,7 +596,8 @@ addon.SpellData = {
     [31884] = { -- Avenging Wrath
         class = addon.PALADIN,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 20,
+        category = category.BURST,
     },
 
     [31935] = { -- Avenger's Shield (Rank 1)
@@ -624,7 +621,8 @@ addon.SpellData = {
     [1510] = { -- Volley (Rank 1)
         class = addon.HUNTER,
         cooldown = 60,
-        category = category.OTHERS,
+        duration = 6,
+        category = category.BURST,
     },
         [14294] = { parent = 1510 }, -- Volley (Rank 2)
         [14295] = { parent = 1510 }, -- Volley (Rank 3)
@@ -667,7 +665,8 @@ addon.SpellData = {
     [3045] = { -- Rapid Fire
         class = addon.HUNTER,
         cooldown = 300,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [5116] = { -- Concussive Shot
@@ -744,7 +743,8 @@ addon.SpellData = {
     [19574] = { -- Bestial Wrath
         class = addon.HUNTER,
         cooldown = 120,
-        category = category.OTHERS,
+        duration = 18,
+        category = category.BURST,
     },
 
     [19577] = { -- Intimidation
@@ -1112,7 +1112,7 @@ addon.SpellData = {
     [11129] = { -- Combustion
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [11426] = { -- Ice Barrier (Rank 1)
@@ -1135,13 +1135,14 @@ addon.SpellData = {
     [12042] = { -- Arcane Power
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 15,
+        category = category.BURST,
     },
 
     [12043] = { -- Presence of Mind
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.BURST,
     },
 
     [12051] = { -- Evocation
@@ -1153,7 +1154,8 @@ addon.SpellData = {
     [12472] = { -- Icy Veins
         class = addon.MAGE,
         cooldown = 180,
-        category = category.OTHERS,
+        duration = 20,
+        category = category.BURST,
     },
 
     [31661] = { -- Dragon's Breath (Rank 1)
