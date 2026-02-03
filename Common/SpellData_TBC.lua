@@ -1467,6 +1467,30 @@ addon.SpellData = {
 };
 
 addon.SpellResets = {
+    -- Cold Snap
+    [11958] = {
+        11426, -- Ice Barrier
+        6143, -- Frost Ward
+        122, -- Frost Nova
+        45438, -- Ice Block
+        12472, -- Icy Veins
+        31687, -- Summon Water Elemental
+    },
+
+    -- Preparation
+    [14185] = {
+        5277, -- Evasion
+        2983, -- Sprint
+        1856, -- Vanish
+        14177, -- Cold Blood
+        36554, -- Shadowstep
+        14183, -- Premeditation
+    },
+
+    -- Summon Felhunter
+    [691] = {
+        19244, -- Spell Lock
+    },
 };
 
 for _, spell in pairs(addon.SpellData) do
