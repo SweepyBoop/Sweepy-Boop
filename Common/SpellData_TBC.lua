@@ -345,6 +345,19 @@ addon.SpellData = {
 
     -- Shaman
 
+    [8042] = { -- Earth Shock (Rank 1)
+        cooldown = 5,
+        class = addon.SHAMAN,
+        category = category.INTERRUPT
+    },
+        [8044] = { parent = 8042 }, -- Earth Shock (Rank 2)
+        [8045] = { parent = 8042 }, -- Earth Shock (Rank 3)
+        [8046] = { parent = 8042 }, -- Earth Shock (Rank 4)
+        [10412] = { parent = 8042 }, -- Earth Shock (Rank 5)
+        [10413] = { parent = 8042 }, -- Earth Shock (Rank 6)
+        [10414] = { parent = 8042 }, -- Earth Shock (Rank 7)
+        [25454] = { parent = 8042 }, -- Earth Shock (Rank 8)
+
     [556] = { -- Astral Recall
         class = addon.SHAMAN,
         cooldown = 900,
