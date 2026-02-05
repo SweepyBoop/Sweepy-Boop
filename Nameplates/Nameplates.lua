@@ -24,6 +24,7 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
     -- healthBar seems fixed now, but name and castBar still show up
     -- When the issue occurs, HealthBarsContainer:IsIgnoringParentAlpha() returns false, so why is it not following parent alpha?
+    -- Seems to happen when arena match starts (also lots of LUA errors)
     if ( not frame.unsetIgnoreParentAlpha ) then
         for key, region in pairs(frame) do
             if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
