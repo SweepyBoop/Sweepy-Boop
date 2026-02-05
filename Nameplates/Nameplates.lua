@@ -23,7 +23,7 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
     -- healthBar seems fixed now, but name and castBar still show up
-    -- When the issue occurs, HealthBarsContainer:IsIgnoringParentAlpha() returns false, so we probably missed some event?
+    -- When the issue occurs, HealthBarsContainer:IsIgnoringParentAlpha() returns false, so why is it not following parent alpha?
     if ( not frame.unsetIgnoreParentAlpha ) then
         for key, region in pairs(frame) do
             if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
