@@ -23,7 +23,8 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
     -- healthBar seems fixed now, but name and castBar still show up
-    if ( not frame.unsetIgnoreParentAlpha ) then
+    -- When the issue occurs, HealthBarsContainer:IsIgnoringParentAlpha() returns false, so we can't cache this value here
+    --if ( not frame.unsetIgnoreParentAlpha ) then
         for key, region in pairs(frame) do
             if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
                 --print("[SweepyBoop] frame key:", key, "type:", type(region.SetIgnoreParentAlpha), "hasGetObjectType:", region.GetObjectType ~= nil);
@@ -47,17 +48,17 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
             end
         end
 
-        frame.unsetIgnoreParentAlpha = true;
-    end
+        --frame.unsetIgnoreParentAlpha = true;
+    --end
 
     show = show or SweepyBoop.db.profile.nameplatesFriendly.keepHealthBar;
 
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
 
-    if addon.PROJECT_MAINLINE then
-        frame.castBar:SetAlpha(alpha);
-    end
+    -- if addon.PROJECT_MAINLINE then
+    --     frame.castBar:SetAlpha(alpha);
+    -- end
 
     if nameplate.extended then -- NeatPlates
         -- Setting alpha on extended itself did not work, just set alpha on child elements
