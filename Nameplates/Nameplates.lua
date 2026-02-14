@@ -261,6 +261,8 @@ function SweepyBoop:SetupNameplateModules()
     -- end
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
+        if addon.PROFILE_MAINLINE then return end
+
         if frame:IsForbidden() then return end
 
         -- Less efficient check for classic as showPvPClassificationIndicator is not available

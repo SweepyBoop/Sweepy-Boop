@@ -337,6 +337,9 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
                         desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
+                        hidden = function ()
+                            return addon.PROJECT_MAINLINE;
+                        end
                     },
 
                     breaker2 = {
