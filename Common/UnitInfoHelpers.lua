@@ -148,7 +148,7 @@ for _, classID in pairs(addon.CLASSID) do
         if specName and classInfo and classInfo.classFile then
             local classFile = classInfo.classFile;
             specInfoByName[classFile .. "-" .. specName] = { icon = icon, role = role };
-     
+
             local localizedClassMale = LOCALIZED_CLASS_NAMES_MALE[classFile];
             if localizedClassMale then
                 specIDByTooltip[specName .. " " .. localizedClassMale] = specID;
@@ -172,11 +172,16 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedPlayerSpec = {};
 end)
 
+addon.GetFullName = function (unitId)
+    local name, realm = UnitName(unitId);
+    return name .. "-" .. ( realm or "" );
+end
+
 addon.GetPlayerSpec = function (unitId)
-    local guid = UnitGUID(unitId);
-    if ( not addon.cachedPlayerSpec[guid] ) then
+    local name = addon.GetFullName(unitId);
+    if ( not addon.cachedPlayerSpec[name] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
-            if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
+            if ( name == addon.GetFullName("party1") or name == addon.GetFullName("party2") ) then
                 local tooltipData = C_TooltipInfo.GetUnit(unitId);
                 if tooltipData then
                     for _, line in ipairs(tooltipData.lines) do
@@ -184,18 +189,18 @@ addon.GetPlayerSpec = function (unitId)
                             local specID = specIDByTooltip[line.leftText];
                             if specID then
                                 local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                                addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
+                                addon.cachedPlayerSpec[name] = { icon = iconID, role = role };
                             end
                         end
                     end
                 end
             else
                 for i = 1, addon.MAX_ARENA_SIZE do
-                    if ( guid == UnitGUID("arena" .. i) ) then
+                    if ( name == addon.GetFullName("arena" .. i) ) then
                         local specID = GetArenaOpponentSpec(i);
                         if ( not specID ) then return end
                         local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                        addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
+                        addon.cachedPlayerSpec[name] = { icon = iconID, role = role };
                     end
                 end
             end
