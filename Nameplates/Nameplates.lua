@@ -261,8 +261,6 @@ function SweepyBoop:SetupNameplateModules()
     -- end
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        if addon.PROFILE_MAINLINE then return end
-
         if frame:IsForbidden() then return end
 
         -- Less efficient check for classic as showPvPClassificationIndicator is not available
@@ -272,7 +270,7 @@ function SweepyBoop:SetupNameplateModules()
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePlayerName(frame:GetParent(), frame);
 
-            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+            if (not addon.PROJECT_MAINLINE) and IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
                 for i = 1, 3 do
                     if UnitIsUnit(frame.unit, "arena" .. i) then
                         frame.name:SetText(i);
