@@ -120,9 +120,16 @@ addon.UpdatePlayerName = function (nameplate, frame)
     if ( not nameplate.classIconContainer ) or ( not nameplate.classIconContainer.NameFrame ) then return end
 
     local nameFrame = nameplate.classIconContainer.NameFrame;
-    local unitGUID = UnitGUID(frame.unit);
 
-    if ( nameFrame.unitGUID ~= unitGUID ) then
+    local shouldUpdate;
+    if addon.PROJECT_MAINLINE then
+        shouldUpdate = true;
+    else
+        local unitGUID = UnitGUID(frame.unit);
+        shouldUpdate = ( nameFrame.unitGUID ~= unitGUID );
+    end
+
+    if shouldUpdate then
         local name = UnitName(frame.unit) or "";
         local class = addon.GetUnitClass(frame.unit);
         local classColor = class and RAID_CLASS_COLORS[class];
@@ -134,7 +141,9 @@ addon.UpdatePlayerName = function (nameplate, frame)
             nameFrame.name:SetTextColor(1, 1, 1);
         end
 
-        nameFrame.unitGUID = unitGUID;
+        if ( not addon.PROJECT_MAINLINE ) then
+            nameFrame.unitGUID = unitGUID;
+        end
     end
 end
 
