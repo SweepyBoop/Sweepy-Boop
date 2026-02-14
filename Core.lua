@@ -315,7 +315,7 @@ function SweepyBoop:OnInitialize()
     end
 
     if addon.PROJECT_MAINLINE then
-        options.args.raidFrames = addon.GetRaidFrameOptions(6);
+        --options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
     end
 
@@ -374,8 +374,8 @@ function SweepyBoop:OnInitialize()
     self:SetupHealerIndicator();
 
     -- Setup raid frame modules
-    self:SetupRaidFrameAggroHighlight();
-    self:SetupRaidFrameAuraModule();
+    --self:SetupRaidFrameAggroHighlight();
+    --self:SetupRaidFrameAuraModule();
 
     self:SetupQueueReminder();
     self:SetupCombatIndicator();
