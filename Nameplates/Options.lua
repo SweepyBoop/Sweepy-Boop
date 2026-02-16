@@ -40,6 +40,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 --name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
                 name = addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons",
                 hidden = function ()
+                    -- TODO: fix this condition
                     return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
                 end
             },
@@ -49,6 +50,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "description",
                 name = addon.EXCLAMATION .. " Enable \"Minions\" in Interface - Nameplates for pet icons",
                 hidden = function ()
+                    -- TODO: fix this condition
                     return ( C_CVar.GetCVar("nameplateShowFriendlyPets") == "1" );
                 end
             },
