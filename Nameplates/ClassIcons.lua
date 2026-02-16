@@ -216,15 +216,15 @@ addon.UpdateClassIcon = function(nameplate, frame)
     local class = addon.GetUnitClass(frame.unit);
     local pvpClassification, specIconID;
     -- Spec icon is broken due to secret values
-    -- if addon.PROJECT_MAINLINE then
-    --     pvpClassification = UnitPvpClassification(frame.unit);
-    --     if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
-    --         local specInfo = addon.GetPlayerSpec(frame.unit);
-    --         if specInfo then
-    --             specIconID = specInfo.icon;
-    --         end
-    --     end
-    -- end
+    if addon.PROJECT_MAINLINE then
+        pvpClassification = UnitPvpClassification(frame.unit);
+        -- if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
+        --     local specInfo = addon.GetPlayerSpec(frame.unit);
+        --     if specInfo then
+        --         specIconID = specInfo.icon;
+        --     end
+        -- end
+    end
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     if ( classIconContainer.class ~= class )
