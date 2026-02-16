@@ -148,6 +148,8 @@ addon.UpdatePlayerName = function (nameplate, frame)
 end
 
 addon.UpdateClassIconCrowdControl = function(nameplate, frame)
+    if addon.PROJECT_MAINLINE then return end
+
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     -- No need to update if class icon is not shown
