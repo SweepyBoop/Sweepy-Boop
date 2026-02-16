@@ -226,6 +226,9 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
+            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
+            if string.sub(unitId, 1, 5) == "arena" then return end
+
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
