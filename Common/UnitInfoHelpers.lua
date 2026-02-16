@@ -207,6 +207,8 @@ addon.GetPlayerSpec = function (unitId)
                 end
             end
         else
+            -- Disable this for now, UnitGUID is secret value in battlegrounds
+
             -- local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(name);
             -- if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
             --     addon.cachedPlayerSpec[name] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
