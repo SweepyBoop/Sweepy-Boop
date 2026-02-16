@@ -356,6 +356,9 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
                         desc = "Show spec icons on top of the nameplates of enemy healers",
+                        hide = function ()
+                            return addon.PROJECT_MAINLINE;
+                        end
                     },
                     arenaSpecIconHealerIcon = {
                         order = 4,
