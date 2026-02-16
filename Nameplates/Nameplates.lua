@@ -201,7 +201,9 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        eventFrame:RegisterEvent(addon.UNIT_IN_RANGE_UPDATE); -- This is possibly where the game overrides UnitFrame alpha
+        -- This is possibly where the game overrides UnitFrame alpha
+        --eventFrame:RegisterEvent(addon.UNIT_IN_RANGE_UPDATE);
+        eventFrame:RegisterEvent(addon.UNIT_FLAGS);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
@@ -256,6 +258,16 @@ function SweepyBoop:SetupNameplateModules()
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
             end
         elseif event == addon.UNIT_IN_RANGE_UPDATE then
+            if IsUnitIdInvalid(unitId) then return end
+
+            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
+            if nameplate and nameplate.UnitFrame then
+                if nameplate.UnitFrame:IsForbidden() then return end
+                if ( not IsRestricted() ) then
+                    UpdateUnitFrameVisibility(nameplate, nameplate.UnitFrame, nil);
+                end
+            end
+        elseif event == addon.UNIT_FLAGS then
             if IsUnitIdInvalid(unitId) then return end
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
