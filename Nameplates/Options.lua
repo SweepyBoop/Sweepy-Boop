@@ -29,7 +29,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons in PvP instances",
                 hidden = function()
-                    return ( not addon.PROJECT_MAINLINE ) or
+                    return addon.PROJECT_MAINLINE or
                         ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
                 end
             },
@@ -355,10 +355,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-                        desc = "Show spec icons on top of the nameplates of enemy healers",
-                        hide = function ()
-                            return addon.PROJECT_MAINLINE;
-                        end
+                        desc = "Show spec icons on top of the nameplates of enemy healers"
                     },
                     arenaSpecIconHealerIcon = {
                         order = 4,
