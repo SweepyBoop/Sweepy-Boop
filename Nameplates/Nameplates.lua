@@ -196,9 +196,11 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+        eventFrame:RegisterEvent(addon.UNIT_IN_RANGE_UPDATE); -- This is possibly where the game overrides UnitFrame alpha
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
+
     eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
             -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
@@ -250,6 +252,17 @@ function SweepyBoop:SetupNameplateModules()
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
 
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
+            end
+        elseif event == addon.UNIT_IN_RANGE_UPDATE then
+            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
+            if string.sub(unitId, 1, 5) == "arena" then return end
+
+            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
+            if nameplate and nameplate.UnitFrame then
+                if nameplate.UnitFrame:IsForbidden() then return end
+                if ( not IsRestricted() ) then
+                    UpdateUnitFrameVisibility(nameplate, nameplate.UnitFrame, nil);
+                end
             end
         end
     end)
