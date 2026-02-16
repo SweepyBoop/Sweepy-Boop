@@ -335,7 +335,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = frame:GetParent();
                 if nameplate and nameplate.UnitFrame then
                     if ( not IsRestricted() ) then
-                        UpdateUnitFrameVisibility(nameplate, frame, nil);
+                        UpdateWidgets(nameplate, frame);
                     end
                 end
             end
@@ -350,7 +350,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = frame:GetParent();
                 if nameplate and nameplate.UnitFrame then
                     if ( not IsRestricted() ) then
-                        UpdateUnitFrameVisibility(nameplate, frame, nil);
+                        UpdateWidgets(nameplate, frame);
                     end
                 end
             end
@@ -366,7 +366,7 @@ function SweepyBoop:SetupNameplateModules()
                 local nameplate = frame:GetParent();
                 if nameplate and nameplate.UnitFrame then
                     if ( not IsRestricted() ) then
-                        UpdateUnitFrameVisibility(nameplate, frame, nil);
+                        UpdateWidgets(nameplate, frame);
                     end
                 end
             end
