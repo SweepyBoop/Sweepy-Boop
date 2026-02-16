@@ -19,6 +19,11 @@ local function IsRestricted()
     return restricted[instanceType];
 end
 
+local function IsUnitIdInvalid(unitId)
+    if unitId == nil then return true end
+    if string.sub(unitId, 1, 5) == "arena" then return true end
+end
+
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
@@ -203,8 +208,7 @@ function SweepyBoop:SetupNameplateModules()
 
     eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
-            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
-            if string.sub(unitId, 1, 5) == "arena" then return end
+            if IsUnitIdInvalid(unitId) then return end
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -231,8 +235,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_FACTION then -- This is triggered for Mind Control
-            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
-            if string.sub(unitId, 1, 5) == "arena" then return end
+            if IsUnitIdInvalid(unitId) then return end
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -242,8 +245,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_AURA then
-            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
-            if string.sub(unitId, 1, 5) == "arena" then return end
+            if IsUnitIdInvalid(unitId) then return end
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -254,8 +256,7 @@ function SweepyBoop:SetupNameplateModules()
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
             end
         elseif event == addon.UNIT_IN_RANGE_UPDATE then
-            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
-            if string.sub(unitId, 1, 5) == "arena" then return end
+            if IsUnitIdInvalid(unitId) then return end
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
@@ -271,9 +272,6 @@ function SweepyBoop:SetupNameplateModules()
     -- The old CompactUnitFrame_UpdatePvPClassificationIndicator was replaced with NamePlateClassificationFrameMixin
     if addon.PROJECT_MAINLINE then
         hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator", function (self)
-            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
-            if string.sub(unitId, 1, 5) == "arena" then return end
-
             if self:IsForbidden() then return end
 
             local nameplate = self:GetParent();
