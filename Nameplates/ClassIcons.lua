@@ -318,7 +318,9 @@ addon.ShowClassIcon = function (nameplate, frame)
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
 
-    addon.UpdateClassIconCrowdControl(nameplate, frame);
+    if ( not addon.PROJECT_MAINLINE ) then
+        addon.UpdateClassIconCrowdControl(nameplate, frame);
+    end
 end
 
 addon.HideClassIcon = function(nameplate)

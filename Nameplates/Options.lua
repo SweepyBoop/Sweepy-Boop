@@ -292,6 +292,9 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",
                 desc = "Show crowd control icons instead of class icons during crowd control effects",
                 hidden = function()
+                    if addon.PROJECT_MAINLINE then
+                        return true; -- Secret value on mainline
+                    end
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
                 end
             },
