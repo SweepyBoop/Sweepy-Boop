@@ -350,6 +350,22 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         end)
+
+        -- Hook CompactUnitFrame_UpdateCenterStatusIcon to catch ALL alpha resets
+        -- This is the actual function that calls frame:SetAlpha()
+        hooksecurefunc("CompactUnitFrame_UpdateCenterStatusIcon", function(frame)
+            if frame:IsForbidden() then return end
+
+            local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
+            if isNamePlate then
+                local nameplate = frame:GetParent();
+                if nameplate and nameplate.UnitFrame then
+                    if ( not IsRestricted() ) then
+                        UpdateUnitFrameVisibility(nameplate, frame, nil);
+                    end
+                end
+            end
+        end)
     end
 
     -- if addon.PROJECT_MAINLINE then
