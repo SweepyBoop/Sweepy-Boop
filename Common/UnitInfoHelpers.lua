@@ -172,12 +172,6 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedPlayerSpec = {};
 end)
 
-addon.GetFullName = function (unitId)
-    local name, realm = UnitName(unitId);
-    if name == nil or issecretvalue(name) then return end
-    return name .. "-" .. ( realm or "" );
-end
-
 addon.GetPlayerSpec = function (unitId)
     local guid = UnitGUID(unitId);
     if ( not addon.cachedPlayerSpec[guid] ) then
