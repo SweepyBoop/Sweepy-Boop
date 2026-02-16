@@ -202,8 +202,8 @@ function SweepyBoop:SetupNameplateModules()
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
         -- This is possibly where the game overrides UnitFrame alpha
-        eventFrame:RegisterEvent(addon.UNIT_FLAGS);
-        eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
+        --eventFrame:RegisterEvent(addon.UNIT_FLAGS);
+        --eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
