@@ -201,6 +201,9 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.UNIT_AURA);
     eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
         if event == addon.NAME_PLATE_UNIT_ADDED then
+            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
+            if string.sub(unitId, 1, 5) == "arena" then return end
+
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
@@ -237,6 +240,9 @@ function SweepyBoop:SetupNameplateModules()
                 end
             end
         elseif event == addon.UNIT_AURA then
+            -- "Arena<n> unit tokens are not allowed for GetNamePlateForUnit"
+            if string.sub(unitId, 1, 5) == "arena" then return end
+
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if nameplate.UnitFrame:IsForbidden() then return end
