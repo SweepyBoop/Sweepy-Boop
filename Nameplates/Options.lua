@@ -37,7 +37,8 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 3,
                 width = "full",
                 type = "description",
-                name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
+                --name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
+                name = addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons",
                 hidden = function ()
                     return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
                 end
