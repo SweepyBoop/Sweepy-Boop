@@ -201,9 +201,6 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        -- This is possibly where the game overrides UnitFrame alpha
-        --eventFrame:RegisterEvent(addon.UNIT_FLAGS);
-        --eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent(addon.UNIT_AURA);
@@ -256,28 +253,6 @@ function SweepyBoop:SetupNameplateModules()
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
 
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
-            end
-        elseif event == addon.UNIT_FLAGS then
-            if IsUnitIdInvalid(unitId) then return end
-
-            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
-            if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
-                if ( not IsRestricted() ) then
-                    UpdateUnitFrameVisibility(nameplate, nameplate.UnitFrame, nil);
-                end
-            end
-        elseif event == addon.PVP_MATCH_STATE_CHANGED then
-            -- Re-apply visibility to all nameplates when PvP match state changes (e.g., arena gates open)
-            if IsRestricted() then return end
-            local nameplates = C_NamePlate.GetNamePlates();
-            for i = 1, #(nameplates) do
-                local nameplate = nameplates[i];
-                if nameplate and nameplate.UnitFrame then
-                    if ( not nameplate.UnitFrame:IsForbidden() ) then
-                        UpdateUnitFrameVisibility(nameplate, nameplate.UnitFrame);
-                    end
-                end
             end
         end
     end)
