@@ -337,10 +337,11 @@ function SweepyBoop:SetupNameplateModules()
     -- Hook CompactUnitFrame_UpdateAll to re-apply our alpha setting after the game resets it
     -- This catches most cases: PLAYER_ENTERING_WORLD, ARENA_OPPONENT_UPDATE, etc.
     if addon.PROJECT_MAINLINE then
-        hooksecurefunc("CompactUnitFrame_UpdateAll", function(frame)
+        -- Hook DefaultCompactUnitFrameSetup - this directly calls frame:SetAlpha(1)
+        hooksecurefunc("DefaultCompactUnitFrameSetup", function(frame)
             if frame:IsForbidden() then return end
 
-            local isNamePlate = frame.optionTable.showPvPClassificationIndicator;
+            local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
             if isNamePlate then
                 local nameplate = frame:GetParent();
                 if nameplate and nameplate.UnitFrame then
@@ -351,8 +352,23 @@ function SweepyBoop:SetupNameplateModules()
             end
         end)
 
-        -- Hook CompactUnitFrame_UpdateCenterStatusIcon to catch ALL alpha resets
-        -- This is the actual function that calls frame:SetAlpha()
+        -- Hook DefaultCompactMiniFrameSetup - this directly calls frame:SetAlpha(1) for mini frames
+        hooksecurefunc("DefaultCompactMiniFrameSetup", function(frame)
+            if frame:IsForbidden() then return end
+
+            local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
+            if isNamePlate then
+                local nameplate = frame:GetParent();
+                if nameplate and nameplate.UnitFrame then
+                    if ( not IsRestricted() ) then
+                        UpdateUnitFrameVisibility(nameplate, frame, nil);
+                    end
+                end
+            end
+        end)
+
+        -- Hook CompactUnitFrame_UpdateCenterStatusIcon - this calls frame:SetAlpha(CompactUnitFrame_GetRangeAlpha(frame))
+        -- This catches all range-based alpha resets
         hooksecurefunc("CompactUnitFrame_UpdateCenterStatusIcon", function(frame)
             if frame:IsForbidden() then return end
 
