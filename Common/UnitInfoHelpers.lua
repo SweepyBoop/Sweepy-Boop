@@ -180,7 +180,7 @@ end
 
 addon.GetPlayerSpec = function (unitId)
     local guid = UnitGUID(unitId);
-    if ( not addon.cachedPlayerSpec[unitGUID] ) then
+    if ( not addon.cachedPlayerSpec[guid] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
                 local tooltipData = C_TooltipInfo.GetUnit(unitId);
