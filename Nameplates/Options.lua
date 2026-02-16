@@ -29,8 +29,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons in PvP instances",
                 hidden = function()
-                    return ( not addon.PROJECT_MAINLINE ) or
-                        ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
+                    return true; -- TODO: enable for MoP Classic
                 end
             },
 
@@ -38,8 +37,10 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 3,
                 width = "full",
                 type = "description",
-                name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
+                --name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
+                name = addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons",
                 hidden = function ()
+                    -- TODO: fix this condition
                     return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
                 end
             },
@@ -49,6 +50,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "description",
                 name = addon.EXCLAMATION .. " Enable \"Minions\" in Interface - Nameplates for pet icons",
                 hidden = function ()
+                    -- TODO: fix this condition
                     return ( C_CVar.GetCVar("nameplateShowFriendlyPets") == "1" );
                 end
             },
@@ -292,6 +294,9 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",
                 desc = "Show crowd control icons instead of class icons during crowd control effects",
                 hidden = function()
+                    if addon.PROJECT_MAINLINE then
+                        return true; -- Secret value on mainline
+                    end
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
                 end
             },
@@ -337,6 +342,9 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_number_1")) .. " Arena enemy player nameplate numbers",
                         desc = "Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on",
+                        hidden = function ()
+                            return addon.PROJECT_MAINLINE;
+                        end
                     },
 
                     breaker2 = {
@@ -349,7 +357,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-                        desc = "Show spec icons on top of the nameplates of enemy healers",
+                        desc = "Show spec icons on top of the nameplates of enemy healers"
                     },
                     arenaSpecIconHealerIcon = {
                         order = 4,

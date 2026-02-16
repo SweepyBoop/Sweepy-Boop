@@ -266,10 +266,14 @@ addon.CheckNpcWhiteList = function (unitId)
         return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
 
-    local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
-    local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
-    local isCritter = addon.CritterNPCs[tonumber(npcID)];
-    return isWhitelisted, isCritter;
+    if ( not addon.PROJECT_MAINLINE ) then
+        local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
+        local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
+        local isCritter = addon.CritterNPCs[tonumber(npcID)];
+        return isWhitelisted, isCritter;
+    else
+        return true, false;
+    end
 end
 
 addon.FillDefaultToNpcOptions = function(profile)

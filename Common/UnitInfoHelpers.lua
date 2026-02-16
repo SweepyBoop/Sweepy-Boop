@@ -148,7 +148,7 @@ for _, classID in pairs(addon.CLASSID) do
         if specName and classInfo and classInfo.classFile then
             local classFile = classInfo.classFile;
             specInfoByName[classFile .. "-" .. specName] = { icon = icon, role = role };
-     
+
             local localizedClassMale = LOCALIZED_CLASS_NAMES_MALE[classFile];
             if localizedClassMale then
                 specIDByTooltip[specName .. " " .. localizedClassMale] = specID;

@@ -393,6 +393,8 @@ end
 -- Issue: auras are filtered properly initially but as a fight goes on, auras that are supposed to be hidden show up again
 -- Possibly need to override logic for isFullUpdate
 addon.OnNamePlateAuraUpdate = function (frame, unit, unitAuraUpdateInfo)
+    if addon.PROJECT_MAINLINE then return end
+
     if auraFilterConflict then
         --print("auraFilterConflict detected, disabling aura filter");
         return;

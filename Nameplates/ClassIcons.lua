@@ -120,9 +120,16 @@ addon.UpdatePlayerName = function (nameplate, frame)
     if ( not nameplate.classIconContainer ) or ( not nameplate.classIconContainer.NameFrame ) then return end
 
     local nameFrame = nameplate.classIconContainer.NameFrame;
-    local unitGUID = UnitGUID(frame.unit);
 
-    if ( nameFrame.unitGUID ~= unitGUID ) then
+    local shouldUpdate;
+    if addon.PROJECT_MAINLINE then
+        shouldUpdate = true;
+    else
+        local unitGUID = UnitGUID(frame.unit);
+        shouldUpdate = ( nameFrame.unitGUID ~= unitGUID );
+    end
+
+    if shouldUpdate then
         local name = UnitName(frame.unit) or "";
         local class = addon.GetUnitClass(frame.unit);
         local classColor = class and RAID_CLASS_COLORS[class];
@@ -134,11 +141,15 @@ addon.UpdatePlayerName = function (nameplate, frame)
             nameFrame.name:SetTextColor(1, 1, 1);
         end
 
-        nameFrame.unitGUID = unitGUID;
+        if ( not addon.PROJECT_MAINLINE ) then
+            nameFrame.unitGUID = unitGUID;
+        end
     end
 end
 
 addon.UpdateClassIconCrowdControl = function(nameplate, frame)
+    if addon.PROJECT_MAINLINE then return end
+
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     -- No need to update if class icon is not shown
@@ -204,15 +215,18 @@ addon.UpdateClassIcon = function(nameplate, frame)
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
     local class = addon.GetUnitClass(frame.unit);
     local pvpClassification, specIconID;
+
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
-        if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
-            local specInfo = addon.GetPlayerSpec(frame.unit);
-            if specInfo then
-                specIconID = specInfo.icon;
-            end
-        end
+        -- Spec icon is broken due to secret values
+        -- if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
+        --     local specInfo = addon.GetPlayerSpec(frame.unit);
+        --     if specInfo then
+        --         specIconID = specInfo.icon;
+        --     end
+        -- end
     end
+
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     if ( classIconContainer.class ~= class )
