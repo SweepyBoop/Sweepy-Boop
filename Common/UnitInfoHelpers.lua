@@ -174,11 +174,13 @@ end)
 
 addon.GetFullName = function (unitId)
     local name, realm = UnitName(unitId);
+    if name == nil or issecretvalue(name) then return end
     return name .. "-" .. ( realm or "" );
 end
 
 addon.GetPlayerSpec = function (unitId)
     local name = addon.GetFullName(unitId);
+    if not name then return end
     if ( not addon.cachedPlayerSpec[name] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
             if ( name == addon.GetFullName("party1") or name == addon.GetFullName("party2") ) then
@@ -205,15 +207,15 @@ addon.GetPlayerSpec = function (unitId)
                 end
             end
         else
-            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-            if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
-                addon.cachedPlayerSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
-            else
-                -- There are still units with unknown spec, request info
-                RequestBattlefieldScoreData();
-            end
+            -- local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(name);
+            -- if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
+            --     addon.cachedPlayerSpec[name] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
+            -- else
+            --     -- There are still units with unknown spec, request info
+            --     RequestBattlefieldScoreData();
+            -- end
         end
     end
 
-    return addon.cachedPlayerSpec[guid];
+    return addon.cachedPlayerSpec[name];
 end
