@@ -321,6 +321,24 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
+    -- Hook CompactUnitFrame_UpdateAll to re-apply our alpha setting after the game resets it
+    -- This catches most cases: PLAYER_ENTERING_WORLD, ARENA_OPPONENT_UPDATE, etc.
+    if addon.PROJECT_MAINLINE then
+        hooksecurefunc("CompactUnitFrame_UpdateAll", function(frame)
+            if frame:IsForbidden() then return end
+
+            local isNamePlate = frame.optionTable.showPvPClassificationIndicator;
+            if isNamePlate then
+                local nameplate = frame:GetParent();
+                if nameplate and nameplate.UnitFrame then
+                    if ( not IsRestricted() ) then
+                        UpdateUnitFrameVisibility(nameplate, frame, nil);
+                    end
+                end
+            end
+        end)
+    end
+
     -- if addon.PROJECT_MAINLINE then
     --     hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
     --         if self:IsForbidden() then return end
