@@ -179,11 +179,10 @@ addon.GetFullName = function (unitId)
 end
 
 addon.GetPlayerSpec = function (unitId)
-    local name = addon.GetFullName(unitId);
-    if not name then return end
-    if ( not addon.cachedPlayerSpec[name] ) then
+    local guid = UnitGUID(unitId);
+    if ( not addon.cachedPlayerSpec[unitGUID] ) then
         if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
-            if ( name == addon.GetFullName("party1") or name == addon.GetFullName("party2") ) then
+            if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
                 local tooltipData = C_TooltipInfo.GetUnit(unitId);
                 if tooltipData then
                     for _, line in ipairs(tooltipData.lines) do
@@ -191,33 +190,31 @@ addon.GetPlayerSpec = function (unitId)
                             local specID = specIDByTooltip[line.leftText];
                             if specID then
                                 local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                                addon.cachedPlayerSpec[name] = { icon = iconID, role = role };
+                                addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
                             end
                         end
                     end
                 end
             else
                 for i = 1, addon.MAX_ARENA_SIZE do
-                    if ( name == addon.GetFullName("arena" .. i) ) then
+                    if ( guid == UnitGUID("arena" .. i) ) then
                         local specID = GetArenaOpponentSpec(i);
                         if ( not specID ) then return end
                         local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                        addon.cachedPlayerSpec[name] = { icon = iconID, role = role };
+                        addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
                     end
                 end
             end
         else
-            -- Disable this for now, UnitGUID is secret value in battlegrounds
-
-            -- local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(name);
-            -- if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
-            --     addon.cachedPlayerSpec[name] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
-            -- else
-            --     -- There are still units with unknown spec, request info
-            --     RequestBattlefieldScoreData();
-            -- end
+            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
+            if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
+                addon.cachedPlayerSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
+            else
+                -- There are still units with unknown spec, request info
+                RequestBattlefieldScoreData();
+            end
         end
     end
 
-    return addon.cachedPlayerSpec[name];
+    return addon.cachedPlayerSpec[guid];
 end
