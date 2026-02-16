@@ -214,7 +214,9 @@ function SweepyBoop:SetupNameplateModules()
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
 
-                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
+                if ( not addon.PROJECT_MAINLINE ) then
+                    addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit); -- Secret values on mainline
+                end
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
             if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
