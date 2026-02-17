@@ -26,8 +26,6 @@ end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
 local function IsForbiddenSafe(frame)
-    -- local success, result = pcall(function() return frame:IsForbidden() end);
-    -- return ( not success ) or result;
     if issecretvalue(frame) then return true end
     return frame:IsForbidden();
 end
