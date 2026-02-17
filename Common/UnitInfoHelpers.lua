@@ -200,6 +200,12 @@ addon.GetPlayerSpec = function (unitId)
         return addon.cachedPlayerSpec[tooltipGUID];
     end
 
+    -- Skip if line.leftText is secret, i.e., can't parse
+    local firstLine = tooltipData.lines and tooltipData.lines[1];
+    if ( not firstLine ) or ( not firstLine.leftText ) or issecretvalue(firstLine.leftText) then
+        return nil;
+    end
+
     -- Iterate through tooltip lines to find the spec name
     for _, line in ipairs(tooltipData.lines) do
         if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
