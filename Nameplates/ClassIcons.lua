@@ -215,16 +215,21 @@ addon.UpdateClassIcon = function(nameplate, frame)
     -- Always update visibility and target highlight, since CompactUnitFrame_UpdateName is called on every target change
     local class = addon.GetUnitClass(frame.unit);
     local pvpClassification, specIconID;
+    local specInfo;
 
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
-        local specInfo = addon.GetPlayerSpec(frame.unit);
+        specInfo = addon.GetPlayerSpec(frame.unit);
         if specInfo then
             specIconID = specInfo.icon;
         end
     end
 
+    -- UnitGroupRolesAssigned doesn't work in open world, fall back to spec-based detection
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
+    if ( roleAssigned == "NONE" or roleAssigned == nil ) and specInfo and specInfo.role then
+        roleAssigned = specInfo.role;
+    end
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     if ( classIconContainer.class ~= class )
         or ( classIconContainer.pvpClassification ~= pvpClassification )
