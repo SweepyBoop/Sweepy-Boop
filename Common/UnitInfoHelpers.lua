@@ -165,7 +165,13 @@ for _, classID in pairs(addon.CLASSID) do
 end
 
 -- Battleground enemy info parser
+-- Use tooltip to get spec - this works even when UnitGUID/UnitName return secret values
+-- Tooltip shows "Spec Class" format (e.g., "Frost Mage", "Arms Warrior")
+-- Key insight: tooltipData.guid works even when UnitGUID() returns secret values
+
+-- Cache by GUID from tooltip (more persistent than unitId token)
 addon.cachedPlayerSpec = {};
+
 local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 refreshFrame:SetScript("OnEvent", function (self, event)
@@ -173,42 +179,38 @@ refreshFrame:SetScript("OnEvent", function (self, event)
 end)
 
 addon.GetPlayerSpec = function (unitId)
-    local guid = UnitGUID(unitId);
-    if ( not addon.cachedPlayerSpec[guid] ) then
-        if IsActiveBattlefieldArena() then -- in arena, we only have party1/2 and arena 1/2/3
-            if ( guid == UnitGUID("party1") or guid == UnitGUID("party2") ) then
-                local tooltipData = C_TooltipInfo.GetUnit(unitId);
-                if tooltipData then
-                    for _, line in ipairs(tooltipData.lines) do
-                        if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
-                            local specID = specIDByTooltip[line.leftText];
-                            if specID then
-                                local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                                addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
-                            end
-                        end
-                    end
-                end
-            else
-                for i = 1, addon.MAX_ARENA_SIZE do
-                    if ( guid == UnitGUID("arena" .. i) ) then
-                        local specID = GetArenaOpponentSpec(i);
-                        if ( not specID ) then return end
-                        local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                        addon.cachedPlayerSpec[guid] = { icon = iconID, role = role };
-                    end
-                end
-            end
-        else
-            local scoreInfo = C_PvP.GetScoreInfoByPlayerGuid(guid);
-            if scoreInfo and scoreInfo.classToken and scoreInfo.talentSpec then
-                addon.cachedPlayerSpec[guid] = specInfoByName[scoreInfo.classToken .. "-" .. scoreInfo.talentSpec];
-            else
-                -- There are still units with unknown spec, request info
-                RequestBattlefieldScoreData();
+    if not unitId then return nil end
+
+    -- Check if unit is a player
+    if not UnitIsPlayer(unitId) then
+        return nil;
+    end
+
+    -- Use tooltip - tooltipData.guid works even when UnitGUID() is secret
+    local tooltipData = C_TooltipInfo.GetUnit(unitId);
+    if not tooltipData or not tooltipData.guid or not tooltipData.lines then
+        return nil;
+    end
+
+    local tooltipGUID = tooltipData.guid;
+
+    -- Return cached specInfo if already found
+    if addon.cachedPlayerSpec[tooltipGUID] then
+        return addon.cachedPlayerSpec[tooltipGUID];
+    end
+
+    -- Iterate through tooltip lines to find the spec name
+    for _, line in ipairs(tooltipData.lines) do
+        if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
+            local specID = specIDByTooltip[line.leftText];
+            if specID then
+                local iconID, role = select(4, GetSpecializationInfoByID(specID));
+                local specInfo = { icon = iconID, role = role };
+                addon.cachedPlayerSpec[tooltipGUID] = specInfo;
+                return specInfo;
             end
         end
     end
 
-    return addon.cachedPlayerSpec[guid];
+    return nil;
 end

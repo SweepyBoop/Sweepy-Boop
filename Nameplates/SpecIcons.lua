@@ -87,16 +87,12 @@ addon.UpdateSpecIcon = function (nameplate)
 end
 
 addon.ShowSpecIcon = function (nameplate)
-    if addon.PROJECT_MAINLINE then return end
-
     EnsureSpecIcon(nameplate);
     addon.UpdateSpecIcon(nameplate);
     nameplate.SpecIconFrame:Show();
 end
 
 addon.HideSpecIcon = function (nameplate)
-    if addon.PROJECT_MAINLINE then return end
-
     if nameplate.SpecIconFrame then
         nameplate.SpecIconFrame:Hide();
     end
