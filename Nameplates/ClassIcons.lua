@@ -218,13 +218,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
-        -- Spec icon is broken due to secret values
-        --if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
-            local specInfo = addon.GetPlayerSpec(frame.unit);
-            if specInfo then
-                specIconID = specInfo.icon;
-            end
-        --end
+        local specInfo = addon.GetPlayerSpec(frame.unit);
+        if specInfo then
+            specIconID = specInfo.icon;
+        end
     end
 
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
