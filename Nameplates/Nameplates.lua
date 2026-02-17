@@ -24,6 +24,14 @@ local function IsUnitIdInvalid(unitId)
     if string.sub(unitId, 1, 5) == "arena" then return true end
 end
 
+-- Helper to safely check if a frame is forbidden (handles secret values in arena)
+local function IsForbiddenSafe(frame)
+    -- local success, result = pcall(function() return frame:IsForbidden() end);
+    -- return ( not success ) or result;
+    if issecretvalue(frame) then return true end
+    return frame:IsForbidden();
+end
+
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
@@ -211,7 +219,7 @@ function SweepyBoop:SetupNameplateModules()
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
+                if IsForbiddenSafe(nameplate.UnitFrame) then return end
                 HideWidgets(nameplate); -- Hide previous widgets (even in restricted areas)
                 if IsRestricted() then
                     UpdateUnitFrameVisibility(nameplate, nameplate.UnitFrame, true); -- We don't want to hide the unit frame inside dungeons
@@ -227,7 +235,7 @@ function SweepyBoop:SetupNameplateModules()
             for i = 1, #(nameplates) do
                 local nameplate = nameplates[i];
                 if nameplate and nameplate.UnitFrame then
-                    if nameplate.UnitFrame:IsForbidden() then return end
+                    if IsForbiddenSafe(nameplate.UnitFrame) then return end
                     if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
                         addon.UpdateSpecIcon(nameplate);
                     end
@@ -238,7 +246,7 @@ function SweepyBoop:SetupNameplateModules()
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
+                if IsForbiddenSafe(nameplate.UnitFrame) then return end
                 if ( not IsRestricted() ) then
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
@@ -248,7 +256,7 @@ function SweepyBoop:SetupNameplateModules()
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
+                if IsForbiddenSafe(nameplate.UnitFrame) then return end
                 local unitAuraUpdateInfo = ...;
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
 
@@ -261,11 +269,10 @@ function SweepyBoop:SetupNameplateModules()
     -- The old CompactUnitFrame_UpdatePvPClassificationIndicator was replaced with NamePlateClassificationFrameMixin
     if addon.PROJECT_MAINLINE then
         hooksecurefunc(NamePlateClassificationFrameMixin, "UpdateClassificationIndicator", function (self)
-            if self:IsForbidden() then return end
+            if IsForbiddenSafe(self) then return end
 
             local nameplate = self:GetParent();
             if nameplate and nameplate.UnitFrame then
-                if nameplate.UnitFrame:IsForbidden() then return end
                 if nameplate.UnitFrame.optionTable.showPvPClassificationIndicator then
                     -- UpdateClassIcon should include UpdateTargetHighlight
                     -- Otherwise we can't guarantee the order of events
@@ -277,7 +284,7 @@ function SweepyBoop:SetupNameplateModules()
     end
 
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
-        if frame:IsForbidden() then return end
+        if IsForbiddenSafe(frame) then return end
 
         -- Less efficient check for classic as showPvPClassificationIndicator is not available
         local isNamePlate = frame.optionTable.showPvPClassificationIndicator or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
@@ -301,13 +308,7 @@ function SweepyBoop:SetupNameplateModules()
     -- Hook CompactUnitFrame_UpdateAll to re-apply our alpha setting after the game resets it
     -- This catches most cases: PLAYER_ENTERING_WORLD, ARENA_OPPONENT_UPDATE, etc.
     if addon.PROJECT_MAINLINE then
-        -- Helper to safely check if a frame is forbidden (handles secret values in arena)
-        local function IsForbiddenSafe(frame)
-            -- local success, result = pcall(function() return frame:IsForbidden() end);
-            -- return ( not success ) or result;
-            if issecretvalue(frame) then return true end
-            return frame:IsForbidden();
-        end
+
 
         -- Hook DefaultCompactUnitFrameSetup - this directly calls frame:SetAlpha(1)
         hooksecurefunc("DefaultCompactUnitFrameSetup", function(frame)
