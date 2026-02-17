@@ -303,8 +303,10 @@ function SweepyBoop:SetupNameplateModules()
     if addon.PROJECT_MAINLINE then
         -- Helper to safely check if a frame is forbidden (handles secret values in arena)
         local function IsForbiddenSafe(frame)
-            local success, result = pcall(function() return frame:IsForbidden() end);
-            return ( not success ) or result;
+            -- local success, result = pcall(function() return frame:IsForbidden() end);
+            -- return ( not success ) or result;
+            if issecretvalue(frame) then return true end
+            return frame:IsForbidden();
         end
 
         -- Hook DefaultCompactUnitFrameSetup - this directly calls frame:SetAlpha(1)
