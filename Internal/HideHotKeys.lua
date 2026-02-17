@@ -15,9 +15,11 @@ local function HideHotKeys_ShowBar(b, f)
         if (o) then
             if f == "HotKey" then
                 local action = _G[b.."Button"..i].action;
-                local range = IsActionInRange(action);
-                if o:GetText() ~= RANGE_INDICATOR or range or range == false then
-                    o:Show();
+                if action and HasAction(action) then
+                    local range = IsActionInRange(action);
+                    if o:GetText() ~= RANGE_INDICATOR or range or range == false then
+                        o:Show();
+                    end
                 end
             else
                 o:Show();
