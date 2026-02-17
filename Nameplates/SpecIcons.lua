@@ -13,24 +13,37 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
-        local specInfo = addon.GetPlayerSpec(unitId);
-        if ( not specInfo ) then return end
-        if ( specInfo.role == "HEALER" ) then
-            if config.arenaSpecIconHealer then
-                if config.arenaSpecIconHealerIcon then
-                    iconID = addon.ICON_ID_HEALER_ENEMY;
-                    isHealer = true;
-                else
-                    iconID = specInfo.icon;
-                end
-            end
-        elseif config.arenaSpecIconOthers then
-            iconID = specInfo.icon;
-        end
 
-        return iconID, isHealer;
+    if addon.PROJECT_MAINLINE then
+        -- On retail, we can only detect healers using UnitGroupRolesAssigned in arenas
+        if IsActiveBattlefieldArena() and config.arenaEnemyHealer then
+            local roleAssigned = UnitGroupRolesAssigned(unitId);
+            if roleAssigned == "HEALER" then
+                iconID = addon.ICON_ID_HEALER_ENEMY;
+                isHealer = true;
+            end
+        end
+    else
+        -- On Classic, we can detect spec from tooltip
+        if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
+            local specInfo = addon.GetPlayerSpec(unitId);
+            if ( not specInfo ) then return end
+            if ( specInfo.role == "HEALER" ) then
+                if config.arenaSpecIconHealer then
+                    if config.arenaSpecIconHealerIcon then
+                        iconID = addon.ICON_ID_HEALER_ENEMY;
+                        isHealer = true;
+                    else
+                        iconID = specInfo.icon;
+                    end
+                end
+            elseif config.arenaSpecIconOthers then
+                iconID = specInfo.icon;
+            end
+        end
     end
+
+    return iconID, isHealer;
 end
 
 local function EnsureSpecIcon(nameplate)

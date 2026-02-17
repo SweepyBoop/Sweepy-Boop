@@ -352,11 +352,26 @@ addon.GetEnemyNameplateOptions = function(order)
                     breaker2 = {
                         order = 2,
                         type = "header",
+                        name = "Arena enemy healer icon",
+                        hidden = ( not addon.PROJECT_MAINLINE ), -- Only show for retail
+                    },
+                    arenaEnemyHealer = {
+                        order = 3,
+                        width = "full",
+                        type = "toggle",
+                        name = addon.SPEC_ICON_ENEMY_HEALER_LOGO .. " Show healer icon for enemy healers in arena",
+                        desc = "Show a healer icon on top of the nameplate for enemy healers in arenas",
+                        hidden = ( not addon.PROJECT_MAINLINE ), -- Only show for retail
+                    },
+
+                    breaker2Classic = {
+                        order = 4,
+                        type = "header",
                         name = "Arena enemy spec icons",
                         hidden = addon.PROJECT_MAINLINE, -- Broken in retail due to secret values
                     },
                     arenaSpecIconHealer = {
-                        order = 3,
+                        order = 5,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
@@ -364,7 +379,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         hidden = addon.PROJECT_MAINLINE, -- Broken in retail due to secret values
                     },
                     arenaSpecIconHealerIcon = {
-                        order = 4,
+                        order = 6,
                         width = "full",
                         type = "toggle",
                         name = addon.SPEC_ICON_ENEMY_HEALER_LOGO .. " Show healer icon instead of spec icon for healers",
@@ -374,7 +389,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end
                     },
                     arenaSpecIconOthers = {
-                        order = 5,
+                        order = 7,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
@@ -382,7 +397,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         hidden = addon.PROJECT_MAINLINE, -- Broken in retail due to secret values
                     },
                     arenaSpecIconAlignment = {
-                        order = 6,
+                        order = 8,
                         type = "select",
                         width = 0.75,
                         name = "Alignment",
@@ -397,7 +412,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end
                     },
                     arenaSpecIconVerticalOffset = {
-                        order = 7,
+                        order = 9,
                         min = -150,
                         max = 150,
                         step = 1,
@@ -411,7 +426,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end
                     },
                     arenaSpecIconScale = {
-                        order = 8,
+                        order = 10,
                         min = 50,
                         max = 300,
                         step = 1,
@@ -425,13 +440,13 @@ addon.GetEnemyNameplateOptions = function(order)
                     },
 
                     breaker3 = {
-                        order = 9,
+                        order = 11,
                         type = "header",
                         name = "Nameplate Filters & Highlights",
                     },
 
                     hideHunterSecondaryPet = {
-                        order = 10,
+                        order = 12,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(beastMasteryHunterIcon) .. " Hide beast mastery hunter secondary pets in arena",
