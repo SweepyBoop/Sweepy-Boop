@@ -86,6 +86,7 @@ local defaults = {
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
+            arenaEnemyHealer = true, -- Retail-only: show healer icon using UnitGroupRolesAssigned
             arenaSpecIconHealer = true,
             arenaSpecIconHealerIcon = true,
             arenaSpecIconOthers = false,

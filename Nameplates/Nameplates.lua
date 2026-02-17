@@ -150,10 +150,11 @@ local function UpdateWidgets(nameplate, frame)
 
         if UnitIsPlayer(frame.unit) then
             -- For Classic version, only show in arena
+            -- For Retail, use UnitGroupRolesAssigned to detect healers in arenas
             local shouldShowSpecIcon;
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
             if addon.PROJECT_MAINLINE then
-                shouldShowSpecIcon = configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers;
+                shouldShowSpecIcon = configEnemy.arenaEnemyHealer and IsActiveBattlefieldArena();
             else
                 shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
             end
