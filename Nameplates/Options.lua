@@ -29,7 +29,8 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons in PvP instances",
                 hidden = function()
-                    return true; -- TODO: enable for MoP Classic
+                    return ( not addon.PROJECT_MAINLINE ) or
+                        ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
                 end
             },
 
