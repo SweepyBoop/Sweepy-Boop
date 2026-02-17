@@ -376,7 +376,7 @@ function SweepyBoop:RefreshAllNamePlates(hideFirst)
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame then
-            if nameplate.UnitFrame:IsForbidden() then return end
+            if IsForbiddenSafe(nameplate.UnitFrame) then return end
             if hideFirst then
                 HideWidgets(nameplate);
             end
@@ -390,7 +390,7 @@ function SweepyBoop:RefreshAurasForAllNamePlates()
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame and ( nameplate.UnitFrame.BuffFrame or nameplate.UnitFrame.CustomBuffFrame ) then
-            if nameplate.UnitFrame:IsForbidden() then return end
+            if IsForbiddenSafe(nameplate.UnitFrame) then return end
             addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
         end
     end
