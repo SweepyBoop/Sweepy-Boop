@@ -301,9 +301,15 @@ function SweepyBoop:SetupNameplateModules()
     -- Hook CompactUnitFrame_UpdateAll to re-apply our alpha setting after the game resets it
     -- This catches most cases: PLAYER_ENTERING_WORLD, ARENA_OPPONENT_UPDATE, etc.
     if addon.PROJECT_MAINLINE then
+        -- Helper to safely check if a frame is forbidden (handles secret values in arena)
+        local function IsForbiddenSafe(frame)
+            local success, result = pcall(function() return frame:IsForbidden() end);
+            return ( not success ) or result;
+        end
+
         -- Hook DefaultCompactUnitFrameSetup - this directly calls frame:SetAlpha(1)
         hooksecurefunc("DefaultCompactUnitFrameSetup", function(frame)
-            if frame:IsForbidden() then return end
+            if IsForbiddenSafe(frame) then return end
 
             local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
             if isNamePlate then
@@ -318,7 +324,7 @@ function SweepyBoop:SetupNameplateModules()
 
         -- Hook DefaultCompactMiniFrameSetup - this directly calls frame:SetAlpha(1) for mini frames
         hooksecurefunc("DefaultCompactMiniFrameSetup", function(frame)
-            if frame:IsForbidden() then return end
+            if IsForbiddenSafe(frame) then return end
 
             local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
             if isNamePlate then
@@ -334,7 +340,7 @@ function SweepyBoop:SetupNameplateModules()
         -- Hook CompactUnitFrame_UpdateCenterStatusIcon - this calls frame:SetAlpha(CompactUnitFrame_GetRangeAlpha(frame))
         -- This catches all range-based alpha resets
         hooksecurefunc("CompactUnitFrame_UpdateCenterStatusIcon", function(frame)
-            if frame:IsForbidden() then return end
+            if IsForbiddenSafe(frame) then return end
 
             local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
             if isNamePlate then
