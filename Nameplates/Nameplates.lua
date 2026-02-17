@@ -150,10 +150,11 @@ local function UpdateWidgets(nameplate, frame)
 
         if UnitIsPlayer(frame.unit) then
             -- For Classic version, only show in arena
+            -- For Retail, enemy spec icons are disabled due to secret values
             local shouldShowSpecIcon;
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
             if addon.PROJECT_MAINLINE then
-                shouldShowSpecIcon = configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers;
+                shouldShowSpecIcon = false; -- Disabled in retail due to secret values
             else
                 shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
             end
