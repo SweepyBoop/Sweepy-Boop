@@ -28,6 +28,7 @@ end
 local function IsForbiddenSafe(frame)
     -- local success, result = pcall(function() return frame:IsForbidden() end);
     -- return ( not success ) or result;
+    if ( not frame ) then return true end
     if issecretvalue(frame) then return true end
     return frame:IsForbidden();
 end
