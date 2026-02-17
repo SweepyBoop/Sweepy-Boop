@@ -193,9 +193,10 @@ addon.GetPlayerSpec = function (unitId)
     end
 
     local tooltipGUID = tooltipData.guid;
+    local canCache = tooltipGUID and ( not issecretvalue(tooltipGUID) );
 
     -- Return cached specInfo if already found
-    if addon.cachedPlayerSpec[tooltipGUID] then
+    if canCache and addon.cachedPlayerSpec[tooltipGUID] then
         return addon.cachedPlayerSpec[tooltipGUID];
     end
 
@@ -206,7 +207,9 @@ addon.GetPlayerSpec = function (unitId)
             if specID then
                 local iconID, role = select(4, GetSpecializationInfoByID(specID));
                 local specInfo = { icon = iconID, role = role };
-                addon.cachedPlayerSpec[tooltipGUID] = specInfo;
+                if canCache then
+                    addon.cachedPlayerSpec[tooltipGUID] = specInfo;
+                end
                 return specInfo;
             end
         end
