@@ -149,11 +149,11 @@ local function UpdateWidgets(nameplate, frame)
         addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
-            -- For Classic version, only show in arena
-            -- For Retail, use UnitGroupRolesAssigned to detect healers in arenas
+            -- For TBC, use retail-style healer detection via UnitGroupRolesAssigned
+            -- For MoP Classic, use spec icons from tooltip
             local shouldShowSpecIcon;
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
-            if addon.PROJECT_MAINLINE then
+            if addon.PROJECT_MAINLINE or addon.PROJECT_TBC then
                 shouldShowSpecIcon = configEnemy.arenaEnemyHealer and IsActiveBattlefieldArena();
             else
                 shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();

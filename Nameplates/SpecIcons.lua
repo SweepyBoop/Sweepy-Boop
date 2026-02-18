@@ -14,8 +14,8 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
 
-    if addon.PROJECT_MAINLINE then
-        -- On retail, we can only detect healers using UnitGroupRolesAssigned in arenas
+    if addon.PROJECT_MAINLINE or addon.PROJECT_TBC then
+        -- On retail and TBC, we can only detect healers using UnitGroupRolesAssigned in arenas
         if IsActiveBattlefieldArena() and config.arenaEnemyHealer then
             local roleAssigned = UnitGroupRolesAssigned(unitId);
             if roleAssigned == "HEALER" then
@@ -24,7 +24,7 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
             end
         end
     else
-        -- On Classic, we can detect spec from tooltip
+        -- On MoP Classic, we can detect spec from tooltip
         if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
             local specInfo = addon.GetPlayerSpec(unitId);
             if ( not specInfo ) then return end
