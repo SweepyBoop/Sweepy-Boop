@@ -367,11 +367,10 @@ end
 -- Don't call IconGroup_Wipe here
 -- Since for standalone bars we are using one group for all units and don't want to lose icons between setting up arena1 and arena2
 -- Callers of this function should make sure to IconGroup_Wipe properly
--- Returns true if setup was successful (class info available), false otherwise
 local function SetupIconGroup(group, unit)
     -- Skip if this unit has already been set up in this group
     if group.unitsSetup[unit] then
-        return true; -- Already setup, consider it successful
+        return;
     end
 
     local iconSetID, isTestGroup = group.iconSetID, group.isTestGroup;
@@ -385,9 +384,9 @@ local function SetupIconGroup(group, unit)
         spec = addon.GetSpecForPlayerOrArena(unit);
     end
 
-    -- Return false if class info is not available (unit not visible/ready yet)
+    -- Return if class info is not available (unit not visible/ready yet)
     if ( not class ) and ( not isTestGroup ) then
-        return false;
+        return;
     end
     local remainingTest = 32;
     for spellID, spell in pairs(spellData) do
@@ -481,8 +480,6 @@ local function SetupIconGroup(group, unit)
 
     -- Mark unit as setup in this group
     group.unitsSetup[unit] = true;
-
-    return true; -- Setup was successful
 end
 
 local function GetIconGroupEnabled(iconSetID)
