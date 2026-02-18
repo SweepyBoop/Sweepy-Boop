@@ -367,6 +367,7 @@ end
 -- Don't call IconGroup_Wipe here
 -- Since for standalone bars we are using one group for all units and don't want to lose icons between setting up arena1 and arena2
 -- Callers of this function should make sure to IconGroup_Wipe properly
+-- Returns true if setup was successful (class info available), false otherwise
 local function SetupIconGroup(group, unit)
     local iconSetID, isTestGroup = group.iconSetID, group.isTestGroup;
     local config = SweepyBoop.db.profile.arenaFrames;
@@ -377,6 +378,11 @@ local function SetupIconGroup(group, unit)
     local spec;
     if ( not addon.PROJECT_TBC ) then
         spec = addon.GetSpecForPlayerOrArena(unit);
+    end
+
+    -- Return false if class info is not available (unit not visible/ready yet)
+    if ( not class ) and ( not isTestGroup ) then
+        return false;
     end
     local remainingTest = 32;
     for spellID, spell in pairs(spellData) do
@@ -467,6 +473,8 @@ local function SetupIconGroup(group, unit)
             end
         end
     end
+
+    return true; -- Setup was successful
 end
 
 local function GetIconGroupEnabled(iconSetID)
@@ -487,17 +495,23 @@ local function ClearAllIconGroups()
 end
 
 local function SetupAllIconGroups(unitToSetup)
+    local unitsSuccessfullySetup = {};
+
     for _, iconSetID in pairs(ICON_SET_ID) do
         if GetIconGroupEnabled(iconSetID) then
             if addon.TEST_MODE then -- debug mode only tracks player
                 local unit = "player";
-                SetupIconGroup(GetIconGroup(iconSetID, unit), unit);
+                if SetupIconGroup(GetIconGroup(iconSetID, unit), unit) then
+                    unitsSuccessfullySetup[unit] = true;
+                end
             else
                 if ARENA_FRAME_BARS[iconSetID] then -- one group, one unit
                     for unitIndex = 1, addon.MAX_ARENA_SIZE do
                         local unit = "arena" .. unitIndex;
                         if (not unitToSetup) or (unitToSetup == unit) then
-                            SetupIconGroup(GetIconGroup(iconSetID, unit), unit);
+                            if SetupIconGroup(GetIconGroup(iconSetID, unit), unit) then
+                                unitsSuccessfullySetup[unit] = true;
+                            end
                         end
                     end
                 else -- one group for all units
@@ -505,13 +519,17 @@ local function SetupAllIconGroups(unitToSetup)
                     for unitIndex = 1, addon.MAX_ARENA_SIZE do
                         local unit = "arena" .. unitIndex;
                         if (not unitToSetup) or (unitToSetup == unit) then
-                            SetupIconGroup(group, unit);
+                            if SetupIconGroup(group, unit) then
+                                unitsSuccessfullySetup[unit] = true;
+                            end
                         end
                     end
                 end
             end
         end
     end
+
+    return unitsSuccessfullySetup;
 end
 
 local function ValidateUnit(self)
@@ -1093,7 +1111,6 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         -- Only setup if this unit hasn't been set up yet in this match
                         if not unitsSetupThisMatch[unit] then
                             unitToSetup = unit;
-                            unitsSetupThisMatch[unit] = true;
                         end
                     end
                     -- Ignore other reasons or already-setup units
@@ -1129,20 +1146,19 @@ function SweepyBoop:SetupArenaCooldownTracker()
                             end
                         end
                     end
-
-                    -- Mark all units as setup when doing a full setup
-                    if unitToSetup == "all" then
-                        for i = 1, addon.MAX_ARENA_SIZE do
-                            unitsSetupThisMatch["arena" .. i] = true;
-                        end
-                    end
                 end
 
                 if unitToSetup then
+                    local unitsSuccessfullySetup;
                     if unitToSetup == "all" then
-                        SetupAllIconGroups();
+                        unitsSuccessfullySetup = SetupAllIconGroups();
                     else
-                        SetupAllIconGroups(unitToSetup);
+                        unitsSuccessfullySetup = SetupAllIconGroups(unitToSetup);
+                    end
+
+                    -- Mark units as setup only after successful setup
+                    for unit, _ in pairs(unitsSuccessfullySetup) do
+                        unitsSetupThisMatch[unit] = true;
                     end
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
