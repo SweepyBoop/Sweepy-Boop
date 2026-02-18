@@ -141,6 +141,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "toggle",
                 name = addon.HELAER_LOGO .. " Special icon for healers",
                 hidden = function()
+                    if addon.PROJECT_TBC then return true end -- TBC: No reliable healer detection
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
@@ -150,6 +151,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = addon.HELAER_LOGO .. " Show healers only",
                 desc = "Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled",
                 hidden = function ()
+                    if addon.PROJECT_TBC then return true end -- TBC: No reliable healer detection
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
