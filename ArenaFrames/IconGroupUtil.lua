@@ -227,7 +227,10 @@ end
 -- For arena offensive cooldown tracking, index is just spellID since we are always tracking a single unitId
 -- For CooldownTracking icons, we will use unitId - spellID
 addon.IconGroup_PopulateIcon = function (group, icon, index)
-    icon.timers = {}; -- Reset current timers
+    -- Only reset timers if this icon is not already populated in this group
+    if not group.icons[index] then
+        icon.timers = {};
+    end
     icon:SetParent(group);
     group.icons[index] = icon;
 end
