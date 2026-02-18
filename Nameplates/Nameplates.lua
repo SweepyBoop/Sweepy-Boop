@@ -26,7 +26,7 @@ end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
 local function IsForbiddenSafe(frame)
-    if issecretvalue(frame) then return true end
+    if addon.IsSecretValue(frame) then return true end
     return frame:IsForbidden();
 end
 
