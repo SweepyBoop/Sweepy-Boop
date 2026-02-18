@@ -354,7 +354,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "header",
                         name = "Arena enemy healer icon",
                         hidden = function()
-                            return not (addon.PROJECT_MAINLINE or addon.PROJECT_TBC);
+                            return not addon.PROJECT_MAINLINE;
                         end,
                     },
                     arenaEnemyHealer = {
@@ -364,7 +364,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = addon.SPEC_ICON_ENEMY_HEALER_LOGO .. " Show healer icon for enemy healers in arena",
                         desc = "Show a healer icon on top of the nameplate for enemy healers in arenas",
                         hidden = function()
-                            return not (addon.PROJECT_MAINLINE or addon.PROJECT_TBC);
+                            return not addon.PROJECT_MAINLINE;
                         end,
                     },
 
