@@ -1099,7 +1099,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 local shouldSetup = false;
                 if addon.TEST_MODE then
                     shouldSetup = true;
-                elseif ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
+                elseif ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.ARENA_OPPONENT_UPDATE ) then
                     shouldSetup = true;
                 elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
                     if addon.PROJECT_MAINLINE then
