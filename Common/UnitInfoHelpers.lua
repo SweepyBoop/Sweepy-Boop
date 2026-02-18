@@ -127,6 +127,11 @@ addon.GetClassForPlayerOrArena = function (unitId)
     if ( unitId == "player" ) then
         return addon.GetUnitClass(unitId);
     else
+        -- In TBC, there are no specs, so we need to use UnitClass directly
+        if addon.PROJECT_TBC then
+            return addon.GetUnitClass(unitId);
+        end
+
         -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
         local index = string.sub(unitId, -1, -1);
         local specID = GetArenaOpponentSpec(index);
