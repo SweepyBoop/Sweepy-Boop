@@ -4,9 +4,13 @@ local specialIconScaleFactor = 1.25;
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
+    ["controlled_stun"] = 100, -- TBC: same as stun (e.g., Kidney Shot, Cheap Shot)
+    ["random_stun"] = 100, -- TBC: same as stun (e.g., Mace Specialization)
     ["silence"] = 90,
+    ["cyclone"] = 85, -- TBC: Cyclone has its own DR category
     ["disorient"] = 80,
     ["incapacitate"] = 80,
+    ["fear"] = 80, -- TBC: Fear has its own DR category
 };
 
 local PvPUnitClassification;
