@@ -28,6 +28,7 @@ addon.CreateIconGroup = function (setPointOptions, growOptions, unit)
     f.active = {}; -- Array of active icons, sort by priority
     f.activeMap = {}; -- Table, spellID -> icon
     f.npcMap = {}; -- Table, npcGUID -> spellID, for processing SPELL_SUMMON / UNIT_DIED
+    f.unitsSetup = {}; -- Table, unit -> true, for tracking which units have been set up in this group
 
     return f;
 end
@@ -272,6 +273,7 @@ addon.IconGroup_Wipe = function (group)
     wipe(group.active);
     wipe(group.activeMap);
     wipe(group.npcMap);
+    wipe(group.unitsSetup);
     group.unitIdToGuid = {};
     group.unitGuidToId = {};
 
