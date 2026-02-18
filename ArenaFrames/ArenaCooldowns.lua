@@ -368,16 +368,28 @@ end
 -- Since for standalone bars we are using one group for all units and don't want to lose icons between setting up arena1 and arena2
 -- Callers of this function should make sure to IconGroup_Wipe properly
 local function SetupIconGroup(group, unit)
+    -- Skip if this unit has already been set up in this group
+    if group.unitsSetup[unit] then
+        return;
+    end
+
     local iconSetID, isTestGroup = group.iconSetID, group.isTestGroup;
     local config = SweepyBoop.db.profile.arenaFrames;
     local spellList = addon.GetSpellListConfig(iconSetID);
     local iconSetConfig = addon.GetIconSetConfig(iconSetID);
 
     local class = addon.GetClassForPlayerOrArena(unit);
+
+    -- Return if class info is not available (unit not visible/ready yet)
+    if ( not class ) and ( not isTestGroup ) then
+        return;
+    end
+
     local spec;
     if ( not addon.PROJECT_TBC ) then
         spec = addon.GetSpecForPlayerOrArena(unit);
     end
+
     local remainingTest = 32;
     for spellID, spell in pairs(spellData) do
         if ( not spell.use_parent_icon ) then
@@ -467,6 +479,9 @@ local function SetupIconGroup(group, unit)
             end
         end
     end
+
+    -- Mark unit as setup in this group
+    group.unitsSetup[unit] = true;
 end
 
 local function GetIconGroupEnabled(iconSetID)
@@ -486,7 +501,7 @@ local function ClearAllIconGroups()
     end
 end
 
-local function SetupAllIconGroups()
+local function SetupAllIconGroups(unitToSetup)
     for _, iconSetID in pairs(ICON_SET_ID) do
         if GetIconGroupEnabled(iconSetID) then
             if addon.TEST_MODE then -- debug mode only tracks player
@@ -496,13 +511,17 @@ local function SetupAllIconGroups()
                 if ARENA_FRAME_BARS[iconSetID] then -- one group, one unit
                     for unitIndex = 1, addon.MAX_ARENA_SIZE do
                         local unit = "arena" .. unitIndex;
-                        SetupIconGroup(GetIconGroup(iconSetID, unit), unit);
+                        if (not unitToSetup) or (unitToSetup == unit) then
+                            SetupIconGroup(GetIconGroup(iconSetID, unit), unit);
+                        end
                     end
                 else -- one group for all units
                     local group = GetIconGroup(iconSetID);
                     for unitIndex = 1, addon.MAX_ARENA_SIZE do
                         local unit = "arena" .. unitIndex;
-                        SetupIconGroup(group, unit);
+                        if (not unitToSetup) or (unitToSetup == unit) then
+                            SetupIconGroup(group, unit);
+                        end
                     end
                 end
             end
@@ -1076,46 +1095,58 @@ function SweepyBoop:SetupArenaCooldownTracker()
         eventFrame:RegisterEvent(addon.UNIT_AURA);
         eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
+
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
             if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.ARENA_OPPONENT_UPDATE ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE and addon.PROJECT_MAINLINE ) then
+                local unitToSetup = nil; -- nil means no setup, set to a unit for per-unit setup
+
                 if ( event == addon.ARENA_OPPONENT_UPDATE ) then
                     local unit, reason = ...;
-                    if ( reason ~= "cleared" ) then
+                    if ( reason == "seen" ) then
+                        -- SetupIconGroup will check group.unitsSetup[unit] and skip if already setup
+                        unitToSetup = unit;
+                    end
+                    -- Ignore other reasons
+                    if not unitToSetup then
                         return;
                     end
-                end
+                else
+                    -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
+                    -- PLAYER_SPECIALIZATION_CHANGED is triggered by Stampede in MoP, we should only process it for retail...
 
-                -- PLAYER_SPECIALIZATION_CHANGED is triggered for all players, so we only process it when TEST_MODE is on
-                -- PLAYER_SPECIALIZATION_CHANGED is triggered by Stampede in MoP, we should only process it for retail...
+                    -- Hide the external "Toggle Test Mode" group
+                    SweepyBoop:HideTestArenaCooldownTracker();
+                    SweepyBoop:HideTestArenaStandaloneBars();
 
-                -- Hide the external "Toggle Test Mode" group
-                SweepyBoop:HideTestArenaCooldownTracker();
-                SweepyBoop:HideTestArenaStandaloneBars();
+                    unitNames = {};
+                    ClearAllIconGroups(); -- This also wipes group.unitsSetup for each group
 
-                unitNames = {};
-                ClearAllIconGroups();
-
-                local shouldSetup = false;
-                if addon.TEST_MODE then
-                    shouldSetup = true;
-                elseif ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
-                    shouldSetup = true;
-                elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
-                    if addon.PROJECT_MAINLINE then
-                        shouldSetup = IsActiveBattlefieldArena() and ( C_PvP.GetActiveMatchState() < Enum.PvPMatchState.Engaged );
-                    else
-                        -- Classic doesn't have C_PvP.GetActiveMatchState, the Preparation buff is also missing in MoP
-                        -- Just refresh icons for now since there lacks a reliable way to check if we are in prep stage
-                        -- if IsActiveBattlefieldArena() then
-                        --     local auraData = C_UnitAuras.GetPlayerAuraBySpellID(44521);
-                        --     shouldSetup = auraData and auraData.name;
-                        -- end
-                        shouldSetup = IsActiveBattlefieldArena();
+                    if addon.TEST_MODE then
+                        unitToSetup = "all";
+                    elseif ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) then
+                        unitToSetup = "all";
+                    elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
+                        if addon.PROJECT_MAINLINE then
+                            if IsActiveBattlefieldArena() and ( C_PvP.GetActiveMatchState() < Enum.PvPMatchState.Engaged ) then
+                                unitToSetup = "all";
+                            end
+                        else
+                            -- Classic doesn't have C_PvP.GetActiveMatchState, the Preparation buff is also missing in MoP
+                            -- Just refresh icons for now since there lacks a reliable way to check if we are in prep stage
+                            if IsActiveBattlefieldArena() then
+                                unitToSetup = "all";
+                            end
+                        end
                     end
                 end
-                if shouldSetup then
-                    SetupAllIconGroups();
+
+                if unitToSetup then
+                    if unitToSetup == "all" then
+                        SetupAllIconGroups();
+                    else
+                        SetupAllIconGroups(unitToSetup);
+                    end
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
