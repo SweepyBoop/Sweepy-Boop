@@ -23,8 +23,12 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
                 isHealer = true;
             end
         end
+    elseif addon.PROJECT_TBC then
+        -- TBC: UnitGroupRolesAssigned doesn't work reliably for enemy arena units
+        -- TBC didn't have a spec system, so we can't detect healers
+        -- Feature disabled for TBC
     else
-        -- On Classic, we can detect spec from tooltip
+        -- On MoP Classic, we can detect spec from tooltip
         if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
             local specInfo = addon.GetPlayerSpec(unitId);
             if ( not specInfo ) then return end

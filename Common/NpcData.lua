@@ -131,6 +131,9 @@ if addon.PROJECT_MAINLINE then
             }
         },
     };
+elseif addon.PROJECT_TBC then
+    -- Empty NPC list for TBC due to API differences
+    addon.importantNpcList = {};
 else
     addon.importantNpcList = {
         {
@@ -299,48 +302,51 @@ addon.AppendNpcOptionsToGroup = function(group)
     local index = 2;
     for _, classEntry in ipairs(addon.importantNpcList) do
         local classInfo = C_CreatureInfo.GetClassInfo(classEntry.classID);
-        local classGroup = {
-            order = index,
-            type = "group",
-            icon = addon.ICON_ID_CLASSES,
-			iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
-            name = classInfo.className,
-            args = {},
-        };
-
-        local spellIdx = 1;
-        for _, npcEntry in ipairs(classEntry.npcs) do
-            -- https://warcraft.wiki.gg/wiki/SpellMixin
-            local spell = Spell:CreateFromSpellID(npcEntry.icon);
-            spell:ContinueOnSpellLoad(function()
-                addon.SPELL_DESCRIPTION[npcEntry.icon] = spell:GetSpellDescription();
-            end)
-
-            local texture = addon.GetSpellTexture(npcEntry.icon);
-            classGroup.args[tostring(npcEntry.npcID)] = {
-                order = spellIdx,
-                type = "select",
-                width = "full",
-                values = {
-                    [addon.NpcOption.Hide] = "Hide",
-                    [addon.NpcOption.Show] = "Nameplate",
-                    [addon.NpcOption.ShowWithIcon] = "Nameplate + icon",
-                    [addon.NpcOption.Highlight] = "Nameplate + pulsing icon",
-                },
-                name = addon.FORMAT_TEXTURE(texture) .. " " .. npcEntry.name,
-                desc = function ()
-                    return addon.SPELL_DESCRIPTION[npcEntry.icon] or "";
-                end,
+        -- Skip classes that don't exist in the current game version (e.g., Evoker in TBC)
+        if classInfo then
+            local classGroup = {
+                order = index,
+                type = "group",
+                icon = addon.ICON_ID_CLASSES,
+                iconCoords = CLASS_ICON_TCOORDS[classInfo.classFile],
+                name = classInfo.className,
+                args = {},
             };
 
-            if npcEntry.isCritter then
-                addon.CritterNPCs[npcEntry.npcID] = true;
+            local spellIdx = 1;
+            for _, npcEntry in ipairs(classEntry.npcs) do
+                -- https://warcraft.wiki.gg/wiki/SpellMixin
+                local spell = Spell:CreateFromSpellID(npcEntry.icon);
+                spell:ContinueOnSpellLoad(function()
+                    addon.SPELL_DESCRIPTION[npcEntry.icon] = spell:GetSpellDescription();
+                end)
+
+                local texture = addon.GetSpellTexture(npcEntry.icon);
+                classGroup.args[tostring(npcEntry.npcID)] = {
+                    order = spellIdx,
+                    type = "select",
+                    width = "full",
+                    values = {
+                        [addon.NpcOption.Hide] = "Hide",
+                        [addon.NpcOption.Show] = "Nameplate",
+                        [addon.NpcOption.ShowWithIcon] = "Nameplate + icon",
+                        [addon.NpcOption.Highlight] = "Nameplate + pulsing icon",
+                    },
+                    name = addon.FORMAT_TEXTURE(texture) .. " " .. npcEntry.name,
+                    desc = function ()
+                        return addon.SPELL_DESCRIPTION[npcEntry.icon] or "";
+                    end,
+                };
+
+                if npcEntry.isCritter then
+                    addon.CritterNPCs[npcEntry.npcID] = true;
+                end
+
+                spellIdx = spellIdx + 1;
             end
 
-            spellIdx = spellIdx + 1;
+            group.args[tostring(classEntry.classID)] = classGroup;
+            index = index + 1;
         end
-
-        group.args[tostring(classEntry.classID)] = classGroup;
-        index = index + 1;
     end
 end

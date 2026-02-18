@@ -193,7 +193,7 @@ addon.GetPlayerSpec = function (unitId)
     end
 
     local tooltipGUID = tooltipData.guid;
-    local canCache = tooltipGUID and ( not issecretvalue(tooltipGUID) );
+    local canCache = tooltipGUID and ( not addon.IsSecretValue(tooltipGUID) );
 
     -- Return cached specInfo if already found
     if canCache and addon.cachedPlayerSpec[tooltipGUID] then
@@ -202,7 +202,7 @@ addon.GetPlayerSpec = function (unitId)
 
     -- Skip if line.leftText is secret, i.e., can't parse
     local firstLine = tooltipData.lines and tooltipData.lines[1];
-    if ( not firstLine ) or ( not firstLine.leftText ) or issecretvalue(firstLine.leftText) then
+    if ( not firstLine ) or ( not firstLine.leftText ) or addon.IsSecretValue(firstLine.leftText) then
         return nil;
     end
 

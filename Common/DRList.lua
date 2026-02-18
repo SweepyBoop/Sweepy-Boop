@@ -11,7 +11,6 @@ if addon.PROJECT_MAINLINE then
         [1513]    = "disorient", -- Scare Beast
         [31661]   = "disorient", -- Dragon's Breath
         [353084]  = "disorient", -- Ring of Fire
-        [198909]  = "disorient", -- Song of Chi-ji
         [202274]  = "disorient", -- Hot Trub
         [105421]  = "disorient", -- Blinding Light
         [10326]   = "disorient", -- Turn Evil
@@ -33,6 +32,7 @@ if addon.PROJECT_MAINLINE then
         -- *** Incapacitate Effects ***
         [217832]  = "incapacitate", -- Imprison
         [221527]  = "incapacitate", -- Imprison (Honor talent)
+        [198909]  = "incapacitate", -- Song of Chi-ji
         [2637]    = "incapacitate", -- Hibernate
         [99]      = "incapacitate", -- Incapacitating Roar
         [378441]  = "incapacitate", -- Time Stop
@@ -90,6 +90,7 @@ if addon.PROJECT_MAINLINE then
         [91797]   = "stun", -- Monstrous Blow (Mutated Ghoul)
         [287254]  = "stun", -- Dead of Winter
         [179057]  = "stun", -- Chaos Nova
+        [1234195] = "stun", -- Void Nova
         [205630]  = "stun", -- Illidan's Grasp (Primary effect)
         [208618]  = "stun", -- Illidan's Grasp (Secondary effect)
         [211881]  = "stun", -- Fel Eruption
@@ -159,7 +160,6 @@ if addon.PROJECT_MAINLINE then
         [324382]  = "root", -- Clash
         [64695]   = "root", -- Earthgrab (Totem effect)
         --[356738]  = "root", -- Earth Unleashed
-        [285515]  = "root", -- Surge of Power
         [199042]  = "root", -- Thunderstruck (Protection PvP Talent)
         --[356356]  = "root", -- Warbringer
         [39965]   = "root", -- Frost Grenade (Item)
@@ -221,6 +221,185 @@ if addon.PROJECT_MAINLINE then
         [51490]   = "knockback", -- Thunderstorm
         [368970]  = "knockback", -- Tail Swipe (Racial, Dracthyr)
         [357214]  = "knockback", -- Wing Buffet (Racial, Dracthyr)
+    };
+elseif addon.PROJECT_TBC then
+    addon.DRList = {
+        -- *** Incapacitate Effects ***
+        [2637]  = "incapacitate", -- Hibernate (Rank 1)
+        [18657] = "incapacitate", -- Hibernate (Rank 2)
+        [18658] = "incapacitate", -- Hibernate (Rank 3)
+        [22570] = "incapacitate", -- Maim
+        [3355]  = "incapacitate", -- Freezing Trap Effect (Rank 1)
+        [14308] = "incapacitate", -- Freezing Trap Effect (Rank 2)
+        [14309] = "incapacitate", -- Freezing Trap Effect (Rank 3)
+        [19386] = "incapacitate", -- Wyvern Sting (Rank 1)
+        [24132] = "incapacitate", -- Wyvern Sting (Rank 2)
+        [24133] = "incapacitate", -- Wyvern Sting (Rank 3)
+        [27068] = "incapacitate", -- Wyvern Sting (Rank 4)
+        [118]   = "incapacitate", -- Polymorph (Rank 1)
+        [12824] = "incapacitate", -- Polymorph (Rank 2)
+        [12825] = "incapacitate", -- Polymorph (Rank 3)
+        [12826] = "incapacitate", -- Polymorph (Rank 4)
+        [28271] = "incapacitate", -- Polymorph: Turtle
+        [28272] = "incapacitate", -- Polymorph: Pig
+        [20066] = "incapacitate", -- Repentance
+        [6770]  = "incapacitate", -- Sap (Rank 1)
+        [2070]  = "incapacitate", -- Sap (Rank 2)
+        [11297] = "incapacitate", -- Sap (Rank 3)
+        [1776]  = "incapacitate", -- Gouge (Rank 1)
+        [1777]  = "incapacitate", -- Gouge (Rank 2)
+        [8629]  = "incapacitate", -- Gouge (Rank 3)
+        [11285] = "incapacitate", -- Gouge (Rank 4)
+        [11286] = "incapacitate", -- Gouge (Rank 5)
+        [38764] = "incapacitate", -- Gouge (Rank 6)
+        [710]   = "incapacitate", -- Banish (Rank 1)
+        [18647] = "incapacitate", -- Banish (Rank 2)
+        [13327] = "incapacitate", -- Reckless Charge (Item)
+        [4064]  = "incapacitate", -- Rough Copper Bomb (Item)
+        [4065]  = "incapacitate", -- Large Copper Bomb (Item)
+        [4066]  = "incapacitate", -- Small Bronze Bomb (Item)
+        [4067]  = "incapacitate", -- Big Bronze Bomb (Item)
+        [4068]  = "incapacitate", -- Iron Grenade (Item)
+        [12421] = "incapacitate", -- Mithril Frag Bomb (Item)
+        [4069]  = "incapacitate", -- Big Iron Bomb (Item)
+        [12562] = "incapacitate", -- The Big One (Item)
+        [12543] = "incapacitate", -- Hi-Explosive Bomb (Item)
+        [19769] = "incapacitate", -- Thorium Grenade (Item)
+        [19784] = "incapacitate", -- Dark Iron Bomb (Item)
+        [30216] = "incapacitate", -- Fel Iron Bomb (Item)
+        [30461] = "incapacitate", -- The Bigger One (Item)
+        [30217] = "incapacitate", -- Adamantite Grenade (Item)
+
+        -- *** Disorient Effects ***
+        [33786] = "disorient", -- Cyclone
+        [2094]  = "disorient", -- Blind
+
+        -- *** Controlled Stun Effects ***
+        [5211]  = "stun", -- Bash (Rank 1)
+        [6798]  = "stun", -- Bash (Rank 2)
+        [8983]  = "stun", -- Bash (Rank 3)
+        [9005]  = "stun", -- Pounce (Rank 1)
+        [9823]  = "stun", -- Pounce (Rank 2)
+        [9827]  = "stun", -- Pounce (Rank 3)
+        [27006] = "stun", -- Pounce (Rank 4)
+        [24394] = "stun", -- Intimidation
+        [853]   = "stun", -- Hammer of Justice (Rank 1)
+        [5588]  = "stun", -- Hammer of Justice (Rank 2)
+        [5589]  = "stun", -- Hammer of Justice (Rank 3)
+        [10308] = "stun", -- Hammer of Justice (Rank 4)
+        [1833]  = "stun", -- Cheap Shot
+        [30283] = "stun", -- Shadowfury (Rank 1)
+        [30413] = "stun", -- Shadowfury (Rank 2)
+        [30414] = "stun", -- Shadowfury (Rank 3)
+        [12809] = "stun", -- Concussion Blow
+        [7922]  = "stun", -- Charge Stun
+        [20253] = "stun", -- Intercept Stun (Rank 1)
+        [20614] = "stun", -- Intercept Stun (Rank 2)
+        [20615] = "stun", -- Intercept Stun (Rank 3)
+        [25273] = "stun", -- Intercept Stun (Rank 4)
+        [25274] = "stun", -- Intercept Stun (Rank 5)
+        [20549] = "stun", -- War Stomp (Racial)
+        [13237] = "stun", -- Goblin Mortar (Item)
+        [835]   = "stun", -- Tidal Charm (Item)
+
+        -- *** Non-Controlled Stun Effects ***
+        [16922]   = "random_stun", -- Celestial Focus (Starfire Stun)
+        [19410]   = "random_stun", -- Improved Concussive Shot
+        [12355]   = "random_stun", -- Impact
+        [20170]   = "random_stun", -- Seal of Justice Stun
+        [15269]   = "random_stun", -- Blackout
+        [18093]   = "random_stun", -- Pyroclasm
+        [39796]   = "random_stun", -- Stoneclaw Stun
+        [12798]   = "random_stun", -- Revenge Stun
+        [5530]    = "random_stun", -- Mace Stun Effect (Mace Specialization)
+        [15283]   = "random_stun", -- Stunning Blow (Weapon Proc)
+        [56]      = "random_stun", -- Stun (Weapon Proc)
+        [34510]   = "random_stun", -- Stormherald/Deep Thunder (Weapon Proc)
+
+        -- *** Fear Effects ***
+        [1513]  = "fear", -- Scare Beast (Rank 1)
+        [14326] = "fear", -- Scare Beast (Rank 2)
+        [14327] = "fear", -- Scare Beast (Rank 3)
+        [10326] = "fear", -- Turn Evil
+        [8122]  = "fear", -- Psychic Scream (Rank 1)
+        [8124]  = "fear", -- Psychic Scream (Rank 2)
+        [10888] = "fear", -- Psychic Scream (Rank 3)
+        [10890] = "fear", -- Psychic Scream (Rank 4)
+        [5782]  = "fear", -- Fear (Rank 1)
+        [6213]  = "fear", -- Fear (Rank 2)
+        [6215]  = "fear", -- Fear (Rank 3)
+        [6358]  = "fear", -- Seduction (Succubus)
+        [5484]  = "fear", -- Howl of Terror (Rank 1)
+        [17928] = "fear", -- Howl of Terror (Rank 2)
+        [5246]  = "fear", -- Intimidating Shout
+        [5134]  = "fear", -- Flash Bomb Fear (Item)
+
+        -- *** Controlled Root Effects ***
+        [339]   = "root", -- Entangling Roots (Rank 1)
+        [1062]  = "root", -- Entangling Roots (Rank 2)
+        [5195]  = "root", -- Entangling Roots (Rank 3)
+        [5196]  = "root", -- Entangling Roots (Rank 4)
+        [9852]  = "root", -- Entangling Roots (Rank 5)
+        [9853]  = "root", -- Entangling Roots (Rank 6)
+        [26989] = "root", -- Entangling Roots (Rank 7)
+        [19975] = "root", -- Nature's Grasp (Rank 1)
+        [19974] = "root", -- Nature's Grasp (Rank 2)
+        [19973] = "root", -- Nature's Grasp (Rank 3)
+        [19972] = "root", -- Nature's Grasp (Rank 4)
+        [19971] = "root", -- Nature's Grasp (Rank 5)
+        [19970] = "root", -- Nature's Grasp (Rank 6)
+        [27010] = "root", -- Nature's Grasp (Rank 7)
+        [122]   = "root", -- Frost Nova (Rank 1)
+        [865]   = "root", -- Frost Nova (Rank 2)
+        [6131]  = "root", -- Frost Nova (Rank 3)
+        [10230] = "root", -- Frost Nova (Rank 4)
+        [27088] = "root", -- Frost Nova (Rank 5)
+        [33395] = "root", -- Freeze (Water Elemental)
+        [39965] = "root", -- Frost Grenade (Item)
+
+        -- *** Non-controlled Root Effects ***
+        [19185] = "random_root", -- Entrapment
+        [19229] = "random_root", -- Improved Wing Clip
+        [12494] = "random_root", -- Frostbite
+        [23694] = "random_root", -- Improved Hamstring
+
+        -- *** Mind Control Effects ***
+        [605]   = "mind_control", -- Mind Control (Rank 1)
+        [10911] = "mind_control", -- Mind Control (Rank 2)
+        [10912] = "mind_control", -- Mind Control (Rank 3)
+        [13181] = "mind_control", -- Gnomish Mind Control Cap (Item)
+
+        -- *** Disarm Weapon Effects ***
+        [14251] = "disarm", -- Riposte
+        [34097] = "disarm", -- Riposte 2 (TODO: not sure which ID is correct)
+        [676]   = "disarm", -- Disarm
+
+        -- *** Scatter Effects ***
+        [19503] = "scatter", -- Scatter Shot
+        [31661] = "scatter", -- Dragon's Breath (Rank 1)
+        [33041] = "scatter", -- Dragon's Breath (Rank 2)
+        [33042] = "scatter", -- Dragon's Breath (Rank 3)
+        [33043] = "scatter", -- Dragon's Breath (Rank 4)
+
+        -- *** Spells that DRs with itself only ***
+        [19306] = "counterattack",       -- Counterattack (Rank 1)
+        [20909] = "counterattack",       -- Counterattack (Rank 2)
+        [20910] = "counterattack",       -- Counterattack (Rank 3)
+        [27067] = "counterattack",       -- Counterattack (Rank 4)
+        [44041] = "chastise",            -- Chastise (Rank 1)
+        [44043] = "chastise",            -- Chastise (Rank 2)
+        [44044] = "chastise",            -- Chastise (Rank 3)
+        [44045] = "chastise",            -- Chastise (Rank 4)
+        [44046] = "chastise",            -- Chastise (Rank 5)
+        [44047] = "chastise",            -- Chastise (Rank 6)
+        [408]   = "kidney_shot",         -- Kidney Shot (Rank 1)
+        [8643]  = "kidney_shot",         -- Kidney Shot (Rank 2)
+        [43523] = "unstable_affliction", -- Unstable Affliction 1
+        [31117] = "unstable_affliction", -- Unstable Affliction 2 (TODO: not sure which ID is correct)
+        [6789]  = "death_coil",          -- Death Coil (Rank 1)
+        [17925] = "death_coil",          -- Death Coil (Rank 2)
+        [17926] = "death_coil",          -- Death Coil (Rank 3)
+        [27223] = "death_coil",          -- Death Coil (Rank 4)
     };
 else
     addon.DRList = {

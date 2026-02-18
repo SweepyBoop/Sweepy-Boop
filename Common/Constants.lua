@@ -328,6 +328,15 @@ addon.GetSpellTexture = function(spellId)
     return originalIconID;
 end
 
+-- Helper function for secret value check (only exists in retail)
+addon.IsSecretValue = function(value)
+    if addon.PROJECT_MAINLINE then
+        return issecretvalue(value);
+    else
+        return false;
+    end
+end
+
 addon.SPELL_DESCRIPTION = {}; -- by spellId, requested via -- https://warcraft.wiki.gg/wiki/SpellMixin
 
 addon.PRINT = function(message)

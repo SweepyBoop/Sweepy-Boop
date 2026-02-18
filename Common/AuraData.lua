@@ -171,6 +171,9 @@ if addon.PROJECT_MAINLINE then
             }
         },
     };
+elseif addon.PROJECT_TBC then
+    -- Empty aura lists for TBC due to API differences
+    addon.DebuffList = {};
 else
     addon.DebuffList = {
         {
@@ -464,6 +467,8 @@ if addon.PROJECT_MAINLINE then
             }
         }
     };
+elseif addon.PROJECT_TBC then
+    addon.BuffList = {};
 else
     addon.BuffList = {
         {

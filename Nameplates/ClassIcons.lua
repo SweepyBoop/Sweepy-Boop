@@ -4,9 +4,13 @@ local specialIconScaleFactor = 1.25;
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
+    ["controlled_stun"] = 100, -- TBC: same as stun (e.g., Kidney Shot, Cheap Shot)
+    ["random_stun"] = 100, -- TBC: same as stun (e.g., Mace Specialization)
     ["silence"] = 90,
+    ["cyclone"] = 85, -- TBC: Cyclone has its own DR category
     ["disorient"] = 80,
     ["incapacitate"] = 80,
+    ["fear"] = 80, -- TBC: Fear has its own DR category
 };
 
 local PvPUnitClassification;
@@ -80,14 +84,18 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
         iconCoords = {0, 1, 0, 1};
     end
 
-    local isHealer = ( roleAssigned == "HEALER" );
-    if isHealer and config.useHealerIcon then
-        iconID = addon.ICON_ID_HEALER;
-        iconCoords = addon.ICON_COORDS_HEALER;
-        iconScale = config.healerIconSize;
-        isSpecialIcon = true;
-    elseif ( not isHealer ) and config.showHealerOnly then
-        iconID = nil;
+    -- TBC: Skip healer detection since UnitGroupRolesAssigned doesn't work reliably
+    -- and there's no spec system to fall back to
+    if ( not addon.PROJECT_TBC ) then
+        local isHealer = ( roleAssigned == "HEALER" );
+        if isHealer and config.useHealerIcon then
+            iconID = addon.ICON_ID_HEALER;
+            iconCoords = addon.ICON_COORDS_HEALER;
+            iconScale = config.healerIconSize;
+            isSpecialIcon = true;
+        elseif ( not isHealer ) and config.showHealerOnly then
+            iconID = nil;
+        end
     end
 
     if addon.PROJECT_MAINLINE and ( not hasConflict ) then
