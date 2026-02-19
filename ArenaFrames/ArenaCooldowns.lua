@@ -1103,7 +1103,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
                 if ( event == addon.ARENA_OPPONENT_UPDATE ) then
                     local unit, reason = ...;
-                    if ( reason == "seen" ) then
+                    if ( reason == "seen" ) and unit and (unit:sub(1, 5) == "arena") then
                         -- SetupIconGroup will check group.unitsSetup[unit] and skip if already setup
                         unitToSetup = unit;
                     end
