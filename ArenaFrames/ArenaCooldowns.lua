@@ -378,7 +378,7 @@ local function SetupIconGroup(group, unit)
     local spellList = addon.GetSpellListConfig(iconSetID);
     local iconSetConfig = addon.GetIconSetConfig(iconSetID);
 
-    local class = addon.GetClassForPlayerOrArena(unit);
+    local class = "ROGUE"; -- addon.GetClassForPlayerOrArena(unit); -- Local testing: hardcode ROGUE
 
     -- Return if class info is not available (unit not visible/ready yet)
     if ( not class ) and ( not isTestGroup ) then
@@ -1078,6 +1078,73 @@ function SweepyBoop:HideTestArenaStandaloneBars()
     end
 end
 
+-- Local test simulation: trigger 3 classes 5 seconds after login
+local function SimulateArenaOpponents()
+    local testClasses = {
+        [1] = addon.ROGUE,
+        [2] = addon.MAGE,
+        [3] = addon.PRIEST,
+    };
+
+    -- Simulate ARENA_OPPONENT_UPDATE "seen" for each arena unit
+    for i = 1, 3 do
+        local unit = "arena" .. i;
+        SetupAllIconGroups(unit);
+    end
+
+    -- Show all spells for these 3 classes as baseline (visible, not on cooldown)
+    for i = 1, 3 do
+        local unit = "arena" .. i;
+        local class = testClasses[i];
+        local guid = "test-guid-" .. i; -- Use test GUID
+
+        for _, iconSetID in pairs(ICON_SET_ID) do
+            local iconGroupID;
+            local iconGroup;
+
+            if ARENA_FRAME_BARS[iconSetID] then
+                iconGroupID = iconSetID .. "-" .. unit;
+                iconGroup = iconGroups[iconGroupID];
+            else
+                iconGroupID = iconSetID;
+                iconGroup = iconGroups[iconGroupID];
+            end
+
+            if iconGroup then
+                -- Update unit GUID mapping for this test
+                iconGroup.unitIdToGuid = iconGroup.unitIdToGuid or {};
+                iconGroup.unitIdToGuid[unit] = guid;
+                iconGroup.unitGuidToId = iconGroup.unitGuidToId or {};
+                iconGroup.unitGuidToId[guid] = unit;
+                iconGroup.unitClass = iconGroup.unitClass or {};
+                iconGroup.unitClass[unit] = class;
+
+                -- Show all baseline spells for this class (visible, not on cooldown)
+                for spellID, spell in pairs(spellData) do
+                    if spell.class == class and spell.baseline and (not spell.parent) then
+                        local icon = iconGroup.icons and iconGroup.icons[spellID];
+                        if icon then
+                            icon:SetAlpha(1);
+                            icon:Show();
+                            addon.IconGroup_Insert(iconGroup, icon);
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    print("|cff00ff00[SweepyBoop Test]|r Simulated arena opponents: ROGUE (arena1), MAGE (arena2), PRIEST (arena3) - all spells shown as baseline");
+end
+
+local function ScheduleLocalTest()
+    C_Timer.After(5, function()
+        if not IsActiveBattlefieldArena() then
+            SimulateArenaOpponents();
+        end
+    end);
+end
+
 local eventFrame;
 
 function SweepyBoop:SetupArenaCooldownTracker()
@@ -1147,6 +1214,11 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     else
                         SetupAllIconGroups(unitToSetup);
                     end
+                end
+
+                -- Schedule local test if entering world (outside of arena)
+                if ( event == addon.PLAYER_ENTERING_WORLD ) then
+                    ScheduleLocalTest();
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
