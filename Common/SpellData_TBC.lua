@@ -1251,7 +1251,7 @@ addon.SpellData = {
 
     [1856] = { -- Vanish (Rank 1)
         class = addon.ROGUE,
-        cooldown = 300,
+        cooldown = 210, -- Baseline 300s, Elusiveness -90s
         category = category.OTHERS,
     },
         [1857] = { parent = 1856, use_parent_icon = true }, -- Vanish (Rank 2)
@@ -1270,7 +1270,7 @@ addon.SpellData = {
 
     [2094] = { -- Blind
         class = addon.ROGUE,
-        cooldown = 180,
+        cooldown = 90, -- Baseline 180s, Elusiveness -90s
         category = category.OTHERS,
     },
 
