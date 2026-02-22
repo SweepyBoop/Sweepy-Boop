@@ -477,7 +477,7 @@ addon.SpellData = {
 
     [853] = { -- Hammer of Justice (Rank 1)
         class = addon.PALADIN,
-        cooldown = 60,
+        cooldown = 45,
         category = category.OTHERS,
     },
         [5588] = { parent = 853, use_parent_icon = true }, -- Hammer of Justice (Rank 2)
@@ -1043,7 +1043,7 @@ addon.SpellData = {
 
     [120] = { -- Cone of Cold (Rank 1)
         class = addon.MAGE,
-        cooldown = 10,
+        cooldown = 8,
         category = category.OTHERS,
     },
         [8492] = { parent = 120, use_parent_icon = true }, -- Cone of Cold (Rank 2)
@@ -1054,7 +1054,7 @@ addon.SpellData = {
 
     [122] = { -- Frost Nova (Rank 1)
         class = addon.MAGE,
-        cooldown = 25,
+        cooldown = 21,
         category = category.OTHERS,
     },
         [865] = { parent = 122, use_parent_icon = true }, -- Frost Nova (Rank 2)
@@ -1075,7 +1075,7 @@ addon.SpellData = {
 
     [1953] = { -- Blink
         class = addon.MAGE,
-        cooldown = 15,
+        cooldown = 13,
         category = category.OTHERS,
     },
 
@@ -1463,7 +1463,7 @@ addon.SpellData = {
 
     [20252] = { -- Intercept (Rank 1)
         class = addon.WARRIOR,
-        cooldown = 30,
+        cooldown = 15,
         category = category.OTHERS,
     },
         [20616] = { parent = 20252, use_parent_icon = true }, -- Intercept (Rank 2)
