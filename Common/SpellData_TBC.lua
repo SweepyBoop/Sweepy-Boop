@@ -1528,3 +1528,5 @@ for _, spell in pairs(addon.SpellData) do
         spell.default = spell.default or parent.default;
     end
 end
+
+addon.SpellResetsAffectedByApotheosis = {}; -- Dummy value to not error out
