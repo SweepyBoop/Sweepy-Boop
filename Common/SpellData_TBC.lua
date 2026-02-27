@@ -1035,6 +1035,12 @@ addon.SpellData = {
 
     -- Mage
 
+    [27103] = { -- Mana Gem
+        class = addon.MAGE,
+        cooldown = 120,
+        category = category.OTHERS,
+    },
+
     [66] = { -- Invisibility
         class = addon.MAGE,
         cooldown = 300,
