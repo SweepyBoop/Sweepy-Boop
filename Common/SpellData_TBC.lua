@@ -1050,6 +1050,7 @@ addon.SpellData = {
     [120] = { -- Cone of Cold (Rank 1)
         class = addon.MAGE,
         cooldown = 8,
+        opt_lower_cooldown = 6,
         category = category.OTHERS,
     },
         [8492] = { parent = 120, use_parent_icon = true }, -- Cone of Cold (Rank 2)
@@ -1137,6 +1138,7 @@ addon.SpellData = {
     [11426] = { -- Ice Barrier (Rank 1)
         class = addon.MAGE,
         cooldown = 30,
+        opt_lower_cooldown = 24,
         category = category.OTHERS,
     },
         [13031] = { parent = 11426, use_parent_icon = true }, -- Ice Barrier (Rank 2)
@@ -1148,6 +1150,7 @@ addon.SpellData = {
     [11958] = { -- Cold Snap
         class = addon.MAGE,
         cooldown = 480,
+        opt_lower_cooldown = 384,
         category = category.OTHERS,
     },
 
@@ -1207,6 +1210,7 @@ addon.SpellData = {
     [45438] = { -- Ice Block
         class = addon.MAGE,
         cooldown = 300,
+        opt_lower_cooldown = 240,
         category = category.OTHERS,
     },
 
