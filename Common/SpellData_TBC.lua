@@ -368,7 +368,7 @@ addon.SpellData = {
         cooldown = 5,
         class = addon.SHAMAN,
         category = category.INTERRUPT,
-        baseline = true
+        baseline = true,
     },
         [8044] = { parent = 8042, use_parent_icon = true }, -- Earth Shock (Rank 2)
         [8045] = { parent = 8042, use_parent_icon = true }, -- Earth Shock (Rank 3)
