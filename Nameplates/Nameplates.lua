@@ -22,6 +22,7 @@ end
 local function IsUnitIdInvalid(unitId)
     if unitId == nil then return true end
     if string.sub(unitId, 1, 5) == "arena" then return true end
+    if string.sub(unitId, 1, 4) == "boss" then return true end
 end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
