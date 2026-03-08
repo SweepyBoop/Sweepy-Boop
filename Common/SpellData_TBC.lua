@@ -11,6 +11,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
         [9578] = { parent = 586, use_parent_icon = true }, -- Fade (Rank 2)
         [9579] = { parent = 586, use_parent_icon = true }, -- Fade (Rank 3)
@@ -57,6 +58,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 8,
         category = category.OTHERS,
+        baseline = true,
     },
         [8102] = { parent = 8092, use_parent_icon = true }, -- Mind Blast (Rank 2)
         [8103] = { parent = 8092, use_parent_icon = true }, -- Mind Blast (Rank 3)
@@ -72,7 +74,8 @@ addon.SpellData = {
     [8122] = { -- Psychic Scream (Rank 1)
         class = addon.PRIEST,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [8124] = { parent = 8122, use_parent_icon = true }, -- Psychic Scream (Rank 2)
         [10888] = { parent = 8122, use_parent_icon = true }, -- Psychic Scream (Rank 3)
@@ -144,6 +147,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 12,
         category = category.OTHERS,
+        baseline = true,
     },
         [32996] = { parent = 32379, use_parent_icon = true }, -- Shadow Word: Death (Rank 2)
 
@@ -163,6 +167,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [33206] = { -- Pain Suppression
@@ -175,6 +180,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 300,
         category = category.BURST,
+        baseline = true,
     },
 
     [44041] = { -- Chastise (Rank 1)
@@ -194,20 +200,23 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
         [30910] = { parent = 603, use_parent_icon = true }, -- Curse of Doom (Rank 2)
 
     [5484] = { -- Howl of Terror (Rank 1)
         class = addon.WARLOCK,
         cooldown = 40,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [17928] = { parent = 5484, use_parent_icon = true }, -- Howl of Terror (Rank 2)
 
     [6229] = { -- Shadow Ward (Rank 1)
         class = addon.WARLOCK,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [11739] = { parent = 6229, use_parent_icon = true }, -- Shadow Ward (Rank 2)
         [11740] = { parent = 6229, use_parent_icon = true }, -- Shadow Ward (Rank 3)
@@ -217,6 +226,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
         [17924] = { parent = 6353, use_parent_icon = true }, -- Soul Fire (Rank 2)
         [27211] = { parent = 6353, use_parent_icon = true }, -- Soul Fire (Rank 3)
@@ -225,7 +235,8 @@ addon.SpellData = {
     [6789] = { -- Death Coil (Rank 1)
         class = addon.WARLOCK,
         cooldown = 120,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [17925] = { parent = 6789, use_parent_icon = true }, -- Death Coil (Rank 2)
         [17926] = { parent = 6789, use_parent_icon = true }, -- Death Coil (Rank 3)
@@ -265,6 +276,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 3600,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [18708] = { -- Fel Domination
@@ -277,12 +289,14 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 300,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [29893] = { -- Ritual of Souls
         class = addon.WARLOCK,
         cooldown = 300,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [30283] = { -- Shadowfury (Rank 1)
@@ -299,12 +313,14 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [7814] = { -- Lash of Pain (Rank 1)
         class = addon.WARLOCK,
         cooldown = 12,
         category = category.OTHERS,
+        baseline = true,
     },
         [7815] = { parent = 7814, use_parent_icon = true }, -- Lash of Pain (Rank 2)
         [7816] = { parent = 7814, use_parent_icon = true }, -- Lash of Pain (Rank 3)
@@ -317,6 +333,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 120,
         category = category.OTHERS,
+        baseline = true,
     },
         [17750] = { parent = 17735, use_parent_icon = true }, -- Suffering (Rank 2)
         [17751] = { parent = 17735, use_parent_icon = true }, -- Suffering (Rank 3)
@@ -329,13 +346,15 @@ addon.SpellData = {
         cooldown = 24,
         category = category.INTERRUPT,
         trackPet = true,
+        baseline = true,
     },
         [19647] = { parent = 19244, use_parent_icon = true }, -- Spell Lock (Rank 2)
 
     [19505] = { -- Devour Magic (Rank 1)
         class = addon.WARLOCK,
         cooldown = 8,
-        category = category.OTHERS,
+        category = category.DISPEL,
+        baseline = true,
     },
         [19731] = { parent = 19505, use_parent_icon = true }, -- Devour Magic (Rank 2)
         [19734] = { parent = 19505, use_parent_icon = true }, -- Devour Magic (Rank 3)
@@ -346,9 +365,10 @@ addon.SpellData = {
     -- Shaman
 
     [8042] = { -- Earth Shock (Rank 1)
-        cooldown = 5,
         class = addon.SHAMAN,
-        category = category.INTERRUPT
+        cooldown = 6,
+        category = category.INTERRUPT,
+        baseline = true,
     },
         [8044] = { parent = 8042, use_parent_icon = true }, -- Earth Shock (Rank 2)
         [8045] = { parent = 8042, use_parent_icon = true }, -- Earth Shock (Rank 3)
@@ -362,12 +382,14 @@ addon.SpellData = {
         class = addon.SHAMAN,
         cooldown = 900,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [1535] = { -- Fire Nova Totem (Rank 1)
         class = addon.SHAMAN,
         cooldown = 15,
         category = category.OTHERS,
+        baseline = true,
     },
         [8498] = { parent = 1535, use_parent_icon = true }, -- Fire Nova Totem (Rank 2)
         [8499] = { parent = 1535, use_parent_icon = true }, -- Fire Nova Totem (Rank 3)
@@ -380,6 +402,7 @@ addon.SpellData = {
         class = addon.SHAMAN,
         cooldown = 15,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [2825] = { -- Bloodlust
@@ -387,18 +410,21 @@ addon.SpellData = {
         cooldown = 600,
         duration = 40,
         category = category.BURST,
+        baseline = true,
     },
 
     [2894] = { -- Fire Elemental Totem
         class = addon.SHAMAN,
         cooldown = 1200,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [5730] = { -- Stoneclaw Totem (Rank 1)
         class = addon.SHAMAN,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
         [6390] = { parent = 5730, use_parent_icon = true }, -- Stoneclaw Totem (Rank 2)
         [6391] = { parent = 5730, use_parent_icon = true }, -- Stoneclaw Totem (Rank 3)
@@ -410,7 +436,8 @@ addon.SpellData = {
     [8177] = { -- Grounding Totem
         class = addon.SHAMAN,
         cooldown = 15,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
 
     [16166] = { -- Elemental Mastery
@@ -448,6 +475,7 @@ addon.SpellData = {
         cooldown = 600,
         duration = 40,
         category = category.BURST,
+        baseline = true,
     },
 
     -- Paladin
@@ -455,14 +483,16 @@ addon.SpellData = {
     [498] = { -- Divine Protection (Rank 1)
         class = addon.PALADIN,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [5573] = { parent = 498, use_parent_icon = true }, -- Divine Protection (Rank 2)
 
     [633] = { -- Lay on Hands (Rank 1)
         class = addon.PALADIN,
         cooldown = 3600,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [2800] = { parent = 633, use_parent_icon = true }, -- Lay on Hands (Rank 2)
         [10310] = { parent = 633, use_parent_icon = true }, -- Lay on Hands (Rank 3)
@@ -477,8 +507,9 @@ addon.SpellData = {
 
     [853] = { -- Hammer of Justice (Rank 1)
         class = addon.PALADIN,
-        cooldown = 45,
-        category = category.OTHERS,
+        cooldown = 60,
+        category = category.STUN,
+        baseline = true,
     },
         [5588] = { parent = 853, use_parent_icon = true }, -- Hammer of Justice (Rank 2)
         [5589] = { parent = 853, use_parent_icon = true }, -- Hammer of Justice (Rank 3)
@@ -488,6 +519,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 15,
         category = category.OTHERS,
+        baseline = true,
     },
         [5614] = { parent = 879, use_parent_icon = true }, -- Exorcism (Rank 2)
         [5615] = { parent = 879, use_parent_icon = true }, -- Exorcism (Rank 3)
@@ -499,7 +531,8 @@ addon.SpellData = {
     [1022] = { -- Blessing of Protection (Rank 1)
         class = addon.PALADIN,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [5599] = { parent = 1022, use_parent_icon = true }, -- Blessing of Protection (Rank 2)
         [10278] = { parent = 1022, use_parent_icon = true }, -- Blessing of Protection (Rank 3)
@@ -508,12 +541,14 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 25,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [2812] = { -- Holy Wrath (Rank 1)
         class = addon.PALADIN,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
         [10318] = { parent = 2812, use_parent_icon = true }, -- Holy Wrath (Rank 2)
         [27139] = { parent = 2812, use_parent_icon = true }, -- Holy Wrath (Rank 3)
@@ -521,14 +556,16 @@ addon.SpellData = {
     [2878] = { -- Turn Undead (Rank 1)
         class = addon.PALADIN,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [5627] = { parent = 2878, use_parent_icon = true }, -- Turn Undead (Rank 2)
 
     [6940] = { -- Blessing of Sacrifice (Rank 1)
         class = addon.PALADIN,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [20729] = { parent = 6940, use_parent_icon = true }, -- Blessing of Sacrifice (Rank 2)
         [27147] = { parent = 6940, use_parent_icon = true }, -- Blessing of Sacrifice (Rank 3)
@@ -537,13 +574,15 @@ addon.SpellData = {
     [10326] = { -- Turn Evil
         class = addon.PALADIN,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
 
     [19752] = { -- Divine Intervention
         class = addon.PALADIN,
         cooldown = 3600,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [20066] = { -- Repentance
@@ -556,6 +595,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 8,
         category = category.OTHERS,
+        baseline = true,
     },
         [20116] = { parent = 26573, use_parent_icon = true }, -- Consecration (Rank 2)
         [20922] = { parent = 26573, use_parent_icon = true }, -- Consecration (Rank 3)
@@ -573,6 +613,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [20473] = { -- Holy Shock (Rank 1)
@@ -598,6 +639,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 15,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [31842] = { -- Divine Illumination
@@ -611,6 +653,7 @@ addon.SpellData = {
         cooldown = 180,
         duration = 20,
         category = category.BURST,
+        baseline = true,
     },
 
     [31935] = { -- Avenger's Shield (Rank 1)
@@ -626,7 +669,8 @@ addon.SpellData = {
     [1499] = { -- Freezing Trap (Rank 1)
         class = addon.HUNTER,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [14310] = { parent = 1499, use_parent_icon = true }, -- Freezing Trap (Rank 2)
         [14311] = { parent = 1499, use_parent_icon = true }, -- Freezing Trap (Rank 3)
@@ -636,6 +680,7 @@ addon.SpellData = {
         cooldown = 60,
         duration = 6,
         category = category.BURST,
+        baseline = true,
     },
         [14294] = { parent = 1510, use_parent_icon = true }, -- Volley (Rank 2)
         [14295] = { parent = 1510, use_parent_icon = true }, -- Volley (Rank 3)
@@ -644,7 +689,8 @@ addon.SpellData = {
     [1513] = { -- Scare Beast (Rank 1)
         class = addon.HUNTER,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [14326] = { parent = 1513, use_parent_icon = true }, -- Scare Beast (Rank 2)
         [14327] = { parent = 1513, use_parent_icon = true }, -- Scare Beast (Rank 3)
@@ -653,12 +699,14 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 20,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [2643] = { -- Multi-Shot (Rank 1)
         class = addon.HUNTER,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [14288] = { parent = 2643, use_parent_icon = true }, -- Multi-Shot (Rank 2)
         [14289] = { parent = 2643, use_parent_icon = true }, -- Multi-Shot (Rank 3)
@@ -670,6 +718,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 15,
         category = category.OTHERS,
+        baseline = true,
     },
         [14279] = { parent = 3034, use_parent_icon = true }, -- Viper Sting (Rank 2)
         [14280] = { parent = 3034, use_parent_icon = true }, -- Viper Sting (Rank 3)
@@ -680,24 +729,28 @@ addon.SpellData = {
         cooldown = 300,
         duration = 15,
         category = category.BURST,
+        baseline = true,
     },
 
     [5116] = { -- Concussive Shot
         class = addon.HUNTER,
         cooldown = 12,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [5384] = { -- Feign Death
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [13795] = { -- Immolation Trap (Rank 1)
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
         [14302] = { parent = 13795, use_parent_icon = true }, -- Immolation Trap (Rank 2)
         [14303] = { parent = 13795, use_parent_icon = true }, -- Immolation Trap (Rank 3)
@@ -709,12 +762,14 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [13813] = { -- Explosive Trap (Rank 1)
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
         [14316] = { parent = 13813, use_parent_icon = true }, -- Explosive Trap (Rank 2)
         [14317] = { parent = 13813, use_parent_icon = true }, -- Explosive Trap (Rank 3)
@@ -724,6 +779,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 8,
         category = category.OTHERS,
+        baseline = true,
     },
         [14274] = { parent = 20736, use_parent_icon = true }, -- Distracting Shot (Rank 2)
         [15629] = { parent = 20736, use_parent_icon = true }, -- Distracting Shot (Rank 3)
@@ -735,7 +791,8 @@ addon.SpellData = {
     [19263] = { -- Deterrence
         class = addon.HUNTER,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
 
     [19386] = { -- Wyvern Sting (Rank 1)
@@ -769,7 +826,8 @@ addon.SpellData = {
     [19801] = { -- Tranquilizing Shot
         class = addon.HUNTER,
         cooldown = 20,
-        category = category.OTHERS,
+        category = category.DISPEL,
+        baseline = true,
     },
 
     [23989] = { -- Readiness
@@ -782,6 +840,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 120,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [34490] = { -- Silencing Shot
@@ -794,6 +853,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
 
     -- Hunter Pets
@@ -802,6 +862,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 25,
         category = category.OTHERS,
+        baseline = true,
     },
         [26177] = { parent = 7371, use_parent_icon = true }, -- Charge (Rank 2)
         [26178] = { parent = 7371, use_parent_icon = true }, -- Charge (Rank 3)
@@ -813,6 +874,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [17255] = { parent = 17253, use_parent_icon = true }, -- Bite (Rank 2)
         [17256] = { parent = 17253, use_parent_icon = true }, -- Bite (Rank 3)
@@ -827,6 +889,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
         [23109] = { parent = 23099, use_parent_icon = true }, -- Dash (Rank 2)
         [23110] = { parent = 23099, use_parent_icon = true }, -- Dash (Rank 3)
@@ -835,6 +898,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
         [23147] = { parent = 23145, use_parent_icon = true }, -- Dive (Rank 2)
         [23148] = { parent = 23145, use_parent_icon = true }, -- Dive (Rank 3)
@@ -843,6 +907,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [24452] = { parent = 24450, use_parent_icon = true }, -- Prowl (Rank 2)
         [24453] = { parent = 24450, use_parent_icon = true }, -- Prowl (Rank 3)
@@ -851,6 +916,7 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [24605] = { parent = 24604, use_parent_icon = true }, -- Furious Howl (Rank 2)
         [24603] = { parent = 24604, use_parent_icon = true }, -- Furious Howl (Rank 3)
@@ -859,13 +925,15 @@ addon.SpellData = {
     [26064] = { -- Shell Shield
         class = addon.HUNTER,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
 
     [26090] = { -- Thunderstomp (Rank 1)
         class = addon.HUNTER,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
         [26187] = { parent = 26090, use_parent_icon = true }, -- Thunderstomp (Rank 2)
         [26188] = { parent = 26090, use_parent_icon = true }, -- Thunderstomp (Rank 3)
@@ -875,19 +943,22 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [35323] = { parent = 34889, use_parent_icon = true }, -- Fire Breath (Rank 2)
 
     [35346] = { -- Warp
         class = addon.HUNTER,
         cooldown = 15,
-        category = category.OTHERS,
+        category = category.MOBILITY,
+        baseline = true,
     },
 
     [35387] = { -- Poison Spit (Rank 1)
         class = addon.HUNTER,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [35389] = { parent = 35387, use_parent_icon = true }, -- Poison Spit (Rank 2)
         [35392] = { parent = 35387, use_parent_icon = true }, -- Poison Spit (Rank 3)
@@ -897,7 +968,9 @@ addon.SpellData = {
     [740] = { -- Tranquility (Rank 1)
         class = addon.DRUID,
         cooldown = 600,
+        duration = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [8918] = { parent = 740, use_parent_icon = true }, -- Tranquility (Rank 2)
         [9862] = { parent = 740, use_parent_icon = true }, -- Tranquility (Rank 3)
@@ -907,7 +980,8 @@ addon.SpellData = {
     [1850] = { -- Dash (Rank 1)
         class = addon.DRUID,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.MOBILITY,
+        baseline = true,
     },
         [9821] = { parent = 1850, use_parent_icon = true }, -- Dash (Rank 2)
         [33357] = { parent = 1850, use_parent_icon = true }, -- Dash (Rank 3)
@@ -916,12 +990,14 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 600,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [5211] = { -- Bash (Rank 1)
         class = addon.DRUID,
         cooldown = 60,
-        category = category.OTHERS,
+        category = category.STUN,
+        baseline = true,
     },
         [6798] = { parent = 5211, use_parent_icon = true }, -- Bash (Rank 2)
         [8983] = { parent = 5211, use_parent_icon = true }, -- Bash (Rank 3)
@@ -930,6 +1006,7 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [6783] = { parent = 5215, use_parent_icon = true }, -- Prowl (Rank 2)
         [9913] = { parent = 5215, use_parent_icon = true }, -- Prowl (Rank 3)
@@ -938,18 +1015,21 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [6795] = { -- Growl
         class = addon.DRUID,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [8998] = { -- Cower (Rank 1)
         class = addon.DRUID,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [9000] = { parent = 8998, use_parent_icon = true }, -- Cower (Rank 2)
         [9892] = { parent = 8998, use_parent_icon = true }, -- Cower (Rank 3)
@@ -960,6 +1040,7 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
         [16810] = { parent = 16689, use_parent_icon = true }, -- Nature's Grasp (Rank 2)
         [16811] = { parent = 16689, use_parent_icon = true }, -- Nature's Grasp (Rank 3)
@@ -972,6 +1053,7 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
         [17401] = { parent = 16914, use_parent_icon = true }, -- Hurricane (Rank 2)
         [17402] = { parent = 16914, use_parent_icon = true }, -- Hurricane (Rank 3)
@@ -999,6 +1081,7 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 1200,
         category = category.OTHERS,
+        baseline = true,
     },
         [20739] = { parent = 20484, use_parent_icon = true }, -- Rebirth (Rank 2)
         [20742] = { parent = 20484, use_parent_icon = true }, -- Rebirth (Rank 3)
@@ -1009,13 +1092,15 @@ addon.SpellData = {
     [22812] = { -- Barkskin
         class = addon.DRUID,
         cooldown = 60,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
 
     [22842] = { -- Frenzied Regeneration (Rank 1)
         class = addon.DRUID,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [22895] = { parent = 22842, use_parent_icon = true }, -- Frenzied Regeneration (Rank 2)
         [22896] = { parent = 22842, use_parent_icon = true }, -- Frenzied Regeneration (Rank 3)
@@ -1025,6 +1110,7 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 360,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [33831] = { -- Force of Nature
@@ -1039,12 +1125,14 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 120,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [66] = { -- Invisibility
         class = addon.MAGE,
         cooldown = 300,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [120] = { -- Cone of Cold (Rank 1)
@@ -1052,6 +1140,7 @@ addon.SpellData = {
         cooldown = 8,
         opt_lower_cooldown = 6,
         category = category.OTHERS,
+        baseline = true,
     },
         [8492] = { parent = 120, use_parent_icon = true }, -- Cone of Cold (Rank 2)
         [10159] = { parent = 120, use_parent_icon = true }, -- Cone of Cold (Rank 3)
@@ -1062,7 +1151,8 @@ addon.SpellData = {
     [122] = { -- Frost Nova (Rank 1)
         class = addon.MAGE,
         cooldown = 21,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [865] = { parent = 122, use_parent_icon = true }, -- Frost Nova (Rank 2)
         [6131] = { parent = 122, use_parent_icon = true }, -- Frost Nova (Rank 3)
@@ -1072,7 +1162,8 @@ addon.SpellData = {
     [543] = { -- Fire Ward (Rank 1)
         class = addon.MAGE,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [8457] = { parent = 543, use_parent_icon = true }, -- Fire Ward (Rank 2)
         [8458] = { parent = 543, use_parent_icon = true }, -- Fire Ward (Rank 3)
@@ -1083,13 +1174,15 @@ addon.SpellData = {
     [1953] = { -- Blink
         class = addon.MAGE,
         cooldown = 13,
-        category = category.OTHERS,
+        category = category.MOBILITY,
+        baseline = true,
     },
 
     [2136] = { -- Fire Blast (Rank 1)
         class = addon.MAGE,
         cooldown = 8,
         category = category.OTHERS,
+        baseline = true,
     },
         [2137] = { parent = 2136, use_parent_icon = true }, -- Fire Blast (Rank 2)
         [2138] = { parent = 2136, use_parent_icon = true }, -- Fire Blast (Rank 3)
@@ -1104,12 +1197,14 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 24,
         category = category.INTERRUPT,
+        baseline = true,
     },
 
     [6143] = { -- Frost Ward (Rank 1)
         class = addon.MAGE,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [8461] = { parent = 6143, use_parent_icon = true }, -- Frost Ward (Rank 2)
         [8462] = { parent = 6143, use_parent_icon = true }, -- Frost Ward (Rank 3)
@@ -1171,6 +1266,7 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 480,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [12472] = { -- Icy Veins
@@ -1205,13 +1301,15 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 300,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [45438] = { -- Ice Block
         class = addon.MAGE,
         cooldown = 300,
         opt_lower_cooldown = 240,
-        category = category.OTHERS,
+        category = category.IMMUNITY,
+        baseline = true,
     },
 
     -- Rogue
@@ -1219,7 +1317,8 @@ addon.SpellData = {
     [408] = { -- Kidney Shot (Rank 1)
         class = addon.ROGUE,
         cooldown = 20,
-        category = category.OTHERS,
+        category = category.STUN,
+        baseline = true,
     },
         [8643] = { parent = 408, use_parent_icon = true }, -- Kidney Shot (Rank 2)
 
@@ -1227,12 +1326,14 @@ addon.SpellData = {
         class = addon.ROGUE,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [1766] = { -- Kick (Rank 1)
         class = addon.ROGUE,
         cooldown = 10,
         category = category.INTERRUPT,
+        baseline = true,
     },
         [1767] = { parent = 1766, use_parent_icon = true }, -- Kick (Rank 2)
         [1768] = { parent = 1766, use_parent_icon = true }, -- Kick (Rank 3)
@@ -1242,7 +1343,8 @@ addon.SpellData = {
     [1776] = { -- Gouge (Rank 1)
         class = addon.ROGUE,
         cooldown = 10,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
         [1777] = { parent = 1776, use_parent_icon = true }, -- Gouge (Rank 2)
         [8629] = { parent = 1776, use_parent_icon = true }, -- Gouge (Rank 3)
@@ -1254,6 +1356,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [1785] = { parent = 1784, use_parent_icon = true }, -- Stealth (Rank 2)
         [1786] = { parent = 1784, use_parent_icon = true }, -- Stealth (Rank 3)
@@ -1262,7 +1365,8 @@ addon.SpellData = {
     [1856] = { -- Vanish (Rank 1)
         class = addon.ROGUE,
         cooldown = 210, -- Baseline 300s, Elusiveness -90s
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [1857] = { parent = 1856, use_parent_icon = true }, -- Vanish (Rank 2)
         [26889] = { parent = 1856, use_parent_icon = true }, -- Vanish (Rank 3)
@@ -1271,6 +1375,7 @@ addon.SpellData = {
         class = addon.ROGUE,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
         [6768] = { parent = 1966, use_parent_icon = true }, -- Feint (Rank 2)
         [8637] = { parent = 1966, use_parent_icon = true }, -- Feint (Rank 3)
@@ -1281,13 +1386,15 @@ addon.SpellData = {
     [2094] = { -- Blind
         class = addon.ROGUE,
         cooldown = 90, -- Baseline 180s, Elusiveness -90s
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
 
     [2983] = { -- Sprint (Rank 1)
         class = addon.ROGUE,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.MOBILITY,
+        baseline = true,
     },
         [8696] = { parent = 2983, use_parent_icon = true }, -- Sprint (Rank 2)
         [11305] = { parent = 2983, use_parent_icon = true }, -- Sprint (Rank 3)
@@ -1295,7 +1402,8 @@ addon.SpellData = {
     [5277] = { -- Evasion (Rank 1)
         class = addon.ROGUE,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
         [26669] = { parent = 5277, use_parent_icon = true }, -- Evasion (Rank 2)
 
@@ -1340,7 +1448,8 @@ addon.SpellData = {
     [31224] = { -- Cloak of Shadows
         class = addon.ROGUE,
         cooldown = 60,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
 
     [36554] = { -- Shadowstep
@@ -1355,6 +1464,7 @@ addon.SpellData = {
         class = addon.WARRIOR,
         cooldown = 15,
         category = category.OTHERS,
+        baseline = true,
     },
         [6178] = { parent = 100, use_parent_icon = true }, -- Charge (Rank 2)
         [11578] = { parent = 100, use_parent_icon = true }, -- Charge (Rank 3)
@@ -1363,18 +1473,21 @@ addon.SpellData = {
         class = addon.WARRIOR,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [676] = { -- Disarm
         class = addon.WARRIOR,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [694] = { -- Mocking Blow (Rank 1)
         class = addon.WARRIOR,
         cooldown = 120,
         category = category.OTHERS,
+        baseline = true,
     },
         [7400] = { parent = 694, use_parent_icon = true }, -- Mocking Blow (Rank 2)
         [7402] = { parent = 694, use_parent_icon = true }, -- Mocking Blow (Rank 3)
@@ -1385,49 +1498,57 @@ addon.SpellData = {
     [871] = { -- Shield Wall
         class = addon.WARRIOR,
         cooldown = 1800,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
 
     [1161] = { -- Challenging Shout
         class = addon.WARRIOR,
         cooldown = 600,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [1680] = { -- Whirlwind
         class = addon.WARRIOR,
         cooldown = 10,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [1719] = { -- Recklessness
         class = addon.WARRIOR,
         cooldown = 1800,
-        category = category.OTHERS,
+        category = category.BURST,
+        baseline = true,
     },
 
     [2687] = { -- Bloodrage
         class = addon.WARRIOR,
         cooldown = 60,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [3411] = { -- Intervene
         class = addon.WARRIOR,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [5246] = { -- Intimidating Shout
         class = addon.WARRIOR,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.CROWDCONTROL,
+        baseline = true,
     },
 
     [6552] = { -- Pummel (Rank 1)
         class = addon.WARRIOR,
         cooldown = 10,
         category = category.INTERRUPT,
+        baseline = true,
     },
         [6554] = { parent = 6552, use_parent_icon = true }, -- Pummel (Rank 2)
         [72] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 1)
@@ -1463,18 +1584,21 @@ addon.SpellData = {
         class = addon.WARRIOR,
         cooldown = 30,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [20230] = { -- Retaliation
         class = addon.WARRIOR,
         cooldown = 1800,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [20252] = { -- Intercept (Rank 1)
         class = addon.WARRIOR,
         cooldown = 15,
         category = category.OTHERS,
+        baseline = true,
     },
         [20616] = { parent = 20252, use_parent_icon = true }, -- Intercept (Rank 2)
         [20617] = { parent = 20252, use_parent_icon = true }, -- Intercept (Rank 3)
@@ -1484,7 +1608,8 @@ addon.SpellData = {
     [23920] = { -- Spell Reflection
         class = addon.WARRIOR,
         cooldown = 10,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
+        baseline = true,
     },
 
 };
