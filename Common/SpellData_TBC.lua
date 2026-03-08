@@ -365,10 +365,10 @@ addon.SpellData = {
     -- Shaman
 
     [8042] = { -- Earth Shock (Rank 1)
+        cooldown = 5,
         class = addon.SHAMAN,
-        cooldown = 6,
         category = category.INTERRUPT,
-        baseline = true,
+        baseline = true
     },
         [8044] = { parent = 8042, use_parent_icon = true }, -- Earth Shock (Rank 2)
         [8045] = { parent = 8042, use_parent_icon = true }, -- Earth Shock (Rank 3)
@@ -968,7 +968,6 @@ addon.SpellData = {
     [740] = { -- Tranquility (Rank 1)
         class = addon.DRUID,
         cooldown = 600,
-        duration = 10,
         category = category.OTHERS,
         baseline = true,
     },
