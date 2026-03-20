@@ -1459,6 +1459,19 @@ addon.SpellData = {
 
     -- Warrior
 
+    [12294] = { -- Mortal Strike (Rank 1)
+        class = addon.WARRIOR,
+        cooldown = 6,
+        category = category.OTHERS,
+        baseline = true,
+    },
+        [21551] = { parent = 12294, use_parent_icon = true }, -- Mortal Strike (Rank 2)
+        [21552] = { parent = 12294, use_parent_icon = true }, -- Mortal Strike (Rank 3)
+        [21553] = { parent = 12294, use_parent_icon = true }, -- Mortal Strike (Rank 4)
+        [25248] = { parent = 12294, use_parent_icon = true }, -- Mortal Strike (Rank 5)
+        [30330] = { parent = 12294, use_parent_icon = true }, -- Mortal Strike (Rank 6)
+
+
     [100] = { -- Charge (Rank 1)
         class = addon.WARRIOR,
         cooldown = 15,
