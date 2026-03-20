@@ -354,6 +354,7 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 8,
         category = category.OTHERS,
+        trackPet = true,
         baseline = true,
     },
         [19731] = { parent = 19505, use_parent_icon = true }, -- Devour Magic (Rank 2)
