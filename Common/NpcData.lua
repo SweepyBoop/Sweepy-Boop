@@ -275,7 +275,7 @@ addon.CheckNpcWhiteList = function (unitId)
         local isCritter = addon.CritterNPCs[tonumber(npcID)];
         return isWhitelisted, isCritter;
     else
-        return true, false;
+        return addon.NpcOption.Show, false;
     end
 end
 
