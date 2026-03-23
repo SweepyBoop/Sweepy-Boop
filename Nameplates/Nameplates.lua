@@ -193,7 +193,7 @@ local function UpdateWidgets(nameplate, frame)
 
         -- Hide Beast Mastery Hunter secondary pets (this override the above setting)
         -- If we already decided to hide a unit, no need to perform this check!
-        if shouldShowUnitFrame and addon.UnitIsHunterSecondaryPet(frame.unit) then
+        if shouldShowUnitFrame and ( not addon.PROJECT_MAINLINE ) and addon.UnitIsHunterSecondaryPet(frame.unit) then
             shouldShowUnitFrame = false;
         end
 
