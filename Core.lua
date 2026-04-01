@@ -378,7 +378,7 @@ function SweepyBoop:OnInitialize()
 
     self:SetupQueueReminder();
     self:SetupCombatIndicator();
-    --self:SetupHealerInCrowdControl();
+    self:SetupHealerInCrowdControl();
     self:SetupArenaSurrender();
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();

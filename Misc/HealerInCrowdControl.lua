@@ -189,12 +189,66 @@ local crowdControlPriority = { -- sort by remaining time, then priority
     ["incapacitate"] = 80,
 };
 
+local function ScanCrowdControlAuras(unitTarget)
+    local bestSpellID;
+    local bestPriority = 0;
+    local bestStartTime;
+    local bestDuration;
+    local bestExpirationTime;
+
+    local ccAuras = C_UnitAuras.GetUnitAuras(unitTarget, "HARMFUL|CROWD_CONTROL");
+    if ( not ccAuras ) then
+        return nil;
+    end
+
+    for _, auraData in ipairs(ccAuras) do
+        if auraData.spellId then
+            local isCC = C_Spell.IsSpellCrowdControl(auraData.spellId);
+            if issecretvalue(isCC) or isCC then
+                local durationInfo = C_UnitAuras.GetAuraDuration(unitTarget, auraData.auraInstanceID);
+                local startTime = durationInfo and durationInfo:GetStartTime();
+                local totalDuration = durationInfo and durationInfo:GetTotalDuration();
+
+                if startTime and totalDuration then
+                    local expirationTime = startTime + totalDuration;
+                    local category = addon.DRList and addon.DRList[auraData.spellId];
+                    local priority = (category and crowdControlPriority[category]) or 50;
+
+                    local update = false;
+                    if ( not bestExpirationTime ) then
+                        update = true;
+                    elseif totalDuration == 0 then -- Aura never expires, prioritize it
+                        update = true;
+                    elseif expirationTime < bestExpirationTime then
+                        update = true;
+                    elseif priority > bestPriority then
+                        update = true;
+                    end
+
+                    if update then
+                        bestSpellID = auraData.spellId;
+                        bestPriority = priority;
+                        bestStartTime = startTime;
+                        bestDuration = totalDuration;
+                        bestExpirationTime = expirationTime;
+                    end
+                end
+            end
+        end
+    end
+
+    if bestSpellID then
+        return bestSpellID, bestStartTime, bestDuration;
+    end
+    return nil;
+end
+
 local updateFrame;
 
 function SweepyBoop:SetupHealerInCrowdControl()
     if ( not updateFrame ) then
-        updateFrame = CreateFrame("Frame"); -- When a frame is hidden it might not receive event, so we create a frame to catch events
-        updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
+        updateFrame = CreateFrame("Frame");
+        updateFrame:SetScript("OnEvent", function (self, event, unitTarget, updateInfo)
             if ( event ~= addon.UNIT_AURA ) then -- Hide when switching map or entering new round of solo shuffle
                 HideIcon(containerFrame);
                 return;
@@ -205,42 +259,25 @@ function SweepyBoop:SetupHealerInCrowdControl()
                 return;
             end
 
+            -- Skip if updateInfo shows no relevant aura changes
+            if updateInfo and ( not updateInfo.isFullUpdate ) then
+                local hasChanges = (updateInfo.addedAuras and #updateInfo.addedAuras > 0)
+                    or (updateInfo.updatedAuras and #updateInfo.updatedAuras > 0)
+                    or (updateInfo.removedAuraInstanceIDs and #updateInfo.removedAuraInstanceIDs > 0);
+                if ( not hasChanges ) then
+                    return;
+                end
+            end
+
             local isFriendly = unitTarget and ( UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2") );
             local isFriendlyHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
             if isFriendlyHealer then
-                local spellID;
-                local priority = 0; -- init with a low priority
-                local duration;
-                local expirationTime;
+                local spellID, startTime, duration = ScanCrowdControlAuras(unitTarget);
 
-                for i = 1, 40 do
-                    local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
-                    if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
-                    if addon.DRList[auraData.spellId] then
-                        local category = addon.DRList[auraData.spellId];
-                        local update = false;
-                        if crowdControlPriority[category] then -- Found a CC that should be shown
-                            -- No expirationTime means this aura never expires, so it should be prioritized
-                            if ( not auraData.expirationTime ) or ( expirationTime and auraData.expirationTime and auraData.expirationTime < expirationTime ) then
-                                update = true;
-                            elseif crowdControlPriority[category] > priority then -- same expirationTime, use priority as tie breaker
-                                update = true;
-                            end
-
-                            if update then
-                                priority = crowdControlPriority[category];
-                                duration = auraData.duration;
-                                expirationTime = auraData.expirationTime;
-                                spellID = auraData.spellId;
-                            end
-                        end
-                    end
-                end
-
-                if ( not spellID ) then -- No CC found, hide
+                if ( not spellID ) then
                     HideIcon(containerFrame);
                 else
-                    ShowIcon(spellID, duration and (expirationTime - duration), duration);
+                    ShowIcon(spellID, startTime, duration);
                 end
             end
         end)
