@@ -55,7 +55,7 @@ local function UpdateHealerIndicator()
     elseif ArenaLiveUnitFrames then
         size = ALUF_ArenaEnemyFramesArenaEnemyFrame1 and ALUF_ArenaEnemyFramesArenaEnemyFrame1Portrait and ALUF_ArenaEnemyFramesArenaEnemyFrame1Portrait:GetSize();
     end
-    if ( not size ) then
+    if ( not size ) or addon.IsSecretValue(size) then
         HideHealerIndicator();
         return;
     end
@@ -68,7 +68,7 @@ local function UpdateHealerIndicator()
     elseif ArenaLiveUnitFrames then
         scale = ALUF_ArenaEnemyFrames:GetScale();
     end
-    if ( not scale ) then
+    if ( not scale ) or addon.IsSecretValue(scale) then
         HideHealerIndicator();
         return;
     end
