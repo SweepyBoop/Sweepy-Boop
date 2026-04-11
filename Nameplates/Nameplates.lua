@@ -21,11 +21,7 @@ end
 
 local function IsUnitIdInvalid(unitId)
     if unitId == nil then return true end
-    if string.sub(unitId, 1, 9) == "nameplate" then return false end
-    if string.sub(unitId, 1, 5) == "arena" then return true end
-    if string.sub(unitId, 1, 4) == "boss" then return true end
-    if string.sub(unitId, 1, 4) == "raid" then return true end
-    if string.sub(unitId, 1, 5) == "party" then return true end
+    return string.sub(unitId, 1, 9) ~= "nameplate"
 end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
