@@ -37,6 +37,14 @@ Get-Content -Path $inputTocPathMists | Where-Object {$_ -notmatch 'Internal'} | 
 
 Move-Item -Path $outputTocPathMists -Destination $inputTocPathMists -Force
 
+# Do the same for the TBC version
+$inputTocPathTBC = "${publishDir}\SweepyBoop_TBC.toc"
+$outputTocPathTBC = "${publishDir}\SweepyBoop_TBC.toc.new"
+
+Get-Content -Path $inputTocPathTBC | Where-Object {$_ -notmatch 'Internal'} | Set-Content -Path $outputTocPathTBC
+
+Move-Item -Path $outputTocPathTBC -Destination $inputTocPathTBC -Force
+
 # Use right click and compress to zip, instead of PowerShell, seems like the package is randomly breaking for Mac users
 #tar -a -cf SweepyBoop.zip $publishDir
 #Remove-Item -Path $publishDir -Recurse -Force
