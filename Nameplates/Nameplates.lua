@@ -19,13 +19,25 @@ local function IsRestricted()
     return restricted[instanceType];
 end
 
+local strsub = string.sub
+local strbyte = string.byte
+
 local function IsUnitIdInvalid(unitId)
     if unitId == nil then return true end
-    if string.sub(unitId, 1, 9) == "nameplate" then return false end
-    if string.sub(unitId, 1, 5) == "arena" then return true end
-    if string.sub(unitId, 1, 4) == "boss" then return true end
-    if string.sub(unitId, 1, 4) == "raid" then return true end
-    if string.sub(unitId, 1, 5) == "party" then return true end
+    local b = strbyte(unitId)
+    if b == 110 then -- 'n'ameplate
+        if strsub(unitId, 1, 9) == "nameplate" then return false end
+    elseif b == 97 then -- 'a'rena
+        if strsub(unitId, 1, 5) == "arena" then return true end
+    elseif b == 98 then -- 'b'oss
+        if strsub(unitId, 1, 4) == "boss" then return true end
+    elseif b == 114 then -- 'r'aid
+        if strsub(unitId, 1, 4) == "raid" then return true end
+    elseif b == 112 then -- 'p'arty
+        if strsub(unitId, 1, 5) == "party" then return true end
+    elseif b == 116 then -- 't'argettarget
+        if unitId == "targettarget" then return true end
+    end
 end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
