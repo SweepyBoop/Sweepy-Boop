@@ -37,6 +37,8 @@ local function IsUnitIdInvalid(unitId)
         if strsub(unitId, 1, 5) == "party" then return true end
     elseif b == 116 then -- 't'argettarget
         if unitId == "targettarget" then return true end
+    elseif b == 102 then -- 'f'ocustarget
+        if unitId == "focustarget" then return true end
     end
 end
 
