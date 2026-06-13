@@ -49,23 +49,19 @@ local function IsForbiddenSafe(frame)
 end
 
 -- Arena number resolver (mainline) -------------------------------------------
--- On mainline, arena units are PvP-restricted: UnitGUID / UnitIsUnit return
--- secret values, so a nameplate cannot be matched to arena1/2/3 directly. We
--- instead fingerprint each arena slot from non-secret attributes (class via the
--- sanctioned GetArenaOpponentSpec, plus race / sex / honor level) and resolve
--- each enemy nameplate by unique match + elimination. On an unresolved conflict
--- the nameplate is intentionally left blank rather than guessed (a wrong number
--- is worse than none).
-local arenaNumberByUnit = {}; -- nameplate unit token -> resolved arena index (sticky within a round)
-local arenaSlotClaimed = {};  -- arena index -> true once a nameplate has claimed it
-
--- The arena slot <-> player mapping is fixed for a round, so resolutions are sticky.
--- We only reset on a genuinely new comp (arena enter / new solo shuffle round).
-local function ResetArenaNumbers()
-    wipe(arenaNumberByUnit);
-    wipe(arenaSlotClaimed);
-end
-addon.ResetArenaNumbers = ResetArenaNumbers;
+-- On mainline, arena units are PvP-restricted: UnitGUID / UnitIsUnit return secret
+-- values, so a nameplate cannot be matched to arena1/2/3 directly. We instead
+-- fingerprint each arena slot from non-secret attributes (class, race, sex, honor
+-- level; class falls back to the sanctioned GetArenaOpponentSpec when the arena unit
+-- is out of range) and match a nameplate's fingerprint against those slots.
+--
+-- The per-nameplate resolution is NOT cached: nameplate tokens (nameplateN) are
+-- recycled far too frequently (range / line-of-sight / stealth, not just deaths) for
+-- a token-keyed cache to be safe or worthwhile, so each request matches live. (The
+-- arena-slot fingerprints themselves ARE cached, by index -- see GetArenaSlotPrint.)
+-- A nameplate is numbered only if it uniquely matches one slot; on any ambiguity it
+-- is left blank (a wrong number is worse than none). A unique match is necessarily
+-- the unit's own slot, so a shown number is never wrong.
 
 local function GetUnitArenaPrint(unit)
     if ( not UnitExists(unit) ) then return end
@@ -79,15 +75,38 @@ local function GetUnitArenaPrint(unit)
     };
 end
 
+-- Per-slot fingerprint cache. The arena1/2/3 -> player identity is fixed for a
+-- round, and a player's class/race/sex/honor never change, so once we read a slot's
+-- full (in-range) fingerprint we cache it until the comp changes (reset on
+-- PLAYER_ENTERING_WORLD / ARENA_PREP_OPPONENT_SPECIALIZATIONS). Keyed by arena index
+-- (not by recycled nameplate tokens), so it has none of the staleness a token-keyed
+-- cache would, and it lets matching survive a slot temporarily breaking line of sight.
+local arenaSlotPrintCache = {};
+
+local function ResetArenaSlotPrintCache()
+    wipe(arenaSlotPrintCache);
+end
+
 local function GetArenaSlotPrint(i)
+    local cached = arenaSlotPrintCache[i];
+    if cached then return cached end
+
     local fp = GetUnitArenaPrint("arena" .. i);
-    if fp then return fp end
+    if fp then
+        -- Cache only a complete in-range fingerprint; while out of range the print is
+        -- too coarse to lock in for the round.
+        if fp.race and fp.sex and fp.honor then
+            arenaSlotPrintCache[i] = fp;
+        end
+        return fp;
+    end
+
     -- Out of range / prep phase: UnitClassBase may be nil, but spec is available.
     local specID = GetArenaOpponentSpec(i);
     if specID and ( specID > 0 ) then
         local class = select(6, GetSpecializationInfoByID(specID)); -- classFilename
         if class then
-            return { class = class }; -- class-only; race/sex/honor act as wildcards
+            return { class = class }; -- class-only; race/sex/honor act as wildcards (not cached)
         end
     end
 end
@@ -100,83 +119,26 @@ local function ArenaPrintsMatch(plate, slot)
     return true;
 end
 
--- Resolve currently-unresolved enemy nameplates against unclaimed arena slots.
--- Confident (unique) matches stick for the rest of the round; ambiguous nameplates
--- are left unresolved and retried as more data (range / honor) becomes available.
-local function ResolveArenaNumbers()
-    local maxArena = addon.MAX_ARENA_SIZE;
-
-    -- Rebuild the claimed set from still-valid resolutions; drop stale ones
-    -- (nameplate gone) so a recycled enemy can reclaim that slot.
-    wipe(arenaSlotClaimed);
-    for unit, slot in pairs(arenaNumberByUnit) do
-        if UnitExists(unit) then
-            arenaSlotClaimed[slot] = true;
-        else
-            arenaNumberByUnit[unit] = nil;
-        end
-    end
-
-    -- Fingerprint the unclaimed arena slots
-    local slotPrint = {};
-    for i = 1, maxArena do
-        if ( not arenaSlotClaimed[i] ) then
-            slotPrint[i] = GetArenaSlotPrint(i);
-        end
-    end
-
-    -- Collect unresolved enemy player nameplates and their candidate (unclaimed) slots
-    local units = {};
-    local candidates = {};
-    local nameplates = C_NamePlate.GetNamePlates();
-    for n = 1, #nameplates do
-        local frame = nameplates[n] and nameplates[n].UnitFrame;
-        if frame and frame.unit and ( not arenaNumberByUnit[frame.unit] )
-                and ( not IsForbiddenSafe(frame) )
-                and UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
-            local platePrint = GetUnitArenaPrint(frame.unit);
-            if platePrint then
-                local list = {};
-                for i = 1, maxArena do
-                    if slotPrint[i] and ArenaPrintsMatch(platePrint, slotPrint[i]) then
-                        list[#list + 1] = i;
-                    end
-                end
-                units[#units + 1] = frame.unit;
-                candidates[frame.unit] = list;
-            end
-        end
-    end
-
-    -- Assign unique matches; repeat so elimination resolves forced cases.
-    local progress = true;
-    while progress do
-        progress = false;
-        for _, unit in ipairs(units) do
-            if ( not arenaNumberByUnit[unit] ) then
-                local match, count = nil, 0;
-                for _, i in ipairs(candidates[unit]) do
-                    if ( not arenaSlotClaimed[i] ) then
-                        count = count + 1;
-                        match = i;
-                    end
-                end
-                if ( count == 1 ) then
-                    arenaNumberByUnit[unit] = match;
-                    arenaSlotClaimed[match] = true;
-                    progress = true;
-                end
-            end
-        end
-    end
-    -- Unresolved nameplates (0 or >1 viable slots) are intentionally left blank.
-end
-
+-- Returns the arena index (1..N) for a nameplate unit, or nil if it can't be
+-- uniquely resolved. The unit's own fingerprint is read live each call and matched
+-- against the (cached) arena slots.
 local function GetArenaNumber(unit)
-    if ( not arenaNumberByUnit[unit] ) then
-        ResolveArenaNumbers();
+    local platePrint = GetUnitArenaPrint(unit);
+    if ( not platePrint ) then return end
+
+    local match, count = nil, 0;
+    for i = 1, addon.MAX_ARENA_SIZE do
+        local slot = GetArenaSlotPrint(i);
+        if slot and ArenaPrintsMatch(platePrint, slot) then
+            count = count + 1;
+            match = i;
+        end
     end
-    return arenaNumberByUnit[unit];
+
+    -- Number only on a unique match; 0 or >1 viable slots -> leave blank.
+    if ( count == 1 ) then
+        return match;
+    end
 end
 addon.GetArenaNumber = GetArenaNumber;
 
@@ -361,9 +323,9 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        -- Arena number resolver: reset the nameplate -> arena slot mapping on a new comp
-        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- new arena
-        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS); -- new solo shuffle round
+        -- Arena slot fingerprint cache: the comp only changes on a new arena / shuffle round
+        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     else
         eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
     end
@@ -419,7 +381,7 @@ function SweepyBoop:SetupNameplateModules()
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
             end
         elseif event == addon.PLAYER_ENTERING_WORLD or event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
-            addon.ResetArenaNumbers();
+            ResetArenaSlotPrintCache(); -- arena comp changed; drop cached slot fingerprints
         end
     end)
 
