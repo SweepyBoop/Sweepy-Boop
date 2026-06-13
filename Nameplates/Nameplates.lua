@@ -48,6 +48,138 @@ local function IsForbiddenSafe(frame)
     return frame:IsForbidden();
 end
 
+-- Arena number resolver (mainline) -------------------------------------------
+-- On mainline, arena units are PvP-restricted: UnitGUID / UnitIsUnit return
+-- secret values, so a nameplate cannot be matched to arena1/2/3 directly. We
+-- instead fingerprint each arena slot from non-secret attributes (class via the
+-- sanctioned GetArenaOpponentSpec, plus race / sex / honor level) and resolve
+-- each enemy nameplate by unique match + elimination. On an unresolved conflict
+-- the nameplate is intentionally left blank rather than guessed (a wrong number
+-- is worse than none).
+local arenaNumberByUnit = {}; -- nameplate unit token -> resolved arena index (sticky within a round)
+local arenaSlotClaimed = {};  -- arena index -> true once a nameplate has claimed it
+
+-- The arena slot <-> player mapping is fixed for a round, so resolutions are sticky.
+-- We only reset on a genuinely new comp (arena enter / new solo shuffle round).
+local function ResetArenaNumbers()
+    wipe(arenaNumberByUnit);
+    wipe(arenaSlotClaimed);
+end
+addon.ResetArenaNumbers = ResetArenaNumbers;
+
+local function GetUnitArenaPrint(unit)
+    if ( not UnitExists(unit) ) then return end
+    local class = UnitClassBase(unit); -- non-secret on arena units
+    if ( not class ) then return end
+    return {
+        class = class,
+        race = select(2, UnitRace(unit)), -- locale-independent race file
+        sex = UnitSex(unit),
+        honor = UnitHonorLevel(unit),
+    };
+end
+
+local function GetArenaSlotPrint(i)
+    local fp = GetUnitArenaPrint("arena" .. i);
+    if fp then return fp end
+    -- Out of range / prep phase: UnitClassBase may be nil, but spec is available.
+    local specID = GetArenaOpponentSpec(i);
+    if specID and ( specID > 0 ) then
+        local class = select(6, GetSpecializationInfoByID(specID)); -- classFilename
+        if class then
+            return { class = class }; -- class-only; race/sex/honor act as wildcards
+        end
+    end
+end
+
+local function ArenaPrintsMatch(plate, slot)
+    if ( plate.class ~= slot.class ) then return false end
+    if ( slot.race ~= nil ) and ( plate.race ~= slot.race ) then return false end
+    if ( slot.sex ~= nil ) and ( plate.sex ~= slot.sex ) then return false end
+    if ( slot.honor ~= nil ) and ( plate.honor ~= slot.honor ) then return false end
+    return true;
+end
+
+-- Resolve currently-unresolved enemy nameplates against unclaimed arena slots.
+-- Confident (unique) matches stick for the rest of the round; ambiguous nameplates
+-- are left unresolved and retried as more data (range / honor) becomes available.
+local function ResolveArenaNumbers()
+    local maxArena = addon.MAX_ARENA_SIZE;
+
+    -- Rebuild the claimed set from still-valid resolutions; drop stale ones
+    -- (nameplate gone) so a recycled enemy can reclaim that slot.
+    wipe(arenaSlotClaimed);
+    for unit, slot in pairs(arenaNumberByUnit) do
+        if UnitExists(unit) then
+            arenaSlotClaimed[slot] = true;
+        else
+            arenaNumberByUnit[unit] = nil;
+        end
+    end
+
+    -- Fingerprint the unclaimed arena slots
+    local slotPrint = {};
+    for i = 1, maxArena do
+        if ( not arenaSlotClaimed[i] ) then
+            slotPrint[i] = GetArenaSlotPrint(i);
+        end
+    end
+
+    -- Collect unresolved enemy player nameplates and their candidate (unclaimed) slots
+    local units = {};
+    local candidates = {};
+    local nameplates = C_NamePlate.GetNamePlates();
+    for n = 1, #nameplates do
+        local frame = nameplates[n] and nameplates[n].UnitFrame;
+        if frame and frame.unit and ( not arenaNumberByUnit[frame.unit] )
+                and ( not IsForbiddenSafe(frame) )
+                and UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
+            local platePrint = GetUnitArenaPrint(frame.unit);
+            if platePrint then
+                local list = {};
+                for i = 1, maxArena do
+                    if slotPrint[i] and ArenaPrintsMatch(platePrint, slotPrint[i]) then
+                        list[#list + 1] = i;
+                    end
+                end
+                units[#units + 1] = frame.unit;
+                candidates[frame.unit] = list;
+            end
+        end
+    end
+
+    -- Assign unique matches; repeat so elimination resolves forced cases.
+    local progress = true;
+    while progress do
+        progress = false;
+        for _, unit in ipairs(units) do
+            if ( not arenaNumberByUnit[unit] ) then
+                local match, count = nil, 0;
+                for _, i in ipairs(candidates[unit]) do
+                    if ( not arenaSlotClaimed[i] ) then
+                        count = count + 1;
+                        match = i;
+                    end
+                end
+                if ( count == 1 ) then
+                    arenaNumberByUnit[unit] = match;
+                    arenaSlotClaimed[match] = true;
+                    progress = true;
+                end
+            end
+        end
+    end
+    -- Unresolved nameplates (0 or >1 viable slots) are intentionally left blank.
+end
+
+local function GetArenaNumber(unit)
+    if ( not arenaNumberByUnit[unit] ) then
+        ResolveArenaNumbers();
+    end
+    return arenaNumberByUnit[unit];
+end
+addon.GetArenaNumber = GetArenaNumber;
+
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
@@ -229,6 +361,9 @@ function SweepyBoop:SetupNameplateModules()
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
+        -- Arena number resolver: reset the nameplate -> arena slot mapping on a new comp
+        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD); -- new arena
+        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS); -- new solo shuffle round
     else
         eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
     end
@@ -283,6 +418,8 @@ function SweepyBoop:SetupNameplateModules()
 
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
             end
+        elseif event == addon.PLAYER_ENTERING_WORLD or event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
+            addon.ResetArenaNumbers();
         end
     end)
 
@@ -314,12 +451,23 @@ function SweepyBoop:SetupNameplateModules()
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePlayerName(frame:GetParent(), frame);
 
-            if ( not addon.PROJECT_MAINLINE ) and IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                for i = 1, 3 do
-                    if UnitIsUnit(frame.unit, "arena" .. i) then
-                        frame.name:SetText(i);
-                        frame.name:SetTextColor(1,1,0); --Yellow
-                        break;
+            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+                if addon.PROJECT_MAINLINE then
+                    -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
+                    if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
+                        local arenaNumber = addon.GetArenaNumber(frame.unit);
+                        if arenaNumber then
+                            frame.name:SetText(arenaNumber);
+                            frame.name:SetTextColor(1, 1, 0); -- Yellow
+                        end
+                    end
+                else
+                    for i = 1, 3 do
+                        if UnitIsUnit(frame.unit, "arena" .. i) then
+                            frame.name:SetText(i);
+                            frame.name:SetTextColor(1, 1, 0); -- Yellow
+                            break;
+                        end
                     end
                 end
             end
