@@ -63,16 +63,13 @@ end
 -- is left blank (a wrong number is worse than none). A unique match is necessarily
 -- the unit's own slot, so a shown number is never wrong.
 
-local function GetUnitArenaPrint(unit)
+local function GetUnitArenaFingerprint(unit)
+    -- Returns class, race, sex, honorLevel (all non-secret on arena units) or nil.
+    -- Multi-return rather than a table so the hot path avoids a per-call allocation.
     if ( not UnitExists(unit) ) then return end
-    local class = UnitClassBase(unit); -- non-secret on arena units
+    local class = UnitClassBase(unit);
     if ( not class ) then return end
-    return {
-        class = class,
-        race = select(2, UnitRace(unit)), -- locale-independent race file
-        sex = UnitSex(unit),
-        honor = UnitHonorLevel(unit),
-    };
+    return class, select(2, UnitRace(unit)), UnitSex(unit), UnitHonorLevel(unit); -- race file is locale-independent
 end
 
 -- Per-slot fingerprint cache. The arena1/2/3 -> player identity is fixed for a
@@ -91,54 +88,50 @@ local function GetArenaSlotPrint(i)
     local cached = arenaSlotPrintCache[i];
     if cached then return cached end
 
-    local fp = GetUnitArenaPrint("arena" .. i);
-    if fp then
-        -- Cache only a complete in-range fingerprint; while out of range the print is
-        -- too coarse to lock in for the round.
-        if fp.race and fp.sex and fp.honor then
-            arenaSlotPrintCache[i] = fp;
+    local class, race, sex, honor = GetUnitArenaFingerprint("arena" .. i);
+    if ( not class ) then
+        -- Out of range / prep phase: UnitClassBase is nil, but the spec gives the class.
+        local specID = GetArenaOpponentSpec(i);
+        if specID and ( specID > 0 ) then
+            class = select(6, GetSpecializationInfoByID(specID)); -- classFilename
         end
-        return fp;
+        if ( not class ) then return end
     end
 
-    -- Out of range / prep phase: UnitClassBase may be nil, but spec is available.
-    local specID = GetArenaOpponentSpec(i);
-    if specID and ( specID > 0 ) then
-        local class = select(6, GetSpecializationInfoByID(specID)); -- classFilename
-        if class then
-            return { class = class }; -- class-only; race/sex/honor act as wildcards (not cached)
-        end
+    local fp = { class = class, race = race, sex = sex, honor = honor };
+    -- Cache only a complete in-range fingerprint; while out of range (race/sex/honor
+    -- nil, so class is the only key) it is too coarse to lock in for the round.
+    if race and sex and honor then
+        arenaSlotPrintCache[i] = fp;
     end
+    return fp;
 end
 
-local function ArenaPrintsMatch(plate, slot)
-    if ( plate.class ~= slot.class ) then return false end
-    if ( slot.race ~= nil ) and ( plate.race ~= slot.race ) then return false end
-    if ( slot.sex ~= nil ) and ( plate.sex ~= slot.sex ) then return false end
-    if ( slot.honor ~= nil ) and ( plate.honor ~= slot.honor ) then return false end
-    return true;
+-- True if a live class/race/sex/honor fingerprint is compatible with a slot print.
+-- A nil slot field is a wildcard (slot known by class only, e.g. still out of range).
+local function SlotMatches(slot, class, race, sex, honor)
+    return class == slot.class
+        and ( slot.race == nil or race == slot.race )
+        and ( slot.sex == nil or sex == slot.sex )
+        and ( slot.honor == nil or honor == slot.honor );
 end
 
--- Returns the arena index (1..N) for a nameplate unit, or nil if it can't be
--- uniquely resolved. The unit's own fingerprint is read live each call and matched
--- against the (cached) arena slots.
+-- Returns the arena index (1..N) for a nameplate unit, or nil if it can't be uniquely
+-- resolved. The unit's own fingerprint is read live each call (no allocation) and
+-- matched against the (cached) arena slots; we bail as soon as a second slot matches.
 local function GetArenaNumber(unit)
-    local platePrint = GetUnitArenaPrint(unit);
-    if ( not platePrint ) then return end
+    local class, race, sex, honor = GetUnitArenaFingerprint(unit);
+    if ( not class ) then return end
 
-    local match, count = nil, 0;
+    local match;
     for i = 1, addon.MAX_ARENA_SIZE do
         local slot = GetArenaSlotPrint(i);
-        if slot and ArenaPrintsMatch(platePrint, slot) then
-            count = count + 1;
+        if slot and SlotMatches(slot, class, race, sex, honor) then
+            if match then return end -- a second match => ambiguous, leave blank
             match = i;
         end
     end
-
-    -- Number only on a unique match; 0 or >1 viable slots -> leave blank.
-    if ( count == 1 ) then
-        return match;
-    end
+    return match;
 end
 addon.GetArenaNumber = GetArenaNumber;
 
