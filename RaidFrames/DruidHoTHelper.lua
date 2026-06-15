@@ -36,10 +36,10 @@ end
 
 -- Retail no longer exposes the individual buff icons on a CompactUnitFrame, so we
 -- can't glow the Lifebloom icon itself. Instead we highlight the unit's whole frame
--- with the raid-frame target-highlight atlas.
+-- with a green-tinted raid-frame highlight atlas.
 -- The highlight lives on our own child texture, so we never toggle anything directly
 -- on Blizzard's (possibly forbidden) frame.
-local glowAtlas = "RaidFrame-TargetFrame";
+local glowAtlas = "RaidFrame-DispelHighlight";
 local glowColor = { 0, 1, 0 }; -- green
 
 local function SetGlowShown(frame, shown)
