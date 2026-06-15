@@ -1,2 +1,3 @@
 - [x] Re-implement arena numbers for mainline, this can unblock enemy spec icons too
-- [ ] Re-implement battleground enemy spec icons
+- [ ] Re-enable Druid HoT Helper
+- [ ] Re-implement battleground enemy spec icons (blocked)
