@@ -1,22 +1,27 @@
 local _, addon = ...;
 
--- Resto Druid raid-frame helper: glow a unit's frame while the player's own Lifebloom
--- on it is inside its refresh window (last 30% of duration).
+-- Resto Druid raid-frame helper: show the player's own Lifebloom as an icon at the
+-- center of the raid frame that has it, and glow that icon while it's inside its
+-- refresh window (last 30% of duration).
 --
 -- Retail (12.x) notes:
---   * The old hook target CompactUnitFrame_UtilSetBuff and the entire Lua buff-frame
---     pipeline were removed; raid auras are engine-rendered. So we can't hook a per-buff
---     function. Instead we track each CompactUnitFrame via CompactUnitFrame_UpdateAll,
---     map unit -> frame(s), refresh on UNIT_AURA, and drive our own glow.
+--   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the Lua buff-frame
+--     pipeline were removed, and a frame's real buff icons aren't addon-accessible. So we
+--     track each CompactUnitFrame via CompactUnitFrame_UpdateAll, map unit -> frame(s),
+--     refresh on UNIT_AURA, query the player's Lifebloom ourselves, and draw our own icon.
 --   * Aura APIs are SecretWhenUnitAuraRestricted, so in an active PvP match most auras
 --     come back as secret values. Lifebloom is currently flagged "neversecret" by
---     Blizzard, so the player's own copy stays readable; the issecretvalue guards below
---     make the feature fail safe (no glow) rather than error if that ever changes.
+--     Blizzard, so the player's own copy stays readable; the issecretvalue guard below
+--     makes the feature fail safe (no icon) rather than error if that ever changes.
 
+local LCG = LibStub("LibCustomGlow-1.0");
 local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex;
 local issecretvalue = issecretvalue or function () return false end; -- no secret values pre-12.0
 local maxAuras = 255;
 local refreshFraction = 0.3; -- glow once the HoT is within the last 30% of its duration
+
+local iconSize = 24;
+local glowColor = { 0, 1, 0, 1 }; -- green (RGBA)
 
 local lifeblooms = {
     [33763] = true,  -- Lifebloom
@@ -34,35 +39,68 @@ local function ShouldGlow(info, now)
     return ( ( info.expirationTime - now ) / info.timeMod ) <= info.refreshTime;
 end
 
--- Retail no longer exposes the individual buff icons on a CompactUnitFrame, so we
--- can't glow the Lifebloom icon itself. Instead we highlight the unit's whole frame
--- with a green-tinted raid-frame highlight atlas.
--- The highlight lives on our own child texture, so we never toggle anything directly
--- on Blizzard's (possibly forbidden) frame.
-local glowAtlas = "RaidFrame-DispelHighlight";
-local glowColor = { 0, 1, 0 }; -- green
+-- Our own Lifebloom icon, centered on the raid frame (retail doesn't expose the frame's
+-- real buff icons, so we draw our own rather than reuse Blizzard's).
+local function EnsureIcon(frame)
+    local icon = frame.druidHoTIcon;
+    if ( not icon ) then
+        icon = CreateFrame("Frame", nil, frame);
+        icon:SetSize(iconSize, iconSize);
+        icon:SetPoint("CENTER", frame, "CENTER");
+        icon:SetFrameLevel(frame:GetFrameLevel() + 10);
 
-local function SetGlowShown(frame, shown)
-    local glow = frame.druidHoTGlow;
-    if ( not glow ) then
-        if ( not shown ) then return end
-        local glowFrame = CreateFrame("Frame", nil, frame);
-        glowFrame:SetAllPoints(frame);
-        glowFrame:SetFrameLevel(frame:GetFrameLevel() + 10); -- draw above the frame's contents
-        glow = glowFrame:CreateTexture(nil, "OVERLAY");
-        glow:SetAllPoints(glowFrame);
-        glow:SetAtlas(glowAtlas);
-        glow:SetDesaturated(true);
-        glow:SetVertexColor(glowColor[1], glowColor[2], glowColor[3]);
-        glow:Hide();
-        frame.druidHoTGlow = glow;
+        icon.texture = icon:CreateTexture(nil, "ARTWORK");
+        icon.texture:SetAllPoints(icon);
+        icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92); -- trim the default icon border
+
+        icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
+        icon.cooldown:SetAllPoints(icon);
+        icon.cooldown:SetHideCountdownNumbers(true);
+        icon.cooldown:SetDrawEdge(false);
+        icon.cooldown:SetDrawBling(false);
+        icon.cooldown:SetReverse(true);
+
+        icon:Hide();
+        frame.druidHoTIcon = icon;
     end
-
-    glow:SetShown(shown);
+    return icon;
 end
 
-local function HideFrameGlow(frame)
-    SetGlowShown(frame, false);
+-- The OnUpdate loop calls this ~20x/sec, so only start/stop the glow on a transition.
+local function SetIconGlow(icon, shown)
+    if shown then
+        if ( not icon.glowing ) then
+            LCG.ButtonGlow_Start(icon, glowColor);
+            icon.glowing = true;
+        end
+    elseif icon.glowing then
+        LCG.ButtonGlow_Stop(icon);
+        icon.glowing = false;
+    end
+end
+
+local function ShowIcon(frame, aura, glow)
+    local icon = EnsureIcon(frame);
+    icon.texture:SetTexture(aura.icon);
+
+    local duration = aura.duration or 0;
+    if ( duration > 0 ) and aura.expirationTime then
+        icon.cooldown:SetCooldown(aura.expirationTime - duration, duration);
+        icon.cooldown:Show();
+    else
+        icon.cooldown:Hide();
+    end
+
+    icon:Show();
+    SetIconGlow(icon, glow);
+end
+
+local function ClearFrame(frame)
+    local icon = frame.druidHoTIcon;
+    if icon then
+        SetIconGlow(icon, false);
+        icon:Hide();
+    end
     tracked[frame] = nil;
 end
 
@@ -84,9 +122,9 @@ updater:SetScript("OnUpdate", function (self, elapsed)
     local now = GetTime();
     for frame, info in pairs(tracked) do
         if ( info.expirationTime <= now ) then
-            HideFrameGlow(frame);
-        else
-            SetGlowShown(frame, ShouldGlow(info, now));
+            ClearFrame(frame);
+        elseif frame.druidHoTIcon then
+            SetIconGlow(frame.druidHoTIcon, ShouldGlow(info, now));
         end
     end
 end)
@@ -109,13 +147,13 @@ local function UpdateFrame(frame)
     if ( not SweepyBoop.db.profile.raidFrames.druidHoTHelper )
             or ( not unit ) or ( not UnitExists(unit) )
             or string.find(unit, "target") then -- target/targettarget aren't raid members
-        HideFrameGlow(frame);
+        ClearFrame(frame);
         return;
     end
 
     local aura = FindLifebloom(unit);
     if ( not aura ) then
-        HideFrameGlow(frame);
+        ClearFrame(frame);
         return;
     end
 
@@ -129,7 +167,7 @@ local function UpdateFrame(frame)
     info.refreshTime = info.duration * refreshFraction;
     tracked[frame] = info;
 
-    SetGlowShown(frame, ShouldGlow(info, GetTime()));
+    ShowIcon(frame, aura, ShouldGlow(info, GetTime()));
     updater:Show();
 end
 
@@ -161,7 +199,7 @@ local function UntrackFrame(frame)
         unitFrames[frame.druidHoTUnit][frame] = nil;
     end
     frame.druidHoTUnit = nil;
-    HideFrameGlow(frame);
+    ClearFrame(frame);
 end
 
 local eventFrame = CreateFrame("Frame");

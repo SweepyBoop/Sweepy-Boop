@@ -75,7 +75,7 @@ addon.GetRaidFrameOptions = function(order)
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
-                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Glow a unit's raid frame while your Lifebloom on it is in its refresh (pandemic) window",
+                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Show a Lifebloom icon on raid frames you've Lifebloomed, and glow it during the refresh (pandemic) window",
             }
         },
     };
