@@ -34,26 +34,31 @@ local function ShouldGlow(info, now)
     return ( ( info.expirationTime - now ) / info.timeMod ) <= info.refreshTime;
 end
 
--- Glow lives on our own child frame anchored to the CompactUnitFrame, so we never
--- create/toggle anything directly on Blizzard's (possibly forbidden) frame.
+-- Retail no longer exposes the individual buff icons on a CompactUnitFrame, so we
+-- can't glow the Lifebloom icon itself. Instead we highlight the unit's whole frame
+-- with the raid-frame target-highlight atlas.
+-- The highlight lives on our own child texture, so we never toggle anything directly
+-- on Blizzard's (possibly forbidden) frame.
+local glowAtlas = "RaidFrame-TargetFrame";
+local glowColor = { 0, 1, 0 }; -- green
+
 local function SetGlowShown(frame, shown)
     local glow = frame.druidHoTGlow;
     if ( not glow ) then
         if ( not shown ) then return end
-        glow = CreateFrame("Frame", nil, frame);
-        glow:SetPoint("CENTER", frame, "CENTER");
-        -- Size explicitly from the frame: ShowOverlayGlow sizes the alert off GetSize(),
-        -- and a freshly anchored child can report 0 for a frame or two.
-        local w, h = frame:GetSize();
-        glow:SetSize((w and w > 0) and w or 20, (h and h > 0) and h or 20);
+        local glowFrame = CreateFrame("Frame", nil, frame);
+        glowFrame:SetAllPoints(frame);
+        glowFrame:SetFrameLevel(frame:GetFrameLevel() + 10); -- draw above the frame's contents
+        glow = glowFrame:CreateTexture(nil, "OVERLAY");
+        glow:SetAllPoints(glowFrame);
+        glow:SetAtlas(glowAtlas);
+        glow:SetDesaturated(true);
+        glow:SetVertexColor(glowColor[1], glowColor[2], glowColor[3]);
+        glow:Hide();
         frame.druidHoTGlow = glow;
     end
 
-    if shown then
-        addon.ShowOverlayGlow(glow);
-    else
-        addon.HideOverlayGlow(glow);
-    end
+    glow:SetShown(shown);
 end
 
 local function HideFrameGlow(frame)
