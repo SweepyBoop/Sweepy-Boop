@@ -12,6 +12,7 @@ addon.GetRaidFrameOptions = function(order)
                 order = 1,
                 type = "header",
                 name = "PvP aggro highlight",
+                hidden = function () return addon.PROJECT_MAINLINE; end,
             },
 
             raidFrameAggroHighlightEnabled = {
@@ -21,6 +22,7 @@ addon.GetRaidFrameOptions = function(order)
                 name = addon.FORMAT_ATLAS("pvptalents-warmode-swords") .. " Enabled",
                 desc = "Show an animating dotted line border when a teammate is targeted by enemy players\n\n"
                     .. "The color of the border changes based on the number of enemies targeting the teammate",
+                hidden = function () return addon.PROJECT_MAINLINE; end,
             },
 
             raidFrameAggroHighlightThickness = {
@@ -31,7 +33,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 1,
                 name = "Border thickness",
                 hidden = function ()
-                    return ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
                 end
             },
 
@@ -44,7 +46,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 0.01,
                 name = "Border alpha",
                 hidden = function ()
-                    return ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
                 end
             },
 
@@ -57,7 +59,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 1,
                 name = "Animation speed (0 for no animation)",
                 hidden = function ()
-                    return ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled );
                 end
             },
 
@@ -65,6 +67,7 @@ addon.GetRaidFrameOptions = function(order)
                 order = 6,
                 type = "header",
                 name = "",
+                hidden = function () return addon.PROJECT_MAINLINE; end,
             },
 
             druidHoTHelper = {
@@ -72,8 +75,7 @@ addon.GetRaidFrameOptions = function(order)
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
-                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Glow Lifebloom during pandemic window\n\n"
-                    .. addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_naturalperfection")) .. " Fade out Cenarion Ward before the healing procs",
+                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Glow a unit's raid frame while your Lifebloom on it is in its refresh (pandemic) window",
             }
         },
     };
