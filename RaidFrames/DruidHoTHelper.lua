@@ -51,14 +51,19 @@ local function EnsureIcon(frame)
 
         icon.texture = icon:CreateTexture(nil, "ARTWORK");
         icon.texture:SetAllPoints(icon);
-        icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92); -- trim the default icon border
 
+        -- Same swipe as the Healer-in-CC indicator: dark fill + the purple Loss-of-Control
+        -- sweep edge. Kept non-circular so it follows the square icon (no round mask).
         icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
         icon.cooldown:SetAllPoints(icon);
-        icon.cooldown:SetHideCountdownNumbers(true);
-        icon.cooldown:SetDrawEdge(false);
         icon.cooldown:SetDrawBling(false);
         icon.cooldown:SetReverse(true);
+        icon.cooldown:SetDrawSwipe(true);
+        icon.cooldown:SetSwipeColor(0, 0, 0, 0.5);
+        icon.cooldown:SetDrawEdge(true);
+        icon.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC"); -- the purple LoC sweep
+        icon.cooldown:SetHideCountdownNumbers(true);
+        icon.cooldown.noCooldownCount = true; -- hide OmniCC timers
 
         icon:Hide();
         frame.druidHoTIcon = icon;
