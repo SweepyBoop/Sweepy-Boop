@@ -39,14 +39,14 @@ local function ShouldGlow(info, now)
     return ( ( info.expirationTime - now ) / info.timeMod ) <= info.refreshTime;
 end
 
--- Our own Lifebloom icon, centered on the raid frame (retail doesn't expose the frame's
--- real buff icons, so we draw our own rather than reuse Blizzard's).
+-- Our own Lifebloom icon, in the top-right corner of the raid frame (retail doesn't expose
+-- the frame's real buff icons, so we draw our own rather than reuse Blizzard's).
 local function EnsureIcon(frame)
     local icon = frame.druidHoTIcon;
     if ( not icon ) then
         icon = CreateFrame("Frame", nil, frame);
         icon:SetSize(iconSize, iconSize);
-        icon:SetPoint("CENTER", frame, "CENTER");
+        icon:SetPoint("BOTTOMRIGHT", frame, "RIGHT"); -- avoid the center (default big defensive CDs)
         icon:SetFrameLevel(frame:GetFrameLevel() + 10);
 
         icon.texture = icon:CreateTexture(nil, "ARTWORK");
