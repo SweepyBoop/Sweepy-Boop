@@ -1269,7 +1269,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
 
-                if addon.PROJECT_TBC and ( subEvent == addon.SPELL_CAST_SUCCESS or subEvent == addon.SPELL_AURA_APPLIED ) then
+                if addon.PROJECT_TBC and ( subEvent == addon.SPELL_CAST_SUCCESS or subEvent == addon.SPELL_AURA_APPLIED or subEvent == addon.SPELL_CAST_START ) then
                     ProcessSpecDetection(sourceGUID, spellId);
                 end
 
