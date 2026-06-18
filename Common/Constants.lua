@@ -225,6 +225,62 @@ addon.SHAMAN = "SHAMAN";
 addon.WARLOCK = "WARLOCK";
 addon.WARRIOR = "WARRIOR";
 
+-- Maps a spec ID back to its class file name. Used by TBC heuristic spec detection to
+-- reject indicators that don't belong to the unit's class.
+addon.SPECID_TO_CLASS = {
+    [addon.SPECID.BLOOD] = addon.DEATHKNIGHT,
+    [addon.SPECID.FROST_DK] = addon.DEATHKNIGHT,
+    [addon.SPECID.UNHOLY] = addon.DEATHKNIGHT,
+
+    [addon.SPECID.HAVOC] = addon.DEMONHUNTER,
+    [addon.SPECID.VENGEANCE] = addon.DEMONHUNTER,
+
+    [addon.SPECID.BALANCE] = addon.DRUID,
+    [addon.SPECID.FERAL] = addon.DRUID,
+    [addon.SPECID.GUARDIAN] = addon.DRUID,
+    [addon.SPECID.RESTORATION_DRUID] = addon.DRUID,
+
+    [addon.SPECID.DEVASTATION] = addon.EVOKER,
+    [addon.SPECID.PRESERVATION] = addon.EVOKER,
+    [addon.SPECID.AUGMENTATION] = addon.EVOKER,
+
+    [addon.SPECID.BEASTMASTERY] = addon.HUNTER,
+    [addon.SPECID.MARKSMANSHIP] = addon.HUNTER,
+    [addon.SPECID.SURVIVAL] = addon.HUNTER,
+
+    [addon.SPECID.ARCANE] = addon.MAGE,
+    [addon.SPECID.FIRE] = addon.MAGE,
+    [addon.SPECID.FROST_MAGE] = addon.MAGE,
+
+    [addon.SPECID.BREWMASTER] = addon.MONK,
+    [addon.SPECID.MISTWEAVER] = addon.MONK,
+    [addon.SPECID.WINDWALKER] = addon.MONK,
+
+    [addon.SPECID.HOLY_PALADIN] = addon.PALADIN,
+    [addon.SPECID.PROTECTION_PALADIN] = addon.PALADIN,
+    [addon.SPECID.RETRIBUTION] = addon.PALADIN,
+
+    [addon.SPECID.DISCIPLINE] = addon.PRIEST,
+    [addon.SPECID.HOLY_PRIEST] = addon.PRIEST,
+    [addon.SPECID.SHADOW] = addon.PRIEST,
+
+    [addon.SPECID.ASSASSINATION] = addon.ROGUE,
+    [addon.SPECID.OUTLAW] = addon.ROGUE,
+    [addon.SPECID.SUBTLETY] = addon.ROGUE,
+
+    [addon.SPECID.ELEMENTAL] = addon.SHAMAN,
+    [addon.SPECID.ENHANCEMENT] = addon.SHAMAN,
+    [addon.SPECID.RESTORATION_SHAMAN] = addon.SHAMAN,
+
+    [addon.SPECID.AFFLICTION] = addon.WARLOCK,
+    [addon.SPECID.DEMONOLOGY] = addon.WARLOCK,
+    [addon.SPECID.DESTRUCTION] = addon.WARLOCK,
+
+    [addon.SPECID.ARMS] = addon.WARRIOR,
+    [addon.SPECID.FURY] = addon.WARRIOR,
+    [addon.SPECID.PROTECTION_WARRIOR] = addon.WARRIOR,
+};
+
 addon.CLASSID = {
     WARRIOR = 1,
     PALADIN = 2,

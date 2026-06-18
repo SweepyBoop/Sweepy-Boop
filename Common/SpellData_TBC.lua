@@ -24,6 +24,8 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 360,
         category = category.OTHERS,
+        spec = { specID.HOLY_PRIEST },
+        baseline = true,
     },
         [27870] = { parent = 724, use_parent_icon = true }, -- Lightwell (Rank 2)
         [27871] = { parent = 724, use_parent_icon = true }, -- Lightwell (Rank 3)
@@ -86,6 +88,8 @@ addon.SpellData = {
         cooldown = 180,
         duration = 15,
         category = category.BURST,
+        spec = { specID.DISCIPLINE },
+        baseline = true,
     },
 
     [10797] = { -- Starshards (Rank 1)
@@ -129,18 +133,24 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.DISCIPLINE },
+        baseline = true,
     },
 
     [15286] = { -- Vampiric Embrace
         class = addon.PRIEST,
         cooldown = 10,
         category = category.OTHERS,
+        spec = { specID.SHADOW },
+        baseline = true,
     },
 
     [15487] = { -- Silence
         class = addon.PRIEST,
         cooldown = 45,
         category = category.OTHERS,
+        spec = { specID.SHADOW },
+        baseline = true,
     },
 
     [32379] = { -- Shadow Word: Death (Rank 1)
@@ -174,6 +184,8 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 120,
         category = category.OTHERS,
+        spec = { specID.DISCIPLINE },
+        baseline = true,
     },
 
     [34433] = { -- Shadowfiend
@@ -246,6 +258,8 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 15,
         category = category.BURST,
+        spec = { specID.DESTRUCTION },
+        baseline = true,
     },
         [18867] = { parent = 17877, use_parent_icon = true }, -- Shadowburn (Rank 2)
         [18868] = { parent = 17877, use_parent_icon = true }, -- Shadowburn (Rank 3)
@@ -259,6 +273,8 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 10,
         category = category.OTHERS,
+        spec = { specID.DESTRUCTION },
+        baseline = true,
     },
         [18930] = { parent = 17962, use_parent_icon = true }, -- Conflagrate (Rank 2)
         [18931] = { parent = 17962, use_parent_icon = true }, -- Conflagrate (Rank 3)
@@ -270,6 +286,8 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.AFFLICTION },
+        baseline = true,
     },
 
     [18540] = { -- Ritual of Doom
@@ -283,6 +301,8 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 900,
         category = category.OTHERS,
+        spec = { specID.DEMONOLOGY },
+        baseline = true,
     },
 
     [29858] = { -- Soulshatter
@@ -303,6 +323,8 @@ addon.SpellData = {
         class = addon.WARLOCK,
         cooldown = 20,
         category = category.OTHERS,
+        spec = { specID.DESTRUCTION },
+        baseline = true,
     },
         [30413] = { parent = 30283, use_parent_icon = true }, -- Shadowfury (Rank 2)
         [30414] = { parent = 30283, use_parent_icon = true }, -- Shadowfury (Rank 3)
@@ -445,30 +467,40 @@ addon.SpellData = {
         class = addon.SHAMAN,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.ELEMENTAL },
+        baseline = true,
     },
 
     [16188] = { -- Nature's Swiftness
         class = addon.SHAMAN,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.RESTORATION_SHAMAN },
+        baseline = true,
     },
 
     [16190] = { -- Mana Tide Totem
         class = addon.SHAMAN,
         cooldown = 300,
         category = category.OTHERS,
+        spec = { specID.RESTORATION_SHAMAN },
+        baseline = true,
     },
 
     [17364] = { -- Stormstrike
         class = addon.SHAMAN,
         cooldown = 10,
         category = category.OTHERS,
+        spec = { specID.ENHANCEMENT },
+        baseline = true,
     },
 
     [30823] = { -- Shamanistic Rage
         class = addon.SHAMAN,
         cooldown = 120,
         category = category.OTHERS,
+        spec = { specID.ENHANCEMENT },
+        baseline = true,
     },
 
     [32182] = { -- Heroism
@@ -503,6 +535,7 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 300,
         category = category.OTHERS,
+        baseline = true,
     },
         [1020] = { parent = 642, use_parent_icon = true }, -- Divine Shield (Rank 2)
 
@@ -590,6 +623,8 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 60,
         category = category.OTHERS,
+        spec = { specID.RETRIBUTION },
+        baseline = true,
     },
 
     [26573] = { -- Consecration (Rank 1)
@@ -608,6 +643,8 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 120,
         category = category.OTHERS,
+        spec = { specID.HOLY_PALADIN },
+        baseline = true,
     },
 
     [20271] = { -- Judgement
@@ -621,6 +658,8 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 15,
         category = category.OTHERS,
+        spec = { specID.HOLY_PALADIN },
+        baseline = true,
     },
         [20929] = { parent = 20473, use_parent_icon = true }, -- Holy Shock (Rank 2)
         [20930] = { parent = 20473, use_parent_icon = true }, -- Holy Shock (Rank 3)
@@ -631,6 +670,8 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 10,
         category = category.OTHERS,
+        spec = { specID.PROTECTION_PALADIN },
+        baseline = true,
     },
         [20927] = { parent = 20925, use_parent_icon = true }, -- Holy Shield (Rank 2)
         [20928] = { parent = 20925, use_parent_icon = true }, -- Holy Shield (Rank 3)
@@ -647,6 +688,8 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.HOLY_PALADIN },
+        baseline = true,
     },
 
     [31884] = { -- Avenging Wrath
@@ -661,6 +704,8 @@ addon.SpellData = {
         class = addon.PALADIN,
         cooldown = 30,
         category = category.OTHERS,
+        spec = { specID.PROTECTION_PALADIN },
+        baseline = true,
     },
         [32699] = { parent = 31935, use_parent_icon = true }, -- Avenger's Shield (Rank 2)
         [32700] = { parent = 31935, use_parent_icon = true }, -- Avenger's Shield (Rank 3)
@@ -800,6 +845,8 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 120,
         category = category.OTHERS,
+        spec = { specID.SURVIVAL },
+        baseline = true,
     },
         [24132] = { parent = 19386, use_parent_icon = true }, -- Wyvern Sting (Rank 2)
         [24133] = { parent = 19386, use_parent_icon = true }, -- Wyvern Sting (Rank 3)
@@ -809,6 +856,8 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 30,
         category = category.OTHERS,
+        spec = { specID.SURVIVAL },
+        baseline = true,
     },
 
     [19574] = { -- Bestial Wrath
@@ -816,12 +865,16 @@ addon.SpellData = {
         cooldown = 120,
         duration = 18,
         category = category.BURST,
+        spec = { specID.BEASTMASTERY },
+        baseline = true,
     },
 
     [19577] = { -- Intimidation
         class = addon.HUNTER,
         cooldown = 60,
         category = category.OTHERS,
+        spec = { specID.BEASTMASTERY },
+        baseline = true,
     },
 
     [19801] = { -- Tranquilizing Shot
@@ -835,6 +888,8 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 300,
         category = category.OTHERS,
+        spec = { specID.MARKSMANSHIP },
+        baseline = true,
     },
 
     [34477] = { -- Misdirection
@@ -848,6 +903,8 @@ addon.SpellData = {
         class = addon.HUNTER,
         cooldown = 20,
         category = category.OTHERS,
+        spec = { specID.MARKSMANSHIP },
+        baseline = true,
     },
 
     [34600] = { -- Snake Trap
@@ -1063,18 +1120,24 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 15,
         category = category.INTERRUPT,
+        spec = { specID.FERAL },
+        baseline = true,
     },
 
     [17116] = { -- Nature's Swiftness
         class = addon.DRUID,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.RESTORATION_DRUID },
+        baseline = true,
     },
 
     [18562] = { -- Swiftmend
         class = addon.DRUID,
         cooldown = 15,
         category = category.OTHERS,
+        spec = { specID.RESTORATION_DRUID },
+        baseline = true,
     },
 
     [20484] = { -- Rebirth (Rank 1)
@@ -1117,6 +1180,8 @@ addon.SpellData = {
         class = addon.DRUID,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.BALANCE },
+        baseline = true,
     },
 
     -- Mage
@@ -1216,6 +1281,8 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 30,
         category = category.OTHERS,
+        spec = { specID.FIRE },
+        baseline = true,
     },
         [13018] = { parent = 11113, use_parent_icon = true }, -- Blast Wave (Rank 2)
         [13019] = { parent = 11113, use_parent_icon = true }, -- Blast Wave (Rank 3)
@@ -1228,6 +1295,8 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 180,
         category = category.BURST,
+        spec = { specID.FIRE },
+        baseline = true,
     },
 
     [11426] = { -- Ice Barrier (Rank 1)
@@ -1235,6 +1304,8 @@ addon.SpellData = {
         cooldown = 30,
         opt_lower_cooldown = 24,
         category = category.OTHERS,
+        spec = { specID.FROST_MAGE },
+        baseline = true,
     },
         [13031] = { parent = 11426, use_parent_icon = true }, -- Ice Barrier (Rank 2)
         [13032] = { parent = 11426, use_parent_icon = true }, -- Ice Barrier (Rank 3)
@@ -1247,6 +1318,8 @@ addon.SpellData = {
         cooldown = 480,
         opt_lower_cooldown = 384,
         category = category.OTHERS,
+        spec = { specID.FROST_MAGE },
+        baseline = true,
     },
 
     [12042] = { -- Arcane Power
@@ -1254,12 +1327,16 @@ addon.SpellData = {
         cooldown = 180,
         duration = 15,
         category = category.BURST,
+        spec = { specID.ARCANE },
+        baseline = true,
     },
 
     [12043] = { -- Presence of Mind
         class = addon.MAGE,
         cooldown = 180,
         category = category.BURST,
+        spec = { specID.ARCANE },
+        baseline = true,
     },
 
     [12051] = { -- Evocation
@@ -1274,12 +1351,16 @@ addon.SpellData = {
         cooldown = 180,
         duration = 20,
         category = category.BURST,
+        spec = { specID.FROST_MAGE },
+        baseline = true,
     },
 
     [31661] = { -- Dragon's Breath (Rank 1)
         class = addon.MAGE,
         cooldown = 20,
         category = category.OTHERS,
+        spec = { specID.FIRE },
+        baseline = true,
     },
         [33041] = { parent = 31661, use_parent_icon = true }, -- Dragon's Breath (Rank 2)
         [33042] = { parent = 31661, use_parent_icon = true }, -- Dragon's Breath (Rank 3)
@@ -1289,12 +1370,16 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.FROST_MAGE },
+        baseline = true,
     },
 
     [33395] = { -- Freeze (Water Elemental)
         class = addon.MAGE,
         cooldown = 25,
         category = category.OTHERS,
+        spec = { specID.FROST_MAGE },
+        baseline = true,
     },
 
     [43987] = { -- Ritual of Refreshment
@@ -1412,6 +1497,8 @@ addon.SpellData = {
         cooldown = 300,
         duration = 15,
         category = category.BURST,
+        spec = { specID.OUTLAW },
+        baseline = true,
     },
 
     [13877] = { -- Blade Flurry
@@ -1419,30 +1506,40 @@ addon.SpellData = {
         cooldown = 120,
         duration = 15,
         category = category.BURST,
+        spec = { specID.OUTLAW },
+        baseline = true,
     },
 
     [14177] = { -- Cold Blood
         class = addon.ROGUE,
         cooldown = 180,
         category = category.BURST,
+        spec = { specID.ASSASSINATION },
+        baseline = true,
     },
 
     [14183] = { -- Premeditation
         class = addon.ROGUE,
         cooldown = 120,
         category = category.OTHERS,
+        spec = { specID.SUBTLETY },
+        baseline = true,
     },
 
     [14185] = { -- Preparation
         class = addon.ROGUE,
         cooldown = 600,
         category = category.OTHERS,
+        spec = { specID.SUBTLETY },
+        baseline = true,
     },
 
     [14278] = { -- Ghostly Strike
         class = addon.ROGUE,
         cooldown = 20,
         category = category.OTHERS,
+        spec = { specID.SUBTLETY },
+        baseline = true,
     },
 
     [31224] = { -- Cloak of Shadows
@@ -1456,6 +1553,8 @@ addon.SpellData = {
         class = addon.ROGUE,
         cooldown = 30,
         category = category.OTHERS,
+        spec = { specID.SUBTLETY },
+        baseline = true,
     },
 
     -- Warrior
@@ -1464,6 +1563,7 @@ addon.SpellData = {
         class = addon.WARRIOR,
         cooldown = 6,
         category = category.OTHERS,
+        spec = { specID.ARMS },
         baseline = true,
     },
         [21551] = { parent = 12294, use_parent_icon = true }, -- Mortal Strike (Rank 2)
@@ -1573,24 +1673,32 @@ addon.SpellData = {
         class = addon.WARRIOR,
         cooldown = 180,
         category = category.OTHERS,
+        spec = { specID.ARMS },
+        baseline = true,
     },
 
     [12328] = { -- Sweeping Strikes
         class = addon.WARRIOR,
         cooldown = 30,
         category = category.OTHERS,
+        spec = { specID.ARMS },
+        baseline = true,
     },
 
     [12809] = { -- Concussion Blow
         class = addon.WARRIOR,
         cooldown = 45,
         category = category.OTHERS,
+        spec = { specID.PROTECTION_WARRIOR },
+        baseline = true,
     },
 
     [12975] = { -- Last Stand
         class = addon.WARRIOR,
         cooldown = 480,
         category = category.OTHERS,
+        spec = { specID.PROTECTION_WARRIOR },
+        baseline = true,
     },
 
     [18499] = { -- Berserker Rage
@@ -1678,3 +1786,99 @@ for _, spell in pairs(addon.SpellData) do
 end
 
 addon.SpellResetsAffectedByApotheosis = {}; -- Dummy value to not error out
+
+-- Spec inference for TBC (the client exposes no enemy spec): a spell cast or an aura a unit
+-- carries can pin down its talent build, which the arena cooldown tracker uses to pre-show
+-- that unit's spec cooldowns once revealed. Two sources feed addon.SpecDetection:
+--   1. The extra tells listed here -- auras/forms and rotational abilities that aren't
+--      themselves tracked cooldowns.
+--   2. Every single-spec cooldown from addon.SpellData, folded in by the loop below so a
+--      spell that is already tracked never has to be repeated.
+-- Spec IDs are addon.SPECID; the TBC "Combat" rogue tree maps to OUTLAW.
+addon.SpecDetection = {};
+local function AddSpecDetection(spellIDs, spec)
+    for _, id in ipairs(spellIDs) do
+        addon.SpecDetection[id] = spec;
+    end
+end
+
+-- Druid
+AddSpecDetection({16880, 16886}, specID.BALANCE); -- Nature's Grace
+AddSpecDetection({24858}, specID.BALANCE); -- Moonkin Form
+AddSpecDetection({17007}, specID.FERAL); -- Leader of the Pack
+AddSpecDetection({33876, 33983, 33982}, specID.FERAL); -- Mangle (Cat)
+AddSpecDetection({33986, 33878, 33987}, specID.FERAL); -- Mangle (Bear)
+AddSpecDetection({33883, 33881, 33882}, specID.RESTORATION_DRUID); -- Natural Perfection
+AddSpecDetection({33891}, specID.RESTORATION_DRUID); -- Tree of Life
+
+-- Hunter
+AddSpecDetection({34471, 34692}, specID.BEASTMASTERY); -- The Beast Within
+AddSpecDetection({20895, 19578}, specID.BEASTMASTERY); -- Spirit Bond
+AddSpecDetection({34460, 34455, 34459}, specID.BEASTMASTERY); -- Ferocious Inspiration
+AddSpecDetection({27066}, specID.MARKSMANSHIP); -- Trueshot Aura
+AddSpecDetection({34502, 34500, 34503, 34501}, specID.SURVIVAL); -- Expose Weakness
+AddSpecDetection({24134, 24132, 19386, 24135, 27069, 24133, 24131, 27068}, specID.SURVIVAL); -- Wyvern Sting
+AddSpecDetection({20909, 19306, 27067, 20910}, specID.SURVIVAL); -- Counterattack
+
+-- Mage
+AddSpecDetection({31589}, specID.ARCANE); -- Slow
+AddSpecDetection({31570, 31569}, specID.ARCANE); -- Improved Blink
+
+-- Paladin
+AddSpecDetection({31836, 31834, 31833, 31835}, specID.HOLY_PALADIN); -- Light's Grace
+AddSpecDetection({33073, 33072, 27175, 25914, 33074, 25903, 20930, 25911, 25902, 25913, 25912, 20473, 27174, 20929, 27176}, specID.HOLY_PALADIN); -- Holy Shock
+AddSpecDetection({27170}, specID.RETRIBUTION); -- Seal of Command
+AddSpecDetection({20049}, specID.RETRIBUTION); -- Vengeance
+AddSpecDetection({20218}, specID.RETRIBUTION); -- Sanctity Aura
+AddSpecDetection({26017, 26018, 67, 26016, 9452, 26021}, specID.RETRIBUTION); -- Vindication
+AddSpecDetection({35395}, specID.RETRIBUTION); -- Crusader Strike
+
+-- Priest
+AddSpecDetection({33206, 44416}, specID.DISCIPLINE); -- Pain Suppression
+AddSpecDetection({14818, 27841, 14819, 25312, 14752}, specID.DISCIPLINE); -- Divine Spirit
+AddSpecDetection({32999, 27681}, specID.DISCIPLINE); -- Prayer of Spirit
+AddSpecDetection({45241, 45244, 45237, 45243, 45242, 45234}, specID.DISCIPLINE); -- Focused Will
+AddSpecDetection({27811, 27816, 27815, 27813, 27818, 27817}, specID.DISCIPLINE); -- Blessed Recovery
+AddSpecDetection({14893}, specID.DISCIPLINE); -- Inspiration
+AddSpecDetection({33146, 33143, 33142, 33145}, specID.HOLY_PRIEST); -- Blessed Resilience
+AddSpecDetection({34865, 34861, 34866, 34863, 34864}, specID.HOLY_PRIEST); -- Circle of Healing
+AddSpecDetection({15473}, specID.SHADOW); -- Shadowform
+AddSpecDetection({34916, 34917, 34914, 34919}, specID.SHADOW); -- Vampiric Touch
+
+-- Rogue
+AddSpecDetection({34411, 34413, 34412, 1329}, specID.ASSASSINATION); -- Mutilate
+AddSpecDetection({31240, 31237, 31238, 31241, 31233, 31236, 31242, 31235, 31239, 31234}, specID.ASSASSINATION); -- Find Weakness
+AddSpecDetection({26864, 17348, 16511, 17347}, specID.SUBTLETY); -- Hemorrhage
+AddSpecDetection({36554, 44373, 36563}, specID.SUBTLETY); -- Shadowstep
+
+-- Shaman
+AddSpecDetection({30708, 30706}, specID.ELEMENTAL); -- Totem of Wrath
+AddSpecDetection({30809, 30805, 30802, 30808, 30807, 30810, 30804, 30811, 30806, 30803}, specID.ENHANCEMENT); -- Unleashed Rage
+AddSpecDetection({16280}, specID.ENHANCEMENT); -- Flurry
+AddSpecDetection({30824, 30823}, specID.ENHANCEMENT); -- Shamanistic Rage
+AddSpecDetection({32176, 17364, 32175}, specID.ENHANCEMENT); -- Stormstrike
+AddSpecDetection({32593, 974, 32594, 379}, specID.RESTORATION_SHAMAN); -- Earth Shield
+AddSpecDetection({29205, 29206, 29202, 29203}, specID.RESTORATION_SHAMAN); -- Healing Way
+
+-- Warlock
+AddSpecDetection({30108, 31117, 30404, 30405}, specID.AFFLICTION); -- Unstable Affliction
+AddSpecDetection({18220, 27265, 18937, 18938}, specID.AFFLICTION); -- Dark Pact
+AddSpecDetection({19028}, specID.DEMONOLOGY); -- Soul Link
+AddSpecDetection({35693, 35691, 35692}, specID.DEMONOLOGY); -- Demonic Knowledge
+AddSpecDetection({23842, 23839, 35706, 23829, 23761, 23826, 23822, 35705, 23835, 23825, 23838, 23841, 23827, 35702, 23828, 35704, 23824, 35703, 23844, 23843, 23840, 23823, 23836, 23785, 23833, 23762, 23760, 23759, 23834, 23837}, specID.DEMONOLOGY); -- Master Demonologist
+AddSpecDetection({30301, 30302, 30300, 30299}, specID.DESTRUCTION); -- Nether Protection
+AddSpecDetection({34936, 34939, 34938, 34935}, specID.DESTRUCTION); -- Backlash
+
+-- Warrior
+AddSpecDetection({29841, 29834, 29838, 29842}, specID.ARMS); -- Second Wind
+AddSpecDetection({30335, 23881, 25253, 23885, 23890, 23886, 25252, 23889, 30339, 23893, 23887, 30340, 23894, 23880, 23888, 25251, 23891, 23892}, specID.FURY); -- Bloodthirst
+AddSpecDetection({20243, 30016, 30022}, specID.PROTECTION_WARRIOR); -- Devastate
+AddSpecDetection({23923, 23925, 23924, 30356, 23922, 25258}, specID.PROTECTION_WARRIOR); -- Shield Slam
+
+-- Fold in tracked spec cooldowns (and their ranks) straight from their SpellData spec tags,
+-- so a spell that is already a tracked cooldown never has to be repeated above.
+for id, spell in pairs(addon.SpellData) do
+    if spell.spec and ( #spell.spec == 1 ) and ( addon.SpecDetection[id] == nil ) then
+        addon.SpecDetection[id] = spell.spec[1];
+    end
+end
