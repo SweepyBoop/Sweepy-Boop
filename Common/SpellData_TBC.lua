@@ -119,7 +119,7 @@ addon.SpellData = {
     [13908] = { -- Desperate Prayer (Rank 1)
         class = addon.PRIEST,
         cooldown = 600,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
     },
         [19236] = { parent = 13908, use_parent_icon = true }, -- Desperate Prayer (Rank 2)
         [19238] = { parent = 13908, use_parent_icon = true }, -- Desperate Prayer (Rank 3)
@@ -183,7 +183,7 @@ addon.SpellData = {
     [33206] = { -- Pain Suppression
         class = addon.PRIEST,
         cooldown = 120,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         spec = { specID.DISCIPLINE },
         baseline = true,
     },
@@ -516,7 +516,7 @@ addon.SpellData = {
     [498] = { -- Divine Protection (Rank 1)
         class = addon.PALADIN,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
         [5573] = { parent = 498, use_parent_icon = true }, -- Divine Protection (Rank 2)
@@ -524,7 +524,7 @@ addon.SpellData = {
     [633] = { -- Lay on Hands (Rank 1)
         class = addon.PALADIN,
         cooldown = 3600,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
         [2800] = { parent = 633, use_parent_icon = true }, -- Lay on Hands (Rank 2)
@@ -534,7 +534,7 @@ addon.SpellData = {
     [642] = { -- Divine Shield (Rank 1)
         class = addon.PALADIN,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
         [1020] = { parent = 642, use_parent_icon = true }, -- Divine Shield (Rank 2)
@@ -565,7 +565,7 @@ addon.SpellData = {
     [1022] = { -- Blessing of Protection (Rank 1)
         class = addon.PALADIN,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
         [5599] = { parent = 1022, use_parent_icon = true }, -- Blessing of Protection (Rank 2)
@@ -598,7 +598,7 @@ addon.SpellData = {
     [6940] = { -- Blessing of Sacrifice (Rank 1)
         class = addon.PALADIN,
         cooldown = 30,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
         [20729] = { parent = 6940, use_parent_icon = true }, -- Blessing of Sacrifice (Rank 2)
@@ -837,7 +837,7 @@ addon.SpellData = {
     [19263] = { -- Deterrence
         class = addon.HUNTER,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
 
@@ -1155,14 +1155,14 @@ addon.SpellData = {
     [22812] = { -- Barkskin
         class = addon.DRUID,
         cooldown = 60,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
 
     [22842] = { -- Frenzied Regeneration (Rank 1)
         class = addon.DRUID,
         cooldown = 180,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
         [22895] = { parent = 22842, use_parent_icon = true }, -- Frenzied Regeneration (Rank 2)
@@ -1303,7 +1303,7 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 30,
         opt_lower_cooldown = 24,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         spec = { specID.FROST_MAGE },
         baseline = true,
     },
@@ -1393,7 +1393,7 @@ addon.SpellData = {
         class = addon.MAGE,
         cooldown = 300,
         opt_lower_cooldown = 240,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
 
@@ -1487,7 +1487,7 @@ addon.SpellData = {
     [5277] = { -- Evasion (Rank 1)
         class = addon.ROGUE,
         cooldown = 300,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
         [26669] = { parent = 5277, use_parent_icon = true }, -- Evasion (Rank 2)
@@ -1545,7 +1545,7 @@ addon.SpellData = {
     [31224] = { -- Cloak of Shadows
         class = addon.ROGUE,
         cooldown = 60,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
 
@@ -1611,7 +1611,7 @@ addon.SpellData = {
     [871] = { -- Shield Wall
         class = addon.WARRIOR,
         cooldown = 1800,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
 
@@ -1696,7 +1696,7 @@ addon.SpellData = {
     [12975] = { -- Last Stand
         class = addon.WARRIOR,
         cooldown = 480,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         spec = { specID.PROTECTION_WARRIOR },
         baseline = true,
     },
@@ -1729,7 +1729,7 @@ addon.SpellData = {
     [23920] = { -- Spell Reflection
         class = addon.WARRIOR,
         cooldown = 10,
-        category = category.OTHERS,
+        category = category.DEFENSIVE,
         baseline = true,
     },
 
