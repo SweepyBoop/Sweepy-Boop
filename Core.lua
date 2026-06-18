@@ -378,7 +378,7 @@ function SweepyBoop:OnInitialize()
 
     self:SetupQueueReminder();
     self:SetupCombatIndicator();
-    --self:SetupHealerInCrowdControl();
+    self:SetupHealerInCrowdControl();
     self:SetupArenaSurrender();
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
@@ -392,6 +392,7 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
         self:HideTestHealerInCrowdControl();
+        self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
     end
 
     local currentTime = GetTime();

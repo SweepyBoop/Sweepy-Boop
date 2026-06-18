@@ -10,8 +10,7 @@ local isInTest = false;
 local function HideIcon(frame)
     if ( not frame ) then return end
 
-    frame.cooldown:SetCooldown(0, 0);
-    frame.text:SetText("");
+    frame.cooldown:Clear();
     frame:Hide();
     isInTest = false;
 end
@@ -51,8 +50,13 @@ local function CreateContainerFrame()
     frame.cooldown:SetReverse(true);
     frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
     frame.cooldown:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
-    frame.cooldown:SetHideCountdownNumbers(true);
-    frame.cooldown.noCooldownCount = true; -- hide OmniCC timers
+    -- The remaining time is now a secret value on retail, so we can no longer read it and draw the
+    -- countdown ourselves. Let the Cooldown frame render the built-in numbers (Blizzard/OmniCC) which
+    -- can display a secret duration safely.
+    frame.cooldown:SetHideCountdownNumbers(false);
+    if frame.cooldown.SetCountdownMillisecondsThreshold then
+        frame.cooldown:SetCountdownMillisecondsThreshold(5000); -- show decimals under 5 seconds
+    end
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent:IsShown() then
@@ -60,38 +64,17 @@ local function CreateContainerFrame()
         end
     end)
 
-    frame.text = frame:CreateFontString(nil, "OVERLAY", "GameTooltipText");
-    frame.text:SetPoint("TOP", frame, "BOTTOM", 0, -5);
-    frame.text:SetText("");
-
-    frame.timer = 0;
-    frame:SetScript("OnUpdate", function (self, elapsed)
-        self.timer = self.timer + elapsed;
-        if self.timer > 0.025 then -- Update every 0.025s
-            local start, duration = self.cooldown:GetCooldownTimes();
-
-            if start and duration then
-                local remainingMs = start + duration - GetTime() * 1000;
-                if remainingMs > 0 then
-                    self.text:SetText(string.format("%.1f Sec", remainingMs / 1000));
-                else
-                    self.text:SetText("");
-                end
-            else
-                self.text:SetText("");
-            end
-
-            self.timer = 0;
-        end
-    end)
-
     frame:Hide(); -- Hide initially
     return frame;
 end
 
-local function ShowIcon(spellID, startTime, duration)
+-- iconID:         the crowd control's icon texture (always readable, even when the spell ID is secret)
+-- durationObject: a DurationObject from C_UnitAuras.GetAuraDuration that drives the cooldown swipe and
+--                 countdown numbers; may be nil for auras that never expire
+-- spellID:        the crowd control's spell ID, used to suggest a breaker. May be a secret value for
+--                 enemy-applied auras (e.g. rated arena), in which case the suggestion is skipped.
+local function ShowIcon(iconID, durationObject, spellID)
     containerFrame = containerFrame or CreateContainerFrame();
-    local iconID = addon.GetSpellTexture(spellID);
 
     local config = SweepyBoop.db.profile.misc;
 
@@ -104,23 +87,27 @@ local function ShowIcon(spellID, startTime, duration)
     end
 
     containerFrame.icon:SetTexture(iconID);
-    if duration then
-        containerFrame.cooldown:SetCooldown(startTime, duration);
+    if durationObject then
+        containerFrame.cooldown:SetCooldownFromDurationObject(durationObject);
         containerFrame.cooldown:Show();
     else
-        containerFrame.cooldown:SetCooldown(0, 0);
+        containerFrame.cooldown:Clear();
         containerFrame.cooldown:Hide();
     end
 
+    -- Suggest a spell the player can press to free the healer. This needs the crowd control's spell ID,
+    -- which is a secret value for enemy-applied auras in rated arena; skip the suggestion when secret.
     local breakerSpellID;
-    local breakers = addon.CrowdControlBreakers[spellID];
-    if breakers then
-        for candidate, _ in pairs(breakers) do
-            if IsSpellKnown(candidate) or IsSpellKnown(candidate, true) then
-                local cooldown = C_Spell.GetSpellCooldown(candidate);
-                if cooldown and cooldown.duration == 0 then
-                    breakerSpellID = candidate;
-                    break;
+    if spellID and ( not addon.IsSecretValue(spellID) ) then
+        local breakers = addon.CrowdControlBreakers[spellID];
+        if breakers then
+            for candidate in pairs(breakers) do
+                if IsSpellKnown(candidate) or IsSpellKnown(candidate, true) then
+                    local cooldown = C_Spell.GetSpellCooldown(candidate);
+                    if cooldown and cooldown.duration == 0 then
+                        breakerSpellID = candidate;
+                        break;
+                    end
                 end
             end
         end
@@ -161,7 +148,10 @@ function SweepyBoop:TestHealerInCrowdControl()
         return;
     end
 
-    ShowIcon(testSpellID, GetTime(), 8);
+    -- The test spell ID is a literal (not secret), so the breaker suggestion is also exercised here.
+    local durationObject = C_DurationUtil.CreateDuration();
+    durationObject:SetTimeFromStart(GetTime(), 8);
+    ShowIcon(addon.GetSpellTexture(testSpellID), durationObject, testSpellID);
     isInTest = true;
 end
 
@@ -182,12 +172,48 @@ function SweepyBoop:HideTestHealerInCrowdControl()
     HideIcon(containerFrame);
 end
 
-local crowdControlPriority = { -- sort by remaining time, then priority
+local crowdControlPriority = { -- used to pick a CC when its category is known (spell ID not secret)
     ["stun"] = 100,
     ["silence"] = 90,
     ["disorient"] = 80,
     ["incapacitate"] = 80,
 };
+
+-- UnitIsUnit can return a secret boolean on retail; treat that as "not the same unit".
+local function SameUnit(unitA, unitB)
+    if ( unitA == unitB ) then return true end
+    local result = UnitIsUnit(unitA, unitB);
+    if addon.IsSecretValue(result) then return false end
+    return result and true or false;
+end
+
+-- Returns the crowd control aura to display on the healer, or nil if there is none.
+-- We rely on Blizzard's CROWD_CONTROL filter to decide what counts as crowd control, since the spell
+-- ID needed for our own DRList lookup is a secret value for enemy-applied auras. When the spell ID is
+-- readable we still prefer the highest-priority category (e.g. a stun over an incapacitate).
+local function GetHealerCrowdControl(unit)
+    local auras = C_UnitAuras.GetUnitAuras(unit, "HARMFUL|CROWD_CONTROL");
+    if ( not auras ) then return end
+
+    local chosen, chosenPriority;
+    for _, auraData in ipairs(auras) do
+        if ( not chosen ) then
+            chosen = auraData; -- fallback: the first crowd control aura returned
+        end
+
+        local spellID = auraData.spellId;
+        if spellID and ( not addon.IsSecretValue(spellID) ) then
+            local category = addon.DRList[spellID];
+            local priority = category and crowdControlPriority[category];
+            if priority and ( ( not chosenPriority ) or priority > chosenPriority ) then
+                chosen = auraData;
+                chosenPriority = priority;
+            end
+        end
+    end
+
+    return chosen;
+end
 
 local updateFrame;
 
@@ -205,42 +231,17 @@ function SweepyBoop:SetupHealerInCrowdControl()
                 return;
             end
 
-            local isFriendly = unitTarget and ( UnitIsUnit(unitTarget, "party1") or UnitIsUnit(unitTarget, "party2") );
-            local isFriendlyHealer = ( UnitGroupRolesAssigned(unitTarget) == "HEALER" and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
+            local isFriendly = unitTarget and ( SameUnit(unitTarget, "party1") or SameUnit(unitTarget, "party2") );
+            local role = unitTarget and UnitGroupRolesAssigned(unitTarget);
+            local isHealer = role and ( not addon.IsSecretValue(role) ) and ( role == "HEALER" );
+            local isFriendlyHealer = ( isHealer and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
             if isFriendlyHealer then
-                local spellID;
-                local priority = 0; -- init with a low priority
-                local duration;
-                local expirationTime;
-
-                for i = 1, 40 do
-                    local auraData = C_UnitAuras.GetDebuffDataByIndex(unitTarget, i);
-                    if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
-                    if addon.DRList[auraData.spellId] then
-                        local category = addon.DRList[auraData.spellId];
-                        local update = false;
-                        if crowdControlPriority[category] then -- Found a CC that should be shown
-                            -- No expirationTime means this aura never expires, so it should be prioritized
-                            if ( not auraData.expirationTime ) or ( expirationTime and auraData.expirationTime and auraData.expirationTime < expirationTime ) then
-                                update = true;
-                            elseif crowdControlPriority[category] > priority then -- same expirationTime, use priority as tie breaker
-                                update = true;
-                            end
-
-                            if update then
-                                priority = crowdControlPriority[category];
-                                duration = auraData.duration;
-                                expirationTime = auraData.expirationTime;
-                                spellID = auraData.spellId;
-                            end
-                        end
-                    end
-                end
-
-                if ( not spellID ) then -- No CC found, hide
+                local auraData = GetHealerCrowdControl(unitTarget);
+                if ( not auraData ) then -- No CC found, hide
                     HideIcon(containerFrame);
                 else
-                    ShowIcon(spellID, duration and (expirationTime - duration), duration);
+                    local durationObject = C_UnitAuras.GetAuraDuration(unitTarget, auraData.auraInstanceID);
+                    ShowIcon(auraData.icon, durationObject, auraData.spellId);
                 end
             end
         end)
