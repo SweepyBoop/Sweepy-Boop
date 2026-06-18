@@ -386,7 +386,9 @@ local function SetupIconGroup(group, unit)
     end
 
     local spec;
-    if ( not addon.PROJECT_TBC ) then
+    if addon.PROJECT_TBC then
+        spec = addon.GetDetectedSpec(unit);
+    else
         spec = addon.GetSpecForPlayerOrArena(unit);
     end
 
@@ -437,7 +439,11 @@ local function SetupIconGroup(group, unit)
                 elseif ( not spell.class ) or ( spell.class == class ) then
                     enabled = true;
 
-                    if spell.spec then
+                    -- TBC: detected spec is a heuristic guess, not authoritative -- never
+                    -- use it to filter which icons are tracked (a Fire mage may still have
+                    -- taken Ice Barrier). It only gates pre-show below. On retail/MoP the
+                    -- spec is exact, so filter as before.
+                    if spell.spec and ( not addon.PROJECT_TBC ) then
                         local specEnabled = false;
 
                         if ( not spec ) then
@@ -468,7 +474,22 @@ local function SetupIconGroup(group, unit)
                 --print("Populated icon", iconSetID, unit, spellID);
 
                 local configSpellID = spell.parent or spellID;
-                if spell.baseline and iconSetConfig.showUnusedIcons and ( skipSpellListCheck or spellList[tostring(configSpellID)] ) then
+                -- Class-wide baselines pre-show always. Spec baselines pre-show only once
+                -- that spec is known: always at the gate on retail/MoP; only after heuristic
+                -- detection in a real TBC arena (test groups preview all of them).
+                local preShowSpecOK = true;
+                if addon.PROJECT_TBC and spell.spec and ( not isTestGroup ) then
+                    preShowSpecOK = false;
+                    if spec then
+                        for i = 1, #(spell.spec) do
+                            if ( spec == spell.spec[i] ) then
+                                preShowSpecOK = true;
+                                break;
+                            end
+                        end
+                    end
+                end
+                if spell.baseline and preShowSpecOK and iconSetConfig.showUnusedIcons and ( skipSpellListCheck or spellList[tostring(configSpellID)] ) then
                     icon:SetAlpha(iconSetConfig.unusedIconAlpha);
                     if icon.info.charges and icon.Count then -- If charges baseline, show the charge icon to start with
                         icon.Count.text:SetText("2");
@@ -526,6 +547,92 @@ local function SetupAllIconGroups(unitToSetup)
                 end
             end
         end
+    end
+end
+
+-- TBC heuristic spec detection: once a unit's spec is inferred, pre-populate that spec's
+-- cooldowns. Maps source GUIDs to arena unit tokens (cached per match).
+local detectionGuidToUnit = {};
+local function GetArenaUnitForGUID(guid)
+    if ( not guid ) then return end
+    if detectionGuidToUnit[guid] then
+        return detectionGuidToUnit[guid];
+    end
+    if addon.TEST_MODE then -- TEST_MODE debugs on the player, not arena units
+        if ( UnitGUID("player") == guid ) then
+            detectionGuidToUnit[guid] = "player";
+            return "player";
+        end
+        return;
+    end
+    for i = 1, addon.MAX_ARENA_SIZE do
+        local unit = "arena" .. i;
+        if ( UnitGUID(unit) == guid ) then
+            detectionGuidToUnit[guid] = unit;
+            return unit;
+        end
+    end
+end
+
+-- Insert greyed "unused" icons for a unit's detected-spec cooldowns. The icons already
+-- exist from initial setup (spec was nil, so all class abilities were created), so we only
+-- insert here -- never PopulateIcon, which would reset in-progress cooldown timers.
+local function RefreshSpecBaselines(group, unit, spec)
+    if ( not group ) or ( not spec ) or ( not group.unitsSetup[unit] ) then return end
+
+    local iconSetConfig = addon.GetIconSetConfig(group.iconSetID);
+    if ( not iconSetConfig.showUnusedIcons ) then return end
+    local spellList = addon.GetSpellListConfig(group.iconSetID);
+
+    for spellID, spell in pairs(spellData) do
+        if ( not spell.use_parent_icon ) and spell.baseline and spell.spec then
+            local specMatched = false;
+            for i = 1, #(spell.spec) do
+                if ( spell.spec[i] == spec ) then
+                    specMatched = true;
+                    break;
+                end
+            end
+
+            if specMatched then
+                local configSpellID = spell.parent or spellID;
+                if spellList[tostring(configSpellID)] then
+                    local icon = group.icons[unit .. "-" .. spellID];
+                    -- Only add not-yet-shown icons. Anything already in the set (e.g. on
+                    -- cooldown) is left untouched -- detection must not change its alpha.
+                    if icon and ( not icon:IsShown() ) then
+                        icon:SetAlpha(iconSetConfig.unusedIconAlpha);
+                        addon.IconGroup_Insert(group, icon);
+                    end
+                end
+            end
+        end
+    end
+end
+
+local function OnSpecDetected(unit, spec)
+    for _, iconSetID in pairs(ICON_SET_ID) do
+        if GetIconGroupEnabled(iconSetID) then
+            local group;
+            if ARENA_FRAME_BARS[iconSetID] or addon.TEST_MODE then
+                -- Arena bars are keyed per-unit; in TEST_MODE standalone bars are too ("-player")
+                group = iconGroups[iconSetID .. "-" .. unit];
+            else
+                group = iconGroups[iconSetID]; -- standalone bars: one group for all units
+            end
+            RefreshSpecBaselines(group, unit, spec);
+        end
+    end
+end
+
+local function ProcessSpecDetection(sourceGUID, spellId)
+    if ( not addon.SpecDetection ) then return end
+    local spec = addon.SpecDetection[spellId];
+    if ( not spec ) then return end
+    local unit = GetArenaUnitForGUID(sourceGUID);
+    if ( not unit ) then return end
+    if addon.RecordDetectedSpec(unit, spec) then
+        OnSpecDetected(unit, spec);
     end
 end
 
@@ -1121,6 +1228,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
                     unitNames = {};
                     ClearAllIconGroups(); -- This also wipes group.unitsSetup for each group
+                    wipe(detectionGuidToUnit); -- New match: stale GUID->unit mappings
 
                     if addon.TEST_MODE then
                         unitToSetup = "all";
@@ -1147,10 +1255,23 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     else
                         SetupAllIconGroups(unitToSetup);
                     end
+
+                    -- TBC: catch spec-revealing buffs already present -- on an arena unit when
+                    -- first seen, or on the player in TEST_MODE.
+                    if addon.PROJECT_TBC then
+                        local scanUnit = ( unitToSetup ~= "all" and unitToSetup ) or ( addon.TEST_MODE and "player" );
+                        if scanUnit and addon.ScanUnitForSpec(scanUnit) then
+                            OnSpecDetected(scanUnit, addon.GetDetectedSpec(scanUnit));
+                        end
+                    end
                 end
             elseif ( event == addon.COMBAT_LOG_EVENT_UNFILTERED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
                 local _, subEvent, _, sourceGUID, _, _, _, destGUID, _, _, _, spellId, spellName, _, _, _, _, _, _, _, critical = CombatLogGetCurrentEventInfo();
+
+                if addon.PROJECT_TBC and ( subEvent == addon.SPELL_CAST_SUCCESS or subEvent == addon.SPELL_AURA_APPLIED ) then
+                    ProcessSpecDetection(sourceGUID, spellId);
+                end
 
                 -- Process arena frame bars if enabled
                 if addon.TEST_MODE then
@@ -1201,6 +1322,13 @@ function SweepyBoop:SetupArenaCooldownTracker()
 
                 local nameUpdated = false;
                 local unitTarget = ...;
+
+                local detectableUnit = unitTarget and ( ( unitTarget:sub(1, 5) == "arena" ) or ( addon.TEST_MODE and unitTarget == "player" ) );
+                if addon.PROJECT_TBC and ( event == addon.UNIT_AURA ) and detectableUnit then
+                    if addon.ScanUnitForSpec(unitTarget) then
+                        OnSpecDetected(unitTarget, addon.GetDetectedSpec(unitTarget));
+                    end
+                end
                 if ( not unitNames[unitTarget] ) then
                     unitNames[unitTarget] = UnitName(unitTarget);
                     if unitNames[unitTarget] then

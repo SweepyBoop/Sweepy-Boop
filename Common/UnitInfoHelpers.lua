@@ -141,6 +141,52 @@ addon.GetClassForPlayerOrArena = function (unitId)
     end
 end
 
+-- TBC heuristic spec detection ---------------------------------------------------------
+-- TBC has no spec API, so we infer an enemy's spec from spells they cast and buffs they
+-- carry (addon.SpecDetection, defined in SpellData_TBC.lua). Stored per GUID so it
+-- survives unit-token churn; reset on PLAYER_ENTERING_WORLD (see refreshFrame below).
+addon.detectedSpec = {};
+
+-- Record a detected spec for a unit. Validates the spec belongs to the unit's class to
+-- guard against misattribution. Returns true only on the first successful record.
+addon.RecordDetectedSpec = function (unit, spec)
+    if ( not unit ) or ( not spec ) then return end
+    local guid = UnitGUID(unit);
+    if ( not guid ) or addon.detectedSpec[guid] then return end
+
+    local class = addon.GetUnitClass(unit);
+    if class and ( addon.SPECID_TO_CLASS[spec] ~= class ) then return end
+
+    addon.detectedSpec[guid] = spec;
+    return true;
+end
+
+addon.GetDetectedSpec = function (unit)
+    local guid = unit and UnitGUID(unit);
+    return guid and addon.detectedSpec[guid];
+end
+
+-- Scan a unit's auras for a spec indicator (self-cast buffs only, e.g. Shadowform, Ice
+-- Barrier). Caster-applied debuffs are caught via the combat log instead. Returns true if
+-- a spec was newly detected.
+addon.ScanUnitForSpec = function (unit)
+    if ( not addon.SpecDetection ) then return end
+    if addon.GetDetectedSpec(unit) then return end
+
+    for _, filter in ipairs({ "HELPFUL", "HARMFUL" }) do
+        for i = 1, maxAuras do
+            local auraData = UnitAura(unit, i, filter);
+            if ( not auraData ) then break end
+            local spec = addon.SpecDetection[auraData.spellId];
+            if spec and auraData.sourceUnit and UnitIsUnit(auraData.sourceUnit, unit) then
+                if addon.RecordDetectedSpec(unit, spec) then
+                    return true;
+                end
+            end
+        end
+    end
+end
+
 -- C_PvP.GetScoreInfoByPlayerGuid returns localized spec name
 -- There are Frost Mage and Frost DK, but the spec name is "Frost" for both...
 -- We need to append class info as well
@@ -181,6 +227,7 @@ local refreshFrame = CreateFrame("Frame");
 refreshFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 refreshFrame:SetScript("OnEvent", function (self, event)
     addon.cachedPlayerSpec = {};
+    addon.detectedSpec = {};
 end)
 
 addon.GetPlayerSpec = function (unitId)
