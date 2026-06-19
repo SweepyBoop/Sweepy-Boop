@@ -75,7 +75,7 @@ addon.GetRaidFrameOptions = function(order)
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
-                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " Show a Lifebloom icon on raid frames you've Lifebloomed, and glow it during the refresh (pandemic) window",
+                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " For Resto Druids, draw your own HoTs on raid frames: Lifebloom (glowing during its refresh/pandemic window) plus Regrowth, Wild Growth, Rejuvenation and Germination packed in Swiftmend-priority order, with a warning when none of those four are active. Disable Blizzard's raid-frame buffs to rely on this.",
             }
         },
     };

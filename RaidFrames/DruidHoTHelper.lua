@@ -1,74 +1,81 @@
 local _, addon = ...;
 
--- Resto Druid raid-frame helper: show the player's own Lifebloom as an icon at the
--- center of the raid frame that has it, and glow that icon while it's inside its
--- refresh window (last 30% of duration).
+-- Resto Druid raid-frame HoT helper: draw the player's own HoTs on each raid frame as our own
+-- icons, so Blizzard's default raid-frame buff icons can be turned off entirely.
+--
+-- Two rows per frame, anchored to the right edge (the frame center is left for Blizzard's big
+-- defensive-cooldown icon):
+--   Row 1 - Lifebloom: icon + cooldown swipe, glowing while inside its refresh (pandemic) window
+--           (the last 30% of its duration).
+--   Row 2 - the four Swiftmend-consumable HoTs (Regrowth, Wild Growth, Rejuvenation, Germination):
+--           icon + cooldown swipe, packed in Swiftmend-priority order with no gaps. When none of the
+--           four are active we show a warning icon instead.
 --
 -- Retail (12.x) notes:
---   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the Lua buff-frame
---     pipeline were removed, and a frame's real buff icons aren't addon-accessible. So we
---     track each CompactUnitFrame via CompactUnitFrame_UpdateAll, map unit -> frame(s),
---     refresh on UNIT_AURA, query the player's Lifebloom ourselves, and draw our own icon.
---   * Aura APIs are SecretWhenUnitAuraRestricted, so in an active PvP match most auras
---     come back as secret values. Lifebloom is currently flagged "neversecret" by
---     Blizzard, so the player's own copy stays readable; the issecretvalue guard below
---     makes the feature fail safe (no icon) rather than error if that ever changes.
+--   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the Lua buff-frame pipeline were
+--     removed, and a frame's real buff icons aren't addon-accessible. So we track each CompactUnitFrame
+--     via CompactUnitFrame_UpdateAll, map unit -> frame(s), refresh on UNIT_AURA, query the player's
+--     HoTs ourselves, and draw our own icons.
+--   * Aura APIs are SecretWhenUnitAuraRestricted, so in an active PvP match most auras come back as
+--     secret values. Lifebloom is currently flagged "neversecret" by Blizzard, so the player's own copy
+--     stays readable and Row 1 keeps working. The other four HoTs are not neversecret, so in rated PvP
+--     their spellId is secret; the sawSecret guard makes Row 2 fail safe (hide it, no false warning)
+--     rather than show a misleading warning or error.
 
 local LCG = LibStub("LibCustomGlow-1.0");
 local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex;
-local issecretvalue = issecretvalue or function () return false end; -- no secret values pre-12.0
 local maxAuras = 255;
-local refreshFraction = 0.3; -- glow once the HoT is within the last 30% of its duration
+local refreshFraction = 0.3; -- glow once Lifebloom is within the last 30% of its duration
 
-local iconSize = 24;
-local glowColor = { 0, 1, 0, 1 }; -- green (RGBA)
-
+-- Lifebloom (Row 1). These two are mutually exclusive on a target.
 local lifeblooms = {
     [33763] = true,  -- Lifebloom
     [290754] = true, -- Lifebloom (Early Spring, PvP talent)
 };
 
-local isDruid = ( addon.GetUnitClass("player") == addon.DRUID ); -- fixed for the login session
+-- The four Swiftmend-consumable HoTs (Row 2), in the order Swiftmend is believed to consume them
+-- (left = consumed first).
+--
+-- IMPORTANT: this order is UNVERIFIED. Swiftmend's consumption priority is server-side and is NOT
+-- present in Blizzard's wow-ui-source. The list below is the commonly-cited order; reorder this single
+-- list once you confirm it in-game / on Wowhead and Row 2 will re-pack accordingly.
+local swiftmendPriority = {
+    8936,   -- Regrowth
+    48438,  -- Wild Growth
+    774,    -- Rejuvenation
+    155777, -- Germination (VERIFY: 155675 is the talent/passive; 155777 is the HoT aura on the target)
+};
+
+-- Lookup set built from the ordered list above so the two never drift apart.
+local swiftmendHoTs = {};
+for _, spellId in ipairs(swiftmendPriority) do
+    swiftmendHoTs[spellId] = true;
+end
+
+-- Layout (all tunable). Both rows hug the frame's right edge; the block is centered vertically.
+local LIFEBLOOM_SIZE = 20;
+local HOT_SIZE = 16;       -- 4 * 16 + 3 * HOT_SPACING fits even narrow 40-man frames
+local HOT_SPACING = 1;     -- gap between Row 2 icons
+local ROW_SPACING = 2;     -- gap between Row 1 and Row 2
+local RIGHT_PAD = 2;       -- inset from the frame's right edge
+local FRAME_LEVEL_OFFSET = 10;
+local BLOCK_HEIGHT = LIFEBLOOM_SIZE + ROW_SPACING + HOT_SIZE; -- used to center the two rows vertically
+local PACK_DIRECTION = "LEFT_TO_RIGHT"; -- "LEFT_TO_RIGHT" (priority 1 leftmost) or "RIGHT_TO_LEFT"
+
+local glowColor = { 0, 1, 0, 1 }; -- green (RGBA)
+local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew"; -- yellow warning triangle
+
+local isDruid = ( addon.GetUnitClass("player") == addon.DRUID ); -- class is fixed for the login session
+local isRestoSpec = false; -- spec can change mid-session; refreshed on PLAYER_SPECIALIZATION_CHANGED
 
 local cufPool = {};    -- frame -> true: raid/party CompactUnitFrames we've seen
 local unitFrames = {}; -- unit token -> { [frame] = true }: which frames currently show a unit
-local tracked = {};    -- frame -> { expirationTime, duration, timeMod, refreshTime }: active lifeblooms
+local tracked = {};    -- frame -> { expirationTime, duration, timeMod, refreshTime }: active lifeblooms (glow timer)
+local scanHoTs = {};   -- scratch reused by ScanUnitHoTs (consumed synchronously within UpdateFrame)
 
 local function ShouldGlow(info, now)
     if ( info.expirationTime <= now ) then return false end
     return ( ( info.expirationTime - now ) / info.timeMod ) <= info.refreshTime;
-end
-
--- Our own Lifebloom icon, in the top-right corner of the raid frame (retail doesn't expose
--- the frame's real buff icons, so we draw our own rather than reuse Blizzard's).
-local function EnsureIcon(frame)
-    local icon = frame.druidHoTIcon;
-    if ( not icon ) then
-        icon = CreateFrame("Frame", nil, frame);
-        icon:SetSize(iconSize, iconSize);
-        icon:SetPoint("BOTTOMRIGHT", frame, "RIGHT"); -- avoid the center (default big defensive CDs)
-        icon:SetFrameLevel(frame:GetFrameLevel() + 10);
-
-        icon.texture = icon:CreateTexture(nil, "ARTWORK");
-        icon.texture:SetAllPoints(icon);
-
-        -- Same swipe as the Healer-in-CC indicator: dark fill + the purple Loss-of-Control
-        -- sweep edge. Kept non-circular so it follows the square icon (no round mask).
-        icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
-        icon.cooldown:SetAllPoints(icon);
-        icon.cooldown:SetDrawBling(false);
-        icon.cooldown:SetReverse(true);
-        icon.cooldown:SetDrawSwipe(true);
-        icon.cooldown:SetSwipeColor(0, 0, 0, 0.5);
-        icon.cooldown:SetDrawEdge(true);
-        icon.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC"); -- the purple LoC sweep
-        icon.cooldown:SetHideCountdownNumbers(true);
-        icon.cooldown.noCooldownCount = true; -- hide OmniCC timers
-
-        icon:Hide();
-        frame.druidHoTIcon = icon;
-    end
-    return icon;
 end
 
 -- The OnUpdate loop calls this ~20x/sec, so only start/stop the glow on a transition.
@@ -84,10 +91,81 @@ local function SetIconGlow(icon, shown)
     end
 end
 
-local function ShowIcon(frame, aura, glow)
-    local icon = EnsureIcon(frame);
-    icon.texture:SetTexture(aura.icon);
+-- Same swipe as the Healer-in-CC indicator: dark fill + the purple Loss-of-Control sweep edge. Kept
+-- non-circular so it follows the square icon (no round mask).
+local function StyleCooldown(cooldown)
+    cooldown:SetDrawBling(false);
+    cooldown:SetReverse(true);
+    cooldown:SetDrawSwipe(true);
+    cooldown:SetSwipeColor(0, 0, 0, 0.5);
+    cooldown:SetDrawEdge(true);
+    cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC"); -- the purple LoC sweep
+    cooldown:SetHideCountdownNumbers(true);
+    cooldown.noCooldownCount = true; -- hide OmniCC timers
+end
 
+-- A single HoT icon: texture + cooldown swipe. Each icon is its own frame so a future Soul of the
+-- Forest border can be attached per icon without touching the others.
+local function CreateHoTIcon(parent, size, frameLevel)
+    local icon = CreateFrame("Frame", nil, parent);
+    icon:SetSize(size, size);
+    icon:SetFrameLevel(frameLevel);
+
+    icon.texture = icon:CreateTexture(nil, "ARTWORK");
+    icon.texture:SetAllPoints(icon);
+
+    icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
+    icon.cooldown:SetAllPoints(icon);
+    StyleCooldown(icon.cooldown);
+
+    icon:Hide();
+    return icon;
+end
+
+local function CreateWarningIcon(parent, size, frameLevel)
+    local icon = CreateFrame("Frame", nil, parent);
+    icon:SetSize(size, size);
+    icon:SetFrameLevel(frameLevel);
+
+    icon.texture = icon:CreateTexture(nil, "ARTWORK");
+    icon.texture:SetAllPoints(icon);
+    icon.texture:SetTexture(warningTexture);
+
+    icon:Hide();
+    return icon;
+end
+
+-- Build (once) the per-frame container holding both rows. Retail doesn't expose a frame's real buff
+-- icons, so we draw our own.
+local function EnsureContainer(frame)
+    local container = frame.druidHoT;
+    if container then return container end
+
+    local frameLevel = frame:GetFrameLevel() + FRAME_LEVEL_OFFSET;
+
+    container = {};
+    container.scratch = {}; -- ordered list of the currently-active Row 2 auras
+
+    -- Row 1: Lifebloom, right edge, upper half. Anchored so the whole two-row block is centered vertically.
+    container.lifebloomIcon = CreateHoTIcon(frame, LIFEBLOOM_SIZE, frameLevel);
+    container.lifebloomIcon:SetPoint("TOPRIGHT", frame, "RIGHT", -RIGHT_PAD, BLOCK_HEIGHT / 2);
+
+    -- Row 2: up to four Swiftmend HoTs, anchored dynamically in UpdateRow2 (packed, no gaps).
+    container.hotIcons = {};
+    for i = 1, 4 do
+        container.hotIcons[i] = CreateHoTIcon(frame, HOT_SIZE, frameLevel);
+    end
+
+    -- Row 2 alternative: warning shown when none of the four HoTs are active. Sits in the first Row 2 slot.
+    container.warningIcon = CreateWarningIcon(frame, HOT_SIZE, frameLevel);
+    container.warningIcon:SetPoint("TOPRIGHT", container.lifebloomIcon, "BOTTOMRIGHT", 0, -ROW_SPACING);
+
+    frame.druidHoT = container;
+    return container;
+end
+
+-- Drive the cooldown swipe from a (readable, non-secret) aura's duration/expiration.
+local function SetIconCooldown(icon, aura)
     local duration = aura.duration or 0;
     if ( duration > 0 ) and aura.expirationTime then
         icon.cooldown:SetCooldown(aura.expirationTime - duration, duration);
@@ -95,22 +173,24 @@ local function ShowIcon(frame, aura, glow)
     else
         icon.cooldown:Hide();
     end
-
-    icon:Show();
-    SetIconGlow(icon, glow);
 end
 
 local function ClearFrame(frame)
-    local icon = frame.druidHoTIcon;
-    if icon then
-        SetIconGlow(icon, false);
-        icon:Hide();
+    local container = frame.druidHoT;
+    if container then
+        SetIconGlow(container.lifebloomIcon, false);
+        container.lifebloomIcon:Hide();
+        for i = 1, #container.hotIcons do
+            container.hotIcons[i]:Hide();
+        end
+        container.warningIcon:Hide();
     end
     tracked[frame] = nil;
 end
 
--- Throttled loop: UNIT_AURA only fires when the aura changes, but the refresh window is
--- time-based, so we re-evaluate the glow on a timer while any lifebloom is active.
+-- Throttled loop: UNIT_AURA only fires when an aura changes, but the Lifebloom refresh window is
+-- time-based, so we re-evaluate its glow on a timer while any Lifebloom is active. Row 2 needs no timer
+-- (the Cooldown widget animates its own swipe and aura gain/loss/expiry all fire UNIT_AURA).
 local updater = CreateFrame("Frame");
 updater.elapsed = 0;
 updater:Hide();
@@ -127,40 +207,51 @@ updater:SetScript("OnUpdate", function (self, elapsed)
     local now = GetTime();
     for frame, info in pairs(tracked) do
         if ( info.expirationTime <= now ) then
-            ClearFrame(frame);
-        elseif frame.druidHoTIcon then
-            SetIconGlow(frame.druidHoTIcon, ShouldGlow(info, now));
+            -- Lifebloom expired. UNIT_AURA will also fire, but stop the glow on time and only touch
+            -- Row 1 here (Row 2's HoTs are independent and may still be active).
+            local container = frame.druidHoT;
+            if container then
+                SetIconGlow(container.lifebloomIcon, false);
+                container.lifebloomIcon:Hide();
+            end
+            tracked[frame] = nil;
+        elseif frame.druidHoT then
+            SetIconGlow(frame.druidHoT.lifebloomIcon, ShouldGlow(info, now));
         end
     end
 end)
 
--- Find the player's lifebloom on a unit (secret-safe: skip any aura whose spellId is secret).
-local function FindLifebloom(unit)
+-- One pass over the player's helpful auras on a unit. Secret-safe: a secret spellId (rated PvP) is
+-- skipped and flagged via sawSecret so Row 2 can fail safe.
+local function ScanUnitHoTs(unit)
+    wipe(scanHoTs);
+    local lifebloomAura, sawSecret;
     for i = 1, maxAuras do
         local aura = GetAuraDataByIndex(unit, i, "PLAYER|HELPFUL");
         if ( not aura ) then break end
-        if ( not issecretvalue(aura.spellId) ) and lifeblooms[aura.spellId] then
-            return aura;
+        local spellId = aura.spellId;
+        if addon.IsSecretValue(spellId) then
+            sawSecret = true;
+        elseif lifeblooms[spellId] then
+            lifebloomAura = aura;
+        elseif swiftmendHoTs[spellId] then
+            scanHoTs[spellId] = aura;
         end
     end
+    return lifebloomAura, scanHoTs, sawSecret;
 end
 
-local function UpdateFrame(frame)
-    if frame:IsForbidden() then return end
-
-    local unit = frame.displayedUnit or frame.unit;
-    if ( not SweepyBoop.db.profile.raidFrames.druidHoTHelper )
-            or ( not unit ) or ( not UnitExists(unit) )
-            or string.find(unit, "target") then -- target/targettarget aren't raid members
-        ClearFrame(frame);
-        return;
-    end
-
-    local aura = FindLifebloom(unit);
+local function UpdateRow1(frame, aura)
+    local icon = frame.druidHoT.lifebloomIcon;
     if ( not aura ) then
-        ClearFrame(frame);
+        SetIconGlow(icon, false);
+        icon:Hide();
+        tracked[frame] = nil; -- updater self-hides once tracked is empty
         return;
     end
+
+    icon.texture:SetTexture(aura.icon);
+    SetIconCooldown(icon, aura);
 
     local timeMod = aura.timeMod or 1;
     if ( timeMod <= 0 ) then timeMod = 1 end
@@ -172,8 +263,95 @@ local function UpdateFrame(frame)
     info.refreshTime = info.duration * refreshFraction;
     tracked[frame] = info;
 
-    ShowIcon(frame, aura, ShouldGlow(info, GetTime()));
+    icon:Show();
+    SetIconGlow(icon, ShouldGlow(info, GetTime()));
     updater:Show();
+end
+
+local function UpdateRow2(frame, hotAuras, sawSecret)
+    local container = frame.druidHoT;
+    local icons = container.hotIcons;
+
+    -- Collect the active HoTs in Swiftmend-priority order.
+    local present = container.scratch;
+    wipe(present);
+    for _, spellId in ipairs(swiftmendPriority) do
+        local aura = hotAuras[spellId];
+        if aura then
+            present[#present + 1] = aura;
+        end
+    end
+
+    local count = #present;
+
+    if ( count == 0 ) then
+        for i = 1, #icons do
+            icons[i]:Hide();
+        end
+        -- In rated PvP our HoTs are secret (unreadable), so a "no HoTs" warning would be misleading.
+        if sawSecret then
+            container.warningIcon:Hide();
+        else
+            container.warningIcon:Show();
+        end
+        return;
+    end
+
+    container.warningIcon:Hide();
+
+    -- Lay the active icons out right-aligned under Lifebloom, chaining each to the left of the previous
+    -- one (icons[1] is the rightmost slot). Assign auras so priority 1 ends up on the correct side per
+    -- PACK_DIRECTION.
+    for i = 1, count do
+        local aura;
+        if ( PACK_DIRECTION == "RIGHT_TO_LEFT" ) then
+            aura = present[i];                 -- priority 1 placed first => rightmost
+        else
+            aura = present[count - i + 1];     -- LEFT_TO_RIGHT: priority 1 ends up leftmost
+        end
+
+        local icon = icons[i];
+        icon.texture:SetTexture(aura.icon);
+        SetIconCooldown(icon, aura);
+
+        icon:ClearAllPoints();
+        if ( i == 1 ) then
+            icon:SetPoint("TOPRIGHT", container.lifebloomIcon, "BOTTOMRIGHT", 0, -ROW_SPACING);
+        else
+            icon:SetPoint("TOPRIGHT", icons[i - 1], "TOPLEFT", -HOT_SPACING, 0);
+        end
+        icon:Show();
+    end
+
+    for i = count + 1, #icons do
+        icons[i]:Hide();
+    end
+end
+
+local function UpdateFrame(frame)
+    if frame:IsForbidden() then return end
+
+    local unit = frame.displayedUnit or frame.unit;
+    if ( not SweepyBoop.db.profile.raidFrames.druidHoTHelper )
+            or ( not isRestoSpec )
+            or ( not unit ) or ( not UnitExists(unit) )
+            or string.find(unit, "target") then -- target/targettarget aren't raid members
+        ClearFrame(frame);
+        return;
+    end
+
+    -- Don't show the warning on dead raiders: they have no HoTs, but a persistent warning is just noise.
+    local dead = UnitIsDeadOrGhost(unit);
+    if dead and ( not addon.IsSecretValue(dead) ) then
+        ClearFrame(frame);
+        return;
+    end
+
+    EnsureContainer(frame);
+
+    local lifebloomAura, hotAuras, sawSecret = ScanUnitHoTs(unit);
+    UpdateRow1(frame, lifebloomAura);
+    UpdateRow2(frame, hotAuras, sawSecret);
 end
 
 -- Maintain unit -> frame(s) so UNIT_AURA can target only the affected frames.
@@ -207,10 +385,22 @@ local function UntrackFrame(frame)
     ClearFrame(frame);
 end
 
+local function CheckSpec()
+    isRestoSpec = ( addon.GetSpecForPlayerOrArena("player") == addon.SPECID.RESTORATION_DRUID );
+end
+
+local function RefreshAllFrames()
+    for frame in pairs(cufPool) do
+        UpdateFrame(frame);
+    end
+end
+
 local eventFrame = CreateFrame("Frame");
 
 function SweepyBoop:SetupRaidFrameAuraModule()
     if ( not isDruid ) then return end -- nothing to do for non-druids this session
+
+    CheckSpec();
 
     -- CompactUnitFrame_UpdateAll fires for every raid/party frame as it's set up / reused.
     hooksecurefunc("CompactUnitFrame_UpdateAll", function (frame)
@@ -229,6 +419,8 @@ function SweepyBoop:SetupRaidFrameAuraModule()
 
     eventFrame:RegisterEvent(addon.UNIT_AURA);
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+    eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
+    eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:SetScript("OnEvent", function (_, event, unitTarget)
         if ( event == addon.UNIT_AURA ) then
             local frames = unitFrames[unitTarget];
@@ -237,6 +429,17 @@ function SweepyBoop:SetupRaidFrameAuraModule()
                     UpdateFrame(frame);
                 end
             end
+        elseif ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
+            if ( unitTarget == "player" ) then
+                local wasResto = isRestoSpec;
+                CheckSpec();
+                if ( wasResto ~= isRestoSpec ) then
+                    RefreshAllFrames(); -- show or clear every frame for the new spec
+                end
+            end
+        elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
+            CheckSpec(); -- spec info may not have been ready at login
+            RefreshAllFrames();
         else -- GROUP_ROSTER_UPDATE: the unit behind a frame may have changed
             for frame in pairs(cufPool) do
                 MapFrameUnit(frame);
