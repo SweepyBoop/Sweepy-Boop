@@ -69,11 +69,12 @@ local function CreateContainerFrame()
 end
 
 -- iconID:         the crowd control's icon texture (always readable, even when the spell ID is secret)
--- durationObject: a DurationObject from C_UnitAuras.GetAuraDuration that drives the cooldown swipe and
---                 countdown numbers; may be nil for auras that never expire
+-- durationObject: a DurationObject from C_UnitAuras.GetAuraDuration for the real (possibly secret)
+--                 remaining time; nil for auras that never expire or for the test path
 -- spellID:        the crowd control's spell ID, used to suggest a breaker. May be a secret value for
 --                 enemy-applied auras (e.g. rated arena), in which case the suggestion is skipped.
-local function ShowIcon(iconID, durationObject, spellID)
+-- startTime/duration: a plain (non-secret) cooldown, used by the test path when there is no DurationObject
+local function ShowIcon(iconID, durationObject, spellID, startTime, duration)
     containerFrame = containerFrame or CreateContainerFrame();
 
     local config = SweepyBoop.db.profile.misc;
@@ -89,6 +90,9 @@ local function ShowIcon(iconID, durationObject, spellID)
     containerFrame.icon:SetTexture(iconID);
     if durationObject then
         containerFrame.cooldown:SetCooldownFromDurationObject(durationObject);
+        containerFrame.cooldown:Show();
+    elseif duration then
+        containerFrame.cooldown:SetCooldown(startTime, duration);
         containerFrame.cooldown:Show();
     else
         containerFrame.cooldown:Clear();
@@ -144,14 +148,14 @@ local testSpellID = testIcons[class] or 118; -- Polymorph
 
 function SweepyBoop:TestHealerInCrowdControl()
     if IsInInstance() then
-        addon.PRINT("Cannot run textest mode inside an instance");
+        addon.PRINT("Cannot run test mode inside an instance");
         return;
     end
 
-    -- The test spell ID is a literal (not secret), so the breaker suggestion is also exercised here.
-    local durationObject = C_DurationUtil.CreateDuration();
-    durationObject:SetTimeFromStart(GetTime(), 8);
-    ShowIcon(addon.GetSpellTexture(testSpellID), durationObject, testSpellID);
+    -- The test duration is a known literal (not a secret value), so drive the cooldown swipe with a plain
+    -- start/duration instead of a DurationObject. The test spell ID is also not secret, so the breaker
+    -- suggestion is exercised here too.
+    ShowIcon(addon.GetSpellTexture(testSpellID), nil, testSpellID, GetTime(), 8);
     isInTest = true;
 end
 
