@@ -262,7 +262,7 @@ function SweepyBoop:SetupHealerInCrowdControl()
             local role = unitTarget and UnitGroupRolesAssigned(unitTarget);
             local isHealer = role and ( not addon.IsSecretValue(role) ) and ( role == "HEALER" );
             local isFriendlyHealer = ( isHealer and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
-            isFriendlyHealer = isFriendlyHealer or ( unitTarget == "player" ); -- TEST ONLY: also alert when you get CC'd (comment out to revert)
+            --isFriendlyHealer = isFriendlyHealer or ( unitTarget == "player" ); -- TEST ONLY: also alert when you get CC'd (comment out to revert)
             if isFriendlyHealer then
                 local auraData = GetHealerCrowdControl(unitTarget);
                 if ( not auraData ) then -- No CC found, hide
