@@ -397,6 +397,28 @@ end
 
 local eventFrame = CreateFrame("Frame");
 
+-- Hide Blizzard's own raid-frame buffs while the helper is enabled on a Resto druid, so our icons
+-- replace them. In retail 12.x a frame's individual buff icons are forbidden/secret, so the only lever
+-- is the global raidFramesDisplayBuffs CVar (all-or-nothing: it hides every buff on raid frames;
+-- debuffs/dispels stay). Changing it re-runs setup on the protected raid frames, so we defer in combat.
+local function ShouldHideBlizzardBuffs()
+    return isRestoSpec and SweepyBoop.db.profile.raidFrames.druidHoTHelper and true or false;
+end
+
+local function ApplyHideBlizzardBuffs()
+    if ( not isDruid ) or ( not addon.PROJECT_MAINLINE ) then return end -- druid-only, and retail-only
+
+    if InCombatLockdown() then
+        eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED); -- retry once combat ends
+        return;
+    end
+
+    local desired = ShouldHideBlizzardBuffs() and "0" or "1";
+    if ( GetCVar("raidFramesDisplayBuffs") ~= desired ) then
+        SetCVar("raidFramesDisplayBuffs", desired); -- 0 hides all raid-frame buffs, 1 restores the default
+    end
+end
+
 function SweepyBoop:SetupRaidFrameAuraModule()
     if ( not isDruid ) then return end -- nothing to do for non-druids this session
 
@@ -433,13 +455,18 @@ function SweepyBoop:SetupRaidFrameAuraModule()
             if ( unitTarget == "player" ) then
                 local wasResto = isRestoSpec;
                 CheckSpec();
+                ApplyHideBlizzardBuffs(); -- entering/leaving Resto flips whether we hide Blizzard buffs
                 if ( wasResto ~= isRestoSpec ) then
                     RefreshAllFrames(); -- show or clear every frame for the new spec
                 end
             end
         elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
             CheckSpec(); -- spec info may not have been ready at login
+            ApplyHideBlizzardBuffs();
             RefreshAllFrames();
+        elseif ( event == addon.PLAYER_REGEN_ENABLED ) then
+            eventFrame:UnregisterEvent(addon.PLAYER_REGEN_ENABLED);
+            ApplyHideBlizzardBuffs(); -- apply the buff-hiding CVar that was deferred during combat
         else -- GROUP_ROSTER_UPDATE: the unit behind a frame may have changed
             for frame in pairs(cufPool) do
                 MapFrameUnit(frame);
@@ -447,4 +474,13 @@ function SweepyBoop:SetupRaidFrameAuraModule()
             end
         end
     end)
+
+    ApplyHideBlizzardBuffs(); -- enforce the buff-hiding CVar for the current spec + toggle
+end
+
+-- Called when the Druid HoT helper toggle changes (and on profile switch): re-evaluate the buff-hiding
+-- CVar and repaint every tracked frame for the new setting.
+function SweepyBoop:RefreshDruidHoTHelper()
+    ApplyHideBlizzardBuffs();
+    RefreshAllFrames();
 end
