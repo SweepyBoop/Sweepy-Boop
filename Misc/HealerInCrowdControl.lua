@@ -55,7 +55,7 @@ local function CreateContainerFrame()
     -- can display a secret duration safely.
     frame.cooldown:SetHideCountdownNumbers(false);
     if frame.cooldown.SetCountdownMillisecondsThreshold then
-        frame.cooldown:SetCountdownMillisecondsThreshold(5000); -- show decimals under 5 seconds
+        frame.cooldown:SetCountdownMillisecondsThreshold(5); -- threshold is in seconds: show decimals under 5s
     end
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
