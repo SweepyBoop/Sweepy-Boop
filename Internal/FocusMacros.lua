@@ -16,7 +16,7 @@ if addon.PROJECT_MAINLINE then
         "Skull Bash",
         "Wild Charge",
     };
-    macroPrefixes["Rake"] = "#showtooltip no\n/cast [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
+    macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5, help] [stance:0/3/4/5, @player] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
     macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@";
 else
     classAbilities[addon.DRUID] = {
