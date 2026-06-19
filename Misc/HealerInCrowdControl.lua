@@ -7,6 +7,26 @@ local borderSize = iconSize * 1.25;
 local containerFrame;
 local isInTest = false;
 
+-- The remaining time may be a secret value, so the Cooldown frame renders the countdown text itself.
+-- We can still restyle that built-in text: shrink the font and move it just below the icon's ring. The
+-- font string is created lazily, so this is re-applied whenever the cooldown is (re)shown.
+local COUNTDOWN_FONT_SIZE = 12; -- base size; scales with the icon via the container's SetScale
+local countdownFont = CreateFont("SweepyBoopHealerCCCountdownFont");
+countdownFont:SetFont(STANDARD_TEXT_FONT, COUNTDOWN_FONT_SIZE, "OUTLINE");
+
+local function StyleCountdownText(cooldown)
+    if cooldown.SetCountdownFont then
+        cooldown:SetCountdownFont(countdownFont:GetName());
+    end
+    if cooldown.GetCountdownFontString then
+        local text = cooldown:GetCountdownFontString();
+        if text then
+            text:ClearAllPoints();
+            text:SetPoint("TOP", cooldown:GetParent().border, "BOTTOM", 0, -1);
+        end
+    end
+end
+
 local function HideIcon(frame)
     if ( not frame ) then return end
 
@@ -57,6 +77,7 @@ local function CreateContainerFrame()
     if frame.cooldown.SetCountdownMillisecondsThreshold then
         frame.cooldown:SetCountdownMillisecondsThreshold(5); -- threshold is in seconds: show decimals under 5s
     end
+    StyleCountdownText(frame.cooldown);
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
         if parent:IsShown() then
@@ -98,6 +119,7 @@ local function ShowIcon(iconID, durationObject, spellID, startTime, duration)
         containerFrame.cooldown:Clear();
         containerFrame.cooldown:Hide();
     end
+    StyleCountdownText(containerFrame.cooldown); -- re-apply: the countdown font string is created lazily
 
     -- Suggest a spell the player can press to free the healer. This needs the crowd control's spell ID,
     -- which is a secret value for enemy-applied auras in rated arena; skip the suggestion when secret.
