@@ -1,5 +1,4 @@
 local _, addon = ...;
-local LCG = LibStub("LibCustomGlow-1.0");
 
 local iconSize = addon.DEFAULT_ICON_SIZE;
 local borderSize = iconSize * 1.25;
@@ -51,6 +50,21 @@ local function CreateContainerFrame()
     frame.breakericon:SetPoint("LEFT", frame.icon, "RIGHT");
     frame.breakericonTexture = frame.breakericon:CreateTexture(nil, "BORDER");
     frame.breakericonTexture:SetAllPoints();
+    -- Blizzard's spell-activation (proc) glow - the same one the rest of the addon uses via
+    -- addon.ShowOverlayGlow. We pre-create it here with a FIXED size: ShowOverlayGlow would otherwise call
+    -- button:GetSize() * 1.4 on first use, and GetSize() returns a secret number once a secret value has
+    -- contaminated the session (real arena aura data) - arithmetic on which throws. Creating the frame
+    -- under the key it checks (SpellActivationAlert) makes ShowOverlayGlow skip that GetSize() path.
+    local breakerGlowSize = ( iconSize / 1.5 ) * 1.4;
+    frame.breakericon.SpellActivationAlert = CreateFrame("Frame", nil, frame.breakericon, "ActionButtonSpellAlertTemplate");
+    frame.breakericon.SpellActivationAlert:SetSize(breakerGlowSize, breakerGlowSize);
+    frame.breakericon.SpellActivationAlert:SetPoint("CENTER", frame.breakericon, "CENTER", 0, 0);
+    -- Pin the "birth" burst to the icon size too: ProcStartFlipbook is a fixed 150px in the template
+    -- (it does not scale with the frame), which is an oversized flash on this small icon.
+    if frame.breakericon.SpellActivationAlert.ProcStartFlipbook then
+        frame.breakericon.SpellActivationAlert.ProcStartFlipbook:SetSize(breakerGlowSize, breakerGlowSize);
+    end
+    frame.breakericon.SpellActivationAlert:Hide();
 
     frame.mask = frame:CreateMaskTexture();
     frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
@@ -142,10 +156,10 @@ local function ShowIcon(iconID, durationObject, spellID, startTime, duration)
     if breakerSpellID then
         local breakerIconID = addon.GetSpellTexture(breakerSpellID);
         containerFrame.breakericonTexture:SetTexture(breakerIconID);
-        LCG.ButtonGlow_Start(containerFrame.breakericon);
+        addon.ShowOverlayGlow(containerFrame.breakericon);
         containerFrame.breakericon:Show();
     else
-        LCG.ButtonGlow_Stop(containerFrame.breakericon);
+        addon.HideOverlayGlow(containerFrame.breakericon);
         containerFrame.breakericon:Hide();
     end
 
