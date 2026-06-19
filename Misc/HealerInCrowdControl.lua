@@ -6,6 +6,11 @@ local borderSize = iconSize * 1.25;
 local containerFrame;
 local isInTest = false;
 
+-- The breaker suggestion needs a readable crowd-control spell ID to look up which spell frees the healer.
+-- On retail/mainline every arena aura is a secret value, so that spell ID is never readable and the breaker
+-- can never be shown - restrict the whole feature to non-mainline clients (no frames, no logic on mainline).
+local breakerSupported = ( not addon.PROJECT_MAINLINE );
+
 -- The remaining time may be a secret value, so the Cooldown frame renders the countdown text itself.
 -- We can still restyle that built-in text: shrink the font and move it just below the icon's ring. The
 -- font string is created lazily, so this is re-applied whenever the cooldown is (re)shown.
@@ -45,26 +50,27 @@ local function CreateContainerFrame()
     frame.icon:SetSize(iconSize, iconSize);
     frame.icon:SetAllPoints(frame);
 
-    frame.breakericon = CreateFrame("Frame", nil, frame);
-    frame.breakericon:SetSize(iconSize / 1.5, iconSize / 1.5);
-    frame.breakericon:SetPoint("LEFT", frame.icon, "RIGHT");
-    frame.breakericonTexture = frame.breakericon:CreateTexture(nil, "BORDER");
-    frame.breakericonTexture:SetAllPoints();
-    -- Blizzard's spell-activation (proc) glow - the same one the rest of the addon uses via
-    -- addon.ShowOverlayGlow. We pre-create it here with a FIXED size: ShowOverlayGlow would otherwise call
-    -- button:GetSize() * 1.4 on first use, and GetSize() returns a secret number once a secret value has
-    -- contaminated the session (real arena aura data) - arithmetic on which throws. Creating the frame
-    -- under the key it checks (SpellActivationAlert) makes ShowOverlayGlow skip that GetSize() path.
-    local breakerGlowSize = ( iconSize / 1.5 ) * 1.4;
-    frame.breakericon.SpellActivationAlert = CreateFrame("Frame", nil, frame.breakericon, "ActionButtonSpellAlertTemplate");
-    frame.breakericon.SpellActivationAlert:SetSize(breakerGlowSize, breakerGlowSize);
-    frame.breakericon.SpellActivationAlert:SetPoint("CENTER", frame.breakericon, "CENTER", 0, 0);
-    -- Pin the "birth" burst to the icon size too: ProcStartFlipbook is a fixed 150px in the template
-    -- (it does not scale with the frame), which is an oversized flash on this small icon.
-    if frame.breakericon.SpellActivationAlert.ProcStartFlipbook then
-        frame.breakericon.SpellActivationAlert.ProcStartFlipbook:SetSize(breakerGlowSize, breakerGlowSize);
+    -- Breaker suggestion icon + its proc glow. Only created off mainline (see breakerSupported): on mainline
+    -- the CC's spell ID is always a secret value, so we can never identify a breaker to show.
+    if breakerSupported then
+        frame.breakericon = CreateFrame("Frame", nil, frame);
+        frame.breakericon:SetSize(iconSize / 1.5, iconSize / 1.5);
+        frame.breakericon:SetPoint("LEFT", frame.icon, "RIGHT");
+        frame.breakericonTexture = frame.breakericon:CreateTexture(nil, "BORDER");
+        frame.breakericonTexture:SetAllPoints();
+        -- Blizzard's spell-activation (proc) glow, the same one the rest of the addon uses via
+        -- addon.ShowOverlayGlow. Pre-create it with a FIXED size so ShowOverlayGlow skips its
+        -- button:GetSize() * 1.4 setup path (GetSize arithmetic is unsafe once secret values are involved).
+        local breakerGlowSize = ( iconSize / 1.5 ) * 1.4;
+        frame.breakericon.SpellActivationAlert = CreateFrame("Frame", nil, frame.breakericon, "ActionButtonSpellAlertTemplate");
+        frame.breakericon.SpellActivationAlert:SetSize(breakerGlowSize, breakerGlowSize);
+        frame.breakericon.SpellActivationAlert:SetPoint("CENTER", frame.breakericon, "CENTER", 0, 0);
+        -- Pin the "birth" burst to the icon size too (ProcStartFlipbook is a fixed 150px in the template).
+        if frame.breakericon.SpellActivationAlert.ProcStartFlipbook then
+            frame.breakericon.SpellActivationAlert.ProcStartFlipbook:SetSize(breakerGlowSize, breakerGlowSize);
+        end
+        frame.breakericon.SpellActivationAlert:Hide();
     end
-    frame.breakericon.SpellActivationAlert:Hide();
 
     frame.mask = frame:CreateMaskTexture();
     frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
@@ -136,31 +142,33 @@ local function ShowIcon(iconID, durationObject, spellID, startTime, duration)
     end
     StyleCountdownText(containerFrame.cooldown); -- re-apply: the countdown font string is created lazily
 
-    -- Suggest a spell the player can press to free the healer. This needs the crowd control's spell ID,
-    -- which is a secret value for enemy-applied auras in rated arena; skip the suggestion when secret.
-    local breakerSpellID;
-    if spellID and ( not addon.IsSecretValue(spellID) ) then
-        local breakers = addon.CrowdControlBreakers[spellID];
-        if breakers then
-            for candidate in pairs(breakers) do
-                if IsSpellKnown(candidate) or IsSpellKnown(candidate, true) then
-                    local cooldown = C_Spell.GetSpellCooldown(candidate);
-                    if cooldown and cooldown.duration == 0 then
-                        breakerSpellID = candidate;
-                        break;
+    -- Suggest a spell the player can press to free the healer. Only off mainline (see breakerSupported):
+    -- mainline spell IDs are secret, so we can never identify the CC to recommend a breaker for it.
+    if breakerSupported then
+        local breakerSpellID;
+        if spellID then
+            local breakers = addon.CrowdControlBreakers[spellID];
+            if breakers then
+                for candidate in pairs(breakers) do
+                    if IsSpellKnown(candidate) or IsSpellKnown(candidate, true) then
+                        local cooldown = C_Spell.GetSpellCooldown(candidate);
+                        if cooldown and cooldown.duration == 0 then
+                            breakerSpellID = candidate;
+                            break;
+                        end
                     end
                 end
             end
         end
-    end
-    if breakerSpellID then
-        local breakerIconID = addon.GetSpellTexture(breakerSpellID);
-        containerFrame.breakericonTexture:SetTexture(breakerIconID);
-        addon.ShowOverlayGlow(containerFrame.breakericon);
-        containerFrame.breakericon:Show();
-    else
-        addon.HideOverlayGlow(containerFrame.breakericon);
-        containerFrame.breakericon:Hide();
+        if breakerSpellID then
+            local breakerIconID = addon.GetSpellTexture(breakerSpellID);
+            containerFrame.breakericonTexture:SetTexture(breakerIconID);
+            addon.ShowOverlayGlow(containerFrame.breakericon);
+            containerFrame.breakericon:Show();
+        else
+            addon.HideOverlayGlow(containerFrame.breakericon);
+            containerFrame.breakericon:Hide();
+        end
     end
 
     if ( not containerFrame:IsShown() ) and config.healerInCrowdControlSound then
