@@ -10,7 +10,7 @@ local isInTest = false;
 -- The remaining time may be a secret value, so the Cooldown frame renders the countdown text itself.
 -- We can still restyle that built-in text: shrink the font and move it just below the icon's ring. The
 -- font string is created lazily, so this is re-applied whenever the cooldown is (re)shown.
-local COUNTDOWN_FONT_SIZE = 12; -- base size; scales with the icon via the container's SetScale
+local COUNTDOWN_FONT_SIZE = 18; -- base size; sits below the icon so it can be large without blocking it
 local countdownFont = CreateFont("SweepyBoopHealerCCCountdownFont");
 countdownFont:SetFont(STANDARD_TEXT_FONT, COUNTDOWN_FONT_SIZE, "OUTLINE");
 
