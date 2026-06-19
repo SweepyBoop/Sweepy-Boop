@@ -11,8 +11,9 @@ local isInTest = false;
 -- We can still restyle that built-in text: shrink the font and move it just below the icon's ring. The
 -- font string is created lazily, so this is re-applied whenever the cooldown is (re)shown.
 local COUNTDOWN_FONT_SIZE = 18; -- base size; sits below the icon so it can be large without blocking it
+local COUNTDOWN_FONT_FILE = "Fonts\\2002.TTF";
 local countdownFont = CreateFont("SweepyBoopHealerCCCountdownFont");
-countdownFont:SetFont(STANDARD_TEXT_FONT, COUNTDOWN_FONT_SIZE, "OUTLINE");
+countdownFont:SetFont(COUNTDOWN_FONT_FILE, COUNTDOWN_FONT_SIZE, "OUTLINE");
 
 local function StyleCountdownText(cooldown)
     if cooldown.SetCountdownFont then
