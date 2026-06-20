@@ -241,12 +241,7 @@ addon.IconGroup_Wipe = function (group)
             icon.cooldown:SetCooldown(0, 0);
         end
         if icon.SpellActivationAlert then
-            if icon.SpellActivationAlert.ProcStartAnim:IsPlaying() then
-                icon.SpellActivationAlert.ProcStartAnim:Stop();
-            end
-            if icon:IsVisible() then
-                icon.SpellActivationAlert:Hide();
-           end
+            addon.HideOverlayGlow(icon);
         end
         if icon.duration then
             icon.duration:SetCooldown(0, 0);

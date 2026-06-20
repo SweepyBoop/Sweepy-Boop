@@ -58,18 +58,8 @@ local function CreateContainerFrame()
         frame.breakericon:SetPoint("LEFT", frame.icon, "RIGHT");
         frame.breakericonTexture = frame.breakericon:CreateTexture(nil, "BORDER");
         frame.breakericonTexture:SetAllPoints();
-        -- Blizzard's spell-activation (proc) glow, the same one the rest of the addon uses via
-        -- addon.ShowOverlayGlow. Pre-create it with a FIXED size so ShowOverlayGlow skips its
-        -- button:GetSize() * 1.4 setup path (GetSize arithmetic is unsafe once secret values are involved).
-        local breakerGlowSize = ( iconSize / 1.5 ) * 1.4;
-        frame.breakericon.SpellActivationAlert = CreateFrame("Frame", nil, frame.breakericon, "ActionButtonSpellAlertTemplate");
-        frame.breakericon.SpellActivationAlert:SetSize(breakerGlowSize, breakerGlowSize);
-        frame.breakericon.SpellActivationAlert:SetPoint("CENTER", frame.breakericon, "CENTER", 0, 0);
-        -- Pin the "birth" burst to the icon size too (ProcStartFlipbook is a fixed 150px in the template).
-        if frame.breakericon.SpellActivationAlert.ProcStartFlipbook then
-            frame.breakericon.SpellActivationAlert.ProcStartFlipbook:SetSize(breakerGlowSize, breakerGlowSize);
-        end
-        frame.breakericon.SpellActivationAlert:Hide();
+        -- Pre-create the overlay with a fixed size so ShowOverlayGlow skips button:GetSize() in restricted contexts.
+        frame.breakericon.SpellActivationAlert = addon.CreateOverlayGlow(frame.breakericon, iconSize / 1.5);
     end
 
     frame.mask = frame:CreateMaskTexture();
