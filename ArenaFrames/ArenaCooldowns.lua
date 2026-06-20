@@ -53,24 +53,33 @@ local petUnitIdToOwnerId = {
 local ICON_SET_ID = addon.ICON_SET_ID;
 local ARENA_FRAME_BARS = addon.ARENA_FRAME_BARS;
 
+local INFERENCE_AURA_FILTERS = {
+    "HELPFUL|BIG_DEFENSIVE",
+    "HELPFUL|EXTERNAL_DEFENSIVE",
+};
+local INFERENCE_DURATION_TOLERANCE = 0.75;
+local INFERENCE_EVIDENCE_WINDOW = 0.3;
+local inferenceEvidence = {};
+
 for spellID, spell in pairs(spellData) do
     -- Fill default priority
     spell.priority = spell.index or addon.SPELLPRIORITY.DEFAULT;
 
-    if ( not spell.class ) or ( not C_Spell.GetSpellName(spellID) ) then
-        print("Invalid spellID:", spellID);
-    end
+    -- Alias records inherit identity/cooldown data from their parent and are not standalone icons.
+    if not spell.parent then
+        if ( not spell.class ) or ( not C_Spell.GetSpellName(spellID) ) then
+            print("Invalid spellID:", spellID);
+        end
 
-    if ( not spell.cooldown ) then
-        print("Spell missing cooldown:", spellID);
-    end
+        if ( not spell.cooldown ) then
+            print("Spell missing cooldown:", spellID);
+        end
 
-    -- Class should be a string of capital letters
-    if spell.class and ( type(spell.class) ~= "string" ) then
-        print("Invalid class for spellID:", spellID);
+        -- Class should be a string of capital letters
+        if spell.class and ( type(spell.class) ~= "string" ) then
+            print("Invalid class for spellID:", spellID);
+        end
     end
-
-    -- Should we allow entries without class specified?
 end
 
 -- iconPool[iconSetID][unitID-spellID]
@@ -519,6 +528,9 @@ end
 local function ClearAllIconGroups()
     for _, iconGroup in pairs(iconGroups) do
         addon.IconGroup_Wipe(iconGroup); -- null check is included in IconGroup_Wipe
+        if iconGroup.inferredAuraState then
+            wipe(iconGroup.inferredAuraState);
+        end
     end
 end
 
@@ -1019,7 +1031,246 @@ local function ProcessUnitSpellCast(self, event, ...)
     end
 end
 
+local function AuraMatchesFilter(unit, auraInstanceID, filter)
+    local filteredOut = C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, auraInstanceID, filter);
+    return filteredOut == false;
+end
+
+local function GetAuraDurationInfo(unit, auraInstanceID)
+    local durationObject = C_UnitAuras.GetAuraDuration and C_UnitAuras.GetAuraDuration(unit, auraInstanceID);
+    if not durationObject then return end
+
+    local duration = durationObject.GetTotalDuration and durationObject:GetTotalDuration();
+    local expirationTime = durationObject.GetEndTime and durationObject:GetEndTime();
+    if duration and ( not addon.IsSecretValue(duration) ) and expirationTime and ( not addon.IsSecretValue(expirationTime) ) then
+        return durationObject, duration, expirationTime;
+    end
+
+    return durationObject;
+end
+
+local function GetInferableAuraMap(unit)
+    local current = {};
+
+    for _, filter in ipairs(INFERENCE_AURA_FILTERS) do
+        local auras = C_UnitAuras.GetUnitAuras(unit, filter);
+        if auras then
+            for _, auraData in ipairs(auras) do
+                local auraInstanceID = auraData.auraInstanceID;
+                if auraInstanceID then
+                    local entry = current[auraInstanceID];
+                    if not entry then
+                        local durationObject, duration, expirationTime = GetAuraDurationInfo(unit, auraInstanceID);
+                        entry = {
+                            auraInstanceID = auraInstanceID,
+                            spellID = ( auraData.spellId and ( not addon.IsSecretValue(auraData.spellId) ) and auraData.spellId ) or nil,
+                            durationObject = durationObject,
+                            duration = duration,
+                            expirationTime = expirationTime,
+                            bigDefensive = AuraMatchesFilter(unit, auraInstanceID, "HELPFUL|BIG_DEFENSIVE"),
+                            externalDefensive = AuraMatchesFilter(unit, auraInstanceID, "HELPFUL|EXTERNAL_DEFENSIVE"),
+                        };
+                        current[auraInstanceID] = entry;
+                    end
+                end
+            end
+        end
+    end
+
+    return current;
+end
+
+local function DurationMatchesRule(ruleDuration, measuredDuration)
+    if ( not ruleDuration ) or ( ruleDuration == addon.DURATION_DYNAMIC ) or ( not measuredDuration ) then
+        return false;
+    end
+    return math.abs(ruleDuration - measuredDuration) <= INFERENCE_DURATION_TOLERANCE;
+end
+
+local function SpellMatchesInference(unit, spellID, spell, auraInfo, measuredDuration)
+    if ( not spell ) or spell.use_parent_icon or ( not spell.cooldown ) then return false end
+
+    local category = spell.category;
+    if ( category ~= addon.SPELLCATEGORY.IMMUNITY ) and ( category ~= addon.SPELLCATEGORY.DEFENSIVE ) then
+        return false;
+    end
+
+    if auraInfo.externalDefensive and ( category ~= addon.SPELLCATEGORY.DEFENSIVE ) then
+        return false;
+    end
+
+    local class = addon.GetClassForPlayerOrArena(unit);
+    if spell.class and class and ( spell.class ~= class ) then
+        return false;
+    end
+
+    local spec = addon.GetSpecForPlayerOrArena(unit);
+    if spell.spec and spec then
+        local specMatched = false;
+        for i = 1, #(spell.spec) do
+            if spell.spec[i] == spec then
+                specMatched = true;
+                break;
+            end
+        end
+        if not specMatched then return false end
+    end
+
+    if auraInfo.spellID then
+        local auraSpell = spellData[auraInfo.spellID];
+        if ( auraInfo.spellID == spellID ) or ( auraSpell and auraSpell.parent == spellID ) then
+            return true;
+        end
+    end
+
+    return DurationMatchesRule(spell.duration, measuredDuration);
+end
+
+local function FindInferredSpell(unit, auraInfo, measuredDuration)
+    if auraInfo.spellID and spellData[auraInfo.spellID] and SpellMatchesInference(unit, auraInfo.spellID, spellData[auraInfo.spellID], auraInfo, measuredDuration) then
+        return auraInfo.spellID;
+    end
+
+    local bestSpellID;
+    for spellID, spell in pairs(spellData) do
+        if SpellMatchesInference(unit, spellID, spell, auraInfo, measuredDuration) then
+            if bestSpellID then
+                return; -- ambiguous: fail closed rather than showing the wrong cooldown
+            end
+            bestSpellID = spellID;
+        end
+    end
+
+    return bestSpellID;
+end
+
+local function ApplyInferredCooldownStart(icon, startTime)
+    if ( not icon ) or ( not icon.cooldown ) or ( not startTime ) then return end
+    if addon.IsSecretValue(startTime) then return end
+
+    local now = GetTime();
+    if startTime > now then return end
+
+    local timers = icon.timers;
+    if ( not timers ) or #(timers) == 0 then return end
+
+    local timer = timers[1];
+    timer.start = startTime;
+    timer.duration = icon.info.cooldown;
+    timer.finish = timer.start + timer.duration;
+
+    if now >= timer.finish then
+        addon.FinishCooldownTimer(icon.cooldown);
+    else
+        addon.RefreshCooldownTimer(icon.cooldown);
+    end
+end
+
+local function CommitInferredCooldown(group, unit, auraInfo, measuredDuration, startTime)
+    local spellID = FindInferredSpell(unit, auraInfo, measuredDuration);
+    if not spellID then return false end
+
+    local spellList = addon.GetSpellListConfig(group.iconSetID);
+    local configSpellID = ( spellData[spellID] and spellData[spellID].parent ) or spellID;
+    if not spellList[tostring(configSpellID)] then return false end
+
+    local iconID = unit .. "-" .. spellID;
+    local icon = group.icons[iconID];
+    if not icon then return false end
+
+    addon.StartCooldownTrackingIcon(icon);
+    ApplyInferredCooldownStart(icon, startTime);
+    if icon.duration and ( icon.template == addon.ICON_TEMPLATE.GLOW ) then
+        addon.ResetGlowDuration(icon);
+    end
+    return true;
+end
+
+local function ProcessEvidenceEvent(event, ...)
+    if not addon.PROJECT_MAINLINE then return end
+
+    local unit = ...;
+    if ( not unit ) or ( unit:sub(1, 5) ~= "arena" ) then return end
+
+    inferenceEvidence[unit] = inferenceEvidence[unit] or {};
+    local evidence = inferenceEvidence[unit];
+    local now = GetTime();
+
+    if event == addon.UNIT_FLAGS then
+        evidence.unitFlags = now;
+    elseif event == addon.UNIT_ABSORB_AMOUNT_CHANGED then
+        evidence.absorb = now;
+    elseif event == addon.UNIT_AURA then
+        local _, updateAuras = ...;
+        if updateAuras and updateAuras.addedAuras then
+            for _, auraData in ipairs(updateAuras.addedAuras) do
+                if auraData.auraInstanceID and AuraMatchesFilter(unit, auraData.auraInstanceID, "HARMFUL") then
+                    evidence.harmfulAura = now;
+                    break;
+                end
+            end
+        end
+    end
+end
+
+local function SnapshotEvidence(unit, startTime)
+    local evidence = inferenceEvidence[unit];
+    if not evidence then return end
+
+    local snapshot;
+    if evidence.unitFlags and math.abs(evidence.unitFlags - startTime) <= INFERENCE_EVIDENCE_WINDOW then
+        snapshot = snapshot or {};
+        snapshot.unitFlags = true;
+    end
+    if evidence.absorb and math.abs(evidence.absorb - startTime) <= INFERENCE_EVIDENCE_WINDOW then
+        snapshot = snapshot or {};
+        snapshot.absorb = true;
+    end
+    if evidence.harmfulAura and math.abs(evidence.harmfulAura - startTime) <= INFERENCE_EVIDENCE_WINDOW then
+        snapshot = snapshot or {};
+        snapshot.harmfulAura = true;
+    end
+
+    return snapshot;
+end
+
 local function ProcessUnitAura(self, event, ...)
+    if addon.PROJECT_MAINLINE then
+        local unitTarget = ...;
+        if ( not unitTarget ) or ( unitTarget:sub(1, 5) ~= "arena" ) then return end
+        if self.unit and ( self.unit ~= unitTarget ) then return end
+
+        self.inferredAuraState = self.inferredAuraState or {};
+        self.inferredAuraState[unitTarget] = self.inferredAuraState[unitTarget] or {};
+        local tracked = self.inferredAuraState[unitTarget];
+        local current = GetInferableAuraMap(unitTarget);
+        local now = GetTime();
+
+        for auraInstanceID, auraInfo in pairs(current) do
+            if not tracked[auraInstanceID] then
+                local startTime = auraInfo.expirationTime and auraInfo.duration and ( auraInfo.expirationTime - auraInfo.duration ) or now;
+                tracked[auraInstanceID] = {
+                    spellID = auraInfo.spellID,
+                    startTime = startTime,
+                    duration = auraInfo.duration,
+                    bigDefensive = auraInfo.bigDefensive,
+                    externalDefensive = auraInfo.externalDefensive,
+                    evidence = SnapshotEvidence(unitTarget, startTime),
+                };
+            end
+        end
+
+        for auraInstanceID, auraInfo in pairs(tracked) do
+            if not current[auraInstanceID] then
+                local measuredDuration = ( auraInfo.startTime and ( now - auraInfo.startTime ) ) or auraInfo.duration;
+                CommitInferredCooldown(self, unitTarget, auraInfo, measuredDuration, auraInfo.startTime);
+                tracked[auraInstanceID] = nil;
+            end
+        end
+
+        return;
+    end
+
     ValidateUnit(self);
     if next(self.unitIdToGuid) == nil then return end
 
@@ -1047,6 +1298,7 @@ end
 
 local function ProcessUnitEvent(group, event, ...)
     if ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
+        if addon.PROJECT_MAINLINE then return end
         ProcessUnitSpellCast(group, event, ...);
     elseif ( event == addon.UNIT_AURA ) then
         ProcessUnitAura(group, event, ...);
@@ -1198,14 +1450,32 @@ function SweepyBoop:SetupArenaCooldownTracker()
             eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
         end
         eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
-        eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
-        eventFrame:RegisterEvent(addon.UNIT_AURA);
-        eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+        if addon.PROJECT_MAINLINE then
+            eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
+            eventFrame:RegisterEvent(addon.UNIT_ABSORB_AMOUNT_CHANGED);
+            for i = 1, addon.MAX_ARENA_SIZE do
+                local unit = "arena" .. i;
+                eventFrame:RegisterUnitEvent(addon.UNIT_AURA, unit);
+                eventFrame:RegisterUnitEvent(addon.UNIT_FLAGS, unit);
+            end
+        else
+            eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+            eventFrame:RegisterEvent(addon.UNIT_AURA);
+            eventFrame:RegisterEvent(addon.UNIT_SPELLCAST_SUCCEEDED);
+        end
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
 
         eventFrame:SetScript("OnEvent", function (frame, event, ...)
             local config = SweepyBoop.db.profile.arenaFrames;
-            if ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.ARENA_OPPONENT_UPDATE ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE and addon.PROJECT_MAINLINE ) then
+            if event == addon.PVP_MATCH_STATE_CHANGED then
+                if C_PvP.GetActiveMatchState() == Enum.PvPMatchState.StartUp then
+                    unitNames = {};
+                    ClearAllIconGroups();
+                    wipe(inferenceEvidence);
+                    SetupAllIconGroups();
+                end
+                return;
+            elseif ( event == addon.PLAYER_ENTERING_WORLD ) or ( event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS ) or ( event == addon.ARENA_OPPONENT_UPDATE ) or ( event == addon.PLAYER_SPECIALIZATION_CHANGED and addon.TEST_MODE and addon.PROJECT_MAINLINE ) then
                 local unitToSetup = nil; -- nil means no setup, set to a unit for per-unit setup
 
                 if ( event == addon.ARENA_OPPONENT_UPDATE ) then
@@ -1229,6 +1499,7 @@ function SweepyBoop:SetupArenaCooldownTracker()
                     unitNames = {};
                     ClearAllIconGroups(); -- This also wipes group.unitsSetup for each group
                     wipe(detectionGuidToUnit); -- New match: stale GUID->unit mappings
+                    wipe(inferenceEvidence);
 
                     if addon.TEST_MODE then
                         unitToSetup = "all";
@@ -1317,8 +1588,13 @@ function SweepyBoop:SetupArenaCooldownTracker()
                         end
                     end
                 end
-            elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) then
+            elseif ( event == addon.UNIT_AURA ) or ( event == addon.UNIT_SPELLCAST_SUCCEEDED ) or ( event == addon.UNIT_FLAGS ) or ( event == addon.UNIT_ABSORB_AMOUNT_CHANGED ) then
                 if ( not IsActiveBattlefieldArena() ) and ( not addon.TEST_MODE ) then return end
+
+                if addon.PROJECT_MAINLINE then
+                    ProcessEvidenceEvent(event, ...);
+                    if event ~= addon.UNIT_AURA then return end
+                end
 
                 local nameUpdated = false;
                 local unitTarget = ...;

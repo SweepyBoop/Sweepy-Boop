@@ -310,9 +310,7 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
-    if ( not addon.PROJECT_MAINLINE ) then
-        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
-    end
+    options.args.arenaFrames = addon.GetArenaFrameOptions(5);
 
     if addon.PROJECT_MAINLINE then
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
@@ -365,9 +363,7 @@ function SweepyBoop:OnInitialize()
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
     self:SetupNameplateModules();
 
-    if ( not addon.PROJECT_MAINLINE ) then
-        self:SetupArenaCooldownTracker();
-    end
+    self:SetupArenaCooldownTracker();
 
     if ( not addon.PROJECT_MAINLINE ) then return end
 
