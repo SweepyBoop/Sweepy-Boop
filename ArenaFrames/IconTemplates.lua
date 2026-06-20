@@ -16,8 +16,7 @@ addon.ShowOverlayGlow = function (button)
 
 	if not button.SpellActivationAlert:IsShown() then
 		button.SpellActivationAlert:Show();
-		button.SpellActivationAlert.ProcStartAnim:Play();
-
+		button.SpellActivationAlert.ProcLoop:Play();
 	end
 end
 
@@ -28,6 +27,9 @@ addon.HideOverlayGlow = function (button)
 
 	if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
 		button.SpellActivationAlert.ProcStartAnim:Stop();
+	end
+	if button.SpellActivationAlert.ProcLoop:IsPlaying() then
+		button.SpellActivationAlert.ProcLoop:Stop();
 	end
 
 	if button:IsVisible() then
