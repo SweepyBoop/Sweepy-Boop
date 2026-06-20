@@ -88,7 +88,11 @@ local function SetIconGlow(icon, shown)
             icon.glowing = true;
         end
     elseif icon.glowing then
-        LCG.ButtonGlow_Stop(icon);
+        if icon._ButtonGlow and LCG.ButtonGlowPool then
+            LCG.ButtonGlowPool:Release(icon._ButtonGlow); -- avoid unsafe restart from LibCustomGlow's fade-out state in restricted aura contexts
+        else
+            LCG.ButtonGlow_Stop(icon);
+        end
         icon.glowing = false;
     end
 end
