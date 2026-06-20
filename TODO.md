@@ -1,3 +1,4 @@
 - [x] Re-implement arena numbers for mainline, this can unblock enemy spec icons too
-- [ ] Re-enable Druid HoT Helper
+- [x] Re-enable Druid HoT Helper
+- [ ] If Lifebloom glow taints again in arena, replace LibCustomGlow ButtonGlow with a local ActionButtonSpellAlertTemplate-based glow that does not read texture alpha.
 - [ ] Re-implement battleground enemy spec icons (blocked)
