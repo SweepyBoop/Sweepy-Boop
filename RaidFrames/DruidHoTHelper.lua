@@ -341,8 +341,10 @@ local function UpdateFrame(frame)
     end
 
     -- Don't show the warning on dead raiders: they have no HoTs, but a persistent warning is just noise.
+    -- Check IsSecretValue first: UnitIsDeadOrGhost can be secret in rated PvP, and the `and` must not
+    -- coerce a secret value to a boolean (that would error). The secret check short-circuits before `dead`.
     local dead = UnitIsDeadOrGhost(unit);
-    if dead and ( not addon.IsSecretValue(dead) ) then
+    if ( not addon.IsSecretValue(dead) ) and dead then
         ClearFrame(frame);
         return;
     end
