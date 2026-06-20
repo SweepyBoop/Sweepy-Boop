@@ -74,7 +74,6 @@ local isRestoSpec = false; -- spec can change mid-session; refreshed on PLAYER_S
 local cufPool = {};    -- frame -> true: raid/party CompactUnitFrames we've seen
 local unitFrames = {}; -- unit token -> { [frame] = true }: which frames currently show a unit
 local tracked = {};    -- frame -> { expirationTime, duration, timeMod, refreshTime }: active lifeblooms (glow timer)
-local scanHoTs = {};   -- scratch reused by ScanUnitHoTs (consumed synchronously within UpdateFrame)
 
 local function ShouldGlow(info, now)
     if ( info.expirationTime <= now ) then return false end
@@ -257,6 +256,7 @@ end)
 
 -- One pass over the player's helpful auras on a unit. We only track five HoTs by spellId; a secret
 -- spellId (PvP-restricted) can't match any of them, so skip it rather than suppress the warning.
+local scanHoTs = {}; -- per-unit scan scratch; returned data is consumed synchronously before the next wipe
 local function ScanUnitHoTs(unit)
     wipe(scanHoTs);
     local lifebloomAura;
