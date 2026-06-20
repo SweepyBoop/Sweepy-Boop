@@ -12,7 +12,7 @@ addon.CreateOverlayGlow = function (button, size, color)
     glow:SetSize(glowSize, glowSize);
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
     if glow.ProcStartFlipbook then
-        -- The birth flipbook can flash at the wrong size before settling; use the stable loop glow only.
+        -- Blizzard's skipBirth path plays ProcLoop directly; hide the birth flipbook to avoid its size flash.
         glow.ProcStartFlipbook:Hide();
     end
     TintOverlayGlowTexture(glow.ProcStartFlipbook, color);
@@ -37,7 +37,7 @@ addon.ShowOverlayGlow = function (button)
 
     if not button.SpellActivationAlert:IsShown() then
         button.SpellActivationAlert:Show();
-        button.SpellActivationAlert.ProcLoop:Play();
+        button.SpellActivationAlert.ProcLoop:Play(); -- matches Blizzard's skipBirth path
     end
 end
 
@@ -46,14 +46,12 @@ addon.HideOverlayGlow = function (button)
         return;
     end
 
+    button.SpellActivationAlert:Hide();
+
     if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
         button.SpellActivationAlert.ProcStartAnim:Stop();
     end
     if button.SpellActivationAlert.ProcLoop:IsPlaying() then
         button.SpellActivationAlert.ProcLoop:Stop();
-    end
-
-    if button:IsVisible() then
-        button.SpellActivationAlert:Hide();
     end
 end
