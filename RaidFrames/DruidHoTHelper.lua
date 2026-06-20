@@ -286,7 +286,11 @@ local function UpdateRow2(frame, hotAuras)
         for i = 1, #icons do
             icons[i]:Hide();
         end
-        container.warningIcon:Show(); -- none of the four Swiftmend HoTs are up
+        if SweepyBoop.db.profile.raidFrames.druidHoTHelperWarning then
+            container.warningIcon:Show(); -- none of the four Swiftmend HoTs are up
+        else
+            container.warningIcon:Hide();
+        end
         return;
     end
 

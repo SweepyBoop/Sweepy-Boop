@@ -97,6 +97,19 @@ addon.GetRaidFrameOptions = function(order)
                     SweepyBoop:RefreshDruidHoTHelper(); -- re-apply the buff-hiding CVar + repaint frames
                 end,
             },
+
+            druidHoTHelperWarning = {
+                order = 8,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Show missing-HoT warning",
+                desc = "Show the warning icon when none of the Swiftmend-consumable HoTs are active.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.druidHoTHelper; end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshDruidHoTHelper(); -- repaint frames so the warning icon appears/disappears immediately
+                end,
+            },
         },
     };
 
