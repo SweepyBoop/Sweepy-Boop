@@ -393,6 +393,7 @@ function SweepyBoop:RefreshConfig()
         self:SetupCombatIndicator();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
+        self:RefreshDruidHoTHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
     end
 
     local currentTime = GetTime();
