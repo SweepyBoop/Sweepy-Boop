@@ -164,7 +164,7 @@ local function EnsureContainer(frame)
 
     container = {};
     container.frame = CreateFrame("Frame", nil, frame);
-    container.frame:SetSize(LIFEBLOOM_SIZE, 1);
+    container.frame:SetSize(1, 1); -- non-zero size keeps this invisible scale anchor valid
     container.frame:SetPoint("RIGHT", frame, "RIGHT", -RIGHT_PAD, 0);
     container.frame:SetFrameLevel(frameLevel);
     container.scratch = {}; -- ordered list of the currently-active Row 2 auras
