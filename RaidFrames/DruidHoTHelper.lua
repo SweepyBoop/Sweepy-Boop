@@ -86,8 +86,8 @@ local function TintSpellAlertTexture(texture)
     end
 end
 
-local spellAlertDummy = CreateFrame("Frame", nil, UIParent, "ActionButtonSpellAlertTemplate");
-spellAlertDummy:Hide(); -- first spell-alert template can inherit bad default sizing; warm it up with an unused frame
+-- local spellAlertDummy = CreateFrame("Frame", nil, UIParent, "ActionButtonSpellAlertTemplate");
+-- spellAlertDummy:Hide(); -- first spell-alert template can inherit bad default sizing; warm it up with an unused frame
 
 local function CreateSpellAlertGlow(parent, size)
     local glowSize = size * 1.4;
