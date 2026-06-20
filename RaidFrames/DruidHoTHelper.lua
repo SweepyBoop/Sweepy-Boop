@@ -60,7 +60,7 @@ local HOT_SPACING = 1;     -- gap between Row 2 icons
 local ROW_SPACING = 2;     -- gap between Row 1 and Row 2
 local RIGHT_PAD = 2;       -- inset from the frame's right edge
 local FRAME_LEVEL_OFFSET = 10;
-local BLOCK_HEIGHT = LIFEBLOOM_SIZE + ROW_SPACING + HOT_SIZE; -- used to center the two rows vertically
+local ROW_CENTER_OFFSET = ROW_SPACING / 2; -- split the row gap around the raid-frame vertical center
 local PACK_DIRECTION = "LEFT_TO_RIGHT"; -- "LEFT_TO_RIGHT" (priority 1 leftmost) or "RIGHT_TO_LEFT"
 
 local glowColor = { 0, 1, 0, 1 }; -- green (RGBA)
@@ -161,9 +161,9 @@ local function EnsureContainer(frame)
     container = {};
     container.scratch = {}; -- ordered list of the currently-active Row 2 auras
 
-    -- Row 1: Lifebloom, right edge, upper half. Anchored so the whole two-row block is centered vertically.
+    -- Row 1: Lifebloom, right edge, upper half. The bottom edge sits just above the frame center.
     container.lifebloomIcon = CreateHoTIcon(frame, LIFEBLOOM_SIZE, frameLevel);
-    container.lifebloomIcon:SetPoint("TOPRIGHT", frame, "RIGHT", -RIGHT_PAD, BLOCK_HEIGHT / 2);
+    container.lifebloomIcon:SetPoint("TOPRIGHT", frame, "RIGHT", -RIGHT_PAD, LIFEBLOOM_SIZE + ROW_CENTER_OFFSET);
 
     -- Row 1 warning: Mark of the Wild missing, same size as the smaller Row 2 icons and left of Lifebloom.
     container.markWarningIcon = CreateHoTIcon(frame, HOT_SIZE, frameLevel);
