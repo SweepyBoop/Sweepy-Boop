@@ -82,17 +82,13 @@ end
 
 -- The OnUpdate loop calls this ~20x/sec, so only start/stop the glow on a transition.
 local function SetIconGlow(icon, shown)
-    local glow = icon.spellActivationAlert;
     if shown then
         if ( not icon.glowing ) then
-            glow:Show();
-            glow.ProcLoop:Play();
+            addon.ShowOverlayGlow(icon);
             icon.glowing = true;
         end
     elseif icon.glowing then
-        glow:Hide();
-        glow.ProcStartAnim:Stop();
-        glow.ProcLoop:Stop();
+        addon.HideOverlayGlow(icon);
         icon.glowing = false;
     end
 end

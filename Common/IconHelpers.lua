@@ -22,3 +22,39 @@ addon.CreateOverlayGlow = function (button, size, color)
     glow:Hide();
     return glow;
 end
+
+local function SetupOverlayGlow(button)
+    if button.SpellActivationAlert then
+        return;
+    end
+
+    -- Make the height/width available before the next frame.
+    local frameWidth = button:GetSize();
+    button.SpellActivationAlert = addon.CreateOverlayGlow(button, frameWidth);
+end
+
+addon.ShowOverlayGlow = function (button)
+    SetupOverlayGlow(button);
+
+    if not button.SpellActivationAlert:IsShown() then
+        button.SpellActivationAlert:Show();
+        button.SpellActivationAlert.ProcLoop:Play();
+    end
+end
+
+addon.HideOverlayGlow = function (button)
+    if not button.SpellActivationAlert then
+        return;
+    end
+
+    if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
+        button.SpellActivationAlert.ProcStartAnim:Stop();
+    end
+    if button.SpellActivationAlert.ProcLoop:IsPlaying() then
+        button.SpellActivationAlert.ProcLoop:Stop();
+    end
+
+    if button:IsVisible() then
+        button.SpellActivationAlert:Hide();
+    end
+end
