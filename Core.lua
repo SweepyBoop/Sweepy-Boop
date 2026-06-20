@@ -249,8 +249,9 @@ local function FillDefaults()
         };
     end
 
-    addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
-    addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, addon.SpellData);
+    local arenaCooldownSpellList = addon.GetArenaCooldownSpellList();
+    addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, arenaCooldownSpellList);
+    addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, arenaCooldownSpellList);
 end
 
 function SweepyBoop:SetupBlizzardOptions()

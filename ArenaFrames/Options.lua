@@ -85,6 +85,36 @@ addon.SetupInterrupts = function (profile, spellList)
     end
 end
 
+addon.GetArenaCooldownSpellList = function()
+    if not addon.PROJECT_MAINLINE then
+        return addon.SpellData;
+    end
+
+    if addon.RetailArenaCooldownSpellData then
+        return addon.RetailArenaCooldownSpellData;
+    end
+
+    local retailSpellData = {};
+    for spellID, spellEntry in pairs(addon.SpellData) do
+        local category = spellEntry.category;
+        local defensiveCategory = ( category == addon.SPELLCATEGORY.IMMUNITY ) or ( category == addon.SPELLCATEGORY.DEFENSIVE );
+        if defensiveCategory and ( not spellEntry.parent ) then
+            local isBigDefensive = C_UnitAuras.AuraIsBigDefensive(spellID);
+            local isExternalDefensive = C_Spell.IsExternalDefensive and C_Spell.IsExternalDefensive(spellID);
+            if ( not addon.IsSecretValue(isBigDefensive) and isBigDefensive ) or ( not addon.IsSecretValue(isExternalDefensive) and isExternalDefensive ) then
+                retailSpellData[spellID] = spellEntry;
+            end
+        end
+    end
+
+    addon.RetailArenaCooldownSpellData = retailSpellData;
+    return retailSpellData;
+end
+
+addon.GetArenaCooldownOptionSpellList = function()
+    return addon.GetArenaCooldownSpellList();
+end
+
 addon.GetArenaFrameOptions = function(order)
     addon.importDialogs = addon.importDialogs or {};
     addon.importDialogs["arenaFrames"] = addon.CreateImportDialog("arenaFrames");
@@ -474,7 +504,7 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "execute",
                                 name = "Restore default",
                                 func = function ()
-                                    addon.SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
+                                    addon.SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.GetArenaCooldownOptionSpellList());
                                 end
                             },
 
@@ -483,7 +513,7 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "execute",
                                 name = "Uncheck all",
                                 func = function ()
-                                    addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.SpellData);
+                                    addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList, addon.GetArenaCooldownOptionSpellList());
                                 end
                             },
                         },
@@ -502,7 +532,7 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "execute",
                                 name = "Restore default",
                                 func = function ()
-                                    addon.SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
+                                    addon.SetupAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.GetArenaCooldownOptionSpellList());
                                 end
                             },
 
@@ -511,7 +541,7 @@ addon.GetArenaFrameOptions = function(order)
                                 type = "execute",
                                 name = "Uncheck all",
                                 func = function ()
-                                    addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.SpellData);
+                                    addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.spellList2, addon.GetArenaCooldownOptionSpellList());
                                 end
                             },
                         },
@@ -782,7 +812,7 @@ addon.GetArenaFrameOptions = function(order)
                             type = "execute",
                             name = "Restore default",
                             func = function ()
-                                addon.SetupInterrupts(SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList, addon.SpellData);
+                                addon.SetupInterrupts(SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList, addon.GetArenaCooldownOptionSpellList());
                             end
                         },
 
@@ -791,7 +821,7 @@ addon.GetArenaFrameOptions = function(order)
                             type = "execute",
                             name = "Uncheck all",
                             func = function ()
-                                addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList, addon.SpellData);
+                                addon.UncheckAllSpells(SweepyBoop.db.profile.arenaFrames.standaloneBars[groupName].spellList, addon.GetArenaCooldownOptionSpellList());
                             end
                         },
                     },
@@ -909,13 +939,14 @@ addon.GetArenaFrameOptions = function(order)
         }
     end
 
-    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList, addon.SpellData);
-    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList2, addon.SpellData);
+    local optionSpellList = addon.GetArenaCooldownOptionSpellList();
+    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList, optionSpellList);
+    AppendSpellOptions(optionGroup.args.arenaFrameBars.args.spellList2, optionSpellList);
     AppendSpellCategoryPriority(optionGroup.args.arenaFrameBars.args.spellCatPriority.args);
 
     for i = 1, 6 do
         local groupName = "Bar " .. i;
-        AppendSpellOptions(optionGroup.args.standaloneBars.args[groupName].args.spellList, addon.SpellData);
+        AppendSpellOptions(optionGroup.args.standaloneBars.args[groupName].args.spellList, optionSpellList);
     end
 
     return optionGroup;

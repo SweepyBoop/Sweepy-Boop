@@ -1089,6 +1089,7 @@ end
 
 local function SpellMatchesInference(unit, spellID, spell, auraInfo, measuredDuration)
     if ( not spell ) or spell.use_parent_icon or ( not spell.cooldown ) then return false end
+    if addon.PROJECT_MAINLINE and addon.GetArenaCooldownSpellList and ( not addon.GetArenaCooldownSpellList()[spellID] ) then return false end
 
     local category = spell.category;
     if ( category ~= addon.SPELLCATEGORY.IMMUNITY ) and ( category ~= addon.SPELLCATEGORY.DEFENSIVE ) then
