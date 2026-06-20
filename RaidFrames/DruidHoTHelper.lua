@@ -5,8 +5,9 @@ local _, addon = ...;
 --
 -- Two rows per frame, anchored to the right edge (the frame center is left for Blizzard's big
 -- defensive-cooldown icon):
---   Row 1 - Lifebloom: icon + cooldown swipe, glowing while inside its refresh (pandemic) window
---           (the last 30% of its duration).
+--   Row 1 - Mark of the Wild warning + Lifebloom. Lifebloom has cooldown swipe and glows while
+--           inside its refresh (pandemic) window (the last 30% of its duration). The Mark warning
+--           glows red while the unit is missing Mark of the Wild.
 --   Row 2 - the four Swiftmend-consumable HoTs (Regrowth, Wild Growth, Rejuvenation, Germination):
 --           icon + cooldown swipe, packed in Swiftmend-priority order with no gaps. When none of the
 --           four are active we show a warning icon instead.
@@ -30,6 +31,8 @@ local lifeblooms = {
     [33763] = true,  -- Lifebloom
     [290754] = true, -- Lifebloom (Early Spring, PvP talent)
 };
+
+local markOfTheWild = 1126;
 
 -- The four Swiftmend-consumable HoTs (Row 2), in the order Swiftmend is believed to consume them
 -- (left = consumed first).
@@ -61,6 +64,8 @@ local BLOCK_HEIGHT = LIFEBLOOM_SIZE + ROW_SPACING + HOT_SIZE; -- used to center 
 local PACK_DIRECTION = "LEFT_TO_RIGHT"; -- "LEFT_TO_RIGHT" (priority 1 leftmost) or "RIGHT_TO_LEFT"
 
 local glowColor = { 0, 1, 0, 1 }; -- green (RGBA)
+local markWarningGlowColor = { 1, 0, 0, 1 }; -- red (RGBA)
+local markOfTheWildTexture = addon.GetSpellTexture(markOfTheWild);
 local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew"; -- yellow warning triangle
 
 local isDruid = ( addon.GetUnitClass("player") == addon.DRUID ); -- class is fixed for the login session
@@ -86,6 +91,18 @@ local function SetIconGlow(icon, shown)
     elseif icon.glowing then
         LCG.ButtonGlow_Stop(icon);
         icon.glowing = false;
+    end
+end
+
+local function SetPixelGlow(icon, shown)
+    if shown then
+        if ( not icon.pixelGlowing ) then
+            LCG.PixelGlow_Start(icon, markWarningGlowColor);
+            icon.pixelGlowing = true;
+        end
+    elseif icon.pixelGlowing then
+        LCG.PixelGlow_Stop(icon);
+        icon.pixelGlowing = false;
     end
 end
 
@@ -148,6 +165,13 @@ local function EnsureContainer(frame)
     container.lifebloomIcon = CreateHoTIcon(frame, LIFEBLOOM_SIZE, frameLevel);
     container.lifebloomIcon:SetPoint("TOPRIGHT", frame, "RIGHT", -RIGHT_PAD, BLOCK_HEIGHT / 2);
 
+    -- Row 1 warning: Mark of the Wild missing, same size as the smaller Row 2 icons and left of Lifebloom.
+    container.markWarningIcon = CreateHoTIcon(frame, HOT_SIZE, frameLevel);
+    container.markWarningIcon.texture:SetTexture(markOfTheWildTexture);
+    container.markWarningIcon.texture:SetDesaturated(true);
+    container.markWarningIcon.cooldown:Hide();
+    container.markWarningIcon:SetPoint("RIGHT", container.lifebloomIcon, "LEFT", -HOT_SPACING, 0);
+
     -- Row 2: up to four Swiftmend HoTs, anchored dynamically in UpdateRow2 (packed, no gaps).
     container.hotIcons = {};
     for i = 1, 4 do
@@ -181,6 +205,8 @@ local function ClearFrame(frame)
         for i = 1, #container.hotIcons do
             container.hotIcons[i]:Hide();
         end
+        SetPixelGlow(container.markWarningIcon, false);
+        container.markWarningIcon:Hide();
         container.warningIcon:Hide();
     end
     tracked[frame] = nil;
@@ -224,19 +250,36 @@ end)
 local function ScanUnitHoTs(unit)
     wipe(scanHoTs);
     local lifebloomAura;
+    local hasMarkOfTheWild = false;
     for i = 1, maxAuras do
-        local aura = GetAuraDataByIndex(unit, i, "PLAYER|HELPFUL");
+        local aura = GetAuraDataByIndex(unit, i, "HELPFUL");
         if ( not aura ) then break end
         local spellId = aura.spellId;
         if ( not addon.IsSecretValue(spellId) ) then -- a secret spellId matches none of our tracked HoTs
-            if lifeblooms[spellId] then
-                lifebloomAura = aura;
-            elseif swiftmendHoTs[spellId] then
-                scanHoTs[spellId] = aura;
+            if ( spellId == markOfTheWild ) then
+                hasMarkOfTheWild = true;
+            elseif ( aura.sourceUnit == "player" ) then
+                if lifeblooms[spellId] then
+                    lifebloomAura = aura;
+                elseif swiftmendHoTs[spellId] then
+                    scanHoTs[spellId] = aura;
+                end
             end
         end
     end
-    return lifebloomAura, scanHoTs;
+    return lifebloomAura, scanHoTs, hasMarkOfTheWild;
+end
+
+local function UpdateMarkWarning(frame, hasMarkOfTheWild)
+    local icon = frame.druidHoT.markWarningIcon;
+    if hasMarkOfTheWild then
+        SetPixelGlow(icon, false);
+        icon:Hide();
+        return;
+    end
+
+    SetPixelGlow(icon, true);
+    icon:Show();
 end
 
 local function UpdateRow1(frame, aura)
@@ -349,7 +392,8 @@ local function UpdateFrame(frame)
 
     EnsureContainer(frame);
 
-    local lifebloomAura, hotAuras = ScanUnitHoTs(unit);
+    local lifebloomAura, hotAuras, hasMarkOfTheWild = ScanUnitHoTs(unit);
+    UpdateMarkWarning(frame, hasMarkOfTheWild);
     UpdateRow1(frame, lifebloomAura);
     UpdateRow2(frame, hotAuras);
 end
