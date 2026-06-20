@@ -96,7 +96,7 @@ end
 local function SetPixelGlow(icon, shown)
     if shown then
         if ( not icon.pixelGlowing ) then
-            LCG.PixelGlow_Start(icon, markWarningGlowColor);
+            LCG.PixelGlow_Start(icon, markWarningGlowColor, 10);
             icon.pixelGlowing = true;
         end
     elseif icon.pixelGlowing then
