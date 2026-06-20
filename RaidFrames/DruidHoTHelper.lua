@@ -80,19 +80,44 @@ local function ShouldGlow(info, now)
     return ( ( info.expirationTime - now ) / info.timeMod ) <= info.refreshTime;
 end
 
+local function TintSpellAlertTexture(texture)
+    if texture then
+        texture:SetVertexColor(glowColor[1], glowColor[2], glowColor[3], glowColor[4]);
+    end
+end
+
+local spellAlertDummy = CreateFrame("Frame", nil, UIParent, "ActionButtonSpellAlertTemplate");
+spellAlertDummy:Hide(); -- first spell-alert template can inherit bad default sizing; warm it up with an unused frame
+
+local function CreateSpellAlertGlow(parent, size)
+    local glowSize = size * 1.4;
+    local glow = CreateFrame("Frame", nil, parent, "ActionButtonSpellAlertTemplate");
+    glow:SetSize(glowSize, glowSize);
+    glow:SetPoint("CENTER", parent, "CENTER", 0, 0);
+    if glow.ProcStartFlipbook then
+        glow.ProcStartFlipbook:SetSize(glowSize, glowSize); -- template defaults this birth burst to 150px
+        glow.ProcStartFlipbook:Hide(); -- skip the birth flipbook; first frame can flash the raw atlas grid
+    end
+    TintSpellAlertTexture(glow.ProcStartFlipbook);
+    TintSpellAlertTexture(glow.ProcLoopFlipbook);
+    TintSpellAlertTexture(glow.ProcAltGlow);
+    glow:Hide();
+    return glow;
+end
+
 -- The OnUpdate loop calls this ~20x/sec, so only start/stop the glow on a transition.
 local function SetIconGlow(icon, shown)
+    local glow = icon.spellActivationAlert;
     if shown then
         if ( not icon.glowing ) then
-            LCG.ButtonGlow_Start(icon, glowColor);
+            glow:Show();
+            glow.ProcLoop:Play();
             icon.glowing = true;
         end
     elseif icon.glowing then
-        if icon._ButtonGlow and LCG.ButtonGlowPool then
-            LCG.ButtonGlowPool:Release(icon._ButtonGlow); -- avoid unsafe restart from LibCustomGlow's fade-out state in restricted aura contexts
-        else
-            LCG.ButtonGlow_Stop(icon);
-        end
+        glow:Hide();
+        glow.ProcStartAnim:Stop();
+        glow.ProcLoop:Stop();
         icon.glowing = false;
     end
 end
@@ -124,7 +149,7 @@ end
 
 -- A single HoT icon: texture + cooldown swipe. Each icon is its own frame so a future Soul of the
 -- Forest border can be attached per icon without touching the others.
-local function CreateHoTIcon(parent, size, frameLevel)
+local function CreateHoTIcon(parent, size, frameLevel, createGlow)
     local icon = CreateFrame("Frame", nil, parent);
     icon:SetSize(size, size);
     icon:SetFrameLevel(frameLevel);
@@ -135,6 +160,10 @@ local function CreateHoTIcon(parent, size, frameLevel)
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     StyleCooldown(icon.cooldown);
+
+    if createGlow then
+        icon.spellActivationAlert = CreateSpellAlertGlow(icon, size);
+    end
 
     icon:Hide();
     return icon;
@@ -173,7 +202,7 @@ local function EnsureContainer(frame)
     container.scratch = {}; -- ordered list of the currently-active Row 2 auras
 
     -- Row 1: Lifebloom, right edge, upper half. The bottom edge sits just above the frame center.
-    container.lifebloomIcon = CreateHoTIcon(container.frame, LIFEBLOOM_SIZE, frameLevel);
+    container.lifebloomIcon = CreateHoTIcon(container.frame, LIFEBLOOM_SIZE, frameLevel, true);
     container.lifebloomIcon:SetPoint("TOPRIGHT", container.frame, "RIGHT", 0, LIFEBLOOM_SIZE + ROW_CENTER_OFFSET);
 
     -- Row 1 warning: Mark of the Wild missing, same size as the smaller Row 2 icons and left of Lifebloom.
