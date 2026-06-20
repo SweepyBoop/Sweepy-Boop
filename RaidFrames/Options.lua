@@ -1,5 +1,11 @@
 local _, addon = ...;
 
+-- Inline a spell's in-game icon for tooltips (empty string if the texture isn't available yet).
+local function SpellIcon(spellId)
+    local icon = addon.GetSpellTexture(spellId);
+    return icon and addon.FORMAT_TEXTURE(icon) or "";
+end
+
 addon.GetRaidFrameOptions = function(order)
     local optionGroup = {
         order = order,
@@ -75,7 +81,17 @@ addon.GetRaidFrameOptions = function(order)
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Druid HoT helper",
-                desc = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_misc_herb_felblossom")) .. " For Resto Druids, draw your own HoTs on raid frames: Lifebloom (glowing during its refresh/pandemic window) plus Regrowth, Wild Growth, Rejuvenation and Germination packed in Swiftmend-priority order, with a warning when none of those four are active. While enabled on a Resto Druid, Blizzard's own raid-frame buffs are hidden so these replace them (this hides ALL raid-frame buffs; debuffs and dispellable debuffs are unaffected).",
+                desc = function ()
+                    local warn = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew");
+                    return table.concat({
+                        "For Restoration Druids \226\128\148 replace Blizzard's raid-frame buffs with your own HoTs:",
+                        "",
+                        "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom: its own row; glows during the refresh (pandemic) window.",
+                        "\226\128\162 Second row, packed left-to-right in " .. SpellIcon(18562) .. " Swiftmend-consume order (left = consumed first): " .. SpellIcon(8936) .. " Regrowth, " .. SpellIcon(48438) .. " Wild Growth, " .. SpellIcon(774) .. " Rejuvenation, " .. SpellIcon(155777) .. " Germination.",
+                        "\226\128\162 " .. warn .. " Warning shown when none of those four are active.",
+                        "\226\128\162 Hides ALL raid-frame buffs while active on Resto; debuffs and dispellable debuffs are unaffected.",
+                    }, "\n");
+                end,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                     SweepyBoop:RefreshDruidHoTHelper(); -- re-apply the buff-hiding CVar + repaint frames
