@@ -133,7 +133,7 @@ local function CreateHoTIcon(parent, size, frameLevel, createGlow)
     StyleCooldown(icon.cooldown);
 
     if createGlow then
-        icon.spellActivationAlert = addon.CreateOverlayGlow(icon, size, glowColor);
+        icon.SpellActivationAlert = addon.CreateOverlayGlow(icon, size, glowColor);
     end
 
     icon:Hide();
