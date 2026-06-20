@@ -137,6 +137,10 @@ local function CreateHoTIcon(parent, size, frameLevel)
     return icon;
 end
 
+local function ApplyIconScale(container)
+    container.frame:SetScale(SweepyBoop.db.profile.raidFrames.druidHoTHelperScale or 1);
+end
+
 local function CreateWarningIcon(parent, size, frameLevel)
     local icon = CreateFrame("Frame", nil, parent);
     icon:SetSize(size, size);
@@ -159,14 +163,18 @@ local function EnsureContainer(frame)
     local frameLevel = frame:GetFrameLevel() + FRAME_LEVEL_OFFSET;
 
     container = {};
+    container.frame = CreateFrame("Frame", nil, frame);
+    container.frame:SetSize(LIFEBLOOM_SIZE, 1);
+    container.frame:SetPoint("RIGHT", frame, "RIGHT", -RIGHT_PAD, 0);
+    container.frame:SetFrameLevel(frameLevel);
     container.scratch = {}; -- ordered list of the currently-active Row 2 auras
 
     -- Row 1: Lifebloom, right edge, upper half. The bottom edge sits just above the frame center.
-    container.lifebloomIcon = CreateHoTIcon(frame, LIFEBLOOM_SIZE, frameLevel);
-    container.lifebloomIcon:SetPoint("TOPRIGHT", frame, "RIGHT", -RIGHT_PAD, LIFEBLOOM_SIZE + ROW_CENTER_OFFSET);
+    container.lifebloomIcon = CreateHoTIcon(container.frame, LIFEBLOOM_SIZE, frameLevel);
+    container.lifebloomIcon:SetPoint("TOPRIGHT", container.frame, "RIGHT", 0, LIFEBLOOM_SIZE + ROW_CENTER_OFFSET);
 
     -- Row 1 warning: Mark of the Wild missing, same size as the smaller Row 2 icons and left of Lifebloom.
-    container.markWarningIcon = CreateHoTIcon(frame, HOT_SIZE, frameLevel);
+    container.markWarningIcon = CreateHoTIcon(container.frame, HOT_SIZE, frameLevel);
     container.markWarningIcon.texture:SetTexture(markOfTheWildTexture);
     container.markWarningIcon.texture:SetDesaturated(true);
     container.markWarningIcon.cooldown:Hide();
@@ -175,12 +183,14 @@ local function EnsureContainer(frame)
     -- Row 2: up to four Swiftmend HoTs, anchored dynamically in UpdateRow2 (packed, no gaps).
     container.hotIcons = {};
     for i = 1, 4 do
-        container.hotIcons[i] = CreateHoTIcon(frame, HOT_SIZE, frameLevel);
+        container.hotIcons[i] = CreateHoTIcon(container.frame, HOT_SIZE, frameLevel);
     end
 
     -- Row 2 alternative: warning shown when none of the four HoTs are active. Sits in the first Row 2 slot.
-    container.warningIcon = CreateWarningIcon(frame, HOT_SIZE, frameLevel);
+    container.warningIcon = CreateWarningIcon(container.frame, HOT_SIZE, frameLevel);
     container.warningIcon:SetPoint("TOPRIGHT", container.lifebloomIcon, "BOTTOMRIGHT", 0, -ROW_SPACING);
+
+    ApplyIconScale(container);
 
     frame.druidHoT = container;
     return container;
@@ -390,7 +400,8 @@ local function UpdateFrame(frame)
         return;
     end
 
-    EnsureContainer(frame);
+    local container = EnsureContainer(frame);
+    ApplyIconScale(container);
 
     local lifebloomAura, hotAuras, hasMarkOfTheWild = ScanUnitHoTs(unit);
     UpdateMarkWarning(frame, hasMarkOfTheWild);

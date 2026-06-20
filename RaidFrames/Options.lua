@@ -86,6 +86,7 @@ addon.GetRaidFrameOptions = function(order)
                         "For Restoration Druids \226\128\148 replace Blizzard's raid-frame buffs with your own HoTs:",
                         "",
                         "\226\128\162 " .. SpellIcon(1126) .. " Mark of the Wild: red-glowing warning shown left of Lifebloom when missing.",
+                        "\226\128\162 Scale: adjust all helper icons together from 50% to 200%.",
                         "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom: its own row; glows during the refresh (pandemic) window.",
                         "\226\128\162 Second row, packed left-to-right in " .. SpellIcon(18562) .. " Swiftmend-consume order (left = consumed first): " .. SpellIcon(8936) .. " Regrowth, " .. SpellIcon(48438) .. " Wild Growth, " .. SpellIcon(774) .. " Rejuvenation, " .. SpellIcon(155777) .. " Germination.",
                         "\226\128\162 " .. warn .. " Warning shown when none of those four are active.",
@@ -98,8 +99,24 @@ addon.GetRaidFrameOptions = function(order)
                 end,
             },
 
-            druidHoTHelperWarning = {
+            druidHoTHelperScale = {
                 order = 8,
+                type = "range",
+                isPercent = true,
+                min = 0.5,
+                max = 2,
+                step = 0.05,
+                name = "Scale",
+                desc = "Scale all Druid HoT Helper icons together without changing their base pixel sizes.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.druidHoTHelper; end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshDruidHoTHelper(); -- repaint frames so the new scale applies immediately
+                end,
+            },
+
+            druidHoTHelperWarning = {
+                order = 9,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Show missing-HoT warning",

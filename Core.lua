@@ -152,6 +152,7 @@ local defaults = {
             raidFrameAggroHighlightAlpha = 0.5,
             raidFrameAggroHighlightAnimationSpeed = 0,
             druidHoTHelper = true,
+            druidHoTHelperScale = 1,
             druidHoTHelperWarning = false,
         },
         misc = {
