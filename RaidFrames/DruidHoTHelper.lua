@@ -5,8 +5,9 @@ local _, addon = ...;
 --
 -- Two rows per frame, anchored to the right edge (the frame center is left for Blizzard's big
 -- defensive-cooldown icon):
---   Row 1 - Lifebloom: icon + cooldown swipe, glowing while inside its refresh (pandemic) window
---           (the last 30% of its duration).
+--   Row 1 - Mark of the Wild warning + Lifebloom. Lifebloom has cooldown swipe and glows while
+--           inside its refresh (pandemic) window (the last 30% of its duration). The Mark warning
+--           glows red while the unit is missing Mark of the Wild.
 --   Row 2 - the four Swiftmend-consumable HoTs (Regrowth, Wild Growth, Rejuvenation, Germination):
 --           icon + cooldown swipe, packed in Swiftmend-priority order with no gaps. When none of the
 --           four are active we show a warning icon instead.
@@ -30,6 +31,8 @@ local lifeblooms = {
     [33763] = true,  -- Lifebloom
     [290754] = true, -- Lifebloom (Early Spring, PvP talent)
 };
+
+local markOfTheWild = 1126;
 
 -- The four Swiftmend-consumable HoTs (Row 2), in the order Swiftmend is believed to consume them
 -- (left = consumed first).
@@ -57,10 +60,12 @@ local HOT_SPACING = 1;     -- gap between Row 2 icons
 local ROW_SPACING = 2;     -- gap between Row 1 and Row 2
 local RIGHT_PAD = 2;       -- inset from the frame's right edge
 local FRAME_LEVEL_OFFSET = 10;
-local BLOCK_HEIGHT = LIFEBLOOM_SIZE + ROW_SPACING + HOT_SIZE; -- used to center the two rows vertically
+local ROW_CENTER_OFFSET = ROW_SPACING / 2; -- split the row gap around the raid-frame vertical center
 local PACK_DIRECTION = "LEFT_TO_RIGHT"; -- "LEFT_TO_RIGHT" (priority 1 leftmost) or "RIGHT_TO_LEFT"
 
 local glowColor = { 0, 1, 0, 1 }; -- green (RGBA)
+local markWarningGlowColor = { 1, 0, 0, 1 }; -- red (RGBA)
+local markOfTheWildTexture = addon.GetSpellTexture(markOfTheWild);
 local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew"; -- yellow warning triangle
 
 local isDruid = ( addon.GetUnitClass("player") == addon.DRUID ); -- class is fixed for the login session
@@ -69,7 +74,6 @@ local isRestoSpec = false; -- spec can change mid-session; refreshed on PLAYER_S
 local cufPool = {};    -- frame -> true: raid/party CompactUnitFrames we've seen
 local unitFrames = {}; -- unit token -> { [frame] = true }: which frames currently show a unit
 local tracked = {};    -- frame -> { expirationTime, duration, timeMod, refreshTime }: active lifeblooms (glow timer)
-local scanHoTs = {};   -- scratch reused by ScanUnitHoTs (consumed synchronously within UpdateFrame)
 
 local function ShouldGlow(info, now)
     if ( info.expirationTime <= now ) then return false end
@@ -86,6 +90,18 @@ local function SetIconGlow(icon, shown)
     elseif icon.glowing then
         LCG.ButtonGlow_Stop(icon);
         icon.glowing = false;
+    end
+end
+
+local function SetPixelGlow(icon, shown)
+    if shown then
+        if ( not icon.pixelGlowing ) then
+            LCG.PixelGlow_Start(icon, markWarningGlowColor, 10);
+            icon.pixelGlowing = true;
+        end
+    elseif icon.pixelGlowing then
+        LCG.PixelGlow_Stop(icon);
+        icon.pixelGlowing = false;
     end
 end
 
@@ -120,6 +136,10 @@ local function CreateHoTIcon(parent, size, frameLevel)
     return icon;
 end
 
+local function ApplyIconScale(container)
+    container.frame:SetScale(SweepyBoop.db.profile.raidFrames.druidHoTHelperScale or 1);
+end
+
 local function CreateWarningIcon(parent, size, frameLevel)
     local icon = CreateFrame("Frame", nil, parent);
     icon:SetSize(size, size);
@@ -142,21 +162,34 @@ local function EnsureContainer(frame)
     local frameLevel = frame:GetFrameLevel() + FRAME_LEVEL_OFFSET;
 
     container = {};
+    container.frame = CreateFrame("Frame", nil, frame);
+    container.frame:SetSize(1, 1); -- non-zero size keeps this invisible scale anchor valid
+    container.frame:SetPoint("RIGHT", frame, "RIGHT", -RIGHT_PAD, 0);
+    container.frame:SetFrameLevel(frameLevel);
     container.scratch = {}; -- ordered list of the currently-active Row 2 auras
 
-    -- Row 1: Lifebloom, right edge, upper half. Anchored so the whole two-row block is centered vertically.
-    container.lifebloomIcon = CreateHoTIcon(frame, LIFEBLOOM_SIZE, frameLevel);
-    container.lifebloomIcon:SetPoint("TOPRIGHT", frame, "RIGHT", -RIGHT_PAD, BLOCK_HEIGHT / 2);
+    -- Row 1: Lifebloom, right edge, upper half. The bottom edge sits just above the frame center.
+    container.lifebloomIcon = CreateHoTIcon(container.frame, LIFEBLOOM_SIZE, frameLevel);
+    container.lifebloomIcon:SetPoint("TOPRIGHT", container.frame, "RIGHT", 0, LIFEBLOOM_SIZE + ROW_CENTER_OFFSET);
+
+    -- Row 1 warning: Mark of the Wild missing, same size as the smaller Row 2 icons and left of Lifebloom.
+    container.markWarningIcon = CreateHoTIcon(container.frame, HOT_SIZE, frameLevel);
+    container.markWarningIcon.texture:SetTexture(markOfTheWildTexture);
+    container.markWarningIcon.texture:SetDesaturated(true);
+    container.markWarningIcon.cooldown:Hide();
+    container.markWarningIcon:SetPoint("RIGHT", container.lifebloomIcon, "LEFT", -HOT_SPACING, 0);
 
     -- Row 2: up to four Swiftmend HoTs, anchored dynamically in UpdateRow2 (packed, no gaps).
     container.hotIcons = {};
     for i = 1, 4 do
-        container.hotIcons[i] = CreateHoTIcon(frame, HOT_SIZE, frameLevel);
+        container.hotIcons[i] = CreateHoTIcon(container.frame, HOT_SIZE, frameLevel);
     end
 
     -- Row 2 alternative: warning shown when none of the four HoTs are active. Sits in the first Row 2 slot.
-    container.warningIcon = CreateWarningIcon(frame, HOT_SIZE, frameLevel);
+    container.warningIcon = CreateWarningIcon(container.frame, HOT_SIZE, frameLevel);
     container.warningIcon:SetPoint("TOPRIGHT", container.lifebloomIcon, "BOTTOMRIGHT", 0, -ROW_SPACING);
+
+    ApplyIconScale(container);
 
     frame.druidHoT = container;
     return container;
@@ -181,6 +214,8 @@ local function ClearFrame(frame)
         for i = 1, #container.hotIcons do
             container.hotIcons[i]:Hide();
         end
+        SetPixelGlow(container.markWarningIcon, false);
+        container.markWarningIcon:Hide();
         container.warningIcon:Hide();
     end
     tracked[frame] = nil;
@@ -221,22 +256,43 @@ end)
 
 -- One pass over the player's helpful auras on a unit. We only track five HoTs by spellId; a secret
 -- spellId (PvP-restricted) can't match any of them, so skip it rather than suppress the warning.
+local scanHoTs = {}; -- per-unit scan scratch; returned data is consumed synchronously before the next wipe
 local function ScanUnitHoTs(unit)
     wipe(scanHoTs);
     local lifebloomAura;
+    local hasMarkOfTheWild = false;
     for i = 1, maxAuras do
-        local aura = GetAuraDataByIndex(unit, i, "PLAYER|HELPFUL");
+        local aura = GetAuraDataByIndex(unit, i, "HELPFUL");
         if ( not aura ) then break end
         local spellId = aura.spellId;
         if ( not addon.IsSecretValue(spellId) ) then -- a secret spellId matches none of our tracked HoTs
-            if lifeblooms[spellId] then
-                lifebloomAura = aura;
-            elseif swiftmendHoTs[spellId] then
-                scanHoTs[spellId] = aura;
+            if ( spellId == markOfTheWild ) then
+                hasMarkOfTheWild = true;
+            else
+                local sourceUnit = aura.sourceUnit;
+                if ( not addon.IsSecretValue(sourceUnit) ) and ( sourceUnit == "player" ) then
+                    if lifeblooms[spellId] then
+                        lifebloomAura = aura;
+                    elseif swiftmendHoTs[spellId] then
+                        scanHoTs[spellId] = aura;
+                    end
+                end
             end
         end
     end
-    return lifebloomAura, scanHoTs;
+    return lifebloomAura, scanHoTs, hasMarkOfTheWild;
+end
+
+local function UpdateMarkWarning(frame, hasMarkOfTheWild)
+    local icon = frame.druidHoT.markWarningIcon;
+    if hasMarkOfTheWild then
+        SetPixelGlow(icon, false);
+        icon:Hide();
+        return;
+    end
+
+    SetPixelGlow(icon, true);
+    icon:Show();
 end
 
 local function UpdateRow1(frame, aura)
@@ -347,9 +403,11 @@ local function UpdateFrame(frame)
         return;
     end
 
-    EnsureContainer(frame);
+    local container = EnsureContainer(frame);
+    ApplyIconScale(container);
 
-    local lifebloomAura, hotAuras = ScanUnitHoTs(unit);
+    local lifebloomAura, hotAuras, hasMarkOfTheWild = ScanUnitHoTs(unit);
+    UpdateMarkWarning(frame, hasMarkOfTheWild);
     UpdateRow1(frame, lifebloomAura);
     UpdateRow2(frame, hotAuras);
 end
