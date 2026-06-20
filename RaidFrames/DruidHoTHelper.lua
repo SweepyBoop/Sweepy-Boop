@@ -268,11 +268,14 @@ local function ScanUnitHoTs(unit)
         if ( not addon.IsSecretValue(spellId) ) then -- a secret spellId matches none of our tracked HoTs
             if ( spellId == markOfTheWild ) then
                 hasMarkOfTheWild = true;
-            elseif ( aura.sourceUnit == "player" ) then
-                if lifeblooms[spellId] then
-                    lifebloomAura = aura;
-                elseif swiftmendHoTs[spellId] then
-                    scanHoTs[spellId] = aura;
+            else
+                local sourceUnit = aura.sourceUnit;
+                if ( not addon.IsSecretValue(sourceUnit) ) and ( sourceUnit == "player" ) then
+                    if lifeblooms[spellId] then
+                        lifebloomAura = aura;
+                    elseif swiftmendHoTs[spellId] then
+                        scanHoTs[spellId] = aura;
+                    end
                 end
             end
         end
