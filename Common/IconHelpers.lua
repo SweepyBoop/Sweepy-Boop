@@ -12,7 +12,6 @@ addon.CreateOverlayGlow = function (button, size, color)
     glow:SetSize(glowSize, glowSize);
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
     if glow.ProcStartFlipbook then
-        glow.ProcStartFlipbook:SetSize(glowSize, glowSize); -- template defaults this birth burst to 150px
         -- The birth flipbook can flash at the wrong size before settling; use the stable loop glow only.
         glow.ProcStartFlipbook:Hide();
     end
