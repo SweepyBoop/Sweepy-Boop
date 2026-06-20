@@ -407,7 +407,7 @@ local function UpdateFrame(frame)
     ApplyIconScale(container);
 
     local lifebloomAura, hotAuras, hasMarkOfTheWild = ScanUnitHoTs(unit);
-    UpdateMarkWarning(frame, hasMarkOfTheWild);
+    UpdateMarkWarning(frame, ( not UnitIsPlayer(unit) ) or hasMarkOfTheWild);
     UpdateRow1(frame, lifebloomAura);
     UpdateRow2(frame, hotAuras);
 end
