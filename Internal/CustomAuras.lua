@@ -179,10 +179,7 @@ local function CreateAuraIcon(spellID, size, point, relativeTo, relativePoint, o
     end
 
     if glowAtStacks then
-        frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionButtonSpellAlertTemplate");
-        frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
-        frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
-        frame.spellActivationAlert:Hide();
+        frame.SpellActivationAlert = addon.CreateOverlayGlow(frame, size);
     end
 
     frame:RegisterEvent(addon.UNIT_AURA);
@@ -401,10 +398,7 @@ local function CreateGlowingDefensiveBuffs(spells, size, point, relativeTo, rela
     frame.cooldown:SetDrawSwipe(true);
     frame.cooldown:SetReverse(true);
 
-    frame.spellActivationAlert = CreateFrame("Frame", nil, frame, "ActionButtonSpellAlertTemplate");
-    frame.spellActivationAlert:SetSize(size * 1.4, size * 1.4);
-    frame.spellActivationAlert:SetPoint("CENTER", frame, "CENTER", 0, 0);
-    frame.spellActivationAlert:Hide();
+    frame.SpellActivationAlert = addon.CreateOverlayGlow(frame, size);
 
     frame:RegisterEvent(addon.UNIT_AURA);
     frame:SetScript("OnEvent", function (self, event, ...)

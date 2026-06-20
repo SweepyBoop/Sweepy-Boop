@@ -84,11 +84,11 @@ end
 local function SetIconGlow(icon, shown)
     if shown then
         if ( not icon.glowing ) then
-            LCG.ButtonGlow_Start(icon, glowColor);
+            addon.ShowOverlayGlow(icon);
             icon.glowing = true;
         end
     elseif icon.glowing then
-        LCG.ButtonGlow_Stop(icon);
+        addon.HideOverlayGlow(icon);
         icon.glowing = false;
     end
 end
@@ -120,7 +120,7 @@ end
 
 -- A single HoT icon: texture + cooldown swipe. Each icon is its own frame so a future Soul of the
 -- Forest border can be attached per icon without touching the others.
-local function CreateHoTIcon(parent, size, frameLevel)
+local function CreateHoTIcon(parent, size, frameLevel, createGlow)
     local icon = CreateFrame("Frame", nil, parent);
     icon:SetSize(size, size);
     icon:SetFrameLevel(frameLevel);
@@ -131,6 +131,10 @@ local function CreateHoTIcon(parent, size, frameLevel)
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     StyleCooldown(icon.cooldown);
+
+    if createGlow then
+        icon.SpellActivationAlert = addon.CreateOverlayGlow(icon, size, glowColor);
+    end
 
     icon:Hide();
     return icon;
@@ -169,7 +173,7 @@ local function EnsureContainer(frame)
     container.scratch = {}; -- ordered list of the currently-active Row 2 auras
 
     -- Row 1: Lifebloom, right edge, upper half. The bottom edge sits just above the frame center.
-    container.lifebloomIcon = CreateHoTIcon(container.frame, LIFEBLOOM_SIZE, frameLevel);
+    container.lifebloomIcon = CreateHoTIcon(container.frame, LIFEBLOOM_SIZE, frameLevel, true);
     container.lifebloomIcon:SetPoint("TOPRIGHT", container.frame, "RIGHT", 0, LIFEBLOOM_SIZE + ROW_CENTER_OFFSET);
 
     -- Row 1 warning: Mark of the Wild missing, same size as the smaller Row 2 icons and left of Lifebloom.

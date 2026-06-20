@@ -1,44 +1,5 @@
 local _, addon = ...;
 
-local function SetupOverlayGlow(button)
-    -- If we already have a SpellActivationAlert then just early return. We should already be setup
-	if button.SpellActivationAlert then
-		return;
-	end
-
-	button.SpellActivationAlert = CreateFrame("Frame", nil, button, "ActionButtonSpellAlertTemplate");
-
-	--Make the height/width available before the next frame:
-	local frameWidth, frameHeight = button:GetSize();
-	button.SpellActivationAlert:SetSize(frameWidth * 1.4, frameHeight * 1.4);
-	button.SpellActivationAlert:SetPoint("CENTER", button, "CENTER", 0, 0);
-	button.SpellActivationAlert:Hide();
-end
-
-addon.ShowOverlayGlow = function (button)
-    SetupOverlayGlow(button);
-
-	if not button.SpellActivationAlert:IsShown() then
-		button.SpellActivationAlert:Show();
-		button.SpellActivationAlert.ProcStartAnim:Play();
-
-	end
-end
-
-addon.HideOverlayGlow = function (button)
-    if not button.SpellActivationAlert then
-		return;
-	end
-
-	if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
-		button.SpellActivationAlert.ProcStartAnim:Stop();
-	end
-
-	if button:IsVisible() then
- 		button.SpellActivationAlert:Hide();
-	end
-end
-
 addon.UpdateTargetHighlight = function (icon)
     if icon.TargetHighlight then
         local show;
