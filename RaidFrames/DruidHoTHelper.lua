@@ -16,11 +16,9 @@ local _, addon = ...;
 --     removed, and a frame's real buff icons aren't addon-accessible. So we track each CompactUnitFrame
 --     via CompactUnitFrame_UpdateAll, map unit -> frame(s), refresh on UNIT_AURA, query the player's
 --     HoTs ourselves, and draw our own icons.
---   * Aura APIs are SecretWhenUnitAuraRestricted, so in an active PvP match most auras come back as
---     secret values. Lifebloom is currently flagged "neversecret" by Blizzard, so the player's own copy
---     stays readable and Row 1 keeps working. The other four HoTs are not neversecret, so in rated PvP
---     their spellId is secret; the sawSecret guard makes Row 2 fail safe (hide it, no false warning)
---     rather than show a misleading warning or error.
+--   * Aura APIs are SecretWhenUnitAuraRestricted, so unrelated auras can come back as secret values in
+--     active PvP. The helper only cares about the five player-applied HoTs below; unrelated secret auras
+--     must not suppress the Row 2 warning.
 
 local LCG = LibStub("LibCustomGlow-1.0");
 local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex;
@@ -221,24 +219,24 @@ updater:SetScript("OnUpdate", function (self, elapsed)
     end
 end)
 
--- One pass over the player's helpful auras on a unit. Secret-safe: a secret spellId (rated PvP) is
--- skipped and flagged via sawSecret so Row 2 can fail safe.
+-- One pass over the player's helpful auras on a unit. We only track five HoTs by spellId; a secret
+-- spellId (PvP-restricted) can't match any of them, so skip it rather than suppress the warning.
 local function ScanUnitHoTs(unit)
     wipe(scanHoTs);
-    local lifebloomAura, sawSecret;
+    local lifebloomAura;
     for i = 1, maxAuras do
         local aura = GetAuraDataByIndex(unit, i, "PLAYER|HELPFUL");
         if ( not aura ) then break end
         local spellId = aura.spellId;
-        if addon.IsSecretValue(spellId) then
-            sawSecret = true;
-        elseif lifeblooms[spellId] then
-            lifebloomAura = aura;
-        elseif swiftmendHoTs[spellId] then
-            scanHoTs[spellId] = aura;
+        if ( not addon.IsSecretValue(spellId) ) then -- a secret spellId matches none of our tracked HoTs
+            if lifeblooms[spellId] then
+                lifebloomAura = aura;
+            elseif swiftmendHoTs[spellId] then
+                scanHoTs[spellId] = aura;
+            end
         end
     end
-    return lifebloomAura, scanHoTs, sawSecret;
+    return lifebloomAura, scanHoTs;
 end
 
 local function UpdateRow1(frame, aura)
@@ -268,7 +266,7 @@ local function UpdateRow1(frame, aura)
     updater:Show();
 end
 
-local function UpdateRow2(frame, hotAuras, sawSecret)
+local function UpdateRow2(frame, hotAuras)
     local container = frame.druidHoT;
     local icons = container.hotIcons;
 
@@ -288,12 +286,7 @@ local function UpdateRow2(frame, hotAuras, sawSecret)
         for i = 1, #icons do
             icons[i]:Hide();
         end
-        -- In rated PvP our HoTs are secret (unreadable), so a "no HoTs" warning would be misleading.
-        if sawSecret then
-            container.warningIcon:Hide();
-        else
-            container.warningIcon:Show();
-        end
+        container.warningIcon:Show(); -- none of the four Swiftmend HoTs are up
         return;
     end
 
@@ -352,9 +345,9 @@ local function UpdateFrame(frame)
 
     EnsureContainer(frame);
 
-    local lifebloomAura, hotAuras, sawSecret = ScanUnitHoTs(unit);
+    local lifebloomAura, hotAuras = ScanUnitHoTs(unit);
     UpdateRow1(frame, lifebloomAura);
-    UpdateRow2(frame, hotAuras, sawSecret);
+    UpdateRow2(frame, hotAuras);
 end
 
 -- Maintain unit -> frame(s) so UNIT_AURA can target only the affected frames.
