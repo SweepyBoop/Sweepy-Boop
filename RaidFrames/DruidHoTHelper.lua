@@ -274,7 +274,7 @@ local function ScanUnitHoTs(unit)
                 hasMarkOfTheWild = true;
             else
                 local sourceUnit = aura.sourceUnit;
-                if ( not addon.IsSecretValue(sourceUnit) ) and sourceUnit and UnitIsUnit(sourceUnit, "player") then
+                if ( not addon.IsSecretValue(sourceUnit) ) and ( sourceUnit == "player" ) then
                     if lifeblooms[spellId] then
                         lifebloomAura = aura;
                     elseif swiftmendHoTs[spellId] then
