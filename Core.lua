@@ -375,7 +375,6 @@ function SweepyBoop:OnInitialize()
     self:SetupHealerIndicator();
 
     -- Setup raid frame modules
-    --self:SetupRaidFrameAggroHighlight();
     self:SetupRaidFrameAuraModule();
 
     self:SetupQueueReminder();
@@ -385,6 +384,13 @@ function SweepyBoop:OnInitialize()
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
+
+    local loginFrame = CreateFrame("Frame");
+    loginFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    loginFrame:SetScript("OnEvent", function()
+        self:SetupRaidFrameAggroHighlight();
+        loginFrame:UnregisterEvent(addon.PLAYER_ENTERING_WORLD);
+    end);
 end
 
 function SweepyBoop:RefreshConfig()
