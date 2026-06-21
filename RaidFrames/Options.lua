@@ -14,14 +14,31 @@ addon.GetRaidFrameOptions = function(order)
         get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
         set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
         args = {
-            header1 = {
+            arenaRaidFrameSortOrder = {
                 order = 1,
+                type = "select",
+                name = "Arena Party Frame Sort",
+                desc = "Sort Blizzard party-style raid frames while in arena.",
+                values = {
+                    [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
+                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
+                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in middle",
+                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player on bottom",
+                },
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshArenaRaidFrameSort();
+                end,
+            },
+
+            header1 = {
+                order = 2,
                 type = "header",
                 name = "PvP aggro highlight",
             },
 
             raidFrameAggroHighlightEnabled = {
-                order = 2,
+                order = 3,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
