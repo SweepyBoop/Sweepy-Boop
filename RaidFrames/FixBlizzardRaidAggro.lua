@@ -1,6 +1,9 @@
 local _, addon = ...;
 
-local framePrefix = ( C_AddOns.IsAddOnLoaded("ElvUI") and "ElvUF_PartyGroup1UnitButton" ) or "CompactPartyFrameMember";
+local explicitFramePrefixes = {
+    "CompactPartyFrameMember",
+    "CompactArenaFrameMember",
+};
 
 local ICON_ATLAS = "groupfinder-icon-friend";
 local ICON_SIZE = 12;
@@ -8,6 +11,7 @@ local ICON_SPACING = 1;
 local ICON_ALPHA = 0.9;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
 
+local trackedFrames = {};
 local targeters = {};
 local classColors = {};
 
@@ -107,7 +111,66 @@ local function HideCustomAggroHighlight(frame)
     end
 end
 
+local function TrackFrame(frame)
+    if frame and ( not frame:IsForbidden() ) then
+        trackedFrames[frame] = true;
+    end
+end
+
+local function AddExplicitFrames()
+    for prefixIndex = 1, #explicitFramePrefixes do
+        local prefix = explicitFramePrefixes[prefixIndex];
+        for i = 1, MAX_RAID_FRAME_INDEX do
+            TrackFrame(_G[prefix .. i]);
+        end
+    end
+end
+
+local function HideAllFrames()
+    AddExplicitFrames();
+    for frame in pairs(trackedFrames) do
+        if frame:IsForbidden() then
+            trackedFrames[frame] = nil;
+        else
+            if frame.aggroHighlight then
+                frame.aggroHighlight:SetAlpha(1);
+            end
+            HideCustomAggroHighlight(frame);
+        end
+    end
+end
+
+local function UpdateAllFrames()
+    AddExplicitFrames();
+    BuildTargeters();
+
+    for frame in pairs(trackedFrames) do
+        if frame:IsForbidden() then
+            trackedFrames[frame] = nil;
+        else
+            if frame.aggroHighlight then
+                frame.aggroHighlight:SetAlpha(0);
+            end
+
+            local unit = frame.displayedUnit or frame.unit;
+            local targetingClassColors = unit and GetTargetingClasses(unit);
+            if targetingClassColors and ( #targetingClassColors > 0 ) then
+                ShowCustomAggroHighlight(frame, targetingClassColors);
+            else
+                HideCustomAggroHighlight(frame);
+            end
+        end
+    end
+end
+
 function SweepyBoop:SetupRaidFrameAggroHighlight()
+    hooksecurefunc("CompactUnitFrame_UpdateAll", function (frame)
+        local name = frame and frame.GetName and frame:GetName();
+        if name and string.find(name, "^Compact") then -- CompactPartyFrameMemberN, CompactRaidFrameN, CompactArenaFrameMemberN, ...
+            TrackFrame(frame);
+        end
+    end)
+
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     if addon.PROJECT_MAINLINE then -- Between solo shuffle rounds (retail only)
@@ -130,33 +193,9 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
         end
 
         if hideAll then
-            for i = 1, MAX_RAID_FRAME_INDEX do
-                local frame = _G[framePrefix .. i];
-                if frame then
-                    if frame.aggroHighlight then
-                        frame.aggroHighlight:SetAlpha(1);
-                    end
-                    HideCustomAggroHighlight(frame);
-                end
-            end
+            HideAllFrames();
         elseif shouldUpdate then
-            BuildTargeters();
-            for i = 1, MAX_RAID_FRAME_INDEX do
-                local frame = _G[framePrefix .. i];
-                if frame then
-                    if frame.aggroHighlight then
-                        frame.aggroHighlight:SetAlpha(0);
-                    end
-
-                    local unit = frame.unit;
-                    local classColors = unit and GetTargetingClasses(unit);
-                    if classColors and ( #classColors > 0 ) then
-                        ShowCustomAggroHighlight(frame, classColors);
-                    else
-                        HideCustomAggroHighlight(frame);
-                    end
-                end
-            end
+            UpdateAllFrames();
         end
     end);
 end
