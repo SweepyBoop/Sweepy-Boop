@@ -21,7 +21,6 @@ local _, addon = ...;
 --     active PvP. The helper only cares about the five player-applied HoTs below; unrelated secret auras
 --     must not suppress the Row 2 warning.
 
-local LCG = LibStub("LibCustomGlow-1.0");
 local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex;
 local maxAuras = 255;
 local refreshFraction = 0.3; -- glow once Lifebloom is within the last 30% of its duration
@@ -96,11 +95,11 @@ end
 local function SetPixelGlow(icon, shown)
     if shown then
         if ( not icon.pixelGlowing ) then
-            LCG.PixelGlow_Start(icon, markWarningGlowColor, 10);
+            addon.ShowFixedPixelGlow(icon.fixedPixelGlow);
             icon.pixelGlowing = true;
         end
     elseif icon.pixelGlowing then
-        LCG.PixelGlow_Stop(icon);
+        addon.HideFixedPixelGlow(icon.fixedPixelGlow);
         icon.pixelGlowing = false;
     end
 end
@@ -181,6 +180,7 @@ local function EnsureContainer(frame)
     container.markWarningIcon.texture:SetTexture(markOfTheWildTexture);
     container.markWarningIcon.texture:SetDesaturated(true);
     container.markWarningIcon.cooldown:Hide();
+    container.markWarningIcon.fixedPixelGlow = addon.CreateFixedPixelGlow(container.markWarningIcon, HOT_SIZE, HOT_SIZE, markWarningGlowColor, 10);
     container.markWarningIcon:SetPoint("RIGHT", container.lifebloomIcon, "LEFT", -HOT_SPACING, 0);
 
     -- Row 2: up to four Swiftmend HoTs, anchored dynamically in UpdateRow2 (packed, no gaps).
