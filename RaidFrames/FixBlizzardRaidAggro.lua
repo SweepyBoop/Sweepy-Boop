@@ -9,6 +9,8 @@ local ICON_ATLAS = "groupfinder-waitdot";
 local ICON_SIZE = 16;
 local ICON_SPACING = 1;
 local ICON_ALPHA = 0.9;
+-- TODO: Enable party-frame indicators after we identify and safely handle Blizzard's built-in arena raid-frame icons.
+local ENABLE_PARTY_FRAME_TARGET_INDICATORS = false;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
 
 local trackedFrames = {};
@@ -84,7 +86,12 @@ end
 
 local function GetTargetingClasses(frameUnit)
     wipe(classColors);
-    local showEnemyTargeters = not IsArenaUnit(frameUnit);
+    local isArenaFrame = IsArenaUnit(frameUnit);
+    if ( not isArenaFrame ) and ( not ENABLE_PARTY_FRAME_TARGET_INDICATORS ) then
+        return classColors;
+    end
+
+    local showEnemyTargeters = not isArenaFrame;
 
     for i = 1, #targeters do
         local targeter = targeters[i];
