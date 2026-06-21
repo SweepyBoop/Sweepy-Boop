@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local MAX_PARTY_FRAMES = 5;
+local SECURE_MANAGER_NAME = "SweepyBoopArenaSortSecureManager";
 local SECURE_RUN_STATE = "state-sweepy-arena-sort";
 local sortPending = false;
 local manager;
@@ -155,19 +156,14 @@ local function RunSecureSort()
     manager:SetAttribute(SECURE_RUN_STATE, "manual" .. tostring(GetTime()));
 end
 
-local function RestoreDefaultSort()
-    if InCombatLockdown() then
-        sortPending = true;
-        return;
-    end
-
+local function DisableSecureSort()
     ClearLoadedUnits();
-    if CompactPartyFrame and CompactPartyFrame.SetFlowSortFunction and CRFSort_Group then
-        CompactPartyFrame:SetFlowSortFunction(CRFSort_Group);
+    if manager then
+        manager:SetAttribute("Enabled", false);
     end
 end
 
-local secureSortSnippet = [[
+local secureSortSnippet = [=[
     if not self:GetAttribute("Enabled") then return end
 
     local container = self:GetFrameRef("Container")
@@ -227,7 +223,7 @@ local secureSortSnippet = [[
             y = y - (frame:GetHeight() or 0)
         end
     end
-]];
+]=];
 
 local function ConfigureSecureHeader(header)
     header:SetAttribute("showParty", true);
@@ -235,17 +231,16 @@ local function ConfigureSecureHeader(header)
     header:SetAttribute("showSolo", false);
     header:SetAttribute("showRaid", false);
     header:SetAttribute("template", "SecureHandlerAttributeTemplate");
-    header:SetFrameRef("Manager", manager);
     header:SetAttribute("initialConfigFunction", [=[
         self:SetWidth(0)
         self:SetHeight(0)
-        self:SetAttribute("Manager", Manager)
         self:SetAttribute("refreshUnitChange", [[
-            local manager = self:GetAttribute("Manager")
-            manager:SetAttribute("state-sweepy-arena-sort", "group")
+            local manager = _G["SweepyBoopArenaSortSecureManager"]
+            if manager then
+                manager:SetAttribute("state-sweepy-arena-sort", "group")
+            end
         ]])
     ]=]);
-    header:Execute([[ Manager = self:GetFrameRef("Manager") ]]);
     header:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 0, 0);
     header:Show();
 end
@@ -253,7 +248,7 @@ end
 local function EnsureSecureSorter()
     if manager then return end
 
-    manager = CreateFrame("Frame", nil, UIParent, "SecureHandlerStateTemplate");
+    manager = CreateFrame("Frame", SECURE_MANAGER_NAME, UIParent, "SecureHandlerStateTemplate");
     manager:SetAttribute("_onstate-sweepy-arena-sort", secureSortSnippet);
     RegisterAttributeDriver(manager, SECURE_RUN_STATE, "[group] grouped; ungrouped;");
 
@@ -265,23 +260,12 @@ local function ApplySort()
     EnsureSecureSorter();
 
     if not IsSortEnabled() then
-        RestoreDefaultSort();
+        DisableSecureSort();
         return;
     end
 
     LoadUnitOrder();
     LoadFrameRefs();
-
-    if not InCombatLockdown() and CompactPartyFrame and CompactPartyFrame.SetFlowSortFunction then
-        -- Let Blizzard's own party refresh use the same order out of combat; secure snippets cover combat changes.
-        CompactPartyFrame:SetFlowSortFunction(function(left, right)
-            local sorted = BuildSortedUnits();
-            local indexes = {};
-            for i = 1, #sorted do indexes[sorted[i]] = i end
-            return ( indexes[left] or UnitSortWeight(left) ) < ( indexes[right] or UnitSortWeight(right) );
-        end);
-    end
-
     RunSecureSort();
     sortPending = false;
 end
