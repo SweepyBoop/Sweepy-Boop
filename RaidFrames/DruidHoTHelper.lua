@@ -385,6 +385,19 @@ local function UpdateRow2(frame, hotAuras)
     end
 end
 
+local function IsGroupUnit(unit)
+    local first = string.byte(unit, 1);
+    if ( first == 112 ) then -- p: player / pet / party / partypet
+        return ( string.sub(unit, 1, 6) == "player" )
+                or ( string.sub(unit, 1, 3) == "pet" )
+                or ( string.sub(unit, 1, 5) == "party" );
+    elseif ( first == 114 ) then -- raid / raidpet
+        return ( string.sub(unit, 1, 4) == "raid" );
+    end
+
+    return false;
+end
+
 local function UpdateFrame(frame)
     if frame:IsForbidden() then return end
 
@@ -392,8 +405,7 @@ local function UpdateFrame(frame)
     if ( not SweepyBoop.db.profile.raidFrames.druidHoTHelper )
             or ( not isRestoSpec )
             or ( not unit ) or ( not UnitExists(unit) )
-            or string.find(unit, "target") -- target/targettarget aren't raid members
-            or addon.UnitIsHostile(unit) then -- enemy units (e.g. arena enemy frames) aren't ours to HoT
+            or ( not IsGroupUnit(unit) ) then
         ClearFrame(frame);
         return;
     end
@@ -457,6 +469,38 @@ local function RefreshAllFrames()
     end
 end
 
+local function IsFrameVisible(frame)
+    local shown = frame:IsShown();
+    return ( not addon.IsSecretValue(shown) ) and shown;
+end
+
+local function UpdateVisibleFrame(frame)
+    if IsFrameVisible(frame) then
+        UpdateFrame(frame);
+    end
+end
+
+local function ShouldTrackFrameName(name)
+    if ( string.byte(name, 1) ~= 67 ) then return false end -- C: CompactPartyFrame / CompactRaid
+    return ( string.sub(name, 1, 17) == "CompactPartyFrame" )
+            or ( string.sub(name, 1, 11) == "CompactRaid" );
+end
+
+local function UpdateUnitFrames(unit)
+    if not IsGroupUnit(unit) then return end
+
+    local frames = unitFrames[unit];
+    if frames then
+        for frame in pairs(frames) do
+            UpdateVisibleFrame(frame);
+        end
+        return;
+    end
+
+    -- If the event unit is not in the exact frame map, avoid UnitIsUnit here: in rated PvP it can
+    -- involve restricted unit data, and GROUP_ROSTER_UPDATE/CompactUnitFrame_UpdateAll refresh mappings.
+end
+
 local eventFrame = CreateFrame("Frame");
 
 -- Hide Blizzard's own raid-frame buffs while the helper is enabled on a Resto druid, so our icons
@@ -494,7 +538,7 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         end
 
         local name = frame:GetName();
-        if name and string.find(name, "^Compact") then -- CompactPartyFrameMemberN, CompactRaidFrameN, ...
+        if name and ShouldTrackFrameName(name) then
             TrackFrame(frame);
         else
             UntrackFrame(frame);
@@ -507,11 +551,8 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:SetScript("OnEvent", function (_, event, unitTarget)
         if ( event == addon.UNIT_AURA ) then
-            local frames = unitFrames[unitTarget];
-            if frames then
-                for frame in pairs(frames) do
-                    UpdateFrame(frame);
-                end
+            if unitTarget then
+                UpdateUnitFrames(unitTarget);
             end
         elseif ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
             if ( unitTarget == "player" ) then
