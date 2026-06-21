@@ -5,7 +5,7 @@ local explicitFramePrefixes = {
     "CompactArenaFrameMember",
 };
 
-local ICON_ATLAS = "groupfinder-icon-friend";
+local ICON_ATLAS = "groupfinder-waitdot";
 local ICON_SIZE = 16;
 local ICON_SPACING = 1;
 local ICON_ALPHA = 0.9;
@@ -103,6 +103,7 @@ local function EnsureTargetIcon(container, index)
 
     local icon = container:CreateTexture(nil, "OVERLAY");
     icon:SetAtlas(ICON_ATLAS);
+    icon:SetDesaturated(true);
     icon:SetSize(ICON_SIZE, ICON_SIZE);
     container.icons[index] = icon;
     return icon;
