@@ -52,14 +52,14 @@ addon.HideOverlayGlow = function (button)
         return;
     end
 
+    button.SpellActivationAlert:Hide();
+
     if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
         button.SpellActivationAlert.ProcStartAnim:Stop();
     end
     if button.SpellActivationAlert.ProcLoop:IsPlaying() then
         button.SpellActivationAlert.ProcLoop:Stop();
     end
-
-    button.SpellActivationAlert:Hide();
 end
 
 local function SetFixedPixelGlowDotPosition(dot, path, progress)
