@@ -6,14 +6,15 @@ local function TintOverlayGlowTexture(texture, color)
     end
 end
 
-addon.CreateOverlayGlow = function (button, size, color, skipStartFlipbook)
+addon.CreateOverlayGlow = function (button, size, color, skipBirth)
     local glowSize = size * 1.4;
     local glow = CreateFrame("Frame", nil, button, "ActionButtonSpellAlertTemplate");
+    glow.skipBirth = skipBirth;
     glow:SetSize(glowSize, glowSize);
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
     if glow.ProcStartFlipbook then
         glow.ProcStartFlipbook:SetSize(glowSize, glowSize); -- template defaults this birth burst to 150px
-        if skipStartFlipbook then
+        if skipBirth then
             glow.ProcStartFlipbook:Hide(); -- skip the birth flipbook; first frame can flash the raw atlas grid
         end
     end
@@ -39,10 +40,10 @@ addon.ShowOverlayGlow = function (button)
 
     if not button.SpellActivationAlert:IsShown() then
         button.SpellActivationAlert:Show();
-        if addon.PROJECT_TBC then
-            button.SpellActivationAlert.ProcStartAnim:Play();
-        else
+        if button.SpellActivationAlert.skipBirth then
             button.SpellActivationAlert.ProcLoop:Play();
+        else
+            button.SpellActivationAlert.ProcStartAnim:Play();
         end
     end
 end
