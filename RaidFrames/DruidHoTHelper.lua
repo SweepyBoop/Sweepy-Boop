@@ -385,9 +385,8 @@ local function UpdateRow2(frame, hotAuras)
     end
 end
 
-local byte = string.byte;
 local function IsGroupUnit(unit)
-    local first = byte(unit, 1);
+    local first = string.byte(unit, 1);
     if ( first == 112 ) then -- p: player / pet / party / partypet
         return string.match(unit, "^player")
                 or string.match(unit, "^pet")
