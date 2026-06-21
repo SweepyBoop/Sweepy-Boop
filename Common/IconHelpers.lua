@@ -6,18 +6,40 @@ local function TintOverlayGlowTexture(texture, color)
     end
 end
 
+local function StartOverlayGlow(glow)
+    if glow.skipBirth then
+        if glow.ProcStartFlipbook then
+            glow.ProcStartFlipbook:Hide();
+        end
+        glow.ProcLoop:Play();
+    else
+        if glow.ProcStartFlipbook then
+            glow.ProcStartFlipbook:Show();
+        end
+        glow.ProcStartAnim:Play();
+    end
+end
+
+local function StopOverlayGlow(glow)
+    if glow.ProcStartAnim:IsPlaying() then
+        glow.ProcStartAnim:Stop();
+    end
+    if glow.ProcLoop:IsPlaying() then
+        glow.ProcLoop:Stop();
+    end
+end
+
 addon.CreateOverlayGlow = function (button, size, color, skipBirth)
     local glowSize = size * 1.4;
     local glow = CreateFrame("Frame", nil, button, "ActionButtonSpellAlertTemplate");
     glow.skipBirth = skipBirth;
     glow:SetSize(glowSize, glowSize);
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
-    if glow.ProcStartFlipbook and skipBirth then
-        glow.ProcStartFlipbook:Hide(); -- skip the birth flipbook; first frame can flash the raw atlas grid
-    end
     TintOverlayGlowTexture(glow.ProcStartFlipbook, color);
     TintOverlayGlowTexture(glow.ProcLoopFlipbook, color);
     TintOverlayGlowTexture(glow.ProcAltGlow, color);
+    glow:SetScript("OnShow", StartOverlayGlow);
+    glow:SetScript("OnHide", StopOverlayGlow);
     glow:Hide();
     return glow;
 end
@@ -37,11 +59,6 @@ addon.ShowOverlayGlow = function (button)
 
     if not button.SpellActivationAlert:IsShown() then
         button.SpellActivationAlert:Show();
-        if button.SpellActivationAlert.skipBirth then
-            button.SpellActivationAlert.ProcLoop:Play();
-        else
-            button.SpellActivationAlert.ProcStartAnim:Play();
-        end
     end
 end
 
@@ -51,13 +68,6 @@ addon.HideOverlayGlow = function (button)
     end
 
     button.SpellActivationAlert:Hide();
-
-    if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
-        button.SpellActivationAlert.ProcStartAnim:Stop();
-    end
-    if button.SpellActivationAlert.ProcLoop:IsPlaying() then
-        button.SpellActivationAlert.ProcLoop:Stop();
-    end
 end
 
 local function SetFixedPixelGlowDotPosition(dot, path, progress)
