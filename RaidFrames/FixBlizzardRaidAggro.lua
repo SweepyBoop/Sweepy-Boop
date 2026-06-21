@@ -146,32 +146,6 @@ local function HideCustomAggroHighlight(frame)
     end
 end
 
-local function SetDispelIconAlpha(prefix, index, alpha)
-    for i = 1, 3 do
-        local frame = _G[prefix .. index .. "DispelDebuff" .. i];
-        if frame then
-            frame:SetAlpha(alpha);
-        end
-    end
-end
-
-local function SetRaidGroupDispelIconAlpha(alpha)
-    for groupIndex = 1, 8 do
-        for memberIndex = 1, 5 do
-            SetDispelIconAlpha("CompactRaidGroup" .. groupIndex .. "Member", memberIndex, alpha);
-        end
-    end
-end
-
-local function SetDispelIconsSuppressed(suppressed)
-    local alpha = suppressed and 0 or 1;
-    for i = 1, MAX_RAID_FRAME_INDEX do
-        SetDispelIconAlpha("CompactPartyFrameMember", i, alpha);
-        SetDispelIconAlpha("CompactArenaFrameMember", i, alpha);
-    end
-    SetRaidGroupDispelIconAlpha(alpha);
-end
-
 local function IsActive()
     return IsActiveBattlefieldArena() and SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled;
 end
@@ -215,7 +189,6 @@ local function AddExplicitFrames()
 end
 
 local function HideAllFrames()
-    SetDispelIconsSuppressed(false);
     AddExplicitFrames();
     for frame in pairs(trackedFrames) do
         if frame:IsForbidden() then
@@ -230,7 +203,6 @@ local function HideAllFrames()
 end
 
 local function UpdateAllFrames()
-    SetDispelIconsSuppressed(true);
     AddExplicitFrames();
     BuildTargeters();
 
