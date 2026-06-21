@@ -48,93 +48,6 @@ local function IsForbiddenSafe(frame)
     return frame:IsForbidden();
 end
 
--- Arena number resolver (mainline) -------------------------------------------
--- On mainline, arena units are PvP-restricted: UnitGUID / UnitIsUnit return secret
--- values, so a nameplate cannot be matched to arena1/2/3 directly. We instead
--- fingerprint each arena slot from non-secret attributes (class, race, sex, honor
--- level; class falls back to the sanctioned GetArenaOpponentSpec when the arena unit
--- is out of range) and match a nameplate's fingerprint against those slots.
---
--- The per-nameplate resolution is NOT cached: nameplate tokens (nameplateN) are
--- recycled far too frequently (range / line-of-sight / stealth, not just deaths) for
--- a token-keyed cache to be safe or worthwhile, so each request matches live. (The
--- arena-slot fingerprints themselves ARE cached, by index -- see GetArenaSlotPrint.)
--- A nameplate is numbered only if it uniquely matches one slot; on any ambiguity it
--- is left blank (a wrong number is worse than none). A unique match is necessarily
--- the unit's own slot, so a shown number is never wrong.
-
-local function GetUnitArenaFingerprint(unit)
-    -- Returns class, race, sex, honorLevel (all non-secret on arena units) or nil.
-    -- Multi-return rather than a table so the hot path avoids a per-call allocation.
-    if ( not UnitExists(unit) ) then return end
-    local class = UnitClassBase(unit);
-    if ( not class ) then return end
-    return class, select(2, UnitRace(unit)), UnitSex(unit), UnitHonorLevel(unit); -- race file is locale-independent
-end
-
--- Per-slot fingerprint cache. The arena1/2/3 -> player identity is fixed for a
--- round, and a player's class/race/sex/honor never change, so once we read a slot's
--- full (in-range) fingerprint we cache it until the comp changes (reset on
--- PLAYER_ENTERING_WORLD / ARENA_PREP_OPPONENT_SPECIALIZATIONS). Keyed by arena index
--- (not by recycled nameplate tokens), so it has none of the staleness a token-keyed
--- cache would, and it lets matching survive a slot temporarily breaking line of sight.
-local arenaSlotPrintCache = {};
-
-local function ResetArenaSlotPrintCache()
-    wipe(arenaSlotPrintCache);
-end
-
-local function GetArenaSlotPrint(i)
-    local cached = arenaSlotPrintCache[i];
-    if cached then return cached end
-
-    local class, race, sex, honor = GetUnitArenaFingerprint("arena" .. i);
-    if ( not class ) then
-        -- Out of range / prep phase: UnitClassBase is nil, but the spec gives the class.
-        local specID = GetArenaOpponentSpec(i);
-        if specID and ( specID > 0 ) then
-            class = select(6, GetSpecializationInfoByID(specID)); -- classFilename
-        end
-        if ( not class ) then return end
-    end
-
-    local fp = { class = class, race = race, sex = sex, honor = honor };
-    -- Cache only a complete in-range fingerprint; while out of range (race/sex/honor
-    -- nil, so class is the only key) it is too coarse to lock in for the round.
-    if race and sex and honor then
-        arenaSlotPrintCache[i] = fp;
-    end
-    return fp;
-end
-
--- True if a live class/race/sex/honor fingerprint is compatible with a slot print.
--- A nil slot field is a wildcard (slot known by class only, e.g. still out of range).
-local function SlotMatches(slot, class, race, sex, honor)
-    return class == slot.class
-        and ( slot.race == nil or race == slot.race )
-        and ( slot.sex == nil or sex == slot.sex )
-        and ( slot.honor == nil or honor == slot.honor );
-end
-
--- Returns the arena index (1..N) for a nameplate unit, or nil if it can't be uniquely
--- resolved. The unit's own fingerprint is read live each call (no allocation) and
--- matched against the (cached) arena slots; we bail as soon as a second slot matches.
-local function GetArenaNumber(unit)
-    local class, race, sex, honor = GetUnitArenaFingerprint(unit);
-    if ( not class ) then return end
-
-    local match;
-    for i = 1, addon.MAX_ARENA_SIZE do
-        local slot = GetArenaSlotPrint(i);
-        if slot and SlotMatches(slot, class, race, sex, honor) then
-            if match then return end -- a second match => ambiguous, leave blank
-            match = i;
-        end
-    end
-    return match;
-end
-addon.GetArenaNumber = GetArenaNumber;
-
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
@@ -374,7 +287,7 @@ function SweepyBoop:SetupNameplateModules()
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
             end
         elseif event == addon.PLAYER_ENTERING_WORLD or event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
-            ResetArenaSlotPrintCache(); -- arena comp changed; drop cached slot fingerprints
+            addon.ResetArenaSlotPrintCache(); -- arena comp changed; drop cached slot fingerprints
         end
     end)
 

@@ -1,58 +1,109 @@
 local _, addon = ...;
 
-local LCG = LibStub("LibCustomGlow-1.0");
 local framePrefix = ( C_AddOns.IsAddOnLoaded("ElvUI") and "ElvUF_PartyGroup1UnitButton" ) or "CompactPartyFrameMember";
 
-local threatColors = {
-    [1] = {r = 1, g = 1, b = 0}, -- yellow
-    [2] = {r = 1, g = 0.5, b = 0}, -- orange
-    [3] = {r = 1, g = 0, b = 0}, -- red
-};
+local ICON_ATLAS = "groupfinder-icon-friend";
+local ICON_SIZE = 12;
+local ICON_SPACING = 1;
+local ICON_ALPHA = 0.9;
+local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
 
-local function GetThreatCounters()
-    local threatCounters = {};
+local targeters = {};
+local classColors = {};
 
-    for i = 1, addon.MAX_ARENA_SIZE do
-        local guid = UnitGUID("arena" .. i .. "target");
-        if guid then
-            threatCounters[guid] = ( threatCounters[guid] or 0 ) + 1;
-        end
+local function AddTargeter(unit)
+    if ( not UnitExists(unit) ) then
+        return;
     end
 
-    return threatCounters;
+    local class = addon.GetUnitClass(unit);
+    if addon.IsSecretValue(class) then
+        return;
+    end
+
+    local classColor = class and RAID_CLASS_COLORS[class];
+    if not classColor then
+        return;
+    end
+
+    table.insert(targeters, {
+        unit = unit,
+        target = unit .. "target",
+        color = classColor,
+    });
 end
 
-local function ShowCustomAggroHighlight(frame, threatCount)
+local function BuildTargeters()
+    wipe(targeters);
+    AddTargeter("player");
+    for i = 1, addon.MAX_ARENA_SIZE do
+        AddTargeter("arena" .. i);
+        AddTargeter("party" .. i);
+    end
+end
+
+local function AddTargetingClassForFrame(classColors, frameUnit, targeter)
+    if addon.UnitIsProbablyUnit(targeter.target, frameUnit) then
+        table.insert(classColors, targeter.color);
+    end
+end
+
+local function GetTargetingClasses(frameUnit)
+    wipe(classColors);
+
+    for i = 1, #targeters do
+        AddTargetingClassForFrame(classColors, frameUnit, targeters[i]);
+    end
+
+    return classColors;
+end
+
+local function EnsureTargetIcon(container, index)
+    if container.icons[index] then
+        return container.icons[index];
+    end
+
+    local icon = container:CreateTexture(nil, "OVERLAY");
+    icon:SetAtlas(ICON_ATLAS);
+    icon:SetSize(ICON_SIZE, ICON_SIZE);
+    container.icons[index] = icon;
+    return icon;
+end
+
+local function ShowCustomAggroHighlight(frame, classColors)
     if not frame.customAggroHighlight then
         local customAggroHighlight = CreateFrame("Frame", nil, frame);
-        customAggroHighlight:SetAllPoints();
+        customAggroHighlight:SetPoint("TOP", frame, "TOP", 0, -1);
+        customAggroHighlight:SetSize(1, ICON_SIZE);
+        customAggroHighlight:SetFrameLevel(frame:GetFrameLevel() + 10);
+        customAggroHighlight.icons = {};
         frame.customAggroHighlight = customAggroHighlight;
     end
 
-    local color = threatColors[threatCount];
-    local thickness = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightThickness;
-    local speed = SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed;
-    if speed == 0 then
-        speed = 1e-10; -- Set to a very small frequency, essentially no animation
+    local container = frame.customAggroHighlight;
+    local iconCount = #classColors;
+    local rowWidth = ( iconCount * ICON_SIZE ) + ( ( iconCount - 1 ) * ICON_SPACING );
+    container:SetSize(rowWidth, ICON_SIZE);
+
+    for i = 1, iconCount do
+        local icon = EnsureTargetIcon(container, i);
+        local color = classColors[i];
+        icon:ClearAllPoints();
+        icon:SetPoint("LEFT", container, "LEFT", ( i - 1 ) * ( ICON_SIZE + ICON_SPACING ), 0);
+        icon:SetVertexColor(color.r, color.g, color.b, ICON_ALPHA);
+        icon:Show();
     end
 
-    LCG.PixelGlow_Start(
-        frame.customAggroHighlight, -- frame
-        { color.r, color.g, color.b, SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightAlpha }, -- color
-        16, -- number of frames
-        0.025 * speed, -- frequency (default is 0.25)
-        nil, -- actions.glow_length,
-        thickness, -- actions.glow_thickness,
-        nil, -- actions.glow_XOffset,
-        nil, -- actions.glow_YOffset,
-        false -- actions.glow_border and true or false,
-        -- id
-    );
+    for i = iconCount + 1, #container.icons do
+        container.icons[i]:Hide();
+    end
+
+    container:Show();
 end
 
 local function HideCustomAggroHighlight(frame)
     if frame.customAggroHighlight then
-        LCG.PixelGlow_Stop(frame.customAggroHighlight);
+        frame.customAggroHighlight:Hide();
     end
 end
 
@@ -71,14 +122,15 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
             hideAll = true;
         else
             if event == addon.UNIT_TARGET then
-                shouldUpdate = ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" );
+                shouldUpdate = ( unitId == "player" ) or ( unitId == "party1" ) or ( unitId == "party2" ) or ( unitId == "party3" ) or ( unitId == "party4" )
+                    or ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" ) or ( unitId == "arena4" ) or ( unitId == "arena5" );
             else
                 shouldUpdate = true;
             end
         end
 
         if hideAll then
-            for i = 1, 6 do -- 3 players and 3 pets in arena
+            for i = 1, MAX_RAID_FRAME_INDEX do
                 local frame = _G[framePrefix .. i];
                 if frame then
                     if frame.aggroHighlight then
@@ -88,18 +140,18 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
                 end
             end
         elseif shouldUpdate then
-            local threatCounts = GetThreatCounters();
-            for i = 1, 6 do -- 3 players and 3 pets in arena
+            BuildTargeters();
+            for i = 1, MAX_RAID_FRAME_INDEX do
                 local frame = _G[framePrefix .. i];
                 if frame then
                     if frame.aggroHighlight then
                         frame.aggroHighlight:SetAlpha(0);
                     end
 
-                    local unitGUID = frame.unit and UnitGUID(frame.unit);
-                    local threatCount = unitGUID and threatCounts[unitGUID];
-                    if threatCount then
-                        ShowCustomAggroHighlight(frame, threatCount);
+                    local unit = frame.unit;
+                    local classColors = unit and GetTargetingClasses(unit);
+                    if classColors and ( #classColors > 0 ) then
+                        ShowCustomAggroHighlight(frame, classColors);
                     else
                         HideCustomAggroHighlight(frame);
                     end
