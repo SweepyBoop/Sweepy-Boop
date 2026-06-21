@@ -497,16 +497,8 @@ local function UpdateUnitFrames(unit)
         return;
     end
 
-    -- Compact frames can expose the same player through different group aliases (party/raid/displayedUnit).
-    -- Fall back to UnitIsUnit so a UNIT_AURA alias mismatch does not leave one visible HoT icon stale.
-    for frame in pairs(cufPool) do
-        if IsFrameVisible(frame) then
-            local frameUnit = frame.druidHoTUnit;
-            if frameUnit and UnitIsUnit(unit, frameUnit) then
-                UpdateFrame(frame);
-            end
-        end
-    end
+    -- If the event unit is not in the exact frame map, avoid UnitIsUnit here: in rated PvP it can
+    -- involve restricted unit data, and GROUP_ROSTER_UPDATE/CompactUnitFrame_UpdateAll refresh mappings.
 end
 
 local eventFrame = CreateFrame("Frame");
