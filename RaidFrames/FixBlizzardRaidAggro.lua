@@ -14,6 +14,7 @@ local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
 local trackedFrames = {};
 local targeters = {};
 local classColors = {};
+local wasActive = false;
 
 local function AddTargeter(unit)
     if ( not UnitExists(unit) ) then
@@ -179,22 +180,25 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- For cases when stealthy classes appear (we need to run an update before they change target)
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
-        local shouldUpdate, hideAll;
-
-        if ( not IsActiveBattlefieldArena() ) or ( not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled ) then -- not in arena or feature disabled
-            hideAll = true;
-        else
-            if event == addon.UNIT_TARGET then
-                shouldUpdate = ( unitId == "player" ) or ( unitId == "party1" ) or ( unitId == "party2" ) or ( unitId == "party3" ) or ( unitId == "party4" )
-                    or ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" ) or ( unitId == "arena4" ) or ( unitId == "arena5" );
-            else
-                shouldUpdate = true;
+        local isActive = IsActiveBattlefieldArena() and SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled;
+        if not isActive then
+            if wasActive then
+                HideAllFrames();
+                wasActive = false;
             end
+            return;
         end
 
-        if hideAll then
-            HideAllFrames();
-        elseif shouldUpdate then
+        wasActive = true;
+        local shouldUpdate;
+        if event == addon.UNIT_TARGET then
+            shouldUpdate = ( unitId == "player" ) or ( unitId == "party1" ) or ( unitId == "party2" ) or ( unitId == "party3" ) or ( unitId == "party4" )
+                or ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" ) or ( unitId == "arena4" ) or ( unitId == "arena5" );
+        else
+            shouldUpdate = true;
+        end
+
+        if shouldUpdate then
             UpdateAllFrames();
         end
     end);
