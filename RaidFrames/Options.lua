@@ -26,6 +26,10 @@ addon.GetRaidFrameOptions = function(order)
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
                 desc = "Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.",
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshRaidFrameAggroHighlight();
+                end,
             },
 
             header2 = {

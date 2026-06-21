@@ -47,6 +47,20 @@ local function BuildTargeters()
     end
 end
 
+local function IsTrackedUnitTarget(unit)
+    if unit == "player" then
+        return true;
+    end
+
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if ( unit == "party" .. i ) or ( unit == "arena" .. i ) then
+            return true;
+        end
+    end
+
+    return false;
+end
+
 local function AddTargetingClassForFrame(classColors, frameUnit, targeter)
     if addon.UnitIsUnitSecretValueSafe(targeter.target, frameUnit) then
         table.insert(classColors, targeter.color);
@@ -112,9 +126,36 @@ local function HideCustomAggroHighlight(frame)
     end
 end
 
+local function IsActive()
+    return IsActiveBattlefieldArena() and SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled;
+end
+
+local function UpdateFrame(frame)
+    if frame:IsForbidden() then
+        trackedFrames[frame] = nil;
+        return;
+    end
+
+    if frame.aggroHighlight then
+        frame.aggroHighlight:SetAlpha(0);
+    end
+
+    local unit = frame.displayedUnit or frame.unit;
+    local targetingClassColors = unit and GetTargetingClasses(unit);
+    if targetingClassColors and ( #targetingClassColors > 0 ) then
+        ShowCustomAggroHighlight(frame, targetingClassColors);
+    else
+        HideCustomAggroHighlight(frame);
+    end
+end
+
 local function TrackFrame(frame)
     if frame and ( not frame:IsForbidden() ) then
         trackedFrames[frame] = true;
+        if wasActive then
+            BuildTargeters();
+            UpdateFrame(frame);
+        end
     end
 end
 
@@ -146,21 +187,17 @@ local function UpdateAllFrames()
     BuildTargeters();
 
     for frame in pairs(trackedFrames) do
-        if frame:IsForbidden() then
-            trackedFrames[frame] = nil;
-        else
-            if frame.aggroHighlight then
-                frame.aggroHighlight:SetAlpha(0);
-            end
+        UpdateFrame(frame);
+    end
+end
 
-            local unit = frame.displayedUnit or frame.unit;
-            local targetingClassColors = unit and GetTargetingClasses(unit);
-            if targetingClassColors and ( #targetingClassColors > 0 ) then
-                ShowCustomAggroHighlight(frame, targetingClassColors);
-            else
-                HideCustomAggroHighlight(frame);
-            end
-        end
+function SweepyBoop:RefreshRaidFrameAggroHighlight()
+    if IsActive() then
+        wasActive = true;
+        UpdateAllFrames();
+    elseif wasActive then
+        HideAllFrames();
+        wasActive = false;
     end
 end
 
@@ -180,8 +217,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- For cases when stealthy classes appear (we need to run an update before they change target)
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
-        local isActive = IsActiveBattlefieldArena() and SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled;
-        if not isActive then
+        if not IsActive() then
             if wasActive then
                 HideAllFrames();
                 wasActive = false;
@@ -190,15 +226,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
         end
 
         wasActive = true;
-        local shouldUpdate;
-        if event == addon.UNIT_TARGET then
-            shouldUpdate = ( unitId == "player" ) or ( unitId == "party1" ) or ( unitId == "party2" ) or ( unitId == "party3" ) or ( unitId == "party4" )
-                or ( unitId == "arena1" ) or ( unitId == "arena2" ) or ( unitId == "arena3" ) or ( unitId == "arena4" ) or ( unitId == "arena5" );
-        else
-            shouldUpdate = true;
-        end
-
-        if shouldUpdate then
+        if ( event ~= addon.UNIT_TARGET ) or IsTrackedUnitTarget(unitId) then
             UpdateAllFrames();
         end
     end);
