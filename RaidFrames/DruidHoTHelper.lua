@@ -392,8 +392,7 @@ local function UpdateFrame(frame)
     if ( not SweepyBoop.db.profile.raidFrames.druidHoTHelper )
             or ( not isRestoSpec )
             or ( not unit ) or ( not UnitExists(unit) )
-            or string.find(unit, "target") -- target/targettarget aren't raid members
-            or addon.UnitIsHostile(unit) then -- enemy units (e.g. arena enemy frames) aren't ours to HoT
+            or ( not IsGroupUnit(unit) ) then
         ClearFrame(frame);
         return;
     end
