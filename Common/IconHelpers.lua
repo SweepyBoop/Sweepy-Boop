@@ -6,24 +6,7 @@ local function TintOverlayGlowTexture(texture, color)
     end
 end
 
-local function StartOverlayGlow(glow)
-    if glow.skipBirth then
-        if glow.ProcStartFlipbook then
-            glow.ProcStartFlipbook:Hide();
-        end
-        glow.ProcLoop:Play();
-    else
-        if glow.ProcStartFlipbook then
-            glow.ProcStartFlipbook:Show();
-        end
-        glow.ProcStartAnim:Play();
-    end
-end
-
 local function StopOverlayGlow(glow)
-    if glow.ProcStartAnim:IsPlaying() then
-        glow.ProcStartAnim:Stop();
-    end
     if glow.ProcLoop:IsPlaying() then
         glow.ProcLoop:Stop();
     end
@@ -38,7 +21,6 @@ addon.CreateOverlayGlow = function (button, size, color, skipBirth)
     TintOverlayGlowTexture(glow.ProcStartFlipbook, color);
     TintOverlayGlowTexture(glow.ProcLoopFlipbook, color);
     TintOverlayGlowTexture(glow.ProcAltGlow, color);
-    glow:SetScript("OnShow", StartOverlayGlow);
     glow:SetScript("OnHide", StopOverlayGlow);
     glow:Hide();
     return glow;
@@ -59,6 +41,11 @@ addon.ShowOverlayGlow = function (button)
 
     if not button.SpellActivationAlert:IsShown() then
         button.SpellActivationAlert:Show();
+        if button.SpellActivationAlert.skipBirth then
+            button.SpellActivationAlert.ProcLoop:Play();
+        else
+            button.SpellActivationAlert.ProcStartAnim:Play();
+        end
     end
 end
 
@@ -68,6 +55,7 @@ addon.HideOverlayGlow = function (button)
     end
 
     button.SpellActivationAlert:Hide();
+    button.SpellActivationAlert.ProcStartAnim:Stop();
 end
 
 local function SetFixedPixelGlowDotPosition(dot, path, progress)
