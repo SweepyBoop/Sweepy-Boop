@@ -12,11 +12,8 @@ addon.CreateOverlayGlow = function (button, size, color, skipBirth)
     glow.skipBirth = skipBirth;
     glow:SetSize(glowSize, glowSize);
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
-    if glow.ProcStartFlipbook then
-        glow.ProcStartFlipbook:SetSize(glowSize, glowSize); -- template defaults this birth burst to 150px
-        if skipBirth then
-            glow.ProcStartFlipbook:Hide(); -- skip the birth flipbook; first frame can flash the raw atlas grid
-        end
+    if glow.ProcStartFlipbook and skipBirth then
+        glow.ProcStartFlipbook:Hide(); -- skip the birth flipbook; first frame can flash the raw atlas grid
     end
     TintOverlayGlowTexture(glow.ProcStartFlipbook, color);
     TintOverlayGlowTexture(glow.ProcLoopFlipbook, color);
