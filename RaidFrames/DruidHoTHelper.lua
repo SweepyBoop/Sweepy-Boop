@@ -385,6 +385,20 @@ local function UpdateRow2(frame, hotAuras)
     end
 end
 
+local byte = string.byte;
+local function IsGroupUnit(unit)
+    local first = byte(unit, 1);
+    if ( first == 112 ) then -- p: player / pet / party / partypet
+        return string.match(unit, "^player")
+                or string.match(unit, "^pet")
+                or string.match(unit, "^party");
+    elseif ( first == 114 ) then -- raid / raidpet
+        return string.match(unit, "^raid");
+    end
+
+    return false;
+end
+
 local function UpdateFrame(frame)
     if frame:IsForbidden() then return end
 
@@ -454,20 +468,6 @@ local function RefreshAllFrames()
     for frame in pairs(cufPool) do
         UpdateFrame(frame);
     end
-end
-
-local byte = string.byte;
-local function IsGroupUnit(unit)
-    local first = byte(unit, 1);
-    if ( first == 112 ) then -- p: player / pet / party / partypet
-        return string.match(unit, "^player")
-                or string.match(unit, "^pet")
-                or string.match(unit, "^party");
-    elseif ( first == 114 ) then -- raid / raidpet
-        return string.match(unit, "^raid");
-    end
-
-    return false;
 end
 
 local function UpdateVisibleFrame(frame)
