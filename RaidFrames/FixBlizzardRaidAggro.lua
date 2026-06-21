@@ -47,7 +47,7 @@ local function BuildTargeters()
 end
 
 local function AddTargetingClassForFrame(classColors, frameUnit, targeter)
-    if addon.UnitIsProbablyUnit(targeter.target, frameUnit) then
+    if addon.UnitIsUnitSecretValueSafe(targeter.target, frameUnit) then
         table.insert(classColors, targeter.color);
     end
 end

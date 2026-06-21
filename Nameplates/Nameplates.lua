@@ -286,8 +286,6 @@ function SweepyBoop:SetupNameplateModules()
 
                 addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
             end
-        elseif event == addon.PLAYER_ENTERING_WORLD or event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
-            addon.ResetArenaSlotPrintCache(); -- arena comp changed; drop cached slot fingerprints
         end
     end)
 

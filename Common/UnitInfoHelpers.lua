@@ -63,7 +63,11 @@ local function GetUnitArenaFingerprint(unit)
     return class, select(2, UnitRace(unit)), UnitSex(unit), UnitHonorLevel(unit); -- race file is locale-independent
 end
 
-addon.UnitIsProbablyUnit = function(unitA, unitB)
+addon.UnitIsUnitSecretValueSafe = function(unitA, unitB)
+    if ( not addon.PROJECT_MAINLINE ) then
+        return UnitIsUnit(unitA, unitB);
+    end
+
     local classA, raceA, sexA, honorA = GetUnitArenaFingerprint(unitA);
     if ( not classA ) then return false end
 
@@ -126,6 +130,13 @@ addon.GetArenaNumber = function(unit)
         end
     end
     return match;
+end
+
+if addon.PROJECT_MAINLINE then
+    local arenaSlotPrintCacheResetFrame = CreateFrame("Frame");
+    arenaSlotPrintCacheResetFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    arenaSlotPrintCacheResetFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    arenaSlotPrintCacheResetFrame:SetScript("OnEvent", addon.ResetArenaSlotPrintCache);
 end
 
 addon.IsShamanPrimaryPet = function (unitId)
