@@ -15,7 +15,8 @@ end
 addon.CreateOverlayGlow = function (button, size, color, skipBirth)
     local glowSize = size * 1.4;
     local glow = CreateFrame("Frame", nil, button, "ActionButtonSpellAlertTemplate");
-    glow.skipBirth = skipBirth;
+    -- TBC's Blizzard spell alert code has no skip-birth path; always play the start flipbook.
+    glow.skipBirth = skipBirth and ( not addon.PROJECT_TBC );
     glow:SetSize(glowSize, glowSize);
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
     TintOverlayGlowTexture(glow.ProcStartFlipbook, color);
