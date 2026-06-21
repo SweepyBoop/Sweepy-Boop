@@ -39,7 +39,11 @@ addon.ShowOverlayGlow = function (button)
 
     if not button.SpellActivationAlert:IsShown() then
         button.SpellActivationAlert:Show();
-        button.SpellActivationAlert.ProcLoop:Play();
+        if addon.PROJECT_TBC then
+            button.SpellActivationAlert.ProcStartAnim:Play();
+        else
+            button.SpellActivationAlert.ProcLoop:Play();
+        end
     end
 end
 
@@ -48,16 +52,14 @@ addon.HideOverlayGlow = function (button)
         return;
     end
 
-    if ( not addon.PROJECT_TBC ) or button:IsVisible() then
-        button.SpellActivationAlert:Hide();
-    end
-
     if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
         button.SpellActivationAlert.ProcStartAnim:Stop();
     end
     if button.SpellActivationAlert.ProcLoop:IsPlaying() then
         button.SpellActivationAlert.ProcLoop:Stop();
     end
+
+    button.SpellActivationAlert:Hide();
 end
 
 local function SetFixedPixelGlowDotPosition(dot, path, progress)
