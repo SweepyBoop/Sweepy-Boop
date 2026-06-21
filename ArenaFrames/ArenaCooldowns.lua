@@ -1209,6 +1209,10 @@ function SweepyBoop:SetupArenaCooldownTracker()
                 local unitToSetup = nil; -- nil means no setup, set to a unit for per-unit setup
 
                 if ( event == addon.ARENA_OPPONENT_UPDATE ) then
+                    if not IsActiveBattlefieldArena() then
+                        return;
+                    end
+
                     local unit, reason = ...;
                     if ( reason == "seen" ) and unit and (unit:sub(1, 5) == "arena") then
                         -- SetupIconGroup will check group.unitsSetup[unit] and skip if already setup
