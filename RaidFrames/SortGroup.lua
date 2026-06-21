@@ -48,7 +48,7 @@ local function InsertUnit(units, unit)
 end
 
 local function NormalizeFrameUnit(frame)
-    local unit = frame and ( frame.displayedUnit or frame.unit or frame:GetAttribute("unit") );
+    local unit = frame and ( frame.displayedUnit or frame.unit );
     if not unit then return nil end
 
     if unit == "player" then return "player" end
@@ -113,7 +113,10 @@ local function BuildSortedUnits()
 end
 
 local function ClearLoadedUnits()
-    if not manager then return end
+    if ( not manager ) or InCombatLockdown() then
+        sortPending = true;
+        return;
+    end
     for i = 1, MAX_PARTY_FRAMES do
         manager:SetAttribute("Unit" .. i, nil);
     end
@@ -122,6 +125,10 @@ end
 
 local function LoadUnitOrder()
     if not manager then return end
+    if InCombatLockdown() then
+        sortPending = true;
+        return;
+    end
 
     local sorted = IsSortEnabled() and BuildSortedUnits() or {};
     for i = 1, MAX_PARTY_FRAMES do
@@ -142,23 +149,37 @@ local function LoadFrameRefs()
         manager:SetFrameRef("Member" .. i, _G["CompactPartyFrameMember" .. i]);
     end
 
+    local memberHeight = 0;
+    for i = 1, MAX_PARTY_FRAMES do
+        local frame = _G["CompactPartyFrameMember" .. i];
+        if frame and frame.GetHeight then
+            memberHeight = frame:GetHeight() or 0;
+            if memberHeight > 0 then break end
+        end
+    end
+
     local titleHeight = 0;
     if CompactPartyFrameTitle and CompactPartyFrameTitle.GetHeight then
         titleHeight = CompactPartyFrameTitle:GetHeight() or 0;
     elseif CompactPartyFrame.title and CompactPartyFrame.title.GetHeight then
         titleHeight = CompactPartyFrame.title:GetHeight() or 0;
     end
+    manager:SetAttribute("MemberHeight", memberHeight);
     manager:SetAttribute("StartYOffset", -titleHeight);
 end
 
 local function RunSecureSort()
     if not manager then return end
+    if InCombatLockdown() then
+        sortPending = true;
+        return;
+    end
     manager:SetAttribute(SECURE_RUN_STATE, "manual" .. tostring(GetTime()));
 end
 
 local function DisableSecureSort()
     ClearLoadedUnits();
-    if manager then
+    if manager and ( not InCombatLockdown() ) then
         manager:SetAttribute("Enabled", false);
     end
 end
@@ -215,12 +236,13 @@ local secureSortSnippet = [=[
     end
 
     local y = self:GetAttribute("StartYOffset") or 0
+    local memberHeight = self:GetAttribute("MemberHeight") or 0
     for i = 1, #ordered do
         local frame = ordered[i]
-        if frame and frame.ClearAllPoints and frame.SetPoint and frame.GetHeight then
+        if frame and frame.ClearAllPoints and frame.SetPoint then
             frame:ClearAllPoints()
             frame:SetPoint("TOP", "$parent", "TOP", 0, y)
-            y = y - (frame:GetHeight() or 0)
+            y = y - memberHeight
         end
     end
 ]=];
@@ -285,11 +307,11 @@ eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
 eventFrame:SetScript("OnEvent", function (_, event)
     if event == "PLAYER_REGEN_DISABLED" then
         EnsureSecureSorter();
-        LoadUnitOrder();
         if not InCombatLockdown() then
+            LoadUnitOrder();
             LoadFrameRefs();
+            RunSecureSort();
         end
-        RunSecureSort();
     elseif event == "PLAYER_REGEN_ENABLED" then
         ApplySort();
     else
