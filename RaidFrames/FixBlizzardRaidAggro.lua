@@ -77,7 +77,7 @@ end
 local function ShowCustomAggroHighlight(frame, classColors)
     if not frame.customAggroHighlight then
         local customAggroHighlight = CreateFrame("Frame", nil, frame);
-        customAggroHighlight:SetPoint("TOP", frame, "TOP", 0, -1);
+        customAggroHighlight:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -1, -1);
         customAggroHighlight:SetSize(1, ICON_SIZE);
         customAggroHighlight:SetFrameLevel(frame:GetFrameLevel() + 10);
         customAggroHighlight.icons = {};
@@ -93,7 +93,7 @@ local function ShowCustomAggroHighlight(frame, classColors)
         local icon = EnsureTargetIcon(container, i);
         local color = classColors[i];
         icon:ClearAllPoints();
-        icon:SetPoint("LEFT", container, "LEFT", ( i - 1 ) * ( ICON_SIZE + ICON_SPACING ), 0);
+        icon:SetPoint("RIGHT", container, "RIGHT", -( i - 1 ) * ( ICON_SIZE + ICON_SPACING ), 0);
         icon:SetVertexColor(color.r, color.g, color.b, ICON_ALPHA);
         icon:Show();
     end
