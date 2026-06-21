@@ -388,11 +388,11 @@ end
 local function IsGroupUnit(unit)
     local first = string.byte(unit, 1);
     if ( first == 112 ) then -- p: player / pet / party / partypet
-        return string.match(unit, "^player")
-                or string.match(unit, "^pet")
-                or string.match(unit, "^party");
+        return ( string.sub(unit, 1, 6) == "player" )
+                or ( string.sub(unit, 1, 3) == "pet" )
+                or ( string.sub(unit, 1, 5) == "party" );
     elseif ( first == 114 ) then -- raid / raidpet
-        return string.match(unit, "^raid");
+        return ( string.sub(unit, 1, 4) == "raid" );
     end
 
     return false;
@@ -540,7 +540,7 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         end
 
         local name = frame:GetName();
-        if name and ( string.find(name, "^CompactPartyFrame") or string.find(name, "^CompactRaid") ) then
+        if name and ( ( string.sub(name, 1, 17) == "CompactPartyFrame" ) or ( string.sub(name, 1, 11) == "CompactRaid" ) ) then
             TrackFrame(frame);
         else
             UntrackFrame(frame);
