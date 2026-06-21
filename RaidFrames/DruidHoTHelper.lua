@@ -469,8 +469,13 @@ local function RefreshAllFrames()
     end
 end
 
+local function IsFrameVisible(frame)
+    local shown = frame:IsShown();
+    return ( not addon.IsSecretValue(shown) ) and shown;
+end
+
 local function UpdateVisibleFrame(frame)
-    if frame:IsShown() then
+    if IsFrameVisible(frame) then
         UpdateFrame(frame);
     end
 end
@@ -489,7 +494,7 @@ local function UpdateUnitFrames(unit)
     -- Compact frames can expose the same player through different group aliases (party/raid/displayedUnit).
     -- Fall back to UnitIsUnit so a UNIT_AURA alias mismatch does not leave one visible HoT icon stale.
     for frame in pairs(cufPool) do
-        if frame:IsShown() then
+        if IsFrameVisible(frame) then
             local frameUnit = frame.druidHoTUnit;
             if frameUnit and UnitIsUnit(unit, frameUnit) then
                 UpdateFrame(frame);
@@ -535,7 +540,7 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         end
 
         local name = frame:GetName();
-        if name and string.find(name, "^Compact") then -- CompactPartyFrameMemberN, CompactRaidFrameN, ...
+        if name and ( string.find(name, "^CompactPartyFrame") or string.find(name, "^CompactRaid") ) then
             TrackFrame(frame);
         else
             UntrackFrame(frame);
