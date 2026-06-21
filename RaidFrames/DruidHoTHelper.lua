@@ -274,7 +274,7 @@ local function ScanUnitHoTs(unit)
                 hasMarkOfTheWild = true;
             else
                 local sourceUnit = aura.sourceUnit;
-                if ( not addon.IsSecretValue(sourceUnit) ) and ( sourceUnit == "player" ) then
+                if ( not addon.IsSecretValue(sourceUnit) ) and sourceUnit and UnitIsUnit(sourceUnit, "player") then
                     if lifeblooms[spellId] then
                         lifebloomAura = aura;
                     elseif swiftmendHoTs[spellId] then
@@ -457,6 +457,49 @@ local function RefreshAllFrames()
     end
 end
 
+local byte = string.byte;
+local function IsGroupUnit(unit)
+    local first = byte(unit, 1);
+    if ( first == 112 ) then -- p: player / pet / party / partypet
+        return string.match(unit, "^player")
+                or string.match(unit, "^pet")
+                or string.match(unit, "^party");
+    elseif ( first == 114 ) then -- raid / raidpet
+        return string.match(unit, "^raid");
+    end
+
+    return false;
+end
+
+local function UpdateVisibleFrame(frame)
+    if frame:IsShown() then
+        UpdateFrame(frame);
+    end
+end
+
+local function UpdateUnitFrames(unit)
+    if not IsGroupUnit(unit) then return end
+
+    local frames = unitFrames[unit];
+    if frames then
+        for frame in pairs(frames) do
+            UpdateVisibleFrame(frame);
+        end
+        return;
+    end
+
+    -- Compact frames can expose the same player through different group aliases (party/raid/displayedUnit).
+    -- Fall back to UnitIsUnit so a UNIT_AURA alias mismatch does not leave one visible HoT icon stale.
+    for frame in pairs(cufPool) do
+        if frame:IsShown() then
+            local frameUnit = frame.druidHoTUnit;
+            if frameUnit and UnitIsUnit(unit, frameUnit) then
+                UpdateFrame(frame);
+            end
+        end
+    end
+end
+
 local eventFrame = CreateFrame("Frame");
 
 -- Hide Blizzard's own raid-frame buffs while the helper is enabled on a Resto druid, so our icons
@@ -507,11 +550,8 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:SetScript("OnEvent", function (_, event, unitTarget)
         if ( event == addon.UNIT_AURA ) then
-            local frames = unitFrames[unitTarget];
-            if frames then
-                for frame in pairs(frames) do
-                    UpdateFrame(frame);
-                end
+            if unitTarget then
+                UpdateUnitFrames(unitTarget);
             end
         elseif ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
             if ( unitTarget == "player" ) then
