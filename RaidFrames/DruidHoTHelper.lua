@@ -480,6 +480,12 @@ local function UpdateVisibleFrame(frame)
     end
 end
 
+local function ShouldTrackFrameName(name)
+    if ( string.byte(name, 1) ~= 67 ) then return false end -- C: CompactPartyFrame / CompactRaid
+    return ( string.sub(name, 1, 17) == "CompactPartyFrame" )
+            or ( string.sub(name, 1, 11) == "CompactRaid" );
+end
+
 local function UpdateUnitFrames(unit)
     if not IsGroupUnit(unit) then return end
 
@@ -540,7 +546,7 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         end
 
         local name = frame:GetName();
-        if name and ( ( string.sub(name, 1, 17) == "CompactPartyFrame" ) or ( string.sub(name, 1, 11) == "CompactRaid" ) ) then
+        if name and ShouldTrackFrameName(name) then
             TrackFrame(frame);
         else
             UntrackFrame(frame);
