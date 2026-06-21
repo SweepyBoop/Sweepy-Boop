@@ -6,7 +6,7 @@ local explicitFramePrefixes = {
 };
 
 local ICON_ATLAS = "groupfinder-icon-friend";
-local ICON_SIZE = 12;
+local ICON_SIZE = 16;
 local ICON_SPACING = 1;
 local ICON_ALPHA = 0.9;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
@@ -16,7 +16,7 @@ local targeters = {};
 local classColors = {};
 local wasActive = false;
 
-local function AddTargeter(unit)
+local function AddTargeter(unit, isEnemy)
     if ( not UnitExists(unit) ) then
         return;
     end
@@ -35,15 +35,16 @@ local function AddTargeter(unit)
         unit = unit,
         target = unit .. "target",
         color = classColor,
+        isEnemy = isEnemy,
     });
 end
 
 local function BuildTargeters()
     wipe(targeters);
-    AddTargeter("player");
+    AddTargeter("player", false);
     for i = 1, addon.MAX_ARENA_SIZE do
-        AddTargeter("arena" .. i);
-        AddTargeter("party" .. i);
+        AddTargeter("arena" .. i, true);
+        AddTargeter("party" .. i, false);
     end
 end
 
@@ -53,7 +54,21 @@ local function IsTrackedUnitTarget(unit)
     end
 
     for i = 1, addon.MAX_ARENA_SIZE do
-        if ( unit == "party" .. i ) or ( unit == "arena" .. i ) then
+        if ( unit == "arena" .. i ) or ( unit == "party" .. i ) then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function IsArenaUnit(unit)
+    if not unit then
+        return false;
+    end
+
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if ( unit == "arena" .. i ) or addon.UnitIsUnitSecretValueSafe(unit, "arena" .. i) then
             return true;
         end
     end
@@ -69,9 +84,13 @@ end
 
 local function GetTargetingClasses(frameUnit)
     wipe(classColors);
+    local showEnemyTargeters = not IsArenaUnit(frameUnit);
 
     for i = 1, #targeters do
-        AddTargetingClassForFrame(classColors, frameUnit, targeters[i]);
+        local targeter = targeters[i];
+        if targeter.isEnemy == showEnemyTargeters then
+            AddTargetingClassForFrame(classColors, frameUnit, targeter);
+        end
     end
 
     return classColors;
