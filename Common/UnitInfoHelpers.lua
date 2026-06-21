@@ -63,15 +63,58 @@ local function GetUnitArenaFingerprint(unit)
     return class, select(2, UnitRace(unit)), UnitSex(unit), UnitHonorLevel(unit); -- race file is locale-independent
 end
 
+local partySlotPrintCache = {};
+
+local function IsPartySlotUnit(unit)
+    if unit == "player" then
+        return true;
+    end
+
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if unit == "party" .. i then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function GetCachedPartySlotPrint(unit)
+    if not IsPartySlotUnit(unit) then
+        return nil;
+    end
+
+    local cached = partySlotPrintCache[unit];
+    if cached then return cached end
+
+    local class, race, sex, honor = GetUnitArenaFingerprint(unit);
+    if ( not class ) then return nil end
+
+    local fp = { class = class, race = race, sex = sex, honor = honor };
+    if race and sex and honor then
+        partySlotPrintCache[unit] = fp;
+    end
+    return fp;
+end
+
+local function GetUnitArenaFingerprintCached(unit)
+    local cached = GetCachedPartySlotPrint(unit);
+    if cached then
+        return cached.class, cached.race, cached.sex, cached.honor;
+    end
+
+    return GetUnitArenaFingerprint(unit);
+end
+
 addon.UnitIsUnitSecretValueSafe = function(unitA, unitB)
     if ( not addon.PROJECT_MAINLINE ) then
         return UnitIsUnit(unitA, unitB);
     end
 
-    local classA, raceA, sexA, honorA = GetUnitArenaFingerprint(unitA);
+    local classA, raceA, sexA, honorA = GetUnitArenaFingerprintCached(unitA);
     if ( not classA ) then return false end
 
-    local classB, raceB, sexB, honorB = GetUnitArenaFingerprint(unitB);
+    local classB, raceB, sexB, honorB = GetUnitArenaFingerprintCached(unitB);
     if ( not classB ) then return false end
 
     return classA == classB
@@ -84,9 +127,12 @@ end
 -- round, so complete slot fingerprints can be cached until the comp changes.
 local arenaSlotPrintCache = {};
 
-addon.ResetArenaSlotPrintCache = function()
+addon.ResetUnitIdentityPrintCaches = function()
     wipe(arenaSlotPrintCache);
+    wipe(partySlotPrintCache);
 end
+
+addon.ResetArenaSlotPrintCache = addon.ResetUnitIdentityPrintCaches;
 
 local function GetArenaSlotPrint(i)
     local cached = arenaSlotPrintCache[i];
@@ -133,10 +179,11 @@ addon.GetArenaNumber = function(unit)
 end
 
 if addon.PROJECT_MAINLINE then
-    local arenaSlotPrintCacheResetFrame = CreateFrame("Frame");
-    arenaSlotPrintCacheResetFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    arenaSlotPrintCacheResetFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    arenaSlotPrintCacheResetFrame:SetScript("OnEvent", addon.ResetArenaSlotPrintCache);
+    local unitIdentityPrintCacheResetFrame = CreateFrame("Frame");
+    unitIdentityPrintCacheResetFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    unitIdentityPrintCacheResetFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+    unitIdentityPrintCacheResetFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    unitIdentityPrintCacheResetFrame:SetScript("OnEvent", addon.ResetUnitIdentityPrintCaches);
 end
 
 addon.IsShamanPrimaryPet = function (unitId)
