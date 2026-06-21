@@ -6,18 +6,23 @@ local function TintOverlayGlowTexture(texture, color)
     end
 end
 
-addon.CreateOverlayGlow = function (button, size, color)
+local function StopOverlayGlow(glow)
+    if glow.ProcLoop:IsPlaying() then
+        glow.ProcLoop:Stop();
+    end
+end
+
+addon.CreateOverlayGlow = function (button, size, color, skipBirth)
     local glowSize = size * 1.4;
     local glow = CreateFrame("Frame", nil, button, "ActionButtonSpellAlertTemplate");
+    -- TBC's Blizzard spell alert code has no skip-birth path; always play the start flipbook.
+    glow.skipBirth = skipBirth and ( not addon.PROJECT_TBC );
     glow:SetSize(glowSize, glowSize);
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
-    if glow.ProcStartFlipbook then
-        -- Blizzard's skipBirth path plays ProcLoop directly; hide the birth flipbook to avoid its size flash.
-        glow.ProcStartFlipbook:Hide();
-    end
     TintOverlayGlowTexture(glow.ProcStartFlipbook, color);
     TintOverlayGlowTexture(glow.ProcLoopFlipbook, color);
     TintOverlayGlowTexture(glow.ProcAltGlow, color);
+    glow:SetScript("OnHide", StopOverlayGlow);
     glow:Hide();
     return glow;
 end
@@ -29,7 +34,7 @@ local function SetupOverlayGlow(button)
 
     -- Make the height/width available before the next frame.
     local frameWidth = button:GetSize();
-    button.SpellActivationAlert = addon.CreateOverlayGlow(button, frameWidth);
+    button.SpellActivationAlert = addon.CreateOverlayGlow(button, frameWidth, nil, not addon.PROJECT_TBC);
 end
 
 addon.ShowOverlayGlow = function (button)
@@ -37,7 +42,11 @@ addon.ShowOverlayGlow = function (button)
 
     if not button.SpellActivationAlert:IsShown() then
         button.SpellActivationAlert:Show();
-        button.SpellActivationAlert.ProcLoop:Play(); -- matches Blizzard's skipBirth path
+        if button.SpellActivationAlert.skipBirth then
+            button.SpellActivationAlert.ProcLoop:Play();
+        else
+            button.SpellActivationAlert.ProcStartAnim:Play();
+        end
     end
 end
 
@@ -47,13 +56,7 @@ addon.HideOverlayGlow = function (button)
     end
 
     button.SpellActivationAlert:Hide();
-
-    if button.SpellActivationAlert.ProcStartAnim:IsPlaying() then
-        button.SpellActivationAlert.ProcStartAnim:Stop();
-    end
-    if button.SpellActivationAlert.ProcLoop:IsPlaying() then
-        button.SpellActivationAlert.ProcLoop:Stop();
-    end
+    button.SpellActivationAlert.ProcStartAnim:Stop();
 end
 
 local function SetFixedPixelGlowDotPosition(dot, path, progress)
