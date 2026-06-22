@@ -35,56 +35,95 @@ addon.GetRaidFrameOptions = function(order)
             header2 = {
                 order = 6,
                 type = "header",
-                name = "Druid HoT Helper",
+                name = "Healer Buff Helper",
             },
 
-            druidHoTHelper = {
+            healerBuffHelperScale = {
                 order = 7,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Enabled",
-                desc = function ()
-                    return table.concat({
-                        "For Restoration Druids \226\128\148 replace Blizzard's raid-frame buffs with your own HoTs:",
-                        "",
-                        "\226\128\162 " .. SpellIcon(1126) .. " Mark of the Wild: red-glowing warning shown left of Lifebloom when missing.",
-                        "\226\128\162 Scale: adjust all helper icons together from 50% to 250%.",
-                        "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom: its own row; glows during the refresh (pandemic) window.",
-                        "\226\128\162 Second row, packed left-to-right in " .. SpellIcon(18562) .. " Swiftmend-consume order (left = consumed first): " .. SpellIcon(8936) .. " Regrowth, " .. SpellIcon(48438) .. " Wild Growth, " .. SpellIcon(774) .. " Rejuvenation, " .. SpellIcon(155777) .. " Germination.",
-                        "\226\128\162 Hides ALL raid-frame buffs while active on Resto; debuffs and dispellable debuffs are unaffected.",
-                    }, "\n");
-                end,
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshDruidHoTHelper(); -- re-apply the buff-hiding CVar + repaint frames
-                end,
-            },
-
-            druidHoTHelperScale = {
-                order = 8,
+                width = "normal",
                 type = "range",
                 isPercent = true,
                 min = 0.5,
                 max = 2.5,
                 step = 0.05,
                 name = "Icon Scale",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.druidHoTHelper; end,
+                desc = "Adjust all helper icons together from 50% to 250%.",
+                disabled = function ()
+                    local raidFrames = SweepyBoop.db.profile.raidFrames;
+                    return ( not raidFrames.druidBuffHelper ) and ( not raidFrames.evokerBuffHelper );
+                end,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshDruidHoTHelper(); -- repaint frames so the new scale applies immediately
+                    SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the new scale applies immediately
                 end,
             },
 
-            druidHoTHelperWarning = {
-                order = 9,
+            healerBuffHelperScaleBreak = {
+                order = 7.5,
+                type = "description",
+                name = "",
                 width = "full",
+            },
+
+            druidBuffHelper = {
+                order = 8,
+                width = "normal",
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Show missing-HoT warning",
-                desc = "Show the warning icon when none of the Swiftmend-consumable HoTs are active.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.druidHoTHelper; end,
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Resto Druid",
+                desc = function ()
+                    return table.concat({
+                        "Enable the helper while playing Restoration Druid.",
+                        "",
+                        "\226\128\162 " .. SpellIcon(1126) .. " Mark of the Wild warning.",
+                        "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom with refresh-window glow.",
+                        "\226\128\162 Row 2: " .. SpellIcon(8936) .. " Regrowth, " .. SpellIcon(48438) .. " Wild Growth, " .. SpellIcon(774) .. " Rejuvenation, " .. SpellIcon(155777) .. " Germination.",
+                        "\226\128\162 Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected.",
+                    }, "\n");
+                end,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshDruidHoTHelper(); -- repaint frames so the warning icon appears/disappears immediately
+                    SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
+                end,
+            },
+
+            druidBuffHelperWarning = {
+                order = 9,
+                width = 1.4,
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Missing-buff warning",
+                desc = "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.druidBuffHelper; end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the warning icon appears/disappears immediately
+                end,
+            },
+
+            druidBuffHelperBreak = {
+                order = 9.5,
+                type = "description",
+                name = "",
+                width = "full",
+            },
+
+            evokerBuffHelper = {
+                order = 10,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. "Preservation Evoker",
+                desc = function ()
+                    return table.concat({
+                        "Enable the helper while playing Preservation Evoker.",
+                        "",
+                        "\226\128\162 " .. SpellIcon(381748) .. " Blessing of the Bronze warning.",
+                        "\226\128\162 " .. SpellIcon(364343) .. " Echo without a refresh-window glow.",
+                        "\226\128\162 Row 2, least-to-most important: " .. SpellIcon(366155) .. " Reversion, " .. SpellIcon(355941) .. " Dream Breath, " .. SpellIcon(373267) .. " Lifebind, " .. SpellIcon(357170) .. " Time Dilation.",
+                        "\226\128\162 Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected.",
+                    }, "\n");
+                end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
                 end,
             },
         },

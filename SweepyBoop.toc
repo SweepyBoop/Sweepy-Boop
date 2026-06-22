@@ -62,7 +62,7 @@ ArenaFrames\HealerIndicator.lua
 ArenaFrames\RangeIndicators.lua
 ArenaFrames\Options.lua
 
-RaidFrames\DruidHoTHelper.lua
+RaidFrames\BuffHelper.lua
 RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\Options.lua
 
