@@ -236,7 +236,7 @@ local function EnsureContainer(frame)
     container.classBuffWarningIcon = CreateBuffIcon(container.frame, ROW2_BUFF_SIZE, frameLevel);
     container.classBuffWarningIcon.texture:SetDesaturated(true);
     container.classBuffWarningIcon.cooldown:Hide();
-    container.classBuffWarningIcon.fixedPixelGlow = addon.CreateFixedPixelGlow(container.classBuffWarningIcon, ROW2_BUFF_SIZE, ROW2_BUFF_SIZE, missingClassBuffGlowColor, 10);
+    container.classBuffWarningIcon.fixedPixelGlow = addon.CreateFixedPixelGlow(container.classBuffWarningIcon, ROW2_BUFF_SIZE, ROW2_BUFF_SIZE, missingClassBuffGlowColor, 10, nil, nil, 0);
     container.classBuffWarningIcon:SetPoint("RIGHT", container.primaryBuffIcon, "LEFT", -ROW2_BUFF_SPACING, 0);
 
     -- Row 2: up to four configured buffs, anchored dynamically in UpdateRow2 (packed, no gaps).
