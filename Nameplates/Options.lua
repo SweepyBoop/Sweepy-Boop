@@ -1,5 +1,30 @@
 local _, addon = ...;
 
+local sTierHealerClasses = { addon.EVOKER, addon.DRUID };
+
+local function FormatTintedAtlas(atlas, color, size)
+    return format(
+        "|A:%s:%d:%d:0:0:%d:%d:%d|a",
+        atlas,
+        size,
+        size,
+        color.r * 255,
+        color.g * 255,
+        color.b * 255
+    );
+end
+
+local function FormatClassColoredBorderRings(classes)
+    local rings = "";
+    for _, class in ipairs(classes) do
+        local color = RAID_CLASS_COLORS[class];
+        if color then
+            rings = rings .. FormatTintedAtlas("charactercreate-ring-select", color, 20);
+        end
+    end
+    return rings;
+end
+
 addon.GetFriendlyNameplateOptions = function(order)
     local optionGroup = {
         order = order,
@@ -196,11 +221,12 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.targetHighlight );
                 end
             },
+            -- Keep this representative of the current S-tier healer colors over time.
             classColorTargetHighlight = {
                 order = 19,
                 type = "toggle",
                 width = 1.75,
-                name = addon.FORMAT_TEXTURE(addon.ICON_ID_CLASSES) .. " Class-colored highlight",
+                name = FormatClassColoredBorderRings(sTierHealerClasses) .. " Class-colored highlight",
                 desc = "Use class color for the animated target highlight instead of yellow",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
