@@ -151,9 +151,10 @@ local defaults = {
             raidFrameAggroHighlightThickness = 2,
             raidFrameAggroHighlightAlpha = 0.5,
             raidFrameAggroHighlightAnimationSpeed = 0,
-            druidHoTHelper = true,
-            druidHoTHelperScale = 1,
-            druidHoTHelperWarning = false,
+            druidBuffHelper = true,
+            healerBuffHelperScale = 1,
+            druidBuffHelperWarning = false,
+            evokerBuffHelper = true,
         },
         misc = {
             healerInCrowdControl = false,
@@ -401,7 +402,7 @@ function SweepyBoop:RefreshConfig()
         self:SetupCombatIndicator();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
-        self:RefreshDruidHoTHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
+        self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
     end
 
     local currentTime = GetTime();
