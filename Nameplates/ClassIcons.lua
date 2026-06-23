@@ -284,7 +284,7 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local featureEnabled = config.targetHighlight and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
-            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassIcon, isTarget and featureEnabled, config.animatedTargetHighlight);
+            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassIcon, isTarget and featureEnabled and nameplate.classIconContainer.hasClassIcon, config.animatedTargetHighlight);
         end
         if nameplate.classIconContainer.FriendlyClassArrow then
             SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassArrow, isTarget and featureEnabled and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ), config.animatedTargetHighlight);
@@ -417,6 +417,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
 
+        classIconContainer.hasClassIcon = ( iconID ~= nil ) and ( iconCoords ~= nil );
+
         if ( not iconID ) or ( not iconCoords ) then -- nil icon ID due to "Show Healer Only" option, or classFileName is not valid
             iconFrame.icon:SetAlpha(0);
             iconFrame.border:SetAlpha(0);
@@ -467,6 +469,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
             else
                 arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
             end
+        end
+
+        if not classIconContainer.hasClassIcon then
+            SetTargetHighlightShown(iconFrame, false, config.animatedTargetHighlight);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
