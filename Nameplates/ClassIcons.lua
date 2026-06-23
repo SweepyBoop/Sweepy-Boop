@@ -436,13 +436,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
             else
                 iconFrame.mask:SetSize(40, 40);
             end
-            if config.classColorBorder then
-                iconFrame.border:SetDesaturated(true);
-                iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            else
-                iconFrame.border:SetDesaturated(false);
-                iconFrame.border:SetVertexColor(1, 1, 1);
-            end
+            iconFrame.border:SetDesaturated(true);
+            iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
 
             local showPlayerName = config.showPlayerName and ( not config.keepHealthBar );
             local offset = config.classIconOffset;

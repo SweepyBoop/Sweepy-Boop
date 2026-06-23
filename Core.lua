@@ -83,7 +83,6 @@ local defaults = {
             targetHighlight = true,
             animatedTargetHighlight = false,
             classColorTargetHighlight = false,
-            classColorBorder = true,
             showPlayerName = false,
         },
         nameplatesEnemy = {

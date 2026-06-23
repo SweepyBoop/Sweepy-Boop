@@ -304,16 +304,6 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
 
-            classColorBorder = {
-                order = 27,
-                type = "toggle",
-                width = 1.25,
-                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-
             showPlayerName = {
                 order = 28,
                 type = "toggle",
