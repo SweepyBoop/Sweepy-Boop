@@ -358,7 +358,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 30,
                 type = "toggle",
                 width = 1.25,
-                name = addon.FORMAT_ATLAS("MainPet-HealthBarFill") .. " Keep Blizzard health bar",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Keep Blizzard health bar",
                 desc = "Keep Blizzard health bars while showing class icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
