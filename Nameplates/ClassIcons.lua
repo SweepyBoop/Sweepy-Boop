@@ -284,7 +284,8 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local featureEnabled = config.targetHighlight and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
-            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassIcon, isTarget and featureEnabled, config.animatedTargetHighlight);
+            local iconFrame = nameplate.classIconContainer.FriendlyClassIcon;
+            SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and ( iconFrame.icon:GetAlpha() > 0 ), config.animatedTargetHighlight);
         end
         if nameplate.classIconContainer.FriendlyClassArrow then
             SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassArrow, isTarget and featureEnabled and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ), config.animatedTargetHighlight);
@@ -467,6 +468,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
             else
                 arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
             end
+        end
+
+        if iconFrame.icon:GetAlpha() == 0 then
+            SetTargetHighlightShown(iconFrame, false, config.animatedTargetHighlight);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
