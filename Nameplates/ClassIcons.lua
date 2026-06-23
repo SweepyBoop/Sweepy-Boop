@@ -45,11 +45,16 @@ local function EnsureTargetHighlightPixelGlow(frame)
         if not dot then
             dot = frame:CreateTexture(nil, "OVERLAY");
             dot:SetDrawLayer("OVERLAY", 2);
+            dot.mask = frame:CreateMaskTexture();
+            dot.mask:SetTexture("Interface/Masks/CircleMaskScalable");
+            dot:AddMaskTexture(dot.mask);
             dot:Hide();
             frame.targetHighlightPixelGlowDots[i] = dot;
         end
         dot:SetColorTexture(unpack(targetHighlightPixelGlowColor));
         dot:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
+        dot.mask:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
+        dot.mask:SetAllPoints(dot);
         dot.offset = ( i - 1 ) / targetHighlightPixelGlowDotCount;
     end
 
@@ -96,7 +101,7 @@ local function ShowTargetHighlight(frame)
     frame.targetHighlightPixelGlowShown = true;
     frame.targetHighlightPixelGlowElapsed = 0;
     frame.targetHighlightPixelGlowProgress = 0;
-    frame.targetHighlightPixelGlowRadius = ( math.min(frame:GetSize()) / 2 ) - targetHighlightPixelGlowDotSize;
+    frame.targetHighlightPixelGlowRadius = ( math.min(frame:GetSize()) / 2 ) - targetHighlightPixelGlowDotSize + 1;
     highlight:Hide();
 
     for i = 1, targetHighlightPixelGlowDotCount do
