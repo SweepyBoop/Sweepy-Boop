@@ -81,6 +81,7 @@ local defaults = {
             showHealerOnly = false,
             useFlagCarrierIcon = true,
             targetHighlight = true,
+            animatedTargetHighlight = false,
             classColorBorder = true,
             showPlayerName = false,
         },

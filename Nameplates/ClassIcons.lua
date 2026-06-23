@@ -83,7 +83,9 @@ local function TargetHighlight_OnUpdate(self, elapsed)
     end
 end
 
-local function ShowTargetHighlight(frame)
+local HideTargetHighlight;
+
+local function ShowAnimatedTargetHighlight(frame)
     if ( not frame ) or ( not frame.targetHighlight ) then
         return;
     end
@@ -113,7 +115,16 @@ local function ShowTargetHighlight(frame)
     frame:SetScript("OnUpdate", TargetHighlight_OnUpdate);
 end
 
-local function HideTargetHighlight(frame)
+local function ShowStaticTargetHighlight(frame)
+    if ( not frame ) or ( not frame.targetHighlight ) then
+        return;
+    end
+
+    HideTargetHighlight(frame);
+    frame.targetHighlight:Show();
+end
+
+HideTargetHighlight = function(frame)
     if ( not frame ) or ( not frame.targetHighlight ) then
         return;
     end
@@ -134,11 +145,13 @@ local function HideTargetHighlight(frame)
     end
 end
 
-local function SetTargetHighlightShown(frame, shouldShow)
-    if shouldShow then
-        ShowTargetHighlight(frame);
-    else
+local function SetTargetHighlightShown(frame, shouldShow, shouldAnimate)
+    if not shouldShow then
         HideTargetHighlight(frame);
+    elseif shouldAnimate then
+        ShowAnimatedTargetHighlight(frame);
+    else
+        ShowStaticTargetHighlight(frame);
     end
 end
 
@@ -231,10 +244,10 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local featureEnabled = config.targetHighlight and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
-            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassIcon, isTarget and featureEnabled);
+            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassIcon, isTarget and featureEnabled, config.animatedTargetHighlight);
         end
         if nameplate.classIconContainer.FriendlyClassArrow then
-            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassArrow, isTarget and featureEnabled and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) );
+            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassArrow, isTarget and featureEnabled and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ), config.animatedTargetHighlight);
         end
     end
 end
