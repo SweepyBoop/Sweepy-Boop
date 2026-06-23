@@ -101,7 +101,7 @@ local function ShowTargetHighlight(frame)
     frame.targetHighlightPixelGlowShown = true;
     frame.targetHighlightPixelGlowElapsed = 0;
     frame.targetHighlightPixelGlowProgress = 0;
-    frame.targetHighlightPixelGlowRadius = ( math.min(frame:GetSize()) / 2 ) - targetHighlightPixelGlowDotSize + 2;
+    frame.targetHighlightPixelGlowRadius = ( math.min(frame:GetSize()) / 2 ) - targetHighlightPixelGlowDotSize + 2.5;
     highlight:Hide();
 
     for i = 1, targetHighlightPixelGlowDotCount do
