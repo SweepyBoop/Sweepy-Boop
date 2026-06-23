@@ -504,6 +504,7 @@ addon.ShowClassIcon = function (nameplate, frame)
             shouldShow = ( not classIconContainer.isSpecialIcon );
         elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW then
             shouldShow = ( UnitInBattleground("player") ~= nil );
+            --shouldShow = true; -- For local testing, comment out before landing in production!
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
