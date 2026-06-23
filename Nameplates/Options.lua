@@ -187,8 +187,8 @@ addon.GetFriendlyNameplateOptions = function(order)
             animatedTargetHighlight = {
                 order = 18,
                 type = "toggle",
-                width = "full",
-                name = "Animated target highlight",
+                width = 1.25,
+                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Animated highlight",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end,
@@ -199,8 +199,8 @@ addon.GetFriendlyNameplateOptions = function(order)
             classColorTargetHighlight = {
                 order = 19,
                 type = "toggle",
-                width = "full",
-                name = "Class color target highlight",
+                width = 1.75,
+                name = addon.FORMAT_TEXTURE(addon.ICON_ID_CLASSES) .. " Class-colored highlight",
                 desc = "Use class color for the animated target highlight instead of yellow",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -210,8 +210,17 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not config.targetHighlight ) or ( not config.animatedTargetHighlight );
                 end
             },
-            classIconOffset = {
+            targetHighlightLineBreak = {
                 order = 20,
+                type = "description",
+                name = "",
+                width = "full",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            classIconOffset = {
+                order = 21,
                 type = "range",
                 min = -50,
                 max = 150,
@@ -224,7 +233,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             header1 = {
-                order = 20,
+                order = 22,
                 type = "header",
                 name = "Icon size",
                 hidden = function()
@@ -232,7 +241,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             classIconSize = {
-                order = 21,
+                order = 23,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -245,7 +254,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             healerIconSize = {
-                order = 22,
+                order = 24,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -259,7 +268,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             flagCarrierIconSize = {
-                order = 22,
+                order = 24,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -273,7 +282,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             petIconSize = {
-                order = 23,
+                order = 25,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -287,7 +296,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             breaker2 = {
-                order = 24,
+                order = 26,
                 type = "header",
                 name = "",
                 hidden = function()
@@ -296,7 +305,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             classColorBorder = {
-                order = 25,
+                order = 27,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
@@ -306,7 +315,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             showPlayerName = {
-                order = 26,
+                order = 28,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Class-colored names",
@@ -318,7 +327,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             showCrowdControl = {
-                order = 27,
+                order = 29,
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",
@@ -332,7 +341,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             keepHealthBar = {
-                order = 28,
+                order = 30,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("MainPet-HealthBarFill") .. " Keep Blizzard health bar",
