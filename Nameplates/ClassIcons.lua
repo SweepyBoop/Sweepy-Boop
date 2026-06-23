@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
 local targetHighlightPixelGlowDotCount = 24;
-local targetHighlightPixelGlowDotSize = 3;
+local targetHighlightPixelGlowDotSize = 4;
 local targetHighlightPixelGlowFrequency = 0.15;
 local targetHighlightPixelGlowThrottle = 0.02;
 local targetHighlightPixelGlowColor = { 1, 0.78, 0, 1 };
@@ -101,7 +101,7 @@ local function ShowTargetHighlight(frame)
     frame.targetHighlightPixelGlowShown = true;
     frame.targetHighlightPixelGlowElapsed = 0;
     frame.targetHighlightPixelGlowProgress = 0;
-    frame.targetHighlightPixelGlowRadius = ( math.min(frame:GetSize()) / 2 ) - targetHighlightPixelGlowDotSize + 1;
+    frame.targetHighlightPixelGlowRadius = ( math.min(frame:GetSize()) / 2 ) - targetHighlightPixelGlowDotSize + 2;
     highlight:Hide();
 
     for i = 1, targetHighlightPixelGlowDotCount do
