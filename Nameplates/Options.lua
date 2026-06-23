@@ -196,8 +196,22 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.targetHighlight );
                 end
             },
-            classIconOffset = {
+            classColorTargetHighlight = {
                 order = 19,
+                type = "toggle",
+                width = "full",
+                name = "Class color target highlight",
+                desc = "Use class color for the animated target highlight instead of yellow",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end,
+                disabled = function()
+                    local config = SweepyBoop.db.profile.nameplatesFriendly;
+                    return ( not config.targetHighlight ) or ( not config.animatedTargetHighlight );
+                end
+            },
+            classIconOffset = {
+                order = 20,
                 type = "range",
                 min = -50,
                 max = 150,

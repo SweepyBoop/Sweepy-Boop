@@ -38,7 +38,28 @@ local function SetTargetHighlightPixelGlowDotPosition(dot, radius, progress)
     dot:SetPoint("CENTER", dot:GetParent(), "CENTER", math.cos(angle) * radius, math.sin(angle) * radius);
 end
 
-local function EnsureTargetHighlightPixelGlow(frame)
+local function GetTargetHighlightPixelGlowColor(frame)
+    local config = SweepyBoop.db.profile.nameplatesFriendly;
+    if config.classColorTargetHighlight and frame.classColor then
+        return frame.classColor;
+    end
+    return targetHighlightPixelGlowColor;
+end
+
+local function IsTargetHighlightPixelGlowColorApplied(frame, color)
+    local appliedColor = frame.targetHighlightPixelGlowColor;
+    return appliedColor
+        and appliedColor[1] == color[1]
+        and appliedColor[2] == color[2]
+        and appliedColor[3] == color[3]
+        and appliedColor[4] == color[4];
+end
+
+local function EnsureTargetHighlightPixelGlow(frame, color)
+    if frame.targetHighlightPixelGlowDots and IsTargetHighlightPixelGlowColorApplied(frame, color) then
+        return;
+    end
+
     frame.targetHighlightPixelGlowDots = frame.targetHighlightPixelGlowDots or {};
     for i = 1, targetHighlightPixelGlowDotCount do
         local dot = frame.targetHighlightPixelGlowDots[i];
@@ -51,7 +72,7 @@ local function EnsureTargetHighlightPixelGlow(frame)
             dot:Hide();
             frame.targetHighlightPixelGlowDots[i] = dot;
         end
-        dot:SetColorTexture(unpack(targetHighlightPixelGlowColor));
+        dot:SetColorTexture(unpack(color));
         dot:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
         dot.mask:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
         dot.mask:SetAllPoints(dot);
@@ -61,6 +82,8 @@ local function EnsureTargetHighlightPixelGlow(frame)
     for i = targetHighlightPixelGlowDotCount + 1, #frame.targetHighlightPixelGlowDots do
         frame.targetHighlightPixelGlowDots[i]:Hide();
     end
+
+    frame.targetHighlightPixelGlowColor = { color[1], color[2], color[3], color[4] };
 end
 
 local function TargetHighlight_OnUpdate(self, elapsed)
@@ -85,13 +108,25 @@ end
 
 local HideTargetHighlight;
 
+local function IsTargetHighlightVisible(frame)
+    return frame.targetHighlightPixelGlowShown or ( frame.targetHighlight and frame.targetHighlight:IsShown() );
+end
+
+local function UpdateClassIconBorderShown(frame)
+    if frame and frame.border then
+        frame.border:SetShown(not IsTargetHighlightVisible(frame));
+    end
+end
+
 local function ShowAnimatedTargetHighlight(frame)
     if ( not frame ) or ( not frame.targetHighlight ) then
         return;
     end
 
     local highlight = frame.targetHighlight;
+    local color = GetTargetHighlightPixelGlowColor(frame);
     if frame.targetHighlightPixelGlowShown then
+        EnsureTargetHighlightPixelGlow(frame, color);
         return;
     end
 
@@ -99,16 +134,14 @@ local function ShowAnimatedTargetHighlight(frame)
         highlight.baseWidth, highlight.baseHeight = highlight:GetSize();
     end
 
-    EnsureTargetHighlightPixelGlow(frame);
+    EnsureTargetHighlightPixelGlow(frame, color);
     frame.targetHighlightPixelGlowShown = true;
     frame.targetHighlightPixelGlowElapsed = 0;
     frame.targetHighlightPixelGlowProgress = 0;
     local borderWidth = frame.border and frame.border:GetWidth() or 48;
     local maskWidth = frame.mask and frame.mask:GetWidth() or 40;
     frame.targetHighlightPixelGlowRadius = ( borderWidth + maskWidth ) / 4 - 2;
-    if frame.border then
-        frame.border:Hide();
-    end
+    UpdateClassIconBorderShown(frame);
     highlight:Hide();
 
     for i = 1, targetHighlightPixelGlowDotCount do
@@ -126,10 +159,8 @@ local function ShowStaticTargetHighlight(frame)
     end
 
     HideTargetHighlight(frame);
-    if frame.border then
-        frame.border:Hide();
-    end
     frame.targetHighlight:Show();
+    UpdateClassIconBorderShown(frame);
 end
 
 HideTargetHighlight = function(frame)
@@ -145,9 +176,7 @@ HideTargetHighlight = function(frame)
     end
     highlight:SetAlpha(1);
     highlight:Hide();
-    if frame.border then
-        frame.border:Show();
-    end
+    UpdateClassIconBorderShown(frame);
 
     if frame.targetHighlightPixelGlowDots then
         for i = 1, #frame.targetHighlightPixelGlowDots do
@@ -400,7 +429,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.targetHighlight:SetAlpha(1);
 
             local classColor = RAID_CLASS_COLORS[class];
-            iconFrame.border:Show();
+            iconFrame.classColor = classColor and { classColor.r, classColor.g, classColor.b, 1 } or nil;
+            UpdateClassIconBorderShown(iconFrame);
             if isSpecialIcon then
                 iconFrame.mask:SetSize(36, 36);
             else
