@@ -395,8 +395,10 @@ function SweepyBoop:OnInitialize()
 end
 
 function SweepyBoop:RefreshConfig()
-    self:HideTestArenaCooldownTracker();
-    self:HideTestArenaStandaloneBars();
+    if ( not addon.PROJECT_MAINLINE ) then
+        self:HideTestArenaCooldownTracker();
+        self:HideTestArenaStandaloneBars();
+    end
 
     if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
