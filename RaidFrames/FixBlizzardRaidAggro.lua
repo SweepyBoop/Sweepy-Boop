@@ -43,7 +43,6 @@ end
 
 local function BuildTargeters()
     wipe(targeters);
-    AddTargeter("player", false);
     for i = 1, addon.MAX_ARENA_SIZE do
         AddTargeter("arena" .. i, true);
         AddTargeter("party" .. i, false);
@@ -51,10 +50,6 @@ local function BuildTargeters()
 end
 
 local function IsTrackedUnitTarget(unit)
-    if unit == "player" then
-        return true;
-    end
-
     for i = 1, addon.MAX_ARENA_SIZE do
         if ( unit == "arena" .. i ) or ( unit == "party" .. i ) then
             return true;
