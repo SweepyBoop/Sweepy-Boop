@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local sTierHealerClasses = { addon.EVOKER, addon.DRUID };
+local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
 
 local function FormatTintedAtlas(atlas, color, size)
     return format(
@@ -40,7 +41,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             classIconsEnabled = {
                 order = 1,
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " Enabled",
+                name = addon.FORMAT_ATLAS(wowLogoAtlas, 40) .. " Enabled",
                 desc = "Show class/pet icons on friendly players/pets",
                 set = function(info, val)
                     SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled = val;
@@ -96,16 +97,13 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "select",
                 width = 1.25,
                 values = {
-                    [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
-                    [addon.CLASS_ICON_STYLE.ARROW] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow") .. " Class color arrows",
-                    [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] =
-                        addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassArrow")
-                        .. addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid")
-                        .. " Icon + party arrow",
+                    [addon.CLASS_ICON_STYLE.ICON] = "WoW class icons",
+                    [addon.CLASS_ICON_STYLE.ARROW] = "Class color arrows",
+                    [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] = "Icon + party arrow",
                 },
                 name = "Icon style",
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
             partyArrowDesc = {
@@ -360,7 +358,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 30,
                 type = "toggle",
                 width = 1.25,
-                name = addon.FORMAT_ATLAS("MainPet-HealthBarFill") .. " Keep Blizzard health bar",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Keep Blizzard health bar",
                 desc = "Keep Blizzard health bars while showing class icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );

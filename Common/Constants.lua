@@ -326,11 +326,11 @@ addon.RAID_FRAME_SORT_ORDER = {
 
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
-addon.FLAG_CARRIER_HORDE_LOGO = addon.INTERFACE_SWEEPY .. "art/FlagCarrierHorde";
-addon.FLAG_CARRIER_ALLIANCE_LOGO = addon.INTERFACE_SWEEPY .. "art/FlagCarrierAlliance";
+addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";
+addon.FLAG_CARRIER_ALLIANCE_LOGO = "interface/icons/inv_bannerpvp_02";
 
-addon.SPEC_ICON_HEALER_LOGO = addon.INTERFACE_SWEEPY .. "art/HealingTouch"; -- icon 136041
-addon.SPEC_ICON_OTHERS_LOGO = addon.INTERFACE_SWEEPY .. "art/DeathMark"; -- icon 236270
+addon.SPEC_ICON_HEALER_LOGO = "interface/icons/spell_nature_healingtouch";
+addon.SPEC_ICON_OTHERS_LOGO = 236270;
 
 addon.SPEC_ICON_ALIGNMENT = {
     TOP = 0,

@@ -3,9 +3,11 @@ local _, addon = ...;
 -- Sizes are fixed, players can customize by scale
 local iconSize = 40;
 
--- Original size is 48 * 67, scale it up a little
+-- Original Sanctum arrow atlas size is 48 * 67, scale it up a little.
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
+-- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
+local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
 local plainBorderSize = 48;
 
@@ -98,9 +100,10 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame:SetPoint("CENTER", nameplate, "CENTER");
 
     classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
-    classIconFrame.icon:SetSize(arrowWidth, arrowHeight);
     classIconFrame.icon:SetDesaturated(false);
-    classIconFrame.icon:SetAtlas("covenantsanctum-renown-doublearrow-disabled"); -- original size is 67 * 48, distort to 67 * 67
+    classIconFrame.icon:SetTexture(addon.INTERFACE_SWEEPY .. "Art/CovenantRenownUI");
+    classIconFrame.icon:SetTexCoord(unpack(arrowTexCoords));
+    classIconFrame.icon:SetSize(arrowWidth, arrowHeight);
     classIconFrame.icon:SetPoint("CENTER", classIconFrame, "CENTER");
     classIconFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
 
