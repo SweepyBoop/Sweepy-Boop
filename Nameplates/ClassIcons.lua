@@ -503,7 +503,8 @@ addon.ShowClassIcon = function (nameplate, frame)
         if style == addon.CLASS_ICON_STYLE.ARROW then
             shouldShow = ( not classIconContainer.isSpecialIcon );
         elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW then
-            shouldShow = ( UnitInBattleground("player") ~= nil );
+            -- shouldShow = ( UnitInBattleground("player") ~= nil );
+            shouldShow = true; -- TODO: temporary local test override; restore PvP instance gate before landing
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end

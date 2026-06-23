@@ -6,7 +6,8 @@ local iconSize = 40;
 -- Original Sanctum arrow atlas size is 48 * 67, scale it up a little.
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
-local classicArrowSize = 40;
+-- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
+local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
 local plainBorderSize = 48;
 
@@ -94,31 +95,23 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
     classIconFrame:SetAlpha(1);
     classIconFrame:SetIgnoreParentAlpha(true);
-    if addon.PROJECT_MAINLINE then
-        classIconFrame:SetSize(arrowHeight, arrowWidth); -- Swap width and height since we are rotating the texture
-    else
-        classIconFrame:SetSize(classicArrowSize, classicArrowSize);
-    end
+    classIconFrame:SetSize(arrowHeight, arrowWidth); -- Swap width and height since we are rotating the texture
     classIconFrame:SetFrameStrata("HIGH");
     classIconFrame:SetPoint("CENTER", nameplate, "CENTER");
 
     classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
     classIconFrame.icon:SetDesaturated(false);
-    if addon.PROJECT_MAINLINE then
-        classIconFrame.icon:SetAtlas("covenantsanctum-renown-doublearrow-disabled"); -- original size is 67 * 48, distort to 67 * 67
-        classIconFrame.icon:SetSize(arrowWidth, arrowHeight);
-        classIconFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
-    else
-        classIconFrame.icon:SetAtlas("UI-QuestPoiImportant-QuestNumber-SuperTracked");
-        classIconFrame.icon:SetSize(classicArrowSize, classicArrowSize);
-    end
+    classIconFrame.icon:SetTexture(addon.INTERFACE_SWEEPY .. "Art/CovenantRenownUI");
+    classIconFrame.icon:SetTexCoord(unpack(arrowTexCoords));
+    classIconFrame.icon:SetSize(arrowWidth, arrowHeight);
     classIconFrame.icon:SetPoint("CENTER", classIconFrame, "CENTER");
+    classIconFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
 
     classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
     classIconFrame.targetHighlight:SetAtlas("communities-guildbanner-border"); -- Originally Capacitance-General-WorkOrderBorder which is rectangle
     classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
     classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetSize(addon.PROJECT_MAINLINE and arrowWidth or classicArrowSize, addon.PROJECT_MAINLINE and arrowWidth or classicArrowSize);
+    classIconFrame.targetHighlight:SetSize(arrowWidth, arrowWidth);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -5);
     classIconFrame.targetHighlight:Hide();
 

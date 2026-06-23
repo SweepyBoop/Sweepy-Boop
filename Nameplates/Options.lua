@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local sTierHealerClasses = { addon.EVOKER, addon.DRUID };
-local classArrowAtlas = addon.PROJECT_MAINLINE and "covenantsanctum-renown-doublearrow-disabled" or "UI-QuestPoiImportant-QuestNumber-SuperTracked";
+local classArrowIcon = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/CovenantRenownUI");
 
 local function FormatTintedAtlas(atlas, color, size)
     return format(
@@ -98,9 +98,9 @@ addon.GetFriendlyNameplateOptions = function(order)
                 width = 1.25,
                 values = {
                     [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
-                    [addon.CLASS_ICON_STYLE.ARROW] = addon.FORMAT_ATLAS(classArrowAtlas) .. " Class color arrows",
+                    [addon.CLASS_ICON_STYLE.ARROW] = classArrowIcon .. " Class color arrows",
                     [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] =
-                        addon.FORMAT_ATLAS(classArrowAtlas)
+                        classArrowIcon
                         .. addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid")
                         .. " Icon + party arrow",
                 },
