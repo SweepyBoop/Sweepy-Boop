@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local sTierHealerClasses = { addon.EVOKER, addon.DRUID };
-local classArrowIcon = "|T" .. addon.INTERFACE_SWEEPY .. "Art/CovenantRenownUI:20:20:0:0:1024:512:875:923:68:135|t";
+local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
 
 local function FormatTintedAtlas(atlas, color, size)
     return format(
@@ -41,7 +41,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             classIconsEnabled = {
                 order = 1,
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " Enabled",
+                name = addon.FORMAT_ATLAS(wowLogoAtlas) .. " Enabled",
                 desc = "Show class/pet icons on friendly players/pets",
                 set = function(info, val)
                     SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled = val;
@@ -97,12 +97,9 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "select",
                 width = 1.25,
                 values = {
-                    [addon.CLASS_ICON_STYLE.ICON] = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid") .. " WoW class icons",
-                    [addon.CLASS_ICON_STYLE.ARROW] = classArrowIcon .. " Class color arrows",
-                    [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] =
-                        addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Druid")
-                        .. classArrowIcon
-                        .. " Icon + party arrow",
+                    [addon.CLASS_ICON_STYLE.ICON] = "WoW class icons",
+                    [addon.CLASS_ICON_STYLE.ARROW] = "Class color arrows",
+                    [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] = "Icon + party arrow",
                 },
                 name = "Icon style",
                 hidden = function()
