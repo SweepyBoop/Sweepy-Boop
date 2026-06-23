@@ -106,6 +106,9 @@ local function ShowAnimatedTargetHighlight(frame)
     local borderWidth = frame.border and frame.border:GetWidth() or 48;
     local maskWidth = frame.mask and frame.mask:GetWidth() or 40;
     frame.targetHighlightPixelGlowRadius = ( borderWidth + maskWidth ) / 4 - 2;
+    if frame.border then
+        frame.border:Hide();
+    end
     highlight:Hide();
 
     for i = 1, targetHighlightPixelGlowDotCount do
@@ -123,6 +126,9 @@ local function ShowStaticTargetHighlight(frame)
     end
 
     HideTargetHighlight(frame);
+    if frame.border then
+        frame.border:Hide();
+    end
     frame.targetHighlight:Show();
 end
 
@@ -139,6 +145,9 @@ HideTargetHighlight = function(frame)
     end
     highlight:SetAlpha(1);
     highlight:Hide();
+    if frame.border then
+        frame.border:Show();
+    end
 
     if frame.targetHighlightPixelGlowDots then
         for i = 1, #frame.targetHighlightPixelGlowDots do
