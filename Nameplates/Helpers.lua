@@ -7,7 +7,22 @@ local iconSize = 40;
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
 local highlightSize = 55;
-local classicBorderSize = 64;
+local plainBorderSize = 48;
+
+local function CreatePlainIconBorder(parent)
+    local border = parent:CreateTexture(nil, "BACKGROUND");
+    border:SetColorTexture(1, 1, 1, 1);
+    border:SetSize(plainBorderSize, plainBorderSize);
+    border:SetPoint("CENTER", parent);
+
+    border.mask = parent:CreateMaskTexture();
+    border.mask:SetTexture("Interface/Masks/CircleMaskScalable");
+    border.mask:SetSize(plainBorderSize, plainBorderSize);
+    border.mask:SetAllPoints(border);
+    border:AddMaskTexture(border.mask);
+
+    return border;
+end
 
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFriendly)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
@@ -29,10 +44,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.mask:SetAllPoints(classIconFrame.icon);
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
-    classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
-    classIconFrame.border:SetAtlas("charactercreate-ring-metallight"); -- "ui-frame-genericplayerchoice-portrait-border"
-    classIconFrame.border:SetSize(classicBorderSize, classicBorderSize);
-    classIconFrame.border:SetPoint("CENTER", classIconFrame); -- SetAllPoints will not work
+    classIconFrame.border = CreatePlainIconBorder(classIconFrame);
 
     if isFriendly then
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
@@ -68,7 +80,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.cooldownCC:SetHideCountdownNumbers(true);
         classIconFrame.cooldownCC.noCooldownCount = true; -- hide OmniCC timers
     else
-        classIconFrame.border:SetVertexColor(255, 0, 0); -- Red border for hostile
+        classIconFrame.border:SetVertexColor(1, 0, 0); -- Red border for hostile
         classIconFrame.border:Hide(); -- Hide initially until an actual icon is set
     end
 
