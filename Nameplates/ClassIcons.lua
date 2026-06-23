@@ -389,6 +389,12 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.targetHighlight:SetAlpha(1);
 
             local classColor = RAID_CLASS_COLORS[class];
+            iconFrame.border:Show();
+            if isSpecialIcon then
+                iconFrame.mask:SetSize(36, 36);
+            else
+                iconFrame.mask:SetSize(40, 40);
+            end
             if config.classColorBorder then
                 iconFrame.border:SetDesaturated(true);
                 iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
