@@ -202,6 +202,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconSize = 1.25;
     defaults.profile.nameplatesFriendly.petIconSize = 1;
     defaults.profile.nameplatesFriendly.animatedTargetHighlight = true;
+    defaults.profile.nameplatesFriendly.classColorTargetHighlight = true;
     defaults.profile.nameplatesFriendly.showCrowdControl = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
