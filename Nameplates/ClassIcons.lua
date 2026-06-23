@@ -3,7 +3,7 @@ local _, addon = ...;
 local specialIconScaleFactor = 1.25;
 local targetHighlightPixelGlowDotCount = 18;
 local targetHighlightPixelGlowDotSize = 5;
-local targetHighlightPixelGlowFrequency = 0.25;
+local targetHighlightPixelGlowFrequency = 0.325;
 local targetHighlightPixelGlowThrottle = 0.02;
 local targetHighlightPixelGlowColor = { 1, 0.78, 0, 1 };
 
