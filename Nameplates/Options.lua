@@ -184,8 +184,20 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-            classIconOffset = {
+            animatedTargetHighlight = {
                 order = 18,
+                type = "toggle",
+                width = "full",
+                name = "Animated target highlight",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end,
+                disabled = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.targetHighlight );
+                end
+            },
+            classIconOffset = {
+                order = 19,
                 type = "range",
                 min = -50,
                 max = 150,
@@ -198,7 +210,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             header1 = {
-                order = 19,
+                order = 20,
                 type = "header",
                 name = "Icon size",
                 hidden = function()
@@ -206,7 +218,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             classIconSize = {
-                order = 20,
+                order = 21,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -219,7 +231,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             healerIconSize = {
-                order = 21,
+                order = 22,
                 type = "range",
                 width = 0.675,
                 isPercent = true,

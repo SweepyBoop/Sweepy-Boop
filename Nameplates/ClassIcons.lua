@@ -1,6 +1,11 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
+local targetHighlightPixelGlowDotCount = 24;
+local targetHighlightPixelGlowDotSize = 4;
+local targetHighlightPixelGlowFrequency = 0.15;
+local targetHighlightPixelGlowThrottle = 0.02;
+local targetHighlightPixelGlowColor = { 1, 0.78, 0, 1 };
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -26,6 +31,129 @@ end
 
 -- Suppress friendly FC icon and target highlight, as NeatPlates unregisters all UnitFrame events, causing problems for those 2 features
 local hasConflict = C_AddOns.IsAddOnLoaded("NeatPlates");
+
+local function SetTargetHighlightPixelGlowDotPosition(dot, radius, progress)
+    local angle = -( progress % 1 ) * math.pi * 2;
+    dot:ClearAllPoints();
+    dot:SetPoint("CENTER", dot:GetParent(), "CENTER", math.cos(angle) * radius, math.sin(angle) * radius);
+end
+
+local function EnsureTargetHighlightPixelGlow(frame)
+    frame.targetHighlightPixelGlowDots = frame.targetHighlightPixelGlowDots or {};
+    for i = 1, targetHighlightPixelGlowDotCount do
+        local dot = frame.targetHighlightPixelGlowDots[i];
+        if not dot then
+            dot = frame:CreateTexture(nil, "OVERLAY");
+            dot:SetDrawLayer("OVERLAY", 2);
+            dot.mask = frame:CreateMaskTexture();
+            dot.mask:SetTexture("Interface/Masks/CircleMaskScalable");
+            dot:AddMaskTexture(dot.mask);
+            dot:Hide();
+            frame.targetHighlightPixelGlowDots[i] = dot;
+        end
+        dot:SetColorTexture(unpack(targetHighlightPixelGlowColor));
+        dot:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
+        dot.mask:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
+        dot.mask:SetAllPoints(dot);
+        dot.offset = ( i - 1 ) / targetHighlightPixelGlowDotCount;
+    end
+
+    for i = targetHighlightPixelGlowDotCount + 1, #frame.targetHighlightPixelGlowDots do
+        frame.targetHighlightPixelGlowDots[i]:Hide();
+    end
+end
+
+local function TargetHighlight_OnUpdate(self, elapsed)
+    if ( not self.targetHighlight ) or ( not self.targetHighlightPixelGlowDots ) then
+        self:SetScript("OnUpdate", nil);
+        return;
+    end
+
+    self.targetHighlightPixelGlowElapsed = self.targetHighlightPixelGlowElapsed + elapsed;
+    if self.targetHighlightPixelGlowElapsed < targetHighlightPixelGlowThrottle then
+        return;
+    end
+
+    local step = self.targetHighlightPixelGlowElapsed;
+    self.targetHighlightPixelGlowElapsed = 0;
+    self.targetHighlightPixelGlowProgress = ( self.targetHighlightPixelGlowProgress + ( step * targetHighlightPixelGlowFrequency ) ) % 1;
+
+    for i = 1, targetHighlightPixelGlowDotCount do
+        SetTargetHighlightPixelGlowDotPosition(self.targetHighlightPixelGlowDots[i], self.targetHighlightPixelGlowRadius, self.targetHighlightPixelGlowProgress + self.targetHighlightPixelGlowDots[i].offset);
+    end
+end
+
+local HideTargetHighlight;
+
+local function ShowAnimatedTargetHighlight(frame)
+    if ( not frame ) or ( not frame.targetHighlight ) then
+        return;
+    end
+
+    local highlight = frame.targetHighlight;
+    if frame.targetHighlightPixelGlowShown then
+        return;
+    end
+
+    if not highlight.baseWidth then
+        highlight.baseWidth, highlight.baseHeight = highlight:GetSize();
+    end
+
+    EnsureTargetHighlightPixelGlow(frame);
+    frame.targetHighlightPixelGlowShown = true;
+    frame.targetHighlightPixelGlowElapsed = 0;
+    frame.targetHighlightPixelGlowProgress = 0;
+    frame.targetHighlightPixelGlowRadius = ( math.min(frame:GetSize()) / 2 ) - targetHighlightPixelGlowDotSize + 2.5;
+    highlight:Hide();
+
+    for i = 1, targetHighlightPixelGlowDotCount do
+        SetTargetHighlightPixelGlowDotPosition(frame.targetHighlightPixelGlowDots[i], frame.targetHighlightPixelGlowRadius, frame.targetHighlightPixelGlowDots[i].offset);
+        frame.targetHighlightPixelGlowDots[i]:SetAlpha(1);
+        frame.targetHighlightPixelGlowDots[i]:Show();
+    end
+
+    frame:SetScript("OnUpdate", TargetHighlight_OnUpdate);
+end
+
+local function ShowStaticTargetHighlight(frame)
+    if ( not frame ) or ( not frame.targetHighlight ) then
+        return;
+    end
+
+    HideTargetHighlight(frame);
+    frame.targetHighlight:Show();
+end
+
+HideTargetHighlight = function(frame)
+    if ( not frame ) or ( not frame.targetHighlight ) then
+        return;
+    end
+
+    local highlight = frame.targetHighlight;
+    frame.targetHighlightPixelGlowShown = false;
+    frame:SetScript("OnUpdate", nil);
+    if highlight.baseWidth then
+        highlight:SetSize(highlight.baseWidth, highlight.baseHeight);
+    end
+    highlight:SetAlpha(1);
+    highlight:Hide();
+
+    if frame.targetHighlightPixelGlowDots then
+        for i = 1, #frame.targetHighlightPixelGlowDots do
+            frame.targetHighlightPixelGlowDots[i]:Hide();
+        end
+    end
+end
+
+local function SetTargetHighlightShown(frame, shouldShow, shouldAnimate)
+    if not shouldShow then
+        HideTargetHighlight(frame);
+    elseif shouldAnimate then
+        ShowAnimatedTargetHighlight(frame);
+    else
+        ShowStaticTargetHighlight(frame);
+    end
+end
 
 local function EnsureClassIcon(nameplate)
     nameplate.classIconContainer = nameplate.classIconContainer or {};
@@ -116,10 +244,10 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local featureEnabled = config.targetHighlight and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
-            nameplate.classIconContainer.FriendlyClassIcon.targetHighlight:SetShown(isTarget and featureEnabled);
+            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassIcon, isTarget and featureEnabled, config.animatedTargetHighlight);
         end
         if nameplate.classIconContainer.FriendlyClassArrow then
-            nameplate.classIconContainer.FriendlyClassArrow.targetHighlight:SetShown(isTarget and featureEnabled and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) );
+            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassArrow, isTarget and featureEnabled and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ), config.animatedTargetHighlight);
         end
     end
 end

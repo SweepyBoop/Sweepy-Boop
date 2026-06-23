@@ -81,6 +81,7 @@ local defaults = {
             showHealerOnly = false,
             useFlagCarrierIcon = true,
             targetHighlight = true,
+            animatedTargetHighlight = false,
             classColorBorder = true,
             showPlayerName = false,
         },
@@ -200,6 +201,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
     defaults.profile.nameplatesFriendly.classIconSize = 1.25;
     defaults.profile.nameplatesFriendly.petIconSize = 1;
+    defaults.profile.nameplatesFriendly.animatedTargetHighlight = true;
     defaults.profile.nameplatesFriendly.showCrowdControl = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
@@ -395,8 +397,10 @@ function SweepyBoop:OnInitialize()
 end
 
 function SweepyBoop:RefreshConfig()
-    self:HideTestArenaCooldownTracker();
-    self:HideTestArenaStandaloneBars();
+    if ( not addon.PROJECT_MAINLINE ) then
+        self:HideTestArenaCooldownTracker();
+        self:HideTestArenaStandaloneBars();
+    end
 
     if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
