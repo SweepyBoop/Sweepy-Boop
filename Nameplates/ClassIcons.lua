@@ -285,7 +285,9 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
             local iconFrame = nameplate.classIconContainer.FriendlyClassIcon;
-            SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and ( iconFrame.icon:GetAlpha() > 0 ), config.animatedTargetHighlight);
+            local classIconStyle = config.classIconStyle;
+            local classIconStyleShowsIcon = classIconStyle == addon.CLASS_ICON_STYLE.ICON or classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
+            SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and classIconStyleShowsIcon and ( iconFrame.icon:GetAlpha() > 0 ), config.animatedTargetHighlight);
         end
     end
 end
