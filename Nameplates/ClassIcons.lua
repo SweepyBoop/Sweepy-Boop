@@ -279,15 +279,16 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
 end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
+    if ( not nameplate ) or ( not frame ) or ( not frame.unit ) then return end
+
     local isTarget = UnitIsUnit(frame.unit, "target");
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     local featureEnabled = config.targetHighlight and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
             local iconFrame = nameplate.classIconContainer.FriendlyClassIcon;
-            local classIconStyle = config.classIconStyle;
-            local classIconStyleShowsIcon = classIconStyle == addon.CLASS_ICON_STYLE.ICON or classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
-            SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and classIconStyleShowsIcon and ( iconFrame.icon:GetAlpha() > 0 ), config.animatedTargetHighlight);
+            local iconVisible = iconFrame:IsShown() and ( iconFrame.icon:GetAlpha() > 0 );
+            SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and iconVisible, config.animatedTargetHighlight);
         end
     end
 end
@@ -508,6 +509,7 @@ addon.ShowClassIcon = function (nameplate, frame)
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
 
+    addon.UpdateClassIconTargetHighlight(nameplate, frame);
     addon.UpdateClassIconCrowdControl(nameplate, frame);
 end
 
