@@ -185,7 +185,7 @@ HideTargetHighlight = function(frame)
     end
 end
 
-local function SetTargetHighlightShown(frame, shouldShow, shouldAnimate)
+addon.SetTargetHighlightShown = function(frame, shouldShow, shouldAnimate)
     if not shouldShow then
         HideTargetHighlight(frame);
     elseif shouldAnimate then
@@ -285,10 +285,8 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
             local iconFrame = nameplate.classIconContainer.FriendlyClassIcon;
-            SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and ( iconFrame.icon:GetAlpha() > 0 ), config.animatedTargetHighlight);
-        end
-        if nameplate.classIconContainer.FriendlyClassArrow then
-            SetTargetHighlightShown(nameplate.classIconContainer.FriendlyClassArrow, isTarget and featureEnabled and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ), config.animatedTargetHighlight);
+            local iconVisible = iconFrame:IsShown() and ( iconFrame.icon:GetAlpha() > 0 );
+            addon.SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and iconVisible, config.animatedTargetHighlight);
         end
     end
 end
@@ -471,7 +469,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         end
 
         if iconFrame.icon:GetAlpha() == 0 then
-            SetTargetHighlightShown(iconFrame, false, config.animatedTargetHighlight);
+            addon.SetTargetHighlightShown(iconFrame, false, config.animatedTargetHighlight);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
@@ -509,6 +507,7 @@ addon.ShowClassIcon = function (nameplate, frame)
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
 
+    addon.UpdateClassIconTargetHighlight(nameplate, frame);
     addon.UpdateClassIconCrowdControl(nameplate, frame);
 end
 
@@ -517,6 +516,7 @@ addon.HideClassIcon = function(nameplate)
     local classIconContainer = nameplate.classIconContainer;
 
     if classIconContainer.FriendlyClassIcon then
+        addon.SetTargetHighlightShown(classIconContainer.FriendlyClassIcon, false, false);
         classIconContainer.FriendlyClassIcon:Hide();
     end
     if classIconContainer.FriendlyClassArrow then
