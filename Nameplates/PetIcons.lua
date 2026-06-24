@@ -11,8 +11,17 @@ local function EnsureIcon(nameplate)
 end
 
 addon.UpdatePetIconTargetHighlight = function (nameplate, frame)
-    if nameplate.FriendlyPetIcon then
-        nameplate.FriendlyPetIcon.targetHighlight:SetShown(UnitIsUnit(frame.unit, "target"));
+    local iconFrame = nameplate.FriendlyPetIcon;
+    if ( not iconFrame ) then return end
+
+    local config = SweepyBoop.db.profile.nameplatesFriendly;
+    local featureEnabled = config.targetHighlight and ( not C_AddOns.IsAddOnLoaded("NeatPlates") );
+    local iconVisible = iconFrame:IsShown() and ( iconFrame.icon:GetAlpha() > 0 );
+    local shouldShow = UnitIsUnit(frame.unit, "target") and featureEnabled and iconVisible;
+    if addon.SetTargetHighlightShown then
+        addon.SetTargetHighlightShown(iconFrame, shouldShow, config.animatedTargetHighlight);
+    else
+        iconFrame.targetHighlight:SetShown(shouldShow);
     end
 end
 
@@ -26,8 +35,6 @@ addon.UpdatePetIcon = function(nameplate, frame)
         iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, config.classIconOffset);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
     end
-
-    addon.UpdatePetIconTargetHighlight(nameplate, frame);
 end
 
 addon.ShowPetIcon = function (nameplate, frame)
@@ -35,10 +42,16 @@ addon.ShowPetIcon = function (nameplate, frame)
     if nameplate.FriendlyPetIcon then
         nameplate.FriendlyPetIcon:Show();
     end
+    addon.UpdatePetIconTargetHighlight(nameplate, frame);
 end
 
 addon.HidePetIcon = function(nameplate)
     if nameplate.FriendlyPetIcon then
+        if addon.SetTargetHighlightShown then
+            addon.SetTargetHighlightShown(nameplate.FriendlyPetIcon, false, false);
+        else
+            nameplate.FriendlyPetIcon.targetHighlight:Hide();
+        end
         nameplate.FriendlyPetIcon:Hide();
     end
 end

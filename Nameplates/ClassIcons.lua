@@ -185,7 +185,7 @@ HideTargetHighlight = function(frame)
     end
 end
 
-local function SetTargetHighlightShown(frame, shouldShow, shouldAnimate)
+addon.SetTargetHighlightShown = function(frame, shouldShow, shouldAnimate)
     if not shouldShow then
         HideTargetHighlight(frame);
     elseif shouldAnimate then
@@ -279,8 +279,6 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
 end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
-    if ( not nameplate ) or ( not frame ) or ( not frame.unit ) then return end
-
     local isTarget = UnitIsUnit(frame.unit, "target");
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     local featureEnabled = config.targetHighlight and ( not hasConflict );
@@ -288,7 +286,7 @@ addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
         if nameplate.classIconContainer.FriendlyClassIcon then
             local iconFrame = nameplate.classIconContainer.FriendlyClassIcon;
             local iconVisible = iconFrame:IsShown() and ( iconFrame.icon:GetAlpha() > 0 );
-            SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and iconVisible, config.animatedTargetHighlight);
+            addon.SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and iconVisible, config.animatedTargetHighlight);
         end
     end
 end
@@ -471,7 +469,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         end
 
         if iconFrame.icon:GetAlpha() == 0 then
-            SetTargetHighlightShown(iconFrame, false, config.animatedTargetHighlight);
+            addon.SetTargetHighlightShown(iconFrame, false, config.animatedTargetHighlight);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;
@@ -518,7 +516,7 @@ addon.HideClassIcon = function(nameplate)
     local classIconContainer = nameplate.classIconContainer;
 
     if classIconContainer.FriendlyClassIcon then
-        SetTargetHighlightShown(classIconContainer.FriendlyClassIcon, false, false);
+        addon.SetTargetHighlightShown(classIconContainer.FriendlyClassIcon, false, false);
         classIconContainer.FriendlyClassIcon:Hide();
     end
     if classIconContainer.FriendlyClassArrow then
