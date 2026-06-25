@@ -1664,10 +1664,10 @@ addon.SpellData = {
         baseline = true,
     },
         [6554] = { parent = 6552, use_parent_icon = true }, -- Pummel (Rank 2)
-        [72] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 1)
-        [1671] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 2)
-        [1672] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 3)
-        [29704] = { parent = 6552, cooldown = 12 }, -- Shield Bash (Rank 4)
+        [72] = { parent = 6552, cooldown = 12, use_parent_icon = true }, -- Shield Bash (Rank 1)
+        [1671] = { parent = 6552, cooldown = 12, use_parent_icon = true }, -- Shield Bash (Rank 2)
+        [1672] = { parent = 6552, cooldown = 12, use_parent_icon = true }, -- Shield Bash (Rank 3)
+        [29704] = { parent = 6552, cooldown = 12, use_parent_icon = true }, -- Shield Bash (Rank 4)
 
     [12292] = { -- Death Wish
         class = addon.WARRIOR,
