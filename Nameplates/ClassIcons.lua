@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
-local classIconBorderSize = 42;
+local classIconBorderSize = 44;
 local classIconSize = 40;
 local specialClassIconSize = 36;
 local targetHighlightPixelGlowDotCount = 18;
