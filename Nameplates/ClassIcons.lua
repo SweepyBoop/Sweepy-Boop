@@ -1,6 +1,9 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
+local classIconBorderSize = 44;
+local classIconSize = 40;
+local specialClassIconSize = 36;
 local targetHighlightPixelGlowDotCount = 18;
 local targetHighlightPixelGlowDotSize = 5;
 local targetHighlightPixelGlowFrequency = 0.325;
@@ -430,10 +433,15 @@ addon.UpdateClassIcon = function(nameplate, frame)
             local classColor = RAID_CLASS_COLORS[class];
             iconFrame.classColor = classColor and { classColor.r, classColor.g, classColor.b, 1 } or nil;
             UpdateClassIconBorderShown(iconFrame);
+            iconFrame.border:SetSize(classIconBorderSize, classIconBorderSize);
+            if iconFrame.border.mask then
+                iconFrame.border.mask:SetSize(classIconBorderSize, classIconBorderSize);
+            end
+
             if isSpecialIcon then
-                iconFrame.mask:SetSize(36, 36);
+                iconFrame.mask:SetSize(specialClassIconSize, specialClassIconSize);
             else
-                iconFrame.mask:SetSize(40, 40);
+                iconFrame.mask:SetSize(classIconSize, classIconSize);
             end
             iconFrame.border:SetDesaturated(true);
             iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);

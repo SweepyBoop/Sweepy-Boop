@@ -9,7 +9,7 @@ local arrowHeight = 67 * 1.1;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
-local plainBorderSize = 48;
+local plainBorderSize = 44;
 
 local function CreatePlainIconBorder(parent)
     local border = parent:CreateTexture(nil, "BACKGROUND");
