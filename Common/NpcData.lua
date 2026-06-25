@@ -256,12 +256,88 @@ for _, classEntry in ipairs(addon.importantNpcList) do
 end
 
 addon.GetNpcIdFromGuid = function (guid)
-    local npcID = select ( 6, strsplit ( "-", guid ) );
-    if (npcID) then
-        return tonumber ( npcID );
+    if ( not guid ) or addon.IsSecretValue(guid) then
+        return 0;
     end
 
-    return 0;
+    local npcID = select ( 6, strsplit ( "-", guid ) );
+    return tonumber ( npcID ) or 0;
+end
+
+addon.GetNpcIdFromUnit = function(unitId)
+    if ( not unitId ) then return 0 end
+    return addon.GetNpcIdFromGuid(UnitGUID(unitId));
+end
+
+local function GetNpcFilterInfo(npcID)
+    if npcID == 0 then return end
+
+    local npcIDString = tostring(npcID);
+    return SweepyBoop.db.profile.nameplatesEnemy.filterList[npcIDString], addon.CritterNPCs[npcID], addon.iconTexture[npcIDString], npcIDString;
+end
+
+local ResolveRetailSummonHighlight;
+if addon.PROJECT_MAINLINE then
+    local function GetFirstSummonAura(unitId, filter)
+        if C_UnitAuras.GetUnitAuras then
+            local auras = C_UnitAuras.GetUnitAuras(unitId, filter);
+            if auras and #auras > 0 then
+                return auras[1];
+            end
+        end
+
+        return C_UnitAuras.GetAuraDataByIndex(unitId, 1, filter);
+    end
+
+    local function ResolveSummonAuraTexture(unitId)
+        local aura = GetFirstSummonAura(unitId, "HELPFUL|IMPORTANT");
+        if aura and aura.spellId then
+            local isImportant = C_Spell.IsSpellImportant and C_Spell.IsSpellImportant(aura.spellId);
+            if addon.IsSecretValue(isImportant) or isImportant then
+                return aura.icon, true;
+            end
+        end
+
+        aura = GetFirstSummonAura(unitId, "HELPFUL");
+        if aura then
+            return aura.icon, false;
+        end
+    end
+
+    local RETAIL_CASTING_SUMMON_TEXTURE = addon.GetSpellTexture(192058);
+    local RETAIL_SUMMON_FALLBACK_TEXTURE = "Interface\\Icons\\Spell_shaman_totemrecall";
+
+    ResolveRetailSummonHighlight = function(unitId)
+        if not UnitIsMinion then
+            return addon.NpcOption.Show, false;
+        end
+
+        local isMinion = UnitIsMinion(unitId);
+        if addon.IsSecretValue(isMinion) or ( not isMinion ) then
+            return addon.NpcOption.Show, false;
+        end
+
+        local isOtherPlayerPet = UnitIsOtherPlayersPet and UnitIsOtherPlayersPet(unitId);
+        if addon.IsSecretValue(isOtherPlayerPet) or isOtherPlayerPet then
+            return addon.NpcOption.Show, false;
+        end
+
+        local auraIcon, isImportantAura = ResolveSummonAuraTexture(unitId);
+        local castingSpell = UnitCastingInfo(unitId);
+        if addon.IsSecretValue(castingSpell) then
+            castingSpell = nil;
+        end
+
+        if isImportantAura then
+            local icon = auraIcon or RETAIL_SUMMON_FALLBACK_TEXTURE;
+            return addon.NpcOption.Highlight, false, icon, "retail-summon-aura:" .. tostring(icon);
+        elseif castingSpell then
+            local icon = RETAIL_CASTING_SUMMON_TEXTURE or auraIcon or RETAIL_SUMMON_FALLBACK_TEXTURE;
+            return addon.NpcOption.Highlight, false, icon, "retail-summon-cast:" .. tostring(castingSpell);
+        end
+
+        return addon.NpcOption.Show, false;
+    end
 end
 
 addon.CheckNpcWhiteList = function (unitId)
@@ -274,9 +350,14 @@ addon.CheckNpcWhiteList = function (unitId)
         local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
         local isCritter = addon.CritterNPCs[tonumber(npcID)];
         return isWhitelisted, isCritter;
-    else
-        return addon.NpcOption.Show, false;
     end
+
+    local npcOption, isCritter, iconTexture, highlightKey = GetNpcFilterInfo(addon.GetNpcIdFromUnit(unitId));
+    if npcOption ~= nil then
+        return npcOption, isCritter, iconTexture, highlightKey;
+    end
+
+    return ResolveRetailSummonHighlight(unitId);
 end
 
 addon.FillDefaultToNpcOptions = function(profile)

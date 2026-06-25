@@ -65,19 +65,24 @@ local function EnsureNpcHighlight(nameplate)
     return nameplate.npcHighlight;
 end
 
-addon.UpdateNpcHighlight = function(nameplate)
+addon.UpdateNpcHighlight = function(nameplate, iconTexture, highlightKey)
     -- Parented to UnitFrame to inherit the visibility
     local highlight = EnsureNpcHighlight(nameplate);
-    local unitGUID = UnitGUID(nameplate.UnitFrame.unit);
-    if ( highlight.currentGuid ~= unitGUID ) then
-        local npcID = select(6, strsplit("-", unitGUID));
-        highlight.customIcon:SetTexture(addon.iconTexture[npcID]); -- nil if no texture found
-        highlight.currentGuid = unitGUID;
+    if ( not iconTexture ) then
+        local npcID = addon.GetNpcIdFromUnit(nameplate.UnitFrame.unit);
+        highlightKey = tostring(npcID);
+        iconTexture = addon.iconTexture[highlightKey]; -- nil if no texture found
+    end
+
+    if ( highlight.currentKey ~= highlightKey ) or ( highlight.currentTexture ~= iconTexture ) then
+        highlight.customIcon:SetTexture(iconTexture);
+        highlight.currentKey = highlightKey;
+        highlight.currentTexture = iconTexture;
     end
 end
 
-addon.ShowNpcHighlight = function(nameplate, animation)
-    addon.UpdateNpcHighlight(nameplate);
+addon.ShowNpcHighlight = function(nameplate, animation, iconTexture, highlightKey)
+    addon.UpdateNpcHighlight(nameplate, iconTexture, highlightKey);
     local highlight = nameplate.npcHighlight;
 
     if highlight then
