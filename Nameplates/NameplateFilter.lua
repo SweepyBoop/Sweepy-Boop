@@ -74,6 +74,11 @@ addon.UpdateNpcHighlight = function(nameplate, iconTexture, highlightKey)
         iconTexture = addon.iconTexture[highlightKey]; -- nil if no texture found
     end
 
+    if addon.PROJECT_MAINLINE then
+        highlight.customIcon:SetTexture(iconTexture);
+        return;
+    end
+
     if ( highlight.currentKey ~= highlightKey ) or ( highlight.currentTexture ~= iconTexture ) then
         highlight.customIcon:SetTexture(iconTexture);
         highlight.currentKey = highlightKey;
