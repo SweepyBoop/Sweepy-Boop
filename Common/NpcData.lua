@@ -308,11 +308,6 @@ if addon.PROJECT_MAINLINE then
     local RETAIL_SUMMON_FALLBACK_TEXTURE = "Interface\\Icons\\Spell_shaman_totemrecall";
 
     ResolveRetailSummonHighlight = function(unitId)
-        local isMinion = UnitIsMinion and UnitIsMinion(unitId);
-        if ( not addon.IsSecretValue(isMinion) ) and ( not isMinion ) then
-            return addon.NpcOption.Show, false;
-        end
-
         local isOtherPlayerPet = UnitIsOtherPlayersPet and UnitIsOtherPlayersPet(unitId);
         if ( not addon.IsSecretValue(isOtherPlayerPet) ) and isOtherPlayerPet then
             return addon.NpcOption.Show, false;
@@ -324,16 +319,12 @@ if addon.PROJECT_MAINLINE then
             castingSpell = nil;
         end
 
-        if ( not isImportantAura ) and ( not castingSpell ) and ( not addon.IsSecretValue(isMinion) ) then
-            return addon.NpcOption.Show, false;
-        end
-
         if isImportantAura then
             local icon = auraIcon or RETAIL_SUMMON_FALLBACK_TEXTURE;
-            return addon.NpcOption.Highlight, false, icon, "retail-summon-aura:" .. tostring(icon);
+            return addon.NpcOption.Highlight, false, icon, nil;
         elseif castingSpell then
             local icon = RETAIL_CASTING_SUMMON_TEXTURE or auraIcon or RETAIL_SUMMON_FALLBACK_TEXTURE;
-            return addon.NpcOption.Highlight, false, icon, "retail-summon-cast:" .. tostring(castingSpell);
+            return addon.NpcOption.Highlight, false, icon, nil;
         end
 
         return addon.NpcOption.Show, false;
