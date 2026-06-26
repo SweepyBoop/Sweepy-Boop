@@ -269,13 +269,6 @@ addon.GetNpcIdFromUnit = function(unitId)
     return addon.GetNpcIdFromGuid(UnitGUID(unitId));
 end
 
-local function GetNpcFilterInfo(npcID)
-    if npcID == 0 then return end
-
-    local npcIDString = tostring(npcID);
-    return SweepyBoop.db.profile.nameplatesEnemy.filterList[npcIDString], addon.CritterNPCs[npcID], addon.iconTexture[npcIDString], npcIDString;
-end
-
 local ResolveRetailSummonHighlight;
 if addon.PROJECT_MAINLINE then
     local function GetFirstSummonAura(unitId, filter)
@@ -308,11 +301,6 @@ if addon.PROJECT_MAINLINE then
     local RETAIL_SUMMON_FALLBACK_TEXTURE = "Interface\\Icons\\Spell_shaman_totemrecall";
 
     ResolveRetailSummonHighlight = function(unitId)
-        local isOtherPlayerPet = UnitIsOtherPlayersPet and UnitIsOtherPlayersPet(unitId);
-        if ( not addon.IsSecretValue(isOtherPlayerPet) ) and isOtherPlayerPet then
-            return addon.NpcOption.Show, false;
-        end
-
         local auraIcon, isImportantAura = ResolveSummonAuraTexture(unitId);
         local castingSpell = UnitCastingInfo(unitId);
         if addon.IsSecretValue(castingSpell) then
