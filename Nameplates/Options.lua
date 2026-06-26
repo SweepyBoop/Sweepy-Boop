@@ -563,6 +563,9 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
                         desc = "Show whitelisted debuffs applied by myself"
                             .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
+                        hidden = function()
+                            return addon.PROJECT_MAINLINE;
+                        end,
                         set = function (info, val)
                             SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
                             SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
@@ -577,7 +580,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",
                         desc = "Show whitelisted buffs on enemy nameplates from all sources",
                         hidden = function ()
-                            return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                            return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
                         end,
                         set = function (info, val)
                             SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
@@ -616,7 +619,7 @@ addon.GetEnemyNameplateOptions = function(order)
                 end,
                 args = {},
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
                 end
             },
 
@@ -632,7 +635,7 @@ addon.GetEnemyNameplateOptions = function(order)
                 end,
                 args = {},
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy );
                 end
             },
         },
