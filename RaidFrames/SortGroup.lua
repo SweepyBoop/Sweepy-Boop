@@ -16,7 +16,6 @@ local MODE_MIDDLE = "Middle";
 
 local PROVIDER_NAME = "Blizzard";
 local CONTAINER_PARTY = 1;
-local CONTAINER_RAID = 2;
 local LAYOUT_HARD = 2;
 
 local secureMethods = {};
@@ -636,7 +635,6 @@ local function SortedFriendlyUnits()
     end
 
     AddEntries(EntriesFromContainer(CompactPartyFrame));
-    AddEntries(EntriesFromContainer(CompactRaidFrameContainer));
 
     table.sort(members, CompareGroupOrder);
     table.sort(pets, CompareGroupOrder);
@@ -751,7 +749,6 @@ local function LoadProvider()
 
     local containers = {};
     AddContainer(containers, CompactPartyFrame, CONTAINER_PARTY);
-    AddContainer(containers, CompactRaidFrameContainer, CONTAINER_RAID);
 
     SetAttributeNoHandler(manager, "BlizzardContainersCount", #containers);
 
@@ -807,7 +804,6 @@ end
 
 local function WatchVisibility()
     WatchContainerVisibility(CompactPartyFrame);
-    WatchContainerVisibility(CompactRaidFrameContainer);
 end
 
 local function ConfigureHeader(header)
@@ -1005,7 +1001,7 @@ local function DebugFrameOrder(container)
 
     local parts = {};
     for i, entry in ipairs(orderedFrames) do
-        parts[#parts + 1] = i .. ":" .. entry.unit .. "(" .. entry.name .. ")";
+        parts[#parts + 1] = i .. ":" .. (UnitIsUnit(entry.unit, "player") and (entry.unit .. "*") or entry.unit) .. "(" .. entry.name .. ")";
     end
 
     return table.concat(parts, " > ");
@@ -1032,13 +1028,10 @@ function SweepyBoop:DebugArenaRaidFrameSort()
         "containers=", manager and manager:GetAttribute("LastEntryCount") or "none",
         "units=", manager and manager:GetAttribute("FriendlyUnitsCount") or "none",
         "cpf=", CompactPartyFrame ~= nil,
-        "cpfVisible=", CompactPartyFrame and CompactPartyFrame:IsVisible(),
-        "crfc=", CompactRaidFrameContainer ~= nil,
-        "crfcVisible=", CompactRaidFrameContainer and CompactRaidFrameContainer:IsVisible()
+        "cpfVisible=", CompactPartyFrame and CompactPartyFrame:IsVisible()
     );
     print("SweepyBoop loaded units", table.concat(loadedUnits, " > "));
     print("SweepyBoop CPF frames", DebugFrameOrder(CompactPartyFrame));
-    print("SweepyBoop CRFC frames", DebugFrameOrder(CompactRaidFrameContainer));
 end
 
 local function OnEvent(_, event)
