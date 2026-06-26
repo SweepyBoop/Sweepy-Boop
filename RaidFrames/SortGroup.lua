@@ -29,7 +29,7 @@ secureMethods.SortParty = [=[
     local playerUnit = self:GetAttribute("PlayerUnit") or "player"
 
     local children = newtable()
-    local frames = newtable()
+    local entries = newtable()
     partyFrame:GetChildList(children)
 
     for _, child in ipairs(children) do
@@ -37,95 +37,77 @@ secureMethods.SortParty = [=[
         local name = child and child.GetName and child:GetName()
 
         if unit and name and strmatch(name, "^CompactPartyFrameMember") and child.GetHeight and child:GetHeight() > 0 then
-            frames[#frames + 1] = child
+            local entry = newtable()
+            entry.Frame = child
+            entry.Unit = unit
+            entry.IsPet = strfind(unit, "pet") ~= nil
+            entry.IsPlayer = unit == "player" or unit == playerUnit
+
+            if entry.IsPlayer then
+                entry.Index = 0
+            else
+                local index = strmatch(unit, "^party(%d+)")
+                    or strmatch(unit, "^raid(%d+)")
+                    or strmatch(unit, "^partypet(%d+)")
+                    or strmatch(unit, "^raidpet(%d+)")
+                    or strmatch(unit, "^party(%d+)pet")
+                    or strmatch(unit, "^raid(%d+)pet")
+                entry.Index = tonumber(index) or 998
+            end
+
+            entries[#entries + 1] = entry
         end
     end
 
-    if #frames <= 1 then
+    if #entries <= 1 then
         return false
     end
 
-    local function IsPetUnit(unit)
-        return unit and strfind(unit, "pet") ~= nil
-    end
-
-    local function IsPlayerUnit(unit)
-        return unit == "player" or unit == playerUnit
-    end
-
-    local function UnitIndex(unit)
-        if not unit then
-            return 999
-        end
-
-        if IsPlayerUnit(unit) then
-            return 0
-        end
-
-        local index = strmatch(unit, "^party(%d+)")
-            or strmatch(unit, "^raid(%d+)")
-            or strmatch(unit, "^partypet(%d+)")
-            or strmatch(unit, "^raidpet(%d+)")
-            or strmatch(unit, "^party(%d+)pet")
-            or strmatch(unit, "^raid(%d+)pet")
-
-        return tonumber(index) or 998
-    end
-
-    local function Compare(leftFrame, rightFrame)
-        local leftUnit = leftFrame and leftFrame:GetAttribute("unit")
-        local rightUnit = rightFrame and rightFrame:GetAttribute("unit")
-
-        if leftUnit == rightUnit then
-            return false
-        end
-
-        local leftIsPet = IsPetUnit(leftUnit)
-        local rightIsPet = IsPetUnit(rightUnit)
-        if leftIsPet ~= rightIsPet then
-            return not leftIsPet
-        end
-
-        local leftIsPlayer = IsPlayerUnit(leftUnit)
-        local rightIsPlayer = IsPlayerUnit(rightUnit)
-        if leftIsPlayer ~= rightIsPlayer then
-            if mode == "Bottom" then
-                return rightIsPlayer
-            elseif mode == "Middle" then
-                if leftIsPlayer then
-                    return UnitIndex(rightUnit) > 1
-                end
-
-                return UnitIndex(leftUnit) <= 1
-            end
-
-            return leftIsPlayer
-        end
-
-        local leftIndex = UnitIndex(leftUnit)
-        local rightIndex = UnitIndex(rightUnit)
-        if leftIndex ~= rightIndex then
-            return leftIndex < rightIndex
-        end
-
-        return tostring(leftUnit or "") < tostring(rightUnit or "")
-    end
-
-    for i = 2, #frames do
-        local current = frames[i]
+    for i = 2, #entries do
+        local current = entries[i]
         local insertPos = i - 1
 
-        while insertPos >= 1 and Compare(current, frames[insertPos]) do
-            frames[insertPos + 1] = frames[insertPos]
-            insertPos = insertPos - 1
+        while insertPos >= 1 do
+            local previous = entries[insertPos]
+            local currentBeforePrevious = false
+
+            if current.Unit ~= previous.Unit then
+                if current.IsPet ~= previous.IsPet then
+                    currentBeforePrevious = not current.IsPet
+                elseif current.IsPlayer ~= previous.IsPlayer then
+                    if mode == "Bottom" then
+                        currentBeforePrevious = previous.IsPlayer
+                    elseif mode == "Middle" then
+                        if current.IsPlayer then
+                            currentBeforePrevious = previous.Index > 1
+                        else
+                            currentBeforePrevious = current.Index <= 1
+                        end
+                    else
+                        currentBeforePrevious = current.IsPlayer
+                    end
+                elseif current.Index ~= previous.Index then
+                    currentBeforePrevious = current.Index < previous.Index
+                else
+                    currentBeforePrevious = (current.Unit or "") < (previous.Unit or "")
+                end
+            end
+
+            if currentBeforePrevious then
+                entries[insertPos + 1] = previous
+                insertPos = insertPos - 1
+            else
+                break
+            end
         end
 
-        frames[insertPos + 1] = current
+        entries[insertPos + 1] = current
     end
 
     local yOffset = -(self:GetAttribute("TitleHeight") or 0)
 
-    for _, frame in ipairs(frames) do
+    for _, entry in ipairs(entries) do
+        local frame = entry.Frame
         frame:ClearAllPoints()
         frame:SetPoint("TOPLEFT", "$parent", "TOPLEFT", 0, yOffset)
         yOffset = yOffset - frame:GetHeight()
@@ -172,12 +154,6 @@ local function ConfigureHeader(header)
         self:SetID(UnitButtonsCount)
         self:SetAttribute("Manager", Manager)
         self:SetAttribute("refreshUnitChange", [[
-            local manager = self:GetAttribute("Manager")
-            if manager then
-                manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
-            end
-        ]])
-        self:SetAttribute("_onattributechanged", [[
             local manager = self:GetAttribute("Manager")
             if manager then
                 manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
