@@ -36,7 +36,7 @@ secureMethods.SortParty = [=[
         local unit = child and child.GetAttribute and child:GetAttribute("unit")
         local name = child and child.GetName and child:GetName()
 
-        if unit and name and strmatch(name, "^CompactPartyFrameMember") and child.GetHeight and child:GetHeight() > 0 then
+        if unit and name and (strmatch(name, "^CompactPartyFrameMember") or strmatch(name, "^CompactPartyFramePet")) and child.IsVisible and child:IsVisible() and child.GetHeight and child:GetHeight() > 0 then
             local entry = newtable()
             entry.Frame = child
             entry.Unit = unit
