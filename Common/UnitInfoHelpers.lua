@@ -217,16 +217,9 @@ addon.IsPartyPrimaryPet = function(unitId)
 end
 
 addon.UnitIsHostile = function(unitId)
-    local playerPossessed = UnitIsPossessed("player");
-    local unitPossessed = UnitIsPossessed(unitId);
-    local reaction = UnitReaction("player", unitId); -- This can return nil/secret; default to hostile to avoid friendly icons on NPCs.
-
-    if addon.IsSecretValue(playerPossessed) or addon.IsSecretValue(unitPossessed) or addon.IsSecretValue(reaction) then
-        return true;
-    end
-
-    local possessedFactor = ( playerPossessed ~= unitPossessed );
+    local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
     -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
+    local reaction = UnitReaction("player", unitId); -- this can sometimes return nil, treat as hostile to avoid showing friendly class icons on NPCs
     local isHostile = ( not reaction ) or ( reaction < 5 );
     return isHostile ~= possessedFactor;
 end
