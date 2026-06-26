@@ -14,14 +14,38 @@ addon.GetRaidFrameOptions = function(order)
         get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
         set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
         args = {
-            header1 = {
+            arenaRaidFrameSortHeader = {
                 order = 1,
+                type = "header",
+                name = "Arena party sorting",
+            },
+
+            arenaRaidFrameSortOrder = {
+                order = 2,
+                type = "select",
+                width = 1.4,
+                name = "Sort order",
+                desc = "Sort Blizzard compact party frames in arenas.",
+                values = {
+                    [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
+                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
+                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in middle",
+                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player on bottom",
+                },
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshArenaRaidFrameSort();
+                end,
+            },
+
+            header1 = {
+                order = 3,
                 type = "header",
                 name = "PvP aggro highlight",
             },
 
             raidFrameAggroHighlightEnabled = {
-                order = 2,
+                order = 4,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
@@ -33,13 +57,13 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             header2 = {
-                order = 6,
+                order = 5,
                 type = "header",
                 name = "Healer Buff Helper",
             },
 
             healerBuffHelperScale = {
-                order = 7,
+                order = 6,
                 width = "normal",
                 type = "range",
                 isPercent = true,
@@ -59,7 +83,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             healerBuffHelperScaleBreak = {
-                order = 7.5,
+                order = 7,
                 type = "description",
                 name = "",
                 width = "full",
@@ -100,14 +124,14 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             druidBuffHelperBreak = {
-                order = 9.5,
+                order = 10,
                 type = "description",
                 name = "",
                 width = "full",
             },
 
             evokerBuffHelper = {
-                order = 10,
+                order = 11,
                 width = "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. "Preservation Evoker",
