@@ -509,13 +509,16 @@ addon.GetEnemyNameplateOptions = function(order)
                         width = "full",
                         name = addon.FORMAT_TEXTURE(beastMasteryHunterIcon) .. " Hide beast mastery hunter secondary pets in arena",
                         desc = "Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations",
+                        hidden = function()
+                            return addon.PROJECT_MAINLINE;
+                        end,
                     },
                     filterEnabled = {
                         order = 11,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight",
-                        desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
+                        name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Highlight important enemy summons" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
+                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons and totems using secret-safe aura and cast detection" or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                     },
                     showCritterIcons = {
                         order = 12,
@@ -524,7 +527,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = addon.FORMAT_ATLAS(addon.ICON_CRITTER) .. " Show critter icons for hidden pet nameplates",
                         desc = "Show a critter icon in place of pet nameplates hidden by the addon\nThis helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen",
                         hidden = function ()
-                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet );
+                            return addon.PROJECT_MAINLINE or ( ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) and ( not SweepyBoop.db.profile.nameplatesEnemy.hideHunterSecondaryPet ) );
                         end
                     },
                     npcHighlightScale = {
@@ -560,6 +563,9 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_shadow_shadowwordpain")) .. " Filter debuffs applied by myself",
                         desc = "Show whitelisted debuffs applied by myself"
                             .. "\n\nCrowd control debuffs are never filtered as they are critical for PvP",
+                        hidden = function()
+                            return addon.PROJECT_MAINLINE;
+                        end,
                         set = function (info, val)
                             SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
                             SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
@@ -574,7 +580,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Show whitelisted buffs on enemy nameplates",
                         desc = "Show whitelisted buffs on enemy nameplates from all sources",
                         hidden = function ()
-                            return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                            return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
                         end,
                         set = function (info, val)
                             SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
@@ -597,7 +603,7 @@ addon.GetEnemyNameplateOptions = function(order)
                 end,
                 args = {},
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                 end
             },
 
@@ -613,7 +619,7 @@ addon.GetEnemyNameplateOptions = function(order)
                 end,
                 args = {},
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled );
                 end
             },
 
@@ -629,7 +635,7 @@ addon.GetEnemyNameplateOptions = function(order)
                 end,
                 args = {},
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.auraFilterEnabled ) or ( not SweepyBoop.db.profile.nameplatesEnemy.showBuffsOnEnemy );
                 end
             },
         },

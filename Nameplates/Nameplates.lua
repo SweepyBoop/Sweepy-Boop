@@ -22,6 +22,11 @@ end
 local strsub = string.sub
 local strbyte = string.byte
 
+local retailNameplateUnits = {};
+for i = 1, 40 do
+    retailNameplateUnits[i] = "nameplate" .. i;
+end
+
 local function IsUnitIdInvalid(unitId)
     if unitId == nil then return true end
     local b = strbyte(unitId)
@@ -115,7 +120,7 @@ local function UpdateWidgets(nameplate, frame)
     end
 
     -- Comment out when testing on a target dummy
-    if ( not UnitPlayerControlled(frame.unit) ) then
+    if ( not addon.PROJECT_MAINLINE ) and ( not UnitPlayerControlled(frame.unit) ) then
         HideWidgets(nameplate);
         UpdateUnitFrameVisibility(nameplate, frame, true);
         return;
@@ -195,12 +200,12 @@ local function UpdateWidgets(nameplate, frame)
         -- Process non-player hostile units
         addon.HideSpecIcon(nameplate);
 
-        local npcOption, isCritter = addon.CheckNpcWhiteList(frame.unit);
+        local npcOption, isCritter, iconTexture, highlightKey = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
         if ( npcOption == addon.NpcOption.Highlight ) then
-            addon.ShowNpcHighlight(nameplate, true);
+            addon.ShowNpcHighlight(nameplate, true, iconTexture, highlightKey);
         elseif ( npcOption == addon.NpcOption.ShowWithIcon ) then
-            addon.ShowNpcHighlight(nameplate);
+            addon.ShowNpcHighlight(nameplate, false, iconTexture, highlightKey);
         elseif ( npcOption == addon.NpcOption.Show ) then
             addon.HideNpcHighlight(nameplate);
         else
@@ -228,6 +233,10 @@ function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
     if addon.PROJECT_MAINLINE then
+        eventFrame:RegisterUnitEvent(addon.UNIT_AURA, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_START, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_STOP, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_INTERRUPTED, unpack(retailNameplateUnits));
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
         -- Arena slot fingerprint cache: the comp only changes on a new arena / shuffle round
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
@@ -275,16 +284,21 @@ function SweepyBoop:SetupNameplateModules()
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
             end
-        elseif event == addon.UNIT_AURA then
+        elseif event == addon.UNIT_AURA or event == addon.UNIT_SPELLCAST_START or event == addon.UNIT_SPELLCAST_STOP or event == addon.UNIT_SPELLCAST_INTERRUPTED then
             if IsUnitIdInvalid(unitId) then return end
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
             if nameplate and nameplate.UnitFrame then
                 if IsForbiddenSafe(nameplate.UnitFrame) then return end
                 local unitAuraUpdateInfo = ...;
-                addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
+                if event == addon.UNIT_AURA then
+                    addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
+                    addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
+                end
 
-                addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
+                if addon.PROJECT_MAINLINE and ( not IsRestricted() ) then
+                    UpdateWidgets(nameplate, nameplate.UnitFrame);
+                end
             end
         end
     end)
