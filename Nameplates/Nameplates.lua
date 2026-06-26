@@ -111,11 +111,20 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     end
 end
 
-local function IsRetailSummon(unit)
+local function MayBeRetailSummon(unit)
     if ( not addon.PROJECT_MAINLINE ) or ( not UnitIsMinion ) then return false end
 
     local isMinion = UnitIsMinion(unit);
-    return ( not addon.IsSecretValue(isMinion) ) and isMinion;
+    return addon.IsSecretValue(isMinion) or isMinion;
+end
+
+local function IsPlayerControlledSafe(unit)
+    local isPlayerControlled = UnitPlayerControlled(unit);
+    if addon.IsSecretValue(isPlayerControlled) then
+        return true;
+    end
+
+    return isPlayerControlled;
 end
 
 local function UpdateWidgets(nameplate, frame)
@@ -127,7 +136,7 @@ local function UpdateWidgets(nameplate, frame)
     end
 
     -- Comment out when testing on a target dummy
-    if ( not UnitPlayerControlled(frame.unit) ) and ( not IsRetailSummon(frame.unit) ) then
+    if ( not IsPlayerControlledSafe(frame.unit) ) and ( not MayBeRetailSummon(frame.unit) ) then
         HideWidgets(nameplate);
         UpdateUnitFrameVisibility(nameplate, frame, true);
         return;

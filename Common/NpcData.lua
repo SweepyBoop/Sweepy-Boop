@@ -308,17 +308,13 @@ if addon.PROJECT_MAINLINE then
     local RETAIL_SUMMON_FALLBACK_TEXTURE = "Interface\\Icons\\Spell_shaman_totemrecall";
 
     ResolveRetailSummonHighlight = function(unitId)
-        if not UnitIsMinion then
-            return addon.NpcOption.Show, false;
-        end
-
-        local isMinion = UnitIsMinion(unitId);
-        if addon.IsSecretValue(isMinion) or ( not isMinion ) then
+        local isMinion = UnitIsMinion and UnitIsMinion(unitId);
+        if ( not addon.IsSecretValue(isMinion) ) and ( not isMinion ) then
             return addon.NpcOption.Show, false;
         end
 
         local isOtherPlayerPet = UnitIsOtherPlayersPet and UnitIsOtherPlayersPet(unitId);
-        if addon.IsSecretValue(isOtherPlayerPet) or isOtherPlayerPet then
+        if ( not addon.IsSecretValue(isOtherPlayerPet) ) and isOtherPlayerPet then
             return addon.NpcOption.Show, false;
         end
 
@@ -326,6 +322,10 @@ if addon.PROJECT_MAINLINE then
         local castingSpell = UnitCastingInfo(unitId);
         if addon.IsSecretValue(castingSpell) then
             castingSpell = nil;
+        end
+
+        if ( not isImportantAura ) and ( not castingSpell ) and ( not addon.IsSecretValue(isMinion) ) then
+            return addon.NpcOption.Show, false;
         end
 
         if isImportantAura then
@@ -350,11 +350,6 @@ addon.CheckNpcWhiteList = function (unitId)
         local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
         local isCritter = addon.CritterNPCs[tonumber(npcID)];
         return isWhitelisted, isCritter;
-    end
-
-    local npcOption, isCritter, iconTexture, highlightKey = GetNpcFilterInfo(addon.GetNpcIdFromUnit(unitId));
-    if npcOption ~= nil then
-        return npcOption, isCritter, iconTexture, highlightKey;
     end
 
     return ResolveRetailSummonHighlight(unitId);

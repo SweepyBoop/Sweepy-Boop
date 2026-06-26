@@ -514,8 +514,8 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 11,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight",
-                        desc = "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
+                        name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Highlight important enemy summons" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
+                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons and totems using secret-safe aura and cast detection" or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                     },
                     showCritterIcons = {
                         order = 12,
@@ -597,7 +597,7 @@ addon.GetEnemyNameplateOptions = function(order)
                 end,
                 args = {},
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                    return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                 end
             },
 
