@@ -1,121 +1,361 @@
--- https://www.curseforge.com/wow/addons/sortgroup
--- https://github.com/Verubato/frame-sort
-
--- Tried both ways, still getting taint when players join/leave, or pet dies during combat
-
--- Try leveraging SetPoint to modify the positions of CompactPartyFrames
+-- Minimal arena-only Blizzard compact party frame sorting.
+-- Hidden secure headers observe party and pet unit changes; restricted snippets
+-- perform the protected frame movement.
 
 local _, addon = ...;
 
-local function Compare_Top(left, right)
-    local leftToken, rightToken = left.unit, right.unit;
+local manager;
+local memberHeader;
+local petHeader;
+local sortPending = false;
 
-    if ( not UnitExists(leftToken) ) then return false
-    elseif ( not UnitExists(rightToken) ) then return true
+local MODE_TOP = "Top";
+local MODE_BOTTOM = "Bottom";
+local MODE_MIDDLE = "Middle";
 
-    elseif (leftToken == "player") then return true
-    elseif (rightToken == "player") then return false
+local secureMethods = {};
+
+secureMethods.SortParty = [=[
+    if not self:GetAttribute("Enabled") then
+        return false
+    end
+
+    local partyFrame = self:GetFrameRef("PartyFrame")
+    if not partyFrame or not partyFrame.GetChildList or not partyFrame:IsVisible() then
+        return false
+    end
+
+    local mode = self:GetAttribute("SortMode") or "Middle"
+    local playerUnit = self:GetAttribute("PlayerUnit") or "player"
+
+    local children = newtable()
+    local frames = newtable()
+    partyFrame:GetChildList(children)
+
+    for _, child in ipairs(children) do
+        local unit = child and child.GetAttribute and child:GetAttribute("unit")
+        local name = child and child.GetName and child:GetName()
+
+        if unit and name and strmatch(name, "^CompactPartyFrameMember") and child.GetHeight and child:GetHeight() > 0 then
+            frames[#frames + 1] = child
+        end
+    end
+
+    if #frames <= 1 then
+        return false
+    end
+
+    local function IsPetUnit(unit)
+        return unit and strfind(unit, "pet") ~= nil
+    end
+
+    local function IsPlayerUnit(unit)
+        return unit == "player" or unit == playerUnit
+    end
+
+    local function UnitIndex(unit)
+        if not unit then
+            return 999
+        end
+
+        if IsPlayerUnit(unit) then
+            return 0
+        end
+
+        local index = strmatch(unit, "^party(%d+)")
+            or strmatch(unit, "^raid(%d+)")
+            or strmatch(unit, "^partypet(%d+)")
+            or strmatch(unit, "^raidpet(%d+)")
+            or strmatch(unit, "^party(%d+)pet")
+            or strmatch(unit, "^raid(%d+)pet")
+
+        return tonumber(index) or 998
+    end
+
+    local function Compare(leftFrame, rightFrame)
+        local leftUnit = leftFrame and leftFrame:GetAttribute("unit")
+        local rightUnit = rightFrame and rightFrame:GetAttribute("unit")
+
+        if leftUnit == rightUnit then
+            return false
+        end
+
+        local leftIsPet = IsPetUnit(leftUnit)
+        local rightIsPet = IsPetUnit(rightUnit)
+        if leftIsPet ~= rightIsPet then
+            return not leftIsPet
+        end
+
+        local leftIsPlayer = IsPlayerUnit(leftUnit)
+        local rightIsPlayer = IsPlayerUnit(rightUnit)
+        if leftIsPlayer ~= rightIsPlayer then
+            if mode == "Bottom" then
+                return rightIsPlayer
+            elseif mode == "Middle" then
+                if leftIsPlayer then
+                    return UnitIndex(rightUnit) > 1
+                end
+
+                return UnitIndex(leftUnit) <= 1
+            end
+
+            return leftIsPlayer
+        end
+
+        local leftIndex = UnitIndex(leftUnit)
+        local rightIndex = UnitIndex(rightUnit)
+        if leftIndex ~= rightIndex then
+            return leftIndex < rightIndex
+        end
+
+        return tostring(leftUnit or "") < tostring(rightUnit or "")
+    end
+
+    for i = 2, #frames do
+        local current = frames[i]
+        local insertPos = i - 1
+
+        while insertPos >= 1 and Compare(current, frames[insertPos]) do
+            frames[insertPos + 1] = frames[insertPos]
+            insertPos = insertPos - 1
+        end
+
+        frames[insertPos + 1] = current
+    end
+
+    local yOffset = -(self:GetAttribute("TitleHeight") or 0)
+
+    for _, frame in ipairs(frames) do
+        frame:ClearAllPoints()
+        frame:SetPoint("TOPLEFT", "$parent", "TOPLEFT", 0, yOffset)
+        yOffset = yOffset - frame:GetHeight()
+    end
+
+    return true
+]=];
+
+local function SetAttributeNoHandler(frame, name, value)
+    if frame.SetAttributeNoHandler then
+        frame:SetAttributeNoHandler(name, value);
     else
-        return leftToken < rightToken;
+        frame:SetAttribute(name, value);
     end
 end
 
-local function Compare_Bottom(left, right)
-    local leftToken, rightToken = left.unit, right.unit;
-    if ( not UnitExists(leftToken) ) then return false
-    elseif ( not UnitExists(rightToken) ) then return true
+local function EnsureSecureHelpers(frame)
+    if not frame.Execute and SecureHandlerExecute then
+        function frame:Execute(body)
+            return SecureHandlerExecute(self, body);
+        end
+    end
 
-    elseif (leftToken == "player") then return false
-    elseif (rightToken == "player") then return true
-    else
-        return leftToken < rightToken;
+    if not frame.SetFrameRef and SecureHandlerSetFrameRef then
+        function frame:SetFrameRef(label, refFrame)
+            return SecureHandlerSetFrameRef(self, label, refFrame);
+        end
     end
 end
 
-local function Compare_Mid(left, right)
-    local leftToken, rightToken = left.unit, right.unit;
+local function ConfigureHeader(header)
+    EnsureSecureHelpers(header);
 
-    if ( not UnitExists(leftToken) ) then return false
-    elseif ( not UnitExists(rightToken) ) then return true
+    header:SetAttribute("showRaid", true);
+    header:SetAttribute("showParty", true);
+    header:SetAttribute("showPlayer", true);
+    header:SetAttribute("showSolo", true);
+    header:SetAttribute("template", "SecureHandlerAttributeTemplate");
+    header:SetAttribute("initialConfigFunction", [=[
+        UnitButtonsCount = (UnitButtonsCount or 0) + 1
 
-    elseif ( leftToken == "party1" ) then return true
-    elseif ( rightToken == "party1" ) then return false
-    elseif ( leftToken == "player" ) then return true
-    elseif ( rightToken == "player" ) then return false
-    else
-        return leftToken < rightToken;
-    end
+        self:SetWidth(0)
+        self:SetHeight(0)
+        self:SetID(UnitButtonsCount)
+        self:SetAttribute("Manager", Manager)
+        self:SetAttribute("refreshUnitChange", [[
+            local manager = self:GetAttribute("Manager")
+            if manager then
+                manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
+            end
+        ]])
+        self:SetAttribute("_onattributechanged", [[
+            local manager = self:GetAttribute("Manager")
+            if manager then
+                manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
+            end
+        ]])
+    ]=]);
+
+    header:SetFrameRef("Manager", manager);
+    header:Execute([[ Manager = self:GetFrameRef("Manager") ]]);
+    header:SetPoint("TOPLEFT", UIParent, "TOPLEFT");
+    header:Show();
 end
 
-local sortFunctions = {
-    [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = Compare_Top,
-    [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = Compare_Bottom,
-    [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = Compare_Mid,
-};
+local function EnsureSecureFrames()
+    if manager then
+        return true;
+    end
 
-local function GetPartyUnitId(unitId)
-    if UnitIsUnit(unitId, "player") then
-        return "player";
-    else
-        for i = 1, (MEMBERS_PER_RAID_GROUP - 1) do
-            if UnitIsUnit(unitId, "party" .. i) then
-                return "party" .. i;
+    if InCombatLockdown() then
+        sortPending = true;
+        return false;
+    end
+
+    manager = CreateFrame("Frame", nil, UIParent, "SecureHandlerStateTemplate");
+    EnsureSecureHelpers(manager);
+
+    if not manager.Execute or not manager.SetFrameRef then
+        manager = nil;
+        return false;
+    end
+
+    for name, snippet in pairs(secureMethods) do
+        SetAttributeNoHandler(manager, name, snippet);
+    end
+
+    manager:SetAttribute("_onstate-sweepyboop-sort-run", [[
+        if newstate == "ignore" then
+            return
+        end
+
+        local run = control or self
+        run:RunAttribute("SortParty")
+    ]]);
+
+    RegisterAttributeDriver(manager, "state-sweepyboop-sort-run", "[pet] pet; nopet;");
+
+    memberHeader = CreateFrame("Frame", nil, UIParent, "SecureGroupHeaderTemplate");
+    petHeader = CreateFrame("Frame", nil, UIParent, "SecureGroupPetHeaderTemplate");
+
+    ConfigureHeader(memberHeader);
+    ConfigureHeader(petHeader);
+
+    return true;
+end
+
+local function IsArena()
+    if IsActiveBattlefieldArena and IsActiveBattlefieldArena() then
+        return true;
+    end
+
+    local _, instanceType = IsInInstance();
+    return instanceType == "arena";
+end
+
+local function SortingEnabled()
+    return SweepyBoop
+        and SweepyBoop.db
+        and SweepyBoop.db.profile
+        and SweepyBoop.db.profile.raidFrames
+        and SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder ~= addon.RAID_FRAME_SORT_ORDER.DISABLED;
+end
+
+local function CurrentSortMode()
+    local order = SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder;
+
+    if order == addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP then
+        return MODE_TOP;
+    elseif order == addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM then
+        return MODE_BOTTOM;
+    end
+
+    return MODE_MIDDLE;
+end
+
+local function CurrentPlayerUnit()
+    if UnitExists("player") then
+        if IsInRaid() then
+            for i = 1, MAX_RAID_MEMBERS do
+                local unit = "raid" .. i;
+                if UnitIsUnit(unit, "player") then
+                    return unit;
+                end
+            end
+        else
+            for i = 1, MEMBERS_PER_RAID_GROUP - 1 do
+                local unit = "party" .. i;
+                if UnitIsUnit(unit, "player") then
+                    return unit;
+                end
             end
         end
     end
 
-    return unitId;
+    return "player";
 end
 
-local sortPending = false;
+local function CurrentTitleHeight()
+    local title = CompactPartyFrameTitle or (CompactPartyFrame and CompactPartyFrame.title);
+    if not title or not title.GetHeight then
+        return 0;
+    end
+
+    local ok, height = pcall(title.GetHeight, title);
+    if ok and type(height) == "number" then
+        return height;
+    end
+
+    return 0;
+end
+
+local function ConfigureForCurrentState()
+    if not manager then
+        return false;
+    end
+
+    local enabled = SortingEnabled() and IsArena() and IsInGroup() and CompactPartyFrame ~= nil;
+
+    SetAttributeNoHandler(manager, "Enabled", enabled);
+    SetAttributeNoHandler(manager, "SortMode", enabled and CurrentSortMode() or nil);
+    SetAttributeNoHandler(manager, "PlayerUnit", enabled and CurrentPlayerUnit() or nil);
+    SetAttributeNoHandler(manager, "TitleHeight", enabled and CurrentTitleHeight() or 0);
+
+    if CompactPartyFrame then
+        manager:SetFrameRef("PartyFrame", CompactPartyFrame);
+    end
+
+    return enabled;
+end
 
 local function TrySort()
+    if not EnsureSecureFrames() then
+        return;
+    end
+
     if InCombatLockdown() then
         sortPending = true;
         return;
     end
 
-    local frames = {};
-    for i = 1, MEMBERS_PER_RAID_GROUP do
-        local frame = _G["CompactPartyFrameMember"..i];
-        local unit = GetPartyUnitId(frame.unit);
-        frames[i] = { unit = unit, frame = frame };
-    end
+    local enabled = ConfigureForCurrentState();
 
-    table.sort(frames, sortFunctions[SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder]);
-
-    local prevFrame;
-    for _, value in ipairs(frames) do
-        local frame = value.frame;
-        frame:ClearAllPoints();
-        if ( not prevFrame ) then
-            frame:SetPoint("TOP", CompactPartyFrameTitle, "BOTTOM");
-        else
-            frame:SetPoint("TOP", prevFrame, "BOTTOM");
-        end
-
-        prevFrame = frame;
+    if enabled then
+        manager:Execute([[
+            local run = control or self
+            run:RunAttribute("SortParty")
+        ]]);
     end
 
     sortPending = false;
 end
 
-local function OnEvent(_, event)
-    if (SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder == addon.RAID_FRAME_SORT_ORDER.DISABLED) then return end
-    if ( not IsActiveBattlefieldArena() ) then return end -- only sort in arena
-    if ( not IsInGroup() ) then return end
+function SweepyBoop:RefreshArenaRaidFrameSort()
+    TrySort();
+end
 
-    -- Do we need to skip when EditModeManagerFrame.editModeActive is true?
-    if (event == addon.PLAYER_REGEN_ENABLED) and sortPending then
+local function OnEvent(_, event)
+    if event == addon.PLAYER_REGEN_ENABLED and sortPending then
         TrySort();
-    else
-        TrySort();
+        return;
     end
+
+    C_Timer.After(0, TrySort);
 end
 
 local eventFrame = CreateFrame("Frame");
-eventFrame:HookScript("OnEvent", OnEvent);
+eventFrame:SetScript("OnEvent", OnEvent);
 eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
 eventFrame:RegisterEvent(addon.UNIT_PET);
+eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
 eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
 eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);

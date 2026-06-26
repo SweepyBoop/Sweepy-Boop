@@ -64,6 +64,7 @@ ArenaFrames\Options.lua
 
 RaidFrames\BuffHelper.lua
 RaidFrames\FixBlizzardRaidAggro.lua
+RaidFrames\SortGroup.lua
 RaidFrames\Options.lua
 
 Internal\HideHotKeys.lua
