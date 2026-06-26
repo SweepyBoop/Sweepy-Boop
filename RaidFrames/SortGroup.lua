@@ -975,7 +975,51 @@ function SweepyBoop:RefreshArenaRaidFrameSort()
     TrySort();
 end
 
+local function DebugFrameOrder(container)
+    if not container or not container.GetChildren then
+        return "none";
+    end
+
+    local orderedFrames = {};
+    for _, child in ipairs({ container:GetChildren() }) do
+        if child and child.IsVisible and child:IsVisible() and child.GetTop and child.GetLeft then
+            local unit = FrameUnit(child);
+            if unit then
+                orderedFrames[#orderedFrames + 1] = {
+                    name = child.GetName and child:GetName() or "?",
+                    unit = unit,
+                    top = child:GetTop() or 0,
+                    left = child:GetLeft() or 0,
+                };
+            end
+        end
+    end
+
+    table.sort(orderedFrames, function(left, right)
+        if left.top ~= right.top then
+            return left.top > right.top;
+        end
+
+        return left.left < right.left;
+    end);
+
+    local parts = {};
+    for i, entry in ipairs(orderedFrames) do
+        parts[#parts + 1] = i .. ":" .. entry.unit .. "(" .. entry.name .. ")";
+    end
+
+    return table.concat(parts, " > ");
+end
+
 function SweepyBoop:DebugArenaRaidFrameSort()
+    local loadedUnits = {};
+    if manager then
+        local count = manager:GetAttribute("FriendlyUnitsCount") or 0;
+        for i = 1, count do
+            loadedUnits[#loadedUnits + 1] = tostring(manager:GetAttribute("FriendlyUnit" .. i));
+        end
+    end
+
     print(
         "SweepyBoop sort",
         "order=", SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder,
@@ -992,6 +1036,9 @@ function SweepyBoop:DebugArenaRaidFrameSort()
         "crfc=", CompactRaidFrameContainer ~= nil,
         "crfcVisible=", CompactRaidFrameContainer and CompactRaidFrameContainer:IsVisible()
     );
+    print("SweepyBoop loaded units", table.concat(loadedUnits, " > "));
+    print("SweepyBoop CPF frames", DebugFrameOrder(CompactPartyFrame));
+    print("SweepyBoop CRFC frames", DebugFrameOrder(CompactRaidFrameContainer));
 end
 
 local function OnEvent(_, event)
