@@ -328,7 +328,7 @@ addon.RAID_FRAME_SORT_ORDER = {
 };
 
 addon.IsConflictingFrameSortAddonLoaded = function()
-    return FrameSort or FrameSortApi or (C_AddOns and C_AddOns.IsAddOnLoaded and C_AddOns.IsAddOnLoaded("FrameSort"));
+    return FrameSort or FrameSortApi or C_AddOns.IsAddOnLoaded("FrameSort");
 end
 
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
