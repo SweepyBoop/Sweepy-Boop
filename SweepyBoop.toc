@@ -3,7 +3,7 @@
 ## Author: SweepyBoop
 ## Version: @project-version@
 ## SavedVariables: SweepyBoopDB
-## OptionalDeps: Ace3
+## OptionalDeps: Ace3, FrameSort
 ## IconTexture: Interface\AddOns\SweepyBoop\Art\Logo
 
 Libs\LibStub\LibStub.lua
