@@ -14,7 +14,6 @@ local MODE_TOP = "Top";
 local MODE_BOTTOM = "Bottom";
 local MODE_MIDDLE = "Middle";
 
-local PROVIDER_NAME = "Blizzard";
 local CONTAINER_PARTY = 1;
 local LAYOUT_HARD = 2;
 
@@ -483,7 +482,8 @@ local function IsArena()
 end
 
 local function SortingEnabled()
-    return SweepyBoop
+    return (not addon.IsConflictingFrameSortAddonLoaded())
+        and SweepyBoop
         and SweepyBoop.db
         and SweepyBoop.db.profile
         and SweepyBoop.db.profile.raidFrames
@@ -1016,6 +1016,7 @@ function SweepyBoop:DebugArenaRaidFrameSort()
     print(
         "SweepyBoop sort",
         "order=", SweepyBoop.db.profile.raidFrames.arenaRaidFrameSortOrder,
+        "conflict=", addon.IsConflictingFrameSortAddonLoaded(),
         "arena=", IsArena(),
         "group=", IsInGroup(),
         "combat=", InCombatLockdown(),

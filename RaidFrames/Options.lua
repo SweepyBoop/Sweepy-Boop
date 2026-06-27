@@ -25,7 +25,14 @@ addon.GetRaidFrameOptions = function(order)
                 type = "select",
                 width = 1.4,
                 name = "Sort order",
-                desc = "Sort Blizzard compact party frames in arenas.",
+                desc = function()
+                    if addon.IsConflictingFrameSortAddonLoaded() then
+                        return "Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement.";
+                    end
+
+                    return "Sort Blizzard compact party frames in arenas.";
+                end,
+                disabled = addon.IsConflictingFrameSortAddonLoaded,
                 values = {
                     [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
                     [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",

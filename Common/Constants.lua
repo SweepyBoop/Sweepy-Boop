@@ -327,6 +327,10 @@ addon.RAID_FRAME_SORT_ORDER = {
     PLAYER_MID = 3,
 };
 
+addon.IsConflictingFrameSortAddonLoaded = function()
+    return C_AddOns and C_AddOns.IsAddOnLoaded and C_AddOns.IsAddOnLoaded("FrameSort");
+end
+
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
 addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";
