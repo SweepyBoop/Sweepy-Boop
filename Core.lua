@@ -84,7 +84,7 @@ local defaults = {
             animatedTargetHighlight = true,
             classColorTargetHighlight = true,
             showPlayerName = false,
-            showCrowdControl = false,
+            showCrowdControl = true,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
@@ -202,7 +202,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconSize = 1.5;
     defaults.profile.nameplatesFriendly.healerIconSize = 1.5;
     defaults.profile.nameplatesFriendly.petIconSize = 1;
-    defaults.profile.nameplatesFriendly.showCrowdControl = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
