@@ -216,6 +216,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
     defaults.profile.misc.healerInCrowdControl = true;
+    defaults.profile.misc.rangeCheckerEnabled = true;
 end
 
 local function FillDefaults()
