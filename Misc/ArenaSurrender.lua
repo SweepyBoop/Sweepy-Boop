@@ -1,17 +1,18 @@
 local _, addon = ...;
 
 function SweepyBoop:SetupArenaSurrender()
-    SlashCmdList["CHAT_AFK"] = function(msg)
-        if IsActiveBattlefieldArena() and SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
-            if CanSurrenderArena() then
-                SurrenderArena();
-            else
-                ConfirmOrLeaveBattlefield();
-            end
-        else
-            SendChatMessage(msg, "AFK");
-        end
-    end
+    -- Overriding Blizzard's CHAT_AFK handler likely taints chat frame/report flows.
+    -- SlashCmdList["CHAT_AFK"] = function(msg)
+    --     if IsActiveBattlefieldArena() and SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
+    --         if CanSurrenderArena() then
+    --             SurrenderArena();
+    --         else
+    --             ConfirmOrLeaveBattlefield();
+    --         end
+    --     else
+    --         SendChatMessage(msg, "AFK");
+    --     end
+    -- end
 
     if SweepyBoop.db.profile.misc.arenaSurrenderEnabled then
         SLASH_ArenaGG1 = "/gg";
