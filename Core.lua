@@ -151,7 +151,6 @@ local defaults = {
             raidFrameAggroHighlightEnabled = true,
             raidFrameAggroHighlightThickness = 2,
             raidFrameAggroHighlightAlpha = 0.5,
-            raidFrameAggroHighlightAnimationSpeed = 0,
             druidBuffHelper = true,
             healerBuffHelperScale = 1,
             druidBuffHelperWarning = false,
@@ -206,7 +205,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
-    defaults.profile.raidFrames.raidFrameAggroHighlightAnimationSpeed = 5;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSizeSecondary = 28;
@@ -217,11 +215,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.showUnusedIcons = true;
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
-    defaults.profile.arenaFrames.interruptBarEnabled = true;
-    defaults.profile.arenaFrames.interruptBarShowUnused = true;
-    defaults.profile.arenaFrames.interruptBarUnusedIconAlpha = 1;
-    defaults.profile.arenaFrames.interruptBarUsedIconAlpha = 0.5;
-    defaults.profile.misc.skipLeaveArenaConfirmation = true;
     defaults.profile.misc.healerInCrowdControl = true;
 end
 
