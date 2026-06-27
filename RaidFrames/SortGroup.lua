@@ -926,9 +926,6 @@ end
 local function TrySort()
     if InCombatLockdown() then
         sortPending = true;
-        if manager then
-            SetAttributeNoHandler(manager, "LastSortResult", "combat-deferred");
-        end
         return;
     end
 
