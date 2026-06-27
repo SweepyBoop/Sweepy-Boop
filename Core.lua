@@ -84,6 +84,7 @@ local defaults = {
             animatedTargetHighlight = true,
             classColorTargetHighlight = true,
             showPlayerName = false,
+            showCrowdControl = false,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,
