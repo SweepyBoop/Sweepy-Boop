@@ -66,7 +66,7 @@ local function GetDispellableScale(config)
 end
 
 local function IsEnabled()
-    return GetConfig().raidFrameDebuffIconsEnabled and true or false;
+    return GetConfig().raidFrameDebuffIconsEnabled and ( not addon.IsConflictingRaidFrameDebuffAddonLoaded() );
 end
 
 local function StyleCooldown(cooldown)
@@ -299,7 +299,9 @@ local function IsGroupUnit(unit)
 end
 
 local function ShowTestFrame(frame)
-    if frame:IsForbidden() or ( not IsFrameVisible(frame) ) then return end
+    if addon.IsConflictingRaidFrameDebuffAddonLoaded()
+            or frame:IsForbidden()
+            or ( not IsFrameVisible(frame) ) then return end
 
     local config = GetConfig();
     local container = EnsureContainer(frame);
@@ -482,6 +484,10 @@ function SweepyBoop:SetupRaidFrameDebuffIcons()
 end
 
 function SweepyBoop:RefreshRaidFrameDebuffIcons()
+    if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
+        isTesting = false;
+    end
+
     if IsEnabled() then
         RefreshAllFrames();
         return;
@@ -493,6 +499,11 @@ function SweepyBoop:RefreshRaidFrameDebuffIcons()
 end
 
 function SweepyBoop:TestRaidFrameDebuffIcons()
+    if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
+        self:HideTestRaidFrameDebuffIcons();
+        return;
+    end
+
     isTesting = true;
     for frame in pairs(cufPool) do
         if IsFrameVisible(frame) then

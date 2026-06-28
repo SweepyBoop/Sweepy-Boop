@@ -13,6 +13,10 @@ local function SetRaidFrameOptionAndRefresh(info, val, refreshFunc)
     refreshFunc();
 end
 
+local function DebuffIconOptionsDisabled()
+    return addon.IsConflictingRaidFrameDebuffAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled );
+end
+
 addon.GetRaidFrameOptions = function(order)
     local optionGroup = {
         order = order,
@@ -176,7 +180,14 @@ addon.GetRaidFrameOptions = function(order)
                 width = 0.675,
                 type = "toggle",
                 name = SpellIcon(118) .. " Enabled",
-                desc = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.",
+                desc = function()
+                    if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
+                        return "Disabled while MiniCC is loaded to avoid duplicate raid-frame crowd-control icons.";
+                    end
+
+                    return "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
+                end,
+                disabled = addon.IsConflictingRaidFrameDebuffAddonLoaded,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
                         SweepyBoop:RefreshRaidFrameDebuffIcons();
@@ -192,7 +203,7 @@ addon.GetRaidFrameOptions = function(order)
                 func = function ()
                     SweepyBoop:TestRaidFrameDebuffIcons();
                 end,
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                disabled = DebuffIconOptionsDisabled,
             },
 
             raidFrameDebuffIconsLayoutBreak1 = {
@@ -211,7 +222,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 1,
                 name = "Max Icons",
                 desc = "Maximum number of crowd-control debuff icons to show beside each raid frame.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                disabled = DebuffIconOptionsDisabled,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
                         SweepyBoop:RefreshRaidFrameDebuffIcons();
@@ -236,7 +247,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 0.05,
                 name = "Other Debuff Scale",
                 desc = "Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                disabled = DebuffIconOptionsDisabled,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
                         SweepyBoop:RefreshRaidFrameDebuffIcons();
@@ -254,7 +265,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 0.05,
                 name = "Dispellable Scale",
                 desc = "Size of dispellable crowd-control debuffs as a percentage of the raid-frame height, such as Magic, Curse, Disease, or Poison.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                disabled = DebuffIconOptionsDisabled,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
                         SweepyBoop:RefreshRaidFrameDebuffIcons();
@@ -271,7 +282,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 1,
                 name = "Offset X",
                 desc = "Horizontal offset from the right edge of the raid frame.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                disabled = DebuffIconOptionsDisabled,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
                         SweepyBoop:RefreshRaidFrameDebuffIcons();
@@ -288,7 +299,7 @@ addon.GetRaidFrameOptions = function(order)
                 step = 1,
                 name = "Offset Y",
                 desc = "Vertical offset from the center of the raid frame.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                disabled = DebuffIconOptionsDisabled,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
                         SweepyBoop:RefreshRaidFrameDebuffIcons();
