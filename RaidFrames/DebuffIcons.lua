@@ -262,6 +262,7 @@ end
 local function SetIconSize(icon, frameHeight, scale)
     local shownSize = frameHeight * scale;
     icon:SetSize(shownSize, shownSize);
+    -- TODO: If countdown text ever renders at the default large size, retry this after SetCooldown*().
     UpdateCooldownFontSize(icon.cooldown, shownSize);
 end
 
