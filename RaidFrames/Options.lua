@@ -172,7 +172,7 @@ addon.GetRaidFrameOptions = function(order)
             raidFrameDebuffIconsHeader = {
                 order = 12,
                 type = "header",
-                name = "Debuff Icons",
+                name = "Big Debuff Icons",
             },
 
             raidFrameDebuffIconsEnabled = {
@@ -238,7 +238,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconScale = {
-                order = 20,
+                order = 21,
                 width = "normal",
                 type = "range",
                 isPercent = true,
@@ -256,7 +256,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconDispellableScale = {
-                order = 21,
+                order = 20,
                 width = "normal",
                 type = "range",
                 isPercent = true,
