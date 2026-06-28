@@ -6,6 +6,17 @@ local function SpellIcon(spellId)
     return icon and addon.FORMAT_TEXTURE(icon) or "";
 end
 
+local function SetRaidFrameOptionAndRefresh(info, val, refreshFunc)
+    local raidFrames = SweepyBoop.db.profile.raidFrames;
+    raidFrames[info[#info]] = val;
+    raidFrames.lastModified = GetTime();
+    refreshFunc();
+end
+
+local function DebuffIconOptionsDisabled()
+    return addon.IsConflictingRaidFrameDebuffAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled );
+end
+
 addon.GetRaidFrameOptions = function(order)
     local optionGroup = {
         order = order,
@@ -53,7 +64,7 @@ addon.GetRaidFrameOptions = function(order)
 
             raidFrameAggroHighlightEnabled = {
                 order = 4,
-                width = "full",
+                width = 0.675,
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
                 desc = "Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.",
@@ -155,6 +166,144 @@ addon.GetRaidFrameOptions = function(order)
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                     SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
+                end,
+            },
+
+            raidFrameDebuffIconsHeader = {
+                order = 12,
+                type = "header",
+                name = "Big Debuff Icons",
+            },
+
+            raidFrameDebuffIconsEnabled = {
+                order = 13,
+                width = 0.675,
+                type = "toggle",
+                name = SpellIcon(118) .. " Enabled",
+                desc = function()
+                    if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
+                        return "Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.";
+                    end
+
+                    return "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
+                end,
+                disabled = addon.IsConflictingRaidFrameDebuffAddonLoaded,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconsTest = {
+                order = 14,
+                type = "execute",
+                width = "half",
+                name = "Test",
+                func = function ()
+                    SweepyBoop:TestRaidFrameDebuffIcons();
+                end,
+                disabled = DebuffIconOptionsDisabled,
+            },
+
+            raidFrameDebuffIconsLayoutBreak1 = {
+                order = 15,
+                type = "description",
+                name = "",
+                width = "full",
+            },
+
+            raidFrameDebuffIconCount = {
+                order = 16,
+                width = "normal",
+                type = "range",
+                min = 1,
+                max = 5,
+                step = 1,
+                name = "Max Icons",
+                desc = "Maximum number of crowd-control debuff icons to show beside each raid frame.",
+                disabled = DebuffIconOptionsDisabled,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconsLayoutBreak2 = {
+                order = 19,
+                type = "description",
+                name = "",
+                width = "full",
+            },
+
+            raidFrameDebuffIconScale = {
+                order = 21,
+                width = "normal",
+                type = "range",
+                isPercent = true,
+                min = 0.25,
+                max = 1.5,
+                step = 0.05,
+                name = "Other Debuff Scale",
+                desc = "Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height.",
+                disabled = DebuffIconOptionsDisabled,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconDispellableScale = {
+                order = 20,
+                width = "normal",
+                type = "range",
+                isPercent = true,
+                min = 0.25,
+                max = 1.5,
+                step = 0.05,
+                name = "Dispellable Scale",
+                desc = "Size of dispellable crowd-control debuffs as a percentage of the raid-frame height, such as Magic, Curse, Disease, or Poison.",
+                disabled = DebuffIconOptionsDisabled,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconOffsetX = {
+                order = 17,
+                width = "normal",
+                type = "range",
+                min = -20,
+                max = 80,
+                step = 1,
+                name = "Offset X",
+                desc = "Horizontal offset from the right edge of the raid frame.",
+                disabled = DebuffIconOptionsDisabled,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconOffsetY = {
+                order = 18,
+                width = "normal",
+                type = "range",
+                min = -80,
+                max = 80,
+                step = 1,
+                name = "Offset Y",
+                desc = "Vertical offset from the center of the raid frame.",
+                disabled = DebuffIconOptionsDisabled,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
                 end,
             },
         },

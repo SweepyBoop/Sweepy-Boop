@@ -63,6 +63,7 @@ ArenaFrames\RangeIndicators.lua
 ArenaFrames\Options.lua
 
 RaidFrames\BuffHelper.lua
+RaidFrames\DebuffIcons.lua
 RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\SortGroup.lua
 RaidFrames\Options.lua

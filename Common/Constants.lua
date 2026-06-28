@@ -331,6 +331,10 @@ addon.IsConflictingFrameSortAddonLoaded = function()
     return C_AddOns.IsAddOnLoaded("FrameSort");
 end
 
+addon.IsConflictingRaidFrameDebuffAddonLoaded = function()
+    return C_AddOns.IsAddOnLoaded("MiniCC");
+end
+
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
 addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";
