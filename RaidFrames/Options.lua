@@ -182,7 +182,7 @@ addon.GetRaidFrameOptions = function(order)
                 name = SpellIcon(118) .. " Enabled",
                 desc = function()
                     if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
-                        return "Disabled while MiniCC is loaded to avoid duplicate raid-frame crowd-control icons.";
+                        return "Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.";
                     end
 
                     return "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
