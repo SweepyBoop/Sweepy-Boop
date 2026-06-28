@@ -60,7 +60,7 @@ addon.GetRaidFrameOptions = function(order)
 
             raidFrameAggroHighlightEnabled = {
                 order = 4,
-                width = "full",
+                width = 1.2,
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
                 desc = "Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.",
@@ -173,7 +173,7 @@ addon.GetRaidFrameOptions = function(order)
 
             raidFrameDebuffIconsEnabled = {
                 order = 13,
-                width = "full",
+                width = 1.2,
                 type = "toggle",
                 name = SpellIcon(118) .. " Enabled",
                 desc = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.",
@@ -184,8 +184,19 @@ addon.GetRaidFrameOptions = function(order)
                 end,
             },
 
-            raidFrameDebuffIconCount = {
+            raidFrameDebuffIconsTest = {
                 order = 14,
+                type = "execute",
+                width = 0.55,
+                name = "Test",
+                func = function ()
+                    SweepyBoop:TestRaidFrameDebuffIcons();
+                end,
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+            },
+
+            raidFrameDebuffIconCount = {
+                order = 15,
                 width = "normal",
                 type = "range",
                 min = 1,
@@ -202,7 +213,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconScale = {
-                order = 15,
+                order = 18,
                 width = "normal",
                 type = "range",
                 isPercent = true,
@@ -220,7 +231,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconDispellableScale = {
-                order = 16,
+                order = 19,
                 width = "normal",
                 type = "range",
                 isPercent = true,
@@ -238,7 +249,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconOffsetX = {
-                order = 17,
+                order = 16,
                 width = "normal",
                 type = "range",
                 min = -20,
@@ -255,7 +266,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconOffsetY = {
-                order = 18,
+                order = 17,
                 width = "normal",
                 type = "range",
                 min = -80,

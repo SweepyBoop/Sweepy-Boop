@@ -9,6 +9,8 @@ local frameLevelOffset = 20;
 local minIconCount = 1;
 local maxIconCount = 5;
 local defaultPriority = 0;
+local kidneyShot = 408;
+local testDuration = 6;
 
 local crowdControlPriority = {
     stun = 100,
@@ -21,8 +23,10 @@ local cufPool = {};    -- frame -> true: compact raid/party frames we have seen
 local unitFrames = {}; -- unit token -> { [frame] = true }: frames currently showing that unit
 local scanAuras = {};  -- scratch table reused while repainting one unit
 local setupComplete = false;
+local isTesting = false;
 
 local eventFrame = CreateFrame("Frame");
+local IsFrameVisible;
 
 local function GetConfig()
     return SweepyBoop.db.profile.raidFrames;
@@ -217,13 +221,20 @@ local function ScanCrowdControlAuras(unit)
     return scanAuras;
 end
 
-local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispellableScale)
-    local shownSize = frameHeight * iconScale;
-    if auraData.dispelName then
-        shownSize = frameHeight * dispellableScale;
-    end
-
+local function SetIconSize(icon, frameHeight, scale)
+    local shownSize = frameHeight * scale;
     icon:SetSize(shownSize, shownSize);
+end
+
+local function ClearIconCooldown(icon)
+    if icon.cooldown.Clear then
+        icon.cooldown:Clear();
+    end
+    icon.cooldown:Hide();
+end
+
+local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispellableScale)
+    SetIconSize(icon, frameHeight, auraData.dispelName and dispellableScale or iconScale);
     icon.texture:SetTexture(auraData.icon);
 
     local durationObject = auraData.auraInstanceID and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
@@ -231,12 +242,17 @@ local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispell
         icon.cooldown:SetCooldownFromDurationObject(durationObject);
         icon.cooldown:Show();
     else
-        if icon.cooldown.Clear then
-            icon.cooldown:Clear();
-        end
-        icon.cooldown:Hide();
+        ClearIconCooldown(icon);
     end
 
+    icon:Show();
+end
+
+local function SetIconTestAura(icon, frameHeight, iconScale)
+    SetIconSize(icon, frameHeight, iconScale);
+    icon.texture:SetTexture(addon.GetSpellTexture(kidneyShot));
+    icon.cooldown:SetCooldown(GetTime(), testDuration);
+    icon.cooldown:Show();
     icon:Show();
 end
 
@@ -255,8 +271,33 @@ local function IsGroupUnit(unit)
     return false;
 end
 
+local function ShowTestFrame(frame)
+    if frame:IsForbidden() or ( not IsFrameVisible(frame) ) then return end
+
+    local config = GetConfig();
+    local container = EnsureContainer(frame);
+    local iconCount = LayoutContainer(frame, container);
+    local frameHeight = GetFrameHeight(frame);
+    local iconScale = GetIconScale(config);
+
+    SetIconTestAura(container.icons[1], frameHeight, iconScale);
+    container.icons[1]:ClearAllPoints();
+    container.icons[1]:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
+
+    for i = 2, iconCount do
+        ClearIcon(container.icons[i]);
+    end
+
+    container.frame:Show();
+end
+
 local function UpdateFrame(frame)
     if frame:IsForbidden() then return end
+
+    if isTesting then
+        ShowTestFrame(frame);
+        return;
+    end
 
     local unit = frame.displayedUnit or frame.unit;
     if ( not IsEnabled() )
@@ -342,7 +383,7 @@ local function UntrackFrame(frame)
     ClearFrame(frame);
 end
 
-local function IsFrameVisible(frame)
+function IsFrameVisible(frame)
     local shown = frame:IsShown();
     return ( not addon.IsSecretValue(shown) ) and shown;
 end
@@ -350,6 +391,8 @@ end
 local function UpdateVisibleFrame(frame)
     if IsFrameVisible(frame) then
         UpdateFrame(frame);
+    elseif isTesting then
+        ClearFrame(frame);
     end
 end
 
@@ -420,4 +463,26 @@ function SweepyBoop:RefreshRaidFrameDebuffIcons()
     for frame in pairs(cufPool) do
         ClearFrame(frame);
     end
+end
+
+function SweepyBoop:TestRaidFrameDebuffIcons()
+    isTesting = true;
+    for frame in pairs(cufPool) do
+        if IsFrameVisible(frame) then
+            ShowTestFrame(frame);
+        else
+            ClearFrame(frame);
+        end
+    end
+
+    C_Timer.After(testDuration, function ()
+        if isTesting then
+            SweepyBoop:HideTestRaidFrameDebuffIcons();
+        end
+    end);
+end
+
+function SweepyBoop:HideTestRaidFrameDebuffIcons()
+    isTesting = false;
+    RefreshAllFrames();
 end
