@@ -175,7 +175,7 @@ addon.GetRaidFrameOptions = function(order)
                 order = 13,
                 width = "full",
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_sealofwrath")) .. " Enabled",
+                name = SpellIcon(118) .. " Enabled",
                 desc = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.",
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
@@ -201,33 +201,16 @@ addon.GetRaidFrameOptions = function(order)
                 end,
             },
 
-            raidFrameDebuffIconSize = {
+            raidFrameDebuffIconScale = {
                 order = 15,
                 width = "normal",
                 type = "range",
-                min = 12,
-                max = 40,
-                step = 1,
-                name = "Icon Size",
-                desc = "Base size of each debuff icon in pixels before scale is applied.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
-            },
-
-            raidFrameDebuffIconScale = {
-                order = 16,
-                width = "normal",
-                type = "range",
                 isPercent = true,
-                min = 0.5,
-                max = 2.5,
+                min = 0.25,
+                max = 1.5,
                 step = 0.05,
-                name = "Icon Scale",
-                desc = "Scale the entire right-side debuff icon row.",
+                name = "Other Debuff Scale",
+                desc = "Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height.",
                 disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
@@ -237,15 +220,15 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconDispellableScale = {
-                order = 17,
+                order = 16,
                 width = "normal",
                 type = "range",
                 isPercent = true,
-                min = 0.5,
-                max = 2.5,
+                min = 0.25,
+                max = 1.5,
                 step = 0.05,
                 name = "Dispellable Scale",
-                desc = "Additional scale applied to crowd-control debuffs that have a dispel type, such as Magic, Curse, Disease, or Poison.",
+                desc = "Size of dispellable crowd-control debuffs as a percentage of the raid-frame height, such as Magic, Curse, Disease, or Poison.",
                 disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
                 set = function(info, val)
                     SetRaidFrameOptionAndRefresh(info, val, function ()
@@ -255,7 +238,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconOffsetX = {
-                order = 18,
+                order = 17,
                 width = "normal",
                 type = "range",
                 min = -20,
@@ -272,7 +255,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconOffsetY = {
-                order = 19,
+                order = 18,
                 width = "normal",
                 type = "range",
                 min = -80,

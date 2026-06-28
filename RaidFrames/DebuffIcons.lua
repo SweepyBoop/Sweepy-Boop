@@ -39,13 +39,18 @@ local function GetIconCount(config)
     return Clamp(config.raidFrameDebuffIconCount, minIconCount, maxIconCount);
 end
 
-local function GetIconSize(config)
-    return Clamp(config.raidFrameDebuffIconSize, 12, 64);
+local function GetFrameHeight(frame)
+    local height = frame:GetHeight();
+    if ( not height ) or ( height <= 0 ) then
+        local _, _, _, rectHeight = frame:GetRect();
+        height = rectHeight;
+    end
+    return ( height and height > 0 ) and height or 36;
 end
 
 local function GetIconScale(config)
-    local scale = tonumber(config.raidFrameDebuffIconScale) or 1;
-    if ( scale <= 0 ) then return 1 end
+    local scale = tonumber(config.raidFrameDebuffIconScale) or 0.75;
+    if ( scale <= 0 ) then return 0.75 end
     return scale;
 end
 
@@ -116,20 +121,20 @@ end
 local function LayoutContainer(frame, container)
     local config = GetConfig();
     local iconCount = GetIconCount(config);
-    local iconSize = GetIconSize(config);
-    local scale = GetIconScale(config);
+    local frameHeight = GetFrameHeight(frame);
+    local maxIconSize = frameHeight * math.max(GetIconScale(config), GetDispellableScale(config));
     local frameLevel = frame:GetFrameLevel() + frameLevelOffset;
 
     container.frame:SetFrameLevel(frameLevel);
-    container.frame:SetScale(scale);
-    container.frame:SetSize(( iconSize * iconCount ) + ( iconSpacing * ( iconCount - 1 ) ), iconSize * GetDispellableScale(config));
+    container.frame:SetScale(1);
+    container.frame:SetSize(( maxIconSize * iconCount ) + ( iconSpacing * ( iconCount - 1 ) ), maxIconSize);
     container.frame:ClearAllPoints();
     container.frame:SetPoint(
         "LEFT",
         frame,
         "RIGHT",
-        ( config.raidFrameDebuffIconOffsetX or 0 ) / scale,
-        ( config.raidFrameDebuffIconOffsetY or 0 ) / scale
+        config.raidFrameDebuffIconOffsetX or 0,
+        config.raidFrameDebuffIconOffsetY or 0
     );
 
     for i = 1, iconCount do
@@ -140,7 +145,7 @@ local function LayoutContainer(frame, container)
         end
 
         icon:SetFrameLevel(frameLevel + i);
-        icon:SetSize(iconSize, iconSize);
+        icon:SetSize(maxIconSize, maxIconSize);
         icon:ClearAllPoints();
         if ( i == 1 ) then
             icon:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
@@ -212,10 +217,10 @@ local function ScanCrowdControlAuras(unit)
     return scanAuras;
 end
 
-local function SetIconAura(icon, unit, auraData, iconSize, dispellableScale)
-    local shownSize = iconSize;
+local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispellableScale)
+    local shownSize = frameHeight * iconScale;
     if auraData.dispelName then
-        shownSize = iconSize * dispellableScale;
+        shownSize = frameHeight * dispellableScale;
     end
 
     icon:SetSize(shownSize, shownSize);
@@ -270,7 +275,8 @@ local function UpdateFrame(frame)
     local config = GetConfig();
     local container = EnsureContainer(frame);
     local iconCount = LayoutContainer(frame, container);
-    local iconSize = GetIconSize(config);
+    local frameHeight = GetFrameHeight(frame);
+    local iconScale = GetIconScale(config);
     local dispellableScale = GetDispellableScale(config);
     local auras = ScanCrowdControlAuras(unit);
 
@@ -285,7 +291,7 @@ local function UpdateFrame(frame)
         local aura = auras[i] and auras[i].aura;
         local icon = container.icons[i];
         if aura then
-            SetIconAura(icon, unit, aura, iconSize, dispellableScale);
+            SetIconAura(icon, unit, aura, frameHeight, iconScale, dispellableScale);
             icon:ClearAllPoints();
             if previousIcon then
                 icon:SetPoint("LEFT", previousIcon, "RIGHT", iconSpacing, 0);
