@@ -490,10 +490,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border.mask:SetSize(classIconBorderSize, classIconBorderSize);
             end
 
-            if isSpecialIcon then
-                iconFrame.mask:SetSize(specialClassIconSize, specialClassIconSize);
-            else
-                iconFrame.mask:SetSize(classIconSize, classIconSize);
+            local iconMaskSize = ( isSpecialIcon and specialClassIconSize ) or classIconSize;
+            iconFrame.mask:SetSize(iconMaskSize, iconMaskSize);
+            if iconFrame.maskCC then
+                iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
             iconFrame.border:SetDesaturated(true);
             iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
