@@ -9,7 +9,7 @@ local frameLevelOffset = 20;
 local minIconCount = 1;
 local maxIconCount = 5;
 local defaultPriority = 0;
-local kidneyShot = 408;
+local psychicScream = 8122;
 local testDuration = 6;
 
 local crowdControlPriority = {
@@ -250,7 +250,7 @@ end
 
 local function SetIconTestAura(icon, frameHeight, iconScale)
     SetIconSize(icon, frameHeight, iconScale);
-    icon.texture:SetTexture(addon.GetSpellTexture(kidneyShot));
+    icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
     icon.cooldown:SetCooldown(GetTime(), testDuration);
     icon.cooldown:Show();
     icon:Show();
@@ -278,9 +278,9 @@ local function ShowTestFrame(frame)
     local container = EnsureContainer(frame);
     local iconCount = LayoutContainer(frame, container);
     local frameHeight = GetFrameHeight(frame);
-    local iconScale = GetIconScale(config);
+    local dispellableScale = GetDispellableScale(config);
 
-    SetIconTestAura(container.icons[1], frameHeight, iconScale);
+    SetIconTestAura(container.icons[1], frameHeight, dispellableScale);
     container.icons[1]:ClearAllPoints();
     container.icons[1]:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
 
