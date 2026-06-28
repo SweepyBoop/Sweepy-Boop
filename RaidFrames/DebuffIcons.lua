@@ -11,6 +11,7 @@ local maxIconCount = 5;
 local defaultPriority = 0;
 local psychicScream = 8122;
 local testDuration = 6;
+local glowColor = { 1, 0, 0, 1 };
 
 local crowdControlPriority = {
     stun = 100,
@@ -92,6 +93,8 @@ local function CreateDebuffIcon(parent, frameLevel)
     icon.cooldown:SetAllPoints(icon);
     StyleCooldown(icon.cooldown);
 
+    icon.SpellActivationAlert = addon.CreateOverlayGlow(icon, 36, glowColor, true);
+
     icon:Hide();
     return icon;
 end
@@ -102,6 +105,7 @@ local function ClearIcon(icon)
         icon.cooldown:Clear();
     end
     icon.cooldown:Hide();
+    addon.HideOverlayGlow(icon);
     icon:Hide();
 end
 
@@ -224,6 +228,7 @@ end
 local function SetIconSize(icon, frameHeight, scale)
     local shownSize = frameHeight * scale;
     icon:SetSize(shownSize, shownSize);
+    icon.SpellActivationAlert:SetSize(shownSize * 1.4, shownSize * 1.4);
 end
 
 local function ClearIconCooldown(icon)
@@ -245,6 +250,7 @@ local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispell
         ClearIconCooldown(icon);
     end
 
+    addon.ShowOverlayGlow(icon);
     icon:Show();
 end
 
@@ -253,6 +259,7 @@ local function SetIconTestAura(icon, frameHeight, iconScale)
     icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
     icon.cooldown:SetCooldown(GetTime(), testDuration);
     icon.cooldown:Show();
+    addon.ShowOverlayGlow(icon);
     icon:Show();
 end
 
