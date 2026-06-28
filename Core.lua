@@ -156,6 +156,12 @@ local defaults = {
             healerBuffHelperScale = 1,
             druidBuffHelperWarning = false,
             evokerBuffHelper = true,
+            raidFrameDebuffIconsEnabled = true,
+            raidFrameDebuffIconCount = 3,
+            raidFrameDebuffIconSize = 22,
+            raidFrameDebuffIconScale = 1,
+            raidFrameDebuffIconOffsetX = 2,
+            raidFrameDebuffIconOffsetY = 0,
         },
         misc = {
             healerInCrowdControl = false,
@@ -374,6 +380,7 @@ function SweepyBoop:OnInitialize()
 
     -- Setup raid frame modules
     self:SetupRaidFrameAuraModule();
+    self:SetupRaidFrameDebuffIcons();
 
     self:SetupQueueReminder();
     self:SetupCombatIndicator();
@@ -402,6 +409,7 @@ function SweepyBoop:RefreshConfig()
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
         self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
+        self:RefreshRaidFrameDebuffIcons();
     end
 
     local currentTime = GetTime();

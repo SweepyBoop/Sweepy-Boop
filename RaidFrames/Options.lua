@@ -6,6 +6,13 @@ local function SpellIcon(spellId)
     return icon and addon.FORMAT_TEXTURE(icon) or "";
 end
 
+local function SetRaidFrameOptionAndRefresh(info, val, refreshFunc)
+    local raidFrames = SweepyBoop.db.profile.raidFrames;
+    raidFrames[info[#info]] = val;
+    raidFrames.lastModified = GetTime();
+    refreshFunc();
+end
+
 addon.GetRaidFrameOptions = function(order)
     local optionGroup = {
         order = order,
@@ -155,6 +162,111 @@ addon.GetRaidFrameOptions = function(order)
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                     SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
+                end,
+            },
+
+            raidFrameDebuffIconsHeader = {
+                order = 12,
+                type = "header",
+                name = "Debuff Icons",
+            },
+
+            raidFrameDebuffIconsEnabled = {
+                order = 13,
+                width = "full",
+                type = "toggle",
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_sealofwrath")) .. " Enabled",
+                desc = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.",
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconCount = {
+                order = 14,
+                width = "normal",
+                type = "range",
+                min = 1,
+                max = 5,
+                step = 1,
+                name = "Max Icons",
+                desc = "Maximum number of crowd-control debuff icons to show beside each raid frame.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconSize = {
+                order = 15,
+                width = "normal",
+                type = "range",
+                min = 12,
+                max = 40,
+                step = 1,
+                name = "Icon Size",
+                desc = "Base size of each debuff icon in pixels before scale is applied.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconScale = {
+                order = 16,
+                width = "normal",
+                type = "range",
+                isPercent = true,
+                min = 0.5,
+                max = 2.5,
+                step = 0.05,
+                name = "Icon Scale",
+                desc = "Scale the entire right-side debuff icon row.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconOffsetX = {
+                order = 17,
+                width = "normal",
+                type = "range",
+                min = -20,
+                max = 80,
+                step = 1,
+                name = "Offset X",
+                desc = "Horizontal offset from the right edge of the raid frame.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconOffsetY = {
+                order = 18,
+                width = "normal",
+                type = "range",
+                min = -80,
+                max = 80,
+                step = 1,
+                name = "Offset Y",
+                desc = "Vertical offset from the center of the raid frame.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
                 end,
             },
         },
