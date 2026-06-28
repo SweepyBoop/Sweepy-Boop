@@ -435,6 +435,45 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     end
 end
 
+if addon.internal then
+    function SweepyBoop:DebugClassIconCrowdControl(duration, spellID)
+        duration = duration or 6;
+        spellID = spellID or 118; -- Polymorph
+
+        local iconTexture = addon.GetSpellTexture(spellID);
+        local expiresAt = GetTime() + duration;
+        local count = 0;
+
+        for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
+            local classIconContainer = nameplate.classIconContainer;
+            local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
+            if iconFrame and iconFrame:IsShown() and iconFrame.iconCC and iconFrame.cooldownCC then
+                iconFrame.debugCrowdControlExpiresAt = expiresAt;
+                iconFrame.iconCC:SetTexture(iconTexture);
+                iconFrame.iconCC:Show();
+                iconFrame.cooldownCC:SetCooldown(GetTime(), duration);
+                iconFrame.cooldownCC:Show();
+                count = count + 1;
+            end
+        end
+
+        if count > 0 then
+            C_Timer.After(duration, function()
+                for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
+                    local classIconContainer = nameplate.classIconContainer;
+                    local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
+                    if iconFrame and iconFrame.debugCrowdControlExpiresAt == expiresAt then
+                        iconFrame.debugCrowdControlExpiresAt = nil;
+                        HideClassIconCrowdControl(iconFrame.iconCC, iconFrame.cooldownCC);
+                    end
+                end
+            end);
+        end
+
+        print(string.format("SweepyBoop: showing %ds test Polymorph on %d friendly class icon(s)", duration, count));
+    end
+end
+
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
