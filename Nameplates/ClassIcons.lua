@@ -325,15 +325,68 @@ addon.UpdatePlayerName = function (nameplate, frame)
     end
 end
 
-addon.UpdateClassIconCrowdControl = function(nameplate, frame)
-    if addon.PROJECT_MAINLINE then return end
+local function SortCrowdControlAurasNewestFirst(auraA, auraB)
+    return ( auraA.auraInstanceID or 0 ) > ( auraB.auraInstanceID or 0 );
+end
 
+local function GetMainlineClassIconCrowdControl(unit)
+    local auras = C_UnitAuras.GetUnitAuras(unit, "HARMFUL|CROWD_CONTROL", nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
+    if ( not auras ) or ( #auras == 0 ) then return end
+
+    table.sort(auras, SortCrowdControlAurasNewestFirst);
+    for _, auraData in ipairs(auras) do
+        local spellID = auraData.spellId;
+        if spellID then
+            local isCrowdControl = C_Spell.IsSpellCrowdControl(spellID);
+            if addon.IsSecretValue(isCrowdControl) or isCrowdControl then
+                return auraData;
+            end
+        end
+    end
+end
+
+local function HideClassIconCrowdControl(iconCC, cooldownCC)
+    cooldownCC:SetCooldown(0, 0);
+    cooldownCC:Hide();
+    iconCC:Hide();
+end
+
+addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     -- No need to update if class icon is not shown
     if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassIcon:IsShown() ) then return end
     local iconCC = classIconContainer.FriendlyClassIcon.iconCC;
     local cooldownCC = classIconContainer.FriendlyClassIcon.cooldownCC;
+
+    if addon.PROJECT_MAINLINE then
+        if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl
+            and UnitInParty(frame.unit)
+            and UnitIsPlayer(frame.unit)
+            and UnitIsFriend("player", frame.unit) then
+            local auraData = GetMainlineClassIconCrowdControl(frame.unit);
+            if auraData then
+                iconCC:SetTexture(auraData.icon);
+                iconCC:Show();
+
+                local durationObject = C_UnitAuras.GetAuraDuration(frame.unit, auraData.auraInstanceID);
+                if durationObject and cooldownCC.SetCooldownFromDurationObject then
+                    cooldownCC:SetCooldownFromDurationObject(durationObject);
+                    cooldownCC:Show();
+                elseif auraData.duration and auraData.expirationTime then
+                    cooldownCC:SetCooldown(auraData.expirationTime - auraData.duration, auraData.duration);
+                    cooldownCC:Show();
+                else
+                    cooldownCC:SetCooldown(0, 0);
+                    cooldownCC:Hide();
+                end
+                return;
+            end
+        end
+
+        HideClassIconCrowdControl(iconCC, cooldownCC);
+        return;
+    end
 
     local spellID;
     local priority = 0; -- init with a low priority
@@ -367,8 +420,7 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     end
 
     if ( not spellID ) then
-        cooldownCC:SetCooldown(0, 0);
-        iconCC:Hide();
+        HideClassIconCrowdControl(iconCC, cooldownCC);
     else
         iconCC:SetTexture(addon.GetSpellTexture(spellID));
         iconCC:Show();
@@ -380,6 +432,45 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
             cooldownCC:SetCooldown(0, 0);
             cooldownCC:Hide();
         end
+    end
+end
+
+if addon.internal then
+    function SweepyBoop:DebugClassIconCrowdControl(duration, spellID)
+        duration = duration or 6;
+        spellID = spellID or 118; -- Polymorph
+
+        local iconTexture = addon.GetSpellTexture(spellID);
+        local expiresAt = GetTime() + duration;
+        local count = 0;
+
+        for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
+            local classIconContainer = nameplate.classIconContainer;
+            local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
+            if iconFrame and iconFrame:IsShown() and iconFrame.iconCC and iconFrame.cooldownCC then
+                iconFrame.debugCrowdControlExpiresAt = expiresAt;
+                iconFrame.iconCC:SetTexture(iconTexture);
+                iconFrame.iconCC:Show();
+                iconFrame.cooldownCC:SetCooldown(GetTime(), duration);
+                iconFrame.cooldownCC:Show();
+                count = count + 1;
+            end
+        end
+
+        if count > 0 then
+            C_Timer.After(duration, function()
+                for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
+                    local classIconContainer = nameplate.classIconContainer;
+                    local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
+                    if iconFrame and iconFrame.debugCrowdControlExpiresAt == expiresAt then
+                        iconFrame.debugCrowdControlExpiresAt = nil;
+                        HideClassIconCrowdControl(iconFrame.iconCC, iconFrame.cooldownCC);
+                    end
+                end
+            end);
+        end
+
+        print(string.format("SweepyBoop: showing %ds test Polymorph on %d friendly class icon(s)", duration, count));
     end
 end
 
@@ -438,10 +529,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border.mask:SetSize(classIconBorderSize, classIconBorderSize);
             end
 
-            if isSpecialIcon then
-                iconFrame.mask:SetSize(specialClassIconSize, specialClassIconSize);
-            else
-                iconFrame.mask:SetSize(classIconSize, classIconSize);
+            local iconMaskSize = ( isSpecialIcon and specialClassIconSize ) or classIconSize;
+            iconFrame.mask:SetSize(iconMaskSize, iconMaskSize);
+            if iconFrame.maskCC then
+                iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
             iconFrame.border:SetDesaturated(true);
             iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
