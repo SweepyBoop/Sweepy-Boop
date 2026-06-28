@@ -160,6 +160,7 @@ local defaults = {
             raidFrameDebuffIconCount = 3,
             raidFrameDebuffIconSize = 22,
             raidFrameDebuffIconScale = 1,
+            raidFrameDebuffIconDispellableScale = 1,
             raidFrameDebuffIconOffsetX = 2,
             raidFrameDebuffIconOffsetY = 0,
         },

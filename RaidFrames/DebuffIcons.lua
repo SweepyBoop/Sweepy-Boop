@@ -49,6 +49,12 @@ local function GetIconScale(config)
     return scale;
 end
 
+local function GetDispellableScale(config)
+    local scale = tonumber(config.raidFrameDebuffIconDispellableScale) or 1;
+    if ( scale <= 0 ) then return 1 end
+    return scale;
+end
+
 local function IsEnabled()
     return GetConfig().raidFrameDebuffIconsEnabled and true or false;
 end
@@ -116,7 +122,7 @@ local function LayoutContainer(frame, container)
 
     container.frame:SetFrameLevel(frameLevel);
     container.frame:SetScale(scale);
-    container.frame:SetSize(( iconSize * iconCount ) + ( iconSpacing * ( iconCount - 1 ) ), iconSize);
+    container.frame:SetSize(( iconSize * iconCount ) + ( iconSpacing * ( iconCount - 1 ) ), iconSize * GetDispellableScale(config));
     container.frame:ClearAllPoints();
     container.frame:SetPoint(
         "LEFT",
@@ -206,7 +212,13 @@ local function ScanCrowdControlAuras(unit)
     return scanAuras;
 end
 
-local function SetIconAura(icon, unit, auraData)
+local function SetIconAura(icon, unit, auraData, iconSize, dispellableScale)
+    local shownSize = iconSize;
+    if auraData.dispelName then
+        shownSize = iconSize * dispellableScale;
+    end
+
+    icon:SetSize(shownSize, shownSize);
     icon.texture:SetTexture(auraData.icon);
 
     local durationObject = auraData.auraInstanceID and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
@@ -255,8 +267,11 @@ local function UpdateFrame(frame)
         return;
     end
 
+    local config = GetConfig();
     local container = EnsureContainer(frame);
     local iconCount = LayoutContainer(frame, container);
+    local iconSize = GetIconSize(config);
+    local dispellableScale = GetDispellableScale(config);
     local auras = ScanCrowdControlAuras(unit);
 
     if ( #auras == 0 ) then
@@ -265,11 +280,19 @@ local function UpdateFrame(frame)
     end
 
     local shown = 0;
+    local previousIcon;
     for i = 1, iconCount do
         local aura = auras[i] and auras[i].aura;
         local icon = container.icons[i];
         if aura then
-            SetIconAura(icon, unit, aura);
+            SetIconAura(icon, unit, aura, iconSize, dispellableScale);
+            icon:ClearAllPoints();
+            if previousIcon then
+                icon:SetPoint("LEFT", previousIcon, "RIGHT", iconSpacing, 0);
+            else
+                icon:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
+            end
+            previousIcon = icon;
             shown = shown + 1;
         else
             ClearIcon(icon);

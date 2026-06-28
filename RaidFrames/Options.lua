@@ -236,8 +236,26 @@ addon.GetRaidFrameOptions = function(order)
                 end,
             },
 
-            raidFrameDebuffIconOffsetX = {
+            raidFrameDebuffIconDispellableScale = {
                 order = 17,
+                width = "normal",
+                type = "range",
+                isPercent = true,
+                min = 0.5,
+                max = 2.5,
+                step = 0.05,
+                name = "Dispellable Scale",
+                desc = "Additional scale applied to crowd-control debuffs that have a dispel type, such as Magic, Curse, Disease, or Poison.",
+                disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
+            raidFrameDebuffIconOffsetX = {
+                order = 18,
                 width = "normal",
                 type = "range",
                 min = -20,
@@ -254,7 +272,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconOffsetY = {
-                order = 18,
+                order = 19,
                 width = "normal",
                 type = "range",
                 min = -80,
