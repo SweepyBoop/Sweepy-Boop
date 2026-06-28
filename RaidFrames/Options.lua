@@ -60,7 +60,7 @@ addon.GetRaidFrameOptions = function(order)
 
             raidFrameAggroHighlightEnabled = {
                 order = 4,
-                width = 1.2,
+                width = 0.675,
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
                 desc = "Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.",
@@ -173,7 +173,7 @@ addon.GetRaidFrameOptions = function(order)
 
             raidFrameDebuffIconsEnabled = {
                 order = 13,
-                width = 1.2,
+                width = 0.675,
                 type = "toggle",
                 name = SpellIcon(118) .. " Enabled",
                 desc = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.",
@@ -187,7 +187,7 @@ addon.GetRaidFrameOptions = function(order)
             raidFrameDebuffIconsTest = {
                 order = 14,
                 type = "execute",
-                width = 0.55,
+                width = "half",
                 name = "Test",
                 func = function ()
                     SweepyBoop:TestRaidFrameDebuffIcons();
