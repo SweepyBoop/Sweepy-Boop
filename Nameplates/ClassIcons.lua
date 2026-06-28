@@ -345,19 +345,26 @@ local function GetMainlineClassIconCrowdControl(unit)
     end
 end
 
-local function HideClassIconCrowdControl(iconCC, cooldownCC)
-    cooldownCC:SetCooldown(0, 0);
-    cooldownCC:Hide();
-    iconCC:Hide();
+local function HideClassIconCrowdControl(iconFrame)
+    if not iconFrame then return end
+
+    if iconFrame.cooldownCC then
+        iconFrame.cooldownCC:SetCooldown(0, 0);
+        iconFrame.cooldownCC:Hide();
+    end
+    if iconFrame.iconCC then
+        iconFrame.iconCC:Hide();
+    end
 end
 
 addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
+    local iconFrame = classIconContainer.FriendlyClassIcon;
     -- No need to update if class icon is not shown
-    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassIcon:IsShown() ) then return end
-    local iconCC = classIconContainer.FriendlyClassIcon.iconCC;
-    local cooldownCC = classIconContainer.FriendlyClassIcon.cooldownCC;
+    if ( not iconFrame ) or ( not iconFrame:IsShown() ) then return end
+    local iconCC = iconFrame.iconCC;
+    local cooldownCC = iconFrame.cooldownCC;
 
     if addon.PROJECT_MAINLINE then
         if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl
@@ -384,7 +391,7 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
             end
         end
 
-        HideClassIconCrowdControl(iconCC, cooldownCC);
+        HideClassIconCrowdControl(iconFrame);
         return;
     end
 
@@ -420,7 +427,7 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     end
 
     if ( not spellID ) then
-        HideClassIconCrowdControl(iconCC, cooldownCC);
+        HideClassIconCrowdControl(iconFrame);
     else
         iconCC:SetTexture(addon.GetSpellTexture(spellID));
         iconCC:Show();
@@ -464,7 +471,7 @@ if addon.internal then
                     local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
                     if iconFrame and iconFrame.debugCrowdControlExpiresAt == expiresAt then
                         iconFrame.debugCrowdControlExpiresAt = nil;
-                        HideClassIconCrowdControl(iconFrame.iconCC, iconFrame.cooldownCC);
+                        HideClassIconCrowdControl(iconFrame);
                     end
                 end
             end);
@@ -616,6 +623,7 @@ addon.HideClassIcon = function(nameplate)
 
     if classIconContainer.FriendlyClassIcon then
         addon.SetTargetHighlightShown(classIconContainer.FriendlyClassIcon, false, false);
+        HideClassIconCrowdControl(classIconContainer.FriendlyClassIcon);
         classIconContainer.FriendlyClassIcon:Hide();
     end
     if classIconContainer.FriendlyClassArrow then
