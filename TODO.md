@@ -2,3 +2,4 @@
 - [x] Re-enable Druid HoT Helper
 - [ ] If Druid HoT Helper glow taints again in arena, replace any remaining LibCustomGlow usage (especially Mark of the Wild PixelGlow) with a local glow implementation that does not read UI alpha/state.
 - [ ] Re-implement battleground enemy spec icons (blocked)
+- [ ] Configurable SetCountdownMillisecondsThreshold for raid frame big debuffs & healer in CC alert
