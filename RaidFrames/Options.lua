@@ -195,8 +195,15 @@ addon.GetRaidFrameOptions = function(order)
                 disabled = function () return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled; end,
             },
 
-            raidFrameDebuffIconCount = {
+            raidFrameDebuffIconsLayoutBreak1 = {
                 order = 15,
+                type = "description",
+                name = "",
+                width = "full",
+            },
+
+            raidFrameDebuffIconCount = {
+                order = 16,
                 width = "normal",
                 type = "range",
                 min = 1,
@@ -212,8 +219,15 @@ addon.GetRaidFrameOptions = function(order)
                 end,
             },
 
+            raidFrameDebuffIconsLayoutBreak2 = {
+                order = 19,
+                type = "description",
+                name = "",
+                width = "full",
+            },
+
             raidFrameDebuffIconScale = {
-                order = 18,
+                order = 20,
                 width = "normal",
                 type = "range",
                 isPercent = true,
@@ -231,7 +245,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconDispellableScale = {
-                order = 19,
+                order = 21,
                 width = "normal",
                 type = "range",
                 isPercent = true,
@@ -249,7 +263,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconOffsetX = {
-                order = 16,
+                order = 17,
                 width = "normal",
                 type = "range",
                 min = -20,
@@ -266,7 +280,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconOffsetY = {
-                order = 17,
+                order = 18,
                 width = "normal",
                 type = "range",
                 min = -80,
