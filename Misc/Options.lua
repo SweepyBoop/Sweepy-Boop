@@ -123,14 +123,41 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
                         end
                     },
+                    healerInCrowdControlThresholdBreak = {
+                        order = 10,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                        end
+                    },
+                    healerInCrowdControlMillisecondsThreshold = {
+                        order = 11,
+                        type = "range",
+                        width = 0.8,
+                        min = 1,
+                        max = 6,
+                        step = 1,
+                        name = "Decimal threshold",
+                        desc = "Show decimal countdowns below this many seconds.",
+                        set = function (info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdateHealerInCrowdControl();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.healerInCrowdControl );
+                        end
+                    },
 
                     header2 = {
-                        order = 10,
+                        order = 12,
                         type = "header",
                         name = "",
                     },
                     queueReminder = {
-                        order = 11,
+                        order = 13,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " PvP Queue Timer",
@@ -142,12 +169,12 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     },
 
                     header3 = {
-                        order = 12,
+                        order = 14,
                         type = "header",
                         name = "Unit frames",
                     },
                     combatIndicator = {
-                        order = 13,
+                        order = 15,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_ATLAS("countdown-swords") .. " Show combat indicators on unit frames",
@@ -159,7 +186,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     alwaysShowDruidComboPoints = {
-                        order = 14,
+                        order = 16,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_mangle")) .. " Always show Druid combo points",
@@ -170,7 +197,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     fixEvokerCastBars = {
-                        order = 15,
+                        order = 17,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. " Fix Evoker cast bars",
@@ -182,12 +209,12 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     },
 
                     header4 = {
-                        order = 16,
+                        order = 18,
                         type = "header",
                         name = "Arena",
                     },
                     hideBlizzArenaFrames = {
-                        order = 17,
+                        order = 19,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_arena_3v3_3")) .. " Hide Blizzard arena frames",
@@ -201,7 +228,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end
                     },
                     arenaSurrenderEnabled = {
-                        order = 18,
+                        order = 20,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Type /gg to leave arena without confirmation",
@@ -216,14 +243,14 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     },
 
                     showDampenPercentage = {
-                        order = 19,
+                        order = 21,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
                     },
 
                     healerIndicator = {
-                        order = 20,
+                        order = 22,
                         type = "toggle",
                         name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
                         desc = "To make it easier to identify the healer in case of class stacking",
@@ -234,13 +261,13 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     },
 
                     header6 = {
-                        order = 21,
+                        order = 23,
                         type = "header",
                         name = "",
                     },
 
                     showMinimapIcon = {
-                        order = 22,
+                        order = 24,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Logo") .. " Show minimap icon for invoking options UI",

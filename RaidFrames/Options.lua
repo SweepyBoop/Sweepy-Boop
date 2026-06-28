@@ -237,8 +237,25 @@ addon.GetRaidFrameOptions = function(order)
                 width = "full",
             },
 
+            raidFrameDebuffIconMillisecondsThreshold = {
+                order = 20,
+                width = "normal",
+                type = "range",
+                min = 1,
+                max = 6,
+                step = 1,
+                name = "Decimal Threshold",
+                desc = "Show decimal countdowns below this many seconds.",
+                disabled = DebuffIconOptionsDisabled,
+                set = function(info, val)
+                    SetRaidFrameOptionAndRefresh(info, val, function ()
+                        SweepyBoop:RefreshRaidFrameDebuffIcons();
+                    end);
+                end,
+            },
+
             raidFrameDebuffIconScale = {
-                order = 21,
+                order = 22,
                 width = "normal",
                 type = "range",
                 isPercent = true,
@@ -256,7 +273,7 @@ addon.GetRaidFrameOptions = function(order)
             },
 
             raidFrameDebuffIconDispellableScale = {
-                order = 20,
+                order = 21,
                 width = "normal",
                 type = "range",
                 isPercent = true,

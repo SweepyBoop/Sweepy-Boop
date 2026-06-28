@@ -10,7 +10,9 @@ local minIconCount = 1;
 local maxIconCount = 5;
 local defaultPriority = 0;
 local psychicScream = 8122;
+local kidneyShot = 408;
 local testDuration = 6;
+local countdownFontSizeCoefficient = 0.375;
 local redGlowColor = { 1, 0, 0, 1 };
 
 local crowdControlPriority = {
@@ -65,11 +67,16 @@ local function GetDispellableScale(config)
     return scale;
 end
 
+local function GetMillisecondsThreshold(config)
+    config = config or GetConfig();
+    return Clamp(config.raidFrameDebuffIconMillisecondsThreshold, 1, 6);
+end
+
 local function IsEnabled()
     return GetConfig().raidFrameDebuffIconsEnabled and ( not addon.IsConflictingRaidFrameDebuffAddonLoaded() );
 end
 
-local function StyleCooldown(cooldown)
+local function StyleCooldown(cooldown, config)
     cooldown:SetDrawBling(false);
     cooldown:SetReverse(true);
     cooldown:SetDrawSwipe(true);
@@ -78,7 +85,7 @@ local function StyleCooldown(cooldown)
     cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
     cooldown:SetHideCountdownNumbers(false);
     if cooldown.SetCountdownMillisecondsThreshold then
-        cooldown:SetCountdownMillisecondsThreshold(5);
+        cooldown:SetCountdownMillisecondsThreshold(GetMillisecondsThreshold(config));
     end
 end
 
@@ -150,6 +157,7 @@ local function LayoutContainer(frame, container)
             container.icons[i] = icon;
         end
 
+        StyleCooldown(icon.cooldown, config);
         icon:SetFrameLevel(frameLevel + i);
         icon:SetSize(maxIconSize, maxIconSize);
         icon:ClearAllPoints();
@@ -228,9 +236,34 @@ local function ScanCrowdControlAuras(unit)
     return scanAuras;
 end
 
+local function UpdateCooldownFontSize(cooldown, iconSize)
+    if ( not cooldown ) or ( not iconSize ) then return end
+
+    if ( not cooldown.sweepyBoopCountdownFontString ) then
+        local numRegions = cooldown:GetNumRegions();
+        for i = 1, numRegions do
+            local region = select(i, cooldown:GetRegions());
+            if region and ( region:GetObjectType() == "FontString" ) then
+                cooldown.sweepyBoopCountdownFontString = region;
+                break;
+            end
+        end
+    end
+
+    local region = cooldown.sweepyBoopCountdownFontString;
+    if region then
+        local font, _, flags = region:GetFont();
+        if font then
+            region:SetFont(font, math.floor(iconSize * countdownFontSizeCoefficient), flags);
+        end
+    end
+end
+
 local function SetIconSize(icon, frameHeight, scale)
     local shownSize = frameHeight * scale;
     icon:SetSize(shownSize, shownSize);
+    -- TODO: If countdown text ever renders at the default large size, retry this after SetCooldown*().
+    UpdateCooldownFontSize(icon.cooldown, shownSize);
 end
 
 local function ClearIconCooldown(icon)
@@ -260,12 +293,12 @@ local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispell
     icon:Show();
 end
 
-local function SetIconTestAura(icon, frameHeight, iconScale)
-    SetIconSize(icon, frameHeight, iconScale);
-    icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
+local function SetIconTestAura(icon, frameHeight, scale, spellID, glowColor)
+    SetIconSize(icon, frameHeight, scale);
+    icon.texture:SetTexture(addon.GetSpellTexture(spellID));
     icon.cooldown:SetCooldown(GetTime(), testDuration);
     icon.cooldown:Show();
-    addon.ShowProcGlow(icon);
+    addon.ShowProcGlow(icon, glowColor);
     icon:Show();
 end
 
@@ -293,13 +326,29 @@ local function ShowTestFrame(frame)
     local container = EnsureContainer(frame);
     local iconCount = LayoutContainer(frame, container);
     local frameHeight = GetFrameHeight(frame);
+    local iconScale = GetIconScale(config);
     local dispellableScale = GetDispellableScale(config);
+    local shownIconCount = math.min(iconCount, 2);
+    local previousIcon;
 
-    SetIconTestAura(container.icons[1], frameHeight, dispellableScale);
-    container.icons[1]:ClearAllPoints();
-    container.icons[1]:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
+    for i = 1, shownIconCount do
+        local icon = container.icons[i];
+        if ( i == 1 ) then
+            SetIconTestAura(icon, frameHeight, dispellableScale, psychicScream);
+        else
+            SetIconTestAura(icon, frameHeight, iconScale, kidneyShot, redGlowColor);
+        end
 
-    for i = 2, iconCount do
+        icon:ClearAllPoints();
+        if previousIcon then
+            icon:SetPoint("LEFT", previousIcon, "RIGHT", iconSpacing, 0);
+        else
+            icon:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
+        end
+        previousIcon = icon;
+    end
+
+    for i = shownIconCount + 1, iconCount do
         ClearIcon(container.icons[i]);
     end
 
