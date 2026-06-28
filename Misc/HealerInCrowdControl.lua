@@ -19,9 +19,20 @@ local COUNTDOWN_FONT_FILE = "Fonts\\2002.TTF";
 local countdownFont = CreateFont("SweepyBoopHealerCCCountdownFont");
 countdownFont:SetFont(COUNTDOWN_FONT_FILE, COUNTDOWN_FONT_SIZE, "OUTLINE");
 
+local function GetMillisecondsThreshold()
+    local config = SweepyBoop.db.profile.misc;
+    local threshold = tonumber(config.healerInCrowdControlMillisecondsThreshold) or 5;
+    if ( threshold < 1 ) then return 1 end
+    if ( threshold > 6 ) then return 6 end
+    return threshold;
+end
+
 local function StyleCountdownText(cooldown)
     if cooldown.SetCountdownFont then
         cooldown:SetCountdownFont(countdownFont:GetName());
+    end
+    if cooldown.SetCountdownMillisecondsThreshold then
+        cooldown:SetCountdownMillisecondsThreshold(GetMillisecondsThreshold());
     end
     if cooldown.GetCountdownFontString then
         local text = cooldown:GetCountdownFontString();
@@ -85,9 +96,6 @@ local function CreateContainerFrame()
     -- countdown ourselves. Let the Cooldown frame render the built-in numbers (Blizzard/OmniCC) which
     -- can display a secret duration safely.
     frame.cooldown:SetHideCountdownNumbers(false);
-    if frame.cooldown.SetCountdownMillisecondsThreshold then
-        frame.cooldown:SetCountdownMillisecondsThreshold(5); -- threshold is in seconds: show decimals under 5s
-    end
     StyleCountdownText(frame.cooldown);
     frame.cooldown:SetScript("OnCooldownDone", function (self)
         local parent = self:GetParent();
@@ -204,6 +212,7 @@ function SweepyBoop:UpdateHealerInCrowdControl()
 
             containerFrame.lastModified = SweepyBoop.db.profile.misc.lastModified;
         end
+        StyleCountdownText(containerFrame.cooldown);
     end
 end
 

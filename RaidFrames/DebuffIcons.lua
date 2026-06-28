@@ -67,11 +67,16 @@ local function GetDispellableScale(config)
     return scale;
 end
 
+local function GetMillisecondsThreshold(config)
+    config = config or GetConfig();
+    return Clamp(config.raidFrameDebuffIconMillisecondsThreshold, 1, 6);
+end
+
 local function IsEnabled()
     return GetConfig().raidFrameDebuffIconsEnabled and ( not addon.IsConflictingRaidFrameDebuffAddonLoaded() );
 end
 
-local function StyleCooldown(cooldown)
+local function StyleCooldown(cooldown, config)
     cooldown:SetDrawBling(false);
     cooldown:SetReverse(true);
     cooldown:SetDrawSwipe(true);
@@ -80,7 +85,7 @@ local function StyleCooldown(cooldown)
     cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
     cooldown:SetHideCountdownNumbers(false);
     if cooldown.SetCountdownMillisecondsThreshold then
-        cooldown:SetCountdownMillisecondsThreshold(5);
+        cooldown:SetCountdownMillisecondsThreshold(GetMillisecondsThreshold(config));
     end
 end
 
@@ -152,6 +157,7 @@ local function LayoutContainer(frame, container)
             container.icons[i] = icon;
         end
 
+        StyleCooldown(icon.cooldown, config);
         icon:SetFrameLevel(frameLevel + i);
         icon:SetSize(maxIconSize, maxIconSize);
         icon:ClearAllPoints();
