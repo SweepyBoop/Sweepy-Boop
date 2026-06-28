@@ -12,6 +12,7 @@ local defaultPriority = 0;
 local psychicScream = 8122;
 local kidneyShot = 408;
 local testDuration = 6;
+local countdownFontSizeCoefficient = 0.375;
 local redGlowColor = { 1, 0, 0, 1 };
 
 local crowdControlPriority = {
@@ -229,9 +230,33 @@ local function ScanCrowdControlAuras(unit)
     return scanAuras;
 end
 
+local function UpdateCooldownFontSize(cooldown, iconSize)
+    if ( not cooldown ) or ( not iconSize ) then return end
+
+    if ( not cooldown.sweepyBoopCountdownFontString ) then
+        local numRegions = cooldown:GetNumRegions();
+        for i = 1, numRegions do
+            local region = select(i, cooldown:GetRegions());
+            if region and ( region:GetObjectType() == "FontString" ) then
+                cooldown.sweepyBoopCountdownFontString = region;
+                break;
+            end
+        end
+    end
+
+    local region = cooldown.sweepyBoopCountdownFontString;
+    if region then
+        local font, _, flags = region:GetFont();
+        if font then
+            region:SetFont(font, math.floor(iconSize * countdownFontSizeCoefficient), flags);
+        end
+    end
+end
+
 local function SetIconSize(icon, frameHeight, scale)
     local shownSize = frameHeight * scale;
     icon:SetSize(shownSize, shownSize);
+    UpdateCooldownFontSize(icon.cooldown, shownSize);
 end
 
 local function ClearIconCooldown(icon)
