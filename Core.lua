@@ -160,14 +160,14 @@ local defaults = {
             raidFrameDebuffIconCount = 2,
             raidFrameDebuffIconScale = 0.35,
             raidFrameDebuffIconDispellableScale = 0.5,
-            raidFrameDebuffIconMillisecondsThreshold = 5,
+            raidFrameDebuffIconMillisecondsThreshold = 3,
             raidFrameDebuffIconOffsetX = 2,
             raidFrameDebuffIconOffsetY = 0,
         },
         misc = {
             healerInCrowdControl = false,
             healerInCrowdControlSize = 48,
-            healerInCrowdControlMillisecondsThreshold = 5,
+            healerInCrowdControlMillisecondsThreshold = 3,
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
             queueReminder = true,
@@ -214,7 +214,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
-    defaults.profile.raidFrames.raidFrameDebuffIconMillisecondsThreshold = 2;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSizeSecondary = 28;
@@ -226,7 +225,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
     defaults.profile.misc.healerInCrowdControl = true;
-    defaults.profile.misc.healerInCrowdControlMillisecondsThreshold = 2;
     defaults.profile.misc.rangeCheckerEnabled = true;
 end
 
