@@ -10,6 +10,7 @@ local minIconCount = 1;
 local maxIconCount = 5;
 local defaultPriority = 0;
 local psychicScream = 8122;
+local kidneyShot = 408;
 local testDuration = 6;
 local redGlowColor = { 1, 0, 0, 1 };
 
@@ -260,12 +261,12 @@ local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispell
     icon:Show();
 end
 
-local function SetIconTestAura(icon, frameHeight, iconScale)
-    SetIconSize(icon, frameHeight, iconScale);
-    icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
+local function SetIconTestAura(icon, frameHeight, scale, spellID, glowColor)
+    SetIconSize(icon, frameHeight, scale);
+    icon.texture:SetTexture(addon.GetSpellTexture(spellID));
     icon.cooldown:SetCooldown(GetTime(), testDuration);
     icon.cooldown:Show();
-    addon.ShowProcGlow(icon);
+    addon.ShowProcGlow(icon, glowColor);
     icon:Show();
 end
 
@@ -293,13 +294,29 @@ local function ShowTestFrame(frame)
     local container = EnsureContainer(frame);
     local iconCount = LayoutContainer(frame, container);
     local frameHeight = GetFrameHeight(frame);
+    local iconScale = GetIconScale(config);
     local dispellableScale = GetDispellableScale(config);
+    local shownIconCount = math.min(iconCount, 2);
+    local previousIcon;
 
-    SetIconTestAura(container.icons[1], frameHeight, dispellableScale);
-    container.icons[1]:ClearAllPoints();
-    container.icons[1]:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
+    for i = 1, shownIconCount do
+        local icon = container.icons[i];
+        if ( i == 1 ) then
+            SetIconTestAura(icon, frameHeight, dispellableScale, psychicScream);
+        else
+            SetIconTestAura(icon, frameHeight, iconScale, kidneyShot, redGlowColor);
+        end
 
-    for i = 2, iconCount do
+        icon:ClearAllPoints();
+        if previousIcon then
+            icon:SetPoint("LEFT", previousIcon, "RIGHT", iconSpacing, 0);
+        else
+            icon:SetPoint("LEFT", container.frame, "LEFT", 0, 0);
+        end
+        previousIcon = icon;
+    end
+
+    for i = shownIconCount + 1, iconCount do
         ClearIcon(container.icons[i]);
     end
 
