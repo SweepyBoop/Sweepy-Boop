@@ -93,20 +93,8 @@ local function CreateDebuffIcon(parent, frameLevel)
     icon.cooldown:SetAllPoints(icon);
     StyleCooldown(icon.cooldown);
 
-    icon.defaultGlow = addon.CreateOverlayGlow(icon, 36, nil, true);
-    icon.redGlow = addon.CreateOverlayGlow(icon, 36, redGlowColor, true);
-    icon.SpellActivationAlert = icon.defaultGlow;
-
     icon:Hide();
     return icon;
-end
-
-local function HideIconGlow(icon)
-    icon.SpellActivationAlert = icon.defaultGlow;
-    addon.HideOverlayGlow(icon);
-    icon.SpellActivationAlert = icon.redGlow;
-    addon.HideOverlayGlow(icon);
-    icon.SpellActivationAlert = icon.defaultGlow;
 end
 
 local function ClearIcon(icon)
@@ -115,7 +103,7 @@ local function ClearIcon(icon)
         icon.cooldown:Clear();
     end
     icon.cooldown:Hide();
-    HideIconGlow(icon);
+    addon.HideProcGlow(icon);
     icon:Hide();
 end
 
@@ -243,8 +231,6 @@ end
 local function SetIconSize(icon, frameHeight, scale)
     local shownSize = frameHeight * scale;
     icon:SetSize(shownSize, shownSize);
-    icon.defaultGlow:SetSize(shownSize * 1.4, shownSize * 1.4);
-    icon.redGlow:SetSize(shownSize * 1.4, shownSize * 1.4);
 end
 
 local function ClearIconCooldown(icon)
@@ -266,9 +252,11 @@ local function SetIconAura(icon, unit, auraData, frameHeight, iconScale, dispell
         ClearIconCooldown(icon);
     end
 
-    HideIconGlow(icon);
-    icon.SpellActivationAlert = auraData.dispelName and icon.defaultGlow or icon.redGlow;
-    addon.ShowOverlayGlow(icon);
+    if auraData.dispelName then
+        addon.ShowProcGlow(icon);
+    else
+        addon.ShowProcGlow(icon, redGlowColor);
+    end
     icon:Show();
 end
 
@@ -277,9 +265,7 @@ local function SetIconTestAura(icon, frameHeight, iconScale)
     icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
     icon.cooldown:SetCooldown(GetTime(), testDuration);
     icon.cooldown:Show();
-    HideIconGlow(icon);
-    icon.SpellActivationAlert = icon.defaultGlow;
-    addon.ShowOverlayGlow(icon);
+    addon.ShowProcGlow(icon);
     icon:Show();
 end
 

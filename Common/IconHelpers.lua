@@ -145,3 +145,71 @@ addon.HideFixedPixelGlow = function (glow)
     glow:SetScript("OnUpdate", nil);
     glow:Hide();
 end
+
+local function EnsureProcGlow(frame)
+    if frame.procGlow then return frame.procGlow end
+
+    local glow = CreateFrame("Frame", nil, frame);
+    glow:SetFrameLevel(frame:GetFrameLevel() + 8);
+    glow.texture = glow:CreateTexture(nil, "ARTWORK");
+    glow.texture:SetAllPoints(glow);
+    glow.texture:SetAtlas("UI-HUD-ActionBar-Proc-Loop-Flipbook");
+    glow.texture:SetBlendMode("ADD");
+
+    glow.animation = glow:CreateAnimationGroup();
+    glow.animation:SetLooping("REPEAT");
+    glow.animation:SetToFinalAlpha(true);
+
+    local alpha = glow.animation:CreateAnimation("Alpha");
+    alpha:SetChildKey("texture");
+    alpha:SetFromAlpha(1);
+    alpha:SetToAlpha(1);
+    alpha:SetDuration(0.001);
+    alpha:SetOrder(0);
+
+    local flipbook = glow.animation:CreateAnimation("FlipBook");
+    flipbook:SetChildKey("texture");
+    flipbook:SetDuration(1);
+    flipbook:SetOrder(0);
+    flipbook:SetFlipBookRows(6);
+    flipbook:SetFlipBookColumns(5);
+    flipbook:SetFlipBookFrames(30);
+    flipbook:SetFlipBookFrameWidth(0);
+    flipbook:SetFlipBookFrameHeight(0);
+
+    glow:SetScript("OnHide", function (self)
+        self.animation:Stop();
+    end);
+    glow:Hide();
+    frame.procGlow = glow;
+    return glow;
+end
+
+addon.HideProcGlow = function (frame)
+    if frame.procGlow then
+        frame.procGlow.animation:Stop();
+        frame.procGlow:Hide();
+    end
+end
+
+addon.ShowProcGlow = function (frame, color)
+    local glow = EnsureProcGlow(frame);
+    addon.HideProcGlow(frame);
+
+    glow:SetFrameLevel(frame:GetFrameLevel() + 8);
+    glow:ClearAllPoints();
+    glow:SetPoint("TOPLEFT", frame, "TOPLEFT", -frame:GetWidth() * 0.2, frame:GetHeight() * 0.2);
+    glow:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", frame:GetWidth() * 0.2, -frame:GetHeight() * 0.2);
+
+    if color then
+        glow.texture:SetDesaturated(true);
+        glow.texture:SetVertexColor(color[1], color[2], color[3], color[4]);
+    else
+        glow.texture:SetDesaturated(false);
+        glow.texture:SetVertexColor(1, 1, 1, 1);
+    end
+
+    glow:Show();
+    glow.texture:Show();
+    glow.animation:Play();
+end
