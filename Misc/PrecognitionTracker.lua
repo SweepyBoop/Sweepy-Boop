@@ -1,7 +1,6 @@
 local _, addon = ...;
 
 local iconSize = addon.DEFAULT_ICON_SIZE;
-local borderSize = iconSize * 1.25;
 local precognitionSpellID = 377362;
 local greenGlowColor = { 0, 1, 0, 1 };
 
@@ -28,24 +27,11 @@ local function CreateContainerFrame()
     frame.icon:SetAllPoints(frame);
     frame.icon:SetTexture(addon.GetSpellTexture(precognitionSpellID));
 
-    frame.mask = frame:CreateMaskTexture();
-    frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-    frame.mask:SetSize(iconSize, iconSize);
-    frame.mask:SetAllPoints(frame.icon);
-    frame.icon:AddMaskTexture(frame.mask);
-
-    frame.border = frame:CreateTexture(nil, "OVERLAY");
-    frame.border:SetAtlas("talents-warmode-ring");
-    frame.border:SetSize(borderSize, borderSize);
-    frame.border:SetPoint("CENTER", frame);
-
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     frame.cooldown:SetAllPoints();
     frame.cooldown:SetDrawEdge(true);
     frame.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
-    frame.cooldown:SetUseCircularEdge(true);
     frame.cooldown:SetReverse(true);
-    frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
     frame.cooldown:SetSwipeColor(0, 0, 0, 0.5);
     frame.cooldown:SetHideCountdownNumbers(true);
     frame.cooldown.noCooldownCount = true;
