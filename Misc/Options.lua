@@ -195,8 +195,17 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.precognitionTracker );
                         end,
                     },
-                    precognitionTrackerSize = {
+                    precognitionTrackerOptionsBreak = {
                         order = 17,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.precognitionTracker );
+                        end,
+                    },
+                    precognitionTrackerSize = {
+                        order = 18,
                         type = "range",
                         width = 0.8,
                         min = 20,
@@ -213,7 +222,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     precognitionTrackerOffsetX = {
-                        order = 18,
+                        order = 19,
                         type = "range",
                         width = 0.8,
                         min = -500,
@@ -230,7 +239,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     precognitionTrackerOffsetY = {
-                        order = 19,
+                        order = 20,
                         type = "range",
                         width = 0.8,
                         min = -500,
@@ -247,7 +256,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     precognitionTrackerBreak = {
-                        order = 20,
+                        order = 21,
                         type = "description",
                         width = "full",
                         name = "",
@@ -256,7 +265,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     combatIndicator = {
-                        order = 21,
+                        order = 22,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_ATLAS("countdown-swords") .. " Show combat indicators on unit frames",
@@ -268,7 +277,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     alwaysShowDruidComboPoints = {
-                        order = 22,
+                        order = 23,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_mangle")) .. " Always show Druid combo points",
@@ -279,12 +288,12 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     header4 = {
-                        order = 23,
+                        order = 24,
                         type = "header",
                         name = "Arena",
                     },
                     hideBlizzArenaFrames = {
-                        order = 24,
+                        order = 25,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_arena_3v3_3")) .. " Hide Blizzard arena frames",
@@ -298,7 +307,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end
                     },
                     arenaSurrenderEnabled = {
-                        order = 25,
+                        order = 26,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " Type /gg to leave arena without confirmation",
@@ -313,14 +322,14 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     },
 
                     showDampenPercentage = {
-                        order = 26,
+                        order = 27,
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
                     },
 
                     healerIndicator = {
-                        order = 27,
+                        order = 28,
                         type = "toggle",
                         name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
                         desc = "To make it easier to identify the healer in case of class stacking",
@@ -331,13 +340,13 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                     },
 
                     header6 = {
-                        order = 28,
+                        order = 29,
                         type = "header",
                         name = "",
                     },
 
                     showMinimapIcon = {
-                        order = 29,
+                        order = 30,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/Logo") .. " Show minimap icon for invoking options UI",
