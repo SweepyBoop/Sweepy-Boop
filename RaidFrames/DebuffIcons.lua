@@ -219,6 +219,7 @@ local function ScanCrowdControlAuras(unit)
         if priority then
             scanAuras[#scanAuras + 1] = {
                 aura = auraData,
+                dispellable = auraData.dispelName and true or false,
                 index = index,
                 priority = priority,
             };
@@ -226,6 +227,10 @@ local function ScanCrowdControlAuras(unit)
     end
 
     table.sort(scanAuras, function (left, right)
+        if ( left.dispellable ~= right.dispellable ) then
+            return left.dispellable;
+        end
+
         if ( left.priority == right.priority ) then
             return left.index < right.index;
         end
