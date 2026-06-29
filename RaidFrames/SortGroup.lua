@@ -650,6 +650,9 @@ local function SortedFriendlyUnits()
     local middleInsertIndex;
     if mode == MODE_MIDDLE and playerEntry then
         middleInsertIndex = math.floor(#members / 2) + 1;
+        if #members == 1 then
+            middleInsertIndex = 2;
+        end
     end
 
     for i, entry in ipairs(members) do

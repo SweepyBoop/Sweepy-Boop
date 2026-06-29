@@ -171,6 +171,10 @@ local defaults = {
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
             queueReminder = true,
+            precognitionTracker = true,
+            precognitionTrackerSize = 36,
+            precognitionTrackerOffsetX = 0,
+            precognitionTrackerOffsetY = -75,
             combatIndicator = true,
             alwaysShowDruidComboPoints = true,
             fixEvokerCastBars = true,
@@ -385,6 +389,7 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameDebuffIcons();
 
     self:SetupQueueReminder();
+    self:SetupPrecognitionTracker();
     self:SetupCombatIndicator();
     self:SetupHealerInCrowdControl();
     self:SetupArenaSurrender();
@@ -408,6 +413,7 @@ function SweepyBoop:RefreshConfig()
 
     if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
+        self:SetupPrecognitionTracker();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
         self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
