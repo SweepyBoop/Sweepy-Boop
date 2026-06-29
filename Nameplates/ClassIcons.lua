@@ -4,8 +4,18 @@ local specialIconScaleFactor = 1.25;
 local classIconBorderSize = 44;
 local classIconSize = 40;
 local specialClassIconSize = 36;
-local targetHighlightAnimationFrequency = 0.325;
 local targetHighlightAnimationThrottle = 0.02;
+local targetHighlightPulseFrequency = 1.2;
+local targetHighlightPulseScale = 0.38;
+local targetHighlightPulseMaxAlpha = 1;
+local targetHighlightPulseMinAlpha = 0.18;
+local targetHighlightBaseMinAlpha = 0.8;
+local targetHighlightRotateFrequency = 0.75;
+local targetHighlightRotateShineCount = 5;
+local targetHighlightRotateShineSize = 8;
+local targetHighlightRotateShineCoreSize = 3;
+local targetHighlightRotateShineSpacing = 0.045;
+local targetHighlightRotateShineInset = 5.5;
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -32,8 +42,118 @@ end
 -- Suppress friendly FC icon and target highlight, as NeatPlates unregisters all UnitFrame events, causing problems for those 2 features
 local hasConflict = C_AddOns.IsAddOnLoaded("NeatPlates");
 
-local function SetTargetHighlightRotation(highlight, progress)
+local function EnsureAnimatedTargetHighlightPulse(frame)
+    if frame.targetHighlightPulse then
+        return;
+    end
+
+    local pulse = frame:CreateTexture(nil, "OVERLAY");
+    pulse:SetDrawLayer("OVERLAY", 2);
+    pulse:SetAtlas("charactercreate-ring-select");
+    pulse:SetVertexColor(1, 0.88, 0, 1);
+    pulse:SetBlendMode("ADD");
+    pulse:SetPoint("CENTER", frame);
+    pulse:Hide();
+    frame.targetHighlightPulse = pulse;
+end
+
+local function EnsureAnimatedTargetHighlightRotator(frame)
+    if frame.targetHighlightRotator then
+        return;
+    end
+
+    local rotator = CreateFrame("Frame", nil, frame);
+    rotator:SetAllPoints(frame);
+    rotator.shines = {};
+
+    for i = 1, targetHighlightRotateShineCount do
+        local shine = rotator:CreateTexture(nil, "OVERLAY");
+        shine:SetDrawLayer("OVERLAY", 3);
+        shine:SetAtlas("charactercreate-ring-select");
+        shine:SetVertexColor(1, 0.95, 0.45, 1);
+        shine:SetBlendMode("ADD");
+        shine:SetSize(targetHighlightRotateShineSize, targetHighlightRotateShineSize);
+        shine:Hide();
+        rotator.shines[i] = shine;
+
+        shine.core = rotator:CreateTexture(nil, "OVERLAY");
+        shine.core:SetDrawLayer("OVERLAY", 4);
+        shine.core:SetColorTexture(1, 1, 0.78, 1);
+        shine.core:SetBlendMode("ADD");
+        shine.core:SetSize(targetHighlightRotateShineCoreSize, targetHighlightRotateShineCoreSize);
+        shine.core:Hide();
+    end
+
+    rotator:Hide();
+    frame.targetHighlightRotator = rotator;
+end
+
+local function SetTargetHighlightPulseAnimation(frame, progress)
+    local highlight = frame.targetHighlight;
+    local wave = ( math.sin(( progress % 1 ) * math.pi * 2) + 1 ) / 2;
+    local width, height = highlight:GetSize();
+    local scale = 1 + ( targetHighlightPulseScale * wave );
+    local alpha = targetHighlightPulseMaxAlpha - ( ( targetHighlightPulseMaxAlpha - targetHighlightPulseMinAlpha ) * wave );
+
     highlight:SetRotation(-( progress % 1 ) * math.pi * 2);
+    highlight:SetAlpha(targetHighlightBaseMinAlpha + ( ( 1 - targetHighlightBaseMinAlpha ) * ( 1 - wave ) ));
+    frame.targetHighlightPulse:SetSize(width * scale, height * scale);
+    frame.targetHighlightPulse:SetAlpha(alpha);
+    frame.targetHighlightPulse:SetRotation(( progress % 1 ) * math.pi * 2);
+end
+
+local function SetTargetHighlightRotateAnimation(frame, progress)
+    local highlight = frame.targetHighlight;
+    local radius = ( highlight:GetWidth() / 2 ) - targetHighlightRotateShineInset;
+
+    highlight:SetRotation(0);
+    highlight:SetAlpha(1);
+    for i = 1, targetHighlightRotateShineCount do
+        local shine = frame.targetHighlightRotator.shines[i];
+        local shineProgress = progress - ( ( i - 1 ) * targetHighlightRotateShineSpacing );
+        local angle = -( shineProgress % 1 ) * math.pi * 2;
+        local alpha = 1 - ( ( i - 1 ) / targetHighlightRotateShineCount );
+        local x = math.cos(angle) * radius;
+        local y = math.sin(angle) * radius;
+
+        shine:ClearAllPoints();
+        shine:SetPoint("CENTER", frame, "CENTER", x, y);
+        shine:SetAlpha(alpha);
+        shine:SetRotation(angle);
+        shine.core:ClearAllPoints();
+        shine.core:SetPoint("CENTER", shine, "CENTER");
+        shine.core:SetAlpha(alpha);
+    end
+end
+
+local function SetTargetHighlightAnimation(frame, progress)
+    if frame.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE then
+        SetTargetHighlightRotateAnimation(frame, progress);
+    else
+        SetTargetHighlightPulseAnimation(frame, progress);
+    end
+end
+
+local function ResetTargetHighlightAnimation(frame)
+    if not frame.targetHighlight then
+        return;
+    end
+
+    frame.targetHighlight:SetRotation(0);
+    frame.targetHighlight:SetAlpha(1);
+    if frame.targetHighlightPulse then
+        frame.targetHighlightPulse:SetRotation(0);
+        frame.targetHighlightPulse:SetAlpha(1);
+        frame.targetHighlightPulse:Hide();
+    end
+    if frame.targetHighlightRotator then
+        for i = 1, #frame.targetHighlightRotator.shines do
+            local shine = frame.targetHighlightRotator.shines[i];
+            shine:Hide();
+            shine.core:Hide();
+        end
+        frame.targetHighlightRotator:Hide();
+    end
 end
 
 local function TargetHighlight_OnUpdate(self, elapsed)
@@ -49,8 +169,9 @@ local function TargetHighlight_OnUpdate(self, elapsed)
 
     local step = self.targetHighlightAnimationElapsed;
     self.targetHighlightAnimationElapsed = 0;
-    self.targetHighlightAnimationProgress = ( self.targetHighlightAnimationProgress + ( step * targetHighlightAnimationFrequency ) ) % 1;
-    SetTargetHighlightRotation(self.targetHighlight, self.targetHighlightAnimationProgress);
+    local frequency = self.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE and targetHighlightRotateFrequency or targetHighlightPulseFrequency;
+    self.targetHighlightAnimationProgress = ( self.targetHighlightAnimationProgress + ( step * frequency ) ) % 1;
+    SetTargetHighlightAnimation(self, self.targetHighlightAnimationProgress);
 end
 
 local HideTargetHighlight;
@@ -71,14 +192,29 @@ local function ShowAnimatedTargetHighlight(frame)
     end
 
     local highlight = frame.targetHighlight;
-    if frame.targetHighlightAnimatedShown then
+    local animationStyle = SweepyBoop.db.profile.nameplatesFriendly.targetHighlightAnimationStyle or addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.PULSE;
+    if frame.targetHighlightAnimatedShown and frame.targetHighlightAnimationStyle == animationStyle then
         return;
+    end
+
+    ResetTargetHighlightAnimation(frame);
+    frame.targetHighlightAnimationStyle = animationStyle;
+    if frame.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE then
+        EnsureAnimatedTargetHighlightRotator(frame);
+        frame.targetHighlightRotator:Show();
+        for i = 1, #frame.targetHighlightRotator.shines do
+            frame.targetHighlightRotator.shines[i]:Show();
+            frame.targetHighlightRotator.shines[i].core:Show();
+        end
+    else
+        EnsureAnimatedTargetHighlightPulse(frame);
+        frame.targetHighlightPulse:Show();
     end
 
     frame.targetHighlightAnimatedShown = true;
     frame.targetHighlightAnimationElapsed = 0;
     frame.targetHighlightAnimationProgress = 0;
-    SetTargetHighlightRotation(highlight, 0);
+    SetTargetHighlightAnimation(frame, 0);
     highlight:Show();
     UpdateClassIconBorderShown(frame);
     frame:SetScript("OnUpdate", TargetHighlight_OnUpdate);
@@ -102,8 +238,7 @@ HideTargetHighlight = function(frame)
     local highlight = frame.targetHighlight;
     frame.targetHighlightAnimatedShown = false;
     frame:SetScript("OnUpdate", nil);
-    SetTargetHighlightRotation(highlight, 0);
-    highlight:SetAlpha(1);
+    ResetTargetHighlightAnimation(frame);
     highlight:Hide();
     UpdateClassIconBorderShown(frame);
 end

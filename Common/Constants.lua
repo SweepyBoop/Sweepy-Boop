@@ -49,6 +49,11 @@ addon.ICON_TEMPLATE = {
     FLASH = 2, -- OmniBar style
 };
 
+addon.TARGET_HIGHLIGHT_ANIMATION_STYLE = {
+    PULSE = 1,
+    ROTATE = 2,
+};
+
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT = 1,
     LEFT = 3,
