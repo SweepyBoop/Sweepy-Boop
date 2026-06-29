@@ -49,6 +49,7 @@ addon.ICON_TEMPLATE = {
     FLASH = 2, -- OmniBar style
 };
 
+
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT = 1,
     LEFT = 3,
