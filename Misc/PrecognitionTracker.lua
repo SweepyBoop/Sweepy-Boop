@@ -20,6 +20,19 @@ local function GetDurationMatcher()
     return durationMatcher;
 end
 
+local function StyleCooldown(cooldown)
+    cooldown:SetDrawBling(false);
+    cooldown:SetReverse(true);
+    cooldown:SetDrawSwipe(true);
+    cooldown:SetSwipeColor(0, 0, 0, 0.5);
+    cooldown:SetDrawEdge(true);
+    cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
+    cooldown:SetHideCountdownNumbers(false);
+    if cooldown.SetCountdownMillisecondsThreshold then
+        cooldown:SetCountdownMillisecondsThreshold(0);
+    end
+end
+
 local function SetSecretSafeVisibility(frame, visible)
     if type(visible) == "number" then
         frame:SetAlpha(visible);
@@ -71,18 +84,12 @@ local function EnsureCandidate(index)
     candidate:SetAllPoints(trackerFrame);
     candidate:SetFrameLevel(trackerFrame:GetFrameLevel() + index * 2);
 
-    candidate.icon = candidate:CreateTexture(nil, "BORDER");
-    candidate.icon:SetSize(iconSize, iconSize);
-    candidate.icon:SetAllPoints(candidate);
+    candidate.texture = candidate:CreateTexture(nil, "ARTWORK");
+    candidate.texture:SetAllPoints(candidate);
 
     candidate.cooldown = CreateFrame("Cooldown", nil, candidate, "CooldownFrameTemplate");
-    candidate.cooldown:SetAllPoints();
-    candidate.cooldown:SetDrawEdge(true);
-    candidate.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
-    candidate.cooldown:SetReverse(true);
-    candidate.cooldown:SetSwipeColor(0, 0, 0, 0.5);
-    candidate.cooldown:SetHideCountdownNumbers(true);
-    candidate.cooldown.noCooldownCount = true;
+    candidate.cooldown:SetAllPoints(candidate);
+    StyleCooldown(candidate.cooldown);
     candidate.cooldown:SetScript("OnCooldownDone", function()
         if isInTest then
             HideTracker();
@@ -124,7 +131,7 @@ end
 
 local function PaintCandidate(index, auraData, durationObject, visibility)
     local candidate = EnsureCandidate(index);
-    candidate.icon:SetTexture(auraData.icon);
+    candidate.texture:SetTexture(auraData.icon);
     candidate.cooldown:SetCooldownFromDurationObject(durationObject);
     candidate.cooldown:Show();
     SetSecretSafeVisibility(candidate, visibility);
@@ -137,7 +144,7 @@ local function ShowTestIcon()
     ClearUnusedCandidates();
 
     local candidate = EnsureCandidate(1);
-    candidate.icon:SetTexture(addon.GetSpellTexture(precognitionSpellID));
+    candidate.texture:SetTexture(addon.GetSpellTexture(precognitionSpellID));
     candidate.cooldown:SetCooldown(GetTime(), 8);
     candidate.cooldown:Show();
     candidate:SetAlpha(1);
