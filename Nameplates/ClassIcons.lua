@@ -5,11 +5,11 @@ local classIconBorderSize = 44;
 local classIconSize = 40;
 local specialClassIconSize = 36;
 local targetHighlightAnimationThrottle = 0.02;
-local targetHighlightAnimationFrequency = 0.85;
-local targetHighlightPulseScale = 0.18;
-local targetHighlightPulseMaxAlpha = 0.75;
-local targetHighlightPulseMinAlpha = 0.25;
-local targetHighlightBaseMinAlpha = 0.9;
+local targetHighlightAnimationFrequency = 0.9;
+local targetHighlightPulseScale = 0.22;
+local targetHighlightPulseMaxAlpha = 0.82;
+local targetHighlightPulseMinAlpha = 0.22;
+local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
 
 local crowdControlPriority = { -- sort by remaining time, then priority
