@@ -1,6 +1,7 @@
 Current Lib versions:
 - Ace3: Release-r1390
 - LibDBIcon: v12.0.2
+- LibDeflate: 1.0.2-release (hasn't updated since 2020)
 
 Tasks:
 - [x] Re-implement arena numbers for mainline, this can unblock enemy spec icons too
