@@ -177,7 +177,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             targetHighlight = {
                 order = 17,
                 type = "toggle",
-                width = "full",
+                width = 1.25,
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
