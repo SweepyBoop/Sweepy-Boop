@@ -4,11 +4,8 @@ local specialIconScaleFactor = 1.25;
 local classIconBorderSize = 44;
 local classIconSize = 40;
 local specialClassIconSize = 36;
-local targetHighlightPixelGlowDotCount = 18;
-local targetHighlightPixelGlowDotSize = 5;
-local targetHighlightPixelGlowFrequency = 0.325;
-local targetHighlightPixelGlowThrottle = 0.02;
-local targetHighlightPixelGlowColor = { 1, 0.78, 0, 1 };
+local targetHighlightAnimationFrequency = 0.325;
+local targetHighlightAnimationThrottle = 0.02;
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -35,84 +32,31 @@ end
 -- Suppress friendly FC icon and target highlight, as NeatPlates unregisters all UnitFrame events, causing problems for those 2 features
 local hasConflict = C_AddOns.IsAddOnLoaded("NeatPlates");
 
-local function SetTargetHighlightPixelGlowDotPosition(dot, radius, progress)
-    local angle = -( progress % 1 ) * math.pi * 2;
-    dot:ClearAllPoints();
-    dot:SetPoint("CENTER", dot:GetParent(), "CENTER", math.cos(angle) * radius, math.sin(angle) * radius);
-end
-
-local function GetTargetHighlightPixelGlowColor(frame)
-    local config = SweepyBoop.db.profile.nameplatesFriendly;
-    if config.classColorTargetHighlight and frame.classColor then
-        return frame.classColor;
-    end
-    return targetHighlightPixelGlowColor;
-end
-
-local function IsTargetHighlightPixelGlowColorApplied(frame, color)
-    local appliedColor = frame.targetHighlightPixelGlowColor;
-    return appliedColor
-        and appliedColor[1] == color[1]
-        and appliedColor[2] == color[2]
-        and appliedColor[3] == color[3]
-        and appliedColor[4] == color[4];
-end
-
-local function EnsureTargetHighlightPixelGlow(frame, color)
-    if frame.targetHighlightPixelGlowDots and IsTargetHighlightPixelGlowColorApplied(frame, color) then
-        return;
-    end
-
-    frame.targetHighlightPixelGlowDots = frame.targetHighlightPixelGlowDots or {};
-    for i = 1, targetHighlightPixelGlowDotCount do
-        local dot = frame.targetHighlightPixelGlowDots[i];
-        if not dot then
-            dot = frame:CreateTexture(nil, "OVERLAY");
-            dot:SetDrawLayer("OVERLAY", 2);
-            dot.mask = frame:CreateMaskTexture();
-            dot.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-            dot:AddMaskTexture(dot.mask);
-            dot:Hide();
-            frame.targetHighlightPixelGlowDots[i] = dot;
-        end
-        dot:SetColorTexture(unpack(color));
-        dot:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
-        dot.mask:SetSize(targetHighlightPixelGlowDotSize, targetHighlightPixelGlowDotSize);
-        dot.mask:SetAllPoints(dot);
-        dot.offset = ( i - 1 ) / targetHighlightPixelGlowDotCount;
-    end
-
-    for i = targetHighlightPixelGlowDotCount + 1, #frame.targetHighlightPixelGlowDots do
-        frame.targetHighlightPixelGlowDots[i]:Hide();
-    end
-
-    frame.targetHighlightPixelGlowColor = { color[1], color[2], color[3], color[4] };
+local function SetTargetHighlightRotation(highlight, progress)
+    highlight:SetRotation(-( progress % 1 ) * math.pi * 2);
 end
 
 local function TargetHighlight_OnUpdate(self, elapsed)
-    if ( not self.targetHighlight ) or ( not self.targetHighlightPixelGlowDots ) then
+    if ( not self.targetHighlight ) or ( not self.targetHighlightAnimatedShown ) then
         self:SetScript("OnUpdate", nil);
         return;
     end
 
-    self.targetHighlightPixelGlowElapsed = self.targetHighlightPixelGlowElapsed + elapsed;
-    if self.targetHighlightPixelGlowElapsed < targetHighlightPixelGlowThrottle then
+    self.targetHighlightAnimationElapsed = self.targetHighlightAnimationElapsed + elapsed;
+    if self.targetHighlightAnimationElapsed < targetHighlightAnimationThrottle then
         return;
     end
 
-    local step = self.targetHighlightPixelGlowElapsed;
-    self.targetHighlightPixelGlowElapsed = 0;
-    self.targetHighlightPixelGlowProgress = ( self.targetHighlightPixelGlowProgress + ( step * targetHighlightPixelGlowFrequency ) ) % 1;
-
-    for i = 1, targetHighlightPixelGlowDotCount do
-        SetTargetHighlightPixelGlowDotPosition(self.targetHighlightPixelGlowDots[i], self.targetHighlightPixelGlowRadius, self.targetHighlightPixelGlowProgress + self.targetHighlightPixelGlowDots[i].offset);
-    end
+    local step = self.targetHighlightAnimationElapsed;
+    self.targetHighlightAnimationElapsed = 0;
+    self.targetHighlightAnimationProgress = ( self.targetHighlightAnimationProgress + ( step * targetHighlightAnimationFrequency ) ) % 1;
+    SetTargetHighlightRotation(self.targetHighlight, self.targetHighlightAnimationProgress);
 end
 
 local HideTargetHighlight;
 
 local function IsTargetHighlightVisible(frame)
-    return frame.targetHighlightPixelGlowShown or ( frame.targetHighlight and frame.targetHighlight:IsShown() );
+    return frame.targetHighlightAnimatedShown or ( frame.targetHighlight and frame.targetHighlight:IsShown() );
 end
 
 local function UpdateClassIconBorderShown(frame)
@@ -127,32 +71,16 @@ local function ShowAnimatedTargetHighlight(frame)
     end
 
     local highlight = frame.targetHighlight;
-    local color = GetTargetHighlightPixelGlowColor(frame);
-    if frame.targetHighlightPixelGlowShown then
-        EnsureTargetHighlightPixelGlow(frame, color);
+    if frame.targetHighlightAnimatedShown then
         return;
     end
 
-    if not highlight.baseWidth then
-        highlight.baseWidth, highlight.baseHeight = highlight:GetSize();
-    end
-
-    EnsureTargetHighlightPixelGlow(frame, color);
-    frame.targetHighlightPixelGlowShown = true;
-    frame.targetHighlightPixelGlowElapsed = 0;
-    frame.targetHighlightPixelGlowProgress = 0;
-    local borderWidth = frame.border and frame.border:GetWidth() or 48;
-    local maskWidth = frame.mask and frame.mask:GetWidth() or 40;
-    frame.targetHighlightPixelGlowRadius = ( borderWidth + maskWidth ) / 4 - 2;
+    frame.targetHighlightAnimatedShown = true;
+    frame.targetHighlightAnimationElapsed = 0;
+    frame.targetHighlightAnimationProgress = 0;
+    SetTargetHighlightRotation(highlight, 0);
+    highlight:Show();
     UpdateClassIconBorderShown(frame);
-    highlight:Hide();
-
-    for i = 1, targetHighlightPixelGlowDotCount do
-        SetTargetHighlightPixelGlowDotPosition(frame.targetHighlightPixelGlowDots[i], frame.targetHighlightPixelGlowRadius, frame.targetHighlightPixelGlowDots[i].offset);
-        frame.targetHighlightPixelGlowDots[i]:SetAlpha(1);
-        frame.targetHighlightPixelGlowDots[i]:Show();
-    end
-
     frame:SetScript("OnUpdate", TargetHighlight_OnUpdate);
 end
 
@@ -172,20 +100,12 @@ HideTargetHighlight = function(frame)
     end
 
     local highlight = frame.targetHighlight;
-    frame.targetHighlightPixelGlowShown = false;
+    frame.targetHighlightAnimatedShown = false;
     frame:SetScript("OnUpdate", nil);
-    if highlight.baseWidth then
-        highlight:SetSize(highlight.baseWidth, highlight.baseHeight);
-    end
+    SetTargetHighlightRotation(highlight, 0);
     highlight:SetAlpha(1);
     highlight:Hide();
     UpdateClassIconBorderShown(frame);
-
-    if frame.targetHighlightPixelGlowDots then
-        for i = 1, #frame.targetHighlightPixelGlowDots do
-            frame.targetHighlightPixelGlowDots[i]:Hide();
-        end
-    end
 end
 
 addon.SetTargetHighlightShown = function(frame, shouldShow, shouldAnimate)
@@ -529,7 +449,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.targetHighlight:SetAlpha(1);
 
             local classColor = RAID_CLASS_COLORS[class];
-            iconFrame.classColor = classColor and { classColor.r, classColor.g, classColor.b, 1 } or nil;
             UpdateClassIconBorderShown(iconFrame);
             iconFrame.border:SetSize(classIconBorderSize, classIconBorderSize);
             if iconFrame.border.mask then

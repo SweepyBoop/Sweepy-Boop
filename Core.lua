@@ -82,7 +82,6 @@ local defaults = {
             useFlagCarrierIcon = true,
             targetHighlight = true,
             animatedTargetHighlight = true,
-            classColorTargetHighlight = true,
             showPlayerName = false,
             showCrowdControl = true,
         },
