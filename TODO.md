@@ -10,3 +10,4 @@ Tasks:
 - [ ] Re-implement battleground enemy spec icons (blocked)
 - [x] Configurable SetCountdownMillisecondsThreshold for raid frame big debuffs & healer in CC alert
 - [ ] Bug fix: friendly class icon "Show CC" sometimes get stuck on the CC icon and never switches back to the class icon
+- [ ] Implement rotating style target highlight for class icons
