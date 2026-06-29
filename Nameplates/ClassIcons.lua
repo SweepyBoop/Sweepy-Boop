@@ -5,17 +5,14 @@ local classIconBorderSize = 44;
 local classIconSize = 40;
 local specialClassIconSize = 36;
 local targetHighlightAnimationThrottle = 0.02;
-local targetHighlightPulseFrequency = 1.2;
-local targetHighlightPulseScale = 0.38;
-local targetHighlightPulseMaxAlpha = 1;
-local targetHighlightPulseMinAlpha = 0.18;
-local targetHighlightBaseMinAlpha = 0.8;
-local targetHighlightRotateFrequency = 0.75;
-local targetHighlightRotateShineCount = 5;
-local targetHighlightRotateShineSize = 8;
-local targetHighlightRotateShineCoreSize = 3;
-local targetHighlightRotateShineSpacing = 0.045;
-local targetHighlightRotateShineInset = 5.5;
+local targetHighlightPulseFrequency = 0.85;
+local targetHighlightPulseScale = 0.18;
+local targetHighlightPulseMaxAlpha = 0.75;
+local targetHighlightPulseMinAlpha = 0.25;
+local targetHighlightBaseMinAlpha = 0.9;
+local targetHighlightRotateFrequency = 0.85;
+local targetHighlightRotateOverlayAlpha = 0.65;
+local targetHighlightRotateOverlayScale = 0.92;
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -62,28 +59,12 @@ local function EnsureAnimatedTargetHighlightRotator(frame)
         return;
     end
 
-    local rotator = CreateFrame("Frame", nil, frame);
-    rotator:SetAllPoints(frame);
-    rotator.shines = {};
-
-    for i = 1, targetHighlightRotateShineCount do
-        local shine = rotator:CreateTexture(nil, "OVERLAY");
-        shine:SetDrawLayer("OVERLAY", 3);
-        shine:SetAtlas("charactercreate-ring-select");
-        shine:SetVertexColor(1, 0.95, 0.45, 1);
-        shine:SetBlendMode("ADD");
-        shine:SetSize(targetHighlightRotateShineSize, targetHighlightRotateShineSize);
-        shine:Hide();
-        rotator.shines[i] = shine;
-
-        shine.core = rotator:CreateTexture(nil, "OVERLAY");
-        shine.core:SetDrawLayer("OVERLAY", 4);
-        shine.core:SetColorTexture(1, 1, 0.78, 1);
-        shine.core:SetBlendMode("ADD");
-        shine.core:SetSize(targetHighlightRotateShineCoreSize, targetHighlightRotateShineCoreSize);
-        shine.core:Hide();
-    end
-
+    local rotator = frame:CreateTexture(nil, "OVERLAY");
+    rotator:SetDrawLayer("OVERLAY", 2);
+    rotator:SetAtlas("charactercreate-ring-select");
+    rotator:SetVertexColor(1, 0.95, 0.35, 1);
+    rotator:SetBlendMode("ADD");
+    rotator:SetPoint("CENTER", frame);
     rotator:Hide();
     frame.targetHighlightRotator = rotator;
 end
@@ -104,26 +85,13 @@ end
 
 local function SetTargetHighlightRotateAnimation(frame, progress)
     local highlight = frame.targetHighlight;
-    local radius = ( highlight:GetWidth() / 2 ) - targetHighlightRotateShineInset;
+    local width, height = highlight:GetSize();
 
     highlight:SetRotation(0);
     highlight:SetAlpha(1);
-    for i = 1, targetHighlightRotateShineCount do
-        local shine = frame.targetHighlightRotator.shines[i];
-        local shineProgress = progress - ( ( i - 1 ) * targetHighlightRotateShineSpacing );
-        local angle = -( shineProgress % 1 ) * math.pi * 2;
-        local alpha = 1 - ( ( i - 1 ) / targetHighlightRotateShineCount );
-        local x = math.cos(angle) * radius;
-        local y = math.sin(angle) * radius;
-
-        shine:ClearAllPoints();
-        shine:SetPoint("CENTER", frame, "CENTER", x, y);
-        shine:SetAlpha(alpha);
-        shine:SetRotation(angle);
-        shine.core:ClearAllPoints();
-        shine.core:SetPoint("CENTER", shine, "CENTER");
-        shine.core:SetAlpha(alpha);
-    end
+    frame.targetHighlightRotator:SetSize(width * targetHighlightRotateOverlayScale, height * targetHighlightRotateOverlayScale);
+    frame.targetHighlightRotator:SetAlpha(targetHighlightRotateOverlayAlpha);
+    frame.targetHighlightRotator:SetRotation(-( progress % 1 ) * math.pi * 2);
 end
 
 local function SetTargetHighlightAnimation(frame, progress)
@@ -147,11 +115,8 @@ local function ResetTargetHighlightAnimation(frame)
         frame.targetHighlightPulse:Hide();
     end
     if frame.targetHighlightRotator then
-        for i = 1, #frame.targetHighlightRotator.shines do
-            local shine = frame.targetHighlightRotator.shines[i];
-            shine:Hide();
-            shine.core:Hide();
-        end
+        frame.targetHighlightRotator:SetRotation(0);
+        frame.targetHighlightRotator:SetAlpha(1);
         frame.targetHighlightRotator:Hide();
     end
 end
@@ -202,10 +167,6 @@ local function ShowAnimatedTargetHighlight(frame)
     if frame.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE then
         EnsureAnimatedTargetHighlightRotator(frame);
         frame.targetHighlightRotator:Show();
-        for i = 1, #frame.targetHighlightRotator.shines do
-            frame.targetHighlightRotator.shines[i]:Show();
-            frame.targetHighlightRotator.shines[i].core:Show();
-        end
     else
         EnsureAnimatedTargetHighlightPulse(frame);
         frame.targetHighlightPulse:Show();
