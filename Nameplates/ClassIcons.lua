@@ -11,8 +11,6 @@ local targetHighlightPulseMaxAlpha = 0.75;
 local targetHighlightPulseMinAlpha = 0.25;
 local targetHighlightBaseMinAlpha = 0.9;
 local targetHighlightRotateFrequency = 0.85;
-local targetHighlightRotateOverlayAlpha = 0.65;
-local targetHighlightRotateOverlayScale = 0.92;
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -54,20 +52,6 @@ local function EnsureAnimatedTargetHighlightPulse(frame)
     frame.targetHighlightPulse = pulse;
 end
 
-local function EnsureAnimatedTargetHighlightRotator(frame)
-    if frame.targetHighlightRotator then
-        return;
-    end
-
-    local rotator = frame:CreateTexture(nil, "OVERLAY");
-    rotator:SetDrawLayer("OVERLAY", 2);
-    rotator:SetAtlas("charactercreate-ring-select");
-    rotator:SetVertexColor(1, 0.95, 0.35, 1);
-    rotator:SetBlendMode("ADD");
-    rotator:SetPoint("CENTER", frame);
-    rotator:Hide();
-    frame.targetHighlightRotator = rotator;
-end
 
 local function SetTargetHighlightPulseAnimation(frame, progress)
     local highlight = frame.targetHighlight;
@@ -84,14 +68,8 @@ local function SetTargetHighlightPulseAnimation(frame, progress)
 end
 
 local function SetTargetHighlightRotateAnimation(frame, progress)
-    local highlight = frame.targetHighlight;
-    local width, height = highlight:GetSize();
-
-    highlight:SetRotation(0);
-    highlight:SetAlpha(1);
-    frame.targetHighlightRotator:SetSize(width * targetHighlightRotateOverlayScale, height * targetHighlightRotateOverlayScale);
-    frame.targetHighlightRotator:SetAlpha(targetHighlightRotateOverlayAlpha);
-    frame.targetHighlightRotator:SetRotation(-( progress % 1 ) * math.pi * 2);
+    frame.targetHighlight:SetAlpha(1);
+    frame.targetHighlight:SetRotation(-( progress % 1 ) * math.pi * 2);
 end
 
 local function SetTargetHighlightAnimation(frame, progress)
@@ -113,11 +91,6 @@ local function ResetTargetHighlightAnimation(frame)
         frame.targetHighlightPulse:SetRotation(0);
         frame.targetHighlightPulse:SetAlpha(1);
         frame.targetHighlightPulse:Hide();
-    end
-    if frame.targetHighlightRotator then
-        frame.targetHighlightRotator:SetRotation(0);
-        frame.targetHighlightRotator:SetAlpha(1);
-        frame.targetHighlightRotator:Hide();
     end
 end
 
@@ -164,10 +137,7 @@ local function ShowAnimatedTargetHighlight(frame)
 
     ResetTargetHighlightAnimation(frame);
     frame.targetHighlightAnimationStyle = animationStyle;
-    if frame.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE then
-        EnsureAnimatedTargetHighlightRotator(frame);
-        frame.targetHighlightRotator:Show();
-    else
+    if frame.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.PULSE then
         EnsureAnimatedTargetHighlightPulse(frame);
         frame.targetHighlightPulse:Show();
     end
