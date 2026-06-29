@@ -145,7 +145,7 @@ local function ShowTestIcon()
 
     local candidate = EnsureCandidate(1);
     candidate.texture:SetTexture(addon.GetSpellTexture(precognitionSpellID));
-    candidate.cooldown:SetCooldown(GetTime(), 8);
+    candidate.cooldown:SetCooldown(GetTime(), 4);
     candidate.cooldown:Show();
     candidate:SetAlpha(1);
     addon.ShowProcGlow(candidate, greenGlowColor);
