@@ -195,25 +195,8 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.targetHighlight );
                 end
             },
-            targetHighlightAnimationStyle = {
-                order = 19,
-                type = "select",
-                width = 1,
-                name = "Animation",
-                values = {
-                    [addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.PULSE] = "Pulse",
-                    [addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE] = "Rotate",
-                },
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end,
-                disabled = function()
-                    local config = SweepyBoop.db.profile.nameplatesFriendly;
-                    return ( not config.targetHighlight ) or ( not config.animatedTargetHighlight );
-                end
-            },
             targetHighlightLineBreak = {
-                order = 20,
+                order = 19,
                 type = "description",
                 name = "",
                 width = "full",
@@ -222,7 +205,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             classIconOffset = {
-                order = 21,
+                order = 20,
                 type = "range",
                 min = -50,
                 max = 150,
@@ -235,7 +218,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             header1 = {
-                order = 22,
+                order = 21,
                 type = "header",
                 name = "Icon size",
                 hidden = function()
@@ -243,7 +226,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             classIconSize = {
-                order = 23,
+                order = 22,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -256,7 +239,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             healerIconSize = {
-                order = 24,
+                order = 23,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -270,7 +253,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             flagCarrierIconSize = {
-                order = 24,
+                order = 23,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -284,7 +267,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             petIconSize = {
-                order = 25,
+                order = 24,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -298,7 +281,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             breaker2 = {
-                order = 26,
+                order = 25,
                 type = "header",
                 name = "",
                 hidden = function()
@@ -307,7 +290,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             showPlayerName = {
-                order = 28,
+                order = 27,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Class-colored names",
@@ -319,7 +302,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             keepHealthBar = {
-                order = 29,
+                order = 28,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Keep Blizzard health bar",
@@ -330,7 +313,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             showCrowdControl = {
-                order = 31,
+                order = 30,
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",

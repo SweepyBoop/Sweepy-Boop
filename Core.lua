@@ -82,7 +82,6 @@ local defaults = {
             useFlagCarrierIcon = true,
             targetHighlight = true,
             animatedTargetHighlight = true,
-            targetHighlightAnimationStyle = addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.PULSE,
             showPlayerName = false,
             showCrowdControl = true,
         },

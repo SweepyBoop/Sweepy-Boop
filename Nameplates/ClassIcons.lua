@@ -5,12 +5,12 @@ local classIconBorderSize = 44;
 local classIconSize = 40;
 local specialClassIconSize = 36;
 local targetHighlightAnimationThrottle = 0.02;
-local targetHighlightPulseFrequency = 0.85;
+local targetHighlightAnimationFrequency = 0.85;
 local targetHighlightPulseScale = 0.18;
 local targetHighlightPulseMaxAlpha = 0.75;
 local targetHighlightPulseMinAlpha = 0.25;
 local targetHighlightBaseMinAlpha = 0.9;
-local targetHighlightRotateFrequency = 0.85;
+local targetHighlightColor = { 1, 0.88, 0, 1 };
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -53,13 +53,14 @@ local function EnsureAnimatedTargetHighlightPulse(frame)
 end
 
 
-local function SetTargetHighlightPulseAnimation(frame, progress)
+local function SetTargetHighlightAnimation(frame, progress)
     local highlight = frame.targetHighlight;
     local wave = ( math.sin(( progress % 1 ) * math.pi * 2) + 1 ) / 2;
     local width, height = highlight:GetSize();
     local scale = 1 + ( targetHighlightPulseScale * wave );
     local alpha = targetHighlightPulseMaxAlpha - ( ( targetHighlightPulseMaxAlpha - targetHighlightPulseMinAlpha ) * wave );
 
+    highlight:SetVertexColor(unpack(targetHighlightColor));
     highlight:SetRotation(-( progress % 1 ) * math.pi * 2);
     highlight:SetAlpha(targetHighlightBaseMinAlpha + ( ( 1 - targetHighlightBaseMinAlpha ) * ( 1 - wave ) ));
     frame.targetHighlightPulse:SetSize(width * scale, height * scale);
@@ -67,24 +68,13 @@ local function SetTargetHighlightPulseAnimation(frame, progress)
     frame.targetHighlightPulse:SetRotation(( progress % 1 ) * math.pi * 2);
 end
 
-local function SetTargetHighlightRotateAnimation(frame, progress)
-    frame.targetHighlight:SetAlpha(1);
-    frame.targetHighlight:SetRotation(-( progress % 1 ) * math.pi * 2);
-end
-
-local function SetTargetHighlightAnimation(frame, progress)
-    if frame.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE then
-        SetTargetHighlightRotateAnimation(frame, progress);
-    else
-        SetTargetHighlightPulseAnimation(frame, progress);
-    end
-end
 
 local function ResetTargetHighlightAnimation(frame)
     if not frame.targetHighlight then
         return;
     end
 
+    frame.targetHighlight:SetVertexColor(unpack(targetHighlightColor));
     frame.targetHighlight:SetRotation(0);
     frame.targetHighlight:SetAlpha(1);
     if frame.targetHighlightPulse then
@@ -107,8 +97,7 @@ local function TargetHighlight_OnUpdate(self, elapsed)
 
     local step = self.targetHighlightAnimationElapsed;
     self.targetHighlightAnimationElapsed = 0;
-    local frequency = self.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.ROTATE and targetHighlightRotateFrequency or targetHighlightPulseFrequency;
-    self.targetHighlightAnimationProgress = ( self.targetHighlightAnimationProgress + ( step * frequency ) ) % 1;
+    self.targetHighlightAnimationProgress = ( self.targetHighlightAnimationProgress + ( step * targetHighlightAnimationFrequency ) ) % 1;
     SetTargetHighlightAnimation(self, self.targetHighlightAnimationProgress);
 end
 
@@ -130,17 +119,13 @@ local function ShowAnimatedTargetHighlight(frame)
     end
 
     local highlight = frame.targetHighlight;
-    local animationStyle = SweepyBoop.db.profile.nameplatesFriendly.targetHighlightAnimationStyle or addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.PULSE;
-    if frame.targetHighlightAnimatedShown and frame.targetHighlightAnimationStyle == animationStyle then
+    if frame.targetHighlightAnimatedShown then
         return;
     end
 
     ResetTargetHighlightAnimation(frame);
-    frame.targetHighlightAnimationStyle = animationStyle;
-    if frame.targetHighlightAnimationStyle == addon.TARGET_HIGHLIGHT_ANIMATION_STYLE.PULSE then
-        EnsureAnimatedTargetHighlightPulse(frame);
-        frame.targetHighlightPulse:Show();
-    end
+    EnsureAnimatedTargetHighlightPulse(frame);
+    frame.targetHighlightPulse:Show();
 
     frame.targetHighlightAnimatedShown = true;
     frame.targetHighlightAnimationElapsed = 0;
