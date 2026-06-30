@@ -11,7 +11,6 @@ local targetHighlightPulseMaxAlpha = 0.82;
 local targetHighlightPulseMinAlpha = 0.22;
 local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
-local plainBorderColor = { 0.55, 0.55, 0.55 };
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -512,11 +511,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
             if iconFrame.maskCC then
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
-            iconFrame.border:SetDesaturated(true);
             if config.classIconClassColoredBorder then
                 iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
-                iconFrame.border:SetVertexColor(unpack(plainBorderColor));
+                iconFrame.border:SetVertexColor(1, 1, 1);
             end
 
             local showPlayerName = config.showPlayerName and ( not config.keepHealthBar );
