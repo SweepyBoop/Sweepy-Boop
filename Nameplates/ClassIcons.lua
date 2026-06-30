@@ -511,8 +511,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
             if config.classIconClassColoredBorder then
+                iconFrame.border:SetDesaturated(true);
                 iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
+                iconFrame.border:SetDesaturated(false);
                 iconFrame.border:SetVertexColor(1, 1, 1);
             end
 
