@@ -360,7 +360,15 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "header",
                         name = "Arena enemy spec icons",
                         hidden = function()
-                            return addon.PROJECT_TBC;
+                            return not addon.PROJECT_MAINLINE;
+                        end,
+                    },
+                    breaker2Classic = {
+                        order = 4,
+                        type = "header",
+                        name = "Arena enemy spec icons",
+                        hidden = function()
+                            return addon.PROJECT_MAINLINE or addon.PROJECT_TBC;
                         end,
                     },
                     arenaSpecIconHealer = {

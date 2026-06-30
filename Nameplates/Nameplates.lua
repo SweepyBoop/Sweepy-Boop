@@ -172,13 +172,17 @@ local function UpdateWidgets(nameplate, frame)
         addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
+            -- For TBC, no spec/healer detection for enemies.
+            -- For MoP Classic, use spec icons from tooltip.
+            -- For Retail, use GetArenaOpponentSpec with inferred arena numbers.
+            local shouldShowSpecIcon;
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
-            local shouldShowSpecIcon = false;
-            if addon.PROJECT_MAINLINE then
+            if addon.PROJECT_TBC then
+                shouldShowSpecIcon = false; -- TBC: no reliable way to detect enemy specs
+            elseif addon.PROJECT_MAINLINE then
                 shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
-            elseif not addon.PROJECT_TBC then
-                shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers )
-                    and ( IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) );
+            else
+                shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
             end
 
             if shouldShowSpecIcon then
