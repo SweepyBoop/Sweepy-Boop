@@ -1,12 +1,6 @@
 local _, addon = ...;
 
 local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
-local function FormatClassIconBorderPreview(r, g, b)
-    return format("|A:charactercreate-ring-metallight:16:16:0:0:255:255:%d:%d:%d|a", r * 255, g * 255, b * 255);
-end
-local classIconBorderPreview = FormatClassIconBorderPreview(1, 0.96, 0.41) -- Rogue
-    .. FormatClassIconBorderPreview(0.25, 0.78, 0.92) -- Mage
-    .. FormatClassIconBorderPreview(1, 1, 1); -- Priest
 
 addon.GetFriendlyNameplateOptions = function(order)
     local optionGroup = {
@@ -184,7 +178,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 17,
                 type = "toggle",
                 width = "full",
-                name = classIconBorderPreview .. " Class-colored borders",
+                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
                 desc = "Use each player's class color for class icon borders. Disable for a plain grey ring.",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
