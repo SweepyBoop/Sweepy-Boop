@@ -7,47 +7,51 @@ local setPointOptions = {
     [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
-local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil; check cache (for perf) and config
-    local iconID, isHealer;
+local function GetConfiguredSpecIcon(specIconID, role, config)
+    if ( not specIconID ) then return end
 
+    if ( role == "HEALER" ) then
+        if config.arenaSpecIconHealer then
+            if config.arenaSpecIconHealerIcon then
+                return addon.ICON_ID_HEALER_ENEMY, true;
+            end
+            return specIconID;
+        end
+    elseif config.arenaSpecIconOthers then
+        return specIconID;
+    end
+end
+
+local function GetMainlineArenaSpecInfo(unitId)
+    local arenaNumber = addon.GetArenaNumber(unitId);
+    if ( not arenaNumber ) then return end
+
+    local specID = GetArenaOpponentSpec(arenaNumber);
+    if ( not specID ) or ( specID <= 0 ) then return end
+
+    return select(4, GetSpecializationInfoByID(specID)); -- iconID, role
+end
+
+local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil; check cache (for perf) and config
     if ( not UnitIsPlayer(unitId) ) then return end -- No spec icon on non-player units
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
 
     if addon.PROJECT_MAINLINE then
-        -- On retail, we can only detect healers using UnitGroupRolesAssigned in arenas
-        if IsActiveBattlefieldArena() and config.arenaEnemyHealer then
-            local roleAssigned = UnitGroupRolesAssigned(unitId);
-            if roleAssigned == "HEALER" then
-                iconID = addon.ICON_ID_HEALER_ENEMY;
-                isHealer = true;
-            end
+        if IsActiveBattlefieldArena() then
+            local specIconID, role = GetMainlineArenaSpecInfo(unitId);
+            return GetConfiguredSpecIcon(specIconID, role, config);
         end
     elseif addon.PROJECT_TBC then
-        -- TBC: UnitGroupRolesAssigned doesn't work reliably for enemy arena units
-        -- TBC didn't have a spec system, so we can't detect healers
-        -- Feature disabled for TBC
+        -- TBC: no spec system, so we can't detect enemy specs.
     else
-        -- On MoP Classic, we can detect spec from tooltip
+        -- On MoP Classic, we can detect spec from tooltip.
         if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
             local specInfo = addon.GetPlayerSpec(unitId);
             if ( not specInfo ) then return end
-            if ( specInfo.role == "HEALER" ) then
-                if config.arenaSpecIconHealer then
-                    if config.arenaSpecIconHealerIcon then
-                        iconID = addon.ICON_ID_HEALER_ENEMY;
-                        isHealer = true;
-                    else
-                        iconID = specInfo.icon;
-                    end
-                end
-            elseif config.arenaSpecIconOthers then
-                iconID = specInfo.icon;
-            end
+            return GetConfiguredSpecIcon(specInfo.icon, specInfo.role, config);
         end
     end
-
-    return iconID, isHealer;
 end
 
 local function EnsureSpecIcon(nameplate)
