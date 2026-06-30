@@ -210,10 +210,10 @@ local defaults = {
 
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
-    defaults.profile.nameplatesFriendly.classIconSize = 2;
-    defaults.profile.nameplatesFriendly.healerIconSize = 2;
-    defaults.profile.nameplatesFriendly.flagCarrierIconSize = 2;
-    defaults.profile.nameplatesFriendly.petIconSize = 2;
+    defaults.profile.nameplatesFriendly.classIconSize = 1.5;
+    defaults.profile.nameplatesFriendly.healerIconSize = 1.5;
+    defaults.profile.nameplatesFriendly.flagCarrierIconSize = 1.5;
+    defaults.profile.nameplatesFriendly.petIconSize = 1.5;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.arenaSpecIconOthers = true;
