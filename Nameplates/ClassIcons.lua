@@ -1,9 +1,8 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
-local classIconBorderSize = 44;
+local classIconBorderSize = 64;
 local classIconSize = 40;
-local specialClassIconSize = 36;
 local targetHighlightAnimationThrottle = 0.02;
 local targetHighlightAnimationFrequency = 0.9;
 local targetHighlightPulseScale = 0.22;
@@ -506,13 +505,18 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border.mask:SetSize(classIconBorderSize, classIconBorderSize);
             end
 
-            local iconMaskSize = ( isSpecialIcon and specialClassIconSize ) or classIconSize;
+            local iconMaskSize = classIconSize;
             iconFrame.mask:SetSize(iconMaskSize, iconMaskSize);
             if iconFrame.maskCC then
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
-            iconFrame.border:SetDesaturated(true);
-            iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            if config.classIconClassColoredBorder then
+                iconFrame.border:SetDesaturated(true);
+                iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            else
+                iconFrame.border:SetDesaturated(false);
+                iconFrame.border:SetVertexColor(1, 1, 1);
+            end
 
             local showPlayerName = config.showPlayerName and ( not config.keepHealthBar );
             local offset = config.classIconOffset;

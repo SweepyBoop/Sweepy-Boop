@@ -77,6 +77,7 @@ local defaults = {
             flagCarrierIconSize = 1.5,
             petIconSize = 0.8,
             classIconOffset = 0,
+            classIconClassColoredBorder = true,
             useHealerIcon = true,
             showHealerOnly = false,
             useFlagCarrierIcon = true,
