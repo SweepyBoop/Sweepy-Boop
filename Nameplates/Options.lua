@@ -174,8 +174,18 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
                 end
             },
-            targetHighlight = {
+            classIconClassColoredBorder = {
                 order = 17,
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_ATLAS("Forge-ColorSwatchSelection") .. " Class-colored borders",
+                desc = "Use each player's class color for class icon borders. Disable for a plain grey ring.",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            targetHighlight = {
+                order = 18,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
@@ -184,7 +194,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             animatedTargetHighlight = {
-                order = 18,
+                order = 19,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Animated highlight",
@@ -196,7 +206,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             targetHighlightLineBreak = {
-                order = 19,
+                order = 20,
                 type = "description",
                 name = "",
                 width = "full",
@@ -205,7 +215,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             classIconOffset = {
-                order = 20,
+                order = 21,
                 type = "range",
                 min = -50,
                 max = 150,
@@ -218,7 +228,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             header1 = {
-                order = 21,
+                order = 22,
                 type = "header",
                 name = "Icon size",
                 hidden = function()
@@ -226,7 +236,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             classIconSize = {
-                order = 22,
+                order = 23,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -239,7 +249,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             healerIconSize = {
-                order = 23,
+                order = 24,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -253,7 +263,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             flagCarrierIconSize = {
-                order = 23,
+                order = 24,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -267,7 +277,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
             petIconSize = {
-                order = 24,
+                order = 25,
                 type = "range",
                 width = 0.675,
                 isPercent = true,
@@ -281,7 +291,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             breaker2 = {
-                order = 25,
+                order = 26,
                 type = "header",
                 name = "",
                 hidden = function()
@@ -290,7 +300,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             showPlayerName = {
-                order = 27,
+                order = 28,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Class-colored names",
@@ -302,7 +312,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             },
 
             keepHealthBar = {
-                order = 28,
+                order = 29,
                 type = "toggle",
                 width = 1.25,
                 name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Keep Blizzard health bar",
