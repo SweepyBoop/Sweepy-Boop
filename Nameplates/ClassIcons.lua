@@ -1,9 +1,8 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
-local classIconBorderSize = 44;
+local classIconBorderSize = 40;
 local classIconSize = 40;
-local specialClassIconSize = 36;
 local targetHighlightAnimationThrottle = 0.02;
 local targetHighlightAnimationFrequency = 0.9;
 local targetHighlightPulseScale = 0.22;
@@ -506,7 +505,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame.border.mask:SetSize(classIconBorderSize, classIconBorderSize);
             end
 
-            local iconMaskSize = ( isSpecialIcon and specialClassIconSize ) or classIconSize;
+            local iconMaskSize = classIconSize;
             iconFrame.mask:SetSize(iconMaskSize, iconMaskSize);
             if iconFrame.maskCC then
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
