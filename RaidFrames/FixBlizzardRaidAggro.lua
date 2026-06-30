@@ -225,7 +225,10 @@ end
 
 function SweepyBoop:SetupRaidFrameAggroHighlight()
     hooksecurefunc("CompactUnitFrame_UpdateAll", function (frame)
-        local name = frame and frame.GetName and frame:GetName();
+        if ( not frame ) or addon.IsSecretValue(frame) or frame:IsForbidden() then return end
+        if ( not IsTrackedUnitTarget(frame.unit) ) and ( not IsTrackedUnitTarget(frame.displayedUnit) ) then return end
+
+        local name = frame.GetName and frame:GetName();
         if name and string.find(name, "^Compact") then -- CompactPartyFrameMemberN, CompactRaidFrameN, CompactArenaFrameMemberN, ...
             TrackFrame(frame);
         end
