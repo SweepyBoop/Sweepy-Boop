@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
-local classIconBorderSize = 40;
+local classIconBorderSize = 64;
 local classIconSize = 40;
 local targetHighlightAnimationThrottle = 0.02;
 local targetHighlightAnimationFrequency = 0.9;

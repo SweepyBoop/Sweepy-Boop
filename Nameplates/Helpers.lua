@@ -9,15 +9,12 @@ local arrowHeight = 67 * 1.1;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
-local plainBorderSize = 44;
--- Copied from TextureAtlasViewer Data_Mainline.lua entry for ui-frame-genericplayerchoice-portrait-border.
-local playerChoicePortraitBorderTexCoords = { 0.2373046875, 0.27587890625, 0.96044921875, 0.9990234375 };
+local metalBorderSize = 64;
 
 local function CreatePlainIconBorder(parent)
-    local border = parent:CreateTexture(nil, "BACKGROUND");
-    border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/GenericPlayerChoice");
-    border:SetTexCoord(unpack(playerChoicePortraitBorderTexCoords));
-    border:SetSize(plainBorderSize, plainBorderSize);
+    local border = parent:CreateTexture(nil, "OVERLAY");
+    border:SetAtlas("charactercreate-ring-metallight");
+    border:SetSize(metalBorderSize, metalBorderSize);
     border:SetPoint("CENTER", parent);
 
     return border;

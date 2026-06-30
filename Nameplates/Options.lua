@@ -1,9 +1,8 @@
 local _, addon = ...;
 
 local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
-local classIconBorderPreviewTexture = addon.INTERFACE_SWEEPY .. "Art/GenericPlayerChoice";
 local function FormatClassIconBorderPreview(r, g, b)
-    return format("|T%s:16:16:0:0:2048:2048:486:565:1967:2046:%d:%d:%d|t", classIconBorderPreviewTexture, r * 255, g * 255, b * 255);
+    return format("|A:charactercreate-ring-metallight:16:16:0:0:255:255:%d:%d:%d|a", r * 255, g * 255, b * 255);
 end
 local classIconBorderPreview = FormatClassIconBorderPreview(1, 0.96, 0.41) -- Rogue
     .. FormatClassIconBorderPreview(0.25, 0.78, 0.92) -- Mage
