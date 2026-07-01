@@ -76,6 +76,7 @@ local defaults = {
             healerIconSize = 1.25,
             flagCarrierIconSize = 1.5,
             petIconSize = 0.8,
+            classIconHorizontalOffset = 0,
             classIconOffset = 0,
             classIconClassColoredBorder = true,
             useHealerIcon = true,

@@ -214,13 +214,25 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-            classIconOffset = {
+            classIconHorizontalOffset = {
                 order = 21,
+                type = "range",
+                min = -150,
+                max = 150,
+                step = 1,
+                name = "Horizontal offset",
+                desc = "Horizontal offset of class / pet icons",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            classIconOffset = {
+                order = 21.5,
                 type = "range",
                 min = -50,
                 max = 150,
                 step = 1,
-                name = "Icon offset",
+                name = "Vertical offset",
                 desc = "Vertical offset of class / pet icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );

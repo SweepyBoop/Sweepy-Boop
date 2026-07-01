@@ -535,9 +535,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
             end
 
             local showPlayerName = config.showPlayerName and ( not config.keepHealthBar );
-            local offset = config.classIconOffset;
+            local offsetX = config.classIconHorizontalOffset or 0;
+            local offsetY = config.classIconOffset or 0;
             if showPlayerName then
-                nameFrame:SetPoint("TOP", nameplate, "CENTER", 0, offset);
+                nameFrame:SetPoint("TOP", nameplate, "CENTER", offsetX, offsetY);
             end
 
             iconFrame.icon:SetTexture(iconID);
@@ -547,7 +548,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             if showPlayerName then
                 iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
-                iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
+                iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
             end
 
             arrowFrame.icon:SetAlpha(1);
@@ -560,7 +561,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             elseif showPlayerName then
                 arrowFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
-                arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, offset);
+                arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
             end
         end
 
