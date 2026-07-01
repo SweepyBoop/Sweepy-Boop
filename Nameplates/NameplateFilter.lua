@@ -31,7 +31,7 @@ local function EnsureNpcHighlight(nameplate)
         nameplate.npcHighlight:SetMouseClickEnabled(false);
         nameplate.npcHighlight:SetSize(iconSize, iconSize);
         nameplate.npcHighlight:SetFrameStrata("HIGH");
-        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", 0, config.npcHighlightOffset);
+        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", config.npcHighlightHorizontalOffset or 0, config.npcHighlightOffset or 0);
 
         nameplate.npcHighlight.customIcon = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
         nameplate.npcHighlight.customIcon:SetAllPoints(nameplate.npcHighlight);
@@ -58,7 +58,7 @@ local function EnsureNpcHighlight(nameplate)
 
     if ( nameplate.npcHighlight.lastModified ~= config.lastModified ) then
         nameplate.npcHighlight:SetScale(config.npcHighlightScale);
-        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", 0, config.npcHighlightOffset);
+        nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", config.npcHighlightHorizontalOffset or 0, config.npcHighlightOffset or 0);
         nameplate.npcHighlight.lastModified = config.lastModified;
     end
 

@@ -524,10 +524,22 @@ addon.GetEnemyNameplateOptions = function(order)
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                         end,
                     },
-                    npcHighlightOffset = {
+                    npcHighlightHorizontalOffset = {
                         order = 14,
                         type = "range",
-                        name = "Highlight icon offset",
+                        name = "Highlight horizontal offset",
+                        width = 1,
+                        min = -150,
+                        max = 150,
+                        step = 1,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                        end,
+                    },
+                    npcHighlightOffset = {
+                        order = 14.5,
+                        type = "range",
+                        name = "Highlight vertical offset",
                         width = 1,
                         min = -50,
                         max = 150,

@@ -101,6 +101,7 @@ local defaults = {
             auraFilterEnabled = false,
             showBuffsOnEnemy = false,
             npcHighlightScale = 1,
+            npcHighlightHorizontalOffset = 0,
             npcHighlightOffset = 0,
             hideHunterSecondaryPet = true,
             filterList = {},
