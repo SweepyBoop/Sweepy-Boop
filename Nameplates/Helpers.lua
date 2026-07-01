@@ -10,12 +10,28 @@ local arrowHeight = 67 * 1.1;
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
 local metalBorderSize = 64;
+local plainBorderSize = 44;
 
-local function CreatePlainIconBorder(parent)
+local function CreateMetalIconBorder(parent)
     local border = parent:CreateTexture(nil, "OVERLAY");
     border:SetAtlas("charactercreate-ring-metallight");
     border:SetSize(metalBorderSize, metalBorderSize);
     border:SetPoint("CENTER", parent);
+
+    return border;
+end
+
+local function CreatePlainIconBorder(parent)
+    local border = parent:CreateTexture(nil, "BACKGROUND");
+    border:SetColorTexture(1, 1, 1, 1);
+    border:SetSize(plainBorderSize, plainBorderSize);
+    border:SetPoint("CENTER", parent);
+    border.mask = parent:CreateMaskTexture();
+    border.mask:SetTexture("Interface/Masks/CircleMaskScalable");
+    border.mask:SetSize(plainBorderSize, plainBorderSize);
+    border.mask:SetAllPoints(border);
+    border:AddMaskTexture(border.mask);
+    border:Hide();
 
     return border;
 end
@@ -40,7 +56,8 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.mask:SetAllPoints(classIconFrame.icon);
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
-    classIconFrame.border = CreatePlainIconBorder(classIconFrame);
+    classIconFrame.border = CreateMetalIconBorder(classIconFrame);
+    classIconFrame.plainBorder = CreatePlainIconBorder(classIconFrame);
 
     if isFriendly then
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
