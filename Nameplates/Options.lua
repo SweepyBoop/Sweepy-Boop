@@ -214,13 +214,25 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-            classIconOffset = {
+            classIconHorizontalOffset = {
                 order = 21,
+                type = "range",
+                min = -150,
+                max = 150,
+                step = 1,
+                name = "Horizontal offset",
+                desc = "Horizontal offset of class / pet icons",
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            classIconOffset = {
+                order = 21.5,
                 type = "range",
                 min = -50,
                 max = 150,
                 step = 1,
-                name = "Icon offset",
+                name = "Vertical offset",
                 desc = "Vertical offset of class / pet icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
@@ -426,8 +438,21 @@ addon.GetEnemyNameplateOptions = function(order)
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
                         end
                     },
-                    arenaSpecIconVerticalOffset = {
+                    arenaSpecIconHorizontalOffset = {
                         order = 9,
+                        min = -150,
+                        max = 150,
+                        step = 1,
+                        type = "range",
+                        width = 0.85,
+                        name = "Horizontal offset",
+                        hidden = function ()
+                            if addon.PROJECT_TBC then return true end
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
+                        end
+                    },
+                    arenaSpecIconVerticalOffset = {
+                        order = 9.5,
                         min = -150,
                         max = 150,
                         step = 1,
@@ -436,8 +461,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = "Vertical offset",
                         hidden = function ()
                             if addon.PROJECT_TBC then return true end
-                            if ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers ) then return true end
-                            return ( SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconAlignment ~= addon.SPEC_ICON_ALIGNMENT.TOP );
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
                         end
                     },
                     arenaSpecIconScale = {
@@ -500,10 +524,22 @@ addon.GetEnemyNameplateOptions = function(order)
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                         end,
                     },
-                    npcHighlightOffset = {
+                    npcHighlightHorizontalOffset = {
                         order = 14,
                         type = "range",
-                        name = "Highlight icon offset",
+                        name = "Highlight horizontal offset",
+                        width = 1,
+                        min = -150,
+                        max = 150,
+                        step = 1,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                        end,
+                    },
+                    npcHighlightOffset = {
+                        order = 14.5,
+                        type = "range",
+                        name = "Highlight vertical offset",
                         width = 1,
                         min = -50,
                         max = 150,

@@ -32,7 +32,7 @@ addon.UpdatePetIcon = function(nameplate, frame)
     local lastModifiedFriendly = config.lastModified;
     if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
         iconFrame:SetScale(config.petIconSize);
-        iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", 0, config.classIconOffset);
+        iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", config.classIconHorizontalOffset or 0, config.classIconOffset or 0);
         iconFrame.lastModifiedFriendly = lastModifiedFriendly;
     end
 end
