@@ -94,6 +94,7 @@ local defaults = {
             arenaSpecIconOthers = false,
             arenaSpecIconScale = 100,
             arenaSpecIconAlignment = addon.SPEC_ICON_ALIGNMENT.TOP,
+            arenaSpecIconHorizontalOffset = 0,
             arenaSpecIconVerticalOffset = 0,
             filterEnabled = true,
             showCritterIcons = true,

@@ -115,9 +115,10 @@ addon.UpdateSpecIcon = function (nameplate)
         iconFrame:SetScale(scale);
         local alignment = config.arenaSpecIconAlignment;
         local options = setPointOptions[alignment];
-        local offsetY = ( alignment == addon.SPEC_ICON_ALIGNMENT.TOP and SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconVerticalOffset ) or 0;
+        local offsetX = config.arenaSpecIconHorizontalOffset or 0;
+        local offsetY = config.arenaSpecIconVerticalOffset or 0;
         iconFrame:ClearAllPoints();
-        iconFrame:SetPoint(options.point, iconFrame:GetParent(), options.relativePoint, 0, offsetY);
+        iconFrame:SetPoint(options.point, iconFrame:GetParent(), options.relativePoint, offsetX, offsetY);
 
         iconFrame.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
         iconFrame.isHealer = isHealer;
