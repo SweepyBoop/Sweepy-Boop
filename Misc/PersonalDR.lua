@@ -161,9 +161,7 @@ end
 
 local function SetBorderColor(icon, stacks)
     if stacks <= 1 then
-        icon.border:SetVertexColor(0, 1, 0); -- 50% DR
-    elseif stacks == 2 then
-        icon.border:SetVertexColor(1, 1, 0); -- 25% DR
+        icon.border:SetVertexColor(1, 1, 0); -- 50% DR
     else
         icon.border:SetVertexColor(1, 0, 0); -- immune DR
     end
@@ -420,7 +418,7 @@ local function UpdateDRs()
             end
 
             if newApplication then
-                state.stacks = math.min(( state.stacks or 0 ) + 1, 3);
+                state.stacks = math.min(( state.stacks or 0 ) + 1, 2);
                 local icon = iconGroup.icons[categoryConfig[category].priority];
                 if icon then
                     ResetIcon(icon);
@@ -525,7 +523,7 @@ function SweepyBoop:TestPersonalDR()
     local testStacks = {
         stun = 1,
         incapacitate = 2,
-        disorient = 3,
+        disorient = 1,
         root = 1,
         silence = 2,
         disarm = 1,
