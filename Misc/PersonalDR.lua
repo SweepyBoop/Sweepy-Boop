@@ -492,6 +492,7 @@ end
 function SweepyBoop:SetupPersonalDR()
     if not addon.PROJECT_MAINLINE then return end
 
+    isInTest = false;
     eventFrame = eventFrame or CreateFrame("Frame");
     eventFrame:SetScript("OnEvent", OnEvent);
     EnsureIconGroup();
