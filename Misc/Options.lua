@@ -428,6 +428,21 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.personalDR );
                         end,
                     },
+                    personalDRShowCleanStun = {
+                        order = 5.5,
+                        type = "toggle",
+                        width = 1.2,
+                        name = "Show clean stun glow",
+                        desc = "Show the glowing stun icon while you are clean on stun DR.",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
                     personalDRAnchorPoint = {
                         order = 6,
                         type = "select",

@@ -181,6 +181,7 @@ local defaults = {
             precognitionTrackerOffsetY = -75,
             personalDR = false,
             personalDRSize = 32,
+            personalDRShowCleanStun = true,
             personalDRAnchorPoint = "CENTER",
             personalDRRelativePoint = "CENTER",
             personalDRGrowDirection = "CENTER",
