@@ -82,7 +82,7 @@ addon.GetRaidFrameOptions = function(order)
 
             healerBuffHelperScale = {
                 order = 6,
-                width = "normal",
+                width = 0.8,
                 type = "range",
                 isPercent = true,
                 min = 0.5,
@@ -100,7 +100,45 @@ addon.GetRaidFrameOptions = function(order)
                 end,
             },
 
-            healerBuffHelperScaleBreak = {
+            healerBuffHelperOffsetX = {
+                order = 6.1,
+                width = 0.8,
+                type = "range",
+                min = -80,
+                max = 80,
+                step = 1,
+                name = "Offset X",
+                desc = "Horizontal offset from the helper's default position.",
+                disabled = function ()
+                    local raidFrames = SweepyBoop.db.profile.raidFrames;
+                    return ( not raidFrames.druidBuffHelper ) and ( not raidFrames.evokerBuffHelper );
+                end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshHealerBuffHelper();
+                end,
+            },
+
+            healerBuffHelperOffsetY = {
+                order = 6.2,
+                width = 0.8,
+                type = "range",
+                min = -80,
+                max = 80,
+                step = 1,
+                name = "Offset Y",
+                desc = "Vertical offset from the helper's default position.",
+                disabled = function ()
+                    local raidFrames = SweepyBoop.db.profile.raidFrames;
+                    return ( not raidFrames.druidBuffHelper ) and ( not raidFrames.evokerBuffHelper );
+                end,
+                set = function(info, val)
+                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                    SweepyBoop:RefreshHealerBuffHelper();
+                end,
+            },
+
+            healerBuffHelperOffsetBreak = {
                 order = 7,
                 type = "description",
                 name = "",
