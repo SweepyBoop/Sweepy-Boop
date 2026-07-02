@@ -366,7 +366,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
             },
 
             personalDR = {
-                order = 2,
+                order = 3,
                 type = "group",
                 name = "Personal DR",
                 args = {
@@ -628,7 +628,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
             },
 
             gismo = {
-                order = 3,
+                order = 2,
                 type = "group",
                 name = "Range checker",
                 args = {
