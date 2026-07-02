@@ -196,8 +196,11 @@ local function CreateBuffIcon(parent, size, frameLevel, createGlow)
     return icon;
 end
 
-local function ApplyIconScale(container)
-    container.frame:SetScale(SweepyBoop.db.profile.raidFrames.healerBuffHelperScale or 1);
+local function ApplyIconLayout(container)
+    local config = SweepyBoop.db.profile.raidFrames;
+    container.frame:SetScale(config.healerBuffHelperScale or 1);
+    container.frame:ClearAllPoints();
+    container.frame:SetPoint("RIGHT", container.parent, "RIGHT", -RIGHT_PAD + ( config.healerBuffHelperOffsetX or 0 ), config.healerBuffHelperOffsetY or 0);
 end
 
 local function CreateWarningIcon(parent, size, frameLevel)
@@ -224,7 +227,7 @@ local function EnsureContainer(frame)
     container = {};
     container.frame = CreateFrame("Frame", nil, frame);
     container.frame:SetSize(1, 1); -- non-zero size keeps this invisible scale anchor valid
-    container.frame:SetPoint("RIGHT", frame, "RIGHT", -RIGHT_PAD, 0);
+    container.parent = frame;
     container.frame:SetFrameLevel(frameLevel);
     container.scratch = {}; -- ordered list of the currently-active Row 2 auras
 
@@ -249,7 +252,7 @@ local function EnsureContainer(frame)
     container.warningIcon = CreateWarningIcon(container.frame, ROW2_BUFF_SIZE, frameLevel);
     container.warningIcon:SetPoint("TOPRIGHT", container.primaryBuffIcon, "BOTTOMRIGHT", 0, -ROW_SPACING);
 
-    ApplyIconScale(container);
+    ApplyIconLayout(container);
 
     frame.healerBuffHelper = container;
     return container;
@@ -492,7 +495,7 @@ local function UpdateFrame(frame)
     end
 
     local container = EnsureContainer(frame);
-    ApplyIconScale(container);
+    ApplyIconLayout(container);
 
     local primaryAura, row2Auras, hasClassBuff = ScanUnitAuras(unit, profile);
     UpdateClassBuffWarning(frame, profile, ( not UnitIsPlayer(unit) ) or hasClassBuff);
