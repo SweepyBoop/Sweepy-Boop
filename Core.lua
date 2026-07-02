@@ -179,6 +179,19 @@ local defaults = {
             precognitionTrackerSize = 36,
             precognitionTrackerOffsetX = 0,
             precognitionTrackerOffsetY = -75,
+            personalDR = true,
+            personalDRSize = 32,
+            personalDRAnchorPoint = "CENTER",
+            personalDRRelativePoint = "CENTER",
+            personalDRGrowDirection = "LEFT",
+            personalDROffsetX = 0,
+            personalDROffsetY = -50,
+            personalDRTrackStun = true,
+            personalDRTrackIncapacitate = true,
+            personalDRTrackDisorient = true,
+            personalDRTrackRoot = false,
+            personalDRTrackSilence = false,
+            personalDRTrackDisarm = false,
             combatIndicator = true,
             alwaysShowDruidComboPoints = true,
             fixEvokerCastBars = true,
@@ -395,6 +408,7 @@ function SweepyBoop:OnInitialize()
 
     self:SetupQueueReminder();
     self:SetupPrecognitionTracker();
+    self:SetupPersonalDR();
     self:SetupCombatIndicator();
     self:SetupHealerInCrowdControl();
     self:SetupArenaSurrender();
@@ -419,6 +433,7 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
         self:SetupPrecognitionTracker();
+        self:SetupPersonalDR();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
         self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
