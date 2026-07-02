@@ -3,8 +3,8 @@ local _, addon = ...;
 local baseIconSize = addon.DEFAULT_ICON_SIZE or 32;
 local drWindowDuration = 16;
 local iconPadding = 3;
-local skullTexture = "Interface\\Icons\\Ability_Creature_Cursed_05";
-local cleanStunGlowColor = { 1, 0.2, 0, 1 };
+local cleanStunTexture = addon.GetSpellTexture(5384); -- Feign Death
+local cleanStunGlowColor = { 1, 0.82, 0, 1 };
 
 local trackedCategories = {
     "stun",
@@ -198,7 +198,7 @@ local function ShowCleanStunIcon()
     if not icon.cleanOnly then
         ResetIcon(icon);
         icon.cleanOnly = true;
-        icon.texture:SetTexture(skullTexture);
+        icon.texture:SetTexture(cleanStunTexture);
         addon.ShowProcGlow(icon, cleanStunGlowColor);
     end
     addon.IconGroup_Insert(iconGroup, icon, categoryConfig.stun.priority);
