@@ -179,7 +179,7 @@ local defaults = {
             precognitionTrackerSize = 36,
             precognitionTrackerOffsetX = 0,
             precognitionTrackerOffsetY = -75,
-            personalDR = true,
+            personalDR = false,
             personalDRSize = 32,
             personalDRAnchorPoint = "CENTER",
             personalDRRelativePoint = "CENTER",
@@ -247,6 +247,8 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
     defaults.profile.misc.healerInCrowdControl = true;
+    defaults.profile.misc.personalDR = true;
+    defaults.profile.misc.personalDROffsetY = -135;
     defaults.profile.misc.rangeCheckerEnabled = true;
 end
 
