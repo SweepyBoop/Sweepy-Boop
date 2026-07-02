@@ -135,8 +135,10 @@ local function ResolveDRCategories(spellId, locType)
 end
 
 local function GetGrowOptions(config)
-    local direction = config.personalDRGrowDirection or "LEFT";
-    if direction == "RIGHT" then
+    local direction = config.personalDRGrowDirection or "CENTER";
+    if direction == "CENTER" then
+        return { direction = "CENTER", anchor = "CENTER", margin = iconPadding };
+    elseif direction == "RIGHT" then
         return { direction = "RIGHT", anchor = "BOTTOMLEFT", margin = iconPadding };
     elseif direction == "UP" then
         return { direction = "RIGHT", anchor = "BOTTOMLEFT", margin = iconPadding, columns = 1, growUpward = true };

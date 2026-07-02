@@ -484,6 +484,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         width = 0.8,
                         name = "Growth",
                         values = {
+                            CENTER = "Center",
                             LEFT = "Left",
                             RIGHT = "Right",
                             UP = "Up",
