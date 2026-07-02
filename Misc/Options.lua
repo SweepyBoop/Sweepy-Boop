@@ -264,270 +264,6 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.precognitionTracker );
                         end,
                     },
-
-                    personalDR = {
-                        order = 21.1,
-                        type = "toggle",
-                        width = 1.2,
-                        name = addon.FORMAT_TEXTURE("Interface\\Icons\\Ability_Creature_Cursed_05") .. " Personal DR",
-                        desc = "Track diminishing returns on yourself. A pulsing skull means you are clean on stun DR.",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:SetupPersonalDR();
-                        end,
-                    },
-                    personalDRTest = {
-                        order = 21.2,
-                        type = "execute",
-                        width = 0.4,
-                        name = "Test",
-                        func = "TestPersonalDR",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRHide = {
-                        order = 21.3,
-                        type = "execute",
-                        width = 0.4,
-                        name = "Hide",
-                        func = "HideTestPersonalDR",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDROptionsBreak = {
-                        order = 21.4,
-                        type = "description",
-                        width = "full",
-                        name = "",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRSize = {
-                        order = 21.5,
-                        type = "range",
-                        width = 0.8,
-                        min = 20,
-                        max = 100,
-                        step = 1,
-                        name = "Icon size",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:UpdatePersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRAnchorPoint = {
-                        order = 21.6,
-                        type = "select",
-                        width = 0.8,
-                        name = "Anchor",
-                        values = {
-                            CENTER = "Center",
-                            TOP = "Top",
-                            BOTTOM = "Bottom",
-                            LEFT = "Left",
-                            RIGHT = "Right",
-                            TOPLEFT = "Top left",
-                            TOPRIGHT = "Top right",
-                            BOTTOMLEFT = "Bottom left",
-                            BOTTOMRIGHT = "Bottom right",
-                        },
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:UpdatePersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRRelativePoint = {
-                        order = 21.7,
-                        type = "select",
-                        width = 0.8,
-                        name = "Relative",
-                        values = {
-                            CENTER = "Center",
-                            TOP = "Top",
-                            BOTTOM = "Bottom",
-                            LEFT = "Left",
-                            RIGHT = "Right",
-                            TOPLEFT = "Top left",
-                            TOPRIGHT = "Top right",
-                            BOTTOMLEFT = "Bottom left",
-                            BOTTOMRIGHT = "Bottom right",
-                        },
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:UpdatePersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRGrowDirection = {
-                        order = 21.8,
-                        type = "select",
-                        width = 0.8,
-                        name = "Growth",
-                        values = {
-                            LEFT = "Left",
-                            RIGHT = "Right",
-                            UP = "Up",
-                            DOWN = "Down",
-                        },
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:UpdatePersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDROffsetX = {
-                        order = 21.9,
-                        type = "range",
-                        width = 0.8,
-                        min = -500,
-                        max = 500,
-                        step = 1,
-                        name = "X offset",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:UpdatePersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDROffsetY = {
-                        order = 21.91,
-                        type = "range",
-                        width = 0.8,
-                        min = -500,
-                        max = 500,
-                        step = 1,
-                        name = "Y offset",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:UpdatePersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRCategoriesHeader = {
-                        order = 21.92,
-                        type = "header",
-                        name = "Tracked DR categories",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRTrackStun = {
-                        order = 21.93,
-                        type = "toggle",
-                        width = 0.8,
-                        name = "Stun",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:ResetPersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRTrackIncapacitate = {
-                        order = 21.94,
-                        type = "toggle",
-                        width = 0.8,
-                        name = "Incap",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:ResetPersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRTrackDisorient = {
-                        order = 21.95,
-                        type = "toggle",
-                        width = 0.8,
-                        name = "Disorient",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:ResetPersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRTrackRoot = {
-                        order = 21.96,
-                        type = "toggle",
-                        width = 0.8,
-                        name = "Root",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:ResetPersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRTrackSilence = {
-                        order = 21.97,
-                        type = "toggle",
-                        width = 0.8,
-                        name = "Silence",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:ResetPersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRTrackDisarm = {
-                        order = 21.98,
-                        type = "toggle",
-                        width = 0.8,
-                        name = "Disarm",
-                        set = function(info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            SweepyBoop:ResetPersonalDR();
-                        end,
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
-                    personalDRBreak = {
-                        order = 21.99,
-                        type = "description",
-                        width = "full",
-                        name = "",
-                        hidden = function ()
-                            return ( not SweepyBoop.db.profile.misc.personalDR );
-                        end,
-                    },
                     combatIndicator = {
                         order = 22,
                         type = "toggle",
@@ -629,8 +365,270 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 },
             },
 
-            gismo = {
+            personalDR = {
                 order = 2,
+                type = "group",
+                name = "Personal DR",
+                args = {
+                    personalDR = {
+                        order = 1,
+                        type = "toggle",
+                        width = 1.2,
+                        name = addon.FORMAT_TEXTURE("Interface\\Icons\\Ability_Creature_Cursed_05") .. " Enabled",
+                        desc = "Track diminishing returns on yourself. A pulsing skull means you are clean on stun DR.",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:SetupPersonalDR();
+                        end,
+                    },
+                    personalDRTest = {
+                        order = 2,
+                        type = "execute",
+                        width = 0.4,
+                        name = "Test",
+                        func = "TestPersonalDR",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRHide = {
+                        order = 3,
+                        type = "execute",
+                        width = 0.4,
+                        name = "Hide",
+                        func = "HideTestPersonalDR",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDROptionsBreak = {
+                        order = 4,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRSize = {
+                        order = 5,
+                        type = "range",
+                        width = 0.8,
+                        min = 20,
+                        max = 100,
+                        step = 1,
+                        name = "Icon size",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdatePersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRAnchorPoint = {
+                        order = 6,
+                        type = "select",
+                        width = 0.8,
+                        name = "Anchor",
+                        values = {
+                            CENTER = "Center",
+                            TOP = "Top",
+                            BOTTOM = "Bottom",
+                            LEFT = "Left",
+                            RIGHT = "Right",
+                            TOPLEFT = "Top left",
+                            TOPRIGHT = "Top right",
+                            BOTTOMLEFT = "Bottom left",
+                            BOTTOMRIGHT = "Bottom right",
+                        },
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdatePersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRRelativePoint = {
+                        order = 7,
+                        type = "select",
+                        width = 0.8,
+                        name = "Relative",
+                        values = {
+                            CENTER = "Center",
+                            TOP = "Top",
+                            BOTTOM = "Bottom",
+                            LEFT = "Left",
+                            RIGHT = "Right",
+                            TOPLEFT = "Top left",
+                            TOPRIGHT = "Top right",
+                            BOTTOMLEFT = "Bottom left",
+                            BOTTOMRIGHT = "Bottom right",
+                        },
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdatePersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRGrowDirection = {
+                        order = 8,
+                        type = "select",
+                        width = 0.8,
+                        name = "Growth",
+                        values = {
+                            LEFT = "Left",
+                            RIGHT = "Right",
+                            UP = "Up",
+                            DOWN = "Down",
+                        },
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdatePersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDROffsetX = {
+                        order = 9,
+                        type = "range",
+                        width = 0.8,
+                        min = -500,
+                        max = 500,
+                        step = 1,
+                        name = "X offset",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdatePersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDROffsetY = {
+                        order = 10,
+                        type = "range",
+                        width = 0.8,
+                        min = -500,
+                        max = 500,
+                        step = 1,
+                        name = "Y offset",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdatePersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRCategoriesHeader = {
+                        order = 11,
+                        type = "header",
+                        name = "Tracked DR categories",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRTrackStun = {
+                        order = 12,
+                        type = "toggle",
+                        width = 0.8,
+                        name = "Stun",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRTrackIncapacitate = {
+                        order = 13,
+                        type = "toggle",
+                        width = 0.8,
+                        name = "Incap",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRTrackDisorient = {
+                        order = 14,
+                        type = "toggle",
+                        width = 0.8,
+                        name = "Disorient",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRTrackRoot = {
+                        order = 15,
+                        type = "toggle",
+                        width = 0.8,
+                        name = "Root",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRTrackSilence = {
+                        order = 16,
+                        type = "toggle",
+                        width = 0.8,
+                        name = "Silence",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRTrackDisarm = {
+                        order = 17,
+                        type = "toggle",
+                        width = 0.8,
+                        name = "Disarm",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                },
+            },
+
+            gismo = {
+                order = 3,
                 type = "group",
                 name = "Range checker",
                 args = {
