@@ -329,7 +329,7 @@ local function GetMainlineClassIconCrowdControl(unit)
     table.sort(auras, SortCrowdControlAurasNewestFirst);
     for _, auraData in ipairs(auras) do
         local spellID = auraData.spellId;
-        if spellID then
+        if spellID and ( not addon.IsSecretValue(spellID) ) then
             local priority = GetCrowdControlPriority(addon.DRList[spellID]);
             if priority then
                 return auraData;
