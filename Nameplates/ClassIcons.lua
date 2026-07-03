@@ -326,7 +326,9 @@ end
 local function HideClassIconCrowdControl(iconFrame)
     if not iconFrame then return end
 
+    iconFrame.sweepyBoopShownCCAuraID = nil;
     if iconFrame.cooldownCC then
+        iconFrame.cooldownCC.sweepyBoopClearsCCOnDone = false;
         iconFrame.cooldownCC:SetCooldown(0, 0);
         iconFrame.cooldownCC:Hide();
     end
@@ -335,7 +337,20 @@ local function HideClassIconCrowdControl(iconFrame)
     end
 end
 
-addon.UpdateClassIconCrowdControl = function(nameplate, frame)
+local function ClearRemovedCrowdControl(iconFrame, unitAuraUpdateInfo)
+    local shownAuraID = iconFrame.sweepyBoopShownCCAuraID;
+    local removedAuraIDs = unitAuraUpdateInfo and unitAuraUpdateInfo.removedAuraInstanceIDs;
+    if ( not shownAuraID ) or ( not removedAuraIDs ) then return end
+
+    for _, removedAuraID in ipairs(removedAuraIDs) do
+        if removedAuraID == shownAuraID then
+            HideClassIconCrowdControl(iconFrame);
+            return;
+        end
+    end
+end
+
+addon.UpdateClassIconCrowdControl = function(nameplate, frame, unitAuraUpdateInfo)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     local iconFrame = classIconContainer.FriendlyClassIcon;
@@ -345,23 +360,29 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     local cooldownCC = iconFrame.cooldownCC;
 
     if addon.PROJECT_MAINLINE then
+        ClearRemovedCrowdControl(iconFrame, unitAuraUpdateInfo);
+
         if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl
             and UnitInParty(frame.unit)
             and UnitIsPlayer(frame.unit)
             and UnitIsFriend("player", frame.unit) then
             local auraData = GetMainlineClassIconCrowdControl(frame.unit);
             if auraData then
+                iconFrame.sweepyBoopShownCCAuraID = auraData.auraInstanceID;
                 iconCC:SetTexture(auraData.icon);
                 iconCC:Show();
 
                 local durationObject = C_UnitAuras.GetAuraDuration(frame.unit, auraData.auraInstanceID);
                 if durationObject and cooldownCC.SetCooldownFromDurationObject then
+                    cooldownCC.sweepyBoopClearsCCOnDone = true;
                     cooldownCC:SetCooldownFromDurationObject(durationObject);
                     cooldownCC:Show();
                 elseif auraData.duration and auraData.expirationTime then
+                    cooldownCC.sweepyBoopClearsCCOnDone = true;
                     cooldownCC:SetCooldown(auraData.expirationTime - auraData.duration, auraData.duration);
                     cooldownCC:Show();
                 else
+                    cooldownCC.sweepyBoopClearsCCOnDone = false;
                     cooldownCC:SetCooldown(0, 0);
                     cooldownCC:Hide();
                 end

@@ -232,6 +232,7 @@ end
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
+    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
     if addon.PROJECT_MAINLINE then
         eventFrame:RegisterUnitEvent(addon.UNIT_AURA, unpack(retailNameplateUnits));
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_START, unpack(retailNameplateUnits));
@@ -261,6 +262,11 @@ function SweepyBoop:SetupNameplateModules()
                 end
 
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
+            end
+        elseif event == addon.NAME_PLATE_UNIT_REMOVED then
+            local nameplate = C_NamePlate.GetNamePlateForUnit(unitId, issecure());
+            if nameplate then
+                HideWidgets(nameplate);
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
             if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
@@ -293,7 +299,7 @@ function SweepyBoop:SetupNameplateModules()
                 local unitAuraUpdateInfo = ...;
                 if event == addon.UNIT_AURA then
                     addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
-                    addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame);
+                    addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame, unitAuraUpdateInfo);
                 end
 
                 if addon.PROJECT_MAINLINE and ( not IsRestricted() ) then
