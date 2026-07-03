@@ -128,7 +128,7 @@ local defaults = {
             arenaCooldownTrackerGlowSecondary = true,
 
             arenaOffensiveIconsEnabled = true,
-            arenaOffensiveIconSize = 42,
+            arenaOffensiveIconSize = 32,
             arenaOffensiveIconOffsetX = 0,
             arenaOffensiveIconOffsetY = 0,
 
