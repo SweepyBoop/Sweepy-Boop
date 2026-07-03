@@ -127,7 +127,7 @@ local defaults = {
             arenaCooldownTrackerGlow = true,
             arenaCooldownTrackerGlowSecondary = true,
 
-            arenaOffensiveIconsEnabled = true,
+            arenaOffensiveIconsEnabled = false,
             arenaOffensiveIconSize = 32,
             arenaOffensiveIconOffsetX = 0,
             arenaOffensiveIconOffsetY = 0,
@@ -250,6 +250,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
     defaults.profile.arenaFrames.arenaCooldownOffsetXSecondary = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetYSecondary = -25;
+    defaults.profile.arenaFrames.arenaOffensiveIconsEnabled = true;
     defaults.profile.arenaFrames.showUnusedIcons = true;
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
