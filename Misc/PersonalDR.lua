@@ -4,6 +4,8 @@ local baseIconSize = addon.DEFAULT_ICON_SIZE or 32;
 local drWindowDuration = 16;
 local iconPadding = 3;
 local cleanStunGlowColor = { 1, 0.82, 0, 1 };
+local countdownFontSizeCoefficient = 0.4;
+local testCooldownBaseDuration = 5;
 
 local trackedCategories = {
     "stun",
@@ -13,6 +15,7 @@ local trackedCategories = {
     "silence",
     "disarm",
 };
+local testDisplayDuration = testCooldownBaseDuration + #trackedCategories;
 
 local categoryConfig = {
     stun = {
@@ -77,6 +80,7 @@ local eventFrame;
 local iconGroup;
 local stateByCategory = {};
 local isInTest = false;
+local testGeneration = 0;
 
 local function GetState(category)
     local state = stateByCategory[category];
@@ -100,6 +104,11 @@ end
 local function IsCategoryTracked(category)
     local info = categoryConfig[category];
     return info and GetConfig()[info.option];
+end
+
+local function ShouldShowCleanStunIcon()
+    local config = GetConfig();
+    return config.personalDR and config.personalDRShowCleanStun and IsCategoryTracked("stun");
 end
 
 local function AddResolvedCategory(categories, category)
@@ -179,6 +188,29 @@ local function StyleCooldown(cooldown)
     end
 end
 
+local function UpdateCooldownFontSize(cooldown, iconSize)
+    if ( not cooldown ) or ( not iconSize ) then return end
+
+    if ( not cooldown.sweepyBoopCountdownFontString ) then
+        local numRegions = cooldown:GetNumRegions();
+        for i = 1, numRegions do
+            local region = select(i, cooldown:GetRegions());
+            if region and ( region:GetObjectType() == "FontString" ) then
+                cooldown.sweepyBoopCountdownFontString = region;
+                break;
+            end
+        end
+    end
+
+    local region = cooldown.sweepyBoopCountdownFontString;
+    if region then
+        local font, _, flags = region:GetFont();
+        if font then
+            region:SetFont(font, math.floor(iconSize * countdownFontSizeCoefficient), flags);
+        end
+    end
+end
+
 local function ResetIcon(icon)
     icon.cleanOnly = false;
     icon.cooldown:SetCooldown(0, 0);
@@ -188,10 +220,10 @@ local function ResetIcon(icon)
 end
 
 local function ShowCleanStunIcon()
-    if ( not iconGroup ) or ( not IsCategoryTracked("stun") ) then return end
+    if ( not iconGroup ) or ( not ShouldShowCleanStunIcon() ) then return false end
 
     local icon = iconGroup.icons[categoryConfig.stun.priority];
-    if not icon then return end
+    if not icon then return false end
 
     iconGroup:Show();
     if not icon.cleanOnly then
@@ -200,6 +232,7 @@ local function ShowCleanStunIcon()
         addon.ShowProcGlow(icon, cleanStunGlowColor);
     end
     addon.IconGroup_Insert(iconGroup, icon, categoryConfig.stun.priority);
+    return true;
 end
 
 local function HideCategoryIcon(category)
@@ -212,11 +245,10 @@ local function HideCategoryIcon(category)
     local state = GetState(category);
     state.stacks = 0;
     state.expiresAt = nil;
-    if category == "stun" then
-        ShowCleanStunIcon();
-    else
-        addon.IconGroup_Remove(iconGroup, icon);
+    if ( category == "stun" ) and ShowCleanStunIcon() then
+        return;
     end
+    addon.IconGroup_Remove(iconGroup, icon);
 end
 
 local function ShowDRIcon(category, stacks)
@@ -233,6 +265,7 @@ local function ShowDRIcon(category, stacks)
     SetBorderColor(icon, stacks);
     icon.border:Show();
     icon.cooldown:SetCooldown(GetTime(), drWindowDuration);
+    UpdateCooldownFontSize(icon.cooldown, icon:GetWidth());
     icon.cooldown:Show();
     addon.IconGroup_Insert(iconGroup, icon, info.priority);
 end
@@ -259,6 +292,7 @@ local function CreateDRIcon(category)
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     StyleCooldown(icon.cooldown);
+    UpdateCooldownFontSize(icon.cooldown, baseIconSize);
     icon.cooldown:SetScript("OnCooldownDone", function()
         if isInTest then return end
         HideCategoryIcon(category);
@@ -292,6 +326,7 @@ local function RefreshIconSizes()
     local restartCleanGlow = cleanStunIcon and cleanStunIcon.cleanOnly;
     for _, icon in pairs(iconGroup.icons) do
         icon:SetSize(size, size);
+        UpdateCooldownFontSize(icon.cooldown, size);
     end
     if restartCleanGlow then
         addon.HideProcGlow(cleanStunIcon);
@@ -342,6 +377,13 @@ local function StartDRWindow(category, stacks)
     ShowDRIcon(category, stacks);
 end
 
+local function ExitTestMode()
+    if not isInTest then return end
+
+    isInTest = false;
+    ResetAllState(GetConfig().personalDR);
+end
+
 local function BuildActiveCategories()
     local active = {};
     local locEntries = {};
@@ -380,7 +422,9 @@ local function BuildActiveCategories()
 end
 
 local function UpdateDRs()
-    if isInTest or ( not iconGroup ) then return end
+    if not iconGroup then return end
+
+    ExitTestMode();
 
     local active = BuildActiveCategories();
     local now = GetTime();
@@ -449,6 +493,17 @@ local function UpdateDRs()
     end
 end
 
+local function HasRealDRState()
+    for _, category in ipairs(trackedCategories) do
+        local state = GetState(category);
+        if IsCategoryTracked(category) and ( state.isActive or state.expiresAt ) then
+            return true;
+        end
+    end
+
+    return false;
+end
+
 local function OnEvent(self, event, unit)
     if event == addon.UNIT_AURA then
         if unit == "player" then
@@ -514,7 +569,14 @@ function SweepyBoop:TestPersonalDR()
     if not addon.PROJECT_MAINLINE then return end
 
     EnsureIconGroup();
+    if GetConfig().personalDR then
+        UpdateDRs();
+        if HasRealDRState() then return end
+    end
+
     isInTest = true;
+    testGeneration = testGeneration + 1;
+    local currentTestGeneration = testGeneration;
     iconGroup:Show();
     ResetAllState(false);
     self:UpdatePersonalDR();
@@ -532,10 +594,17 @@ function SweepyBoop:TestPersonalDR()
             ShowDRIcon(category, testStacks[category] or 1);
             local icon = iconGroup.icons[categoryConfig[category].priority];
             if icon then
-                icon.cooldown:SetCooldown(GetTime(), 5 + categoryConfig[category].priority);
+                icon.cooldown:SetCooldown(GetTime(), testCooldownBaseDuration + categoryConfig[category].priority);
+                UpdateCooldownFontSize(icon.cooldown, icon:GetWidth());
             end
         end
     end
+
+    C_Timer.After(testDisplayDuration, function ()
+        if isInTest and ( testGeneration == currentTestGeneration ) then
+            SweepyBoop:HideTestPersonalDR();
+        end
+    end);
 end
 
 function SweepyBoop:HideTestPersonalDR()

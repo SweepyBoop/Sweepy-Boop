@@ -374,7 +374,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         order = 1,
                         type = "toggle",
                         width = 1.2,
-                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(1833)) .. " Enabled",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(118)) .. " Enabled",
                         desc = "Track diminishing returns on yourself. A pulsing stun icon means you are clean on stun DR.",
                         set = function(info, val)
                             SweepyBoop.db.profile.misc[info[#info]] = val;
@@ -423,6 +423,21 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             SweepyBoop.db.profile.misc[info[#info]] = val;
                             SweepyBoop.db.profile.misc.lastModified = GetTime();
                             SweepyBoop:UpdatePersonalDR();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.personalDR );
+                        end,
+                    },
+                    personalDRShowCleanStun = {
+                        order = 4.5,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(1833)) .. " Show clean stun DR",
+                        desc = "Show the glowing stun icon while you are clean on stun DR.",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:ResetPersonalDR();
                         end,
                         hidden = function ()
                             return ( not SweepyBoop.db.profile.misc.personalDR );
