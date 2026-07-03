@@ -109,7 +109,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show big offensive icons on Blizzard arena frames",
-                        desc = "Shows the highest-priority active enemy offensive cooldown buff to the left/top-left of each built-in Blizzard arena frame.",
+                        desc = "Shows the highest-priority active enemy offensive cooldown buff inside the top-left of each built-in Blizzard arena frame.",
                         set = function(info, val)
                             SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
                             SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
@@ -184,7 +184,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         order = 8,
                         type = "description",
                         width = "full",
-                        name = addon.EXCLAMATION .. " These icons anchor to Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.",
+                        name = addon.EXCLAMATION .. " These icons attach inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.",
                         hidden = function()
                             return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
                         end,

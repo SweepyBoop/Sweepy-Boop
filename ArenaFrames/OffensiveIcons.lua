@@ -105,13 +105,6 @@ local function CreateIcon(parent)
     icon.cooldown:SetAllPoints(icon);
     StyleCooldown(icon.cooldown);
 
-    icon.border = icon:CreateTexture(nil, "OVERLAY");
-    icon.border:SetTexture("Interface\\Buttons\\UI-ActionButton-Border");
-    icon.border:SetBlendMode("ADD");
-    icon.border:SetPoint("CENTER", icon, "CENTER", 0, 0);
-    icon.border:SetSize(baseIconSize * 1.75, baseIconSize * 1.75);
-    icon.border:SetVertexColor(1, 0.82, 0, 1);
-
     icon:Hide();
     return icon;
 end
@@ -146,6 +139,7 @@ local function HideGroup(group)
 
     for _, icon in ipairs(group.icons) do
         ClearCooldown(icon.cooldown);
+        addon.HideProcGlow(icon);
         icon:Hide();
     end
     group:Hide();
@@ -173,14 +167,18 @@ local function RefreshGroupPosition(group)
         return false;
     end
 
+    group:SetParent(arenaFrame);
+    group:SetFrameStrata(arenaFrame:GetFrameStrata());
+    group:SetFrameLevel(arenaFrame:GetFrameLevel() + 20);
+
     local scale = ( config.arenaOffensiveIconSize or 42 ) / baseIconSize;
     group:SetScale(scale);
     group:ClearAllPoints();
     group:SetPoint(
-        "TOPRIGHT",
+        "TOPLEFT",
         arenaFrame,
         "TOPLEFT",
-        ( config.arenaOffensiveIconOffsetX or -4 ) / scale,
+        ( config.arenaOffensiveIconOffsetX or 0 ) / scale,
         ( config.arenaOffensiveIconOffsetY or 0 ) / scale
     );
     group.lastModified = config.lastModified;
@@ -189,7 +187,7 @@ end
 
 local function PositionIcon(group, icon)
     icon:ClearAllPoints();
-    icon:SetPoint("TOPRIGHT", group, "TOPRIGHT", 0, 0);
+    icon:SetPoint("TOPLEFT", group, "TOPLEFT", 0, 0);
 end
 
 local function PaintIcon(icon, auraData, durationObject, startTime, duration)
@@ -206,12 +204,14 @@ local function PaintIcon(icon, auraData, durationObject, startTime, duration)
         icon.cooldown:Hide();
     end
 
+    addon.ShowProcGlow(icon, { 1, 0.82, 0, 1 });
     icon:Show();
 end
 
 local function ClearUnusedIcons(group, firstUnusedIndex)
     for i = firstUnusedIndex, #group.icons do
         ClearCooldown(group.icons[i].cooldown);
+        addon.HideProcGlow(group.icons[i]);
         group.icons[i]:Hide();
     end
 end

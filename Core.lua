@@ -129,7 +129,7 @@ local defaults = {
 
             arenaOffensiveIconsEnabled = true,
             arenaOffensiveIconSize = 42,
-            arenaOffensiveIconOffsetX = -4,
+            arenaOffensiveIconOffsetX = 0,
             arenaOffensiveIconOffsetY = 0,
 
             unusedIconAlpha = 0.5,
