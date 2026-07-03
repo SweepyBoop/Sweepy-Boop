@@ -126,6 +126,14 @@ local defaults = {
             arenaCooldownTrackerIconPaddingSecondary = 2,
             arenaCooldownTrackerGlow = true,
             arenaCooldownTrackerGlowSecondary = true,
+
+            arenaOffensiveIconsEnabled = true,
+            arenaOffensiveIconSize = 42,
+            arenaOffensiveIconPadding = 3,
+            arenaOffensiveIconOffsetX = -4,
+            arenaOffensiveIconOffsetY = 0,
+            arenaOffensiveIconMaxIcons = 3,
+
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
             showUnusedIcons = false,
@@ -403,6 +411,8 @@ function SweepyBoop:OnInitialize()
 
     if ( not addon.PROJECT_MAINLINE ) then return end
 
+    self:SetupArenaOffensiveIcons();
+
     self:SetupHealerIndicator();
 
     -- Setup raid frame modules
@@ -434,6 +444,7 @@ function SweepyBoop:RefreshConfig()
     end
 
     if addon.PROJECT_MAINLINE then
+        self:SetupArenaOffensiveIcons();
         self:SetupCombatIndicator();
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();

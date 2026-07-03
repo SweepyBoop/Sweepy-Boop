@@ -292,6 +292,159 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         type = "header",
                         name = "Arena",
                     },
+                    arenaOffensiveIconsEnabled = {
+                        order = 24.1,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show big offensive icons on Blizzard arena frames",
+                        desc = "Shows active enemy offensive cooldown buffs to the left of each built-in Blizzard arena frame.",
+                        get = function()
+                            return SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled;
+                        end,
+                        set = function(_, val)
+                            SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:SetupArenaOffensiveIcons();
+                        end,
+                    },
+                    arenaOffensiveIconsTest = {
+                        order = 24.2,
+                        type = "execute",
+                        width = "half",
+                        name = "Test",
+                        func = "TestArenaOffensiveIcons",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconsHide = {
+                        order = 24.3,
+                        type = "execute",
+                        width = "half",
+                        name = "Hide",
+                        func = "HideTestArenaOffensiveIcons",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconsBreak = {
+                        order = 24.4,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconSize = {
+                        order = 24.5,
+                        type = "range",
+                        width = 0.8,
+                        min = 24,
+                        max = 96,
+                        step = 1,
+                        name = "Icon size",
+                        get = function()
+                            return SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconSize;
+                        end,
+                        set = function(_, val)
+                            SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconSize = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:UpdateArenaOffensiveIcons();
+                        end,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconPadding = {
+                        order = 24.6,
+                        type = "range",
+                        width = 0.8,
+                        min = 0,
+                        max = 12,
+                        step = 1,
+                        name = "Padding",
+                        get = function()
+                            return SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconPadding;
+                        end,
+                        set = function(_, val)
+                            SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconPadding = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:UpdateArenaOffensiveIcons();
+                        end,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconMaxIcons = {
+                        order = 24.7,
+                        type = "range",
+                        width = 0.8,
+                        min = 1,
+                        max = 6,
+                        step = 1,
+                        name = "Max icons",
+                        get = function()
+                            return SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconMaxIcons;
+                        end,
+                        set = function(_, val)
+                            SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconMaxIcons = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:UpdateArenaOffensiveIcons();
+                        end,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconOffsetX = {
+                        order = 24.8,
+                        type = "range",
+                        width = 0.8,
+                        min = -200,
+                        max = 200,
+                        step = 1,
+                        name = "X offset",
+                        get = function()
+                            return SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconOffsetX;
+                        end,
+                        set = function(_, val)
+                            SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconOffsetX = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:UpdateArenaOffensiveIcons();
+                        end,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconOffsetY = {
+                        order = 24.9,
+                        type = "range",
+                        width = 0.8,
+                        min = -150,
+                        max = 150,
+                        step = 1,
+                        name = "Y offset",
+                        get = function()
+                            return SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconOffsetY;
+                        end,
+                        set = function(_, val)
+                            SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconOffsetY = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:UpdateArenaOffensiveIcons();
+                        end,
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconsConflictNote = {
+                        order = 24.95,
+                        type = "description",
+                        width = "full",
+                        name = addon.EXCLAMATION .. " These icons anchor to Blizzard arena frames only. They will hide if Blizzard arena frames are hidden by another arena-frame addon.",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
                     hideBlizzArenaFrames = {
                         order = 25,
                         type = "toggle",
