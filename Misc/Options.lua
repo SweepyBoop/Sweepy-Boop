@@ -429,9 +429,9 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     personalDRShowCleanStun = {
-                        order = 5.5,
+                        order = 4.5,
                         type = "toggle",
-                        width = 1.2,
+                        width = "full",
                         name = "Show clean stun glow",
                         desc = "Show the glowing stun icon while you are clean on stun DR.",
                         set = function(info, val)
