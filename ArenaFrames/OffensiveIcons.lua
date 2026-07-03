@@ -6,7 +6,6 @@ local maxAurasToScan = 255;
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
 local maxOverlayLayers = 12;
 local procGlowColor = { 1, 0.82, 0, 1 };
-local countdownFontSizeCoefficient = 0.375;
 local burstAuraSpellIDs;
 local arenaOverlayEventFrame;
 local arenaOverlays = {};
@@ -130,7 +129,7 @@ local function UpdateCountdownFontSize(cooldown)
     if region then
         local font, _, flags = region:GetFont();
         if font then
-            region:SetFont(font, math.floor(baseIconSize * countdownFontSizeCoefficient), flags);
+            region:SetFont(font, math.floor(baseIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT), flags);
         end
     end
 end
