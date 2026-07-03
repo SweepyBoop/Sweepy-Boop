@@ -6,6 +6,7 @@ local maxAurasToScan = 255;
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
 local maxOverlayLayers = 12;
 local procGlowColor = { 1, 0.82, 0, 1 };
+local countdownFontSizeCoefficient = 0.375;
 local burstAuraSpellIDs;
 local arenaOverlayEventFrame;
 local arenaOverlays = {};
@@ -111,6 +112,29 @@ local function ConfigureCooldownSwipe(cooldown)
     end
 end
 
+local function UpdateCountdownFontSize(cooldown)
+    if not cooldown then return end
+
+    if not cooldown.sweepyBoopCountdownFontString then
+        local numRegions = cooldown:GetNumRegions();
+        for i = 1, numRegions do
+            local region = select(i, cooldown:GetRegions());
+            if region and ( region:GetObjectType() == "FontString" ) then
+                cooldown.sweepyBoopCountdownFontString = region;
+                break;
+            end
+        end
+    end
+
+    local region = cooldown.sweepyBoopCountdownFontString;
+    if region then
+        local font, _, flags = region:GetFont();
+        if font then
+            region:SetFont(font, math.floor(baseIconSize * countdownFontSizeCoefficient), flags);
+        end
+    end
+end
+
 local function ResetCooldownSwipe(cooldown)
     if cooldown.Clear then
         cooldown:Clear();
@@ -130,6 +154,7 @@ local function CreateOverlayLayer(parent)
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     ConfigureCooldownSwipe(icon.cooldown);
+    UpdateCountdownFontSize(icon.cooldown);
 
     icon:Hide();
     return icon;
@@ -241,6 +266,7 @@ local function PaintOverlayLayer(icon, overlaySignal, durationObject, startTime,
         icon.cooldown:Hide();
     end
 
+    UpdateCountdownFontSize(icon.cooldown);
     ApplyAlphaSignal(icon, overlaySignal.alphaSignal);
     addon.ShowProcGlow(icon, procGlowColor);
     icon:Show();

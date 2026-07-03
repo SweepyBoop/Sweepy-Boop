@@ -4,7 +4,7 @@ local baseIconSize = addon.DEFAULT_ICON_SIZE or 32;
 local drWindowDuration = 16;
 local iconPadding = 3;
 local cleanStunGlowColor = { 1, 0.82, 0, 1 };
-local countdownFontSizeCoefficient = 0.4;
+local countdownFontSizeCoefficient = 0.375;
 local testCooldownBaseDuration = 5;
 
 local trackedCategories = {
