@@ -307,17 +307,53 @@ local function SortCrowdControlAurasNewestFirst(auraA, auraB)
     return ( auraA.auraInstanceID or 0 ) > ( auraB.auraInstanceID or 0 );
 end
 
+local function GetCrowdControlPriority(drType)
+    if type(drType) == "table" then
+        local priority;
+        for _, category in ipairs(drType) do
+            local categoryPriority = crowdControlPriority[category];
+            if categoryPriority and ( ( not priority ) or categoryPriority > priority ) then
+                priority = categoryPriority;
+            end
+        end
+        return priority;
+    end
+
+    return crowdControlPriority[drType];
+end
+
+local function ResolveFriendlyPartyUnit(unit)
+    local resolvedUnit;
+    if addon.UnitIsUnitSecretValueSafe(unit, "player") then
+        resolvedUnit = "player";
+    end
+
+    for i = 1, ( MAX_PARTY_MEMBERS or 4 ) do
+        local partyUnit = "party" .. i;
+        if UnitExists(partyUnit) and addon.UnitIsUnitSecretValueSafe(unit, partyUnit) then
+            if resolvedUnit then return end
+            resolvedUnit = partyUnit;
+        end
+    end
+
+    return resolvedUnit;
+end
+
 local function GetMainlineClassIconCrowdControl(unit)
-    local auras = C_UnitAuras.GetUnitAuras(unit, "HARMFUL|CROWD_CONTROL", nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
+    local auraUnit = ResolveFriendlyPartyUnit(unit) or unit;
+    local auras = C_UnitAuras.GetUnitAuras(auraUnit, "HARMFUL|CROWD_CONTROL", nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
     if ( not auras ) or ( #auras == 0 ) then return end
 
     table.sort(auras, SortCrowdControlAurasNewestFirst);
     for _, auraData in ipairs(auras) do
         local spellID = auraData.spellId;
         if spellID then
-            local isCrowdControl = C_Spell.IsSpellCrowdControl(spellID);
-            if ( not addon.IsSecretValue(isCrowdControl) ) and isCrowdControl then
-                return auraData;
+            if addon.IsSecretValue(spellID) then
+                if auraUnit == unit then
+                    return auraData, auraUnit;
+                end
+            elseif GetCrowdControlPriority(addon.DRList[spellID]) then
+                return auraData, auraUnit;
             end
         end
     end
@@ -326,6 +362,7 @@ end
 local function HideClassIconCrowdControl(iconFrame)
     if not iconFrame then return end
 
+    iconFrame.sweepyBoopShownCCAuraID = nil;
     if iconFrame.cooldownCC then
         iconFrame.cooldownCC:SetCooldown(0, 0);
         iconFrame.cooldownCC:Hide();
@@ -335,7 +372,20 @@ local function HideClassIconCrowdControl(iconFrame)
     end
 end
 
-addon.UpdateClassIconCrowdControl = function(nameplate, frame)
+local function ClearRemovedCrowdControl(iconFrame, unitAuraUpdateInfo)
+    local shownAuraID = iconFrame.sweepyBoopShownCCAuraID;
+    local removedAuraIDs = unitAuraUpdateInfo and unitAuraUpdateInfo.removedAuraInstanceIDs;
+    if ( not shownAuraID ) or ( not removedAuraIDs ) then return end
+
+    for _, removedAuraID in ipairs(removedAuraIDs) do
+        if removedAuraID == shownAuraID then
+            HideClassIconCrowdControl(iconFrame);
+            return;
+        end
+    end
+end
+
+addon.UpdateClassIconCrowdControl = function(nameplate, frame, unitAuraUpdateInfo)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
     local iconFrame = classIconContainer.FriendlyClassIcon;
@@ -345,16 +395,19 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame)
     local cooldownCC = iconFrame.cooldownCC;
 
     if addon.PROJECT_MAINLINE then
+        ClearRemovedCrowdControl(iconFrame, unitAuraUpdateInfo);
+
         if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl
             and UnitInParty(frame.unit)
             and UnitIsPlayer(frame.unit)
             and UnitIsFriend("player", frame.unit) then
-            local auraData = GetMainlineClassIconCrowdControl(frame.unit);
+            local auraData, auraUnit = GetMainlineClassIconCrowdControl(frame.unit);
             if auraData then
+                iconFrame.sweepyBoopShownCCAuraID = auraData.auraInstanceID;
                 iconCC:SetTexture(auraData.icon);
                 iconCC:Show();
 
-                local durationObject = C_UnitAuras.GetAuraDuration(frame.unit, auraData.auraInstanceID);
+                local durationObject = C_UnitAuras.GetAuraDuration(auraUnit, auraData.auraInstanceID);
                 if durationObject and cooldownCC.SetCooldownFromDurationObject then
                     cooldownCC:SetCooldownFromDurationObject(durationObject);
                     cooldownCC:Show();

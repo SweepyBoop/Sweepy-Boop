@@ -92,6 +92,16 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.cooldownCC:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
         classIconFrame.cooldownCC:SetHideCountdownNumbers(true);
         classIconFrame.cooldownCC.noCooldownCount = true; -- hide OmniCC timers
+        classIconFrame.cooldownCC:SetScript("OnCooldownDone", function(self)
+            local parent = self:GetParent();
+            if parent then
+                parent.sweepyBoopShownCCAuraID = nil;
+                if parent.iconCC then
+                    parent.iconCC:Hide();
+                end
+            end
+            self:Hide();
+        end)
     else
         classIconFrame.border:SetVertexColor(1, 0, 0); -- Red border for hostile
         classIconFrame.border:Hide(); -- Hide initially until an actual icon is set
