@@ -201,9 +201,9 @@ local function AnchorArenaOverlay(group)
     group:SetScale(scale);
     group:ClearAllPoints();
     group:SetPoint(
-        "TOPLEFT",
+        "LEFT",
         arenaFrame,
-        "TOPLEFT",
+        "LEFT",
         ( config.arenaOffensiveIconOffsetX or 0 ) / scale,
         ( config.arenaOffensiveIconOffsetY or 0 ) / scale
     );
@@ -213,7 +213,7 @@ end
 
 local function AnchorOverlayLayer(group, icon)
     icon:ClearAllPoints();
-    icon:SetPoint("TOPLEFT", group, "TOPLEFT", 0, 0);
+    icon:SetPoint("LEFT", group, "LEFT", 0, 0);
 end
 
 local function ApplyAlphaSignal(frame, alphaSignal)
