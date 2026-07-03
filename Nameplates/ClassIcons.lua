@@ -307,21 +307,6 @@ local function SortCrowdControlAurasNewestFirst(auraA, auraB)
     return ( auraA.auraInstanceID or 0 ) > ( auraB.auraInstanceID or 0 );
 end
 
-local function GetCrowdControlPriority(drType)
-    if type(drType) == "table" then
-        local priority;
-        for _, category in ipairs(drType) do
-            local categoryPriority = crowdControlPriority[category];
-            if categoryPriority and ( ( not priority ) or categoryPriority > priority ) then
-                priority = categoryPriority;
-            end
-        end
-        return priority;
-    end
-
-    return crowdControlPriority[drType];
-end
-
 local function GetMainlineClassIconCrowdControl(unit)
     local auras = C_UnitAuras.GetUnitAuras(unit, "HARMFUL|CROWD_CONTROL", nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
     if ( not auras ) or ( #auras == 0 ) then return end
@@ -329,9 +314,9 @@ local function GetMainlineClassIconCrowdControl(unit)
     table.sort(auras, SortCrowdControlAurasNewestFirst);
     for _, auraData in ipairs(auras) do
         local spellID = auraData.spellId;
-        if spellID and ( not addon.IsSecretValue(spellID) ) then
-            local priority = GetCrowdControlPriority(addon.DRList[spellID]);
-            if priority then
+        if spellID then
+            local isCrowdControl = C_Spell.IsSpellCrowdControl(spellID);
+            if ( not addon.IsSecretValue(isCrowdControl) ) and isCrowdControl then
                 return auraData;
             end
         end
