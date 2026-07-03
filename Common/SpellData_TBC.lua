@@ -54,6 +54,7 @@ addon.SpellData = {
         class = addon.PRIEST,
         cooldown = 180,
         category = category.OTHERS,
+        baseline = true,
     },
 
     [8092] = { -- Mind Blast (Rank 1)
