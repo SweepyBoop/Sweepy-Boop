@@ -93,13 +93,16 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
         classIconFrame.cooldownCC:SetHideCountdownNumbers(true);
         classIconFrame.cooldownCC.noCooldownCount = true; -- hide OmniCC timers
         classIconFrame.cooldownCC:SetScript("OnCooldownDone", function(self)
-            local parent = self:GetParent();
-            if parent then
-                parent.sweepyBoopShownCCAuraID = nil;
-                if parent.iconCC then
-                    parent.iconCC:Hide();
+            if self.sweepyBoopClearsCCOnDone then
+                local parent = self:GetParent();
+                if parent then
+                    parent.sweepyBoopShownCCAuraID = nil;
+                    if parent.iconCC then
+                        parent.iconCC:Hide();
+                    end
                 end
             end
+            self.sweepyBoopClearsCCOnDone = false;
             self:Hide();
         end)
     else

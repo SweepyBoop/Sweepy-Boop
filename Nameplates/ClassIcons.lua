@@ -328,6 +328,7 @@ local function HideClassIconCrowdControl(iconFrame)
 
     iconFrame.sweepyBoopShownCCAuraID = nil;
     if iconFrame.cooldownCC then
+        iconFrame.cooldownCC.sweepyBoopClearsCCOnDone = false;
         iconFrame.cooldownCC:SetCooldown(0, 0);
         iconFrame.cooldownCC:Hide();
     end
@@ -373,12 +374,15 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame, unitAuraUpdateInf
 
                 local durationObject = C_UnitAuras.GetAuraDuration(frame.unit, auraData.auraInstanceID);
                 if durationObject and cooldownCC.SetCooldownFromDurationObject then
+                    cooldownCC.sweepyBoopClearsCCOnDone = true;
                     cooldownCC:SetCooldownFromDurationObject(durationObject);
                     cooldownCC:Show();
                 elseif auraData.duration and auraData.expirationTime then
+                    cooldownCC.sweepyBoopClearsCCOnDone = true;
                     cooldownCC:SetCooldown(auraData.expirationTime - auraData.duration, auraData.duration);
                     cooldownCC:Show();
                 else
+                    cooldownCC.sweepyBoopClearsCCOnDone = false;
                     cooldownCC:SetCooldown(0, 0);
                     cooldownCC:Hide();
                 end
