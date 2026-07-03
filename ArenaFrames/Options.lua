@@ -85,6 +85,116 @@ addon.SetupInterrupts = function (profile, spellList)
     end
 end
 
+addon.GetMainlineArenaFrameOptions = function(order)
+    return {
+        order = order,
+        type = "group",
+        childGroups = "tab",
+        name = "Arena frames",
+        handler = SweepyBoop,
+        get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
+        set = function(info, val)
+            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+            SweepyBoop:UpdateArenaOffensiveIcons();
+        end,
+        args = {
+            offensiveIcons = {
+                order = 1,
+                type = "group",
+                name = "Offensive icons",
+                args = {
+                    arenaOffensiveIconsEnabled = {
+                        order = 1,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show big offensive icons on Blizzard arena frames",
+                        desc = "Shows the highest-priority active enemy offensive cooldown buff to the left/top-left of each built-in Blizzard arena frame.",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+                            SweepyBoop:SetupArenaOffensiveIcons();
+                        end,
+                    },
+                    test = {
+                        order = 2,
+                        type = "execute",
+                        width = "half",
+                        name = "Test",
+                        func = "TestArenaOffensiveIcons",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    hide = {
+                        order = 3,
+                        type = "execute",
+                        width = "half",
+                        name = "Hide",
+                        func = "HideTestArenaOffensiveIcons",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    positionHeader = {
+                        order = 4,
+                        type = "header",
+                        name = "Position",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconSize = {
+                        order = 5,
+                        type = "range",
+                        width = 0.8,
+                        min = 24,
+                        max = 96,
+                        step = 1,
+                        name = "Icon size",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconOffsetX = {
+                        order = 6,
+                        type = "range",
+                        width = 0.8,
+                        min = -200,
+                        max = 200,
+                        step = 1,
+                        name = "X offset",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    arenaOffensiveIconOffsetY = {
+                        order = 7,
+                        type = "range",
+                        width = 0.8,
+                        min = -150,
+                        max = 150,
+                        step = 1,
+                        name = "Y offset",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                    note = {
+                        order = 8,
+                        type = "description",
+                        width = "full",
+                        name = addon.EXCLAMATION .. " These icons anchor to Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.",
+                        hidden = function()
+                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                        end,
+                    },
+                },
+            },
+        },
+    };
+end
+
 addon.GetArenaFrameOptions = function(order)
     addon.importDialogs = addon.importDialogs or {};
     addon.importDialogs["arenaFrames"] = addon.CreateImportDialog("arenaFrames");

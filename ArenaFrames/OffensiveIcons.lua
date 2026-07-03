@@ -187,19 +187,9 @@ local function RefreshGroupPosition(group)
     return true;
 end
 
-local function LayoutGroup(group, iconCount)
-    local config = GetConfig();
-    local padding = config.arenaOffensiveIconPadding or 3;
-
-    for i = 1, iconCount do
-        local icon = EnsureIcon(group, i);
-        icon:ClearAllPoints();
-        if i == 1 then
-            icon:SetPoint("TOPRIGHT", group, "TOPRIGHT", 0, 0);
-        else
-            icon:SetPoint("TOPRIGHT", group.icons[i - 1], "TOPLEFT", -padding, 0);
-        end
-    end
+local function PositionIcon(group, icon)
+    icon:ClearAllPoints();
+    icon:SetPoint("TOPRIGHT", group, "TOPRIGHT", 0, 0);
 end
 
 local function PaintIcon(icon, auraData, durationObject, startTime, duration)
@@ -262,28 +252,27 @@ local function UpdateGroup(index)
     end
 
     local unit = group.unit;
-    local auras = CollectOffensiveAuras(unit);
-    local maxIcons = config.arenaOffensiveIconMaxIcons or 3;
-    local shown = 0;
-
-    LayoutGroup(group, math.min(maxIcons, #auras));
-
-    for i = 1, math.min(maxIcons, #auras) do
-        local auraData = auras[i];
-        local icon = EnsureIcon(group, i);
-        local durationObject = C_UnitAuras and C_UnitAuras.GetAuraDuration and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
-        local startTime, duration;
-        if ( not durationObject ) and auraData.duration and auraData.expirationTime
-            and ( not addon.IsSecretValue(auraData.duration) ) and ( not addon.IsSecretValue(auraData.expirationTime) ) then
-            startTime = auraData.expirationTime - auraData.duration;
-            duration = auraData.duration;
-        end
-        PaintIcon(icon, auraData, durationObject, startTime, duration);
-        shown = shown + 1;
+    local auraData = CollectOffensiveAuras(unit)[1];
+    if not auraData then
+        ClearUnusedIcons(group, 1);
+        group:Hide();
+        return;
     end
 
-    ClearUnusedIcons(group, shown + 1);
-    group:SetShown(shown > 0);
+    local icon = EnsureIcon(group, 1);
+    PositionIcon(group, icon);
+
+    local durationObject = C_UnitAuras and C_UnitAuras.GetAuraDuration and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
+    local startTime, duration;
+    if ( not durationObject ) and auraData.duration and auraData.expirationTime
+        and ( not addon.IsSecretValue(auraData.duration) ) and ( not addon.IsSecretValue(auraData.expirationTime) ) then
+        startTime = auraData.expirationTime - auraData.duration;
+        duration = auraData.duration;
+    end
+
+    PaintIcon(icon, auraData, durationObject, startTime, duration);
+    ClearUnusedIcons(group, 2);
+    group:Show();
 end
 
 local function UpdateAllGroups()
@@ -311,7 +300,7 @@ local function ShowTestIcons()
                 auraInstanceID = i,
                 spellId = spellID,
             };
-            LayoutGroup(group, 1);
+            PositionIcon(group, icon);
             PaintIcon(icon, auraData, nil, GetTime() - i, 12 + i);
             ClearUnusedIcons(group, 2);
             group:Show();

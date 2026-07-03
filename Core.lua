@@ -129,10 +129,8 @@ local defaults = {
 
             arenaOffensiveIconsEnabled = true,
             arenaOffensiveIconSize = 42,
-            arenaOffensiveIconPadding = 3,
             arenaOffensiveIconOffsetX = -4,
             arenaOffensiveIconOffsetY = 0,
-            arenaOffensiveIconMaxIcons = 3,
 
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
@@ -350,13 +348,12 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
-    if ( not addon.PROJECT_MAINLINE ) then
-        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
-    end
-
     if addon.PROJECT_MAINLINE then
+        options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
+    else
+        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
     end
 
     addon.importDialogs = addon.importDialogs or {};
