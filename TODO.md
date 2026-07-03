@@ -9,6 +9,6 @@ Tasks:
 - [x] If Druid HoT Helper glow taints again in arena, replace any remaining LibCustomGlow usage (especially Mark of the Wild PixelGlow) with a local glow implementation that does not read UI alpha/state (completed, no dependency on LibCustomGlow anymore)
 - [ ] Re-implement battleground enemy spec icons (blocked)
 - [x] Configurable SetCountdownMillisecondsThreshold for raid frame big debuffs & healer in CC alert
-- [x] Bug fix: friendly class icon "Show CC" sometimes get stuck on the CC icon and never switches back to the class icon (mainline tracks the shown CC aura instance and clears the overlay when that aura is removed)
+- [x] Bug fix: friendly class icon "Show CC" sometimes get stuck on the CC icon and never switches back to the class icon (mainline keeps Blizzard CC selection and clears the shown overlay when that aura instance is removed)
 - [ ] Implement rotating style target highlight for class icons
 - [ ] Self stun DR that's super visible to play vs. swaps

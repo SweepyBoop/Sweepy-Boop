@@ -307,53 +307,17 @@ local function SortCrowdControlAurasNewestFirst(auraA, auraB)
     return ( auraA.auraInstanceID or 0 ) > ( auraB.auraInstanceID or 0 );
 end
 
-local function GetCrowdControlPriority(drType)
-    if type(drType) == "table" then
-        local priority;
-        for _, category in ipairs(drType) do
-            local categoryPriority = crowdControlPriority[category];
-            if categoryPriority and ( ( not priority ) or categoryPriority > priority ) then
-                priority = categoryPriority;
-            end
-        end
-        return priority;
-    end
-
-    return crowdControlPriority[drType];
-end
-
-local function ResolveFriendlyPartyUnit(unit)
-    local resolvedUnit;
-    if addon.UnitIsUnitSecretValueSafe(unit, "player") then
-        resolvedUnit = "player";
-    end
-
-    for i = 1, ( MAX_PARTY_MEMBERS or 4 ) do
-        local partyUnit = "party" .. i;
-        if UnitExists(partyUnit) and addon.UnitIsUnitSecretValueSafe(unit, partyUnit) then
-            if resolvedUnit then return end
-            resolvedUnit = partyUnit;
-        end
-    end
-
-    return resolvedUnit;
-end
-
 local function GetMainlineClassIconCrowdControl(unit)
-    local auraUnit = ResolveFriendlyPartyUnit(unit) or unit;
-    local auras = C_UnitAuras.GetUnitAuras(auraUnit, "HARMFUL|CROWD_CONTROL", nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
+    local auras = C_UnitAuras.GetUnitAuras(unit, "HARMFUL|CROWD_CONTROL", nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
     if ( not auras ) or ( #auras == 0 ) then return end
 
     table.sort(auras, SortCrowdControlAurasNewestFirst);
     for _, auraData in ipairs(auras) do
         local spellID = auraData.spellId;
         if spellID then
-            if addon.IsSecretValue(spellID) then
-                if auraUnit == unit then
-                    return auraData, auraUnit;
-                end
-            elseif GetCrowdControlPriority(addon.DRList[spellID]) then
-                return auraData, auraUnit;
+            local isCrowdControl = C_Spell.IsSpellCrowdControl(spellID);
+            if addon.IsSecretValue(isCrowdControl) or isCrowdControl then
+                return auraData;
             end
         end
     end
@@ -401,13 +365,13 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame, unitAuraUpdateInf
             and UnitInParty(frame.unit)
             and UnitIsPlayer(frame.unit)
             and UnitIsFriend("player", frame.unit) then
-            local auraData, auraUnit = GetMainlineClassIconCrowdControl(frame.unit);
+            local auraData = GetMainlineClassIconCrowdControl(frame.unit);
             if auraData then
                 iconFrame.sweepyBoopShownCCAuraID = auraData.auraInstanceID;
                 iconCC:SetTexture(auraData.icon);
                 iconCC:Show();
 
-                local durationObject = C_UnitAuras.GetAuraDuration(auraUnit, auraData.auraInstanceID);
+                local durationObject = C_UnitAuras.GetAuraDuration(frame.unit, auraData.auraInstanceID);
                 if durationObject and cooldownCC.SetCooldownFromDurationObject then
                     cooldownCC:SetCooldownFromDurationObject(durationObject);
                     cooldownCC:Show();
