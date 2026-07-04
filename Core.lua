@@ -256,6 +256,8 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
     defaults.profile.misc.healerInCrowdControl = true;
     defaults.profile.misc.personalDR = true;
+    defaults.profile.misc.personalDRTrackIncapacitate = false;
+    defaults.profile.misc.personalDRTrackDisorient = false;
     defaults.profile.misc.personalDROffsetY = -135;
     defaults.profile.misc.rangeCheckerEnabled = true;
 end
