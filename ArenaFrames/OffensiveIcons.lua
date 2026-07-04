@@ -142,6 +142,15 @@ local function ResetCooldownSwipe(cooldown)
     end
 end
 
+local function ClearOverlayLayer(icon)
+    if not icon then return end
+
+    ResetCooldownSwipe(icon.cooldown);
+    addon.HideProcGlow(icon);
+    icon:SetAlpha(1);
+    icon:Hide();
+end
+
 local function CreateOverlayLayer(parent)
     local icon = CreateFrame("Frame", nil, parent);
     icon:SetMouseClickEnabled(false);
@@ -154,6 +163,12 @@ local function CreateOverlayLayer(parent)
     icon.cooldown:SetAllPoints(icon);
     ConfigureCooldownSwipe(icon.cooldown);
     UpdateCountdownFontSize(icon.cooldown);
+    icon.cooldown:SetScript("OnCooldownDone", function()
+        if icon.isTestPreview then
+            icon.isTestPreview = nil;
+            ClearOverlayLayer(icon);
+        end
+    end);
 
     icon:Hide();
     return icon;
@@ -188,9 +203,8 @@ local function ClearArenaOverlay(group)
     if not group then return end
 
     for _, icon in ipairs(group.icons) do
-        ResetCooldownSwipe(icon.cooldown);
-        addon.HideProcGlow(icon);
-        icon:Hide();
+        icon.isTestPreview = nil;
+        ClearOverlayLayer(icon);
     end
     group:Hide();
 end
@@ -273,10 +287,8 @@ end
 
 local function ClearOverlayLayersAfter(group, firstUnusedIndex)
     for i = firstUnusedIndex, #group.icons do
-        ResetCooldownSwipe(group.icons[i].cooldown);
-        addon.HideProcGlow(group.icons[i]);
-        group.icons[i]:SetAlpha(1);
-        group.icons[i]:Hide();
+        group.icons[i].isTestPreview = nil;
+        ClearOverlayLayer(group.icons[i]);
     end
 end
 
@@ -363,6 +375,11 @@ local function RefreshArenaOverlays()
 end
 
 local function PreviewArenaOverlays()
+    if IsInInstance() then
+        ClearAllArenaOverlays();
+        return;
+    end
+
     for i = 1, addon.MAX_ARENA_SIZE do
         local group = EnsureArenaOverlay(i);
         if AnchorArenaOverlay(group) then
@@ -378,6 +395,7 @@ local function PreviewArenaOverlays()
                 burstSpellID = spellID,
             };
             AnchorOverlayLayer(group, icon);
+            icon.isTestPreview = true;
             PaintOverlayLayer(icon, overlaySignal, nil, GetTime() - i, 12 + i);
             ClearOverlayLayersAfter(group, 2);
             group:Show();
