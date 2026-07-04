@@ -374,9 +374,12 @@ local function RefreshArenaOverlays()
     end
 end
 
-local function PreviewArenaOverlays()
+local function PreviewArenaOverlays(showWarning)
     if IsInInstance() then
         ClearAllArenaOverlays();
+        if showWarning then
+            addon.PRINT("Test mode can only be used outside instances");
+        end
         return;
     end
 
@@ -418,12 +421,12 @@ end
 
 function SweepyBoop:TestArenaOffensiveIcons()
     if IsInInstance() then
-        addon.PRINT("Test mode can only be used outside instances");
+        PreviewArenaOverlays(true);
         return;
     end
 
     ShowBlizzardArenaFramesForPreview();
-    PreviewArenaOverlays();
+    PreviewArenaOverlays(false);
 end
 
 function SweepyBoop:HideTestArenaOffensiveIcons()
@@ -432,7 +435,7 @@ end
 
 function SweepyBoop:UpdateArenaOffensiveIcons()
     if isInTest then
-        PreviewArenaOverlays();
+        PreviewArenaOverlays(false);
         return;
     end
 
