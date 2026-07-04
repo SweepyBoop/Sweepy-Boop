@@ -12,7 +12,6 @@ local defaultPriority = 0;
 local psychicScream = 8122;
 local kidneyShot = 408;
 local testDuration = 6;
-local countdownFontSizeCoefficient = 0.375;
 local redGlowColor = { 1, 0, 0, 1 };
 
 local crowdControlPriority = {
@@ -254,7 +253,7 @@ local function UpdateCooldownFontSize(cooldown, iconSize)
     if region then
         local font, _, flags = region:GetFont();
         if font then
-            region:SetFont(font, math.floor(iconSize * countdownFontSizeCoefficient), flags);
+            region:SetFont(font, math.floor(iconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT), flags);
         end
     end
 end

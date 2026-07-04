@@ -126,6 +126,12 @@ local defaults = {
             arenaCooldownTrackerIconPaddingSecondary = 2,
             arenaCooldownTrackerGlow = true,
             arenaCooldownTrackerGlowSecondary = true,
+
+            arenaOffensiveIconsEnabled = false,
+            arenaOffensiveIconSize = 32,
+            arenaOffensiveIconOffsetX = 0,
+            arenaOffensiveIconOffsetY = 0,
+
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
             showUnusedIcons = false,
@@ -244,6 +250,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.arenaCooldownOffsetY = 15;
     defaults.profile.arenaFrames.arenaCooldownOffsetXSecondary = 35;
     defaults.profile.arenaFrames.arenaCooldownOffsetYSecondary = -25;
+    defaults.profile.arenaFrames.arenaOffensiveIconsEnabled = true;
     defaults.profile.arenaFrames.showUnusedIcons = true;
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
@@ -342,13 +349,12 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
-    if ( not addon.PROJECT_MAINLINE ) then
-        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
-    end
-
     if addon.PROJECT_MAINLINE then
+        options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
+    else
+        options.args.arenaFrames = addon.GetArenaFrameOptions(5);
     end
 
     addon.importDialogs = addon.importDialogs or {};
@@ -403,6 +409,8 @@ function SweepyBoop:OnInitialize()
 
     if ( not addon.PROJECT_MAINLINE ) then return end
 
+    self:SetupArenaOffensiveIcons();
+
     self:SetupHealerIndicator();
 
     -- Setup raid frame modules
@@ -434,6 +442,7 @@ function SweepyBoop:RefreshConfig()
     end
 
     if addon.PROJECT_MAINLINE then
+        self:SetupArenaOffensiveIcons();
         self:SetupCombatIndicator();
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
