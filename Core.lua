@@ -204,7 +204,6 @@ local defaults = {
             fixEvokerCastBars = true,
             hideBlizzArenaFrames = true,
             arenaSurrenderEnabled = true,
-            healerIndicator = true,
             showDampenPercentage = true,
 
             rangeCheckerSize = 32,
@@ -412,8 +411,6 @@ function SweepyBoop:OnInitialize()
     if ( not addon.PROJECT_MAINLINE ) then return end
 
     self:SetupArenaOffensiveIcons();
-
-    self:SetupHealerIndicator();
 
     -- Setup raid frame modules
     self:SetupRaidFrameAuraModule();

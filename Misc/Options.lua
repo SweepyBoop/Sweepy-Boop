@@ -328,16 +328,6 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " Show dampen percentage on the arena widget",
                     },
 
-                    healerIndicator = {
-                        order = 28,
-                        type = "toggle",
-                        name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer indicator on arena frames",
-                        desc = "To make it easier to identify the healer in case of class stacking",
-                        width = "full",
-                        hidden = function ()
-                            return ( not ( Gladius or sArena ) );
-                        end
-                    },
 
                     header6 = {
                         order = 29,

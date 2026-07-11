@@ -60,7 +60,6 @@ ArenaFrames\IconTemplates.lua
 ArenaFrames\CooldownTracking.xml
 ArenaFrames\CooldownTrackingTemplates.lua
 ArenaFrames\OffensiveIcons.lua
-ArenaFrames\HealerIndicator.lua
 ArenaFrames\RangeIndicators.lua
 ArenaFrames\Options.lua
 
