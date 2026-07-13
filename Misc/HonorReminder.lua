@@ -54,6 +54,10 @@ local function GetFontSize()
     return Clamp(GetConfig().honorReminderFontSize, 8, 64);
 end
 
+local function GetIconSize()
+    return Clamp(GetConfig().honorReminderIconSize, 16, 128);
+end
+
 local function GetAnchorPoint()
     local anchorPoint = GetConfig().honorReminderAnchorPoint or "CENTER";
     if validAnchorPoints[anchorPoint] then
@@ -172,7 +176,7 @@ local function RefreshReminderLayout()
     local frame = EnsureReminderFrame();
     local config = GetConfig();
     local fontSize = GetFontSize();
-    local iconSize = math.max(BASE_ICON_SIZE, fontSize * 2);
+    local iconSize = GetIconSize();
 
     frame.iconSize = iconSize;
     frame:SetHeight(iconSize);

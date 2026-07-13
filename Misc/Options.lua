@@ -697,8 +697,17 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.honorReminder );
                         end,
                     },
-                    honorReminderFontSize = {
+                    honorReminderThresholdBreak = {
                         order = 6,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderFontSize = {
+                        order = 7,
                         type = "range",
                         width = 0.8,
                         min = 8,
@@ -714,8 +723,34 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.honorReminder );
                         end,
                     },
+                    honorReminderIconSize = {
+                        order = 8,
+                        type = "range",
+                        width = 0.8,
+                        min = 16,
+                        max = 128,
+                        step = 1,
+                        name = "Icon size",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdateHonorReminder();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderSizeBreak = {
+                        order = 9,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
                     honorReminderAnchorPoint = {
-                        order = 7,
+                        order = 10,
                         type = "select",
                         width = 0.8,
                         name = "Anchor",
@@ -740,7 +775,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     honorReminderOffsetX = {
-                        order = 8,
+                        order = 11,
                         type = "range",
                         width = 0.8,
                         min = -1000,
@@ -757,7 +792,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     honorReminderOffsetY = {
-                        order = 9,
+                        order = 12,
                         type = "range",
                         width = 0.8,
                         min = -1000,
