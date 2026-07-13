@@ -267,6 +267,12 @@ function SweepyBoop:HideTestHonorReminder()
     SweepyBoop:UpdateHonorReminder();
 end
 
+function SweepyBoop:RefreshHonorReminder()
+    isInTest = false;
+    HideReminder();
+    SweepyBoop:SetupHonorReminder();
+end
+
 function SweepyBoop:SetupHonorReminder()
     if not eventFrame then
         eventFrame = CreateFrame("Frame");
