@@ -453,7 +453,7 @@ function SweepyBoop:RefreshConfig()
         self:SetupCombatIndicator();
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
-        self:SetupHonorReminder();
+        self:RefreshHonorReminder();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
         self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
