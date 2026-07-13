@@ -2,12 +2,12 @@ local _, addon = ...;
 
 local HONOR_CURRENCY_ID = 1792;
 local HONOR_LABEL = "Honor";
-local HONOR_ICON_FALLBACK = addon.ICON_PATH("achievement_legionpvptier4");
+local HONOR_ICON_ATLAS = "countdown-swords";
 local CURRENCY_DISPLAY_UPDATE_EVENT = "CURRENCY_DISPLAY_UPDATE";
 local BASE_ICON_SIZE = addon.DEFAULT_ICON_SIZE;
 local ICON_TEXT_SPACING = 8;
-local PULSE_SCALE = 1.15;
-local PULSE_DURATION = 0.55;
+local PULSE_SCALE = 1.5;
+local PULSE_DURATION = 0.3;
 local TEST_HONOR_QUANTITY = 10000;
 local TEST_HONOR_MAX = 15000;
 
@@ -150,7 +150,7 @@ local function CreateReminderFrame()
 
     frame.icon = frame.iconFrame:CreateTexture(nil, "ARTWORK");
     frame.icon:SetAllPoints(frame.iconFrame);
-    frame.icon:SetTexture(HONOR_ICON_FALLBACK);
+    frame.icon:SetAtlas(HONOR_ICON_ATLAS);
 
     frame.text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge");
     frame.text:SetPoint("LEFT", frame.iconFrame, "RIGHT", ICON_TEXT_SPACING, 0);
@@ -196,14 +196,14 @@ local function RefreshReminderLayout()
     frame.lastModified = config.lastModified;
 end
 
-local function ShowReminder(quantity, denominator, iconFileID, currencyName)
+local function ShowReminder(quantity, denominator, currencyName)
     local frame = EnsureReminderFrame();
     local config = GetConfig();
     if frame.lastModified ~= config.lastModified then
         RefreshReminderLayout();
     end
 
-    frame.icon:SetTexture(iconFileID or HONOR_ICON_FALLBACK);
+    frame.icon:SetAtlas(HONOR_ICON_ATLAS);
     frame.text:SetText(format("%s %s / %s", currencyName or HONOR_LABEL, FormatNumber(quantity), FormatNumber(denominator)));
     UpdateReminderWidth();
 
@@ -219,7 +219,7 @@ function SweepyBoop:UpdateHonorReminder()
     end
 
     if isInTest then
-        ShowReminder(TEST_HONOR_QUANTITY, TEST_HONOR_MAX, nil, HONOR_LABEL);
+        ShowReminder(TEST_HONOR_QUANTITY, TEST_HONOR_MAX, HONOR_LABEL);
         return;
     end
 
@@ -241,14 +241,14 @@ function SweepyBoop:UpdateHonorReminder()
         denominator = threshold;
     end
 
-    ShowReminder(quantity, denominator, currencyInfo.iconFileID, currencyInfo.name or HONOR_LABEL);
+    ShowReminder(quantity, denominator, currencyInfo.name or HONOR_LABEL);
 end
 
 function SweepyBoop:TestHonorReminder()
     if ( not addon.PROJECT_MAINLINE ) then return end
 
     isInTest = true;
-    ShowReminder(TEST_HONOR_QUANTITY, TEST_HONOR_MAX, nil, HONOR_LABEL);
+    ShowReminder(TEST_HONOR_QUANTITY, TEST_HONOR_MAX, HONOR_LABEL);
 end
 
 function SweepyBoop:HideTestHonorReminder()
