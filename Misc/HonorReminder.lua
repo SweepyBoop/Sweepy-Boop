@@ -15,6 +15,18 @@ local reminderFrame;
 local eventFrame;
 local isInTest = false;
 
+local validAnchorPoints = {
+    CENTER = true,
+    TOP = true,
+    BOTTOM = true,
+    LEFT = true,
+    RIGHT = true,
+    TOPLEFT = true,
+    TOPRIGHT = true,
+    BOTTOMLEFT = true,
+    BOTTOMRIGHT = true,
+};
+
 local function Clamp(value, minValue, maxValue)
     value = tonumber(value) or minValue;
     if value < minValue then return minValue end
@@ -35,11 +47,19 @@ local function GetConfig()
 end
 
 local function GetThreshold()
-    return Clamp(GetConfig().honorReminderThreshold, 7500, 15000);
+    return Clamp(GetConfig().honorReminderThreshold, 5000, 15000);
 end
 
 local function GetFontSize()
-    return Clamp(GetConfig().honorReminderFontSize, 10, 24);
+    return Clamp(GetConfig().honorReminderFontSize, 8, 64);
+end
+
+local function GetAnchorPoint()
+    local anchorPoint = GetConfig().honorReminderAnchorPoint or "CENTER";
+    if validAnchorPoints[anchorPoint] then
+        return anchorPoint;
+    end
+    return "CENTER";
 end
 
 local function GetHonorInfo()
@@ -166,8 +186,9 @@ local function RefreshReminderLayout()
 
     UpdateReminderWidth();
 
+    local anchorPoint = GetAnchorPoint();
     frame:ClearAllPoints();
-    frame:SetPoint("CENTER", UIParent, "CENTER", config.honorReminderOffsetX or 0, config.honorReminderOffsetY or 0);
+    frame:SetPoint(anchorPoint, UIParent, anchorPoint, config.honorReminderOffsetX or 0, config.honorReminderOffsetY or 0);
     frame.lastModified = config.lastModified;
 end
 

@@ -202,6 +202,7 @@ local defaults = {
             honorReminder = true,
             honorReminderThreshold = 15000,
             honorReminderFontSize = 14,
+            honorReminderAnchorPoint = "BOTTOMRIGHT",
             honorReminderOffsetX = 0,
             honorReminderOffsetY = 200,
             combatIndicator = true,

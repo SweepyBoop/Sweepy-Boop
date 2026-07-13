@@ -93,8 +93,8 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         order = 8,
                         type = "range",
                         width = 1,
-                        min = -500,
-                        max = 500,
+                        min = -1000,
+                        max = 1000,
                         step = 1,
                         name = "X offset",
                         set = function (info, val)
@@ -110,8 +110,8 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         order = 9,
                         type = "range",
                         width = 1,
-                        min = -500,
-                        max = 500,
+                        min = -1000,
+                        max = 1000,
                         step = 1,
                         name = "Y offset",
                         set = function (info, val)
@@ -683,7 +683,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         order = 5,
                         type = "range",
                         width = 0.8,
-                        min = 7500,
+                        min = 5000,
                         max = 15000,
                         step = 500,
                         name = "Honor threshold",
@@ -701,8 +701,8 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         order = 6,
                         type = "range",
                         width = 0.8,
-                        min = 10,
-                        max = 24,
+                        min = 8,
+                        max = 64,
                         step = 1,
                         name = "Font size",
                         set = function(info, val)
@@ -714,12 +714,37 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not SweepyBoop.db.profile.misc.honorReminder );
                         end,
                     },
-                    honorReminderOffsetX = {
+                    honorReminderAnchorPoint = {
                         order = 7,
+                        type = "select",
+                        width = 0.8,
+                        name = "Anchor",
+                        values = {
+                            CENTER = "Center",
+                            TOP = "Top",
+                            BOTTOM = "Bottom",
+                            LEFT = "Left",
+                            RIGHT = "Right",
+                            TOPLEFT = "Top left",
+                            TOPRIGHT = "Top right",
+                            BOTTOMLEFT = "Bottom left",
+                            BOTTOMRIGHT = "Bottom right",
+                        },
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdateHonorReminder();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderOffsetX = {
+                        order = 8,
                         type = "range",
                         width = 0.8,
-                        min = -500,
-                        max = 500,
+                        min = -1000,
+                        max = 1000,
                         step = 1,
                         name = "X offset",
                         set = function(info, val)
@@ -732,11 +757,11 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         end,
                     },
                     honorReminderOffsetY = {
-                        order = 8,
+                        order = 9,
                         type = "range",
                         width = 0.8,
-                        min = -500,
-                        max = 500,
+                        min = -1000,
+                        max = 1000,
                         step = 1,
                         name = "Y offset",
                         set = function(info, val)
