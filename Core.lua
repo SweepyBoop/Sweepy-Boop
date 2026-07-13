@@ -199,6 +199,11 @@ local defaults = {
             personalDRTrackRoot = false,
             personalDRTrackSilence = false,
             personalDRTrackDisarm = false,
+            honorReminder = true,
+            honorReminderThreshold = 15000,
+            honorReminderFontSize = 14,
+            honorReminderOffsetX = 0,
+            honorReminderOffsetY = 200,
             combatIndicator = true,
             alwaysShowDruidComboPoints = true,
             fixEvokerCastBars = true,
@@ -425,6 +430,7 @@ function SweepyBoop:OnInitialize()
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
+    self:SetupHonorReminder();
 
     local loginFrame = CreateFrame("Frame");
     loginFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
@@ -445,6 +451,7 @@ function SweepyBoop:RefreshConfig()
         self:SetupCombatIndicator();
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
+        self:SetupHonorReminder();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
         self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec

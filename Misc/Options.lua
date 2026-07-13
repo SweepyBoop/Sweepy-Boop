@@ -633,6 +633,124 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                 },
             },
 
+            honorReminder = {
+                order = 4,
+                type = "group",
+                name = "Honor reminder",
+                args = {
+                    honorReminder = {
+                        order = 1,
+                        type = "toggle",
+                        width = 1.2,
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_legionpvptier4")) .. " Enabled",
+                        desc = "Show a pulsing Honor reminder when your current Honor reaches the configured threshold.",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:SetupHonorReminder();
+                        end,
+                    },
+                    honorReminderTest = {
+                        order = 2,
+                        type = "execute",
+                        width = 0.4,
+                        name = "Test",
+                        func = "TestHonorReminder",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderHide = {
+                        order = 3,
+                        type = "execute",
+                        width = 0.4,
+                        name = "Hide",
+                        func = "HideTestHonorReminder",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderOptionsBreak = {
+                        order = 4,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderThreshold = {
+                        order = 5,
+                        type = "range",
+                        width = 0.8,
+                        min = 7500,
+                        max = 15000,
+                        step = 500,
+                        name = "Honor threshold",
+                        desc = "Show the reminder when your current Honor is at least this amount.",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdateHonorReminder();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderFontSize = {
+                        order = 6,
+                        type = "range",
+                        width = 0.8,
+                        min = 10,
+                        max = 24,
+                        step = 1,
+                        name = "Font size",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdateHonorReminder();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderOffsetX = {
+                        order = 7,
+                        type = "range",
+                        width = 0.8,
+                        min = -500,
+                        max = 500,
+                        step = 1,
+                        name = "X offset",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdateHonorReminder();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                    honorReminderOffsetY = {
+                        order = 8,
+                        type = "range",
+                        width = 0.8,
+                        min = -500,
+                        max = 500,
+                        step = 1,
+                        name = "Y offset",
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:UpdateHonorReminder();
+                        end,
+                        hidden = function ()
+                            return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                    },
+                },
+            },
+
             gismo = {
                 order = 2,
                 type = "group",
