@@ -10,5 +10,5 @@ Tasks:
 - [ ] Re-implement battleground enemy spec icons (blocked)
 - [x] Configurable SetCountdownMillisecondsThreshold for raid frame big debuffs & healer in CC alert
 - [x] Bug fix: friendly class icon "Show CC" sometimes get stuck on the CC icon and never switches back to the class icon (mainline keeps Blizzard CC selection and clears the shown overlay when that aura instance is removed)
-- [ ] Implement rotating style target highlight for class icons
-- [ ] Self stun DR that's super visible to play vs. swaps
+- [x] Self stun DR that's super visible to play vs. swaps
+- [ ] Test icon for "Honor reminder" should dismiss when resetting profile
