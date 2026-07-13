@@ -72,6 +72,14 @@ local function GetHonorInfo()
     return C_CurrencyInfo.GetCurrencyInfo(HONOR_CURRENCY_ID);
 end
 
+local function IsRealReminderShown()
+    return reminderFrame and reminderFrame:IsShown() and ( not isInTest );
+end
+
+function SweepyBoop:IsHonorReminderRealReminderShown()
+    return IsRealReminderShown();
+end
+
 local function UpdateReminderWidth()
     if not reminderFrame then return end
 
@@ -245,13 +253,15 @@ function SweepyBoop:UpdateHonorReminder()
 end
 
 function SweepyBoop:TestHonorReminder()
-    if ( not addon.PROJECT_MAINLINE ) then return end
+    if ( not addon.PROJECT_MAINLINE ) or IsRealReminderShown() then return end
 
     isInTest = true;
     ShowReminder(TEST_HONOR_QUANTITY, TEST_HONOR_MAX, HONOR_LABEL);
 end
 
 function SweepyBoop:HideTestHonorReminder()
+    if IsRealReminderShown() then return end
+
     isInTest = false;
     HideReminder();
     SweepyBoop:UpdateHonorReminder();
