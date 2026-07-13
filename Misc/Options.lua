@@ -659,6 +659,9 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         hidden = function ()
                             return ( not SweepyBoop.db.profile.misc.honorReminder );
                         end,
+                        disabled = function ()
+                            return SweepyBoop:IsHonorReminderRealReminderShown();
+                        end,
                     },
                     honorReminderHide = {
                         order = 3,
@@ -668,6 +671,9 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         func = "HideTestHonorReminder",
                         hidden = function ()
                             return ( not SweepyBoop.db.profile.misc.honorReminder );
+                        end,
+                        disabled = function ()
+                            return SweepyBoop:IsHonorReminderRealReminderShown();
                         end,
                     },
                     honorReminderOptionsBreak = {
