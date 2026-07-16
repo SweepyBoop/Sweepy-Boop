@@ -1,4 +1,6 @@
 local addonName, addon = ...;
+addon.L = LibStub("AceLocale-3.0"):GetLocale(addonName);
+local L = addon.L;
 addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceSerializer-3.0");
@@ -9,7 +11,7 @@ local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
     icon = addon.INTERFACE_SWEEPY .. "Art/Logo",
     OnTooltipShow = function(tooltip)
         tooltip:SetText(addon.addonTitle, 1, 1, 1);
-        tooltip:AddLine("Click to open options");
+        tooltip:AddLine(L["Click to open options"]);
     end,
     OnClick = function()
         LibStub("AceConfigDialog-3.0"):Open(addonName);
@@ -28,7 +30,7 @@ local options = {
             image = addon.INTERFACE_SWEEPY .. "Art/Logo",
             imageWidth = 36,
             imageHeight = 36,
-            name = "A lightweight addon to enhance your arena & battleground experience :)"
+            name = L["A lightweight addon to enhance your arena & battleground experience :)"]
         },
     },
 };
@@ -36,14 +38,14 @@ local options = {
 options.args.support = {
     order = 8,
     type = "group",
-    name = "Support",
+    name = L["Support"],
     args = {
         discordLink = {
             order = 1,
             type = "input",
             width = "full",
-            name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " Join Discord for PvP UI support",
-            desc = "Press Ctrl+C to copy URL",
+            name = addon.FORMAT_ATLAS("UI-ChatIcon-ODIN") .. " " .. L["Join Discord for PvP UI support"],
+            desc = L["Press Ctrl+C to copy URL"],
             dialogControl = "InlineLink-SweepyBoop",
             get = function ()
                 return "https://discord.gg/SMRxeZzVwc";
@@ -54,8 +56,8 @@ options.args.support = {
             order = 2,
             type = "input",
             width = "full",
-            name = addon.FORMAT_ATLAS("GarrisonTroops-Health") .. " If feeling generous",
-            desc = "Press Ctrl+C to copy URL",
+            name = addon.FORMAT_ATLAS("GarrisonTroops-Health") .. " " .. L["If feeling generous"],
+            desc = L["Press Ctrl+C to copy URL"],
             dialogControl = "InlineLink-SweepyBoop",
             get = function ()
                 return "https://www.paypal.me/sweepyboop";
@@ -312,10 +314,10 @@ function SweepyBoop:SetupBlizzardOptions()
 
         local context = self:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall");
         context:SetPoint("TOPLEFT", title, "BOTTOMLEFT", 0, -8);
-        context:SetText("\124cFF00FF00Type /sb\124r or click the minimap icon to open the option panel.");
+        context:SetText(L["\124cFF00FF00Type /sb\124r or click the minimap icon to open the option panel."]);
 
         local open = CreateFrame("Button", nil, self, "UIPanelButtonTemplate");
-        open:SetText("Open Option Panel");
+        open:SetText(L["Open Option Panel"]);
         open:SetWidth(177);
         open:SetHeight(24);
         open:SetPoint("TOPLEFT", context, "BOTTOMLEFT", 0, -30);
@@ -371,13 +373,13 @@ function SweepyBoop:OnInitialize()
     options.args.profileSharing = {
         order = 9,
         type = "group",
-        name = "Profile sharing",
+        name = L["Profile sharing"],
         args = {
             import = {
                 order = 1,
                 type = "execute",
-                name = "Import Profile",
-                desc = "Import a profile from another user.",
+                name = L["Import Profile"],
+                desc = L["Import a profile from another user."],
                 func = function()
                     SweepyBoop:ShowImport("");
                 end,
@@ -385,8 +387,8 @@ function SweepyBoop:OnInitialize()
             export = {
                 order = 2,
                 type = "execute",
-                name = "Export Profile",
-                desc = "Export your profile to share with others.",
+                name = L["Export Profile"],
+                desc = L["Export your profile to share with others."],
                 func = function()
                     SweepyBoop:ShowExport();
                 end,
