@@ -2,361 +2,333 @@ local addonName = ...;
 local L = LibStub("AceLocale-3.0"):NewLocale(addonName, "ptBR");
 if not L then return end
 
-local translations = {
-    [=[Click to open options]=] = [=[Clique para abrir as opções]=],
-    [=[A lightweight addon to enhance your arena & battleground experience :)]=] = [=[Um addon leve para melhorar sua experiência em arenas e campos de batalha :)]=],
-    [=[Support]=] = [=[Suporte]=],
-    [=[Join Discord for PvP UI support]=] = [=[Entre no Discord para suporte de interface PvP]=],
-    [=[Press Ctrl+C to copy URL]=] = [=[Pressione Ctrl+C para copiar a URL]=],
-    [=[If feeling generous]=] = [=[Se quiser apoiar o desenvolvimento]=],
-    [=[|cFF00FF00Type /sb|r or click the minimap icon to open the option panel.]=] = [=[|cFF00FF00Digite /sb|r ou clique no ícone do minimapa para abrir o painel de opções.]=],
-    [=[Open Option Panel]=] = [=[Abrir painel de opções]=],
-    [=[Profile sharing]=] = [=[Compartilhamento de perfis]=],
-    [=[Import Profile]=] = [=[Importar perfil]=],
-    [=[Import a profile from another user.]=] = [=[Importa um perfil de outro usuário.]=],
-    [=[Export Profile]=] = [=[Exportar perfil]=],
-    [=[Export your profile to share with others.]=] = [=[Exporta seu perfil para compartilhar com outros.]=],
-    [=[Misc]=] = [=[Diversos]=],
-    [=[General]=] = [=[Geral]=],
-    [=[Healer in crowd control reminder in arena]=] = [=[Lembrete de curador sob controle em arena]=],
-    [=[Enabled]=] = [=[Ativado]=],
-    [=[Play sound]=] = [=[Tocar som]=],
-    [=[Test]=] = [=[Testar]=],
-    [=[Hide]=] = [=[Ocultar]=],
-    [=[Icon size]=] = [=[Tamanho do ícone]=],
-    [=[X offset]=] = [=[Deslocamento X]=],
-    [=[Y offset]=] = [=[Deslocamento Y]=],
-    [=[Decimal threshold]=] = [=[Limite decimal]=],
-    [=[Show decimal countdowns below this many seconds.]=] = [=[Mostra contagens regressivas decimais abaixo desta quantidade de segundos.]=],
-    [=[PvP Queue Timer]=] = [=[Temporizador da fila PvP]=],
-    [=[Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire]=] = [=[Mostra um temporizador quando a fila de arena/campo de batalha aparece e toca um alerta quando está prestes a expirar]=],
-    [=[Unit frames]=] = [=[Quadros de unidade]=],
-    [=[Show Precognition on player]=] = [=[Mostrar Precognição no jogador]=],
-    [=[Show a glowing icon while Precognition is active on you.]=] = [=[Mostra um ícone brilhante enquanto Precognição está ativa em você.]=],
-    [=[Show combat indicators on unit frames]=] = [=[Mostrar indicadores de combate nos quadros de unidade]=],
-    [=[Show combat indicator icons on Player / Target / Focus frames]=] = [=[Mostra ícones de indicador de combate nos quadros de Jogador/Alvo/Foco]=],
-    [=[Always show Druid combo points]=] = [=[Sempre mostrar pontos de combo do druida]=],
-    [=[Arena]=] = [=[Arena]=],
-    [=[Hide Blizzard arena frames]=] = [=[Ocultar quadros de arena da Blizzard]=],
-    [=[Type /gg to leave arena without confirmation]=] = [=[Digite /gg para sair da arena sem confirmação]=],
-    [=[Disabling this option requires a UI reload to take effect]=] = [=[Desativar esta opção requer recarregar a interface para entrar em vigor]=],
-    [=[Show dampen percentage on the arena widget]=] = [=[Mostrar porcentagem de amortecimento no widget de arena]=],
-    [=[Show minimap icon for invoking options UI]=] = [=[Mostrar ícone do minimapa para abrir a interface de opções]=],
-    [=[Personal DR]=] = [=[DR pessoal]=],
-    [=[Track diminishing returns on yourself. A pulsing stun icon means you are clean on stun DR.]=] = [=[Rastreia retornos decrescentes em você. Um ícone de atordoamento pulsante significa que você está sem DR de atordoamento.]=],
-    [=[Show clean stun DR]=] = [=[Mostrar DR de atordoamento limpo]=],
-    [=[Show the glowing stun icon while you are clean on stun DR.]=] = [=[Mostra o ícone de atordoamento brilhante enquanto você está sem DR de atordoamento.]=],
-    [=[Anchor]=] = [=[Âncora]=],
-    [=[Center]=] = [=[Centro]=],
-    [=[Top]=] = [=[Topo]=],
-    [=[Bottom]=] = [=[Baixo]=],
-    [=[Left]=] = [=[Esquerda]=],
-    [=[Right]=] = [=[Direita]=],
-    [=[Top left]=] = [=[Topo esquerdo]=],
-    [=[Top right]=] = [=[Topo direito]=],
-    [=[Bottom left]=] = [=[Baixo esquerdo]=],
-    [=[Bottom right]=] = [=[Baixo direito]=],
-    [=[Relative]=] = [=[Relativo]=],
-    [=[Growth]=] = [=[Crescimento]=],
-    [=[Up]=] = [=[Para cima]=],
-    [=[Down]=] = [=[Para baixo]=],
-    [=[Tracked DR categories]=] = [=[Categorias de DR rastreadas]=],
-    [=[Stun]=] = [=[Atordoamento]=],
-    [=[Incap]=] = [=[Incapacitação]=],
-    [=[Disorient]=] = [=[Desorientação]=],
-    [=[Root]=] = [=[Enraizamento]=],
-    [=[Silence]=] = [=[Silêncio]=],
-    [=[Disarm]=] = [=[Desarme]=],
-    [=[Honor]=] = [=[Honra]=],
-    [=[Honor reminder]=] = [=[Lembrete de honra]=],
-    [=[Show a pulsing Honor reminder when your current Honor reaches the configured threshold.]=] = [=[Mostra um lembrete de honra pulsante quando sua honra atual atinge o limite configurado.]=],
-    [=[Honor threshold]=] = [=[Limite de honra]=],
-    [=[Show the reminder when your current Honor is at least this amount.]=] = [=[Mostra o lembrete quando sua honra atual for pelo menos este valor.]=],
-    [=[Font size]=] = [=[Tamanho da fonte]=],
-    [=[Range checker]=] = [=[Verificador de alcance]=],
-    [=[Support the original WA author]=] = [=[Apoie o autor original da WA]=],
-    [=[Indicator size]=] = [=[Tamanho do indicador]=],
-    [=[Tracked spells]=] = [=[Feitiços rastreados]=],
-    [=[Friendly class icons]=] = [=[Ícones de classe aliados]=],
-    [=[Show class/pet icons on friendly players/pets]=] = [=[Mostrar ícones de classe/pet em jogadores/pets aliados]=],
-    [=[Show spec icons in PvP instances]=] = [=[Mostrar ícones de especialização em instâncias PvP]=],
-    [=[Show spec icons instead of class icons for friendly players in PvP instances
-
-|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r]=] = [=[Mostrar ícones de especialização em vez de ícones de classe para jogadores aliados em instâncias PvP
-
-|cFFFF0000Observação: especializações podem nem sempre ser detectáveis devido a restrições da API da Blizzard em PvP ranqueado|r]=],
-    [=[Enable "Friendly Player Nameplates" in Interface - Nameplates for pet icons]=] = [=[Ative "Placas de identificação de jogadores aliados" em Interface - Placas de identificação para ícones de pets]=],
-    [=[Enable "Minions" in Interface - Nameplates for pet icons]=] = [=[Ative "Lacaios" em Interface - Placas de identificação para ícones de pets]=],
-    [=[WoW class icons]=] = [=[Ícones de classe do WoW]=],
-    [=[Class color arrows]=] = [=[Setas com cor de classe]=],
-    [=[Icon + party arrow]=] = [=[Ícone + seta do grupo]=],
-    [=[Icon style]=] = [=[Estilo do ícone]=],
-    [=[Class-colored party arrows only show on party members in PvP instances]=] = [=[Setas do grupo com cor de classe só aparecem em membros do grupo em instâncias PvP]=],
-    [=[Visibility]=] = [=[Visibilidade]=],
-    [=[Hide in World]=] = [=[Ocultar no mundo]=],
-    [=[Hide in Battlegrounds]=] = [=[Ocultar em campos de batalha]=],
-    [=[Special icon for healers]=] = [=[Ícone especial para curadores]=],
-    [=[Show healers only]=] = [=[Mostrar apenas curadores]=],
-    [=[Hide class icons of non-healer players
-Flag carrier icons will still show if the option is enabled]=] = [=[Ocultar ícones de classe de jogadores que não são curadores
-Ícones de portador da bandeira ainda aparecerão se a opção estiver ativada]=],
-    [=[Show my pet only]=] = [=[Mostrar apenas meu pet]=],
-    [=[Hide class icons of other players' pets
-This option is not available in arenas]=] = [=[Ocultar ícones de classe dos pets de outros jogadores
-Esta opção não está disponível em arenas]=],
-    [=[Show flag carrier icons in battlegrounds]=] = [=[Mostrar ícones de portador da bandeira em campos de batalha]=],
-    [=[Use special icons for friendly flag carriers
-This overwrites the healer icon]=] = [=[Usar ícones especiais para portadores da bandeira aliados
-Isso substitui o ícone de curador]=],
-    [=[Class-colored borders]=] = [=[Bordas com cor de classe]=],
-    [=[Use a plain class-colored ring for class icon borders. Disable for the metal ring texture.]=] = [=[Usa um anel simples com cor de classe nas bordas dos ícones de classe. Desative para usar a textura metálica.]=],
-    [=[Show target highlight]=] = [=[Mostrar destaque do alvo]=],
-    [=[Animated highlight]=] = [=[Destaque animado]=],
-    [=[Horizontal offset]=] = [=[Deslocamento horizontal]=],
-    [=[Horizontal offset of class / pet icons]=] = [=[Deslocamento horizontal dos ícones de classe/pet]=],
-    [=[Vertical offset]=] = [=[Deslocamento vertical]=],
-    [=[Vertical offset of class / pet icons]=] = [=[Deslocamento vertical dos ícones de classe/pet]=],
-    [=[Player]=] = [=[Jogador]=],
-    [=[Healer]=] = [=[Curador]=],
-    [=[Flag carrier]=] = [=[Portador da bandeira]=],
-    [=[Pet]=] = [=[Pet]=],
-    [=[Class-colored names]=] = [=[Nomes com cor de classe]=],
-    [=[Show class-colored names under class icons]=] = [=[Mostrar nomes com cor de classe abaixo dos ícones de classe]=],
-    [=[Keep Blizzard health bar]=] = [=[Manter barra de vida da Blizzard]=],
-    [=[Keep Blizzard health bars while showing class icons]=] = [=[Manter barras de vida da Blizzard ao mostrar ícones de classe]=],
-    [=[Show crowd controls on party members]=] = [=[Mostrar controles de grupo em membros do grupo]=],
-    [=[Show crowd control icons instead of class icons during crowd control effects]=] = [=[Mostrar ícones de controle de grupo em vez de ícones de classe durante efeitos de controle]=],
-    [=[Enemy nameplates]=] = [=[Placas de inimigos]=],
-    [=[Arena enemy player nameplate numbers]=] = [=[Números nas placas de inimigos da arena]=],
-    [=[Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on]=] = [=[Coloca números de arena sobre as placas de jogadores inimigos, por exemplo 1 para arena1, e assim por diante]=],
-    [=[Arena enemy spec icons]=] = [=[Ícones de especialização de inimigos da arena]=],
-    [=[Show spec icon for healers]=] = [=[Mostrar ícone de especialização para curadores]=],
-    [=[Show spec icons on top of the nameplates of enemy healers]=] = [=[Mostrar ícones de especialização sobre as placas de curadores inimigos]=],
-    [=[Show healer icon instead of spec icon for healers]=] = [=[Mostrar ícone de curador em vez de ícone de especialização para curadores]=],
-    [=[Show spec icon for non-healers]=] = [=[Mostrar ícone de especialização para não curadores]=],
-    [=[Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas]=] = [=[Mostrar um ícone de especialização sobre a placa de jogadores inimigos que não são curadores dentro de arenas]=],
-    [=[Alignment]=] = [=[Alinhamento]=],
-    [=[Scale (%)]=] = [=[Escala (%)]=],
-    [=[Nameplate Filters & Highlights]=] = [=[Filtros e destaques de placas]=],
-    [=[Hide beast mastery hunter secondary pets in arena]=] = [=[Ocultar pets secundários de caçador domínio das feras em arena]=],
-    [=[Hide the extra pet from talents
-This feature is not available in battlegrounds due to WoW API limitations]=] = [=[Oculta o pet extra de talentos
-Este recurso não está disponível em campos de batalha devido a limitações da API do WoW]=],
-    [=[Highlight important enemy summons]=] = [=[Destacar invocações inimigas importantes]=],
-    [=[Customize enemy units to hide / show / highlight]=] = [=[Personalizar unidades inimigas para ocultar/mostrar/destacar]=],
-    [=[Highlight important enemy summons and totems using secret-safe aura and cast detection]=] = [=[Destaca invocações e totens inimigos importantes usando detecção segura de auras e conjurações]=],
-    [=[Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top
-This works in arenas and battlegrounds]=] = [=[A placa de cada unidade pode ser ocultada, mostrada ou mostrada com um ícone pulsante acima
-Funciona em arenas e campos de batalha]=],
-    [=[Show critter icons for hidden pet nameplates]=] = [=[Mostrar ícones de bichos para placas de pets ocultas]=],
-    [=[Show a critter icon in place of pet nameplates hidden by the addon
-This helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen]=] = [=[Mostra um ícone de bicho no lugar das placas de pets ocultas pelo addon
-Ajuda em situações como lançar Anel de Gelo em pets de caçador sem exibir todas essas placas e poluir a tela]=],
-    [=[Highlight icon scale]=] = [=[Escala do ícone de destaque]=],
-    [=[Highlight offset X]=] = [=[Deslocamento X do destaque]=],
-    [=[Highlight offset Y]=] = [=[Deslocamento Y do destaque]=],
-    [=[Filter debuffs applied by myself]=] = [=[Filtrar penalidades aplicadas por mim]=],
-    [=[Show whitelisted debuffs applied by myself
-
-Crowd control debuffs are never filtered as they are critical for PvP]=] = [=[Mostrar penalidades da lista branca aplicadas por mim
-
-Penalidades de controle de grupo nunca são filtradas porque são críticas para PvP]=],
-    [=[Show whitelisted buffs on enemy nameplates]=] = [=[Mostrar bônus da lista branca em placas inimigas]=],
-    [=[Show whitelisted buffs on enemy nameplates from all sources]=] = [=[Mostrar bônus da lista branca em placas inimigas de todas as fontes]=],
-    [=[Unit whitelist]=] = [=[Lista branca de unidades]=],
-    [=[Debuff whitelist]=] = [=[Lista branca de penalidades]=],
-    [=[Buff whitelist]=] = [=[Lista branca de bônus]=],
-    [=[Reset to default]=] = [=[Redefinir para o padrão]=],
-    [=[Nameplate]=] = [=[Placa]=],
-    [=[Nameplate + icon]=] = [=[Placa + ícone]=],
-    [=[Nameplate + pulsing icon]=] = [=[Placa + ícone pulsante]=],
-    [=[Arena frames]=] = [=[Quadros de arena]=],
-    [=[Offensive alerts]=] = [=[Alertas ofensivos]=],
-    [=[Show big offensive icons on Blizzard arena frames]=] = [=[Mostrar ícones ofensivos grandes nos quadros de arena da Blizzard]=],
-    [=[Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered.]=] = [=[Mostra o bônus ofensivo ativo inimigo de maior prioridade dentro do lado esquerdo de cada quadro de arena integrado da Blizzard, centralizado verticalmente.]=],
-    [=[Position]=] = [=[Posição]=],
-    [=[These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.]=] = [=[Esses ícones se fixam apenas ao lado esquerdo dentro dos quadros de arena da Blizzard. Eles se ocultam se os quadros de arena da Blizzard forem ocultados por outro addon de quadros de arena.]=],
-    [=[Test icons showing arena 1 only, arena 2 & 3 will be automatically set up]=] = [=[Ícones de teste mostram apenas arena 1; arena 2 e 3 serão configuradas automaticamente]=],
-    [=[Arena cooldowns]=] = [=[Tempos de recarga da arena]=],
-    [=[Import]=] = [=[Importar]=],
-    [=[Import a profile from an export string]=] = [=[Importar um perfil de uma string exportada]=],
-    [=[Export]=] = [=[Exportar]=],
-    [=[Export your profile to a string]=] = [=[Exportar seu perfil para uma string]=],
-    [=[Settings]=] = [=[Configurações]=],
-    [=[Enable Primary bar]=] = [=[Ativar barra principal]=],
-    [=[Enable secondary bar]=] = [=[Ativar barra secundária]=],
-    [=[Hide border]=] = [=[Ocultar borda]=],
-    [=[Hide countdown numbers]=] = [=[Ocultar números da contagem regressiva]=],
-    [=[Hide countdown numbers but show a more visible swiping edge]=] = [=[Oculta os números da contagem regressiva, mas mostra uma borda de varredura mais visível]=],
-    [=[Show off-CD icons]=] = [=[Mostrar ícones fora de recarga]=],
-    [=[Show icons for abilities that are not on cooldown
-Abilities that are not baseline will only show after they are detected]=] = [=[Mostra ícones de habilidades que não estão em recarga
-Habilidades que não são básicas só aparecerão depois de detectadas]=],
-    [=[Off-cooldown alpha]=] = [=[Alfa fora de recarga]=],
-    [=[On-cooldown alpha]=] = [=[Alfa em recarga]=],
-    [=[Primary bar]=] = [=[Barra principal]=],
-    [=[Glow]=] = [=[Brilho]=],
-    [=[Glow icons when active for offensive abilities]=] = [=[Faz os ícones brilharem quando habilidades ofensivas estão ativas]=],
-    [=[Padding]=] = [=[Espaçamento]=],
-    [=[Space between icons]=] = [=[Espaço entre ícones]=],
-    [=[Grow direction]=] = [=[Direção de crescimento]=],
-    [=[Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame]=] = [=[Deslocamento horizontal do grupo de ícones de recarga da arena em relação à borda direita do quadro de arena]=],
-    [=[Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame]=] = [=[Deslocamento vertical do grupo de ícones de recarga da arena em relação à borda direita do quadro de arena]=],
-    [=[Secondary bar]=] = [=[Barra secundária]=],
-    [=[Horizontal offset of the arena cooldown defensive group relative to the right edge of the arena frame]=] = [=[Deslocamento horizontal do grupo defensivo de recarga da arena em relação à borda direita do quadro de arena]=],
-    [=[Vertical offset of the arena cooldown defensive group relative to the right edge of the arena frame]=] = [=[Deslocamento vertical do grupo defensivo de recarga da arena em relação à borda direita do quadro de arena]=],
-    [=[Priority]=] = [=[Prioridade]=],
-    [=[Primary bar spells]=] = [=[Feitiços da barra principal]=],
-    [=[Secondary bar spells]=] = [=[Feitiços da barra secundária]=],
-    [=[Select which abilities to track cooldown inside arenas]=] = [=[Selecione quais habilidades rastrear dentro de arenas]=],
-    [=[Restore default]=] = [=[Restaurar padrão]=],
-    [=[Uncheck all]=] = [=[Desmarcar tudo]=],
-    [=[Standalone bars]=] = [=[Barras independentes]=],
-    [=[Test all]=] = [=[Testar tudo]=],
-    [=[Hide all]=] = [=[Ocultar tudo]=],
-    [=[Name]=] = [=[Nome]=],
-    [=[Columns]=] = [=[Colunas]=],
-    [=[Grow upward]=] = [=[Crescer para cima]=],
-    [=[Show name]=] = [=[Mostrar nome]=],
-    [=[Class-colored name]=] = [=[Nome com cor de classe]=],
-    [=[Highlight target]=] = [=[Destacar alvo]=],
-    [=[Spells]=] = [=[Feitiços]=],
-    [=[Test mode can only be used outside instances]=] = [=[O modo de teste só pode ser usado fora de instâncias]=],
-    [=[Cooldown]=] = [=[Recarga]=],
-    [=[Spell ID]=] = [=[ID do feitiço]=],
-    [=[Category]=] = [=[Categoria]=],
-    [=[Raid frames]=] = [=[Quadros de raide]=],
-    [=[Arena party sorting]=] = [=[Ordenação do grupo na arena]=],
-    [=[Sort order]=] = [=[Ordem de classificação]=],
-    [=[Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement.]=] = [=[Desativado enquanto outro addon de ordenação de quadros estiver carregado para evitar conflito com o movimento dos quadros compactos da Blizzard.]=],
-    [=[Sort Blizzard compact party frames in arenas.]=] = [=[Ordena os quadros compactos de grupo da Blizzard em arenas.]=],
-    [=[Disabled]=] = [=[Desativado]=],
-    [=[Player on top]=] = [=[Jogador no topo]=],
-    [=[Player in middle]=] = [=[Jogador no meio]=],
-    [=[Player on bottom]=] = [=[Jogador embaixo]=],
-    [=[PvP aggro highlight]=] = [=[Destaque de ameaça PvP]=],
-    [=[Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.]=] = [=[Mostra indicadores com cor de classe em quadros estilo raide da Blizzard quando jogadores da arena miram essa unidade.]=],
-    [=[Healer Buff Helper]=] = [=[Auxiliar de bônus de curador]=],
-    [=[Icon Scale]=] = [=[Escala do ícone]=],
-    [=[Adjust all helper icons together from 50% to 250%.]=] = [=[Ajusta todos os ícones auxiliares juntos de 50% a 250%.]=],
-    [=[Offset X]=] = [=[Deslocamento X]=],
-    [=[Offset Y]=] = [=[Deslocamento Y]=],
-    [=[Horizontal offset from the helper's default position.]=] = [=[Deslocamento horizontal a partir da posição padrão do auxiliar.]=],
-    [=[Vertical offset from the helper's default position.]=] = [=[Deslocamento vertical a partir da posição padrão do auxiliar.]=],
-    [=[Resto Druid]=] = [=[Druida restauração]=],
-    [=[Enable the helper while playing Restoration Druid.]=] = [=[Ativa o auxiliar ao jogar de Druida Restauração.]=],
-    [=[Mark of the Wild warning.]=] = [=[Aviso de Marca do Indomado.]=],
-    [=[Lifebloom with refresh-window glow.]=] = [=[Botão de Vida com brilho na janela de renovação.]=],
-    [=[Row 2: Regrowth, Wild Growth, Rejuvenation, Germination.]=] = [=[Linha 2: Recrescimento, Crescimento Silvestre, Rejuvenescimento, Germinação.]=],
-    [=[Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected.]=] = [=[Oculta TODOS os bônus dos quadros de raide enquanto ativo; penalidades e penalidades dissipáveis não são afetadas.]=],
-    [=[Missing-buff warning]=] = [=[Aviso de bônus ausente]=],
-    [=[For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.]=] = [=[Apenas para Druida Restauração: mostra o ícone de aviso quando nenhum bônus consumível por Recomposição Rápida está ativo.]=],
-    [=[Preservation Evoker]=] = [=[Evocador preservação]=],
-    [=[Enable the helper while playing Preservation Evoker.]=] = [=[Ativa o auxiliar ao jogar de Evocador Preservação.]=],
-    [=[Blessing of the Bronze warning.]=] = [=[Aviso de Bênção do Bronze.]=],
-    [=[Echo without a refresh-window glow.]=] = [=[Eco sem brilho na janela de renovação.]=],
-    [=[Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation.]=] = [=[Linha 2, do menos ao mais importante: Reversão, Sopro Onírico, Vínculo Vital, Dilatação Temporal.]=],
-    [=[Big Debuff Icons]=] = [=[Ícones grandes de penalidades]=],
-    [=[Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.]=] = [=[Desativado enquanto um addon conflitante de penalidades em quadros de raide estiver carregado para evitar ícones duplicados de controle.]=],
-    [=[Show large crowd-control debuffs to the right of Blizzard raid-style frames.]=] = [=[Mostra penalidades grandes de controle à direita dos quadros estilo raide da Blizzard.]=],
-    [=[Max Icons]=] = [=[Máximo de ícones]=],
-    [=[Maximum number of crowd-control debuff icons to show beside each raid frame.]=] = [=[Número máximo de ícones de penalidades de controle a mostrar ao lado de cada quadro de raide.]=],
-    [=[Decimal Threshold]=] = [=[Limite decimal]=],
-    [=[Other Debuff Scale]=] = [=[Escala de outras penalidades]=],
-    [=[Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height.]=] = [=[Tamanho de penalidades de controle não dissipáveis como porcentagem da altura do quadro de raide.]=],
-    [=[Dispellable Scale]=] = [=[Escala de dissipáveis]=],
-    [=[Size of dispellable crowd-control debuffs as a percentage of the raid-frame height, such as Magic, Curse, Disease, or Poison.]=] = [=[Tamanho de penalidades de controle dissipáveis como porcentagem da altura do quadro de raide, como magia, maldição, doença ou veneno.]=],
-    [=[Horizontal offset from the right edge of the raid frame.]=] = [=[Deslocamento horizontal a partir da borda direita do quadro de raide.]=],
-    [=[Vertical offset from the center of the raid frame.]=] = [=[Deslocamento vertical a partir do centro do quadro de raide.]=],
-    [=[Immunity]=] = [=[Imunidade]=],
-    [=[Defensive]=] = [=[Defensivo]=],
-    [=[Dispel]=] = [=[Dissipar]=],
-    [=[Mass Dispel]=] = [=[Dissipação em massa]=],
-    [=[Interrupt]=] = [=[Interromper]=],
-    [=[Knockback]=] = [=[Empurrão]=],
-    [=[Crowd Control]=] = [=[Controle de grupo]=],
-    [=[Burst]=] = [=[Explosão]=],
-    [=[Heal]=] = [=[Cura]=],
-    [=[Mobility]=] = [=[Mobilidade]=],
-    [=[Others]=] = [=[Outros]=],
-    [=[Ebon Gargoyle]=] = [=[Gárgula de Ébano]=],
-    [=[Raise Dead]=] = [=[Erguer Morto]=],
-    [=[Army of the Dead]=] = [=[Exército dos Mortos]=],
-    [=[Water Elemental]=] = [=[Elemental da Água]=],
-    [=[Xuen]=] = [=[Xuen]=],
-    [=[Storm, Earth and Fire (Red)]=] = [=[Tempestade, Terra e Fogo (vermelho)]=],
-    [=[Storm, Earth and Fire (Green)]=] = [=[Tempestade, Terra e Fogo (verde)]=],
-    [=[Psyfiend]=] = [=[Psicodemônio]=],
-    [=[Shadowfiend]=] = [=[Demônio das Sombras]=],
-    [=[Mindbender]=] = [=[Dobramentes]=],
-    [=[Grounding Totem]=] = [=[Totem de Aterramento]=],
-    [=[Spirit Link Totem]=] = [=[Totem do Elo Espiritual]=],
-    [=[Tremor Totem]=] = [=[Totem Sísmico]=],
-    [=[Capacitor Totem]=] = [=[Totem Capacitor]=],
-    [=[Healing Tide Totem]=] = [=[Totem Maré Curativa]=],
-    [=[Healing Stream Totem]=] = [=[Totem Corrente Curativa]=],
-    [=[Mana Tide Totem]=] = [=[Totem Maré de Mana]=],
-    [=[Earth Elemental Totem]=] = [=[Totem Elemental da Terra]=],
-    [=[Fire Elemental Totem]=] = [=[Totem Elemental do Fogo]=],
-    [=[Greater Fire Elemental]=] = [=[Elemental Maior do Fogo]=],
-    [=[Magma Totem]=] = [=[Totem de Magma]=],
-    [=[Searing Totem]=] = [=[Totem Calcinante]=],
-    [=[Greater Earth Elemental]=] = [=[Elemental Maior da Terra]=],
-    [=[Earthbind Totem]=] = [=[Totem de Prisão Terrena]=],
-    [=[Earthgrab Totem]=] = [=[Totem Agarraterra]=],
-    [=[Windwalk Totem]=] = [=[Totem Caminha-vento]=],
-    [=[Stormlash Totem]=] = [=[Totem de Açoite Tempestuoso]=],
-    [=[Imp]=] = [=[Diabrete]=],
-    [=[Fel Imp]=] = [=[Diabrete Vil]=],
-    [=[Voidwalker]=] = [=[Emissário do Caos]=],
-    [=[Voidlord]=] = [=[Senhor do Caos]=],
-    [=[Felhunter]=] = [=[Caçador Vil]=],
-    [=[Observer]=] = [=[Observador]=],
-    [=[Succubus]=] = [=[Súcubo]=],
-    [=[Shivarra]=] = [=[Shivarra]=],
-    [=[Felguard]=] = [=[Guarda Vil]=],
-    [=[Wrathguard]=] = [=[Guardião Colérico]=],
-    [=[Skull Banner]=] = [=[Estandarte da Caveira]=],
-    [=[Demoralizing Banner]=] = [=[Estandarte Desmoralizador]=],
-    [=[PVP Training Dummy]=] = [=[Boneco de Treinamento JxJ]=],
-    [=[Kelpfist]=] = [=[Punho-de-alga]=],
-    [=[Training Dummy]=] = [=[Boneco de Treinamento]=],
-    [=[Ancestral Protection Totem]=] = [=[Totem de Proteção Ancestral]=],
-    [=[Cloudburst Totem]=] = [=[Totem de Torrente]=],
-    [=[Counterstrike Totem]=] = [=[Totem de Contra-ataque]=],
-    [=[Darkglare]=] = [=[Mirada Negra]=],
-    [=[Demonic Tyrant]=] = [=[Tirano Demoníaco]=],
-    [=[Dire Beast: Basilisk]=] = [=[Fera Atroz: Basilisco]=],
-    [=[Dreadstalker]=] = [=[Espreitador Medonho]=],
-    [=[Earthen Wall Totem]=] = [=[Totem de Barreira Terrena]=],
-    [=[Fel Lord]=] = [=[Senhor Vil]=],
-    [=[Guardian of the Forgotten Queen]=] = [=[Guardião da Rainha Esquecida]=],
-    [=[Ice Wall]=] = [=[Muralha de Gelo]=],
-    [=[Infernal]=] = [=[Infernal]=],
-    [=[Liquid Magma Totem]=] = [=[Totem de Magma Líquido]=],
-    [=[Mirror Image]=] = [=[Imagem Espelhada]=],
-    [=[Past Self]=] = [=[Eu do Passado]=],
-    [=[Pit Lord]=] = [=[Senhor do Fosso]=],
-    [=[Poison Cleansing Totem]=] = [=[Totem de Purificação de Veneno]=],
-    [=[Primal Earth Elemental]=] = [=[Elemental da Terra Primevo]=],
-    [=[Primal Fire Elemental]=] = [=[Elemental do Fogo Primevo]=],
-    [=[Raise Abomination]=] = [=[Erguer Abominação]=],
-    [=[Reanimation]=] = [=[Reanimação]=],
-    [=[Sayaad]=] = [=[Sayaad]=],
-    [=[Shadow]=] = [=[Sombra]=],
-    [=[Static Field Totem]=] = [=[Totem de Campo Estático]=],
-    [=[Stone Bulwark Totem]=] = [=[Totem Baluarte de Pedra]=],
-    [=[Stoneskin Totem]=] = [=[Totem de Pele Rochosa]=],
-    [=[Surging Totem]=] = [=[Totem Surto]=],
-    [=[Totem of Wrath]=] = [=[Totem da Ira]=],
-    [=[Tranquil Air Totem]=] = [=[Totem do Ar Tranquilo]=],
-    [=[Treant]=] = [=[Arvoroso]=],
-    [=[Void Tendrils]=] = [=[Tentáculos do Caos]=],
-    [=[Voidwraith]=] = [=[Aparição do Caos]=],
-    [=[Wild Imp]=] = [=[Diabrete Selvagem]=],
-    [=[Wind Rush Totem]=] = [=[Totem de Ventania]=],
-};
-
-for key, value in pairs(translations) do
-    L[key] = value;
-end
+L["Click to open options"] = "Clique para abrir as opções";
+L["A lightweight addon to enhance your arena & battleground experience :)"] = "Um addon leve para melhorar sua experiência em arenas e campos de batalha :)";
+L["Support"] = "Suporte";
+L["Join Discord for PvP UI support"] = "Entre no Discord para suporte de interface PvP";
+L["Press Ctrl+C to copy URL"] = "Pressione Ctrl+C para copiar a URL";
+L["If feeling generous"] = "Se quiser apoiar o desenvolvimento";
+L["|cFF00FF00Type /sb|r or click the minimap icon to open the option panel."] = "|cFF00FF00Digite /sb|r ou clique no ícone do minimapa para abrir o painel de opções.";
+L["Open Option Panel"] = "Abrir painel de opções";
+L["Profile sharing"] = "Compartilhamento de perfis";
+L["Import Profile"] = "Importar perfil";
+L["Import a profile from another user."] = "Importa um perfil de outro usuário.";
+L["Export Profile"] = "Exportar perfil";
+L["Export your profile to share with others."] = "Exporta seu perfil para compartilhar com outros.";
+L["Misc"] = "Diversos";
+L["General"] = "Geral";
+L["Healer in crowd control reminder in arena"] = "Lembrete de curador sob controle em arena";
+L["Enabled"] = "Ativado";
+L["Play sound"] = "Tocar som";
+L["Test"] = "Testar";
+L["Hide"] = "Ocultar";
+L["Icon size"] = "Tamanho do ícone";
+L["X offset"] = "Deslocamento X";
+L["Y offset"] = "Deslocamento Y";
+L["Decimal threshold"] = "Limite decimal";
+L["Show decimal countdowns below this many seconds."] = "Mostra contagens regressivas decimais abaixo desta quantidade de segundos.";
+L["PvP Queue Timer"] = "Temporizador da fila PvP";
+L["Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire"] = "Mostra um temporizador quando a fila de arena/campo de batalha aparece e toca um alerta quando está prestes a expirar";
+L["Unit frames"] = "Quadros de unidade";
+L["Show Precognition on player"] = "Mostrar Precognição no jogador";
+L["Show a glowing icon while Precognition is active on you."] = "Mostra um ícone brilhante enquanto Precognição está ativa em você.";
+L["Show combat indicators on unit frames"] = "Mostrar indicadores de combate nos quadros de unidade";
+L["Show combat indicator icons on Player / Target / Focus frames"] = "Mostra ícones de indicador de combate nos quadros de Jogador/Alvo/Foco";
+L["Always show Druid combo points"] = "Sempre mostrar pontos de combo do druida";
+L["Arena"] = "Arena";
+L["Hide Blizzard arena frames"] = "Ocultar quadros de arena da Blizzard";
+L["Type /gg to leave arena without confirmation"] = "Digite /gg para sair da arena sem confirmação";
+L["Disabling this option requires a UI reload to take effect"] = "Desativar esta opção requer recarregar a interface para entrar em vigor";
+L["Show dampen percentage on the arena widget"] = "Mostrar porcentagem de amortecimento no widget de arena";
+L["Show minimap icon for invoking options UI"] = "Mostrar ícone do minimapa para abrir a interface de opções";
+L["Personal DR"] = "DR pessoal";
+L["Track diminishing returns on yourself. A pulsing stun icon means you are clean on stun DR."] = "Rastreia retornos decrescentes em você. Um ícone de atordoamento pulsante significa que você está sem DR de atordoamento.";
+L["Show clean stun DR"] = "Mostrar DR de atordoamento limpo";
+L["Show the glowing stun icon while you are clean on stun DR."] = "Mostra o ícone de atordoamento brilhante enquanto você está sem DR de atordoamento.";
+L["Anchor"] = "Âncora";
+L["Center"] = "Centro";
+L["Top"] = "Topo";
+L["Bottom"] = "Baixo";
+L["Left"] = "Esquerda";
+L["Right"] = "Direita";
+L["Top left"] = "Topo esquerdo";
+L["Top right"] = "Topo direito";
+L["Bottom left"] = "Baixo esquerdo";
+L["Bottom right"] = "Baixo direito";
+L["Relative"] = "Relativo";
+L["Growth"] = "Crescimento";
+L["Up"] = "Para cima";
+L["Down"] = "Para baixo";
+L["Tracked DR categories"] = "Categorias de DR rastreadas";
+L["Stun"] = "Atordoamento";
+L["Incap"] = "Incapacitação";
+L["Disorient"] = "Desorientação";
+L["Root"] = "Enraizamento";
+L["Silence"] = "Silêncio";
+L["Disarm"] = "Desarme";
+L["Honor"] = "Honra";
+L["Honor reminder"] = "Lembrete de honra";
+L["Show a pulsing Honor reminder when your current Honor reaches the configured threshold."] = "Mostra um lembrete de honra pulsante quando sua honra atual atinge o limite configurado.";
+L["Honor threshold"] = "Limite de honra";
+L["Show the reminder when your current Honor is at least this amount."] = "Mostra o lembrete quando sua honra atual for pelo menos este valor.";
+L["Font size"] = "Tamanho da fonte";
+L["Range checker"] = "Verificador de alcance";
+L["Support the original WA author"] = "Apoie o autor original da WA";
+L["Indicator size"] = "Tamanho do indicador";
+L["Tracked spells"] = "Feitiços rastreados";
+L["Friendly class icons"] = "Ícones de classe aliados";
+L["Show class/pet icons on friendly players/pets"] = "Mostrar ícones de classe/pet em jogadores/pets aliados";
+L["Show spec icons in PvP instances"] = "Mostrar ícones de especialização em instâncias PvP";
+L["Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r"] = "Mostrar ícones de especialização em vez de ícones de classe para jogadores aliados em instâncias PvP\n\n|cFFFF0000Observação: especializações podem nem sempre ser detectáveis devido a restrições da API da Blizzard em PvP ranqueado|r";
+L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons"] = "Ative \"Placas de identificação de jogadores aliados\" em Interface - Placas de identificação para ícones de pets";
+L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Ative \"Lacaios\" em Interface - Placas de identificação para ícones de pets";
+L["WoW class icons"] = "Ícones de classe do WoW";
+L["Class color arrows"] = "Setas com cor de classe";
+L["Icon + party arrow"] = "Ícone + seta do grupo";
+L["Icon style"] = "Estilo do ícone";
+L["Class-colored party arrows only show on party members in PvP instances"] = "Setas do grupo com cor de classe só aparecem em membros do grupo em instâncias PvP";
+L["Visibility"] = "Visibilidade";
+L["Hide in World"] = "Ocultar no mundo";
+L["Hide in Battlegrounds"] = "Ocultar em campos de batalha";
+L["Special icon for healers"] = "Ícone especial para curadores";
+L["Show healers only"] = "Mostrar apenas curadores";
+L["Hide class icons of non-healer players\nFlag carrier icons will still show if the option is enabled"] = "Ocultar ícones de classe de jogadores que não são curadores\nÍcones de portador da bandeira ainda aparecerão se a opção estiver ativada";
+L["Show my pet only"] = "Mostrar apenas meu pet";
+L["Hide class icons of other players' pets\nThis option is not available in arenas"] = "Ocultar ícones de classe dos pets de outros jogadores\nEsta opção não está disponível em arenas";
+L["Show flag carrier icons in battlegrounds"] = "Mostrar ícones de portador da bandeira em campos de batalha";
+L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Usar ícones especiais para portadores da bandeira aliados\nIsso substitui o ícone de curador";
+L["Class-colored borders"] = "Bordas com cor de classe";
+L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Usa um anel simples com cor de classe nas bordas dos ícones de classe. Desative para usar a textura metálica.";
+L["Show target highlight"] = "Mostrar destaque do alvo";
+L["Animated highlight"] = "Destaque animado";
+L["Horizontal offset"] = "Deslocamento horizontal";
+L["Horizontal offset of class / pet icons"] = "Deslocamento horizontal dos ícones de classe/pet";
+L["Vertical offset"] = "Deslocamento vertical";
+L["Vertical offset of class / pet icons"] = "Deslocamento vertical dos ícones de classe/pet";
+L["Player"] = "Jogador";
+L["Healer"] = "Curador";
+L["Flag carrier"] = "Portador da bandeira";
+L["Pet"] = "Pet";
+L["Class-colored names"] = "Nomes com cor de classe";
+L["Show class-colored names under class icons"] = "Mostrar nomes com cor de classe abaixo dos ícones de classe";
+L["Keep Blizzard health bar"] = "Manter barra de vida da Blizzard";
+L["Keep Blizzard health bars while showing class icons"] = "Manter barras de vida da Blizzard ao mostrar ícones de classe";
+L["Show crowd controls on party members"] = "Mostrar controles de grupo em membros do grupo";
+L["Show crowd control icons instead of class icons during crowd control effects"] = "Mostrar ícones de controle de grupo em vez de ícones de classe durante efeitos de controle";
+L["Enemy nameplates"] = "Placas de inimigos";
+L["Arena enemy player nameplate numbers"] = "Números nas placas de inimigos da arena";
+L["Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on"] = "Coloca números de arena sobre as placas de jogadores inimigos, por exemplo 1 para arena1, e assim por diante";
+L["Arena enemy spec icons"] = "Ícones de especialização de inimigos da arena";
+L["Show spec icon for healers"] = "Mostrar ícone de especialização para curadores";
+L["Show spec icons on top of the nameplates of enemy healers"] = "Mostrar ícones de especialização sobre as placas de curadores inimigos";
+L["Show healer icon instead of spec icon for healers"] = "Mostrar ícone de curador em vez de ícone de especialização para curadores";
+L["Show spec icon for non-healers"] = "Mostrar ícone de especialização para não curadores";
+L["Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas"] = "Mostrar um ícone de especialização sobre a placa de jogadores inimigos que não são curadores dentro de arenas";
+L["Alignment"] = "Alinhamento";
+L["Scale (%)"] = "Escala (%)";
+L["Nameplate Filters & Highlights"] = "Filtros e destaques de placas";
+L["Hide beast mastery hunter secondary pets in arena"] = "Ocultar pets secundários de caçador domínio das feras em arena";
+L["Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations"] = "Oculta o pet extra de talentos\nEste recurso não está disponível em campos de batalha devido a limitações da API do WoW";
+L["Highlight important enemy summons"] = "Destacar invocações inimigas importantes";
+L["Customize enemy units to hide / show / highlight"] = "Personalizar unidades inimigas para ocultar/mostrar/destacar";
+L["Highlight important enemy summons and totems using secret-safe aura and cast detection"] = "Destaca invocações e totens inimigos importantes usando detecção segura de auras e conjurações";
+L["Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds"] = "A placa de cada unidade pode ser ocultada, mostrada ou mostrada com um ícone pulsante acima\nFunciona em arenas e campos de batalha";
+L["Show critter icons for hidden pet nameplates"] = "Mostrar ícones de bichos para placas de pets ocultas";
+L["Show a critter icon in place of pet nameplates hidden by the addon\nThis helps with situations such as casting Ring of the Frost on hunter pets, without actually showing all those nameplates to clutter the screen"] = "Mostra um ícone de bicho no lugar das placas de pets ocultas pelo addon\nAjuda em situações como lançar Anel de Gelo em pets de caçador sem exibir todas essas placas e poluir a tela";
+L["Highlight icon scale"] = "Escala do ícone de destaque";
+L["Highlight offset X"] = "Deslocamento X do destaque";
+L["Highlight offset Y"] = "Deslocamento Y do destaque";
+L["Filter debuffs applied by myself"] = "Filtrar penalidades aplicadas por mim";
+L["Show whitelisted debuffs applied by myself\n\nCrowd control debuffs are never filtered as they are critical for PvP"] = "Mostrar penalidades da lista branca aplicadas por mim\n\nPenalidades de controle de grupo nunca são filtradas porque são críticas para PvP";
+L["Show whitelisted buffs on enemy nameplates"] = "Mostrar bônus da lista branca em placas inimigas";
+L["Show whitelisted buffs on enemy nameplates from all sources"] = "Mostrar bônus da lista branca em placas inimigas de todas as fontes";
+L["Unit whitelist"] = "Lista branca de unidades";
+L["Debuff whitelist"] = "Lista branca de penalidades";
+L["Buff whitelist"] = "Lista branca de bônus";
+L["Reset to default"] = "Redefinir para o padrão";
+L["Nameplate"] = "Placa";
+L["Nameplate + icon"] = "Placa + ícone";
+L["Nameplate + pulsing icon"] = "Placa + ícone pulsante";
+L["Arena frames"] = "Quadros de arena";
+L["Offensive alerts"] = "Alertas ofensivos";
+L["Show big offensive icons on Blizzard arena frames"] = "Mostrar ícones ofensivos grandes nos quadros de arena da Blizzard";
+L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "Mostra o bônus ofensivo ativo inimigo de maior prioridade dentro do lado esquerdo de cada quadro de arena integrado da Blizzard, centralizado verticalmente.";
+L["Position"] = "Posição";
+L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "Esses ícones se fixam apenas ao lado esquerdo dentro dos quadros de arena da Blizzard. Eles se ocultam se os quadros de arena da Blizzard forem ocultados por outro addon de quadros de arena.";
+L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "Ícones de teste mostram apenas arena 1; arena 2 e 3 serão configuradas automaticamente";
+L["Arena cooldowns"] = "Tempos de recarga da arena";
+L["Import"] = "Importar";
+L["Import a profile from an export string"] = "Importar um perfil de uma string exportada";
+L["Export"] = "Exportar";
+L["Export your profile to a string"] = "Exportar seu perfil para uma string";
+L["Settings"] = "Configurações";
+L["Enable Primary bar"] = "Ativar barra principal";
+L["Enable secondary bar"] = "Ativar barra secundária";
+L["Hide border"] = "Ocultar borda";
+L["Hide countdown numbers"] = "Ocultar números da contagem regressiva";
+L["Hide countdown numbers but show a more visible swiping edge"] = "Oculta os números da contagem regressiva, mas mostra uma borda de varredura mais visível";
+L["Show off-CD icons"] = "Mostrar ícones fora de recarga";
+L["Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected"] = "Mostra ícones de habilidades que não estão em recarga\nHabilidades que não são básicas só aparecerão depois de detectadas";
+L["Off-cooldown alpha"] = "Alfa fora de recarga";
+L["On-cooldown alpha"] = "Alfa em recarga";
+L["Primary bar"] = "Barra principal";
+L["Glow"] = "Brilho";
+L["Glow icons when active for offensive abilities"] = "Faz os ícones brilharem quando habilidades ofensivas estão ativas";
+L["Padding"] = "Espaçamento";
+L["Space between icons"] = "Espaço entre ícones";
+L["Grow direction"] = "Direção de crescimento";
+L["Horizontal offset of the arena cooldown icon group relative to the right edge of the arena frame"] = "Deslocamento horizontal do grupo de ícones de recarga da arena em relação à borda direita do quadro de arena";
+L["Vertical offset of the arena cooldown icon group relative to the right edge of the arena frame"] = "Deslocamento vertical do grupo de ícones de recarga da arena em relação à borda direita do quadro de arena";
+L["Secondary bar"] = "Barra secundária";
+L["Horizontal offset of the arena cooldown defensive group relative to the right edge of the arena frame"] = "Deslocamento horizontal do grupo defensivo de recarga da arena em relação à borda direita do quadro de arena";
+L["Vertical offset of the arena cooldown defensive group relative to the right edge of the arena frame"] = "Deslocamento vertical do grupo defensivo de recarga da arena em relação à borda direita do quadro de arena";
+L["Priority"] = "Prioridade";
+L["Primary bar spells"] = "Feitiços da barra principal";
+L["Secondary bar spells"] = "Feitiços da barra secundária";
+L["Select which abilities to track cooldown inside arenas"] = "Selecione quais habilidades rastrear dentro de arenas";
+L["Restore default"] = "Restaurar padrão";
+L["Uncheck all"] = "Desmarcar tudo";
+L["Standalone bars"] = "Barras independentes";
+L["Test all"] = "Testar tudo";
+L["Hide all"] = "Ocultar tudo";
+L["Name"] = "Nome";
+L["Columns"] = "Colunas";
+L["Grow upward"] = "Crescer para cima";
+L["Show name"] = "Mostrar nome";
+L["Class-colored name"] = "Nome com cor de classe";
+L["Highlight target"] = "Destacar alvo";
+L["Spells"] = "Feitiços";
+L["Test mode can only be used outside instances"] = "O modo de teste só pode ser usado fora de instâncias";
+L["Cooldown"] = "Recarga";
+L["Spell ID"] = "ID do feitiço";
+L["Category"] = "Categoria";
+L["Raid frames"] = "Quadros de raide";
+L["Arena party sorting"] = "Ordenação do grupo na arena";
+L["Sort order"] = "Ordem de classificação";
+L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Desativado enquanto outro addon de ordenação de quadros estiver carregado para evitar conflito com o movimento dos quadros compactos da Blizzard.";
+L["Sort Blizzard compact party frames in arenas."] = "Ordena os quadros compactos de grupo da Blizzard em arenas.";
+L["Disabled"] = "Desativado";
+L["Player on top"] = "Jogador no topo";
+L["Player in middle"] = "Jogador no meio";
+L["Player on bottom"] = "Jogador embaixo";
+L["PvP aggro highlight"] = "Destaque de ameaça PvP";
+L["Show class-colored indicators on Blizzard raid-style frames when arena players target that unit."] = "Mostra indicadores com cor de classe em quadros estilo raide da Blizzard quando jogadores da arena miram essa unidade.";
+L["Healer Buff Helper"] = "Auxiliar de bônus de curador";
+L["Icon Scale"] = "Escala do ícone";
+L["Adjust all helper icons together from 50% to 250%."] = "Ajusta todos os ícones auxiliares juntos de 50% a 250%.";
+L["Offset X"] = "Deslocamento X";
+L["Offset Y"] = "Deslocamento Y";
+L["Horizontal offset from the helper's default position."] = "Deslocamento horizontal a partir da posição padrão do auxiliar.";
+L["Vertical offset from the helper's default position."] = "Deslocamento vertical a partir da posição padrão do auxiliar.";
+L["Resto Druid"] = "Druida restauração";
+L["Enable the helper while playing Restoration Druid."] = "Ativa o auxiliar ao jogar de Druida Restauração.";
+L["Mark of the Wild warning."] = "Aviso de Marca do Indomado.";
+L["Lifebloom with refresh-window glow."] = "Botão de Vida com brilho na janela de renovação.";
+L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."] = "Linha 2: Recrescimento, Crescimento Silvestre, Rejuvenescimento, Germinação.";
+L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."] = "Oculta TODOS os bônus dos quadros de raide enquanto ativo; penalidades e penalidades dissipáveis não são afetadas.";
+L["Missing-buff warning"] = "Aviso de bônus ausente";
+L["For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active."] = "Apenas para Druida Restauração: mostra o ícone de aviso quando nenhum bônus consumível por Recomposição Rápida está ativo.";
+L["Preservation Evoker"] = "Evocador preservação";
+L["Enable the helper while playing Preservation Evoker."] = "Ativa o auxiliar ao jogar de Evocador Preservação.";
+L["Blessing of the Bronze warning."] = "Aviso de Bênção do Bronze.";
+L["Echo without a refresh-window glow."] = "Eco sem brilho na janela de renovação.";
+L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Linha 2, do menos ao mais importante: Reversão, Sopro Onírico, Vínculo Vital, Dilatação Temporal.";
+L["Big Debuff Icons"] = "Ícones grandes de penalidades";
+L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "Desativado enquanto um addon conflitante de penalidades em quadros de raide estiver carregado para evitar ícones duplicados de controle.";
+L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Mostra penalidades grandes de controle à direita dos quadros estilo raide da Blizzard.";
+L["Max Icons"] = "Máximo de ícones";
+L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Número máximo de ícones de penalidades de controle a mostrar ao lado de cada quadro de raide.";
+L["Decimal Threshold"] = "Limite decimal";
+L["Other Debuff Scale"] = "Escala de outras penalidades";
+L["Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height."] = "Tamanho de penalidades de controle não dissipáveis como porcentagem da altura do quadro de raide.";
+L["Dispellable Scale"] = "Escala de dissipáveis";
+L["Size of dispellable crowd-control debuffs as a percentage of the raid-frame height, such as Magic, Curse, Disease, or Poison."] = "Tamanho de penalidades de controle dissipáveis como porcentagem da altura do quadro de raide, como magia, maldição, doença ou veneno.";
+L["Horizontal offset from the right edge of the raid frame."] = "Deslocamento horizontal a partir da borda direita do quadro de raide.";
+L["Vertical offset from the center of the raid frame."] = "Deslocamento vertical a partir do centro do quadro de raide.";
+L["Immunity"] = "Imunidade";
+L["Defensive"] = "Defensivo";
+L["Dispel"] = "Dissipar";
+L["Mass Dispel"] = "Dissipação em massa";
+L["Interrupt"] = "Interromper";
+L["Knockback"] = "Empurrão";
+L["Crowd Control"] = "Controle de grupo";
+L["Burst"] = "Explosão";
+L["Heal"] = "Cura";
+L["Mobility"] = "Mobilidade";
+L["Others"] = "Outros";
+L["Ebon Gargoyle"] = "Gárgula de Ébano";
+L["Raise Dead"] = "Erguer Morto";
+L["Army of the Dead"] = "Exército dos Mortos";
+L["Water Elemental"] = "Elemental da Água";
+L["Xuen"] = "Xuen";
+L["Storm, Earth and Fire (Red)"] = "Tempestade, Terra e Fogo (vermelho)";
+L["Storm, Earth and Fire (Green)"] = "Tempestade, Terra e Fogo (verde)";
+L["Psyfiend"] = "Psicodemônio";
+L["Shadowfiend"] = "Demônio das Sombras";
+L["Mindbender"] = "Dobramentes";
+L["Grounding Totem"] = "Totem de Aterramento";
+L["Spirit Link Totem"] = "Totem do Elo Espiritual";
+L["Tremor Totem"] = "Totem Sísmico";
+L["Capacitor Totem"] = "Totem Capacitor";
+L["Healing Tide Totem"] = "Totem Maré Curativa";
+L["Healing Stream Totem"] = "Totem Corrente Curativa";
+L["Mana Tide Totem"] = "Totem Maré de Mana";
+L["Earth Elemental Totem"] = "Totem Elemental da Terra";
+L["Fire Elemental Totem"] = "Totem Elemental do Fogo";
+L["Greater Fire Elemental"] = "Elemental Maior do Fogo";
+L["Magma Totem"] = "Totem de Magma";
+L["Searing Totem"] = "Totem Calcinante";
+L["Greater Earth Elemental"] = "Elemental Maior da Terra";
+L["Earthbind Totem"] = "Totem de Prisão Terrena";
+L["Earthgrab Totem"] = "Totem Agarraterra";
+L["Windwalk Totem"] = "Totem Caminha-vento";
+L["Stormlash Totem"] = "Totem de Açoite Tempestuoso";
+L["Imp"] = "Diabrete";
+L["Fel Imp"] = "Diabrete Vil";
+L["Voidwalker"] = "Emissário do Caos";
+L["Voidlord"] = "Senhor do Caos";
+L["Felhunter"] = "Caçador Vil";
+L["Observer"] = "Observador";
+L["Succubus"] = "Súcubo";
+L["Shivarra"] = "Shivarra";
+L["Felguard"] = "Guarda Vil";
+L["Wrathguard"] = "Guardião Colérico";
+L["Skull Banner"] = "Estandarte da Caveira";
+L["Demoralizing Banner"] = "Estandarte Desmoralizador";
+L["PVP Training Dummy"] = "Boneco de Treinamento JxJ";
+L["Kelpfist"] = "Punho-de-alga";
+L["Training Dummy"] = "Boneco de Treinamento";
+L["Ancestral Protection Totem"] = "Totem de Proteção Ancestral";
+L["Cloudburst Totem"] = "Totem de Torrente";
+L["Counterstrike Totem"] = "Totem de Contra-ataque";
+L["Darkglare"] = "Mirada Negra";
+L["Demonic Tyrant"] = "Tirano Demoníaco";
+L["Dire Beast: Basilisk"] = "Fera Atroz: Basilisco";
+L["Dreadstalker"] = "Espreitador Medonho";
+L["Earthen Wall Totem"] = "Totem de Barreira Terrena";
+L["Fel Lord"] = "Senhor Vil";
+L["Guardian of the Forgotten Queen"] = "Guardião da Rainha Esquecida";
+L["Ice Wall"] = "Muralha de Gelo";
+L["Infernal"] = "Infernal";
+L["Liquid Magma Totem"] = "Totem de Magma Líquido";
+L["Mirror Image"] = "Imagem Espelhada";
+L["Past Self"] = "Eu do Passado";
+L["Pit Lord"] = "Senhor do Fosso";
+L["Poison Cleansing Totem"] = "Totem de Purificação de Veneno";
+L["Primal Earth Elemental"] = "Elemental da Terra Primevo";
+L["Primal Fire Elemental"] = "Elemental do Fogo Primevo";
+L["Raise Abomination"] = "Erguer Abominação";
+L["Reanimation"] = "Reanimação";
+L["Sayaad"] = "Sayaad";
+L["Shadow"] = "Sombra";
+L["Static Field Totem"] = "Totem de Campo Estático";
+L["Stone Bulwark Totem"] = "Totem Baluarte de Pedra";
+L["Stoneskin Totem"] = "Totem de Pele Rochosa";
+L["Surging Totem"] = "Totem Surto";
+L["Totem of Wrath"] = "Totem da Ira";
+L["Tranquil Air Totem"] = "Totem do Ar Tranquilo";
+L["Treant"] = "Arvoroso";
+L["Void Tendrils"] = "Tentáculos do Caos";
+L["Voidwraith"] = "Aparição do Caos";
+L["Wild Imp"] = "Diabrete Selvagem";
+L["Wind Rush Totem"] = "Totem de Ventania";
