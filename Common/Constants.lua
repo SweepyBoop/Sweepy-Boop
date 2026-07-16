@@ -22,19 +22,19 @@ addon.SPELLCATEGORY = {
 };
 
 addon.SPELLCATEGORY_NAME = {
-    [addon.SPELLCATEGORY.IMMUNITY] = "Immunity",
-    [addon.SPELLCATEGORY.DEFENSIVE] = "Defensive",
-    [addon.SPELLCATEGORY.DISPEL] = "Dispel",
-    [addon.SPELLCATEGORY.MASS_DISPEL] = "Mass Dispel",
-    [addon.SPELLCATEGORY.INTERRUPT] = "Interrupt",
-    [addon.SPELLCATEGORY.STUN] = "Stun",
-    [addon.SPELLCATEGORY.SILENCE] = "Silence",
-    [addon.SPELLCATEGORY.KNOCKBACK] = "Knockback",
-    [addon.SPELLCATEGORY.CROWDCONTROL] = "Crowd Control",
-    [addon.SPELLCATEGORY.BURST] = "Burst",
-    [addon.SPELLCATEGORY.HEAL] = "Heal",
-    [addon.SPELLCATEGORY.MOBILITY] = "Mobility",
-    [addon.SPELLCATEGORY.OTHERS] = "Others",
+    [addon.SPELLCATEGORY.IMMUNITY] = addon.L["Immunity"],
+    [addon.SPELLCATEGORY.DEFENSIVE] = addon.L["Defensive"],
+    [addon.SPELLCATEGORY.DISPEL] = addon.L["Dispel"],
+    [addon.SPELLCATEGORY.MASS_DISPEL] = addon.L["Mass Dispel"],
+    [addon.SPELLCATEGORY.INTERRUPT] = addon.L["Interrupt"],
+    [addon.SPELLCATEGORY.STUN] = addon.L["Stun"],
+    [addon.SPELLCATEGORY.SILENCE] = addon.L["Silence"],
+    [addon.SPELLCATEGORY.KNOCKBACK] = addon.L["Knockback"],
+    [addon.SPELLCATEGORY.CROWDCONTROL] = addon.L["Crowd Control"],
+    [addon.SPELLCATEGORY.BURST] = addon.L["Burst"],
+    [addon.SPELLCATEGORY.HEAL] = addon.L["Heal"],
+    [addon.SPELLCATEGORY.MOBILITY] = addon.L["Mobility"],
+    [addon.SPELLCATEGORY.OTHERS] = addon.L["Others"],
 };
 
 addon.SPELLPRIORITY = {
@@ -359,6 +359,63 @@ addon.FORMAT_ATLAS = function (texture, customSize)
     local size = customSize or 20;
     return format("|A:%s:" .. size .. ":" .. size .. ":|a", texture);
 end
+
+addon.LocalizeText = function(text)
+    if ( type(text) ~= "string" ) or ( text == "" ) or ( not addon.L ) then
+        return text;
+    end
+
+    local localized = rawget(addon.L, text);
+    if localized then return localized end
+
+    local prefix, separator, suffix = text:match("^(|T.-|t)(%s*)(.+)$");
+    if not prefix then
+        prefix, separator, suffix = text:match("^(|A.-|a)(%s*)(.+)$");
+    end
+
+    if prefix and suffix then
+        localized = rawget(addon.L, suffix);
+        if localized then
+            return prefix .. separator .. localized;
+        end
+    end
+
+    return text;
+end
+
+addon.LocalizeOptions = function(optionGroup)
+    local function LocalizeOption(option)
+        if type(option) ~= "table" then return end
+
+        if type(option.name) == "string" then
+            option.name = addon.LocalizeText(option.name);
+        end
+        if type(option.desc) == "string" then
+            option.desc = addon.LocalizeText(option.desc);
+        elseif type(option.desc) == "function" then
+            local originalDesc = option.desc;
+            option.desc = function(...)
+                return addon.LocalizeText(originalDesc(...));
+            end
+        end
+        if type(option.values) == "table" then
+            for key, value in pairs(option.values) do
+                if type(value) == "string" then
+                    option.values[key] = addon.LocalizeText(value);
+                end
+            end
+        end
+        if type(option.args) == "table" then
+            for _, child in pairs(option.args) do
+                LocalizeOption(child);
+            end
+        end
+    end
+
+    LocalizeOption(optionGroup);
+    return optionGroup;
+end
+
 addon.ICON_PATH = function (iconName)
     return "interface/icons/" .. iconName;
 end

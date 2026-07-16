@@ -3,7 +3,7 @@ local yellowColor = "cFFFFFF00";
 
 function SweepyBoop:TestArena()
     if IsInInstance() then
-        addon.PRINT("Test mode can only be used outside instances");
+        addon.PRINT(addon.L["Test mode can only be used outside instances"]);
         return;
     end
 
@@ -49,7 +49,7 @@ end
 
 function SweepyBoop:TestArenaStandalone()
     if IsInInstance() then
-        addon.PRINT("Test mode can only be used outside instances");
+        addon.PRINT(addon.L["Test mode can only be used outside instances"]);
         return;
     end
 
@@ -86,7 +86,7 @@ addon.SetupInterrupts = function (profile, spellList)
 end
 
 addon.GetMainlineArenaFrameOptions = function(order)
-    return {
+    local optionGroup = {
         order = order,
         type = "group",
         childGroups = "tab",
@@ -193,6 +193,8 @@ addon.GetMainlineArenaFrameOptions = function(order)
             },
         },
     };
+
+    return addon.LocalizeOptions(optionGroup);
 end
 
 addon.GetArenaFrameOptions = function(order)
@@ -972,9 +974,9 @@ addon.GetArenaFrameOptions = function(order)
                         else
                             cooldown = spellInfo.cooldown.default;
                         end
-                        local additionalInfo = "\n\n|" .. yellowColor .. "Cooldown".."|r ".. SecondsToTime(cooldown) ..
-								"\n\n|" .. yellowColor .. "Spell ID" .. "|r ".. spellID ..
-                                "\n\n|" .. yellowColor .. "Category" .. "|r " .. addon.SPELLCATEGORY_NAME[spellInfo.category];
+local additionalInfo = "\n\n|" .. yellowColor .. addon.L["Cooldown"] .. "|r " .. SecondsToTime(cooldown) ..
+                                "\n\n|" .. yellowColor .. addon.L["Spell ID"] .. "|r " .. spellID ..
+                                "\n\n|" .. yellowColor .. addon.L["Category"] .. "|r " .. addon.SPELLCATEGORY_NAME[spellInfo.category];
                         return description .. additionalInfo;
                     end
                 };
@@ -1028,5 +1030,5 @@ addon.GetArenaFrameOptions = function(order)
         AppendSpellOptions(optionGroup.args.standaloneBars.args[groupName].args.spellList, addon.SpellData);
     end
 
-    return optionGroup;
+    return addon.LocalizeOptions(optionGroup);
 end

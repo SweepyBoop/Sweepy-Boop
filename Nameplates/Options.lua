@@ -347,7 +347,7 @@ addon.GetFriendlyNameplateOptions = function(order)
         }
     };
 
-    return optionGroup;
+    return addon.LocalizeOptions(optionGroup);
 end
 
 addon.GetEnemyNameplateOptions = function(order)
@@ -638,5 +638,5 @@ addon.GetEnemyNameplateOptions = function(order)
     addon.AppendAuraOptionsToGroup(optionGroup.args.debuffWhiteList, addon.DebuffList, "debuffWhiteList");
     addon.AppendAuraOptionsToGroup(optionGroup.args.buffWhiteList, addon.BuffList, "buffWhiteList");
 
-    return optionGroup;
+    return addon.LocalizeOptions(optionGroup);
 end

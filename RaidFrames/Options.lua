@@ -152,12 +152,12 @@ addon.GetRaidFrameOptions = function(order)
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Resto Druid",
                 desc = function ()
                     return table.concat({
-                        "Enable the helper while playing Restoration Druid.",
+                        addon.L["Enable the helper while playing Restoration Druid."],
                         "",
-                        "\226\128\162 " .. SpellIcon(1126) .. " Mark of the Wild warning.",
-                        "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom with refresh-window glow.",
-                        "\226\128\162 Row 2: " .. SpellIcon(8936) .. " Regrowth, " .. SpellIcon(48438) .. " Wild Growth, " .. SpellIcon(774) .. " Rejuvenation, " .. SpellIcon(155777) .. " Germination.",
-                        "\226\128\162 Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected.",
+                        "\226\128\162 " .. SpellIcon(1126) .. " " .. addon.L["Mark of the Wild warning."],
+                        "\226\128\162 " .. SpellIcon(33763) .. " " .. addon.L["Lifebloom with refresh-window glow."],
+                        "\226\128\162 " .. addon.L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."],
+                        "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
                     }, "\n");
                 end,
                 set = function(info, val)
@@ -193,12 +193,12 @@ addon.GetRaidFrameOptions = function(order)
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. "Preservation Evoker",
                 desc = function ()
                     return table.concat({
-                        "Enable the helper while playing Preservation Evoker.",
+                        addon.L["Enable the helper while playing Preservation Evoker."],
                         "",
-                        "\226\128\162 " .. SpellIcon(381748) .. " Blessing of the Bronze warning.",
-                        "\226\128\162 " .. SpellIcon(364343) .. " Echo without a refresh-window glow.",
-                        "\226\128\162 Row 2, least-to-most important: " .. SpellIcon(366155) .. " Reversion, " .. SpellIcon(355941) .. " Dream Breath, " .. SpellIcon(373267) .. " Lifebind, " .. SpellIcon(357170) .. " Time Dilation.",
-                        "\226\128\162 Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected.",
+                        "\226\128\162 " .. SpellIcon(381748) .. " " .. addon.L["Blessing of the Bronze warning."],
+                        "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Echo without a refresh-window glow."],
+                        "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."],
+                        "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
                     }, "\n");
                 end,
                 set = function(info, val)
@@ -364,5 +364,5 @@ addon.GetRaidFrameOptions = function(order)
         },
     };
 
-    return optionGroup;
+    return addon.LocalizeOptions(optionGroup);
 end
