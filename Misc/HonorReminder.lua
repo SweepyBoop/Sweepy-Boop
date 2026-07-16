@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local HONOR_CURRENCY_ID = 1792;
-local HONOR_LABEL = "Honor";
+local HONOR_LABEL = addon.L["Honor"];
 local HONOR_ICON_ATLAS = "countdown-swords";
 local CURRENCY_DISPLAY_UPDATE_EVENT = "CURRENCY_DISPLAY_UPDATE";
 local BASE_ICON_SIZE = addon.DEFAULT_ICON_SIZE;
