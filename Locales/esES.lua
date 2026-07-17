@@ -28,7 +28,7 @@ local function ApplyTranslations(locale)
     L["X offset"] = "Desplazamiento X";
     L["Y offset"] = "Desplazamiento Y";
     L["Decimal threshold"] = "Umbral decimal";
-    L["Show decimal countdowns below this many seconds."] = "Muestra cuenta atrás decimal por debajo de esta cantidad de segundos.";
+    L["Show decimal countdowns below this many seconds."] = "Muestra decimales bajo esta cantidad de segundos.";
     L["PvP Queue Timer"] = "Temporizador de cola PvP";
     L["Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire"] = "Muestra un temporizador cuando salta la cola de arena/campo de batalla y reproduce una alerta cuando está a punto de expirar";
     L["Unit frames"] = "Marcos de unidad";
@@ -143,11 +143,11 @@ local function ApplyTranslations(locale)
     L["Filter debuffs applied by myself"] = "Mis perjuicios";
     L["Show whitelisted debuffs applied by myself\n\nCrowd control debuffs are never filtered as they are critical for PvP"] = "Mostrar perjuicios de la lista blanca aplicados por mí\n\nLos perjuicios de control de masas nunca se filtran porque son críticos para PvP";
     L["Show whitelisted buffs on enemy nameplates"] = "Beneficios permitidos";
-    L["Show whitelisted buffs on enemy nameplates from all sources"] = "Mostrar beneficios de la lista blanca en placas enemigas de todas las fuentes";
+    L["Show whitelisted buffs on enemy nameplates from all sources"] = "Mostrar beneficios permitidos de todas las fuentes";
     L["Unit whitelist"] = "Lista blanca de unidades";
-    L["Debuff whitelist"] = "Lista blanca de perjuicios";
-    L["Buff whitelist"] = "Lista blanca de beneficios";
-    L["Reset to default"] = "Restablecer valores predeterminados";
+    L["Debuff whitelist"] = "Perjuicios permitidos";
+    L["Buff whitelist"] = "Beneficios permitidos";
+    L["Reset to default"] = "Restablecer predeterminado";
     L["Nameplate"] = "Placa";
     L["Nameplate + icon"] = "Placa + icono";
     L["Nameplate + pulsing icon"] = "Placa + icono pulsante";
@@ -168,7 +168,7 @@ local function ApplyTranslations(locale)
     L["Enable secondary bar"] = "Activar barra secundaria";
     L["Hide border"] = "Ocultar borde";
     L["Hide countdown numbers"] = "Ocultar números de cuenta atrás";
-    L["Hide countdown numbers but show a more visible swiping edge"] = "Oculta los números de cuenta atrás pero muestra un borde de barrido más visible";
+    L["Hide countdown numbers but show a more visible swiping edge"] = "Oculta números y muestra un borde más visible";
     L["Show off-CD icons"] = "Mostrar iconos sin reutilización";
     L["Show icons for abilities that are not on cooldown\nAbilities that are not baseline will only show after they are detected"] = "Muestra iconos de habilidades que no están en reutilización\nLas habilidades que no son base solo se mostrarán después de ser detectadas";
     L["Off-cooldown alpha"] = "Alfa sin reutilización";
