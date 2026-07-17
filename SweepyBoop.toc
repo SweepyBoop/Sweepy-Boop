@@ -4,7 +4,7 @@
 ## Version: @project-version@
 ## SavedVariables: SweepyBoopDB
 ## OptionalDeps: Ace3
-## X-Localizations: enUS, esES, esMX, ptBR, zhTW
+## X-Localizations: enUS, esES, esMX, ptBR, zhCN, zhTW, koKR
 ## IconTexture: Interface\AddOns\SweepyBoop\Art\Logo
 
 Libs\LibStub\LibStub.lua
