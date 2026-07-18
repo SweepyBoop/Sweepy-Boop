@@ -17,6 +17,15 @@ L["Export Profile"] = "프로필 내보내기";
 L["Export your profile to share with others."] = "다른 사람과 공유할 수 있도록 프로필을 내보냅니다.";
 
 L["Misc"] = "기타";
+L["Smart macros"] = "스마트 매크로";
+L["Focus arena macros"] = "주시 투기장 매크로";
+L["Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus."] = "매크로 이름에 SBM을 추가하면 SweepyBoop이 투기장에서 @focus 시전을 적 힐러에게 다시 지정합니다.\n\n힐러가 감지되면 @focus가 @arena1, @arena2 또는 @arena3이 됩니다. 투기장 밖이거나 힐러를 찾지 못하면 다시 @focus로 바뀝니다.";
+L["How it works"] = "작동 방식";
+L["Only macro names containing case-sensitive SBM are edited.\n\nSweepyBoop only changes explicit target tokens: @focus and @arena1 through @arena5. All other macro text is left unchanged.\n\nIf combat blocks macro edits, the update is applied after combat ends."] = "대소문자가 정확한 SBM을 포함한 매크로 이름만 편집됩니다.\n\nSweepyBoop은 명시적인 대상 토큰인 @focus 및 @arena1부터 @arena5까지만 변경합니다. 다른 매크로 텍스트는 그대로 둡니다.\n\n전투로 매크로 편집이 막히면 전투가 끝난 후 업데이트가 적용됩니다.";
+L["Example"] = "예시";
+L["Name:\nSBM Cyclone\n\nBefore arena:\n#showtooltip\n/cast [@focus] Cyclone\n\nIf the healer is arena2:\n#showtooltip\n/cast [@arena2] Cyclone\n\nAfter arena, it returns to @focus."] = "이름:\nSBM Cyclone\n\n투기장 전:\n#showtooltip\n/cast [@focus] Cyclone\n\n힐러가 arena2이면:\n#showtooltip\n/cast [@arena2] Cyclone\n\n투기장 후에는 @focus로 돌아갑니다.";
+L["Important details"] = "중요 세부 정보";
+L["Create the macro yourself and use @focus as the default target.\n\nAdd SBM only to macros SweepyBoop should manage. Leave it out of macros that must keep a fixed arena target."] = "매크로를 직접 만들고 @focus를 기본 대상으로 사용하세요.\n\nSweepyBoop이 관리해야 하는 매크로에만 SBM을 추가하세요. 고정 투기장 대상을 유지해야 하는 매크로에는 넣지 마세요.";
 L["General"] = "일반";
 L["Healer in crowd control reminder in arena"] = "투기장 힐러 군중 제어 알림";
 L["Enabled"] = "사용";

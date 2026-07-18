@@ -17,6 +17,15 @@ L["Export Profile"] = "匯出設定檔";
 L["Export your profile to share with others."] = "匯出你的設定檔以分享給其他人。";
 
 L["Misc"] = "雜項";
+L["Smart macros"] = "智慧巨集";
+L["Focus arena macros"] = "焦點競技場巨集";
+L["Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus."] = "在巨集名稱中加入 SBM，讓 SweepyBoop 在競技場中將 @focus 施法重新指向敵方治療者。\n\n偵測到治療者時，@focus 會變成 @arena1、@arena2 或 @arena3。在競技場外，或未找到治療者時，會改回 @focus。";
+L["How it works"] = "運作方式";
+L["Only macro names containing case-sensitive SBM are edited.\n\nSweepyBoop only changes explicit target tokens: @focus and @arena1 through @arena5. All other macro text is left unchanged.\n\nIf combat blocks macro edits, the update is applied after combat ends."] = "只會編輯包含區分大小寫的 SBM 的巨集名稱。\n\nSweepyBoop 只會變更明確的目標標記：@focus 以及 @arena1 到 @arena5。其他巨集文字保持不變。\n\n如果戰鬥阻止巨集編輯，更新會在戰鬥結束後套用。";
+L["Example"] = "範例";
+L["Name:\nSBM Cyclone\n\nBefore arena:\n#showtooltip\n/cast [@focus] Cyclone\n\nIf the healer is arena2:\n#showtooltip\n/cast [@arena2] Cyclone\n\nAfter arena, it returns to @focus."] = "名稱：\nSBM Cyclone\n\n競技場前：\n#showtooltip\n/cast [@focus] Cyclone\n\n如果治療者是 arena2：\n#showtooltip\n/cast [@arena2] Cyclone\n\n競技場後會返回 @focus。";
+L["Important details"] = "重要細節";
+L["Create the macro yourself and use @focus as the default target.\n\nAdd SBM only to macros SweepyBoop should manage. Leave it out of macros that must keep a fixed arena target."] = "請自行建立巨集，並使用 @focus 作為預設目標。\n\n只將 SBM 加到需要 SweepyBoop 管理的巨集。需要保持固定競技場目標的巨集請不要加入 SBM。";
 L["General"] = "一般";
 L["Healer in crowd control reminder in arena"] = "競技場治療者遭控場提醒";
 L["Enabled"] = "啟用";

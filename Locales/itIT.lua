@@ -17,6 +17,15 @@ L["Export Profile"] = "Esporta profilo";
 L["Export your profile to share with others."] = "Esporta il tuo profilo per condividerlo con altri.";
 
 L["Misc"] = "Varie";
+L["Smart macros"] = "Macro intelligenti";
+L["Focus arena macros"] = "Macro focus arena";
+L["Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus."] = "Aggiungi SBM al nome di una macro per permettere a SweepyBoop di reindirizzare i suoi lanci @focus al guaritore nemico in arena.\n\nQuando viene rilevato un guaritore, @focus diventa @arena1, @arena2 o @arena3. Fuori dall'arena, o se non viene trovato alcun guaritore, torna a @focus.";
+L["How it works"] = "Come funziona";
+L["Only macro names containing case-sensitive SBM are edited.\n\nSweepyBoop only changes explicit target tokens: @focus and @arena1 through @arena5. All other macro text is left unchanged.\n\nIf combat blocks macro edits, the update is applied after combat ends."] = "Vengono modificati solo i nomi delle macro che contengono SBM con maiuscole esatte.\n\nSweepyBoop cambia solo token di bersaglio espliciti: @focus e da @arena1 a @arena5. Tutto il resto del testo resta invariato.\n\nSe il combattimento blocca la modifica delle macro, l'aggiornamento viene applicato al termine del combattimento.";
+L["Example"] = "Esempio";
+L["Name:\nSBM Cyclone\n\nBefore arena:\n#showtooltip\n/cast [@focus] Cyclone\n\nIf the healer is arena2:\n#showtooltip\n/cast [@arena2] Cyclone\n\nAfter arena, it returns to @focus."] = "Nome:\nSBM Cyclone\n\nPrima dell'arena:\n#showtooltip\n/cast [@focus] Cyclone\n\nSe il guaritore è arena2:\n#showtooltip\n/cast [@arena2] Cyclone\n\nDopo l'arena, torna a @focus.";
+L["Important details"] = "Dettagli importanti";
+L["Create the macro yourself and use @focus as the default target.\n\nAdd SBM only to macros SweepyBoop should manage. Leave it out of macros that must keep a fixed arena target."] = "Crea tu la macro e usa @focus come bersaglio predefinito.\n\nAggiungi SBM solo alle macro che SweepyBoop deve gestire. Lascialo fuori dalle macro che devono mantenere un bersaglio arena fisso.";
 L["General"] = "Generale";
 L["Healer in crowd control reminder in arena"] = "Promemoria guaritore sotto controllo in arena";
 L["Enabled"] = "Abilitato";

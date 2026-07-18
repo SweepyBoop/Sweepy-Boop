@@ -54,23 +54,6 @@ classAbilities[addon.PALADIN] = {
     "Rebuke",
 };
 
-local function GetFocusName()
-    if IsActiveBattlefieldArena() then
-        for i = 1, addon.MAX_ARENA_SIZE do
-            local spec = GetArenaOpponentSpec(i);
-            if spec then
-                local role = select(5, GetSpecializationInfoByID(spec));
-                if ( role == "HEALER" ) then
-                    return "arena" .. i;
-                end
-            end
-        end
-    end
-
-    -- Fallback in case no healer found
-    return "focus";
-end
-
 -- e.g., #showtooltip\n/cast [@focus] Cyclone
 local commonPrefix = "#showtooltip\n/cast [@";
 local commonSuffix = "] ";
@@ -102,7 +85,7 @@ local function TryUpdateMacros()
         -- Combat locked, wait for 6s to drop combat
         C_Timer.After(3, TryUpdateMacros);
     else
-        local focusName = GetFocusName();
+        local focusName = addon.GetArenaHealerUnit();
         updateMacros(focusName);
     end
 end

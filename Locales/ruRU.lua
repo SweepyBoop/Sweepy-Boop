@@ -17,6 +17,15 @@ L["Export Profile"] = "Экспорт профиля";
 L["Export your profile to share with others."] = "Экспортировать ваш профиль, чтобы поделиться им с другими.";
 
 L["Misc"] = "Разное";
+L["Smart macros"] = "Умные макросы";
+L["Focus arena macros"] = "Макросы фокуса арены";
+L["Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus."] = "Добавьте SBM в имя макроса, чтобы SweepyBoop перенаправлял его заклинания @focus на вражеского целителя на арене.\n\nКогда целитель обнаружен, @focus становится @arena1, @arena2 или @arena3. Вне арены или если целитель не найден, он снова становится @focus.";
+L["How it works"] = "Как это работает";
+L["Only macro names containing case-sensitive SBM are edited.\n\nSweepyBoop only changes explicit target tokens: @focus and @arena1 through @arena5. All other macro text is left unchanged.\n\nIf combat blocks macro edits, the update is applied after combat ends."] = "Редактируются только имена макросов, содержащие SBM с учетом регистра.\n\nSweepyBoop изменяет только явные токены целей: @focus и @arena1 до @arena5. Остальной текст макроса не меняется.\n\nЕсли бой блокирует редактирование макросов, обновление применяется после окончания боя.";
+L["Example"] = "Пример";
+L["Name:\nSBM Cyclone\n\nBefore arena:\n#showtooltip\n/cast [@focus] Cyclone\n\nIf the healer is arena2:\n#showtooltip\n/cast [@arena2] Cyclone\n\nAfter arena, it returns to @focus."] = "Имя:\nSBM Cyclone\n\nДо арены:\n#showtooltip\n/cast [@focus] Cyclone\n\nЕсли целитель — arena2:\n#showtooltip\n/cast [@arena2] Cyclone\n\nПосле арены возвращается к @focus.";
+L["Important details"] = "Важные детали";
+L["Create the macro yourself and use @focus as the default target.\n\nAdd SBM only to macros SweepyBoop should manage. Leave it out of macros that must keep a fixed arena target."] = "Создайте макрос самостоятельно и используйте @focus как цель по умолчанию.\n\nДобавляйте SBM только в макросы, которыми должен управлять SweepyBoop. Не добавляйте его в макросы, которым нужна фиксированная цель арены.";
 L["General"] = "Общие";
 L["Healer in crowd control reminder in arena"] = "Напоминание о контроле целителя на арене";
 L["Enabled"] = "Включено";

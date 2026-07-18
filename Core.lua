@@ -363,6 +363,7 @@ function SweepyBoop:OnInitialize()
         options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
+        options.args.macros = addon.GetMacroOptions(7.5);
     else
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
     end
@@ -435,6 +436,7 @@ function SweepyBoop:OnInitialize()
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
     self:SetupHonorReminder();
+    self:UpdateSBMMacros();
 
     local loginFrame = CreateFrame("Frame");
     loginFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
