@@ -74,5 +74,8 @@ RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\SortGroup.lua
 RaidFrames\Options.lua
 
+Macros\FocusArenaMacros.lua
+Macros\Options.lua
+
 Internal\HideHotKeys.lua
 Internal\FocusMacros.lua
