@@ -18,6 +18,14 @@ L["Export your profile to share with others."] = "导出你的配置文件以分
 
 L["Misc"] = "杂项";
 L["Smart macros"] = "智能宏";
+L["Focus arena macros"] = "焦点竞技场宏";
+L["SweepyBoop can keep selected focus macros pointed at the enemy healer in arenas. To opt in, add the letters SBM anywhere in the macro name, for example \"SBM Cyclone\" or \"Focus Kick SBM\".\n\nWhen arena specializations are available, the addon finds the enemy healer and rewrites managed target tokens in those macros from @focus to @arena1, @arena2, or @arena3. Outside arenas, or when no healer can be detected, the addon rewrites those same managed targets back to @focus."] = "SweepyBoop 可以让选定的焦点宏在竞技场中指向敌方治疗者。要启用此功能，请在宏名称的任意位置加入字母 SBM，例如 \"SBM Cyclone\" 或 \"Focus Kick SBM\"。\n\n当竞技场专精信息可用时，插件会找到敌方治疗者，并将这些宏中受管理的目标标记从 @focus 改写为 @arena1、@arena2 或 @arena3。在竞技场外，或无法检测到治疗者时，插件会将这些受管理的目标改回 @focus。";
+L["How it works"] = "工作方式";
+L["Only macros with SBM in the macro name are edited. The marker is case-sensitive, so \"SBM\" works and \"sbm\" is ignored.\n\nInside those macros, SweepyBoop only changes explicit unit target tokens: @focus and @arena1 through @arena5. Other macro text is left untouched.\n\nMacro editing is blocked during combat by the game client, so updates are applied after combat ends if an arena event occurs while you are in combat."] = "只有宏名称中包含 SBM 的宏会被编辑。该标记区分大小写，因此 \"SBM\" 会生效，而 \"sbm\" 会被忽略。\n\n在这些宏中，SweepyBoop 只会更改明确的单位目标标记：@focus 以及 @arena1 到 @arena5。其他宏文本不会被修改。\n\n游戏客户端会在战斗中阻止编辑宏，因此如果你在战斗中触发了竞技场事件，更新会在战斗结束后应用。";
+L["Example"] = "示例";
+L["Macro name:\nSBM Cyclone\n\nMacro body before entering arena:\n#showtooltip\n/cast [@focus] Cyclone\n\nIf the healer is arena2, SweepyBoop changes it to:\n#showtooltip\n/cast [@arena2] Cyclone\n\nAfter leaving arena, the same macro is restored to @focus."] = "宏名称：\nSBM Cyclone\n\n进入竞技场前的宏内容：\n#showtooltip\n/cast [@focus] Cyclone\n\n如果治疗者是 arena2，SweepyBoop 会将其改为：\n#showtooltip\n/cast [@arena2] Cyclone\n\n离开竞技场后，同一个宏会恢复为 @focus。";
+L["Important details"] = "重要说明";
+L["Use this for macros you want SweepyBoop to manage. Do not put SBM in macro names that should keep a fixed arena target.\n\nThe addon does not create macros for this feature. Create your own macro, include SBM in the macro name, and write it using @focus as the default target."] = "请将此功能用于你希望 SweepyBoop 管理的宏。不要在需要保持固定竞技场目标的宏名称中加入 SBM。\n\n插件不会为此功能创建宏。请自行创建宏，在宏名称中包含 SBM，并使用 @focus 作为默认目标来编写。";
 L["General"] = "通用";
 L["Healer in crowd control reminder in arena"] = "竞技场治疗者被控制提醒";
 L["Enabled"] = "启用";

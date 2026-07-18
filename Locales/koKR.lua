@@ -18,6 +18,14 @@ L["Export your profile to share with others."] = "다른 사람과 공유할 수
 
 L["Misc"] = "기타";
 L["Smart macros"] = "스마트 매크로";
+L["Focus arena macros"] = "주시 투기장 매크로";
+L["SweepyBoop can keep selected focus macros pointed at the enemy healer in arenas. To opt in, add the letters SBM anywhere in the macro name, for example \"SBM Cyclone\" or \"Focus Kick SBM\".\n\nWhen arena specializations are available, the addon finds the enemy healer and rewrites managed target tokens in those macros from @focus to @arena1, @arena2, or @arena3. Outside arenas, or when no healer can be detected, the addon rewrites those same managed targets back to @focus."] = "SweepyBoop은 선택한 주시 매크로가 투기장에서 적 힐러를 가리키도록 유지할 수 있습니다. 사용하려면 매크로 이름 아무 곳에나 SBM 문자를 추가하세요. 예: \"SBM Cyclone\" 또는 \"Focus Kick SBM\".\n\n투기장 전문화 정보를 사용할 수 있으면 애드온이 적 힐러를 찾고 해당 매크로의 관리 대상 토큰을 @focus에서 @arena1, @arena2 또는 @arena3으로 다시 씁니다. 투기장 밖이거나 힐러를 감지할 수 없으면 애드온이 같은 관리 대상을 @focus로 되돌립니다.";
+L["How it works"] = "작동 방식";
+L["Only macros with SBM in the macro name are edited. The marker is case-sensitive, so \"SBM\" works and \"sbm\" is ignored.\n\nInside those macros, SweepyBoop only changes explicit unit target tokens: @focus and @arena1 through @arena5. Other macro text is left untouched.\n\nMacro editing is blocked during combat by the game client, so updates are applied after combat ends if an arena event occurs while you are in combat."] = "매크로 이름에 SBM이 있는 매크로만 편집됩니다. 이 표시는 대소문자를 구분하므로 \"SBM\"은 작동하지만 \"sbm\"은 무시됩니다.\n\n해당 매크로 안에서 SweepyBoop은 명시적인 유닛 대상 토큰인 @focus 및 @arena1부터 @arena5까지만 변경합니다. 다른 매크로 텍스트는 그대로 둡니다.\n\n게임 클라이언트는 전투 중 매크로 편집을 차단하므로, 전투 중 투기장 이벤트가 발생하면 전투가 끝난 뒤 업데이트가 적용됩니다.";
+L["Example"] = "예시";
+L["Macro name:\nSBM Cyclone\n\nMacro body before entering arena:\n#showtooltip\n/cast [@focus] Cyclone\n\nIf the healer is arena2, SweepyBoop changes it to:\n#showtooltip\n/cast [@arena2] Cyclone\n\nAfter leaving arena, the same macro is restored to @focus."] = "매크로 이름:\nSBM Cyclone\n\n투기장에 들어가기 전 매크로 내용:\n#showtooltip\n/cast [@focus] Cyclone\n\n힐러가 arena2이면 SweepyBoop이 다음과 같이 변경합니다:\n#showtooltip\n/cast [@arena2] Cyclone\n\n투기장을 나가면 같은 매크로가 @focus로 복원됩니다.";
+L["Important details"] = "중요 세부 정보";
+L["Use this for macros you want SweepyBoop to manage. Do not put SBM in macro names that should keep a fixed arena target.\n\nThe addon does not create macros for this feature. Create your own macro, include SBM in the macro name, and write it using @focus as the default target."] = "SweepyBoop이 관리하길 원하는 매크로에 이 기능을 사용하세요. 고정 투기장 대상을 유지해야 하는 매크로 이름에는 SBM을 넣지 마세요.\n\n이 기능은 애드온이 매크로를 생성하지 않습니다. 직접 매크로를 만들고 매크로 이름에 SBM을 포함한 뒤, 기본 대상으로 @focus를 사용해 작성하세요.";
 L["General"] = "일반";
 L["Healer in crowd control reminder in arena"] = "투기장 힐러 군중 제어 알림";
 L["Enabled"] = "사용";
