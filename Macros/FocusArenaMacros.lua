@@ -7,22 +7,6 @@ local TARGET_FOCUS = "@focus";
 local FOCUS_TARGET_PATTERN = TARGET_FOCUS .. TARGET_TOKEN_SUFFIX_PATTERN;
 local MAX_MACRO_SLOTS = (MAX_ACCOUNT_MACROS or 120) + (MAX_CHARACTER_MACROS or 18);
 
-local function GetArenaHealerUnit()
-    if IsActiveBattlefieldArena() then
-        for i = 1, addon.MAX_ARENA_SIZE do
-            local spec = GetArenaOpponentSpec(i);
-            if spec then
-                local role = select(5, GetSpecializationInfoByID(spec));
-                if ( role == "HEALER" ) then
-                    return "arena" .. i;
-                end
-            end
-        end
-    end
-
-    return "focus";
-end
-
 local function ReplaceManagedTargets(body, targetUnit)
     local target = "@" .. targetUnit;
 
@@ -35,7 +19,7 @@ local function ReplaceManagedTargets(body, targetUnit)
 end
 
 local function UpdateSBMMacros()
-    local targetUnit = GetArenaHealerUnit();
+    local targetUnit = addon.GetArenaHealerUnit();
 
     for i = 1, MAX_MACRO_SLOTS do
         local name, icon, body = GetMacroInfo(i);

@@ -74,6 +74,7 @@ RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\SortGroup.lua
 RaidFrames\Options.lua
 
+Macros\ArenaTargetHelpers.lua
 Macros\FocusArenaMacros.lua
 Macros\Options.lua
 
