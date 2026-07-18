@@ -16,6 +16,7 @@ L["Import a profile from another user."] = "Importa um perfil de outro usuário.
 L["Export Profile"] = "Exportar perfil";
 L["Export your profile to share with others."] = "Exporta seu perfil para compartilhar com outros.";
 L["Misc"] = "Diversos";
+L["Smart macros"] = "Macros inteligentes";
 L["General"] = "Geral";
 L["Healer in crowd control reminder in arena"] = "Lembrete de curador sob controle em arena";
 L["Enabled"] = "Ativado";

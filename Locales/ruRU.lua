@@ -17,6 +17,7 @@ L["Export Profile"] = "Экспорт профиля";
 L["Export your profile to share with others."] = "Экспортировать ваш профиль, чтобы поделиться им с другими.";
 
 L["Misc"] = "Разное";
+L["Smart macros"] = "Умные макросы";
 L["General"] = "Общие";
 L["Healer in crowd control reminder in arena"] = "Напоминание о контроле целителя на арене";
 L["Enabled"] = "Включено";

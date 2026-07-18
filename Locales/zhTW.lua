@@ -17,6 +17,7 @@ L["Export Profile"] = "匯出設定檔";
 L["Export your profile to share with others."] = "匯出你的設定檔以分享給其他人。";
 
 L["Misc"] = "雜項";
+L["Smart macros"] = "智慧巨集";
 L["General"] = "一般";
 L["Healer in crowd control reminder in arena"] = "競技場治療者遭控場提醒";
 L["Enabled"] = "啟用";

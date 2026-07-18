@@ -79,7 +79,7 @@ L["Support the original WA author"] = "Support the original WA author";
 L["Indicator size"] = "Indicator size";
 L["Tracked spells"] = "Tracked spells";
 
-L["Macros"] = "Macros";
+L["Smart macros"] = "Smart macros";
 L["Focus arena macros"] = "Focus arena macros";
 L["SweepyBoop can keep selected focus macros pointed at the enemy healer in arenas. To opt in, add the letters SBM anywhere in the macro name, for example \"SBM Cyclone\" or \"Focus Kick SBM\".\n\nWhen arena specializations are available, the addon finds the enemy healer and rewrites managed target tokens in those macros from @focus to @arena1, @arena2, or @arena3. Outside arenas, or when no healer can be detected, the addon rewrites those same managed targets back to @focus."] = "SweepyBoop can keep selected focus macros pointed at the enemy healer in arenas. To opt in, add the letters SBM anywhere in the macro name, for example \"SBM Cyclone\" or \"Focus Kick SBM\".\n\nWhen arena specializations are available, the addon finds the enemy healer and rewrites managed target tokens in those macros from @focus to @arena1, @arena2, or @arena3. Outside arenas, or when no healer can be detected, the addon rewrites those same managed targets back to @focus.";
 L["How it works"] = "How it works";

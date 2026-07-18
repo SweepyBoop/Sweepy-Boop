@@ -18,6 +18,7 @@ local function ApplyTranslations(locale)
     L["Export Profile"] = "Exportar perfil";
     L["Export your profile to share with others."] = "Exporta tu perfil para compartirlo con otros.";
     L["Misc"] = "Varios";
+    L["Smart macros"] = "Macros inteligentes";
     L["General"] = "General";
     L["Healer in crowd control reminder in arena"] = "Recordatorio de sanador bajo control en arena";
     L["Enabled"] = "Activado";

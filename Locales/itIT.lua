@@ -17,6 +17,7 @@ L["Export Profile"] = "Esporta profilo";
 L["Export your profile to share with others."] = "Esporta il tuo profilo per condividerlo con altri.";
 
 L["Misc"] = "Varie";
+L["Smart macros"] = "Macro intelligenti";
 L["General"] = "Generale";
 L["Healer in crowd control reminder in arena"] = "Promemoria guaritore sotto controllo in arena";
 L["Enabled"] = "Abilitato";

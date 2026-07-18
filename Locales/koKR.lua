@@ -17,6 +17,7 @@ L["Export Profile"] = "프로필 내보내기";
 L["Export your profile to share with others."] = "다른 사람과 공유할 수 있도록 프로필을 내보냅니다.";
 
 L["Misc"] = "기타";
+L["Smart macros"] = "스마트 매크로";
 L["General"] = "일반";
 L["Healer in crowd control reminder in arena"] = "투기장 힐러 군중 제어 알림";
 L["Enabled"] = "사용";
