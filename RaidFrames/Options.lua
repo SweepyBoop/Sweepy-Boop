@@ -18,8 +18,16 @@ local function DebuffIconOptionsDisabled()
 end
 
 local function HealerBuffHelperLayoutDisabled()
+    if addon.IsConflictingHealerBuffHelperAddonLoaded() then return true end
+
     local raidFrames = SweepyBoop.db.profile.raidFrames;
     return ( not raidFrames.druidBuffHelper ) and ( not raidFrames.evokerBuffHelper );
+end
+
+local function HealerBuffHelperConflictDesc()
+    if addon.IsConflictingHealerBuffHelperAddonLoaded() then
+        return "Disabled while RaidFrameAuras is loaded to avoid conflicting raid-frame buff indicators.";
+    end
 end
 
 addon.GetRaidFrameOptions = function(order)
@@ -94,7 +102,9 @@ addon.GetRaidFrameOptions = function(order)
                 max = 2.5,
                 step = 0.05,
                 name = "Icon Scale",
-                desc = "Adjust all helper icons together from 50% to 250%.",
+                desc = function()
+                    return HealerBuffHelperConflictDesc() or "Adjust all helper icons together from 50% to 250%.";
+                end,
                 disabled = HealerBuffHelperLayoutDisabled,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
@@ -110,7 +120,9 @@ addon.GetRaidFrameOptions = function(order)
                 max = 80,
                 step = 1,
                 name = "Offset X",
-                desc = "Horizontal offset from the helper's default position.",
+                desc = function()
+                    return HealerBuffHelperConflictDesc() or "Horizontal offset from the helper's default position.";
+                end,
                 disabled = HealerBuffHelperLayoutDisabled,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
@@ -126,7 +138,9 @@ addon.GetRaidFrameOptions = function(order)
                 max = 80,
                 step = 1,
                 name = "Offset Y",
-                desc = "Vertical offset from the helper's default position.",
+                desc = function()
+                    return HealerBuffHelperConflictDesc() or "Vertical offset from the helper's default position.";
+                end,
                 disabled = HealerBuffHelperLayoutDisabled,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
@@ -147,6 +161,9 @@ addon.GetRaidFrameOptions = function(order)
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Resto Druid",
                 desc = function ()
+                    local conflictDesc = HealerBuffHelperConflictDesc();
+                    if conflictDesc then return conflictDesc end
+
                     return table.concat({
                         addon.L["Enable the helper while playing Restoration Druid."],
                         "",
@@ -156,9 +173,10 @@ addon.GetRaidFrameOptions = function(order)
                         "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
                     }, "\n");
                 end,
+                disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the new setting applies immediately
+                    SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
                 end,
             },
 
@@ -167,8 +185,10 @@ addon.GetRaidFrameOptions = function(order)
                 width = 1.4,
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Missing-buff warning",
-                desc = "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.",
-                disabled = function () return not SweepyBoop.db.profile.raidFrames.druidBuffHelper; end,
+                desc = function()
+                    return HealerBuffHelperConflictDesc() or "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.";
+                end,
+                disabled = function () return addon.IsConflictingHealerBuffHelperAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.druidBuffHelper ); end,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                     SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the warning icon appears/disappears immediately
@@ -188,6 +208,9 @@ addon.GetRaidFrameOptions = function(order)
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. "Preservation Evoker",
                 desc = function ()
+                    local conflictDesc = HealerBuffHelperConflictDesc();
+                    if conflictDesc then return conflictDesc end
+
                     return table.concat({
                         addon.L["Enable the helper while playing Preservation Evoker."],
                         "",
@@ -197,9 +220,10 @@ addon.GetRaidFrameOptions = function(order)
                         "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
                     }, "\n");
                 end,
+                disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the new setting applies immediately
+                    SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
                 end,
             },
 
