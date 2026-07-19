@@ -17,19 +17,15 @@ local function DebuffIconOptionsDisabled()
     return addon.IsConflictingRaidFrameDebuffAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled );
 end
 
-local function HealerBuffHelperDisabled()
-    return addon.IsConflictingHealerBuffHelperAddonLoaded();
-end
-
 local function HealerBuffHelperLayoutDisabled()
-    if HealerBuffHelperDisabled() then return true end
+    if addon.IsConflictingHealerBuffHelperAddonLoaded() then return true end
 
     local raidFrames = SweepyBoop.db.profile.raidFrames;
     return ( not raidFrames.druidBuffHelper ) and ( not raidFrames.evokerBuffHelper );
 end
 
 local function HealerBuffHelperConflictDesc()
-    if HealerBuffHelperDisabled() then
+    if addon.IsConflictingHealerBuffHelperAddonLoaded() then
         return "Disabled while RaidFrameAuras is loaded to avoid conflicting raid-frame buff indicators.";
     end
 end
@@ -177,7 +173,7 @@ addon.GetRaidFrameOptions = function(order)
                         "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
                     }, "\n");
                 end,
-                disabled = HealerBuffHelperDisabled,
+                disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                     SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
@@ -192,7 +188,7 @@ addon.GetRaidFrameOptions = function(order)
                 desc = function()
                     return HealerBuffHelperConflictDesc() or "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.";
                 end,
-                disabled = function () return HealerBuffHelperDisabled() or ( not SweepyBoop.db.profile.raidFrames.druidBuffHelper ); end,
+                disabled = function () return addon.IsConflictingHealerBuffHelperAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.druidBuffHelper ); end,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                     SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the warning icon appears/disappears immediately
@@ -224,7 +220,7 @@ addon.GetRaidFrameOptions = function(order)
                         "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
                     }, "\n");
                 end,
-                disabled = HealerBuffHelperDisabled,
+                disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                 set = function(info, val)
                     SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                     SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
