@@ -266,7 +266,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.misc.personalDR = true;
     defaults.profile.misc.personalDRTrackIncapacitate = false;
     defaults.profile.misc.personalDRTrackDisorient = false;
-    defaults.profile.misc.personalDROffsetY = 125;
+    defaults.profile.misc.personalDROffsetY = 100;
     defaults.profile.misc.rangeCheckerEnabled = true;
 end
 
