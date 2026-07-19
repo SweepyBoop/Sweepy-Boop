@@ -12,10 +12,9 @@ local _, addon = ...;
 --           of the four are active we can show a warning icon instead.
 --
 -- Retail (12.x) notes:
---   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the Lua buff-frame pipeline were
---     removed, and a frame's real buff icons aren't addon-accessible. So we track each CompactUnitFrame
---     via CompactUnitFrame_UpdateAll, map unit -> frame(s), refresh on UNIT_AURA, query the player's
---     buffs ourselves, and draw our own icons.
+--   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the old Lua buff-frame pipeline were
+--     removed. So we track each CompactUnitFrame via CompactUnitFrame_UpdateAll, map unit -> frame(s),
+--     refresh on UNIT_AURA, query the player's buffs ourselves, and draw our own icons.
 --   * Aura APIs are SecretWhenUnitAuraRestricted, so unrelated auras can come back as secret values in
 --     active PvP. The helper only cares about the configured player-applied buffs below; unrelated secret
 --     auras must not suppress the Row 2 warning.
@@ -396,6 +395,8 @@ local function UpdateRow1(frame, aura, profile)
 end
 
 local function IsProfileEnabled(profile)
+    if addon.IsConflictingHealerBuffHelperAddonLoaded() then return false end
+
     return SweepyBoop.db.profile.raidFrames[profile.enabledSetting] and true or false;
 end
 
@@ -585,9 +586,8 @@ end
 local eventFrame = CreateFrame("Frame");
 
 -- Hide Blizzard's own raid-frame buffs while the helper is enabled on a supported healing spec, so our
--- icons replace them. In retail 12.x a frame's individual buff icons are forbidden/secret, so the only
--- lever is the global raidFramesDisplayBuffs CVar (all-or-nothing: it hides every buff on raid frames;
--- debuffs/dispels stay). Changing it re-runs setup on the protected raid frames, so we defer in combat.
+-- icons replace them. In retail 12.x this still has to use the global raidFramesDisplayBuffs CVar; the
+-- private-aura buff frames are not reliably suppressible through per-frame alpha.
 local function ShouldHideBlizzardBuffs()
     return activeProfile and IsProfileEnabled(activeProfile) and true or false;
 end
