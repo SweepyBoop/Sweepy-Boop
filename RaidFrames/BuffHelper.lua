@@ -12,10 +12,9 @@ local _, addon = ...;
 --           of the four are active we can show a warning icon instead.
 --
 -- Retail (12.x) notes:
---   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the Lua buff-frame pipeline were
---     removed, and a frame's real buff icons aren't addon-accessible. So we track each CompactUnitFrame
---     via CompactUnitFrame_UpdateAll, map unit -> frame(s), refresh on UNIT_AURA, query the player's
---     buffs ourselves, and draw our own icons.
+--   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the old Lua buff-frame pipeline were
+--     removed. So we track each CompactUnitFrame via CompactUnitFrame_UpdateAll, map unit -> frame(s),
+--     refresh on UNIT_AURA, query the player's buffs ourselves, and draw our own icons.
 --   * Aura APIs are SecretWhenUnitAuraRestricted, so unrelated auras can come back as secret values in
 --     active PvP. The helper only cares about the configured player-applied buffs below; unrelated secret
 --     auras must not suppress the Row 2 warning.
@@ -269,7 +268,18 @@ local function SetIconCooldown(icon, aura)
     end
 end
 
+local function SetBlizzardBuffsAlpha(frame, alpha)
+    frame.healerBuffHelperBlizzardBuffsAlpha = alpha;
+    if frame.buffFrames then
+        for _, buffFrame in ipairs(frame.buffFrames) do
+            buffFrame:SetAlpha(alpha);
+        end
+    end
+end
+
 local function ClearFrame(frame)
+    SetBlizzardBuffsAlpha(frame, 1);
+
     local container = frame.healerBuffHelper;
     if container then
         SetIconGlow(container.primaryBuffIcon, false);
@@ -487,6 +497,8 @@ local function UpdateFrame(frame)
         return;
     end
 
+    SetBlizzardBuffsAlpha(frame, 0);
+
     -- Don't show the warning on dead raiders: they have no tracked buffs, but a persistent warning is just noise.
     -- Check IsSecretValue first: UnitIsDeadOrGhost can be secret in rated PvP, and the `and` must not
     -- coerce a secret value to a boolean (that would error). The secret check short-circuits before `dead`.
@@ -586,28 +598,8 @@ end
 
 local eventFrame = CreateFrame("Frame");
 
--- Hide Blizzard's own raid-frame buffs while the helper is enabled on a supported healing spec, so our
--- icons replace them. In retail 12.x a frame's individual buff icons are forbidden/secret, so the only
--- lever is the global raidFramesDisplayBuffs CVar (all-or-nothing: it hides every buff on raid frames;
--- debuffs/dispels stay). Changing it re-runs setup on the protected raid frames, so we defer in combat.
-local function ShouldHideBlizzardBuffs()
-    return activeProfile and IsProfileEnabled(activeProfile) and true or false;
-end
-
-local function ApplyHideBlizzardBuffs()
-    if ( not isSupportedClass ) or ( not addon.PROJECT_MAINLINE ) then return end -- retail-only supported classes
-
-    if InCombatLockdown() then
-        eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED); -- retry once combat ends
-        return;
-    end
-
-    local desired = ShouldHideBlizzardBuffs() and "0" or "1";
-    if ( GetCVar("raidFramesDisplayBuffs") ~= desired ) then
-        SetCVar("raidFramesDisplayBuffs", desired); -- 0 hides buffs while active, 1 restores them when disabled
-    end
-end
-
+-- Hide Blizzard's own raid-frame buffs per frame while the helper is enabled, so our icons replace them
+-- without changing the user's global raidFramesDisplayBuffs CVar.
 function SweepyBoop:SetupRaidFrameAuraModule()
     if ( not isSupportedClass ) then return end -- nothing to do for unsupported classes this session
 
@@ -641,18 +633,13 @@ function SweepyBoop:SetupRaidFrameAuraModule()
             if ( unitTarget == "player" ) then
                 local oldProfile = activeProfile;
                 CheckSpec();
-                ApplyHideBlizzardBuffs(); -- entering/leaving a supported healer flips Blizzard buff hiding
                 if ( oldProfile ~= activeProfile ) then
                     RefreshAllFrames(); -- show or clear every frame for the new spec
                 end
             end
         elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
             CheckSpec(); -- spec info may not have been ready at login
-            ApplyHideBlizzardBuffs();
             RefreshAllFrames();
-        elseif ( event == addon.PLAYER_REGEN_ENABLED ) then
-            eventFrame:UnregisterEvent(addon.PLAYER_REGEN_ENABLED);
-            ApplyHideBlizzardBuffs(); -- apply the buff-hiding CVar that was deferred during combat
         else -- GROUP_ROSTER_UPDATE: the unit behind a frame may have changed
             for frame in pairs(cufPool) do
                 MapFrameUnit(frame);
@@ -661,12 +648,11 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         end
     end)
 
-    ApplyHideBlizzardBuffs(); -- enforce the buff-hiding CVar for the current spec + toggle
+    RefreshAllFrames(); -- enforce Blizzard buff alpha for the current spec + toggle
 end
 
--- Called when the Healer Buff Helper settings change (and on profile switch): re-evaluate the
--- buff-hiding CVar and repaint every tracked frame for the new setting.
+-- Called when the Healer Buff Helper settings change (and on profile switch): re-evaluate Blizzard
+-- buff alpha and repaint every tracked frame for the new setting.
 function SweepyBoop:RefreshHealerBuffHelper()
-    ApplyHideBlizzardBuffs();
     RefreshAllFrames();
 end
