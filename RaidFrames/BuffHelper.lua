@@ -124,7 +124,7 @@ local missingClassBuffGlowColor = { 1, 0, 0, 1 }; -- red (RGBA)
 local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew"; -- yellow warning triangle
 
 local playerClass = addon.GetUnitClass("player"); -- class is fixed for the login session
-local isSupportedClass = supportedClasses[playerClass] and true or false;
+local isSupportedClass = supportedClasses[playerClass] == true;
 local activeProfile; -- spec can change mid-session; refreshed on PLAYER_SPECIALIZATION_CHANGED
 
 local cufPool = {};    -- frame -> true: raid/party CompactUnitFrames we've seen
@@ -261,7 +261,7 @@ end
 -- Drive the cooldown swipe from a (readable, non-secret) aura's duration/expiration.
 local function SetIconCooldown(icon, aura)
     local duration = aura.duration or 0;
-    if ( duration > 0 ) and aura.expirationTime then
+    if ( ( duration > 0 ) and aura.expirationTime ) then
         icon.cooldown:SetCooldown(aura.expirationTime - duration, duration);
         icon.cooldown:Show();
     else
@@ -339,7 +339,7 @@ local function ScanUnitAuras(unit, profile)
                     primaryAura = aura;
                 else
                     local row2SpellId = profile.row2Auras[spellId];
-                    if row2SpellId and ( ( spellId == row2SpellId ) or ( not scanAuras[row2SpellId] ) ) then
+                    if ( row2SpellId and ( ( spellId == row2SpellId ) or ( not scanAuras[row2SpellId] ) ) ) then
                         scanAuras[row2SpellId] = aura;
                     end
                 end
@@ -396,9 +396,8 @@ local function UpdateRow1(frame, aura, profile)
 end
 
 local function IsProfileEnabled(profile)
-    return ( not addon.IsConflictingHealerBuffHelperAddonLoaded() )
-            and SweepyBoop.db.profile.raidFrames[profile.enabledSetting]
-            and true or false;
+    return ( ( not addon.IsConflictingHealerBuffHelperAddonLoaded() )
+            and ( SweepyBoop.db.profile.raidFrames[profile.enabledSetting] == true ) );
 end
 
 local function UpdateRow2(frame, row2Auras, profile)
@@ -422,7 +421,7 @@ local function UpdateRow2(frame, row2Auras, profile)
             icons[i]:Hide();
         end
         local warningSetting = profile.row2WarningSetting;
-        if warningSetting and SweepyBoop.db.profile.raidFrames[warningSetting] then
+        if ( warningSetting and ( SweepyBoop.db.profile.raidFrames[warningSetting] == true ) ) then
             container.warningIcon:Show(); -- none of the configured Row 2 buffs are up
         else
             container.warningIcon:Hide();
@@ -464,9 +463,9 @@ end
 local function IsGroupUnit(unit)
     local first = string.byte(unit, 1);
     if ( first == 112 ) then -- p: player / pet / party / partypet
-        return ( string.sub(unit, 1, 6) == "player" )
+        return ( ( string.sub(unit, 1, 6) == "player" )
                 or ( string.sub(unit, 1, 3) == "pet" )
-                or ( string.sub(unit, 1, 5) == "party" );
+                or ( string.sub(unit, 1, 5) == "party" ) );
     elseif ( first == 114 ) then -- raid / raidpet
         return ( string.sub(unit, 1, 4) == "raid" );
     end
@@ -479,10 +478,11 @@ local function UpdateFrame(frame)
 
     local unit = frame.displayedUnit or frame.unit;
     local profile = activeProfile;
-    if ( not profile )
+    if ( ( not profile )
             or ( not IsProfileEnabled(profile) )
-            or ( not unit ) or ( not UnitExists(unit) )
-            or ( not IsGroupUnit(unit) ) then
+            or ( not unit )
+            or ( not UnitExists(unit) )
+            or ( not IsGroupUnit(unit) ) ) then
         ClearFrame(frame);
         return;
     end
@@ -491,7 +491,7 @@ local function UpdateFrame(frame)
     -- Check IsSecretValue first: UnitIsDeadOrGhost can be secret in rated PvP, and the `and` must not
     -- coerce a secret value to a boolean (that would error). The secret check short-circuits before `dead`.
     local dead = UnitIsDeadOrGhost(unit);
-    if ( not addon.IsSecretValue(dead) ) and dead then
+    if ( ( not addon.IsSecretValue(dead) ) and dead ) then
         ClearFrame(frame);
         return;
     end
@@ -500,7 +500,7 @@ local function UpdateFrame(frame)
     ApplyIconLayout(container);
 
     local primaryAura, row2Auras, hasClassBuff = ScanUnitAuras(unit, profile);
-    UpdateClassBuffWarning(frame, profile, ( not UnitIsPlayer(unit) ) or hasClassBuff);
+    UpdateClassBuffWarning(frame, profile, ( ( not UnitIsPlayer(unit) ) or hasClassBuff ));
     UpdateRow1(frame, primaryAura, profile);
     UpdateRow2(frame, row2Auras, profile);
 end
@@ -510,7 +510,7 @@ local function MapFrameUnit(frame)
     local unit = frame.displayedUnit or frame.unit;
     if ( frame.healerBuffHelperUnit == unit ) then return end
 
-    if frame.healerBuffHelperUnit and unitFrames[frame.healerBuffHelperUnit] then
+    if ( frame.healerBuffHelperUnit and unitFrames[frame.healerBuffHelperUnit] ) then
         unitFrames[frame.healerBuffHelperUnit][frame] = nil;
     end
 
@@ -529,7 +529,7 @@ end
 
 local function UntrackFrame(frame)
     cufPool[frame] = nil;
-    if frame.healerBuffHelperUnit and unitFrames[frame.healerBuffHelperUnit] then
+    if ( frame.healerBuffHelperUnit and unitFrames[frame.healerBuffHelperUnit] ) then
         unitFrames[frame.healerBuffHelperUnit][frame] = nil;
     end
     frame.healerBuffHelperUnit = nil;
@@ -539,7 +539,7 @@ end
 local function CheckSpec()
     local specID = addon.GetSpecForPlayerOrArena("player");
     local profile = profiles[specID];
-    if profile and ( profile.class == playerClass ) then
+    if ( profile and ( profile.class == playerClass ) ) then
         activeProfile = profile;
     else
         activeProfile = nil;
@@ -554,7 +554,7 @@ end
 
 local function IsFrameVisible(frame)
     local shown = frame:IsShown();
-    return ( not addon.IsSecretValue(shown) ) and shown;
+    return ( ( not addon.IsSecretValue(shown) ) and shown );
 end
 
 local function UpdateVisibleFrame(frame)
@@ -565,8 +565,8 @@ end
 
 local function ShouldTrackFrameName(name)
     if ( string.byte(name, 1) ~= 67 ) then return false end -- C: CompactPartyFrame / CompactRaid
-    return ( string.sub(name, 1, 17) == "CompactPartyFrame" )
-            or ( string.sub(name, 1, 11) == "CompactRaid" );
+    return ( ( string.sub(name, 1, 17) == "CompactPartyFrame" )
+            or ( string.sub(name, 1, 11) == "CompactRaid" ) );
 end
 
 local function UpdateUnitFrames(unit)
@@ -591,18 +591,23 @@ local eventFrame = CreateFrame("Frame");
 -- lever is the global raidFramesDisplayBuffs CVar (all-or-nothing: it hides every buff on raid frames;
 -- debuffs/dispels stay). Changing it re-runs setup on the protected raid frames, so we defer in combat.
 local function ShouldHideBlizzardBuffs()
-    return activeProfile and IsProfileEnabled(activeProfile) and true or false;
+    return ( activeProfile and IsProfileEnabled(activeProfile) ) == true;
 end
 
 local function ApplyHideBlizzardBuffs()
-    if ( not isSupportedClass ) or ( not addon.PROJECT_MAINLINE ) then return end -- retail-only supported classes
+    if ( ( not isSupportedClass ) or ( not addon.PROJECT_MAINLINE ) ) then return end -- retail-only supported classes
 
     if InCombatLockdown() then
         eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED); -- retry once combat ends
         return;
     end
 
-    local desired = ShouldHideBlizzardBuffs() and "0" or "1";
+    local desired;
+    if ShouldHideBlizzardBuffs() then
+        desired = "0";
+    else
+        desired = "1";
+    end
     if ( GetCVar("raidFramesDisplayBuffs") ~= desired ) then
         SetCVar("raidFramesDisplayBuffs", desired); -- 0 hides buffs while active, 1 restores them when disabled
     end
@@ -621,7 +626,7 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         end
 
         local name = frame:GetName();
-        if name and ShouldTrackFrameName(name) then
+        if ( name and ShouldTrackFrameName(name) ) then
             TrackFrame(frame);
         else
             UntrackFrame(frame);
