@@ -406,8 +406,6 @@ local function UpdateRow1(frame, aura, profile)
 end
 
 local function IsProfileEnabled(profile)
-    if addon.IsConflictingHealerBuffHelperAddonLoaded() then return false end
-
     return SweepyBoop.db.profile.raidFrames[profile.enabledSetting] and true or false;
 end
 

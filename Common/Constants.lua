@@ -337,10 +337,6 @@ addon.IsConflictingRaidFrameDebuffAddonLoaded = function()
     return C_AddOns.IsAddOnLoaded("MiniCC");
 end
 
-addon.IsConflictingHealerBuffHelperAddonLoaded = function()
-    return C_AddOns.IsAddOnLoaded("RaidFrameAuras");
-end
-
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
 addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";
