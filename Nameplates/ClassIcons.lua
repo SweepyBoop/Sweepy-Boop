@@ -443,6 +443,20 @@ end
 
 if addon.internal then
     function SweepyBoop:DebugClassIconCrowdControl(duration, spellID)
+        if ( not SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl ) then
+            for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
+                local classIconContainer = nameplate.classIconContainer;
+                local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
+                if iconFrame then
+                    iconFrame.debugCrowdControlExpiresAt = nil;
+                    HideClassIconCrowdControl(iconFrame);
+                end
+            end
+
+            print("SweepyBoop: crowd control icons are disabled in Friendly nameplates options");
+            return;
+        end
+
         duration = duration or 6;
         spellID = spellID or 118; -- Polymorph
 
