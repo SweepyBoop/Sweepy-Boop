@@ -396,7 +396,9 @@ local function UpdateRow1(frame, aura, profile)
 end
 
 local function IsProfileEnabled(profile)
-    return SweepyBoop.db.profile.raidFrames[profile.enabledSetting] and true or false;
+    return ( not addon.IsConflictingHealerBuffHelperAddonLoaded() )
+            and SweepyBoop.db.profile.raidFrames[profile.enabledSetting]
+            and true or false;
 end
 
 local function UpdateRow2(frame, row2Auras, profile)
