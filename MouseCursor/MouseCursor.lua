@@ -3,28 +3,22 @@ local _, addon = ...;
 if not addon.PROJECT_MAINLINE then return end
 
 local GCD_SPELL_ID = 61304;
-local WHITE_TEXTURE = "Interface\\Buttons\\WHITE8X8";
+local RING_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/MouseCursorRing";
 local TRAIL_ATLAS = "CircleMaskScalable";
-local SEGMENT_COUNT = 192;
 local TRAIL_POOL_SIZE = 48;
-local TWO_PI = math.pi * 2;
-local HALF_PI = math.pi / 2;
 
 local cursorFrame;
+local baselineRing;
+local gcdRing;
 local trailFrame;
 local trackerFrame;
 local eventFrame;
-local baselineSegments = {};
-local gcdSegments = {};
 local trailPool = {};
 local activeTrail = {};
 local trailPoolInitialized = false;
 local trailTimer = 0;
 local lastTrailX;
 local lastTrailY;
-local gcdStartTime = 0;
-local gcdDuration = 0;
-local gcdActive = false;
 local lastGCDTime = 0;
 local pendingGCDCheck = false;
 
@@ -47,76 +41,6 @@ local function GetTrailColor(config)
     return Clamp(config.trailColorR, 0, 1), Clamp(config.trailColorG, 0, 1), Clamp(config.trailColorB, 0, 1);
 end
 
-local function StyleTexture(texture, blendMode)
-    texture:SetTexture(WHITE_TEXTURE);
-    texture:SetBlendMode(blendMode or "ADD");
-end
-
-local function StyleTrailTexture(texture)
-    texture:SetAtlas(TRAIL_ATLAS);
-    texture:SetBlendMode("ADD");
-end
-
-local function CreateSegment(parent, layer)
-    if parent.CreateLine then
-        local line = parent:CreateLine(nil, layer or "OVERLAY");
-        line:Hide();
-        return line;
-    end
-
-    local segment = parent:CreateTexture(nil, layer or "OVERLAY");
-    StyleTexture(segment);
-    segment:Hide();
-    return segment;
-end
-
-local function EnsureRingSegments(target, parent, layer)
-    for i = #target + 1, SEGMENT_COUNT do
-        target[i] = CreateSegment(parent, layer);
-    end
-end
-
-local function StyleLineSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b)
-    segment:ClearAllPoints();
-    segment:SetStartPoint("CENTER", cursorFrame, x1, y1);
-    segment:SetEndPoint("CENTER", cursorFrame, x2, y2);
-    segment:SetThickness(thickness);
-    segment:SetColorTexture(r, g, b, alpha);
-end
-
-local function StyleTextureSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b)
-    local dx = x2 - x1;
-    local dy = y2 - y1;
-    local length = math.sqrt(dx * dx + dy * dy);
-    local angle = math.atan(dy / dx);
-    if dx < 0 then
-        angle = angle + math.pi;
-    end
-
-    segment:ClearAllPoints();
-    segment:SetPoint("CENTER", cursorFrame, "CENTER", ( x1 + x2 ) / 2, ( y1 + y2 ) / 2);
-    segment:SetSize(length * 1.05, thickness);
-    segment:SetRotation(angle);
-    segment:SetVertexColor(r, g, b, alpha);
-end
-
-local function LayoutSegments(segments, radius, thickness, alpha, r, g, b)
-    for i, segment in ipairs(segments) do
-        local angle1 = HALF_PI - ( ( i - 1 ) / SEGMENT_COUNT ) * TWO_PI;
-        local angle2 = HALF_PI - ( i / SEGMENT_COUNT ) * TWO_PI;
-        local x1 = math.cos(angle1) * radius;
-        local y1 = math.sin(angle1) * radius;
-        local x2 = math.cos(angle2) * radius;
-        local y2 = math.sin(angle2) * radius;
-
-        if segment.SetStartPoint and segment.SetEndPoint then
-            StyleLineSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b);
-        else
-            StyleTextureSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b);
-        end
-    end
-end
-
 local function ClearTrail()
     for i = #activeTrail, 1, -1 do
         local element = activeTrail[i];
@@ -127,10 +51,19 @@ local function ClearTrail()
 end
 
 local function HideGCDRing()
-    gcdActive = false;
-    for _, segment in ipairs(gcdSegments) do
-        segment:Hide();
-    end
+    if not gcdRing then return end
+
+    gcdRing:Hide();
+    gcdRing:SetCooldown(0, 0);
+end
+
+local function StyleGCDRing(cooldown)
+    cooldown:SetSwipeTexture(RING_TEXTURE);
+    cooldown:SetHideCountdownNumbers(true);
+    cooldown:SetDrawSwipe(true);
+    cooldown:SetDrawEdge(false);
+    cooldown:SetDrawBling(false);
+    cooldown:SetReverse(true);
 end
 
 local function EnsureFrames()
@@ -151,8 +84,17 @@ local function EnsureFrames()
     cursorFrame:SetFrameLevel(90);
     cursorFrame:Hide();
 
-    EnsureRingSegments(baselineSegments, cursorFrame, "ARTWORK");
-    EnsureRingSegments(gcdSegments, cursorFrame, "OVERLAY");
+    baselineRing = cursorFrame:CreateTexture(nil, "ARTWORK");
+    baselineRing:SetTexture(RING_TEXTURE);
+    baselineRing:SetPoint("CENTER", cursorFrame, "CENTER");
+    baselineRing:SetBlendMode("ADD");
+    baselineRing:SetVertexColor(1, 1, 1, 1);
+
+    gcdRing = CreateFrame("Cooldown", "SweepyBoopMouseCursorGCDRing", cursorFrame, "CooldownFrameTemplate");
+    gcdRing:SetPoint("CENTER", cursorFrame, "CENTER");
+    gcdRing:SetFrameLevel(cursorFrame:GetFrameLevel() + 1);
+    StyleGCDRing(gcdRing);
+    gcdRing:Hide();
 end
 
 local function EnsureTrailPool()
@@ -161,7 +103,8 @@ local function EnsureTrailPool()
     trailPoolInitialized = true;
     for i = 1, TRAIL_POOL_SIZE do
         local texture = trailFrame:CreateTexture(nil, "ARTWORK");
-        StyleTrailTexture(texture);
+        texture:SetAtlas(TRAIL_ATLAS);
+        texture:SetBlendMode("ADD");
         texture:Hide();
         trailPool[i] = texture;
     end
@@ -169,7 +112,7 @@ end
 
 local function ApplyCursorDefaults()
     local config = GetConfig();
-    if config.visualDefaultsVersion == 3 then return end
+    if config.visualDefaultsVersion == 4 then return end
 
     if config.ringSize == nil or config.ringSize == 70 then
         config.ringSize = 48;
@@ -196,7 +139,7 @@ local function ApplyCursorDefaults()
     config.gcdColorR = config.gcdColorR or 0.1;
     config.gcdColorG = config.gcdColorG or 1;
     config.gcdColorB = config.gcdColorB or 0.25;
-    config.visualDefaultsVersion = 3;
+    config.visualDefaultsVersion = 4;
     config.lastModified = GetTime();
 end
 
@@ -207,32 +150,25 @@ local function RefreshVisuals()
     local config = GetConfig();
     local opacity = Clamp(config.opacity, 0.2, 1);
     local ringSize = Clamp(config.ringSize, 28, 90);
-    local thickness = Clamp(config.ringThickness, 2, 6);
-    local gcdR, gcdG, gcdB = GetGCDColor(config);
+    local r, g, b = GetGCDColor(config);
+    local gcdSize = ringSize + Clamp(config.ringThickness, 2, 6) * 4;
 
-    cursorFrame:SetSize(ringSize + thickness * 4, ringSize + thickness * 4);
+    cursorFrame:SetSize(gcdSize, gcdSize);
     cursorFrame:SetScale(Clamp(config.scale, 0.5, 2));
     trailFrame:SetAlpha(opacity);
 
-    LayoutSegments(baselineSegments, ringSize / 2, thickness, opacity * 0.72, 1, 1, 1);
-    LayoutSegments(gcdSegments, ( ringSize / 2 ) + thickness + 1, thickness + 1, opacity, gcdR, gcdG, gcdB);
+    baselineRing:SetSize(ringSize, ringSize);
+    baselineRing:SetAlpha(opacity * 0.72);
+    baselineRing:SetShown(config.showBaseline);
 
-    if config.showBaseline then
-        for _, segment in ipairs(baselineSegments) do
-            segment:Show();
-        end
-    else
-        for _, segment in ipairs(baselineSegments) do
-            segment:Hide();
-        end
+    gcdRing:SetSize(gcdSize, gcdSize);
+    gcdRing:SetSwipeColor(r, g, b, opacity);
+    if not config.showGCD then
+        HideGCDRing();
     end
 
     if not config.showTrail then
         ClearTrail();
-    end
-
-    if not config.showGCD then
-        HideGCDRing();
     end
 
     cursorFrame.lastModified = config.lastModified;
@@ -319,29 +255,9 @@ local function UpdateTrail(elapsed)
     SpawnTrailElement(x, y, config, r, g, b);
 end
 
-local function UpdateGCDRing()
-    local config = GetConfig();
-    if ( not gcdActive ) or ( not config.showGCD ) then return end
-
-    local progress = ( GetTime() - gcdStartTime ) / gcdDuration;
-    if progress >= 1 then
-        HideGCDRing();
-        return;
-    end
-
-    local visibleSegments = math.max(1, math.ceil(SEGMENT_COUNT * ( 1 - Clamp(progress, 0, 1))));
-    for i, segment in ipairs(gcdSegments) do
-        if i <= visibleSegments then
-            segment:Show();
-        else
-            segment:Hide();
-        end
-    end
-end
-
 local function OnUpdate(_, elapsed)
     local config = GetConfig();
-    if ( not config.enabled ) then return end
+    if not config.enabled then return end
 
     if cursorFrame.lastModified ~= config.lastModified then
         RefreshVisuals();
@@ -349,7 +265,6 @@ local function OnUpdate(_, elapsed)
 
     UpdateCursorPosition();
     UpdateTrail(elapsed);
-    UpdateGCDRing();
 end
 
 local function StartGCD(startTime, duration)
@@ -361,10 +276,8 @@ local function StartGCD(startTime, duration)
         RefreshVisuals();
     end
 
-    gcdStartTime = startTime;
-    gcdDuration = duration;
-    gcdActive = true;
-    UpdateGCDRing();
+    gcdRing:SetCooldown(startTime, duration);
+    gcdRing:Show();
     return true;
 end
 
