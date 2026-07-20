@@ -116,40 +116,23 @@ end
 
 local function ApplyCursorDefaults()
     local config = GetConfig();
-    if config.visualDefaultsVersion == 6 then return end
 
-    if config.ringSize == nil or config.ringSize == 70 then
-        config.ringSize = 48;
-    end
-    if config.gcdRingSize == nil then
-        config.gcdRingSize = ( config.ringSize or 48 ) + ( ( config.ringThickness or 3 ) * 4 );
-    end
-    if config.opacity == nil or config.opacity == 0.9 then
-        config.opacity = 0.85;
-    end
-    if config.trailDuration == nil or config.trailDuration == 0.45 then
-        config.trailDuration = 0.35;
-    end
-    if config.trailDensity == nil or config.trailDensity == 0.015 then
-        config.trailDensity = 0.018;
-    end
-    if config.trailSize == nil or config.trailSize == 12 then
-        config.trailSize = 9;
-    end
+    config.ringSize = config.ringSize or 48;
+    config.gcdRingSize = config.gcdRingSize or 60;
+    config.opacity = config.opacity or 0.85;
+    config.trailDuration = config.trailDuration or 0.35;
+    config.trailDensity = config.trailDensity or 0.018;
+    config.trailSize = config.trailSize or 9;
 
     config.baselineColorR = config.baselineColorR or 1;
     config.baselineColorG = config.baselineColorG or 1;
     config.baselineColorB = config.baselineColorB or 1;
-    if config.trailColorR == nil or ( config.trailColorR == 0.72 and config.trailColorG == 0.9 and config.trailColorB == 1 ) then
-        config.trailColorR = 1;
-        config.trailColorG = 1;
-        config.trailColorB = 1;
-    end
+    config.trailColorR = config.trailColorR or 1;
+    config.trailColorG = config.trailColorG or 1;
+    config.trailColorB = config.trailColorB or 1;
     config.gcdColorR = config.gcdColorR or 0.1;
     config.gcdColorG = config.gcdColorG or 1;
     config.gcdColorB = config.gcdColorB or 0.25;
-    config.visualDefaultsVersion = 6;
-    config.lastModified = GetTime();
 end
 
 local function RefreshVisuals()
@@ -384,11 +367,4 @@ function SweepyBoop:RefreshMouseCursor()
     HideGCDRing();
     ClearTrail();
     self:SetupMouseCursor();
-end
-
-function SweepyBoop:TestMouseCursorGCD()
-    if not addon.PROJECT_MAINLINE then return end
-
-    self:SetupMouseCursor();
-    StartGCD(GetTime(), 1.5);
 end

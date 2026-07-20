@@ -257,7 +257,6 @@ local defaults = {
             gcdColorR = 0.1,
             gcdColorG = 1,
             gcdColorB = 0.25,
-            visualDefaultsVersion = 6,
         },
         minimap = {
             hide = false,
