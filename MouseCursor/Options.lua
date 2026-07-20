@@ -17,6 +17,20 @@ local function UpdateMouseCursorOption(info, val)
     SweepyBoop:UpdateMouseCursor();
 end
 
+local function GetGCDColor()
+    local config = SweepyBoop.db.profile.mouseCursor;
+    return config.gcdColorR, config.gcdColorG, config.gcdColorB;
+end
+
+local function SetGCDColor(_, r, g, b)
+    local config = SweepyBoop.db.profile.mouseCursor;
+    config.gcdColorR = r;
+    config.gcdColorG = g;
+    config.gcdColorB = b;
+    config.lastModified = GetTime();
+    SweepyBoop:UpdateMouseCursor();
+end
+
 addon.GetMouseCursorOptions = function(order)
     local optionGroup = {
         order = order,
@@ -92,14 +106,16 @@ addon.GetMouseCursorOptions = function(order)
                     return not SweepyBoop.db.profile.mouseCursor.enabled;
                 end,
             },
-            useClassColor = {
+            gcdColor = {
                 order = 9,
-                type = "toggle",
-                width = 1,
-                name = L["Use class color"],
-                set = UpdateMouseCursorOption,
+                type = "color",
+                width = 0.9,
+                name = L["GCD color"],
+                get = GetGCDColor,
+                set = SetGCDColor,
                 disabled = function()
-                    return not SweepyBoop.db.profile.mouseCursor.enabled;
+                    local config = SweepyBoop.db.profile.mouseCursor;
+                    return ( not config.enabled ) or ( not config.showGCD );
                 end,
             },
             ringSize = {

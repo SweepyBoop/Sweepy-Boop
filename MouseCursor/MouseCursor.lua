@@ -5,7 +5,7 @@ if not addon.PROJECT_MAINLINE then return end
 local GCD_SPELL_ID = 61304;
 local WHITE_TEXTURE = "Interface\\Buttons\\WHITE8X8";
 local TRAIL_ATLAS = "CircleMaskScalable";
-local SEGMENT_COUNT = 96;
+local SEGMENT_COUNT = 192;
 local TRAIL_POOL_SIZE = 48;
 local TWO_PI = math.pi * 2;
 local HALF_PI = math.pi / 2;
@@ -26,6 +26,7 @@ local gcdStartTime = 0;
 local gcdDuration = 0;
 local gcdActive = false;
 local lastGCDTime = 0;
+local pendingGCDCheck = false;
 
 local function Clamp(value, minValue, maxValue)
     value = tonumber(value) or minValue;
@@ -38,16 +39,8 @@ local function GetConfig()
     return SweepyBoop.db.profile.mouseCursor;
 end
 
-local function GetClassColorOrWhite(useClassColor)
-    if useClassColor then
-        local _, classFile = UnitClass("player");
-        local color = classFile and RAID_CLASS_COLORS and RAID_CLASS_COLORS[classFile];
-        if color then
-            return color.r, color.g, color.b;
-        end
-    end
-
-    return 1, 1, 1;
+local function GetGCDColor(config)
+    return Clamp(config.gcdColorR, 0, 1), Clamp(config.gcdColorG, 0, 1), Clamp(config.gcdColorB, 0, 1);
 end
 
 local function GetTrailColor(config)
@@ -65,6 +58,12 @@ local function StyleTrailTexture(texture)
 end
 
 local function CreateSegment(parent, layer)
+    if parent.CreateLine then
+        local line = parent:CreateLine(nil, layer or "OVERLAY");
+        line:Hide();
+        return line;
+    end
+
     local segment = parent:CreateTexture(nil, layer or "OVERLAY");
     StyleTexture(segment);
     segment:Hide();
@@ -77,19 +76,44 @@ local function EnsureRingSegments(target, parent, layer)
     end
 end
 
+local function StyleLineSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b)
+    segment:ClearAllPoints();
+    segment:SetStartPoint("CENTER", cursorFrame, x1, y1);
+    segment:SetEndPoint("CENTER", cursorFrame, x2, y2);
+    segment:SetThickness(thickness);
+    segment:SetColorTexture(r, g, b, alpha);
+end
+
+local function StyleTextureSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b)
+    local dx = x2 - x1;
+    local dy = y2 - y1;
+    local length = math.sqrt(dx * dx + dy * dy);
+    local angle = math.atan(dy / dx);
+    if dx < 0 then
+        angle = angle + math.pi;
+    end
+
+    segment:ClearAllPoints();
+    segment:SetPoint("CENTER", cursorFrame, "CENTER", ( x1 + x2 ) / 2, ( y1 + y2 ) / 2);
+    segment:SetSize(length * 1.05, thickness);
+    segment:SetRotation(angle);
+    segment:SetVertexColor(r, g, b, alpha);
+end
+
 local function LayoutSegments(segments, radius, thickness, alpha, r, g, b)
-    local chordLength = 2 * radius * math.sin(math.pi / SEGMENT_COUNT) * 1.08;
-
     for i, segment in ipairs(segments) do
-        local angle = HALF_PI - ( ( i - 1 ) / SEGMENT_COUNT ) * TWO_PI;
-        local x = math.cos(angle) * radius;
-        local y = math.sin(angle) * radius;
+        local angle1 = HALF_PI - ( ( i - 1 ) / SEGMENT_COUNT ) * TWO_PI;
+        local angle2 = HALF_PI - ( i / SEGMENT_COUNT ) * TWO_PI;
+        local x1 = math.cos(angle1) * radius;
+        local y1 = math.sin(angle1) * radius;
+        local x2 = math.cos(angle2) * radius;
+        local y2 = math.sin(angle2) * radius;
 
-        segment:ClearAllPoints();
-        segment:SetPoint("CENTER", cursorFrame, "CENTER", x, y);
-        segment:SetSize(chordLength, thickness);
-        segment:SetRotation(angle - HALF_PI);
-        segment:SetVertexColor(r, g, b, alpha);
+        if segment.SetStartPoint and segment.SetEndPoint then
+            StyleLineSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b);
+        else
+            StyleTextureSegment(segment, x1, y1, x2, y2, thickness, alpha, r, g, b);
+        end
     end
 end
 
@@ -145,7 +169,7 @@ end
 
 local function ApplyCursorDefaults()
     local config = GetConfig();
-    if config.visualDefaultsVersion == 2 then return end
+    if config.visualDefaultsVersion == 3 then return end
 
     if config.ringSize == nil or config.ringSize == 70 then
         config.ringSize = 48;
@@ -169,7 +193,10 @@ local function ApplyCursorDefaults()
     config.trailColorR = config.trailColorR or 0.72;
     config.trailColorG = config.trailColorG or 0.9;
     config.trailColorB = config.trailColorB or 1;
-    config.visualDefaultsVersion = 2;
+    config.gcdColorR = config.gcdColorR or 0.1;
+    config.gcdColorG = config.gcdColorG or 1;
+    config.gcdColorB = config.gcdColorB or 0.25;
+    config.visualDefaultsVersion = 3;
     config.lastModified = GetTime();
 end
 
@@ -181,14 +208,14 @@ local function RefreshVisuals()
     local opacity = Clamp(config.opacity, 0.2, 1);
     local ringSize = Clamp(config.ringSize, 28, 90);
     local thickness = Clamp(config.ringThickness, 2, 6);
-    local r, g, b = GetClassColorOrWhite(config.useClassColor);
+    local gcdR, gcdG, gcdB = GetGCDColor(config);
 
     cursorFrame:SetSize(ringSize + thickness * 4, ringSize + thickness * 4);
     cursorFrame:SetScale(Clamp(config.scale, 0.5, 2));
     trailFrame:SetAlpha(opacity);
 
-    LayoutSegments(baselineSegments, ringSize / 2, thickness, opacity * 0.72, r, g, b);
-    LayoutSegments(gcdSegments, ( ringSize / 2 ) - thickness - 2, thickness + 1, opacity, 1, 0.82, 0.12);
+    LayoutSegments(baselineSegments, ringSize / 2, thickness, opacity * 0.72, 1, 1, 1);
+    LayoutSegments(gcdSegments, ( ringSize / 2 ) + thickness + 1, thickness + 1, opacity, gcdR, gcdG, gcdB);
 
     if config.showBaseline then
         for _, segment in ipairs(baselineSegments) do
@@ -302,7 +329,7 @@ local function UpdateGCDRing()
         return;
     end
 
-    local visibleSegments = math.ceil(SEGMENT_COUNT * ( 1 - Clamp(progress, 0, 1)));
+    local visibleSegments = math.max(1, math.ceil(SEGMENT_COUNT * ( 1 - Clamp(progress, 0, 1))));
     for i, segment in ipairs(gcdSegments) do
         if i <= visibleSegments then
             segment:Show();
@@ -327,13 +354,18 @@ end
 
 local function StartGCD(startTime, duration)
     local config = GetConfig();
-    if ( not config.enabled ) or ( not config.showGCD ) then return end
-    if ( not startTime ) or ( not duration ) or duration <= 0 then return end
+    if ( not config.enabled ) or ( not config.showGCD ) then return false end
+    if ( not startTime ) or ( not duration ) or duration <= 0 then return false end
+
+    if cursorFrame.lastModified ~= config.lastModified then
+        RefreshVisuals();
+    end
 
     gcdStartTime = startTime;
     gcdDuration = duration;
     gcdActive = true;
     UpdateGCDRing();
+    return true;
 end
 
 local function GetGCDCooldown()
@@ -350,13 +382,33 @@ local function GetGCDCooldown()
     end
 end
 
+local function TryStartGCD()
+    return StartGCD(GetGCDCooldown());
+end
+
+local function QueueGCDCheck()
+    if pendingGCDCheck then return end
+
+    pendingGCDCheck = true;
+    C_Timer.After(0, function()
+        pendingGCDCheck = false;
+        TryStartGCD();
+    end);
+end
+
 local function OnEvent(_, event, unit)
-    if event ~= "UNIT_SPELLCAST_SENT" then return end
     if unit and unit ~= "player" then return end
-    if GetTime() - lastGCDTime < 0.1 then return end
+    if event == "SPELL_UPDATE_COOLDOWN" then
+        TryStartGCD();
+        return;
+    end
+    if event ~= "UNIT_SPELLCAST_SENT" and event ~= "UNIT_SPELLCAST_SUCCEEDED" then return end
+    if GetTime() - lastGCDTime < 0.05 then return end
 
     lastGCDTime = GetTime();
-    StartGCD(GetGCDCooldown());
+    if not TryStartGCD() then
+        QueueGCDCheck();
+    end
 end
 
 function SweepyBoop:UpdateMouseCursor()
@@ -395,6 +447,8 @@ function SweepyBoop:SetupMouseCursor()
         trackerFrame:SetScript("OnUpdate", OnUpdate);
         if config.showGCD then
             eventFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
+            eventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+            eventFrame:RegisterEvent("SPELL_UPDATE_COOLDOWN");
         end
     else
         trackerFrame:SetScript("OnUpdate", nil);
