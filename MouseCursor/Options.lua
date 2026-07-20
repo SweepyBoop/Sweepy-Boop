@@ -111,24 +111,8 @@ addon.GetMouseCursorOptions = function(order)
                     return ( not config.enabled ) or ( not config.showBaseline );
                 end,
             },
-            gcdColor = {
-                order = 9.1,
-                type = "color",
-                width = 0.9,
-                name = L["GCD color"],
-                get = function()
-                    return GetColor("gcd");
-                end,
-                set = function(_, r, g, b)
-                    SetColor("gcd", r, g, b);
-                end,
-                disabled = function()
-                    local config = SweepyBoop.db.profile.mouseCursor;
-                    return ( not config.enabled ) or ( not config.showGCD );
-                end,
-            },
             trailColor = {
-                order = 9.2,
+                order = 9.1,
                 type = "color",
                 width = 0.9,
                 name = L["Trail color"],
@@ -141,6 +125,22 @@ addon.GetMouseCursorOptions = function(order)
                 disabled = function()
                     local config = SweepyBoop.db.profile.mouseCursor;
                     return ( not config.enabled ) or ( not config.showTrail );
+                end,
+            },
+            gcdColor = {
+                order = 9.2,
+                type = "color",
+                width = 0.9,
+                name = L["GCD color"],
+                get = function()
+                    return GetColor("gcd");
+                end,
+                set = function(_, r, g, b)
+                    SetColor("gcd", r, g, b);
+                end,
+                disabled = function()
+                    local config = SweepyBoop.db.profile.mouseCursor;
+                    return ( not config.enabled ) or ( not config.showGCD );
                 end,
             },
             ringSize = {
@@ -163,7 +163,7 @@ addon.GetMouseCursorOptions = function(order)
                 min = 2,
                 max = 6,
                 step = 1,
-                name = L["Ring thickness"],
+                name = L["GCD ring padding"],
                 set = UpdateMouseCursorOption,
                 disabled = function()
                     return not SweepyBoop.db.profile.mouseCursor.enabled;
