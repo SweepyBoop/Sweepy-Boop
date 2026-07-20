@@ -235,6 +235,25 @@ local defaults = {
                 [addon.WARRIOR] = 107570, -- Storm Bolt
             },
         },
+        mouseCursor = {
+            enabled = true,
+            showBaseline = true,
+            showTrail = true,
+            showGCD = true,
+            useClassColor = true,
+            ringSize = 48,
+            ringThickness = 3,
+            scale = 1,
+            opacity = 0.85,
+            trailDuration = 0.35,
+            trailDensity = 0.018,
+            trailSize = 9,
+            trailMinMovement = 2,
+            trailColorR = 0.72,
+            trailColorG = 0.9,
+            trailColorB = 1,
+            visualDefaultsVersion = 2,
+        },
         minimap = {
             hide = false,
         },
@@ -362,6 +381,7 @@ function SweepyBoop:OnInitialize()
         options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
+        options.args.mouseCursor = addon.GetMouseCursorOptions(7.25);
         options.args.macros = addon.GetMacroOptions(7.5);
     else
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
@@ -435,6 +455,7 @@ function SweepyBoop:OnInitialize()
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
     self:SetupHonorReminder();
+    self:SetupMouseCursor();
     self:UpdateSBMMacros();
 
     local loginFrame = CreateFrame("Frame");
@@ -457,6 +478,7 @@ function SweepyBoop:RefreshConfig()
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
         self:RefreshHonorReminder();
+        self:RefreshMouseCursor();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
         self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
