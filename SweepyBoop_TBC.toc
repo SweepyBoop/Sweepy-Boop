@@ -56,4 +56,7 @@ ArenaFrames\ArenaCooldowns.lua
 ArenaFrames\RangeIndicators.lua
 ArenaFrames\Options.lua
 
+MouseCursor\MouseCursor.lua
+MouseCursor\Options.lua
+
 Internal\Debug.lua

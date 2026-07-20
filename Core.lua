@@ -235,6 +235,29 @@ local defaults = {
                 [addon.WARRIOR] = 107570, -- Storm Bolt
             },
         },
+        mouseCursor = {
+            enabled = true,
+            showBaseline = true,
+            showTrail = true,
+            showGCD = true,
+            ringSize = 48,
+            gcdRingSize = 60,
+            scale = 1,
+            opacity = 0.85,
+            trailDuration = 0.35,
+            trailDensity = 0.018,
+            trailSize = 9,
+            trailMinMovement = 2,
+            baselineColorR = 1,
+            baselineColorG = 1,
+            baselineColorB = 1,
+            trailColorR = 1,
+            trailColorG = 1,
+            trailColorB = 1,
+            gcdColorR = 0.1,
+            gcdColorG = 1,
+            gcdColorB = 0.25,
+        },
         minimap = {
             hide = false,
         },
@@ -366,6 +389,7 @@ function SweepyBoop:OnInitialize()
     else
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
     end
+    options.args.mouseCursor = addon.GetMouseCursorOptions(7.25);
 
     addon.importDialogs = addon.importDialogs or {};
     addon.importDialogs[""] = addon.CreateImportDialog("");
@@ -415,6 +439,7 @@ function SweepyBoop:OnInitialize()
 
     if ( not addon.PROJECT_MAINLINE ) then
         self:SetupArenaCooldownTracker();
+        self:SetupMouseCursor();
     end
 
     if ( not addon.PROJECT_MAINLINE ) then return end
@@ -435,6 +460,7 @@ function SweepyBoop:OnInitialize()
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
     self:SetupHonorReminder();
+    self:SetupMouseCursor();
     self:UpdateSBMMacros();
 
     local loginFrame = CreateFrame("Frame");
@@ -450,6 +476,8 @@ function SweepyBoop:RefreshConfig()
         self:HideTestArenaCooldownTracker();
         self:HideTestArenaStandaloneBars();
     end
+
+    self:RefreshMouseCursor();
 
     if addon.PROJECT_MAINLINE then
         self:SetupArenaOffensiveIcons();

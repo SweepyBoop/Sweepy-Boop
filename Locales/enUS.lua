@@ -79,6 +79,23 @@ L["Support the original WA author"] = "Support the original WA author";
 L["Indicator size"] = "Indicator size";
 L["Tracked spells"] = "Tracked spells";
 
+L["Mouse cursor"] = "Mouse cursor";
+L["A lightweight ring, GCD indicator, and fading trail around your mouse cursor."] = "A lightweight ring, GCD indicator, and fading trail around your mouse cursor.";
+L["Visuals"] = "Visuals";
+L["Baseline ring"] = "Baseline ring";
+L["Trail"] = "Trail";
+L["GCD ring"] = "GCD ring";
+L["Baseline color"] = "Baseline color";
+L["GCD color"] = "GCD color";
+L["Trail color"] = "Trail color";
+L["Ring size"] = "Ring size";
+L["GCD ring size"] = "GCD ring size";
+L["Scale"] = "Scale";
+L["Opacity"] = "Opacity";
+L["Trail duration"] = "Trail duration";
+L["Trail density"] = "Trail density";
+L["Trail size"] = "Trail size";
+
 L["Smart macros"] = "Smart macros";
 L["Focus arena macros"] = "Focus arena macros";
 L["Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus."] = "Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus.";
