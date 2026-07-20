@@ -73,7 +73,7 @@ addon.GetMouseCursorOptions = function(order)
                 order = 1,
                 type = "description",
                 fontSize = "medium",
-                name = L["Adds a lightweight ring, GCD indicator, and fading trail around your mouse cursor. Uses built-in UI primitives only; no external cursor media is copied."],
+                name = L["A lightweight ring, GCD indicator, and fading trail around your mouse cursor."],
             },
             enabled = {
                 order = 2,
