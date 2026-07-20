@@ -249,7 +249,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.petIconSize = 1.5;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
-    defaults.profile.nameplatesEnemy.arenaSpecIconOthers = true;
     defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
