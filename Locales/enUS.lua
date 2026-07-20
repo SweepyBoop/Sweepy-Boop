@@ -81,7 +81,6 @@ L["Tracked spells"] = "Tracked spells";
 
 L["Mouse cursor"] = "Mouse cursor";
 L["Adds a lightweight ring, GCD indicator, and fading trail around your mouse cursor. Uses built-in UI primitives only; no external cursor media is copied."] = "Adds a lightweight ring, GCD indicator, and fading trail around your mouse cursor. Uses built-in UI primitives only; no external cursor media is copied.";
-L["Test GCD"] = "Test GCD";
 L["Visuals"] = "Visuals";
 L["Baseline ring"] = "Baseline ring";
 L["Trail"] = "Trail";

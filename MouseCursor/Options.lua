@@ -60,17 +60,6 @@ addon.GetMouseCursorOptions = function(order)
                 name = addon.FORMAT_ATLAS("CircleMaskScalable") .. " " .. L["Enabled"],
                 set = SetMouseCursorOption,
             },
-            testGCD = {
-                order = 4,
-                type = "execute",
-                width = 0.6,
-                name = L["Test GCD"],
-                func = "TestMouseCursorGCD",
-                disabled = function()
-                    local config = SweepyBoop.db.profile.mouseCursor;
-                    return ( not config.enabled ) or ( not config.showGCD );
-                end,
-            },
             visualHeader = {
                 order = 5,
                 type = "header",
