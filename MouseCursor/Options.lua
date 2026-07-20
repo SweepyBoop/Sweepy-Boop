@@ -145,6 +145,12 @@ addon.GetMouseCursorOptions = function(order)
                 disabled = IsDisabled,
             },
             trailColor = CreateColorOption(22, L["Trail color"], "trail", "showTrail"),
+            trailColorBreak = {
+                order = 22.5,
+                type = "description",
+                width = "full",
+                name = "",
+            },
             trailDuration = {
                 order = 23,
                 type = "range",
@@ -198,14 +204,14 @@ addon.GetMouseCursorOptions = function(order)
                 disabled = IsDisabled,
             },
             gcdColor = CreateColorOption(32, L["GCD color"], "gcd", "showGCD"),
-            ringThickness = {
+            gcdRingSize = {
                 order = 33,
                 type = "range",
                 width = 0.9,
-                min = 2,
-                max = 6,
+                min = 28,
+                max = 110,
                 step = 1,
-                name = L["GCD ring padding"],
+                name = L["GCD ring size"],
                 set = UpdateMouseCursorOption,
                 disabled = function()
                     return IsFeatureDisabled("showGCD");

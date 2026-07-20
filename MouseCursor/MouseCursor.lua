@@ -116,13 +116,13 @@ end
 
 local function ApplyCursorDefaults()
     local config = GetConfig();
-    if config.visualDefaultsVersion == 5 then return end
+    if config.visualDefaultsVersion == 6 then return end
 
     if config.ringSize == nil or config.ringSize == 70 then
         config.ringSize = 48;
     end
-    if config.ringThickness == nil or config.ringThickness == 4 then
-        config.ringThickness = 3;
+    if config.gcdRingSize == nil then
+        config.gcdRingSize = ( config.ringSize or 48 ) + ( ( config.ringThickness or 3 ) * 4 );
     end
     if config.opacity == nil or config.opacity == 0.9 then
         config.opacity = 0.85;
@@ -148,7 +148,7 @@ local function ApplyCursorDefaults()
     config.gcdColorR = config.gcdColorR or 0.1;
     config.gcdColorG = config.gcdColorG or 1;
     config.gcdColorB = config.gcdColorB or 0.25;
-    config.visualDefaultsVersion = 5;
+    config.visualDefaultsVersion = 6;
     config.lastModified = GetTime();
 end
 
@@ -159,9 +159,9 @@ local function RefreshVisuals()
     local config = GetConfig();
     local opacity = Clamp(config.opacity, 0.2, 1);
     local ringSize = Clamp(config.ringSize, 28, 90);
+    local gcdSize = Clamp(config.gcdRingSize, 28, 110);
     local baselineR, baselineG, baselineB = GetBaselineColor(config);
     local gcdR, gcdG, gcdB = GetGCDColor(config);
-    local gcdSize = ringSize + Clamp(config.ringThickness, 2, 6) * 4;
 
     cursorFrame:SetSize(gcdSize, gcdSize);
     cursorFrame:SetScale(Clamp(config.scale, 0.5, 2));

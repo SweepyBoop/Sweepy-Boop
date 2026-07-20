@@ -241,7 +241,7 @@ local defaults = {
             showTrail = true,
             showGCD = true,
             ringSize = 48,
-            ringThickness = 3,
+            gcdRingSize = 60,
             scale = 1,
             opacity = 0.85,
             trailDuration = 0.35,
@@ -257,7 +257,7 @@ local defaults = {
             gcdColorR = 0.1,
             gcdColorG = 1,
             gcdColorB = 0.25,
-            visualDefaultsVersion = 5,
+            visualDefaultsVersion = 6,
         },
         minimap = {
             hide = false,
