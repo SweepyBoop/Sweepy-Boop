@@ -17,16 +17,16 @@ local function UpdateMouseCursorOption(info, val)
     SweepyBoop:UpdateMouseCursor();
 end
 
-local function GetGCDColor()
+local function GetColor(prefix)
     local config = SweepyBoop.db.profile.mouseCursor;
-    return config.gcdColorR, config.gcdColorG, config.gcdColorB;
+    return config[prefix .. "ColorR"], config[prefix .. "ColorG"], config[prefix .. "ColorB"];
 end
 
-local function SetGCDColor(_, r, g, b)
+local function SetColor(prefix, r, g, b)
     local config = SweepyBoop.db.profile.mouseCursor;
-    config.gcdColorR = r;
-    config.gcdColorG = g;
-    config.gcdColorB = b;
+    config[prefix .. "ColorR"] = r;
+    config[prefix .. "ColorG"] = g;
+    config[prefix .. "ColorB"] = b;
     config.lastModified = GetTime();
     SweepyBoop:UpdateMouseCursor();
 end
@@ -95,16 +95,52 @@ addon.GetMouseCursorOptions = function(order)
                     return not SweepyBoop.db.profile.mouseCursor.enabled;
                 end,
             },
-            gcdColor = {
+            baselineColor = {
                 order = 9,
                 type = "color",
                 width = 0.9,
+                name = L["Baseline color"],
+                get = function()
+                    return GetColor("baseline");
+                end,
+                set = function(_, r, g, b)
+                    SetColor("baseline", r, g, b);
+                end,
+                disabled = function()
+                    local config = SweepyBoop.db.profile.mouseCursor;
+                    return ( not config.enabled ) or ( not config.showBaseline );
+                end,
+            },
+            gcdColor = {
+                order = 9.1,
+                type = "color",
+                width = 0.9,
                 name = L["GCD color"],
-                get = GetGCDColor,
-                set = SetGCDColor,
+                get = function()
+                    return GetColor("gcd");
+                end,
+                set = function(_, r, g, b)
+                    SetColor("gcd", r, g, b);
+                end,
                 disabled = function()
                     local config = SweepyBoop.db.profile.mouseCursor;
                     return ( not config.enabled ) or ( not config.showGCD );
+                end,
+            },
+            trailColor = {
+                order = 9.2,
+                type = "color",
+                width = 0.9,
+                name = L["Trail color"],
+                get = function()
+                    return GetColor("trail");
+                end,
+                set = function(_, r, g, b)
+                    SetColor("trail", r, g, b);
+                end,
+                disabled = function()
+                    local config = SweepyBoop.db.profile.mouseCursor;
+                    return ( not config.enabled ) or ( not config.showTrail );
                 end,
             },
             ringSize = {

@@ -33,6 +33,10 @@ local function GetConfig()
     return SweepyBoop.db.profile.mouseCursor;
 end
 
+local function GetBaselineColor(config)
+    return Clamp(config.baselineColorR, 0, 1), Clamp(config.baselineColorG, 0, 1), Clamp(config.baselineColorB, 0, 1);
+end
+
 local function GetGCDColor(config)
     return Clamp(config.gcdColorR, 0, 1), Clamp(config.gcdColorG, 0, 1), Clamp(config.gcdColorB, 0, 1);
 end
@@ -133,6 +137,9 @@ local function ApplyCursorDefaults()
         config.trailSize = 9;
     end
 
+    config.baselineColorR = config.baselineColorR or 1;
+    config.baselineColorG = config.baselineColorG or 1;
+    config.baselineColorB = config.baselineColorB or 1;
     config.trailColorR = config.trailColorR or 0.72;
     config.trailColorG = config.trailColorG or 0.9;
     config.trailColorB = config.trailColorB or 1;
@@ -150,7 +157,8 @@ local function RefreshVisuals()
     local config = GetConfig();
     local opacity = Clamp(config.opacity, 0.2, 1);
     local ringSize = Clamp(config.ringSize, 28, 90);
-    local r, g, b = GetGCDColor(config);
+    local baselineR, baselineG, baselineB = GetBaselineColor(config);
+    local gcdR, gcdG, gcdB = GetGCDColor(config);
     local gcdSize = ringSize + Clamp(config.ringThickness, 2, 6) * 4;
 
     cursorFrame:SetSize(gcdSize, gcdSize);
@@ -158,11 +166,11 @@ local function RefreshVisuals()
     trailFrame:SetAlpha(opacity);
 
     baselineRing:SetSize(ringSize, ringSize);
-    baselineRing:SetAlpha(opacity * 0.72);
+    baselineRing:SetVertexColor(baselineR, baselineG, baselineB, opacity * 0.72);
     baselineRing:SetShown(config.showBaseline);
 
     gcdRing:SetSize(gcdSize, gcdSize);
-    gcdRing:SetSwipeColor(r, g, b, opacity);
+    gcdRing:SetSwipeColor(gcdR, gcdG, gcdB, opacity);
     if not config.showGCD then
         HideGCDRing();
     end
