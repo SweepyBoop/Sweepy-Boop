@@ -116,7 +116,7 @@ end
 
 local function ApplyCursorDefaults()
     local config = GetConfig();
-    if config.visualDefaultsVersion == 4 then return end
+    if config.visualDefaultsVersion == 5 then return end
 
     if config.ringSize == nil or config.ringSize == 70 then
         config.ringSize = 48;
@@ -140,13 +140,15 @@ local function ApplyCursorDefaults()
     config.baselineColorR = config.baselineColorR or 1;
     config.baselineColorG = config.baselineColorG or 1;
     config.baselineColorB = config.baselineColorB or 1;
-    config.trailColorR = config.trailColorR or 0.72;
-    config.trailColorG = config.trailColorG or 0.9;
-    config.trailColorB = config.trailColorB or 1;
+    if config.trailColorR == nil or ( config.trailColorR == 0.72 and config.trailColorG == 0.9 and config.trailColorB == 1 ) then
+        config.trailColorR = 1;
+        config.trailColorG = 1;
+        config.trailColorB = 1;
+    end
     config.gcdColorR = config.gcdColorR or 0.1;
     config.gcdColorG = config.gcdColorG or 1;
     config.gcdColorB = config.gcdColorB or 0.25;
-    config.visualDefaultsVersion = 4;
+    config.visualDefaultsVersion = 5;
     config.lastModified = GetTime();
 end
 
