@@ -1,7 +1,5 @@
 local _, addon = ...;
 
-if not addon.PROJECT_MAINLINE then return end
-
 local GCD_SPELL_ID = 61304;
 local RING_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/MouseCursorRing";
 local TRAIL_ATLAS = "CircleMaskScalable";
@@ -33,6 +31,10 @@ local function GetConfig()
     return SweepyBoop.db.profile.mouseCursor;
 end
 
+local function SupportsGCDRing()
+    return not addon.PROJECT_TBC;
+end
+
 local function GetBaselineColor(config)
     return Clamp(config.baselineColorR, 0, 1), Clamp(config.baselineColorG, 0, 1), Clamp(config.baselineColorB, 0, 1);
 end
@@ -62,19 +64,33 @@ local function HideGCDRing()
 end
 
 local function StyleGCDRing(cooldown)
-    cooldown:SetSwipeTexture(RING_TEXTURE);
-    cooldown:SetHideCountdownNumbers(true);
-    cooldown:SetDrawSwipe(true);
-    cooldown:SetDrawEdge(false);
-    cooldown:SetDrawBling(false);
-    cooldown:SetReverse(true);
+    if cooldown.SetSwipeTexture then
+        cooldown:SetSwipeTexture(RING_TEXTURE);
+    end
+    if cooldown.SetHideCountdownNumbers then
+        cooldown:SetHideCountdownNumbers(true);
+    end
+    if cooldown.SetDrawSwipe then
+        cooldown:SetDrawSwipe(true);
+    end
+    if cooldown.SetDrawEdge then
+        cooldown:SetDrawEdge(false);
+    end
+    if cooldown.SetDrawBling then
+        cooldown:SetDrawBling(false);
+    end
+    if cooldown.SetReverse then
+        cooldown:SetReverse(true);
+    end
 end
 
 local function EnsureFrames()
     if cursorFrame then return end
 
     trailFrame = CreateFrame("Frame", "SweepyBoopMouseCursorTrailFrame", UIParent);
-    trailFrame:SetMouseClickEnabled(false);
+    if trailFrame.SetMouseClickEnabled then
+        trailFrame:SetMouseClickEnabled(false);
+    end
     trailFrame:EnableMouse(false);
     trailFrame:SetFrameStrata("HIGH");
     trailFrame:SetFrameLevel(80);
@@ -82,7 +98,9 @@ local function EnsureFrames()
     trailFrame:Hide();
 
     cursorFrame = CreateFrame("Frame", "SweepyBoopMouseCursorFrame", UIParent);
-    cursorFrame:SetMouseClickEnabled(false);
+    if cursorFrame.SetMouseClickEnabled then
+        cursorFrame:SetMouseClickEnabled(false);
+    end
     cursorFrame:EnableMouse(false);
     cursorFrame:SetFrameStrata("HIGH");
     cursorFrame:SetFrameLevel(90);
@@ -107,7 +125,11 @@ local function EnsureTrailPool()
     trailPoolInitialized = true;
     for i = 1, TRAIL_POOL_SIZE do
         local texture = trailFrame:CreateTexture(nil, "ARTWORK");
-        texture:SetAtlas(TRAIL_ATLAS);
+        if texture.SetAtlas then
+            texture:SetAtlas(TRAIL_ATLAS);
+        else
+            texture:SetTexture("Interface\\Buttons\\WHITE8X8");
+        end
         texture:SetBlendMode("ADD");
         texture:Hide();
         trailPool[i] = texture;
@@ -152,11 +174,17 @@ local function RefreshVisuals()
 
     baselineRing:SetSize(ringSize, ringSize);
     baselineRing:SetVertexColor(baselineR, baselineG, baselineB, opacity * 0.72);
-    baselineRing:SetShown(config.showBaseline);
+    if config.showBaseline then
+        baselineRing:Show();
+    else
+        baselineRing:Hide();
+    end
 
     gcdRing:SetSize(gcdSize, gcdSize);
-    gcdRing:SetSwipeColor(gcdR, gcdG, gcdB, opacity);
-    if not config.showGCD then
+    if gcdRing.SetSwipeColor then
+        gcdRing:SetSwipeColor(gcdR, gcdG, gcdB, opacity);
+    end
+    if ( not SupportsGCDRing() ) or ( not config.showGCD ) then
         HideGCDRing();
     end
 
@@ -262,7 +290,7 @@ end
 
 local function StartGCD(startTime, duration)
     local config = GetConfig();
-    if ( not config.enabled ) or ( not config.showGCD ) then return false end
+    if ( not SupportsGCDRing() ) or ( not config.enabled ) or ( not config.showGCD ) then return false end
     if ( not startTime ) or ( not duration ) or duration <= 0 then return false end
 
     if cursorFrame.lastModified ~= config.lastModified then
@@ -318,8 +346,6 @@ local function OnEvent(_, event, unit)
 end
 
 function SweepyBoop:UpdateMouseCursor()
-    if not addon.PROJECT_MAINLINE then return end
-
     EnsureFrames();
     ApplyCursorDefaults();
     local config = GetConfig();
@@ -338,8 +364,6 @@ function SweepyBoop:UpdateMouseCursor()
 end
 
 function SweepyBoop:SetupMouseCursor()
-    if not addon.PROJECT_MAINLINE then return end
-
     EnsureFrames();
     ApplyCursorDefaults();
     trackerFrame = trackerFrame or CreateFrame("Frame");
@@ -351,7 +375,7 @@ function SweepyBoop:SetupMouseCursor()
 
     if config.enabled then
         trackerFrame:SetScript("OnUpdate", OnUpdate);
-        if config.showGCD then
+        if SupportsGCDRing() and config.showGCD then
             eventFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
             eventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
             eventFrame:RegisterEvent("SPELL_UPDATE_COOLDOWN");
