@@ -302,6 +302,12 @@ local function StartGCD(startTime, duration)
     return true;
 end
 
+local function IsActiveGCD(startTime, duration)
+    if ( not startTime ) or ( not duration ) or duration <= 0 then return false end
+
+    return ( startTime + duration ) > ( GetTime() + 0.05 );
+end
+
 local function GetGCDCooldown()
     if C_Spell and C_Spell.GetSpellCooldown then
         local info = C_Spell.GetSpellCooldown(GCD_SPELL_ID);
@@ -316,8 +322,19 @@ local function GetGCDCooldown()
     end
 end
 
-local function TryStartGCD()
-    return StartGCD(GetGCDCooldown());
+local function SyncGCDRing()
+    if not SupportsGCDRing() then
+        HideGCDRing();
+        return false;
+    end
+
+    local startTime, duration = GetGCDCooldown();
+    if IsActiveGCD(startTime, duration) then
+        return StartGCD(startTime, duration);
+    end
+
+    HideGCDRing();
+    return false;
 end
 
 local function QueueGCDCheck()
@@ -326,21 +343,21 @@ local function QueueGCDCheck()
     pendingGCDCheck = true;
     C_Timer.After(0, function()
         pendingGCDCheck = false;
-        TryStartGCD();
+        SyncGCDRing();
     end);
 end
 
 local function OnEvent(_, event, unit)
     if unit and unit ~= "player" then return end
-    if event == "SPELL_UPDATE_COOLDOWN" then
-        TryStartGCD();
+    if event == "SPELL_UPDATE_COOLDOWN" or event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED" then
+        SyncGCDRing();
         return;
     end
     if event ~= "UNIT_SPELLCAST_SENT" and event ~= "UNIT_SPELLCAST_SUCCEEDED" then return end
     if GetTime() - lastGCDTime < 0.05 then return end
 
     lastGCDTime = GetTime();
-    if not TryStartGCD() then
+    if not SyncGCDRing() then
         QueueGCDCheck();
     end
 end
@@ -378,6 +395,8 @@ function SweepyBoop:SetupMouseCursor()
         if SupportsGCDRing() and config.showGCD then
             eventFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
             eventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
+            eventFrame:RegisterEvent("UNIT_SPELLCAST_FAILED");
+            eventFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
             eventFrame:RegisterEvent("SPELL_UPDATE_COOLDOWN");
         end
     else
