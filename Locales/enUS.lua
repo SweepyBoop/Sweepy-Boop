@@ -97,6 +97,9 @@ L["Trail density"] = "Trail density";
 L["Trail size"] = "Trail size";
 
 L["Smart macros"] = "Smart macros";
+L["Smart healer macros"] = "Smart healer macros";
+L["Show healer icon on arena frames"] = "Show healer icon on arena frames";
+L["Marks the detected enemy healer on supported arena frames so it is easier to match Smart macro targeting to the frame."] = "Marks the detected enemy healer on supported arena frames so it is easier to match Smart macro targeting to the frame.";
 L["Focus arena macros"] = "Focus arena macros";
 L["Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus."] = "Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus.";
 L["How it works"] = "How it works";

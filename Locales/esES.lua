@@ -34,6 +34,9 @@ local function ApplyTranslations(locale)
     L["Trail density"] = "Densidad de estela";
     L["Trail size"] = "Tamaño de estela";
     L["Smart macros"] = "Macros inteligentes";
+    L["Smart healer macros"] = "Macros inteligentes de sanador";
+    L["Show healer icon on arena frames"] = "Mostrar icono de sanador en marcos de arena";
+    L["Marks the detected enemy healer on supported arena frames so it is easier to match Smart macro targeting to the frame."] = "Marca al sanador enemigo detectado en marcos de arena compatibles para que sea más fácil relacionar el objetivo de la macro inteligente con el marco.";
     L["Focus arena macros"] = "Macros de foco de arena";
     L["Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus."] = "Añade SBM al nombre de una macro para que SweepyBoop redirija sus lanzamientos @focus al sanador enemigo en arena.\n\nCuando se detecta un sanador, @focus se convierte en @arena1, @arena2 o @arena3. Fuera de arena, o si no se encuentra sanador, vuelve a @focus.";
     L["How it works"] = "Cómo funciona";

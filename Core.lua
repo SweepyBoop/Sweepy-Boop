@@ -182,6 +182,7 @@ local defaults = {
             healerInCrowdControlMillisecondsThreshold = 3,
             healerInCrowdControlOffsetX = 0,
             healerInCrowdControlOffsetY = 250,
+            healerIndicator = true,
             queueReminder = true,
             precognitionTracker = true,
             precognitionTrackerSize = 36,
@@ -455,6 +456,7 @@ function SweepyBoop:OnInitialize()
     self:SetupPersonalDR();
     self:SetupCombatIndicator();
     self:SetupHealerInCrowdControl();
+    self:SetupHealerIndicator();
     self:SetupArenaSurrender();
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
