@@ -51,8 +51,6 @@ local function GetArenaFrame(healerIndex)
     elseif SlashCmdList.GLADDY then
         return _G["GladdyButtonFrame" .. healerIndex];
     end
-
-    return _G["CompactArenaFrameMember" .. healerIndex];
 end
 
 local function GetAnchorFrame(frame, healerIndex)

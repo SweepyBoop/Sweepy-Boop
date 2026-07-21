@@ -23,6 +23,9 @@ addon.GetMacroOptions = function(order)
                 width = "full",
                 name = addon.FORMAT_ATLAS("Icon-Healer") .. " Show healer icon on arena frames",
                 desc = "Marks the detected enemy healer on supported arena frames so it is easier to match Smart macro targeting to the frame.",
+                disabled = function()
+                    return ( not ( GladiusEx or Gladius or sArena or ArenaLiveUnitFrames or SlashCmdList.GLADDY ) );
+                end,
                 get = function()
                     return SweepyBoop.db.profile.misc.healerIndicator;
                 end,
