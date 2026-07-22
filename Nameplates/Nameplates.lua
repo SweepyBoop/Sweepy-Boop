@@ -247,7 +247,10 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     else
-        eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
+        eventFrame:RegisterUnitEvent(addon.UNIT_AURA, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_START, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_STOP, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_INTERRUPTED, unpack(retailNameplateUnits));
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
 
@@ -306,7 +309,7 @@ function SweepyBoop:SetupNameplateModules()
                     addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame, unitAuraUpdateInfo);
                 end
 
-                if addon.PROJECT_MAINLINE and ( not IsRestricted() ) then
+                if ( not IsRestricted() ) then
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
             end
