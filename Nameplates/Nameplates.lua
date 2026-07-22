@@ -53,21 +53,6 @@ local function IsForbiddenSafe(frame)
     return frame:IsForbidden();
 end
 
-local function IsNamePlateFrame(frame)
-    if frame.optionTable.showPvPClassificationIndicator then
-        return true;
-    end
-
-    -- Unit tokens are secret on mainline rated PvP frames; only use this fallback in Classic.
-    return ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate");
-end
-
-local function UnsetIgnoreParentAlpha(region)
-    if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-        region:SetIgnoreParentAlpha(false);
-    end
-end
-
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
@@ -76,14 +61,25 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Seems to happen when arena match starts (also lots of LUA errors)
     if ( not frame.unsetIgnoreParentAlpha ) then
         for key, region in pairs(frame) do
-            if ( key ~= "HitTestFrame" ) then
-                UnsetIgnoreParentAlpha(region);
+            if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                --print("[SweepyBoop] frame key:", key, "type:", type(region.SetIgnoreParentAlpha), "hasGetObjectType:", region.GetObjectType ~= nil);
+                if addon.PROJECT_MAINLINE then
+                    if (key ~= "HitTestFrame") then
+                        region:SetIgnoreParentAlpha(false);
+                    end
+                else
+                    if (key == "healthBar" or key == "selectionHighlight") then
+                        region:SetIgnoreParentAlpha(false);
+                    end
+                end
             end
         end
 
-        if frame.castBar then
+        if addon.PROJECT_MAINLINE then
             for _, region in pairs(frame.castBar) do
-                UnsetIgnoreParentAlpha(region);
+                if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                    region:SetIgnoreParentAlpha(false);
+                end
             end
         end
 
@@ -95,7 +91,7 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
 
-    if frame.castBar and frame.castBar.SetAlpha then
+    if addon.PROJECT_MAINLINE then
         frame.castBar:SetAlpha(alpha);
     end
 
@@ -247,10 +243,7 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     else
-        eventFrame:RegisterUnitEvent(addon.UNIT_AURA, unpack(retailNameplateUnits));
-        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_START, unpack(retailNameplateUnits));
-        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_STOP, unpack(retailNameplateUnits));
-        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_INTERRUPTED, unpack(retailNameplateUnits));
+        eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
     end
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
 
@@ -337,7 +330,9 @@ function SweepyBoop:SetupNameplateModules()
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if IsForbiddenSafe(frame) then return end
 
-        if IsNamePlateFrame(frame) then
+        -- Less efficient check for classic as showPvPClassificationIndicator is not available
+        local isNamePlate = frame.optionTable.showPvPClassificationIndicator or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
+        if isNamePlate then
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePlayerName(frame:GetParent(), frame);
@@ -365,35 +360,56 @@ function SweepyBoop:SetupNameplateModules()
         end
     end)
 
-    -- Re-apply our alpha setting after Blizzard setup/range updates reset nameplates.
-    local function ReapplyNamePlateWidgets(frame)
-        if IsForbiddenSafe(frame) then return end
-        if not IsNamePlateFrame(frame) then return end
+    -- Hook CompactUnitFrame_UpdateAll to re-apply our alpha setting after the game resets it
+    -- This catches most cases: PLAYER_ENTERING_WORLD, ARENA_OPPONENT_UPDATE, etc.
+    if addon.PROJECT_MAINLINE then
 
-        local nameplate = frame:GetParent();
-        if nameplate and nameplate.UnitFrame and ( not IsRestricted() ) then
-            UpdateWidgets(nameplate, frame);
-        end
-    end
 
-    -- DefaultCompactUnitFrameSetup directly calls frame:SetAlpha(1).
-    if type(DefaultCompactUnitFrameSetup) == "function" then
-        hooksecurefunc("DefaultCompactUnitFrameSetup", ReapplyNamePlateWidgets)
-    end
+        -- Hook DefaultCompactUnitFrameSetup - this directly calls frame:SetAlpha(1)
+        hooksecurefunc("DefaultCompactUnitFrameSetup", function(frame)
+            if IsForbiddenSafe(frame) then return end
 
-    -- DefaultCompactMiniFrameSetup directly calls frame:SetAlpha(1) for mini frames.
-    if type(DefaultCompactMiniFrameSetup) == "function" then
-        hooksecurefunc("DefaultCompactMiniFrameSetup", ReapplyNamePlateWidgets)
-    end
+            local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
+            if isNamePlate then
+                local nameplate = frame:GetParent();
+                if nameplate and nameplate.UnitFrame then
+                    if ( not IsRestricted() ) then
+                        UpdateWidgets(nameplate, frame);
+                    end
+                end
+            end
+        end)
 
-    -- CompactUnitFrame_UpdateCenterStatusIcon reapplies range-based alpha.
-    if type(CompactUnitFrame_UpdateCenterStatusIcon) == "function" then
-        hooksecurefunc("CompactUnitFrame_UpdateCenterStatusIcon", ReapplyNamePlateWidgets)
-    end
+        -- Hook DefaultCompactMiniFrameSetup - this directly calls frame:SetAlpha(1) for mini frames
+        hooksecurefunc("DefaultCompactMiniFrameSetup", function(frame)
+            if IsForbiddenSafe(frame) then return end
 
-    -- CompactUnitFrame_UpdateAll runs during arena-wide compact frame refreshes.
-    if type(CompactUnitFrame_UpdateAll) == "function" then
-        hooksecurefunc("CompactUnitFrame_UpdateAll", ReapplyNamePlateWidgets)
+            local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
+            if isNamePlate then
+                local nameplate = frame:GetParent();
+                if nameplate and nameplate.UnitFrame then
+                    if ( not IsRestricted() ) then
+                        UpdateWidgets(nameplate, frame);
+                    end
+                end
+            end
+        end)
+
+        -- Hook CompactUnitFrame_UpdateCenterStatusIcon - this calls frame:SetAlpha(CompactUnitFrame_GetRangeAlpha(frame))
+        -- This catches all range-based alpha resets
+        hooksecurefunc("CompactUnitFrame_UpdateCenterStatusIcon", function(frame)
+            if IsForbiddenSafe(frame) then return end
+
+            local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
+            if isNamePlate then
+                local nameplate = frame:GetParent();
+                if nameplate and nameplate.UnitFrame then
+                    if ( not IsRestricted() ) then
+                        UpdateWidgets(nameplate, frame);
+                    end
+                end
+            end
+        end)
     end
 
     -- if addon.PROJECT_MAINLINE then
