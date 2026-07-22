@@ -302,7 +302,7 @@ function SweepyBoop:SetupNameplateModules()
                     addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame, unitAuraUpdateInfo);
                 end
 
-                if ( not IsRestricted() ) then
+                if addon.PROJECT_MAINLINE and ( not IsRestricted() ) then
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
             end
@@ -395,22 +395,25 @@ function SweepyBoop:SetupNameplateModules()
             end
         end)
 
-        -- Hook CompactUnitFrame_UpdateCenterStatusIcon - this calls frame:SetAlpha(CompactUnitFrame_GetRangeAlpha(frame))
-        -- This catches all range-based alpha resets
-        hooksecurefunc("CompactUnitFrame_UpdateCenterStatusIcon", function(frame)
-            if IsForbiddenSafe(frame) then return end
+    end
 
-            local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
-            if isNamePlate then
-                local nameplate = frame:GetParent();
-                if nameplate and nameplate.UnitFrame then
-                    if ( not IsRestricted() ) then
-                        UpdateWidgets(nameplate, frame);
-                    end
+    -- Hook CompactUnitFrame_UpdateCenterStatusIcon - this calls frame:SetAlpha(CompactUnitFrame_GetRangeAlpha(frame))
+    -- This catches all range-based alpha resets
+    hooksecurefunc("CompactUnitFrame_UpdateCenterStatusIcon", function(frame)
+        if IsForbiddenSafe(frame) then return end
+
+        local isNamePlate = frame.optionTable and frame.optionTable.showPvPClassificationIndicator;
+        -- Less efficient check for classic as showPvPClassificationIndicator is not available
+        isNamePlate = isNamePlate or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
+        if isNamePlate then
+            local nameplate = frame:GetParent();
+            if nameplate and nameplate.UnitFrame then
+                if ( not IsRestricted() ) then
+                    UpdateWidgets(nameplate, frame);
                 end
             end
-        end)
-    end
+        end
+    end)
 
     -- if addon.PROJECT_MAINLINE then
     --     hooksecurefunc(NameplateBuffButtonTemplateMixin, "OnEnter", function(self)
