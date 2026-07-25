@@ -26,7 +26,7 @@ param(
     [string]$Realm = "tichondrius",
     [string]$Character = "Swëëpybööp",
     [string]$Locale = "en_US",
-    [string[]]$Brackets = @("2v2", "3v3", "rbg", "shuffle", "solo-shuffle", "shuffle-warrior-arms"),
+    [string[]]$ExtraBrackets = @(),
     [string]$OutputDir = (Join-Path $PSScriptRoot "BlizzardProbeOutput"),
     [string]$ClientId,
     [string]$ClientSecret,
@@ -115,7 +115,7 @@ function Invoke-BlizzardApi {
 
         $response | ConvertTo-Json -Depth 100 | Set-Content -Path $outputPath -Encoding UTF8
         Write-Host "  -> wrote $outputPath"
-        return @{ Name = $Name; Status = "OK"; Path = $outputPath }
+        return @{ Name = $Name; Status = "OK"; Path = $outputPath; Body = $response }
     }
     catch {
         $statusCode = $null
@@ -179,9 +179,14 @@ $token = Get-AccessToken -Region $regionSlug -ClientId $ClientId -ClientSecret $
 $encodedCharacter = [Uri]::EscapeDataString($characterSlug)
 $characterBase = "$apiHost/profile/wow/character/$realmSlug/$encodedCharacter"
 
+$pvpSummaryResult = Invoke-BlizzardApi `
+    -Name "character-pvp-summary" `
+    -Uri "$characterBase/pvp-summary?namespace=$profileNamespace&locale=$Locale" `
+    -Token $token `
+    -OutputDir $OutputDir
+
 $requests = @(
     @{ Name = "character-profile"; Uri = "$characterBase`?namespace=$profileNamespace&locale=$Locale" },
-    @{ Name = "character-pvp-summary"; Uri = "$characterBase/pvp-summary?namespace=$profileNamespace&locale=$Locale" },
     @{ Name = "character-achievements"; Uri = "$characterBase/achievements?namespace=$profileNamespace&locale=$Locale" },
     @{ Name = "character-achievement-statistics"; Uri = "$characterBase/achievements/statistics?namespace=$profileNamespace&locale=$Locale" },
     @{ Name = "character-statistics"; Uri = "$characterBase/statistics?namespace=$profileNamespace&locale=$Locale" },
@@ -191,24 +196,36 @@ $requests = @(
     @{ Name = "realm-index"; Uri = "$apiHost/data/wow/realm/index?namespace=$dynamicNamespace&locale=$Locale" }
 )
 
-foreach ($bracket in $Brackets) {
+if ($pvpSummaryResult.Status -eq "OK" -and $pvpSummaryResult.Body.brackets) {
+    foreach ($bracket in $pvpSummaryResult.Body.brackets) {
+        $href = [string]$bracket.href
+        $bracketSlug = ($href -replace '^.*/pvp-bracket/', '') -replace '\?.*$', ''
+        if (-not [string]::IsNullOrWhiteSpace($bracketSlug)) {
+            $requests += @{ Name = "character-pvp-bracket-$bracketSlug"; Uri = "$characterBase/pvp-bracket/$bracketSlug`?namespace=$profileNamespace&locale=$Locale" }
+        }
+    }
+}
+
+foreach ($bracket in $ExtraBrackets) {
     $bracketSlug = ConvertTo-Slug $bracket
-    $requests += @{ Name = "character-pvp-bracket-$bracketSlug"; Uri = "$characterBase/pvp-bracket/$bracketSlug`?namespace=$profileNamespace&locale=$Locale" }
+    $requests += @{ Name = "character-pvp-bracket-extra-$bracketSlug"; Uri = "$characterBase/pvp-bracket/$bracketSlug`?namespace=$profileNamespace&locale=$Locale" }
 }
 
 if ($IncludeLeaderboards) {
     Write-Host "Leaderboards require a season id. The script writes pvp-season-index first; pass a concrete request manually after inspecting it."
 }
 
-$results = foreach ($request in $requests) {
+$results = @($pvpSummaryResult)
+$results += foreach ($request in $requests) {
     Invoke-BlizzardApi -Name $request.Name -Uri $request.Uri -Token $token -OutputDir $OutputDir
 }
 
+$summaryResults = $results | Select-Object Name, Status, StatusCode, Path
 $summaryPath = Join-Path $OutputDir "summary.json"
-$results | ConvertTo-Json -Depth 20 | Set-Content -Path $summaryPath -Encoding UTF8
+$summaryResults | ConvertTo-Json -Depth 20 | Set-Content -Path $summaryPath -Encoding UTF8
 Write-Host "Summary: $summaryPath"
 
 $failed = @($results | Where-Object { $_.Status -ne "OK" })
 if ($failed.Count -gt 0) {
-    Write-Warning "$($failed.Count) request(s) failed. This is expected for bracket slugs that Blizzard does not support; inspect the generated JSON files."
+    Write-Warning "$($failed.Count) request(s) failed. Inspect the generated JSON files."
 }
