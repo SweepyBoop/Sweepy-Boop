@@ -63,7 +63,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
 
     args[keyPrefix .. "Shape"] = {
             order = orderOffset + 2,
-            width = "normal",
+            width = 0.9,
             type = "select",
             name = "Shape",
             desc = "Shape used for class-colored target indicators.",
@@ -83,9 +83,42 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
             set = SetAggroHighlightOptionAndRefresh,
         };
 
-    args[keyPrefix .. "Anchor"] = {
+    args[keyPrefix .. "Size"] = {
             order = orderOffset + 3,
-            width = "normal",
+            width = 0.65,
+            type = "range",
+            min = 8,
+            max = 32,
+            step = 1,
+            name = "Size",
+            desc = "Indicator size in pixels.",
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "BorderThickness"] = {
+            order = orderOffset + 4,
+            width = 0.95,
+            type = "range",
+            min = 1,
+            max = 5,
+            step = 1,
+            name = "Border Thickness",
+            desc = "Thickness of the black marker outline.",
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "FirstRowBreak"] = {
+            order = orderOffset + 4.5,
+            type = "description",
+            name = "",
+            width = "full",
+        };
+
+    args[keyPrefix .. "Anchor"] = {
+            order = orderOffset + 5,
+            width = 0.9,
             type = "select",
             name = "Anchor",
             desc = "Point on the indicator group used for positioning and first-icon placement.",
@@ -105,8 +138,8 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "RelativePoint"] = {
-            order = orderOffset + 4,
-            width = "normal",
+            order = orderOffset + 6,
+            width = 0.9,
             type = "select",
             name = "Relative To",
             desc = "Point on the Blizzard frame that the indicator group attaches to.",
@@ -126,8 +159,8 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "GrowDirection"] = {
-            order = orderOffset + 5,
-            width = "normal",
+            order = orderOffset + 7,
+            width = 0.9,
             type = "select",
             name = "Grow Direction",
             desc = "Direction additional target indicators grow from the first indicator. Centered modes place the full indicator group on the configured relative point.",
@@ -143,29 +176,16 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
             set = SetAggroHighlightOptionAndRefresh,
         };
 
-    args[keyPrefix .. "LayoutBreak"] = {
-            order = orderOffset + 6,
+    args[keyPrefix .. "SecondRowBreak"] = {
+            order = orderOffset + 7.5,
             type = "description",
             name = "",
             width = "full",
         };
 
-    args[keyPrefix .. "Size"] = {
-            order = orderOffset + 7,
-            width = "normal",
-            type = "range",
-            min = 8,
-            max = 32,
-            step = 1,
-            name = "Size",
-            desc = "Indicator size in pixels.",
-            disabled = LayoutDisabled,
-            set = SetAggroHighlightOptionAndRefresh,
-        };
-
     args[keyPrefix .. "Spacing"] = {
             order = orderOffset + 8,
-            width = "normal",
+            width = 0.65,
             type = "range",
             min = 0,
             max = 12,
@@ -178,7 +198,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
 
     args[keyPrefix .. "OffsetX"] = {
             order = orderOffset + 9,
-            width = "normal",
+            width = 0.75,
             type = "range",
             min = -80,
             max = 80,
@@ -191,7 +211,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
 
     args[keyPrefix .. "OffsetY"] = {
             order = orderOffset + 10,
-            width = "normal",
+            width = 0.75,
             type = "range",
             min = -80,
             max = 80,

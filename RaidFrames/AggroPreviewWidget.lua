@@ -11,7 +11,6 @@ local PREVIEW_FRAME_HEIGHT = 72;
 local PREVIEW_FRAME_SPACING = 28;
 local PREVIEW_HEIGHT = 116;
 local MARKER_ALPHA = 1;
-local MARKER_BORDER_SIZE = 1;
 local FLASH_SECONDS = 0.85;
 local FLASH_MIN_ALPHA = 0.35;
 
@@ -73,9 +72,9 @@ local function MoveMask(mask, owner, iconIndex, width, height)
     mask:Show();
 end
 
-local function DrawPreviewMarker(marker, shape, color, alpha, size)
+local function DrawPreviewMarker(marker, shape, color, alpha, size, borderThickness)
     local iconIndex = RAID_ICON_INDICES[NormalizeShape(shape)];
-    local fillSize = math.max(0, size - ( 2 * MARKER_BORDER_SIZE ));
+    local fillSize = math.max(0, size - ( 2 * borderThickness ));
 
     RemoveMask(marker.outline, marker.outlineMask);
     RemoveMask(marker.fill, marker.fillMask);
@@ -187,10 +186,11 @@ local function RenderSample(widget, sample, markerCount)
 
     local shape = NormalizeShape(ConfigValue(widget.keyPrefix, "Shape"));
     local markerSize = ConfigValue(widget.keyPrefix, "Size");
+    local borderThickness = ConfigValue(widget.keyPrefix, "BorderThickness");
     local previousMarker;
     for i = 1, markerCount do
         local marker = EnsureMarker(sample.frame, sample.markers, i);
-        DrawPreviewMarker(marker, shape, sampleColors[i], MARKER_ALPHA, markerSize);
+        DrawPreviewMarker(marker, shape, sampleColors[i], MARKER_ALPHA, markerSize, borderThickness);
         PositionMarker(marker, sample.frame, sample.container, previousMarker, i, widget.keyPrefix);
         previousMarker = marker;
     end
