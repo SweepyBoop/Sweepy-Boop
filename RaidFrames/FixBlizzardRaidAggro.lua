@@ -166,18 +166,25 @@ end
 
 local function SetTargetIconPoint(icon, container, previousIcon, index, config)
     icon:ClearAllPoints();
-    if index == 1 then
-        icon:SetPoint(config.raidFrameAggroHighlightAnchor, container, config.raidFrameAggroHighlightAnchor, 0, 0);
-        return;
-    end
 
     local spacing = config.raidFrameAggroHighlightSpacing;
     local growDirection = config.raidFrameAggroHighlightGrowDirection;
-    if growDirection == "RIGHT" then
+    if index == 1 then
+        if growDirection == "CENTER_HORIZONTAL" then
+            icon:SetPoint("LEFT", container, "LEFT", 0, 0);
+        elseif growDirection == "CENTER_VERTICAL" then
+            icon:SetPoint("TOP", container, "TOP", 0, 0);
+        else
+            icon:SetPoint(config.raidFrameAggroHighlightAnchor, container, config.raidFrameAggroHighlightAnchor, 0, 0);
+        end
+        return;
+    end
+
+    if ( growDirection == "RIGHT" ) or ( growDirection == "CENTER_HORIZONTAL" ) then
         icon:SetPoint("LEFT", previousIcon, "RIGHT", spacing, 0);
     elseif growDirection == "UP" then
         icon:SetPoint("BOTTOM", previousIcon, "TOP", 0, spacing);
-    elseif growDirection == "DOWN" then
+    elseif ( growDirection == "DOWN" ) or ( growDirection == "CENTER_VERTICAL" ) then
         icon:SetPoint("TOP", previousIcon, "BOTTOM", 0, -spacing);
     else
         icon:SetPoint("RIGHT", previousIcon, "LEFT", -spacing, 0);
@@ -192,20 +199,30 @@ local function LayoutContainer(container, frame, iconCount, config)
     local width = size;
     local height = size;
 
-    if ( growDirection == "UP" ) or ( growDirection == "DOWN" ) then
+    if ( growDirection == "UP" ) or ( growDirection == "DOWN" ) or ( growDirection == "CENTER_VERTICAL" ) then
         height = ( iconCount * size ) + totalSpacing;
     else
         width = ( iconCount * size ) + totalSpacing;
     end
 
     container:ClearAllPoints();
-    container:SetPoint(
-        config.raidFrameAggroHighlightAnchor,
-        frame,
-        config.raidFrameAggroHighlightRelativePoint,
-        config.raidFrameAggroHighlightOffsetX,
-        config.raidFrameAggroHighlightOffsetY
-    );
+    if ( growDirection == "CENTER_HORIZONTAL" ) or ( growDirection == "CENTER_VERTICAL" ) then
+        container:SetPoint(
+            "CENTER",
+            frame,
+            config.raidFrameAggroHighlightRelativePoint,
+            config.raidFrameAggroHighlightOffsetX,
+            config.raidFrameAggroHighlightOffsetY
+        );
+    else
+        container:SetPoint(
+            config.raidFrameAggroHighlightAnchor,
+            frame,
+            config.raidFrameAggroHighlightRelativePoint,
+            config.raidFrameAggroHighlightOffsetX,
+            config.raidFrameAggroHighlightOffsetY
+        );
+    end
     container:SetSize(width, height);
 end
 
