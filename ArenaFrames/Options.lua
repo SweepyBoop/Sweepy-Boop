@@ -1,6 +1,17 @@
 local _, addon = ...;
 local yellowColor = "cFFFFFF00";
 
+local function SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val, callback)
+    SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
+    SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
+    if callback then
+        callback();
+    end
+    if addon.RefreshArenaOffensiveIconPreviewWidgets then
+        addon.RefreshArenaOffensiveIconPreviewWidgets();
+    end
+end
+
 function SweepyBoop:TestArena()
     if IsInInstance() then
         addon.PRINT(addon.L["Test mode can only be used outside instances"]);
@@ -105,36 +116,23 @@ addon.GetMainlineArenaFrameOptions = function(order)
                 name = "Offensive alerts",
                 args = {
                     arenaOffensiveIconsEnabled = {
-                        order = 1,
+                        order = 2,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show big offensive icons on Blizzard arena frames",
                         desc = "Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered.",
                         set = function(info, val)
-                            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-                            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-                            SweepyBoop:SetupArenaOffensiveIcons();
+                            SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val, function()
+                                SweepyBoop:SetupArenaOffensiveIcons();
+                            end);
                         end,
                     },
-                    test = {
-                        order = 2,
-                        type = "execute",
-                        width = "half",
-                        name = "Test",
-                        func = "TestArenaOffensiveIcons",
-                        hidden = function()
-                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
-                        end,
-                    },
-                    hide = {
-                        order = 3,
-                        type = "execute",
-                        width = "half",
-                        name = "Hide",
-                        func = "HideTestArenaOffensiveIcons",
-                        hidden = function()
-                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
-                        end,
+                    preview = {
+                        order = 1,
+                        type = "description",
+                        width = "full",
+                        name = "Preview",
+                        dialogControl = "ArenaOffensiveIconPreview-SweepyBoop",
                     },
                     positionHeader = {
                         order = 4,
@@ -152,6 +150,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         max = 96,
                         step = 1,
                         name = "Icon size",
+                        set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                         hidden = function()
                             return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
                         end,
@@ -164,6 +163,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         max = 200,
                         step = 1,
                         name = "X offset",
+                        set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                         hidden = function()
                             return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
                         end,
@@ -176,6 +176,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         max = 150,
                         step = 1,
                         name = "Y offset",
+                        set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                         hidden = function()
                             return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
                         end,
