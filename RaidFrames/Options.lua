@@ -30,14 +30,169 @@ local function HealerBuffHelperConflictDesc()
     end
 end
 
-local function AggroHighlightOptionsDisabled()
-    return not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled;
+local function AggroHighlightTestDisabled()
+    local raidFrames = SweepyBoop.db.profile.raidFrames;
+    return ( not raidFrames.raidFrameAggroHighlightRaidFramesEnabled ) and ( not raidFrames.raidFrameAggroHighlightArenaFramesEnabled );
 end
 
 local function SetAggroHighlightOptionAndRefresh(info, val)
     SetRaidFrameOptionAndRefresh(info, val, function ()
         SweepyBoop:RefreshRaidFrameAggroHighlight();
     end);
+end
+
+local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, sectionName, enabledName, enabledDesc)
+    local function LayoutDisabled()
+        return not SweepyBoop.db.profile.raidFrames[keyPrefix .. "Enabled"];
+    end
+
+    args[keyPrefix .. "Header"] = {
+        order = orderOffset,
+        type = "header",
+        name = sectionName,
+    };
+
+    args[keyPrefix .. "Enabled"] = {
+            order = orderOffset + 1,
+            width = "full",
+            type = "toggle",
+            name = enabledName,
+            desc = enabledDesc,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "Anchor"] = {
+            order = orderOffset + 2,
+            width = "normal",
+            type = "select",
+            name = "Anchor",
+            desc = "Point on the indicator group used for positioning and first-icon placement.",
+            values = {
+                TOPLEFT = "TOPLEFT",
+                TOP = "TOP",
+                TOPRIGHT = "TOPRIGHT",
+                LEFT = "LEFT",
+                CENTER = "CENTER",
+                RIGHT = "RIGHT",
+                BOTTOMLEFT = "BOTTOMLEFT",
+                BOTTOM = "BOTTOM",
+                BOTTOMRIGHT = "BOTTOMRIGHT",
+            },
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "RelativePoint"] = {
+            order = orderOffset + 3,
+            width = "normal",
+            type = "select",
+            name = "Relative To",
+            desc = "Point on the Blizzard frame that the indicator group attaches to.",
+            values = {
+                TOPLEFT = "TOPLEFT",
+                TOP = "TOP",
+                TOPRIGHT = "TOPRIGHT",
+                LEFT = "LEFT",
+                CENTER = "CENTER",
+                RIGHT = "RIGHT",
+                BOTTOMLEFT = "BOTTOMLEFT",
+                BOTTOM = "BOTTOM",
+                BOTTOMRIGHT = "BOTTOMRIGHT",
+            },
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "GrowDirection"] = {
+            order = orderOffset + 4,
+            width = "normal",
+            type = "select",
+            name = "Grow Direction",
+            desc = "Direction additional target indicators grow from the first indicator. Centered modes place the full indicator group on the configured relative point.",
+            values = {
+                RIGHT = "RIGHT",
+                LEFT = "LEFT",
+                UP = "UP",
+                DOWN = "DOWN",
+                CENTER_HORIZONTAL = "CENTER_HORIZONTAL",
+                CENTER_VERTICAL = "CENTER_VERTICAL",
+            },
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "LayoutBreak"] = {
+            order = orderOffset + 5,
+            type = "description",
+            name = "",
+            width = "full",
+        };
+
+    args[keyPrefix .. "Size"] = {
+            order = orderOffset + 6,
+            width = "normal",
+            type = "range",
+            min = 8,
+            max = 32,
+            step = 1,
+            name = "Size",
+            desc = "Indicator size in pixels.",
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "Spacing"] = {
+            order = orderOffset + 7,
+            width = "normal",
+            type = "range",
+            min = 0,
+            max = 12,
+            step = 1,
+            name = "Spacing",
+            desc = "Spacing between multiple indicators.",
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "OffsetX"] = {
+            order = orderOffset + 8,
+            width = "normal",
+            type = "range",
+            min = -80,
+            max = 80,
+            step = 1,
+            name = "Offset X",
+            desc = "Horizontal offset from the selected frame point.",
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "OffsetY"] = {
+            order = orderOffset + 9,
+            width = "normal",
+            type = "range",
+            min = -80,
+            max = 80,
+            step = 1,
+            name = "Offset Y",
+            desc = "Vertical offset from the selected frame point.",
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "Alpha"] = {
+            order = orderOffset + 10,
+            width = "normal",
+            type = "range",
+            isPercent = true,
+            min = 0.2,
+            max = 1,
+            step = 0.05,
+            name = "Alpha",
+            desc = "Opacity of the target indicators.",
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
 end
 
 addon.GetRaidFrameOptions = function(order)
@@ -386,205 +541,65 @@ addon.GetRaidFrameOptions = function(order)
                 order = 2,
                 type = "group",
                 name = "PvP aggro highlight",
-                args = {
-                    raidFrameAggroHighlightEnabled = {
-                        order = 1,
-                        width = 0.675,
-                        type = "toggle",
-                        name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
-                        desc = "Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.",
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-
-                    raidFrameAggroHighlightTest = {
-                        order = 2,
-                        type = "execute",
-                        width = "half",
-                        name = "Test",
-                        desc = "Preview the configured aggro indicators on visible raid-style frames. Test mode can only be used outside instances.",
-                        func = function ()
-                            SweepyBoop:TestRaidFrameAggroHighlight();
-                        end,
-                        disabled = AggroHighlightOptionsDisabled,
-                    },
-
-                    raidFrameAggroHighlightHideTest = {
-                        order = 3,
-                        type = "execute",
-                        width = "half",
-                        name = "Hide",
-                        desc = "Hide the aggro indicator preview.",
-                        func = function ()
-                            SweepyBoop:HideTestRaidFrameAggroHighlight();
-                        end,
-                        disabled = AggroHighlightOptionsDisabled,
-                    },
-
-                    raidFrameAggroHighlightShape = {
-                        order = 4,
-                        width = "normal",
-                        type = "select",
-                        name = "Shape",
-                        desc = "Shape used for class-colored target indicators.",
-                        values = {
-                            Circle = "Circle",
-                            Diamond = "Diamond",
-                            Square = "Square",
-                            Star = "Star",
+                args = (function ()
+                    local args = {
+                        raidFrameAggroHighlightTest = {
+                            order = 1,
+                            type = "execute",
+                            width = "half",
+                            name = "Test",
+                            desc = "Preview the configured aggro indicators on visible raid-style frames. Test mode can only be used outside instances.",
+                            func = function ()
+                                SweepyBoop:TestRaidFrameAggroHighlight();
+                            end,
+                            disabled = AggroHighlightTestDisabled,
                         },
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
 
-                    raidFrameAggroHighlightPulseSkullOnThreeEnemyTargeters = {
-                        order = 5,
-                        width = "full",
-                        type = "toggle",
-                        name = "Show pulsing skull when 3 enemies target a player/party frame",
-                        desc = "When exactly three enemy arena players target you or a party member, replace the three class-colored indicators with one pulsing skull icon.",
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-
-                    layoutHeader = {
-                        order = 6,
-                        type = "header",
-                        name = "Layout",
-                    },
-
-                    raidFrameAggroHighlightAnchor = {
-                        order = 7,
-                        width = "normal",
-                        type = "select",
-                        name = "Anchor",
-                        desc = "Point on the indicator group used for positioning and first-icon placement.",
-                        values = {
-                            TOPLEFT = "TOPLEFT",
-                            TOP = "TOP",
-                            TOPRIGHT = "TOPRIGHT",
-                            LEFT = "LEFT",
-                            CENTER = "CENTER",
-                            RIGHT = "RIGHT",
-                            BOTTOMLEFT = "BOTTOMLEFT",
-                            BOTTOM = "BOTTOM",
-                            BOTTOMRIGHT = "BOTTOMRIGHT",
+                        raidFrameAggroHighlightHideTest = {
+                            order = 2,
+                            type = "execute",
+                            width = "half",
+                            name = "Hide",
+                            desc = "Hide the aggro indicator preview.",
+                            func = function ()
+                                SweepyBoop:HideTestRaidFrameAggroHighlight();
+                            end,
                         },
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
 
-                    raidFrameAggroHighlightRelativePoint = {
-                        order = 8,
-                        width = "normal",
-                        type = "select",
-                        name = "Relative To",
-                        desc = "Point on the Blizzard raid frame that the indicator group attaches to.",
-                        values = {
-                            TOPLEFT = "TOPLEFT",
-                            TOP = "TOP",
-                            TOPRIGHT = "TOPRIGHT",
-                            LEFT = "LEFT",
-                            CENTER = "CENTER",
-                            RIGHT = "RIGHT",
-                            BOTTOMLEFT = "BOTTOMLEFT",
-                            BOTTOM = "BOTTOM",
-                            BOTTOMRIGHT = "BOTTOMRIGHT",
+                        raidFrameAggroHighlightShape = {
+                            order = 3,
+                            width = "normal",
+                            type = "select",
+                            name = "Shape",
+                            desc = "Shape used for class-colored target indicators.",
+                            values = {
+                                Circle = "Circle",
+                                Diamond = "Diamond",
+                                Square = "Square",
+                                Star = "Star",
+                            },
+                            set = SetAggroHighlightOptionAndRefresh,
                         },
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
+                    };
 
-                    raidFrameAggroHighlightGrowDirection = {
-                        order = 9,
-                        width = "normal",
-                        type = "select",
-                        name = "Grow Direction",
-                        desc = "Direction additional target indicators grow from the first indicator. Centered modes place the full indicator group on the configured relative point.",
-                        values = {
-                            RIGHT = "RIGHT",
-                            LEFT = "LEFT",
-                            UP = "UP",
-                            DOWN = "DOWN",
-                            CENTER_HORIZONTAL = "CENTER_HORIZONTAL",
-                            CENTER_VERTICAL = "CENTER_VERTICAL",
-                        },
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-
-                    layoutBreak = {
-                        order = 10,
-                        type = "description",
-                        name = "",
-                        width = "full",
-                    },
-
-                    raidFrameAggroHighlightSize = {
-                        order = 11,
-                        width = "normal",
-                        type = "range",
-                        min = 8,
-                        max = 32,
-                        step = 1,
-                        name = "Size",
-                        desc = "Indicator size in pixels.",
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-
-                    raidFrameAggroHighlightSpacing = {
-                        order = 12,
-                        width = "normal",
-                        type = "range",
-                        min = 0,
-                        max = 12,
-                        step = 1,
-                        name = "Spacing",
-                        desc = "Spacing between multiple indicators.",
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-
-                    raidFrameAggroHighlightOffsetX = {
-                        order = 13,
-                        width = "normal",
-                        type = "range",
-                        min = -80,
-                        max = 80,
-                        step = 1,
-                        name = "Offset X",
-                        desc = "Horizontal offset from the selected raid-frame point.",
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-
-                    raidFrameAggroHighlightOffsetY = {
-                        order = 14,
-                        width = "normal",
-                        type = "range",
-                        min = -80,
-                        max = 80,
-                        step = 1,
-                        name = "Offset Y",
-                        desc = "Vertical offset from the selected raid-frame point.",
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-
-                    raidFrameAggroHighlightAlpha = {
-                        order = 15,
-                        width = "normal",
-                        type = "range",
-                        isPercent = true,
-                        min = 0.2,
-                        max = 1,
-                        step = 0.05,
-                        name = "Alpha",
-                        desc = "Opacity of the target indicators.",
-                        disabled = AggroHighlightOptionsDisabled,
-                        set = SetAggroHighlightOptionAndRefresh,
-                    },
-                },
+                    BuildAggroHighlightLayoutOptions(
+                        args,
+                        10,
+                        "raidFrameAggroHighlightRaidFrames",
+                        "Raid frames",
+                        "Show on raid frames",
+                        "Show enemy target indicators on player and party raid-style frames."
+                    );
+                    BuildAggroHighlightLayoutOptions(
+                        args,
+                        30,
+                        "raidFrameAggroHighlightArenaFrames",
+                        "Arena frames",
+                        "Show on built-in arena frames",
+                        "Show friendly target indicators on Blizzard compact arena frames."
+                    );
+                    return args;
+                end)(),
             },
         },
     };

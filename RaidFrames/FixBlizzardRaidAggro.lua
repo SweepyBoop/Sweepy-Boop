@@ -7,17 +7,18 @@ local explicitFramePrefixes = {
 
 local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
 local ICON_ALPHA = 0.9;
+local OVERLAY_FRAME_LEVEL_OFFSET = 50;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
-local TRIPLE_TARGETER_COUNT = 3;
-local SKULL_PULSE_SECONDS = 0.85;
-local SKULL_PULSE_MIN_ALPHA = 0.35;
+local RAID_FRAME_FLASH_TARGETER_COUNT = 3;
+local ARENA_FRAME_FLASH_TARGETER_COUNT = 2;
+local DOT_FLASH_SECONDS = 0.85;
+local DOT_FLASH_MIN_ALPHA = 0.35;
 
 local RAID_ICON_INDICES = {
     Star = 1,
     Circle = 2,
     Diamond = 3,
     Square = 6,
-    Skull = 8,
 };
 
 local trackedFrames = {};
@@ -29,6 +30,18 @@ local isTesting = false;
 
 local function GetConfig()
     return SweepyBoop.db.profile.raidFrames;
+end
+
+local function GetFrameConfigPrefix(isArenaFrame)
+    return isArenaFrame and "raidFrameAggroHighlightArenaFrames" or "raidFrameAggroHighlightRaidFrames";
+end
+
+local function IsFrameTypeEnabled(config, isArenaFrame)
+    return config[GetFrameConfigPrefix(isArenaFrame) .. "Enabled"];
+end
+
+local function GetFrameConfigValue(config, isArenaFrame, key)
+    return config[GetFrameConfigPrefix(isArenaFrame) .. key];
 end
 
 local function BuildTestClassColors()
@@ -103,15 +116,23 @@ local function IsArenaUnit(unit)
     return false;
 end
 
+local function IsArenaFrame(frame, unit)
+    if IsArenaUnit(unit) then
+        return true;
+    end
+
+    local name = frame and frame.GetName and frame:GetName();
+    return name and string.find(name, "^CompactArenaFrameMember") ~= nil;
+end
+
 local function AddTargetingClassForFrame(classColors, frameUnit, targeter)
     if addon.UnitIsUnitSecretValueSafe(targeter.target, frameUnit) then
         table.insert(classColors, targeter.color);
     end
 end
 
-local function GetTargetingClasses(frameUnit)
+local function GetTargetingClasses(frameUnit, isArenaFrame)
     wipe(classColors);
-    local isArenaFrame = IsArenaUnit(frameUnit);
     local showEnemyTargeters = not isArenaFrame;
 
     for i = 1, #targeters do
@@ -121,7 +142,7 @@ local function GetTargetingClasses(frameUnit)
         end
     end
 
-    return classColors, isArenaFrame;
+    return classColors;
 end
 
 local function GetRaidIconTexCoord(index)
@@ -134,13 +155,8 @@ local function ApplyRaidIconTexture(icon, shape, color, alpha)
     local index = RAID_ICON_INDICES[shape] or RAID_ICON_INDICES.Circle;
     icon:SetTexture(TEXTURE_RAID_ICONS);
     icon:SetTexCoord(GetRaidIconTexCoord(index));
-    icon:SetDesaturated(shape ~= "Skull");
-
-    if shape == "Skull" then
-        icon:SetVertexColor(1, 1, 1, 1);
-    else
-        icon:SetVertexColor(color.r, color.g, color.b, alpha);
-    end
+    icon:SetDesaturated(true);
+    icon:SetVertexColor(color.r, color.g, color.b, alpha);
 end
 
 local function EnsureTargetIcon(container, index)
@@ -153,39 +169,43 @@ local function EnsureTargetIcon(container, index)
     return icon;
 end
 
-local function StopSkullPulse(container)
-    if container.pulseIcon then
-        container.pulseIcon:SetAlpha(1);
+local function StopDotFlash(container)
+    if container.flashIcons then
+        for i = 1, #container.flashIcons do
+            container.flashIcons[i]:SetAlpha(1);
+        end
+        wipe(container.flashIcons);
     end
 
-    container.pulseIcon = nil;
     container:SetScript("OnUpdate", nil);
 end
 
-local function StartSkullPulse(container, icon, maxAlpha)
-    container.pulseIcon = icon;
-    container.pulseElapsed = 0;
-    container.pulseMaxAlpha = maxAlpha;
+local function StartDotFlash(container, maxAlpha)
+    container.flashElapsed = 0;
+    container.flashMaxAlpha = maxAlpha;
     container:SetScript("OnUpdate", function(self, elapsed)
-        self.pulseElapsed = self.pulseElapsed + elapsed;
-        local progress = ( self.pulseElapsed % SKULL_PULSE_SECONDS ) / SKULL_PULSE_SECONDS;
-        local pulse = SKULL_PULSE_MIN_ALPHA + ( ( 1 - SKULL_PULSE_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
-        self.pulseIcon:SetAlpha(self.pulseMaxAlpha * pulse);
+        self.flashElapsed = self.flashElapsed + elapsed;
+        local progress = ( self.flashElapsed % DOT_FLASH_SECONDS ) / DOT_FLASH_SECONDS;
+        local pulse = DOT_FLASH_MIN_ALPHA + ( ( 1 - DOT_FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
+        local alpha = self.flashMaxAlpha * pulse;
+        for i = 1, #self.flashIcons do
+            self.flashIcons[i]:SetAlpha(alpha);
+        end
     end);
 end
 
-local function SetTargetIconPoint(icon, container, previousIcon, index, config)
+local function SetTargetIconPoint(icon, container, previousIcon, index, layoutConfig)
     icon:ClearAllPoints();
 
-    local spacing = config.raidFrameAggroHighlightSpacing;
-    local growDirection = config.raidFrameAggroHighlightGrowDirection;
+    local spacing = layoutConfig.spacing;
+    local growDirection = layoutConfig.growDirection;
     if index == 1 then
         if growDirection == "CENTER_HORIZONTAL" then
             icon:SetPoint("LEFT", container, "LEFT", 0, 0);
         elseif growDirection == "CENTER_VERTICAL" then
             icon:SetPoint("TOP", container, "TOP", 0, 0);
         else
-            icon:SetPoint(config.raidFrameAggroHighlightAnchor, container, config.raidFrameAggroHighlightAnchor, 0, 0);
+            icon:SetPoint(layoutConfig.anchor, container, layoutConfig.anchor, 0, 0);
         end
         return;
     end
@@ -201,10 +221,10 @@ local function SetTargetIconPoint(icon, container, previousIcon, index, config)
     end
 end
 
-local function LayoutContainer(container, frame, iconCount, config)
-    local size = config.raidFrameAggroHighlightSize;
-    local spacing = config.raidFrameAggroHighlightSpacing;
-    local growDirection = config.raidFrameAggroHighlightGrowDirection;
+local function LayoutContainer(container, frame, iconCount, layoutConfig)
+    local size = layoutConfig.size;
+    local spacing = layoutConfig.spacing;
+    local growDirection = layoutConfig.growDirection;
     local totalSpacing = math.max(0, iconCount - 1) * spacing;
     local width = size;
     local height = size;
@@ -220,65 +240,72 @@ local function LayoutContainer(container, frame, iconCount, config)
         container:SetPoint(
             "CENTER",
             frame,
-            config.raidFrameAggroHighlightRelativePoint,
-            config.raidFrameAggroHighlightOffsetX,
-            config.raidFrameAggroHighlightOffsetY
+            layoutConfig.relativePoint,
+            layoutConfig.offsetX,
+            layoutConfig.offsetY
         );
     else
         container:SetPoint(
-            config.raidFrameAggroHighlightAnchor,
+            layoutConfig.anchor,
             frame,
-            config.raidFrameAggroHighlightRelativePoint,
-            config.raidFrameAggroHighlightOffsetX,
-            config.raidFrameAggroHighlightOffsetY
+            layoutConfig.relativePoint,
+            layoutConfig.offsetX,
+            layoutConfig.offsetY
         );
     end
     container:SetSize(width, height);
 end
 
-local function ShouldShowPulseSkull(config, isArenaFrame, iconCount)
-    return config.raidFrameAggroHighlightPulseSkullOnThreeEnemyTargeters and ( not isArenaFrame ) and ( iconCount == TRIPLE_TARGETER_COUNT );
+local function ShouldFlashDots(isArenaFrame, iconCount)
+    return ( ( not isArenaFrame ) and ( iconCount == RAID_FRAME_FLASH_TARGETER_COUNT ) )
+        or ( isArenaFrame and ( iconCount == ARENA_FRAME_FLASH_TARGETER_COUNT ) );
 end
 
 local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
     if not frame.customAggroHighlight then
         local customAggroHighlight = CreateFrame("Frame", nil, frame);
-        customAggroHighlight:SetFrameLevel(frame:GetFrameLevel() + 10);
         customAggroHighlight.icons = {};
+        customAggroHighlight.flashIcons = {};
         frame.customAggroHighlight = customAggroHighlight;
     end
 
     local config = GetConfig();
     local container = frame.customAggroHighlight;
-    local alpha = config.raidFrameAggroHighlightAlpha or ICON_ALPHA;
+    local layoutConfig = {
+        anchor = GetFrameConfigValue(config, isArenaFrame, "Anchor"),
+        relativePoint = GetFrameConfigValue(config, isArenaFrame, "RelativePoint"),
+        growDirection = GetFrameConfigValue(config, isArenaFrame, "GrowDirection"),
+        offsetX = GetFrameConfigValue(config, isArenaFrame, "OffsetX"),
+        offsetY = GetFrameConfigValue(config, isArenaFrame, "OffsetY"),
+        spacing = GetFrameConfigValue(config, isArenaFrame, "Spacing"),
+        size = GetFrameConfigValue(config, isArenaFrame, "Size"),
+        alpha = GetFrameConfigValue(config, isArenaFrame, "Alpha") or ICON_ALPHA,
+    };
+    container:SetFrameLevel(frame:GetFrameLevel() + OVERLAY_FRAME_LEVEL_OFFSET);
     local iconCount = #classColors;
-    local showPulseSkull = ShouldShowPulseSkull(config, isArenaFrame, iconCount);
-    local visibleIconCount = showPulseSkull and 1 or iconCount;
     local previousIcon;
 
-    LayoutContainer(container, frame, visibleIconCount, config);
-    StopSkullPulse(container);
+    LayoutContainer(container, frame, iconCount, layoutConfig);
+    StopDotFlash(container);
 
-    if showPulseSkull then
-        local icon = EnsureTargetIcon(container, 1);
-        icon:SetSize(config.raidFrameAggroHighlightSize, config.raidFrameAggroHighlightSize);
-        SetTargetIconPoint(icon, container, nil, 1, config);
-        ApplyRaidIconTexture(icon, "Skull", classColors[1], alpha);
+    for i = 1, iconCount do
+        local icon = EnsureTargetIcon(container, i);
+        icon:SetAlpha(1);
+        icon:SetSize(layoutConfig.size, layoutConfig.size);
+        SetTargetIconPoint(icon, container, previousIcon, i, layoutConfig);
+        ApplyRaidIconTexture(icon, config.raidFrameAggroHighlightShape, classColors[i], layoutConfig.alpha);
         icon:Show();
-        StartSkullPulse(container, icon, alpha);
-    else
-        for i = 1, iconCount do
-            local icon = EnsureTargetIcon(container, i);
-            icon:SetAlpha(1);
-            icon:SetSize(config.raidFrameAggroHighlightSize, config.raidFrameAggroHighlightSize);
-            SetTargetIconPoint(icon, container, previousIcon, i, config);
-            ApplyRaidIconTexture(icon, config.raidFrameAggroHighlightShape, classColors[i], alpha);
-            icon:Show();
-            previousIcon = icon;
+        if ShouldFlashDots(isArenaFrame, iconCount) then
+            table.insert(container.flashIcons, icon);
         end
+        previousIcon = icon;
     end
 
-    for i = visibleIconCount + 1, #container.icons do
+    if #container.flashIcons > 0 then
+        StartDotFlash(container, layoutConfig.alpha);
+    end
+
+    for i = iconCount + 1, #container.icons do
         container.icons[i]:Hide();
     end
 
@@ -287,13 +314,15 @@ end
 
 local function HideCustomAggroHighlight(frame)
     if frame.customAggroHighlight then
-        StopSkullPulse(frame.customAggroHighlight);
+        StopDotFlash(frame.customAggroHighlight);
         frame.customAggroHighlight:Hide();
     end
 end
 
 local function IsActive()
-    return IsActiveBattlefieldArena() and SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled;
+    local config = GetConfig();
+    return IsActiveBattlefieldArena()
+        and ( config.raidFrameAggroHighlightRaidFramesEnabled or config.raidFrameAggroHighlightArenaFramesEnabled );
 end
 
 local function UpdateFrame(frame)
@@ -308,7 +337,13 @@ local function UpdateFrame(frame)
 
     local unit = frame.displayedUnit or frame.unit;
     if unit then
-        local targetingClassColors, isArenaFrame = GetTargetingClasses(unit);
+        local isArenaFrame = IsArenaFrame(frame, unit);
+        local targetingClassColors = GetTargetingClasses(unit, isArenaFrame);
+        if ( not IsFrameTypeEnabled(GetConfig(), isArenaFrame) ) then
+            HideCustomAggroHighlight(frame);
+            return;
+        end
+
         if #targetingClassColors > 0 then
             ShowCustomAggroHighlight(frame, targetingClassColors, isArenaFrame);
             return;
@@ -383,7 +418,13 @@ local function ShowTestFrames()
         if frame:IsForbidden() then
             trackedFrames[frame] = nil;
         elseif frame:IsShown() then
-            ShowCustomAggroHighlight(frame, previewColors, false);
+            local unit = frame.displayedUnit or frame.unit;
+            local isArenaFrame = IsArenaFrame(frame, unit);
+            if IsFrameTypeEnabled(GetConfig(), isArenaFrame) then
+                ShowCustomAggroHighlight(frame, previewColors, isArenaFrame);
+            else
+                HideCustomAggroHighlight(frame);
+            end
         else
             HideCustomAggroHighlight(frame);
         end
