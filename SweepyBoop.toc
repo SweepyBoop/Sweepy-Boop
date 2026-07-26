@@ -75,6 +75,7 @@ RaidFrames\DebuffIcons.lua
 RaidFrames\AggroHighlightConstants.lua
 RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\AggroPreviewWidget.lua
+RaidFrames\DebuffPreviewWidget.lua
 RaidFrames\SortGroup.lua
 RaidFrames\Options.lua
 
