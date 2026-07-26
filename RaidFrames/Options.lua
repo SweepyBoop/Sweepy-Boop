@@ -39,6 +39,20 @@ local function SetAggroHighlightOptionAndRefresh(info, val)
     end);
 end
 
+local aggroHighlightShapeOrder = {
+    "Disabled",
+    "Star",
+    "Circle",
+    "Diamond",
+    "Triangle",
+    "Moon",
+    "Square",
+    "Cross",
+    "Skull",
+    "Flag",
+    "Murloc",
+};
+
 local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, sectionName, previewName)
     local function LayoutDisabled()
         return SweepyBoop.db.profile.raidFrames[keyPrefix .. "Shape"] == "Disabled";
@@ -80,6 +94,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
                 Flag = "Flag",
                 Murloc = "Murloc",
             },
+            sorting = aggroHighlightShapeOrder,
             set = SetAggroHighlightOptionAndRefresh,
         };
 
