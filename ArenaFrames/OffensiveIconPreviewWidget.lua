@@ -36,7 +36,30 @@ local function ConfigureCooldownSwipe(cooldown)
 end
 
 local function RestartIconCooldown(icon, elapsed)
+    if not icon.previewActive then
+        return;
+    end
     icon.cooldown:SetCooldown(GetTime() - ( elapsed or 0 ), sampleCooldownDuration);
+end
+
+local function ClearIconCooldown(icon)
+    icon.previewActive = false;
+    if icon.cooldown.Clear then
+        icon.cooldown:Clear();
+    else
+        icon.cooldown:SetCooldown(0, 0);
+    end
+    icon.cooldown:Hide();
+end
+
+local function CleanupPreview(widget)
+    if not widget or not widget.sample then
+        return;
+    end
+
+    local icon = widget.sample.icon;
+    ClearIconCooldown(icon);
+    addon.HideProcGlow(icon);
 end
 
 local function BuildSample(parent)
@@ -88,6 +111,7 @@ local methods = {
 
     ["OnRelease"] = function(self)
         previewWidgets[self] = nil;
+        CleanupPreview(self);
     end,
 
     ["SetText"] = function(self, text)
@@ -112,12 +136,17 @@ local methods = {
         if not SweepyBoop or not SweepyBoop.db then
             return;
         end
+        if not self.frame:IsShown() then
+            CleanupPreview(self);
+            return;
+        end
 
         local config = GetConfig();
         local enabled = config.arenaOffensiveIconsEnabled;
         local scale = ( config.arenaOffensiveIconSize or baseIconSize ) / baseIconSize;
         local icon = self.sample.icon;
 
+        icon.previewActive = self.frame:IsShown();
         icon:SetSize(baseIconSize, baseIconSize);
         icon:SetScale(scale);
         addon.ShowProcGlow(icon, procGlowColor);
@@ -170,6 +199,9 @@ local function Constructor()
 
     frame:SetScript("OnShow", function()
         addon.RefreshArenaOffensiveIconPreviewWidgets();
+    end);
+    frame:SetScript("OnHide", function()
+        CleanupPreview(widget);
     end);
 
     for method, func in pairs(methods) do

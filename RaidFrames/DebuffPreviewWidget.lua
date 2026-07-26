@@ -65,6 +65,9 @@ local function StyleCooldown(cooldown, config)
 end
 
 local function RestartIconCooldown(icon, elapsed)
+    if not icon.previewActive then
+        return;
+    end
     icon.cooldown:SetCooldown(GetTime() - ( elapsed or 0 ), testDuration);
     icon.cooldown:Show();
 end
@@ -99,13 +102,26 @@ local function SetIconSize(icon, frameHeight, scale)
 end
 
 local function ClearIcon(icon)
+    icon.previewActive = false;
     icon.texture:SetTexture(nil);
     if icon.cooldown.Clear then
         icon.cooldown:Clear();
+    else
+        icon.cooldown:SetCooldown(0, 0);
     end
     icon.cooldown:Hide();
     addon.HideProcGlow(icon);
     icon:Hide();
+end
+
+local function CleanupPreview(widget)
+    if not widget or not widget.sample then
+        return;
+    end
+
+    for _, icon in ipairs(widget.sample.container.icons) do
+        ClearIcon(icon);
+    end
 end
 
 local function CreateDebuffIcon(parent)
@@ -190,6 +206,7 @@ local function RenderSample(widget)
         previousIcon = icon;
 
         if i <= shownIconCount then
+            icon.previewActive = widget.frame:IsShown();
             if i == 1 then
                 SetIconSize(icon, frameHeight, dispellableScale);
                 icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
@@ -227,6 +244,7 @@ local methods = {
 
     ["OnRelease"] = function(self)
         previewWidgets[self] = nil;
+        CleanupPreview(self);
     end,
 
     ["SetText"] = function(self, text)
@@ -249,6 +267,10 @@ local methods = {
 
     ["Refresh"] = function(self)
         if not SweepyBoop or not SweepyBoop.db then
+            return;
+        end
+        if not self.frame:IsShown() then
+            CleanupPreview(self);
             return;
         end
 
@@ -287,6 +309,9 @@ local function Constructor()
 
     frame:SetScript("OnShow", function()
         addon.RefreshRaidFrameDebuffIconPreviewWidgets();
+    end);
+    frame:SetScript("OnHide", function()
+        CleanupPreview(widget);
     end);
 
     for method, func in pairs(methods) do
