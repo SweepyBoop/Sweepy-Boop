@@ -49,8 +49,6 @@ local aggroHighlightShapeOrder = {
     "Square",
     "Cross",
     "Skull",
-    "Flag",
-    "Murloc",
 };
 
 local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, sectionName, previewName)
@@ -91,8 +89,6 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
                 Square = "Square",
                 Cross = "Cross",
                 Skull = "Skull",
-                Flag = "Flag",
-                Murloc = "Murloc",
             },
             sorting = aggroHighlightShapeOrder,
             set = SetAggroHighlightOptionAndRefresh,

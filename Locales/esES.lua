@@ -255,8 +255,6 @@ local function ApplyTranslations(locale)
     L["Square"] = "Square";
     L["Cross"] = "Cross";
     L["Skull"] = "Skull";
-    L["Flag"] = "Flag";
-    L["Murloc"] = "Murloc";
     L["Size"] = "Size";
     L["Indicator size in pixels."] = "Indicator size in pixels.";
     L["Border Thickness"] = "Border Thickness";

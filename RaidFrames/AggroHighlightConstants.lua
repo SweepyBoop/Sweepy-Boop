@@ -22,7 +22,5 @@ addon.RAID_FRAME_AGGRO_HIGHLIGHT = {
         Square = 6,
         Cross = 7,
         Skull = 8,
-        Flag = 15,
-        Murloc = 16,
     },
 };
