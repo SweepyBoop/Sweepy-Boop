@@ -7,7 +7,7 @@ local explicitFramePrefixes = {
 
 local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
 local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
-local ICON_ALPHA = 0.9;
+local ICON_ALPHA = 1;
 local ICON_BORDER_SIZE = 1;
 local OVERLAY_FRAME_LEVEL_OFFSET = 50;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
@@ -344,7 +344,7 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
         offsetY = GetFrameConfigValue(config, isArenaFrame, "OffsetY"),
         spacing = GetFrameConfigValue(config, isArenaFrame, "Spacing"),
         size = GetFrameConfigValue(config, isArenaFrame, "Size"),
-        alpha = GetFrameConfigValue(config, isArenaFrame, "Alpha") or ICON_ALPHA,
+        alpha = ICON_ALPHA,
         shape = NormalizeMarkerShape(GetFrameConfigValue(config, isArenaFrame, "Shape")),
     };
     container:SetFrameLevel(frame:GetFrameLevel() + OVERLAY_FRAME_LEVEL_OFFSET);

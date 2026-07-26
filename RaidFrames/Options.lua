@@ -199,20 +199,6 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
             disabled = LayoutDisabled,
             set = SetAggroHighlightOptionAndRefresh,
         };
-
-    args[keyPrefix .. "Alpha"] = {
-            order = orderOffset + 11,
-            width = "normal",
-            type = "range",
-            isPercent = true,
-            min = 0.2,
-            max = 1,
-            step = 0.05,
-            name = "Alpha",
-            desc = "Opacity of the target indicators.",
-            disabled = LayoutDisabled,
-            set = SetAggroHighlightOptionAndRefresh,
-        };
 end
 
 addon.GetRaidFrameOptions = function(order)

@@ -6,9 +6,11 @@ if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return e
 
 local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
 local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
-local PREVIEW_FRAME_WIDTH = 170;
-local PREVIEW_FRAME_HEIGHT = 56;
-local PREVIEW_HEIGHT = 168;
+local PREVIEW_FRAME_WIDTH = 144;
+local PREVIEW_FRAME_HEIGHT = 72;
+local PREVIEW_FRAME_SPACING = 28;
+local PREVIEW_HEIGHT = 116;
+local MARKER_ALPHA = 1;
 local MARKER_BORDER_SIZE = 1;
 local FLASH_SECONDS = 0.85;
 local FLASH_MIN_ALPHA = 0.35;
@@ -185,11 +187,10 @@ local function RenderSample(widget, sample, markerCount)
 
     local shape = NormalizeShape(ConfigValue(widget.keyPrefix, "Shape"));
     local markerSize = ConfigValue(widget.keyPrefix, "Size");
-    local alpha = ConfigValue(widget.keyPrefix, "Alpha");
     local previousMarker;
     for i = 1, markerCount do
         local marker = EnsureMarker(sample.frame, sample.markers, i);
-        DrawPreviewMarker(marker, shape, sampleColors[i], alpha, markerSize);
+        DrawPreviewMarker(marker, shape, sampleColors[i], MARKER_ALPHA, markerSize);
         PositionMarker(marker, sample.frame, sample.container, previousMarker, i, widget.keyPrefix);
         previousMarker = marker;
     end
@@ -215,7 +216,7 @@ local function StartPreviewFlash(widget)
         widget.flashElapsed = ( widget.flashElapsed or 0 ) + elapsed;
         local progress = ( widget.flashElapsed % FLASH_SECONDS ) / FLASH_SECONDS;
         local pulse = FLASH_MIN_ALPHA + ( ( 1 - FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
-        SetFlashingSampleAlpha(widget, ConfigValue(widget.keyPrefix, "Alpha") * pulse);
+        SetFlashingSampleAlpha(widget, MARKER_ALPHA * pulse);
     end);
 end
 
@@ -225,14 +226,9 @@ local function StopPreviewFlash(widget)
     SetFlashingSampleAlpha(widget, 1);
 end
 
-local function BuildSample(parent, title, topOffset)
-    local titleText = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
-    titleText:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, topOffset);
-    titleText:SetText(title);
-    titleText:SetTextColor(1, 1, 1, 1);
-
+local function BuildSample(parent, anchorTo, xOffset)
     local previewFrame = CreateFrame("Frame", nil, parent);
-    previewFrame:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, topOffset - 18);
+    previewFrame:SetPoint("TOPLEFT", anchorTo, "TOPLEFT", xOffset, 0);
     previewFrame:SetSize(PREVIEW_FRAME_WIDTH, PREVIEW_FRAME_HEIGHT);
 
     local border = previewFrame:CreateTexture(nil, "BACKGROUND");
@@ -325,8 +321,12 @@ local function Constructor()
     label:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -4);
     label:SetTextColor(1, 0.82, 0, 1);
 
-    local normalSample = BuildSample(frame, "2 targeters", -24);
-    local flashingSample = BuildSample(frame, "3 targeters (flashing)", -94);
+    local previewRow = CreateFrame("Frame", nil, frame);
+    previewRow:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -28);
+    previewRow:SetSize(( PREVIEW_FRAME_WIDTH * 2 ) + PREVIEW_FRAME_SPACING, PREVIEW_FRAME_HEIGHT);
+
+    local normalSample = BuildSample(frame, previewRow, 0);
+    local flashingSample = BuildSample(frame, previewRow, PREVIEW_FRAME_WIDTH + PREVIEW_FRAME_SPACING);
 
     local disabledText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall");
     disabledText:SetPoint("LEFT", normalSample.frame, "RIGHT", 12, 0);
