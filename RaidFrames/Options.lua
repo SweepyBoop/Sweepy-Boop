@@ -568,7 +568,7 @@ addon.GetRaidFrameOptions = function(order)
             aggroHighlight = {
                 order = 2,
                 type = "group",
-                name = "PvP aggro highlight",
+                name = "Arena target",
                 args = (function ()
                     local args = {};
 

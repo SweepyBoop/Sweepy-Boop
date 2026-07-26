@@ -247,7 +247,7 @@ local methods = {
     end,
 
     ["SetText"] = function(self, text)
-        self.label:SetText(text or "Preview");
+        self.label:SetText(text or addon.L["Preview"]);
     end,
 
     ["SetFontObject"] = function(self, fontObject)
@@ -312,7 +312,7 @@ local function Constructor()
 
     local disabledText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall");
     disabledText:SetPoint("LEFT", normalSample.frame, "RIGHT", 12, 0);
-    disabledText:SetText("Disabled");
+    disabledText:SetText(addon.L["Disabled"]);
 
     local widget = {
         frame = frame,
