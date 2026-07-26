@@ -6,8 +6,9 @@ local explicitFramePrefixes = {
 };
 
 local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
+local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
 local ICON_ALPHA = 0.9;
-local LINE_HEIGHT_FACTOR = 0.25;
+local ICON_BORDER_SIZE = 1;
 local OVERLAY_FRAME_LEVEL_OFFSET = 50;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
 local RAID_FRAME_FLASH_TARGETER_COUNT = 3;
@@ -15,9 +16,17 @@ local ARENA_FRAME_FLASH_TARGETER_COUNT = 2;
 local DOT_FLASH_SECONDS = 0.85;
 local DOT_FLASH_MIN_ALPHA = 0.35;
 
-local PLAIN_SHAPES = {
-    Box = true,
-    Line = true,
+local RAID_ICON_INDICES = {
+    Star = 1,
+    Circle = 2,
+    Diamond = 3,
+    Triangle = 4,
+    Moon = 5,
+    Square = 6,
+    Cross = 7,
+    Skull = 8,
+    Flag = 15,
+    Murloc = 16,
 };
 
 local trackedFrames = {};
@@ -144,15 +153,77 @@ local function GetTargetingClasses(frameUnit, isArenaFrame)
     return classColors;
 end
 
-local function GetShape(shape)
-    return PLAIN_SHAPES[shape] and shape or "Box";
+local function NormalizeMarkerShape(shape)
+    return RAID_ICON_INDICES[shape] and shape or "Circle";
 end
 
-local function ApplyTargetIconTexture(icon, color, alpha)
-    icon:SetTexture(TEXTURE_WHITE);
-    icon:SetTexCoord(0, 1, 0, 1);
-    icon:SetDesaturated(true);
-    icon:SetVertexColor(color.r, color.g, color.b, alpha);
+local function UnmaskLayer(texture, mask)
+    if mask then
+        mask:Hide();
+        texture:RemoveMaskTexture(mask);
+    end
+end
+
+local function PaintSolidLayer(texture, r, g, b, alpha)
+    texture:SetTexture(TEXTURE_WHITE);
+    texture:SetTexCoord(0, 1, 0, 1);
+    texture:SetVertexColor(r, g, b, alpha);
+    texture:Show();
+end
+
+local function ResizeMarkerLayers(marker, width, height)
+    local inset = ICON_BORDER_SIZE;
+    local fillWidth = math.max(0, width - ( 2 * inset ));
+    local fillHeight = math.max(0, height - ( 2 * inset ));
+
+    marker.outline:ClearAllPoints();
+    marker.outline:SetAllPoints(marker);
+
+    marker.fill:ClearAllPoints();
+    marker.fill:SetPoint("CENTER", marker, "CENTER", 0, 0);
+    marker.fill:SetSize(fillWidth, fillHeight);
+
+    return fillWidth, fillHeight;
+end
+
+local function MoveRaidMarkerMask(mask, owner, markerIndex, width, height)
+    local column = ( markerIndex - 1 ) % 4;
+    local row = math.floor(( markerIndex - 1 ) / 4);
+
+    mask:SetTexture(TEXTURE_RAID_ICONS, "CLAMP", "CLAMP");
+    mask:SetSize(width * 4, height * 4);
+    mask:ClearAllPoints();
+    mask:SetPoint("TOPLEFT", owner, "TOPLEFT", -column * width, row * height);
+    mask:Show();
+end
+
+local function ApplyRaidMarkerMask(marker, shape, width, height, fillWidth, fillHeight)
+    -- The raid-marker atlas is used only as a silhouette mask; visible pixels come from our solid layers.
+    local markerIndex = RAID_ICON_INDICES[shape];
+    if not markerIndex then
+        return;
+    end
+
+    if not marker.outlineMask then marker.outlineMask = marker:CreateMaskTexture() end
+    if not marker.fillMask then marker.fillMask = marker:CreateMaskTexture() end
+
+    MoveRaidMarkerMask(marker.outlineMask, marker, markerIndex, width, height);
+    MoveRaidMarkerMask(marker.fillMask, marker.fill, markerIndex, fillWidth, fillHeight);
+
+    marker.outline:AddMaskTexture(marker.outlineMask);
+    marker.fill:AddMaskTexture(marker.fillMask);
+end
+
+local function DrawTargetMarker(marker, shape, color, alpha, width, height)
+    UnmaskLayer(marker.outline, marker.outlineMask);
+    UnmaskLayer(marker.fill, marker.fillMask);
+
+    PaintSolidLayer(marker.outline, 0, 0, 0, alpha);
+    PaintSolidLayer(marker.fill, color.r, color.g, color.b, alpha);
+
+    local fillWidth, fillHeight = ResizeMarkerLayers(marker, width, height);
+    ApplyRaidMarkerMask(marker, NormalizeMarkerShape(shape), width, height, fillWidth, fillHeight);
+    marker:SetAlpha(1);
 end
 
 local function EnsureTargetIcon(container, index)
@@ -160,9 +231,13 @@ local function EnsureTargetIcon(container, index)
         return container.icons[index];
     end
 
-    local icon = container:CreateTexture(nil, "OVERLAY");
-    container.icons[index] = icon;
-    return icon;
+    local marker = CreateFrame("Frame", nil, container);
+    marker.outline = marker:CreateTexture(nil, "BACKGROUND");
+    marker.fill = marker:CreateTexture(nil, "ARTWORK");
+    marker.outline:SetBlendMode("BLEND");
+    marker.fill:SetBlendMode("BLEND");
+    container.icons[index] = marker;
+    return marker;
 end
 
 local function StopDotFlash(container)
@@ -218,10 +293,6 @@ local function SetTargetIconPoint(icon, container, previousIcon, index, layoutCo
 end
 
 local function GetIconSize(shape, layoutConfig)
-    if GetShape(shape) == "Line" then
-        return layoutConfig.size, math.max(1, layoutConfig.size * LINE_HEIGHT_FACTOR);
-    end
-
     return layoutConfig.size, layoutConfig.size;
 end
 
@@ -284,7 +355,7 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
         spacing = GetFrameConfigValue(config, isArenaFrame, "Spacing"),
         size = GetFrameConfigValue(config, isArenaFrame, "Size"),
         alpha = GetFrameConfigValue(config, isArenaFrame, "Alpha") or ICON_ALPHA,
-        shape = GetShape(config.raidFrameAggroHighlightShape),
+        shape = NormalizeMarkerShape(config.raidFrameAggroHighlightShape),
     };
     container:SetFrameLevel(frame:GetFrameLevel() + OVERLAY_FRAME_LEVEL_OFFSET);
     local iconCount = #classColors;
@@ -295,11 +366,11 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
 
     for i = 1, iconCount do
         local icon = EnsureTargetIcon(container, i);
-        local width, height = GetIconSize(config.raidFrameAggroHighlightShape, layoutConfig);
+        local width, height = GetIconSize(layoutConfig.shape, layoutConfig);
         icon:SetAlpha(1);
         icon:SetSize(width, height);
         SetTargetIconPoint(icon, container, previousIcon, i, layoutConfig);
-        ApplyTargetIconTexture(icon, classColors[i], layoutConfig.alpha);
+        DrawTargetMarker(icon, layoutConfig.shape, classColors[i], layoutConfig.alpha, width, height);
         icon:Show();
         if ShouldFlashDots(isArenaFrame, iconCount) then
             table.insert(container.flashIcons, icon);
