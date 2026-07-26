@@ -11,6 +11,8 @@ local previewFrameWidth = 144;
 local previewFrameHeight = 72;
 local previewHeight = 116;
 local baseIconSize = addon.DEFAULT_ICON_SIZE;
+local sampleCooldownDuration = 18;
+local sampleCooldownInitialElapsed = 4;
 local procGlowColor = { 1, 0.82, 0, 1 };
 
 local function GetConfig()
@@ -31,6 +33,10 @@ local function ConfigureCooldownSwipe(cooldown)
     if cooldown.SetCountdownMillisecondsThreshold then
         cooldown:SetCountdownMillisecondsThreshold(0);
     end
+end
+
+local function RestartIconCooldown(icon, elapsed)
+    icon.cooldown:SetCooldown(GetTime() - ( elapsed or 0 ), sampleCooldownDuration);
 end
 
 local function BuildSample(parent)
@@ -61,6 +67,9 @@ local function BuildSample(parent)
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     ConfigureCooldownSwipe(icon.cooldown);
+    icon.cooldown:SetScript("OnCooldownDone", function()
+        RestartIconCooldown(icon);
+    end);
 
     return {
         frame = previewFrame,
@@ -121,7 +130,7 @@ local methods = {
             ( config.arenaOffensiveIconOffsetY or 0 ) / scale
         );
         icon.texture:SetTexture(addon.GetSpellTexture(sampleSpellID));
-        icon.cooldown:SetCooldown(GetTime() - 4, 18);
+        RestartIconCooldown(icon, sampleCooldownInitialElapsed);
         icon:SetAlpha(enabled and 1 or 0.35);
         icon:SetShown(true);
 
