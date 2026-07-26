@@ -381,19 +381,15 @@ local function UpdateFrame(frame)
         return;
     end
 
-    if frame.aggroHighlight then
-        frame.aggroHighlight:SetAlpha(0);
-    end
-
     local unit = frame.displayedUnit or frame.unit;
     if unit then
         local isArenaFrame = IsArenaFrame(frame, unit);
-        local targetingClassColors = GetTargetingClasses(unit, isArenaFrame);
         if ( not IsFrameTypeEnabled(GetConfig(), isArenaFrame) ) then
             HideCustomAggroHighlight(frame);
             return;
         end
 
+        local targetingClassColors = GetTargetingClasses(unit, isArenaFrame);
         if #targetingClassColors > 0 then
             ShowCustomAggroHighlight(frame, targetingClassColors, isArenaFrame);
             return;
@@ -428,9 +424,6 @@ local function HideAllFrames()
         if frame:IsForbidden() then
             trackedFrames[frame] = nil;
         else
-            if frame.aggroHighlight then
-                frame.aggroHighlight:SetAlpha(1);
-            end
             HideCustomAggroHighlight(frame);
         end
     end
