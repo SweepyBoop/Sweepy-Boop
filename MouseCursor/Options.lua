@@ -38,6 +38,10 @@ local function IsFeatureDisabled(featureKey)
     return ( not config.enabled ) or ( not config[featureKey] );
 end
 
+local function HideGCDOptions()
+    return addon.PROJECT_TBC;
+end
+
 local function CreateColorOption(order, name, prefix, featureKey, hidden)
     return {
         order = order,
@@ -193,6 +197,7 @@ addon.GetMouseCursorOptions = function(order)
                 order = 30,
                 type = "header",
                 name = L["GCD ring"],
+                hidden = HideGCDOptions,
             },
             showGCD = {
                 order = 31,
@@ -201,8 +206,9 @@ addon.GetMouseCursorOptions = function(order)
                 name = L["Enabled"],
                 set = SetMouseCursorOption,
                 disabled = IsDisabled,
+                hidden = HideGCDOptions,
             },
-            gcdColor = CreateColorOption(32, L["GCD color"], "gcd", "showGCD"),
+            gcdColor = CreateColorOption(32, L["GCD color"], "gcd", "showGCD", HideGCDOptions),
             gcdRingSize = {
                 order = 33,
                 type = "range",
@@ -215,6 +221,7 @@ addon.GetMouseCursorOptions = function(order)
                 disabled = function()
                     return IsFeatureDisabled("showGCD");
                 end,
+                hidden = HideGCDOptions,
             },
         },
     };
