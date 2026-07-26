@@ -43,7 +43,7 @@ local function GetFrameConfigPrefix(isArenaFrame)
 end
 
 local function IsFrameTypeEnabled(config, isArenaFrame)
-    return config[GetFrameConfigPrefix(isArenaFrame) .. "Enabled"];
+    return config[GetFrameConfigPrefix(isArenaFrame) .. "Shape"] ~= "Disabled";
 end
 
 local function GetFrameConfigValue(config, isArenaFrame, key)
@@ -389,7 +389,7 @@ end
 local function IsActive()
     local config = GetConfig();
     return IsActiveBattlefieldArena()
-        and ( config.raidFrameAggroHighlightRaidFramesEnabled or config.raidFrameAggroHighlightArenaFramesEnabled );
+        and ( IsFrameTypeEnabled(config, false) or IsFrameTypeEnabled(config, true) );
 end
 
 local function UpdateFrame(frame)

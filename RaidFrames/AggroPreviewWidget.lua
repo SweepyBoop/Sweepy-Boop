@@ -292,7 +292,7 @@ local methods = {
             return;
         end
 
-        local enabled = ConfigValue(self.keyPrefix, "Enabled");
+        local enabled = ConfigValue(self.keyPrefix, "Shape") ~= "Disabled";
         self.normalSample.frame:SetAlpha(enabled and 1 or 0.35);
         self.flashingSample.frame:SetAlpha(enabled and 1 or 0.35);
         self.disabledText:SetShown(not enabled);
