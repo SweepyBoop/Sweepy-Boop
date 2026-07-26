@@ -30,356 +30,535 @@ local function HealerBuffHelperConflictDesc()
     end
 end
 
+local function AggroHighlightOptionsDisabled()
+    return not SweepyBoop.db.profile.raidFrames.raidFrameAggroHighlightEnabled;
+end
+
+local function SetAggroHighlightOptionAndRefresh(info, val)
+    SetRaidFrameOptionAndRefresh(info, val, function ()
+        SweepyBoop:RefreshRaidFrameAggroHighlight();
+    end);
+end
+
 addon.GetRaidFrameOptions = function(order)
     local optionGroup = {
         order = order,
         type = "group",
+        childGroups = "tab",
         name = "Raid frames",
         get = function(info) return SweepyBoop.db.profile.raidFrames[info[#info]] end,
         set = function(info, val) SweepyBoop.db.profile.raidFrames[info[#info]] = val end,
         args = {
-            arenaRaidFrameSortHeader = {
+            general = {
                 order = 1,
-                type = "header",
-                name = "Arena party sorting",
-            },
+                type = "group",
+                name = "General",
+                args = {
+                    arenaRaidFrameSortHeader = {
+                        order = 1,
+                        type = "header",
+                        name = "Arena party sorting",
+                    },
 
-            arenaRaidFrameSortOrder = {
-                order = 2,
-                type = "select",
-                width = 1.4,
-                name = "Sort order",
-                desc = function()
-                    if addon.IsConflictingFrameSortAddonLoaded() then
-                        return "Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement.";
-                    end
+                    arenaRaidFrameSortOrder = {
+                        order = 2,
+                        type = "select",
+                        width = 1.4,
+                        name = "Sort order",
+                        desc = function()
+                            if addon.IsConflictingFrameSortAddonLoaded() then
+                                return "Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement.";
+                            end
 
-                    return "Sort Blizzard compact party frames in arenas.";
-                end,
-                disabled = addon.IsConflictingFrameSortAddonLoaded,
-                values = {
-                    [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
-                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
-                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in middle",
-                    [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player on bottom",
+                            return "Sort Blizzard compact party frames in arenas.";
+                        end,
+                        disabled = addon.IsConflictingFrameSortAddonLoaded,
+                        values = {
+                            [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
+                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
+                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in middle",
+                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player on bottom",
+                        },
+                        set = function(info, val)
+                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                            SweepyBoop:RefreshArenaRaidFrameSort();
+                        end,
+                    },
+
+                    header2 = {
+                        order = 5,
+                        type = "header",
+                        name = "Healer Buff Helper",
+                    },
+
+                    healerBuffHelperScale = {
+                        order = 6,
+                        width = 0.8,
+                        type = "range",
+                        isPercent = true,
+                        min = 0.5,
+                        max = 2.5,
+                        step = 0.05,
+                        name = "Icon Scale",
+                        desc = function()
+                            return HealerBuffHelperConflictDesc() or "Adjust all helper icons together from 50% to 250%.";
+                        end,
+                        disabled = HealerBuffHelperLayoutDisabled,
+                        set = function(info, val)
+                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                            SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the new scale applies immediately
+                        end,
+                    },
+
+                    healerBuffHelperOffsetX = {
+                        order = 6.1,
+                        width = 0.8,
+                        type = "range",
+                        min = -80,
+                        max = 80,
+                        step = 1,
+                        name = "Offset X",
+                        desc = function()
+                            return HealerBuffHelperConflictDesc() or "Horizontal offset from the helper's default position.";
+                        end,
+                        disabled = HealerBuffHelperLayoutDisabled,
+                        set = function(info, val)
+                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                            SweepyBoop:RefreshHealerBuffHelper();
+                        end,
+                    },
+
+                    healerBuffHelperOffsetY = {
+                        order = 6.2,
+                        width = 0.8,
+                        type = "range",
+                        min = -80,
+                        max = 80,
+                        step = 1,
+                        name = "Offset Y",
+                        desc = function()
+                            return HealerBuffHelperConflictDesc() or "Vertical offset from the helper's default position.";
+                        end,
+                        disabled = HealerBuffHelperLayoutDisabled,
+                        set = function(info, val)
+                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                            SweepyBoop:RefreshHealerBuffHelper();
+                        end,
+                    },
+
+                    healerBuffHelperOffsetBreak = {
+                        order = 7,
+                        type = "description",
+                        name = "",
+                        width = "full",
+                    },
+
+                    druidBuffHelper = {
+                        order = 8,
+                        width = "normal",
+                        type = "toggle",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Resto Druid",
+                        desc = function ()
+                            local conflictDesc = HealerBuffHelperConflictDesc();
+                            if conflictDesc then return conflictDesc end
+
+                            return table.concat({
+                                addon.L["Enable the helper while playing Restoration Druid."],
+                                "",
+                                "\226\128\162 " .. SpellIcon(1126) .. " " .. addon.L["Mark of the Wild warning."],
+                                "\226\128\162 " .. SpellIcon(33763) .. " " .. addon.L["Lifebloom with refresh-window glow."],
+                                "\226\128\162 " .. addon.L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."],
+                                "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
+                            }, "\n");
+                        end,
+                        disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
+                        set = function(info, val)
+                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                            SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
+                        end,
+                    },
+
+                    druidBuffHelperWarning = {
+                        order = 9,
+                        width = 1.4,
+                        type = "toggle",
+                        name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Missing-buff warning",
+                        desc = function()
+                            return HealerBuffHelperConflictDesc() or "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.";
+                        end,
+                        disabled = function () return addon.IsConflictingHealerBuffHelperAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.druidBuffHelper ); end,
+                        set = function(info, val)
+                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                            SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the warning icon appears/disappears immediately
+                        end,
+                    },
+
+                    druidBuffHelperBreak = {
+                        order = 10,
+                        type = "description",
+                        name = "",
+                        width = "full",
+                    },
+
+                    evokerBuffHelper = {
+                        order = 11,
+                        width = "full",
+                        type = "toggle",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. "Preservation Evoker",
+                        desc = function ()
+                            local conflictDesc = HealerBuffHelperConflictDesc();
+                            if conflictDesc then return conflictDesc end
+
+                            return table.concat({
+                                addon.L["Enable the helper while playing Preservation Evoker."],
+                                "",
+                                "\226\128\162 " .. SpellIcon(381748) .. " " .. addon.L["Blessing of the Bronze warning."],
+                                "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Echo without a refresh-window glow."],
+                                "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."],
+                                "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
+                            }, "\n");
+                        end,
+                        disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
+                        set = function(info, val)
+                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
+                            SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
+                        end,
+                    },
+
+                    raidFrameDebuffIconsHeader = {
+                        order = 12,
+                        type = "header",
+                        name = "Big Debuff Icons",
+                    },
+
+                    raidFrameDebuffIconsEnabled = {
+                        order = 13,
+                        width = 0.675,
+                        type = "toggle",
+                        name = SpellIcon(118) .. " Enabled",
+                        desc = function()
+                            if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
+                                return "Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.";
+                            end
+
+                            return "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
+                        end,
+                        disabled = addon.IsConflictingRaidFrameDebuffAddonLoaded,
+                        set = function(info, val)
+                            SetRaidFrameOptionAndRefresh(info, val, function ()
+                                SweepyBoop:RefreshRaidFrameDebuffIcons();
+                            end);
+                        end,
+                    },
+
+                    raidFrameDebuffIconsTest = {
+                        order = 14,
+                        type = "execute",
+                        width = "half",
+                        name = "Test",
+                        func = function ()
+                            SweepyBoop:TestRaidFrameDebuffIcons();
+                        end,
+                        disabled = DebuffIconOptionsDisabled,
+                    },
+
+                    raidFrameDebuffIconsLayoutBreak1 = {
+                        order = 15,
+                        type = "description",
+                        name = "",
+                        width = "full",
+                    },
+
+                    raidFrameDebuffIconCount = {
+                        order = 16,
+                        width = "normal",
+                        type = "range",
+                        min = 1,
+                        max = 5,
+                        step = 1,
+                        name = "Max Icons",
+                        desc = "Maximum number of crowd-control debuff icons to show beside each raid frame.",
+                        disabled = DebuffIconOptionsDisabled,
+                        set = function(info, val)
+                            SetRaidFrameOptionAndRefresh(info, val, function ()
+                                SweepyBoop:RefreshRaidFrameDebuffIcons();
+                            end);
+                        end,
+                    },
+
+                    raidFrameDebuffIconsLayoutBreak2 = {
+                        order = 19,
+                        type = "description",
+                        name = "",
+                        width = "full",
+                    },
+
+                    raidFrameDebuffIconMillisecondsThreshold = {
+                        order = 20,
+                        width = "normal",
+                        type = "range",
+                        min = 1,
+                        max = 6,
+                        step = 1,
+                        name = "Decimal Threshold",
+                        desc = "Show decimal countdowns below this many seconds.",
+                        disabled = DebuffIconOptionsDisabled,
+                        set = function(info, val)
+                            SetRaidFrameOptionAndRefresh(info, val, function ()
+                                SweepyBoop:RefreshRaidFrameDebuffIcons();
+                            end);
+                        end,
+                    },
+
+                    raidFrameDebuffIconScale = {
+                        order = 22,
+                        width = "normal",
+                        type = "range",
+                        isPercent = true,
+                        min = 0.25,
+                        max = 1.5,
+                        step = 0.05,
+                        name = "Other Debuff Scale",
+                        desc = "Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height.",
+                        disabled = DebuffIconOptionsDisabled,
+                        set = function(info, val)
+                            SetRaidFrameOptionAndRefresh(info, val, function ()
+                                SweepyBoop:RefreshRaidFrameDebuffIcons();
+                            end);
+                        end,
+                    },
+
+                    raidFrameDebuffIconDispellableScale = {
+                        order = 21,
+                        width = "normal",
+                        type = "range",
+                        isPercent = true,
+                        min = 0.25,
+                        max = 1.5,
+                        step = 0.05,
+                        name = "Dispellable Scale",
+                        desc = "Size of dispellable crowd-control debuffs as a percentage of the raid-frame height, such as Magic, Curse, Disease, or Poison.",
+                        disabled = DebuffIconOptionsDisabled,
+                        set = function(info, val)
+                            SetRaidFrameOptionAndRefresh(info, val, function ()
+                                SweepyBoop:RefreshRaidFrameDebuffIcons();
+                            end);
+                        end,
+                    },
+
+                    raidFrameDebuffIconOffsetX = {
+                        order = 17,
+                        width = "normal",
+                        type = "range",
+                        min = -20,
+                        max = 80,
+                        step = 1,
+                        name = "Offset X",
+                        desc = "Horizontal offset from the right edge of the raid frame.",
+                        disabled = DebuffIconOptionsDisabled,
+                        set = function(info, val)
+                            SetRaidFrameOptionAndRefresh(info, val, function ()
+                                SweepyBoop:RefreshRaidFrameDebuffIcons();
+                            end);
+                        end,
+                    },
+
+                    raidFrameDebuffIconOffsetY = {
+                        order = 18,
+                        width = "normal",
+                        type = "range",
+                        min = -80,
+                        max = 80,
+                        step = 1,
+                        name = "Offset Y",
+                        desc = "Vertical offset from the center of the raid frame.",
+                        disabled = DebuffIconOptionsDisabled,
+                        set = function(info, val)
+                            SetRaidFrameOptionAndRefresh(info, val, function ()
+                                SweepyBoop:RefreshRaidFrameDebuffIcons();
+                            end);
+                        end,
+                    },
                 },
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshArenaRaidFrameSort();
-                end,
             },
 
-            header1 = {
-                order = 3,
-                type = "header",
+            aggroHighlight = {
+                order = 2,
+                type = "group",
                 name = "PvP aggro highlight",
-            },
+                args = {
+                    raidFrameAggroHighlightEnabled = {
+                        order = 1,
+                        width = 0.675,
+                        type = "toggle",
+                        name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
+                        desc = "Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.",
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            raidFrameAggroHighlightEnabled = {
-                order = 4,
-                width = 0.675,
-                type = "toggle",
-                name = addon.FORMAT_ATLAS("groupfinder-icon-friend") .. " Enabled",
-                desc = "Show class-colored indicators on Blizzard raid-style frames when arena players target that unit.",
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshRaidFrameAggroHighlight();
-                end,
-            },
+                    raidFrameAggroHighlightShape = {
+                        order = 2,
+                        width = "normal",
+                        type = "select",
+                        name = "Shape",
+                        desc = "Shape used for class-colored target indicators.",
+                        values = {
+                            Circle = "Circle",
+                            Diamond = "Diamond",
+                            Square = "Square",
+                            Star = "Star",
+                        },
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            header2 = {
-                order = 5,
-                type = "header",
-                name = "Healer Buff Helper",
-            },
+                    raidFrameAggroHighlightPulseSkullOnThreeEnemyTargeters = {
+                        order = 3,
+                        width = "full",
+                        type = "toggle",
+                        name = "Show pulsing skull when 3 enemies target a player/party frame",
+                        desc = "When exactly three enemy arena players target you or a party member, replace the three class-colored indicators with one pulsing skull icon.",
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            healerBuffHelperScale = {
-                order = 6,
-                width = 0.8,
-                type = "range",
-                isPercent = true,
-                min = 0.5,
-                max = 2.5,
-                step = 0.05,
-                name = "Icon Scale",
-                desc = function()
-                    return HealerBuffHelperConflictDesc() or "Adjust all helper icons together from 50% to 250%.";
-                end,
-                disabled = HealerBuffHelperLayoutDisabled,
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the new scale applies immediately
-                end,
-            },
+                    layoutHeader = {
+                        order = 4,
+                        type = "header",
+                        name = "Layout",
+                    },
 
-            healerBuffHelperOffsetX = {
-                order = 6.1,
-                width = 0.8,
-                type = "range",
-                min = -80,
-                max = 80,
-                step = 1,
-                name = "Offset X",
-                desc = function()
-                    return HealerBuffHelperConflictDesc() or "Horizontal offset from the helper's default position.";
-                end,
-                disabled = HealerBuffHelperLayoutDisabled,
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper();
-                end,
-            },
+                    raidFrameAggroHighlightAnchor = {
+                        order = 5,
+                        width = "normal",
+                        type = "select",
+                        name = "Anchor",
+                        desc = "Point on the indicator group used for positioning and first-icon placement.",
+                        values = {
+                            TOPLEFT = "TOPLEFT",
+                            TOP = "TOP",
+                            TOPRIGHT = "TOPRIGHT",
+                            LEFT = "LEFT",
+                            CENTER = "CENTER",
+                            RIGHT = "RIGHT",
+                            BOTTOMLEFT = "BOTTOMLEFT",
+                            BOTTOM = "BOTTOM",
+                            BOTTOMRIGHT = "BOTTOMRIGHT",
+                        },
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            healerBuffHelperOffsetY = {
-                order = 6.2,
-                width = 0.8,
-                type = "range",
-                min = -80,
-                max = 80,
-                step = 1,
-                name = "Offset Y",
-                desc = function()
-                    return HealerBuffHelperConflictDesc() or "Vertical offset from the helper's default position.";
-                end,
-                disabled = HealerBuffHelperLayoutDisabled,
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper();
-                end,
-            },
+                    raidFrameAggroHighlightRelativePoint = {
+                        order = 6,
+                        width = "normal",
+                        type = "select",
+                        name = "Relative To",
+                        desc = "Point on the Blizzard raid frame that the indicator group attaches to.",
+                        values = {
+                            TOPLEFT = "TOPLEFT",
+                            TOP = "TOP",
+                            TOPRIGHT = "TOPRIGHT",
+                            LEFT = "LEFT",
+                            CENTER = "CENTER",
+                            RIGHT = "RIGHT",
+                            BOTTOMLEFT = "BOTTOMLEFT",
+                            BOTTOM = "BOTTOM",
+                            BOTTOMRIGHT = "BOTTOMRIGHT",
+                        },
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            healerBuffHelperOffsetBreak = {
-                order = 7,
-                type = "description",
-                name = "",
-                width = "full",
-            },
+                    raidFrameAggroHighlightGrowDirection = {
+                        order = 7,
+                        width = "normal",
+                        type = "select",
+                        name = "Grow Direction",
+                        desc = "Direction additional target indicators grow from the first indicator.",
+                        values = {
+                            RIGHT = "RIGHT",
+                            LEFT = "LEFT",
+                            UP = "UP",
+                            DOWN = "DOWN",
+                        },
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            druidBuffHelper = {
-                order = 8,
-                width = "normal",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Resto Druid",
-                desc = function ()
-                    local conflictDesc = HealerBuffHelperConflictDesc();
-                    if conflictDesc then return conflictDesc end
+                    layoutBreak = {
+                        order = 8,
+                        type = "description",
+                        name = "",
+                        width = "full",
+                    },
 
-                    return table.concat({
-                        addon.L["Enable the helper while playing Restoration Druid."],
-                        "",
-                        "\226\128\162 " .. SpellIcon(1126) .. " " .. addon.L["Mark of the Wild warning."],
-                        "\226\128\162 " .. SpellIcon(33763) .. " " .. addon.L["Lifebloom with refresh-window glow."],
-                        "\226\128\162 " .. addon.L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."],
-                        "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
-                    }, "\n");
-                end,
-                disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
-                end,
-            },
+                    raidFrameAggroHighlightSize = {
+                        order = 9,
+                        width = "normal",
+                        type = "range",
+                        min = 8,
+                        max = 32,
+                        step = 1,
+                        name = "Size",
+                        desc = "Indicator size in pixels.",
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            druidBuffHelperWarning = {
-                order = 9,
-                width = 1.4,
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Missing-buff warning",
-                desc = function()
-                    return HealerBuffHelperConflictDesc() or "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.";
-                end,
-                disabled = function () return addon.IsConflictingHealerBuffHelperAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.druidBuffHelper ); end,
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the warning icon appears/disappears immediately
-                end,
-            },
+                    raidFrameAggroHighlightSpacing = {
+                        order = 10,
+                        width = "normal",
+                        type = "range",
+                        min = 0,
+                        max = 12,
+                        step = 1,
+                        name = "Spacing",
+                        desc = "Spacing between multiple indicators.",
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            druidBuffHelperBreak = {
-                order = 10,
-                type = "description",
-                name = "",
-                width = "full",
-            },
+                    raidFrameAggroHighlightOffsetX = {
+                        order = 11,
+                        width = "normal",
+                        type = "range",
+                        min = -80,
+                        max = 80,
+                        step = 1,
+                        name = "Offset X",
+                        desc = "Horizontal offset from the selected raid-frame point.",
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-            evokerBuffHelper = {
-                order = 11,
-                width = "full",
-                type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. "Preservation Evoker",
-                desc = function ()
-                    local conflictDesc = HealerBuffHelperConflictDesc();
-                    if conflictDesc then return conflictDesc end
+                    raidFrameAggroHighlightOffsetY = {
+                        order = 12,
+                        width = "normal",
+                        type = "range",
+                        min = -80,
+                        max = 80,
+                        step = 1,
+                        name = "Offset Y",
+                        desc = "Vertical offset from the selected raid-frame point.",
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
 
-                    return table.concat({
-                        addon.L["Enable the helper while playing Preservation Evoker."],
-                        "",
-                        "\226\128\162 " .. SpellIcon(381748) .. " " .. addon.L["Blessing of the Bronze warning."],
-                        "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Echo without a refresh-window glow."],
-                        "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."],
-                        "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
-                    }, "\n");
-                end,
-                disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
-                set = function(info, val)
-                    SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                    SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
-                end,
-            },
-
-            raidFrameDebuffIconsHeader = {
-                order = 12,
-                type = "header",
-                name = "Big Debuff Icons",
-            },
-
-            raidFrameDebuffIconsEnabled = {
-                order = 13,
-                width = 0.675,
-                type = "toggle",
-                name = SpellIcon(118) .. " Enabled",
-                desc = function()
-                    if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
-                        return "Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.";
-                    end
-
-                    return "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
-                end,
-                disabled = addon.IsConflictingRaidFrameDebuffAddonLoaded,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
-            },
-
-            raidFrameDebuffIconsTest = {
-                order = 14,
-                type = "execute",
-                width = "half",
-                name = "Test",
-                func = function ()
-                    SweepyBoop:TestRaidFrameDebuffIcons();
-                end,
-                disabled = DebuffIconOptionsDisabled,
-            },
-
-            raidFrameDebuffIconsLayoutBreak1 = {
-                order = 15,
-                type = "description",
-                name = "",
-                width = "full",
-            },
-
-            raidFrameDebuffIconCount = {
-                order = 16,
-                width = "normal",
-                type = "range",
-                min = 1,
-                max = 5,
-                step = 1,
-                name = "Max Icons",
-                desc = "Maximum number of crowd-control debuff icons to show beside each raid frame.",
-                disabled = DebuffIconOptionsDisabled,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
-            },
-
-            raidFrameDebuffIconsLayoutBreak2 = {
-                order = 19,
-                type = "description",
-                name = "",
-                width = "full",
-            },
-
-            raidFrameDebuffIconMillisecondsThreshold = {
-                order = 20,
-                width = "normal",
-                type = "range",
-                min = 1,
-                max = 6,
-                step = 1,
-                name = "Decimal Threshold",
-                desc = "Show decimal countdowns below this many seconds.",
-                disabled = DebuffIconOptionsDisabled,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
-            },
-
-            raidFrameDebuffIconScale = {
-                order = 22,
-                width = "normal",
-                type = "range",
-                isPercent = true,
-                min = 0.25,
-                max = 1.5,
-                step = 0.05,
-                name = "Other Debuff Scale",
-                desc = "Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height.",
-                disabled = DebuffIconOptionsDisabled,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
-            },
-
-            raidFrameDebuffIconDispellableScale = {
-                order = 21,
-                width = "normal",
-                type = "range",
-                isPercent = true,
-                min = 0.25,
-                max = 1.5,
-                step = 0.05,
-                name = "Dispellable Scale",
-                desc = "Size of dispellable crowd-control debuffs as a percentage of the raid-frame height, such as Magic, Curse, Disease, or Poison.",
-                disabled = DebuffIconOptionsDisabled,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
-            },
-
-            raidFrameDebuffIconOffsetX = {
-                order = 17,
-                width = "normal",
-                type = "range",
-                min = -20,
-                max = 80,
-                step = 1,
-                name = "Offset X",
-                desc = "Horizontal offset from the right edge of the raid frame.",
-                disabled = DebuffIconOptionsDisabled,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
-            },
-
-            raidFrameDebuffIconOffsetY = {
-                order = 18,
-                width = "normal",
-                type = "range",
-                min = -80,
-                max = 80,
-                step = 1,
-                name = "Offset Y",
-                desc = "Vertical offset from the center of the raid frame.",
-                disabled = DebuffIconOptionsDisabled,
-                set = function(info, val)
-                    SetRaidFrameOptionAndRefresh(info, val, function ()
-                        SweepyBoop:RefreshRaidFrameDebuffIcons();
-                    end);
-                end,
+                    raidFrameAggroHighlightAlpha = {
+                        order = 13,
+                        width = "normal",
+                        type = "range",
+                        isPercent = true,
+                        min = 0.2,
+                        max = 1,
+                        step = 0.05,
+                        name = "Alpha",
+                        desc = "Opacity of the target indicators.",
+                        disabled = AggroHighlightOptionsDisabled,
+                        set = SetAggroHighlightOptionAndRefresh,
+                    },
+                },
             },
         },
     };
