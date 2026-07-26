@@ -65,6 +65,7 @@ ArenaFrames\IconTemplates.lua
 ArenaFrames\CooldownTracking.xml
 ArenaFrames\CooldownTrackingTemplates.lua
 ArenaFrames\OffensiveIcons.lua
+ArenaFrames\OffensiveIconPreviewWidget.lua
 ArenaFrames\HealerIndicator.lua
 ArenaFrames\RangeIndicators.lua
 ArenaFrames\Options.lua
@@ -74,6 +75,7 @@ RaidFrames\DebuffIcons.lua
 RaidFrames\AggroHighlightConstants.lua
 RaidFrames\FixBlizzardRaidAggro.lua
 RaidFrames\AggroPreviewWidget.lua
+RaidFrames\DebuffPreviewWidget.lua
 RaidFrames\SortGroup.lua
 RaidFrames\Options.lua
 
