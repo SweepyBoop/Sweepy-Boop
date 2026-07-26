@@ -59,8 +59,30 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
             set = SetAggroHighlightOptionAndRefresh,
         };
 
-    args[keyPrefix .. "Anchor"] = {
+    args[keyPrefix .. "Shape"] = {
             order = orderOffset + 2,
+            width = "normal",
+            type = "select",
+            name = "Shape",
+            desc = "Shape used for class-colored target indicators.",
+            values = {
+                Star = "Star",
+                Circle = "Circle",
+                Diamond = "Diamond",
+                Triangle = "Triangle",
+                Moon = "Moon",
+                Square = "Square",
+                Cross = "Cross",
+                Skull = "Skull",
+                Flag = "Flag",
+                Murloc = "Murloc",
+            },
+            disabled = LayoutDisabled,
+            set = SetAggroHighlightOptionAndRefresh,
+        };
+
+    args[keyPrefix .. "Anchor"] = {
+            order = orderOffset + 3,
             width = "normal",
             type = "select",
             name = "Anchor",
@@ -81,7 +103,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "RelativePoint"] = {
-            order = orderOffset + 3,
+            order = orderOffset + 4,
             width = "normal",
             type = "select",
             name = "Relative To",
@@ -102,7 +124,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "GrowDirection"] = {
-            order = orderOffset + 4,
+            order = orderOffset + 5,
             width = "normal",
             type = "select",
             name = "Grow Direction",
@@ -120,14 +142,14 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "LayoutBreak"] = {
-            order = orderOffset + 5,
+            order = orderOffset + 6,
             type = "description",
             name = "",
             width = "full",
         };
 
     args[keyPrefix .. "Size"] = {
-            order = orderOffset + 6,
+            order = orderOffset + 7,
             width = "normal",
             type = "range",
             min = 8,
@@ -140,7 +162,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "Spacing"] = {
-            order = orderOffset + 7,
+            order = orderOffset + 8,
             width = "normal",
             type = "range",
             min = 0,
@@ -153,7 +175,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "OffsetX"] = {
-            order = orderOffset + 8,
+            order = orderOffset + 9,
             width = "normal",
             type = "range",
             min = -80,
@@ -166,7 +188,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "OffsetY"] = {
-            order = orderOffset + 9,
+            order = orderOffset + 10,
             width = "normal",
             type = "range",
             min = -80,
@@ -179,7 +201,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "Alpha"] = {
-            order = orderOffset + 10,
+            order = orderOffset + 11,
             width = "normal",
             type = "range",
             isPercent = true,
@@ -563,27 +585,6 @@ addon.GetRaidFrameOptions = function(order)
                                 keyPrefix = "raidFrameAggroHighlightArenaFrames",
                                 markerCount = 2,
                             },
-                        },
-
-                        raidFrameAggroHighlightShape = {
-                            order = 3,
-                            width = "normal",
-                            type = "select",
-                            name = "Shape",
-                            desc = "Shape used for class-colored target indicators.",
-                            values = {
-                                Star = "Star",
-                                Circle = "Circle",
-                                Diamond = "Diamond",
-                                Triangle = "Triangle",
-                                Moon = "Moon",
-                                Square = "Square",
-                                Cross = "Cross",
-                                Skull = "Skull",
-                                Flag = "Flag",
-                                Murloc = "Murloc",
-                            },
-                            set = SetAggroHighlightOptionAndRefresh,
                         },
                     };
 

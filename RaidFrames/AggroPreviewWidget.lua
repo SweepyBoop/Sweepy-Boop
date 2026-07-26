@@ -8,8 +8,10 @@ local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
 local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
 local PREVIEW_FRAME_WIDTH = 170;
 local PREVIEW_FRAME_HEIGHT = 56;
-local PREVIEW_HEIGHT = 104;
+local PREVIEW_HEIGHT = 168;
 local MARKER_BORDER_SIZE = 1;
+local FLASH_SECONDS = 0.85;
+local FLASH_MIN_ALPHA = 0.35;
 
 local RAID_ICON_INDICES = {
     Star = 1,
@@ -25,6 +27,12 @@ local RAID_ICON_INDICES = {
 };
 
 local previewWidgets = setmetatable({}, { __mode = "k" });
+
+local sampleColors = {
+    { r = 0.25, g = 0.78, b = 0.92 },
+    { r = 1.00, g = 0.96, b = 0.41 },
+    { r = 1.00, g = 0.49, b = 0.04 },
+};
 
 local function GetConfig()
     return SweepyBoop.db.profile.raidFrames;
@@ -90,34 +98,34 @@ local function DrawPreviewMarker(marker, shape, color, alpha, size)
     marker:Show();
 end
 
-local function EnsureMarker(widget, index)
-    if widget.markers[index] then
-        return widget.markers[index];
+local function EnsureMarker(parent, markers, index)
+    if markers[index] then
+        return markers[index];
     end
 
-    local marker = CreateFrame("Frame", nil, widget.previewFrame);
+    local marker = CreateFrame("Frame", nil, parent);
     marker.outline = marker:CreateTexture(nil, "BACKGROUND");
     marker.fill = marker:CreateTexture(nil, "ARTWORK");
     marker.outline:SetBlendMode("BLEND");
     marker.fill:SetBlendMode("BLEND");
-    widget.markers[index] = marker;
+    markers[index] = marker;
     return marker;
 end
 
-local function SetMarkerPoint(widget, marker, previousMarker, index, keyPrefix)
+local function PositionMarker(marker, previewFrame, previewContainer, previousMarker, index, keyPrefix)
     marker:ClearAllPoints();
 
     local growDirection = ConfigValue(keyPrefix, "GrowDirection");
     local spacing = ConfigValue(keyPrefix, "Spacing");
     if index == 1 then
         if growDirection == "CENTER_HORIZONTAL" then
-            marker:SetPoint("LEFT", widget.previewContainer, "LEFT", 0, 0);
+            marker:SetPoint("LEFT", previewContainer, "LEFT", 0, 0);
         elseif growDirection == "CENTER_VERTICAL" then
-            marker:SetPoint("TOP", widget.previewContainer, "TOP", 0, 0);
+            marker:SetPoint("TOP", previewContainer, "TOP", 0, 0);
         else
             marker:SetPoint(
                 ConfigValue(keyPrefix, "Anchor"),
-                widget.previewFrame,
+                previewFrame,
                 ConfigValue(keyPrefix, "RelativePoint"),
                 ConfigValue(keyPrefix, "OffsetX"),
                 ConfigValue(keyPrefix, "OffsetY")
@@ -137,8 +145,7 @@ local function SetMarkerPoint(widget, marker, previousMarker, index, keyPrefix)
     end
 end
 
-local function LayoutPreviewContainer(widget, markerCount)
-    local keyPrefix = widget.keyPrefix;
+local function LayoutPreviewContainer(previewFrame, previewContainer, keyPrefix, markerCount)
     local markerSize = ConfigValue(keyPrefix, "Size");
     local spacing = ConfigValue(keyPrefix, "Spacing");
     local growDirection = ConfigValue(keyPrefix, "GrowDirection");
@@ -152,32 +159,99 @@ local function LayoutPreviewContainer(widget, markerCount)
         width = ( markerCount * markerSize ) + totalSpacing;
     end
 
-    widget.previewContainer:ClearAllPoints();
+    previewContainer:ClearAllPoints();
     if ( growDirection == "CENTER_HORIZONTAL" ) or ( growDirection == "CENTER_VERTICAL" ) then
-        widget.previewContainer:SetPoint(
+        previewContainer:SetPoint(
             "CENTER",
-            widget.previewFrame,
+            previewFrame,
             ConfigValue(keyPrefix, "RelativePoint"),
             ConfigValue(keyPrefix, "OffsetX"),
             ConfigValue(keyPrefix, "OffsetY")
         );
     else
-        widget.previewContainer:SetPoint(
+        previewContainer:SetPoint(
             ConfigValue(keyPrefix, "Anchor"),
-            widget.previewFrame,
+            previewFrame,
             ConfigValue(keyPrefix, "RelativePoint"),
             ConfigValue(keyPrefix, "OffsetX"),
             ConfigValue(keyPrefix, "OffsetY")
         );
     end
-    widget.previewContainer:SetSize(width, height);
+    previewContainer:SetSize(width, height);
 end
 
-local sampleColors = {
-    { r = 0.25, g = 0.78, b = 0.92 },
-    { r = 1.00, g = 0.96, b = 0.41 },
-    { r = 1.00, g = 0.49, b = 0.04 },
-};
+local function RenderSample(widget, sample, markerCount)
+    LayoutPreviewContainer(sample.frame, sample.container, widget.keyPrefix, markerCount);
+
+    local shape = NormalizeShape(ConfigValue(widget.keyPrefix, "Shape"));
+    local markerSize = ConfigValue(widget.keyPrefix, "Size");
+    local alpha = ConfigValue(widget.keyPrefix, "Alpha");
+    local previousMarker;
+    for i = 1, markerCount do
+        local marker = EnsureMarker(sample.frame, sample.markers, i);
+        DrawPreviewMarker(marker, shape, sampleColors[i], alpha, markerSize);
+        PositionMarker(marker, sample.frame, sample.container, previousMarker, i, widget.keyPrefix);
+        previousMarker = marker;
+    end
+
+    for i = markerCount + 1, #sample.markers do
+        sample.markers[i]:Hide();
+    end
+end
+
+local function SetFlashingSampleAlpha(widget, alpha)
+    local sample = widget.flashingSample;
+    if not sample then
+        return;
+    end
+
+    for i = 1, #sample.markers do
+        sample.markers[i]:SetAlpha(alpha);
+    end
+end
+
+local function StartPreviewFlash(widget)
+    widget.frame:SetScript("OnUpdate", function(_, elapsed)
+        widget.flashElapsed = ( widget.flashElapsed or 0 ) + elapsed;
+        local progress = ( widget.flashElapsed % FLASH_SECONDS ) / FLASH_SECONDS;
+        local pulse = FLASH_MIN_ALPHA + ( ( 1 - FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
+        SetFlashingSampleAlpha(widget, ConfigValue(widget.keyPrefix, "Alpha") * pulse);
+    end);
+end
+
+local function StopPreviewFlash(widget)
+    widget.frame:SetScript("OnUpdate", nil);
+    widget.flashElapsed = 0;
+    SetFlashingSampleAlpha(widget, 1);
+end
+
+local function BuildSample(parent, title, topOffset)
+    local titleText = parent:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
+    titleText:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, topOffset);
+    titleText:SetText(title);
+    titleText:SetTextColor(1, 1, 1, 1);
+
+    local previewFrame = CreateFrame("Frame", nil, parent);
+    previewFrame:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, topOffset - 18);
+    previewFrame:SetSize(PREVIEW_FRAME_WIDTH, PREVIEW_FRAME_HEIGHT);
+
+    local border = previewFrame:CreateTexture(nil, "BACKGROUND");
+    border:SetAllPoints(previewFrame);
+    border:SetTexture(TEXTURE_WHITE);
+    border:SetVertexColor(0, 0, 0, 1);
+
+    local background = previewFrame:CreateTexture(nil, "BORDER");
+    background:SetPoint("TOPLEFT", previewFrame, "TOPLEFT", 1, -1);
+    background:SetPoint("BOTTOMRIGHT", previewFrame, "BOTTOMRIGHT", -1, 1);
+    background:SetTexture(TEXTURE_WHITE);
+    background:SetVertexColor(1, 0.45, 0, 1);
+
+    return {
+        frame = previewFrame,
+        container = CreateFrame("Frame", nil, previewFrame),
+        markers = {},
+    };
+end
 
 local methods = {
     ["OnAcquire"] = function(self)
@@ -191,6 +265,7 @@ local methods = {
     ["OnRelease"] = function(self)
         previewWidgets[self] = nil;
         self.keyPrefix = nil;
+        StopPreviewFlash(self);
     end,
 
     ["SetText"] = function(self, text)
@@ -208,7 +283,6 @@ local methods = {
 
     ["SetCustomData"] = function(self, data)
         self.keyPrefix = data and data.keyPrefix;
-        self.markerCount = data and data.markerCount or 3;
         self:Refresh();
     end,
 
@@ -223,24 +297,15 @@ local methods = {
         end
 
         local enabled = ConfigValue(self.keyPrefix, "Enabled");
-        self.previewFrame:SetAlpha(enabled and 1 or 0.35);
+        self.normalSample.frame:SetAlpha(enabled and 1 or 0.35);
+        self.flashingSample.frame:SetAlpha(enabled and 1 or 0.35);
         self.disabledText:SetShown(not enabled);
 
-        LayoutPreviewContainer(self, self.markerCount or 3);
-        local shape = NormalizeShape(GetConfig().raidFrameAggroHighlightShape);
-        local markerSize = ConfigValue(self.keyPrefix, "Size");
-        local alpha = ConfigValue(self.keyPrefix, "Alpha");
-        local previousMarker;
-        local markerCount = self.markerCount or 3;
-        for i = 1, markerCount do
-            local marker = EnsureMarker(self, i);
-            DrawPreviewMarker(marker, shape, sampleColors[i], alpha, markerSize);
-            SetMarkerPoint(self, marker, previousMarker, i, self.keyPrefix);
-            previousMarker = marker;
-        end
-
-        for i = markerCount + 1, #self.markers do
-            self.markers[i]:Hide();
+        RenderSample(self, self.normalSample, 2);
+        RenderSample(self, self.flashingSample, 3);
+        StopPreviewFlash(self);
+        if enabled then
+            StartPreviewFlash(self);
         end
     end,
 };
@@ -260,40 +325,28 @@ local function Constructor()
     label:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -4);
     label:SetTextColor(1, 0.82, 0, 1);
 
-    local previewFrame = CreateFrame("Frame", nil, frame);
-    previewFrame:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -28);
-    previewFrame:SetSize(PREVIEW_FRAME_WIDTH, PREVIEW_FRAME_HEIGHT);
-
-    local border = previewFrame:CreateTexture(nil, "BACKGROUND");
-    border:SetAllPoints(previewFrame);
-    border:SetTexture(TEXTURE_WHITE);
-    border:SetVertexColor(0, 0, 0, 1);
-
-    local background = previewFrame:CreateTexture(nil, "BORDER");
-    background:SetPoint("TOPLEFT", previewFrame, "TOPLEFT", 1, -1);
-    background:SetPoint("BOTTOMRIGHT", previewFrame, "BOTTOMRIGHT", -1, 1);
-    background:SetTexture(TEXTURE_WHITE);
-    background:SetVertexColor(1, 0.45, 0, 1);
-
-    local previewContainer = CreateFrame("Frame", nil, previewFrame);
+    local normalSample = BuildSample(frame, "2 targeters", -24);
+    local flashingSample = BuildSample(frame, "3 targeters (flashing)", -94);
 
     local disabledText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall");
-    disabledText:SetPoint("LEFT", previewFrame, "RIGHT", 12, 0);
+    disabledText:SetPoint("LEFT", normalSample.frame, "RIGHT", 12, 0);
     disabledText:SetText("Disabled");
-
-    frame:SetScript("OnShow", function()
-        addon.RefreshRaidFrameAggroPreviewWidgets();
-    end);
 
     local widget = {
         frame = frame,
         label = label,
-        previewFrame = previewFrame,
-        previewContainer = previewContainer,
+        normalSample = normalSample,
+        flashingSample = flashingSample,
         disabledText = disabledText,
-        markers = {},
         type = Type,
     };
+
+    frame:SetScript("OnShow", function()
+        addon.RefreshRaidFrameAggroPreviewWidgets();
+    end);
+    frame:SetScript("OnHide", function()
+        StopPreviewFlash(widget);
+    end);
 
     for method, func in pairs(methods) do
         widget[method] = func;

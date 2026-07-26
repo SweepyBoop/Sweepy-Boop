@@ -345,7 +345,7 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
         spacing = GetFrameConfigValue(config, isArenaFrame, "Spacing"),
         size = GetFrameConfigValue(config, isArenaFrame, "Size"),
         alpha = GetFrameConfigValue(config, isArenaFrame, "Alpha") or ICON_ALPHA,
-        shape = NormalizeMarkerShape(config.raidFrameAggroHighlightShape),
+        shape = NormalizeMarkerShape(GetFrameConfigValue(config, isArenaFrame, "Shape")),
     };
     container:SetFrameLevel(frame:GetFrameLevel() + OVERLAY_FRAME_LEVEL_OFFSET);
     local iconCount = #classColors;

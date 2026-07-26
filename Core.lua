@@ -159,7 +159,7 @@ local defaults = {
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
-            raidFrameAggroHighlightShape = "Circle",
+            raidFrameAggroHighlightRaidFramesShape = "Circle",
             raidFrameAggroHighlightRaidFramesEnabled = true,
             raidFrameAggroHighlightRaidFramesAnchor = "TOPRIGHT",
             raidFrameAggroHighlightRaidFramesRelativePoint = "TOPRIGHT",
@@ -169,6 +169,7 @@ local defaults = {
             raidFrameAggroHighlightRaidFramesSpacing = 1,
             raidFrameAggroHighlightRaidFramesSize = 16,
             raidFrameAggroHighlightRaidFramesAlpha = 0.9,
+            raidFrameAggroHighlightArenaFramesShape = "Circle",
             raidFrameAggroHighlightArenaFramesEnabled = true,
             raidFrameAggroHighlightArenaFramesAnchor = "TOPRIGHT",
             raidFrameAggroHighlightArenaFramesRelativePoint = "TOPRIGHT",
