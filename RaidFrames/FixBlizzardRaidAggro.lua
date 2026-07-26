@@ -5,28 +5,11 @@ local explicitFramePrefixes = {
     "CompactArenaFrameMember",
 };
 
-local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
-local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
-local ICON_ALPHA = 1;
-local OVERLAY_FRAME_LEVEL_OFFSET = 50;
+local aggroHighlight = addon.RAID_FRAME_AGGRO_HIGHLIGHT;
+local TEXTURE_WHITE = aggroHighlight.TEXTURE_WHITE;
+local TEXTURE_RAID_ICONS = aggroHighlight.TEXTURE_RAID_ICONS;
+local RAID_ICON_INDICES = aggroHighlight.RAID_ICON_INDICES;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
-local RAID_FRAME_FLASH_TARGETER_COUNT = 3;
-local ARENA_FRAME_FLASH_TARGETER_COUNT = 2;
-local DOT_FLASH_SECONDS = 0.85;
-local DOT_FLASH_MIN_ALPHA = 0.35;
-
-local RAID_ICON_INDICES = {
-    Star = 1,
-    Circle = 2,
-    Diamond = 3,
-    Triangle = 4,
-    Moon = 5,
-    Square = 6,
-    Cross = 7,
-    Skull = 8,
-    Flag = 15,
-    Murloc = 16,
-};
 
 local trackedFrames = {};
 local targeters = {};
@@ -245,8 +228,8 @@ local function StartDotFlash(container, maxAlpha)
     container.flashMaxAlpha = maxAlpha;
     container:SetScript("OnUpdate", function(self, elapsed)
         self.flashElapsed = self.flashElapsed + elapsed;
-        local progress = ( self.flashElapsed % DOT_FLASH_SECONDS ) / DOT_FLASH_SECONDS;
-        local pulse = DOT_FLASH_MIN_ALPHA + ( ( 1 - DOT_FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
+        local progress = ( self.flashElapsed % aggroHighlight.FLASH_SECONDS ) / aggroHighlight.FLASH_SECONDS;
+        local pulse = aggroHighlight.FLASH_MIN_ALPHA + ( ( 1 - aggroHighlight.FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
         local alpha = self.flashMaxAlpha * pulse;
         for i = 1, #self.flashIcons do
             self.flashIcons[i]:SetAlpha(alpha);
@@ -321,8 +304,8 @@ local function LayoutContainer(container, frame, iconCount, layoutConfig)
 end
 
 local function ShouldFlashDots(isArenaFrame, iconCount)
-    return ( ( not isArenaFrame ) and ( iconCount == RAID_FRAME_FLASH_TARGETER_COUNT ) )
-        or ( isArenaFrame and ( iconCount == ARENA_FRAME_FLASH_TARGETER_COUNT ) );
+    return ( ( not isArenaFrame ) and ( iconCount == aggroHighlight.RAID_FRAME_FLASH_TARGETER_COUNT ) )
+        or ( isArenaFrame and ( iconCount == aggroHighlight.ARENA_FRAME_FLASH_TARGETER_COUNT ) );
 end
 
 local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
@@ -344,10 +327,10 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
         spacing = GetFrameConfigValue(config, isArenaFrame, "Spacing"),
         size = GetFrameConfigValue(config, isArenaFrame, "Size"),
         borderThickness = GetFrameConfigValue(config, isArenaFrame, "BorderThickness"),
-        alpha = ICON_ALPHA,
+        alpha = aggroHighlight.MARKER_ALPHA,
         shape = NormalizeMarkerShape(GetFrameConfigValue(config, isArenaFrame, "Shape")),
     };
-    container:SetFrameLevel(frame:GetFrameLevel() + OVERLAY_FRAME_LEVEL_OFFSET);
+    container:SetFrameLevel(frame:GetFrameLevel() + aggroHighlight.OVERLAY_FRAME_LEVEL_OFFSET);
     local iconCount = #classColors;
     local previousIcon;
 

@@ -4,28 +4,10 @@ local Type, Version = "RaidFrameAggroPreview-SweepyBoop", 1;
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true);
 if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return end
 
-local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
-local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
-local PREVIEW_FRAME_WIDTH = 144;
-local PREVIEW_FRAME_HEIGHT = 72;
-local PREVIEW_FRAME_SPACING = 28;
-local PREVIEW_HEIGHT = 116;
-local MARKER_ALPHA = 1;
-local FLASH_SECONDS = 0.85;
-local FLASH_MIN_ALPHA = 0.35;
-
-local RAID_ICON_INDICES = {
-    Star = 1,
-    Circle = 2,
-    Diamond = 3,
-    Triangle = 4,
-    Moon = 5,
-    Square = 6,
-    Cross = 7,
-    Skull = 8,
-    Flag = 15,
-    Murloc = 16,
-};
+local aggroHighlight = addon.RAID_FRAME_AGGRO_HIGHLIGHT;
+local TEXTURE_WHITE = aggroHighlight.TEXTURE_WHITE;
+local TEXTURE_RAID_ICONS = aggroHighlight.TEXTURE_RAID_ICONS;
+local RAID_ICON_INDICES = aggroHighlight.RAID_ICON_INDICES;
 
 local previewWidgets = setmetatable({}, { __mode = "k" });
 
@@ -190,7 +172,7 @@ local function RenderSample(widget, sample, markerCount)
     local previousMarker;
     for i = 1, markerCount do
         local marker = EnsureMarker(sample.frame, sample.markers, i);
-        DrawPreviewMarker(marker, shape, sampleColors[i], MARKER_ALPHA, markerSize, borderThickness);
+        DrawPreviewMarker(marker, shape, sampleColors[i], aggroHighlight.MARKER_ALPHA, markerSize, borderThickness);
         PositionMarker(marker, sample.frame, sample.container, previousMarker, i, widget.keyPrefix);
         previousMarker = marker;
     end
@@ -214,9 +196,9 @@ end
 local function StartPreviewFlash(widget)
     widget.frame:SetScript("OnUpdate", function(_, elapsed)
         widget.flashElapsed = ( widget.flashElapsed or 0 ) + elapsed;
-        local progress = ( widget.flashElapsed % FLASH_SECONDS ) / FLASH_SECONDS;
-        local pulse = FLASH_MIN_ALPHA + ( ( 1 - FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
-        SetFlashingSampleAlpha(widget, MARKER_ALPHA * pulse);
+        local progress = ( widget.flashElapsed % aggroHighlight.FLASH_SECONDS ) / aggroHighlight.FLASH_SECONDS;
+        local pulse = aggroHighlight.FLASH_MIN_ALPHA + ( ( 1 - aggroHighlight.FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
+        SetFlashingSampleAlpha(widget, aggroHighlight.MARKER_ALPHA * pulse);
     end);
 end
 
@@ -229,7 +211,7 @@ end
 local function BuildSample(parent, anchorTo, xOffset)
     local previewFrame = CreateFrame("Frame", nil, parent);
     previewFrame:SetPoint("TOPLEFT", anchorTo, "TOPLEFT", xOffset, 0);
-    previewFrame:SetSize(PREVIEW_FRAME_WIDTH, PREVIEW_FRAME_HEIGHT);
+    previewFrame:SetSize(aggroHighlight.PREVIEW_FRAME_WIDTH, aggroHighlight.PREVIEW_FRAME_HEIGHT);
 
     local border = previewFrame:CreateTexture(nil, "BACKGROUND");
     border:SetAllPoints(previewFrame);
@@ -252,8 +234,8 @@ end
 local methods = {
     ["OnAcquire"] = function(self)
         self:SetFullWidth(true);
-        self:SetHeight(PREVIEW_HEIGHT);
-        self.frame:SetHeight(PREVIEW_HEIGHT);
+        self:SetHeight(aggroHighlight.PREVIEW_HEIGHT);
+        self.frame:SetHeight(aggroHighlight.PREVIEW_HEIGHT);
         previewWidgets[self] = true;
         self:Refresh();
     end,
@@ -315,7 +297,7 @@ end
 local function Constructor()
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide();
-    frame:SetHeight(PREVIEW_HEIGHT);
+    frame:SetHeight(aggroHighlight.PREVIEW_HEIGHT);
 
     local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
     label:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -4);
@@ -323,10 +305,10 @@ local function Constructor()
 
     local previewRow = CreateFrame("Frame", nil, frame);
     previewRow:SetPoint("TOPLEFT", frame, "TOPLEFT", 8, -28);
-    previewRow:SetSize(( PREVIEW_FRAME_WIDTH * 2 ) + PREVIEW_FRAME_SPACING, PREVIEW_FRAME_HEIGHT);
+    previewRow:SetSize(( aggroHighlight.PREVIEW_FRAME_WIDTH * 2 ) + aggroHighlight.PREVIEW_FRAME_SPACING, aggroHighlight.PREVIEW_FRAME_HEIGHT);
 
     local normalSample = BuildSample(frame, previewRow, 0);
-    local flashingSample = BuildSample(frame, previewRow, PREVIEW_FRAME_WIDTH + PREVIEW_FRAME_SPACING);
+    local flashingSample = BuildSample(frame, previewRow, aggroHighlight.PREVIEW_FRAME_WIDTH + aggroHighlight.PREVIEW_FRAME_SPACING);
 
     local disabledText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall");
     disabledText:SetPoint("LEFT", normalSample.frame, "RIGHT", 12, 0);
