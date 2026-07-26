@@ -5,8 +5,9 @@ local explicitFramePrefixes = {
     "CompactArenaFrameMember",
 };
 
-local TEXTURE_RAID_ICONS = "Interface\\TargetingFrame\\UI-RaidTargetingIcons";
+local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
 local ICON_ALPHA = 0.9;
+local LINE_HEIGHT_FACTOR = 0.25;
 local OVERLAY_FRAME_LEVEL_OFFSET = 50;
 local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
 local RAID_FRAME_FLASH_TARGETER_COUNT = 3;
@@ -14,11 +15,9 @@ local ARENA_FRAME_FLASH_TARGETER_COUNT = 2;
 local DOT_FLASH_SECONDS = 0.85;
 local DOT_FLASH_MIN_ALPHA = 0.35;
 
-local RAID_ICON_INDICES = {
-    Star = 1,
-    Circle = 2,
-    Diamond = 3,
-    Square = 6,
+local PLAIN_SHAPES = {
+    Box = true,
+    Line = true,
 };
 
 local trackedFrames = {};
@@ -145,16 +144,13 @@ local function GetTargetingClasses(frameUnit, isArenaFrame)
     return classColors;
 end
 
-local function GetRaidIconTexCoord(index)
-    local column = ( index - 1 ) % 4;
-    local row = math.floor(( index - 1 ) / 4);
-    return column / 4, ( column + 1 ) / 4, row / 4, ( row + 1 ) / 4;
+local function GetShape(shape)
+    return PLAIN_SHAPES[shape] and shape or "Box";
 end
 
-local function ApplyRaidIconTexture(icon, shape, color, alpha)
-    local index = RAID_ICON_INDICES[shape] or RAID_ICON_INDICES.Circle;
-    icon:SetTexture(TEXTURE_RAID_ICONS);
-    icon:SetTexCoord(GetRaidIconTexCoord(index));
+local function ApplyTargetIconTexture(icon, color, alpha)
+    icon:SetTexture(TEXTURE_WHITE);
+    icon:SetTexCoord(0, 1, 0, 1);
     icon:SetDesaturated(true);
     icon:SetVertexColor(color.r, color.g, color.b, alpha);
 end
@@ -221,18 +217,26 @@ local function SetTargetIconPoint(icon, container, previousIcon, index, layoutCo
     end
 end
 
+local function GetIconSize(shape, layoutConfig)
+    if GetShape(shape) == "Line" then
+        return layoutConfig.size, math.max(1, layoutConfig.size * LINE_HEIGHT_FACTOR);
+    end
+
+    return layoutConfig.size, layoutConfig.size;
+end
+
 local function LayoutContainer(container, frame, iconCount, layoutConfig)
-    local size = layoutConfig.size;
+    local iconWidth, iconHeight = GetIconSize(layoutConfig.shape, layoutConfig);
     local spacing = layoutConfig.spacing;
     local growDirection = layoutConfig.growDirection;
     local totalSpacing = math.max(0, iconCount - 1) * spacing;
-    local width = size;
-    local height = size;
+    local width = iconWidth;
+    local height = iconHeight;
 
     if ( growDirection == "UP" ) or ( growDirection == "DOWN" ) or ( growDirection == "CENTER_VERTICAL" ) then
-        height = ( iconCount * size ) + totalSpacing;
+        height = ( iconCount * iconHeight ) + totalSpacing;
     else
-        width = ( iconCount * size ) + totalSpacing;
+        width = ( iconCount * iconWidth ) + totalSpacing;
     end
 
     container:ClearAllPoints();
@@ -280,6 +284,7 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
         spacing = GetFrameConfigValue(config, isArenaFrame, "Spacing"),
         size = GetFrameConfigValue(config, isArenaFrame, "Size"),
         alpha = GetFrameConfigValue(config, isArenaFrame, "Alpha") or ICON_ALPHA,
+        shape = GetShape(config.raidFrameAggroHighlightShape),
     };
     container:SetFrameLevel(frame:GetFrameLevel() + OVERLAY_FRAME_LEVEL_OFFSET);
     local iconCount = #classColors;
@@ -290,10 +295,11 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
 
     for i = 1, iconCount do
         local icon = EnsureTargetIcon(container, i);
+        local width, height = GetIconSize(config.raidFrameAggroHighlightShape, layoutConfig);
         icon:SetAlpha(1);
-        icon:SetSize(layoutConfig.size, layoutConfig.size);
+        icon:SetSize(width, height);
         SetTargetIconPoint(icon, container, previousIcon, i, layoutConfig);
-        ApplyRaidIconTexture(icon, config.raidFrameAggroHighlightShape, classColors[i], layoutConfig.alpha);
+        ApplyTargetIconTexture(icon, classColors[i], layoutConfig.alpha);
         icon:Show();
         if ShouldFlashDots(isArenaFrame, iconCount) then
             table.insert(container.flashIcons, icon);

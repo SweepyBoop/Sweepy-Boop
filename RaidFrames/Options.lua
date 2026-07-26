@@ -573,10 +573,8 @@ addon.GetRaidFrameOptions = function(order)
                             name = "Shape",
                             desc = "Shape used for class-colored target indicators.",
                             values = {
-                                Circle = "Circle",
-                                Diamond = "Diamond",
-                                Square = "Square",
-                                Star = "Star",
+                                Box = "Box",
+                                Line = "Line",
                             },
                             set = SetAggroHighlightOptionAndRefresh,
                         },

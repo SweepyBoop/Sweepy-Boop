@@ -159,7 +159,7 @@ local defaults = {
         },
         raidFrames = {
             arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
-            raidFrameAggroHighlightShape = "Circle",
+            raidFrameAggroHighlightShape = "Box",
             raidFrameAggroHighlightRaidFramesEnabled = true,
             raidFrameAggroHighlightRaidFramesAnchor = "TOPRIGHT",
             raidFrameAggroHighlightRaidFramesRelativePoint = "TOPRIGHT",
