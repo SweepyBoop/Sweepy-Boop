@@ -396,8 +396,32 @@ addon.GetRaidFrameOptions = function(order)
                         set = SetAggroHighlightOptionAndRefresh,
                     },
 
-                    raidFrameAggroHighlightShape = {
+                    raidFrameAggroHighlightTest = {
                         order = 2,
+                        type = "execute",
+                        width = "half",
+                        name = "Test",
+                        desc = "Preview the configured aggro indicators on visible raid-style frames. Test mode can only be used outside instances.",
+                        func = function ()
+                            SweepyBoop:TestRaidFrameAggroHighlight();
+                        end,
+                        disabled = AggroHighlightOptionsDisabled,
+                    },
+
+                    raidFrameAggroHighlightHideTest = {
+                        order = 3,
+                        type = "execute",
+                        width = "half",
+                        name = "Hide",
+                        desc = "Hide the aggro indicator preview.",
+                        func = function ()
+                            SweepyBoop:HideTestRaidFrameAggroHighlight();
+                        end,
+                        disabled = AggroHighlightOptionsDisabled,
+                    },
+
+                    raidFrameAggroHighlightShape = {
+                        order = 4,
                         width = "normal",
                         type = "select",
                         name = "Shape",
@@ -413,7 +437,7 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     raidFrameAggroHighlightPulseSkullOnThreeEnemyTargeters = {
-                        order = 3,
+                        order = 5,
                         width = "full",
                         type = "toggle",
                         name = "Show pulsing skull when 3 enemies target a player/party frame",
@@ -423,13 +447,13 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     layoutHeader = {
-                        order = 4,
+                        order = 6,
                         type = "header",
                         name = "Layout",
                     },
 
                     raidFrameAggroHighlightAnchor = {
-                        order = 5,
+                        order = 7,
                         width = "normal",
                         type = "select",
                         name = "Anchor",
@@ -450,7 +474,7 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     raidFrameAggroHighlightRelativePoint = {
-                        order = 6,
+                        order = 8,
                         width = "normal",
                         type = "select",
                         name = "Relative To",
@@ -471,7 +495,7 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     raidFrameAggroHighlightGrowDirection = {
-                        order = 7,
+                        order = 9,
                         width = "normal",
                         type = "select",
                         name = "Grow Direction",
@@ -489,14 +513,14 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     layoutBreak = {
-                        order = 8,
+                        order = 10,
                         type = "description",
                         name = "",
                         width = "full",
                     },
 
                     raidFrameAggroHighlightSize = {
-                        order = 9,
+                        order = 11,
                         width = "normal",
                         type = "range",
                         min = 8,
@@ -509,7 +533,7 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     raidFrameAggroHighlightSpacing = {
-                        order = 10,
+                        order = 12,
                         width = "normal",
                         type = "range",
                         min = 0,
@@ -522,7 +546,7 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     raidFrameAggroHighlightOffsetX = {
-                        order = 11,
+                        order = 13,
                         width = "normal",
                         type = "range",
                         min = -80,
@@ -535,7 +559,7 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     raidFrameAggroHighlightOffsetY = {
-                        order = 12,
+                        order = 14,
                         width = "normal",
                         type = "range",
                         min = -80,
@@ -548,7 +572,7 @@ addon.GetRaidFrameOptions = function(order)
                     },
 
                     raidFrameAggroHighlightAlpha = {
-                        order = 13,
+                        order = 15,
                         width = "normal",
                         type = "range",
                         isPercent = true,
