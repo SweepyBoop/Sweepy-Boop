@@ -1,6 +1,28 @@
 local _, addon = ...;
 
 local GCD_SPELL_ID = 61304;
+local MAX_GCD_DURATION = 1.7;
+local PLAYER_GCD_PROBE_SPELLS = {
+    DRUID = 5185, -- Healing Touch
+    HUNTER = 75, -- Auto Shot
+    MAGE = 1459, -- Arcane Intellect
+    PALADIN = 635, -- Holy Light
+    PRIEST = 2050, -- Lesser Heal
+    ROGUE = 1752, -- Sinister Strike
+    SHAMAN = 331, -- Healing Wave
+    WARLOCK = 687, -- Demon Skin
+    WARRIOR = 6673, -- Battle Shout
+};
+local GCD_REFRESH_EVENTS = {
+    "ACTIONBAR_UPDATE_COOLDOWN",
+    "SPELL_UPDATE_COOLDOWN",
+    "UNIT_SPELLCAST_FAILED",
+    "UNIT_SPELLCAST_INTERRUPTED",
+};
+local GCD_CAST_EVENTS = {
+    "UNIT_SPELLCAST_SENT",
+    "UNIT_SPELLCAST_SUCCEEDED",
+};
 local RING_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/MouseCursorRing";
 local TRAIL_ATLAS = "CircleMaskScalable";
 local TRAIL_POOL_SIZE = 48;
@@ -19,6 +41,7 @@ local lastTrailX;
 local lastTrailY;
 local lastGCDTime = 0;
 local pendingGCDCheck = false;
+local gcdSpellID = GCD_SPELL_ID;
 
 local function Clamp(value, minValue, maxValue)
     value = tonumber(value) or minValue;
@@ -32,7 +55,34 @@ local function GetConfig()
 end
 
 local function SupportsGCDRing()
-    return not addon.PROJECT_TBC;
+    return GetSpellCooldown ~= nil or ( C_Spell and C_Spell.GetSpellCooldown ) ~= nil;
+end
+
+local function DoesSpellExist(spellID)
+    if not spellID then return false end
+
+    if C_Spell and C_Spell.DoesSpellExist then
+        return C_Spell.DoesSpellExist(spellID);
+    end
+
+    return GetSpellInfo and GetSpellInfo(spellID) ~= nil;
+end
+
+local function ResolveGCDProbeSpellID()
+    if DoesSpellExist(GCD_SPELL_ID) then
+        return GCD_SPELL_ID;
+    end
+
+    local _, class = UnitClass("player");
+    local classProbeSpellID = PLAYER_GCD_PROBE_SPELLS[class];
+    if DoesSpellExist(classProbeSpellID) then
+        return classProbeSpellID;
+    end
+end
+
+local function RefreshGCDProbeSpell()
+    gcdSpellID = ResolveGCDProbeSpellID();
+    return gcdSpellID;
 end
 
 local function GetBaselineColor(config)
@@ -291,7 +341,7 @@ end
 local function StartGCD(startTime, duration)
     local config = GetConfig();
     if ( not SupportsGCDRing() ) or ( not config.enabled ) or ( not config.showGCD ) then return false end
-    if ( not startTime ) or ( not duration ) or duration <= 0 then return false end
+    if ( not startTime ) or ( not duration ) or duration <= 0 or duration > MAX_GCD_DURATION then return false end
 
     if cursorFrame.lastModified ~= config.lastModified then
         RefreshVisuals();
@@ -303,21 +353,24 @@ local function StartGCD(startTime, duration)
 end
 
 local function IsActiveGCD(startTime, duration)
-    if ( not startTime ) or ( not duration ) or duration <= 0 then return false end
+    if ( not startTime ) or ( not duration ) or duration <= 0 or duration > MAX_GCD_DURATION then return false end
 
     return ( startTime + duration ) > ( GetTime() + 0.05 );
 end
 
 local function GetGCDCooldown()
+    local spellID = gcdSpellID or RefreshGCDProbeSpell();
+    if not spellID then return end
+
     if C_Spell and C_Spell.GetSpellCooldown then
-        local info = C_Spell.GetSpellCooldown(GCD_SPELL_ID);
+        local info = C_Spell.GetSpellCooldown(spellID);
         if type(info) == "table" then
             return info.startTime, info.duration;
         end
     end
 
     if GetSpellCooldown then
-        local startTime, duration = GetSpellCooldown(GCD_SPELL_ID);
+        local startTime, duration = GetSpellCooldown(spellID);
         return startTime, duration;
     end
 end
@@ -341,15 +394,26 @@ local function QueueGCDCheck()
     if pendingGCDCheck then return end
 
     pendingGCDCheck = true;
-    C_Timer.After(0, function()
+    if C_Timer and C_Timer.After then
+        C_Timer.After(0, function()
+            pendingGCDCheck = false;
+            SyncGCDRing();
+        end);
+    else
         pendingGCDCheck = false;
         SyncGCDRing();
-    end);
+    end
 end
 
 local function OnEvent(_, event, unit)
     if unit and unit ~= "player" then return end
-    if event == "SPELL_UPDATE_COOLDOWN" or event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED" then
+
+    if event == "SPELLS_CHANGED" then
+        RefreshGCDProbeSpell();
+        return;
+    end
+
+    if event == "ACTIONBAR_UPDATE_COOLDOWN" or event == "SPELL_UPDATE_COOLDOWN" or event == "UNIT_SPELLCAST_FAILED" or event == "UNIT_SPELLCAST_INTERRUPTED" then
         SyncGCDRing();
         return;
     end
@@ -393,11 +457,14 @@ function SweepyBoop:SetupMouseCursor()
     if config.enabled then
         trackerFrame:SetScript("OnUpdate", OnUpdate);
         if SupportsGCDRing() and config.showGCD then
-            eventFrame:RegisterEvent("UNIT_SPELLCAST_SENT");
-            eventFrame:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED");
-            eventFrame:RegisterEvent("UNIT_SPELLCAST_FAILED");
-            eventFrame:RegisterEvent("UNIT_SPELLCAST_INTERRUPTED");
-            eventFrame:RegisterEvent("SPELL_UPDATE_COOLDOWN");
+            RefreshGCDProbeSpell();
+            eventFrame:RegisterEvent("SPELLS_CHANGED");
+            for _, event in ipairs(GCD_REFRESH_EVENTS) do
+                eventFrame:RegisterEvent(event);
+            end
+            for _, event in ipairs(GCD_CAST_EVENTS) do
+                eventFrame:RegisterEvent(event);
+            end
         end
     else
         trackerFrame:SetScript("OnUpdate", nil);
