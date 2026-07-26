@@ -30,14 +30,12 @@ local function HealerBuffHelperConflictDesc()
     end
 end
 
-local function AggroHighlightTestDisabled()
-    local raidFrames = SweepyBoop.db.profile.raidFrames;
-    return ( not raidFrames.raidFrameAggroHighlightRaidFramesEnabled ) and ( not raidFrames.raidFrameAggroHighlightArenaFramesEnabled );
-end
-
 local function SetAggroHighlightOptionAndRefresh(info, val)
     SetRaidFrameOptionAndRefresh(info, val, function ()
         SweepyBoop:RefreshRaidFrameAggroHighlight();
+        if addon.RefreshRaidFrameAggroPreviewWidgets then
+            addon.RefreshRaidFrameAggroPreviewWidgets();
+        end
     end);
 end
 
@@ -543,27 +541,28 @@ addon.GetRaidFrameOptions = function(order)
                 name = "PvP aggro highlight",
                 args = (function ()
                     local args = {
-                        raidFrameAggroHighlightTest = {
+                        raidFrameAggroHighlightRaidFramesPreview = {
                             order = 1,
-                            type = "execute",
-                            width = "half",
-                            name = "Test",
-                            desc = "Preview the configured aggro indicators on visible raid-style frames. Test mode can only be used outside instances.",
-                            func = function ()
-                                SweepyBoop:TestRaidFrameAggroHighlight();
-                            end,
-                            disabled = AggroHighlightTestDisabled,
+                            type = "description",
+                            width = "full",
+                            name = "Raid frames preview",
+                            dialogControl = "RaidFrameAggroPreview-SweepyBoop",
+                            arg = {
+                                keyPrefix = "raidFrameAggroHighlightRaidFrames",
+                                markerCount = 3,
+                            },
                         },
 
-                        raidFrameAggroHighlightHideTest = {
+                        raidFrameAggroHighlightArenaFramesPreview = {
                             order = 2,
-                            type = "execute",
-                            width = "half",
-                            name = "Hide",
-                            desc = "Hide the aggro indicator preview.",
-                            func = function ()
-                                SweepyBoop:HideTestRaidFrameAggroHighlight();
-                            end,
+                            type = "description",
+                            width = "full",
+                            name = "Arena frames preview",
+                            dialogControl = "RaidFrameAggroPreview-SweepyBoop",
+                            arg = {
+                                keyPrefix = "raidFrameAggroHighlightArenaFrames",
+                                markerCount = 2,
+                            },
                         },
 
                         raidFrameAggroHighlightShape = {

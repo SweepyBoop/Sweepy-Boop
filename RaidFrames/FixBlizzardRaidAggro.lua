@@ -32,9 +32,7 @@ local RAID_ICON_INDICES = {
 local trackedFrames = {};
 local targeters = {};
 local classColors = {};
-local testClassColors = {};
 local wasActive = false;
-local isTesting = false;
 
 local function GetConfig()
     return SweepyBoop.db.profile.raidFrames;
@@ -50,14 +48,6 @@ end
 
 local function GetFrameConfigValue(config, isArenaFrame, key)
     return config[GetFrameConfigPrefix(isArenaFrame) .. key];
-end
-
-local function BuildTestClassColors()
-    wipe(testClassColors);
-    table.insert(testClassColors, RAID_CLASS_COLORS.WARRIOR);
-    table.insert(testClassColors, RAID_CLASS_COLORS.MAGE);
-    table.insert(testClassColors, RAID_CLASS_COLORS.ROGUE);
-    return testClassColors;
 end
 
 local function AddTargeter(unit, isEnemy)
@@ -472,61 +462,7 @@ local function UpdateAllFrames()
     end
 end
 
-local function ShowBlizzardArenaFramesForPreview()
-    if not CompactArenaFrame then
-        return;
-    end
-
-    CompactArenaFrame:Show();
-    for i = 1, addon.MAX_ARENA_SIZE do
-        local frame = _G["CompactArenaFrameMember" .. i];
-        if frame then
-            frame:Show();
-        end
-    end
-end
-
-local function ShowTestFrames()
-    ShowBlizzardArenaFramesForPreview();
-    AddExplicitFrames();
-    local previewColors = BuildTestClassColors();
-
-    for frame in pairs(trackedFrames) do
-        if frame:IsForbidden() then
-            trackedFrames[frame] = nil;
-        elseif frame:IsShown() then
-            local unit = frame.displayedUnit or frame.unit;
-            local isArenaFrame = IsArenaFrame(frame, unit);
-            if IsFrameTypeEnabled(GetConfig(), isArenaFrame) then
-                ShowCustomAggroHighlight(frame, previewColors, isArenaFrame);
-            else
-                HideCustomAggroHighlight(frame);
-            end
-        else
-            HideCustomAggroHighlight(frame);
-        end
-    end
-end
-
-local function ClearTestFrames()
-    if not isTesting then
-        return;
-    end
-
-    isTesting = false;
-    HideAllFrames();
-end
-
 function SweepyBoop:RefreshRaidFrameAggroHighlight()
-    if isTesting then
-        if IsInInstance() then
-            ClearTestFrames();
-        else
-            ShowTestFrames();
-            return;
-        end
-    end
-
     if IsActive() then
         wasActive = true;
         UpdateAllFrames();
@@ -534,22 +470,6 @@ function SweepyBoop:RefreshRaidFrameAggroHighlight()
         HideAllFrames();
         wasActive = false;
     end
-end
-
-function SweepyBoop:TestRaidFrameAggroHighlight()
-    if IsInInstance() then
-        self:HideTestRaidFrameAggroHighlight();
-        addon.PRINT(addon.L["Test mode can only be used outside instances"]);
-        return;
-    end
-
-    isTesting = true;
-    ShowTestFrames();
-end
-
-function SweepyBoop:HideTestRaidFrameAggroHighlight()
-    ClearTestFrames();
-    self:RefreshRaidFrameAggroHighlight();
 end
 
 function SweepyBoop:SetupRaidFrameAggroHighlight()
@@ -571,10 +491,6 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- For cases when stealthy classes appear (we need to run an update before they change target)
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
-        if IsInInstance() then
-            ClearTestFrames();
-        end
-
         if not IsActive() then
             if wasActive then
                 HideAllFrames();
