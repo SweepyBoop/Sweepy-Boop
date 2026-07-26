@@ -39,7 +39,7 @@ local function SetAggroHighlightOptionAndRefresh(info, val)
     end);
 end
 
-local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, sectionName, enabledName, enabledDesc)
+local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, sectionName, enabledName, enabledDesc, previewName)
     local function LayoutDisabled()
         return not SweepyBoop.db.profile.raidFrames[keyPrefix .. "Enabled"];
     end
@@ -59,8 +59,19 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
             set = SetAggroHighlightOptionAndRefresh,
         };
 
-    args[keyPrefix .. "Shape"] = {
+    args[keyPrefix .. "Preview"] = {
             order = orderOffset + 2,
+            type = "description",
+            width = "full",
+            name = previewName,
+            dialogControl = "RaidFrameAggroPreview-SweepyBoop",
+            arg = {
+                keyPrefix = keyPrefix,
+            },
+        };
+
+    args[keyPrefix .. "Shape"] = {
+            order = orderOffset + 3,
             width = "normal",
             type = "select",
             name = "Shape",
@@ -82,7 +93,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "Anchor"] = {
-            order = orderOffset + 3,
+            order = orderOffset + 4,
             width = "normal",
             type = "select",
             name = "Anchor",
@@ -103,7 +114,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "RelativePoint"] = {
-            order = orderOffset + 4,
+            order = orderOffset + 5,
             width = "normal",
             type = "select",
             name = "Relative To",
@@ -124,7 +135,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "GrowDirection"] = {
-            order = orderOffset + 5,
+            order = orderOffset + 6,
             width = "normal",
             type = "select",
             name = "Grow Direction",
@@ -142,14 +153,14 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "LayoutBreak"] = {
-            order = orderOffset + 6,
+            order = orderOffset + 7,
             type = "description",
             name = "",
             width = "full",
         };
 
     args[keyPrefix .. "Size"] = {
-            order = orderOffset + 7,
+            order = orderOffset + 8,
             width = "normal",
             type = "range",
             min = 8,
@@ -162,7 +173,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "Spacing"] = {
-            order = orderOffset + 8,
+            order = orderOffset + 9,
             width = "normal",
             type = "range",
             min = 0,
@@ -175,7 +186,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "OffsetX"] = {
-            order = orderOffset + 9,
+            order = orderOffset + 10,
             width = "normal",
             type = "range",
             min = -80,
@@ -188,7 +199,7 @@ local function BuildAggroHighlightLayoutOptions(args, orderOffset, keyPrefix, se
         };
 
     args[keyPrefix .. "OffsetY"] = {
-            order = orderOffset + 10,
+            order = orderOffset + 11,
             width = "normal",
             type = "range",
             min = -80,
@@ -548,31 +559,7 @@ addon.GetRaidFrameOptions = function(order)
                 type = "group",
                 name = "PvP aggro highlight",
                 args = (function ()
-                    local args = {
-                        raidFrameAggroHighlightRaidFramesPreview = {
-                            order = 1,
-                            type = "description",
-                            width = "full",
-                            name = "Raid frames preview",
-                            dialogControl = "RaidFrameAggroPreview-SweepyBoop",
-                            arg = {
-                                keyPrefix = "raidFrameAggroHighlightRaidFrames",
-                                markerCount = 3,
-                            },
-                        },
-
-                        raidFrameAggroHighlightArenaFramesPreview = {
-                            order = 2,
-                            type = "description",
-                            width = "full",
-                            name = "Arena frames preview",
-                            dialogControl = "RaidFrameAggroPreview-SweepyBoop",
-                            arg = {
-                                keyPrefix = "raidFrameAggroHighlightArenaFrames",
-                                markerCount = 2,
-                            },
-                        },
-                    };
+                    local args = {};
 
                     BuildAggroHighlightLayoutOptions(
                         args,
@@ -580,7 +567,8 @@ addon.GetRaidFrameOptions = function(order)
                         "raidFrameAggroHighlightRaidFrames",
                         "Raid frames",
                         "Show on raid frames",
-                        "Show enemy target indicators on player and party raid-style frames."
+                        "Show enemy target indicators on player and party raid-style frames.",
+                        "Raid frames preview"
                     );
                     BuildAggroHighlightLayoutOptions(
                         args,
@@ -588,7 +576,8 @@ addon.GetRaidFrameOptions = function(order)
                         "raidFrameAggroHighlightArenaFrames",
                         "Arena frames",
                         "Show on built-in arena frames",
-                        "Show friendly target indicators on Blizzard compact arena frames."
+                        "Show friendly target indicators on Blizzard compact arena frames.",
+                        "Arena frames preview"
                     );
                     return args;
                 end)(),
