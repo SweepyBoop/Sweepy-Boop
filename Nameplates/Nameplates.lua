@@ -49,6 +49,8 @@ end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
 local ARENA_NUMBER_VERTICAL_OFFSET = 2;
+local ARENA_NUMBER_FONT_SIZE_MULTIPLIER = 2.5;
+local ARENA_NUMBER_LOCAL_TEST_UNIT_NAME = "PvP Training Dummy";
 
 local function IsForbiddenSafe(frame)
     if addon.IsSecretValue(frame) then return true end
@@ -65,7 +67,12 @@ local function EnsureArenaNameplateNumberText(frame)
     if frame.sweepyBoopArenaNumberText then return frame.sweepyBoopArenaNumberText end
 
     local text = frame:CreateFontString(nil, "OVERLAY");
-    text:SetFontObject("SystemFont_LargeNamePlate");
+    local font, fontSize, flags = SystemFont_NamePlate:GetFont();
+    if font and fontSize then
+        text:SetFont(font, fontSize * ARENA_NUMBER_FONT_SIZE_MULTIPLIER, flags or "OUTLINE");
+    else
+        text:SetFontObject("SystemFont_LargeNamePlate");
+    end
     text:SetTextColor(1, 1, 0); -- Yellow
     text:SetJustifyH("CENTER");
     text:SetJustifyV("BOTTOM");
@@ -83,6 +90,13 @@ local function ShowArenaNameplateNumber(frame, arenaNumber)
     local text = EnsureArenaNameplateNumberText(frame);
     text:SetText(arenaNumber);
     text:Show();
+end
+
+local function ShouldShowLocalArenaNumberTest(frame)
+    if not ARENA_NUMBER_LOCAL_TEST_UNIT_NAME then return false end
+    if not frame.unit then return false end
+
+    return UnitName(frame.unit) == ARENA_NUMBER_LOCAL_TEST_UNIT_NAME;
 end
 
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
@@ -374,7 +388,9 @@ function SweepyBoop:SetupNameplateModules()
             addon.UpdatePlayerName(frame:GetParent(), frame);
             HideArenaNameplateNumber(frame);
 
-            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
+            if ShouldShowLocalArenaNumberTest(frame) then
+                ShowArenaNameplateNumber(frame, 1);
+            elseif IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
                 if addon.PROJECT_MAINLINE then
                     -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
                     if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
