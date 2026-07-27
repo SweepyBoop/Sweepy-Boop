@@ -48,7 +48,6 @@ local function IsUnitIdInvalid(unitId)
 end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
-local ARENA_NUMBER_FONT_SIZE_BONUS = 2;
 local ARENA_NUMBER_VERTICAL_OFFSET = 2;
 
 local function IsForbiddenSafe(frame)
@@ -66,13 +65,7 @@ local function EnsureArenaNameplateNumberText(frame)
     if frame.sweepyBoopArenaNumberText then return frame.sweepyBoopArenaNumberText end
 
     local text = frame:CreateFontString(nil, "OVERLAY");
-    local font, _, flags = frame.name:GetFont();
-    local _, baseFontSize = SystemFont_NamePlate:GetFont();
-    if font and baseFontSize then
-        text:SetFont(font, baseFontSize + ARENA_NUMBER_FONT_SIZE_BONUS, flags or "OUTLINE");
-    else
-        text:SetFontObject("SystemFont_NamePlate");
-    end
+    text:SetFontObject("SystemFont_LargeNamePlate");
     text:SetTextColor(1, 1, 0); -- Yellow
     text:SetJustifyH("CENTER");
     text:SetJustifyV("BOTTOM");
