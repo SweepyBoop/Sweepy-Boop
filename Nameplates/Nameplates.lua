@@ -50,6 +50,9 @@ end
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
 local ARENA_NUMBER_VERTICAL_OFFSET = 2;
 local ARENA_NUMBER_FONT_SIZE_MULTIPLIER = 2.5;
+local arenaNumberFont;
+local arenaNumberBaseFontSize;
+local arenaNumberFontFlags;
 
 local function IsForbiddenSafe(frame)
     if addon.IsSecretValue(frame) then return true end
@@ -62,13 +65,20 @@ local function HideArenaNameplateNumber(frame)
     end
 end
 
+local function EnsureArenaNumberFont()
+    if arenaNumberFont or arenaNumberBaseFontSize then return end
+
+    arenaNumberFont, arenaNumberBaseFontSize, arenaNumberFontFlags = SystemFont_NamePlate:GetFont();
+end
+
 local function EnsureArenaNameplateNumberText(frame)
     if frame.sweepyBoopArenaNumberText then return frame.sweepyBoopArenaNumberText end
 
+    EnsureArenaNumberFont();
+
     local text = frame:CreateFontString(nil, "OVERLAY");
-    local font, fontSize, flags = SystemFont_NamePlate:GetFont();
-    if font and fontSize then
-        text:SetFont(font, fontSize * ARENA_NUMBER_FONT_SIZE_MULTIPLIER, flags or "OUTLINE");
+    if arenaNumberFont and arenaNumberBaseFontSize then
+        text:SetFont(arenaNumberFont, arenaNumberBaseFontSize * ARENA_NUMBER_FONT_SIZE_MULTIPLIER, arenaNumberFontFlags or "OUTLINE");
     else
         text:SetFontObject("SystemFont_LargeNamePlate");
     end
