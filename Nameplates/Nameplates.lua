@@ -48,9 +48,73 @@ local function IsUnitIdInvalid(unitId)
 end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
+local ARENA_NUMBER_FONT_SIZE = 32;
+
 local function IsForbiddenSafe(frame)
     if addon.IsSecretValue(frame) then return true end
     return frame:IsForbidden();
+end
+
+local function SaveNameFontStringLayout(name)
+    if name.sweepyBoopOriginalLayout then return end
+
+    local points = {};
+    for i = 1, name:GetNumPoints() do
+        local point, relativeTo, relativePoint, xOfs, yOfs = name:GetPoint(i);
+        points[i] = {
+            point = point,
+            relativeTo = relativeTo,
+            relativePoint = relativePoint,
+            xOfs = xOfs,
+            yOfs = yOfs,
+        };
+    end
+
+    local font, fontSize, flags = name:GetFont();
+    name.sweepyBoopOriginalLayout = {
+        font = font,
+        fontSize = fontSize,
+        flags = flags,
+        justifyH = name:GetJustifyH(),
+        justifyV = name:GetJustifyV(),
+        points = points,
+    };
+end
+
+local function RestoreNameFontStringLayout(name)
+    if not name then return end
+
+    local layout = name.sweepyBoopOriginalLayout;
+    if not layout then return end
+
+    name:ClearAllPoints();
+    for _, point in ipairs(layout.points) do
+        name:SetPoint(point.point, point.relativeTo, point.relativePoint, point.xOfs, point.yOfs);
+    end
+
+    if layout.font then
+        name:SetFont(layout.font, layout.fontSize, layout.flags);
+    end
+    name:SetJustifyH(layout.justifyH);
+    name:SetJustifyV(layout.justifyV);
+end
+
+local function ShowArenaNameplateNumber(frame, arenaNumber)
+    if not frame.name then return end
+
+    local name = frame.name;
+    SaveNameFontStringLayout(name);
+
+    local font, _, flags = name:GetFont();
+    name:ClearAllPoints();
+    name:SetPoint("CENTER", frame.healthBar or frame, "CENTER", 0, 0);
+    name:SetJustifyH("CENTER");
+    name:SetJustifyV("MIDDLE");
+    if font then
+        name:SetFont(font, ARENA_NUMBER_FONT_SIZE, flags);
+    end
+    name:SetText(arenaNumber);
+    name:SetTextColor(1, 1, 0); -- Yellow
 end
 
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
@@ -333,6 +397,7 @@ function SweepyBoop:SetupNameplateModules()
         -- Less efficient check for classic as showPvPClassificationIndicator is not available
         local isNamePlate = frame.optionTable.showPvPClassificationIndicator or ( ( not addon.PROJECT_MAINLINE ) and string.find(frame.unit, "nameplate") );
         if isNamePlate then
+            RestoreNameFontStringLayout(frame.name);
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePlayerName(frame:GetParent(), frame);
@@ -343,15 +408,13 @@ function SweepyBoop:SetupNameplateModules()
                     if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
                         local arenaNumber = addon.GetArenaNumber(frame.unit);
                         if arenaNumber then
-                            frame.name:SetText(arenaNumber);
-                            frame.name:SetTextColor(1, 1, 0); -- Yellow
+                            ShowArenaNameplateNumber(frame, arenaNumber);
                         end
                     end
                 else
                     for i = 1, 3 do
                         if UnitIsUnit(frame.unit, "arena" .. i) then
-                            frame.name:SetText(i);
-                            frame.name:SetTextColor(1, 1, 0); -- Yellow
+                            ShowArenaNameplateNumber(frame, i);
                             break;
                         end
                     end
