@@ -50,6 +50,8 @@ end
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
 local ARENA_NUMBER_VERTICAL_OFFSET = 2;
 local ARENA_NUMBER_FONT_SIZE_MULTIPLIER = 2.5;
+local ARENA_NUMBER_TEST_UNIT_NAME = "PvP Training Dummy";
+local arenaNumberTestEnabled = false;
 local arenaNumberFont;
 local arenaNumberBaseFontSize;
 local arenaNumberFontFlags;
@@ -102,6 +104,13 @@ local function ShowArenaNameplateNumber(frame, arenaNumber)
 end
 
 local function GetArenaNameplateNumber(frame)
+    if arenaNumberTestEnabled and frame.unit and UnitName(frame.unit) == ARENA_NUMBER_TEST_UNIT_NAME then
+        if not frame.sweepyBoopArenaNumberTestNumber then
+            frame.sweepyBoopArenaNumberTestNumber = random(1, 3);
+        end
+        return frame.sweepyBoopArenaNumberTestNumber;
+    end
+
     if not IsActiveBattlefieldArena() then return end
     if not SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then return end
 
@@ -503,25 +512,31 @@ function SweepyBoop:RefreshAllNamePlates(hideFirst)
 end
 
 function SweepyBoop:TestArenaNameplateNumbers()
+    arenaNumberTestEnabled = true;
+
     local nameplates = C_NamePlate.GetNamePlates(issecure());
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         local frame = nameplate and nameplate.UnitFrame;
         if frame then
             if IsForbiddenSafe(frame) then return end
-            if frame.unit and addon.UnitIsHostile(frame.unit) then
-                ShowArenaNameplateNumber(frame, random(1, 3));
+            if frame.unit and UnitName(frame.unit) == ARENA_NUMBER_TEST_UNIT_NAME then
+                frame.sweepyBoopArenaNumberTestNumber = random(1, 3);
+                UpdateArenaNameplateNumber(frame);
             end
         end
     end
 end
 
 function SweepyBoop:HideTestArenaNameplateNumbers()
+    arenaNumberTestEnabled = false;
+
     local nameplates = C_NamePlate.GetNamePlates(issecure());
     for i = 1, #(nameplates) do
         local nameplate = nameplates[i];
         if nameplate and nameplate.UnitFrame then
             if IsForbiddenSafe(nameplate.UnitFrame) then return end
+            nameplate.UnitFrame.sweepyBoopArenaNumberTestNumber = nil;
             HideArenaNameplateNumber(nameplate.UnitFrame);
             CompactUnitFrame_UpdateName(nameplate.UnitFrame);
         end
