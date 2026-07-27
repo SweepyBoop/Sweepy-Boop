@@ -101,6 +101,33 @@ local function ShowArenaNameplateNumber(frame, arenaNumber)
     text:Show();
 end
 
+local function GetArenaNameplateNumber(frame)
+    if not IsActiveBattlefieldArena() then return end
+    if not SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then return end
+
+    if addon.PROJECT_MAINLINE then
+        -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
+        if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
+            return addon.GetArenaNumber(frame.unit);
+        end
+    else
+        for i = 1, 3 do
+            if UnitIsUnit(frame.unit, "arena" .. i) then
+                return i;
+            end
+        end
+    end
+end
+
+local function UpdateArenaNameplateNumber(frame)
+    local arenaNumber = GetArenaNameplateNumber(frame);
+    if arenaNumber then
+        ShowArenaNameplateNumber(frame, arenaNumber);
+    else
+        HideArenaNameplateNumber(frame);
+    end
+end
+
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
@@ -310,7 +337,7 @@ function SweepyBoop:SetupNameplateModules()
                 end
 
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
-                HideArenaNameplateNumber(nameplate.UnitFrame);
+                UpdateArenaNameplateNumber(nameplate.UnitFrame);
             end
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId, issecure());
@@ -388,26 +415,7 @@ function SweepyBoop:SetupNameplateModules()
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePlayerName(frame:GetParent(), frame);
-            HideArenaNameplateNumber(frame);
-
-            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                if addon.PROJECT_MAINLINE then
-                    -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
-                    if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
-                        local arenaNumber = addon.GetArenaNumber(frame.unit);
-                        if arenaNumber then
-                            ShowArenaNameplateNumber(frame, arenaNumber);
-                        end
-                    end
-                else
-                    for i = 1, 3 do
-                        if UnitIsUnit(frame.unit, "arena" .. i) then
-                            ShowArenaNameplateNumber(frame, i);
-                            break;
-                        end
-                    end
-                end
-            end
+            UpdateArenaNameplateNumber(frame);
         end
     end)
 
