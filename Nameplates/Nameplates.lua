@@ -48,9 +48,93 @@ local function IsUnitIdInvalid(unitId)
 end
 
 -- Helper to safely check if a frame is forbidden (handles secret values in arena)
+local ARENA_NUMBER_VERTICAL_OFFSET = 2;
+local ARENA_NUMBER_FONT_SIZE_MULTIPLIER = 2.5;
+local ARENA_NUMBER_TEST_UNIT_NAME = "PvP Training Dummy";
+local arenaNumberTestEnabled = false;
+local arenaNumberFont;
+local arenaNumberBaseFontSize;
+local arenaNumberFontFlags;
+
 local function IsForbiddenSafe(frame)
     if addon.IsSecretValue(frame) then return true end
     return frame:IsForbidden();
+end
+
+local function HideArenaNameplateNumber(frame)
+    if frame.sweepyBoopArenaNumberText then
+        frame.sweepyBoopArenaNumberText:Hide();
+    end
+end
+
+local function EnsureArenaNumberFont()
+    if arenaNumberFont or arenaNumberBaseFontSize then return end
+
+    arenaNumberFont, arenaNumberBaseFontSize, arenaNumberFontFlags = SystemFont_NamePlate:GetFont();
+end
+
+local function EnsureArenaNameplateNumberText(frame)
+    if frame.sweepyBoopArenaNumberText then return frame.sweepyBoopArenaNumberText end
+
+    EnsureArenaNumberFont();
+
+    local text = frame:CreateFontString(nil, "OVERLAY");
+    if arenaNumberFont and arenaNumberBaseFontSize then
+        text:SetFont(arenaNumberFont, arenaNumberBaseFontSize * ARENA_NUMBER_FONT_SIZE_MULTIPLIER, arenaNumberFontFlags or "OUTLINE");
+    else
+        text:SetFontObject("SystemFont_LargeNamePlate");
+    end
+    text:SetTextColor(1, 1, 0); -- Yellow
+    text:SetJustifyH("CENTER");
+    text:SetJustifyV("BOTTOM");
+    text:SetPoint("BOTTOM", frame.healthBar or frame, "TOP", 0, ARENA_NUMBER_VERTICAL_OFFSET);
+    text:Hide();
+
+    frame.sweepyBoopArenaNumberText = text;
+    return text;
+end
+
+local function ShowArenaNameplateNumber(frame, arenaNumber)
+    if not frame.name then return end
+
+    frame.name:SetText("");
+    local text = EnsureArenaNameplateNumberText(frame);
+    text:SetText(arenaNumber);
+    text:Show();
+end
+
+local function GetArenaNameplateNumber(frame)
+    if arenaNumberTestEnabled and frame.unit and UnitName(frame.unit) == ARENA_NUMBER_TEST_UNIT_NAME then
+        if not frame.sweepyBoopArenaNumberTestNumber then
+            frame.sweepyBoopArenaNumberTestNumber = random(1, 3);
+        end
+        return frame.sweepyBoopArenaNumberTestNumber;
+    end
+
+    if not IsActiveBattlefieldArena() then return end
+    if not SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then return end
+
+    if addon.PROJECT_MAINLINE then
+        -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
+        if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
+            return addon.GetArenaNumber(frame.unit);
+        end
+    else
+        for i = 1, 3 do
+            if UnitIsUnit(frame.unit, "arena" .. i) then
+                return i;
+            end
+        end
+    end
+end
+
+local function UpdateArenaNameplateNumber(frame)
+    local arenaNumber = GetArenaNameplateNumber(frame);
+    if arenaNumber then
+        ShowArenaNameplateNumber(frame, arenaNumber);
+    else
+        HideArenaNameplateNumber(frame);
+    end
 end
 
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
@@ -262,10 +346,14 @@ function SweepyBoop:SetupNameplateModules()
                 end
 
                 addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit);
+                UpdateArenaNameplateNumber(nameplate.UnitFrame);
             end
         elseif event == addon.NAME_PLATE_UNIT_REMOVED then
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId, issecure());
             if nameplate then
+                if nameplate.UnitFrame then
+                    HideArenaNameplateNumber(nameplate.UnitFrame);
+                end
                 HideWidgets(nameplate);
             end
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
@@ -336,27 +424,7 @@ function SweepyBoop:SetupNameplateModules()
             addon.UpdateClassIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePetIconTargetHighlight(frame:GetParent(), frame);
             addon.UpdatePlayerName(frame:GetParent(), frame);
-
-            if IsActiveBattlefieldArena() and SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then
-                if addon.PROJECT_MAINLINE then
-                    -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
-                    if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
-                        local arenaNumber = addon.GetArenaNumber(frame.unit);
-                        if arenaNumber then
-                            frame.name:SetText(arenaNumber);
-                            frame.name:SetTextColor(1, 1, 0); -- Yellow
-                        end
-                    end
-                else
-                    for i = 1, 3 do
-                        if UnitIsUnit(frame.unit, "arena" .. i) then
-                            frame.name:SetText(i);
-                            frame.name:SetTextColor(1, 1, 0); -- Yellow
-                            break;
-                        end
-                    end
-                end
-            end
+            UpdateArenaNameplateNumber(frame);
         end
     end)
 
@@ -439,6 +507,38 @@ function SweepyBoop:RefreshAllNamePlates(hideFirst)
                 HideWidgets(nameplate);
             end
             UpdateWidgets(nameplate, nameplate.UnitFrame);
+        end
+    end
+end
+
+function SweepyBoop:TestArenaNameplateNumbers()
+    arenaNumberTestEnabled = true;
+
+    local nameplates = C_NamePlate.GetNamePlates(issecure());
+    for i = 1, #(nameplates) do
+        local nameplate = nameplates[i];
+        local frame = nameplate and nameplate.UnitFrame;
+        if frame then
+            if IsForbiddenSafe(frame) then return end
+            if frame.unit and UnitName(frame.unit) == ARENA_NUMBER_TEST_UNIT_NAME then
+                frame.sweepyBoopArenaNumberTestNumber = random(1, 3);
+                UpdateArenaNameplateNumber(frame);
+            end
+        end
+    end
+end
+
+function SweepyBoop:HideTestArenaNameplateNumbers()
+    arenaNumberTestEnabled = false;
+
+    local nameplates = C_NamePlate.GetNamePlates(issecure());
+    for i = 1, #(nameplates) do
+        local nameplate = nameplates[i];
+        if nameplate and nameplate.UnitFrame then
+            if IsForbiddenSafe(nameplate.UnitFrame) then return end
+            nameplate.UnitFrame.sweepyBoopArenaNumberTestNumber = nil;
+            HideArenaNameplateNumber(nameplate.UnitFrame);
+            CompactUnitFrame_UpdateName(nameplate.UnitFrame);
         end
     end
 end
