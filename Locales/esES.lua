@@ -243,8 +243,8 @@ local function ApplyTranslations(locale)
     L["PvP aggro highlight"] = "Resaltado de amenaza PvP";
     L["Arena target"] = "Arena target";
     L["Preview"] = "Preview";
-    L["Raid frames preview"] = "Raid frames preview";
-    L["Arena frames preview"] = "Arena frames preview";
+    L["Raid frames preview (disable: Shape -> Disabled)"] = "Raid frames preview (disable: Shape -> Disabled)";
+    L["Arena frames preview (disable: Shape -> Disabled)"] = "Arena frames preview (disable: Shape -> Disabled)";
     L["Shape"] = "Shape";
     L["Shape used for class-colored target indicators."] = "Shape used for class-colored target indicators.";
     L["Star"] = "Star";

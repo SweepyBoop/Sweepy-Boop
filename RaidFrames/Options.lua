@@ -568,14 +568,14 @@ addon.GetRaidFrameOptions = function(order)
                         10,
                         "raidFrameAggroHighlightRaidFrames",
                         "Raid frames",
-                        "Raid frames preview"
+                        "Raid frames preview (disable: Shape -> Disabled)"
                     );
                     BuildAggroHighlightLayoutOptions(
                         args,
                         30,
                         "raidFrameAggroHighlightArenaFrames",
                         "Arena frames",
-                        "Arena frames preview"
+                        "Arena frames preview (disable: Shape -> Disabled)"
                     );
                     return args;
                 end)(),
