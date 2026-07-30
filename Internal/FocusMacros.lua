@@ -18,7 +18,7 @@ if addon.PROJECT_MAINLINE then
         "Wild Charge",
         "Heart of the Wild",
     };
-    macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5, help] [stance:0/3/4/5, @player] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
+    macroPrefixes["Rake"] = "#showtooltip\n/cast [stance:0/3/4/5, help] [stance:0/3/4/5] Wild Growth\n/cast [stance:1] Ironfur\n/cast [stance:2, @";
     macroPrefixes["Wild Charge"] = "#showtooltip Wild Charge\n/cast [stance:3,@player] Ursol's Vortex\n/cast [@";
     macroContentGenerators["Heart of the Wild"] = function (focusName)
         return "#showtooltip Ironbark\n/use [nostance][stance:1/3/4/5] !Cat Form(Shapeshift)\n/cast [stance:2, @" .. focusName .. "] Wild Charge\n/cast [stance:2, @" .. focusName .. "] Heart of the Wild";
