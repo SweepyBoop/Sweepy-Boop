@@ -262,14 +262,14 @@ local function ShowHighlightGlow(slot, color, config)
     slot.highlightFrame:SetPoint("CENTER", slot, "CENTER");
     slot.highlightGlow:SetVertexColor(color[1], color[2], color[3], 0.9);
     slot.highlightGlow:ClearAllPoints();
-    slot.highlightGlow:SetPoint("TOPLEFT", slot, "TOPLEFT", -padding, padding);
-    slot.highlightGlow:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", padding, -padding);
+    slot.highlightGlow:SetPoint("TOPLEFT", slot.highlightFrame, "TOPLEFT", -padding, padding);
+    slot.highlightGlow:SetPoint("BOTTOMRIGHT", slot.highlightFrame, "BOTTOMRIGHT", padding, -padding);
     slot.highlightGlow:Show();
 
     slot.highlightBorder:SetVertexColor(color[1], color[2], color[3], 1);
     slot.highlightBorder:ClearAllPoints();
-    slot.highlightBorder:SetPoint("TOPLEFT", slot, "TOPLEFT", -padding, padding);
-    slot.highlightBorder:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", padding, -padding);
+    slot.highlightBorder:SetPoint("TOPLEFT", slot.highlightFrame, "TOPLEFT", -padding, padding);
+    slot.highlightBorder:SetPoint("BOTTOMRIGHT", slot.highlightFrame, "BOTTOMRIGHT", padding, -padding);
     slot.highlightBorder:Show();
 end
 
