@@ -229,6 +229,11 @@ local function GetSlotSize(config)
     return iconSize, iconSize;
 end
 
+local function GetAuraHighlightPadding(config)
+    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
+    return addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_PADDING * iconSize / addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_PADDING_BASE_SIZE;
+end
+
 local function HideAuraHighlightGlow(slot)
     if slot.auraHighlightGlow then
         slot.auraHighlightGlow:Hide();
@@ -238,8 +243,8 @@ local function HideAuraHighlightGlow(slot)
     end
 end
 
-local function ShowAuraHighlightGlow(slot, color)
-    local padding = addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_PADDING;
+local function ShowAuraHighlightGlow(slot, color, config)
+    local padding = GetAuraHighlightPadding(config);
     slot.auraHighlightGlow:SetVertexColor(color[1], color[2], color[3], 0.9);
     slot.auraHighlightGlow:ClearAllPoints();
     slot.auraHighlightGlow:SetPoint("TOPLEFT", slot, "TOPLEFT", -padding, padding);
@@ -306,7 +311,7 @@ local function SetSlotTint(slot, auraData, config)
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
     elseif IsAuraHighlightStyle(config) then
         addon.HideProcGlow(slot);
-        ShowAuraHighlightGlow(slot, color);
+        ShowAuraHighlightGlow(slot, color, config);
     else
         HideAuraHighlightGlow(slot);
         addon.HideProcGlow(slot);
@@ -394,7 +399,7 @@ local function PaintRail(rail, railInfo, auras, config, unit)
     local spacing = config.bigDebuffsSpacing or addon.BIG_DEBUFFS_DEFAULTS.SPACING;
     local slotStep = slotWidth + spacing;
     if IsAuraHighlightStyle(config) then
-        slotStep = slotStep + ( 2 * addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_PADDING );
+        slotStep = slotStep + ( 2 * GetAuraHighlightPadding(config) );
     end
     local visibleSlots = math.min(#auras, config.bigDebuffsMaxIcons or addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS);
 
