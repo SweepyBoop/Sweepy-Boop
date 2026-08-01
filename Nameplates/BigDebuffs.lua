@@ -298,12 +298,8 @@ local function SetSlotStyle(slot, config)
         slot.icon = slot.debuffIcon;
         slot.border = useHighlightStyle and nil or slot.debuffBorder;
         slot.icon:ClearAllPoints();
-        if useHighlightStyle then
-            slot.icon:SetAllPoints(slot);
-        else
-            slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
-            slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
-        end
+        slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
+        slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
         slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
     end
 
@@ -413,9 +409,6 @@ local function PaintRail(rail, railInfo, auras, config, unit)
     local slotWidth, slotHeight = GetSlotSize(config);
     local spacing = config.bigDebuffsSpacing or addon.BIG_DEBUFFS_DEFAULTS.SPACING;
     local slotStep = slotWidth + spacing;
-    if IsHighlightStyle(config) then
-        slotStep = slotStep + ( 2 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING * GetHighlightScale(config) );
-    end
     local visibleSlots = math.min(#auras, config.bigDebuffsMaxIcons or addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS);
 
     rail:SetSize(math.max(visibleSlots, 1) * slotWidth + math.max(visibleSlots - 1, 0) * ( slotStep - slotWidth ), slotHeight);
