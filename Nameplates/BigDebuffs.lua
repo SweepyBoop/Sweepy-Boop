@@ -1,0 +1,328 @@
+local _, addon = ...;
+
+local AURA_KIND = {
+    CROWD_CONTROL = 1,
+    DEFENSIVE = 2,
+    IMPORTANT_BUFF = 3,
+};
+
+local KIND_TINT = {
+    [AURA_KIND.CROWD_CONTROL] = { 1, 0.6471, 0 },
+    [AURA_KIND.DEFENSIVE] = { 0.2, 0.65, 1 },
+    [AURA_KIND.IMPORTANT_BUFF] = { 0, 1, 0 },
+};
+
+local RAIL = {
+    LEFT = {
+        frameKey = "sweepyBoopBigDebuffsLeftRail",
+        anchorPoint = "RIGHT",
+        anchorRelativePoint = "LEFT",
+        direction = -1,
+    },
+    RIGHT = {
+        frameKey = "sweepyBoopBigDebuffsRightRail",
+        anchorPoint = "LEFT",
+        anchorRelativePoint = "RIGHT",
+        direction = 1,
+    },
+};
+
+local scratchLeft = {};
+local scratchRight = {};
+local scratchRightAuraIDs = {};
+
+local function ResetArray(array)
+    for i = #array, 1, -1 do
+        array[i] = nil;
+    end
+end
+
+local function AuraComesFirst(auraA, auraB)
+    if auraA.sweepyBoopKind ~= auraB.sweepyBoopKind then
+        return auraA.sweepyBoopKind < auraB.sweepyBoopKind;
+    end
+
+    return ( auraA.auraInstanceID or 0 ) > ( auraB.auraInstanceID or 0 );
+end
+
+local function IsTrueOrSecret(value)
+    return addon.IsSecretValue(value) or value;
+end
+
+local function AddAuraCandidate(target, auraData, kind)
+    if not auraData then return end
+
+    auraData.sweepyBoopKind = kind;
+    table.insert(target, auraData);
+end
+
+local function VisitCurrentAuras(unit, filter, visitor)
+    local auras = C_UnitAuras.GetUnitAuras(unit, filter, nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
+    if not auras then return end
+
+    for _, auraData in ipairs(auras) do
+        visitor(auraData);
+    end
+end
+
+local function AddCrowdControlAura(auraData)
+    if ( not auraData ) or ( not auraData.spellId ) then return end
+
+    if IsTrueOrSecret(C_Spell.IsSpellCrowdControl(auraData.spellId)) then
+        AddAuraCandidate(scratchLeft, auraData, AURA_KIND.CROWD_CONTROL);
+    end
+end
+
+local function RememberRightAura(auraData, kind)
+    AddAuraCandidate(scratchRight, auraData, kind);
+    scratchRightAuraIDs[auraData.auraInstanceID] = true;
+end
+
+local function AddBigDefensiveAura(auraData)
+    if ( not auraData ) or ( not auraData.spellId ) then return end
+
+    local isDefensive = C_UnitAuras.AuraIsBigDefensive and C_UnitAuras.AuraIsBigDefensive(auraData.spellId);
+    if ( not C_UnitAuras.AuraIsBigDefensive ) or IsTrueOrSecret(isDefensive) then
+        RememberRightAura(auraData, AURA_KIND.DEFENSIVE);
+    end
+end
+
+local function AddExternalDefensiveAura(auraData)
+    if ( not auraData ) or scratchRightAuraIDs[auraData.auraInstanceID] then return end
+
+    RememberRightAura(auraData, AURA_KIND.DEFENSIVE);
+end
+
+local function GetBlizzardNameplateBuffIDs(nameplate)
+    local frame = nameplate and nameplate.UnitFrame;
+    local auraFrame = frame and frame.AurasFrame;
+    if auraFrame and auraFrame.buffList and auraFrame.buffList.Iterate and ( not auraFrame.IsForbidden or not auraFrame:IsForbidden() ) then
+        return auraFrame.buffList;
+    end
+end
+
+local function AddNameplateImportantBuff(unit, auraInstanceID)
+    if scratchRightAuraIDs[auraInstanceID] then return end
+
+    local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID);
+    if auraData then
+        RememberRightAura(auraData, AURA_KIND.IMPORTANT_BUFF);
+    end
+end
+
+local function BuildAuraSnapshot(nameplate, unit, config)
+    ResetArray(scratchLeft);
+    ResetArray(scratchRight);
+    wipe(scratchRightAuraIDs);
+
+    if config.bigDebuffsShowCrowdControl then
+        VisitCurrentAuras(unit, "HARMFUL|CROWD_CONTROL", AddCrowdControlAura);
+    end
+
+    if config.bigDebuffsShowDefensives then
+        VisitCurrentAuras(unit, "HELPFUL|BIG_DEFENSIVE", AddBigDefensiveAura);
+        VisitCurrentAuras(unit, "HELPFUL|EXTERNAL_DEFENSIVE", AddExternalDefensiveAura);
+    end
+
+    if config.bigDebuffsShowImportantBuffs then
+        local buffIDs = GetBlizzardNameplateBuffIDs(nameplate);
+        if buffIDs then
+            buffIDs:Iterate(function(auraInstanceID)
+                AddNameplateImportantBuff(unit, auraInstanceID);
+            end);
+        end
+    end
+
+    table.sort(scratchLeft, AuraComesFirst);
+    table.sort(scratchRight, AuraComesFirst);
+end
+
+local function PositionRail(rail, nameplate, railInfo, config)
+    local anchor = nameplate.UnitFrame and nameplate.UnitFrame.healthBar or nameplate;
+    local offsetX = config.bigDebuffsOffsetX or 0;
+    local offsetY = config.bigDebuffsOffsetY or 0;
+
+    rail:ClearAllPoints();
+    rail:SetPoint(railInfo.anchorPoint, anchor, railInfo.anchorRelativePoint, railInfo.direction * (2 + offsetX), offsetY);
+    rail.sweepyBoopLastModified = config.lastModified;
+end
+
+local function EnsureRail(nameplate, railInfo)
+    local rail = nameplate[railInfo.frameKey];
+    if rail then return rail end
+
+    rail = CreateFrame("Frame", nil, nameplate);
+    rail:SetMouseClickEnabled(false);
+    rail:SetIgnoreParentAlpha(true);
+    rail:SetFrameStrata("HIGH");
+    rail:SetSize(1, 1);
+    rail.sweepyBoopSlots = {};
+    nameplate[railInfo.frameKey] = rail;
+
+    return rail;
+end
+
+local function PaintEdge(texture, pointA, pointB, sizeSetter)
+    texture:SetPoint(pointA, texture:GetParent(), pointA);
+    texture:SetPoint(pointB, texture:GetParent(), pointB);
+    sizeSetter(texture, 2);
+    texture:SetColorTexture(1, 1, 1, 1);
+end
+
+local function CreateSlot(rail)
+    local slot = CreateFrame("Frame", nil, rail);
+    slot:SetMouseClickEnabled(false);
+    slot:SetIgnoreParentAlpha(true);
+
+    slot.backdrop = slot:CreateTexture(nil, "BACKGROUND");
+    slot.backdrop:SetAllPoints(slot);
+    slot.backdrop:SetColorTexture(0, 0, 0, 1);
+
+    slot.icon = slot:CreateTexture(nil, "BORDER");
+    slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", 1, -1);
+    slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -1, 1);
+    slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+
+    slot.edgeTop = slot:CreateTexture(nil, "OVERLAY");
+    PaintEdge(slot.edgeTop, "TOPLEFT", "TOPRIGHT", function(texture, size) texture:SetHeight(size); end);
+
+    slot.edgeBottom = slot:CreateTexture(nil, "OVERLAY");
+    PaintEdge(slot.edgeBottom, "BOTTOMLEFT", "BOTTOMRIGHT", function(texture, size) texture:SetHeight(size); end);
+
+    slot.edgeLeft = slot:CreateTexture(nil, "OVERLAY");
+    PaintEdge(slot.edgeLeft, "TOPLEFT", "BOTTOMLEFT", function(texture, size) texture:SetWidth(size); end);
+
+    slot.edgeRight = slot:CreateTexture(nil, "OVERLAY");
+    PaintEdge(slot.edgeRight, "TOPRIGHT", "BOTTOMRIGHT", function(texture, size) texture:SetWidth(size); end);
+
+    slot.cooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
+    slot.cooldown:SetAllPoints(slot.icon);
+    slot.cooldown:SetDrawEdge(true);
+    slot.cooldown:SetReverse(true);
+    slot.cooldown:SetHideCountdownNumbers(false);
+
+    slot.count = slot:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall");
+    slot.count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 2, -2);
+
+    return slot;
+end
+
+local function EnsureSlot(rail, index)
+    local slot = rail.sweepyBoopSlots[index];
+    if slot then return slot end
+
+    slot = CreateSlot(rail);
+    rail.sweepyBoopSlots[index] = slot;
+
+    return slot;
+end
+
+local function SetSlotTint(slot, auraData)
+    local color = KIND_TINT[auraData.sweepyBoopKind] or KIND_TINT[AURA_KIND.IMPORTANT_BUFF];
+    slot.edgeTop:SetVertexColor(color[1], color[2], color[3]);
+    slot.edgeBottom:SetVertexColor(color[1], color[2], color[3]);
+    slot.edgeLeft:SetVertexColor(color[1], color[2], color[3]);
+    slot.edgeRight:SetVertexColor(color[1], color[2], color[3]);
+end
+
+local function SetSlotCooldown(slot, unit, auraData)
+    local durationObject = auraData.auraInstanceID and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
+    if durationObject and slot.cooldown.SetCooldownFromDurationObject then
+        slot.cooldown:SetCooldownFromDurationObject(durationObject);
+        slot.cooldown:Show();
+    elseif auraData.duration and auraData.expirationTime then
+        slot.cooldown:SetCooldown(auraData.expirationTime - auraData.duration, auraData.duration);
+        slot.cooldown:Show();
+    else
+        slot.cooldown:SetCooldown(0, 0);
+        slot.cooldown:Hide();
+    end
+end
+
+local function SetSlotAura(slot, unit, auraData, config)
+    local iconSize = config.bigDebuffsIconSize or 35;
+    slot:SetSize(iconSize, iconSize);
+    slot.icon:SetTexture(auraData.icon);
+    SetSlotTint(slot, auraData);
+    SetSlotCooldown(slot, unit, auraData);
+
+    if auraData.applications and auraData.applications > 1 then
+        slot.count:SetText(auraData.applications);
+        slot.count:Show();
+    else
+        slot.count:Hide();
+    end
+
+    slot:Show();
+end
+
+local function HideRail(rail)
+    if not rail then return end
+
+    for _, slot in ipairs(rail.sweepyBoopSlots) do
+        slot:Hide();
+    end
+    rail:Hide();
+end
+
+local function PaintRail(rail, railInfo, auras, config, unit)
+    local iconSize = config.bigDebuffsIconSize or 35;
+    local spacing = config.bigDebuffsSpacing or 2;
+    local visibleSlots = math.min(#auras, config.bigDebuffsMaxIcons or 5);
+
+    rail:SetSize(math.max(visibleSlots, 1) * iconSize + math.max(visibleSlots - 1, 0) * spacing, iconSize);
+
+    for index, slot in ipairs(rail.sweepyBoopSlots) do
+        if index > visibleSlots then
+            slot:Hide();
+        end
+    end
+
+    for index = 1, visibleSlots do
+        local slot = EnsureSlot(rail, index);
+        local offset = ( index - 1 ) * ( iconSize + spacing );
+
+        slot:ClearAllPoints();
+        if railInfo.direction < 0 then
+            slot:SetPoint("RIGHT", rail, "RIGHT", -offset, 0);
+        else
+            slot:SetPoint("LEFT", rail, "LEFT", offset, 0);
+        end
+
+        SetSlotAura(slot, unit, auras[index], config);
+    end
+
+    rail:SetShown(visibleSlots > 0);
+end
+
+addon.UpdateBigDebuffs = function(nameplate, frame)
+    if not addon.PROJECT_MAINLINE then return end
+    if ( not nameplate ) or ( not frame ) or ( not frame.unit ) then return end
+
+    local config = SweepyBoop.db.profile.nameplatesEnemy;
+    if ( not config.bigDebuffsEnabled ) or ( not UnitIsPlayer(frame.unit) ) or ( not addon.UnitIsHostile(frame.unit) ) then
+        addon.HideBigDebuffs(nameplate);
+        return;
+    end
+
+    BuildAuraSnapshot(nameplate, frame.unit, config);
+
+    local leftRail = EnsureRail(nameplate, RAIL.LEFT);
+    local rightRail = EnsureRail(nameplate, RAIL.RIGHT);
+    if leftRail.sweepyBoopLastModified ~= config.lastModified then
+        PositionRail(leftRail, nameplate, RAIL.LEFT, config);
+    end
+    if rightRail.sweepyBoopLastModified ~= config.lastModified then
+        PositionRail(rightRail, nameplate, RAIL.RIGHT, config);
+    end
+
+    PaintRail(leftRail, RAIL.LEFT, scratchLeft, config, frame.unit);
+    PaintRail(rightRail, RAIL.RIGHT, scratchRight, config, frame.unit);
+end
+
+addon.HideBigDebuffs = function(nameplate)
+    if not nameplate then return end
+
+    HideRail(nameplate.sweepyBoopBigDebuffsLeftRail);
+    HideRail(nameplate.sweepyBoopBigDebuffsRightRail);
+end

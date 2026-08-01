@@ -98,7 +98,7 @@ local function UpdateBuffGlow(buff, show)
 end
 
 -- Return aura category if should be shown, nil otherwise
-local function ShouldShowBuffOverride(self, aura)
+addon.GetEnemyNameplateAuraCategory = function(aura)
     if ( not aura ) or ( not aura.spellId ) then
         return nil;
     end
@@ -136,6 +136,10 @@ local function ShouldShowBuffOverride(self, aura)
 
         return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[tostring(spellId)] and AURA_CATEGORY.BUFF;
     end
+end
+
+local function ShouldShowBuffOverride(self, aura)
+    return addon.GetEnemyNameplateAuraCategory(aura);
 end
 
 local function DefaultAuraCompareClassic(a, b)

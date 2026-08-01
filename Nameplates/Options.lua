@@ -589,8 +589,114 @@ addon.GetEnemyNameplateOptions = function(order)
                 },
             },
 
-            filterList = {
+            bigDebuffs = {
                 order = 2,
+                type = "group",
+                name = "Big debuffs",
+                args = {
+                    bigDebuffsEnabled = {
+                        order = 1,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enable big debuffs",
+                        desc = "Show large category-based aura icons beside enemy player nameplates.\n\nCrowd control appears on the left; defensives and important buffs appear on the right.",
+                    },
+                    bigDebuffsShowCrowdControl = {
+                        order = 2,
+                        type = "toggle",
+                        width = "full",
+                        name = "Show crowd control on the left",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsShowDefensives = {
+                        order = 3,
+                        type = "toggle",
+                        width = "full",
+                        name = "Show defensives on the right",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsShowImportantBuffs = {
+                        order = 4,
+                        type = "toggle",
+                        width = "full",
+                        name = "Show important buffs on the right",
+                        desc = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsIconSize = {
+                        order = 5,
+                        min = 20,
+                        max = 60,
+                        step = 1,
+                        type = "range",
+                        width = 0.85,
+                        name = "Icon size",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsMaxIcons = {
+                        order = 6,
+                        min = 1,
+                        max = 8,
+                        step = 1,
+                        type = "range",
+                        width = 0.85,
+                        name = "Max icons per side",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsSpacing = {
+                        order = 7,
+                        min = 0,
+                        max = 10,
+                        step = 1,
+                        type = "range",
+                        width = 0.85,
+                        name = "Icon spacing",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsOffsetX = {
+                        order = 8,
+                        min = -100,
+                        max = 100,
+                        step = 1,
+                        type = "range",
+                        width = 0.85,
+                        name = "Horizontal offset",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsOffsetY = {
+                        order = 9,
+                        min = -100,
+                        max = 100,
+                        step = 1,
+                        type = "range",
+                        width = 0.85,
+                        name = "Vertical offset",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                },
+                hidden = function()
+                    return not addon.PROJECT_MAINLINE;
+                end,
+            },
+
+            filterList = {
+                order = 3,
                 type = "group",
                 name = "Unit whitelist",
                 get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.filterList[info[#info]] end,
@@ -606,7 +712,7 @@ addon.GetEnemyNameplateOptions = function(order)
             },
 
             debuffWhiteList = {
-                order = 3,
+                order = 4,
                 type = "group",
                 name = "Debuff whitelist",
                 get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.debuffWhiteList[info[#info]] end,
@@ -622,7 +728,7 @@ addon.GetEnemyNameplateOptions = function(order)
             },
 
             buffWhiteList = {
-                order = 4,
+                order = 5,
                 type = "group",
                 name = "Buff whitelist",
                 get = function(info) return SweepyBoop.db.profile.nameplatesEnemy.buffWhiteList[info[#info]] end,

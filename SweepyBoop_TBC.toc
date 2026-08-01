@@ -45,6 +45,7 @@ Nameplates\PetIcons.lua
 Nameplates\NameplateFilter.lua
 Nameplates\SpecIcons.lua
 Nameplates\AuraFilter.lua
+Nameplates\BigDebuffs.lua
 Nameplates\Nameplates.lua
 Nameplates\Options.lua
 

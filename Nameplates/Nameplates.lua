@@ -6,6 +6,7 @@ local function HideWidgets(nameplate)
     addon.HideNpcHighlight(nameplate);
     addon.HideCritterIcon(nameplate);
     addon.HideSpecIcon(nameplate);
+    addon.HideBigDebuffs(nameplate);
 end
 
 -- Protected nameplates in dungeons and raids
@@ -251,6 +252,7 @@ local function UpdateWidgets(nameplate, frame)
         addon.HideSpecIcon(nameplate);
         addon.HideNpcHighlight(nameplate);
         addon.HideCritterIcon(nameplate);
+        addon.HideBigDebuffs(nameplate);
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
@@ -277,12 +279,14 @@ local function UpdateWidgets(nameplate, frame)
 
             addon.HideNpcHighlight(nameplate);
             addon.HideCritterIcon(nameplate);
+            addon.UpdateBigDebuffs(nameplate, frame);
             UpdateUnitFrameVisibility(nameplate, frame, true); -- Always show enemy players
             return;
         end
 
         -- Process non-player hostile units
         addon.HideSpecIcon(nameplate);
+        addon.HideBigDebuffs(nameplate);
 
         local npcOption, isCritter, iconTexture, highlightKey = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
@@ -388,6 +392,7 @@ function SweepyBoop:SetupNameplateModules()
                 if event == addon.UNIT_AURA then
                     addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
                     addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame, unitAuraUpdateInfo);
+                    addon.UpdateBigDebuffs(nameplate, nameplate.UnitFrame);
                 end
 
                 if addon.PROJECT_MAINLINE and ( not IsRestricted() ) then
