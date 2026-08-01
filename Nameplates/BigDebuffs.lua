@@ -306,8 +306,11 @@ local function SetSlotStyle(slot, config)
     slot.cooldown:ClearAllPoints();
     slot.cooldown:SetAllPoints(slot.icon);
     slot.count:ClearAllPoints();
-    slot.count:SetFontObject(NumberFontNormalSmall);
-    slot.count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 2, -2);
+    slot.count:SetFontObject(NumberFontNormal);
+    slot.count:SetJustifyH("RIGHT");
+    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
+    local actionButtonScale = iconSize / 45;
+    slot.count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -5 * actionButtonScale, 5 * actionButtonScale);
 end
 
 local function GetSlotTint(auraData)
