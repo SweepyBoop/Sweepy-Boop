@@ -29,7 +29,7 @@ local RAIL = {
 
 local scratchLeft = {};
 local scratchRight = {};
-local scratchRightAuraIDs = {};
+local scratchLeftAuraIDs = {};
 
 local function ResetArray(array)
     for i = #array, 1, -1 do
@@ -69,13 +69,13 @@ local function AddCrowdControlAura(auraData)
     if ( not auraData ) or ( not auraData.spellId ) then return end
 
     if IsTrueOrSecret(C_Spell.IsSpellCrowdControl(auraData.spellId)) then
-        AddAuraCandidate(scratchLeft, auraData, AURA_KIND.CROWD_CONTROL);
+        AddAuraCandidate(scratchRight, auraData, AURA_KIND.CROWD_CONTROL);
     end
 end
 
-local function RememberRightAura(auraData, kind)
-    AddAuraCandidate(scratchRight, auraData, kind);
-    scratchRightAuraIDs[auraData.auraInstanceID] = true;
+local function RememberLeftAura(auraData, kind)
+    AddAuraCandidate(scratchLeft, auraData, kind);
+    scratchLeftAuraIDs[auraData.auraInstanceID] = true;
 end
 
 local function AddBigDefensiveAura(auraData)
@@ -83,14 +83,14 @@ local function AddBigDefensiveAura(auraData)
 
     local isDefensive = C_UnitAuras.AuraIsBigDefensive and C_UnitAuras.AuraIsBigDefensive(auraData.spellId);
     if ( not C_UnitAuras.AuraIsBigDefensive ) or IsTrueOrSecret(isDefensive) then
-        RememberRightAura(auraData, AURA_KIND.DEFENSIVE);
+        RememberLeftAura(auraData, AURA_KIND.DEFENSIVE);
     end
 end
 
 local function AddExternalDefensiveAura(auraData)
-    if ( not auraData ) or scratchRightAuraIDs[auraData.auraInstanceID] then return end
+    if ( not auraData ) or scratchLeftAuraIDs[auraData.auraInstanceID] then return end
 
-    RememberRightAura(auraData, AURA_KIND.DEFENSIVE);
+    RememberLeftAura(auraData, AURA_KIND.DEFENSIVE);
 end
 
 local function GetBlizzardNameplateBuffIDs(nameplate)
@@ -102,18 +102,18 @@ local function GetBlizzardNameplateBuffIDs(nameplate)
 end
 
 local function AddNameplateImportantBuff(unit, auraInstanceID)
-    if scratchRightAuraIDs[auraInstanceID] then return end
+    if scratchLeftAuraIDs[auraInstanceID] then return end
 
     local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID);
     if auraData then
-        RememberRightAura(auraData, AURA_KIND.IMPORTANT_BUFF);
+        RememberLeftAura(auraData, AURA_KIND.IMPORTANT_BUFF);
     end
 end
 
 local function BuildAuraSnapshot(nameplate, unit, config)
     ResetArray(scratchLeft);
     ResetArray(scratchRight);
-    wipe(scratchRightAuraIDs);
+    wipe(scratchLeftAuraIDs);
 
     if config.bigDebuffsShowCrowdControl then
         VisitCurrentAuras(unit, "HARMFUL|CROWD_CONTROL", AddCrowdControlAura);

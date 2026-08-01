@@ -613,13 +613,13 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enable big debuffs",
-                        desc = "Show large category-based aura icons beside enemy player nameplates.\n\nCrowd control appears on the left; defensives and important buffs appear on the right.",
+                        desc = "Show large category-based aura icons beside enemy player nameplates.\n\nDefensives and important buffs appear on the left; crowd control appears on the right, matching Blizzard nameplates."
                     },
                     bigDebuffsShowCrowdControl = {
                         order = 3,
                         type = "toggle",
                         width = "full",
-                        name = "Show crowd control on the left",
+                        name = "Show crowd control on the right",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -628,7 +628,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 4,
                         type = "toggle",
                         width = "full",
-                        name = "Show defensives on the right",
+                        name = "Show defensives on the left",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -637,7 +637,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 5,
                         type = "toggle",
                         width = "full",
-                        name = "Show important buffs on the right",
+                        name = "Show important buffs on the left",
                         desc = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;

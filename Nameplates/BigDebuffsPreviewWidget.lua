@@ -21,11 +21,11 @@ local cooldownDuration = 10;
 local cooldownElapsed = 3;
 local sampleAuras = {
     left = {
-        { option = "bigDebuffsShowCrowdControl", spellID = ccSampleSpell, fallbackTexture = fallbackCcTexture, color = { 1, 0.6471, 0 } },
-    },
-    right = {
         { option = "bigDebuffsShowDefensives", spellID = defensiveSampleSpell, fallbackTexture = fallbackDefensiveTexture, color = { 0.2, 0.65, 1 } },
         { option = "bigDebuffsShowImportantBuffs", spellID = importantSampleSpell, fallbackTexture = fallbackImportantTexture, color = { 0, 1, 0 } },
+    },
+    right = {
+        { option = "bigDebuffsShowCrowdControl", spellID = ccSampleSpell, fallbackTexture = fallbackCcTexture, color = { 1, 0.6471, 0 } },
     },
 };
 
