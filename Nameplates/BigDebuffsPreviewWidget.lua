@@ -9,8 +9,8 @@ local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
 local previewHeight = 128;
 local sampleWidth = 360;
 local sampleHeight = 70;
-local healthWidth = 96;
-local healthHeight = 12;
+local healthWidth = 210;
+local healthHeight = 24;
 local previewLeftInset = 8;
 local previewMaxIcons = addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS;
 local ccSampleSpell = 118; -- Polymorph
@@ -111,13 +111,8 @@ local function BuildSample(parent)
     sample:SetPoint("TOPLEFT", parent, "TOPLEFT", previewLeftInset, -28);
     sample:SetSize(sampleWidth, sampleHeight);
 
-    local nameText = sample:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
-    nameText:SetPoint("BOTTOM", sample, "CENTER", 0, 3);
-    nameText:SetText("Enemy nameplate");
-    nameText:SetTextColor(1, 0.82, 0, 1);
-
     local health = CreateFrame("Frame", nil, sample);
-    health:SetPoint("TOP", sample, "CENTER", 0, -3);
+    health:SetPoint("CENTER", sample, "CENTER", 0, 0);
     health:SetSize(healthWidth, healthHeight);
 
     local healthBorder = health:CreateTexture(nil, "BACKGROUND");
@@ -125,11 +120,29 @@ local function BuildSample(parent)
     healthBorder:SetTexture(TEXTURE_WHITE);
     healthBorder:SetVertexColor(0, 0, 0, 1);
 
-    local healthFill = health:CreateTexture(nil, "BORDER");
-    healthFill:SetPoint("TOPLEFT", health, "TOPLEFT", 1, -1);
-    healthFill:SetPoint("BOTTOMRIGHT", health, "BOTTOMRIGHT", -1, 1);
+    local healthInset = health:CreateTexture(nil, "BORDER");
+    healthInset:SetPoint("TOPLEFT", health, "TOPLEFT", 2, -2);
+    healthInset:SetPoint("BOTTOMRIGHT", health, "BOTTOMRIGHT", -2, 2);
+    healthInset:SetTexture(TEXTURE_WHITE);
+    healthInset:SetVertexColor(0.16, 0.09, 0.04, 1);
+
+    local healthFill = health:CreateTexture(nil, "ARTWORK");
+    healthFill:SetPoint("TOPLEFT", health, "TOPLEFT", 4, -4);
+    healthFill:SetPoint("BOTTOMRIGHT", health, "BOTTOMRIGHT", -4, 4);
     healthFill:SetTexture(TEXTURE_WHITE);
-    healthFill:SetVertexColor(0.55, 0.05, 0.05, 1);
+    healthFill:SetVertexColor(0.62, 0.28, 0.03, 1);
+
+    local healthHighlight = health:CreateTexture(nil, "OVERLAY");
+    healthHighlight:SetPoint("TOPLEFT", healthFill, "TOPLEFT");
+    healthHighlight:SetPoint("TOPRIGHT", healthFill, "TOPRIGHT");
+    healthHighlight:SetHeight(5);
+    healthHighlight:SetTexture(TEXTURE_WHITE);
+    healthHighlight:SetVertexColor(1, 0.58, 0.12, 0.45);
+
+    local nameText = health:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmallOutline");
+    nameText:SetPoint("LEFT", health, "LEFT", 8, 0);
+    nameText:SetText("Target Name");
+    nameText:SetTextColor(1, 0.92, 0.78, 1);
 
     local leftRail = CreateFrame("Frame", nil, sample);
     leftRail:SetSize(1, 1);
