@@ -612,14 +612,14 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 2,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enable big debuffs",
-                        desc = "Show large category-based aura icons beside enemy player nameplates.\n\nDefensives and important buffs appear on the left; crowd control appears on the right, matching Blizzard nameplates."
+                        name = "Enabled",
+                        desc = "Show large category-based aura icons beside enemy player nameplates."
                     },
                     bigDebuffsShowCrowdControl = {
                         order = 3,
                         type = "toggle",
                         width = "full",
-                        name = "Show crowd control on the right",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(118)) .. " Show crowd control",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -628,7 +628,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 4,
                         type = "toggle",
                         width = "full",
-                        name = "Show defensives on the left",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(642)) .. " Show defensives",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -637,7 +637,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 5,
                         type = "toggle",
                         width = "full",
-                        name = "Show important buffs on the left",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(31884)) .. " Show important buffs",
                         desc = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;

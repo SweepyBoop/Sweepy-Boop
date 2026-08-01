@@ -139,8 +139,8 @@ end
 
 local function PositionRail(rail, nameplate, railInfo, config)
     local anchor = nameplate.UnitFrame and nameplate.UnitFrame.healthBar or nameplate;
-    local offsetX = config.bigDebuffsOffsetX or 0;
-    local offsetY = config.bigDebuffsOffsetY or 0;
+    local offsetX = config.bigDebuffsOffsetX or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_X;
+    local offsetY = config.bigDebuffsOffsetY or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_Y;
 
     rail:ClearAllPoints();
     rail:SetPoint(railInfo.anchorPoint, anchor, railInfo.anchorRelativePoint, railInfo.direction * (2 + offsetX), offsetY);
@@ -240,7 +240,7 @@ local function SetSlotCooldown(slot, unit, auraData)
 end
 
 local function SetSlotAura(slot, unit, auraData, config)
-    local iconSize = config.bigDebuffsIconSize or 35;
+    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
     slot:SetSize(iconSize, iconSize);
     slot.icon:SetTexture(auraData.icon);
     SetSlotTint(slot, auraData);
@@ -266,9 +266,9 @@ local function HideRail(rail)
 end
 
 local function PaintRail(rail, railInfo, auras, config, unit)
-    local iconSize = config.bigDebuffsIconSize or 35;
-    local spacing = config.bigDebuffsSpacing or 2;
-    local visibleSlots = math.min(#auras, config.bigDebuffsMaxIcons or 5);
+    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
+    local spacing = config.bigDebuffsSpacing or addon.BIG_DEBUFFS_DEFAULTS.SPACING;
+    local visibleSlots = math.min(#auras, config.bigDebuffsMaxIcons or addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS);
 
     rail:SetSize(math.max(visibleSlots, 1) * iconSize + math.max(visibleSlots - 1, 0) * spacing, iconSize);
 

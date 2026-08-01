@@ -49,6 +49,17 @@ addon.ICON_TEMPLATE = {
     FLASH = 2, -- OmniBar style
 };
 
+addon.BIG_DEBUFFS_DEFAULTS = {
+    ENABLED = false,
+    SHOW_CROWD_CONTROL = true,
+    SHOW_DEFENSIVES = true,
+    SHOW_IMPORTANT_BUFFS = true,
+    ICON_SIZE = 32,
+    MAX_ICONS = 5,
+    SPACING = 2,
+    OFFSET_X = 0,
+    OFFSET_Y = 0,
+};
 
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT = 1,

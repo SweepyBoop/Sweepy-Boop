@@ -6,11 +6,13 @@ if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return e
 
 local previewWidgets = setmetatable({}, { __mode = "k" });
 local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
-local previewHeight = 116;
-local sampleWidth = 190;
-local sampleHeight = 58;
+local previewHeight = 128;
+local sampleWidth = 360;
+local sampleHeight = 70;
 local healthWidth = 96;
 local healthHeight = 12;
+local previewLeftInset = 8;
+local previewMaxIcons = addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS;
 local ccSampleSpell = 118; -- Polymorph
 local defensiveSampleSpell = 642; -- Divine Shield
 local importantSampleSpell = 31884; -- Avenging Wrath
@@ -34,7 +36,7 @@ local function GetConfig()
 end
 
 local function GetIconSize(config)
-    local iconSize = tonumber(config.bigDebuffsIconSize) or 35;
+    local iconSize = tonumber(config.bigDebuffsIconSize) or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
     if iconSize < 20 then return 20 end
     if iconSize > 60 then return 60 end
     return iconSize;
@@ -103,7 +105,7 @@ end
 
 local function BuildSample(parent)
     local sample = CreateFrame("Frame", nil, parent);
-    sample:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, -28);
+    sample:SetPoint("TOPLEFT", parent, "TOPLEFT", previewLeftInset, -28);
     sample:SetSize(sampleWidth, sampleHeight);
 
     local nameText = sample:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall");
@@ -170,13 +172,13 @@ end
 
 local function RenderRail(rail, anchor, point, relativePoint, direction, sampleData, config, enabled)
     local iconSize = GetIconSize(config);
-    local spacing = config.bigDebuffsSpacing or 2;
-    local maxIcons = config.bigDebuffsMaxIcons or 5;
+    local spacing = config.bigDebuffsSpacing or addon.BIG_DEBUFFS_DEFAULTS.SPACING;
+    local maxIcons = math.min(config.bigDebuffsMaxIcons or addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS, previewMaxIcons);
     local shownCount = 0;
 
     rail:SetSize(math.max(maxIcons, 1) * iconSize + math.max(maxIcons - 1, 0) * spacing, iconSize);
     rail:ClearAllPoints();
-    rail:SetPoint(point, anchor, relativePoint, direction * (2 + (config.bigDebuffsOffsetX or 0)), config.bigDebuffsOffsetY or 0);
+    rail:SetPoint(point, anchor, relativePoint, direction * (2 + (config.bigDebuffsOffsetX or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_X)), config.bigDebuffsOffsetY or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_Y);
     rail:Show();
 
     for _, aura in ipairs(sampleData) do
