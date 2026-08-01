@@ -63,7 +63,7 @@ addon.BIG_DEBUFFS_DEFAULTS = {
     ICON_STYLE = addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT,
     ICON_SIZE = 32,
     MAX_ICONS = 2,
-    SPACING = 3,
+    SPACING = 6,
     OFFSET_X = 0,
     OFFSET_Y = 0,
 };
