@@ -74,8 +74,8 @@ addon.BIG_DEBUFFS_ICON_STYLE = {
     DEBUFF_BORDER_TEX_COORDS = { 0.296875, 0.5703125, 0, 0.515625 },
     AURA_HIGHLIGHT_BORDER_TEXTURE = "Interface\\AddOns\\SweepyBoop\\Art\\BigDebuffsAuraHighlightBorder",
     AURA_HIGHLIGHT_GLOW_TEXTURE = "Interface\\AddOns\\SweepyBoop\\Art\\BigDebuffsAuraHighlightGlow",
+    AURA_HIGHLIGHT_BASE_SIZE = 32,
     AURA_HIGHLIGHT_PADDING = 7,
-    AURA_HIGHLIGHT_PADDING_BASE_SIZE = 32,
     GLOW_COOLDOWN_EDGE_TEXTURE = "Interface\\Cooldown\\UI-HUD-ActionBar-LoC",
 };
 
