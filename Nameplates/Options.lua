@@ -647,10 +647,10 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 6,
                         type = "select",
                         width = 1.2,
-                        name = "Icon style",
+                        name = "Border style",
                         values = {
-                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = "Debuff border",
-                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = "Glow",
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = "Plain",
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = "Glowing",
                         },
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
