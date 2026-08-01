@@ -322,6 +322,21 @@ L["Size of dispellable crowd-control debuffs as a percentage of the raid-frame h
 L["Horizontal offset from the right edge of the raid frame."] = "Horizontal offset from the right edge of the raid frame.";
 L["Vertical offset from the center of the raid frame."] = "Vertical offset from the center of the raid frame.";
 
+L["Big Debuffs"] = "Big Debuffs";
+L["Show large category-based aura icons beside enemy player nameplates."] = "Show large category-based aura icons beside enemy player nameplates.";
+L["Show crowd control"] = "Show crowd control";
+L["Show defensives"] = "Show defensives";
+L["Show important buffs"] = "Show important buffs";
+L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.";
+L["Border style"] = "Border style";
+L["Plain"] = "Plain";
+L["Glowing"] = "Glowing";
+L["Icon size"] = "Icon size";
+L["Max icons"] = "Max icons";
+L["Icon spacing"] = "Icon spacing";
+L["Horizontal offset"] = "Horizontal offset";
+L["Vertical offset"] = "Vertical offset";
+
 L["Immunity"] = "Immunity";
 L["Defensive"] = "Defensive";
 L["Dispel"] = "Dispel";

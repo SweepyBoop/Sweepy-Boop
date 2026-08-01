@@ -49,6 +49,30 @@ addon.ICON_TEMPLATE = {
     FLASH = 2, -- OmniBar style
 };
 
+addon.BIG_DEBUFFS_ICON_STYLE_ID = {
+    DEBUFF_BORDER = "debuffBorder",
+    GLOW = "glow",
+};
+
+addon.BIG_DEBUFFS_DEFAULTS = {
+    ENABLED = false,
+    SHOW_CROWD_CONTROL = true,
+    SHOW_DEFENSIVES = true,
+    SHOW_IMPORTANT_BUFFS = true,
+    ICON_STYLE = addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
+    ICON_SIZE = 32,
+    MAX_ICONS = 2,
+    SPACING = 2,
+    OFFSET_X = 0,
+    OFFSET_Y = 0,
+};
+
+addon.BIG_DEBUFFS_ICON_STYLE = {
+    DEBUFF_ICON_INSET = 2,
+    DEBUFF_BORDER_TEXTURE = "Interface\\Buttons\\UI-Debuff-Overlays",
+    DEBUFF_BORDER_TEX_COORDS = { 0.296875, 0.5703125, 0, 0.515625 },
+    GLOW_COOLDOWN_EDGE_TEXTURE = "Interface\\Cooldown\\UI-HUD-ActionBar-LoC",
+};
 
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT = 1,

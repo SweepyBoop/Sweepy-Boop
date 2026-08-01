@@ -406,3 +406,15 @@ L["Void Tendrils"] = "공허의 촉수";
 L["Voidwraith"] = "공허 망령";
 L["Wild Imp"] = "야생 임프";
 L["Wind Rush Totem"] = "바람 질주 토템";
+
+-- Nameplate Big Debuffs
+L["Big Debuffs"] = "Big Debuffs";
+L["Show large category-based aura icons beside enemy player nameplates."] = "Show large category-based aura icons beside enemy player nameplates.";
+L["Show crowd control"] = "Show crowd control";
+L["Show defensives"] = "Show defensives";
+L["Show important buffs"] = "Show important buffs";
+L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.";
+L["Border style"] = "Border style";
+L["Plain"] = "Plain";
+L["Glowing"] = "Glowing";
+L["Icon spacing"] = "Icon spacing";
