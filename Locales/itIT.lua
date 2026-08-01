@@ -406,3 +406,15 @@ L["Void Tendrils"] = "Viticci del Vuoto";
 L["Voidwraith"] = "Spettro del Vuoto";
 L["Wild Imp"] = "Imp Selvaggio";
 L["Wind Rush Totem"] = "Totem dello Slancio del Vento";
+
+-- Nameplate Big Debuffs
+L["Big Debuffs"] = "Big Debuffs";
+L["Show large category-based aura icons beside enemy player nameplates."] = "Show large category-based aura icons beside enemy player nameplates.";
+L["Show crowd control"] = "Show crowd control";
+L["Show defensives"] = "Show defensives";
+L["Show important buffs"] = "Show important buffs";
+L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.";
+L["Border style"] = "Border style";
+L["Plain"] = "Plain";
+L["Glowing"] = "Glowing";
+L["Icon spacing"] = "Icon spacing";
