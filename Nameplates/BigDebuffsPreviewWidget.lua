@@ -14,9 +14,11 @@ local healthHeight = 12;
 local previewLeftInset = 8;
 local previewMaxIcons = addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS;
 local ccSampleSpell = 118; -- Polymorph
+local secondCcSampleSpell = 408; -- Kidney Shot
 local defensiveSampleSpell = 642; -- Divine Shield
 local importantSampleSpell = 31884; -- Avenging Wrath
 local fallbackCcTexture = "Interface\\Icons\\Spell_Nature_Polymorph";
+local fallbackSecondCcTexture = "Interface\\Icons\\Ability_Rogue_KidneyShot";
 local fallbackDefensiveTexture = "Interface\\Icons\\Spell_Holy_DivineIntervention";
 local fallbackImportantTexture = "Interface\\Icons\\Spell_Holy_AvengineWrath";
 local cooldownDuration = 10;
@@ -28,6 +30,7 @@ local sampleAuras = {
     },
     right = {
         { option = "bigDebuffsShowCrowdControl", spellID = ccSampleSpell, fallbackTexture = fallbackCcTexture, color = { 1, 0.6471, 0 } },
+        { option = "bigDebuffsShowCrowdControl", spellID = secondCcSampleSpell, fallbackTexture = fallbackSecondCcTexture, color = { 1, 0.6471, 0 } },
     },
 };
 
