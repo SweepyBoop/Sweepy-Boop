@@ -411,6 +411,7 @@ local function ApplyTranslations(locale)
     L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.";
     L["Border style"] = "Border style";
     L["Plain"] = "Plain";
+    L["Aura highlight"] = "Aura highlight";
     L["Glowing"] = "Glowing";
     L["Icon spacing"] = "Icon spacing";
 end

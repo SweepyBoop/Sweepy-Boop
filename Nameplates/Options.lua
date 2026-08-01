@@ -650,6 +650,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         name = addon.L["Border style"],
                         values = {
                             [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.AURA_HIGHLIGHT] = addon.L["Aura highlight"],
                             [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = addon.L["Glowing"],
                         },
                         hidden = function()

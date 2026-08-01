@@ -176,7 +176,7 @@ local function CreateSlot(rail)
     slot.backdrop:SetAllPoints(slot);
     slot.backdrop:SetColorTexture(0, 0, 0, 1);
 
-    slot.debuffIcon = slot:CreateTexture(nil, "BORDER");
+    slot.debuffIcon = slot:CreateTexture(nil, "ARTWORK");
     slot.debuffIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
     slot.debuffBorder = slot:CreateTexture(nil, "OVERLAY");
@@ -185,13 +185,23 @@ local function CreateSlot(rail)
     slot.debuffBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
     slot.debuffBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
 
+    slot.auraHighlightGlow = slot:CreateTexture(nil, "BORDER");
+    slot.auraHighlightGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_GLOW_TEXTURE);
+    slot.auraHighlightGlow:SetBlendMode("ADD");
+
+    slot.auraHighlightBorder = slot:CreateTexture(nil, "OVERLAY");
+    slot.auraHighlightBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_BORDER_TEXTURE);
+    slot.auraHighlightBorder:SetBlendMode("ADD");
+
     slot.glowIcon = slot:CreateTexture(nil, "ARTWORK");
     slot.glowIcon:SetAllPoints(slot);
 
-    slot.cooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
-    slot.cooldown:SetHideCountdownNumbers(false);
+    slot.bigDebuffsCooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
+    slot.bigDebuffsCooldown:SetHideCountdownNumbers(false);
+    slot.cooldown = slot.bigDebuffsCooldown;
 
-    slot.count = slot:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall");
+    slot.bigDebuffsCount = slot:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall");
+    slot.count = slot.bigDebuffsCount;
 
     return slot;
 end
@@ -210,12 +220,53 @@ local function GetIconStyle(config)
     return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
 end
 
+local function IsAuraHighlightStyle(config)
+    return GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.AURA_HIGHLIGHT;
+end
+
+local function GetSlotSize(config)
+    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
+    return iconSize, iconSize;
+end
+
+local function HideAuraHighlightGlow(slot)
+    if slot.auraHighlightGlow then
+        slot.auraHighlightGlow:Hide();
+    end
+    if slot.auraHighlightBorder then
+        slot.auraHighlightBorder:Hide();
+    end
+end
+
+local function ShowAuraHighlightGlow(slot, color)
+    local padding = addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_PADDING;
+    slot.auraHighlightGlow:SetVertexColor(color[1], color[2], color[3], 0.9);
+    slot.auraHighlightGlow:ClearAllPoints();
+    slot.auraHighlightGlow:SetPoint("TOPLEFT", slot, "TOPLEFT", -padding, padding);
+    slot.auraHighlightGlow:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", padding, -padding);
+    slot.auraHighlightGlow:Show();
+
+    slot.auraHighlightBorder:SetVertexColor(color[1], color[2], color[3], 1);
+    slot.auraHighlightBorder:ClearAllPoints();
+    slot.auraHighlightBorder:SetPoint("TOPLEFT", slot, "TOPLEFT", -padding, padding);
+    slot.auraHighlightBorder:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", padding, -padding);
+    slot.auraHighlightBorder:Show();
+end
+
 local function SetSlotStyle(slot, config)
+    local useAuraHighlightStyle = IsAuraHighlightStyle(config);
     local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
 
+    slot.backdrop:SetShown(true);
     slot.debuffIcon:SetShown(not useGlowStyle);
-    slot.debuffBorder:SetShown(not useGlowStyle);
+    slot.debuffBorder:SetShown(not useAuraHighlightStyle and not useGlowStyle);
+    if not useAuraHighlightStyle then
+        HideAuraHighlightGlow(slot);
+    end
     slot.glowIcon:SetShown(useGlowStyle);
+
+    slot.cooldown = slot.bigDebuffsCooldown;
+    slot.count = slot.bigDebuffsCount;
 
     if useGlowStyle then
         slot.icon = slot.glowIcon;
@@ -223,24 +274,24 @@ local function SetSlotStyle(slot, config)
         slot.icon:ClearAllPoints();
         slot.icon:SetAllPoints(slot);
         slot.icon:SetTexCoord(0, 1, 0, 1);
-        slot.cooldown:ClearAllPoints();
-        slot.cooldown:SetAllPoints(slot.icon);
-        slot.count:ClearAllPoints();
-        slot.count:SetFontObject(NumberFontNormalSmall);
-        slot.count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 2, -2);
     else
         slot.icon = slot.debuffIcon;
-        slot.border = slot.debuffBorder;
+        slot.border = useAuraHighlightStyle and nil or slot.debuffBorder;
         slot.icon:ClearAllPoints();
-        slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
-        slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
+        if useAuraHighlightStyle then
+            slot.icon:SetAllPoints(slot);
+        else
+            slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
+            slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
+        end
         slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
-        slot.cooldown:ClearAllPoints();
-        slot.cooldown:SetAllPoints(slot.icon);
-        slot.count:ClearAllPoints();
-        slot.count:SetFontObject(NumberFontNormalSmall);
-        slot.count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 2, -2);
     end
+
+    slot.cooldown:ClearAllPoints();
+    slot.cooldown:SetAllPoints(slot.icon);
+    slot.count:ClearAllPoints();
+    slot.count:SetFontObject(NumberFontNormalSmall);
+    slot.count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 2, -2);
 end
 
 local function GetSlotTint(auraData)
@@ -251,8 +302,13 @@ end
 local function SetSlotTint(slot, auraData, config)
     local color = GetSlotTint(auraData);
     if GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
+        HideAuraHighlightGlow(slot);
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
+    elseif IsAuraHighlightStyle(config) then
+        addon.HideProcGlow(slot);
+        ShowAuraHighlightGlow(slot, color);
     else
+        HideAuraHighlightGlow(slot);
         addon.HideProcGlow(slot);
         slot.border:SetVertexColor(color[1], color[2], color[3]);
     end
@@ -310,8 +366,7 @@ local function SetSlotCount(slot, applications)
 end
 
 local function SetSlotAura(slot, unit, auraData, config)
-    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
-    slot:SetSize(iconSize, iconSize);
+    slot:SetSize(GetSlotSize(config));
     SetSlotStyle(slot, config);
     ConfigureSlotCooldown(slot, config);
     SetSlotIcon(slot, auraData.icon);
@@ -327,6 +382,7 @@ local function HideRail(rail)
     if not rail then return end
 
     for _, slot in ipairs(rail.sweepyBoopSlots) do
+        HideAuraHighlightGlow(slot);
         addon.HideProcGlow(slot);
         slot:Hide();
     end
@@ -334,14 +390,19 @@ local function HideRail(rail)
 end
 
 local function PaintRail(rail, railInfo, auras, config, unit)
-    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
+    local slotWidth, slotHeight = GetSlotSize(config);
     local spacing = config.bigDebuffsSpacing or addon.BIG_DEBUFFS_DEFAULTS.SPACING;
+    local slotStep = slotWidth + spacing;
+    if IsAuraHighlightStyle(config) then
+        slotStep = slotStep + ( 2 * addon.BIG_DEBUFFS_ICON_STYLE.AURA_HIGHLIGHT_PADDING );
+    end
     local visibleSlots = math.min(#auras, config.bigDebuffsMaxIcons or addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS);
 
-    rail:SetSize(math.max(visibleSlots, 1) * iconSize + math.max(visibleSlots - 1, 0) * spacing, iconSize);
+    rail:SetSize(math.max(visibleSlots, 1) * slotWidth + math.max(visibleSlots - 1, 0) * ( slotStep - slotWidth ), slotHeight);
 
     for index, slot in ipairs(rail.sweepyBoopSlots) do
         if index > visibleSlots then
+            HideAuraHighlightGlow(slot);
             addon.HideProcGlow(slot);
             slot:Hide();
         end
@@ -349,7 +410,7 @@ local function PaintRail(rail, railInfo, auras, config, unit)
 
     for index = 1, visibleSlots do
         local slot = EnsureSlot(rail, index);
-        local offset = ( index - 1 ) * ( iconSize + spacing );
+        local offset = ( index - 1 ) * slotStep;
 
         slot:ClearAllPoints();
         if railInfo.direction < 0 then

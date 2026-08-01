@@ -51,6 +51,7 @@ addon.ICON_TEMPLATE = {
 
 addon.BIG_DEBUFFS_ICON_STYLE_ID = {
     DEBUFF_BORDER = "debuffBorder",
+    AURA_HIGHLIGHT = "auraHighlight",
     GLOW = "glow",
 };
 
@@ -71,6 +72,9 @@ addon.BIG_DEBUFFS_ICON_STYLE = {
     DEBUFF_ICON_INSET = 2,
     DEBUFF_BORDER_TEXTURE = "Interface\\Buttons\\UI-Debuff-Overlays",
     DEBUFF_BORDER_TEX_COORDS = { 0.296875, 0.5703125, 0, 0.515625 },
+    AURA_HIGHLIGHT_BORDER_TEXTURE = "Interface\\AddOns\\SweepyBoop\\Art\\BigDebuffsAuraHighlightBorder",
+    AURA_HIGHLIGHT_GLOW_TEXTURE = "Interface\\AddOns\\SweepyBoop\\Art\\BigDebuffsAuraHighlightGlow",
+    AURA_HIGHLIGHT_PADDING = 7,
     GLOW_COOLDOWN_EDGE_TEXTURE = "Interface\\Cooldown\\UI-HUD-ActionBar-LoC",
 };
 
