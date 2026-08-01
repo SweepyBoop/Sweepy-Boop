@@ -72,7 +72,7 @@ local function CreatePreviewSlot(parent)
     slot.backdrop:SetTexture(TEXTURE_WHITE);
     slot.backdrop:SetVertexColor(0, 0, 0, 1);
 
-    slot.debuffIcon = slot:CreateTexture(nil, "BORDER");
+    slot.debuffIcon = slot:CreateTexture(nil, "ARTWORK");
     slot.debuffIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
     slot.debuffBorder = slot:CreateTexture(nil, "OVERLAY");
@@ -81,10 +81,23 @@ local function CreatePreviewSlot(parent)
     slot.debuffBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
     slot.debuffBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
 
+    slot.highlightFrame = CreateFrame("Frame", nil, slot);
+    slot.highlightFrame:SetSize(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE, addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE);
+    slot.highlightFrame:SetPoint("CENTER", slot, "CENTER");
+
+    slot.highlightGlow = slot.highlightFrame:CreateTexture(nil, "BORDER");
+    slot.highlightGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
+    slot.highlightGlow:SetBlendMode("ADD");
+
+    slot.highlightBorder = slot.highlightFrame:CreateTexture(nil, "OVERLAY");
+    slot.highlightBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE);
+    slot.highlightBorder:SetBlendMode("ADD");
+
     slot.glowIcon = slot:CreateTexture(nil, "ARTWORK");
     slot.glowIcon:SetAllPoints(slot);
 
-    slot.cooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
+    slot.bigDebuffsCooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
+    slot.cooldown = slot.bigDebuffsCooldown;
     ConfigureCooldown(slot.cooldown);
     slot.cooldown:SetScript("OnCooldownDone", function()
         RestartCooldown(slot);
@@ -157,26 +170,84 @@ local function EnsureSlot(rail, index)
     return rail.slots[index];
 end
 
+local HideHighlightGlow;
+
 local function ClearRail(rail)
     for _, slot in ipairs(rail.slots) do
         slot.previewActive = false;
         slot.cooldown:SetCooldown(0, 0);
         slot.cooldown:Hide();
+        HideHighlightGlow(slot);
         addon.HideProcGlow(slot);
         slot:Hide();
     end
 end
 
 local function GetIconStyle(config)
+    if config.bigDebuffsIconStyle == "auraHighlight" then
+        return addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+    end
+
     return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
 end
 
+local function IsHighlightStyle(config)
+    return GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+end
+
+local function GetSlotSize(config)
+    local iconSize = GetIconSize(config);
+    return iconSize, iconSize;
+end
+
+local function GetHighlightScale(config)
+    return GetIconSize(config) / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+end
+
+local function GetHighlightPadding()
+    return addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING;
+end
+
+HideHighlightGlow = function(slot)
+    if slot.highlightGlow then
+        slot.highlightGlow:Hide();
+    end
+    if slot.highlightBorder then
+        slot.highlightBorder:Hide();
+    end
+end
+
+local function ShowHighlightGlow(slot, color, config)
+    local padding = GetHighlightPadding();
+    slot.highlightFrame:SetScale(GetHighlightScale(config));
+    slot.highlightFrame:ClearAllPoints();
+    slot.highlightFrame:SetPoint("CENTER", slot, "CENTER");
+    slot.highlightGlow:SetVertexColor(color[1], color[2], color[3], 0.9);
+    slot.highlightGlow:ClearAllPoints();
+    slot.highlightGlow:SetPoint("TOPLEFT", slot.highlightFrame, "TOPLEFT", -padding, padding);
+    slot.highlightGlow:SetPoint("BOTTOMRIGHT", slot.highlightFrame, "BOTTOMRIGHT", padding, -padding);
+    slot.highlightGlow:Show();
+
+    slot.highlightBorder:SetVertexColor(color[1], color[2], color[3], 1);
+    slot.highlightBorder:ClearAllPoints();
+    slot.highlightBorder:SetPoint("TOPLEFT", slot.highlightFrame, "TOPLEFT", -padding, padding);
+    slot.highlightBorder:SetPoint("BOTTOMRIGHT", slot.highlightFrame, "BOTTOMRIGHT", padding, -padding);
+    slot.highlightBorder:Show();
+end
+
 local function SetSlotStyle(slot, config)
+    local useHighlightStyle = IsHighlightStyle(config);
     local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
 
+    slot.backdrop:SetShown(true);
     slot.debuffIcon:SetShown(not useGlowStyle);
-    slot.debuffBorder:SetShown(not useGlowStyle);
+    slot.debuffBorder:SetShown(not useHighlightStyle and not useGlowStyle);
+    if not useHighlightStyle then
+        HideHighlightGlow(slot);
+    end
     slot.glowIcon:SetShown(useGlowStyle);
+
+    slot.cooldown = slot.bigDebuffsCooldown;
 
     if useGlowStyle then
         slot.icon = slot.glowIcon;
@@ -184,24 +255,28 @@ local function SetSlotStyle(slot, config)
         slot.icon:ClearAllPoints();
         slot.icon:SetAllPoints(slot);
         slot.icon:SetTexCoord(0, 1, 0, 1);
-        slot.cooldown:ClearAllPoints();
-        slot.cooldown:SetAllPoints(slot.icon);
     else
         slot.icon = slot.debuffIcon;
-        slot.border = slot.debuffBorder;
+        slot.border = useHighlightStyle and nil or slot.debuffBorder;
         slot.icon:ClearAllPoints();
         slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
         slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
         slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
-        slot.cooldown:ClearAllPoints();
-        slot.cooldown:SetAllPoints(slot.icon);
     end
+
+    slot.cooldown:ClearAllPoints();
+    slot.cooldown:SetAllPoints(slot.icon);
 end
 
 local function SetSlotTint(slot, color, config)
     if GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
+        HideHighlightGlow(slot);
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
+    elseif IsHighlightStyle(config) then
+        addon.HideProcGlow(slot);
+        ShowHighlightGlow(slot, color, config);
     else
+        HideHighlightGlow(slot);
         addon.HideProcGlow(slot);
         slot.border:SetVertexColor(color[1], color[2], color[3], 1);
     end
@@ -221,12 +296,13 @@ local function ConfigureSlotCooldown(slot, config)
 end
 
 local function RenderRail(rail, anchor, point, relativePoint, direction, sampleData, config, enabled)
-    local iconSize = GetIconSize(config);
+    local slotWidth, slotHeight = GetSlotSize(config);
     local spacing = config.bigDebuffsSpacing or addon.BIG_DEBUFFS_DEFAULTS.SPACING;
+    local slotStep = slotWidth + spacing;
     local maxIcons = math.min(config.bigDebuffsMaxIcons or addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS, previewMaxIcons);
     local shownCount = 0;
 
-    rail:SetSize(math.max(maxIcons, 1) * iconSize + math.max(maxIcons - 1, 0) * spacing, iconSize);
+    rail:SetSize(math.max(maxIcons, 1) * slotWidth + math.max(maxIcons - 1, 0) * ( slotStep - slotWidth ), slotHeight);
     rail:ClearAllPoints();
     rail:SetPoint(point, anchor, relativePoint, direction * (2 + (config.bigDebuffsOffsetX or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_X)), config.bigDebuffsOffsetY or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_Y);
     rail:Show();
@@ -235,9 +311,9 @@ local function RenderRail(rail, anchor, point, relativePoint, direction, sampleD
         if config[aura.option] and shownCount < maxIcons then
             shownCount = shownCount + 1;
             local slot = EnsureSlot(rail, shownCount);
-            local offset = ( shownCount - 1 ) * ( iconSize + spacing );
+            local offset = ( shownCount - 1 ) * slotStep;
 
-            slot:SetSize(iconSize, iconSize);
+            slot:SetSize(slotWidth, slotHeight);
             SetSlotStyle(slot, config);
             ConfigureSlotCooldown(slot, config);
             slot:ClearAllPoints();
@@ -258,6 +334,7 @@ local function RenderRail(rail, anchor, point, relativePoint, direction, sampleD
 
     for index = shownCount + 1, #rail.slots do
         rail.slots[index].previewActive = false;
+        HideHighlightGlow(rail.slots[index]);
         addon.HideProcGlow(rail.slots[index]);
         rail.slots[index]:Hide();
     end

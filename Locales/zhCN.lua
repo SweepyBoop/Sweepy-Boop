@@ -416,5 +416,6 @@ L["Show important buffs"] = "Show important buffs";
 L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.";
 L["Border style"] = "Border style";
 L["Plain"] = "Plain";
+L["Highlight"] = "Highlight";
 L["Glowing"] = "Glowing";
 L["Icon spacing"] = "Icon spacing";

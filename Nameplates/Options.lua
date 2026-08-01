@@ -2,6 +2,28 @@ local _, addon = ...;
 
 local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
 
+local function GetBigDebuffsIconStyle(config)
+    if config.bigDebuffsIconStyle == "auraHighlight" then
+        return addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+    end
+
+    return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
+end
+
+local bigDebuffsIconStyleSorting = {
+    addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
+    addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT,
+    addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW,
+};
+
+local function GetBigDebuffsIconStyleValues()
+    return {
+        [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
+        [addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT] = addon.L["Highlight"],
+        [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = addon.L["Glowing"],
+    };
+end
+
 addon.GetFriendlyNameplateOptions = function(order)
     local optionGroup = {
         order = order,
@@ -648,10 +670,17 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "select",
                         width = 1.2,
                         name = addon.L["Border style"],
-                        values = {
-                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
-                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = addon.L["Glowing"],
-                        },
+                        values = GetBigDebuffsIconStyleValues,
+                        sorting = bigDebuffsIconStyleSorting,
+                        get = function()
+                            return GetBigDebuffsIconStyle(SweepyBoop.db.profile.nameplatesEnemy);
+                        end,
+                        set = function(_, val)
+                            SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsIconStyle = val;
+                            SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                            SweepyBoop:RefreshAllNamePlates();
+                            addon.RefreshNameplateBigDebuffsPreviewWidgets();
+                        end,
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -668,7 +697,7 @@ addon.GetEnemyNameplateOptions = function(order)
                     bigDebuffsIconSize = {
                         order = 8,
                         min = 20,
-                        max = 60,
+                        max = 64,
                         step = 1,
                         type = "range",
                         width = 0.85,
@@ -692,7 +721,7 @@ addon.GetEnemyNameplateOptions = function(order)
                     bigDebuffsSpacing = {
                         order = 10,
                         min = 0,
-                        max = 10,
+                        max = 16,
                         step = 1,
                         type = "range",
                         width = 0.85,
