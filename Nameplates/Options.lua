@@ -643,8 +643,21 @@ addon.GetEnemyNameplateOptions = function(order)
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
                     },
-                    bigDebuffsIconSize = {
+                    bigDebuffsIconStyle = {
                         order = 6,
+                        type = "select",
+                        width = 1.2,
+                        name = "Icon style",
+                        values = {
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = "Debuff border",
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = "Glow",
+                        },
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsIconSize = {
+                        order = 7,
                         min = 20,
                         max = 60,
                         step = 1,
@@ -656,7 +669,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsMaxIcons = {
-                        order = 7,
+                        order = 8,
                         min = 1,
                         max = 8,
                         step = 1,
@@ -668,7 +681,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsSpacing = {
-                        order = 8,
+                        order = 9,
                         min = 0,
                         max = 10,
                         step = 1,
@@ -680,7 +693,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsOffsetX = {
-                        order = 9,
+                        order = 10,
                         min = -100,
                         max = 100,
                         step = 1,
@@ -692,7 +705,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsOffsetY = {
-                        order = 10,
+                        order = 11,
                         min = -100,
                         max = 100,
                         step = 1,

@@ -106,6 +106,7 @@ local defaults = {
             bigDebuffsShowCrowdControl = addon.BIG_DEBUFFS_DEFAULTS.SHOW_CROWD_CONTROL,
             bigDebuffsShowDefensives = addon.BIG_DEBUFFS_DEFAULTS.SHOW_DEFENSIVES,
             bigDebuffsShowImportantBuffs = addon.BIG_DEBUFFS_DEFAULTS.SHOW_IMPORTANT_BUFFS,
+            bigDebuffsIconStyle = addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE,
             bigDebuffsIconSize = addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE,
             bigDebuffsMaxIcons = addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS,
             bigDebuffsSpacing = addon.BIG_DEBUFFS_DEFAULTS.SPACING,
