@@ -593,16 +593,30 @@ addon.GetEnemyNameplateOptions = function(order)
                 order = 2,
                 type = "group",
                 name = "Big debuffs",
+                set = function(info, val)
+                    SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
+                    SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
+                    SweepyBoop:RefreshAllNamePlates();
+                    addon.RefreshNameplateBigDebuffsPreviewWidgets();
+                end,
                 args = {
-                    bigDebuffsEnabled = {
+                    bigDebuffsPreview = {
                         order = 1,
+                        type = "description",
+                        width = "full",
+                        name = "Preview",
+                        dialogControl = "NameplateBigDebuffsPreview-SweepyBoop",
+                    },
+
+                    bigDebuffsEnabled = {
+                        order = 2,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_holy_divineshield")) .. " Enable big debuffs",
                         desc = "Show large category-based aura icons beside enemy player nameplates.\n\nCrowd control appears on the left; defensives and important buffs appear on the right.",
                     },
                     bigDebuffsShowCrowdControl = {
-                        order = 2,
+                        order = 3,
                         type = "toggle",
                         width = "full",
                         name = "Show crowd control on the left",
@@ -611,7 +625,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsShowDefensives = {
-                        order = 3,
+                        order = 4,
                         type = "toggle",
                         width = "full",
                         name = "Show defensives on the right",
@@ -620,7 +634,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsShowImportantBuffs = {
-                        order = 4,
+                        order = 5,
                         type = "toggle",
                         width = "full",
                         name = "Show important buffs on the right",
@@ -630,7 +644,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsIconSize = {
-                        order = 5,
+                        order = 6,
                         min = 20,
                         max = 60,
                         step = 1,
@@ -642,7 +656,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsMaxIcons = {
-                        order = 6,
+                        order = 7,
                         min = 1,
                         max = 8,
                         step = 1,
@@ -654,7 +668,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsSpacing = {
-                        order = 7,
+                        order = 8,
                         min = 0,
                         max = 10,
                         step = 1,
@@ -666,7 +680,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsOffsetX = {
-                        order = 8,
+                        order = 9,
                         min = -100,
                         max = 100,
                         step = 1,
@@ -678,7 +692,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsOffsetY = {
-                        order = 9,
+                        order = 10,
                         min = -100,
                         max = 100,
                         step = 1,
