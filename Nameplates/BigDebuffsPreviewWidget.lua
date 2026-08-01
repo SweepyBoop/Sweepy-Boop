@@ -282,6 +282,29 @@ local function SetSlotTint(slot, color, config)
     end
 end
 
+local function UpdateCooldownFontSize(cooldown, iconSize)
+    if ( not cooldown ) or ( not iconSize ) then return end
+
+    if not cooldown.sweepyBoopCountdownFontString then
+        local numRegions = cooldown:GetNumRegions();
+        for i = 1, numRegions do
+            local region = select(i, cooldown:GetRegions());
+            if region and region:GetObjectType() == "FontString" then
+                cooldown.sweepyBoopCountdownFontString = region;
+                break;
+            end
+        end
+    end
+
+    local region = cooldown.sweepyBoopCountdownFontString;
+    if region then
+        local font, _, flags = region:GetFont();
+        if font then
+            region:SetFont(font, math.floor(iconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT), flags);
+        end
+    end
+end
+
 local function ConfigureSlotCooldown(slot, config)
     local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
 
@@ -293,6 +316,7 @@ local function ConfigureSlotCooldown(slot, config)
     if slot.cooldown.SetEdgeTexture then
         slot.cooldown:SetEdgeTexture(addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE);
     end
+    UpdateCooldownFontSize(slot.cooldown, GetIconSize(config));
 end
 
 local function RenderRail(rail, anchor, point, relativePoint, direction, sampleData, config, enabled)
