@@ -172,22 +172,25 @@ local function CreateSlot(rail)
     slot:SetMouseClickEnabled(false);
     slot:SetIgnoreParentAlpha(true);
 
-    slot.backdrop = slot:CreateTexture(nil, "BACKGROUND");
-    slot.backdrop:SetAllPoints(slot);
+    slot.visualFrame = CreateFrame("Frame", nil, slot);
+    slot.visualFrame:SetSize(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE, addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE);
+    slot.visualFrame:SetPoint("CENTER", slot, "CENTER");
+
+    slot.backdrop = slot.visualFrame:CreateTexture(nil, "BACKGROUND");
+    slot.backdrop:SetAllPoints(slot.visualFrame);
     slot.backdrop:SetColorTexture(0, 0, 0, 1);
 
-    slot.debuffIcon = slot:CreateTexture(nil, "ARTWORK");
+    slot.debuffIcon = slot.visualFrame:CreateTexture(nil, "ARTWORK");
     slot.debuffIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
-    slot.debuffBorder = slot:CreateTexture(nil, "OVERLAY");
-    slot.debuffBorder:SetPoint("TOPLEFT", slot, "TOPLEFT", -1, 1);
-    slot.debuffBorder:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 1, -1);
+    slot.debuffBorder = slot.visualFrame:CreateTexture(nil, "OVERLAY");
+    slot.debuffBorder:SetPoint("TOPLEFT", slot.visualFrame, "TOPLEFT", -1, 1);
+    slot.debuffBorder:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", 1, -1);
     slot.debuffBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
     slot.debuffBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
 
-    slot.highlightFrame = CreateFrame("Frame", nil, slot);
-    slot.highlightFrame:SetSize(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE, addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE);
-    slot.highlightFrame:SetPoint("CENTER", slot, "CENTER");
+    slot.highlightFrame = CreateFrame("Frame", nil, slot.visualFrame);
+    slot.highlightFrame:SetAllPoints(slot.visualFrame);
 
     slot.highlightGlow = slot.highlightFrame:CreateTexture(nil, "BORDER");
     slot.highlightGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
@@ -197,14 +200,14 @@ local function CreateSlot(rail)
     slot.highlightBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE);
     slot.highlightBorder:SetBlendMode("ADD");
 
-    slot.glowIcon = slot:CreateTexture(nil, "ARTWORK");
-    slot.glowIcon:SetAllPoints(slot);
+    slot.glowIcon = slot.visualFrame:CreateTexture(nil, "ARTWORK");
+    slot.glowIcon:SetAllPoints(slot.visualFrame);
 
-    slot.bigDebuffsCooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
+    slot.bigDebuffsCooldown = CreateFrame("Cooldown", nil, slot.visualFrame, "CooldownFrameTemplate");
     slot.bigDebuffsCooldown:SetHideCountdownNumbers(false);
     slot.cooldown = slot.bigDebuffsCooldown;
 
-    slot.bigDebuffsCount = slot:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall");
+    slot.bigDebuffsCount = slot.visualFrame:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall");
     slot.count = slot.bigDebuffsCount;
 
     return slot;
@@ -237,7 +240,7 @@ local function GetSlotSize(config)
     return iconSize, iconSize;
 end
 
-local function GetHighlightScale(config)
+local function GetVisualScale(config)
     local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
     return iconSize / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 end
@@ -257,9 +260,6 @@ end
 
 local function ShowHighlightGlow(slot, color, config)
     local padding = GetHighlightPadding();
-    slot.highlightFrame:SetScale(GetHighlightScale(config));
-    slot.highlightFrame:ClearAllPoints();
-    slot.highlightFrame:SetPoint("CENTER", slot, "CENTER");
     slot.highlightGlow:SetVertexColor(color[1], color[2], color[3], 0.9);
     slot.highlightGlow:ClearAllPoints();
     slot.highlightGlow:SetPoint("TOPLEFT", slot.highlightFrame, "TOPLEFT", -padding, padding);
@@ -292,14 +292,14 @@ local function SetSlotStyle(slot, config)
         slot.icon = slot.glowIcon;
         slot.border = nil;
         slot.icon:ClearAllPoints();
-        slot.icon:SetAllPoints(slot);
+        slot.icon:SetAllPoints(slot.visualFrame);
         slot.icon:SetTexCoord(0, 1, 0, 1);
     else
         slot.icon = slot.debuffIcon;
         slot.border = useHighlightStyle and nil or slot.debuffBorder;
         slot.icon:ClearAllPoints();
-        slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
-        slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
+        slot.icon:SetPoint("TOPLEFT", slot.visualFrame, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
+        slot.icon:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
         slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
     end
 
@@ -308,9 +308,7 @@ local function SetSlotStyle(slot, config)
     slot.count:ClearAllPoints();
     slot.count:SetFontObject(NumberFontNormal);
     slot.count:SetJustifyH("RIGHT");
-    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
-    local actionButtonScale = iconSize / 45;
-    slot.count:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -5 * actionButtonScale, 5 * actionButtonScale);
+    slot.count:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", -5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45, 5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45);
 end
 
 local function GetSlotTint(auraData)
@@ -333,32 +331,8 @@ local function SetSlotTint(slot, auraData, config)
     end
 end
 
-local function UpdateCooldownFontSize(cooldown, iconSize)
-    if ( not cooldown ) or ( not iconSize ) then return end
-
-    if not cooldown.sweepyBoopCountdownFontString then
-        local numRegions = cooldown:GetNumRegions();
-        for i = 1, numRegions do
-            local region = select(i, cooldown:GetRegions());
-            if region and region:GetObjectType() == "FontString" then
-                cooldown.sweepyBoopCountdownFontString = region;
-                break;
-            end
-        end
-    end
-
-    local region = cooldown.sweepyBoopCountdownFontString;
-    if region then
-        local font, _, flags = region:GetFont();
-        if font then
-            region:SetFont(font, math.floor(iconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT), flags);
-        end
-    end
-end
-
 local function ConfigureSlotCooldown(slot, config)
     local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
-    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
 
     slot.cooldown:SetDrawBling(false);
     slot.cooldown:SetDrawSwipe(true);
@@ -370,7 +344,6 @@ local function ConfigureSlotCooldown(slot, config)
     if slot.cooldown.SetEdgeTexture then
         slot.cooldown:SetEdgeTexture(addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE);
     end
-    UpdateCooldownFontSize(slot.cooldown, iconSize);
 end
 
 local function SetSlotCooldown(slot, unit, auraData)
@@ -411,6 +384,9 @@ end
 
 local function SetSlotAura(slot, unit, auraData, config)
     slot:SetSize(GetSlotSize(config));
+    slot.visualFrame:SetScale(GetVisualScale(config));
+    slot.visualFrame:ClearAllPoints();
+    slot.visualFrame:SetPoint("CENTER", slot, "CENTER");
     SetSlotStyle(slot, config);
     ConfigureSlotCooldown(slot, config);
     SetSlotIcon(slot, auraData.icon);
