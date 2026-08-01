@@ -656,8 +656,17 @@ addon.GetEnemyNameplateOptions = function(order)
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
                     },
-                    bigDebuffsIconSize = {
+                    bigDebuffsStyleRowBreak = {
                         order = 7,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsIconSize = {
+                        order = 8,
                         min = 20,
                         max = 60,
                         step = 1,
@@ -669,19 +678,19 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsMaxIcons = {
-                        order = 8,
+                        order = 9,
                         min = 1,
                         max = 8,
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Max icons per side",
+                        name = "Max icons",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
                     },
                     bigDebuffsSpacing = {
-                        order = 9,
+                        order = 10,
                         min = 0,
                         max = 10,
                         step = 1,
@@ -692,8 +701,17 @@ addon.GetEnemyNameplateOptions = function(order)
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
                     },
+                    bigDebuffsSizingRowBreak = {
+                        order = 11,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
                     bigDebuffsOffsetX = {
-                        order = 10,
+                        order = 12,
                         min = -100,
                         max = 100,
                         step = 1,
@@ -705,13 +723,22 @@ addon.GetEnemyNameplateOptions = function(order)
                         end,
                     },
                     bigDebuffsOffsetY = {
-                        order = 11,
+                        order = 13,
                         min = -100,
                         max = 100,
                         step = 1,
                         type = "range",
                         width = 0.85,
                         name = "Vertical offset",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
+                    bigDebuffsOffsetsRowBreak = {
+                        order = 14,
+                        type = "description",
+                        width = "full",
+                        name = "",
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
