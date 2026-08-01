@@ -106,6 +106,7 @@ local function GetBlizzardNameplateBuffIDs(nameplate)
 end
 
 local function AddNameplateImportantBuff(unit, auraInstanceID)
+    if ( not auraInstanceID ) or addon.IsSecretValue(auraInstanceID) then return end
     if scratchLeftAuraIDs[auraInstanceID] then return end
 
     local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID);
@@ -341,6 +342,7 @@ local function PaintRail(rail, railInfo, auras, config, unit)
 
     for index, slot in ipairs(rail.sweepyBoopSlots) do
         if index > visibleSlots then
+            addon.HideProcGlow(slot);
             slot:Hide();
         end
     end

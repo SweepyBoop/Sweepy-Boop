@@ -162,6 +162,7 @@ local function ClearRail(rail)
         slot.previewActive = false;
         slot.cooldown:SetCooldown(0, 0);
         slot.cooldown:Hide();
+        addon.HideProcGlow(slot);
         slot:Hide();
     end
 end
@@ -257,6 +258,7 @@ local function RenderRail(rail, anchor, point, relativePoint, direction, sampleD
 
     for index = shownCount + 1, #rail.slots do
         rail.slots[index].previewActive = false;
+        addon.HideProcGlow(rail.slots[index]);
         rail.slots[index]:Hide();
     end
 end

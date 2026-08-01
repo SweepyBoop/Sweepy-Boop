@@ -450,7 +450,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Horizontal offset",
+                        name = addon.L["Horizontal offset"],
                         hidden = function ()
                             if addon.PROJECT_TBC then return true end
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
@@ -463,7 +463,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Vertical offset",
+                        name = addon.L["Vertical offset"],
                         hidden = function ()
                             if addon.PROJECT_TBC then return true end
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer ) and ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconOthers );
@@ -592,7 +592,7 @@ addon.GetEnemyNameplateOptions = function(order)
             bigDebuffs = {
                 order = 2,
                 type = "group",
-                name = "Big debuffs",
+                name = addon.L["Big Debuffs"],
                 set = function(info, val)
                     SweepyBoop.db.profile.nameplatesEnemy[info[#info]] = val;
                     SweepyBoop.db.profile.nameplatesEnemy.lastModified = GetTime();
@@ -604,7 +604,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 1,
                         type = "description",
                         width = "full",
-                        name = "Preview",
+                        name = addon.L["Preview"],
                         dialogControl = "NameplateBigDebuffsPreview-SweepyBoop",
                     },
 
@@ -612,14 +612,14 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 2,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_ATLAS("countdown-swords") .. " Enabled",
-                        desc = "Show large category-based aura icons beside enemy player nameplates."
+                        name = addon.FORMAT_ATLAS("countdown-swords") .. " " .. addon.L["Enabled"],
+                        desc = addon.L["Show large category-based aura icons beside enemy player nameplates."]
                     },
                     bigDebuffsShowCrowdControl = {
                         order = 3,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(118)) .. " Show crowd control",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(118)) .. " " .. addon.L["Show crowd control"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -628,7 +628,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 4,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(642)) .. " Show defensives",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(642)) .. " " .. addon.L["Show defensives"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -637,8 +637,8 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 5,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(31884)) .. " Show important buffs",
-                        desc = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(31884)) .. " " .. addon.L["Show important buffs"],
+                        desc = addon.L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -647,10 +647,10 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 6,
                         type = "select",
                         width = 1.2,
-                        name = "Border style",
+                        name = addon.L["Border style"],
                         values = {
-                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = "Plain",
-                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = "Glowing",
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = addon.L["Glowing"],
                         },
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
@@ -672,7 +672,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Icon size",
+                        name = addon.L["Icon size"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -684,7 +684,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Max icons",
+                        name = addon.L["Max icons"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -696,7 +696,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Icon spacing",
+                        name = addon.L["Icon spacing"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -717,7 +717,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Horizontal offset",
+                        name = addon.L["Horizontal offset"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -729,7 +729,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = "Vertical offset",
+                        name = addon.L["Vertical offset"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
