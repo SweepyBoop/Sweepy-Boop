@@ -612,7 +612,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 2,
                         type = "toggle",
                         width = "full",
-                        name = "Enabled",
+                        name = addon.FORMAT_ATLAS("countdown-swords") .. " Enabled",
                         desc = "Show large category-based aura icons beside enemy player nameplates."
                     },
                     bigDebuffsShowCrowdControl = {
