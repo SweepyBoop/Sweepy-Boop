@@ -61,6 +61,12 @@ addon.BIG_DEBUFFS_DEFAULTS = {
     OFFSET_Y = 0,
 };
 
+addon.BIG_DEBUFFS_ICON_STYLE = {
+    ICON_INSET = 2,
+    BORDER_TEXTURE = "Interface\\Buttons\\UI-Debuff-Overlays",
+    BORDER_TEX_COORDS = { 0.296875, 0.5703125, 0, 0.515625 },
+};
+
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT = 1,
     LEFT = 3,

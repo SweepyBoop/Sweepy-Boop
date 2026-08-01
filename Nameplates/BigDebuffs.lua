@@ -162,13 +162,6 @@ local function EnsureRail(nameplate, railInfo)
     return rail;
 end
 
-local function PaintEdge(texture, pointA, pointB, sizeSetter)
-    texture:SetPoint(pointA, texture:GetParent(), pointA);
-    texture:SetPoint(pointB, texture:GetParent(), pointB);
-    sizeSetter(texture, 2);
-    texture:SetColorTexture(1, 1, 1, 1);
-end
-
 local function CreateSlot(rail)
     local slot = CreateFrame("Frame", nil, rail);
     slot:SetMouseClickEnabled(false);
@@ -179,21 +172,15 @@ local function CreateSlot(rail)
     slot.backdrop:SetColorTexture(0, 0, 0, 1);
 
     slot.icon = slot:CreateTexture(nil, "BORDER");
-    slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", 1, -1);
-    slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -1, 1);
+    slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET);
+    slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET);
     slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
-    slot.edgeTop = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeTop, "TOPLEFT", "TOPRIGHT", function(texture, size) texture:SetHeight(size); end);
-
-    slot.edgeBottom = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeBottom, "BOTTOMLEFT", "BOTTOMRIGHT", function(texture, size) texture:SetHeight(size); end);
-
-    slot.edgeLeft = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeLeft, "TOPLEFT", "BOTTOMLEFT", function(texture, size) texture:SetWidth(size); end);
-
-    slot.edgeRight = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeRight, "TOPRIGHT", "BOTTOMRIGHT", function(texture, size) texture:SetWidth(size); end);
+    slot.border = slot:CreateTexture(nil, "OVERLAY");
+    slot.border:SetPoint("TOPLEFT", slot, "TOPLEFT", -1, 1);
+    slot.border:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 1, -1);
+    slot.border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.BORDER_TEXTURE);
+    slot.border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.BORDER_TEX_COORDS));
 
     slot.cooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
     slot.cooldown:SetAllPoints(slot.icon);
@@ -219,10 +206,7 @@ end
 
 local function SetSlotTint(slot, auraData)
     local color = KIND_TINT[auraData.sweepyBoopKind] or KIND_TINT[AURA_KIND.IMPORTANT_BUFF];
-    slot.edgeTop:SetVertexColor(color[1], color[2], color[3]);
-    slot.edgeBottom:SetVertexColor(color[1], color[2], color[3]);
-    slot.edgeLeft:SetVertexColor(color[1], color[2], color[3]);
-    slot.edgeRight:SetVertexColor(color[1], color[2], color[3]);
+    slot.border:SetVertexColor(color[1], color[2], color[3]);
 end
 
 local function SetSlotCooldown(slot, unit, auraData)

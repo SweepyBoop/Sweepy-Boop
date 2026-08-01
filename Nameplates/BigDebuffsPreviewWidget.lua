@@ -63,13 +63,6 @@ local function ConfigureCooldown(cooldown)
     end
 end
 
-local function PaintEdge(texture, pointA, pointB, sizeSetter)
-    texture:SetPoint(pointA, texture:GetParent(), pointA);
-    texture:SetPoint(pointB, texture:GetParent(), pointB);
-    sizeSetter(texture, 2);
-    texture:SetTexture(TEXTURE_WHITE);
-end
-
 local function CreatePreviewSlot(parent)
     local slot = CreateFrame("Frame", nil, parent);
     slot:Hide();
@@ -80,21 +73,15 @@ local function CreatePreviewSlot(parent)
     slot.backdrop:SetVertexColor(0, 0, 0, 1);
 
     slot.icon = slot:CreateTexture(nil, "BORDER");
-    slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", 1, -1);
-    slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -1, 1);
+    slot.icon:SetPoint("TOPLEFT", slot, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET);
+    slot.icon:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.ICON_INSET);
     slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
-    slot.edgeTop = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeTop, "TOPLEFT", "TOPRIGHT", function(texture, size) texture:SetHeight(size); end);
-
-    slot.edgeBottom = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeBottom, "BOTTOMLEFT", "BOTTOMRIGHT", function(texture, size) texture:SetHeight(size); end);
-
-    slot.edgeLeft = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeLeft, "TOPLEFT", "BOTTOMLEFT", function(texture, size) texture:SetWidth(size); end);
-
-    slot.edgeRight = slot:CreateTexture(nil, "OVERLAY");
-    PaintEdge(slot.edgeRight, "TOPRIGHT", "BOTTOMRIGHT", function(texture, size) texture:SetWidth(size); end);
+    slot.border = slot:CreateTexture(nil, "OVERLAY");
+    slot.border:SetPoint("TOPLEFT", slot, "TOPLEFT", -1, 1);
+    slot.border:SetPoint("BOTTOMRIGHT", slot, "BOTTOMRIGHT", 1, -1);
+    slot.border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.BORDER_TEXTURE);
+    slot.border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.BORDER_TEX_COORDS));
 
     slot.cooldown = CreateFrame("Cooldown", nil, slot, "CooldownFrameTemplate");
     slot.cooldown:SetAllPoints(slot.icon);
@@ -180,10 +167,7 @@ local function ClearRail(rail)
 end
 
 local function SetSlotTint(slot, color)
-    slot.edgeTop:SetVertexColor(color[1], color[2], color[3], 1);
-    slot.edgeBottom:SetVertexColor(color[1], color[2], color[3], 1);
-    slot.edgeLeft:SetVertexColor(color[1], color[2], color[3], 1);
-    slot.edgeRight:SetVertexColor(color[1], color[2], color[3], 1);
+    slot.border:SetVertexColor(color[1], color[2], color[3], 1);
 end
 
 local function RenderRail(rail, anchor, point, relativePoint, direction, sampleData, config, enabled)
