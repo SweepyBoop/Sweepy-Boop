@@ -42,7 +42,7 @@ local function AuraComesFirst(auraA, auraB)
         return auraA.sweepyBoopKind < auraB.sweepyBoopKind;
     end
 
-    return ( auraA.auraInstanceID or 0 ) > ( auraB.auraInstanceID or 0 );
+    return ( auraA.sweepyBoopOrder or 0 ) < ( auraB.sweepyBoopOrder or 0 );
 end
 
 local function IsTrueOrSecret(value)
@@ -53,6 +53,7 @@ local function AddAuraCandidate(target, auraData, kind)
     if not auraData then return end
 
     auraData.sweepyBoopKind = kind;
+    auraData.sweepyBoopOrder = #target;
     table.insert(target, auraData);
 end
 
@@ -68,27 +69,30 @@ end
 local function AddCrowdControlAura(auraData)
     if ( not auraData ) or ( not auraData.spellId ) then return end
 
-    if IsTrueOrSecret(C_Spell.IsSpellCrowdControl(auraData.spellId)) then
+    if addon.IsSecretValue(auraData.spellId) or IsTrueOrSecret(C_Spell.IsSpellCrowdControl(auraData.spellId)) then
         AddAuraCandidate(scratchRight, auraData, AURA_KIND.CROWD_CONTROL);
     end
 end
 
 local function RememberLeftAura(auraData, kind)
     AddAuraCandidate(scratchLeft, auraData, kind);
-    scratchLeftAuraIDs[auraData.auraInstanceID] = true;
+    if auraData.auraInstanceID and not addon.IsSecretValue(auraData.auraInstanceID) then
+        scratchLeftAuraIDs[auraData.auraInstanceID] = true;
+    end
 end
 
 local function AddBigDefensiveAura(auraData)
     if ( not auraData ) or ( not auraData.spellId ) then return end
 
-    local isDefensive = C_UnitAuras.AuraIsBigDefensive and C_UnitAuras.AuraIsBigDefensive(auraData.spellId);
+    local isDefensive = addon.IsSecretValue(auraData.spellId) or ( C_UnitAuras.AuraIsBigDefensive and C_UnitAuras.AuraIsBigDefensive(auraData.spellId) );
     if ( not C_UnitAuras.AuraIsBigDefensive ) or IsTrueOrSecret(isDefensive) then
         RememberLeftAura(auraData, AURA_KIND.DEFENSIVE);
     end
 end
 
 local function AddExternalDefensiveAura(auraData)
-    if ( not auraData ) or scratchLeftAuraIDs[auraData.auraInstanceID] then return end
+    if not auraData then return end
+    if auraData.auraInstanceID and ( not addon.IsSecretValue(auraData.auraInstanceID) ) and scratchLeftAuraIDs[auraData.auraInstanceID] then return end
 
     RememberLeftAura(auraData, AURA_KIND.DEFENSIVE);
 end
@@ -210,32 +214,49 @@ local function SetSlotTint(slot, auraData)
 end
 
 local function SetSlotCooldown(slot, unit, auraData)
-    local durationObject = auraData.auraInstanceID and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
+    local durationObject = auraData.auraInstanceID and ( not addon.IsSecretValue(auraData.auraInstanceID) ) and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
     if durationObject and slot.cooldown.SetCooldownFromDurationObject then
         slot.cooldown:SetCooldownFromDurationObject(durationObject);
         slot.cooldown:Show();
-    elseif auraData.duration and auraData.expirationTime then
+        return;
+    end
+
+    if auraData.duration and auraData.expirationTime and ( not addon.IsSecretValue(auraData.duration) ) and ( not addon.IsSecretValue(auraData.expirationTime) ) then
         slot.cooldown:SetCooldown(auraData.expirationTime - auraData.duration, auraData.duration);
         slot.cooldown:Show();
+        return;
+    end
+
+    slot.cooldown:SetCooldown(0, 0);
+    slot.cooldown:Hide();
+end
+
+local function SetSlotIcon(slot, icon)
+    if icon then
+        local success = pcall(slot.icon.SetTexture, slot.icon, icon);
+        if success then return end
+    end
+
+    slot.icon:SetTexture(addon.ICON_ID_PVP_CURSOR);
+end
+
+local function SetSlotCount(slot, applications)
+    if applications and ( not addon.IsSecretValue(applications) ) and applications > 1 then
+        slot.count:SetText(applications);
+        slot.count:Show();
     else
-        slot.cooldown:SetCooldown(0, 0);
-        slot.cooldown:Hide();
+        slot.count:Hide();
     end
 end
 
 local function SetSlotAura(slot, unit, auraData, config)
     local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
     slot:SetSize(iconSize, iconSize);
-    slot.icon:SetTexture(auraData.icon);
+    SetSlotIcon(slot, auraData.icon);
     SetSlotTint(slot, auraData);
     SetSlotCooldown(slot, unit, auraData);
 
-    if auraData.applications and auraData.applications > 1 then
-        slot.count:SetText(auraData.applications);
-        slot.count:Show();
-    else
-        slot.count:Hide();
-    end
+    SetSlotCount(slot, auraData.applications);
 
     slot:Show();
 end
