@@ -403,6 +403,76 @@ end
 
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
+local function GetSweepyBoopIconPath(directory, iconName)
+    return addon.INTERFACE_SWEEPY .. "Art/" .. directory .. "/" .. iconName;
+end
+
+addon.CLASS_ICON_OVERRIDES = {
+    [addon.DEATHKNIGHT] = GetSweepyBoopIconPath("ClassIcons", "DEATHKNIGHT"),
+    [addon.DEMONHUNTER] = GetSweepyBoopIconPath("ClassIcons", "DEMONHUNTER"),
+    [addon.DRUID] = GetSweepyBoopIconPath("ClassIcons", "DRUID"),
+    [addon.EVOKER] = GetSweepyBoopIconPath("ClassIcons", "EVOKER"),
+    [addon.HUNTER] = GetSweepyBoopIconPath("ClassIcons", "HUNTER"),
+    [addon.MAGE] = GetSweepyBoopIconPath("ClassIcons", "MAGE"),
+    [addon.MONK] = GetSweepyBoopIconPath("ClassIcons", "MONK"),
+    [addon.PALADIN] = GetSweepyBoopIconPath("ClassIcons", "PALADIN"),
+    [addon.PRIEST] = GetSweepyBoopIconPath("ClassIcons", "PRIEST"),
+    [addon.ROGUE] = GetSweepyBoopIconPath("ClassIcons", "ROGUE"),
+    [addon.SHAMAN] = GetSweepyBoopIconPath("ClassIcons", "SHAMAN"),
+    [addon.WARLOCK] = GetSweepyBoopIconPath("ClassIcons", "WARLOCK"),
+    [addon.WARRIOR] = GetSweepyBoopIconPath("ClassIcons", "WARRIOR"),
+};
+
+addon.SPEC_ICON_OVERRIDES = {
+    [addon.SPECID.BLOOD] = GetSweepyBoopIconPath("SpecIcons", "BLOOD"),
+    [addon.SPECID.FROST_DK] = GetSweepyBoopIconPath("SpecIcons", "FROST_DK"),
+    [addon.SPECID.UNHOLY] = GetSweepyBoopIconPath("SpecIcons", "UNHOLY"),
+    [addon.SPECID.HAVOC] = GetSweepyBoopIconPath("SpecIcons", "HAVOC"),
+    [addon.SPECID.VENGEANCE] = GetSweepyBoopIconPath("SpecIcons", "VENGEANCE"),
+    [addon.SPECID.BALANCE] = GetSweepyBoopIconPath("SpecIcons", "BALANCE"),
+    [addon.SPECID.FERAL] = GetSweepyBoopIconPath("SpecIcons", "FERAL"),
+    [addon.SPECID.GUARDIAN] = GetSweepyBoopIconPath("SpecIcons", "GUARDIAN"),
+    [addon.SPECID.RESTORATION_DRUID] = GetSweepyBoopIconPath("SpecIcons", "RESTORATION_DRUID"),
+    [addon.SPECID.DEVASTATION] = GetSweepyBoopIconPath("SpecIcons", "DEVASTATION"),
+    [addon.SPECID.PRESERVATION] = GetSweepyBoopIconPath("SpecIcons", "PRESERVATION"),
+    [addon.SPECID.AUGMENTATION] = GetSweepyBoopIconPath("SpecIcons", "AUGMENTATION"),
+    [addon.SPECID.BEASTMASTERY] = GetSweepyBoopIconPath("SpecIcons", "BEASTMASTERY"),
+    [addon.SPECID.MARKSMANSHIP] = GetSweepyBoopIconPath("SpecIcons", "MARKSMANSHIP"),
+    [addon.SPECID.SURVIVAL] = GetSweepyBoopIconPath("SpecIcons", "SURVIVAL"),
+    [addon.SPECID.ARCANE] = GetSweepyBoopIconPath("SpecIcons", "ARCANE"),
+    [addon.SPECID.FIRE] = GetSweepyBoopIconPath("SpecIcons", "FIRE"),
+    [addon.SPECID.FROST_MAGE] = GetSweepyBoopIconPath("SpecIcons", "FROST_MAGE"),
+    [addon.SPECID.BREWMASTER] = GetSweepyBoopIconPath("SpecIcons", "BREWMASTER"),
+    [addon.SPECID.MISTWEAVER] = GetSweepyBoopIconPath("SpecIcons", "MISTWEAVER"),
+    [addon.SPECID.WINDWALKER] = GetSweepyBoopIconPath("SpecIcons", "WINDWALKER"),
+    [addon.SPECID.HOLY_PALADIN] = GetSweepyBoopIconPath("SpecIcons", "HOLY_PALADIN"),
+    [addon.SPECID.PROTECTION_PALADIN] = GetSweepyBoopIconPath("SpecIcons", "PROTECTION_PALADIN"),
+    [addon.SPECID.RETRIBUTION] = GetSweepyBoopIconPath("SpecIcons", "RETRIBUTION"),
+    [addon.SPECID.DISCIPLINE] = GetSweepyBoopIconPath("SpecIcons", "DISCIPLINE"),
+    [addon.SPECID.HOLY_PRIEST] = GetSweepyBoopIconPath("SpecIcons", "HOLY_PRIEST"),
+    [addon.SPECID.SHADOW] = GetSweepyBoopIconPath("SpecIcons", "SHADOW"),
+    [addon.SPECID.ASSASSINATION] = GetSweepyBoopIconPath("SpecIcons", "ASSASSINATION"),
+    [addon.SPECID.OUTLAW] = GetSweepyBoopIconPath("SpecIcons", "OUTLAW"),
+    [addon.SPECID.SUBTLETY] = GetSweepyBoopIconPath("SpecIcons", "SUBTLETY"),
+    [addon.SPECID.ELEMENTAL] = GetSweepyBoopIconPath("SpecIcons", "ELEMENTAL"),
+    [addon.SPECID.ENHANCEMENT] = GetSweepyBoopIconPath("SpecIcons", "ENHANCEMENT"),
+    [addon.SPECID.RESTORATION_SHAMAN] = GetSweepyBoopIconPath("SpecIcons", "RESTORATION_SHAMAN"),
+    [addon.SPECID.AFFLICTION] = GetSweepyBoopIconPath("SpecIcons", "AFFLICTION"),
+    [addon.SPECID.DEMONOLOGY] = GetSweepyBoopIconPath("SpecIcons", "DEMONOLOGY"),
+    [addon.SPECID.DESTRUCTION] = GetSweepyBoopIconPath("SpecIcons", "DESTRUCTION"),
+    [addon.SPECID.ARMS] = GetSweepyBoopIconPath("SpecIcons", "ARMS"),
+    [addon.SPECID.FURY] = GetSweepyBoopIconPath("SpecIcons", "FURY"),
+    [addon.SPECID.PROTECTION_WARRIOR] = GetSweepyBoopIconPath("SpecIcons", "PROTECTION_WARRIOR"),
+};
+
+addon.GetClassIconOverride = function(class)
+    return addon.CLASS_ICON_OVERRIDES[class];
+end
+
+addon.GetSpecIconOverride = function(specID)
+    return addon.SPEC_ICON_OVERRIDES[specID];
+end
+
 addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";
 addon.FLAG_CARRIER_ALLIANCE_LOGO = "interface/icons/inv_bannerpvp_02";
 

@@ -7,7 +7,7 @@ local setPointOptions = {
     [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
-local function GetConfiguredSpecIcon(specIconID, role, config)
+local function GetConfiguredSpecIcon(specIconID, specID, role, config)
     if ( not specIconID ) then return end
 
     if ( role == "HEALER" ) then
@@ -15,10 +15,10 @@ local function GetConfiguredSpecIcon(specIconID, role, config)
             if config.arenaSpecIconHealerIcon then
                 return addon.ICON_ID_HEALER_ENEMY, true;
             end
-            return specIconID;
+            return addon.GetSpecIconOverride(specID) or specIconID;
         end
     elseif config.arenaSpecIconOthers then
-        return specIconID;
+        return addon.GetSpecIconOverride(specID) or specIconID;
     end
 end
 
@@ -29,7 +29,8 @@ local function GetMainlineArenaSpecInfo(unitId)
     local specID = GetArenaOpponentSpec(arenaNumber);
     if ( not specID ) or ( specID <= 0 ) then return end
 
-    return select(4, GetSpecializationInfoByID(specID)); -- iconID, role
+    local iconID, role = select(4, GetSpecializationInfoByID(specID));
+    return iconID, specID, role;
 end
 
 local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil; check cache (for perf) and config
@@ -41,8 +42,8 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
 
     if addon.PROJECT_MAINLINE then
         if IsActiveBattlefieldArena() then
-            local specIconID, role = GetMainlineArenaSpecInfo(unitId);
-            return GetConfiguredSpecIcon(specIconID, role, config);
+            local specIconID, specID, role = GetMainlineArenaSpecInfo(unitId);
+            return GetConfiguredSpecIcon(specIconID, specID, role, config);
         end
     elseif addon.PROJECT_TBC then
         -- TBC: UnitGroupRolesAssigned doesn't work reliably for enemy arena units
@@ -59,11 +60,11 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
                         iconID = addon.ICON_ID_HEALER_ENEMY;
                         isHealer = true;
                     else
-                        iconID = specInfo.icon;
+                        iconID = addon.GetSpecIconOverride(specInfo.specID) or specInfo.icon;
                     end
                 end
             elseif config.arenaSpecIconOthers then
-                iconID = specInfo.icon;
+                iconID = addon.GetSpecIconOverride(specInfo.specID) or specInfo.icon;
             end
         end
     end
@@ -99,6 +100,7 @@ addon.UpdateSpecIcon = function (nameplate)
             end
         else
             iconFrame.icon:SetTexture(iconID);
+            iconFrame.icon:SetVertexColor(1, 1, 1);
             iconFrame.border:Show();
         end
 
