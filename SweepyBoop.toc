@@ -57,6 +57,7 @@ Misc\QueueReminder.lua
 Misc\PrecognitionTracker.lua
 Misc\PersonalDR.lua
 Misc\CombatIndicator.lua
+Misc\ClassColorUnitFrames.lua
 Misc\HideBlizzArenaFrames.lua
 Misc\AlwaysShowDruidComboPoints.lua
 Misc\HonorReminder.lua

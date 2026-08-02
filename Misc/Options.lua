@@ -288,6 +288,18 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             SweepyBoop:SetupAlwaysShowDruidComboPoints();
                         end,
                     },
+                    classColorUnitFrames = {
+                        order = 23.5,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_ID_CLASSES) .. " " .. L["Class color unit frame health bars"],
+                        desc = L["Color Player / Target / Focus health bars by class color"],
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:SetupClassColorUnitFrames();
+                        end,
+                    },
                     header4 = {
                         order = 24,
                         type = "header",

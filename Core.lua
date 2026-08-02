@@ -235,6 +235,7 @@ local defaults = {
             honorReminderOffsetX = 0,
             honorReminderOffsetY = 100,
             combatIndicator = true,
+            classColorUnitFrames = false,
             alwaysShowDruidComboPoints = true,
             fixEvokerCastBars = true,
             hideBlizzArenaFrames = true,
@@ -481,6 +482,7 @@ function SweepyBoop:OnInitialize()
     self:SetupPrecognitionTracker();
     self:SetupPersonalDR();
     self:SetupCombatIndicator();
+    self:SetupClassColorUnitFrames();
     self:SetupHealerInCrowdControl();
     self:SetupHealerIndicator();
     self:SetupArenaSurrender();
@@ -510,6 +512,7 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:SetupArenaOffensiveIcons();
         self:SetupCombatIndicator();
+        self:SetupClassColorUnitFrames();
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
         self:RefreshHonorReminder();
