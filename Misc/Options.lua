@@ -319,21 +319,6 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not ( Gladius or GladiusEx or sArena ) );
                         end
                     },
-                    arenaSurrenderEnabled = {
-                        order = 26,
-                        width = "full",
-                        type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " " .. L["Type /gg to leave arena without confirmation"],
-                        desc = L["Disabling this option requires a UI reload to take effect"],
-                        set = function (info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            if ( val == false ) then
-                                ReloadUI();
-                            end
-                        end,
-                    },
-
                     showDampenPercentage = {
                         order = 27,
                         width = "full",

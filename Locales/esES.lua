@@ -66,8 +66,6 @@ local function ApplyTranslations(locale)
     L["Always show Druid combo points"] = "Mostrar siempre los puntos de combo del druida";
     L["Arena"] = "Arena";
     L["Hide Blizzard arena frames"] = "Ocultar marcos de arena de Blizzard";
-    L["Type /gg to leave arena without confirmation"] = "Escribe /gg para salir de la arena sin confirmación";
-    L["Disabling this option requires a UI reload to take effect"] = "Desactivar esta opción requiere recargar la IU para que surta efecto";
     L["Show dampen percentage on the arena widget"] = "Mostrar porcentaje de atenuación en el widget de arena";
     L["Show minimap icon for invoking options UI"] = "Mostrar icono del minimapa para abrir la IU de opciones";
     L["Personal DR"] = "DR personal";

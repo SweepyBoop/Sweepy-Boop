@@ -239,7 +239,6 @@ local defaults = {
             alwaysShowDruidComboPoints = true,
             fixEvokerCastBars = true,
             hideBlizzArenaFrames = true,
-            arenaSurrenderEnabled = true,
             showDampenPercentage = true,
 
             rangeCheckerSize = 32,
@@ -485,7 +484,6 @@ function SweepyBoop:OnInitialize()
     self:SetupClassColorUnitFrames();
     self:SetupHealerInCrowdControl();
     self:SetupHealerIndicator();
-    self:SetupArenaSurrender();
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();

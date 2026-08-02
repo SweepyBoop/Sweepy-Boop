@@ -50,7 +50,6 @@ Nameplates\BigDebuffsPreviewWidget.lua
 Nameplates\Nameplates.lua
 Nameplates\Options.lua
 
-Misc\ArenaSurrender.lua
 Misc\DampenDisplay.lua
 Misc\HealerInCrowdControl.lua
 Misc\QueueReminder.lua
