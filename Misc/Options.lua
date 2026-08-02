@@ -288,6 +288,18 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             SweepyBoop:SetupAlwaysShowDruidComboPoints();
                         end,
                     },
+                    classColorUnitFrames = {
+                        order = 23.5,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("classicon_druid")) .. " " .. L["Class color unit frame health bars"],
+                        desc = L["Color Player / Target / Focus health bars by class color"],
+                        set = function(info, val)
+                            SweepyBoop.db.profile.misc[info[#info]] = val;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:SetupClassColorUnitFrames();
+                        end,
+                    },
                     header4 = {
                         order = 24,
                         type = "header",
@@ -307,21 +319,6 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                             return ( not ( Gladius or GladiusEx or sArena ) );
                         end
                     },
-                    arenaSurrenderEnabled = {
-                        order = 26,
-                        width = "full",
-                        type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("inv_pet_exitbattle")) .. " " .. L["Type /gg to leave arena without confirmation"],
-                        desc = L["Disabling this option requires a UI reload to take effect"],
-                        set = function (info, val)
-                            SweepyBoop.db.profile.misc[info[#info]] = val;
-                            SweepyBoop.db.profile.misc.lastModified = GetTime();
-                            if ( val == false ) then
-                                ReloadUI();
-                            end
-                        end,
-                    },
-
                     showDampenPercentage = {
                         order = 27,
                         width = "full",
