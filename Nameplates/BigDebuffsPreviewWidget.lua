@@ -25,12 +25,12 @@ local cooldownDuration = 10;
 local cooldownElapsed = 3;
 local sampleAuras = {
     left = {
-        { option = "bigDebuffsShowDefensives", spellID = defensiveSampleSpell, fallbackTexture = fallbackDefensiveTexture, color = { 0.2, 0.65, 1 } },
-        { option = "bigDebuffsShowImportantBuffs", spellID = importantSampleSpell, fallbackTexture = fallbackImportantTexture, color = { 0, 1, 0 } },
+        { option = "bigDebuffsShowDefensives", spellID = defensiveSampleSpell, fallbackTexture = fallbackDefensiveTexture, auraKind = addon.BIG_DEBUFFS_AURA_KIND.DEFENSIVE },
+        { option = "bigDebuffsShowImportantBuffs", spellID = importantSampleSpell, fallbackTexture = fallbackImportantTexture, auraKind = addon.BIG_DEBUFFS_AURA_KIND.IMPORTANT_BUFF },
     },
     right = {
-        { option = "bigDebuffsShowCrowdControl", spellID = ccSampleSpell, fallbackTexture = fallbackCcTexture, color = { 1, 0.6471, 0 } },
-        { option = "bigDebuffsShowCrowdControl", spellID = secondCcSampleSpell, fallbackTexture = fallbackSecondCcTexture, color = { 1, 0.6471, 0 } },
+        { option = "bigDebuffsShowCrowdControl", spellID = ccSampleSpell, fallbackTexture = fallbackCcTexture, auraKind = addon.BIG_DEBUFFS_AURA_KIND.CROWD_CONTROL },
+        { option = "bigDebuffsShowCrowdControl", spellID = secondCcSampleSpell, fallbackTexture = fallbackSecondCcTexture, auraKind = addon.BIG_DEBUFFS_AURA_KIND.CROWD_CONTROL },
     },
 };
 
@@ -186,16 +186,8 @@ local function ClearRail(rail)
     end
 end
 
-local function GetIconStyle(config)
-    if config.bigDebuffsIconStyle == "auraHighlight" then
-        return addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
-    end
-
-    return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
-end
-
 local function IsHighlightStyle(config)
-    return GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+    return addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
 end
 
 local function GetSlotSize(config)
@@ -237,7 +229,7 @@ end
 
 local function SetSlotStyle(slot, config)
     local useHighlightStyle = IsHighlightStyle(config);
-    local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
+    local useGlowStyle = addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
 
     slot.backdrop:SetShown(true);
     slot.debuffIcon:SetShown(not useGlowStyle);
@@ -268,11 +260,13 @@ local function SetSlotStyle(slot, config)
     slot.cooldown:SetAllPoints(slot.icon);
 end
 
-local function SetSlotTint(slot, color, config)
-    if GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
+local function SetSlotTint(slot, auraKind, config)
+    local iconStyle = addon.GetBigDebuffsIconStyle(config);
+    local color = addon.GetBigDebuffsAuraTint(auraKind, iconStyle);
+    if iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
         HideHighlightGlow(slot);
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
-    elseif IsHighlightStyle(config) then
+    elseif iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT then
         addon.HideProcGlow(slot);
         ShowHighlightGlow(slot, color, config);
     else
@@ -283,7 +277,7 @@ local function SetSlotTint(slot, color, config)
 end
 
 local function ConfigureSlotCooldown(slot, config)
-    local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
+    local useGlowStyle = addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
 
     slot.cooldown:SetDrawEdge(true);
     slot.cooldown:SetReverse(true);
@@ -328,7 +322,7 @@ local function RenderRail(rail, anchor, point, relativePoint, direction, sampleD
 
             slot.previewActive = true;
             slot.icon:SetTexture(addon.GetSpellTexture(aura.spellID) or aura.fallbackTexture);
-            SetSlotTint(slot, aura.color, config);
+            SetSlotTint(slot, aura.auraKind, config);
             RestartCooldown(slot);
             slot:SetAlpha(enabled and 1 or 0.35);
             slot:Show();

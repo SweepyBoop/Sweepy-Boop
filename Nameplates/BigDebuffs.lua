@@ -1,16 +1,6 @@
 local _, addon = ...;
 
-local AURA_KIND = {
-    CROWD_CONTROL = 1,
-    DEFENSIVE = 2,
-    IMPORTANT_BUFF = 3,
-};
-
-local KIND_TINT = {
-    [AURA_KIND.CROWD_CONTROL] = { 1, 0.6471, 0 },
-    [AURA_KIND.DEFENSIVE] = { 0.2, 0.65, 1 },
-    [AURA_KIND.IMPORTANT_BUFF] = { 0, 1, 0 },
-};
+local AURA_KIND = addon.BIG_DEBUFFS_AURA_KIND;
 
 local RAIL = {
     LEFT = {
@@ -223,16 +213,8 @@ local function EnsureSlot(rail, index)
     return slot;
 end
 
-local function GetIconStyle(config)
-    if config.bigDebuffsIconStyle == "auraHighlight" then
-        return addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
-    end
-
-    return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
-end
-
 local function IsHighlightStyle(config)
-    return GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+    return addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
 end
 
 local function GetSlotSize(config)
@@ -275,7 +257,7 @@ end
 
 local function SetSlotStyle(slot, config)
     local useHighlightStyle = IsHighlightStyle(config);
-    local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
+    local useGlowStyle = addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
 
     slot.backdrop:SetShown(true);
     slot.debuffIcon:SetShown(not useGlowStyle);
@@ -311,17 +293,13 @@ local function SetSlotStyle(slot, config)
     slot.count:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", -5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45, 5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45);
 end
 
-local function GetSlotTint(auraData)
-    local color = KIND_TINT[auraData.sweepyBoopKind] or KIND_TINT[AURA_KIND.IMPORTANT_BUFF];
-    return color;
-end
-
 local function SetSlotTint(slot, auraData, config)
-    local color = GetSlotTint(auraData);
-    if GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
+    local iconStyle = addon.GetBigDebuffsIconStyle(config);
+    local color = addon.GetBigDebuffsAuraTint(auraData.sweepyBoopKind, iconStyle);
+    if iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
         HideHighlightGlow(slot);
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
-    elseif IsHighlightStyle(config) then
+    elseif iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT then
         addon.HideProcGlow(slot);
         ShowHighlightGlow(slot, color, config);
     else
@@ -332,7 +310,7 @@ local function SetSlotTint(slot, auraData, config)
 end
 
 local function ConfigureSlotCooldown(slot, config)
-    local useGlowStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
+    local useGlowStyle = addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
 
     slot.cooldown:SetDrawBling(false);
     slot.cooldown:SetDrawSwipe(true);
