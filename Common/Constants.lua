@@ -465,6 +465,7 @@ addon.SPEC_ICON_OVERRIDES = {
     [addon.SPECID.DESTRUCTION] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shadow_RainOfFire"),
     [addon.SPECID.ARMS] = GetSweepyBoopIconPath("SpecIcons", "Ability_Warrior_SavageBlow"),
     [addon.SPECID.FURY] = GetSweepyBoopIconPath("SpecIcons", "Ability_Warrior_InnerRage"),
+    [addon.SPECID.PROTECTION_WARRIOR] = GetSweepyBoopIconPath("SpecIcons", "Ability_Warrior_DefensiveStance"),
 };
 
 addon.GetClassIconOverride = function(class)
