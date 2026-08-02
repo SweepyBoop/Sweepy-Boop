@@ -64,6 +64,8 @@ local function ApplyTranslations(locale)
     L["Show combat indicators on unit frames"] = "Mostrar indicadores de combate en marcos de unidad";
     L["Show combat indicator icons on Player / Target / Focus frames"] = "Muestra iconos de indicador de combate en los marcos de Jugador/Objetivo/Foco";
     L["Always show Druid combo points"] = "Mostrar siempre los puntos de combo del druida";
+    L["Class color unit frame health bars"] = "Class color unit frame health bars";
+    L["Color Player / Target / Focus health bars by class color"] = "Color Player / Target / Focus health bars by class color";
     L["Arena"] = "Arena";
     L["Hide Blizzard arena frames"] = "Ocultar marcos de arena de Blizzard";
     L["Show dampen percentage on the arena widget"] = "Mostrar porcentaje de atenuación en el widget de arena";
