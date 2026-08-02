@@ -2,10 +2,6 @@ local _, addon = ...;
 
 local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
 
-local function GetBigDebuffsIconStyle(config)
-    return addon.GetBigDebuffsIconStyle(config);
-end
-
 local bigDebuffsIconStyleSorting = {
     addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
     addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT,
@@ -669,7 +665,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         values = GetBigDebuffsIconStyleValues,
                         sorting = bigDebuffsIconStyleSorting,
                         get = function()
-                            return GetBigDebuffsIconStyle(SweepyBoop.db.profile.nameplatesEnemy);
+                            return addon.GetBigDebuffsIconStyle(SweepyBoop.db.profile.nameplatesEnemy);
                         end,
                         set = function(_, val)
                             SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsIconStyle = val;
