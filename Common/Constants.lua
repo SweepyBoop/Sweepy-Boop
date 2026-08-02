@@ -171,6 +171,7 @@ addon.SPECID = {
 
     HAVOC = 577,
     VENGEANCE = 581,
+    DEVOURER = 1480,
 
     BALANCE = 102,
     FERAL = 103,
@@ -298,6 +299,7 @@ addon.SPECID_TO_CLASS = {
 
     [addon.SPECID.HAVOC] = addon.DEMONHUNTER,
     [addon.SPECID.VENGEANCE] = addon.DEMONHUNTER,
+    [addon.SPECID.DEVOURER] = addon.DEMONHUNTER,
 
     [addon.SPECID.BALANCE] = addon.DRUID,
     [addon.SPECID.FERAL] = addon.DRUID,
@@ -429,6 +431,7 @@ addon.SPEC_ICON_OVERRIDES = {
     [addon.SPECID.UNHOLY] = GetSweepyBoopIconPath("SpecIcons", "Spell_Deathknight_UnholyPresence"),
     [addon.SPECID.HAVOC] = GetSweepyBoopIconPath("SpecIcons", "Ability_DemonHunter_SpecDPS"),
     [addon.SPECID.VENGEANCE] = GetSweepyBoopIconPath("SpecIcons", "Ability_DemonHunter_SpecTank"),
+    [addon.SPECID.DEVOURER] = GetSweepyBoopIconPath("SpecIcons", "Classicon_DemonHunter_Void"),
     [addon.SPECID.BALANCE] = GetSweepyBoopIconPath("SpecIcons", "Spell_Nature_StarFall"),
     [addon.SPECID.FERAL] = GetSweepyBoopIconPath("SpecIcons", "Ability_Druid_CatForm"),
     [addon.SPECID.GUARDIAN] = GetSweepyBoopIconPath("SpecIcons", "Ability_Racial_BearForm"),
