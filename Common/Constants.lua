@@ -446,13 +446,11 @@ addon.SPEC_ICON_OVERRIDES = {
     [addon.SPECID.MISTWEAVER] = GetSweepyBoopIconPath("SpecIcons", "MISTWEAVER"),
     [addon.SPECID.WINDWALKER] = GetSweepyBoopIconPath("SpecIcons", "WINDWALKER"),
     [addon.SPECID.HOLY_PALADIN] = GetSweepyBoopIconPath("SpecIcons", "HOLY_PALADIN"),
-    [addon.SPECID.PROTECTION_PALADIN] = GetSweepyBoopIconPath("SpecIcons", "PROTECTION_PALADIN"),
     [addon.SPECID.RETRIBUTION] = GetSweepyBoopIconPath("SpecIcons", "RETRIBUTION"),
     [addon.SPECID.DISCIPLINE] = GetSweepyBoopIconPath("SpecIcons", "DISCIPLINE"),
     [addon.SPECID.HOLY_PRIEST] = GetSweepyBoopIconPath("SpecIcons", "HOLY_PRIEST"),
     [addon.SPECID.SHADOW] = GetSweepyBoopIconPath("SpecIcons", "SHADOW"),
     [addon.SPECID.ASSASSINATION] = GetSweepyBoopIconPath("SpecIcons", "ASSASSINATION"),
-    [addon.SPECID.OUTLAW] = GetSweepyBoopIconPath("SpecIcons", "OUTLAW"),
     [addon.SPECID.SUBTLETY] = GetSweepyBoopIconPath("SpecIcons", "SUBTLETY"),
     [addon.SPECID.ELEMENTAL] = GetSweepyBoopIconPath("SpecIcons", "ELEMENTAL"),
     [addon.SPECID.ENHANCEMENT] = GetSweepyBoopIconPath("SpecIcons", "ENHANCEMENT"),
@@ -462,7 +460,6 @@ addon.SPEC_ICON_OVERRIDES = {
     [addon.SPECID.DESTRUCTION] = GetSweepyBoopIconPath("SpecIcons", "DESTRUCTION"),
     [addon.SPECID.ARMS] = GetSweepyBoopIconPath("SpecIcons", "ARMS"),
     [addon.SPECID.FURY] = GetSweepyBoopIconPath("SpecIcons", "FURY"),
-    [addon.SPECID.PROTECTION_WARRIOR] = GetSweepyBoopIconPath("SpecIcons", "PROTECTION_WARRIOR"),
 };
 
 addon.GetClassIconOverride = function(class)
