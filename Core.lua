@@ -5,6 +5,19 @@ addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceSerializer-3.0");
 
+function SweepyBoop:DebugSpecIcons()
+    for _, classID in ipairs(addon.CLASSORDER) do
+        local classInfo = C_CreatureInfo.GetClassInfo(classID);
+        local classFile = classInfo and classInfo.classFile or tostring(classID);
+        for specIndex = 1, 4 do
+            local _, specName, _, iconID = GetSpecializationInfoForClassID(classID, specIndex);
+            if specName and iconID then
+                print(format("%s, %s, %s", classFile, specName, iconID));
+            end
+        end
+    end
+end
+
 local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
     type = "data source",
     text = addonName,
@@ -385,28 +398,8 @@ function SweepyBoop:SetupBlizzardOptions()
         InterfaceOptions_AddCategory(interfaceOptionPanel);
     end
 
-    addon.PrintSpecIconDebugInfo = function()
-        print("SweepyBoop spec icon IDs:");
-        for _, classID in ipairs(addon.CLASSORDER) do
-            local classInfo = C_CreatureInfo.GetClassInfo(classID);
-            local classFile = classInfo and classInfo.classFile or tostring(classID);
-            for specIndex = 1, 4 do
-                local specID, specName, _, iconID, role = GetSpecializationInfoForClassID(classID, specIndex);
-                if specID and specName and iconID then
-                    print(format("%s %s %s role=%s icon=%s https://www.wowhead.com/icon=%s", specID, classFile, specName, role or "NONE", iconID, iconID));
-                end
-            end
-        end
-    end
-
     SLASH_SweepyBoop1 = "/sb";
     SlashCmdList.SweepyBoop = function(msg)
-        local command = string.lower((msg or ""):match("^%s*(.-)%s*$"));
-        if command == "specicons" then
-            addon.PrintSpecIconDebugInfo();
-            return;
-        end
-
         -- This opens the in-game options panel that is not moveable or resizable
         -- if Settings and Settings.OpenToCategory then
         --     Settings.OpenToCategory(SweepyBoop.categoryID);
