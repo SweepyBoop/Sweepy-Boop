@@ -12,6 +12,10 @@ local KIND_TINT = {
     [AURA_KIND.IMPORTANT_BUFF] = { 0, 1, 0 },
 };
 
+local HIGHLIGHT_KIND_TINT = {
+    [AURA_KIND.CROWD_CONTROL] = { 1, 0.48, 0 },
+};
+
 local RAIL = {
     LEFT = {
         frameKey = "sweepyBoopBigDebuffsLeftRail",
@@ -316,6 +320,10 @@ local function GetSlotTint(auraData)
     return color;
 end
 
+local function GetHighlightSlotTint(auraData)
+    return HIGHLIGHT_KIND_TINT[auraData.sweepyBoopKind] or GetSlotTint(auraData);
+end
+
 local function SetSlotTint(slot, auraData, config)
     local color = GetSlotTint(auraData);
     if GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
@@ -323,7 +331,7 @@ local function SetSlotTint(slot, auraData, config)
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
     elseif IsHighlightStyle(config) then
         addon.HideProcGlow(slot);
-        ShowHighlightGlow(slot, color, config);
+        ShowHighlightGlow(slot, GetHighlightSlotTint(auraData), config);
     else
         HideHighlightGlow(slot);
         addon.HideProcGlow(slot);

@@ -29,8 +29,8 @@ local sampleAuras = {
         { option = "bigDebuffsShowImportantBuffs", spellID = importantSampleSpell, fallbackTexture = fallbackImportantTexture, color = { 0, 1, 0 } },
     },
     right = {
-        { option = "bigDebuffsShowCrowdControl", spellID = ccSampleSpell, fallbackTexture = fallbackCcTexture, color = { 1, 0.6471, 0 } },
-        { option = "bigDebuffsShowCrowdControl", spellID = secondCcSampleSpell, fallbackTexture = fallbackSecondCcTexture, color = { 1, 0.6471, 0 } },
+        { option = "bigDebuffsShowCrowdControl", spellID = ccSampleSpell, fallbackTexture = fallbackCcTexture, color = { 1, 0.6471, 0 }, highlightColor = { 1, 0.48, 0 } },
+        { option = "bigDebuffsShowCrowdControl", spellID = secondCcSampleSpell, fallbackTexture = fallbackSecondCcTexture, color = { 1, 0.6471, 0 }, highlightColor = { 1, 0.48, 0 } },
     },
 };
 
@@ -268,13 +268,13 @@ local function SetSlotStyle(slot, config)
     slot.cooldown:SetAllPoints(slot.icon);
 end
 
-local function SetSlotTint(slot, color, config)
+local function SetSlotTint(slot, color, highlightColor, config)
     if GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
         HideHighlightGlow(slot);
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
     elseif IsHighlightStyle(config) then
         addon.HideProcGlow(slot);
-        ShowHighlightGlow(slot, color, config);
+        ShowHighlightGlow(slot, highlightColor or color, config);
     else
         HideHighlightGlow(slot);
         addon.HideProcGlow(slot);
@@ -328,7 +328,7 @@ local function RenderRail(rail, anchor, point, relativePoint, direction, sampleD
 
             slot.previewActive = true;
             slot.icon:SetTexture(addon.GetSpellTexture(aura.spellID) or aura.fallbackTexture);
-            SetSlotTint(slot, aura.color, config);
+            SetSlotTint(slot, aura.color, aura.highlightColor, config);
             RestartCooldown(slot);
             slot:SetAlpha(enabled and 1 or 0.35);
             slot:Show();
