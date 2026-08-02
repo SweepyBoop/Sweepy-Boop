@@ -385,8 +385,28 @@ function SweepyBoop:SetupBlizzardOptions()
         InterfaceOptions_AddCategory(interfaceOptionPanel);
     end
 
+    addon.PrintSpecIconDebugInfo = function()
+        print("SweepyBoop spec icon IDs:");
+        for _, classID in ipairs(addon.CLASSORDER) do
+            local classInfo = C_CreatureInfo.GetClassInfo(classID);
+            local classFile = classInfo and classInfo.classFile or tostring(classID);
+            for specIndex = 1, 4 do
+                local specID, specName, _, iconID, role = GetSpecializationInfoForClassID(classID, specIndex);
+                if specID and specName and iconID then
+                    print(format("%s %s %s role=%s icon=%s https://www.wowhead.com/icon=%s", specID, classFile, specName, role or "NONE", iconID, iconID));
+                end
+            end
+        end
+    end
+
     SLASH_SweepyBoop1 = "/sb";
     SlashCmdList.SweepyBoop = function(msg)
+        local command = string.lower((msg or ""):match("^%s*(.-)%s*$"));
+        if command == "specicons" then
+            addon.PrintSpecIconDebugInfo();
+            return;
+        end
+
         -- This opens the in-game options panel that is not moveable or resizable
         -- if Settings and Settings.OpenToCategory then
         --     Settings.OpenToCategory(SweepyBoop.categoryID);
