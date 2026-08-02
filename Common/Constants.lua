@@ -455,6 +455,7 @@ addon.SPEC_ICON_OVERRIDES = {
     [addon.SPECID.HOLY_PRIEST] = GetSweepyBoopIconPath("SpecIcons", "Spell_Holy_GuardianSpirit"),
     [addon.SPECID.SHADOW] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shadow_ShadowWordPain"),
     [addon.SPECID.ASSASSINATION] = GetSweepyBoopIconPath("SpecIcons", "Ability_Rogue_DeadlyBrew"),
+    [addon.SPECID.OUTLAW] = GetSweepyBoopIconPath("SpecIcons", "Ability_Rogue_Waylay"),
     [addon.SPECID.SUBTLETY] = GetSweepyBoopIconPath("SpecIcons", "Ability_Stealth"),
     [addon.SPECID.ELEMENTAL] = GetSweepyBoopIconPath("SpecIcons", "Spell_Nature_Lightning"),
     [addon.SPECID.ENHANCEMENT] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shaman_ImprovedStormstrike"),
