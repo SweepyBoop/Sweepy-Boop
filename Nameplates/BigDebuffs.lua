@@ -1,20 +1,6 @@
 local _, addon = ...;
 
-local AURA_KIND = {
-    CROWD_CONTROL = 1,
-    DEFENSIVE = 2,
-    IMPORTANT_BUFF = 3,
-};
-
-local KIND_TINT = {
-    [AURA_KIND.CROWD_CONTROL] = { 1, 0.6471, 0 },
-    [AURA_KIND.DEFENSIVE] = { 0.2, 0.65, 1 },
-    [AURA_KIND.IMPORTANT_BUFF] = { 0, 1, 0 },
-};
-
-local HIGHLIGHT_KIND_TINT = {
-    [AURA_KIND.CROWD_CONTROL] = { 1, 0.48, 0 },
-};
+local AURA_KIND = addon.BIG_DEBUFFS_AURA_KIND;
 
 local RAIL = {
     LEFT = {
@@ -228,11 +214,7 @@ local function EnsureSlot(rail, index)
 end
 
 local function GetIconStyle(config)
-    if config.bigDebuffsIconStyle == "auraHighlight" then
-        return addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
-    end
-
-    return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
+    return addon.GetBigDebuffsIconStyle(config);
 end
 
 local function IsHighlightStyle(config)
@@ -315,23 +297,15 @@ local function SetSlotStyle(slot, config)
     slot.count:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", -5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45, 5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45);
 end
 
-local function GetSlotTint(auraData)
-    local color = KIND_TINT[auraData.sweepyBoopKind] or KIND_TINT[AURA_KIND.IMPORTANT_BUFF];
-    return color;
-end
-
-local function GetHighlightSlotTint(auraData)
-    return HIGHLIGHT_KIND_TINT[auraData.sweepyBoopKind] or GetSlotTint(auraData);
-end
-
 local function SetSlotTint(slot, auraData, config)
-    local color = GetSlotTint(auraData);
-    if GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
+    local iconStyle = GetIconStyle(config);
+    local color = addon.GetBigDebuffsAuraTint(auraData.sweepyBoopKind, iconStyle);
+    if iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
         HideHighlightGlow(slot);
         addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
-    elseif IsHighlightStyle(config) then
+    elseif iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT then
         addon.HideProcGlow(slot);
-        ShowHighlightGlow(slot, GetHighlightSlotTint(auraData), config);
+        ShowHighlightGlow(slot, color, config);
     else
         HideHighlightGlow(slot);
         addon.HideProcGlow(slot);

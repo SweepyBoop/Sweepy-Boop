@@ -55,6 +55,24 @@ addon.BIG_DEBUFFS_ICON_STYLE_ID = {
     GLOW = "glow",
 };
 
+addon.BIG_DEBUFFS_AURA_KIND = {
+    CROWD_CONTROL = 1,
+    DEFENSIVE = 2,
+    IMPORTANT_BUFF = 3,
+};
+
+local BIG_DEBUFFS_AURA_TINT = {
+    [addon.BIG_DEBUFFS_AURA_KIND.CROWD_CONTROL] = { 1, 0.6471, 0 },
+    [addon.BIG_DEBUFFS_AURA_KIND.DEFENSIVE] = { 0.2, 0.65, 1 },
+    [addon.BIG_DEBUFFS_AURA_KIND.IMPORTANT_BUFF] = { 0, 1, 0 },
+};
+
+local BIG_DEBUFFS_STYLE_TINT = {
+    [addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT] = {
+        [addon.BIG_DEBUFFS_AURA_KIND.CROWD_CONTROL] = { 1, 0.48, 0 },
+    },
+};
+
 addon.BIG_DEBUFFS_DEFAULTS = {
     ENABLED = false,
     SHOW_CROWD_CONTROL = true,
@@ -78,6 +96,19 @@ addon.BIG_DEBUFFS_ICON_STYLE = {
     HIGHLIGHT_PADDING = 7,
     GLOW_COOLDOWN_EDGE_TEXTURE = "Interface\\Cooldown\\UI-HUD-ActionBar-LoC",
 };
+
+addon.GetBigDebuffsIconStyle = function(config)
+    if config.bigDebuffsIconStyle == "auraHighlight" then
+        return addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+    end
+
+    return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
+end
+
+addon.GetBigDebuffsAuraTint = function(auraKind, iconStyle)
+    local styleTints = BIG_DEBUFFS_STYLE_TINT[iconStyle];
+    return ( styleTints and styleTints[auraKind] ) or BIG_DEBUFFS_AURA_TINT[auraKind] or BIG_DEBUFFS_AURA_TINT[addon.BIG_DEBUFFS_AURA_KIND.IMPORTANT_BUFF];
+end
 
 addon.ARENA_COOLDOWN_GROW_DIRECTION = {
     RIGHT = 1,
