@@ -5,6 +5,19 @@ addon.addonTitle = C_AddOns.GetAddOnMetadata(addonName, "Title");
 
 SweepyBoop = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceSerializer-3.0");
 
+function SweepyBoop:DebugSpecIcons()
+    for _, classID in ipairs(addon.CLASSORDER) do
+        local classInfo = C_CreatureInfo.GetClassInfo(classID);
+        local classFile = classInfo and classInfo.classFile or tostring(classID);
+        for specIndex = 1, 4 do
+            local _, specName, _, iconID = GetSpecializationInfoForClassID(classID, specIndex);
+            if specName and iconID then
+                print(format("%s, %s, %s", classFile, specName, iconID));
+            end
+        end
+    end
+end
+
 local SweepyBoopLDB = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
     type = "data source",
     text = addonName,

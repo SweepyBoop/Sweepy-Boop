@@ -171,6 +171,7 @@ addon.SPECID = {
 
     HAVOC = 577,
     VENGEANCE = 581,
+    DEVOURER = 1480,
 
     BALANCE = 102,
     FERAL = 103,
@@ -298,6 +299,7 @@ addon.SPECID_TO_CLASS = {
 
     [addon.SPECID.HAVOC] = addon.DEMONHUNTER,
     [addon.SPECID.VENGEANCE] = addon.DEMONHUNTER,
+    [addon.SPECID.DEVOURER] = addon.DEMONHUNTER,
 
     [addon.SPECID.BALANCE] = addon.DRUID,
     [addon.SPECID.FERAL] = addon.DRUID,
@@ -402,6 +404,77 @@ addon.IsConflictingHealerBuffHelperAddonLoaded = function()
 end
 
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
+
+local function GetSweepyBoopIconPath(directory, iconName)
+    return addon.INTERFACE_SWEEPY .. "Art/" .. directory .. "/" .. iconName;
+end
+
+addon.CLASS_ICON_OVERRIDES = {
+    [addon.DEATHKNIGHT] = GetSweepyBoopIconPath("ClassIcons", "DEATHKNIGHT"),
+    [addon.DEMONHUNTER] = GetSweepyBoopIconPath("ClassIcons", "DEMONHUNTER"),
+    [addon.DRUID] = GetSweepyBoopIconPath("ClassIcons", "DRUID"),
+    [addon.EVOKER] = GetSweepyBoopIconPath("ClassIcons", "EVOKER"),
+    [addon.HUNTER] = GetSweepyBoopIconPath("ClassIcons", "HUNTER"),
+    [addon.MAGE] = GetSweepyBoopIconPath("ClassIcons", "MAGE"),
+    [addon.MONK] = GetSweepyBoopIconPath("ClassIcons", "MONK"),
+    [addon.PALADIN] = GetSweepyBoopIconPath("ClassIcons", "PALADIN"),
+    [addon.PRIEST] = GetSweepyBoopIconPath("ClassIcons", "PRIEST"),
+    [addon.ROGUE] = GetSweepyBoopIconPath("ClassIcons", "ROGUE"),
+    [addon.SHAMAN] = GetSweepyBoopIconPath("ClassIcons", "SHAMAN"),
+    [addon.WARLOCK] = GetSweepyBoopIconPath("ClassIcons", "WARLOCK"),
+    [addon.WARRIOR] = GetSweepyBoopIconPath("ClassIcons", "WARRIOR"),
+};
+
+addon.SPEC_ICON_OVERRIDES = {
+    [addon.SPECID.BLOOD] = GetSweepyBoopIconPath("SpecIcons", "Spell_Deathknight_BloodPresence"),
+    [addon.SPECID.FROST_DK] = GetSweepyBoopIconPath("SpecIcons", "Spell_Deathknight_FrostPresence"),
+    [addon.SPECID.UNHOLY] = GetSweepyBoopIconPath("SpecIcons", "Spell_Deathknight_UnholyPresence"),
+    [addon.SPECID.HAVOC] = GetSweepyBoopIconPath("SpecIcons", "Ability_DemonHunter_SpecDPS"),
+    [addon.SPECID.VENGEANCE] = GetSweepyBoopIconPath("SpecIcons", "Ability_DemonHunter_SpecTank"),
+    [addon.SPECID.DEVOURER] = GetSweepyBoopIconPath("SpecIcons", "Classicon_DemonHunter_Void"),
+    [addon.SPECID.BALANCE] = GetSweepyBoopIconPath("SpecIcons", "Spell_Nature_StarFall"),
+    [addon.SPECID.FERAL] = GetSweepyBoopIconPath("SpecIcons", "Ability_Druid_CatForm"),
+    [addon.SPECID.GUARDIAN] = GetSweepyBoopIconPath("SpecIcons", "Ability_Racial_BearForm"),
+    [addon.SPECID.RESTORATION_DRUID] = GetSweepyBoopIconPath("SpecIcons", "SPELL_NATURE_HEALINGTOUCH"),
+    [addon.SPECID.DEVASTATION] = GetSweepyBoopIconPath("SpecIcons", "ClassIcon_Evoker_Devastation"),
+    [addon.SPECID.PRESERVATION] = GetSweepyBoopIconPath("SpecIcons", "ClassIcon_Evoker_Preservation"),
+    [addon.SPECID.AUGMENTATION] = GetSweepyBoopIconPath("SpecIcons", "ClassIcon_Evoker_Augmentation"),
+    [addon.SPECID.BEASTMASTERY] = GetSweepyBoopIconPath("SpecIcons", "ABILITY_HUNTER_BESTIALDISCIPLINE"),
+    [addon.SPECID.MARKSMANSHIP] = GetSweepyBoopIconPath("SpecIcons", "Ability_Hunter_FocusedAim"),
+    [addon.SPECID.SURVIVAL] = GetSweepyBoopIconPath("SpecIcons", "Ability_Hunter_Camouflage"),
+    [addon.SPECID.ARCANE] = GetSweepyBoopIconPath("SpecIcons", "Spell_Holy_MagicalSentry"),
+    [addon.SPECID.FIRE] = GetSweepyBoopIconPath("SpecIcons", "Spell_Fire_FireBolt02"),
+    [addon.SPECID.FROST_MAGE] = GetSweepyBoopIconPath("SpecIcons", "Spell_Frost_FrostBolt02"),
+    [addon.SPECID.BREWMASTER] = GetSweepyBoopIconPath("SpecIcons", "Spell_Monk_Brewmaster_Spec"),
+    [addon.SPECID.MISTWEAVER] = GetSweepyBoopIconPath("SpecIcons", "Spell_Monk_MistWeaver_Spec"),
+    [addon.SPECID.WINDWALKER] = GetSweepyBoopIconPath("SpecIcons", "Spell_Monk_WindWalker_Spec"),
+    [addon.SPECID.HOLY_PALADIN] = GetSweepyBoopIconPath("SpecIcons", "Spell_Holy_HolyBolt"),
+    [addon.SPECID.PROTECTION_PALADIN] = GetSweepyBoopIconPath("SpecIcons", "Ability_Paladin_ShieldoftheTemplar"),
+    [addon.SPECID.RETRIBUTION] = GetSweepyBoopIconPath("SpecIcons", "Spell_Holy_AuraOfLight"),
+    [addon.SPECID.DISCIPLINE] = GetSweepyBoopIconPath("SpecIcons", "Spell_Holy_PowerWordShield"),
+    [addon.SPECID.HOLY_PRIEST] = GetSweepyBoopIconPath("SpecIcons", "Spell_Holy_GuardianSpirit"),
+    [addon.SPECID.SHADOW] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shadow_ShadowWordPain"),
+    [addon.SPECID.ASSASSINATION] = GetSweepyBoopIconPath("SpecIcons", "Ability_Rogue_DeadlyBrew"),
+    [addon.SPECID.OUTLAW] = GetSweepyBoopIconPath("SpecIcons", "Ability_Rogue_Waylay"),
+    [addon.SPECID.SUBTLETY] = GetSweepyBoopIconPath("SpecIcons", "Ability_Stealth"),
+    [addon.SPECID.ELEMENTAL] = GetSweepyBoopIconPath("SpecIcons", "Spell_Nature_Lightning"),
+    [addon.SPECID.ENHANCEMENT] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shaman_ImprovedStormstrike"),
+    [addon.SPECID.RESTORATION_SHAMAN] = GetSweepyBoopIconPath("SpecIcons", "Spell_Nature_MagicImmunity"),
+    [addon.SPECID.AFFLICTION] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shadow_DeathCoil"),
+    [addon.SPECID.DEMONOLOGY] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shadow_Metamorphosis"),
+    [addon.SPECID.DESTRUCTION] = GetSweepyBoopIconPath("SpecIcons", "Spell_Shadow_RainOfFire"),
+    [addon.SPECID.ARMS] = GetSweepyBoopIconPath("SpecIcons", "Ability_Warrior_SavageBlow"),
+    [addon.SPECID.FURY] = GetSweepyBoopIconPath("SpecIcons", "Ability_Warrior_InnerRage"),
+    [addon.SPECID.PROTECTION_WARRIOR] = GetSweepyBoopIconPath("SpecIcons", "Ability_Warrior_DefensiveStance"),
+};
+
+addon.GetClassIconOverride = function(class)
+    return addon.CLASS_ICON_OVERRIDES[class];
+end
+
+addon.GetSpecIconOverride = function(specID)
+    return addon.SPEC_ICON_OVERRIDES[specID];
+end
 
 addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";
 addon.FLAG_CARRIER_ALLIANCE_LOGO = "interface/icons/inv_bannerpvp_02";
