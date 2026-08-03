@@ -21,7 +21,16 @@ local function ResetHealthBar(unit)
     local healthBar = GetHealthBar(unit);
     if not healthBar then return end
 
-    healthBar:SetStatusBarDesaturated(false);
+    if healthBar.lockColor then
+        healthBar:SetStatusBarDesaturated(false);
+        healthBar:SetStatusBarColor(1, 1, 1, 1);
+    elseif UnitExists(unit) and ( not UnitIsConnected(unit) ) then
+        healthBar:SetStatusBarDesaturated(false);
+        healthBar:SetStatusBarColor(0.5, 0.5, 0.5, 1);
+    else
+        healthBar:SetStatusBarDesaturated(false);
+        healthBar:SetStatusBarColor(0, 1, 0, 1);
+    end
 end
 
 local function PaintHealthBar(unit)
