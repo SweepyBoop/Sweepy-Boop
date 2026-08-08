@@ -237,7 +237,6 @@ local defaults = {
             combatIndicator = true,
             classColorUnitFrames = true,
             alwaysShowDruidComboPoints = true,
-            fixEvokerCastBars = true,
             hideBlizzArenaFrames = true,
             showDampenPercentage = true,
 
