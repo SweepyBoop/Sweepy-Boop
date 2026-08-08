@@ -1,5 +1,5 @@
 Current Lib versions:
-- Ace3: Release-r1390
+- Ace3: Release-r1390 with selected r1400-alpha AceGUI widget files for 12.1 PTR compatibility
 - LibDBIcon: v12.0.2
 - LibDeflate: 1.0.2-release (hasn't updated since 2020)
 
@@ -12,3 +12,4 @@ Tasks:
 - [x] Bug fix: friendly class icon "Show CC" sometimes get stuck on the CC icon and never switches back to the class icon (mainline keeps Blizzard CC selection and clears the shown overlay when that aura instance is removed)
 - [x] Self stun DR that's super visible to play vs. swaps
 - [ ] Test icon for "Honor reminder" should dismiss when resetting profile
+- [ ] Update vendored Ace3 lib files once a stable 12.1-compatible release is available; currently using selected r1400-alpha files

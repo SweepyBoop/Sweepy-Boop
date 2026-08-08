@@ -139,6 +139,7 @@ local function UpdateArenaNameplateNumber(frame)
 end
 
 local function GetNameplateCastBar(frame)
+    -- TODO: Once 12.1 arrives, remove the frame.castBar fallback.
     return frame.castBar or ( frame.CastBarsContainer and frame.CastBarsContainer.castBar );
 end
 
