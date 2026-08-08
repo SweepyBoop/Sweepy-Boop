@@ -37,11 +37,12 @@ function Deploy-Addon {
 }
 
 # --- Deployment ---
-$addonDir   = Join-Path $gameDir "_retail_\Interface\Addons\SweepyBoop"
-$classicDir = Join-Path $gameDir "_classic_\Interface\Addons\SweepyBoop"
-$mopDir     = Join-Path $gameDir "_classic_ptr_\Interface\Addons\SweepyBoop"
-$tbcDir     = Join-Path $gameDir "_anniversary_\Interface\Addons\SweepyBoop"
+$addonDir   = Join-Path $gameDir "_retail_\Interface\AddOns\SweepyBoop"
+$ptrDir     = Join-Path $gameDir "_ptr_\Interface\AddOns\SweepyBoop"
+$classicDir = Join-Path $gameDir "_classic_\Interface\AddOns\SweepyBoop"
+$mopDir     = Join-Path $gameDir "_classic_ptr_\Interface\AddOns\SweepyBoop"
+$tbcDir     = Join-Path $gameDir "_anniversary_\Interface\AddOns\SweepyBoop"
 
-foreach ($dir in @($addonDir, $classicDir, $mopDir, $tbcDir)) {
+foreach ($dir in @($addonDir, $ptrDir, $classicDir, $mopDir, $tbcDir)) {
     Deploy-Addon -sourceDir $workDir -destDir $dir
 }

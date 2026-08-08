@@ -40,10 +40,11 @@ function Update-TestMode {
 $gameDir = "C:\Program Files (x86)\World of Warcraft"
 
 $addonDirs = @(
-    (Join-Path $gameDir "_retail_\Interface\Addons\SweepyBoop"),
-    (Join-Path $gameDir "_classic_\Interface\Addons\SweepyBoop"),
-    (Join-Path $gameDir "_classic_ptr_\Interface\Addons\SweepyBoop"),
-    (Join-Path $gameDir "_anniversary_\Interface\Addons\SweepyBoop")
+    (Join-Path $gameDir "_retail_\Interface\AddOns\SweepyBoop"),
+    (Join-Path $gameDir "_ptr_\Interface\AddOns\SweepyBoop"),
+    (Join-Path $gameDir "_classic_\Interface\AddOns\SweepyBoop"),
+    (Join-Path $gameDir "_classic_ptr_\Interface\AddOns\SweepyBoop"),
+    (Join-Path $gameDir "_anniversary_\Interface\AddOns\SweepyBoop")
 )
 
 foreach ($dir in $addonDirs) {

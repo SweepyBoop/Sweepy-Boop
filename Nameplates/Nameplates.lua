@@ -138,6 +138,11 @@ local function UpdateArenaNameplateNumber(frame)
     end
 end
 
+local function GetNameplateCastBar(frame)
+    -- TODO: Once 12.1 arrives, remove the frame.castBar fallback.
+    return frame.castBar or ( frame.CastBarsContainer and frame.CastBarsContainer.castBar );
+end
+
 local function UpdateUnitFrameVisibility(nameplate, frame, show)
     -- Force frame's child elements to not ignore parent alpha
     -- This is still problematic at least in Retail, sometimes both healthBar and castBar show up
@@ -161,9 +166,12 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
         end
 
         if addon.PROJECT_MAINLINE then
-            for _, region in pairs(frame.castBar) do
-                if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
-                    region:SetIgnoreParentAlpha(false);
+            local castBar = GetNameplateCastBar(frame);
+            if castBar then
+                for _, region in pairs(castBar) do
+                    if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                        region:SetIgnoreParentAlpha(false);
+                    end
                 end
             end
         end
@@ -177,7 +185,10 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
     frame:SetAlpha(alpha);
 
     if addon.PROJECT_MAINLINE then
-        frame.castBar:SetAlpha(alpha);
+        local castBar = GetNameplateCastBar(frame);
+        if castBar then
+            castBar:SetAlpha(alpha);
+        end
     end
 
     if nameplate.extended then -- NeatPlates
