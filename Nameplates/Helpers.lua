@@ -11,21 +11,7 @@ local classPinHeight = 46;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
-local friendlyIconBorderSize = 44;
-local hostileIconBorderSize = 64;
-
-local function CreateIconBorder(parent, texture, isAtlas, drawLayer, size)
-    local border = parent:CreateTexture(nil, drawLayer);
-    if isAtlas then
-        border:SetAtlas(texture);
-    else
-        border:SetTexture(texture);
-    end
-    border:SetSize(size, size);
-    border:SetPoint("CENTER", parent);
-
-    return border;
-end
+local iconBorderSize = 64;
 
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFriendly)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
@@ -47,15 +33,12 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.mask:SetAllPoints(classIconFrame.icon);
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
-    if isFriendly then
-        classIconFrame.border = CreateIconBorder(
-            classIconFrame,
-            addon.INTERFACE_SWEEPY .. "Art/ClassIconBorder",
-            false,
-            "OVERLAY",
-            friendlyIconBorderSize
-        );
+    classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
+    classIconFrame.border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/CharacterCreateRingMetalLight");
+    classIconFrame.border:SetSize(iconBorderSize, iconBorderSize);
+    classIconFrame.border:SetPoint("CENTER", classIconFrame);
 
+    if isFriendly then
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
         classIconFrame.targetHighlight:Hide();
         classIconFrame.targetHighlight:SetDesaturated(false);
@@ -102,13 +85,6 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
             self:Hide();
         end)
     else
-        classIconFrame.border = CreateIconBorder(
-            classIconFrame,
-            "charactercreate-ring-metallight",
-            true,
-            "OVERLAY",
-            hostileIconBorderSize
-        );
         classIconFrame.border:SetVertexColor(1, 0, 0); -- Red border for hostile
         classIconFrame.border:Hide(); -- Hide initially until an actual icon is set
     end
