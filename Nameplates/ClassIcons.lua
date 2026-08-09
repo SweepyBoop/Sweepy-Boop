@@ -9,6 +9,7 @@ local targetHighlightPulseMaxAlpha = 0.82;
 local targetHighlightPulseMinAlpha = 0.22;
 local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
+local metallicBorderColor = { 0.88, 0.86, 0.82 };
 local iconAndPinIconOffsetY = -1;
 local debugShowIconAndPartyMarker = false;
 
@@ -573,7 +574,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             if config.classIconClassColoredBorder and classColor then
                 iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
-                iconFrame.border:SetVertexColor(1, 1, 1);
+                iconFrame.border:SetVertexColor(unpack(metallicBorderColor));
             end
 
             local showPlayerName = config.showPlayerName and ( not config.keepHealthBar );
