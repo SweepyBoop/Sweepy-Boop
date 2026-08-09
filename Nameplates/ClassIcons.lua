@@ -9,7 +9,7 @@ local targetHighlightPulseMaxAlpha = 0.82;
 local targetHighlightPulseMinAlpha = 0.22;
 local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
-local metallicBorderColor = { 0.88, 0.86, 0.82 };
+local metallicBorderColor = { 0.62, 0.64, 0.67 };
 local iconAndPinIconOffsetY = -1;
 local debugShowIconAndPartyMarker = false;
 
