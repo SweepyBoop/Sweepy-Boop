@@ -68,15 +68,16 @@ end
 addon.UpdateNpcHighlight = function(nameplate, iconTexture, highlightKey)
     -- Parented to UnitFrame to inherit the visibility
     local highlight = EnsureNpcHighlight(nameplate);
+    if addon.PROJECT_MAINLINE then
+        -- SetTexture accepts secret aura textures; do not inspect them in Lua.
+        highlight.customIcon:SetTexture(iconTexture);
+        return;
+    end
+
     if ( not iconTexture ) then
         local npcID = addon.GetNpcIdFromUnit(nameplate.UnitFrame.unit);
         highlightKey = tostring(npcID);
         iconTexture = addon.iconTexture[highlightKey]; -- nil if no texture found
-    end
-
-    if addon.PROJECT_MAINLINE then
-        highlight.customIcon:SetTexture(iconTexture);
-        return;
     end
 
     if ( highlight.currentKey ~= highlightKey ) or ( highlight.currentTexture ~= iconTexture ) then
