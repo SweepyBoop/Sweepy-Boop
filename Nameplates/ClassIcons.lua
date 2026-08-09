@@ -1,7 +1,6 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
-local classIconBorderSize = 64;
 local classIconSize = 40;
 local targetHighlightAnimationThrottle = 0.02;
 local targetHighlightAnimationFrequency = 0.9;
@@ -125,12 +124,8 @@ local function UpdateClassIconBorderShown(frame)
         return;
     end
 
-    local shouldShow = not IsTargetHighlightVisible(frame);
     if frame.border then
-        frame.border:SetShown(shouldShow and ( not frame.usePlainBorder ));
-    end
-    if frame.plainBorder then
-        frame.plainBorder:SetShown(shouldShow and frame.usePlainBorder);
+        frame.border:SetShown(not IsTargetHighlightVisible(frame));
     end
 end
 
@@ -564,9 +559,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
         if ( not iconID ) or ( not iconCoords ) then -- nil icon ID due to "Show Healer Only" option, or classFileName is not valid
             iconFrame.icon:SetAlpha(0);
             iconFrame.border:SetAlpha(0);
-            if iconFrame.plainBorder then
-                iconFrame.plainBorder:SetAlpha(0);
-            end
             iconFrame.targetHighlight:SetAlpha(0);
             arrowFrame.icon:SetAlpha(0);
             arrowFrame.targetHighlight:SetAlpha(0);
@@ -575,30 +567,20 @@ addon.UpdateClassIcon = function(nameplate, frame)
         else
             iconFrame.icon:SetAlpha(1);
             iconFrame.border:SetAlpha(1);
-            if iconFrame.plainBorder then
-                iconFrame.plainBorder:SetAlpha(1);
-            end
             iconFrame.targetHighlight:SetAlpha(1);
 
             local classColor = RAID_CLASS_COLORS[class];
-            iconFrame.usePlainBorder = config.classIconClassColoredBorder;
             UpdateClassIconBorderShown(iconFrame);
-            iconFrame.border:SetSize(classIconBorderSize, classIconBorderSize);
 
             local iconMaskSize = classIconSize;
             iconFrame.mask:SetSize(iconMaskSize, iconMaskSize);
             if iconFrame.maskCC then
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
+            iconFrame.border:SetDesaturated(false);
             if config.classIconClassColoredBorder and classColor then
-                iconFrame.plainBorder:SetVertexColor(classColor.r, classColor.g, classColor.b);
-                iconFrame.border:SetDesaturated(false);
-                iconFrame.border:SetVertexColor(1, 1, 1);
+                iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
-                if iconFrame.plainBorder then
-                    iconFrame.plainBorder:SetVertexColor(1, 1, 1);
-                end
-                iconFrame.border:SetDesaturated(false);
                 iconFrame.border:SetVertexColor(1, 1, 1);
             end
 

@@ -129,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "在戰場中顯示持旗者圖示";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "為友方持旗者使用特殊圖示\n這會覆蓋治療者圖示";
 L["Class-colored borders"] = "職業顏色邊框";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "職業圖示邊框使用純職業顏色圓環。停用後使用金屬圓環材質。";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "使用職業顏色為圖示邊框著色。停用則顯示邊框的預設顏色。";
 L["Show target highlight"] = "顯示目標高亮";
 L["Animated highlight"] = "動畫高亮";
 L["Horizontal offset"] = "水平偏移";

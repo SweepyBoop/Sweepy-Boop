@@ -208,7 +208,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
-                desc = "Use a plain class-colored ring for class icon borders. Disable for the metal ring texture.",
+                desc = "Tint the icon border with the class color. Disable to show the default border colors.",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end

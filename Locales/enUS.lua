@@ -133,7 +133,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "Show flag carrier icons in battlegrounds";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Use special icons for friendly flag carriers\nThis overwrites the healer icon";
 L["Class-colored borders"] = "Class-colored borders";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Use a plain class-colored ring for class icon borders. Disable for the metal ring texture.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "Tint the icon border with the class color. Disable to show the default border colors.";
 L["Show target highlight"] = "Show target highlight";
 L["Animated highlight"] = "Animated highlight";
 L["Horizontal offset"] = "Horizontal offset";

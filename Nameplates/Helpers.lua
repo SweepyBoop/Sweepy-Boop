@@ -11,29 +11,18 @@ local classPinHeight = 46;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
-local metalBorderSize = 64;
-local plainBorderSize = 44;
+local friendlyIconBorderSize = 44;
+local hostileIconBorderSize = 64;
 
-local function CreateMetalIconBorder(parent)
-    local border = parent:CreateTexture(nil, "OVERLAY");
-    border:SetAtlas("charactercreate-ring-metallight");
-    border:SetSize(metalBorderSize, metalBorderSize);
+local function CreateIconBorder(parent, texture, isAtlas, drawLayer, size)
+    local border = parent:CreateTexture(nil, drawLayer);
+    if isAtlas then
+        border:SetAtlas(texture);
+    else
+        border:SetTexture(texture);
+    end
+    border:SetSize(size, size);
     border:SetPoint("CENTER", parent);
-
-    return border;
-end
-
-local function CreatePlainIconBorder(parent)
-    local border = parent:CreateTexture(nil, "BACKGROUND");
-    border:SetColorTexture(1, 1, 1, 1);
-    border:SetSize(plainBorderSize, plainBorderSize);
-    border:SetPoint("CENTER", parent);
-    border.mask = parent:CreateMaskTexture();
-    border.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-    border.mask:SetSize(plainBorderSize, plainBorderSize);
-    border.mask:SetAllPoints(border);
-    border:AddMaskTexture(border.mask);
-    border:Hide();
 
     return border;
 end
@@ -58,10 +47,15 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.mask:SetAllPoints(classIconFrame.icon);
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
-    classIconFrame.border = CreateMetalIconBorder(classIconFrame);
-    classIconFrame.plainBorder = CreatePlainIconBorder(classIconFrame);
-
     if isFriendly then
+        classIconFrame.border = CreateIconBorder(
+            classIconFrame,
+            addon.INTERFACE_SWEEPY .. "Art/ClassIconBorder",
+            false,
+            "OVERLAY",
+            friendlyIconBorderSize
+        );
+
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
         classIconFrame.targetHighlight:Hide();
         classIconFrame.targetHighlight:SetDesaturated(false);
@@ -108,6 +102,13 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
             self:Hide();
         end)
     else
+        classIconFrame.border = CreateIconBorder(
+            classIconFrame,
+            "charactercreate-ring-metallight",
+            true,
+            "OVERLAY",
+            hostileIconBorderSize
+        );
         classIconFrame.border:SetVertexColor(1, 0, 0); -- Red border for hostile
         classIconFrame.border:Hide(); -- Hide initially until an actual icon is set
     end

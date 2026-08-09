@@ -129,7 +129,7 @@ local function ApplyTranslations(locale)
     L["Show flag carrier icons in battlegrounds"] = "Portador de bandera";
     L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Usar iconos especiales para portadores de bandera aliados\nEsto sobrescribe el icono de sanador";
     L["Class-colored borders"] = "Bordes de clase";
-    L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Usa un anillo sencillo con color de clase para los bordes de iconos de clase. Desactívalo para usar la textura metálica.";
+    L["Tint the icon border with the class color. Disable to show the default border colors."] = "Tiñe el borde del icono con el color de clase. Desactívalo para mostrar los colores predeterminados del borde.";
     L["Show target highlight"] = "Mostrar resaltado del objetivo";
     L["Animated highlight"] = "Animado";
     L["Horizontal offset"] = "Desplazamiento horizontal";

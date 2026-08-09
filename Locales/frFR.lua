@@ -129,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "Afficher les porteurs de drapeau";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Utiliser des icônes spéciales pour les porteurs de drapeau alliés\nCela remplace l'icône de soigneur";
 L["Class-colored borders"] = "Bordures aux couleurs de classe";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Utiliser un anneau simple couleur classe. Désactiver pour l'anneau métallique.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "Teinte la bordure de l'icône avec la couleur de classe. Désactivez pour afficher les couleurs par défaut de la bordure.";
 L["Show target highlight"] = "Afficher la surbrillance de la cible";
 L["Animated highlight"] = "Surbrillance animée";
 L["Horizontal offset"] = "Décalage horizontal";
