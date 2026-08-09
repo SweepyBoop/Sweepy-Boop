@@ -256,7 +256,7 @@ for _, classEntry in ipairs(addon.importantNpcList) do
 end
 
 addon.GetNpcIdFromGuid = function (guid)
-    if ( not guid ) or addon.IsSecretValue(guid) then
+    if addon.IsSecretValue(guid) or ( not guid ) then
         return 0;
     end
 
@@ -266,12 +266,33 @@ end
 
 addon.GetNpcIdFromUnit = function(unitId)
     if ( not unitId ) then return 0 end
-    return addon.GetNpcIdFromGuid(UnitGUID(unitId));
+
+    local npcID = addon.GetNpcIdFromGuid(UnitGUID(unitId));
+    if ( npcID ~= 0 ) or ( not addon.PROJECT_MAINLINE ) then
+        return npcID;
+    end
+
+    local tooltipData = C_TooltipInfo.GetUnit(unitId);
+    return addon.GetNpcIdFromGuid(tooltipData and tooltipData.guid);
 end
 
-local ResolveRetailSummonHighlight;
+local ClassifyMainlineNpc;
 if addon.PROJECT_MAINLINE then
-    local function GetFirstSummonAura(unitId, filter)
+    local function ReadUnitFlag(getter, ...)
+        local value = getter(...);
+        if addon.IsSecretValue(value) then
+            return nil, false;
+        end
+
+        return value, true;
+    end
+
+    local function HasActiveSpellSignal(getter, unitId)
+        local spellName = getter(unitId);
+        return addon.IsSecretValue(spellName) or spellName ~= nil;
+    end
+
+    local function GetFirstAuraMatching(unitId, filter)
         if C_UnitAuras.GetUnitAuras then
             local auras = C_UnitAuras.GetUnitAuras(unitId, filter);
             if auras and #auras > 0 then
@@ -282,40 +303,57 @@ if addon.PROJECT_MAINLINE then
         return C_UnitAuras.GetAuraDataByIndex(unitId, 1, filter);
     end
 
-    local function ResolveSummonAuraTexture(unitId)
-        local aura = GetFirstSummonAura(unitId, "HELPFUL|IMPORTANT");
-        if aura and aura.spellId then
-            local isImportant = C_Spell.IsSpellImportant and C_Spell.IsSpellImportant(aura.spellId);
-            if addon.IsSecretValue(isImportant) or isImportant then
-                return aura.icon, true;
-            end
-        end
-
-        aura = GetFirstSummonAura(unitId, "HELPFUL");
+    local function GetPriorityAuraIcon(unitId)
+        local aura = GetFirstAuraMatching(unitId, "HELPFUL|IMPORTANT");
         if aura then
-            return aura.icon, false;
+            return aura.icon, true;
         end
     end
 
-    local RETAIL_CASTING_SUMMON_TEXTURE = addon.GetSpellTexture(192058);
-    local RETAIL_SUMMON_FALLBACK_TEXTURE = "Interface\\Icons\\Spell_shaman_totemrecall";
+    local CAPACITOR_TOTEM_ICON = addon.GetSpellTexture(192058);
+    local PSYFIEND_ICON = addon.GetSpellTexture(199824);
+    local GENERIC_SUMMON_ICON = "Interface\\Icons\\Spell_shaman_totemrecall";
 
-    ResolveRetailSummonHighlight = function(unitId)
-        local auraIcon, isImportantAura = ResolveSummonAuraTexture(unitId);
-        local castingSpell = UnitCastingInfo(unitId);
-        if addon.IsSecretValue(castingSpell) then
-            castingSpell = nil;
+    ClassifyMainlineNpc = function(unitId)
+        -- Only confirmed minions are eligible for suppression. Unknown values fail open.
+        local isMinion, minionKnown = ReadUnitFlag(UnitIsMinion, unitId);
+        if ( not minionKnown ) or ( not isMinion ) then
+            return addon.NpcOption.Show, false;
         end
 
-        if isImportantAura then
-            local icon = auraIcon or RETAIL_SUMMON_FALLBACK_TEXTURE;
-            return addon.NpcOption.Highlight, false, icon, nil;
-        elseif castingSpell then
-            local icon = RETAIL_CASTING_SUMMON_TEXTURE or auraIcon or RETAIL_SUMMON_FALLBACK_TEXTURE;
-            return addon.NpcOption.Highlight, false, icon, nil;
+        local isPrimaryPet, primaryPetKnown = ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
+        if ( not primaryPetKnown ) or isPrimaryPet then
+            return addon.NpcOption.Show, false;
         end
 
-        return addon.NpcOption.Show, false;
+        local isShamanPrimaryPet = addon.IsShamanPrimaryPet(unitId);
+        if isShamanPrimaryPet then
+            return addon.NpcOption.Show, false;
+        end
+
+        if HasActiveSpellSignal(UnitChannelInfo, unitId) then
+            return addon.NpcOption.Highlight, false, PSYFIEND_ICON or GENERIC_SUMMON_ICON, nil;
+        end
+
+        if HasActiveSpellSignal(UnitCastingInfo, unitId) then
+            return addon.NpcOption.Highlight, false, CAPACITOR_TOTEM_ICON or GENERIC_SUMMON_ICON, nil;
+        end
+
+        local auraIcon, hasPriorityAura = GetPriorityAuraIcon(unitId);
+        if hasPriorityAura then
+            return addon.NpcOption.Highlight, false, auraIcon, nil;
+        end
+
+        local isTarget, targetKnown = ReadUnitFlag(UnitIsUnit, unitId, "target");
+        if ( not targetKnown ) or isTarget then
+            return addon.NpcOption.Show, false;
+        end
+
+        if isShamanPrimaryPet == nil then
+            return addon.NpcOption.Show, false;
+        end
+
+        return addon.NpcOption.Hide, false;
     end
 end
 
@@ -331,7 +369,7 @@ addon.CheckNpcWhiteList = function (unitId)
         return isWhitelisted, isCritter;
     end
 
-    return ResolveRetailSummonHighlight(unitId);
+    return ClassifyMainlineNpc(unitId);
 end
 
 addon.FillDefaultToNpcOptions = function(profile)

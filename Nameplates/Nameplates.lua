@@ -179,8 +179,6 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
         frame.unsetIgnoreParentAlpha = true;
     end
 
-    show = show or SweepyBoop.db.profile.nameplatesFriendly.keepHealthBar;
-
     local alpha = ( show and 1 ) or 0;
     frame:SetAlpha(alpha);
 
@@ -254,7 +252,7 @@ local function UpdateWidgets(nameplate, frame)
                 addon.HidePetIcon(nameplate);
             end
 
-            UpdateUnitFrameVisibility(nameplate, frame, false); -- if class icons are enabled, all friendly units' health bars should be hidden
+            UpdateUnitFrameVisibility(nameplate, frame, configFriendly.keepHealthBar);
         else
             addon.HideClassIcon(nameplate);
             UpdateUnitFrameVisibility(nameplate, frame, true); -- Will be overriden by nameplate filter later
@@ -337,6 +335,9 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_START, unpack(retailNameplateUnits));
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_STOP, unpack(retailNameplateUnits));
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_INTERRUPTED, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_CHANNEL_START, unpack(retailNameplateUnits));
+        eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_CHANNEL_STOP, unpack(retailNameplateUnits));
+        eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
         -- Arena slot fingerprint cache: the comp only changes on a new arena / shuffle round
         eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
@@ -371,6 +372,8 @@ function SweepyBoop:SetupNameplateModules()
                 end
                 HideWidgets(nameplate);
             end
+        elseif event == addon.PLAYER_TARGET_CHANGED then
+            SweepyBoop:RefreshAllNamePlates();
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
             if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
             local nameplates = C_NamePlate.GetNamePlates();
@@ -393,7 +396,8 @@ function SweepyBoop:SetupNameplateModules()
                     UpdateWidgets(nameplate, nameplate.UnitFrame);
                 end
             end
-        elseif event == addon.UNIT_AURA or event == addon.UNIT_SPELLCAST_START or event == addon.UNIT_SPELLCAST_STOP or event == addon.UNIT_SPELLCAST_INTERRUPTED then
+        elseif event == addon.UNIT_AURA or event == addon.UNIT_SPELLCAST_START or event == addon.UNIT_SPELLCAST_STOP or event == addon.UNIT_SPELLCAST_INTERRUPTED
+            or event == addon.UNIT_SPELLCAST_CHANNEL_START or event == addon.UNIT_SPELLCAST_CHANNEL_STOP then
             if IsUnitIdInvalid(unitId) then return end
 
             local nameplate = C_NamePlate.GetNamePlateForUnit(unitId);
