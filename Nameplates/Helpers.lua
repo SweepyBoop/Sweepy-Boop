@@ -132,6 +132,7 @@ addon.CreateClassColorPinFrame = function (nameplate)
 
     classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
     classIconFrame.icon:SetDesaturated(false);
+    classIconFrame.icon:SetTexture(addon.INTERFACE_SWEEPY .. "Art/PinMarker");
     classIconFrame.icon:SetAllPoints(classIconFrame);
     classIconFrame.icon:SetTexCoord(0, 1, 0, 1);
 

@@ -16,14 +16,6 @@ local function ShouldShowIconAndPartyMarker(unit)
     return debugShowIconAndPartyMarker or ( ( UnitInBattleground("player") ~= nil ) and UnitInParty(unit) );
 end
 
-local function GetClassPinTexture(style)
-    if style == addon.CLASS_ICON_STYLE.ICON_AND_PIN then
-        return addon.INTERFACE_SWEEPY .. "Art/PinMarkerCut";
-    end
-
-    return addon.INTERFACE_SWEEPY .. "Art/PinMarker";
-end
-
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
     ["controlled_stun"] = 100, -- TBC: same as stun (e.g., Kidney Shot, Cheap Shot)
@@ -616,10 +608,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
             end
 
-            local pinTexture = classColor and GetClassPinTexture(config.classIconStyle);
-            pinFrame.icon:SetAlpha(pinTexture and 1 or 0);
-            pinFrame.targetHighlight:SetAlpha(pinTexture and 1 or 0);
-            pinFrame.icon:SetTexture(pinTexture);
+            pinFrame.icon:SetAlpha(classColor and 1 or 0);
+            pinFrame.targetHighlight:SetAlpha(classColor and 1 or 0);
             if classColor then
                 pinFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
