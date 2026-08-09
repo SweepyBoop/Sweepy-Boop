@@ -6,8 +6,8 @@ local iconSize = 40;
 -- Original Sanctum arrow atlas size is 48 * 67, scale it up a little.
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
-local classPinWidth = 44;
-local classPinHeight = 51;
+local classPinWidth = 40;
+local classPinHeight = 46;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
