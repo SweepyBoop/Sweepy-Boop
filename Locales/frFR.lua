@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Activez \"Serviteurs\" dans Interface - Barres d'info pour les icônes de familiers";
 L["WoW class icons"] = "Icônes de classe WoW";
 L["Class color arrows"] = "Flèches aux couleurs de classe";
+L["Class color pins"] = "Épingles aux couleurs de classe";
 L["Icon + party arrow"] = "Icône + flèche de groupe";
+L["Icon + party pin"] = "Icône + épingle de groupe";
 L["Icon style"] = "Style d'icône";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Flèches de groupe colorées seulement en PvP";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Les flèches et épingles de groupe aux couleurs de classe ne s'affichent que sur les membres du groupe dans les instances JcJ";
 L["Visibility"] = "Visibilité";
 L["Hide in World"] = "Masquer en extérieur";
 L["Hide in Battlegrounds"] = "Masquer dans les champs de bataille";
@@ -127,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "Afficher les porteurs de drapeau";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Utiliser des icônes spéciales pour les porteurs de drapeau alliés\nCela remplace l'icône de soigneur";
 L["Class-colored borders"] = "Bordures aux couleurs de classe";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Utiliser un anneau simple couleur classe. Désactiver pour l'anneau métallique.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "Teinte la bordure de l'icône avec la couleur de classe. Désactivez pour afficher les couleurs par défaut de la bordure.";
 L["Show target highlight"] = "Afficher la surbrillance de la cible";
 L["Animated highlight"] = "Surbrillance animée";
 L["Horizontal offset"] = "Décalage horizontal";

@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "请在界面 - 姓名板中启用“仆从”，以显示宠物图标";
 L["WoW class icons"] = "WoW 职业图标";
 L["Class color arrows"] = "职业颜色箭头";
+L["Class color pins"] = "职业颜色标记";
 L["Icon + party arrow"] = "图标 + 队伍箭头";
+L["Icon + party pin"] = "图标 + 队伍标记";
 L["Icon style"] = "图标样式";
-L["Class-colored party arrows only show on party members in PvP instances"] = "职业颜色队伍箭头只会在 PvP 副本中的队伍成员上显示";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "职业颜色队伍箭头和标记只会在 PvP 副本中的队伍成员上显示";
 L["Visibility"] = "可见性";
 L["Hide in World"] = "在野外隐藏";
 L["Hide in Battlegrounds"] = "在战场中隐藏";
@@ -127,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "在战场中显示持旗者图标";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "为友方持旗者使用特殊图标\n这会覆盖治疗者图标";
 L["Class-colored borders"] = "职业颜色边框";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "职业图标边框使用纯职业颜色圆环。停用后使用金属圆环材质。";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "使用职业颜色为图标边框着色。禁用则显示边框的默认颜色。";
 L["Show target highlight"] = "显示目标高亮";
 L["Animated highlight"] = "动画高亮";
 L["Horizontal offset"] = "水平偏移";

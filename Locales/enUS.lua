@@ -117,9 +117,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Enable \"Minions\" in Interface - Nameplates for pet icons";
 L["WoW class icons"] = "WoW class icons";
 L["Class color arrows"] = "Class color arrows";
+L["Class color pins"] = "Class color pins";
 L["Icon + party arrow"] = "Icon + party arrow";
+L["Icon + party pin"] = "Icon + party pin";
 L["Icon style"] = "Icon style";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Class-colored party arrows only show on party members in PvP instances";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Class-colored party arrows and pins only show on party members in PvP instances";
 L["Visibility"] = "Visibility";
 L["Hide in World"] = "Hide in World";
 L["Hide in Battlegrounds"] = "Hide in Battlegrounds";
@@ -131,7 +133,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "Show flag carrier icons in battlegrounds";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Use special icons for friendly flag carriers\nThis overwrites the healer icon";
 L["Class-colored borders"] = "Class-colored borders";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Use a plain class-colored ring for class icon borders. Disable for the metal ring texture.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "Tint the icon border with the class color. Disable to show the default border colors.";
 L["Show target highlight"] = "Show target highlight";
 L["Animated highlight"] = "Animated highlight";
 L["Horizontal offset"] = "Horizontal offset";

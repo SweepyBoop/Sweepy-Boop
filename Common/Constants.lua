@@ -511,7 +511,10 @@ addon.CLASS_ICON_STYLE = {
     ICON = 0,
     ARROW = 1,
     ICON_AND_ARROW = 2,
+    PIN = 3,
+    ICON_AND_PIN = 4,
 };
+
 
 addon.GetSpellTexture = function(spellId)
     local _, originalIconID = C_Spell.GetSpellTexture(spellId);

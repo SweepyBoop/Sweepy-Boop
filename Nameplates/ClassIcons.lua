@@ -1,7 +1,6 @@
 local _, addon = ...;
 
 local specialIconScaleFactor = 1.25;
-local classIconBorderSize = 64;
 local classIconSize = 40;
 local targetHighlightAnimationThrottle = 0.02;
 local targetHighlightAnimationFrequency = 0.9;
@@ -10,6 +9,12 @@ local targetHighlightPulseMaxAlpha = 0.82;
 local targetHighlightPulseMinAlpha = 0.22;
 local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
+local iconAndPinIconOffsetY = -1;
+local debugShowIconAndPartyMarker = false;
+
+local function ShouldShowIconAndPartyMarker(unit)
+    return debugShowIconAndPartyMarker or ( ( UnitInBattleground("player") ~= nil ) and UnitInParty(unit) );
+end
 
 local crowdControlPriority = { -- sort by remaining time, then priority
     ["stun"] = 100,
@@ -111,12 +116,8 @@ local function UpdateClassIconBorderShown(frame)
         return;
     end
 
-    local shouldShow = not IsTargetHighlightVisible(frame);
     if frame.border then
-        frame.border:SetShown(shouldShow and ( not frame.usePlainBorder ));
-    end
-    if frame.plainBorder then
-        frame.plainBorder:SetShown(shouldShow and frame.usePlainBorder);
+        frame.border:SetShown(not IsTargetHighlightVisible(frame));
     end
 end
 
@@ -187,6 +188,11 @@ local function EnsureClassIcon(nameplate)
     if ( not nameplate.classIconContainer.FriendlyClassArrow ) then
         nameplate.classIconContainer.FriendlyClassArrow = addon.CreateClassColorArrowFrame(nameplate);
         nameplate.classIconContainer.FriendlyClassArrow:Hide();
+    end
+
+    if ( not nameplate.classIconContainer.FriendlyClassPin ) then
+        nameplate.classIconContainer.FriendlyClassPin = addon.CreateClassColorPinFrame(nameplate);
+        nameplate.classIconContainer.FriendlyClassPin:Hide();
     end
 
     if ( not nameplate.classIconContainer.NameFrame ) then
@@ -494,10 +500,18 @@ if addon.internal then
     end
 end
 
+if addon.internal then
+    function SweepyBoop:DebugIconAndPartyMarker(shouldShow)
+        debugShowIconAndPartyMarker = ( shouldShow ~= false );
+        SweepyBoop:RefreshAllNamePlates();
+        print("SweepyBoop: icon + party marker debug preview " .. ( debugShowIconAndPartyMarker and "enabled" or "disabled" ));
+    end
+end
+
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
-    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassArrow ) then return end
+    if ( not classIconContainer.FriendlyClassIcon ) or ( not classIconContainer.FriendlyClassArrow ) or ( not classIconContainer.FriendlyClassPin ) then return end
 
     -- Full update if class, PvPClassification, roleAssigned or configurations have changed
     -- (healer icons work between solo shuffle rounds because UnitGroupRolesAssigned works on opponent healer as well)
@@ -520,52 +534,45 @@ addon.UpdateClassIcon = function(nameplate, frame)
         roleAssigned = specInfo.role;
     end
     local config = SweepyBoop.db.profile.nameplatesFriendly;
+    local showPartyPin = ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_PIN ) and ShouldShowIconAndPartyMarker(frame.unit);
     if ( classIconContainer.class ~= class )
         or ( classIconContainer.pvpClassification ~= pvpClassification )
         or ( classIconContainer.specIconID ~= specIconID )
         or ( classIconContainer.roleAssigned ~= roleAssigned )
+        or ( classIconContainer.showPartyPin ~= showPartyPin )
+        or ( classIconContainer.debugShowIconAndPartyMarker ~= debugShowIconAndPartyMarker )
         or ( classIconContainer.lastModified ~= config.lastModified ) then
         local iconID, iconCoords, iconScale, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
         local nameFrame = classIconContainer.NameFrame;
         local iconFrame = classIconContainer.FriendlyClassIcon;
         local arrowFrame = classIconContainer.FriendlyClassArrow;
+        local pinFrame = classIconContainer.FriendlyClassPin;
 
         if ( not iconID ) or ( not iconCoords ) then -- nil icon ID due to "Show Healer Only" option, or classFileName is not valid
             iconFrame.icon:SetAlpha(0);
             iconFrame.border:SetAlpha(0);
-            if iconFrame.plainBorder then
-                iconFrame.plainBorder:SetAlpha(0);
-            end
             iconFrame.targetHighlight:SetAlpha(0);
             arrowFrame.icon:SetAlpha(0);
             arrowFrame.targetHighlight:SetAlpha(0);
+            pinFrame.icon:SetAlpha(0);
+            pinFrame.targetHighlight:SetAlpha(0);
         else
             iconFrame.icon:SetAlpha(1);
             iconFrame.border:SetAlpha(1);
-            if iconFrame.plainBorder then
-                iconFrame.plainBorder:SetAlpha(1);
-            end
             iconFrame.targetHighlight:SetAlpha(1);
 
             local classColor = RAID_CLASS_COLORS[class];
-            iconFrame.usePlainBorder = config.classIconClassColoredBorder;
             UpdateClassIconBorderShown(iconFrame);
-            iconFrame.border:SetSize(classIconBorderSize, classIconBorderSize);
 
             local iconMaskSize = classIconSize;
             iconFrame.mask:SetSize(iconMaskSize, iconMaskSize);
             if iconFrame.maskCC then
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
+            iconFrame.border:SetDesaturated(false);
             if config.classIconClassColoredBorder and classColor then
-                iconFrame.plainBorder:SetVertexColor(classColor.r, classColor.g, classColor.b);
-                iconFrame.border:SetDesaturated(false);
-                iconFrame.border:SetVertexColor(1, 1, 1);
+                iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
-                if iconFrame.plainBorder then
-                    iconFrame.plainBorder:SetVertexColor(1, 1, 1);
-                end
-                iconFrame.border:SetDesaturated(false);
                 iconFrame.border:SetVertexColor(1, 1, 1);
             end
 
@@ -579,6 +586,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.icon:SetTexture(iconID);
             iconFrame.icon:SetTexCoord(unpack(iconCoords));
             iconFrame:SetScale(iconScale);
+            iconFrame:SetFrameLevel(2);
             iconFrame:ClearAllPoints();
             if showPlayerName then
                 iconFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
@@ -590,6 +598,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
             arrowFrame:SetScale(iconScale);
+            arrowFrame:SetFrameLevel(3);
             arrowFrame:ClearAllPoints();
             if ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) then
                 arrowFrame:SetPoint("BOTTOM", iconFrame, "TOP", 0, -2); -- Get the arrow closer to the icon
@@ -597,6 +606,26 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 arrowFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
             else
                 arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
+            end
+
+            pinFrame.icon:SetAlpha(classColor and 1 or 0);
+            pinFrame.targetHighlight:SetAlpha(classColor and 1 or 0);
+            if classColor then
+                pinFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            else
+                pinFrame.icon:SetVertexColor(1, 1, 1);
+            end
+            pinFrame:SetScale(iconScale);
+            pinFrame:SetFrameLevel(1);
+            pinFrame:ClearAllPoints();
+            if showPlayerName then
+                pinFrame:SetPoint("BOTTOM", classIconContainer.NameFrame, "TOP");
+            else
+                pinFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
+            end
+            if showPartyPin then
+                iconFrame:ClearAllPoints();
+                iconFrame:SetPoint("CENTER", pinFrame, "TOP", 0, iconAndPinIconOffsetY);
             end
         end
 
@@ -610,6 +639,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
         classIconContainer.pvpClassification = pvpClassification;
         classIconContainer.specIconID = specIconID;
         classIconContainer.roleAssigned = roleAssigned;
+        classIconContainer.showPartyPin = showPartyPin;
+        classIconContainer.debugShowIconAndPartyMarker = debugShowIconAndPartyMarker;
         classIconContainer.lastModified = config.lastModified;
     end
 
@@ -625,18 +656,27 @@ addon.ShowClassIcon = function (nameplate, frame)
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     classIconContainer.NameFrame:SetShown(config.showPlayerName and ( not config.keepHealthBar ) );
     local style = config.classIconStyle;
+    local shouldShowPartyMarker = ShouldShowIconAndPartyMarker(frame.unit);
     if classIconContainer.FriendlyClassIcon then
-        classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW or classIconContainer.isSpecialIcon);
+        classIconContainer.FriendlyClassIcon:SetShown(style == addon.CLASS_ICON_STYLE.ICON or style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW or style == addon.CLASS_ICON_STYLE.ICON_AND_PIN or classIconContainer.isSpecialIcon);
     end
     if classIconContainer.FriendlyClassArrow then
         local shouldShow = false;
         if style == addon.CLASS_ICON_STYLE.ARROW then
             shouldShow = ( not classIconContainer.isSpecialIcon );
         elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW then
-            shouldShow = ( UnitInBattleground("player") ~= nil );
-            --shouldShow = true; -- For local testing, comment out before landing in production!
+            shouldShow = shouldShowPartyMarker;
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
+    end
+    if classIconContainer.FriendlyClassPin then
+        local shouldShow = false;
+        if style == addon.CLASS_ICON_STYLE.PIN then
+            shouldShow = ( not classIconContainer.isSpecialIcon );
+        elseif style == addon.CLASS_ICON_STYLE.ICON_AND_PIN then
+            shouldShow = classIconContainer.showPartyPin;
+        end
+        classIconContainer.FriendlyClassPin:SetShown(shouldShow);
     end
 
     addon.UpdateClassIconTargetHighlight(nameplate, frame);
@@ -654,6 +694,9 @@ addon.HideClassIcon = function(nameplate)
     end
     if classIconContainer.FriendlyClassArrow then
         classIconContainer.FriendlyClassArrow:Hide();
+    end
+    if classIconContainer.FriendlyClassPin then
+        classIconContainer.FriendlyClassPin:Hide();
     end
     if classIconContainer.NameFrame then
         classIconContainer.NameFrame:Hide();

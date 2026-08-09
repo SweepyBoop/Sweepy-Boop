@@ -6,35 +6,12 @@ local iconSize = 40;
 -- Original Sanctum arrow atlas size is 48 * 67, scale it up a little.
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
+local classPinWidth = 40;
+local classPinHeight = 46;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
-local metalBorderSize = 64;
-local plainBorderSize = 44;
-
-local function CreateMetalIconBorder(parent)
-    local border = parent:CreateTexture(nil, "OVERLAY");
-    border:SetAtlas("charactercreate-ring-metallight");
-    border:SetSize(metalBorderSize, metalBorderSize);
-    border:SetPoint("CENTER", parent);
-
-    return border;
-end
-
-local function CreatePlainIconBorder(parent)
-    local border = parent:CreateTexture(nil, "BACKGROUND");
-    border:SetColorTexture(1, 1, 1, 1);
-    border:SetSize(plainBorderSize, plainBorderSize);
-    border:SetPoint("CENTER", parent);
-    border.mask = parent:CreateMaskTexture();
-    border.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-    border.mask:SetSize(plainBorderSize, plainBorderSize);
-    border.mask:SetAllPoints(border);
-    border:AddMaskTexture(border.mask);
-    border:Hide();
-
-    return border;
-end
+local iconBorderSize = 64;
 
 addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFriendly)
     local classIconFrame = CreateFrame("Frame", nil, nameplate);
@@ -56,8 +33,10 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.mask:SetAllPoints(classIconFrame.icon);
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
-    classIconFrame.border = CreateMetalIconBorder(classIconFrame);
-    classIconFrame.plainBorder = CreatePlainIconBorder(classIconFrame);
+    classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
+    classIconFrame.border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/ClassIconBorder");
+    classIconFrame.border:SetSize(iconBorderSize, iconBorderSize);
+    classIconFrame.border:SetPoint("CENTER", classIconFrame);
 
     if isFriendly then
         classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
@@ -137,6 +116,32 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight:SetDesaturated(false);
     classIconFrame.targetHighlight:SetSize(arrowWidth, arrowWidth);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -5);
+    classIconFrame.targetHighlight:Hide();
+
+    return classIconFrame;
+end
+
+addon.CreateClassColorPinFrame = function (nameplate)
+    local classIconFrame = CreateFrame("Frame", nil, nameplate);
+    classIconFrame:SetMouseClickEnabled(false);
+    classIconFrame:SetAlpha(1);
+    classIconFrame:SetIgnoreParentAlpha(true);
+    classIconFrame:SetSize(classPinWidth, classPinHeight);
+    classIconFrame:SetFrameStrata("HIGH");
+    classIconFrame:SetPoint("CENTER", nameplate, "CENTER");
+
+    classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
+    classIconFrame.icon:SetDesaturated(false);
+    classIconFrame.icon:SetTexture(addon.INTERFACE_SWEEPY .. "Art/PinMarker");
+    classIconFrame.icon:SetAllPoints(classIconFrame);
+    classIconFrame.icon:SetTexCoord(0, 1, 0, 1);
+
+    classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
+    classIconFrame.targetHighlight:SetAtlas("communities-guildbanner-border");
+    classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
+    classIconFrame.targetHighlight:SetDesaturated(false);
+    classIconFrame.targetHighlight:SetSize(classPinWidth, classPinWidth);
+    classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -3);
     classIconFrame.targetHighlight:Hide();
 
     return classIconFrame;

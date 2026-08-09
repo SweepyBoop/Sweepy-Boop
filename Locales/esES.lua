@@ -113,9 +113,11 @@ local function ApplyTranslations(locale)
     L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Activa esbirros";
     L["WoW class icons"] = "Iconos de clase de WoW";
     L["Class color arrows"] = "Flechas con color de clase";
+    L["Class color pins"] = "Pines con color de clase";
     L["Icon + party arrow"] = "Icono + flecha de grupo";
+    L["Icon + party pin"] = "Icono + pin de grupo";
     L["Icon style"] = "Estilo de icono";
-    L["Class-colored party arrows only show on party members in PvP instances"] = "Flechas de grupo en PvP";
+    L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Las flechas y los pines de grupo con color de clase solo se muestran en miembros del grupo en instancias JcJ";
     L["Visibility"] = "Visibilidad";
     L["Hide in World"] = "Ocultar en el mundo";
     L["Hide in Battlegrounds"] = "Ocultar en campos de batalla";
@@ -127,7 +129,7 @@ local function ApplyTranslations(locale)
     L["Show flag carrier icons in battlegrounds"] = "Portador de bandera";
     L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Usar iconos especiales para portadores de bandera aliados\nEsto sobrescribe el icono de sanador";
     L["Class-colored borders"] = "Bordes de clase";
-    L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Usa un anillo sencillo con color de clase para los bordes de iconos de clase. Desactívalo para usar la textura metálica.";
+    L["Tint the icon border with the class color. Disable to show the default border colors."] = "Tiñe el borde del icono con el color de clase. Desactívalo para mostrar los colores predeterminados del borde.";
     L["Show target highlight"] = "Mostrar resaltado del objetivo";
     L["Animated highlight"] = "Animado";
     L["Horizontal offset"] = "Desplazamiento horizontal";

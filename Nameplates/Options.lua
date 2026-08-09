@@ -8,6 +8,14 @@ local bigDebuffsIconStyleSorting = {
     addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW,
 };
 
+local classIconStyleSorting = {
+    addon.CLASS_ICON_STYLE.ICON,
+    addon.CLASS_ICON_STYLE.ARROW,
+    addon.CLASS_ICON_STYLE.PIN,
+    addon.CLASS_ICON_STYLE.ICON_AND_ARROW,
+    addon.CLASS_ICON_STYLE.ICON_AND_PIN,
+};
+
 local function GetBigDebuffsIconStyleValues()
     return {
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
@@ -46,8 +54,9 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons in PvP instances",
                 desc = "Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r",
                 hidden = function()
+                    local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
                     return ( not addon.PROJECT_MAINLINE ) or
-                        ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle == addon.CLASS_ICON_STYLE.ARROW );
+                        ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( style == addon.CLASS_ICON_STYLE.ARROW ) or ( style == addon.CLASS_ICON_STYLE.PIN );
                 end
             },
 
@@ -89,20 +98,26 @@ addon.GetFriendlyNameplateOptions = function(order)
                 values = {
                     [addon.CLASS_ICON_STYLE.ICON] = "WoW class icons",
                     [addon.CLASS_ICON_STYLE.ARROW] = "Class color arrows",
+                    [addon.CLASS_ICON_STYLE.PIN] = "Class color pins",
                     [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] = "Icon + party arrow",
+                    [addon.CLASS_ICON_STYLE.ICON_AND_PIN] = "Icon + party pin",
                 },
+                sorting = classIconStyleSorting,
                 name = "Icon style",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-            partyArrowDesc = {
+
+            partyMarkerDesc = {
                 order = 7,
                 type = "description",
-                name = addon.EXCLAMATION .. " Class-colored party arrows only show on party members in PvP instances",
+                name = addon.EXCLAMATION .. " Class-colored party arrows and pins only show on party members in PvP instances",
                 hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE )
-                        or ( SweepyBoop.db.profile.nameplatesFriendly.classIconStyle ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW );
+                    local config = SweepyBoop.db.profile.nameplatesFriendly;
+                    local style = config.classIconStyle;
+                    return ( not config.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE )
+                        or ( ( style ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) and ( style ~= addon.CLASS_ICON_STYLE.ICON_AND_PIN ) );
                 end
             },
 
@@ -193,7 +208,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
-                desc = "Use a plain class-colored ring for class icon borders. Disable for the metal ring texture.",
+                desc = "Tint the icon border with the class color. Disable to show the default border colors.",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
@@ -357,7 +372,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 hidden = function()
                     local config = SweepyBoop.db.profile.nameplatesFriendly;
                     if ( not config.classIconsEnabled ) then return true end
-                    if ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ARROW ) then return false end
+                    if ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ARROW ) and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.PIN ) then return false end
                     if ( ( not addon.PROJECT_TBC ) and config.useHealerIcon ) then return false end
                     if ( addon.PROJECT_MAINLINE and config.useFlagCarrierIcon ) then return false end
                     return true;

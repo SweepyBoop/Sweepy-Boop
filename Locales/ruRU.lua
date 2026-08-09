@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Включите \"Прислужники\" в Интерфейс - Индикаторы, чтобы видеть значки питомцев";
 L["WoW class icons"] = "Значки классов WoW";
 L["Class color arrows"] = "Стрелки цвета класса";
+L["Class color pins"] = "Метки цвета класса";
 L["Icon + party arrow"] = "Значок + стрелка группы";
+L["Icon + party pin"] = "Значок + метка группы";
 L["Icon style"] = "Стиль значка";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Стрелки группы цвета класса показываются только на участниках группы в PvP-зонах";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Стрелки и метки группы цвета класса показываются только на участниках группы в PvP-зонах";
 L["Visibility"] = "Видимость";
 L["Hide in World"] = "Скрывать в открытом мире";
 L["Hide in Battlegrounds"] = "Скрывать на полях боя";
@@ -127,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "Показывать значки носителей флага на полях боя";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Использовать особые значки для союзных носителей флага\nЭто заменяет значок целителя";
 L["Class-colored borders"] = "Рамки цвета класса";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Использовать простое кольцо цвета класса для рамок значков классов. Отключите для металлической текстуры кольца.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "Окрашивает рамку значка в цвет класса. Отключите, чтобы показать стандартные цвета рамки.";
 L["Show target highlight"] = "Показывать подсветку цели";
 L["Animated highlight"] = "Анимированная подсветка";
 L["Horizontal offset"] = "Горизонтальное смещение";

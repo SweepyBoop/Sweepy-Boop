@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Aktiviere \"Diener\" unter Interface - Namensplaketten für Begleitersymbole";
 L["WoW class icons"] = "WoW-Klassensymbole";
 L["Class color arrows"] = "Pfeile in Klassenfarbe";
+L["Class color pins"] = "Pins in Klassenfarbe";
 L["Icon + party arrow"] = "Symbol + Gruppenpfeil";
+L["Icon + party pin"] = "Symbol + Gruppenpin";
 L["Icon style"] = "Symbolstil";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Gruppenpfeile in Klassenfarbe werden nur auf Gruppenmitgliedern in PvP-Instanzen angezeigt";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Gruppenpfeile und -pins in Klassenfarbe werden nur auf Gruppenmitgliedern in PvP-Instanzen angezeigt";
 L["Visibility"] = "Sichtbarkeit";
 L["Hide in World"] = "In der Welt ausblenden";
 L["Hide in Battlegrounds"] = "In Schlachtfeldern ausblenden";
@@ -127,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "Flaggenträger-Symbole in Schlachtfeldern anzeigen";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Sondersymbole für freundliche Flaggenträger verwenden\nDies überschreibt das Heilersymbol";
 L["Class-colored borders"] = "Rahmen in Klassenfarbe";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Verwendet einen schlichten Ring in Klassenfarbe als Rahmen für Klassensymbole. Deaktivieren, um die Metallring-Textur zu verwenden.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "Färbt den Symbolrahmen in der Klassenfarbe. Deaktivieren, um die Standardfarben des Rahmens anzuzeigen.";
 L["Show target highlight"] = "Zielhervorhebung anzeigen";
 L["Animated highlight"] = "Animierte Hervorhebung";
 L["Horizontal offset"] = "Horizontaler Versatz";

@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "소환수 아이콘을 표시하려면 인터페이스 - 이름표에서 \"하수인\"을 활성화하세요";
 L["WoW class icons"] = "WoW 직업 아이콘";
 L["Class color arrows"] = "직업 색상 화살표";
+L["Class color pins"] = "직업 색상 핀";
 L["Icon + party arrow"] = "아이콘 + 파티 화살표";
+L["Icon + party pin"] = "아이콘 + 파티 핀";
 L["Icon style"] = "아이콘 스타일";
-L["Class-colored party arrows only show on party members in PvP instances"] = "직업 색상 파티 화살표는 PvP 인스턴스의 파티원에게만 표시됩니다";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "직업 색상 파티 화살표와 핀은 PvP 인스턴스의 파티원에게만 표시됩니다";
 L["Visibility"] = "표시 여부";
 L["Hide in World"] = "필드에서 숨기기";
 L["Hide in Battlegrounds"] = "전장에서 숨기기";
@@ -127,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "전장에서 깃발 운반자 아이콘 표시";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "아군 깃발 운반자에게 특수 아이콘 사용\n힐러 아이콘을 덮어씁니다";
 L["Class-colored borders"] = "직업 색상 테두리";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "직업 아이콘 테두리에 단순한 직업 색상 링을 사용합니다. 금속 링 텍스처를 사용하려면 비활성화하세요.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "아이콘 테두리를 직업 색상으로 물들입니다. 기본 테두리 색상을 표시하려면 비활성화하세요.";
 L["Show target highlight"] = "대상 강조 표시";
 L["Animated highlight"] = "애니메이션 강조";
 L["Horizontal offset"] = "수평 오프셋";

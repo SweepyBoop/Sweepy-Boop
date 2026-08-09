@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Abilita \"Servitori\" in Interfaccia - Barre dei nomi per le icone dei famigli";
 L["WoW class icons"] = "Icone classe WoW";
 L["Class color arrows"] = "Frecce con colore di classe";
+L["Class color pins"] = "Pin con colore di classe";
 L["Icon + party arrow"] = "Icona + freccia gruppo";
+L["Icon + party pin"] = "Icona + pin gruppo";
 L["Icon style"] = "Stile icona";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Le frecce del gruppo con colore di classe appaiono solo sui membri del gruppo nelle istanze PvP";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Le frecce e i pin del gruppo con colore di classe appaiono solo sui membri del gruppo nelle istanze PvP";
 L["Visibility"] = "Visibilità";
 L["Hide in World"] = "Nascondi nel mondo";
 L["Hide in Battlegrounds"] = "Nascondi nei campi di battaglia";
@@ -127,7 +129,7 @@ L["Hide class icons of other players' pets\nThis option is not available in aren
 L["Show flag carrier icons in battlegrounds"] = "Mostra icone portabandiera nei campi di battaglia";
 L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Usa icone speciali per i portabandiera alleati\nQuesto sovrascrive l'icona del guaritore";
 L["Class-colored borders"] = "Bordi con colore di classe";
-L["Use a plain class-colored ring for class icon borders. Disable for the metal ring texture."] = "Usa un semplice anello con colore di classe per i bordi delle icone classe. Disabilita per usare la texture ad anello metallico.";
+L["Tint the icon border with the class color. Disable to show the default border colors."] = "Colora il bordo dell'icona con il colore di classe. Disabilita per mostrare i colori predefiniti del bordo.";
 L["Show target highlight"] = "Mostra evidenziazione bersaglio";
 L["Animated highlight"] = "Evidenziazione animata";
 L["Horizontal offset"] = "Scostamento orizzontale";
