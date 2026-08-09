@@ -12,8 +12,12 @@ local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
 local iconAndPinOffsetY = 24;
 
-local function GetClassPinTexture()
-    return addon.INTERFACE_SWEEPY .. "Art/ClassPins/ClassColorPin";
+local function GetClassPinTexture(style)
+    if style == addon.CLASS_ICON_STYLE.ICON_AND_PIN then
+        return addon.INTERFACE_SWEEPY .. "Art/PinMarkerCut";
+    end
+
+    return addon.INTERFACE_SWEEPY .. "Art/PinMarker";
 end
 
 local crowdControlPriority = { -- sort by remaining time, then priority
@@ -617,7 +621,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
             end
 
-            local pinTexture = classColor and GetClassPinTexture();
+            local pinTexture = classColor and GetClassPinTexture(config.classIconStyle);
             pinFrame.icon:SetAlpha(pinTexture and 1 or 0);
             pinFrame.targetHighlight:SetAlpha(pinTexture and 1 or 0);
             pinFrame.icon:SetTexture(pinTexture);
