@@ -11,11 +11,6 @@ local targetHighlightPulseMinAlpha = 0.22;
 local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
 local iconAndPinIconOffsetY = -1;
-local debugShowIconAndPartyMarker = false;
-
-local function ShouldShowIconAndPartyMarker()
-    return debugShowIconAndPartyMarker or ( UnitInBattleground("player") ~= nil );
-end
 
 local function GetClassPinTexture(style)
     if style == addon.CLASS_ICON_STYLE.ICON_AND_PIN then
@@ -513,14 +508,6 @@ if addon.internal then
     end
 end
 
-if addon.internal then
-    function SweepyBoop:DebugIconAndPartyMarker(shouldShow)
-        debugShowIconAndPartyMarker = ( shouldShow ~= false );
-        SweepyBoop:RefreshAllNamePlates();
-        print("SweepyBoop: icon + party marker debug preview " .. ( debugShowIconAndPartyMarker and "enabled" or "disabled" ));
-    end
-end
-
 addon.UpdateClassIcon = function(nameplate, frame)
     if ( not nameplate.classIconContainer ) then return end
     local classIconContainer = nameplate.classIconContainer;
@@ -547,13 +534,12 @@ addon.UpdateClassIcon = function(nameplate, frame)
         roleAssigned = specInfo.role;
     end
     local config = SweepyBoop.db.profile.nameplatesFriendly;
-    local showPartyPin = ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_PIN ) and ShouldShowIconAndPartyMarker();
+    local showPartyPin = ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_PIN );
     if ( classIconContainer.class ~= class )
         or ( classIconContainer.pvpClassification ~= pvpClassification )
         or ( classIconContainer.specIconID ~= specIconID )
         or ( classIconContainer.roleAssigned ~= roleAssigned )
         or ( classIconContainer.showPartyPin ~= showPartyPin )
-        or ( classIconContainer.debugShowIconAndPartyMarker ~= debugShowIconAndPartyMarker )
         or ( classIconContainer.lastModified ~= config.lastModified ) then
         local iconID, iconCoords, iconScale, isSpecialIcon = GetIconOptions(class, pvpClassification, specIconID, roleAssigned);
         local nameFrame = classIconContainer.NameFrame;
@@ -651,7 +637,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             else
                 pinFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
             end
-            if ( config.classIconStyle == addon.CLASS_ICON_STYLE.ICON_AND_PIN ) then
+            if showPartyPin then
                 iconFrame:ClearAllPoints();
                 iconFrame:SetPoint("CENTER", pinFrame, "TOP", 0, iconAndPinIconOffsetY);
             end
@@ -668,7 +654,6 @@ addon.UpdateClassIcon = function(nameplate, frame)
         classIconContainer.specIconID = specIconID;
         classIconContainer.roleAssigned = roleAssigned;
         classIconContainer.showPartyPin = showPartyPin;
-        classIconContainer.debugShowIconAndPartyMarker = debugShowIconAndPartyMarker;
         classIconContainer.lastModified = config.lastModified;
     end
 
@@ -692,7 +677,7 @@ addon.ShowClassIcon = function (nameplate, frame)
         if style == addon.CLASS_ICON_STYLE.ARROW then
             shouldShow = ( not classIconContainer.isSpecialIcon );
         elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW then
-            shouldShow = ShouldShowIconAndPartyMarker();
+            shouldShow = true;
         end
         classIconContainer.FriendlyClassArrow:SetShown(shouldShow);
     end
@@ -701,7 +686,7 @@ addon.ShowClassIcon = function (nameplate, frame)
         if style == addon.CLASS_ICON_STYLE.PIN then
             shouldShow = ( not classIconContainer.isSpecialIcon );
         elseif style == addon.CLASS_ICON_STYLE.ICON_AND_PIN then
-            shouldShow = ShouldShowIconAndPartyMarker();
+            shouldShow = true;
         end
         classIconContainer.FriendlyClassPin:SetShown(shouldShow);
     end
