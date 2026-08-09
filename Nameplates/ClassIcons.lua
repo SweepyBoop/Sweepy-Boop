@@ -14,7 +14,7 @@ local iconAndPinIconOffsetY = -1;
 local debugShowIconAndPartyMarker = false;
 
 local function ShouldShowIconAndPartyMarker(unit)
-    return debugShowIconAndPartyMarker or UnitInParty(unit);
+    return debugShowIconAndPartyMarker or ( ( UnitInBattleground("player") ~= nil ) and UnitInParty(unit) );
 end
 
 local function GetClassPinTexture(style)
