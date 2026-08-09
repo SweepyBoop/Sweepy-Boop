@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Aktiviere \"Diener\" unter Interface - Namensplaketten für Begleitersymbole";
 L["WoW class icons"] = "WoW-Klassensymbole";
 L["Class color arrows"] = "Pfeile in Klassenfarbe";
+L["Class color pins"] = "Pins in Klassenfarbe";
 L["Icon + party arrow"] = "Symbol + Gruppenpfeil";
+L["Icon + party pin"] = "Symbol + Gruppenpin";
 L["Icon style"] = "Symbolstil";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Gruppenpfeile in Klassenfarbe werden nur auf Gruppenmitgliedern in PvP-Instanzen angezeigt";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Gruppenpfeile und -pins in Klassenfarbe werden nur auf Gruppenmitgliedern in PvP-Instanzen angezeigt";
 L["Visibility"] = "Sichtbarkeit";
 L["Hide in World"] = "In der Welt ausblenden";
 L["Hide in Battlegrounds"] = "In Schlachtfeldern ausblenden";

@@ -117,9 +117,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Enable \"Minions\" in Interface - Nameplates for pet icons";
 L["WoW class icons"] = "WoW class icons";
 L["Class color arrows"] = "Class color arrows";
+L["Class color pins"] = "Class color pins";
 L["Icon + party arrow"] = "Icon + party arrow";
+L["Icon + party pin"] = "Icon + party pin";
 L["Icon style"] = "Icon style";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Class-colored party arrows only show on party members in PvP instances";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Class-colored party arrows and pins only show on party members in PvP instances";
 L["Visibility"] = "Visibility";
 L["Hide in World"] = "Hide in World";
 L["Hide in Battlegrounds"] = "Hide in Battlegrounds";

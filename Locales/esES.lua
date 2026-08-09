@@ -113,9 +113,11 @@ local function ApplyTranslations(locale)
     L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Activa esbirros";
     L["WoW class icons"] = "Iconos de clase de WoW";
     L["Class color arrows"] = "Flechas con color de clase";
+    L["Class color pins"] = "Pines con color de clase";
     L["Icon + party arrow"] = "Icono + flecha de grupo";
+    L["Icon + party pin"] = "Icono + pin de grupo";
     L["Icon style"] = "Estilo de icono";
-    L["Class-colored party arrows only show on party members in PvP instances"] = "Flechas de grupo en PvP";
+    L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Las flechas y los pines de grupo con color de clase solo se muestran en miembros del grupo en instancias JcJ";
     L["Visibility"] = "Visibilidad";
     L["Hide in World"] = "Ocultar en el mundo";
     L["Hide in Battlegrounds"] = "Ocultar en campos de batalla";

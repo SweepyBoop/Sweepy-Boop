@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "Activez \"Serviteurs\" dans Interface - Barres d'info pour les icônes de familiers";
 L["WoW class icons"] = "Icônes de classe WoW";
 L["Class color arrows"] = "Flèches aux couleurs de classe";
+L["Class color pins"] = "Épingles aux couleurs de classe";
 L["Icon + party arrow"] = "Icône + flèche de groupe";
+L["Icon + party pin"] = "Icône + épingle de groupe";
 L["Icon style"] = "Style d'icône";
-L["Class-colored party arrows only show on party members in PvP instances"] = "Flèches de groupe colorées seulement en PvP";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Les flèches et épingles de groupe aux couleurs de classe ne s'affichent que sur les membres du groupe dans les instances JcJ";
 L["Visibility"] = "Visibilité";
 L["Hide in World"] = "Masquer en extérieur";
 L["Hide in Battlegrounds"] = "Masquer dans les champs de bataille";

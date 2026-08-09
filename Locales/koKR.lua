@@ -113,9 +113,11 @@ L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons
 L["Enable \"Minions\" in Interface - Nameplates for pet icons"] = "소환수 아이콘을 표시하려면 인터페이스 - 이름표에서 \"하수인\"을 활성화하세요";
 L["WoW class icons"] = "WoW 직업 아이콘";
 L["Class color arrows"] = "직업 색상 화살표";
+L["Class color pins"] = "직업 색상 핀";
 L["Icon + party arrow"] = "아이콘 + 파티 화살표";
+L["Icon + party pin"] = "아이콘 + 파티 핀";
 L["Icon style"] = "아이콘 스타일";
-L["Class-colored party arrows only show on party members in PvP instances"] = "직업 색상 파티 화살표는 PvP 인스턴스의 파티원에게만 표시됩니다";
+L["Class-colored party arrows and pins only show on party members in PvP instances"] = "직업 색상 파티 화살표와 핀은 PvP 인스턴스의 파티원에게만 표시됩니다";
 L["Visibility"] = "표시 여부";
 L["Hide in World"] = "필드에서 숨기기";
 L["Hide in Battlegrounds"] = "전장에서 숨기기";
