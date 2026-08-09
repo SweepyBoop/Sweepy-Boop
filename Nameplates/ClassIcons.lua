@@ -12,14 +12,8 @@ local targetHighlightBaseMinAlpha = 0.88;
 local targetHighlightColor = { 1, 0.88, 0, 1 };
 local iconAndPinOffsetY = 24;
 
-local function GetClassPinTexture(class, style)
-    local classPinTexture = class and addon.CLASS_PIN_TEXTURE[class];
-    if not classPinTexture then
-        return nil;
-    end
-
-    local pinStyle = ( style == addon.CLASS_ICON_STYLE.ICON_AND_PIN ) and "teardrop" or "arrow";
-    return addon.INTERFACE_SWEEPY .. "Art/ClassPins/" .. pinStyle .. "/pin-" .. classPinTexture;
+local function GetClassPinTexture()
+    return addon.INTERFACE_SWEEPY .. "Art/ClassPins/ClassColorPin";
 end
 
 local crowdControlPriority = { -- sort by remaining time, then priority
@@ -623,11 +617,15 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 arrowFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
             end
 
-            local pinTexture = GetClassPinTexture(class, config.classIconStyle);
+            local pinTexture = classColor and GetClassPinTexture();
             pinFrame.icon:SetAlpha(pinTexture and 1 or 0);
             pinFrame.targetHighlight:SetAlpha(pinTexture and 1 or 0);
             pinFrame.icon:SetTexture(pinTexture);
-            pinFrame.icon:SetVertexColor(1, 1, 1);
+            if classColor then
+                pinFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            else
+                pinFrame.icon:SetVertexColor(1, 1, 1);
+            end
             pinFrame:SetScale(iconScale);
             pinFrame:SetFrameLevel(1);
             pinFrame:ClearAllPoints();
