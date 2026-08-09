@@ -34,7 +34,7 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
     classIconFrame.icon:AddMaskTexture(classIconFrame.mask);
 
     classIconFrame.border = classIconFrame:CreateTexture(nil, "OVERLAY");
-    classIconFrame.border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/CharacterCreateRingMetalLight");
+    classIconFrame.border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/ClassIconBorder");
     classIconFrame.border:SetSize(iconBorderSize, iconBorderSize);
     classIconFrame.border:SetPoint("CENTER", classIconFrame);
 
