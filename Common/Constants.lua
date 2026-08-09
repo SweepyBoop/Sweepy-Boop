@@ -511,6 +511,24 @@ addon.CLASS_ICON_STYLE = {
     ICON = 0,
     ARROW = 1,
     ICON_AND_ARROW = 2,
+    PIN = 3,
+    ICON_AND_PIN = 4,
+};
+
+addon.CLASS_PIN_TEXTURE = {
+    DEATHKNIGHT = "death-knight",
+    DEMONHUNTER = "demon-hunter",
+    DRUID = "druid",
+    EVOKER = "evoker",
+    HUNTER = "hunter",
+    MAGE = "mage",
+    MONK = "monk",
+    PALADIN = "paladin",
+    PRIEST = "priest",
+    ROGUE = "rogue",
+    SHAMAN = "shaman",
+    WARLOCK = "warlock",
+    WARRIOR = "warrior",
 };
 
 addon.GetSpellTexture = function(spellId)

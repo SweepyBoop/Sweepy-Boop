@@ -6,6 +6,8 @@ local iconSize = 40;
 -- Original Sanctum arrow atlas size is 48 * 67, scale it up a little.
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
+local classPinWidth = 56;
+local classPinHeight = 65;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
 local arrowTexCoords = { 0.8544921875, 0.9013671875, 0.1328125, 0.263671875 };
 local highlightSize = 55;
@@ -137,6 +139,31 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     classIconFrame.targetHighlight:SetDesaturated(false);
     classIconFrame.targetHighlight:SetSize(arrowWidth, arrowWidth);
     classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -5);
+    classIconFrame.targetHighlight:Hide();
+
+    return classIconFrame;
+end
+
+addon.CreateClassColorPinFrame = function (nameplate)
+    local classIconFrame = CreateFrame("Frame", nil, nameplate);
+    classIconFrame:SetMouseClickEnabled(false);
+    classIconFrame:SetAlpha(1);
+    classIconFrame:SetIgnoreParentAlpha(true);
+    classIconFrame:SetSize(classPinWidth, classPinHeight);
+    classIconFrame:SetFrameStrata("HIGH");
+    classIconFrame:SetPoint("CENTER", nameplate, "CENTER");
+
+    classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
+    classIconFrame.icon:SetDesaturated(false);
+    classIconFrame.icon:SetAllPoints(classIconFrame);
+    classIconFrame.icon:SetTexCoord(0, 1, 0, 1);
+
+    classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
+    classIconFrame.targetHighlight:SetAtlas("communities-guildbanner-border");
+    classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
+    classIconFrame.targetHighlight:SetDesaturated(false);
+    classIconFrame.targetHighlight:SetSize(classPinWidth, classPinWidth);
+    classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -3);
     classIconFrame.targetHighlight:Hide();
 
     return classIconFrame;
