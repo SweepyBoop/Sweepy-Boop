@@ -6,6 +6,8 @@ local iconSize = 40;
 -- Original Sanctum arrow atlas size is 48 * 67, scale it up a little.
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
+-- The overlay includes antialias padding, so 48 gives it the same visible footprint as a 40px class icon.
+local classArrowSize = 48;
 local classPinWidth = 40;
 local classPinHeight = 46;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
@@ -98,7 +100,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
     arrowFrame:SetAlpha(1);
     arrowFrame:SetIgnoreParentAlpha(true);
-    arrowFrame:SetSize(arrowHeight, arrowWidth); -- Swap width and height since we are rotating the texture
+    arrowFrame:SetSize(classArrowSize, classArrowSize);
     arrowFrame:SetFrameStrata("HIGH");
     arrowFrame:SetPoint("CENTER", nameplate, "CENTER");
 
@@ -120,7 +122,7 @@ addon.CreateClassColorArrowFrame = function (nameplate)
     arrowFrame.targetHighlight:SetAtlas("communities-guildbanner-border"); -- Originally Capacitance-General-WorkOrderBorder which is rectangle
     arrowFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
     arrowFrame.targetHighlight:SetDesaturated(false);
-    arrowFrame.targetHighlight:SetSize(arrowWidth, arrowWidth);
+    arrowFrame.targetHighlight:SetSize(classArrowSize, classArrowSize);
     arrowFrame.targetHighlight:SetPoint("CENTER", arrowFrame, "CENTER", 0, -5);
     arrowFrame.targetHighlight:Hide();
 
