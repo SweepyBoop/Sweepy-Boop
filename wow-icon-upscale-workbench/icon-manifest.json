@@ -24,7 +24,7 @@
 
     { "kind": "spec", "classId": 12, "class": "DEMONHUNTER", "specId": 577, "label": "Havoc", "outputName": "Ability_DemonHunter_SpecDPS", "sourcePath": "ICONS/Ability_DemonHunter_SpecDPS.PNG" },
     { "kind": "spec", "classId": 12, "class": "DEMONHUNTER", "specId": 581, "label": "Vengeance", "outputName": "Ability_DemonHunter_SpecTank", "sourcePath": "ICONS/Ability_DemonHunter_SpecTank.PNG" },
-    { "kind": "spec", "classId": 12, "class": "DEMONHUNTER", "specId": 1480, "label": "Devourer", "outputName": "Classicon_DemonHunter_Void", "sourcePath": null },
+    { "kind": "spec", "classId": 12, "class": "DEMONHUNTER", "specId": 1480, "label": "Devourer", "outputName": "Classicon_DemonHunter_Void", "retailPath": "Icons/Classicon_DemonHunter_Void.blp" },
 
     { "kind": "spec", "classId": 11, "class": "DRUID", "specId": 102, "label": "Balance", "outputName": "Spell_Nature_StarFall", "sourcePath": "ICONS/Spell_Nature_StarFall.PNG" },
     { "kind": "spec", "classId": 11, "class": "DRUID", "specId": 103, "label": "Feral", "outputName": "Ability_Druid_CatForm", "sourcePath": "ICONS/Ability_Druid_CatForm.PNG" },
@@ -33,7 +33,7 @@
 
     { "kind": "spec", "classId": 13, "class": "EVOKER", "specId": 1467, "label": "Devastation", "outputName": "ClassIcon_Evoker_Devastation", "sourcePath": "ICONS/ClassIcon_Evoker_Devastation.PNG" },
     { "kind": "spec", "classId": 13, "class": "EVOKER", "specId": 1468, "label": "Preservation", "outputName": "ClassIcon_Evoker_Preservation", "sourcePath": "ICONS/ClassIcon_Evoker_Preservation.PNG" },
-    { "kind": "spec", "classId": 13, "class": "EVOKER", "specId": 1473, "label": "Augmentation", "outputName": "ClassIcon_Evoker_Augmentation", "sourcePath": null },
+    { "kind": "spec", "classId": 13, "class": "EVOKER", "specId": 1473, "label": "Augmentation", "outputName": "ClassIcon_Evoker_Augmentation", "retailPath": "Icons/ClassIcon_Evoker_Augmentation.blp" },
 
     { "kind": "spec", "classId": 3, "class": "HUNTER", "specId": 253, "label": "Beast Mastery", "outputName": "ABILITY_HUNTER_BESTIALDISCIPLINE", "sourcePath": "ICONS/ABILITY_HUNTER_BESTIALDISCIPLINE.PNG" },
     { "kind": "spec", "classId": 3, "class": "HUNTER", "specId": 254, "label": "Marksmanship", "outputName": "Ability_Hunter_FocusedAim", "sourcePath": "ICONS/Ability_Hunter_FocusedAim.PNG" },

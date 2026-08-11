@@ -210,7 +210,21 @@ icon-manifest.json
 run-icon-batch.ps1
 ```
 
-The manifest follows SweepyBoop's class/spec override identifiers: 13 classes and 40 specializations. Image pixels come only from the `Gethe/wow-ui-textures` repository. The runner exports each source directly from the configured Git ref, verifies 64x64 inputs, runs `digital-art-4x`, verifies 256x256 outputs, and records source blob IDs and SHA-256 hashes.
+The manifest follows SweepyBoop's class/spec override identifiers: 13 classes and 40 specializations. All pixels come from original Blizzard assets through two sources:
+
+- 51 PNG textures exported byte-for-byte from the `Gethe/wow-ui-textures` `origin/ptr` Git ref.
+- Two newer 64x64 BLP2 textures from the installed Retail interface-art extraction:
+  - `Icons/Classicon_DemonHunter_Void.blp` for Devourer, spec ID 1480.
+  - `Icons/ClassIcon_Evoker_Augmentation.blp` for Augmentation, spec ID 1473.
+
+The BLP files are converted to lossless PNG with `convert-blp-to-png.py` and Pillow 12.3.0 in the ignored `scratch/python` environment. The runner verifies all 64x64 inputs, runs `digital-art-4x`, verifies all 256x256 outputs, and records source hashes, Git blob IDs where applicable, and generated hashes.
+
+Prepare the local converter once:
+
+```powershell
+py -3.10 -m venv .\scratch\python
+.\scratch\python\Scripts\python.exe -m pip install Pillow==12.3.0
+```
 
 Run the batch from this directory:
 
@@ -218,12 +232,7 @@ Run the batch from this directory:
 .\run-icon-batch.ps1
 ```
 
-Current source coverage is 51 of 53 icons. The frozen `wow-ui-textures` upstream contains no assets for:
-
-- Devourer (`Classicon_DemonHunter_Void`, spec ID 1480)
-- Augmentation (`ClassIcon_Evoker_Augmentation`, spec ID 1473)
-
-The runner does not substitute unrelated art. It renders explicit missing-source panels for those entries. The generated review is under:
+Current source coverage is complete: 53 of 53 icons. The generated review is under:
 
 ```text
 scratch/comparisons/class-spec-digital-art-4x/

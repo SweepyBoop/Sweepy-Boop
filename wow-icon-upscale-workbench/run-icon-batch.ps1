@@ -1,5 +1,6 @@
 param(
     [string]$TextureRepository = 'C:\Users\kunhouseliu\Documents\GitHub\wow-ui-textures',
+    [string]$RetailInterface = 'C:\Program Files (x86)\World of Warcraft\_retail_\BlizzardInterfaceArt\Interface',
     [switch]$SkipUpscale
 )
 
@@ -18,6 +19,8 @@ $classSheetDirectory = Join-Path $comparisonDirectory 'by-class'
 $reportPath = Join-Path $scratch 'class-spec-run-report.json'
 $upscaler = Join-Path $scratch 'upscayl-2.15.0\resources\bin\upscayl-bin.exe'
 $modelDirectory = Join-Path $scratch 'upscayl-2.15.0\resources\models'
+$python = Join-Path $scratch 'python\Scripts\python.exe'
+$blpConverter = Join-Path $workbench 'convert-blp-to-png.py'
 
 $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
 $assets = @($manifest.assets)
@@ -33,6 +36,15 @@ if (@($assets | Where-Object kind -eq 'spec').Count -ne 40) {
 }
 if (-not (Test-Path -LiteralPath (Join-Path $TextureRepository '.git'))) {
     throw "Texture repository is not a Git checkout: $TextureRepository"
+}
+if (-not (Test-Path -LiteralPath $RetailInterface)) {
+    throw "Extracted Retail interface art is missing: $RetailInterface"
+}
+if (-not (Test-Path -LiteralPath $python)) {
+    throw "Scratch Python environment is missing: $python"
+}
+if (-not (Test-Path -LiteralPath $blpConverter)) {
+    throw "BLP converter script is missing: $blpConverter"
 }
 if (-not $SkipUpscale -and -not (Test-Path -LiteralPath $upscaler)) {
     throw "Upscayl CLI is missing: $upscaler"
@@ -96,20 +108,50 @@ function Export-GitBlob {
 $staged = @()
 $missing = @()
 foreach ($asset in $assets) {
-    if (-not $asset.sourcePath) {
+    $inputPath = Join-Path $inputDirectory ($asset.outputName + '.png')
+    $sourceType = $null
+    $sourcePath = $null
+    $sourceBlob = $null
+    $sourceSha256 = $null
+
+    if ($asset.sourcePath) {
+        $sourceType = 'wow-ui-textures'
+        $sourcePath = $asset.sourcePath
+        $sourceBlob = Export-GitBlob -Repository $TextureRepository -Revision $manifest.sourceRef -Path $asset.sourcePath -Destination $inputPath
+        $sourceSha256 = (Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash
+    }
+    elseif ($asset.retailPath) {
+        $sourceType = 'retail-interface-blp'
+        $sourcePath = Join-Path $RetailInterface ($asset.retailPath -replace '/', '\')
+        if (-not (Test-Path -LiteralPath $sourcePath)) {
+            $missing += [PSCustomObject]@{
+                kind = $asset.kind
+                class = $asset.class
+                specId = $asset.specId
+                label = $asset.label
+                outputName = $asset.outputName
+                reason = "Retail BLP source is missing: $sourcePath"
+            }
+            continue
+        }
+        $sourceSha256 = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash
+        & $python $blpConverter $sourcePath $inputPath
+        if ($LASTEXITCODE -ne 0) {
+            throw "BLP conversion failed for $sourcePath with exit code $LASTEXITCODE."
+        }
+    }
+    else {
         $missing += [PSCustomObject]@{
             kind = $asset.kind
             class = $asset.class
             specId = $asset.specId
             label = $asset.label
             outputName = $asset.outputName
-            reason = 'No matching asset exists in the available wow-ui-textures refs.'
+            reason = 'No source is configured.'
         }
         continue
     }
 
-    $inputPath = Join-Path $inputDirectory ($asset.outputName + '.png')
-    $blob = Export-GitBlob -Repository $TextureRepository -Revision $manifest.sourceRef -Path $asset.sourcePath -Destination $inputPath
     $image = [Drawing.Image]::FromFile($inputPath)
     try {
         if ($image.Width -ne 64 -or $image.Height -ne 64) {
@@ -127,19 +169,21 @@ foreach ($asset in $assets) {
         specId = $asset.specId
         label = $asset.label
         outputName = $asset.outputName
-        sourceRef = $manifest.sourceRef
-        sourcePath = $asset.sourcePath
-        sourceBlob = $blob
+        sourceType = $sourceType
+        sourceRef = if ($sourceType -eq 'wow-ui-textures') { $manifest.sourceRef } else { $null }
+        sourcePath = $sourcePath
+        sourceBlob = $sourceBlob
+        sourceSha256 = $sourceSha256
         inputPath = $inputPath
         inputSha256 = (Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash
     }
 }
 
-if ($staged.Count -ne 51) {
-    throw "Expected to stage 51 available wow-ui-textures assets, staged $($staged.Count)."
+if ($staged.Count -ne 53) {
+    throw "Expected to stage all 53 class and spec assets, staged $($staged.Count)."
 }
-if ($missing.Count -ne 2) {
-    throw "Expected exactly two unavailable assets, found $($missing.Count)."
+if ($missing.Count -ne 0) {
+    throw "Expected no unavailable assets, found $($missing.Count): $($missing.outputName -join ', ')"
 }
 
 if (-not $SkipUpscale) {
@@ -287,7 +331,7 @@ try {
         $graphics.FillRectangle($backgroundBrush, 0, 0, $masterWidth, $masterHeight)
         $graphics.TextRenderingHint = [Drawing.Text.TextRenderingHint]::ClearTypeGridFit
         $graphics.DrawString('SweepyBoop class + spec icons', $titleFont, $textBrush, 18, 15)
-        $graphics.DrawString('51 generated from wow-ui-textures; 2 missing sources', $labelFont, $mutedBrush, 18, 42)
+        $graphics.DrawString('53 generated from original Blizzard sources', $labelFont, $mutedBrush, 18, 42)
         for ($index = 0; $index -lt $renderAssets.Count; $index++) {
             $asset = $renderAssets[$index]
             $column = $index % $columns
@@ -334,6 +378,7 @@ finally {
 $report = [ordered]@{
     generatedAtUtc = [DateTime]::UtcNow.ToString('o')
     textureRepository = (Resolve-Path -LiteralPath $TextureRepository).Path
+    retailInterface = (Resolve-Path -LiteralPath $RetailInterface).Path
     sourceRepository = $manifest.sourceRepository
     sourceRef = $manifest.sourceRef
     sourceCommit = (& git -C $TextureRepository rev-parse $manifest.sourceRef).Trim()
@@ -347,7 +392,7 @@ $report = [ordered]@{
 $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $reportPath -Encoding utf8
 
 Write-Output "Generated $($staged.Count) of $($assets.Count) manifest icons."
-Write-Output "Missing source assets: $($missing.outputName -join ', ')"
+Write-Output 'Missing source assets: none'
 Write-Output "Master comparison: $(Join-Path $comparisonDirectory 'all-class-spec-icons-index.png')"
 Write-Output "Per-class comparisons: $classSheetDirectory"
 Write-Output "Provenance report: $reportPath"
