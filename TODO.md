@@ -13,3 +13,4 @@ Tasks:
 - [x] Self stun DR that's super visible to play vs. swaps
 - [ ] Test icon for "Honor reminder" should dismiss when resetting profile
 - [ ] Update vendored Ace3 lib files once a stable 12.1-compatible release is available; currently using selected r1400-alpha files
+- [ ] TBC Classic is missing the option to turn off minimap icon
