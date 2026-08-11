@@ -1,0 +1,74 @@
+{
+  "sourceRepository": "Gethe/wow-ui-textures",
+  "sourceRef": "origin/ptr",
+  "model": "digital-art-4x",
+  "scale": 4,
+  "assets": [
+    { "kind": "class", "classId": 1, "class": "WARRIOR", "label": "Warrior", "outputName": "WARRIOR", "sourcePath": "ICONS/ClassIcon_Warrior.PNG" },
+    { "kind": "class", "classId": 2, "class": "PALADIN", "label": "Paladin", "outputName": "PALADIN", "sourcePath": "ICONS/ClassIcon_Paladin.PNG" },
+    { "kind": "class", "classId": 3, "class": "HUNTER", "label": "Hunter", "outputName": "HUNTER", "sourcePath": "ICONS/ClassIcon_Hunter.PNG" },
+    { "kind": "class", "classId": 4, "class": "ROGUE", "label": "Rogue", "outputName": "ROGUE", "sourcePath": "ICONS/ClassIcon_Rogue.PNG" },
+    { "kind": "class", "classId": 5, "class": "PRIEST", "label": "Priest", "outputName": "PRIEST", "sourcePath": "ICONS/ClassIcon_Priest.PNG" },
+    { "kind": "class", "classId": 6, "class": "DEATHKNIGHT", "label": "Death Knight", "outputName": "DEATHKNIGHT", "sourcePath": "ICONS/ClassIcon_DeathKnight.PNG" },
+    { "kind": "class", "classId": 7, "class": "SHAMAN", "label": "Shaman", "outputName": "SHAMAN", "sourcePath": "ICONS/ClassIcon_Shaman.PNG" },
+    { "kind": "class", "classId": 8, "class": "MAGE", "label": "Mage", "outputName": "MAGE", "sourcePath": "ICONS/ClassIcon_Mage.PNG" },
+    { "kind": "class", "classId": 9, "class": "WARLOCK", "label": "Warlock", "outputName": "WARLOCK", "sourcePath": "ICONS/ClassIcon_Warlock.PNG" },
+    { "kind": "class", "classId": 10, "class": "MONK", "label": "Monk", "outputName": "MONK", "sourcePath": "ICONS/ClassIcon_Monk.PNG" },
+    { "kind": "class", "classId": 11, "class": "DRUID", "label": "Druid", "outputName": "DRUID", "sourcePath": "ICONS/ClassIcon_Druid.PNG" },
+    { "kind": "class", "classId": 12, "class": "DEMONHUNTER", "label": "Demon Hunter", "outputName": "DEMONHUNTER", "sourcePath": "ICONS/ClassIcon_DemonHunter.PNG" },
+    { "kind": "class", "classId": 13, "class": "EVOKER", "label": "Evoker", "outputName": "EVOKER", "sourcePath": "ICONS/ClassIcon_Evoker.PNG" },
+
+    { "kind": "spec", "classId": 6, "class": "DEATHKNIGHT", "specId": 250, "label": "Blood", "outputName": "Spell_Deathknight_BloodPresence", "sourcePath": "ICONS/Spell_Deathknight_BloodPresence.PNG" },
+    { "kind": "spec", "classId": 6, "class": "DEATHKNIGHT", "specId": 251, "label": "Frost", "outputName": "Spell_Deathknight_FrostPresence", "sourcePath": "ICONS/Spell_Deathknight_FrostPresence.PNG" },
+    { "kind": "spec", "classId": 6, "class": "DEATHKNIGHT", "specId": 252, "label": "Unholy", "outputName": "Spell_Deathknight_UnholyPresence", "sourcePath": "ICONS/Spell_Deathknight_UnholyPresence.PNG" },
+
+    { "kind": "spec", "classId": 12, "class": "DEMONHUNTER", "specId": 577, "label": "Havoc", "outputName": "Ability_DemonHunter_SpecDPS", "sourcePath": "ICONS/Ability_DemonHunter_SpecDPS.PNG" },
+    { "kind": "spec", "classId": 12, "class": "DEMONHUNTER", "specId": 581, "label": "Vengeance", "outputName": "Ability_DemonHunter_SpecTank", "sourcePath": "ICONS/Ability_DemonHunter_SpecTank.PNG" },
+    { "kind": "spec", "classId": 12, "class": "DEMONHUNTER", "specId": 1480, "label": "Devourer", "outputName": "Classicon_DemonHunter_Void", "sourcePath": null },
+
+    { "kind": "spec", "classId": 11, "class": "DRUID", "specId": 102, "label": "Balance", "outputName": "Spell_Nature_StarFall", "sourcePath": "ICONS/Spell_Nature_StarFall.PNG" },
+    { "kind": "spec", "classId": 11, "class": "DRUID", "specId": 103, "label": "Feral", "outputName": "Ability_Druid_CatForm", "sourcePath": "ICONS/Ability_Druid_CatForm.PNG" },
+    { "kind": "spec", "classId": 11, "class": "DRUID", "specId": 104, "label": "Guardian", "outputName": "Ability_Racial_BearForm", "sourcePath": "ICONS/Ability_Racial_BearForm.PNG" },
+    { "kind": "spec", "classId": 11, "class": "DRUID", "specId": 105, "label": "Restoration", "outputName": "SPELL_NATURE_HEALINGTOUCH", "sourcePath": "ICONS/SPELL_NATURE_HEALINGTOUCH.PNG" },
+
+    { "kind": "spec", "classId": 13, "class": "EVOKER", "specId": 1467, "label": "Devastation", "outputName": "ClassIcon_Evoker_Devastation", "sourcePath": "ICONS/ClassIcon_Evoker_Devastation.PNG" },
+    { "kind": "spec", "classId": 13, "class": "EVOKER", "specId": 1468, "label": "Preservation", "outputName": "ClassIcon_Evoker_Preservation", "sourcePath": "ICONS/ClassIcon_Evoker_Preservation.PNG" },
+    { "kind": "spec", "classId": 13, "class": "EVOKER", "specId": 1473, "label": "Augmentation", "outputName": "ClassIcon_Evoker_Augmentation", "sourcePath": null },
+
+    { "kind": "spec", "classId": 3, "class": "HUNTER", "specId": 253, "label": "Beast Mastery", "outputName": "ABILITY_HUNTER_BESTIALDISCIPLINE", "sourcePath": "ICONS/ABILITY_HUNTER_BESTIALDISCIPLINE.PNG" },
+    { "kind": "spec", "classId": 3, "class": "HUNTER", "specId": 254, "label": "Marksmanship", "outputName": "Ability_Hunter_FocusedAim", "sourcePath": "ICONS/Ability_Hunter_FocusedAim.PNG" },
+    { "kind": "spec", "classId": 3, "class": "HUNTER", "specId": 255, "label": "Survival", "outputName": "Ability_Hunter_Camouflage", "sourcePath": "ICONS/Ability_Hunter_Camouflage.PNG" },
+
+    { "kind": "spec", "classId": 8, "class": "MAGE", "specId": 62, "label": "Arcane", "outputName": "Spell_Holy_MagicalSentry", "sourcePath": "ICONS/Spell_Holy_MagicalSentry.PNG" },
+    { "kind": "spec", "classId": 8, "class": "MAGE", "specId": 63, "label": "Fire", "outputName": "Spell_Fire_FireBolt02", "sourcePath": "ICONS/Spell_Fire_FireBolt02.PNG" },
+    { "kind": "spec", "classId": 8, "class": "MAGE", "specId": 64, "label": "Frost", "outputName": "Spell_Frost_FrostBolt02", "sourcePath": "ICONS/Spell_Frost_FrostBolt02.PNG" },
+
+    { "kind": "spec", "classId": 10, "class": "MONK", "specId": 268, "label": "Brewmaster", "outputName": "Spell_Monk_Brewmaster_Spec", "sourcePath": "ICONS/Spell_Monk_Brewmaster_Spec.PNG" },
+    { "kind": "spec", "classId": 10, "class": "MONK", "specId": 270, "label": "Mistweaver", "outputName": "Spell_Monk_MistWeaver_Spec", "sourcePath": "ICONS/Spell_Monk_MistWeaver_Spec.PNG" },
+    { "kind": "spec", "classId": 10, "class": "MONK", "specId": 269, "label": "Windwalker", "outputName": "Spell_Monk_WindWalker_Spec", "sourcePath": "ICONS/Spell_Monk_WindWalker_Spec.PNG" },
+
+    { "kind": "spec", "classId": 2, "class": "PALADIN", "specId": 65, "label": "Holy", "outputName": "Spell_Holy_HolyBolt", "sourcePath": "ICONS/Spell_Holy_HolyBolt.PNG" },
+    { "kind": "spec", "classId": 2, "class": "PALADIN", "specId": 66, "label": "Protection", "outputName": "Ability_Paladin_ShieldoftheTemplar", "sourcePath": "ICONS/Ability_Paladin_ShieldoftheTemplar.PNG" },
+    { "kind": "spec", "classId": 2, "class": "PALADIN", "specId": 70, "label": "Retribution", "outputName": "Spell_Holy_AuraOfLight", "sourcePath": "ICONS/Spell_Holy_AuraOfLight.PNG" },
+
+    { "kind": "spec", "classId": 5, "class": "PRIEST", "specId": 256, "label": "Discipline", "outputName": "Spell_Holy_PowerWordShield", "sourcePath": "ICONS/Spell_Holy_PowerWordShield.PNG" },
+    { "kind": "spec", "classId": 5, "class": "PRIEST", "specId": 257, "label": "Holy", "outputName": "Spell_Holy_GuardianSpirit", "sourcePath": "ICONS/Spell_Holy_GuardianSpirit.PNG" },
+    { "kind": "spec", "classId": 5, "class": "PRIEST", "specId": 258, "label": "Shadow", "outputName": "Spell_Shadow_ShadowWordPain", "sourcePath": "ICONS/Spell_Shadow_ShadowWordPain.PNG" },
+
+    { "kind": "spec", "classId": 4, "class": "ROGUE", "specId": 259, "label": "Assassination", "outputName": "Ability_Rogue_DeadlyBrew", "sourcePath": "ICONS/Ability_Rogue_DeadlyBrew.PNG" },
+    { "kind": "spec", "classId": 4, "class": "ROGUE", "specId": 260, "label": "Outlaw", "outputName": "Ability_Rogue_Waylay", "sourcePath": "ICONS/Ability_Rogue_Waylay.PNG" },
+    { "kind": "spec", "classId": 4, "class": "ROGUE", "specId": 261, "label": "Subtlety", "outputName": "Ability_Stealth", "sourcePath": "ICONS/Ability_Stealth.PNG" },
+
+    { "kind": "spec", "classId": 7, "class": "SHAMAN", "specId": 262, "label": "Elemental", "outputName": "Spell_Nature_Lightning", "sourcePath": "ICONS/Spell_Nature_Lightning.PNG" },
+    { "kind": "spec", "classId": 7, "class": "SHAMAN", "specId": 263, "label": "Enhancement", "outputName": "Spell_Shaman_ImprovedStormstrike", "sourcePath": "ICONS/Spell_Shaman_ImprovedStormstrike.PNG" },
+    { "kind": "spec", "classId": 7, "class": "SHAMAN", "specId": 264, "label": "Restoration", "outputName": "Spell_Nature_MagicImmunity", "sourcePath": "ICONS/Spell_Nature_MagicImmunity.PNG" },
+
+    { "kind": "spec", "classId": 9, "class": "WARLOCK", "specId": 265, "label": "Affliction", "outputName": "Spell_Shadow_DeathCoil", "sourcePath": "ICONS/Spell_Shadow_DeathCoil.PNG" },
+    { "kind": "spec", "classId": 9, "class": "WARLOCK", "specId": 266, "label": "Demonology", "outputName": "Spell_Shadow_Metamorphosis", "sourcePath": "ICONS/Spell_Shadow_Metamorphosis.PNG" },
+    { "kind": "spec", "classId": 9, "class": "WARLOCK", "specId": 267, "label": "Destruction", "outputName": "Spell_Shadow_RainOfFire", "sourcePath": "ICONS/Spell_Shadow_RainOfFire.PNG" },
+
+    { "kind": "spec", "classId": 1, "class": "WARRIOR", "specId": 71, "label": "Arms", "outputName": "Ability_Warrior_SavageBlow", "sourcePath": "ICONS/Ability_Warrior_SavageBlow.PNG" },
+    { "kind": "spec", "classId": 1, "class": "WARRIOR", "specId": 72, "label": "Fury", "outputName": "Ability_Warrior_InnerRage", "sourcePath": "ICONS/Ability_Warrior_InnerRage.PNG" },
+    { "kind": "spec", "classId": 1, "class": "WARRIOR", "specId": 73, "label": "Protection", "outputName": "Ability_Warrior_DefensiveStance", "sourcePath": "ICONS/Ability_Warrior_DefensiveStance.PNG" }
+  ]
+}

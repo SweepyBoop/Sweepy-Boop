@@ -201,6 +201,43 @@ Get-ChildItem (Join-Path $Scratch 'outputs\digital-art-4x') -Filter '*.png'
 git -C (Join-Path $PSScriptRoot '..') status --short
 ```
 
+## Complete class and specialization batch
+
+The tracked manifest and runner are:
+
+```text
+icon-manifest.json
+run-icon-batch.ps1
+```
+
+The manifest follows SweepyBoop's class/spec override identifiers: 13 classes and 40 specializations. Image pixels come only from the `Gethe/wow-ui-textures` repository. The runner exports each source directly from the configured Git ref, verifies 64x64 inputs, runs `digital-art-4x`, verifies 256x256 outputs, and records source blob IDs and SHA-256 hashes.
+
+Run the batch from this directory:
+
+```powershell
+.\run-icon-batch.ps1
+```
+
+Current source coverage is 51 of 53 icons. The frozen `wow-ui-textures` upstream contains no assets for:
+
+- Devourer (`Classicon_DemonHunter_Void`, spec ID 1480)
+- Augmentation (`ClassIcon_Evoker_Augmentation`, spec ID 1473)
+
+The runner does not substitute unrelated art. It renders explicit missing-source panels for those entries. The generated review is under:
+
+```text
+scratch/comparisons/class-spec-digital-art-4x/
+|-- all-class-spec-icons-index.png
+|-- by-class/
+`-- individual/
+```
+
+The provenance report is:
+
+```text
+scratch/class-spec-run-report.json
+```
+
 ## Continuing the work
 
 A future agent should begin by reading this file, checking whether `scratch/` already contains a runtime and outputs, and asking which source art and target in-game dimensions should be evaluated. Reuse existing downloads when their hashes and versions match. Keep experimental binaries, models, copied source textures, generated images, logs, and temporary scripts under `scratch/`.
