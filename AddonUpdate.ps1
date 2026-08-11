@@ -2,6 +2,7 @@ $workDir = $PSScriptRoot
 $gameDir = "C:\Program Files (x86)\World of Warcraft"
 $extensions = @("*.lua", "*.toc", "*.xml")
 $excludePatterns = @("*.git*", "*Docs*")
+$excludedDirectoryNames = @("Tools", "wow-icon-upscale-workbench")
 
 function Deploy-Addon {
     param (
@@ -22,11 +23,19 @@ function Deploy-Addon {
         Copy-Item -Path (Join-Path $sourceDir $ext) -Destination $destDir -Force
     }
 
-    # Copy subdirectories (excluding patterns)
-    $dirsToCopy = Get-ChildItem -Path $sourceDir -Directory -Exclude $excludePatterns
+    # Copy subdirectories (excluding patterns and development-only directories)
+    $dirsToCopy = Get-ChildItem -Path $sourceDir -Directory -Exclude $excludePatterns |
+        Where-Object { $_.Name -notin $excludedDirectoryNames }
     foreach ($dir in $dirsToCopy) {
         $destPath = Join-Path -Path $destDir -ChildPath $dir.Name
         Copy-Item -Path $dir.FullName -Destination $destPath -Recurse -Force
+    }
+
+    foreach ($excludedDirectoryName in $excludedDirectoryNames) {
+        $unexpectedPath = Join-Path -Path $destDir -ChildPath $excludedDirectoryName
+        if (Test-Path -LiteralPath $unexpectedPath) {
+            throw "Excluded directory was copied into the addon installation: $unexpectedPath"
+        }
     }
 
     # Append internal flag to Constants.lua

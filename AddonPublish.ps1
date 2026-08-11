@@ -9,7 +9,9 @@ if (Test-Path -Path $publishDir) {
 Remove-Item "${workDir}\SweepyBoop.zip" -ErrorAction SilentlyContinue
 
 $excludePatterns = @("*.git*", "*Docs*", "*Internal*", "*VSCode*")
-$dirsToCopy = Get-ChildItem -Path $workDir -Directory -Exclude $excludePatterns
+$excludedDirectoryNames = @("Tools", "wow-icon-upscale-workbench")
+$dirsToCopy = Get-ChildItem -Path $workDir -Directory -Exclude $excludePatterns |
+    Where-Object { $_.Name -notin $excludedDirectoryNames }
 New-Item -ItemType Directory -Path $publishDir # Get dirsToCopy to avoid including the publishDir (i.e., infinite loop)
 
 $extensions = @("*.lua", "*.toc", "*.xml")
@@ -19,6 +21,13 @@ foreach ($ext in $extensions) {
 foreach ($dir in $dirsToCopy) {
     $destPath = Join-Path -Path $publishDir -ChildPath $dir.Name
     Copy-Item -Path $dir.FullName -Destination $destPath -Recurse -Force
+}
+
+foreach ($excludedDirectoryName in $excludedDirectoryNames) {
+    $unexpectedPath = Join-Path -Path $publishDir -ChildPath $excludedDirectoryName
+    if (Test-Path -LiteralPath $unexpectedPath) {
+        throw "Excluded directory was copied into the publication staging tree: $unexpectedPath"
+    }
 }
 
 # Filter out lines containing "Internal" from the .toc file
