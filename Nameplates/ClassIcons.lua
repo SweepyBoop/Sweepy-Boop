@@ -554,6 +554,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             iconFrame.border:SetAlpha(0);
             iconFrame.targetHighlight:SetAlpha(0);
             arrowFrame.icon:SetAlpha(0);
+            arrowFrame.materialOverlay:SetAlpha(0);
             arrowFrame.targetHighlight:SetAlpha(0);
             pinFrame.icon:SetAlpha(0);
             pinFrame.targetHighlight:SetAlpha(0);
@@ -595,9 +596,11 @@ addon.UpdateClassIcon = function(nameplate, frame)
                 iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", offsetX, offsetY);
             end
 
-            arrowFrame.icon:SetAlpha(1);
+            arrowFrame.icon:SetAlpha(0);
+            arrowFrame.materialOverlay:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
             arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            arrowFrame.materialOverlay:SetVertexColor(classColor.r, classColor.g, classColor.b);
             arrowFrame:SetScale(iconScale);
             arrowFrame:SetFrameLevel(3);
             arrowFrame:ClearAllPoints();

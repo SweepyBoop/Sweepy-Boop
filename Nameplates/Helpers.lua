@@ -6,6 +6,8 @@ local iconSize = 40;
 -- Original Sanctum arrow atlas size is 48 * 67, scale it up a little.
 local arrowWidth = 48 * 1.1;
 local arrowHeight = 67 * 1.1;
+-- The overlay includes antialias padding, so 48 gives it the same visible footprint as a 40px class icon.
+local classArrowSize = 48;
 local classPinWidth = 40;
 local classPinHeight = 46;
 -- Copied from TextureAtlasViewer Data_Mainline.lua entry for CovenantSanctum-Renown-DoubleArrow-Disabled.
@@ -93,32 +95,38 @@ addon.CreateClassOrSpecIcon = function (nameplate, point, relativePoint, isFrien
 end
 
 addon.CreateClassColorArrowFrame = function (nameplate)
-    local classIconFrame = CreateFrame("Frame", nil, nameplate);
-    classIconFrame:SetMouseClickEnabled(false);
+    local arrowFrame = CreateFrame("Frame", nil, nameplate);
+    arrowFrame:SetMouseClickEnabled(false);
     -- Force alpha 1 and ignore parent alpha, so that the nameplate is always super visible
-    classIconFrame:SetAlpha(1);
-    classIconFrame:SetIgnoreParentAlpha(true);
-    classIconFrame:SetSize(arrowHeight, arrowWidth); -- Swap width and height since we are rotating the texture
-    classIconFrame:SetFrameStrata("HIGH");
-    classIconFrame:SetPoint("CENTER", nameplate, "CENTER");
+    arrowFrame:SetAlpha(1);
+    arrowFrame:SetIgnoreParentAlpha(true);
+    arrowFrame:SetSize(classArrowSize, classArrowSize);
+    arrowFrame:SetFrameStrata("HIGH");
+    arrowFrame:SetPoint("CENTER", nameplate, "CENTER");
 
-    classIconFrame.icon = classIconFrame:CreateTexture(nil, "BORDER");
-    classIconFrame.icon:SetDesaturated(false);
-    classIconFrame.icon:SetTexture(addon.INTERFACE_SWEEPY .. "Art/CovenantRenownUI");
-    classIconFrame.icon:SetTexCoord(unpack(arrowTexCoords));
-    classIconFrame.icon:SetSize(arrowWidth, arrowHeight);
-    classIconFrame.icon:SetPoint("CENTER", classIconFrame, "CENTER");
-    classIconFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
+    arrowFrame.icon = arrowFrame:CreateTexture(nil, "BORDER");
+    arrowFrame.icon:SetDesaturated(false);
+    arrowFrame.icon:SetTexture(addon.INTERFACE_SWEEPY .. "Art/CovenantRenownUI");
+    arrowFrame.icon:SetTexCoord(unpack(arrowTexCoords));
+    arrowFrame.icon:SetSize(arrowWidth, arrowHeight);
+    arrowFrame.icon:SetPoint("CENTER", arrowFrame, "CENTER");
+    arrowFrame.icon:SetRotation(math.pi / 2); -- Counter-clockwise by 90 degrees
 
-    classIconFrame.targetHighlight = classIconFrame:CreateTexture(nil, "OVERLAY");
-    classIconFrame.targetHighlight:SetAtlas("communities-guildbanner-border"); -- Originally Capacitance-General-WorkOrderBorder which is rectangle
-    classIconFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
-    classIconFrame.targetHighlight:SetDesaturated(false);
-    classIconFrame.targetHighlight:SetSize(arrowWidth, arrowWidth);
-    classIconFrame.targetHighlight:SetPoint("CENTER", classIconFrame, "CENTER", 0, -5);
-    classIconFrame.targetHighlight:Hide();
+    arrowFrame.materialOverlay = arrowFrame:CreateTexture(nil, "ARTWORK");
+    arrowFrame.materialOverlay:SetDesaturated(false);
+    arrowFrame.materialOverlay:SetTexture(addon.INTERFACE_SWEEPY .. "Art/ClassColorArrowOverlay");
+    arrowFrame.materialOverlay:SetAllPoints(arrowFrame);
+    arrowFrame.materialOverlay:SetTexCoord(0, 1, 0, 1);
 
-    return classIconFrame;
+    arrowFrame.targetHighlight = arrowFrame:CreateTexture(nil, "OVERLAY");
+    arrowFrame.targetHighlight:SetAtlas("communities-guildbanner-border"); -- Originally Capacitance-General-WorkOrderBorder which is rectangle
+    arrowFrame.targetHighlight:SetVertexColor(1, 0.88, 0);
+    arrowFrame.targetHighlight:SetDesaturated(false);
+    arrowFrame.targetHighlight:SetSize(classArrowSize, classArrowSize);
+    arrowFrame.targetHighlight:SetPoint("CENTER", arrowFrame, "CENTER", 0, -5);
+    arrowFrame.targetHighlight:Hide();
+
+    return arrowFrame;
 end
 
 addon.CreateClassColorPinFrame = function (nameplate)
