@@ -7,8 +7,7 @@ local setPointOptions = {
     [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
-local function GetConfiguredSpecIcon(specID, specIconID, role, config)
-    specIconID = addon.GetSpecIconTexture(specID, specIconID);
+local function GetConfiguredSpecIcon(specIconID, role, config)
     if ( not specIconID ) then return end
 
     if ( role == "HEALER" ) then
@@ -30,20 +29,7 @@ local function GetMainlineArenaSpecInfo(unitId)
     local specID = GetArenaOpponentSpec(arenaNumber);
     if ( not specID ) or ( specID <= 0 ) then return end
 
-    local iconID, role = select(4, GetSpecializationInfoByID(specID));
-    return specID, iconID, role;
-end
-
-local function GetMoPArenaSpecInfo(unitId)
-    for i = 1, addon.MAX_ARENA_SIZE do
-        if UnitIsUnit(unitId, "arena" .. i) then
-            local specID = GetArenaOpponentSpec(i);
-            if ( not specID ) or ( specID <= 0 ) then return end
-
-            local iconID, role = select(4, GetSpecializationInfoByID(specID));
-            return specID, iconID, role;
-        end
-    end
+    return select(4, GetSpecializationInfoByID(specID)); -- iconID, role
 end
 
 local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil; check cache (for perf) and config
@@ -55,17 +41,30 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
 
     if addon.PROJECT_MAINLINE then
         if IsActiveBattlefieldArena() then
-            local specID, specIconID, role = GetMainlineArenaSpecInfo(unitId);
-            return GetConfiguredSpecIcon(specID, specIconID, role, config);
+            local specIconID, role = GetMainlineArenaSpecInfo(unitId);
+            return GetConfiguredSpecIcon(specIconID, role, config);
         end
     elseif addon.PROJECT_TBC then
         -- TBC: UnitGroupRolesAssigned doesn't work reliably for enemy arena units
         -- TBC didn't have a spec system, so we can't detect healers
         -- Feature disabled for TBC
     else
-        if IsActiveBattlefieldArena() then
-            local specID, specIconID, role = GetMoPArenaSpecInfo(unitId);
-            return GetConfiguredSpecIcon(specID, specIconID, role, config);
+        -- On MoP Classic, we can detect spec from tooltip
+        if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
+            local specInfo = addon.GetPlayerSpec(unitId);
+            if ( not specInfo ) then return end
+            if ( specInfo.role == "HEALER" ) then
+                if config.arenaSpecIconHealer then
+                    if config.arenaSpecIconHealerIcon then
+                        iconID = addon.ICON_ID_HEALER_ENEMY;
+                        isHealer = true;
+                    else
+                        iconID = specInfo.icon;
+                    end
+                end
+            elseif config.arenaSpecIconOthers then
+                iconID = specInfo.icon;
+            end
         end
     end
 
@@ -91,14 +90,15 @@ addon.UpdateSpecIcon = function (nameplate)
             iconFrame.icon:SetTexture();
             iconFrame.border:Hide();
         elseif isHealer then
-            iconFrame.icon:SetTexture(iconID);
-            iconFrame.icon:SetTexCoord(unpack(addon.FULL_ICON_TEX_COORDS));
-            iconFrame.icon:SetVertexColor(1, 1, 1, 1);
-            iconFrame.border:SetShown(addon.PROJECT_MAINLINE);
+            iconFrame.icon:SetAtlas(iconID);
+            if addon.PROJECT_MAINLINE then
+                iconFrame.border:Show();
+            else
+                iconFrame.border:Hide();
+                iconFrame.icon:SetVertexColor(1, 0, 0);
+            end
         else
             iconFrame.icon:SetTexture(iconID);
-            iconFrame.icon:SetTexCoord(unpack(addon.FULL_ICON_TEX_COORDS));
-            iconFrame.icon:SetVertexColor(1, 1, 1, 1);
             iconFrame.border:Show();
         end
 

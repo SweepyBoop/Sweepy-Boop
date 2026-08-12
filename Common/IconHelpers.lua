@@ -1,18 +1,5 @@
 local _, addon = ...;
 
-addon.GetClassIconTexture = function (classFileName)
-    local bundledTexture = addon.BUNDLED_CLASS_ICON_TEXTURES[classFileName];
-    if bundledTexture then
-        return bundledTexture, addon.FULL_ICON_TEX_COORDS;
-    end
-
-    return addon.ICON_ID_CLASSES, CLASS_ICON_TCOORDS[classFileName];
-end
-
-addon.GetSpecIconTexture = function (specID, fallbackTexture)
-    return addon.BUNDLED_SPEC_ICON_TEXTURES[specID] or fallbackTexture;
-end
-
 local function TintOverlayGlowTexture(texture, color)
     if texture and color then
         texture:SetVertexColor(color[1], color[2], color[3], color[4]);

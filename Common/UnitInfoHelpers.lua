@@ -49,9 +49,7 @@ addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
 end
 
 addon.GetUnitClass = function(unitId)
-    local class = UnitClassBase(unitId); -- Locale-independent name, e.g. "WARRIOR"
-    if addon.IsSecretValue(class) then return end
-    return class;
+    return select(2, UnitClass(unitId)); -- Locale-independent name, e.g. "WARRIOR"
 end
 
 -- Arena-safe unit resolver ----------------------------------------------------
@@ -227,19 +225,9 @@ addon.IsPartyPrimaryPet = function(unitId)
 end
 
 addon.UnitIsHostile = function(unitId)
-    local playerPossessed = UnitIsPossessed("player");
-    local unitPossessed = UnitIsPossessed(unitId);
-    if addon.IsSecretValue(playerPossessed) or addon.IsSecretValue(unitPossessed) then
-        return true;
-    end
-
-    local possessedFactor = ( playerPossessed ~= unitPossessed );
+    local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
     -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
     local reaction = UnitReaction("player", unitId); -- this can sometimes return nil, treat as hostile to avoid showing friendly class icons on NPCs
-    if addon.IsSecretValue(reaction) then
-        return true;
-    end
-
     local isHostile = ( not reaction ) or ( reaction < 5 );
     return isHostile ~= possessedFactor;
 end
@@ -418,7 +406,7 @@ addon.GetPlayerSpec = function (unitId)
             local specID = specIDByTooltip[line.leftText];
             if specID then
                 local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                local specInfo = { icon = addon.GetSpecIconTexture(specID, iconID), role = role };
+                local specInfo = { icon = iconID, role = role };
                 if canCache then
                     addon.cachedPlayerSpec[tooltipGUID] = specInfo;
                 end

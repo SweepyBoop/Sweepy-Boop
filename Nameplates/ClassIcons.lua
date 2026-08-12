@@ -231,7 +231,8 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     end
 
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
-    iconID, iconCoords = addon.GetClassIconTexture(class);
+    iconID = addon.ICON_ID_CLASSES;
+    iconCoords = CLASS_ICON_TCOORDS[class];
     iconScale = config.classIconSize;
 
     if config.showSpecIcons and specIconID then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
@@ -598,13 +599,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame.icon:SetAlpha(0);
             arrowFrame.materialOverlay:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
-            if classColor then
-                arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-                arrowFrame.materialOverlay:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            else
-                arrowFrame.icon:SetVertexColor(1, 1, 1);
-                arrowFrame.materialOverlay:SetVertexColor(1, 1, 1);
-            end
+            arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            arrowFrame.materialOverlay:SetVertexColor(classColor.r, classColor.g, classColor.b);
             arrowFrame:SetScale(iconScale);
             arrowFrame:SetFrameLevel(3);
             arrowFrame:ClearAllPoints();
