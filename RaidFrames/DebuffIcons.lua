@@ -148,6 +148,11 @@ local function InitializeAuraButton(button, frame)
         showWhenHarmful = true,
         showWithoutDispelType = true,
         customDispelColorMap = {
+            Magic = CreateColor(1, 1, 1),
+            Curse = CreateColor(1, 1, 1),
+            Disease = CreateColor(1, 1, 1),
+            Poison = CreateColor(1, 1, 1),
+            Enrage = CreateColor(1, 1, 1),
             None = CreateColor(1, 0, 0),
         },
     });
