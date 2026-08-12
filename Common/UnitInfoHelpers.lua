@@ -119,6 +119,12 @@ local function GetUnitArenaFingerprintCached(unit)
     return GetUnitArenaFingerprint(unit);
 end
 
+addon.UnitIsUnitReadable = function(unitA, unitB)
+    local isSameUnit = UnitIsUnit(unitA, unitB);
+    if addon.IsSecretValue(isSameUnit) then return false end
+    return isSameUnit;
+end
+
 addon.UnitIsUnitSecretValueSafe = function(unitA, unitB)
     if ( not addon.PROJECT_MAINLINE ) then
         return UnitIsUnit(unitA, unitB);
@@ -401,12 +407,12 @@ addon.GetPlayerSpec = function (unitId)
 
     -- Use tooltip - tooltipData.guid works even when UnitGUID() is secret
     local tooltipData = C_TooltipInfo.GetUnit(unitId);
-    if not tooltipData or not tooltipData.guid or not tooltipData.lines then
+    if not tooltipData or not tooltipData.lines then
         return nil;
     end
 
     local tooltipGUID = tooltipData.guid;
-    local canCache = tooltipGUID and ( not addon.IsSecretValue(tooltipGUID) );
+    local canCache = ( not addon.IsSecretValue(tooltipGUID) ) and tooltipGUID ~= nil;
 
     -- Return cached specInfo if already found
     if canCache and addon.cachedPlayerSpec[tooltipGUID] then
@@ -414,15 +420,22 @@ addon.GetPlayerSpec = function (unitId)
     end
 
     -- Skip if line.leftText is secret, i.e., can't parse
-    local firstLine = tooltipData.lines and tooltipData.lines[1];
-    if ( not firstLine ) or ( not firstLine.leftText ) or addon.IsSecretValue(firstLine.leftText) then
+    local firstLine = tooltipData.lines[1];
+    local firstLineText = firstLine and firstLine.leftText;
+    if addon.IsSecretValue(firstLineText) or ( not firstLineText ) then
         return nil;
     end
 
     -- Iterate through tooltip lines to find the spec name
     for _, line in ipairs(tooltipData.lines) do
-        if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
-            local specID = specIDByTooltip[line.leftText];
+        local lineType = line and line.type;
+        local lineText = line and line.leftText;
+        if ( not addon.IsSecretValue(lineType) )
+            and ( not addon.IsSecretValue(lineText) )
+            and lineType == Enum.TooltipDataLineType.None
+            and lineText
+            and lineText ~= "" then
+            local specID = specIDByTooltip[lineText];
             if specID then
                 local iconID, role = select(4, GetSpecializationInfoByID(specID));
                 local specInfo = { icon = iconID, role = role };

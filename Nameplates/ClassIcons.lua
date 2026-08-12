@@ -267,7 +267,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
 end
 
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
-    local isTarget = UnitIsUnit(frame.unit, "target");
+    local isTarget = addon.UnitIsUnitReadable(frame.unit, "target");
     local config = SweepyBoop.db.profile.nameplatesFriendly;
     local featureEnabled = config.targetHighlight and ( not hasConflict );
     if nameplate.classIconContainer then
@@ -293,7 +293,7 @@ addon.UpdatePlayerName = function (nameplate, frame)
     end
 
     if shouldUpdate then
-        local name = UnitName(frame.unit) or "";
+        local name = UnitName(frame.unit);
         local class = addon.GetUnitClass(frame.unit);
         local classColor = class and RAID_CLASS_COLORS[class];
 
@@ -523,6 +523,10 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
+        if addon.IsSecretValue(pvpClassification) then
+            pvpClassification = nil;
+        end
+
         specInfo = addon.GetPlayerSpec(frame.unit);
         if specInfo then
             specIconID = specInfo.icon;
@@ -531,6 +535,9 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
     -- UnitGroupRolesAssigned doesn't work in open world, fall back to spec-based detection
     local roleAssigned = UnitGroupRolesAssigned(frame.unit);
+    if addon.IsSecretValue(roleAssigned) then
+        roleAssigned = nil;
+    end
     if ( roleAssigned == "NONE" or roleAssigned == nil ) and specInfo and specInfo.role then
         roleAssigned = specInfo.role;
     end
