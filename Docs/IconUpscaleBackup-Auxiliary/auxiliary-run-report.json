@@ -1,38 +1,8 @@
 {
   "model": "digital-art-4x",
   "targetSize": 256,
-  "generatedAssets": 7,
+  "generatedAssets": 6,
   "assets": [
-    {
-      "kind": "atlas",
-      "label": "Friendly healer (native extraction)",
-      "outputName": "HealerFriendly",
-      "processing": "native-extraction",
-      "retailPath": "Interface/LFGFRAME/UILFGPrompts.blp",
-      "atlasDataFile": "Data_Mainline.lua",
-      "atlasName": "UI-LFG-RoleIcon-Healer",
-      "logicalSize": [
-        70,
-        70
-      ],
-      "texCoords": [
-        0.00048828125,
-        0.12548828125,
-        0.75537109375,
-        0.88037109375
-      ],
-      "inputSize": [
-        256,
-        256
-      ],
-      "inputSha256": "7C8040D5D71D60087CA9D413E855E14C1F5503782267E2DD6DA3640D3DCEC9CA",
-      "outputSize": [
-        256,
-        256
-      ],
-      "outputSha256": "7C8040D5D71D60087CA9D413E855E14C1F5503782267E2DD6DA3640D3DCEC9CA",
-      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\HealerFriendly.png"
-    },
     {
       "kind": "atlas",
       "label": "Enemy healer",

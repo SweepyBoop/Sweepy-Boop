@@ -34,6 +34,18 @@ local function GetMainlineArenaSpecInfo(unitId)
     return specID, iconID, role;
 end
 
+local function GetMoPArenaSpecInfo(unitId)
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if UnitIsUnit(unitId, "arena" .. i) then
+            local specID = GetArenaOpponentSpec(i);
+            if ( not specID ) or ( specID <= 0 ) then return end
+
+            local iconID, role = select(4, GetSpecializationInfoByID(specID));
+            return specID, iconID, role;
+        end
+    end
+end
+
 local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil; check cache (for perf) and config
     local iconID, isHealer;
 
@@ -51,22 +63,9 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
         -- TBC didn't have a spec system, so we can't detect healers
         -- Feature disabled for TBC
     else
-        -- On MoP Classic, we can detect spec from tooltip
-        if IsActiveBattlefieldArena() or ( UnitInBattleground("player") ~= nil ) then
-            local specInfo = addon.GetPlayerSpec(unitId);
-            if ( not specInfo ) then return end
-            if ( specInfo.role == "HEALER" ) then
-                if config.arenaSpecIconHealer then
-                    if config.arenaSpecIconHealerIcon then
-                        iconID = addon.ICON_ID_HEALER_ENEMY;
-                        isHealer = true;
-                    else
-                        iconID = specInfo.icon;
-                    end
-                end
-            elseif config.arenaSpecIconOthers then
-                iconID = specInfo.icon;
-            end
+        if IsActiveBattlefieldArena() then
+            local specID, specIconID, role = GetMoPArenaSpecInfo(unitId);
+            return GetConfiguredSpecIcon(specID, specIconID, role, config);
         end
     end
 

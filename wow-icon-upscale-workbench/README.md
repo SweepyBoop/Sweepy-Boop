@@ -274,7 +274,7 @@ The helper preserves the 256x256 RGB pixels, forces opaque alpha, validates the 
 
 ## Auxiliary icons
 
-The auxiliary workflow covers the friendly healer, universal red enemy healer, arena-frame healer, pet, and three flag-carrier icons. Atlas coordinates come from `TextureAtlasViewer/Data_Mainline.lua`; source pixels come from the corresponding current Retail BLP files. The friendly healer is bundled as an unchanged native 256x256 extraction for consistent standalone-texture handling; it is not AI-upscaled because that provides no quality gain. Run extraction and inference with:
+The auxiliary workflow covers the universal red enemy healer, arena-frame healer, pet, and three flag-carrier icons. Atlas coordinates come from `TextureAtlasViewer/Data_Mainline.lua`; source pixels come from the corresponding current Retail BLP files. The friendly healer keeps Blizzard's built-in `UILFGPrompts` texture and inset coordinates because the standalone crop does not align correctly with SweepyBoop's icon mask. Run extraction and inference with:
 
 ```powershell
 .\scratch\python\Scripts\python.exe `

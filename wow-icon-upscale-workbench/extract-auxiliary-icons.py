@@ -62,8 +62,8 @@ def main() -> None:
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     assets = manifest["assets"]
-    if len(assets) != 7:
-        raise ValueError(f"Expected 7 auxiliary assets, found {len(assets)}")
+    if len(assets) != 6:
+        raise ValueError(f"Expected 6 auxiliary assets, found {len(assets)}")
 
     args.output.mkdir(parents=True, exist_ok=True)
     report_assets = []

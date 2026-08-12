@@ -489,8 +489,8 @@ end
 
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
--- This is the native 256x256 Retail atlas crop; AI upscaling adds no quality.
-addon.ICON_ID_HEALER = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerFriendly";
+-- Keep the inset atlas crop so the friendly healer artwork aligns with the icon mask.
+addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
 addon.ICON_ID_HEALER_ENEMY = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/Healing_Red";
 addon.ICON_ID_HEALER_ARENA_FRAME = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerArenaFrame";
 addon.SPEC_ICON_ENEMY_HEALER_LOGO = addon.FORMAT_TEXTURE(addon.ICON_ID_HEALER_ENEMY);
@@ -563,7 +563,7 @@ addon.ICON_ID_PVP_CURSOR = "interface/cursor/pvp";
 -- https://warcraft.wiki.gg/wiki/UI_escape_sequences
 addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
 
-addon.ICON_COORDS_HEALER = addon.FULL_ICON_TEX_COORDS;
+addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
 
 addon.CLASS_ICON_STYLE = {
     ICON = 0,

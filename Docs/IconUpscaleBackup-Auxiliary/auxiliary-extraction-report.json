@@ -4,43 +4,6 @@
   "assets": [
     {
       "kind": "atlas",
-      "label": "Friendly healer (native extraction)",
-      "outputName": "HealerFriendly",
-      "processing": "native-extraction",
-      "retailPath": "Interface/LFGFRAME/UILFGPrompts.blp",
-      "atlasDataFile": "Data_Mainline.lua",
-      "atlasName": "UI-LFG-RoleIcon-Healer",
-      "logicalSize": [
-        70,
-        70
-      ],
-      "texCoords": [
-        0.00048828125,
-        0.12548828125,
-        0.75537109375,
-        0.88037109375
-      ],
-      "sourcePath": "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\BlizzardInterfaceArt\\Interface\\LFGFRAME\\UILFGPrompts.blp",
-      "sourceSha256": "45E361890BD09C7089089CE48C6369D0D7E2EED4E23C14EDA51670CDD9D11462",
-      "sourceSize": [
-        2048,
-        2048
-      ],
-      "cropBox": [
-        1,
-        1547,
-        257,
-        1803
-      ],
-      "inputSize": [
-        256,
-        256
-      ],
-      "inputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\inputs\\auxiliary-icons\\HealerFriendly.png",
-      "inputSha256": "7C8040D5D71D60087CA9D413E855E14C1F5503782267E2DD6DA3640D3DCEC9CA"
-    },
-    {
-      "kind": "atlas",
       "label": "Enemy healer",
       "outputName": "Healing_Red",
       "retailPath": "Interface/PVPFRAME/TournamentOrganizer.blp",
