@@ -45,8 +45,8 @@ local function GetFrameHeight(frame)
 end
 
 local function GetIconSize(frame, config)
-    local scale = tonumber(config.raidFrameDebuffIconScale) or 0.35;
-    if ( scale <= 0 ) then scale = 0.35 end
+    local scale = tonumber(config.raidFrameDebuffIconScale) or 0.5;
+    if ( scale <= 0 ) then scale = 0.5 end
     return GetFrameHeight(frame) * scale;
 end
 

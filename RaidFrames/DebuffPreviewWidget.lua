@@ -32,14 +32,8 @@ local function GetIconCount(config)
 end
 
 local function GetIconScale(config)
-    local scale = tonumber(config.raidFrameDebuffIconScale) or 0.75;
-    if scale <= 0 then return 0.75 end
-    return scale;
-end
-
-local function GetDispellableScale(config)
-    local scale = tonumber(config.raidFrameDebuffIconDispellableScale) or 1;
-    if scale <= 0 then return 1 end
+    local scale = tonumber(config.raidFrameDebuffIconScale) or 0.5;
+    if scale <= 0 then return 0.5 end
     return scale;
 end
 
@@ -97,7 +91,17 @@ end
 
 local function SetIconSize(icon, frameHeight, scale)
     local shownSize = frameHeight * scale;
+    local visualScale = shownSize / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET * visualScale;
+    local borderPadding = visualScale;
+
     icon:SetSize(shownSize, shownSize);
+    icon.texture:ClearAllPoints();
+    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
+    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
+    icon.border:ClearAllPoints();
+    icon.border:SetPoint("TOPLEFT", icon, "TOPLEFT", -borderPadding, borderPadding);
+    icon.border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", borderPadding, -borderPadding);
     UpdateCooldownFontSize(icon.cooldown, shownSize);
 end
 
@@ -126,10 +130,20 @@ end
 
 local function CreateDebuffIcon(parent)
     local icon = CreateFrame("Frame", nil, parent);
+
+    local backdrop = icon:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(icon);
+    backdrop:SetColorTexture(0, 0, 0, 1);
+
     icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    icon.texture:SetAllPoints(icon);
+    icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+
+    icon.border = icon:CreateTexture(nil, "OVERLAY");
+    icon.border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+    icon.border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
-    icon.cooldown:SetAllPoints(icon);
+    icon.cooldown:SetAllPoints(icon.texture);
     icon.cooldown:SetScript("OnCooldownDone", function()
         RestartIconCooldown(icon);
     end);
@@ -178,8 +192,7 @@ local function RenderSample(widget)
     local iconCount = GetIconCount(config);
     local frameHeight = previewFrameHeight;
     local iconScale = GetIconScale(config);
-    local dispellableScale = GetDispellableScale(config);
-    local maxIconSize = frameHeight * math.max(iconScale, dispellableScale);
+    local maxIconSize = frameHeight * iconScale;
     local shownIconCount = math.min(iconCount, 2);
     local previousIcon;
 
@@ -208,7 +221,7 @@ local function RenderSample(widget)
         if i <= shownIconCount then
             icon.previewActive = widget.frame:IsShown();
             if i == 1 then
-                SetIconSize(icon, frameHeight, dispellableScale);
+                SetIconSize(icon, frameHeight, iconScale);
                 icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
                 addon.ShowProcGlow(icon);
             else

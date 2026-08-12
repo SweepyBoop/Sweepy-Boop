@@ -16,7 +16,14 @@ local function SetBlizzardBuffsHidden(hidden)
     if ( not callSucceeded )
             or ( setSucceeded == false )
             or ( tostring(GetCVar(blizzardBuffCVar)) ~= desired ) then
-        print(addon.addonTitle .. ": could not change " .. blizzardBuffCVar .. ".");
+        print(
+            addon.addonTitle
+                .. ": "
+                .. format(
+                    addon.L["Could not change %s."],
+                    blizzardBuffCVar
+                )
+        );
     end
     RefreshOptions();
 end
@@ -335,7 +342,7 @@ addon.GetRaidFrameOptions = function(order)
                         confirm = function(_, hidden)
                             return hidden;
                         end,
-                        confirmText = "SweepyBoop will set raidFramesDisplayBuffs to 0. This hides Blizzard's built-in raid-frame buffs until you turn this option off. Continue?",
+                        confirmText = addon.L["SweepyBoop will set raidFramesDisplayBuffs to 0. This hides Blizzard's built-in raid-frame buffs until you turn this option off. Continue?"],
                         get = GetBlizzardBuffsHidden,
                         set = function(_, hidden)
                             SetBlizzardBuffsHidden(hidden);
@@ -416,10 +423,10 @@ addon.GetRaidFrameOptions = function(order)
                             return table.concat({
                                 addon.L["Enable the helper while playing Restoration Druid."],
                                 "",
-                                "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom with a green glow in its 30% refresh window when timing is readable.",
+                                "\226\128\162 " .. SpellIcon(33763) .. " " .. addon.L["Lifebloom with a green glow in its 30% refresh window when timing is readable."],
                                 "\226\128\162 " .. addon.L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."],
-                                "\226\128\162 Warn when Mark of the Wild is missing.",
-                                "\226\128\162 Securely rendered by Blizzard's aura container.",
+                                "\226\128\162 " .. addon.L["Warn when Mark of the Wild is missing."],
+                                "\226\128\162 " .. addon.L["Securely rendered by Blizzard's aura container."],
                             }, "\n");
                         end,
                         disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
@@ -465,8 +472,8 @@ addon.GetRaidFrameOptions = function(order)
                                 "",
                                 "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Echo without a refresh-window glow."],
                                 "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."],
-                                "\226\128\162 Warn when Blessing of the Bronze is missing.",
-                                "\226\128\162 Securely rendered by Blizzard's aura container.",
+                                "\226\128\162 " .. addon.L["Warn when Blessing of the Bronze is missing."],
+                                "\226\128\162 " .. addon.L["Securely rendered by Blizzard's aura container."],
                             }, "\n");
                         end,
                         disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
