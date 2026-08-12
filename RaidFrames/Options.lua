@@ -1,7 +1,6 @@
 local addonName, addon = ...;
 
 local blizzardBuffCVar = "raidFramesDisplayBuffs";
-local confirmHideBlizzardBuffs = "SWEEPYBOOP_CONFIRM_HIDE_BLIZZARD_RAID_FRAME_BUFFS";
 
 local function RefreshOptions()
     LibStub("AceConfigRegistry-3.0"):NotifyChange(addonName);
@@ -21,20 +20,6 @@ local function SetBlizzardBuffsHidden(hidden)
     end
     RefreshOptions();
 end
-
-StaticPopupDialogs[confirmHideBlizzardBuffs] = {
-    text = "SweepyBoop will set raidFramesDisplayBuffs to 0. This hides Blizzard's built-in raid-frame buffs until you turn this option off. Continue?",
-    button1 = YES,
-    button2 = NO,
-    OnAccept = function()
-        SetBlizzardBuffsHidden(true);
-    end,
-    OnCancel = RefreshOptions,
-    timeout = 0,
-    whileDead = true,
-    hideOnEscape = true,
-    preferredIndex = 3,
-};
 
 local cvarEventFrame = CreateFrame("Frame");
 cvarEventFrame:RegisterEvent("CVAR_UPDATE");
@@ -347,13 +332,13 @@ addon.GetRaidFrameOptions = function(order)
                         type = "toggle",
                         name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Hide Blizzard raid-frame buffs via CVar",
                         desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
+                        confirm = function(_, hidden)
+                            return hidden;
+                        end,
+                        confirmText = "SweepyBoop will set raidFramesDisplayBuffs to 0. This hides Blizzard's built-in raid-frame buffs until you turn this option off. Continue?",
                         get = GetBlizzardBuffsHidden,
                         set = function(_, hidden)
-                            if hidden then
-                                StaticPopup_Show(confirmHideBlizzardBuffs);
-                            else
-                                SetBlizzardBuffsHidden(false);
-                            end
+                            SetBlizzardBuffsHidden(hidden);
                         end,
                     },
 
