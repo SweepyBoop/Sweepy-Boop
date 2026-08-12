@@ -1,0 +1,154 @@
+{
+  "sourcePolicy": "retail-interface-art",
+  "targetSize": 256,
+  "assets": [
+    {
+      "kind": "atlas",
+      "label": "Enemy healer",
+      "outputName": "Healing_Red",
+      "retailPath": "Interface/PVPFRAME/TournamentOrganizer.blp",
+      "atlasDataFile": "Data_Mainline.lua",
+      "atlasName": "Healing_Red",
+      "logicalSize": [
+        37,
+        37
+      ],
+      "texCoords": [
+        0.0009765625,
+        0.037109375,
+        0.2568359375,
+        0.29296875
+      ],
+      "sourcePath": "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\BlizzardInterfaceArt\\Interface\\PVPFRAME\\TournamentOrganizer.blp",
+      "sourceSha256": "1549587EB35C676574CEE19513C21DD3095C0DC94D11AB8DE4DF0A69B204181C",
+      "sourceSize": [
+        1024,
+        1024
+      ],
+      "cropBox": [
+        1,
+        263,
+        38,
+        300
+      ],
+      "inputSize": [
+        37,
+        37
+      ],
+      "inputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\inputs\\auxiliary-icons\\Healing_Red.png",
+      "inputSha256": "6105DCF4DFB19A1092EF97BC83214FBCBDF63369D2BC99FA39F9ABC74C71785A"
+    },
+    {
+      "kind": "atlas",
+      "label": "Arena frame healer",
+      "outputName": "HealerArenaFrame",
+      "retailPath": "Interface/PVPFRAME/PvPSeparation.blp",
+      "atlasDataFile": "Data_Mainline.lua",
+      "atlasName": "Icon-Healer",
+      "logicalSize": [
+        64,
+        64
+      ],
+      "texCoords": [
+        0.51953125,
+        0.76953125,
+        0.6884765625,
+        0.7509765625
+      ],
+      "sourcePath": "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\BlizzardInterfaceArt\\Interface\\PVPFRAME\\PvPSeparation.blp",
+      "sourceSha256": "71CF81287C86059B05D5A357B171A5581D3E33A52085C3B64A06ED2A889AA092",
+      "sourceSize": [
+        256,
+        1024
+      ],
+      "cropBox": [
+        133,
+        705,
+        197,
+        769
+      ],
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\inputs\\auxiliary-icons\\HealerArenaFrame.png",
+      "inputSha256": "662D17C71298C3CFD212EF6BFB13AD3AD9830AB1A9741B395CE98F9AC4F045DC"
+    },
+    {
+      "kind": "icon",
+      "label": "Friendly pet",
+      "outputName": "Pet",
+      "retailPath": "Interface/ICONS/Ability_Hunter_MendPet.blp",
+      "sourcePath": "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\BlizzardInterfaceArt\\Interface\\ICONS\\Ability_Hunter_MendPet.blp",
+      "sourceSha256": "E64E278FB2EAF4037930FEF820E03F09E8358709A31EE3CEE1E7BD5F6C18B133",
+      "sourceSize": [
+        64,
+        64
+      ],
+      "cropBox": null,
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\inputs\\auxiliary-icons\\Pet.png",
+      "inputSha256": "0CE806B9B9E8180E28AABA2ADA59568076A391FA2F26EB096ED1114CFC32B75A"
+    },
+    {
+      "kind": "icon",
+      "label": "Horde flag carrier",
+      "outputName": "FlagCarrierHorde",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_01.blp",
+      "sourcePath": "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\BlizzardInterfaceArt\\Interface\\ICONS\\INV_BannerPVP_01.blp",
+      "sourceSha256": "562B5A935D398266B79C2392EC542A828DA4FF337BB420B284A349331B093CF9",
+      "sourceSize": [
+        64,
+        64
+      ],
+      "cropBox": null,
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\inputs\\auxiliary-icons\\FlagCarrierHorde.png",
+      "inputSha256": "9EB5CC7A30525E4AC533D959CF3216F9D88833E85F00215D6B5398484CE6752F"
+    },
+    {
+      "kind": "icon",
+      "label": "Alliance flag carrier",
+      "outputName": "FlagCarrierAlliance",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_02.blp",
+      "sourcePath": "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\BlizzardInterfaceArt\\Interface\\ICONS\\INV_BannerPVP_02.blp",
+      "sourceSha256": "ABE85AAFF39CAAA66CDB47498CC1B1F71586FBB1F9C69F4751592AA3A7DCDAEF",
+      "sourceSize": [
+        64,
+        64
+      ],
+      "cropBox": null,
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\inputs\\auxiliary-icons\\FlagCarrierAlliance.png",
+      "inputSha256": "DC9FFB3583B3499530F8719590841B134447F34E6ED891BBD3025F52304A34F5"
+    },
+    {
+      "kind": "icon",
+      "label": "Neutral flag carrier",
+      "outputName": "FlagCarrierNeutral",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_03.blp",
+      "sourcePath": "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\BlizzardInterfaceArt\\Interface\\ICONS\\INV_BannerPVP_03.blp",
+      "sourceSha256": "66FBE0E120B8586F3FB9CB258BAB73DF0E2C16C27A95C3D2C21037E44D1AEDD1",
+      "sourceSize": [
+        64,
+        64
+      ],
+      "cropBox": null,
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\inputs\\auxiliary-icons\\FlagCarrierNeutral.png",
+      "inputSha256": "E881D9BBA0C06C9ACADA166AD70BDC22D4135678EF695B39AB8F2C6538C171CC"
+    }
+  ]
+}

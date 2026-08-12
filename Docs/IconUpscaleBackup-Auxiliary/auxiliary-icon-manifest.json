@@ -1,0 +1,51 @@
+{
+  "sourcePolicy": "retail-interface-art",
+  "model": "digital-art-4x",
+  "targetSize": 256,
+  "assets": [
+    {
+      "kind": "atlas",
+      "label": "Enemy healer",
+      "outputName": "Healing_Red",
+      "retailPath": "Interface/PVPFRAME/TournamentOrganizer.blp",
+      "atlasDataFile": "Data_Mainline.lua",
+      "atlasName": "Healing_Red",
+      "logicalSize": [37, 37],
+      "texCoords": [0.0009765625, 0.037109375, 0.2568359375, 0.29296875]
+    },
+    {
+      "kind": "atlas",
+      "label": "Arena frame healer",
+      "outputName": "HealerArenaFrame",
+      "retailPath": "Interface/PVPFRAME/PvPSeparation.blp",
+      "atlasDataFile": "Data_Mainline.lua",
+      "atlasName": "Icon-Healer",
+      "logicalSize": [64, 64],
+      "texCoords": [0.51953125, 0.76953125, 0.6884765625, 0.7509765625]
+    },
+    {
+      "kind": "icon",
+      "label": "Friendly pet",
+      "outputName": "Pet",
+      "retailPath": "Interface/ICONS/Ability_Hunter_MendPet.blp"
+    },
+    {
+      "kind": "icon",
+      "label": "Horde flag carrier",
+      "outputName": "FlagCarrierHorde",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_01.blp"
+    },
+    {
+      "kind": "icon",
+      "label": "Alliance flag carrier",
+      "outputName": "FlagCarrierAlliance",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_02.blp"
+    },
+    {
+      "kind": "icon",
+      "label": "Neutral flag carrier",
+      "outputName": "FlagCarrierNeutral",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_03.blp"
+    }
+  ]
+}
