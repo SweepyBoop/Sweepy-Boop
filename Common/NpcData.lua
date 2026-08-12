@@ -304,10 +304,18 @@ if addon.PROJECT_MAINLINE then
     end
 
     local function GetPriorityAuraIcon(unitId)
+        if C_Secrets
+            and C_Secrets.ShouldAurasBeSecret
+            and C_Secrets.ShouldAurasBeSecret() then
+            return nil, false, false;
+        end
+
         local aura = GetFirstAuraMatching(unitId, "HELPFUL|IMPORTANT");
         if aura then
-            return aura.icon, true;
+            return aura.icon, true, true;
         end
+
+        return nil, false, true;
     end
 
     local CAPACITOR_TOTEM_ICON = addon.GetSpellTexture(192058);
@@ -339,8 +347,10 @@ if addon.PROJECT_MAINLINE then
             return addon.NpcOption.Highlight, false, CAPACITOR_TOTEM_ICON or GENERIC_SUMMON_ICON, nil;
         end
 
-        local auraIcon, hasPriorityAura = GetPriorityAuraIcon(unitId);
-        if hasPriorityAura then
+        local auraIcon, hasPriorityAura, priorityAuraKnown = GetPriorityAuraIcon(unitId);
+        if not priorityAuraKnown then
+            return addon.NpcOption.Show, false;
+        elseif hasPriorityAura then
             return addon.NpcOption.Highlight, false, auraIcon, nil;
         end
 

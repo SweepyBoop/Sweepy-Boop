@@ -414,19 +414,49 @@ ApplyLayout = function(frame, helper)
     end
 end
 
+local lifebloomSpellIDs = {
+    33763,
+    290754,
+};
 local lifebloomSpellName;
 
-local function ReadLifebloomTiming(unit)
-    if ( not C_UnitAuras.GetAuraDataBySpellName ) then return end
+local function IsPlayerLifebloom(aura)
+    if not aura then return false end
+
+    local spellID = aura.spellId;
+    local sourceUnit = aura.sourceUnit;
+    return ( not addon.IsSecretValue(spellID) )
+        and playerProfile.primaryBuffs[spellID]
+        and ( not addon.IsSecretValue(sourceUnit) )
+        and sourceUnit == "player";
+end
+
+local function FindReadableLifebloom(unit)
+    if C_UnitAuras.GetUnitAuraBySpellID then
+        for _, spellID in ipairs(lifebloomSpellIDs) do
+            local aura = C_UnitAuras.GetUnitAuraBySpellID(unit, spellID);
+            if IsPlayerLifebloom(aura) then
+                return aura;
+            end
+        end
+    end
+
+    if not C_UnitAuras.GetAuraDataBySpellName then return end
+
     lifebloomSpellName = lifebloomSpellName or C_Spell.GetSpellName(33763);
-    if ( not lifebloomSpellName ) then return end
+    if not lifebloomSpellName then return end
 
     local aura = C_UnitAuras.GetAuraDataBySpellName(
         unit,
         lifebloomSpellName,
         "HELPFUL|PLAYER"
     );
-    if ( not aura ) then return end
+    return IsPlayerLifebloom(aura) and aura or nil;
+end
+
+local function ReadLifebloomTiming(unit)
+    local aura = FindReadableLifebloom(unit);
+    if not aura then return end
 
     local duration = aura.duration;
     local expirationTime = aura.expirationTime;
