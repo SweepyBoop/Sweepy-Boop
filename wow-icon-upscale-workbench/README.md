@@ -274,7 +274,7 @@ The helper preserves the 256x256 RGB pixels, forces opaque alpha, validates the 
 
 ## Auxiliary icons
 
-The auxiliary workflow covers the friendly healer, universal red enemy healer, arena-frame healer, pet, and three flag-carrier icons. Atlas coordinates come from `TextureAtlasViewer/Data_Mainline.lua`; source pixels come from the corresponding current Retail BLP files. Run extraction and inference with:
+The auxiliary workflow covers the friendly healer, universal red enemy healer, arena-frame healer, pet, and three flag-carrier icons. Atlas coordinates come from `TextureAtlasViewer/Data_Mainline.lua`; source pixels come from the corresponding current Retail BLP files. The friendly healer is bundled as an unchanged native 256x256 extraction for consistent standalone-texture handling; it is not AI-upscaled because that provides no quality gain. Run extraction and inference with:
 
 ```powershell
 .\scratch\python\Scripts\python.exe `
@@ -302,7 +302,7 @@ The approved backup is `../Docs/IconUpscaleBackup-Auxiliary/`. Promote it while 
     ..\Art\AuxiliaryIcons
 ```
 
-The same bundled `HealerEnemy` texture is used on Retail and Mists; TBC's existing no-enemy-spec behavior is unchanged.
+The same bundled `Healing_Red` texture is used on Retail and Mists; TBC's existing no-enemy-spec behavior is unchanged.
 
 ## Continuing the work
 

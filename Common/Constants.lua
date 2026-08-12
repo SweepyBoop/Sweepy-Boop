@@ -489,6 +489,7 @@ end
 
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
+-- This is the native 256x256 Retail atlas crop; AI upscaling adds no quality.
 addon.ICON_ID_HEALER = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerFriendly";
 addon.ICON_ID_HEALER_ENEMY = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/Healing_Red";
 addon.ICON_ID_HEALER_ARENA_FRAME = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerArenaFrame";

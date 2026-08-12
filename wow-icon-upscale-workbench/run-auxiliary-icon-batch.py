@@ -25,7 +25,13 @@ def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFo
         return ImageFont.load_default()
 
 
-def make_pair(source: Path, output: Path, destination: Path, label: str) -> None:
+def make_pair(
+    source: Path,
+    output: Path,
+    destination: Path,
+    label: str,
+    processing: str,
+) -> None:
     with Image.open(source) as source_image, Image.open(output) as output_image:
         original = source_image.convert("RGBA").resize((256, 256), Image.Resampling.NEAREST)
         generated = output_image.convert("RGBA")
@@ -35,7 +41,12 @@ def make_pair(source: Path, output: Path, destination: Path, label: str) -> None
         draw = ImageDraw.Draw(canvas)
         draw.text((12, 12), label, fill=(245, 247, 250, 255), font=load_font(19, True))
         draw.text((12, 292), f"Original {source_image.width}x{source_image.height} (nearest)", fill=(174, 184, 196, 255), font=load_font(13))
-        draw.text((282, 292), "Digital Art / native 256x256", fill=(174, 184, 196, 255), font=load_font(13))
+        output_label = (
+            "Native extraction 256x256"
+            if processing == "native-extraction"
+            else "Digital Art / native 256x256"
+        )
+        draw.text((282, 292), output_label, fill=(174, 184, 196, 255), font=load_font(13))
         canvas.save(destination, format="PNG")
 
 
@@ -104,7 +115,13 @@ def main() -> None:
                 generated.save(output, format="PNG")
 
         pair = individual / name
-        make_pair(source, output, pair, asset["label"])
+        make_pair(
+            source,
+            output,
+            pair,
+            asset["label"],
+            asset.get("processing", "digital-art-4x"),
+        )
         with Image.open(source) as source_image, Image.open(output) as output_image:
             report_assets.append(
                 {
@@ -121,7 +138,7 @@ def main() -> None:
     sheet = Image.new("RGBA", (1120, sheet_height), (11, 15, 20, 255))
     draw = ImageDraw.Draw(sheet)
     draw.text((20, 16), "SweepyBoop auxiliary icons", fill=(245, 247, 250, 255), font=load_font(24, True))
-    draw.text((20, 48), "Original Blizzard source vs Digital Art / native 256x256", fill=(174, 184, 196, 255), font=load_font(15))
+    draw.text((20, 48), "Original Blizzard source vs approved 256x256 runtime asset", fill=(174, 184, 196, 255), font=load_font(15))
     for index, asset in enumerate(assets):
         pair_path = individual / f'{asset["outputName"]}.png'
         with Image.open(pair_path) as pair:

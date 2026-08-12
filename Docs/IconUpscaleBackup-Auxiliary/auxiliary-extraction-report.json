@@ -4,8 +4,9 @@
   "assets": [
     {
       "kind": "atlas",
-      "label": "Friendly healer",
+      "label": "Friendly healer (native extraction)",
       "outputName": "HealerFriendly",
+      "processing": "native-extraction",
       "retailPath": "Interface/LFGFRAME/UILFGPrompts.blp",
       "atlasDataFile": "Data_Mainline.lua",
       "atlasName": "UI-LFG-RoleIcon-Healer",
