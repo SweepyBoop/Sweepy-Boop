@@ -409,7 +409,10 @@ function SweepyBoop:OnInitialize()
 
     if addon.PROJECT_MAINLINE then
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
-        if ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
+        if addon.MAINLINE_CORE_FEATURES_ONLY then
+            options.args.misc =
+                addon.GetHealerInCrowdControlOptions(7);
+        else
             options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
             options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
             options.args.macros = addon.GetMacroOptions(7.5);
@@ -472,11 +475,12 @@ function SweepyBoop:OnInitialize()
 
     if ( not addon.PROJECT_MAINLINE ) then return end
 
-    -- Raid frame modules are recovered independently of the temporary Mainline gate.
+    -- Recovered modules run independently of the temporary Mainline gate.
     self:SetupRaidFrameAuraModule();
     self:SetupRaidFrameDebuffIcons();
 
     self:SetupRaidFrameAggroHighlight();
+    self:SetupHealerInCrowdControl();
 
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
@@ -490,7 +494,6 @@ function SweepyBoop:OnInitialize()
     self:SetupPersonalDR();
     self:SetupCombatIndicator();
     self:SetupClassColorUnitFrames();
-    self:SetupHealerInCrowdControl();
     self:SetupHealerIndicator();
     self:SetupHideBlizzArenaFrames();
     self:SetupAlwaysShowDruidComboPoints();
@@ -513,6 +516,9 @@ function SweepyBoop:RefreshConfig()
         self:RefreshRaidFrameDebuffIcons();
         self:RefreshRaidFrameAggroHighlight();
         self:RefreshArenaRaidFrameSort();
+        self:HideTestHealerInCrowdControl();
+        self:SetupHealerInCrowdControl();
+        self:UpdateHealerInCrowdControl();
     end
 
     if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
@@ -522,8 +528,6 @@ function SweepyBoop:RefreshConfig()
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
         self:RefreshHonorReminder();
-        self:HideTestHealerInCrowdControl();
-        self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
     end
 
     local currentTime = GetTime();

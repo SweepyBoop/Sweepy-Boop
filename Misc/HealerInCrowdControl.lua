@@ -1,30 +1,45 @@
 local _, addon = ...;
 
-local iconSize = addon.DEFAULT_ICON_SIZE;
-local borderSize = iconSize * 1.25;
+local auraFilter = "HARMFUL|CROWD_CONTROL";
+local auraGroupKey = "CrowdControl";
+local iconBaseSize = addon.DEFAULT_ICON_SIZE;
+local borderBaseSize = iconBaseSize * 1.25;
+local testDuration = 8;
+local alertSound = 569006; -- spell_uni_sonarping_01
+local partyUnits = { "party1", "party2" };
 
-local containerFrame;
-local isInTest = false;
+local visualRoot;
+local testFrame;
+local liveContainers = {};
+local healerUnits = {};
+local auraButtons = {};
+local auraSoundIDs = {};
+local setupComplete = false;
+local editModePreviewActive = false;
+local restylePending = false;
+local soundRefreshPending = false;
+local restyleTicker;
 
--- The breaker suggestion needs a readable crowd-control spell ID to look up which spell frees the healer.
--- On retail/mainline every arena aura is a secret value, so that spell ID is never readable and the breaker
--- can never be shown - restrict the whole feature to non-mainline clients (no frames, no logic on mainline).
-local breakerSupported = ( not addon.PROJECT_MAINLINE );
-
--- The remaining time may be a secret value, so the Cooldown frame renders the countdown text itself.
--- We can still restyle that built-in text: shrink the font and move it just below the icon's ring. The
--- font string is created lazily, so this is re-applied whenever the cooldown is (re)shown.
-local COUNTDOWN_FONT_SIZE = 18; -- base size; sits below the icon so it can be large without blocking it
+local COUNTDOWN_FONT_SIZE = 18;
 local COUNTDOWN_FONT_FILE = "Fonts\\2002.TTF";
 local countdownFont = CreateFont("SweepyBoopHealerCCCountdownFont");
 countdownFont:SetFont(COUNTDOWN_FONT_FILE, COUNTDOWN_FONT_SIZE, "OUTLINE");
 
+local function GetConfig()
+    return SweepyBoop.db.profile.misc;
+end
+
 local function GetMillisecondsThreshold()
-    local config = SweepyBoop.db.profile.misc;
-    local threshold = tonumber(config.healerInCrowdControlMillisecondsThreshold) or 5;
+    local threshold = tonumber(GetConfig().healerInCrowdControlMillisecondsThreshold) or 5;
     if ( threshold < 1 ) then return 1 end
     if ( threshold > 6 ) then return 6 end
     return threshold;
+end
+
+local function CanStyleAuraButtons()
+    return ( not C_Secrets )
+        or ( not C_Secrets.ShouldAurasBeSecret )
+        or ( not C_Secrets.ShouldAurasBeSecret() );
 end
 
 local function StyleCountdownText(cooldown)
@@ -43,137 +58,263 @@ local function StyleCountdownText(cooldown)
     end
 end
 
-local function HideIcon(frame)
-    if ( not frame ) then return end
-
-    frame.cooldown:Clear();
-    frame:Hide();
-    isInTest = false;
-end
-
-local function CreateContainerFrame()
-    local frame = CreateFrame("Frame");
-    frame:SetMouseClickEnabled(false);
-    frame:SetFrameStrata("HIGH");
-    frame:SetSize(iconSize, iconSize);
+local function CreateVisual(frame)
+    frame:SetSize(iconBaseSize, iconBaseSize);
 
     frame.icon = frame:CreateTexture(nil, "BORDER");
-    frame.icon:SetSize(iconSize, iconSize);
     frame.icon:SetAllPoints(frame);
-
-    -- Breaker suggestion icon + its proc glow. Only created off mainline (see breakerSupported): on mainline
-    -- the CC's spell ID is always a secret value, so we can never identify a breaker to show.
-    if breakerSupported then
-        frame.breakericon = CreateFrame("Frame", nil, frame);
-        frame.breakericon:SetSize(iconSize / 1.5, iconSize / 1.5);
-        frame.breakericon:SetPoint("LEFT", frame.icon, "RIGHT");
-        frame.breakericonTexture = frame.breakericon:CreateTexture(nil, "BORDER");
-        frame.breakericonTexture:SetAllPoints();
-        -- Pre-create the overlay with a fixed size so ShowOverlayGlow skips button:GetSize() in restricted contexts.
-        frame.breakericon.SpellActivationAlert = addon.CreateOverlayGlow(frame.breakericon, iconSize / 1.5);
-    end
 
     frame.mask = frame:CreateMaskTexture();
     frame.mask:SetTexture("Interface/Masks/CircleMaskScalable");
-    frame.mask:SetSize(iconSize, iconSize);
     frame.mask:SetAllPoints(frame.icon);
     frame.icon:AddMaskTexture(frame.mask);
 
     frame.border = frame:CreateTexture(nil, "OVERLAY");
     frame.border:SetAtlas("talents-warmode-ring");
-    frame.border:SetSize(borderSize, borderSize);
+    frame.border:SetSize(borderBaseSize, borderBaseSize);
     frame.border:SetPoint("CENTER", frame);
 
     frame.cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
-    frame.cooldown:SetAllPoints();
+    frame.cooldown:SetAllPoints(frame);
     frame.cooldown:SetDrawEdge(true);
     frame.cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
     frame.cooldown:SetUseCircularEdge(true);
     frame.cooldown:SetReverse(true);
     frame.cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
-    frame.cooldown:SetSwipeColor(0, 0, 0, 0.5); -- to achieve a transparent background
-    -- The remaining time is now a secret value on retail, so we can no longer read it and draw the
-    -- countdown ourselves. Let the Cooldown frame render the built-in numbers (Blizzard/OmniCC) which
-    -- can display a secret duration safely.
+    frame.cooldown:SetSwipeColor(0, 0, 0, 0.5);
     frame.cooldown:SetHideCountdownNumbers(false);
     StyleCountdownText(frame.cooldown);
-    frame.cooldown:SetScript("OnCooldownDone", function (self)
-        local parent = self:GetParent();
-        if parent:IsShown() then
-            HideIcon(parent);
-        end
-    end)
-
-    frame:Hide(); -- Hide initially
-    return frame;
 end
 
--- iconID:         the crowd control's icon texture (always readable, even when the spell ID is secret)
--- durationObject: a DurationObject from C_UnitAuras.GetAuraDuration for the real (possibly secret)
---                 remaining time; nil for auras that never expire or for the test path
--- spellID:        the crowd control's spell ID, used to suggest a breaker. May be a secret value for
---                 enemy-applied auras (e.g. rated arena), in which case the suggestion is skipped.
--- startTime/duration: a plain (non-secret) cooldown, used by the test path when there is no DurationObject
-local function ShowIcon(iconID, durationObject, spellID, startTime, duration)
-    containerFrame = containerFrame or CreateContainerFrame();
+local function EnsureVisualRoot()
+    if visualRoot then return visualRoot end
 
-    local config = SweepyBoop.db.profile.misc;
+    visualRoot = CreateFrame("Frame", nil, UIParent);
+    visualRoot:SetFrameStrata("HIGH");
+    visualRoot:SetSize(1, 1);
+    return visualRoot;
+end
 
-    if ( containerFrame.lastModified ~= config.lastModified ) then
-        local scale = config.healerInCrowdControlSize / iconSize;
-        containerFrame:SetScale(scale);
-        containerFrame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
+local function ApplyVisualRootLayout()
+    local root = EnsureVisualRoot();
+    local config = GetConfig();
+    local shownSize = tonumber(config.healerInCrowdControlSize) or 48;
+    if ( shownSize <= 0 ) then shownSize = 48 end
+    local scale = shownSize / iconBaseSize;
 
-        containerFrame.lastModified = config.lastModified;
+    root:ClearAllPoints();
+    root:SetPoint(
+        "CENTER",
+        UIParent,
+        "CENTER",
+        ( config.healerInCrowdControlOffsetX or 0 ) / scale,
+        ( config.healerInCrowdControlOffsetY or 0 ) / scale
+    );
+    root:SetScale(scale);
+    root:Show();
+end
+
+local function InitializeAuraButton(button)
+    auraButtons[#auraButtons + 1] = button;
+    button:SetMouseMotionEnabled(false);
+    CreateVisual(button);
+    button:SetIcon(button.icon);
+    button:SetDurationCooldown(button.cooldown);
+end
+
+local function EnsureLiveContainer(unit)
+    local container = liveContainers[unit];
+    if container then return container end
+
+    local root = EnsureVisualRoot();
+    container = CreateFrame(
+        "AuraContainer",
+        nil,
+        root,
+        "CustomAuraContainerTemplate"
+    );
+    container:SetPoint("CENTER", root, "CENTER");
+    container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
+    container:SetFlowLayoutAnchorPoint("CENTER");
+    container:SetFlowLayoutGrowthDirection(
+        AnchorUtil.FlowDirection.Right,
+        AnchorUtil.FlowDirection.Down
+    );
+    container:SetUnit(unit);
+    container:SetEnabled(false);
+    container:Hide();
+    container:SetAuraProcessingPolicy(
+        CustomAuraContainerAuraProcessingPolicy.ProcessAura,
+        {
+            displayOnlyDispellableDebuffs = false,
+            ignoreBuffs = true,
+            ignoreDebuffs = false,
+            ignoreDispelDebuffs = false,
+        }
+    );
+    container:AddAuraGroup(auraGroupKey, auraFilter, {
+        maxFrameCount = 1,
+        sortMethod = AuraContainerSortMethod.UnitFrameDebuff,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = InitializeAuraButton,
+        layout = {
+            elementSpacing = 0,
+            lineSpacing = 0,
+            elementWidth = iconBaseSize,
+            elementHeight = iconBaseSize,
+        },
+    });
+
+    liveContainers[unit] = container;
+    return container;
+end
+
+local function HideLiveContainer(container)
+    container:SetEnabled(false);
+    container:Hide();
+end
+
+local function ActivateLiveContainer(container, unit, forceRefresh)
+    if forceRefresh then
+        container:Hide();
+        container:SetUnit("none");
+        container:SetUnit(unit);
+        container:UpdateAllAuras();
     end
+    container:SetEnabled(true);
+    container:Show();
+end
 
-    containerFrame.icon:SetTexture(iconID);
-    if durationObject then
-        containerFrame.cooldown:SetCooldownFromDurationObject(durationObject);
-        containerFrame.cooldown:Show();
-    elseif duration then
-        containerFrame.cooldown:SetCooldown(startTime, duration);
-        containerFrame.cooldown:Show();
-    else
-        containerFrame.cooldown:Clear();
-        containerFrame.cooldown:Hide();
-    end
-    StyleCountdownText(containerFrame.cooldown); -- re-apply: the countdown font string is created lazily
+local function UnitExistsReadable(unit)
+    local exists = UnitExists(unit);
+    return ( not addon.IsSecretValue(exists) ) and exists;
+end
 
-    -- Suggest a spell the player can press to free the healer. Only off mainline (see breakerSupported):
-    -- mainline spell IDs are secret, so we can never identify the CC to recommend a breaker for it.
-    if breakerSupported then
-        local breakerSpellID;
-        if spellID then
-            local breakers = addon.CrowdControlBreakers[spellID];
-            if breakers then
-                for candidate in pairs(breakers) do
-                    if IsSpellKnown(candidate) or IsSpellKnown(candidate, true) then
-                        local cooldown = C_Spell.GetSpellCooldown(candidate);
-                        if cooldown and cooldown.duration == 0 then
-                            breakerSpellID = candidate;
-                            break;
-                        end
-                    end
+local function UpdateHealerAssignments(resetUnreadable)
+    for _, unit in ipairs(partyUnits) do
+        if UnitExistsReadable(unit) then
+            local role = UnitGroupRolesAssigned(unit);
+            if addon.IsSecretValue(role) then
+                if resetUnreadable then
+                    healerUnits[unit] = nil;
                 end
+            else
+                healerUnits[unit] = role == "HEALER";
+            end
+        else
+            healerUnits[unit] = nil;
+        end
+    end
+end
+
+local function ClearAuraSounds()
+    for i = #auraSoundIDs, 1, -1 do
+        C_UnitAuras.RemoveAuraSound(auraSoundIDs[i]);
+        auraSoundIDs[i] = nil;
+    end
+end
+
+local function RegisterAuraSounds(unit)
+    if ( not GetConfig().healerInCrowdControlSound )
+        or ( not C_UnitAuras.AddAuraSound ) then
+
+        return;
+    end
+
+    for spellID in pairs(addon.DRList) do
+        local isCrowdControl = C_Spell.IsSpellCrowdControl(spellID);
+        if ( not addon.IsSecretValue(isCrowdControl) ) and isCrowdControl then
+            local soundID = C_UnitAuras.AddAuraSound(
+                Enum.UnitAuraSoundTrigger.Added,
+                {
+                    unitToken = unit,
+                    spellID = spellID,
+                    soundFileID = alertSound,
+                    outputChannel = "Master",
+                }
+            );
+            if soundID then
+                auraSoundIDs[#auraSoundIDs + 1] = soundID;
             end
         end
-        if breakerSpellID then
-            local breakerIconID = addon.GetSpellTexture(breakerSpellID);
-            containerFrame.breakericonTexture:SetTexture(breakerIconID);
-            addon.ShowOverlayGlow(containerFrame.breakericon);
-            containerFrame.breakericon:Show();
+    end
+end
+
+local function IsInArenaInstance()
+    local inInstance, instanceType = IsInInstance();
+    return inInstance and instanceType == "arena";
+end
+
+local function RefreshLiveContainers(forceRefresh, resetUnreadableRoles)
+    ApplyVisualRootLayout();
+    UpdateHealerAssignments(resetUnreadableRoles);
+    local refreshSounds = forceRefresh and ( not InCombatLockdown() );
+    if forceRefresh then
+        ClearAuraSounds();
+        soundRefreshPending = not refreshSounds
+            and GetConfig().healerInCrowdControlSound;
+    end
+
+    local enabled = GetConfig().healerInCrowdControl
+        and IsInArenaInstance()
+        and ( not editModePreviewActive );
+
+    for _, unit in ipairs(partyUnits) do
+        local container = EnsureLiveContainer(unit);
+        local trackUnit = enabled
+            and UnitExistsReadable(unit)
+            and healerUnits[unit];
+
+        if trackUnit then
+            ActivateLiveContainer(container, unit, forceRefresh);
+            if refreshSounds then
+                RegisterAuraSounds(unit);
+            end
         else
-            addon.HideOverlayGlow(containerFrame.breakericon);
-            containerFrame.breakericon:Hide();
+            HideLiveContainer(container);
         end
     end
+end
 
-    if ( not containerFrame:IsShown() ) and config.healerInCrowdControlSound then
-        PlaySoundFile(569006, "master"); -- spell_uni_sonarping_01
+local function FlushPendingRestyle()
+    if ( not restylePending ) or ( not CanStyleAuraButtons() ) then return end
+
+    restylePending = false;
+    for _, button in ipairs(auraButtons) do
+        StyleCountdownText(button.cooldown);
+    end
+    if restyleTicker then
+        restyleTicker:Cancel();
+        restyleTicker = nil;
+    end
+end
+
+local function RestyleAuraButtons()
+    if ( not CanStyleAuraButtons() ) then
+        restylePending = true;
+        if not restyleTicker then
+            restyleTicker = C_Timer.NewTicker(1, FlushPendingRestyle);
+        end
+        return;
     end
 
-    containerFrame:Show();
+    for _, button in ipairs(auraButtons) do
+        StyleCountdownText(button.cooldown);
+    end
+end
+
+local function EnsureTestFrame()
+    if testFrame then return testFrame end
+
+    testFrame = CreateFrame("Frame", nil, EnsureVisualRoot());
+    testFrame:SetPoint("CENTER", visualRoot, "CENTER");
+    testFrame:SetMouseClickEnabled(false);
+    CreateVisual(testFrame);
+    testFrame.cooldown:SetScript("OnCooldownDone", function()
+        testFrame:Hide();
+    end);
+    testFrame:Hide();
+    return testFrame;
 end
 
 local class = addon.GetUnitClass("player");
@@ -195,113 +336,78 @@ function SweepyBoop:TestHealerInCrowdControl()
         return;
     end
 
-    -- The test duration is a known literal (not a secret value), so drive the cooldown swipe with a plain
-    -- start/duration instead of a DurationObject. The test spell ID is also not secret, so the breaker
-    -- suggestion is exercised here too.
-    ShowIcon(addon.GetSpellTexture(testSpellID), nil, testSpellID, GetTime(), 8);
-    isInTest = true;
-end
+    ApplyVisualRootLayout();
+    local frame = EnsureTestFrame();
+    frame.icon:SetTexture(addon.GetSpellTexture(testSpellID));
+    StyleCountdownText(frame.cooldown);
+    frame.cooldown:SetCooldown(GetTime(), testDuration);
+    frame.cooldown:Show();
+    frame:Show();
 
-function SweepyBoop:UpdateHealerInCrowdControl()
-    if containerFrame and containerFrame:IsShown() then
-        if ( containerFrame.lastModified ~= SweepyBoop.db.profile.misc.lastModified ) then
-            local config = SweepyBoop.db.profile.misc;
-            local scale = config.healerInCrowdControlSize / iconSize;
-            containerFrame:SetScale(scale);
-            containerFrame:SetPoint("CENTER", UIParent, "CENTER", config.healerInCrowdControlOffsetX / scale, config.healerInCrowdControlOffsetY / scale);
-
-            containerFrame.lastModified = SweepyBoop.db.profile.misc.lastModified;
-        end
-        StyleCountdownText(containerFrame.cooldown);
+    if GetConfig().healerInCrowdControlSound then
+        PlaySoundFile(alertSound, "Master");
     end
 end
 
 function SweepyBoop:HideTestHealerInCrowdControl()
-    HideIcon(containerFrame);
-end
-
-local crowdControlPriority = { -- used to pick a CC when its category is known (spell ID not secret)
-    ["stun"] = 100,
-    ["silence"] = 90,
-    ["disorient"] = 80,
-    ["incapacitate"] = 80,
-};
-
--- UnitIsUnit can return a secret boolean on retail; treat that as "not the same unit".
-local function SameUnit(unitA, unitB)
-    if ( unitA == unitB ) then return true end
-    local result = UnitIsUnit(unitA, unitB);
-    if addon.IsSecretValue(result) then return false end
-    return result and true or false;
-end
-
--- Returns the crowd control aura to display on the healer, or nil if there is none.
--- We rely on Blizzard's CROWD_CONTROL filter to decide what counts as crowd control, since the spell
--- ID needed for our own DRList lookup is a secret value for enemy-applied auras. When the spell ID is
--- readable we still prefer the highest-priority category (e.g. a stun over an incapacitate).
-local function GetHealerCrowdControl(unit)
-    local auras = C_UnitAuras.GetUnitAuras(unit, "HARMFUL|CROWD_CONTROL");
-    if ( not auras ) then return end
-
-    local chosen, chosenPriority;
-    for _, auraData in ipairs(auras) do
-        if ( not chosen ) then
-            chosen = auraData; -- fallback: the first crowd control aura returned
-        end
-
-        local spellID = auraData.spellId;
-        if spellID and ( not addon.IsSecretValue(spellID) ) then
-            local category = addon.DRList[spellID];
-            local priority = category and crowdControlPriority[category];
-            if priority and ( ( not chosenPriority ) or priority > chosenPriority ) then
-                chosen = auraData;
-                chosenPriority = priority;
-            end
-        end
+    if testFrame then
+        testFrame.cooldown:Clear();
+        testFrame:Hide();
     end
-
-    return chosen;
 end
 
-local updateFrame;
+function SweepyBoop:UpdateHealerInCrowdControl()
+    ApplyVisualRootLayout();
+    RestyleAuraButtons();
+    if testFrame then
+        StyleCountdownText(testFrame.cooldown);
+    end
+end
 
 function SweepyBoop:SetupHealerInCrowdControl()
-    if ( not updateFrame ) then
-        updateFrame = CreateFrame("Frame"); -- When a frame is hidden it might not receive event, so we create a frame to catch events
-        updateFrame:SetScript("OnEvent", function (self, event, unitTarget)
-            if ( event ~= addon.UNIT_AURA ) then -- Hide when switching map or entering new round of solo shuffle
-                HideIcon(containerFrame);
-                return;
-            end
+    if ( not addon.PROJECT_MAINLINE ) then return end
 
-            if ( not IsActiveBattlefieldArena() ) and ( not isInTest ) and ( not addon.TEST_MODE ) then
-                HideIcon(containerFrame);
-                return;
-            end
-
-            local isFriendly = unitTarget and ( SameUnit(unitTarget, "party1") or SameUnit(unitTarget, "party2") );
-            local role = unitTarget and UnitGroupRolesAssigned(unitTarget);
-            local isHealer = role and ( not addon.IsSecretValue(role) ) and ( role == "HEALER" );
-            local isFriendlyHealer = ( isHealer and isFriendly ) or ( addon.TEST_MODE and unitTarget == "target" );
-            --isFriendlyHealer = isFriendlyHealer or ( unitTarget == "player" ); -- TEST ONLY: also alert when you get CC'd (comment out to revert)
-            if isFriendlyHealer then
-                local auraData = GetHealerCrowdControl(unitTarget);
-                if ( not auraData ) then -- No CC found, hide
-                    HideIcon(containerFrame);
-                else
-                    local durationObject = C_UnitAuras.GetAuraDuration(unitTarget, auraData.auraInstanceID);
-                    ShowIcon(auraData.icon, durationObject, auraData.spellId);
-                end
-            end
-        end)
+    ApplyVisualRootLayout();
+    for _, unit in ipairs(partyUnits) do
+        EnsureLiveContainer(unit);
     end
 
-    updateFrame:UnregisterAllEvents();
-    if SweepyBoop.db.profile.misc.healerInCrowdControl then
-        updateFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        updateFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-        updateFrame:RegisterEvent(addon.UNIT_AURA);
-    else
-        HideIcon(containerFrame);
+    if setupComplete then
+        RefreshLiveContainers(true);
+        return;
     end
+    setupComplete = true;
+
+    local eventFrame = CreateFrame("Frame");
+    eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+    eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
+    eventFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
+    eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
+    eventFrame:SetScript("OnEvent", function(_, event, useRealDataProvider)
+        if event == "AURA_DATA_PROVIDER_SWITCH" then
+            editModePreviewActive = useRealDataProvider ~= true;
+        elseif event == addon.PLAYER_REGEN_ENABLED then
+            FlushPendingRestyle();
+            if soundRefreshPending then
+                RefreshLiveContainers(true);
+            end
+            return;
+        end
+
+        if event == addon.GROUP_ROSTER_UPDATE
+            or event == addon.PLAYER_ENTERING_WORLD
+            or event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS
+            or event == "PLAYER_ROLES_ASSIGNED" then
+
+            C_Timer.After(0, function()
+                RefreshLiveContainers(true, true);
+            end);
+        else
+            RefreshLiveContainers();
+        end
+    end);
+
+    RefreshLiveContainers(true);
 end
