@@ -743,6 +743,11 @@ function SweepyBoop:SetupRaidFrameAuraModule()
             C_Timer.After(0, function()
                 RefreshAllFrames(true);
             end);
+        elseif event == addon.PLAYER_ENTERING_WORLD then
+            C_Timer.After(0, function()
+                CheckSpec();
+                RefreshAllFrames(true);
+            end);
         else
             RefreshAllFrames();
         end
