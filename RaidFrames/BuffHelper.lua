@@ -420,9 +420,8 @@ local function FindReadableLifebloom(unit)
     return IsPlayerLifebloom(aura) and aura or nil;
 end
 
-local function ReadLifebloomTiming(unit)
-    local aura = FindReadableLifebloom(unit);
-    if not aura then return end
+local function ReadLifebloomTimingFromAura(aura)
+    if not IsPlayerLifebloom(aura) then return end
 
     local duration = aura.duration;
     local expirationTime = aura.expirationTime;
@@ -443,7 +442,17 @@ local function ReadLifebloomTiming(unit)
     if playerProfile.primaryRefreshMaxSeconds then
         refreshTime = math.min(refreshTime, playerProfile.primaryRefreshMaxSeconds);
     end
-    return expirationTime, refreshTime, timeMod;
+    local auraInstanceID = aura.auraInstanceID;
+    if addon.IsSecretValue(auraInstanceID)
+        or ( type(auraInstanceID) ~= "number" ) then
+        auraInstanceID = nil;
+    end
+
+    return expirationTime, refreshTime, timeMod, auraInstanceID;
+end
+
+local function ReadLifebloomTiming(unit)
+    return ReadLifebloomTimingFromAura(FindReadableLifebloom(unit));
 end
 
 local function SetLifebloomGlow(helper, shown)
@@ -471,7 +480,7 @@ local function RefreshLifebloomTiming(frame, helper)
     end
 
     local unit = frame.displayedUnit or frame.unit;
-    local ok, expirationTime, refreshTime, timeMod = pcall(
+    local ok, expirationTime, refreshTime, timeMod, auraInstanceID = pcall(
         ReadLifebloomTiming,
         unit
     );
@@ -485,7 +494,22 @@ local function RefreshLifebloomTiming(frame, helper)
         expirationTime = expirationTime,
         refreshTime = refreshTime,
         timeMod = timeMod,
+        auraInstanceID = auraInstanceID,
     };
+end
+
+local function SetLifebloomTimingFromAura(helper, aura)
+    local expirationTime, refreshTime, timeMod, auraInstanceID =
+        ReadLifebloomTimingFromAura(aura);
+    if not expirationTime then return false end
+
+    helper.lifebloomTiming = {
+        expirationTime = expirationTime,
+        refreshTime = refreshTime,
+        timeMod = timeMod,
+        auraInstanceID = auraInstanceID,
+    };
+    return true;
 end
 
 local function UpdateLifebloomGlow(helper, now)
@@ -651,17 +675,82 @@ local function FlushPendingRestyle()
     end
 end
 
-local function RefreshReadableAuraState()
+local function RefreshClassBuffWarnings()
     for frame in pairs(cufPool) do
         local helper = frame.healerBuffHelper;
         if helper and helper.active then
             local unit = frame.displayedUnit or frame.unit;
             UpdateClassBuffWarning(helper, unit);
-            if playerProfile.primaryRefreshFraction then
-                RefreshLifebloomTiming(frame, helper);
+        end
+    end
+end
+
+local function RefreshReadableAuraState()
+    RefreshClassBuffWarnings();
+    if not playerProfile.primaryRefreshFraction then return end
+
+    for frame in pairs(cufPool) do
+        local helper = frame.healerBuffHelper;
+        if helper and helper.active then
+            RefreshLifebloomTiming(frame, helper);
+        end
+    end
+end
+
+local function ApplyLifebloomAuraUpdate(unitTarget, updateInfo)
+    if ( not playerProfile.primaryRefreshFraction ) or ( not updateInfo ) then
+        return;
+    end
+
+    for frame in pairs(cufPool) do
+        local helper = frame.healerBuffHelper;
+        local unit = frame.displayedUnit or frame.unit;
+        if helper and helper.active and unit == unitTarget then
+            local timingUpdated = false;
+            if updateInfo.addedAuras then
+                for _, aura in ipairs(updateInfo.addedAuras) do
+                    if SetLifebloomTimingFromAura(helper, aura) then
+                        timingUpdated = true;
+                        break;
+                    end
+                end
+            end
+
+            if ( not timingUpdated )
+                and updateInfo.updatedAuraInstanceIDs
+                and C_UnitAuras.GetAuraDataByAuraInstanceID then
+                for _, auraInstanceID in ipairs(updateInfo.updatedAuraInstanceIDs) do
+                    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(
+                        unit,
+                        auraInstanceID
+                    );
+                    if SetLifebloomTimingFromAura(helper, aura) then break end
+                end
+            end
+
+            local timing = helper.lifebloomTiming;
+            if timing and timing.auraInstanceID
+                and updateInfo.removedAuraInstanceIDs then
+                for _, auraInstanceID in ipairs(updateInfo.removedAuraInstanceIDs) do
+                    if auraInstanceID == timing.auraInstanceID then
+                        helper.lifebloomTiming = nil;
+                        SetLifebloomGlow(helper, false);
+                        break;
+                    end
+                end
             end
         end
     end
+end
+
+local function HandleUnitAura(unitTarget, updateInfo)
+    if ( not updateInfo ) or updateInfo.isFullUpdate then
+        RefreshReadableAuraState();
+        return;
+    end
+
+    RefreshClassBuffWarnings();
+    ApplyLifebloomAuraUpdate(unitTarget, updateInfo);
 end
 
 local function StartLifebloomGlowUpdater()
@@ -721,9 +810,9 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
     eventFrame:RegisterEvent("UNIT_AURA");
-    eventFrame:SetScript("OnEvent", function(_, event, arg1)
+    eventFrame:SetScript("OnEvent", function(_, event, arg1, arg2)
         if event == "UNIT_AURA" then
-            RefreshReadableAuraState();
+            pcall(HandleUnitAura, arg1, arg2);
             return;
         elseif event == addon.PLAYER_SPECIALIZATION_CHANGED then
             if arg1 ~= "player" then return end
