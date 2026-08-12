@@ -372,52 +372,7 @@ refreshFrame:SetScript("OnEvent", function (self, event)
     addon.detectedSpec = {};
 end)
 
-local unitSpecTooltip;
-local function GetMoPFriendlySpec(unitId)
-    if ( not UnitIsPlayer(unitId) ) or ( not UnitIsFriend("player", unitId) ) then return end
-
-    local guid = UnitGUID(unitId);
-    if guid and addon.cachedPlayerSpec[guid] then
-        return addon.cachedPlayerSpec[guid];
-    end
-
-    if not unitSpecTooltip then
-        unitSpecTooltip = CreateFrame("GameTooltip", "SweepyBoopSpecTooltip", UIParent, "GameTooltipTemplate");
-        unitSpecTooltip:SetOwner(UIParent, "ANCHOR_NONE");
-    end
-
-    unitSpecTooltip:ClearLines();
-    unitSpecTooltip:SetUnit(unitId);
-
-    local specID;
-    for i = 1, unitSpecTooltip:NumLines() do
-        local line = _G["SweepyBoopSpecTooltipTextLeft" .. i];
-        local text = line and line:GetText();
-        specID = text and specIDByTooltip[text];
-        if specID then break end
-    end
-
-    unitSpecTooltip:Hide();
-    unitSpecTooltip:ClearLines();
-    if ( not specID ) then return end
-
-    local iconID, role = select(4, GetSpecializationInfoByID(specID));
-    local specInfo = {
-        specID = specID,
-        icon = addon.GetSpecIconTexture(specID, iconID),
-        role = role,
-    };
-    if guid then
-        addon.cachedPlayerSpec[guid] = specInfo;
-    end
-    return specInfo;
-end
-
 addon.GetPlayerSpec = function (unitId)
-    if ( not addon.PROJECT_MAINLINE ) then
-        return GetMoPFriendlySpec(unitId);
-    end
-
     if not unitId then return nil end
 
     -- Check if unit is a player

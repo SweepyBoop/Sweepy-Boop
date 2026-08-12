@@ -523,7 +523,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
     end
-    if ( not addon.PROJECT_TBC ) then
+    if addon.PROJECT_MAINLINE then
         specInfo = addon.GetPlayerSpec(frame.unit);
         if specInfo then
             specIconID = specInfo.icon;
