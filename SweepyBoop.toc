@@ -1,4 +1,5 @@
 ## Interface: 120100
+## Dependencies: Blizzard_AuraContainer
 ## Title: SweepyBoop's PvP Helper
 ## Author: SweepyBoop
 ## Version: @project-version@

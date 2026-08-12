@@ -184,13 +184,25 @@ end
 
 addon.GetArenaNumber = function(unit)
     local class, race, sex, honor = GetUnitArenaFingerprint(unit);
-    if ( not class ) then return end
-
     local match;
+    if class then
+        for i = 1, addon.MAX_ARENA_SIZE do
+            local slot = GetArenaSlotPrint(i);
+            if slot and SlotMatches(slot, class, race, sex, honor) then
+                if match then return end -- a second match => ambiguous, leave blank
+                match = i;
+            end
+        end
+        if match then return match end
+    end
+
+    local unitName = UnitName(unit);
+    if addon.IsSecretValue(unitName) or ( not unitName ) then return end
+
     for i = 1, addon.MAX_ARENA_SIZE do
-        local slot = GetArenaSlotPrint(i);
-        if slot and SlotMatches(slot, class, race, sex, honor) then
-            if match then return end -- a second match => ambiguous, leave blank
+        local arenaName = UnitName("arena" .. i);
+        if ( not addon.IsSecretValue(arenaName) ) and arenaName == unitName then
+            if match then return end -- duplicated names are ambiguous
             match = i;
         end
     end

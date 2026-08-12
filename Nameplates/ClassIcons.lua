@@ -310,28 +310,62 @@ addon.UpdatePlayerName = function (nameplate, frame)
     end
 end
 
-local function SortCrowdControlAurasNewestFirst(auraA, auraB)
-    return ( auraA.auraInstanceID or 0 ) > ( auraB.auraInstanceID or 0 );
+local function InitializeMainlineCrowdControlAura(auraFrame, iconFrame)
+    auraFrame:SetSize(classIconSize, classIconSize);
+    auraFrame:SetPoint("CENTER", iconFrame);
+    auraFrame:SetMouseMotionEnabled(false);
+
+    local icon = auraFrame:CreateTexture(nil, "ARTWORK");
+    icon:SetAllPoints(auraFrame);
+    auraFrame:SetIcon(icon);
+
+    local mask = auraFrame:CreateMaskTexture();
+    mask:SetTexture("Interface/Masks/CircleMaskScalable");
+    mask:SetAllPoints(icon);
+    icon:AddMaskTexture(mask);
+
+    local cooldown = CreateFrame("Cooldown", nil, auraFrame, "CooldownFrameTemplate");
+    cooldown:SetAllPoints(icon);
+    cooldown:SetDrawEdge(true);
+    cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
+    cooldown:SetUseCircularEdge(true);
+    cooldown:SetReverse(true);
+    cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
+    cooldown:SetSwipeColor(0, 0, 0, 0.5);
+    cooldown:SetHideCountdownNumbers(true);
+    cooldown.noCooldownCount = true;
+    auraFrame:SetDurationCooldown(cooldown);
 end
 
-local function GetMainlineClassIconCrowdControl(unit)
-    local auras = C_UnitAuras.GetUnitAuras(unit, "HARMFUL|CROWD_CONTROL", nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
-    if ( not auras ) or ( #auras == 0 ) then return end
-
-    table.sort(auras, SortCrowdControlAurasNewestFirst);
-    for _, auraData in ipairs(auras) do
-        local spellID = auraData.spellId;
-        if spellID then
-            local isCrowdControl = C_Spell.IsSpellCrowdControl(spellID);
-            if addon.IsSecretValue(isCrowdControl) or isCrowdControl then
-                return auraData;
-            end
-        end
+local function EnsureMainlineCrowdControlContainer(iconFrame)
+    if iconFrame.sweepyBoopCrowdControlContainer then
+        return iconFrame.sweepyBoopCrowdControlContainer;
     end
+
+    local container = CreateFrame("AuraContainer", nil, iconFrame, "CustomAuraContainerTemplate");
+    container:SetAllPoints(iconFrame);
+    container:SetFrameStrata("HIGH");
+    container:SetFrameLevel(iconFrame:GetFrameLevel() + 1);
+    container:SetEnabled(false);
+    container:Hide();
+    container:AddAuraSlot("CC", "HARMFUL|CROWD_CONTROL", {
+        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
+        sortDirection = AuraContainerSortDirection.Reverse,
+        initializeFrame = function(auraFrame)
+            InitializeMainlineCrowdControlAura(auraFrame, iconFrame);
+        end,
+    });
+    iconFrame.sweepyBoopCrowdControlContainer = container;
+    return container;
 end
 
 local function HideClassIconCrowdControl(iconFrame)
     if not iconFrame then return end
+
+    if iconFrame.sweepyBoopCrowdControlContainer then
+        iconFrame.sweepyBoopCrowdControlContainer:SetEnabled(false);
+        iconFrame.sweepyBoopCrowdControlContainer:Hide();
+    end
 
     iconFrame.sweepyBoopShownCCAuraID = nil;
     if iconFrame.cooldownCC then
@@ -341,19 +375,6 @@ local function HideClassIconCrowdControl(iconFrame)
     end
     if iconFrame.iconCC then
         iconFrame.iconCC:Hide();
-    end
-end
-
-local function ClearRemovedCrowdControl(iconFrame, unitAuraUpdateInfo)
-    local shownAuraID = iconFrame.sweepyBoopShownCCAuraID;
-    local removedAuraIDs = unitAuraUpdateInfo and unitAuraUpdateInfo.removedAuraInstanceIDs;
-    if ( not shownAuraID ) or ( not removedAuraIDs ) then return end
-
-    for _, removedAuraID in ipairs(removedAuraIDs) do
-        if removedAuraID == shownAuraID then
-            HideClassIconCrowdControl(iconFrame);
-            return;
-        end
     end
 end
 
@@ -367,37 +388,18 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame, unitAuraUpdateInf
     local cooldownCC = iconFrame.cooldownCC;
 
     if addon.PROJECT_MAINLINE then
-        ClearRemovedCrowdControl(iconFrame, unitAuraUpdateInfo);
-
+        local container = EnsureMainlineCrowdControlContainer(iconFrame);
         if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl
             and UnitInParty(frame.unit)
             and UnitIsPlayer(frame.unit)
             and UnitIsFriend("player", frame.unit) then
-            local auraData = GetMainlineClassIconCrowdControl(frame.unit);
-            if auraData then
-                iconFrame.sweepyBoopShownCCAuraID = auraData.auraInstanceID;
-                iconCC:SetTexture(auraData.icon);
-                iconCC:Show();
-
-                local durationObject = C_UnitAuras.GetAuraDuration(frame.unit, auraData.auraInstanceID);
-                if durationObject and cooldownCC.SetCooldownFromDurationObject then
-                    cooldownCC.sweepyBoopClearsCCOnDone = true;
-                    cooldownCC:SetCooldownFromDurationObject(durationObject);
-                    cooldownCC:Show();
-                elseif auraData.duration and auraData.expirationTime then
-                    cooldownCC.sweepyBoopClearsCCOnDone = true;
-                    cooldownCC:SetCooldown(auraData.expirationTime - auraData.duration, auraData.duration);
-                    cooldownCC:Show();
-                else
-                    cooldownCC.sweepyBoopClearsCCOnDone = false;
-                    cooldownCC:SetCooldown(0, 0);
-                    cooldownCC:Hide();
-                end
-                return;
-            end
+            container:SetUnit(frame.unit);
+            container:SetEnabled(true);
+            container:Show();
+        else
+            container:SetEnabled(false);
+            container:Hide();
         end
-
-        HideClassIconCrowdControl(iconFrame);
         return;
     end
 
