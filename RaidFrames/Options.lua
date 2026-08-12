@@ -417,6 +417,7 @@ addon.GetRaidFrameOptions = function(order)
                                 "",
                                 "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom.",
                                 "\226\128\162 " .. addon.L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."],
+                                "\226\128\162 Warn when Mark of the Wild is missing.",
                                 "\226\128\162 Securely rendered by Blizzard's aura container.",
                             }, "\n");
                         end,
@@ -429,7 +430,6 @@ addon.GetRaidFrameOptions = function(order)
 
                     druidBuffHelperWarning = {
                         order = 9,
-                        hidden = true, -- AuraContainer does not expose secure aura absence.
                         width = 1.4,
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Missing-buff warning",
@@ -464,6 +464,7 @@ addon.GetRaidFrameOptions = function(order)
                                 "",
                                 "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Echo without a refresh-window glow."],
                                 "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."],
+                                "\226\128\162 Warn when Blessing of the Bronze is missing.",
                                 "\226\128\162 Securely rendered by Blizzard's aura container.",
                             }, "\n");
                         end,

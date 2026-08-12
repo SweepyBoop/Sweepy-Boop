@@ -1,9 +1,32 @@
 local _, addon = ...;
 
+local markOfTheWild = 1126;
+local blessingOfTheBronze = 381748;
+local blessingOfTheBronzeAuras = {
+    [381732] = true, -- Death Knight
+    [381741] = true, -- Demon Hunter
+    [381746] = true, -- Druid
+    [381748] = true, -- Evoker
+    [381749] = true, -- Hunter
+    [381750] = true, -- Mage
+    [381751] = true, -- Monk
+    [381752] = true, -- Paladin
+    [381753] = true, -- Priest
+    [381754] = true, -- Rogue
+    [381756] = true, -- Shaman
+    [381757] = true, -- Warlock
+    [381758] = true, -- Warrior
+};
+
 local profiles = {
     [addon.SPECID.RESTORATION_DRUID] = {
         class = addon.DRUID,
         enabledSetting = "druidBuffHelper",
+        row2WarningSetting = "druidBuffHelperWarning",
+        classBuff = markOfTheWild,
+        classBuffAuras = {
+            [markOfTheWild] = true,
+        },
         primaryBuffs = {
             [33763] = true,  -- Lifebloom
             [290754] = true, -- Lifebloom (Early Spring)
@@ -24,6 +47,8 @@ local profiles = {
     [addon.SPECID.PRESERVATION] = {
         class = addon.EVOKER,
         enabledSetting = "evokerBuffHelper",
+        classBuff = blessingOfTheBronze,
+        classBuffAuras = blessingOfTheBronzeAuras,
         primaryBuffs = {
             [364343] = true, -- Echo
         },
@@ -56,6 +81,8 @@ local ROW2_BUFF_SPACING = 1;
 local ROW_SPACING = 2;
 local RIGHT_PAD = 2;
 local FRAME_LEVEL_OFFSET = 10;
+local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew";
+local missingClassBuffGlowColor = { 1, 0, 0, 1 };
 
 local playerClass = addon.GetUnitClass("player");
 local isSupportedClass = supportedClasses[playerClass] and true or false;
@@ -197,6 +224,10 @@ local function EnsureContainers(frame)
     helper.row2:SetEnabled(false);
     helper.row2:Hide();
 
+    helper.row2Warning = helper.row2:CreateTexture(nil, "BACKGROUND");
+    helper.row2Warning:SetTexture(warningTexture);
+    helper.row2Warning:SetPoint("TOPRIGHT", helper.row2, "TOPRIGHT");
+
     for i = #playerProfile.row2Priority, 1, -1 do
         local spellID = playerProfile.row2Priority[i];
         helper.row2:AddAuraGroup("Row2-" .. spellID, "HELPFUL", {
@@ -217,6 +248,64 @@ local function EnsureContainers(frame)
             },
         });
     end
+
+    helper.classBuffAnchor = CreateFrame("Frame", nil, frame);
+    helper.classBuffAnchor:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
+    helper.classBuffAnchor:Hide();
+
+    helper.classBuff = CreateFrame(
+        "AuraContainer",
+        nil,
+        frame,
+        "CustomAuraContainerTemplate"
+    );
+    helper.classBuff:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
+    helper.classBuff:SetPoint("CENTER", helper.classBuffAnchor, "CENTER");
+    helper.classBuff:SetEnabled(false);
+    helper.classBuff:Hide();
+
+    local warningLevel = helper.classBuffAnchor:GetFrameLevel() + 1;
+    helper.classBuffWarning = CreateFrame("Frame", nil, helper.classBuffAnchor);
+    helper.classBuffWarning:SetFrameLevel(warningLevel);
+    helper.classBuffWarning:SetAllPoints(helper.classBuffAnchor);
+    helper.classBuffWarning.texture = helper.classBuffWarning:CreateTexture(nil, "ARTWORK");
+    helper.classBuffWarning.texture:SetAllPoints(helper.classBuffWarning);
+    helper.classBuffWarning.texture:SetTexture(addon.GetSpellTexture(playerProfile.classBuff));
+    helper.classBuffWarning.texture:SetDesaturated(true);
+    helper.classBuffWarning.fixedPixelGlow = addon.CreateFixedPixelGlow(
+        helper.classBuffWarning,
+        ROW2_BUFF_SIZE,
+        ROW2_BUFF_SIZE,
+        missingClassBuffGlowColor,
+        10,
+        nil,
+        nil,
+        0
+    );
+    helper.classBuffWarning.fixedPixelGlow:SetFrameLevel(warningLevel + 1);
+    addon.ShowFixedPixelGlow(helper.classBuffWarning.fixedPixelGlow);
+
+    helper.classBuff:AddAuraSlot("ClassBuff", "HELPFUL", {
+        candidateFilters = {
+            includeSpellIDs = playerProfile.classBuffAuras,
+        },
+        sortMethod = AuraContainerSortMethod.Expiration,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            button:SetFrameLevel(warningLevel + 2);
+            button:SetAllPoints(helper.classBuffAnchor);
+            button:SetMouseMotionEnabled(false);
+
+            local background = button:CreateTexture(nil, "BACKGROUND");
+            background:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1);
+            background:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1);
+            background:SetColorTexture(0, 0, 0, 1);
+
+            local icon = button:CreateTexture(nil, "ARTWORK");
+            icon:SetAllPoints(button);
+            button:SetIcon(icon);
+        end,
+    });
 
     frame.healerBuffHelper = helper;
     ApplyLayout(frame, helper);
@@ -244,6 +333,22 @@ ApplyLayout = function(frame, helper)
         elementHeight = primarySize,
     });
 
+    helper.classBuffAnchor:ClearAllPoints();
+    helper.classBuffAnchor:SetSize(row2Size, row2Size);
+    helper.classBuffAnchor:SetPoint(
+        "RIGHT",
+        frame,
+        "RIGHT",
+        offsetX - primarySize - ROW2_BUFF_SPACING,
+        offsetY + ( primarySize / 2 ) + ( ROW_SPACING / 2 )
+    );
+    addon.SetFixedPixelGlowSize(
+        helper.classBuffWarning.fixedPixelGlow,
+        row2Size,
+        row2Size,
+        0
+    );
+
     helper.row2:ClearAllPoints();
     helper.row2:SetPoint(
         "TOPRIGHT",
@@ -252,6 +357,15 @@ ApplyLayout = function(frame, helper)
         offsetX,
         offsetY - ( ROW_SPACING / 2 )
     );
+    helper.row2Warning:SetSize(row2Size, row2Size);
+    local warningSetting = playerProfile.row2WarningSetting;
+    helper.row2Warning:SetShown(
+        warningSetting
+            and config[warningSetting]
+            and true
+            or false
+    );
+
     for _, spellID in ipairs(playerProfile.row2Priority) do
         helper.row2:SetAuraGroupLayout("Row2-" .. spellID, {
             groupSpacing = ROW2_BUFF_SPACING,
@@ -262,12 +376,12 @@ ApplyLayout = function(frame, helper)
 end
 
 local function RestyleButtons(frame, helper)
+    ApplyLayout(frame, helper);
     if ( not CanStyleAuraButtons() ) then
         restylePending = true;
         return;
     end
 
-    ApplyLayout(frame, helper);
     local scale = GetScale();
     for _, button in ipairs(helper.buttons) do
         local size = button.sweepyBoopBaseSize * scale;
@@ -278,10 +392,14 @@ end
 local function HideHelper(frame)
     local helper = frame.healerBuffHelper;
     if ( not helper ) then return end
+    helper.active = false;
     helper.primary:SetEnabled(false);
     helper.primary:Hide();
     helper.row2:SetEnabled(false);
     helper.row2:Hide();
+    helper.classBuff:SetEnabled(false);
+    helper.classBuff:Hide();
+    helper.classBuffAnchor:Hide();
 end
 
 local function IsGroupUnit(unit)
@@ -342,8 +460,12 @@ local function UpdateFrame(frame, forceRefresh)
     local helper = EnsureContainers(frame);
     if ( not helper ) then return end
     RestyleButtons(frame, helper);
-    ActivateContainer(helper.primary, unit, forceRefresh);
-    ActivateContainer(helper.row2, unit, forceRefresh);
+    local needsFullRefresh = forceRefresh or ( not helper.active );
+    ActivateContainer(helper.primary, unit, needsFullRefresh);
+    ActivateContainer(helper.row2, unit, needsFullRefresh);
+    ActivateContainer(helper.classBuff, unit, needsFullRefresh);
+    helper.classBuffAnchor:Show();
+    helper.active = true;
 end
 
 local function RefreshAllFrames(forceRefresh)

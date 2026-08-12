@@ -70,6 +70,28 @@ local function SetFixedPixelGlowDotPosition(dot, path, progress)
     );
 end
 
+local function SetFixedPixelGlowSize(glow, width, height, padding)
+    padding = padding or 2;
+    local halfWidth = ( width / 2 ) + padding;
+    local halfHeight = ( height / 2 ) + padding;
+    glow.path = {
+        { x = -halfWidth, y = halfHeight },
+        { x = halfWidth, y = halfHeight },
+        { x = halfWidth, y = -halfHeight },
+        { x = -halfWidth, y = -halfHeight },
+    };
+
+    for i = 1, #( glow.dots or {} ) do
+        SetFixedPixelGlowDotPosition(
+            glow.dots[i],
+            glow.path,
+            glow.progress + glow.dots[i].offset
+        );
+    end
+end
+
+addon.SetFixedPixelGlowSize = SetFixedPixelGlowSize;
+
 local function FixedPixelGlow_OnUpdate(self, elapsed)
     self.elapsed = self.elapsed + elapsed;
     if self.elapsed < self.throttle then
@@ -93,8 +115,6 @@ addon.CreateFixedPixelGlow = function (button, width, height, color, dotCount, d
     frequency = frequency or 0.25;
     padding = padding or 2;
 
-    local halfWidth = ( width / 2 ) + padding;
-    local halfHeight = ( height / 2 ) + padding;
     local glow = CreateFrame("Frame", nil, button);
     glow:SetSize(1, 1); -- non-zero anchor frame; animation uses stored fixed dimensions only
     glow:SetPoint("CENTER", button, "CENTER", 0, 0);
@@ -102,12 +122,7 @@ addon.CreateFixedPixelGlow = function (button, width, height, color, dotCount, d
     glow.progress = 0;
     glow.frequency = frequency;
     glow.throttle = 0.02;
-    glow.path = {
-        { x = -halfWidth, y = halfHeight },
-        { x = halfWidth, y = halfHeight },
-        { x = halfWidth, y = -halfHeight },
-        { x = -halfWidth, y = -halfHeight },
-    };
+    glow.path = {};
     glow.dots = {};
 
     for i = 1, dotCount do
@@ -116,8 +131,8 @@ addon.CreateFixedPixelGlow = function (button, width, height, color, dotCount, d
         dot:SetSize(dotSize, dotSize);
         dot.offset = ( i - 1 ) / dotCount;
         glow.dots[i] = dot;
-        SetFixedPixelGlowDotPosition(dot, glow.path, dot.offset);
     end
+    SetFixedPixelGlowSize(glow, width, height, padding);
 
     glow:Hide();
     return glow;
