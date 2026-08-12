@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local Type, Version = "RaidFrameDebuffIconPreview-SweepyBoop", 1;
+local Type, Version = "RaidFrameDebuffIconPreview-SweepyBoop", 2;
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true);
 if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return end
 
@@ -10,7 +10,8 @@ local psychicScream = 8122;
 local kidneyShot = 408;
 local testDuration = 6;
 local testInitialElapsed = 1;
-local iconSpacing = 2;
+local iconSpacing = 6;
+local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local redGlowColor = { 1, 0, 0, 1 };
 local previewFrameWidth = 144;
 local previewFrameHeight = 72;
@@ -66,8 +67,8 @@ local function RestartIconCooldown(icon, elapsed)
     icon.cooldown:Show();
 end
 
-local function UpdateCooldownFontSize(cooldown, iconSize)
-    if ( not cooldown ) or ( not iconSize ) then return end
+local function UpdateCooldownFontSize(cooldown)
+    if not cooldown then return end
 
     if not cooldown.sweepyBoopCountdownFontString then
         local numRegions = cooldown:GetNumRegions();
@@ -84,28 +85,9 @@ local function UpdateCooldownFontSize(cooldown, iconSize)
     if region then
         local font, _, flags = region:GetFont();
         if font then
-            region:SetFont(font, math.floor(iconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT), flags);
+            region:SetFont(font, math.floor(iconBaseSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT), flags);
         end
     end
-end
-
-local function SetIconSize(icon, frameHeight, scale)
-    local shownSize = frameHeight * scale;
-    local visualScale = shownSize / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
-    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET * visualScale;
-    local highlightPadding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING * visualScale;
-
-    icon:SetSize(shownSize, shownSize);
-    icon.texture:ClearAllPoints();
-    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
-    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
-    icon.highlightGlow:ClearAllPoints();
-    icon.highlightGlow:SetPoint("TOPLEFT", icon, "TOPLEFT", -highlightPadding, highlightPadding);
-    icon.highlightGlow:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", highlightPadding, -highlightPadding);
-    icon.highlightBorder:ClearAllPoints();
-    icon.highlightBorder:SetPoint("TOPLEFT", icon, "TOPLEFT", -highlightPadding, highlightPadding);
-    icon.highlightBorder:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", highlightPadding, -highlightPadding);
-    UpdateCooldownFontSize(icon.cooldown, shownSize);
 end
 
 local function ClearIcon(icon)
@@ -134,28 +116,38 @@ end
 
 local function CreateDebuffIcon(parent)
     local icon = CreateFrame("Frame", nil, parent);
+    icon:SetSize(iconBaseSize, iconBaseSize);
 
     local backdrop = icon:CreateTexture(nil, "BACKGROUND");
     backdrop:SetAllPoints(icon);
     backdrop:SetColorTexture(0, 0, 0, 1);
 
     icon.texture = icon:CreateTexture(nil, "ARTWORK");
+    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
+    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
     icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
+    local highlightPadding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING;
     icon.highlightGlow = icon:CreateTexture(nil, "BORDER");
     icon.highlightGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
     icon.highlightGlow:SetBlendMode("ADD");
+    icon.highlightGlow:SetPoint("TOPLEFT", icon, "TOPLEFT", -highlightPadding, highlightPadding);
+    icon.highlightGlow:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", highlightPadding, -highlightPadding);
     icon.highlightGlow:SetAlpha(0.9);
 
     icon.highlightBorder = icon:CreateTexture(nil, "OVERLAY");
     icon.highlightBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE);
     icon.highlightBorder:SetBlendMode("ADD");
+    icon.highlightBorder:SetPoint("TOPLEFT", icon, "TOPLEFT", -highlightPadding, highlightPadding);
+    icon.highlightBorder:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", highlightPadding, -highlightPadding);
 
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon.texture);
     icon.cooldown:SetScript("OnCooldownDone", function()
         RestartIconCooldown(icon);
     end);
+    UpdateCooldownFontSize(icon.cooldown);
     icon:Hide();
     return icon;
 end
@@ -201,11 +193,16 @@ local function RenderSample(widget)
     local iconCount = GetIconCount(config);
     local frameHeight = previewFrameHeight;
     local iconScale = GetIconScale(config);
-    local maxIconSize = frameHeight * iconScale;
+    local shownIconSize = frameHeight * iconScale;
     local shownIconCount = math.min(iconCount, 2);
     local previousIcon;
 
-    widget.sample.container:SetSize(( maxIconSize * iconCount ) + ( iconSpacing * ( iconCount - 1 ) ), maxIconSize);
+    widget.sample.container:SetSize(
+        ( iconBaseSize * iconCount )
+            + ( iconSpacing * ( iconCount - 1 ) ),
+        iconBaseSize
+    );
+    widget.sample.container:SetScale(shownIconSize / iconBaseSize);
     widget.sample.container:ClearAllPoints();
     widget.sample.container:SetPoint(
         "LEFT",
@@ -230,12 +227,10 @@ local function RenderSample(widget)
         if i <= shownIconCount then
             icon.previewActive = widget.frame:IsShown();
             if i == 1 then
-                SetIconSize(icon, frameHeight, iconScale);
                 icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
                 icon.highlightGlow:SetVertexColor(1, 1, 1, 1);
                 icon.highlightBorder:SetVertexColor(1, 1, 1, 1);
             else
-                SetIconSize(icon, frameHeight, iconScale);
                 icon.texture:SetTexture(addon.GetSpellTexture(kidneyShot));
                 icon.highlightGlow:SetVertexColor(unpack(redGlowColor));
                 icon.highlightBorder:SetVertexColor(unpack(redGlowColor));

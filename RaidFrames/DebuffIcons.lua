@@ -2,7 +2,7 @@ local _, addon = ...;
 
 local auraFilter = "HARMFUL|CROWD_CONTROL";
 local auraGroupKey = "CrowdControl";
-local iconSpacing = 2;
+local iconSpacing = 6;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local frameLevelOffset = 20;
 local minIconCount = 1;
