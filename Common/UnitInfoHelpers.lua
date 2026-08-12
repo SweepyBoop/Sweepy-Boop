@@ -406,7 +406,11 @@ addon.GetPlayerSpec = function (unitId)
             local specID = specIDByTooltip[line.leftText];
             if specID then
                 local iconID, role = select(4, GetSpecializationInfoByID(specID));
-                local specInfo = { icon = iconID, role = role };
+                local specInfo = {
+                    specID = specID,
+                    icon = addon.GetSpecIconTexture(specID, iconID),
+                    role = role,
+                };
                 if canCache then
                     addon.cachedPlayerSpec[tooltipGUID] = specInfo;
                 end

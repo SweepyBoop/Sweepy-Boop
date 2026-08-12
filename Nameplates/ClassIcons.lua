@@ -231,8 +231,7 @@ local function GetIconOptions(class, pvpClassification, specIconID, roleAssigned
     end
 
     -- Check regular class, then healer, then flag carrier; latter overwrites the former
-    iconID = addon.ICON_ID_CLASSES;
-    iconCoords = CLASS_ICON_TCOORDS[class];
+    iconID, iconCoords = addon.GetClassIconTexture(class);
     iconScale = config.classIconSize;
 
     if config.showSpecIcons and specIconID then -- Show spec icon in PvP instances, overwritten by healer / flag carrier icons
@@ -523,6 +522,8 @@ addon.UpdateClassIcon = function(nameplate, frame)
 
     if addon.PROJECT_MAINLINE then
         pvpClassification = UnitPvpClassification(frame.unit);
+    end
+    if ( not addon.PROJECT_TBC ) then
         specInfo = addon.GetPlayerSpec(frame.unit);
         if specInfo then
             specIconID = specInfo.icon;

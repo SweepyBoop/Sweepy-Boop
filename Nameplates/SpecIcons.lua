@@ -7,7 +7,8 @@ local setPointOptions = {
     [addon.SPEC_ICON_ALIGNMENT.RIGHT] = { point = "RIGHT", relativePoint = "RIGHT" },
 };
 
-local function GetConfiguredSpecIcon(specIconID, role, config)
+local function GetConfiguredSpecIcon(specID, specIconID, role, config)
+    specIconID = addon.GetSpecIconTexture(specID, specIconID);
     if ( not specIconID ) then return end
 
     if ( role == "HEALER" ) then
@@ -29,7 +30,8 @@ local function GetMainlineArenaSpecInfo(unitId)
     local specID = GetArenaOpponentSpec(arenaNumber);
     if ( not specID ) or ( specID <= 0 ) then return end
 
-    return select(4, GetSpecializationInfoByID(specID)); -- iconID, role
+    local iconID, role = select(4, GetSpecializationInfoByID(specID));
+    return specID, iconID, role;
 end
 
 local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwise nil; check cache (for perf) and config
@@ -41,8 +43,8 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
 
     if addon.PROJECT_MAINLINE then
         if IsActiveBattlefieldArena() then
-            local specIconID, role = GetMainlineArenaSpecInfo(unitId);
-            return GetConfiguredSpecIcon(specIconID, role, config);
+            local specID, specIconID, role = GetMainlineArenaSpecInfo(unitId);
+            return GetConfiguredSpecIcon(specID, specIconID, role, config);
         end
     elseif addon.PROJECT_TBC then
         -- TBC: UnitGroupRolesAssigned doesn't work reliably for enemy arena units
@@ -99,6 +101,8 @@ addon.UpdateSpecIcon = function (nameplate)
             end
         else
             iconFrame.icon:SetTexture(iconID);
+            iconFrame.icon:SetTexCoord(unpack(addon.FULL_ICON_TEX_COORDS));
+            iconFrame.icon:SetVertexColor(1, 1, 1, 1);
             iconFrame.border:Show();
         end
 

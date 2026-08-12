@@ -258,6 +258,20 @@ The Git-visible backup of the latest Retail run is:
 `-- retail-class-spec-run-report.json
 ```
 
+## Runtime promotion
+
+WoW runtime textures are uncompressed 32-bit TGA files under `../Art/ClassIcons/` and `../Art/SpecIcons/`. Rebuild them from the approved PNG backup with the tracked promotion helper:
+
+```powershell
+.\scratch\python\Scripts\python.exe `
+    .\promote-runtime-icons.py `
+    .\icon-manifest.json `
+    ..\Docs\IconUpscaleBackup-Retail\digital-art-4x `
+    ..\Art
+```
+
+The helper preserves the 256x256 RGB pixels, forces opaque alpha, validates the 13-class/40-spec manifest split, and preserves exact manifest casing. Runtime Lua uses the bundled class icons on all supported clients and bundled spec icons on Retail and Mists; TBC remains class-only because that client has no reliable specialization source.
+
 ## Continuing the work
 
 A future agent should begin by reading this file, checking whether `scratch/` already contains a runtime and outputs, and asking which source art and target in-game dimensions should be evaluated. Reuse existing downloads when their hashes and versions match. Keep experimental binaries, models, copied source textures, generated images, logs, and temporary scripts under `scratch/`.
