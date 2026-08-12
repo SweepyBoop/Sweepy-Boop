@@ -272,6 +272,38 @@ WoW runtime textures are uncompressed 32-bit TGA files under `../Art/ClassIcons/
 
 The helper preserves the 256x256 RGB pixels, forces opaque alpha, validates the 13-class/40-spec manifest split, and preserves exact manifest casing. Runtime Lua uses the bundled class icons on all supported clients and bundled spec icons on Retail and Mists; TBC remains class-only because that client has no reliable specialization source.
 
+## Auxiliary icons
+
+The auxiliary workflow covers the friendly healer, universal red enemy healer, arena-frame healer, pet, and three flag-carrier icons. Atlas coordinates come from `TextureAtlasViewer/Data_Mainline.lua`; source pixels come from the corresponding current Retail BLP files. Run extraction and inference with:
+
+```powershell
+.\scratch\python\Scripts\python.exe `
+    .\extract-auxiliary-icons.py `
+    .\auxiliary-icon-manifest.json `
+    "C:\Program Files (x86)\World of Warcraft\_retail_\BlizzardInterfaceArt" `
+    .\scratch\inputs\auxiliary-icons
+
+.\scratch\python\Scripts\python.exe `
+    .\run-auxiliary-icon-batch.py `
+    .\auxiliary-icon-manifest.json `
+    .\scratch\inputs\auxiliary-icons `
+    .\scratch\auxiliary `
+    .\scratch\upscayl-2.15.0\resources\bin\upscayl-bin.exe `
+    .\scratch\upscayl-2.15.0\resources\models
+```
+
+The approved backup is `../Docs/IconUpscaleBackup-Auxiliary/`. Promote it while preserving transparency with:
+
+```powershell
+.\scratch\python\Scripts\python.exe `
+    .\promote-auxiliary-runtime-icons.py `
+    .\auxiliary-icon-manifest.json `
+    ..\Docs\IconUpscaleBackup-Auxiliary\digital-art-4x `
+    ..\Art\AuxiliaryIcons
+```
+
+The same bundled `HealerEnemy` texture is used on Retail and Mists; TBC's existing no-enemy-spec behavior is unchanged.
+
 ## Continuing the work
 
 A future agent should begin by reading this file, checking whether `scratch/` already contains a runtime and outputs, and asking which source art and target in-game dimensions should be evaluated. Reuse existing downloads when their hashes and versions match. Keep experimental binaries, models, copied source textures, generated images, logs, and temporary scripts under `scratch/`.

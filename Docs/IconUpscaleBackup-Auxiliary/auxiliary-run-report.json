@@ -1,0 +1,163 @@
+{
+  "model": "digital-art-4x",
+  "targetSize": 256,
+  "generatedAssets": 7,
+  "assets": [
+    {
+      "kind": "atlas",
+      "label": "Friendly healer",
+      "outputName": "HealerFriendly",
+      "retailPath": "Interface/LFGFRAME/UILFGPrompts.blp",
+      "atlasDataFile": "Data_Mainline.lua",
+      "atlasName": "UI-LFG-RoleIcon-Healer",
+      "logicalSize": [
+        70,
+        70
+      ],
+      "texCoords": [
+        0.00048828125,
+        0.12548828125,
+        0.75537109375,
+        0.88037109375
+      ],
+      "inputSize": [
+        256,
+        256
+      ],
+      "inputSha256": "7C8040D5D71D60087CA9D413E855E14C1F5503782267E2DD6DA3640D3DCEC9CA",
+      "outputSize": [
+        256,
+        256
+      ],
+      "outputSha256": "7C8040D5D71D60087CA9D413E855E14C1F5503782267E2DD6DA3640D3DCEC9CA",
+      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\HealerFriendly.png"
+    },
+    {
+      "kind": "atlas",
+      "label": "Enemy healer",
+      "outputName": "Healing_Red",
+      "retailPath": "Interface/PVPFRAME/TournamentOrganizer.blp",
+      "atlasDataFile": "Data_Mainline.lua",
+      "atlasName": "Healing_Red",
+      "logicalSize": [
+        37,
+        37
+      ],
+      "texCoords": [
+        0.0009765625,
+        0.037109375,
+        0.2568359375,
+        0.29296875
+      ],
+      "inputSize": [
+        37,
+        37
+      ],
+      "inputSha256": "6105DCF4DFB19A1092EF97BC83214FBCBDF63369D2BC99FA39F9ABC74C71785A",
+      "outputSize": [
+        256,
+        256
+      ],
+      "outputSha256": "0DC1CC7430524B8F4EF538DB6836194E365AE7C68E7608C954DBA980E74F3D43",
+      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\Healing_Red.png"
+    },
+    {
+      "kind": "atlas",
+      "label": "Arena frame healer",
+      "outputName": "HealerArenaFrame",
+      "retailPath": "Interface/PVPFRAME/PvPSeparation.blp",
+      "atlasDataFile": "Data_Mainline.lua",
+      "atlasName": "Icon-Healer",
+      "logicalSize": [
+        64,
+        64
+      ],
+      "texCoords": [
+        0.51953125,
+        0.76953125,
+        0.6884765625,
+        0.7509765625
+      ],
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputSha256": "662D17C71298C3CFD212EF6BFB13AD3AD9830AB1A9741B395CE98F9AC4F045DC",
+      "outputSize": [
+        256,
+        256
+      ],
+      "outputSha256": "30C6EE453798F51DA67637F2A012B803E06302F2ED90DF1E1315C8F1B673B50C",
+      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\HealerArenaFrame.png"
+    },
+    {
+      "kind": "icon",
+      "label": "Friendly pet",
+      "outputName": "Pet",
+      "retailPath": "Interface/ICONS/Ability_Hunter_MendPet.blp",
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputSha256": "0CE806B9B9E8180E28AABA2ADA59568076A391FA2F26EB096ED1114CFC32B75A",
+      "outputSize": [
+        256,
+        256
+      ],
+      "outputSha256": "ED20839DDF242B8D3ABF514FF9476ED556EDE1A898D886E3C70E2A42DC18735A",
+      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\Pet.png"
+    },
+    {
+      "kind": "icon",
+      "label": "Horde flag carrier",
+      "outputName": "FlagCarrierHorde",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_01.blp",
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputSha256": "9EB5CC7A30525E4AC533D959CF3216F9D88833E85F00215D6B5398484CE6752F",
+      "outputSize": [
+        256,
+        256
+      ],
+      "outputSha256": "E517E00E49F5F974D20A50AD5E9C5445AB392CB86100A09F4EFDC83EBB474CE5",
+      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\FlagCarrierHorde.png"
+    },
+    {
+      "kind": "icon",
+      "label": "Alliance flag carrier",
+      "outputName": "FlagCarrierAlliance",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_02.blp",
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputSha256": "DC9FFB3583B3499530F8719590841B134447F34E6ED891BBD3025F52304A34F5",
+      "outputSize": [
+        256,
+        256
+      ],
+      "outputSha256": "D18714457BA4D60FE361BDDE708F2F35C70C13A7B6FD3D48E28C156408ED57D8",
+      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\FlagCarrierAlliance.png"
+    },
+    {
+      "kind": "icon",
+      "label": "Neutral flag carrier",
+      "outputName": "FlagCarrierNeutral",
+      "retailPath": "Interface/ICONS/INV_BannerPVP_03.blp",
+      "inputSize": [
+        64,
+        64
+      ],
+      "inputSha256": "E881D9BBA0C06C9ACADA166AD70BDC22D4135678EF695B39AB8F2C6538C171CC",
+      "outputSize": [
+        256,
+        256
+      ],
+      "outputSha256": "256612E8ED651AFC9F9F68AF96709631F34CDDD775D56F4B93A7E644BDDB975C",
+      "outputPath": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\outputs\\FlagCarrierNeutral.png"
+    }
+  ],
+  "comparisonSheet": "C:\\Users\\kunhouseliu\\Documents\\GitHub\\Sweepy-Boop\\wow-icon-upscale-workbench\\scratch\\auxiliary\\comparisons\\all-auxiliary-icons-index.png"
+}

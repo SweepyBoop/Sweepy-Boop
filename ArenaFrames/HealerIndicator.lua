@@ -27,7 +27,7 @@ local function EnsureHealerIndicator()
         healerIndicator:SetFrameLevel(9999);
         healerIndicator:SetMouseClickEnabled(false);
         healerIndicator.icon = healerIndicator:CreateTexture(nil, "OVERLAY");
-        healerIndicator.icon:SetAtlas("Icon-Healer");
+        healerIndicator.icon:SetTexture(addon.ICON_ID_HEALER_ARENA_FRAME);
         healerIndicator.icon:SetAllPoints(healerIndicator);
         healerIndicator:Hide();
     end

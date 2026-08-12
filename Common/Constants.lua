@@ -489,15 +489,11 @@ end
 
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
-addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
-if addon.PROJECT_MAINLINE then
-    addon.ICON_ID_HEALER_ENEMY = "Healing_Red";
-    addon.SPEC_ICON_ENEMY_HEALER_LOGO = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY);
-else
-    addon.ICON_ID_HEALER_ENEMY = "GreenCross";
-    addon.SPEC_ICON_ENEMY_HEALER_LOGO = format("|A:%s:20:20:0:0:255:0:0|a", addon.ICON_ID_HEALER_ENEMY);
-end
-addon.ICON_ID_PET = addon.ICON_PATH("ability_hunter_mendpet");
+addon.ICON_ID_HEALER = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerFriendly";
+addon.ICON_ID_HEALER_ENEMY = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/Healing_Red";
+addon.ICON_ID_HEALER_ARENA_FRAME = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerArenaFrame";
+addon.SPEC_ICON_ENEMY_HEALER_LOGO = addon.FORMAT_TEXTURE(addon.ICON_ID_HEALER_ENEMY);
+addon.ICON_ID_PET = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/Pet";
 addon.ICON_CRITTER = "WildBattlePet";
 addon.ICON_ID_CLASSES = "Interface/GLUES/CHARACTERCREATE/UI-CHARACTERCREATE-CLASSES";
 addon.FULL_ICON_TEX_COORDS = {0, 1, 0, 1};
@@ -558,15 +554,15 @@ addon.BUNDLED_SPEC_ICON_TEXTURES = {
     [addon.SPECID.FURY] = addon.INTERFACE_SWEEPY .. "Art/SpecIcons/Ability_Warrior_InnerRage",
     [addon.SPECID.PROTECTION_WARRIOR] = addon.INTERFACE_SWEEPY .. "Art/SpecIcons/Ability_Warrior_DefensiveStance",
 };
-addon.ICON_ID_FLAG_CARRIER_HORDE = addon.ICON_PATH("inv_bannerpvp_01");
-addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.ICON_PATH("inv_bannerpvp_02");
-addon.ICON_ID_FLAG_CARRIER_NEUTRAL = addon.ICON_PATH("inv_bannerpvp_03");
+addon.ICON_ID_FLAG_CARRIER_HORDE = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/FlagCarrierHorde";
+addon.ICON_ID_FLAG_CARRIER_ALLIANCE = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/FlagCarrierAlliance";
+addon.ICON_ID_FLAG_CARRIER_NEUTRAL = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/FlagCarrierNeutral";
 addon.ICON_ID_PVP_CURSOR = "interface/cursor/pvp";
 
 -- https://warcraft.wiki.gg/wiki/UI_escape_sequences
 addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
 
-addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
+addon.ICON_COORDS_HEALER = addon.FULL_ICON_TEX_COORDS;
 
 addon.CLASS_ICON_STYLE = {
     ICON = 0,
