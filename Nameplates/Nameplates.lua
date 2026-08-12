@@ -207,7 +207,7 @@ end
 
 local function UpdateWidgets(nameplate, frame)
     -- Don't mess with personal resource display
-    if ( UnitIsUnit(frame.unit, "player") ) then
+    if addon.UnitIsUnitReadable(frame.unit, "player") then
         HideWidgets(nameplate);
         UpdateUnitFrameVisibility(nameplate, frame, true);
         return;
@@ -229,7 +229,9 @@ local function UpdateWidgets(nameplate, frame)
                 -- Maybe it was partypet2 and later someone else joined so this pet became partypet3
                 addon.ShowClassIcon(nameplate, frame);
                 addon.HidePetIcon(nameplate);
-            elseif UnitIsUnit(frame.unit, "pet") or UnitIsUnit(frame.unit, "partypet1") or UnitIsUnit(frame.unit, "partypet2") then
+            elseif addon.UnitIsUnitReadable(frame.unit, "pet")
+                or addon.UnitIsUnitReadable(frame.unit, "partypet1")
+                or addon.UnitIsUnitReadable(frame.unit, "partypet2") then
                 local shouldShow = true;
                 local isArena = IsActiveBattlefieldArena();
                 local isBattleground = ( UnitInBattleground("player") ~= nil );
@@ -237,7 +239,7 @@ local function UpdateWidgets(nameplate, frame)
                     shouldShow = false;
                 elseif configFriendly.hideInBattlegrounds and isBattleground and ( not isArena ) then
                     shouldShow = false;
-                elseif configFriendly.showMyPetOnly and ( not UnitIsUnit(frame.unit, "pet") ) then
+                elseif configFriendly.showMyPetOnly and ( not addon.UnitIsUnitReadable(frame.unit, "pet") ) then
                     shouldShow = false;
                 end
 

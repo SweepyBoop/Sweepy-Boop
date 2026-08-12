@@ -3,6 +3,8 @@ addon.TEST_MODE = false;
 
 addon.PROJECT_MAINLINE = (WOW_PROJECT_ID == WOW_PROJECT_MAINLINE);
 addon.PROJECT_TBC = (WOW_PROJECT_ID == 5);
+-- Temporary 12.1 compatibility gate. Keep disabled features intact for staged recovery.
+addon.MAINLINE_CORE_FEATURES_ONLY = addon.PROJECT_MAINLINE;
 addon.PROFILE_VERSION = 1.0; -- To validate export string
 
 addon.SPELLCATEGORY = {

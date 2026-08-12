@@ -49,7 +49,9 @@ addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
 end
 
 addon.GetUnitClass = function(unitId)
-    return select(2, UnitClass(unitId)); -- Locale-independent name, e.g. "WARRIOR"
+    local class = select(2, UnitClass(unitId)); -- Locale-independent name, e.g. "WARRIOR"
+    if addon.IsSecretValue(class) then return end
+    return class;
 end
 
 -- Arena-safe unit resolver ----------------------------------------------------
@@ -58,9 +60,20 @@ end
 -- APIs are unsafe or unavailable.
 local function GetUnitArenaFingerprint(unit)
     if ( not UnitExists(unit) ) then return end
+
     local class = UnitClassBase(unit);
+    local race = select(2, UnitRace(unit));
+    local sex = UnitSex(unit);
+    local honor = UnitHonorLevel(unit);
+    if addon.IsSecretValue(class)
+        or addon.IsSecretValue(race)
+        or addon.IsSecretValue(sex)
+        or addon.IsSecretValue(honor) then
+        return;
+    end
     if ( not class ) then return end
-    return class, select(2, UnitRace(unit)), UnitSex(unit), UnitHonorLevel(unit); -- race file is locale-independent
+
+    return class, race, sex, honor; -- race file is locale-independent
 end
 
 local partySlotPrintCache = {};
@@ -104,6 +117,12 @@ local function GetUnitArenaFingerprintCached(unit)
     end
 
     return GetUnitArenaFingerprint(unit);
+end
+
+addon.UnitIsUnitReadable = function(unitA, unitB)
+    local isSameUnit = UnitIsUnit(unitA, unitB);
+    if addon.IsSecretValue(isSameUnit) then return false end
+    return isSameUnit;
 end
 
 addon.UnitIsUnitSecretValueSafe = function(unitA, unitB)
@@ -165,13 +184,25 @@ end
 
 addon.GetArenaNumber = function(unit)
     local class, race, sex, honor = GetUnitArenaFingerprint(unit);
-    if ( not class ) then return end
-
     local match;
+    if class then
+        for i = 1, addon.MAX_ARENA_SIZE do
+            local slot = GetArenaSlotPrint(i);
+            if slot and SlotMatches(slot, class, race, sex, honor) then
+                if match then return end -- a second match => ambiguous, leave blank
+                match = i;
+            end
+        end
+        if match then return match end
+    end
+
+    local unitName = UnitName(unit);
+    if addon.IsSecretValue(unitName) or ( not unitName ) then return end
+
     for i = 1, addon.MAX_ARENA_SIZE do
-        local slot = GetArenaSlotPrint(i);
-        if slot and SlotMatches(slot, class, race, sex, honor) then
-            if match then return end -- a second match => ambiguous, leave blank
+        local arenaName = UnitName("arena" .. i);
+        if ( not addon.IsSecretValue(arenaName) ) and arenaName == unitName then
+            if match then return end -- duplicated names are ambiguous
             match = i;
         end
     end
@@ -225,6 +256,12 @@ addon.IsPartyPrimaryPet = function(unitId)
 end
 
 addon.UnitIsHostile = function(unitId)
+    if addon.PROJECT_MAINLINE then
+        local reaction = UnitReaction(unitId, "player");
+        if addon.IsSecretValue(reaction) then return true end
+        return ( not reaction ) or ( reaction < 5 );
+    end
+
     local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
     -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
     local reaction = UnitReaction("player", unitId); -- this can sometimes return nil, treat as hostile to avoid showing friendly class icons on NPCs
@@ -382,12 +419,12 @@ addon.GetPlayerSpec = function (unitId)
 
     -- Use tooltip - tooltipData.guid works even when UnitGUID() is secret
     local tooltipData = C_TooltipInfo.GetUnit(unitId);
-    if not tooltipData or not tooltipData.guid or not tooltipData.lines then
+    if not tooltipData or not tooltipData.lines then
         return nil;
     end
 
     local tooltipGUID = tooltipData.guid;
-    local canCache = tooltipGUID and ( not addon.IsSecretValue(tooltipGUID) );
+    local canCache = ( not addon.IsSecretValue(tooltipGUID) ) and tooltipGUID ~= nil;
 
     -- Return cached specInfo if already found
     if canCache and addon.cachedPlayerSpec[tooltipGUID] then
@@ -395,15 +432,22 @@ addon.GetPlayerSpec = function (unitId)
     end
 
     -- Skip if line.leftText is secret, i.e., can't parse
-    local firstLine = tooltipData.lines and tooltipData.lines[1];
-    if ( not firstLine ) or ( not firstLine.leftText ) or addon.IsSecretValue(firstLine.leftText) then
+    local firstLine = tooltipData.lines[1];
+    local firstLineText = firstLine and firstLine.leftText;
+    if addon.IsSecretValue(firstLineText) or ( not firstLineText ) then
         return nil;
     end
 
     -- Iterate through tooltip lines to find the spec name
     for _, line in ipairs(tooltipData.lines) do
-        if line and line.type == Enum.TooltipDataLineType.None and line.leftText and line.leftText ~= "" then
-            local specID = specIDByTooltip[line.leftText];
+        local lineType = line and line.type;
+        local lineText = line and line.leftText;
+        if ( not addon.IsSecretValue(lineType) )
+            and ( not addon.IsSecretValue(lineText) )
+            and lineType == Enum.TooltipDataLineType.None
+            and lineText
+            and lineText ~= "" then
+            local specID = specIDByTooltip[lineText];
             if specID then
                 local iconID, role = select(4, GetSpecializationInfoByID(specID));
                 local specInfo = { icon = iconID, role = role };

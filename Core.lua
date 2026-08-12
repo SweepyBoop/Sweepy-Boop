@@ -408,10 +408,12 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
     if addon.PROJECT_MAINLINE then
-        options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
-        options.args.raidFrames = addon.GetRaidFrameOptions(6);
-        options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
-        options.args.macros = addon.GetMacroOptions(7.5);
+        if ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
+            options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
+            options.args.raidFrames = addon.GetRaidFrameOptions(6);
+            options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
+            options.args.macros = addon.GetMacroOptions(7.5);
+        end
     else
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
     end
@@ -469,6 +471,10 @@ function SweepyBoop:OnInitialize()
     end
 
     if ( not addon.PROJECT_MAINLINE ) then return end
+    if addon.MAINLINE_CORE_FEATURES_ONLY then
+        self:SetupMouseCursor();
+        return;
+    end
 
     self:SetupArenaOffensiveIcons();
 
@@ -506,7 +512,7 @@ function SweepyBoop:RefreshConfig()
 
     self:RefreshMouseCursor();
 
-    if addon.PROJECT_MAINLINE then
+    if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
         self:SetupArenaOffensiveIcons();
         self:SetupCombatIndicator();
         self:SetupClassColorUnitFrames();
