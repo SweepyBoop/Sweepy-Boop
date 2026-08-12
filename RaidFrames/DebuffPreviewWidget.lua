@@ -94,6 +94,7 @@ local function SetIconSize(icon, frameHeight, scale)
     local visualScale = shownSize / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
     local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET * visualScale;
     local borderPadding = visualScale;
+    local highlightPadding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING * visualScale;
 
     icon:SetSize(shownSize, shownSize);
     icon.texture:ClearAllPoints();
@@ -102,6 +103,12 @@ local function SetIconSize(icon, frameHeight, scale)
     icon.border:ClearAllPoints();
     icon.border:SetPoint("TOPLEFT", icon, "TOPLEFT", -borderPadding, borderPadding);
     icon.border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", borderPadding, -borderPadding);
+    icon.highlightGlow:ClearAllPoints();
+    icon.highlightGlow:SetPoint("TOPLEFT", icon, "TOPLEFT", -highlightPadding, highlightPadding);
+    icon.highlightGlow:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", highlightPadding, -highlightPadding);
+    icon.highlightBorder:ClearAllPoints();
+    icon.highlightBorder:SetPoint("TOPLEFT", icon, "TOPLEFT", -highlightPadding, highlightPadding);
+    icon.highlightBorder:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", highlightPadding, -highlightPadding);
     UpdateCooldownFontSize(icon.cooldown, shownSize);
 end
 
@@ -114,7 +121,8 @@ local function ClearIcon(icon)
         icon.cooldown:SetCooldown(0, 0);
     end
     icon.cooldown:Hide();
-    addon.HideProcGlow(icon);
+    icon.highlightGlow:Hide();
+    icon.highlightBorder:Hide();
     icon:Hide();
 end
 
@@ -141,6 +149,15 @@ local function CreateDebuffIcon(parent)
     icon.border = icon:CreateTexture(nil, "OVERLAY");
     icon.border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
     icon.border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+
+    icon.highlightGlow = icon:CreateTexture(nil, "BORDER");
+    icon.highlightGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
+    icon.highlightGlow:SetBlendMode("ADD");
+    icon.highlightGlow:SetAlpha(0.9);
+
+    icon.highlightBorder = icon:CreateTexture(nil, "OVERLAY");
+    icon.highlightBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE);
+    icon.highlightBorder:SetBlendMode("ADD");
 
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon.texture);
@@ -223,12 +240,16 @@ local function RenderSample(widget)
             if i == 1 then
                 SetIconSize(icon, frameHeight, iconScale);
                 icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
-                addon.ShowProcGlow(icon);
+                icon.highlightGlow:SetVertexColor(1, 1, 1, 1);
+                icon.highlightBorder:SetVertexColor(1, 1, 1, 1);
             else
                 SetIconSize(icon, frameHeight, iconScale);
                 icon.texture:SetTexture(addon.GetSpellTexture(kidneyShot));
-                addon.ShowProcGlow(icon, redGlowColor);
+                icon.highlightGlow:SetVertexColor(unpack(redGlowColor));
+                icon.highlightBorder:SetVertexColor(unpack(redGlowColor));
             end
+            icon.highlightGlow:Show();
+            icon.highlightBorder:Show();
             RestartIconCooldown(icon, testInitialElapsed);
             icon:SetAlpha(enabled and 1 or 0.35);
             icon:Show();

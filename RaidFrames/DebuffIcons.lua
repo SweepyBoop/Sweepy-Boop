@@ -10,7 +10,7 @@ local maxIconCount = 5;
 local psychicScream = 8122;
 local kidneyShot = 408;
 local testDuration = 6;
-local redGlowColor = { 1, 0, 0, 1 };
+local redHighlightColor = { 1, 0, 0, 1 };
 
 local cufPool = {};
 local setupComplete = false;
@@ -127,6 +127,37 @@ local function CreateDebuffVisual(frame)
     return icon, cooldown;
 end
 
+local function CreateHighlightTexture(frame, texturePath, layer, alpha)
+    local texture = frame:CreateTexture(nil, layer);
+    texture:SetTexture(texturePath);
+    texture:SetBlendMode("ADD");
+    texture:SetPoint("TOPLEFT", frame, "TOPLEFT", -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING, addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING);
+    texture:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING, -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING);
+    texture:SetAlpha(alpha);
+    return texture;
+end
+
+local function GetHighlightColorMap()
+    return {
+        Magic = CreateColor(1, 1, 1),
+        Curse = CreateColor(1, 1, 1),
+        Disease = CreateColor(1, 1, 1),
+        Poison = CreateColor(1, 1, 1),
+        Enrage = CreateColor(1, 1, 1),
+        None = CreateColor(1, 0, 0),
+    };
+end
+
+local function AddSecureHighlightTexture(button, texturePath, layer, alpha)
+    local texture = CreateHighlightTexture(button, texturePath, layer, alpha);
+    button:AddDispelTypeTexture(texture, {
+        style = Enum.CustomAuraButtonDispelTypeTextureStyle.PreserveAsset,
+        showWhenHarmful = true,
+        showWithoutDispelType = true,
+        customDispelColorMap = GetHighlightColorMap(),
+    });
+end
+
 local function InitializeAuraButton(button, frame)
     frame.sweepyBoopDebuffAuraButtons = frame.sweepyBoopDebuffAuraButtons or {};
     frame.sweepyBoopDebuffAuraButtons[#frame.sweepyBoopDebuffAuraButtons + 1] = button;
@@ -138,24 +169,18 @@ local function InitializeAuraButton(button, frame)
     button:SetIcon(icon);
     button:SetDurationCooldown(cooldown);
 
-    local glow = button:CreateTexture(nil, "OVERLAY");
-    glow:SetTexture("Interface\\Buttons\\UI-ActionButton-Border");
-    glow:SetBlendMode("ADD");
-    glow:SetPoint("TOPLEFT", button, "TOPLEFT", -7, 7);
-    glow:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 7, -7);
-    button:AddDispelTypeTexture(glow, {
-        style = Enum.CustomAuraButtonDispelTypeTextureStyle.PreserveAsset,
-        showWhenHarmful = true,
-        showWithoutDispelType = true,
-        customDispelColorMap = {
-            Magic = CreateColor(1, 1, 1),
-            Curse = CreateColor(1, 1, 1),
-            Disease = CreateColor(1, 1, 1),
-            Poison = CreateColor(1, 1, 1),
-            Enrage = CreateColor(1, 1, 1),
-            None = CreateColor(1, 0, 0),
-        },
-    });
+    AddSecureHighlightTexture(
+        button,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        0.9
+    );
+    AddSecureHighlightTexture(
+        button,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        1
+    );
 end
 
 local function EnsureVisualRoot(frame)
@@ -292,7 +317,8 @@ local function ClearTestIcons(frame)
     local icons = frame.sweepyBoopDebuffTestIcons;
     if ( not icons ) then return end
     for i = 1, #icons do
-        addon.HideProcGlow(icons[i]);
+        icons[i].highlightGlow:Hide();
+        icons[i].highlightBorder:Hide();
         icons[i]:Hide();
     end
 end
@@ -307,6 +333,18 @@ local function EnsureTestIcon(frame, index)
     icon:SetFrameLevel(frame:GetFrameLevel() + frameLevelOffset + index);
     icon:SetSize(iconBaseSize, iconBaseSize);
     icon.texture, icon.cooldown = CreateDebuffVisual(icon);
+    icon.highlightGlow = CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        0.9
+    );
+    icon.highlightBorder = CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        1
+    );
     frame.sweepyBoopDebuffTestIcons[index] = icon;
     return icon;
 end
@@ -337,7 +375,14 @@ local function ShowTestFrame(frame)
         icon.texture:SetTexture(addon.GetSpellTexture(i == 1 and psychicScream or kidneyShot));
         icon.cooldown:SetCooldown(GetTime(), testDuration);
         icon.cooldown:Show();
-        addon.ShowProcGlow(icon, i == 1 and nil or redGlowColor);
+        local color = i == 1 and nil or redHighlightColor;
+        local red = color and color[1] or 1;
+        local green = color and color[2] or 1;
+        local blue = color and color[3] or 1;
+        icon.highlightGlow:SetVertexColor(red, green, blue, 1);
+        icon.highlightBorder:SetVertexColor(red, green, blue, 1);
+        icon.highlightGlow:Show();
+        icon.highlightBorder:Show();
         icon:Show();
         previous = icon;
     end
