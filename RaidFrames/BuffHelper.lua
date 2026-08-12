@@ -23,8 +23,7 @@ local profiles = {
         class = addon.DRUID,
         enabledSetting = "druidBuffHelper",
         row2WarningSetting = "druidBuffHelperWarning",
-        primaryRefreshFraction = 0.3,
-        primaryRefreshMaxSeconds = 4.5,
+        primaryPandemicGlow = true,
         classBuff = markOfTheWild,
         classBuffAuras = {
             [markOfTheWild] = true,
@@ -86,7 +85,6 @@ local FRAME_LEVEL_OFFSET = 10;
 local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew";
 local missingClassBuffGlowColor = { 1, 0, 0, 1 };
 local lifebloomGlowColor = { 0, 1, 0, 1 };
-local LIFEBLOOM_GLOW_INTERVAL = 0.05;
 
 local playerClass = addon.GetUnitClass("player");
 local isSupportedClass = supportedClasses[playerClass] and true or false;
@@ -97,7 +95,6 @@ local setupComplete = false;
 local editModePreviewActive = false;
 local restylePending = false;
 local restyleTicker;
-local lifebloomGlowUpdater;
 local ApplyLayout;
 
 for _, profile in pairs(profiles) do
@@ -206,29 +203,22 @@ local function EnsureContainers(frame)
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             InitializeAuraButton(button, helper, PRIMARY_BUFF_SIZE);
+
+            if playerProfile.primaryPandemicGlow then
+                local pandemicGlow = button:CreateTexture(nil, "OVERLAY");
+                pandemicGlow:SetAllPoints(button);
+                pandemicGlow:SetAtlas("RaidFrame-TargetFrame");
+                pandemicGlow:SetDesaturated(true);
+                pandemicGlow:SetVertexColor(unpack(lifebloomGlowColor));
+                pandemicGlow:SetBlendMode("ADD");
+                button:AddPandemicRegion(pandemicGlow);
+            end
         end,
         layout = {
             elementWidth = PRIMARY_BUFF_SIZE * GetScale(),
             elementHeight = PRIMARY_BUFF_SIZE * GetScale(),
         },
     });
-
-    if playerProfile.primaryRefreshFraction then
-        helper.primaryGlowAnchor = CreateFrame("Frame", nil, frame);
-        helper.primaryGlowAnchor:SetFrameLevel(
-            frame:GetFrameLevel() + FRAME_LEVEL_OFFSET + 5
-        );
-        helper.primaryGlowAnchor.SpellActivationAlert = addon.CreateOverlayGlow(
-            helper.primaryGlowAnchor,
-            PRIMARY_BUFF_SIZE,
-            lifebloomGlowColor,
-            true
-        );
-        helper.primaryGlowAnchor.SpellActivationAlert:SetFrameLevel(
-            helper.primaryGlowAnchor:GetFrameLevel() + 1
-        );
-        helper.primaryGlowAnchor:Hide();
-    end
 
     helper.row2 = CreateFrame(
         "AuraContainer",
@@ -322,22 +312,6 @@ ApplyLayout = function(frame, helper)
         elementHeight = primarySize,
     });
 
-    if helper.primaryGlowAnchor then
-        helper.primaryGlowAnchor:ClearAllPoints();
-        helper.primaryGlowAnchor:SetSize(primarySize, primarySize);
-        helper.primaryGlowAnchor:SetPoint(
-            "TOPRIGHT",
-            frame,
-            "RIGHT",
-            offsetX,
-            offsetY + primarySize + ( ROW_SPACING / 2 )
-        );
-        helper.primaryGlowAnchor.SpellActivationAlert:SetSize(
-            primarySize * 1.4,
-            primarySize * 1.4
-        );
-    end
-
     helper.classBuffAnchor:ClearAllPoints();
     helper.classBuffAnchor:SetSize(row2Size, row2Size);
     helper.classBuffAnchor:SetPoint(
@@ -380,154 +354,6 @@ ApplyLayout = function(frame, helper)
     end
 end
 
-local lifebloomSpellIDs = {
-    33763,
-    290754,
-};
-local lifebloomSpellName;
-
-local function IsPlayerLifebloom(aura)
-    if not aura then return false end
-
-    local spellID = aura.spellId;
-    local sourceUnit = aura.sourceUnit;
-    return ( not addon.IsSecretValue(spellID) )
-        and playerProfile.primaryBuffs[spellID]
-        and ( not addon.IsSecretValue(sourceUnit) )
-        and sourceUnit == "player";
-end
-
-local function FindReadableLifebloom(unit)
-    if C_UnitAuras.GetUnitAuraBySpellID then
-        for _, spellID in ipairs(lifebloomSpellIDs) do
-            local aura = C_UnitAuras.GetUnitAuraBySpellID(unit, spellID);
-            if IsPlayerLifebloom(aura) then
-                return aura;
-            end
-        end
-    end
-
-    if not C_UnitAuras.GetAuraDataBySpellName then return end
-
-    lifebloomSpellName = lifebloomSpellName or C_Spell.GetSpellName(33763);
-    if not lifebloomSpellName then return end
-
-    local aura = C_UnitAuras.GetAuraDataBySpellName(
-        unit,
-        lifebloomSpellName,
-        "HELPFUL|PLAYER"
-    );
-    return IsPlayerLifebloom(aura) and aura or nil;
-end
-
-local function ReadLifebloomTimingFromAura(aura)
-    if not IsPlayerLifebloom(aura) then return end
-
-    local duration = aura.duration;
-    local expirationTime = aura.expirationTime;
-    local timeMod = aura.timeMod or 1;
-    if addon.IsSecretValue(duration)
-        or addon.IsSecretValue(expirationTime)
-        or addon.IsSecretValue(timeMod)
-        or ( type(duration) ~= "number" )
-        or ( type(expirationTime) ~= "number" )
-        or ( type(timeMod) ~= "number" )
-        or ( duration <= 0 )
-        or ( expirationTime <= 0 )
-        or ( timeMod <= 0 ) then
-        return;
-    end
-
-    local refreshTime = duration * playerProfile.primaryRefreshFraction;
-    if playerProfile.primaryRefreshMaxSeconds then
-        refreshTime = math.min(refreshTime, playerProfile.primaryRefreshMaxSeconds);
-    end
-    local auraInstanceID = aura.auraInstanceID;
-    if addon.IsSecretValue(auraInstanceID)
-        or ( type(auraInstanceID) ~= "number" ) then
-        auraInstanceID = nil;
-    end
-
-    return expirationTime, refreshTime, timeMod, auraInstanceID;
-end
-
-local function ReadLifebloomTiming(unit)
-    return ReadLifebloomTimingFromAura(FindReadableLifebloom(unit));
-end
-
-local function SetLifebloomGlow(helper, shown)
-    local anchor = helper and helper.primaryGlowAnchor;
-    if ( not anchor ) then return end
-
-    if shown then
-        if ( not anchor.lifebloomGlowing ) then
-            anchor:Show();
-            addon.ShowOverlayGlow(anchor);
-            anchor.lifebloomGlowing = true;
-        end
-    elseif anchor.lifebloomGlowing then
-        addon.HideOverlayGlow(anchor);
-        anchor:Hide();
-        anchor.lifebloomGlowing = false;
-    end
-end
-
-local function RefreshLifebloomTiming(frame, helper)
-    if ( not helper.primaryGlowAnchor ) or ( not helper.active ) then
-        helper.lifebloomTiming = nil;
-        SetLifebloomGlow(helper, false);
-        return;
-    end
-
-    local unit = frame.displayedUnit or frame.unit;
-    local ok, expirationTime, refreshTime, timeMod, auraInstanceID = pcall(
-        ReadLifebloomTiming,
-        unit
-    );
-    if ( not ok ) or ( not expirationTime ) then
-        helper.lifebloomTiming = nil;
-        SetLifebloomGlow(helper, false);
-        return;
-    end
-
-    helper.lifebloomTiming = {
-        expirationTime = expirationTime,
-        refreshTime = refreshTime,
-        timeMod = timeMod,
-        auraInstanceID = auraInstanceID,
-    };
-end
-
-local function SetLifebloomTimingFromAura(helper, aura)
-    local expirationTime, refreshTime, timeMod, auraInstanceID =
-        ReadLifebloomTimingFromAura(aura);
-    if not expirationTime then return false end
-
-    helper.lifebloomTiming = {
-        expirationTime = expirationTime,
-        refreshTime = refreshTime,
-        timeMod = timeMod,
-        auraInstanceID = auraInstanceID,
-    };
-    return true;
-end
-
-local function UpdateLifebloomGlow(helper, now)
-    local timing = helper.lifebloomTiming;
-    if ( not timing ) then
-        SetLifebloomGlow(helper, false);
-        return;
-    end
-
-    local remaining = ( timing.expirationTime - now ) / timing.timeMod;
-    if remaining <= 0 then
-        helper.lifebloomTiming = nil;
-        SetLifebloomGlow(helper, false);
-    else
-        SetLifebloomGlow(helper, remaining <= timing.refreshTime);
-    end
-end
-
 local function RestyleButtons(frame, helper)
     ApplyLayout(frame, helper);
     if ( not CanStyleAuraButtons() ) then
@@ -546,8 +372,6 @@ local function HideHelper(frame)
     local helper = frame.healerBuffHelper;
     if ( not helper ) then return end
     helper.active = false;
-    helper.lifebloomTiming = nil;
-    SetLifebloomGlow(helper, false);
     helper.primary:SetEnabled(false);
     helper.primary:Hide();
     helper.row2:SetEnabled(false);
@@ -656,7 +480,6 @@ local function UpdateFrame(frame, forceRefresh)
     UpdateClassBuffWarning(helper, unit);
 
     helper.active = true;
-    RefreshLifebloomTiming(frame, helper);
 end
 
 local function RefreshAllFrames(forceRefresh)
@@ -685,96 +508,6 @@ local function RefreshClassBuffWarnings()
     end
 end
 
-local function RefreshReadableAuraState()
-    RefreshClassBuffWarnings();
-    if not playerProfile.primaryRefreshFraction then return end
-
-    for frame in pairs(cufPool) do
-        local helper = frame.healerBuffHelper;
-        if helper and helper.active then
-            RefreshLifebloomTiming(frame, helper);
-        end
-    end
-end
-
-local function ApplyLifebloomAuraUpdate(unitTarget, updateInfo)
-    if ( not playerProfile.primaryRefreshFraction ) or ( not updateInfo ) then
-        return;
-    end
-
-    for frame in pairs(cufPool) do
-        local helper = frame.healerBuffHelper;
-        local unit = frame.displayedUnit or frame.unit;
-        if helper and helper.active and unit == unitTarget then
-            local timingUpdated = false;
-            if updateInfo.addedAuras then
-                for _, aura in ipairs(updateInfo.addedAuras) do
-                    if SetLifebloomTimingFromAura(helper, aura) then
-                        timingUpdated = true;
-                        break;
-                    end
-                end
-            end
-
-            if ( not timingUpdated )
-                and updateInfo.updatedAuraInstanceIDs
-                and C_UnitAuras.GetAuraDataByAuraInstanceID then
-                for _, auraInstanceID in ipairs(updateInfo.updatedAuraInstanceIDs) do
-                    local aura = C_UnitAuras.GetAuraDataByAuraInstanceID(
-                        unit,
-                        auraInstanceID
-                    );
-                    if SetLifebloomTimingFromAura(helper, aura) then break end
-                end
-            end
-
-            local timing = helper.lifebloomTiming;
-            if timing and timing.auraInstanceID
-                and updateInfo.removedAuraInstanceIDs then
-                for _, auraInstanceID in ipairs(updateInfo.removedAuraInstanceIDs) do
-                    if auraInstanceID == timing.auraInstanceID then
-                        helper.lifebloomTiming = nil;
-                        SetLifebloomGlow(helper, false);
-                        break;
-                    end
-                end
-            end
-        end
-    end
-end
-
-local function HandleUnitAura(unitTarget, updateInfo)
-    if ( not updateInfo ) or updateInfo.isFullUpdate then
-        RefreshReadableAuraState();
-        return;
-    end
-
-    RefreshClassBuffWarnings();
-    ApplyLifebloomAuraUpdate(unitTarget, updateInfo);
-end
-
-local function StartLifebloomGlowUpdater()
-    if lifebloomGlowUpdater or ( not playerProfile.primaryRefreshFraction ) then
-        return;
-    end
-
-    local elapsedSinceUpdate = 0;
-    lifebloomGlowUpdater = CreateFrame("Frame");
-    lifebloomGlowUpdater:SetScript("OnUpdate", function(_, elapsed)
-        elapsedSinceUpdate = elapsedSinceUpdate + elapsed;
-        if elapsedSinceUpdate < LIFEBLOOM_GLOW_INTERVAL then return end
-
-        elapsedSinceUpdate = 0;
-        local now = GetTime();
-        for frame in pairs(cufPool) do
-            local helper = frame.healerBuffHelper;
-            if helper and helper.active then
-                UpdateLifebloomGlow(helper, now);
-            end
-        end
-    end);
-end
-
 local function StartRestyleTicker()
     if restylePending and ( not restyleTicker ) then
         restyleTicker = C_Timer.NewTicker(1, FlushPendingRestyle);
@@ -797,7 +530,6 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     if ( not addon.PROJECT_MAINLINE ) or ( not isSupportedClass ) or setupComplete then return end
     setupComplete = true;
     CheckSpec();
-    StartLifebloomGlowUpdater();
 
     hooksecurefunc("CompactUnitFrame_UpdateAll", TrackFrame);
     hooksecurefunc("CompactUnitFrame_SetUnit", TrackFrame);
@@ -810,9 +542,9 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
     eventFrame:RegisterEvent("UNIT_AURA");
-    eventFrame:SetScript("OnEvent", function(_, event, arg1, arg2)
+    eventFrame:SetScript("OnEvent", function(_, event, arg1)
         if event == "UNIT_AURA" then
-            pcall(HandleUnitAura, arg1, arg2);
+            RefreshClassBuffWarnings();
             return;
         elseif event == addon.PLAYER_SPECIALIZATION_CHANGED then
             if arg1 ~= "player" then return end
