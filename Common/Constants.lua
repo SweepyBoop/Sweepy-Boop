@@ -489,7 +489,6 @@ end
 
 addon.EXCLAMATION = "|TInterface/OptionsFrame/UI-OptionsFrame-NewFeatureIcon:0:0:0:-1|t";
 
--- Keep the inset atlas crop so the friendly healer artwork aligns with the icon mask.
 addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
 addon.ICON_ID_HEALER_ENEMY = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/Healing_Red";
 addon.ICON_ID_HEALER_ARENA_FRAME = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerArenaFrame";

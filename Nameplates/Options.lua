@@ -55,7 +55,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 desc = "Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r",
                 hidden = function()
                     local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
-                    return addon.PROJECT_TBC or
+                    return ( not addon.PROJECT_MAINLINE ) or
                         ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( style == addon.CLASS_ICON_STYLE.ARROW ) or ( style == addon.CLASS_ICON_STYLE.PIN );
                 end
             },
