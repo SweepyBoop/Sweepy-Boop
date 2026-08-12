@@ -552,7 +552,7 @@ local function FrameEntry(frame)
         frame = frame,
         unit = unit,
         isPet = string.find(unit, "pet") ~= nil,
-        isPlayer = unit == "player",
+        isPlayer = UnitIsUnit(unit, "player"),
         index = UnitIndex(unit),
     };
 end
@@ -1001,7 +1001,7 @@ local function DebugFrameOrder(container)
 
     local parts = {};
     for i, entry in ipairs(orderedFrames) do
-        parts[#parts + 1] = i .. ":" .. (entry.unit == "player" and (entry.unit .. "*") or entry.unit) .. "(" .. entry.name .. ")";
+        parts[#parts + 1] = i .. ":" .. (UnitIsUnit(entry.unit, "player") and (entry.unit .. "*") or entry.unit) .. "(" .. entry.name .. ")";
     end
 
     return table.concat(parts, " > ");
