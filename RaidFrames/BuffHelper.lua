@@ -162,8 +162,13 @@ local function LayoutLifebloomPandemicBorder(button)
 end
 
 local function AddLifebloomPandemicBorder(button)
+    local borderFrame = CreateFrame("Frame", nil, button);
+    borderFrame:SetAllPoints(button);
+    borderFrame:SetFrameStrata("HIGH");
+    borderFrame:SetFixedFrameStrata(true);
+
     local function AddTexture(path, layer, alpha)
-        local texture = button:CreateTexture(nil, layer);
+        local texture = borderFrame:CreateTexture(nil, layer);
         texture:SetTexture(path);
         texture:SetBlendMode("ADD");
         texture:SetVertexColor(0, 1, 0, alpha);
