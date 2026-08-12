@@ -1,5 +1,4 @@
 param(
-    [string]$TextureRepository = 'C:\Users\kunhouseliu\Documents\GitHub\wow-ui-textures',
     [string]$RetailInterface = 'C:\Program Files (x86)\World of Warcraft\_retail_\BlizzardInterfaceArt\Interface',
     [switch]$SkipUpscale
 )
@@ -11,12 +10,12 @@ Add-Type -AssemblyName System.Drawing
 $workbench = $PSScriptRoot
 $scratch = Join-Path $workbench 'scratch'
 $manifestPath = Join-Path $workbench 'icon-manifest.json'
-$inputDirectory = Join-Path $scratch 'inputs\class-spec-icons'
-$outputDirectory = Join-Path $scratch 'outputs\digital-art-4x-class-spec-icons'
-$comparisonDirectory = Join-Path $scratch 'comparisons\class-spec-digital-art-4x'
+$inputDirectory = Join-Path $scratch 'inputs\retail-class-spec-icons'
+$outputDirectory = Join-Path $scratch 'outputs\retail-digital-art-4x-class-spec-icons'
+$comparisonDirectory = Join-Path $scratch 'comparisons\retail-class-spec-digital-art-4x'
 $pairDirectory = Join-Path $comparisonDirectory 'individual'
 $classSheetDirectory = Join-Path $comparisonDirectory 'by-class'
-$reportPath = Join-Path $scratch 'class-spec-run-report.json'
+$reportPath = Join-Path $scratch 'retail-class-spec-run-report.json'
 $upscaler = Join-Path $scratch 'upscayl-2.15.0\resources\bin\upscayl-bin.exe'
 $modelDirectory = Join-Path $scratch 'upscayl-2.15.0\resources\models'
 $python = Join-Path $scratch 'python\Scripts\python.exe'
@@ -34,8 +33,8 @@ if (@($assets | Where-Object kind -eq 'class').Count -ne 13) {
 if (@($assets | Where-Object kind -eq 'spec').Count -ne 40) {
     throw 'The manifest must contain exactly 40 specialization icons.'
 }
-if (-not (Test-Path -LiteralPath (Join-Path $TextureRepository '.git'))) {
-    throw "Texture repository is not a Git checkout: $TextureRepository"
+if ($manifest.sourcePolicy -ne 'retail-interface-blp') {
+    throw "Unsupported source policy: $($manifest.sourcePolicy)"
 }
 if (-not (Test-Path -LiteralPath $RetailInterface)) {
     throw "Extracted Retail interface art is missing: $RetailInterface"
@@ -63,93 +62,35 @@ if (-not $SkipUpscale) {
 Get-ChildItem -LiteralPath $pairDirectory -File -ErrorAction SilentlyContinue | Remove-Item -Force
 Get-ChildItem -LiteralPath $classSheetDirectory -File -ErrorAction SilentlyContinue | Remove-Item -Force
 
-function Export-GitBlob {
-    param(
-        [string]$Repository,
-        [string]$Revision,
-        [string]$Path,
-        [string]$Destination
-    )
-
-    $objectName = & git -C $Repository rev-parse "$Revision`:$Path" 2>$null
-    if ($LASTEXITCODE -ne 0 -or -not $objectName) {
-        throw "Source does not exist at ${Revision}:$Path"
-    }
-
-    $startInfo = [Diagnostics.ProcessStartInfo]::new()
-    $startInfo.FileName = 'git.exe'
-    $startInfo.ArgumentList.Add('-C')
-    $startInfo.ArgumentList.Add($Repository)
-    $startInfo.ArgumentList.Add('cat-file')
-    $startInfo.ArgumentList.Add('blob')
-    $startInfo.ArgumentList.Add($objectName.Trim())
-    $startInfo.UseShellExecute = $false
-    $startInfo.RedirectStandardOutput = $true
-    $startInfo.RedirectStandardError = $true
-
-    $process = [Diagnostics.Process]::Start($startInfo)
-    $file = [IO.File]::Create($Destination)
-    try {
-        $process.StandardOutput.BaseStream.CopyTo($file)
-    }
-    finally {
-        $file.Dispose()
-    }
-    $errorText = $process.StandardError.ReadToEnd()
-    $process.WaitForExit()
-    if ($process.ExitCode -ne 0) {
-        Remove-Item -LiteralPath $Destination -Force -ErrorAction SilentlyContinue
-        throw "Could not export ${Revision}:$Path. $errorText"
-    }
-
-    return $objectName.Trim()
-}
-
 $staged = @()
 $missing = @()
 foreach ($asset in $assets) {
     $inputPath = Join-Path $inputDirectory ($asset.outputName + '.png')
-    $sourceType = $null
-    $sourcePath = $null
-    $sourceBlob = $null
-    $sourceSha256 = $null
-
-    if ($asset.sourcePath) {
-        $sourceType = 'wow-ui-textures'
-        $sourcePath = $asset.sourcePath
-        $sourceBlob = Export-GitBlob -Repository $TextureRepository -Revision $manifest.sourceRef -Path $asset.sourcePath -Destination $inputPath
-        $sourceSha256 = (Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash
+    $retailRelativePath = if ($asset.retailPath) {
+        $asset.retailPath
     }
-    elseif ($asset.retailPath) {
-        $sourceType = 'retail-interface-blp'
-        $sourcePath = Join-Path $RetailInterface ($asset.retailPath -replace '/', '\')
-        if (-not (Test-Path -LiteralPath $sourcePath)) {
-            $missing += [PSCustomObject]@{
-                kind = $asset.kind
-                class = $asset.class
-                specId = $asset.specId
-                label = $asset.label
-                outputName = $asset.outputName
-                reason = "Retail BLP source is missing: $sourcePath"
-            }
-            continue
-        }
-        $sourceSha256 = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash
-        & $python $blpConverter $sourcePath $inputPath
-        if ($LASTEXITCODE -ne 0) {
-            throw "BLP conversion failed for $sourcePath with exit code $LASTEXITCODE."
-        }
+    elseif ($asset.sourcePath) {
+        ($asset.sourcePath -replace '^ICONS/', 'Icons/' -replace '\.PNG$', '.blp')
     }
     else {
+        "Icons/$($asset.outputName).blp"
+    }
+    $sourcePath = Join-Path $RetailInterface ($retailRelativePath -replace '/', '\')
+    if (-not (Test-Path -LiteralPath $sourcePath)) {
         $missing += [PSCustomObject]@{
             kind = $asset.kind
             class = $asset.class
             specId = $asset.specId
             label = $asset.label
             outputName = $asset.outputName
-            reason = 'No source is configured.'
+            reason = "Retail BLP source is missing: $sourcePath"
         }
         continue
+    }
+    $sourceSha256 = (Get-FileHash -LiteralPath $sourcePath -Algorithm SHA256).Hash
+    & $python $blpConverter $sourcePath $inputPath
+    if ($LASTEXITCODE -ne 0) {
+        throw "BLP conversion failed for $sourcePath with exit code $LASTEXITCODE."
     }
 
     $image = [Drawing.Image]::FromFile($inputPath)
@@ -169,10 +110,10 @@ foreach ($asset in $assets) {
         specId = $asset.specId
         label = $asset.label
         outputName = $asset.outputName
-        sourceType = $sourceType
-        sourceRef = if ($sourceType -eq 'wow-ui-textures') { $manifest.sourceRef } else { $null }
+        sourceType = 'retail-interface-blp'
+        sourceRef = $null
         sourcePath = $sourcePath
-        sourceBlob = $sourceBlob
+        sourceBlob = $null
         sourceSha256 = $sourceSha256
         inputPath = $inputPath
         inputSha256 = (Get-FileHash -LiteralPath $inputPath -Algorithm SHA256).Hash
@@ -331,7 +272,7 @@ try {
         $graphics.FillRectangle($backgroundBrush, 0, 0, $masterWidth, $masterHeight)
         $graphics.TextRenderingHint = [Drawing.Text.TextRenderingHint]::ClearTypeGridFit
         $graphics.DrawString('SweepyBoop class + spec icons', $titleFont, $textBrush, 18, 15)
-        $graphics.DrawString('53 generated from original Blizzard sources', $labelFont, $mutedBrush, 18, 42)
+        $graphics.DrawString('53 generated from current Retail BlizzardInterfaceArt BLP files', $labelFont, $mutedBrush, 18, 42)
         for ($index = 0; $index -lt $renderAssets.Count; $index++) {
             $asset = $renderAssets[$index]
             $column = $index % $columns
@@ -377,11 +318,8 @@ finally {
 
 $report = [ordered]@{
     generatedAtUtc = [DateTime]::UtcNow.ToString('o')
-    textureRepository = (Resolve-Path -LiteralPath $TextureRepository).Path
     retailInterface = (Resolve-Path -LiteralPath $RetailInterface).Path
-    sourceRepository = $manifest.sourceRepository
-    sourceRef = $manifest.sourceRef
-    sourceCommit = (& git -C $TextureRepository rev-parse $manifest.sourceRef).Trim()
+    sourcePolicy = $manifest.sourcePolicy
     model = $manifest.model
     scale = $manifest.scale
     expectedAssets = $assets.Count

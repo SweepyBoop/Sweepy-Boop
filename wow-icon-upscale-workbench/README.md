@@ -210,14 +210,13 @@ icon-manifest.json
 run-icon-batch.ps1
 ```
 
-The manifest follows SweepyBoop's class/spec override identifiers: 13 classes and 40 specializations. All pixels come from original Blizzard assets through two sources:
+The manifest follows SweepyBoop's class/spec override identifiers: 13 classes and 40 specializations. All 53 inputs come from the current installed Retail interface-art extraction under:
 
-- 51 PNG textures exported byte-for-byte from the `Gethe/wow-ui-textures` `origin/ptr` Git ref.
-- Two newer 64x64 BLP2 textures from the installed Retail interface-art extraction:
-  - `Icons/Classicon_DemonHunter_Void.blp` for Devourer, spec ID 1480.
-  - `Icons/ClassIcon_Evoker_Augmentation.blp` for Augmentation, spec ID 1473.
+```text
+C:\Program Files (x86)\World of Warcraft\_retail_\BlizzardInterfaceArt\Interface\Icons
+```
 
-The BLP files are converted to lossless PNG with `convert-blp-to-png.py` and Pillow 12.3.0 in the ignored `scratch/python` environment. The runner verifies all 64x64 inputs, runs `digital-art-4x`, verifies all 256x256 outputs, and records source hashes, Git blob IDs where applicable, and generated hashes.
+The runner resolves each stable icon basename to its Retail `.blp` file. It converts the 64x64 BLP2 files to lossless PNG with `convert-blp-to-png.py` and Pillow 12.3.0 in the ignored `scratch/python` environment, runs `digital-art-4x`, verifies all 256x256 outputs, and records source and generated SHA-256 hashes.
 
 Prepare the local converter once:
 
@@ -235,7 +234,7 @@ Run the batch from this directory:
 Current source coverage is complete: 53 of 53 icons. The generated review is under:
 
 ```text
-scratch/comparisons/class-spec-digital-art-4x/
+scratch/comparisons/retail-class-spec-digital-art-4x/
 |-- all-class-spec-icons-index.png
 |-- by-class/
 `-- individual/
@@ -244,7 +243,19 @@ scratch/comparisons/class-spec-digital-art-4x/
 The provenance report is:
 
 ```text
-scratch/class-spec-run-report.json
+scratch/retail-class-spec-run-report.json
+```
+
+The Git-visible backup of the latest Retail run is:
+
+```text
+../Docs/IconUpscaleBackup-Retail/
+|-- digital-art-4x/
+|-- comparisons/
+|   |-- all-class-spec-icons-index.png
+|   `-- by-class/
+|-- icon-manifest.json
+`-- retail-class-spec-run-report.json
 ```
 
 ## Continuing the work
