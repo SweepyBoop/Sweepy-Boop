@@ -341,6 +341,22 @@ addon.GetRaidFrameOptions = function(order)
                         name = "Healer Buff Helper",
                     },
 
+                    hideBlizzardRaidFrameBuffs = {
+                        order = 5.5,
+                        width = "full",
+                        type = "toggle",
+                        name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Hide Blizzard raid-frame buffs via CVar",
+                        desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
+                        get = GetBlizzardBuffsHidden,
+                        set = function(_, hidden)
+                            if hidden then
+                                StaticPopup_Show(confirmHideBlizzardBuffs);
+                            else
+                                SetBlizzardBuffsHidden(false);
+                            end
+                        end,
+                    },
+
                     healerBuffHelperScale = {
                         order = 6,
                         width = 0.8,
@@ -472,22 +488,6 @@ addon.GetRaidFrameOptions = function(order)
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                             SweepyBoop:RefreshHealerBuffHelper();
-                        end,
-                    },
-
-                    hideBlizzardRaidFrameBuffs = {
-                        order = 11.5,
-                        width = "full",
-                        type = "toggle",
-                        name = "Hide Blizzard raid-frame buffs via CVar",
-                        desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
-                        get = GetBlizzardBuffsHidden,
-                        set = function(_, hidden)
-                            if hidden then
-                                StaticPopup_Show(confirmHideBlizzardBuffs);
-                            else
-                                SetBlizzardBuffsHidden(false);
-                            end
                         end,
                     },
 
