@@ -3,6 +3,7 @@ local _, addon = ...;
 local auraFilter = "HARMFUL|CROWD_CONTROL";
 local auraGroupKey = "CrowdControl";
 local iconSpacing = 2;
+local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local frameLevelOffset = 20;
 local minIconCount = 1;
 local maxIconCount = 5;
@@ -64,6 +65,31 @@ local function CanStyleAuraButtons()
         or ( not C_Secrets.ShouldAurasBeSecret() );
 end
 
+local function UpdateCooldownFontSize(cooldown)
+    if not cooldown.sweepyBoopCountdownFontString then
+        local numRegions = cooldown:GetNumRegions();
+        for i = 1, numRegions do
+            local region = select(i, cooldown:GetRegions());
+            if region and ( region:GetObjectType() == "FontString" ) then
+                cooldown.sweepyBoopCountdownFontString = region;
+                break;
+            end
+        end
+    end
+
+    local region = cooldown.sweepyBoopCountdownFontString;
+    if region then
+        local font, _, flags = region:GetFont();
+        if font then
+            region:SetFont(
+                font,
+                math.floor(iconBaseSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT),
+                flags
+            );
+        end
+    end
+end
+
 local function StyleCooldown(cooldown, config)
     cooldown:SetDrawBling(false);
     cooldown:SetReverse(true);
@@ -75,49 +101,41 @@ local function StyleCooldown(cooldown, config)
     if cooldown.SetCountdownMillisecondsThreshold then
         cooldown:SetCountdownMillisecondsThreshold(GetMillisecondsThreshold(config));
     end
+    UpdateCooldownFontSize(cooldown);
 end
 
-local function LayoutAuraButton(button, size)
-    local visualScale = size / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
-    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET * visualScale;
-    local borderPadding = visualScale;
+local function CreateDebuffVisual(frame)
+    local backdrop = frame:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(frame);
+    backdrop:SetColorTexture(0, 0, 0, 1);
 
-    button.sweepyBoopDebuffIcon:ClearAllPoints();
-    button.sweepyBoopDebuffIcon:SetPoint("TOPLEFT", button, "TOPLEFT", inset, -inset);
-    button.sweepyBoopDebuffIcon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -inset, inset);
-    button.sweepyBoopDebuffBorder:ClearAllPoints();
-    button.sweepyBoopDebuffBorder:SetPoint("TOPLEFT", button, "TOPLEFT", -borderPadding, borderPadding);
-    button.sweepyBoopDebuffBorder:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", borderPadding, -borderPadding);
+    local icon = frame:CreateTexture(nil, "ARTWORK");
+    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    icon:SetPoint("TOPLEFT", frame, "TOPLEFT", inset, -inset);
+    icon:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -inset, inset);
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+
+    local border = frame:CreateTexture(nil, "OVERLAY");
+    border:SetPoint("TOPLEFT", frame, "TOPLEFT", -1, 1);
+    border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, -1);
+    border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+    border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+
+    local cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
+    cooldown:SetAllPoints(icon);
+    StyleCooldown(cooldown, GetConfig());
+    return icon, cooldown;
 end
 
 local function InitializeAuraButton(button, frame)
-    local config = GetConfig();
-    local size = GetIconSize(frame, config);
-
     frame.sweepyBoopDebuffAuraButtons = frame.sweepyBoopDebuffAuraButtons or {};
     frame.sweepyBoopDebuffAuraButtons[#frame.sweepyBoopDebuffAuraButtons + 1] = button;
 
-    button:SetSize(size, size);
+    button:SetSize(iconBaseSize, iconBaseSize);
     button:SetMouseMotionEnabled(false);
 
-    local backdrop = button:CreateTexture(nil, "BACKGROUND");
-    backdrop:SetAllPoints(button);
-    backdrop:SetColorTexture(0, 0, 0, 1);
-
-    local icon = button:CreateTexture(nil, "ARTWORK");
-    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+    local icon, cooldown = CreateDebuffVisual(button);
     button:SetIcon(icon);
-    button.sweepyBoopDebuffIcon = icon;
-
-    local border = button:CreateTexture(nil, "OVERLAY");
-    border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
-    border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
-    button.sweepyBoopDebuffBorder = border;
-    LayoutAuraButton(button, size);
-
-    local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
-    cooldown:SetAllPoints(icon);
-    StyleCooldown(cooldown, config);
     button:SetDurationCooldown(cooldown);
 
     local glow = button:CreateTexture(nil, "OVERLAY");
@@ -135,24 +153,39 @@ local function InitializeAuraButton(button, frame)
     });
 end
 
-local function ApplyContainerLayout(frame, container)
-    local config = GetConfig();
-    local size = GetIconSize(frame, config);
+local function EnsureVisualRoot(frame)
+    local root = frame.sweepyBoopDebuffRoot;
+    if root then return root end
 
-    container:ClearAllPoints();
-    container:SetPoint(
+    root = CreateFrame("Frame", nil, frame);
+    root:SetSize(1, 1);
+    root:SetFrameLevel(frame:GetFrameLevel() + frameLevelOffset);
+    frame.sweepyBoopDebuffRoot = root;
+    return root;
+end
+
+local function ApplyVisualRootLayout(frame)
+    local config = GetConfig();
+    local root = EnsureVisualRoot(frame);
+
+    root:ClearAllPoints();
+    root:SetPoint(
         "LEFT",
         frame,
         "RIGHT",
         config.raidFrameDebuffIconOffsetX or 0,
         config.raidFrameDebuffIconOffsetY or 0
     );
-    container:SetAuraGroupLayout(auraGroupKey, {
-        elementSpacing = iconSpacing,
-        lineSpacing = iconSpacing,
-        elementWidth = size,
-        elementHeight = size,
-    });
+    root:SetScale(GetIconSize(frame, config) / iconBaseSize);
+    return root;
+end
+
+local function ApplyContainerLayout(frame, container)
+    local config = GetConfig();
+    local root = ApplyVisualRootLayout(frame);
+
+    container:ClearAllPoints();
+    container:SetPoint("LEFT", root, "LEFT");
     container:SetAuraGroupMaxFrameCount(auraGroupKey, GetIconCount(config));
 end
 
@@ -164,10 +197,7 @@ local function RestyleContainer(frame, container)
 
     ApplyContainerLayout(frame, container);
     local config = GetConfig();
-    local size = GetIconSize(frame, config);
     for _, button in ipairs(frame.sweepyBoopDebuffAuraButtons or {}) do
-        button:SetSize(size, size);
-        LayoutAuraButton(button, size);
         local cooldown = button:GetDurationCooldown();
         if cooldown then
             StyleCooldown(cooldown, config);
@@ -179,10 +209,11 @@ local function EnsureContainer(frame)
     local container = frame.sweepyBoopDebuffAuraContainer;
     if container then return container end
 
+    local root = EnsureVisualRoot(frame);
     container = CreateFrame(
         "AuraContainer",
         nil,
-        frame,
+        root,
         "CustomAuraContainerTemplate"
     );
     container:SetFrameLevel(frame:GetFrameLevel() + frameLevelOffset);
@@ -213,8 +244,8 @@ local function EnsureContainer(frame)
         layout = {
             elementSpacing = iconSpacing,
             lineSpacing = iconSpacing,
-            elementWidth = GetIconSize(frame, GetConfig()),
-            elementHeight = GetIconSize(frame, GetConfig()),
+            elementWidth = iconBaseSize,
+            elementHeight = iconBaseSize,
         },
     });
 
@@ -266,12 +297,11 @@ local function EnsureTestIcon(frame, index)
     local icon = frame.sweepyBoopDebuffTestIcons[index];
     if icon then return icon end
 
-    icon = CreateFrame("Frame", nil, frame);
+    local root = EnsureVisualRoot(frame);
+    icon = CreateFrame("Frame", nil, root);
     icon:SetFrameLevel(frame:GetFrameLevel() + frameLevelOffset + index);
-    icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    icon.texture:SetAllPoints(icon);
-    icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
-    icon.cooldown:SetAllPoints(icon);
+    icon:SetSize(iconBaseSize, iconBaseSize);
+    icon.texture, icon.cooldown = CreateDebuffVisual(icon);
     frame.sweepyBoopDebuffTestIcons[index] = icon;
     return icon;
 end
@@ -287,23 +317,16 @@ local function ShowTestFrame(frame)
     ClearTestIcons(frame);
 
     local config = GetConfig();
-    local size = GetIconSize(frame, config);
+    local root = ApplyVisualRootLayout(frame);
     local count = math.min(GetIconCount(config), 2);
     local previous;
     for i = 1, count do
         local icon = EnsureTestIcon(frame, i);
-        icon:SetSize(size, size);
         icon:ClearAllPoints();
         if previous then
             icon:SetPoint("LEFT", previous, "RIGHT", iconSpacing, 0);
         else
-            icon:SetPoint(
-                "LEFT",
-                frame,
-                "RIGHT",
-                config.raidFrameDebuffIconOffsetX or 0,
-                config.raidFrameDebuffIconOffsetY or 0
-            );
+            icon:SetPoint("LEFT", root, "LEFT");
         end
         StyleCooldown(icon.cooldown, config);
         icon.texture:SetTexture(addon.GetSpellTexture(i == 1 and psychicScream or kidneyShot));
