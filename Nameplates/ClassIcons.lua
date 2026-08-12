@@ -598,8 +598,13 @@ addon.UpdateClassIcon = function(nameplate, frame)
             arrowFrame.icon:SetAlpha(0);
             arrowFrame.materialOverlay:SetAlpha(1);
             arrowFrame.targetHighlight:SetAlpha(1);
-            arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
-            arrowFrame.materialOverlay:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            if classColor then
+                arrowFrame.icon:SetVertexColor(classColor.r, classColor.g, classColor.b);
+                arrowFrame.materialOverlay:SetVertexColor(classColor.r, classColor.g, classColor.b);
+            else
+                arrowFrame.icon:SetVertexColor(1, 1, 1);
+                arrowFrame.materialOverlay:SetVertexColor(1, 1, 1);
+            end
             arrowFrame:SetScale(iconScale);
             arrowFrame:SetFrameLevel(3);
             arrowFrame:ClearAllPoints();

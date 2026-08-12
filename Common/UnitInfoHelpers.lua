@@ -49,7 +49,9 @@ addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
 end
 
 addon.GetUnitClass = function(unitId)
-    return select(2, UnitClass(unitId)); -- Locale-independent name, e.g. "WARRIOR"
+    local class = UnitClassBase(unitId); -- Locale-independent name, e.g. "WARRIOR"
+    if addon.IsSecretValue(class) then return end
+    return class;
 end
 
 -- Arena-safe unit resolver ----------------------------------------------------

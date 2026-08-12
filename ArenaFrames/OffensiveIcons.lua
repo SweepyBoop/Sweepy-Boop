@@ -32,7 +32,7 @@ local function GetBurstAuraSpellSet()
 end
 
 local function CanUseSpellID(spellID)
-    return spellID and ( not addon.IsSecretValue(spellID) );
+    return ( not addon.IsSecretValue(spellID) ) and spellID;
 end
 
 local function GetBurstLookupSpellID(spellID)
@@ -42,7 +42,10 @@ local function GetBurstLookupSpellID(spellID)
 end
 
 local function AuraPassesFilter(unit, auraInstanceID, filter)
-    if ( not C_UnitAuras ) or ( not C_UnitAuras.IsAuraFilteredOutByInstanceID ) then
+    if addon.IsSecretValue(auraInstanceID)
+        or ( not auraInstanceID )
+        or ( not C_UnitAuras )
+        or ( not C_UnitAuras.IsAuraFilteredOutByInstanceID ) then
         return false;
     end
 
@@ -60,21 +63,24 @@ local function IsExcludedDefensiveAura(unit, auraInstanceID)
 end
 
 local function BuildBurstOverlaySignal(unit, auraData)
-    if ( not auraData ) or ( not auraData.icon ) or ( not auraData.auraInstanceID ) then
+    if not auraData then
         return false;
     end
 
+    local auraInstanceID = auraData.auraInstanceID;
     local spellID = GetBurstLookupSpellID(auraData.spellId);
     if spellID then
         return GetBurstAuraSpellSet()[spellID] and true or false, spellID;
     end
 
-    if IsExcludedDefensiveAura(unit, auraData.auraInstanceID) then
+    if IsExcludedDefensiveAura(unit, auraInstanceID) then
         return false;
     end
 
-    if addon.PROJECT_MAINLINE and auraData.spellId and C_Spell and C_Spell.IsSpellImportant then
-        return C_Spell.IsSpellImportant(auraData.spellId);
+    local rawSpellID = auraData.spellId;
+    if addon.PROJECT_MAINLINE and C_Spell and C_Spell.IsSpellImportant
+        and ( addon.IsSecretValue(rawSpellID) or rawSpellID ) then
+        return C_Spell.IsSpellImportant(rawSpellID);
     end
 
     return false;
@@ -92,7 +98,13 @@ local function CompareBurstOverlays(a, b)
         return aPriority < bPriority;
     end
 
-    return ( a.aura.auraInstanceID or 0 ) < ( b.aura.auraInstanceID or 0 );
+    local aAuraInstanceID = a.aura.auraInstanceID;
+    local bAuraInstanceID = b.aura.auraInstanceID;
+    if addon.IsSecretValue(aAuraInstanceID) or addon.IsSecretValue(bAuraInstanceID) then
+        return false;
+    end
+
+    return ( aAuraInstanceID or 0 ) < ( bAuraInstanceID or 0 );
 end
 
 local function ConfigureCooldownSwipe(cooldown)
@@ -296,24 +308,12 @@ local function GatherBurstOverlaySignals(unit)
     local results = {};
     if ( not UnitExists(unit) ) or ( not C_UnitAuras ) then return results end
 
-    if C_UnitAuras.GetUnitAuras then
-        local auras = C_UnitAuras.GetUnitAuras(unit, "HELPFUL");
-        if auras then
-            for _, auraData in ipairs(auras) do
-                local alphaSignal, burstSpellID = BuildBurstOverlaySignal(unit, auraData);
-                if addon.IsSecretValue(alphaSignal) or alphaSignal then
-                    table.insert(results, { aura = auraData, alphaSignal = alphaSignal, burstSpellID = burstSpellID });
-                end
-            end
-        end
-    else
-        for i = 1, maxAurasToScan do
-            local auraData = C_UnitAuras.GetAuraDataByIndex(unit, i, "HELPFUL");
-            if ( not auraData ) or ( not auraData.name ) then break end
-            local alphaSignal, burstSpellID = BuildBurstOverlaySignal(unit, auraData);
-            if addon.IsSecretValue(alphaSignal) or alphaSignal then
-                table.insert(results, { aura = auraData, alphaSignal = alphaSignal, burstSpellID = burstSpellID });
-            end
+    for i = 1, maxAurasToScan do
+        local auraData = C_UnitAuras.GetAuraDataByIndex(unit, i, "HELPFUL");
+        if not auraData then break end
+        local alphaSignal, burstSpellID = BuildBurstOverlaySignal(unit, auraData);
+        if addon.IsSecretValue(alphaSignal) or alphaSignal then
+            table.insert(results, { aura = auraData, alphaSignal = alphaSignal, burstSpellID = burstSpellID });
         end
     end
 
@@ -345,12 +345,21 @@ local function RefreshArenaOverlay(index)
         AnchorOverlayLayer(group, icon);
         icon:SetFrameLevel(group:GetFrameLevel() + maxOverlayLayers - i);
 
-        local durationObject = C_UnitAuras and C_UnitAuras.GetAuraDuration and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
+        local auraInstanceID = auraData.auraInstanceID;
+        local durationObject;
+        if ( not addon.IsSecretValue(auraInstanceID) ) and auraInstanceID
+            and C_UnitAuras and C_UnitAuras.GetAuraDuration then
+            durationObject = C_UnitAuras.GetAuraDuration(unit, auraInstanceID);
+        end
         local startTime, duration;
-        if ( not durationObject ) and auraData.duration and auraData.expirationTime
-            and ( not addon.IsSecretValue(auraData.duration) ) and ( not addon.IsSecretValue(auraData.expirationTime) ) then
-            startTime = auraData.expirationTime - auraData.duration;
-            duration = auraData.duration;
+        local auraDuration = auraData.duration;
+        local expirationTime = auraData.expirationTime;
+        if ( not durationObject )
+            and ( not addon.IsSecretValue(auraDuration) )
+            and ( not addon.IsSecretValue(expirationTime) )
+            and auraDuration and expirationTime then
+            startTime = expirationTime - auraDuration;
+            duration = auraDuration;
         end
 
         PaintOverlayLayer(icon, overlaySignal, durationObject, startTime, duration);
