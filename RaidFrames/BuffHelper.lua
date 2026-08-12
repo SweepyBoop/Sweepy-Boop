@@ -86,7 +86,6 @@ local FRAME_LEVEL_OFFSET = 10;
 local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew";
 local missingClassBuffGlowColor = { 1, 0, 0, 1 };
 local lifebloomGlowColor = { 0, 1, 0, 1 };
-local LIFEBLOOM_SCAN_INTERVAL = 0.25;
 local LIFEBLOOM_GLOW_INTERVAL = 0.05;
 
 local playerClass = addon.GetUnitClass("player");
@@ -98,7 +97,7 @@ local setupComplete = false;
 local editModePreviewActive = false;
 local restylePending = false;
 local restyleTicker;
-local lifebloomUpdater;
+local lifebloomGlowUpdater;
 local ApplyLayout;
 
 for _, profile in pairs(profiles) do
@@ -276,17 +275,6 @@ local function EnsureContainers(frame)
     helper.classBuffAnchor:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
     helper.classBuffAnchor:Hide();
 
-    helper.classBuff = CreateFrame(
-        "AuraContainer",
-        nil,
-        frame,
-        "CustomAuraContainerTemplate"
-    );
-    helper.classBuff:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
-    helper.classBuff:SetPoint("CENTER", helper.classBuffAnchor, "CENTER");
-    helper.classBuff:SetEnabled(false);
-    helper.classBuff:Hide();
-
     local warningLevel = helper.classBuffAnchor:GetFrameLevel() + 1;
     helper.classBuffWarning = CreateFrame("Frame", nil, helper.classBuffAnchor);
     helper.classBuffWarning:SetFrameLevel(warningLevel);
@@ -307,28 +295,6 @@ local function EnsureContainers(frame)
     );
     helper.classBuffWarning.fixedPixelGlow:SetFrameLevel(warningLevel + 1);
     addon.ShowFixedPixelGlow(helper.classBuffWarning.fixedPixelGlow);
-
-    helper.classBuff:AddAuraSlot("ClassBuff", "HELPFUL", {
-        candidateFilters = {
-            includeSpellIDs = playerProfile.classBuffAuras,
-        },
-        sortMethod = AuraContainerSortMethod.Expiration,
-        sortDirection = AuraContainerSortDirection.Normal,
-        initializeFrame = function(button)
-            button:SetFrameLevel(warningLevel + 2);
-            button:SetAllPoints(helper.classBuffAnchor);
-            button:SetMouseMotionEnabled(false);
-
-            local background = button:CreateTexture(nil, "BACKGROUND");
-            background:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1);
-            background:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1);
-            background:SetColorTexture(0, 0, 0, 1);
-
-            local icon = button:CreateTexture(nil, "ARTWORK");
-            icon:SetAllPoints(button);
-            button:SetIcon(icon);
-        end,
-    });
 
     frame.healerBuffHelper = helper;
     ApplyLayout(frame, helper);
@@ -562,8 +528,6 @@ local function HideHelper(frame)
     helper.primary:Hide();
     helper.row2:SetEnabled(false);
     helper.row2:Hide();
-    helper.classBuff:SetEnabled(false);
-    helper.classBuff:Hide();
     helper.classBuffAnchor:Hide();
 end
 
@@ -587,6 +551,36 @@ end
 local function IsFrameVisible(frame)
     local shown = frame:IsShown();
     return ( not addon.IsSecretValue(shown) ) and shown;
+end
+
+local function ReadClassBuffState(unit)
+    if ( not C_UnitAuras.GetUnitAuraBySpellID )
+        or ( not C_Secrets )
+        or ( not C_Secrets.ShouldSpellAuraBeSecret ) then
+        return;
+    end
+
+    for spellID in pairs(playerProfile.classBuffAuras) do
+        if C_Secrets.ShouldSpellAuraBeSecret(spellID) then return end
+        if C_UnitAuras.GetUnitAuraBySpellID(unit, spellID) then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function UpdateClassBuffWarning(helper, unit)
+    helper.classBuffWarning:Hide();
+    helper.classBuffAnchor:Hide();
+
+    if IsPetUnit(unit) then return end
+
+    local ok, hasClassBuff = pcall(ReadClassBuffState, unit);
+    if ( not ok ) or hasClassBuff == nil then return end
+
+    helper.classBuffAnchor:Show();
+    helper.classBuffWarning:SetShown(not hasClassBuff);
 end
 
 local function ShouldTrackFrameName(name)
@@ -635,15 +629,7 @@ local function UpdateFrame(frame, forceRefresh)
     local needsFullRefresh = forceRefresh or ( not helper.active );
     ActivateContainer(helper.primary, unit, needsFullRefresh);
     ActivateContainer(helper.row2, unit, needsFullRefresh);
-
-    if IsPetUnit(unit) then
-        helper.classBuff:SetEnabled(false);
-        helper.classBuff:Hide();
-        helper.classBuffAnchor:Hide();
-    else
-        ActivateContainer(helper.classBuff, unit, needsFullRefresh);
-        helper.classBuffAnchor:Show();
-    end
+    UpdateClassBuffWarning(helper, unit);
 
     helper.active = true;
     RefreshLifebloomTiming(frame, helper);
@@ -665,31 +651,36 @@ local function FlushPendingRestyle()
     end
 end
 
-local function StartLifebloomUpdater()
-    if lifebloomUpdater or ( not playerProfile.primaryRefreshFraction ) then return end
+local function RefreshReadableAuraState()
+    for frame in pairs(cufPool) do
+        local helper = frame.healerBuffHelper;
+        if helper and helper.active then
+            local unit = frame.displayedUnit or frame.unit;
+            UpdateClassBuffWarning(helper, unit);
+            if playerProfile.primaryRefreshFraction then
+                RefreshLifebloomTiming(frame, helper);
+            end
+        end
+    end
+end
 
-    local scanElapsed = 0;
-    local glowElapsed = 0;
-    lifebloomUpdater = CreateFrame("Frame");
-    lifebloomUpdater:SetScript("OnUpdate", function(_, elapsed)
-        scanElapsed = scanElapsed + elapsed;
-        glowElapsed = glowElapsed + elapsed;
-        local shouldScan = scanElapsed >= LIFEBLOOM_SCAN_INTERVAL;
-        local shouldUpdateGlow = glowElapsed >= LIFEBLOOM_GLOW_INTERVAL;
-        if ( not shouldScan ) and ( not shouldUpdateGlow ) then return end
+local function StartLifebloomGlowUpdater()
+    if lifebloomGlowUpdater or ( not playerProfile.primaryRefreshFraction ) then
+        return;
+    end
 
-        if shouldScan then scanElapsed = 0 end
-        if shouldUpdateGlow then glowElapsed = 0 end
+    local elapsedSinceUpdate = 0;
+    lifebloomGlowUpdater = CreateFrame("Frame");
+    lifebloomGlowUpdater:SetScript("OnUpdate", function(_, elapsed)
+        elapsedSinceUpdate = elapsedSinceUpdate + elapsed;
+        if elapsedSinceUpdate < LIFEBLOOM_GLOW_INTERVAL then return end
+
+        elapsedSinceUpdate = 0;
         local now = GetTime();
         for frame in pairs(cufPool) do
             local helper = frame.healerBuffHelper;
             if helper and helper.active then
-                if shouldScan then
-                    RefreshLifebloomTiming(frame, helper);
-                end
-                if shouldUpdateGlow then
-                    UpdateLifebloomGlow(helper, now);
-                end
+                UpdateLifebloomGlow(helper, now);
             end
         end
     end);
@@ -717,7 +708,7 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     if ( not addon.PROJECT_MAINLINE ) or ( not isSupportedClass ) or setupComplete then return end
     setupComplete = true;
     CheckSpec();
-    StartLifebloomUpdater();
+    StartLifebloomGlowUpdater();
 
     hooksecurefunc("CompactUnitFrame_UpdateAll", TrackFrame);
     hooksecurefunc("CompactUnitFrame_SetUnit", TrackFrame);
@@ -729,8 +720,12 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
+    eventFrame:RegisterEvent("UNIT_AURA");
     eventFrame:SetScript("OnEvent", function(_, event, arg1)
-        if event == addon.PLAYER_SPECIALIZATION_CHANGED then
+        if event == "UNIT_AURA" then
+            RefreshReadableAuraState();
+            return;
+        elseif event == addon.PLAYER_SPECIALIZATION_CHANGED then
             if arg1 ~= "player" then return end
             CheckSpec();
         elseif event == "AURA_DATA_PROVIDER_SWITCH" then
