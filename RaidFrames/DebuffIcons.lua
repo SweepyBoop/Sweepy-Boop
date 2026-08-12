@@ -115,12 +115,6 @@ local function CreateDebuffVisual(frame)
     icon:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -inset, inset);
     icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
-    local border = frame:CreateTexture(nil, "OVERLAY");
-    border:SetPoint("TOPLEFT", frame, "TOPLEFT", -1, 1);
-    border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", 1, -1);
-    border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
-    border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
-
     local cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     cooldown:SetAllPoints(icon);
     StyleCooldown(cooldown, GetConfig());

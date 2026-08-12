@@ -93,16 +93,12 @@ local function SetIconSize(icon, frameHeight, scale)
     local shownSize = frameHeight * scale;
     local visualScale = shownSize / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
     local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET * visualScale;
-    local borderPadding = visualScale;
     local highlightPadding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING * visualScale;
 
     icon:SetSize(shownSize, shownSize);
     icon.texture:ClearAllPoints();
     icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
     icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
-    icon.border:ClearAllPoints();
-    icon.border:SetPoint("TOPLEFT", icon, "TOPLEFT", -borderPadding, borderPadding);
-    icon.border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", borderPadding, -borderPadding);
     icon.highlightGlow:ClearAllPoints();
     icon.highlightGlow:SetPoint("TOPLEFT", icon, "TOPLEFT", -highlightPadding, highlightPadding);
     icon.highlightGlow:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", highlightPadding, -highlightPadding);
@@ -145,10 +141,6 @@ local function CreateDebuffIcon(parent)
 
     icon.texture = icon:CreateTexture(nil, "ARTWORK");
     icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
-
-    icon.border = icon:CreateTexture(nil, "OVERLAY");
-    icon.border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
-    icon.border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
 
     icon.highlightGlow = icon:CreateTexture(nil, "BORDER");
     icon.highlightGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
