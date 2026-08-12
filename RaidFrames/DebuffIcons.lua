@@ -77,6 +77,19 @@ local function StyleCooldown(cooldown, config)
     end
 end
 
+local function LayoutAuraButton(button, size)
+    local visualScale = size / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET * visualScale;
+    local borderPadding = visualScale;
+
+    button.sweepyBoopDebuffIcon:ClearAllPoints();
+    button.sweepyBoopDebuffIcon:SetPoint("TOPLEFT", button, "TOPLEFT", inset, -inset);
+    button.sweepyBoopDebuffIcon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -inset, inset);
+    button.sweepyBoopDebuffBorder:ClearAllPoints();
+    button.sweepyBoopDebuffBorder:SetPoint("TOPLEFT", button, "TOPLEFT", -borderPadding, borderPadding);
+    button.sweepyBoopDebuffBorder:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", borderPadding, -borderPadding);
+end
+
 local function InitializeAuraButton(button, frame)
     local config = GetConfig();
     local size = GetIconSize(frame, config);
@@ -87,12 +100,23 @@ local function InitializeAuraButton(button, frame)
     button:SetSize(size, size);
     button:SetMouseMotionEnabled(false);
 
+    local backdrop = button:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(button);
+    backdrop:SetColorTexture(0, 0, 0, 1);
+
     local icon = button:CreateTexture(nil, "ARTWORK");
-    icon:SetAllPoints(button);
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
     button:SetIcon(icon);
+    button.sweepyBoopDebuffIcon = icon;
+
+    local border = button:CreateTexture(nil, "OVERLAY");
+    border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+    border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+    button.sweepyBoopDebuffBorder = border;
+    LayoutAuraButton(button, size);
 
     local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
-    cooldown:SetAllPoints(button);
+    cooldown:SetAllPoints(icon);
     StyleCooldown(cooldown, config);
     button:SetDurationCooldown(cooldown);
 
@@ -143,6 +167,7 @@ local function RestyleContainer(frame, container)
     local size = GetIconSize(frame, config);
     for _, button in ipairs(frame.sweepyBoopDebuffAuraButtons or {}) do
         button:SetSize(size, size);
+        LayoutAuraButton(button, size);
         local cooldown = button:GetDurationCooldown();
         if cooldown then
             StyleCooldown(cooldown, config);
