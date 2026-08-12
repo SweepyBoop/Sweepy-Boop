@@ -416,7 +416,7 @@ addon.GetRaidFrameOptions = function(order)
                             return table.concat({
                                 addon.L["Enable the helper while playing Restoration Druid."],
                                 "",
-                                "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom.",
+                                "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom with a green glow in its 30% refresh window when timing is readable.",
                                 "\226\128\162 " .. addon.L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."],
                                 "\226\128\162 Warn when Mark of the Wild is missing.",
                                 "\226\128\162 Securely rendered by Blizzard's aura container.",
