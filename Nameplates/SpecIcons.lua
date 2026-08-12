@@ -40,9 +40,13 @@ local function GetSpecIconInfo(unitId) -- Return icon ID if should show, otherwi
     local config = SweepyBoop.db.profile.nameplatesEnemy;
 
     if addon.PROJECT_MAINLINE then
-        if IsActiveBattlefieldArena() then
-            local specIconID, role = GetMainlineArenaSpecInfo(unitId);
-            return GetConfiguredSpecIcon(specIconID, role, config);
+        local roleAssigned = UnitGroupRolesAssigned(unitId);
+        if addon.IsSecretValue(roleAssigned) or roleAssigned ~= "HEALER" then
+            return;
+        end
+
+        if config.arenaSpecIconHealer then
+            return addon.ICON_ID_HEALER_ENEMY, true;
         end
     elseif addon.PROJECT_TBC then
         -- TBC: UnitGroupRolesAssigned doesn't work reliably for enemy arena units

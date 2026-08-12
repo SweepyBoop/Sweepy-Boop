@@ -49,7 +49,9 @@ addon.Util_GetFirstUnitBuff = function (unit, spells, filter, sourceUnit)
 end
 
 addon.GetUnitClass = function(unitId)
-    return select(2, UnitClass(unitId)); -- Locale-independent name, e.g. "WARRIOR"
+    local class = select(2, UnitClass(unitId)); -- Locale-independent name, e.g. "WARRIOR"
+    if addon.IsSecretValue(class) then return end
+    return class;
 end
 
 -- Arena-safe unit resolver ----------------------------------------------------
@@ -58,9 +60,20 @@ end
 -- APIs are unsafe or unavailable.
 local function GetUnitArenaFingerprint(unit)
     if ( not UnitExists(unit) ) then return end
+
     local class = UnitClassBase(unit);
+    local race = select(2, UnitRace(unit));
+    local sex = UnitSex(unit);
+    local honor = UnitHonorLevel(unit);
+    if addon.IsSecretValue(class)
+        or addon.IsSecretValue(race)
+        or addon.IsSecretValue(sex)
+        or addon.IsSecretValue(honor) then
+        return;
+    end
     if ( not class ) then return end
-    return class, select(2, UnitRace(unit)), UnitSex(unit), UnitHonorLevel(unit); -- race file is locale-independent
+
+    return class, race, sex, honor; -- race file is locale-independent
 end
 
 local partySlotPrintCache = {};
@@ -225,6 +238,12 @@ addon.IsPartyPrimaryPet = function(unitId)
 end
 
 addon.UnitIsHostile = function(unitId)
+    if addon.PROJECT_MAINLINE then
+        local reaction = UnitReaction(unitId, "player");
+        if addon.IsSecretValue(reaction) then return true end
+        return ( not reaction ) or ( reaction < 5 );
+    end
+
     local possessedFactor = ( UnitIsPossessed("player") ~= UnitIsPossessed(unitId) );
     -- UnitIsEnemy / UnitIsFriend will not work here, since it excludes neutral units
     local reaction = UnitReaction("player", unitId); -- this can sometimes return nil, treat as hostile to avoid showing friendly class icons on NPCs

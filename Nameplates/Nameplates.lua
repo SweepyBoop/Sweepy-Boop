@@ -275,7 +275,7 @@ local function UpdateWidgets(nameplate, frame)
             if addon.PROJECT_TBC then
                 shouldShowSpecIcon = false; -- TBC: no reliable way to detect enemy specs
             elseif addon.PROJECT_MAINLINE then
-                shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
+                shouldShowSpecIcon = configEnemy.arenaSpecIconHealer and IsActiveBattlefieldArena();
             else
                 shouldShowSpecIcon = ( configEnemy.arenaSpecIconHealer or configEnemy.arenaSpecIconOthers ) and IsActiveBattlefieldArena();
             end

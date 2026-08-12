@@ -781,7 +781,7 @@ addon.GetEnemyNameplateOptions = function(order)
                     },
                 },
                 hidden = function()
-                    return not addon.PROJECT_MAINLINE;
+                    return addon.MAINLINE_CORE_FEATURES_ONLY or ( not addon.PROJECT_MAINLINE );
                 end,
             },
 

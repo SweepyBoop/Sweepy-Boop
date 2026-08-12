@@ -422,6 +422,10 @@ end
 
 addon.UpdateBigDebuffs = function(nameplate, frame)
     if not addon.PROJECT_MAINLINE then return end
+    if addon.MAINLINE_CORE_FEATURES_ONLY then
+        addon.HideBigDebuffs(nameplate);
+        return;
+    end
     if ( not nameplate ) or ( not frame ) or ( not frame.unit ) then return end
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
