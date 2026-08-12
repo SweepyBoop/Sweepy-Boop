@@ -410,7 +410,7 @@ function SweepyBoop:OnInitialize()
     if addon.PROJECT_MAINLINE then
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         if addon.MAINLINE_CORE_FEATURES_ONLY then
-            options.args.healerInCrowdControl =
+            options.args.misc =
                 addon.GetHealerInCrowdControlOptions(7);
         else
             options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);

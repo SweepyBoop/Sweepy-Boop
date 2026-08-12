@@ -14,106 +14,133 @@ addon.GetHealerInCrowdControlOptions = function(order)
     return {
         order = order,
         type = "group",
-        name = L["Healer in crowd control reminder in arena"],
+        childGroups = "tab",
+        name = L["Misc"],
         get = function(info)
             return SweepyBoop.db.profile.misc[info[#info]];
         end,
         set = SetValue,
         handler = SweepyBoop,
         args = {
-            healerInCrowdControl = {
+            general = {
                 order = 1,
-                type = "toggle",
-                width = 0.675,
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " " .. L["Enabled"],
-                set = function(info, value)
-                    SetValue(info, value);
-                    SweepyBoop:SetupHealerInCrowdControl();
-                end,
-            },
-            healerInCrowdControlSound = {
-                order = 2,
-                type = "toggle",
-                width = 0.75,
-                name = addon.FORMAT_ATLAS("chatframe-button-icon-voicechat") .. " " .. L["Play sound"],
-                set = function(info, value)
-                    SetValue(info, value);
-                    SweepyBoop:SetupHealerInCrowdControl();
-                end,
-                hidden = IsHidden,
-            },
-            healerInCrowdControlTest = {
-                order = 3,
-                type = "execute",
-                width = "half",
-                name = L["Test"],
-                func = "TestHealerInCrowdControl",
-                hidden = IsHidden,
-            },
-            healerInCrowdControlHide = {
-                order = 4,
-                type = "execute",
-                width = "half",
-                name = L["Hide"],
-                func = "HideTestHealerInCrowdControl",
-                hidden = IsHidden,
-            },
-            healerInCrowdControlSize = {
-                order = 5,
-                type = "range",
-                width = 0.8,
-                min = 30,
-                max = 200,
-                step = 1,
-                name = L["Icon size"],
-                set = function(info, value)
-                    SetValue(info, value);
-                    SweepyBoop:UpdateHealerInCrowdControl();
-                end,
-                hidden = IsHidden,
-            },
-            healerInCrowdControlOffsetX = {
-                order = 6,
-                type = "range",
-                width = 1,
-                min = -1000,
-                max = 1000,
-                step = 1,
-                name = L["X offset"],
-                set = function(info, value)
-                    SetValue(info, value);
-                    SweepyBoop:UpdateHealerInCrowdControl();
-                end,
-                hidden = IsHidden,
-            },
-            healerInCrowdControlOffsetY = {
-                order = 7,
-                type = "range",
-                width = 1,
-                min = -1000,
-                max = 1000,
-                step = 1,
-                name = L["Y offset"],
-                set = function(info, value)
-                    SetValue(info, value);
-                    SweepyBoop:UpdateHealerInCrowdControl();
-                end,
-                hidden = IsHidden,
-            },
-            healerInCrowdControlMillisecondsThreshold = {
-                order = 8,
-                type = "range",
-                width = 0.8,
-                min = 1,
-                max = 6,
-                step = 1,
-                name = L["Decimal threshold"],
-                desc = L["Show decimal countdowns below this many seconds."],
-                set = function(info, value)
-                    SetValue(info, value);
-                    SweepyBoop:UpdateHealerInCrowdControl();
-                end,
-                hidden = IsHidden,
+                type = "group",
+                name = L["General"],
+                args = {
+                    header1 = {
+                        order = 1,
+                        type = "header",
+                        name = L["Healer in crowd control reminder in arena"],
+                    },
+                    healerInCrowdControl = {
+                        order = 2,
+                        type = "toggle",
+                        width = 0.675,
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " " .. L["Enabled"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:SetupHealerInCrowdControl();
+                        end,
+                    },
+                    healerInCrowdControlSound = {
+                        order = 3,
+                        type = "toggle",
+                        width = 0.75,
+                        name = addon.FORMAT_ATLAS("chatframe-button-icon-voicechat") .. " " .. L["Play sound"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:SetupHealerInCrowdControl();
+                        end,
+                        hidden = IsHidden,
+                    },
+                    healerInCrowdControlTest = {
+                        order = 4,
+                        type = "execute",
+                        width = "half",
+                        name = L["Test"],
+                        func = "TestHealerInCrowdControl",
+                        hidden = IsHidden,
+                    },
+                    healerInCrowdControlHide = {
+                        order = 5,
+                        type = "execute",
+                        width = "half",
+                        name = L["Hide"],
+                        func = "HideTestHealerInCrowdControl",
+                        hidden = IsHidden,
+                    },
+                    newline = {
+                        order = 6,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = IsHidden,
+                    },
+                    healerInCrowdControlSize = {
+                        order = 7,
+                        type = "range",
+                        width = 0.8,
+                        min = 30,
+                        max = 200,
+                        step = 1,
+                        name = L["Icon size"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:UpdateHealerInCrowdControl();
+                        end,
+                        hidden = IsHidden,
+                    },
+                    healerInCrowdControlOffsetX = {
+                        order = 8,
+                        type = "range",
+                        width = 1,
+                        min = -1000,
+                        max = 1000,
+                        step = 1,
+                        name = L["X offset"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:UpdateHealerInCrowdControl();
+                        end,
+                        hidden = IsHidden,
+                    },
+                    healerInCrowdControlOffsetY = {
+                        order = 9,
+                        type = "range",
+                        width = 1,
+                        min = -1000,
+                        max = 1000,
+                        step = 1,
+                        name = L["Y offset"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:UpdateHealerInCrowdControl();
+                        end,
+                        hidden = IsHidden,
+                    },
+                    healerInCrowdControlThresholdBreak = {
+                        order = 10,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = IsHidden,
+                    },
+                    healerInCrowdControlMillisecondsThreshold = {
+                        order = 11,
+                        type = "range",
+                        width = 0.8,
+                        min = 1,
+                        max = 6,
+                        step = 1,
+                        name = L["Decimal threshold"],
+                        desc = L["Show decimal countdowns below this many seconds."],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:UpdateHealerInCrowdControl();
+                        end,
+                        hidden = IsHidden,
+                    },
+                },
             },
         },
     };
