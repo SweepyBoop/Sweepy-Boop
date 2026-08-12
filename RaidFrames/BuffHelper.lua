@@ -1,30 +1,7 @@
 local _, addon = ...;
 
--- Raid-frame buff helper for supported healing specs: draw the player's own important buffs on each
--- raid frame as our own icons, so Blizzard's default raid-frame buff icons can be turned off entirely.
---
--- Two rows per frame, anchored to the right edge (the frame center is left for Blizzard's big
--- defensive-cooldown icon):
---   Row 1 - class-buff warning + the spec's primary tracked buff. Resto Druid shows Lifebloom, which
---           glows inside its refresh (pandemic) window. Preservation Evoker shows Echo without a
---           refresh-window glow because Echo is consumed by the next heal rather than refreshed.
---   Row 2 - four spec-specific player-applied buffs, packed in priority order with no gaps. When none
---           of the four are active we can show a warning icon instead.
---
--- Retail (12.x) notes:
---   * Blizzard's per-buff hook (CompactUnitFrame_UtilSetBuff) and the old Lua buff-frame pipeline were
---     removed. So we track each CompactUnitFrame via CompactUnitFrame_UpdateAll, map unit -> frame(s),
---     refresh on UNIT_AURA, query the player's buffs ourselves, and draw our own icons.
---   * Aura APIs are SecretWhenUnitAuraRestricted, so unrelated auras can come back as secret values in
---     active PvP. The helper only cares about the configured player-applied buffs below; unrelated secret
---     auras must not suppress the Row 2 warning.
-
-local GetAuraDataByIndex = C_UnitAuras.GetAuraDataByIndex;
-local maxAuras = 255;
-local lifebloomRefreshFraction = 0.3; -- glow once Lifebloom is within the last 30% of its duration
-
 local markOfTheWild = 1126;
-local blessingOfTheBronze = 381748; -- Evoker's applied raid-buff aura; used for the warning icon
+local blessingOfTheBronze = 381748;
 local blessingOfTheBronzeAuras = {
     [381732] = true, -- Death Knight
     [381741] = true, -- Demon Hunter
@@ -44,29 +21,22 @@ local blessingOfTheBronzeAuras = {
 local profiles = {
     [addon.SPECID.RESTORATION_DRUID] = {
         class = addon.DRUID,
-        primaryBuffs = {
-            [33763] = true,  -- Lifebloom
-            [290754] = true, -- Lifebloom (Early Spring, PvP talent)
-        },
         enabledSetting = "druidBuffHelper",
         row2WarningSetting = "druidBuffHelperWarning",
-        primaryRefreshFraction = lifebloomRefreshFraction,
+        primaryPandemicGlow = true,
         classBuff = markOfTheWild,
         classBuffAuras = {
             [markOfTheWild] = true,
         },
-
-        -- The four Swiftmend-consumable HoTs (Row 2), least-to-most important left-to-right. For
-        -- Druid, that means the order Swiftmend is believed to consume them (left = consumed first).
-        --
-        -- IMPORTANT: this order is UNVERIFIED. Swiftmend's consumption priority is server-side and is
-        -- NOT present in Blizzard's wow-ui-source. Reorder this single list once you confirm it in-game /
-        -- on Wowhead and Row 2 will re-pack accordingly.
+        primaryBuffs = {
+            [33763] = true,  -- Lifebloom
+            [290754] = true, -- Lifebloom (Early Spring)
+        },
         row2Priority = {
             8936,   -- Regrowth
             48438,  -- Wild Growth
             774,    -- Rejuvenation
-            155777, -- Germination (VERIFY: 155675 is the talent/passive; 155777 is the HoT aura)
+            155777, -- Germination
         },
         row2Auras = {
             [8936] = 8936,
@@ -75,30 +45,28 @@ local profiles = {
             [155777] = 155777,
         },
     },
-
     [addon.SPECID.PRESERVATION] = {
         class = addon.EVOKER,
         enabledSetting = "evokerBuffHelper",
+        classBuff = blessingOfTheBronze,
+        classBuffAuras = blessingOfTheBronzeAuras,
         primaryBuffs = {
             [364343] = true, -- Echo
         },
-        classBuff = blessingOfTheBronze,
-        classBuffAuras = blessingOfTheBronzeAuras,
-        -- Row 2 is least-to-most important left-to-right.
         row2Priority = {
             366155, -- Reversion
-            355941, -- Dream Breath HoT
+            355941, -- Dream Breath
             373267, -- Lifebind
             357170, -- Time Dilation
         },
         row2Auras = {
-            [366155] = 366155, -- Reversion
-            [1256577] = 366155, -- Merithra's Blessing (Reversion upgrade)
-            [355936] = 355941, -- Dream Breath cast spell, included defensively in case aura IDs drift
-            [355941] = 355941, -- Dream Breath HoT
-            [373267] = 373267, -- Lifebind periodic aura
-            [373270] = 373267, -- Lifebind dummy aura
-            [357170] = 357170, -- Time Dilation
+            [366155] = 366155,
+            [1256577] = 366155,
+            [355936] = 355941,
+            [355941] = 355941,
+            [373267] = 373267,
+            [373270] = 373267,
+            [357170] = 357170,
         },
     },
 };
@@ -108,447 +76,315 @@ local supportedClasses = {
     [addon.EVOKER] = true,
 };
 
--- Layout (all tunable). Both rows hug the frame's right edge; the block is centered vertically.
 local PRIMARY_BUFF_SIZE = 20;
-local ROW2_BUFF_SIZE = 16;       -- 4 * 16 + 3 * ROW2_BUFF_SPACING fits even narrow 40-man frames
-local ROW2_BUFF_SPACING = 1;     -- gap between Row 2 icons
-local ROW_SPACING = 2;     -- gap between Row 1 and Row 2
-local RIGHT_PAD = 2;       -- inset from the frame's right edge
+local ROW2_BUFF_SIZE = 16;
+local ROW2_BUFF_SPACING = 1;
+local ROW_SPACING = 2;
+local RIGHT_PAD = 2;
 local FRAME_LEVEL_OFFSET = 10;
-local ROW_CENTER_OFFSET = ROW_SPACING / 2; -- split the row gap around the raid-frame vertical center
-local PACK_DIRECTION = "LEFT_TO_RIGHT"; -- "LEFT_TO_RIGHT" (priority 1 leftmost) or "RIGHT_TO_LEFT"
+local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew";
+local missingClassBuffGlowColor = { 1, 0, 0, 1 };
 
-local glowColor = { 0, 1, 0, 1 }; -- green (RGBA)
-local missingClassBuffGlowColor = { 1, 0, 0, 1 }; -- red (RGBA)
-local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew"; -- yellow warning triangle
-
-local playerClass = addon.GetUnitClass("player"); -- class is fixed for the login session
+local playerClass = addon.GetUnitClass("player");
 local isSupportedClass = supportedClasses[playerClass] and true or false;
-local activeProfile; -- spec can change mid-session; refreshed on PLAYER_SPECIALIZATION_CHANGED
+local playerProfile;
+local activeProfile;
+local cufPool = {};
+local setupComplete = false;
+local editModePreviewActive = false;
+local ApplyLayout;
 
-local cufPool = {};    -- frame -> true: raid/party CompactUnitFrames we've seen
-local unitFrames = {}; -- unit token -> { [frame] = true }: which frames currently show a unit
-local tracked = {};    -- frame -> { expirationTime, timeMod, refreshTime }: active primary buffs with timer glows
-
-local function ShouldGlow(info, now)
-    if ( info.expirationTime <= now ) then return false end
-    return ( ( info.expirationTime - now ) / info.timeMod ) <= info.refreshTime;
-end
-
--- The OnUpdate loop calls this ~20x/sec, so only start/stop the glow on a transition.
-local function SetIconGlow(icon, shown)
-    if shown then
-        if ( not icon.glowing ) then
-            addon.ShowOverlayGlow(icon);
-            icon.glowing = true;
-        end
-    elseif icon.glowing then
-        addon.HideOverlayGlow(icon);
-        icon.glowing = false;
+for _, profile in pairs(profiles) do
+    if profile.class == playerClass then
+        playerProfile = profile;
+        break;
     end
 end
 
-local function SetPixelGlow(icon, shown)
-    if shown then
-        if ( not icon.pixelGlowing ) then
-            addon.ShowFixedPixelGlow(icon.fixedPixelGlow);
-            icon.pixelGlowing = true;
-        end
-    elseif icon.pixelGlowing then
-        addon.HideFixedPixelGlow(icon.fixedPixelGlow);
-        icon.pixelGlowing = false;
-    end
+local function GetConfig()
+    return SweepyBoop.db.profile.raidFrames;
 end
 
--- Same swipe as the Healer-in-CC indicator: dark fill + the purple Loss-of-Control sweep edge. Kept
--- non-circular so it follows the square icon (no round mask).
+local function GetScale()
+    local scale = tonumber(GetConfig().healerBuffHelperScale) or 1;
+    return scale > 0 and scale or 1;
+end
+
+local function IsProfileEnabled(profile)
+    return profile
+        and GetConfig()[profile.enabledSetting]
+        and ( not addon.IsConflictingHealerBuffHelperAddonLoaded() );
+end
+
+local function CheckSpec()
+    local specID = addon.GetSpecForPlayerOrArena("player");
+    local profile = profiles[specID];
+    activeProfile = profile and ( profile.class == playerClass ) and profile or nil;
+end
+
 local function StyleCooldown(cooldown)
     cooldown:SetDrawBling(false);
     cooldown:SetReverse(true);
     cooldown:SetDrawSwipe(true);
     cooldown:SetSwipeColor(0, 0, 0, 0.5);
     cooldown:SetDrawEdge(true);
-    cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC"); -- the purple LoC sweep
+    cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC", 1, 1, 1, 1);
     cooldown:SetHideCountdownNumbers(true);
-    cooldown.noCooldownCount = true; -- hide OmniCC timers
+    cooldown.noCooldownCount = true;
 end
 
--- A single buff icon: texture + cooldown swipe. Each icon is its own frame so a future Soul of the
--- Forest border can be attached per icon without touching the others.
-local function CreateBuffIcon(parent, size, frameLevel, createGlow)
-    local icon = CreateFrame("Frame", nil, parent);
-    icon:SetSize(size, size);
-    icon:SetFrameLevel(frameLevel);
+local function InitializeAuraButton(button, size)
+    button:SetSize(size, size);
+    button:SetMouseMotionEnabled(false);
 
-    icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    icon.texture:SetAllPoints(icon);
+    local icon = button:CreateTexture(nil, "ARTWORK");
+    icon:SetAllPoints(button);
+    button:SetIcon(icon);
 
-    icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
-    icon.cooldown:SetAllPoints(icon);
-    StyleCooldown(icon.cooldown);
-
-    if createGlow then
-        icon.SpellActivationAlert = addon.CreateOverlayGlow(icon, size, glowColor, true);
-    end
-
-    icon:Hide();
-    return icon;
+    local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
+    cooldown:SetAllPoints(button);
+    StyleCooldown(cooldown);
+    button:SetDurationCooldown(cooldown);
 end
 
-local function ApplyIconLayout(container)
-    local config = SweepyBoop.db.profile.raidFrames;
-    container.frame:SetScale(config.healerBuffHelperScale or 1);
-    container.frame:ClearAllPoints();
-    container.frame:SetPoint("RIGHT", container.parent, "RIGHT", -RIGHT_PAD + ( config.healerBuffHelperOffsetX or 0 ), config.healerBuffHelperOffsetY or 0);
-end
+local function LayoutLifebloomPandemicBorder(button)
+    local textures = button.sweepyBoopPandemicBorder;
+    if not textures then return end
 
-local function CreateWarningIcon(parent, size, frameLevel)
-    local icon = CreateFrame("Frame", nil, parent);
-    icon:SetSize(size, size);
-    icon:SetFrameLevel(frameLevel);
-
-    icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    icon.texture:SetAllPoints(icon);
-    icon.texture:SetTexture(warningTexture);
-
-    icon:Hide();
-    return icon;
-end
-
--- Build (once) the per-frame container holding both rows. Retail doesn't expose a frame's real buff
--- icons, so we draw our own.
-local function EnsureContainer(frame)
-    local container = frame.healerBuffHelper;
-    if container then return container end
-
-    local frameLevel = frame:GetFrameLevel() + FRAME_LEVEL_OFFSET;
-
-    container = {};
-    container.frame = CreateFrame("Frame", nil, frame);
-    container.frame:SetSize(1, 1); -- non-zero size keeps this invisible scale anchor valid
-    container.parent = frame;
-    container.frame:SetFrameLevel(frameLevel);
-    container.scratch = {}; -- ordered list of the currently-active Row 2 auras
-
-    -- Row 1: primary buff, right edge, upper half. The bottom edge sits just above the frame center.
-    container.primaryBuffIcon = CreateBuffIcon(container.frame, PRIMARY_BUFF_SIZE, frameLevel, true);
-    container.primaryBuffIcon:SetPoint("TOPRIGHT", container.frame, "RIGHT", 0, PRIMARY_BUFF_SIZE + ROW_CENTER_OFFSET);
-
-    -- Row 1 warning: missing class buff, same size as the smaller Row 2 icons and left of the primary buff.
-    container.classBuffWarningIcon = CreateBuffIcon(container.frame, ROW2_BUFF_SIZE, frameLevel);
-    container.classBuffWarningIcon.texture:SetDesaturated(true);
-    container.classBuffWarningIcon.cooldown:Hide();
-    container.classBuffWarningIcon.fixedPixelGlow = addon.CreateFixedPixelGlow(container.classBuffWarningIcon, ROW2_BUFF_SIZE, ROW2_BUFF_SIZE, missingClassBuffGlowColor, 10, nil, nil, 0);
-    container.classBuffWarningIcon:SetPoint("RIGHT", container.primaryBuffIcon, "LEFT", -ROW2_BUFF_SPACING, 0);
-
-    -- Row 2: up to four configured buffs, anchored dynamically in UpdateRow2 (packed, no gaps).
-    container.row2Icons = {};
-    for i = 1, 4 do
-        container.row2Icons[i] = CreateBuffIcon(container.frame, ROW2_BUFF_SIZE, frameLevel);
-    end
-
-    -- Row 2 alternative: warning shown when none of the four buffs are active. Sits in the first Row 2 slot.
-    container.warningIcon = CreateWarningIcon(container.frame, ROW2_BUFF_SIZE, frameLevel);
-    container.warningIcon:SetPoint("TOPRIGHT", container.primaryBuffIcon, "BOTTOMRIGHT", 0, -ROW_SPACING);
-
-    ApplyIconLayout(container);
-
-    frame.healerBuffHelper = container;
-    return container;
-end
-
--- Drive the cooldown swipe from a (readable, non-secret) aura's duration/expiration.
-local function SetIconCooldown(icon, aura)
-    local duration = aura.duration or 0;
-    if ( duration > 0 ) and aura.expirationTime then
-        icon.cooldown:SetCooldown(aura.expirationTime - duration, duration);
-        icon.cooldown:Show();
-    else
-        icon.cooldown:Hide();
+    local padding = PRIMARY_BUFF_SIZE
+        * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+        / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+    for _, texture in ipairs(textures) do
+        texture:ClearAllPoints();
+        texture:SetPoint("TOPLEFT", button, "TOPLEFT", -padding, padding);
+        texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", padding, -padding);
     end
 end
 
-local function ClearFrame(frame)
-    local container = frame.healerBuffHelper;
-    if container then
-        SetIconGlow(container.primaryBuffIcon, false);
-        container.primaryBuffIcon:Hide();
-        for i = 1, #container.row2Icons do
-            container.row2Icons[i]:Hide();
+local function AddLifebloomPandemicBorder(button)
+    local borderFrame = CreateFrame("Frame", nil, button);
+    borderFrame:SetAllPoints(button);
+    borderFrame:SetFrameStrata("HIGH");
+    borderFrame:SetFixedFrameStrata(true);
+
+    local function AddTexture(path, layer, alpha)
+        local texture = borderFrame:CreateTexture(nil, layer);
+        texture:SetTexture(path);
+        texture:SetBlendMode("ADD");
+        texture:SetVertexColor(0, 1, 0, alpha);
+        button:AddPandemicRegion(texture);
+        return texture;
+    end
+
+    button.sweepyBoopPandemicBorder = {
+        AddTexture(
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+            "BORDER",
+            0.9
+        ),
+        AddTexture(
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+            "OVERLAY",
+            1
+        ),
+    };
+    LayoutLifebloomPandemicBorder(button);
+end
+
+local function BuildRow2SpellMap(profile, canonicalSpellID)
+    local spellIDs = {};
+    for auraSpellID, row2SpellID in pairs(profile.row2Auras) do
+        if row2SpellID == canonicalSpellID then
+            spellIDs[auraSpellID] = true;
         end
-        SetPixelGlow(container.classBuffWarningIcon, false);
-        container.classBuffWarningIcon:Hide();
-        container.warningIcon:Hide();
     end
-    tracked[frame] = nil;
+    return spellIDs;
 end
 
--- Throttled loop: UNIT_AURA only fires when an aura changes, but a primary buff's refresh window can be
--- time-based, so we re-evaluate its glow on a timer while any timer-glow primary buff is active. Row 2
--- needs no timer (the Cooldown widget animates its own swipe and aura gain/loss/expiry all fire UNIT_AURA).
-local updater = CreateFrame("Frame");
-updater.elapsed = 0;
-updater:Hide();
-updater:SetScript("OnUpdate", function (self, elapsed)
-    self.elapsed = self.elapsed + elapsed;
-    if ( self.elapsed < 0.05 ) then return end
-    self.elapsed = 0;
+local function EnsureContainers(frame)
+    local helper = frame.healerBuffHelper;
+    if helper then return helper end
+    if ( not playerProfile ) then return end
 
-    if ( next(tracked) == nil ) then
-        self:Hide();
-        return;
-    end
+    helper = {};
+    helper.root = CreateFrame("Frame", nil, frame);
+    helper.root:SetSize(1, 1);
+    helper.root:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
 
-    local now = GetTime();
-    for frame, info in pairs(tracked) do
-        if ( info.expirationTime <= now ) then
-            -- The primary buff expired. UNIT_AURA will also fire, but stop the glow on time and only
-            -- touch Row 1 here (Row 2's buffs are independent and may still be active).
-            local container = frame.healerBuffHelper;
-            if container then
-                SetIconGlow(container.primaryBuffIcon, false);
-                container.primaryBuffIcon:Hide();
+    helper.primary = CreateFrame(
+        "AuraContainer",
+        nil,
+        helper.root,
+        "CustomAuraContainerTemplate"
+    );
+    helper.primary:SetFrameLevel(helper.root:GetFrameLevel());
+    helper.primary:SetPoint(
+        "TOPRIGHT",
+        helper.root,
+        "CENTER",
+        0,
+        PRIMARY_BUFF_SIZE + ( ROW_SPACING / 2 )
+    );
+    helper.primary:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
+    helper.primary:SetFlowLayoutAnchorPoint("TOPRIGHT");
+    helper.primary:SetFlowLayoutGrowthDirection(
+        AnchorUtil.FlowDirection.Left,
+        AnchorUtil.FlowDirection.Down
+    );
+    helper.primary:SetEnabled(false);
+    helper.primary:Hide();
+    helper.primary:AddAuraGroup("Primary", "HELPFUL", {
+        maxFrameCount = 1,
+        candidateFilters = {
+            includeSpellIDs = playerProfile.primaryBuffs,
+            isFromPlayerOrPlayerPet = true,
+        },
+        sortMethod = AuraContainerSortMethod.Expiration,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            InitializeAuraButton(button, PRIMARY_BUFF_SIZE);
+
+            if playerProfile.primaryPandemicGlow then
+                AddLifebloomPandemicBorder(button);
             end
-            tracked[frame] = nil;
-        elseif frame.healerBuffHelper then
-            SetIconGlow(frame.healerBuffHelper.primaryBuffIcon, ShouldGlow(info, now));
-        end
-    end
-end)
+        end,
+        layout = {
+            elementWidth = PRIMARY_BUFF_SIZE,
+            elementHeight = PRIMARY_BUFF_SIZE,
+        },
+    });
 
--- One pass over the helpful auras on a unit. Secret PvP-restricted spell IDs cannot match any configured
--- aura, so skip them rather than suppressing the Row 2 warning.
-local scanAuras = {}; -- per-unit scan scratch; returned data is consumed synchronously before the next wipe
-local function ScanUnitAuras(unit, profile)
-    wipe(scanAuras);
-    local primaryAura;
-    local hasClassBuff = false;
-    for i = 1, maxAuras do
-        local aura = GetAuraDataByIndex(unit, i, "HELPFUL");
-        if ( not aura ) then break end
-        local spellId = aura.spellId;
-        if ( not addon.IsSecretValue(spellId) ) then
-            if profile.classBuffAuras[spellId] then
-                hasClassBuff = true;
-            end
+    helper.row2 = CreateFrame(
+        "AuraContainer",
+        nil,
+        helper.root,
+        "CustomAuraContainerTemplate"
+    );
+    helper.row2:SetFrameLevel(helper.root:GetFrameLevel());
+    helper.row2:SetPoint(
+        "TOPRIGHT",
+        helper.root,
+        "CENTER",
+        0,
+        -( ROW_SPACING / 2 )
+    );
+    helper.row2:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
+    helper.row2:SetFlowLayoutAnchorPoint("TOPRIGHT");
+    helper.row2:SetFlowLayoutGrowthDirection(
+        AnchorUtil.FlowDirection.Left,
+        AnchorUtil.FlowDirection.Down
+    );
+    helper.row2:SetEnabled(false);
+    helper.row2:Hide();
 
-            local sourceUnit = aura.sourceUnit;
-            if ( not addon.IsSecretValue(sourceUnit) ) and ( sourceUnit == "player" ) then
-                if profile.primaryBuffs[spellId] then
-                    primaryAura = aura;
-                else
-                    local row2SpellId = profile.row2Auras[spellId];
-                    if row2SpellId and ( ( spellId == row2SpellId ) or ( not scanAuras[row2SpellId] ) ) then
-                        scanAuras[row2SpellId] = aura;
-                    end
-                end
-            end
-        end
+    helper.row2Warning = helper.row2:CreateTexture(nil, "BACKGROUND");
+    helper.row2Warning:SetTexture(warningTexture);
+    helper.row2Warning:SetSize(ROW2_BUFF_SIZE, ROW2_BUFF_SIZE);
+    helper.row2Warning:SetPoint("TOPRIGHT", helper.row2, "TOPRIGHT");
+
+    for i = #playerProfile.row2Priority, 1, -1 do
+        local spellID = playerProfile.row2Priority[i];
+        helper.row2:AddAuraGroup("Row2-" .. spellID, "HELPFUL", {
+            maxFrameCount = 1,
+            candidateFilters = {
+                includeSpellIDs = BuildRow2SpellMap(playerProfile, spellID),
+                isFromPlayerOrPlayerPet = true,
+            },
+            sortMethod = AuraContainerSortMethod.Expiration,
+            sortDirection = AuraContainerSortDirection.Normal,
+            initializeFrame = function(button)
+                InitializeAuraButton(button, ROW2_BUFF_SIZE);
+            end,
+            layout = {
+                groupSpacing = ROW2_BUFF_SPACING,
+                elementWidth = ROW2_BUFF_SIZE,
+                elementHeight = ROW2_BUFF_SIZE,
+            },
+        });
     end
-    return primaryAura, scanAuras, hasClassBuff;
+
+    helper.classBuffAnchor = CreateFrame("Frame", nil, helper.root);
+    helper.classBuffAnchor:SetFrameLevel(helper.root:GetFrameLevel());
+    helper.classBuffAnchor:SetSize(ROW2_BUFF_SIZE, ROW2_BUFF_SIZE);
+    helper.classBuffAnchor:SetPoint(
+        "RIGHT",
+        helper.root,
+        "CENTER",
+        -PRIMARY_BUFF_SIZE - ROW2_BUFF_SPACING,
+        ( PRIMARY_BUFF_SIZE / 2 ) + ( ROW_SPACING / 2 )
+    );
+    helper.classBuffAnchor:Hide();
+
+    local warningLevel = helper.classBuffAnchor:GetFrameLevel() + 1;
+    helper.classBuffWarning = CreateFrame("Frame", nil, helper.classBuffAnchor);
+    helper.classBuffWarning:SetFrameLevel(warningLevel);
+    helper.classBuffWarning:SetAllPoints(helper.classBuffAnchor);
+    helper.classBuffWarning.texture = helper.classBuffWarning:CreateTexture(nil, "ARTWORK");
+    helper.classBuffWarning.texture:SetAllPoints(helper.classBuffWarning);
+    helper.classBuffWarning.texture:SetTexture(addon.GetSpellTexture(playerProfile.classBuff));
+    helper.classBuffWarning.texture:SetDesaturated(true);
+    helper.classBuffWarning.fixedPixelGlow = addon.CreateFixedPixelGlow(
+        helper.classBuffWarning,
+        ROW2_BUFF_SIZE,
+        ROW2_BUFF_SIZE,
+        missingClassBuffGlowColor,
+        10,
+        nil,
+        nil,
+        0
+    );
+    helper.classBuffWarning.fixedPixelGlow:SetFrameLevel(warningLevel + 1);
+    addon.ShowFixedPixelGlow(helper.classBuffWarning.fixedPixelGlow);
+
+    frame.healerBuffHelper = helper;
+    ApplyLayout(frame, helper);
+    return helper;
 end
 
-local function UpdateClassBuffWarning(frame, profile, hasClassBuff)
-    local icon = frame.healerBuffHelper.classBuffWarningIcon;
-    if hasClassBuff then
-        SetPixelGlow(icon, false);
-        icon:Hide();
-        return;
-    end
+ApplyLayout = function(frame, helper)
+    local config = GetConfig();
+    local offsetX = -RIGHT_PAD + ( config.healerBuffHelperOffsetX or 0 );
+    local offsetY = config.healerBuffHelperOffsetY or 0;
 
-    icon.texture:SetTexture(addon.GetSpellTexture(profile.classBuff));
-    SetPixelGlow(icon, true);
-    icon:Show();
+    helper.root:ClearAllPoints();
+    helper.root:SetPoint("RIGHT", frame, "RIGHT", offsetX, offsetY);
+    helper.root:SetScale(GetScale());
+
+    local warningSetting = playerProfile.row2WarningSetting;
+    helper.row2Warning:SetShown(
+        warningSetting
+            and config[warningSetting]
+            and true
+            or false
+    );
 end
 
-local function UpdateRow1(frame, aura, profile)
-    local icon = frame.healerBuffHelper.primaryBuffIcon;
-    if ( not aura ) then
-        SetIconGlow(icon, false);
-        icon:Hide();
-        tracked[frame] = nil; -- updater self-hides once tracked is empty
-        return;
-    end
-
-    icon.texture:SetTexture(aura.icon);
-    SetIconCooldown(icon, aura);
-    icon:Show();
-
-    local refreshFraction = profile.primaryRefreshFraction;
-    if ( not refreshFraction ) then
-        SetIconGlow(icon, false);
-        tracked[frame] = nil;
-        return;
-    end
-
-    local timeMod = aura.timeMod or 1;
-    if ( timeMod <= 0 ) then timeMod = 1 end
-
-    local info = tracked[frame] or {};
-    info.expirationTime = aura.expirationTime or 0;
-    info.timeMod = timeMod;
-    info.refreshTime = ( aura.duration or 0 ) * refreshFraction;
-    tracked[frame] = info;
-
-    SetIconGlow(icon, ShouldGlow(info, GetTime()));
-    updater:Show();
-end
-
-local function IsProfileEnabled(profile)
-    if addon.IsConflictingHealerBuffHelperAddonLoaded() then return false end
-
-    return SweepyBoop.db.profile.raidFrames[profile.enabledSetting] and true or false;
-end
-
-local function UpdateRow2(frame, row2Auras, profile)
-    local container = frame.healerBuffHelper;
-    local icons = container.row2Icons;
-
-    -- Collect the active buffs in profile display order: least important leftmost, most important rightmost.
-    local present = container.scratch;
-    wipe(present);
-    for _, spellId in ipairs(profile.row2Priority) do
-        local aura = row2Auras[spellId];
-        if aura then
-            present[#present + 1] = aura;
-        end
-    end
-
-    local count = #present;
-
-    if ( count == 0 ) then
-        for i = 1, #icons do
-            icons[i]:Hide();
-        end
-        local warningSetting = profile.row2WarningSetting;
-        if warningSetting and SweepyBoop.db.profile.raidFrames[warningSetting] then
-            container.warningIcon:Show(); -- none of the configured Row 2 buffs are up
-        else
-            container.warningIcon:Hide();
-        end
-        return;
-    end
-
-    container.warningIcon:Hide();
-
-    -- Lay the active icons out right-aligned under the primary buff, chaining each to the left of the
-    -- previous one (icons[1] is the rightmost slot). Assign auras so priority 1 ends up on the correct
-    -- side per PACK_DIRECTION.
-    for i = 1, count do
-        local aura;
-        if ( PACK_DIRECTION == "RIGHT_TO_LEFT" ) then
-            aura = present[i];                 -- priority 1 placed first => rightmost
-        else
-            aura = present[count - i + 1];     -- LEFT_TO_RIGHT: priority 1 ends up leftmost
-        end
-
-        local icon = icons[i];
-        icon.texture:SetTexture(aura.icon);
-        SetIconCooldown(icon, aura);
-
-        icon:ClearAllPoints();
-        if ( i == 1 ) then
-            icon:SetPoint("TOPRIGHT", container.primaryBuffIcon, "BOTTOMRIGHT", 0, -ROW_SPACING);
-        else
-            icon:SetPoint("TOPRIGHT", icons[i - 1], "TOPLEFT", -ROW2_BUFF_SPACING, 0);
-        end
-        icon:Show();
-    end
-
-    for i = count + 1, #icons do
-        icons[i]:Hide();
-    end
+local function HideHelper(frame)
+    local helper = frame.healerBuffHelper;
+    if ( not helper ) then return end
+    helper.active = false;
+    helper.primary:SetEnabled(false);
+    helper.primary:Hide();
+    helper.row2:SetEnabled(false);
+    helper.row2:Hide();
+    helper.classBuffAnchor:Hide();
 end
 
 local function IsGroupUnit(unit)
-    local first = string.byte(unit, 1);
-    if ( first == 112 ) then -- p: player / pet / party / partypet
-        return ( string.sub(unit, 1, 6) == "player" )
-                or ( string.sub(unit, 1, 3) == "pet" )
-                or ( string.sub(unit, 1, 5) == "party" );
-    elseif ( first == 114 ) then -- raid / raidpet
-        return ( string.sub(unit, 1, 4) == "raid" );
-    end
-
-    return false;
+    if ( not unit ) then return false end
+    return ( unit == "player" )
+        or ( unit == "pet" )
+        or ( string.match(unit, "^party%d+$") ~= nil )
+        or ( string.match(unit, "^partypet%d+$") ~= nil )
+        or ( string.match(unit, "^raid%d+$") ~= nil )
+        or ( string.match(unit, "^raidpet%d+$") ~= nil );
 end
 
-local function UpdateFrame(frame)
-    if frame:IsForbidden() then return end
-
-    local unit = frame.displayedUnit or frame.unit;
-    local profile = activeProfile;
-    if ( not profile )
-            or ( not IsProfileEnabled(profile) )
-            or ( not unit ) or ( not UnitExists(unit) )
-            or ( not IsGroupUnit(unit) ) then
-        ClearFrame(frame);
-        return;
-    end
-
-    -- Don't show the warning on dead raiders: they have no tracked buffs, but a persistent warning is just noise.
-    -- Check IsSecretValue first: UnitIsDeadOrGhost can be secret in rated PvP, and the `and` must not
-    -- coerce a secret value to a boolean (that would error). The secret check short-circuits before `dead`.
-    local dead = UnitIsDeadOrGhost(unit);
-    if ( not addon.IsSecretValue(dead) ) and dead then
-        ClearFrame(frame);
-        return;
-    end
-
-    local container = EnsureContainer(frame);
-    ApplyIconLayout(container);
-
-    local primaryAura, row2Auras, hasClassBuff = ScanUnitAuras(unit, profile);
-    UpdateClassBuffWarning(frame, profile, ( not UnitIsPlayer(unit) ) or hasClassBuff);
-    UpdateRow1(frame, primaryAura, profile);
-    UpdateRow2(frame, row2Auras, profile);
-end
-
--- Maintain unit -> frame(s) so UNIT_AURA can target only the affected frames.
-local function MapFrameUnit(frame)
-    local unit = frame.displayedUnit or frame.unit;
-    if ( frame.healerBuffHelperUnit == unit ) then return end
-
-    if frame.healerBuffHelperUnit and unitFrames[frame.healerBuffHelperUnit] then
-        unitFrames[frame.healerBuffHelperUnit][frame] = nil;
-    end
-
-    frame.healerBuffHelperUnit = unit;
-    if unit then
-        unitFrames[unit] = unitFrames[unit] or {};
-        unitFrames[unit][frame] = true;
-    end
-end
-
-local function TrackFrame(frame)
-    cufPool[frame] = true;
-    MapFrameUnit(frame);
-    UpdateFrame(frame);
-end
-
-local function UntrackFrame(frame)
-    cufPool[frame] = nil;
-    if frame.healerBuffHelperUnit and unitFrames[frame.healerBuffHelperUnit] then
-        unitFrames[frame.healerBuffHelperUnit][frame] = nil;
-    end
-    frame.healerBuffHelperUnit = nil;
-    ClearFrame(frame);
-end
-
-local function CheckSpec()
-    local specID = addon.GetSpecForPlayerOrArena("player");
-    local profile = profiles[specID];
-    if profile and ( profile.class == playerClass ) then
-        activeProfile = profile;
-    else
-        activeProfile = nil;
-    end
-end
-
-local function RefreshAllFrames()
-    for frame in pairs(cufPool) do
-        UpdateFrame(frame);
-    end
+local function IsPetUnit(unit)
+    if ( not unit ) then return false end
+    return ( unit == "pet" )
+        or ( string.match(unit, "^partypet%d+$") ~= nil )
+        or ( string.match(unit, "^raidpet%d+$") ~= nil );
 end
 
 local function IsFrameVisible(frame)
@@ -556,115 +392,157 @@ local function IsFrameVisible(frame)
     return ( not addon.IsSecretValue(shown) ) and shown;
 end
 
-local function UpdateVisibleFrame(frame)
-    if IsFrameVisible(frame) then
-        UpdateFrame(frame);
+local function ReadClassBuffState(unit)
+    if ( not C_UnitAuras.GetUnitAuraBySpellID )
+        or ( not C_Secrets )
+        or ( not C_Secrets.ShouldSpellAuraBeSecret ) then
+        return;
     end
+
+    for spellID in pairs(playerProfile.classBuffAuras) do
+        if C_Secrets.ShouldSpellAuraBeSecret(spellID) then return end
+        if C_UnitAuras.GetUnitAuraBySpellID(unit, spellID) then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function UpdateClassBuffWarning(helper, unit)
+    helper.classBuffWarning:Hide();
+    helper.classBuffAnchor:Hide();
+
+    if IsPetUnit(unit) then return end
+
+    local ok, hasClassBuff = pcall(ReadClassBuffState, unit);
+    if ( not ok ) or hasClassBuff == nil then return end
+
+    helper.classBuffAnchor:Show();
+    helper.classBuffWarning:SetShown(not hasClassBuff);
 end
 
 local function ShouldTrackFrameName(name)
-    if ( string.byte(name, 1) ~= 67 ) then return false end -- C: CompactPartyFrame / CompactRaid
+    if ( not name ) then return false end
     return ( string.sub(name, 1, 17) == "CompactPartyFrame" )
-            or ( string.sub(name, 1, 11) == "CompactRaid" );
+        or ( string.sub(name, 1, 11) == "CompactRaid" );
 end
 
-local function UpdateUnitFrames(unit)
-    if not IsGroupUnit(unit) then return end
-
-    local frames = unitFrames[unit];
-    if frames then
-        for frame in pairs(frames) do
-            UpdateVisibleFrame(frame);
+local function ActivateContainer(container, unit, forceRefresh)
+    local unitChanged = container:GetUnit() ~= unit;
+    if unitChanged or forceRefresh then
+        container:Hide();
+        if forceRefresh and ( not unitChanged ) then
+            container:SetUnit("none");
         end
+        container:SetUnit(unit);
+        container:UpdateAllAuras();
+    end
+    container:SetEnabled(true);
+    container:Show();
+end
+
+local function UpdateFrame(frame, forceRefresh)
+    if ( not frame ) or frame:IsForbidden() then return end
+
+    local unit = frame.displayedUnit or frame.unit;
+    if editModePreviewActive
+        or ( not IsProfileEnabled(activeProfile) )
+        or ( not IsFrameVisible(frame) )
+        or ( not unit )
+        or ( not UnitExists(unit) )
+        or ( not IsGroupUnit(unit) ) then
+        HideHelper(frame);
         return;
     end
 
-    -- If the event unit is not in the exact frame map, avoid UnitIsUnit here: in rated PvP it can
-    -- involve restricted unit data, and GROUP_ROSTER_UPDATE/CompactUnitFrame_UpdateAll refresh mappings.
-end
-
-local eventFrame = CreateFrame("Frame");
-
--- Hide Blizzard's own raid-frame buffs while the helper is enabled on a supported healing spec, so our
--- icons replace them. In retail 12.x this still has to use the global raidFramesDisplayBuffs CVar; the
--- private-aura buff frames are not reliably suppressible through per-frame alpha.
-local function ShouldHideBlizzardBuffs()
-    return activeProfile and IsProfileEnabled(activeProfile) and true or false;
-end
-
-local function ApplyHideBlizzardBuffs()
-    if ( not isSupportedClass ) or ( not addon.PROJECT_MAINLINE ) then return end -- retail-only supported classes
-
-    if InCombatLockdown() then
-        eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED); -- retry once combat ends
+    local canAssist = UnitCanAssist("player", unit);
+    if addon.IsSecretValue(canAssist) or ( not canAssist ) then
+        HideHelper(frame);
         return;
     end
 
-    local desired = ShouldHideBlizzardBuffs() and "0" or "1";
-    if ( GetCVar("raidFramesDisplayBuffs") ~= desired ) then
-        SetCVar("raidFramesDisplayBuffs", desired); -- 0 hides buffs while active, 1 restores them when disabled
+    local helper = EnsureContainers(frame);
+    if ( not helper ) then return end
+    ApplyLayout(frame, helper);
+    local needsFullRefresh = forceRefresh or ( not helper.active );
+    ActivateContainer(helper.primary, unit, needsFullRefresh);
+    ActivateContainer(helper.row2, unit, needsFullRefresh);
+    UpdateClassBuffWarning(helper, unit);
+
+    helper.active = true;
+end
+
+local function RefreshAllFrames(forceRefresh)
+    for frame in pairs(cufPool) do
+        UpdateFrame(frame, forceRefresh);
+    end
+end
+
+local function RefreshClassBuffWarnings()
+    for frame in pairs(cufPool) do
+        local helper = frame.healerBuffHelper;
+        if helper and helper.active then
+            local unit = frame.displayedUnit or frame.unit;
+            UpdateClassBuffWarning(helper, unit);
+        end
+    end
+end
+
+local function TrackFrame(frame)
+    if ( not frame ) or frame:IsForbidden() then return end
+    local name = frame:GetName();
+    if ShouldTrackFrameName(name) then
+        cufPool[frame] = true;
+        UpdateFrame(frame);
+    elseif cufPool[frame] then
+        cufPool[frame] = nil;
+        HideHelper(frame);
     end
 end
 
 function SweepyBoop:SetupRaidFrameAuraModule()
-    if ( not isSupportedClass ) then return end -- nothing to do for unsupported classes this session
-
+    if ( not addon.PROJECT_MAINLINE ) or ( not isSupportedClass ) or setupComplete then return end
+    setupComplete = true;
     CheckSpec();
 
-    -- CompactUnitFrame_UpdateAll fires for every raid/party frame as it's set up / reused.
-    hooksecurefunc("CompactUnitFrame_UpdateAll", function (frame)
-        if frame:IsForbidden() then
-            UntrackFrame(frame);
-            return;
-        end
+    hooksecurefunc("CompactUnitFrame_UpdateAll", TrackFrame);
+    hooksecurefunc("CompactUnitFrame_SetUnit", TrackFrame);
+    hooksecurefunc("CompactUnitFrame_UpdateVisible", TrackFrame);
 
-        local name = frame:GetName();
-        if name and ShouldTrackFrameName(name) then
-            TrackFrame(frame);
-        else
-            UntrackFrame(frame);
-        end
-    end)
-
-    eventFrame:RegisterEvent(addon.UNIT_AURA);
+    local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    eventFrame:SetScript("OnEvent", function (_, event, unitTarget)
-        if ( event == addon.UNIT_AURA ) then
-            if unitTarget then
-                UpdateUnitFrames(unitTarget);
-            end
-        elseif ( event == addon.PLAYER_SPECIALIZATION_CHANGED ) then
-            if ( unitTarget == "player" ) then
-                local oldProfile = activeProfile;
-                CheckSpec();
-                ApplyHideBlizzardBuffs(); -- entering/leaving a supported healer flips Blizzard buff hiding
-                if ( oldProfile ~= activeProfile ) then
-                    RefreshAllFrames(); -- show or clear every frame for the new spec
-                end
-            end
-        elseif ( event == addon.PLAYER_ENTERING_WORLD ) then
-            CheckSpec(); -- spec info may not have been ready at login
-            ApplyHideBlizzardBuffs();
-            RefreshAllFrames();
-        elseif ( event == addon.PLAYER_REGEN_ENABLED ) then
-            eventFrame:UnregisterEvent(addon.PLAYER_REGEN_ENABLED);
-            ApplyHideBlizzardBuffs(); -- apply the buff-hiding CVar that was deferred during combat
-        else -- GROUP_ROSTER_UPDATE: the unit behind a frame may have changed
-            for frame in pairs(cufPool) do
-                MapFrameUnit(frame);
-                UpdateFrame(frame);
-            end
+    eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
+    eventFrame:RegisterEvent("UNIT_AURA");
+    eventFrame:SetScript("OnEvent", function(_, event, arg1)
+        if event == "UNIT_AURA" then
+            RefreshClassBuffWarnings();
+            return;
+        elseif event == addon.PLAYER_SPECIALIZATION_CHANGED then
+            if arg1 ~= "player" then return end
+            CheckSpec();
+        elseif event == "AURA_DATA_PROVIDER_SWITCH" then
+            editModePreviewActive = arg1 ~= true;
         end
-    end)
 
-    ApplyHideBlizzardBuffs(); -- enforce the buff-hiding CVar for the current spec + toggle
+        if event == addon.GROUP_ROSTER_UPDATE then
+            C_Timer.After(0, function()
+                RefreshAllFrames(true);
+            end);
+        elseif event == addon.PLAYER_ENTERING_WORLD then
+            C_Timer.After(0, function()
+                CheckSpec();
+                RefreshAllFrames(true);
+            end);
+        else
+            RefreshAllFrames();
+        end
+    end);
 end
 
--- Called when the Healer Buff Helper settings change (and on profile switch): re-evaluate the
--- buff-hiding CVar and repaint every tracked frame for the new setting.
 function SweepyBoop:RefreshHealerBuffHelper()
-    ApplyHideBlizzardBuffs();
+    CheckSpec();
     RefreshAllFrames();
 end

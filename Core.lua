@@ -195,7 +195,7 @@ local defaults = {
             evokerBuffHelper = true,
             raidFrameDebuffIconsEnabled = true,
             raidFrameDebuffIconCount = 2,
-            raidFrameDebuffIconScale = 0.35,
+            raidFrameDebuffIconScale = 0.5,
             raidFrameDebuffIconDispellableScale = 0.5,
             raidFrameDebuffIconMillisecondsThreshold = 3,
             raidFrameDebuffIconOffsetX = 2,
@@ -408,9 +408,9 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
     if addon.PROJECT_MAINLINE then
+        options.args.raidFrames = addon.GetRaidFrameOptions(6);
         if ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
             options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
-            options.args.raidFrames = addon.GetRaidFrameOptions(6);
             options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
             options.args.macros = addon.GetMacroOptions(7.5);
         end
@@ -471,16 +471,19 @@ function SweepyBoop:OnInitialize()
     end
 
     if ( not addon.PROJECT_MAINLINE ) then return end
+
+    -- Raid frame modules are recovered independently of the temporary Mainline gate.
+    self:SetupRaidFrameAuraModule();
+    self:SetupRaidFrameDebuffIcons();
+
+    self:SetupRaidFrameAggroHighlight();
+
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
         return;
     end
 
     self:SetupArenaOffensiveIcons();
-
-    -- Setup raid frame modules
-    self:SetupRaidFrameAuraModule();
-    self:SetupRaidFrameDebuffIcons();
 
     self:SetupQueueReminder();
     self:SetupPrecognitionTracker();
@@ -495,13 +498,6 @@ function SweepyBoop:OnInitialize()
     self:SetupHonorReminder();
     self:SetupMouseCursor();
     self:UpdateSBMMacros();
-
-    local loginFrame = CreateFrame("Frame");
-    loginFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    loginFrame:SetScript("OnEvent", function()
-        self:SetupRaidFrameAggroHighlight();
-        loginFrame:UnregisterEvent(addon.PLAYER_ENTERING_WORLD);
-    end);
 end
 
 function SweepyBoop:RefreshConfig()
@@ -512,6 +508,13 @@ function SweepyBoop:RefreshConfig()
 
     self:RefreshMouseCursor();
 
+    if addon.PROJECT_MAINLINE then
+        self:RefreshHealerBuffHelper();
+        self:RefreshRaidFrameDebuffIcons();
+        self:RefreshRaidFrameAggroHighlight();
+        self:RefreshArenaRaidFrameSort();
+    end
+
     if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
         self:SetupArenaOffensiveIcons();
         self:SetupCombatIndicator();
@@ -521,8 +524,6 @@ function SweepyBoop:RefreshConfig()
         self:RefreshHonorReminder();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl(); -- re-sync event registration to the new profile's toggle
-        self:RefreshHealerBuffHelper(); -- re-sync the raid-buff CVar + icons to the new profile + spec
-        self:RefreshRaidFrameDebuffIcons();
     end
 
     local currentTime = GetTime();

@@ -5,10 +5,11 @@ Current Lib versions:
 
 Tasks:
 - [x] Re-implement arena numbers for mainline, this can unblock enemy spec icons too
-- [x] Re-enable Druid HoT Helper
-- [x] If Druid HoT Helper glow taints again in arena, replace any remaining LibCustomGlow usage (especially Mark of the Wild PixelGlow) with a local glow implementation that does not read UI alpha/state (completed, no dependency on LibCustomGlow anymore)
+- [x] Re-enable the secure Raid Frame healer buff helper for Restoration Druid and Preservation Evoker, including missing class-buff warnings and Blizzard-managed Lifebloom pandemic highlighting
+- [x] Replace remaining Raid Frame healer-helper LibCustomGlow usage with local or Blizzard-managed visuals that do not read restricted UI alpha/state
 - [ ] Re-implement battleground enemy spec icons (blocked)
-- [x] Configurable SetCountdownMillisecondsThreshold for raid frame big debuffs & healer in CC alert
+- [x] Recover secure Raid Frame Big Debuff icons with configurable countdown threshold, Big Debuffs styling, a 50% default scale, and a matching settings preview
+- [ ] Investigate Raid Frame arena target dots not appearing in arena (confirmed; intentionally deferred from the 12.1 compatibility patch)
 - [x] Bug fix: friendly class icon "Show CC" sometimes get stuck on the CC icon and never switches back to the class icon (mainline keeps Blizzard CC selection and clears the shown overlay when that aura instance is removed)
 - [x] Self stun DR that's super visible to play vs. swaps
 - [ ] Test icon for "Honor reminder" should dismiss when resetting profile
