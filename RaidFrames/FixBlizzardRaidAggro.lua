@@ -15,6 +15,7 @@ local trackedFrames = {};
 local targeters = {};
 local classColors = {};
 local wasActive = false;
+local setupComplete = false;
 
 local function GetConfig()
     return SweepyBoop.db.profile.raidFrames;
@@ -449,6 +450,9 @@ function SweepyBoop:RefreshRaidFrameAggroHighlight()
 end
 
 function SweepyBoop:SetupRaidFrameAggroHighlight()
+    if setupComplete then return end
+    setupComplete = true;
+
     hooksecurefunc("CompactUnitFrame_UpdateAll", function (frame)
         if ( not frame ) or addon.IsSecretValue(frame) or frame:IsForbidden() then return end
         if ( not IsTrackedUnitTarget(frame.unit) ) and ( not IsTrackedUnitTarget(frame.displayedUnit) ) then return end
@@ -463,6 +467,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     if addon.PROJECT_MAINLINE then -- Between solo shuffle rounds (retail only)
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
     end
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- For cases when stealthy classes appear (we need to run an update before they change target)
@@ -480,4 +485,6 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
             UpdateAllFrames();
         end
     end);
+
+    self:RefreshRaidFrameAggroHighlight();
 end

@@ -1,4 +1,49 @@
-local _, addon = ...;
+local addonName, addon = ...;
+
+local blizzardBuffCVar = "raidFramesDisplayBuffs";
+local confirmHideBlizzardBuffs = "SWEEPYBOOP_CONFIRM_HIDE_BLIZZARD_RAID_FRAME_BUFFS";
+
+local function RefreshOptions()
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(addonName);
+end
+
+local function GetBlizzardBuffsHidden()
+    return tostring(GetCVar(blizzardBuffCVar)) == "0";
+end
+
+local function SetBlizzardBuffsHidden(hidden)
+    local desired = hidden and "0" or "1";
+    local callSucceeded, setSucceeded = pcall(SetCVar, blizzardBuffCVar, desired);
+    if ( not callSucceeded )
+            or ( setSucceeded == false )
+            or ( tostring(GetCVar(blizzardBuffCVar)) ~= desired ) then
+        print(addon.addonTitle .. ": could not change " .. blizzardBuffCVar .. ".");
+    end
+    RefreshOptions();
+end
+
+StaticPopupDialogs[confirmHideBlizzardBuffs] = {
+    text = "SweepyBoop will set raidFramesDisplayBuffs to 0. This hides Blizzard's built-in raid-frame buffs until you turn this option off. Continue?",
+    button1 = YES,
+    button2 = NO,
+    OnAccept = function()
+        SetBlizzardBuffsHidden(true);
+    end,
+    OnCancel = RefreshOptions,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,
+};
+
+local cvarEventFrame = CreateFrame("Frame");
+cvarEventFrame:RegisterEvent("CVAR_UPDATE");
+cvarEventFrame:SetScript("OnEvent", function(_, _, cvarName)
+    if cvarName
+            and ( string.lower(cvarName) == string.lower(blizzardBuffCVar) ) then
+        RefreshOptions();
+    end
+end);
 
 -- Inline a spell's in-game icon for tooltips (empty string if the texture isn't available yet).
 local function SpellIcon(spellId)
@@ -370,21 +415,21 @@ addon.GetRaidFrameOptions = function(order)
                             return table.concat({
                                 addon.L["Enable the helper while playing Restoration Druid."],
                                 "",
-                                "\226\128\162 " .. SpellIcon(1126) .. " " .. addon.L["Mark of the Wild warning."],
-                                "\226\128\162 " .. SpellIcon(33763) .. " " .. addon.L["Lifebloom with refresh-window glow."],
+                                "\226\128\162 " .. SpellIcon(33763) .. " Lifebloom.",
                                 "\226\128\162 " .. addon.L["Row 2: Regrowth, Wild Growth, Rejuvenation, Germination."],
-                                "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
+                                "\226\128\162 Securely rendered by Blizzard's aura container.",
                             }, "\n");
                         end,
                         disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                            SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
+                            SweepyBoop:RefreshHealerBuffHelper();
                         end,
                     },
 
                     druidBuffHelperWarning = {
                         order = 9,
+                        hidden = true, -- AuraContainer does not expose secure aura absence.
                         width = 1.4,
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Missing-buff warning",
@@ -417,16 +462,31 @@ addon.GetRaidFrameOptions = function(order)
                             return table.concat({
                                 addon.L["Enable the helper while playing Preservation Evoker."],
                                 "",
-                                "\226\128\162 " .. SpellIcon(381748) .. " " .. addon.L["Blessing of the Bronze warning."],
                                 "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Echo without a refresh-window glow."],
                                 "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."],
-                                "\226\128\162 " .. addon.L["Hides ALL raid-frame buffs while active; debuffs and dispellable debuffs are unaffected."],
+                                "\226\128\162 Securely rendered by Blizzard's aura container.",
                             }, "\n");
                         end,
                         disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                            SweepyBoop:RefreshHealerBuffHelper(); -- re-apply the buff-hiding CVar + repaint frames
+                            SweepyBoop:RefreshHealerBuffHelper();
+                        end,
+                    },
+
+                    hideBlizzardRaidFrameBuffs = {
+                        order = 11.5,
+                        width = "full",
+                        type = "toggle",
+                        name = "Hide Blizzard raid-frame buffs via CVar",
+                        desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
+                        get = GetBlizzardBuffsHidden,
+                        set = function(_, hidden)
+                            if hidden then
+                                StaticPopup_Show(confirmHideBlizzardBuffs);
+                            else
+                                SetBlizzardBuffsHidden(false);
+                            end
                         end,
                     },
 
@@ -508,14 +568,15 @@ addon.GetRaidFrameOptions = function(order)
                         min = 0.25,
                         max = 1.5,
                         step = 0.05,
-                        name = "Other Debuff Scale",
-                        desc = "Size of non-dispellable crowd-control debuffs as a percentage of the raid-frame height.",
+                        name = "Debuff Scale",
+                        desc = "Size of crowd-control debuffs as a percentage of the raid-frame height.",
                         disabled = DebuffIconOptionsDisabled,
                         set = SetDebuffIconOptionAndRefresh,
                     },
 
                     raidFrameDebuffIconDispellableScale = {
                         order = 21,
+                        hidden = true, -- One secure group uses one size and one total icon budget.
                         width = 0.8,
                         type = "range",
                         isPercent = true,
