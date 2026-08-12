@@ -793,11 +793,11 @@ local function WatchContainerVisibility(container)
             SecureHandlerSetFrameRef(child, "SweepyBoopSortManager", manager);
             SecureHandlerWrapScript(child, "OnShow", manager, [[
                 local manager = control
-                manager:RunAttribute("TrySort")
+                manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
             ]]);
             SecureHandlerWrapScript(child, "OnHide", manager, [[
                 local manager = control
-                manager:RunAttribute("TrySort")
+                manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
             ]]);
 
             visibilityWatched[child] = true;
@@ -822,7 +822,7 @@ local function ConfigureHeader(header)
                 child:SetAttribute("_onattributechanged", [[
                     local manager = self:GetAttribute("Manager")
                     if manager then
-                        manager:RunAttribute("TrySort")
+                        manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
                     end
                 ]]);
                 break;
@@ -846,7 +846,7 @@ local function ConfigureHeader(header)
         self:SetAttribute("refreshUnitChange", [[
             local manager = self:GetAttribute("Manager")
             if manager then
-                manager:RunAttribute("TrySort")
+                manager:SetAttribute("state-sweepyboop-sort-run", "ignore")
             end
         ]])
 
@@ -902,12 +902,6 @@ local function EnsureSecureFrames()
     ConfigureHeader(memberHeader);
     ConfigureHeader(petHeader);
 
-    memberHeader:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
-    memberHeader:RegisterEvent("UNIT_NAME_UPDATE");
-    petHeader:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
-    petHeader:RegisterEvent(addon.UNIT_PET);
-    petHeader:RegisterEvent("UNIT_NAME_UPDATE");
-
     return true;
 end
 
@@ -940,11 +934,37 @@ local function TrySort()
 
     if PrepareOutOfCombat() then
         RunSecureSort();
-    elseif CompactPartyFrame and CompactPartyFrame.UpdateLayout then
-        CompactPartyFrame:UpdateLayout();
     end
 
     sortPending = false;
+end
+
+local function PrepareForCombat()
+    if not manager then
+        sortPending = true;
+        return;
+    end
+
+    LoadSortState();
+    LoadProvider();
+    LoadFriendlyUnits();
+    WatchVisibility();
+
+    if memberHeader then
+        memberHeader:UnregisterEvent(addon.GROUP_ROSTER_UPDATE);
+        memberHeader:UnregisterEvent("UNIT_NAME_UPDATE");
+        memberHeader:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+        memberHeader:RegisterEvent("UNIT_NAME_UPDATE");
+    end
+
+    if petHeader then
+        petHeader:UnregisterEvent(addon.GROUP_ROSTER_UPDATE);
+        petHeader:UnregisterEvent(addon.UNIT_PET);
+        petHeader:UnregisterEvent("UNIT_NAME_UPDATE");
+        petHeader:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+        petHeader:RegisterEvent(addon.UNIT_PET);
+        petHeader:RegisterEvent("UNIT_NAME_UPDATE");
+    end
 end
 
 function SweepyBoop:RefreshArenaRaidFrameSort()
@@ -1016,6 +1036,11 @@ function SweepyBoop:DebugArenaRaidFrameSort()
 end
 
 local function OnEvent(_, event)
+    if event == "PLAYER_REGEN_DISABLED" then
+        PrepareForCombat();
+        return;
+    end
+
     if event == addon.PLAYER_REGEN_ENABLED and sortPending then
         TrySort();
         return;
@@ -1028,5 +1053,6 @@ local eventFrame = CreateFrame("Frame");
 eventFrame:SetScript("OnEvent", OnEvent);
 eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
 eventFrame:RegisterEvent(addon.UNIT_PET);
+eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED");
 eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
 eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
