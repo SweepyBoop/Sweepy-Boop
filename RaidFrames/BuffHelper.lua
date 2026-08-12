@@ -84,7 +84,6 @@ local RIGHT_PAD = 2;
 local FRAME_LEVEL_OFFSET = 10;
 local warningTexture = "Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew";
 local missingClassBuffGlowColor = { 1, 0, 0, 1 };
-local lifebloomGlowColor = { 0, 1, 0, 1 };
 
 local playerClass = addon.GetUnitClass("player");
 local isSupportedClass = supportedClasses[playerClass] and true or false;
@@ -93,8 +92,6 @@ local activeProfile;
 local cufPool = {};
 local setupComplete = false;
 local editModePreviewActive = false;
-local restylePending = false;
-local restyleTicker;
 local ApplyLayout;
 
 for _, profile in pairs(profiles) do
@@ -111,12 +108,6 @@ end
 local function GetScale()
     local scale = tonumber(GetConfig().healerBuffHelperScale) or 1;
     return scale > 0 and scale or 1;
-end
-
-local function CanStyleAuraButtons()
-    return ( not C_Secrets )
-        or ( not C_Secrets.ShouldAurasBeSecret )
-        or ( not C_Secrets.ShouldAurasBeSecret() );
 end
 
 local function IsProfileEnabled(profile)
@@ -142,10 +133,7 @@ local function StyleCooldown(cooldown)
     cooldown.noCooldownCount = true;
 end
 
-local function InitializeAuraButton(button, helper, baseSize)
-    local size = baseSize * GetScale();
-    helper.buttons[#helper.buttons + 1] = button;
-    button.sweepyBoopBaseSize = baseSize;
+local function InitializeAuraButton(button, size)
     button:SetSize(size, size);
     button:SetMouseMotionEnabled(false);
 
@@ -157,6 +145,45 @@ local function InitializeAuraButton(button, helper, baseSize)
     cooldown:SetAllPoints(button);
     StyleCooldown(cooldown);
     button:SetDurationCooldown(cooldown);
+end
+
+local function LayoutLifebloomPandemicBorder(button)
+    local textures = button.sweepyBoopPandemicBorder;
+    if not textures then return end
+
+    local padding = PRIMARY_BUFF_SIZE
+        * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+        / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+    for _, texture in ipairs(textures) do
+        texture:ClearAllPoints();
+        texture:SetPoint("TOPLEFT", button, "TOPLEFT", -padding, padding);
+        texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", padding, -padding);
+    end
+end
+
+local function AddLifebloomPandemicBorder(button)
+    local function AddTexture(path, layer, alpha)
+        local texture = button:CreateTexture(nil, layer);
+        texture:SetTexture(path);
+        texture:SetBlendMode("ADD");
+        texture:SetVertexColor(0, 1, 0, alpha);
+        button:AddPandemicRegion(texture);
+        return texture;
+    end
+
+    button.sweepyBoopPandemicBorder = {
+        AddTexture(
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+            "BORDER",
+            0.9
+        ),
+        AddTexture(
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+            "OVERLAY",
+            1
+        ),
+    };
+    LayoutLifebloomPandemicBorder(button);
 end
 
 local function BuildRow2SpellMap(profile, canonicalSpellID)
@@ -174,17 +201,25 @@ local function EnsureContainers(frame)
     if helper then return helper end
     if ( not playerProfile ) then return end
 
-    helper = {
-        buttons = {},
-    };
+    helper = {};
+    helper.root = CreateFrame("Frame", nil, frame);
+    helper.root:SetSize(1, 1);
+    helper.root:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
 
     helper.primary = CreateFrame(
         "AuraContainer",
         nil,
-        frame,
+        helper.root,
         "CustomAuraContainerTemplate"
     );
-    helper.primary:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
+    helper.primary:SetFrameLevel(helper.root:GetFrameLevel());
+    helper.primary:SetPoint(
+        "TOPRIGHT",
+        helper.root,
+        "CENTER",
+        0,
+        PRIMARY_BUFF_SIZE + ( ROW_SPACING / 2 )
+    );
     helper.primary:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
     helper.primary:SetFlowLayoutAnchorPoint("TOPRIGHT");
     helper.primary:SetFlowLayoutGrowthDirection(
@@ -202,31 +237,32 @@ local function EnsureContainers(frame)
         sortMethod = AuraContainerSortMethod.Expiration,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
-            InitializeAuraButton(button, helper, PRIMARY_BUFF_SIZE);
+            InitializeAuraButton(button, PRIMARY_BUFF_SIZE);
 
             if playerProfile.primaryPandemicGlow then
-                local pandemicGlow = button:CreateTexture(nil, "OVERLAY");
-                pandemicGlow:SetAllPoints(button);
-                pandemicGlow:SetAtlas("RaidFrame-TargetFrame");
-                pandemicGlow:SetDesaturated(true);
-                pandemicGlow:SetVertexColor(unpack(lifebloomGlowColor));
-                pandemicGlow:SetBlendMode("ADD");
-                button:AddPandemicRegion(pandemicGlow);
+                AddLifebloomPandemicBorder(button);
             end
         end,
         layout = {
-            elementWidth = PRIMARY_BUFF_SIZE * GetScale(),
-            elementHeight = PRIMARY_BUFF_SIZE * GetScale(),
+            elementWidth = PRIMARY_BUFF_SIZE,
+            elementHeight = PRIMARY_BUFF_SIZE,
         },
     });
 
     helper.row2 = CreateFrame(
         "AuraContainer",
         nil,
-        frame,
+        helper.root,
         "CustomAuraContainerTemplate"
     );
-    helper.row2:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
+    helper.row2:SetFrameLevel(helper.root:GetFrameLevel());
+    helper.row2:SetPoint(
+        "TOPRIGHT",
+        helper.root,
+        "CENTER",
+        0,
+        -( ROW_SPACING / 2 )
+    );
     helper.row2:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
     helper.row2:SetFlowLayoutAnchorPoint("TOPRIGHT");
     helper.row2:SetFlowLayoutGrowthDirection(
@@ -238,6 +274,7 @@ local function EnsureContainers(frame)
 
     helper.row2Warning = helper.row2:CreateTexture(nil, "BACKGROUND");
     helper.row2Warning:SetTexture(warningTexture);
+    helper.row2Warning:SetSize(ROW2_BUFF_SIZE, ROW2_BUFF_SIZE);
     helper.row2Warning:SetPoint("TOPRIGHT", helper.row2, "TOPRIGHT");
 
     for i = #playerProfile.row2Priority, 1, -1 do
@@ -251,18 +288,26 @@ local function EnsureContainers(frame)
             sortMethod = AuraContainerSortMethod.Expiration,
             sortDirection = AuraContainerSortDirection.Normal,
             initializeFrame = function(button)
-                InitializeAuraButton(button, helper, ROW2_BUFF_SIZE);
+                InitializeAuraButton(button, ROW2_BUFF_SIZE);
             end,
             layout = {
                 groupSpacing = ROW2_BUFF_SPACING,
-                elementWidth = ROW2_BUFF_SIZE * GetScale(),
-                elementHeight = ROW2_BUFF_SIZE * GetScale(),
+                elementWidth = ROW2_BUFF_SIZE,
+                elementHeight = ROW2_BUFF_SIZE,
             },
         });
     end
 
-    helper.classBuffAnchor = CreateFrame("Frame", nil, frame);
-    helper.classBuffAnchor:SetFrameLevel(frame:GetFrameLevel() + FRAME_LEVEL_OFFSET);
+    helper.classBuffAnchor = CreateFrame("Frame", nil, helper.root);
+    helper.classBuffAnchor:SetFrameLevel(helper.root:GetFrameLevel());
+    helper.classBuffAnchor:SetSize(ROW2_BUFF_SIZE, ROW2_BUFF_SIZE);
+    helper.classBuffAnchor:SetPoint(
+        "RIGHT",
+        helper.root,
+        "CENTER",
+        -PRIMARY_BUFF_SIZE - ROW2_BUFF_SPACING,
+        ( PRIMARY_BUFF_SIZE / 2 ) + ( ROW_SPACING / 2 )
+    );
     helper.classBuffAnchor:Hide();
 
     local warningLevel = helper.classBuffAnchor:GetFrameLevel() + 1;
@@ -293,50 +338,13 @@ end
 
 ApplyLayout = function(frame, helper)
     local config = GetConfig();
-    local scale = GetScale();
-    local primarySize = PRIMARY_BUFF_SIZE * scale;
-    local row2Size = ROW2_BUFF_SIZE * scale;
     local offsetX = -RIGHT_PAD + ( config.healerBuffHelperOffsetX or 0 );
     local offsetY = config.healerBuffHelperOffsetY or 0;
 
-    helper.primary:ClearAllPoints();
-    helper.primary:SetPoint(
-        "TOPRIGHT",
-        frame,
-        "RIGHT",
-        offsetX,
-        offsetY + primarySize + ( ROW_SPACING / 2 )
-    );
-    helper.primary:SetAuraGroupLayout("Primary", {
-        elementWidth = primarySize,
-        elementHeight = primarySize,
-    });
+    helper.root:ClearAllPoints();
+    helper.root:SetPoint("RIGHT", frame, "RIGHT", offsetX, offsetY);
+    helper.root:SetScale(GetScale());
 
-    helper.classBuffAnchor:ClearAllPoints();
-    helper.classBuffAnchor:SetSize(row2Size, row2Size);
-    helper.classBuffAnchor:SetPoint(
-        "RIGHT",
-        frame,
-        "RIGHT",
-        offsetX - primarySize - ROW2_BUFF_SPACING,
-        offsetY + ( primarySize / 2 ) + ( ROW_SPACING / 2 )
-    );
-    addon.SetFixedPixelGlowSize(
-        helper.classBuffWarning.fixedPixelGlow,
-        row2Size,
-        row2Size,
-        0
-    );
-
-    helper.row2:ClearAllPoints();
-    helper.row2:SetPoint(
-        "TOPRIGHT",
-        frame,
-        "RIGHT",
-        offsetX,
-        offsetY - ( ROW_SPACING / 2 )
-    );
-    helper.row2Warning:SetSize(row2Size, row2Size);
     local warningSetting = playerProfile.row2WarningSetting;
     helper.row2Warning:SetShown(
         warningSetting
@@ -344,28 +352,6 @@ ApplyLayout = function(frame, helper)
             and true
             or false
     );
-
-    for _, spellID in ipairs(playerProfile.row2Priority) do
-        helper.row2:SetAuraGroupLayout("Row2-" .. spellID, {
-            groupSpacing = ROW2_BUFF_SPACING,
-            elementWidth = row2Size,
-            elementHeight = row2Size,
-        });
-    end
-end
-
-local function RestyleButtons(frame, helper)
-    ApplyLayout(frame, helper);
-    if ( not CanStyleAuraButtons() ) then
-        restylePending = true;
-        return;
-    end
-
-    local scale = GetScale();
-    for _, button in ipairs(helper.buttons) do
-        local size = button.sweepyBoopBaseSize * scale;
-        button:SetSize(size, size);
-    end
 end
 
 local function HideHelper(frame)
@@ -473,7 +459,7 @@ local function UpdateFrame(frame, forceRefresh)
 
     local helper = EnsureContainers(frame);
     if ( not helper ) then return end
-    RestyleButtons(frame, helper);
+    ApplyLayout(frame, helper);
     local needsFullRefresh = forceRefresh or ( not helper.active );
     ActivateContainer(helper.primary, unit, needsFullRefresh);
     ActivateContainer(helper.row2, unit, needsFullRefresh);
@@ -488,16 +474,6 @@ local function RefreshAllFrames(forceRefresh)
     end
 end
 
-local function FlushPendingRestyle()
-    if ( not restylePending ) or ( not CanStyleAuraButtons() ) then return end
-    restylePending = false;
-    RefreshAllFrames();
-    if restyleTicker then
-        restyleTicker:Cancel();
-        restyleTicker = nil;
-    end
-end
-
 local function RefreshClassBuffWarnings()
     for frame in pairs(cufPool) do
         local helper = frame.healerBuffHelper;
@@ -505,12 +481,6 @@ local function RefreshClassBuffWarnings()
             local unit = frame.displayedUnit or frame.unit;
             UpdateClassBuffWarning(helper, unit);
         end
-    end
-end
-
-local function StartRestyleTicker()
-    if restylePending and ( not restyleTicker ) then
-        restyleTicker = C_Timer.NewTicker(1, FlushPendingRestyle);
     end
 end
 
@@ -539,7 +509,6 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
     eventFrame:RegisterEvent("UNIT_AURA");
     eventFrame:SetScript("OnEvent", function(_, event, arg1)
@@ -551,8 +520,6 @@ function SweepyBoop:SetupRaidFrameAuraModule()
             CheckSpec();
         elseif event == "AURA_DATA_PROVIDER_SWITCH" then
             editModePreviewActive = arg1 ~= true;
-        elseif event == addon.PLAYER_REGEN_ENABLED then
-            FlushPendingRestyle();
         end
 
         if event == addon.GROUP_ROSTER_UPDATE then
@@ -573,5 +540,4 @@ end
 function SweepyBoop:RefreshHealerBuffHelper()
     CheckSpec();
     RefreshAllFrames();
-    StartRestyleTicker();
 end
