@@ -15,10 +15,8 @@ local healerUnits = {};
 local auraButtons = {};
 local auraSoundIDs = {};
 local setupComplete = false;
-local editModePreviewActive = false;
 local restylePending = false;
 local soundRefreshPending = false;
-local restyleTicker;
 
 local COUNTDOWN_FONT_SIZE = 18;
 local COUNTDOWN_FONT_FILE = "Fonts\\2002.TTF";
@@ -175,10 +173,11 @@ local function HideLiveContainer(container)
 end
 
 local function ActivateLiveContainer(container, unit, forceRefresh)
-    if forceRefresh then
-        container:Hide();
-        container:SetUnit("none");
+    if container:GetUnit() ~= unit then
+        -- Blizzard_AuraContainer.lua: AuraContainerSharedMixin:SetUnit refreshes on token changes.
         container:SetUnit(unit);
+    elseif forceRefresh then
+        -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
     container:SetEnabled(true);
@@ -255,9 +254,10 @@ local function RefreshLiveContainers(forceRefresh, resetUnreadableRoles)
             and GetConfig().healerInCrowdControlSound;
     end
 
+    -- Blizzard's fake AuraContainer provider is Edit Mode preview data, not live unit state.
     local enabled = GetConfig().healerInCrowdControl
         and IsInArenaInstance()
-        and ( not editModePreviewActive );
+        and addon.IsUsingRealAuraData();
 
     for _, unit in ipairs(partyUnits) do
         local container = EnsureLiveContainer(unit);
@@ -276,28 +276,24 @@ local function RefreshLiveContainers(forceRefresh, resetUnreadableRoles)
     end
 end
 
-local function FlushPendingRestyle()
+local function ReconcilePendingRestyle()
+    -- A restricted style request remains dirty until the shared Blizzard
+    -- restriction transition callback wakes this event-driven retry.
     if ( not restylePending ) or ( not CanStyleAuraButtons() ) then return end
 
     restylePending = false;
     for _, button in ipairs(auraButtons) do
         StyleCountdownText(button.cooldown);
     end
-    if restyleTicker then
-        restyleTicker:Cancel();
-        restyleTicker = nil;
-    end
 end
 
 local function RestyleAuraButtons()
     if ( not CanStyleAuraButtons() ) then
         restylePending = true;
-        if not restyleTicker then
-            restyleTicker = C_Timer.NewTicker(1, FlushPendingRestyle);
-        end
         return;
     end
 
+    restylePending = false;
     for _, button in ipairs(auraButtons) do
         StyleCountdownText(button.cooldown);
     end
@@ -384,12 +380,14 @@ function SweepyBoop:SetupHealerInCrowdControl()
     eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent("PLAYER_ROLES_ASSIGNED");
-    eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
-    eventFrame:SetScript("OnEvent", function(_, event, useRealDataProvider)
-        if event == "AURA_DATA_PROVIDER_SWITCH" then
-            editModePreviewActive = useRealDataProvider ~= true;
-        elseif event == addon.PLAYER_REGEN_ENABLED then
-            FlushPendingRestyle();
+    eventFrame:SetScript("OnEvent", function(_, event)
+        if event == addon.PLAYER_REGEN_ENABLED
+            or event == addon.PLAYER_ENTERING_WORLD then
+
+            ReconcilePendingRestyle();
+        end
+
+        if event == addon.PLAYER_REGEN_ENABLED then
             if soundRefreshPending then
                 RefreshLiveContainers(true);
             end
@@ -408,6 +406,11 @@ function SweepyBoop:SetupHealerInCrowdControl()
             RefreshLiveContainers();
         end
     end);
+
+    addon.RegisterAuraDataProviderListener("HealerInCrowdControl", function()
+        RefreshLiveContainers();
+    end);
+    addon.RegisterAuraRestrictionListener("HealerInCrowdControl", ReconcilePendingRestyle);
 
     RefreshLiveContainers(true);
 end

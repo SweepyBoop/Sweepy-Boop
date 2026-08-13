@@ -91,7 +91,6 @@ local playerProfile;
 local activeProfile;
 local cufPool = {};
 local setupComplete = false;
-local editModePreviewActive = false;
 local ApplyLayout;
 
 for _, profile in pairs(profiles) do
@@ -357,7 +356,7 @@ ApplyLayout = function(frame, helper)
     );
 end
 
-local function HideHelper(frame, resetContainers)
+local function HideHelper(frame)
     local helper = frame.healerBuffHelper;
     if ( not helper ) then return end
     helper.active = false;
@@ -366,11 +365,6 @@ local function HideHelper(frame, resetContainers)
     helper.row2:SetEnabled(false);
     helper.row2:Hide();
     helper.classBuffAnchor:Hide();
-
-    if resetContainers then
-        helper.primary:SetUnit("none");
-        helper.row2:SetUnit("none");
-    end
 end
 
 local function IsGroupUnit(unit)
@@ -432,13 +426,11 @@ local function ShouldTrackFrameName(name)
 end
 
 local function ActivateContainer(container, unit, forceRefresh)
-    local unitChanged = container:GetUnit() ~= unit;
-    if unitChanged or forceRefresh then
-        container:Hide();
-        if forceRefresh and ( not unitChanged ) then
-            container:SetUnit("none");
-        end
+    if container:GetUnit() ~= unit then
+        -- Blizzard_AuraContainer.lua: AuraContainerSharedMixin:SetUnit refreshes on token changes.
         container:SetUnit(unit);
+    elseif forceRefresh then
+        -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
     container:SetEnabled(true);
@@ -449,19 +441,20 @@ local function UpdateFrame(frame, forceRefresh)
     if ( not frame ) or frame:IsForbidden() then return end
 
     local unit = frame.displayedUnit or frame.unit;
-    if editModePreviewActive
+    -- Blizzard's fake AuraContainer provider is Edit Mode preview data, not live unit state.
+    if ( not addon.IsUsingRealAuraData() )
         or ( not IsProfileEnabled(activeProfile) )
         or ( not IsFrameVisible(frame) )
         or ( not unit )
         or ( not UnitExists(unit) )
         or ( not IsGroupUnit(unit) ) then
-        HideHelper(frame, forceRefresh);
+        HideHelper(frame);
         return;
     end
 
     local canAssist = UnitCanAssist("player", unit);
     if addon.IsSecretValue(canAssist) or ( not canAssist ) then
-        HideHelper(frame, forceRefresh);
+        HideHelper(frame);
         return;
     end
 
@@ -500,7 +493,7 @@ local function TrackFrame(frame)
         UpdateFrame(frame);
     elseif cufPool[frame] then
         cufPool[frame] = nil;
-        HideHelper(frame, true);
+        HideHelper(frame);
     end
 end
 
@@ -520,7 +513,6 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent("PLAYER_CONTROL_LOST");
     eventFrame:RegisterEvent("PLAYER_CONTROL_GAINED");
-    eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
     eventFrame:RegisterEvent("UNIT_AURA");
     eventFrame:SetScript("OnEvent", function(_, event, arg1)
         if event == "UNIT_AURA" then
@@ -529,8 +521,6 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         elseif event == addon.PLAYER_SPECIALIZATION_CHANGED then
             if arg1 ~= "player" then return end
             CheckSpec();
-        elseif event == "AURA_DATA_PROVIDER_SWITCH" then
-            editModePreviewActive = arg1 ~= true;
         end
 
         local isControlTransition = event == addon.UNIT_FACTION
@@ -548,6 +538,10 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         else
             RefreshAllFrames();
         end
+    end);
+
+    addon.RegisterAuraDataProviderListener("RaidFrameAuraModule", function()
+        RefreshAllFrames();
     end);
 end
 

@@ -279,7 +279,6 @@ local function EnsureContainer(nameplate, railInfo, groups)
         railInfo.growthDirection,
         AnchorUtil.FlowDirection.Down
     );
-    container:SetUnit("none");
     container:SetEnabled(false);
     container:Hide();
     container:SetAuraProcessingPolicy(
@@ -333,9 +332,8 @@ end
 
 local function ActivateContainer(container, unit)
     if container:GetUnit() ~= unit then
-        container:Hide();
+        -- Blizzard_AuraContainer.lua: AuraContainerSharedMixin:SetUnit refreshes on token changes.
         container:SetUnit(unit);
-        container:UpdateAllAuras();
     end
     container:SetEnabled(true);
     container:Show();
