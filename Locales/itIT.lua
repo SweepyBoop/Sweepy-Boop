@@ -237,14 +237,7 @@ L["Spell ID"] = "ID incantesimo";
 L["Category"] = "Categoria";
 
 L["Raid frames"] = "Riquadri incursione";
-L["Arena party sorting"] = "Ordinamento gruppo in arena";
-L["Sort order"] = "Ordine di ordinamento";
-L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Disabilitato mentre è caricato un altro addon di ordinamento riquadri per evitare conflitti con lo spostamento dei riquadri compatti Blizzard.";
-L["Sort Blizzard compact party frames in arenas."] = "Ordina i riquadri gruppo compatti Blizzard nelle arene.";
 L["Disabled"] = "Disabilitato";
-L["Player on top"] = "Giocatore in alto";
-L["Player in middle"] = "Giocatore al centro";
-L["Player on bottom"] = "Giocatore in basso";
 L["PvP aggro highlight"] = "Evidenziazione aggro PvP";
 L["Arena target"] = "Arena target";
 L["Preview"] = "Preview";

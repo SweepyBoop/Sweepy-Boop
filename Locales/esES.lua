@@ -234,14 +234,7 @@ local function ApplyTranslations(locale)
     L["Spell ID"] = "ID de hechizo";
     L["Category"] = "Categoría";
     L["Raid frames"] = "Marcos de banda";
-    L["Arena party sorting"] = "Orden de grupo en arena";
-    L["Sort order"] = "Orden de clasificación";
-    L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Desactivado mientras otro addon de ordenación de marcos esté cargado para evitar conflictos con el movimiento de los marcos compactos de Blizzard.";
-    L["Sort Blizzard compact party frames in arenas."] = "Ordena los marcos compactos de grupo de Blizzard en arenas.";
     L["Disabled"] = "Desactivado";
-    L["Player on top"] = "Jugador arriba";
-    L["Player in middle"] = "Jugador en medio";
-    L["Player on bottom"] = "Jugador abajo";
     L["PvP aggro highlight"] = "Resaltado de amenaza PvP";
     L["Arena target"] = "Arena target";
     L["Preview"] = "Preview";

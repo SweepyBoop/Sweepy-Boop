@@ -237,14 +237,7 @@ L["Spell ID"] = "Zauber-ID";
 L["Category"] = "Kategorie";
 
 L["Raid frames"] = "Schlachtzugsfenster";
-L["Arena party sorting"] = "Arena-Gruppensortierung";
-L["Sort order"] = "Sortierreihenfolge";
-L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Deaktiviert, solange ein anderes Fenster-Sortier-Addon geladen ist, um Konflikte mit der Bewegung der kompakten Blizzard-Fenster zu vermeiden.";
-L["Sort Blizzard compact party frames in arenas."] = "Sortiert kompakte Blizzard-Gruppenfenster in Arenen.";
 L["Disabled"] = "Deaktiviert";
-L["Player on top"] = "Spieler oben";
-L["Player in middle"] = "Spieler in der Mitte";
-L["Player on bottom"] = "Spieler unten";
 L["PvP aggro highlight"] = "PvP-Aggro-Hervorhebung";
 L["Arena target"] = "Arena target";
 L["Preview"] = "Preview";

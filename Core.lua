@@ -168,7 +168,6 @@ local defaults = {
             },
         },
         raidFrames = {
-            arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.DISABLED,
             raidFrameAggroHighlightRaidFramesShape = "Circle",
             raidFrameAggroHighlightRaidFramesAnchor = "TOPRIGHT",
             raidFrameAggroHighlightRaidFramesRelativePoint = "TOPRIGHT",
@@ -298,7 +297,6 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.bigDebuffsEnabled = true;
-    defaults.profile.raidFrames.arenaRaidFrameSortOrder = addon.RAID_FRAME_SORT_ORDER.PLAYER_MID;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSizeSecondary = 28;
@@ -403,6 +401,9 @@ function SweepyBoop:OnInitialize()
         end
     end
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
+    for _, profile in pairs(self.db.profiles) do
+        addon.RemoveObsoleteProfileSettings(profile);
+    end
 
     options.args.nameplatesFriendly = addon.GetFriendlyNameplateOptions(3);
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
@@ -515,7 +516,6 @@ function SweepyBoop:RefreshConfig()
         self:RefreshHealerBuffHelper();
         self:RefreshRaidFrameDebuffIcons();
         self:RefreshRaidFrameAggroHighlight();
-        self:RefreshArenaRaidFrameSort();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl();
         self:UpdateHealerInCrowdControl();

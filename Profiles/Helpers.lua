@@ -1,6 +1,12 @@
 local _, addon = ...;
 local AceGUI = LibStub("AceGUI-3.0");
 
+function addon.RemoveObsoleteProfileSettings(profile)
+    if type(profile) == "table" and type(profile.raidFrames) == "table" then
+        profile.raidFrames.arenaRaidFrameSortOrder = nil;
+    end
+end
+
 function SweepyBoop:Decode(encoded, module)
     local importDialog = addon.importDialogs and addon.importDialogs[module]; -- module = "" for importing the entire profile, it's valid to use "" as table key
     if ( not importDialog ) then return end
@@ -74,6 +80,8 @@ function SweepyBoop:ImportProfile(data, module)
     if ( not importDialog ) then return end
 
     if ( data.version ~= addon.PROFILE_VERSION ) then return self:ImportError(importDialog, "Invalid version") end
+
+    addon.RemoveObsoleteProfileSettings(data.profile);
 
     if ( module ~= "" ) then
         self.db.profile[module] = data.profile[module];

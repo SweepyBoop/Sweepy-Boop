@@ -237,14 +237,7 @@ L["Spell ID"] = "주문 ID";
 L["Category"] = "분류";
 
 L["Raid frames"] = "공격대 프레임";
-L["Arena party sorting"] = "투기장 파티 정렬";
-L["Sort order"] = "정렬 순서";
-L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "블리자드 기본 소형 프레임 이동과 충돌하지 않도록 다른 프레임 정렬 애드온이 로드되어 있으면 비활성화됩니다.";
-L["Sort Blizzard compact party frames in arenas."] = "투기장에서 블리자드 소형 파티 프레임을 정렬합니다.";
 L["Disabled"] = "비활성화";
-L["Player on top"] = "플레이어를 위에";
-L["Player in middle"] = "플레이어를 가운데에";
-L["Player on bottom"] = "플레이어를 아래에";
 L["PvP aggro highlight"] = "PvP 위협 강조";
 L["Arena target"] = "Arena target";
 L["Preview"] = "Preview";

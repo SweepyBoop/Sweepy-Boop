@@ -296,37 +296,6 @@ addon.GetRaidFrameOptions = function(order)
                 type = "group",
                 name = "General",
                 args = {
-                    arenaRaidFrameSortHeader = {
-                        order = 1,
-                        type = "header",
-                        name = "Arena party sorting",
-                    },
-
-                    arenaRaidFrameSortOrder = {
-                        order = 2,
-                        type = "select",
-                        width = 1.4,
-                        name = "Sort order",
-                        desc = function()
-                            if addon.IsConflictingFrameSortAddonLoaded() then
-                                return "Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement.";
-                            end
-
-                            return "Sort Blizzard compact party frames in arenas.";
-                        end,
-                        disabled = addon.IsConflictingFrameSortAddonLoaded,
-                        values = {
-                            [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
-                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
-                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in middle",
-                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player on bottom",
-                        },
-                        set = function(info, val)
-                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                            SweepyBoop:RefreshArenaRaidFrameSort();
-                        end,
-                    },
-
                     header2 = {
                         order = 5,
                         type = "header",

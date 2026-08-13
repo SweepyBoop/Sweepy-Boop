@@ -388,16 +388,6 @@ addon.COUNTDOWN_FONT_SIZE_COEFFICIENT = 0.375;
 addon.CHARGE_TEXTURE = "Crosshair_Recurring_32"; -- TODO: make it available for classic: https://github.com/seblindfors/WoWAtlasExtract/blob/master/README.md
 addon.CHARGE_TEXTURE_SIZE = 16;
 
-addon.RAID_FRAME_SORT_ORDER = {
-    DISABLED = 0,
-    PLAYER_TOP = 1,
-    PLAYER_BOTTOM = 2,
-    PLAYER_MID = 3,
-};
-
-addon.IsConflictingFrameSortAddonLoaded = function()
-    return C_AddOns.IsAddOnLoaded("FrameSort");
-end
 
 addon.IsConflictingRaidFrameDebuffAddonLoaded = function()
     return C_AddOns.IsAddOnLoaded("MiniCC");

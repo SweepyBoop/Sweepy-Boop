@@ -237,14 +237,7 @@ L["Spell ID"] = "ID du sort";
 L["Category"] = "Catégorie";
 
 L["Raid frames"] = "Cadres de raid";
-L["Arena party sorting"] = "Tri du groupe en arène";
-L["Sort order"] = "Ordre de tri";
-L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Désactivé tant qu'un autre addon de tri de cadres est chargé afin d'éviter les conflits de déplacement des cadres compacts Blizzard.";
-L["Sort Blizzard compact party frames in arenas."] = "Trier les cadres de groupe compacts Blizzard en arène.";
 L["Disabled"] = "Désactivé";
-L["Player on top"] = "Joueur en haut";
-L["Player in middle"] = "Joueur au milieu";
-L["Player on bottom"] = "Joueur en bas";
 L["PvP aggro highlight"] = "Surbrillance d'aggro PvP";
 L["Arena target"] = "Arena target";
 L["Preview"] = "Preview";

@@ -237,14 +237,7 @@ L["Spell ID"] = "法術 ID";
 L["Category"] = "分類";
 
 L["Raid frames"] = "團隊框架";
-L["Arena party sorting"] = "競技場隊伍排序";
-L["Sort order"] = "排序順序";
-L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "載入其他框架排序插件時停用，以避免與暴雪精簡框架移動衝突。";
-L["Sort Blizzard compact party frames in arenas."] = "在競技場中排序暴雪精簡隊伍框架。";
 L["Disabled"] = "停用";
-L["Player on top"] = "玩家在上方";
-L["Player in middle"] = "玩家在中間";
-L["Player on bottom"] = "玩家在下方";
 L["PvP aggro highlight"] = "PvP 仇恨高亮";
 L["Arena target"] = "Arena target";
 L["Preview"] = "Preview";

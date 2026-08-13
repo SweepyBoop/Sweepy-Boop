@@ -237,14 +237,7 @@ L["Spell ID"] = "ID заклинания";
 L["Category"] = "Категория";
 
 L["Raid frames"] = "Рейдовые рамки";
-L["Arena party sorting"] = "Сортировка группы на арене";
-L["Sort order"] = "Порядок сортировки";
-L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Отключено, пока загружен другой аддон сортировки рамок, чтобы избежать конфликта с перемещением компактных рамок Blizzard.";
-L["Sort Blizzard compact party frames in arenas."] = "Сортировать компактные рамки группы Blizzard на аренах.";
 L["Disabled"] = "Отключено";
-L["Player on top"] = "Игрок сверху";
-L["Player in middle"] = "Игрок посередине";
-L["Player on bottom"] = "Игрок снизу";
 L["PvP aggro highlight"] = "Подсветка угрозы PvP";
 L["Arena target"] = "Arena target";
 L["Preview"] = "Preview";

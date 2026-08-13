@@ -241,14 +241,7 @@ L["Spell ID"] = "Spell ID";
 L["Category"] = "Category";
 
 L["Raid frames"] = "Raid frames";
-L["Arena party sorting"] = "Arena party sorting";
-L["Sort order"] = "Sort order";
-L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement.";
-L["Sort Blizzard compact party frames in arenas."] = "Sort Blizzard compact party frames in arenas.";
 L["Disabled"] = "Disabled";
-L["Player on top"] = "Player on top";
-L["Player in middle"] = "Player in middle";
-L["Player on bottom"] = "Player on bottom";
 L["PvP aggro highlight"] = "PvP aggro highlight";
 L["Arena target"] = "Arena target";
 L["Preview"] = "Preview";
