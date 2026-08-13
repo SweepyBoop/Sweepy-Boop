@@ -720,7 +720,9 @@ addon.GetEnemyNameplateOptions = function(order)
                         step = 1,
                         type = "range",
                         width = 0.85,
-                        name = addon.L["Max icons"],
+                        name = addon.PROJECT_MAINLINE
+                            and addon.L["Max icons per category"]
+                            or addon.L["Max icons"],
                         hidden = function()
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
@@ -781,7 +783,7 @@ addon.GetEnemyNameplateOptions = function(order)
                     },
                 },
                 hidden = function()
-                    return addon.MAINLINE_CORE_FEATURES_ONLY or ( not addon.PROJECT_MAINLINE );
+                    return not addon.PROJECT_MAINLINE;
                 end,
             },
 
