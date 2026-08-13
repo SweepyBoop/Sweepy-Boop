@@ -359,7 +359,7 @@ ApplyLayout = function(frame, helper)
     );
 end
 
-local function HideHelper(frame)
+local function HideHelper(frame, resetContainers)
     local helper = frame.healerBuffHelper;
     if ( not helper ) then return end
     helper.active = false;
@@ -368,6 +368,11 @@ local function HideHelper(frame)
     helper.row2:SetEnabled(false);
     helper.row2:Hide();
     helper.classBuffAnchor:Hide();
+
+    if resetContainers then
+        helper.primary:SetUnit("none");
+        helper.row2:SetUnit("none");
+    end
 end
 
 local function IsGroupUnit(unit)
@@ -452,13 +457,13 @@ local function UpdateFrame(frame, forceRefresh)
         or ( not unit )
         or ( not UnitExists(unit) )
         or ( not IsGroupUnit(unit) ) then
-        HideHelper(frame);
+        HideHelper(frame, forceRefresh);
         return;
     end
 
     local canAssist = UnitCanAssist("player", unit);
     if addon.IsSecretValue(canAssist) or ( not canAssist ) then
-        HideHelper(frame);
+        HideHelper(frame, forceRefresh);
         return;
     end
 
@@ -497,7 +502,7 @@ local function TrackFrame(frame)
         UpdateFrame(frame);
     elseif cufPool[frame] then
         cufPool[frame] = nil;
-        HideHelper(frame);
+        HideHelper(frame, true);
     end
 end
 
@@ -514,6 +519,9 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    eventFrame:RegisterEvent(addon.UNIT_FACTION);
+    eventFrame:RegisterEvent("PLAYER_CONTROL_LOST");
+    eventFrame:RegisterEvent("PLAYER_CONTROL_GAINED");
     eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
     eventFrame:RegisterEvent("UNIT_AURA");
     eventFrame:SetScript("OnEvent", function(_, event, arg1)
@@ -527,7 +535,10 @@ function SweepyBoop:SetupRaidFrameAuraModule()
             editModePreviewActive = arg1 ~= true;
         end
 
-        if event == addon.GROUP_ROSTER_UPDATE then
+        local isControlTransition = event == addon.UNIT_FACTION
+            or event == "PLAYER_CONTROL_LOST"
+            or event == "PLAYER_CONTROL_GAINED";
+        if event == addon.GROUP_ROSTER_UPDATE or isControlTransition then
             C_Timer.After(0, function()
                 RefreshAllFrames(true);
             end);
