@@ -514,6 +514,9 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PLAYER_SPECIALIZATION_CHANGED);
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    eventFrame:RegisterEvent(addon.UNIT_FACTION);
+    eventFrame:RegisterEvent("PLAYER_CONTROL_LOST");
+    eventFrame:RegisterEvent("PLAYER_CONTROL_GAINED");
     eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
     eventFrame:RegisterEvent("UNIT_AURA");
     eventFrame:SetScript("OnEvent", function(_, event, arg1)
@@ -527,7 +530,10 @@ function SweepyBoop:SetupRaidFrameAuraModule()
             editModePreviewActive = arg1 ~= true;
         end
 
-        if event == addon.GROUP_ROSTER_UPDATE then
+        local isControlTransition = event == addon.UNIT_FACTION
+            or event == "PLAYER_CONTROL_LOST"
+            or event == "PLAYER_CONTROL_GAINED";
+        if event == addon.GROUP_ROSTER_UPDATE or isControlTransition then
             C_Timer.After(0, function()
                 RefreshAllFrames(true);
             end);
