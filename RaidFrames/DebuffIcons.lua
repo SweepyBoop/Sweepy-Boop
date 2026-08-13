@@ -214,6 +214,8 @@ local function ApplyContainerLayout(frame, container)
 end
 
 local function RestyleContainer(frame, container)
+    ApplyVisualRootLayout(frame);
+
     if ( not CanStyleAuraButtons() ) then
         restylePending = true;
         return;
