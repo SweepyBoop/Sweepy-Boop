@@ -64,18 +64,42 @@ local function CreateIconVisual(frame)
     StyleCooldown(frame.cooldown);
 end
 
+local function CreateHighlightTexture(frame, texturePath, layer, alpha)
+    local padding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING;
+    local texture = frame:CreateTexture(nil, layer);
+    texture:SetTexture(texturePath);
+    texture:SetBlendMode("ADD");
+    texture:SetPoint("TOPLEFT", frame, "TOPLEFT", -padding, padding);
+    texture:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", padding, -padding);
+    texture:SetVertexColor(
+        greenGlowColor[1],
+        greenGlowColor[2],
+        greenGlowColor[3],
+        alpha
+    );
+end
+
+local function CreateStaticHighlight(frame)
+    CreateHighlightTexture(
+        frame,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        0.9
+    );
+    CreateHighlightTexture(
+        frame,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        1
+    );
+end
+
 local function InitializeAuraButton(button)
     CreateIconVisual(button);
+    CreateStaticHighlight(button);
     button:SetPoint("CENTER", button:GetParent(), "CENTER");
     button:SetIcon(button.icon);
     button:SetDurationCooldown(button.cooldown);
-
-    button.glow = button:CreateTexture(nil, "OVERLAY");
-    button.glow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
-    button.glow:SetBlendMode("ADD");
-    button.glow:SetPoint("TOPLEFT", button, "TOPLEFT", -iconSize * 0.2, iconSize * 0.2);
-    button.glow:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", iconSize * 0.2, -iconSize * 0.2);
-    button.glow:SetVertexColor(unpack(greenGlowColor));
 end
 
 local function EnsureLiveContainer()
@@ -120,6 +144,7 @@ local function EnsureTestFrame()
     testFrame = CreateFrame("Frame", nil, EnsureVisualRoot());
     testFrame:SetPoint("CENTER", visualRoot, "CENTER");
     CreateIconVisual(testFrame);
+    CreateStaticHighlight(testFrame);
     testFrame.icon:SetTexture(addon.GetSpellTexture(precognitionSpellID));
     testFrame.cooldown:SetScript("OnCooldownDone", function()
         testFrame:Hide();
@@ -144,7 +169,6 @@ function SweepyBoop:TestPrecognitionTracker()
     local frame = EnsureTestFrame();
     frame.cooldown:SetCooldown(GetTime(), 4);
     frame.cooldown:Show();
-    addon.ShowProcGlow(frame, greenGlowColor);
     frame:Show();
 end
 
@@ -154,7 +178,6 @@ function SweepyBoop:SetupPrecognitionTracker()
     ApplyVisualRootLayout();
     if testFrame then
         testFrame.cooldown:Clear();
-        addon.HideProcGlow(testFrame);
         testFrame:Hide();
     end
     SetLiveContainerEnabled(GetConfig().precognitionTracker);

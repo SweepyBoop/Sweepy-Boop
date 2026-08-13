@@ -80,8 +80,9 @@ local function CreatePreviewSlot(parent)
     slot.debuffIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
 
     slot.debuffBorder = slot.visualFrame:CreateTexture(nil, "OVERLAY");
-    slot.debuffBorder:SetPoint("TOPLEFT", slot.visualFrame, "TOPLEFT", -1, 1);
-    slot.debuffBorder:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", 1, -1);
+    local borderPadding = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING;
+    slot.debuffBorder:SetPoint("TOPLEFT", slot.visualFrame, "TOPLEFT", -borderPadding, borderPadding);
+    slot.debuffBorder:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", borderPadding, -borderPadding);
     slot.debuffBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
     slot.debuffBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
 

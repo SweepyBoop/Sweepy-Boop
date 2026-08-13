@@ -187,8 +187,9 @@ local function InitializeAuraButton(button, auraKind, iconStyle)
         );
     else
         local border = button:CreateTexture(nil, "OVERLAY");
-        border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1);
-        border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1);
+        local padding = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING;
+        border:SetPoint("TOPLEFT", button, "TOPLEFT", -padding, padding);
+        border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", padding, -padding);
         border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
         border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
         border:SetVertexColor(color[1], color[2], color[3], 1);

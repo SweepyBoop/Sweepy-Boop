@@ -5,7 +5,6 @@ local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-c
 local bigDebuffsIconStyleSorting = {
     addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
     addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT,
-    addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW,
 };
 
 local classIconStyleSorting = {
@@ -20,7 +19,6 @@ local function GetBigDebuffsIconStyleValues()
     return {
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT] = addon.L["Highlight"],
-        [addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW] = addon.L["Glowing"],
     };
 end
 
