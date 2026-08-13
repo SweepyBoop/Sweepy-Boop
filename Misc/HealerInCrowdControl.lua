@@ -175,10 +175,11 @@ local function HideLiveContainer(container)
 end
 
 local function ActivateLiveContainer(container, unit, forceRefresh)
-    if forceRefresh then
-        container:Hide();
-        container:SetUnit("none");
+    if container:GetUnit() ~= unit then
+        -- Blizzard_AuraContainer.lua: AuraContainerSharedMixin:SetUnit refreshes on token changes.
         container:SetUnit(unit);
+    elseif forceRefresh then
+        -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
     container:SetEnabled(true);

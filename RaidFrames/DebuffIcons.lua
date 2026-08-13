@@ -383,13 +383,11 @@ local function ShowTestFrame(frame)
 end
 
 local function ActivateContainer(container, unit, forceRefresh)
-    local unitChanged = container:GetUnit() ~= unit;
-    if unitChanged or forceRefresh then
-        container:Hide();
-        if forceRefresh and ( not unitChanged ) then
-            container:SetUnit("none");
-        end
+    if container:GetUnit() ~= unit then
+        -- Blizzard_AuraContainer.lua: AuraContainerSharedMixin:SetUnit refreshes on token changes.
         container:SetUnit(unit);
+    elseif forceRefresh then
+        -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
     container:SetEnabled(true);
