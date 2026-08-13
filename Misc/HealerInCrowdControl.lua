@@ -146,13 +146,16 @@ local function EnsureLiveContainer(unit)
         }
     );
     -- Blizzard AuraSlots select one preferred aura and do not participate in
-    -- flow layout, so the returned frame must be anchored explicitly.
-    local auraButton = container:AddAuraSlot(auraSlotKey, auraFilter, {
+    -- flow layout. Configure the required anchor in initializeFrame, which the
+    -- frame provider invokes before applying secret-aura access restrictions.
+    container:AddAuraSlot(auraSlotKey, auraFilter, {
         sortMethod = AuraContainerSortMethod.UnitFrameDebuff,
         sortDirection = AuraContainerSortDirection.Normal,
-        initializeFrame = InitializeAuraButton,
+        initializeFrame = function(button)
+            InitializeAuraButton(button);
+            button:SetPoint("CENTER", container, "CENTER");
+        end,
     });
-    auraButton:SetPoint("CENTER", container, "CENTER");
 
     liveContainers[unit] = container;
     return container;
