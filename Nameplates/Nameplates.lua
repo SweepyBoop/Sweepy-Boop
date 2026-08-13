@@ -6,7 +6,9 @@ local function HideWidgets(nameplate)
     addon.HideNpcHighlight(nameplate);
     addon.HideCritterIcon(nameplate);
     addon.HideSpecIcon(nameplate);
-    addon.HideBigDebuffs(nameplate);
+    if addon.PROJECT_MAINLINE then
+        addon.HideBigDebuffs(nameplate);
+    end
 end
 
 -- Protected nameplates in dungeons and raids
@@ -263,7 +265,9 @@ local function UpdateWidgets(nameplate, frame)
         addon.HideSpecIcon(nameplate);
         addon.HideNpcHighlight(nameplate);
         addon.HideCritterIcon(nameplate);
-        addon.HideBigDebuffs(nameplate);
+        if addon.PROJECT_MAINLINE then
+            addon.HideBigDebuffs(nameplate);
+        end
     else
         addon.HideClassIcon(nameplate);
         addon.HidePetIcon(nameplate);
@@ -290,14 +294,20 @@ local function UpdateWidgets(nameplate, frame)
 
             addon.HideNpcHighlight(nameplate);
             addon.HideCritterIcon(nameplate);
-            addon.UpdateBigDebuffs(nameplate, frame);
+            if addon.PROJECT_MAINLINE then
+                addon.UpdateBigDebuffs(nameplate, frame);
+            end
             UpdateUnitFrameVisibility(nameplate, frame, true); -- Always show enemy players
             return;
         end
 
         -- Process non-player hostile units
         addon.HideSpecIcon(nameplate);
-        addon.HideBigDebuffs(nameplate);
+        if addon.PROJECT_MAINLINE then
+            addon.HideBigDebuffs(nameplate);
+        end
+
+        local npcOption
 
         local npcOption, isCritter, iconTexture, highlightKey = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
@@ -409,7 +419,9 @@ function SweepyBoop:SetupNameplateModules()
                 if event == addon.UNIT_AURA then
                     addon.OnNamePlateAuraUpdate(nameplate.UnitFrame, nameplate.UnitFrame.unit, unitAuraUpdateInfo);
                     addon.UpdateClassIconCrowdControl(nameplate, nameplate.UnitFrame, unitAuraUpdateInfo);
-                    addon.UpdateBigDebuffs(nameplate, nameplate.UnitFrame);
+                    if addon.PROJECT_MAINLINE then
+                        addon.UpdateBigDebuffs(nameplate, nameplate.UnitFrame);
+                    end
                 end
 
                 if addon.PROJECT_MAINLINE and ( not IsRestricted() ) then

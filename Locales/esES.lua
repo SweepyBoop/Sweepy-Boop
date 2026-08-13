@@ -405,17 +405,20 @@ local function ApplyTranslations(locale)
     L["Wind Rush Totem"] = "Tótem de Viento impetuoso";
 
     -- Nameplate Big Debuffs
-    L["Big Debuffs"] = "Big Debuffs";
-    L["Show large category-based aura icons beside enemy player nameplates."] = "Show large category-based aura icons beside enemy player nameplates.";
-    L["Show crowd control"] = "Show crowd control";
-    L["Show defensives"] = "Show defensives";
-    L["Show important buffs"] = "Show important buffs";
-    L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Uses Blizzard's nameplate-important buff list instead of a custom spell list.";
-    L["Border style"] = "Border style";
-    L["Plain"] = "Plain";
-    L["Highlight"] = "Highlight";
-    L["Glowing"] = "Glowing";
-    L["Icon spacing"] = "Icon spacing";
+    L["Big Debuffs"] = "Auras grandes";
+    L["Show large category-based aura icons beside enemy player nameplates."] = "Muestra iconos de aura grandes por categoría junto a las placas de nombre de jugadores enemigos.";
+    L["Show crowd control"] = "Mostrar control de masas";
+    L["Show defensives"] = "Mostrar defensivos";
+    L["Show important buffs"] = "Mostrar beneficios importantes";
+    L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Usa la lista de beneficios importantes para placas de nombre de Blizzard en lugar de una lista de hechizos personalizada.";
+    L["Border style"] = "Estilo del borde";
+    L["Plain"] = "Simple";
+    L["Highlight"] = "Resaltado";
+    L["Glowing"] = "Brillante";
+    L["Max icons"] = "Máx. de iconos";
+    L["Max icons per category"] = "Máx. de iconos por categoría";
+    L["Icon spacing"] = "Espaciado entre iconos";
+    L["Target Name"] = "Nombre del objetivo";
 end
 
 ApplyTranslations("esES");

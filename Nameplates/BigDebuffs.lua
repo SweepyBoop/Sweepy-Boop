@@ -1,457 +1,381 @@
 local _, addon = ...;
 
+if not addon.PROJECT_MAINLINE then return end
+
 local AURA_KIND = addon.BIG_DEBUFFS_AURA_KIND;
+local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+local frameLevelOffset = 20;
 
 local RAIL = {
     LEFT = {
-        frameKey = "sweepyBoopBigDebuffsLeftRail",
+        rootKey = "sweepyBoopBigDebuffsLeftRoot",
+        containersKey = "sweepyBoopBigDebuffsLeftContainers",
         anchorPoint = "RIGHT",
         anchorRelativePoint = "LEFT",
+        growthDirection = AnchorUtil.FlowDirection.Left,
         direction = -1,
     },
     RIGHT = {
-        frameKey = "sweepyBoopBigDebuffsRightRail",
+        rootKey = "sweepyBoopBigDebuffsRightRoot",
+        containersKey = "sweepyBoopBigDebuffsRightContainers",
         anchorPoint = "LEFT",
         anchorRelativePoint = "RIGHT",
+        growthDirection = AnchorUtil.FlowDirection.Right,
         direction = 1,
     },
 };
 
-local scratchLeft = {};
-local scratchRight = {};
-local scratchLeftAuraIDs = {};
+local GROUP = {
+    CROWD_CONTROL = {
+        key = "CrowdControl",
+        filter = "HARMFUL|CROWD_CONTROL",
+        configKey = "bigDebuffsShowCrowdControl",
+        auraKind = AURA_KIND.CROWD_CONTROL,
+    },
+    BIG_DEFENSIVE = {
+        key = "BigDefensive",
+        filter = "HELPFUL|BIG_DEFENSIVE",
+        configKey = "bigDebuffsShowDefensives",
+        auraKind = AURA_KIND.DEFENSIVE,
+    },
+    EXTERNAL_DEFENSIVE = {
+        key = "ExternalDefensive",
+        filter = "HELPFUL|EXTERNAL_DEFENSIVE|!BIG_DEFENSIVE",
+        configKey = "bigDebuffsShowDefensives",
+        auraKind = AURA_KIND.DEFENSIVE,
+    },
+    IMPORTANT = {
+        key = "Important",
+        filter = "HELPFUL|IMPORTANT|!BIG_DEFENSIVE|!EXTERNAL_DEFENSIVE",
+        configKey = "bigDebuffsShowImportantBuffs",
+        auraKind = AURA_KIND.IMPORTANT_BUFF,
+    },
+};
 
-local function ResetArray(array)
-    for i = #array, 1, -1 do
-        array[i] = nil;
+local leftGroups = {
+    GROUP.BIG_DEFENSIVE,
+    GROUP.EXTERNAL_DEFENSIVE,
+    GROUP.IMPORTANT,
+};
+local rightGroups = {
+    GROUP.CROWD_CONTROL,
+};
+
+local function GetConfig()
+    return SweepyBoop.db.profile.nameplatesEnemy;
+end
+
+local function Clamp(value, minValue, maxValue)
+    value = tonumber(value) or minValue;
+    if value < minValue then return minValue end
+    if value > maxValue then return maxValue end
+    return value;
+end
+
+local function GetIconSize(config)
+    return Clamp(
+        config.bigDebuffsIconSize,
+        20,
+        64
+    );
+end
+
+local function GetIconCount(config)
+    return Clamp(
+        config.bigDebuffsMaxIcons,
+        1,
+        8
+    );
+end
+
+local function GetIconSpacing(config)
+    return Clamp(
+        config.bigDebuffsSpacing,
+        0,
+        16
+    );
+end
+
+local function IsHighlightStyle(iconStyle)
+    return iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+end
+
+local function IsGlowStyle(iconStyle)
+    return iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
+end
+
+local function CreateHighlightTexture(frame, texturePath, layer, color, alpha)
+    local texture = frame:CreateTexture(nil, layer);
+    texture:SetTexture(texturePath);
+    texture:SetBlendMode("ADD");
+    texture:SetPoint(
+        "TOPLEFT",
+        frame,
+        "TOPLEFT",
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    );
+    texture:SetPoint(
+        "BOTTOMRIGHT",
+        frame,
+        "BOTTOMRIGHT",
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    );
+    texture:SetVertexColor(color[1], color[2], color[3], alpha);
+    return texture;
+end
+
+local function ConfigureCooldown(cooldown, useGlowStyle)
+    cooldown:SetDrawBling(false);
+    cooldown:SetDrawSwipe(true);
+    cooldown:SetDrawEdge(true);
+    cooldown:SetReverse(true);
+    cooldown:SetHideCountdownNumbers(false);
+    cooldown:SetSwipeColor(0, 0, 0, useGlowStyle and 0.5 or 0.55);
+    if cooldown.SetEdgeTexture then
+        cooldown:SetEdgeTexture(addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE);
     end
 end
 
-local function AuraComesFirst(auraA, auraB)
-    if auraA.sweepyBoopKind ~= auraB.sweepyBoopKind then
-        return auraA.sweepyBoopKind < auraB.sweepyBoopKind;
+local function InitializeAuraButton(button, auraKind, iconStyle)
+    local useHighlightStyle = IsHighlightStyle(iconStyle);
+    local useGlowStyle = IsGlowStyle(iconStyle);
+    local color = addon.GetBigDebuffsAuraTint(auraKind, iconStyle);
+
+    button:SetSize(iconBaseSize, iconBaseSize);
+    button:SetMouseMotionEnabled(false);
+
+    local backdrop = button:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(button);
+    backdrop:SetColorTexture(0, 0, 0, 1);
+
+    local icon = button:CreateTexture(nil, "ARTWORK");
+    if useGlowStyle then
+        icon:SetAllPoints(button);
+        icon:SetTexCoord(0, 1, 0, 1);
+    else
+        local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+        icon:SetPoint("TOPLEFT", button, "TOPLEFT", inset, -inset);
+        icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -inset, inset);
+        icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+    end
+    button:SetIcon(icon);
+
+    if useGlowStyle then
+        CreateHighlightTexture(
+            button,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+            "OVERLAY",
+            color,
+            1
+        );
+    elseif useHighlightStyle then
+        CreateHighlightTexture(
+            button,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+            "BORDER",
+            color,
+            0.9
+        );
+        CreateHighlightTexture(
+            button,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+            "OVERLAY",
+            color,
+            1
+        );
+    else
+        local border = button:CreateTexture(nil, "OVERLAY");
+        border:SetPoint("TOPLEFT", button, "TOPLEFT", -1, 1);
+        border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 1, -1);
+        border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+        border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+        border:SetVertexColor(color[1], color[2], color[3], 1);
     end
 
-    return ( auraA.sweepyBoopOrder or 0 ) < ( auraB.sweepyBoopOrder or 0 );
+    local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
+    cooldown:SetAllPoints(icon);
+    ConfigureCooldown(cooldown, useGlowStyle);
+    button:SetDurationCooldown(cooldown);
 end
 
-local function IsTrueOrSecret(value)
-    return addon.IsSecretValue(value) or value;
+local function EnsureRoot(nameplate, railInfo)
+    local root = nameplate[railInfo.rootKey];
+    if root then return root end
+
+    root = CreateFrame("Frame", nil, nameplate);
+    root:SetMouseClickEnabled(false);
+    root:SetIgnoreParentAlpha(true);
+    root:SetFrameStrata("HIGH");
+    root:SetFrameLevel(nameplate:GetFrameLevel() + frameLevelOffset);
+    root:SetSize(1, 1);
+    nameplate[railInfo.rootKey] = root;
+    return root;
 end
 
-local function AddAuraCandidate(target, auraData, kind)
-    if not auraData then return end
-
-    auraData.sweepyBoopKind = kind;
-    auraData.sweepyBoopOrder = #target;
-    table.insert(target, auraData);
-end
-
-local function VisitCurrentAuras(unit, filter, visitor)
-    local auras = C_UnitAuras.GetUnitAuras(unit, filter, nil, Enum.UnitAuraSortRule.Unsorted, Enum.UnitAuraSortDirection.Reverse);
-    if not auras then return end
-
-    for _, auraData in ipairs(auras) do
-        visitor(auraData);
-    end
-end
-
-local function AddCrowdControlAura(auraData)
-    if ( not auraData ) or ( not auraData.spellId ) then return end
-
-    if addon.IsSecretValue(auraData.spellId) or IsTrueOrSecret(C_Spell.IsSpellCrowdControl(auraData.spellId)) then
-        AddAuraCandidate(scratchRight, auraData, AURA_KIND.CROWD_CONTROL);
-    end
-end
-
-local function RememberLeftAura(auraData, kind)
-    AddAuraCandidate(scratchLeft, auraData, kind);
-    if auraData.auraInstanceID and not addon.IsSecretValue(auraData.auraInstanceID) then
-        scratchLeftAuraIDs[auraData.auraInstanceID] = true;
-    end
-end
-
-local function AddBigDefensiveAura(auraData)
-    if ( not auraData ) or ( not auraData.spellId ) then return end
-
-    local isDefensive = addon.IsSecretValue(auraData.spellId) or ( C_UnitAuras.AuraIsBigDefensive and C_UnitAuras.AuraIsBigDefensive(auraData.spellId) );
-    if ( not C_UnitAuras.AuraIsBigDefensive ) or IsTrueOrSecret(isDefensive) then
-        RememberLeftAura(auraData, AURA_KIND.DEFENSIVE);
-    end
-end
-
-local function AddExternalDefensiveAura(auraData)
-    if not auraData then return end
-    if auraData.auraInstanceID and ( not addon.IsSecretValue(auraData.auraInstanceID) ) and scratchLeftAuraIDs[auraData.auraInstanceID] then return end
-
-    RememberLeftAura(auraData, AURA_KIND.DEFENSIVE);
-end
-
-local function GetBlizzardNameplateBuffIDs(nameplate)
-    local frame = nameplate and nameplate.UnitFrame;
-    local auraFrame = frame and frame.AurasFrame;
-    if auraFrame and auraFrame.buffList and auraFrame.buffList.Iterate and ( not auraFrame.IsForbidden or not auraFrame:IsForbidden() ) then
-        return auraFrame.buffList;
-    end
-end
-
-local function AddNameplateImportantBuff(unit, auraInstanceID)
-    if ( not auraInstanceID ) or addon.IsSecretValue(auraInstanceID) then return end
-    if scratchLeftAuraIDs[auraInstanceID] then return end
-
-    local auraData = C_UnitAuras.GetAuraDataByAuraInstanceID(unit, auraInstanceID);
-    if auraData then
-        RememberLeftAura(auraData, AURA_KIND.IMPORTANT_BUFF);
-    end
-end
-
-local function BuildAuraSnapshot(nameplate, unit, config)
-    ResetArray(scratchLeft);
-    ResetArray(scratchRight);
-    wipe(scratchLeftAuraIDs);
-
-    if config.bigDebuffsShowCrowdControl then
-        VisitCurrentAuras(unit, "HARMFUL|CROWD_CONTROL", AddCrowdControlAura);
-    end
-
-    if config.bigDebuffsShowDefensives then
-        VisitCurrentAuras(unit, "HELPFUL|BIG_DEFENSIVE", AddBigDefensiveAura);
-        VisitCurrentAuras(unit, "HELPFUL|EXTERNAL_DEFENSIVE", AddExternalDefensiveAura);
-    end
-
-    if config.bigDebuffsShowImportantBuffs then
-        local buffIDs = GetBlizzardNameplateBuffIDs(nameplate);
-        if buffIDs then
-            buffIDs:Iterate(function(auraInstanceID)
-                AddNameplateImportantBuff(unit, auraInstanceID);
-            end);
-        end
-    end
-
-    table.sort(scratchLeft, AuraComesFirst);
-    table.sort(scratchRight, AuraComesFirst);
-end
-
-local function PositionRail(rail, nameplate, railInfo, config)
+local function ApplyRootLayout(nameplate, railInfo)
+    local config = GetConfig();
+    local root = EnsureRoot(nameplate, railInfo);
     local anchor = nameplate.UnitFrame and nameplate.UnitFrame.healthBar or nameplate;
+    local scale = GetIconSize(config) / iconBaseSize;
     local offsetX = config.bigDebuffsOffsetX or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_X;
     local offsetY = config.bigDebuffsOffsetY or addon.BIG_DEBUFFS_DEFAULTS.OFFSET_Y;
 
-    rail:ClearAllPoints();
-    rail:SetPoint(railInfo.anchorPoint, anchor, railInfo.anchorRelativePoint, railInfo.direction * (2 + offsetX), offsetY);
-    rail.sweepyBoopLastModified = config.lastModified;
+    root:ClearAllPoints();
+    root:SetPoint(
+        railInfo.anchorPoint,
+        anchor,
+        railInfo.anchorRelativePoint,
+        railInfo.direction * (2 + offsetX) / scale,
+        offsetY / scale
+    );
+    root:SetScale(scale);
+    root.sweepyBoopAnchor = anchor;
+    return root;
 end
 
-local function EnsureRail(nameplate, railInfo)
-    local rail = nameplate[railInfo.frameKey];
-    if rail then return rail end
-
-    rail = CreateFrame("Frame", nil, nameplate);
-    rail:SetMouseClickEnabled(false);
-    rail:SetIgnoreParentAlpha(true);
-    rail:SetFrameStrata("HIGH");
-    rail:SetSize(1, 1);
-    rail.sweepyBoopSlots = {};
-    nameplate[railInfo.frameKey] = rail;
-
-    return rail;
+local function AddAuraGroup(container, group, iconStyle)
+    container:AddAuraGroup(group.key, group.filter, {
+        maxFrameCount = GetIconCount(GetConfig()),
+        sortMethod = AuraContainerSortMethod.UnitFrameDebuff,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            InitializeAuraButton(button, group.auraKind, iconStyle);
+        end,
+        layout = {
+            elementSpacing = GetIconSpacing(GetConfig()) * iconBaseSize / GetIconSize(GetConfig()),
+            groupSpacing = GetIconSpacing(GetConfig()) * iconBaseSize / GetIconSize(GetConfig()),
+            lineSpacing = 0,
+            elementWidth = iconBaseSize,
+            elementHeight = iconBaseSize,
+        },
+    });
 end
 
-local function CreateSlot(rail)
-    local slot = CreateFrame("Frame", nil, rail);
-    slot:SetMouseClickEnabled(false);
-    slot:SetIgnoreParentAlpha(true);
-
-    slot.visualFrame = CreateFrame("Frame", nil, slot);
-    slot.visualFrame:SetSize(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE, addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE);
-    slot.visualFrame:SetPoint("CENTER", slot, "CENTER");
-
-    slot.backdrop = slot.visualFrame:CreateTexture(nil, "BACKGROUND");
-    slot.backdrop:SetAllPoints(slot.visualFrame);
-    slot.backdrop:SetColorTexture(0, 0, 0, 1);
-
-    slot.debuffIcon = slot.visualFrame:CreateTexture(nil, "ARTWORK");
-    slot.debuffIcon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
-
-    slot.debuffBorder = slot.visualFrame:CreateTexture(nil, "OVERLAY");
-    slot.debuffBorder:SetPoint("TOPLEFT", slot.visualFrame, "TOPLEFT", -1, 1);
-    slot.debuffBorder:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", 1, -1);
-    slot.debuffBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
-    slot.debuffBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
-
-    slot.highlightFrame = CreateFrame("Frame", nil, slot.visualFrame);
-    slot.highlightFrame:SetAllPoints(slot.visualFrame);
-
-    slot.highlightGlow = slot.highlightFrame:CreateTexture(nil, "BORDER");
-    slot.highlightGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
-    slot.highlightGlow:SetBlendMode("ADD");
-
-    slot.highlightBorder = slot.highlightFrame:CreateTexture(nil, "OVERLAY");
-    slot.highlightBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE);
-    slot.highlightBorder:SetBlendMode("ADD");
-
-    slot.glowIcon = slot.visualFrame:CreateTexture(nil, "ARTWORK");
-    slot.glowIcon:SetAllPoints(slot.visualFrame);
-
-    slot.bigDebuffsCooldown = CreateFrame("Cooldown", nil, slot.visualFrame, "CooldownFrameTemplate");
-    slot.bigDebuffsCooldown:SetHideCountdownNumbers(false);
-    slot.cooldown = slot.bigDebuffsCooldown;
-
-    slot.bigDebuffsCount = slot.visualFrame:CreateFontString(nil, "OVERLAY", "NumberFontNormalSmall");
-    slot.count = slot.bigDebuffsCount;
-
-    return slot;
-end
-
-local function EnsureSlot(rail, index)
-    local slot = rail.sweepyBoopSlots[index];
-    if slot then return slot end
-
-    slot = CreateSlot(rail);
-    rail.sweepyBoopSlots[index] = slot;
-
-    return slot;
-end
-
-local function IsHighlightStyle(config)
-    return addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
-end
-
-local function GetSlotSize(config)
-    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
-    return iconSize, iconSize;
-end
-
-local function GetVisualScale(config)
-    local iconSize = config.bigDebuffsIconSize or addon.BIG_DEBUFFS_DEFAULTS.ICON_SIZE;
-    return iconSize / addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
-end
-
-local function GetHighlightPadding()
-    return addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING;
-end
-
-local function HideHighlightGlow(slot)
-    if slot.highlightGlow then
-        slot.highlightGlow:Hide();
-    end
-    if slot.highlightBorder then
-        slot.highlightBorder:Hide();
-    end
-end
-
-local function ShowHighlightGlow(slot, color, config)
-    local padding = GetHighlightPadding();
-    slot.highlightGlow:SetVertexColor(color[1], color[2], color[3], 0.9);
-    slot.highlightGlow:ClearAllPoints();
-    slot.highlightGlow:SetPoint("TOPLEFT", slot.highlightFrame, "TOPLEFT", -padding, padding);
-    slot.highlightGlow:SetPoint("BOTTOMRIGHT", slot.highlightFrame, "BOTTOMRIGHT", padding, -padding);
-    slot.highlightGlow:Show();
-
-    slot.highlightBorder:SetVertexColor(color[1], color[2], color[3], 1);
-    slot.highlightBorder:ClearAllPoints();
-    slot.highlightBorder:SetPoint("TOPLEFT", slot.highlightFrame, "TOPLEFT", -padding, padding);
-    slot.highlightBorder:SetPoint("BOTTOMRIGHT", slot.highlightFrame, "BOTTOMRIGHT", padding, -padding);
-    slot.highlightBorder:Show();
-end
-
-local function SetSlotStyle(slot, config)
-    local useHighlightStyle = IsHighlightStyle(config);
-    local useGlowStyle = addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
-
-    slot.backdrop:SetShown(true);
-    slot.debuffIcon:SetShown(not useGlowStyle);
-    slot.debuffBorder:SetShown(not useHighlightStyle and not useGlowStyle);
-    if not useHighlightStyle then
-        HideHighlightGlow(slot);
-    end
-    slot.glowIcon:SetShown(useGlowStyle);
-
-    slot.cooldown = slot.bigDebuffsCooldown;
-    slot.count = slot.bigDebuffsCount;
-
-    if useGlowStyle then
-        slot.icon = slot.glowIcon;
-        slot.border = nil;
-        slot.icon:ClearAllPoints();
-        slot.icon:SetAllPoints(slot.visualFrame);
-        slot.icon:SetTexCoord(0, 1, 0, 1);
-    else
-        slot.icon = slot.debuffIcon;
-        slot.border = useHighlightStyle and nil or slot.debuffBorder;
-        slot.icon:ClearAllPoints();
-        slot.icon:SetPoint("TOPLEFT", slot.visualFrame, "TOPLEFT", addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
-        slot.icon:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", -addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET, addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET);
-        slot.icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+local function EnsureContainer(nameplate, railInfo, groups)
+    local iconStyle = addon.GetBigDebuffsIconStyle(GetConfig());
+    local containers = nameplate[railInfo.containersKey];
+    if not containers then
+        containers = {};
+        nameplate[railInfo.containersKey] = containers;
     end
 
-    slot.cooldown:ClearAllPoints();
-    slot.cooldown:SetAllPoints(slot.icon);
-    slot.count:ClearAllPoints();
-    slot.count:SetFontObject(NumberFontNormal);
-    slot.count:SetJustifyH("RIGHT");
-    slot.count:SetPoint("BOTTOMRIGHT", slot.visualFrame, "BOTTOMRIGHT", -5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45, 5 * addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE / 45);
+    local container = containers[iconStyle];
+    if container then return container end
+
+    local root = EnsureRoot(nameplate, railInfo);
+    container = CreateFrame(
+        "AuraContainer",
+        nil,
+        root,
+        "CustomAuraContainerTemplate"
+    );
+    container:SetPoint(railInfo.anchorPoint, root, railInfo.anchorPoint);
+    container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
+    container:SetFlowLayoutAnchorPoint(railInfo.anchorPoint);
+    container:SetFlowLayoutGrowthDirection(
+        railInfo.growthDirection,
+        AnchorUtil.FlowDirection.Down
+    );
+    container:SetUnit("none");
+    container:SetEnabled(false);
+    container:Hide();
+    container:SetAuraProcessingPolicy(
+        CustomAuraContainerAuraProcessingPolicy.ProcessAura,
+        {
+            displayOnlyDispellableDebuffs = false,
+            ignoreBuffs = false,
+            ignoreDebuffs = false,
+            ignoreDispelDebuffs = false,
+        }
+    );
+
+    for _, group in ipairs(groups) do
+        AddAuraGroup(container, group, iconStyle);
+    end
+
+    containers[iconStyle] = container;
+    return container;
 end
 
-local function SetSlotTint(slot, auraData, config)
-    local iconStyle = addon.GetBigDebuffsIconStyle(config);
-    local color = addon.GetBigDebuffsAuraTint(auraData.sweepyBoopKind, iconStyle);
-    if iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
-        HideHighlightGlow(slot);
-        addon.ShowProcGlow(slot, { color[1], color[2], color[3], 1 });
-    elseif iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT then
-        addon.HideProcGlow(slot);
-        ShowHighlightGlow(slot, color, config);
-    else
-        HideHighlightGlow(slot);
-        addon.HideProcGlow(slot);
-        slot.border:SetVertexColor(color[1], color[2], color[3]);
-    end
-end
-
-local function ConfigureSlotCooldown(slot, config)
-    local useGlowStyle = addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
-
-    slot.cooldown:SetDrawBling(false);
-    slot.cooldown:SetDrawSwipe(true);
-    slot.cooldown:SetDrawEdge(true);
-    slot.cooldown:SetReverse(true);
-    if slot.cooldown.SetSwipeColor then
-        slot.cooldown:SetSwipeColor(0, 0, 0, useGlowStyle and 0.5 or 0.55);
-    end
-    if slot.cooldown.SetEdgeTexture then
-        slot.cooldown:SetEdgeTexture(addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE);
-    end
-end
-
-local function SetSlotCooldown(slot, unit, auraData)
-    local durationObject = auraData.auraInstanceID and ( not addon.IsSecretValue(auraData.auraInstanceID) ) and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
-    if durationObject and slot.cooldown.SetCooldownFromDurationObject then
-        slot.cooldown:SetCooldownFromDurationObject(durationObject);
-        slot.cooldown:Show();
+local function ApplyContainerLayout(nameplate, railInfo, container, groups)
+    local config = GetConfig();
+    local root = EnsureRoot(nameplate, railInfo);
+    local anchor = nameplate.UnitFrame and nameplate.UnitFrame.healthBar or nameplate;
+    if container.sweepyBoopLastModified == config.lastModified
+        and root.sweepyBoopAnchor == anchor then
         return;
     end
 
-    if auraData.duration and auraData.expirationTime and ( not addon.IsSecretValue(auraData.duration) ) and ( not addon.IsSecretValue(auraData.expirationTime) ) then
-        slot.cooldown:SetCooldown(auraData.expirationTime - auraData.duration, auraData.duration);
-        slot.cooldown:Show();
-        return;
+    root = ApplyRootLayout(nameplate, railInfo);
+    local spacing = GetIconSpacing(config) / root:GetScale();
+    local maxIcons = GetIconCount(config);
+
+    container:ClearAllPoints();
+    container:SetPoint(railInfo.anchorPoint, root, railInfo.anchorPoint);
+    for _, group in ipairs(groups) do
+        container:SetAuraGroupMaxFrameCount(
+            group.key,
+            config[group.configKey] and maxIcons or 0
+        );
+        container:SetAuraGroupLayout(group.key, {
+            elementSpacing = spacing,
+            groupSpacing = spacing,
+            lineSpacing = 0,
+            elementWidth = iconBaseSize,
+            elementHeight = iconBaseSize,
+        });
     end
-
-    slot.cooldown:SetCooldown(0, 0);
-    slot.cooldown:Hide();
+    container.sweepyBoopLastModified = config.lastModified;
 end
 
-local function SetSlotIcon(slot, icon)
-    if icon then
-        local success = pcall(slot.icon.SetTexture, slot.icon, icon);
-        if success then return end
+local function ActivateContainer(container, unit)
+    if container:GetUnit() ~= unit then
+        container:Hide();
+        container:SetUnit(unit);
+        container:UpdateAllAuras();
     end
-
-    slot.icon:SetTexture(addon.ICON_ID_PVP_CURSOR);
+    container:SetEnabled(true);
+    container:Show();
 end
 
-local function SetSlotCount(slot, applications)
-    if applications and ( not addon.IsSecretValue(applications) ) and applications > 1 then
-        slot.count:SetText(applications);
-        slot.count:Show();
-    else
-        slot.count:Hide();
-    end
-end
+local function HideContainers(containers, exceptContainer)
+    if not containers then return end
 
-local function SetSlotAura(slot, unit, auraData, config)
-    slot:SetSize(GetSlotSize(config));
-    slot.visualFrame:SetScale(GetVisualScale(config));
-    slot.visualFrame:ClearAllPoints();
-    slot.visualFrame:SetPoint("CENTER", slot, "CENTER");
-    SetSlotStyle(slot, config);
-    ConfigureSlotCooldown(slot, config);
-    SetSlotIcon(slot, auraData.icon);
-    SetSlotTint(slot, auraData, config);
-    SetSlotCooldown(slot, unit, auraData);
-
-    SetSlotCount(slot, auraData.applications);
-
-    slot:Show();
-end
-
-local function HideRail(rail)
-    if not rail then return end
-
-    for _, slot in ipairs(rail.sweepyBoopSlots) do
-        HideHighlightGlow(slot);
-        addon.HideProcGlow(slot);
-        slot:Hide();
-    end
-    rail:Hide();
-end
-
-local function PaintRail(rail, railInfo, auras, config, unit)
-    local slotWidth, slotHeight = GetSlotSize(config);
-    local spacing = config.bigDebuffsSpacing or addon.BIG_DEBUFFS_DEFAULTS.SPACING;
-    local slotStep = slotWidth + spacing;
-    local visibleSlots = math.min(#auras, config.bigDebuffsMaxIcons or addon.BIG_DEBUFFS_DEFAULTS.MAX_ICONS);
-
-    rail:SetSize(math.max(visibleSlots, 1) * slotWidth + math.max(visibleSlots - 1, 0) * ( slotStep - slotWidth ), slotHeight);
-
-    for index, slot in ipairs(rail.sweepyBoopSlots) do
-        if index > visibleSlots then
-            HideHighlightGlow(slot);
-            addon.HideProcGlow(slot);
-            slot:Hide();
+    for _, container in pairs(containers) do
+        if container ~= exceptContainer then
+            container:SetEnabled(false);
+            container:Hide();
         end
     end
-
-    for index = 1, visibleSlots do
-        local slot = EnsureSlot(rail, index);
-        local offset = ( index - 1 ) * slotStep;
-
-        slot:ClearAllPoints();
-        if railInfo.direction < 0 then
-            slot:SetPoint("RIGHT", rail, "RIGHT", -offset, 0);
-        else
-            slot:SetPoint("LEFT", rail, "LEFT", offset, 0);
-        end
-
-        SetSlotAura(slot, unit, auras[index], config);
-    end
-
-    rail:SetShown(visibleSlots > 0);
 end
 
 addon.UpdateBigDebuffs = function(nameplate, frame)
     if not addon.PROJECT_MAINLINE then return end
-    if addon.MAINLINE_CORE_FEATURES_ONLY then
-        addon.HideBigDebuffs(nameplate);
-        return;
-    end
     if ( not nameplate ) or ( not frame ) or ( not frame.unit ) then return end
 
-    local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if ( not config.bigDebuffsEnabled ) or ( not UnitIsPlayer(frame.unit) ) or ( not addon.UnitIsHostile(frame.unit) ) then
+    local config = GetConfig();
+    if ( not config.bigDebuffsEnabled )
+        or ( not UnitIsPlayer(frame.unit) )
+        or ( not addon.UnitIsHostile(frame.unit) ) then
         addon.HideBigDebuffs(nameplate);
         return;
     end
 
-    BuildAuraSnapshot(nameplate, frame.unit, config);
-
-    local leftRail = EnsureRail(nameplate, RAIL.LEFT);
-    local rightRail = EnsureRail(nameplate, RAIL.RIGHT);
-    if leftRail.sweepyBoopLastModified ~= config.lastModified then
-        PositionRail(leftRail, nameplate, RAIL.LEFT, config);
-    end
-    if rightRail.sweepyBoopLastModified ~= config.lastModified then
-        PositionRail(rightRail, nameplate, RAIL.RIGHT, config);
-    end
-
-    PaintRail(leftRail, RAIL.LEFT, scratchLeft, config, frame.unit);
-    PaintRail(rightRail, RAIL.RIGHT, scratchRight, config, frame.unit);
+    local leftContainer = EnsureContainer(nameplate, RAIL.LEFT, leftGroups);
+    local rightContainer = EnsureContainer(nameplate, RAIL.RIGHT, rightGroups);
+    HideContainers(nameplate[RAIL.LEFT.containersKey], leftContainer);
+    HideContainers(nameplate[RAIL.RIGHT.containersKey], rightContainer);
+    ApplyContainerLayout(nameplate, RAIL.LEFT, leftContainer, leftGroups);
+    ApplyContainerLayout(nameplate, RAIL.RIGHT, rightContainer, rightGroups);
+    ActivateContainer(leftContainer, frame.unit);
+    ActivateContainer(rightContainer, frame.unit);
 end
 
 addon.HideBigDebuffs = function(nameplate)
     if not nameplate then return end
 
-    HideRail(nameplate.sweepyBoopBigDebuffsLeftRail);
-    HideRail(nameplate.sweepyBoopBigDebuffsRightRail);
+    HideContainers(nameplate[RAIL.LEFT.containersKey]);
+    HideContainers(nameplate[RAIL.RIGHT.containersKey]);
 end

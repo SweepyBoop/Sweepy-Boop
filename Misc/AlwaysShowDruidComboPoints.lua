@@ -3,6 +3,11 @@ local _, addon = ...;
 local function UpdateComboPoints(frame)
     local isCatForm = ( GetShapeshiftForm() == 2 );
     local cp = UnitPower("player", frame.powerType);
+    if addon.IsSecretValue(cp) then
+        frame:Show();
+        return;
+    end
+
     frame:SetShown(isCatForm or ( cp > 0 ) );
 
     for i, point in ipairs(frame.classResourceButtonTable) do
@@ -37,7 +42,9 @@ function SweepyBoop:SetupAlwaysShowDruidComboPoints()
 
         comboPointFrame:HookScript("OnHide", function(frame)
             if ( not SweepyBoop.db.profile.misc.alwaysShowDruidComboPoints ) then return end
-            if ( UnitPower("player", frame.powerType) > 0 ) then
+
+            local cp = UnitPower("player", frame.powerType);
+            if addon.IsSecretValue(cp) or ( cp > 0 ) then
                 frame:Show();
             end
         end);

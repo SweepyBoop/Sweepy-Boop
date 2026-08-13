@@ -481,6 +481,9 @@ function SweepyBoop:OnInitialize()
 
     self:SetupRaidFrameAggroHighlight();
     self:SetupHealerInCrowdControl();
+    self:SetupAlwaysShowDruidComboPoints();
+    self:SetupQueueReminder();
+    self:SetupPrecognitionTracker();
 
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
@@ -489,14 +492,11 @@ function SweepyBoop:OnInitialize()
 
     self:SetupArenaOffensiveIcons();
 
-    self:SetupQueueReminder();
-    self:SetupPrecognitionTracker();
     self:SetupPersonalDR();
     self:SetupCombatIndicator();
     self:SetupClassColorUnitFrames();
     self:SetupHealerIndicator();
     self:SetupHideBlizzArenaFrames();
-    self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
     self:SetupHonorReminder();
     self:SetupMouseCursor();
@@ -519,13 +519,14 @@ function SweepyBoop:RefreshConfig()
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl();
         self:UpdateHealerInCrowdControl();
+        self:SetupAlwaysShowDruidComboPoints();
+        self:SetupPrecognitionTracker();
     end
 
     if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
         self:SetupArenaOffensiveIcons();
         self:SetupCombatIndicator();
         self:SetupClassColorUnitFrames();
-        self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
         self:RefreshHonorReminder();
     end

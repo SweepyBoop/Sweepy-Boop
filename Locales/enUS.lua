@@ -341,7 +341,9 @@ L["Highlight"] = "Highlight";
 L["Glowing"] = "Glowing";
 L["Icon size"] = "Icon size";
 L["Max icons"] = "Max icons";
+L["Max icons per category"] = "Max icons per category";
 L["Icon spacing"] = "Icon spacing";
+L["Target Name"] = "Target Name";
 L["Horizontal offset"] = "Horizontal offset";
 L["Vertical offset"] = "Vertical offset";
 
