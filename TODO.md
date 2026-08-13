@@ -16,3 +16,4 @@ Tasks:
 - [ ] Update vendored Ace3 lib files once a stable 12.1-compatible release is available; currently using selected r1400-alpha files
 - [ ] TBC Classic is missing the option to turn off minimap icon
 - [ ] Re-generate HD icons from extracted in-game art (instead of from the wow-ui-texture repo which is a few years behind)
+- [ ] Enemy nameplate highlight clearly showing bogus icons
