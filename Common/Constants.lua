@@ -100,11 +100,12 @@ addon.BIG_DEBUFFS_ICON_STYLE = {
 };
 
 addon.GetBigDebuffsIconStyle = function(config)
-    if config.bigDebuffsIconStyle == "auraHighlight" then
+    local iconStyle = config.bigDebuffsIconStyle;
+    if iconStyle == "auraHighlight" or iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
         return addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
     end
 
-    return config.bigDebuffsIconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
+    return iconStyle or addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
 end
 
 addon.GetBigDebuffsAuraTint = function(auraKind, iconStyle)
