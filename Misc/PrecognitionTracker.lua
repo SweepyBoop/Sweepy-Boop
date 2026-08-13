@@ -64,18 +64,39 @@ local function CreateIconVisual(frame)
     StyleCooldown(frame.cooldown);
 end
 
-local function CreateStaticGlow(frame)
-    frame.glow = frame:CreateTexture(nil, "OVERLAY");
-    frame.glow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
-    frame.glow:SetBlendMode("ADD");
-    frame.glow:SetPoint("TOPLEFT", frame, "TOPLEFT", -iconSize * 0.2, iconSize * 0.2);
-    frame.glow:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", iconSize * 0.2, -iconSize * 0.2);
-    frame.glow:SetVertexColor(unpack(greenGlowColor));
+local function CreateHighlightTexture(frame, texturePath, layer, alpha)
+    local padding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING;
+    local texture = frame:CreateTexture(nil, layer);
+    texture:SetTexture(texturePath);
+    texture:SetBlendMode("ADD");
+    texture:SetPoint("TOPLEFT", frame, "TOPLEFT", -padding, padding);
+    texture:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", padding, -padding);
+    texture:SetVertexColor(
+        greenGlowColor[1],
+        greenGlowColor[2],
+        greenGlowColor[3],
+        alpha
+    );
+end
+
+local function CreateStaticHighlight(frame)
+    CreateHighlightTexture(
+        frame,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        0.9
+    );
+    CreateHighlightTexture(
+        frame,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        1
+    );
 end
 
 local function InitializeAuraButton(button)
     CreateIconVisual(button);
-    CreateStaticGlow(button);
+    CreateStaticHighlight(button);
     button:SetPoint("CENTER", button:GetParent(), "CENTER");
     button:SetIcon(button.icon);
     button:SetDurationCooldown(button.cooldown);
@@ -123,7 +144,7 @@ local function EnsureTestFrame()
     testFrame = CreateFrame("Frame", nil, EnsureVisualRoot());
     testFrame:SetPoint("CENTER", visualRoot, "CENTER");
     CreateIconVisual(testFrame);
-    CreateStaticGlow(testFrame);
+    CreateStaticHighlight(testFrame);
     testFrame.icon:SetTexture(addon.GetSpellTexture(precognitionSpellID));
     testFrame.cooldown:SetScript("OnCooldownDone", function()
         testFrame:Hide();
