@@ -140,13 +140,29 @@ addon.GetHealerInCrowdControlOptions = function(order)
                         end,
                         hidden = IsHidden,
                     },
-                    unitFramesHeader = {
+                    queueHeader = {
                         order = 12,
+                        type = "header",
+                        name = "",
+                    },
+                    queueReminder = {
+                        order = 13,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " " .. L["PvP Queue Timer"],
+                        desc = L["Shows a timer on arena / battlefield queue pop, and plays an alert when it's about to expire"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:SetupQueueReminder();
+                        end,
+                    },
+                    unitFramesHeader = {
+                        order = 14,
                         type = "header",
                         name = L["Unit frames"],
                     },
                     alwaysShowDruidComboPoints = {
-                        order = 13,
+                        order = 15,
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_mangle")) .. " " .. L["Always show Druid combo points"],

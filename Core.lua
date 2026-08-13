@@ -482,6 +482,7 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAggroHighlight();
     self:SetupHealerInCrowdControl();
     self:SetupAlwaysShowDruidComboPoints();
+    self:SetupQueueReminder();
 
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
@@ -490,7 +491,6 @@ function SweepyBoop:OnInitialize()
 
     self:SetupArenaOffensiveIcons();
 
-    self:SetupQueueReminder();
     self:SetupPrecognitionTracker();
     self:SetupPersonalDR();
     self:SetupCombatIndicator();
