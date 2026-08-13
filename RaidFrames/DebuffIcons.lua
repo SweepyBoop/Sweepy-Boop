@@ -15,9 +15,7 @@ local redHighlightColor = { 1, 0, 0, 1 };
 local cufPool = {};
 local setupComplete = false;
 local isTesting = false;
-local editModePreviewActive = false;
 local restylePending = false;
-local restyleTicker;
 local testTimer;
 
 local function GetConfig()
@@ -220,6 +218,7 @@ local function RestyleContainer(frame, container)
         return;
     end
 
+    restylePending = false;
     ApplyContainerLayout(frame, container);
     local config = GetConfig();
     for _, button in ipairs(frame.sweepyBoopDebuffAuraButtons or {}) do
@@ -404,7 +403,8 @@ local function UpdateFrame(frame, forceRefresh)
 
     ClearTestIcons(frame);
     local unit = frame.displayedUnit or frame.unit;
-    if editModePreviewActive
+    -- Blizzard's fake AuraContainer provider is Edit Mode preview data, not live unit state.
+    if ( not addon.IsUsingRealAuraData() )
         or ( not IsEnabled() )
         or ( not IsFrameVisible(frame) )
         or ( not unit )
@@ -425,20 +425,12 @@ local function RefreshAllFrames(forceRefresh)
     end
 end
 
-local function FlushPendingRestyle()
+local function ReconcilePendingRestyle()
+    -- Normal refreshes style immediately when access is permitted. A restricted
+    -- attempt leaves this dirty flag set until the shared Blizzard restriction
+    -- transition callback wakes one event-driven retry; no polling is required.
     if ( not restylePending ) or ( not CanStyleAuraButtons() ) then return end
-    restylePending = false;
     RefreshAllFrames();
-    if restyleTicker then
-        restyleTicker:Cancel();
-        restyleTicker = nil;
-    end
-end
-
-local function StartRestyleTicker()
-    if restylePending and ( not restyleTicker ) then
-        restyleTicker = C_Timer.NewTicker(1, FlushPendingRestyle);
-    end
 end
 
 local function TrackFrame(frame)
@@ -466,12 +458,11 @@ function SweepyBoop:SetupRaidFrameDebuffIcons()
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
-    eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
-    eventFrame:SetScript("OnEvent", function(_, event, useRealDataProvider)
-        if event == "AURA_DATA_PROVIDER_SWITCH" then
-            editModePreviewActive = useRealDataProvider ~= true;
-        elseif event == addon.PLAYER_REGEN_ENABLED then
-            FlushPendingRestyle();
+    eventFrame:SetScript("OnEvent", function(_, event)
+        if event == addon.PLAYER_REGEN_ENABLED
+            or event == addon.PLAYER_ENTERING_WORLD then
+
+            ReconcilePendingRestyle();
         end
 
         local forceRefresh = event == addon.GROUP_ROSTER_UPDATE;
@@ -483,11 +474,16 @@ function SweepyBoop:SetupRaidFrameDebuffIcons()
             RefreshAllFrames();
         end
     end);
+
+    addon.RegisterAuraDataProviderListener("RaidFrameDebuffIcons", function()
+        RefreshAllFrames();
+    end);
+    addon.RegisterAuraRestrictionListener("RaidFrameDebuffIcons", ReconcilePendingRestyle);
 end
 
 function SweepyBoop:RefreshRaidFrameDebuffIcons()
     RefreshAllFrames();
-    StartRestyleTicker();
+    ReconcilePendingRestyle();
 end
 
 function SweepyBoop:TestRaidFrameDebuffIcons()

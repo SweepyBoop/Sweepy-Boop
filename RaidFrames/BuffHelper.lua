@@ -91,7 +91,6 @@ local playerProfile;
 local activeProfile;
 local cufPool = {};
 local setupComplete = false;
-local editModePreviewActive = false;
 local ApplyLayout;
 
 for _, profile in pairs(profiles) do
@@ -442,7 +441,8 @@ local function UpdateFrame(frame, forceRefresh)
     if ( not frame ) or frame:IsForbidden() then return end
 
     local unit = frame.displayedUnit or frame.unit;
-    if editModePreviewActive
+    -- Blizzard's fake AuraContainer provider is Edit Mode preview data, not live unit state.
+    if ( not addon.IsUsingRealAuraData() )
         or ( not IsProfileEnabled(activeProfile) )
         or ( not IsFrameVisible(frame) )
         or ( not unit )
@@ -513,7 +513,6 @@ function SweepyBoop:SetupRaidFrameAuraModule()
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
     eventFrame:RegisterEvent("PLAYER_CONTROL_LOST");
     eventFrame:RegisterEvent("PLAYER_CONTROL_GAINED");
-    eventFrame:RegisterEvent("AURA_DATA_PROVIDER_SWITCH");
     eventFrame:RegisterEvent("UNIT_AURA");
     eventFrame:SetScript("OnEvent", function(_, event, arg1)
         if event == "UNIT_AURA" then
@@ -522,8 +521,6 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         elseif event == addon.PLAYER_SPECIALIZATION_CHANGED then
             if arg1 ~= "player" then return end
             CheckSpec();
-        elseif event == "AURA_DATA_PROVIDER_SWITCH" then
-            editModePreviewActive = arg1 ~= true;
         end
 
         local isControlTransition = event == addon.UNIT_FACTION
@@ -541,6 +538,10 @@ function SweepyBoop:SetupRaidFrameAuraModule()
         else
             RefreshAllFrames();
         end
+    end);
+
+    addon.RegisterAuraDataProviderListener("RaidFrameAuraModule", function()
+        RefreshAllFrames();
     end);
 end
 
