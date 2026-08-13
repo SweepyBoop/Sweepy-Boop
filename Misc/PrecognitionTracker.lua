@@ -64,18 +64,21 @@ local function CreateIconVisual(frame)
     StyleCooldown(frame.cooldown);
 end
 
+local function CreateStaticGlow(frame)
+    frame.glow = frame:CreateTexture(nil, "OVERLAY");
+    frame.glow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
+    frame.glow:SetBlendMode("ADD");
+    frame.glow:SetPoint("TOPLEFT", frame, "TOPLEFT", -iconSize * 0.2, iconSize * 0.2);
+    frame.glow:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", iconSize * 0.2, -iconSize * 0.2);
+    frame.glow:SetVertexColor(unpack(greenGlowColor));
+end
+
 local function InitializeAuraButton(button)
     CreateIconVisual(button);
+    CreateStaticGlow(button);
     button:SetPoint("CENTER", button:GetParent(), "CENTER");
     button:SetIcon(button.icon);
     button:SetDurationCooldown(button.cooldown);
-
-    button.glow = button:CreateTexture(nil, "OVERLAY");
-    button.glow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
-    button.glow:SetBlendMode("ADD");
-    button.glow:SetPoint("TOPLEFT", button, "TOPLEFT", -iconSize * 0.2, iconSize * 0.2);
-    button.glow:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", iconSize * 0.2, -iconSize * 0.2);
-    button.glow:SetVertexColor(unpack(greenGlowColor));
 end
 
 local function EnsureLiveContainer()
@@ -120,6 +123,7 @@ local function EnsureTestFrame()
     testFrame = CreateFrame("Frame", nil, EnsureVisualRoot());
     testFrame:SetPoint("CENTER", visualRoot, "CENTER");
     CreateIconVisual(testFrame);
+    CreateStaticGlow(testFrame);
     testFrame.icon:SetTexture(addon.GetSpellTexture(precognitionSpellID));
     testFrame.cooldown:SetScript("OnCooldownDone", function()
         testFrame:Hide();
@@ -144,7 +148,6 @@ function SweepyBoop:TestPrecognitionTracker()
     local frame = EnsureTestFrame();
     frame.cooldown:SetCooldown(GetTime(), 4);
     frame.cooldown:Show();
-    addon.ShowProcGlow(frame, greenGlowColor);
     frame:Show();
 end
 
@@ -154,7 +157,6 @@ function SweepyBoop:SetupPrecognitionTracker()
     ApplyVisualRootLayout();
     if testFrame then
         testFrame.cooldown:Clear();
-        addon.HideProcGlow(testFrame);
         testFrame:Hide();
     end
     SetLiveContainerEnabled(GetConfig().precognitionTracker);
