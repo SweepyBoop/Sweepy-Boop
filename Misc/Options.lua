@@ -171,6 +171,84 @@ addon.GetHealerInCrowdControlOptions = function(order)
                             SweepyBoop:SetupAlwaysShowDruidComboPoints();
                         end,
                     },
+                    precognitionTracker = {
+                        order = 16,
+                        type = "toggle",
+                        width = 1.35,
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(377362)) .. " " .. L["Show Precognition on player"],
+                        desc = L["Show a glowing icon while Precognition is active on you."],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:SetupPrecognitionTracker();
+                        end,
+                    },
+                    precognitionTrackerTest = {
+                        order = 17,
+                        type = "execute",
+                        width = 0.4,
+                        name = L["Test"],
+                        func = "TestPrecognitionTracker",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.misc.precognitionTracker;
+                        end,
+                    },
+                    precognitionTrackerOptionsBreak = {
+                        order = 18,
+                        type = "description",
+                        width = "full",
+                        name = "",
+                        hidden = function()
+                            return not SweepyBoop.db.profile.misc.precognitionTracker;
+                        end,
+                    },
+                    precognitionTrackerSize = {
+                        order = 19,
+                        type = "range",
+                        width = 0.8,
+                        min = 20,
+                        max = 100,
+                        step = 1,
+                        name = L["Icon size"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:UpdatePrecognitionTracker();
+                        end,
+                        hidden = function()
+                            return not SweepyBoop.db.profile.misc.precognitionTracker;
+                        end,
+                    },
+                    precognitionTrackerOffsetX = {
+                        order = 20,
+                        type = "range",
+                        width = 0.8,
+                        min = -500,
+                        max = 500,
+                        step = 1,
+                        name = L["X offset"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:UpdatePrecognitionTracker();
+                        end,
+                        hidden = function()
+                            return not SweepyBoop.db.profile.misc.precognitionTracker;
+                        end,
+                    },
+                    precognitionTrackerOffsetY = {
+                        order = 21,
+                        type = "range",
+                        width = 0.8,
+                        min = -500,
+                        max = 500,
+                        step = 1,
+                        name = L["Y offset"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:UpdatePrecognitionTracker();
+                        end,
+                        hidden = function()
+                            return not SweepyBoop.db.profile.misc.precognitionTracker;
+                        end,
+                    },
                 },
             },
         },
