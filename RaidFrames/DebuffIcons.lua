@@ -55,8 +55,7 @@ local function GetMillisecondsThreshold(config)
 end
 
 local function IsEnabled()
-    return GetConfig().raidFrameDebuffIconsEnabled
-        and ( not addon.IsConflictingRaidFrameDebuffAddonLoaded() );
+    return GetConfig().raidFrameDebuffIconsEnabled;
 end
 
 local function CanStyleAuraButtons()
@@ -347,8 +346,7 @@ end
 
 local function ShowTestFrame(frame)
     if frame:IsForbidden()
-        or ( not IsFrameVisible(frame) )
-        or addon.IsConflictingRaidFrameDebuffAddonLoaded() then
+        or ( not IsFrameVisible(frame) ) then
         return;
     end
 
@@ -490,19 +488,11 @@ function SweepyBoop:SetupRaidFrameDebuffIcons()
 end
 
 function SweepyBoop:RefreshRaidFrameDebuffIcons()
-    if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
-        isTesting = false;
-    end
     RefreshAllFrames();
     StartRestyleTicker();
 end
 
 function SweepyBoop:TestRaidFrameDebuffIcons()
-    if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
-        self:HideTestRaidFrameDebuffIcons();
-        return;
-    end
-
     isTesting = true;
     RefreshAllFrames();
     if testTimer then

@@ -51,20 +51,12 @@ local function SetRaidFrameOptionAndRefresh(info, val, refreshFunc)
 end
 
 local function DebuffIconOptionsDisabled()
-    return addon.IsConflictingRaidFrameDebuffAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled );
+    return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled;
 end
 
 local function HealerBuffHelperLayoutDisabled()
-    if addon.IsConflictingHealerBuffHelperAddonLoaded() then return true end
-
     local raidFrames = SweepyBoop.db.profile.raidFrames;
     return ( not raidFrames.druidBuffHelper ) and ( not raidFrames.evokerBuffHelper );
-end
-
-local function HealerBuffHelperConflictDesc()
-    if addon.IsConflictingHealerBuffHelperAddonLoaded() then
-        return "Disabled while RaidFrameAuras is loaded to avoid conflicting raid-frame buff indicators.";
-    end
 end
 
 local function SetAggroHighlightOptionAndRefresh(info, val)
@@ -296,37 +288,6 @@ addon.GetRaidFrameOptions = function(order)
                 type = "group",
                 name = "General",
                 args = {
-                    arenaRaidFrameSortHeader = {
-                        order = 1,
-                        type = "header",
-                        name = "Arena party sorting",
-                    },
-
-                    arenaRaidFrameSortOrder = {
-                        order = 2,
-                        type = "select",
-                        width = 1.4,
-                        name = "Sort order",
-                        desc = function()
-                            if addon.IsConflictingFrameSortAddonLoaded() then
-                                return "Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement.";
-                            end
-
-                            return "Sort Blizzard compact party frames in arenas.";
-                        end,
-                        disabled = addon.IsConflictingFrameSortAddonLoaded,
-                        values = {
-                            [addon.RAID_FRAME_SORT_ORDER.DISABLED] = "Disabled",
-                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_TOP] = "Player on top",
-                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_MID] = "Player in middle",
-                            [addon.RAID_FRAME_SORT_ORDER.PLAYER_BOTTOM] = "Player on bottom",
-                        },
-                        set = function(info, val)
-                            SweepyBoop.db.profile.raidFrames[info[#info]] = val;
-                            SweepyBoop:RefreshArenaRaidFrameSort();
-                        end,
-                    },
-
                     header2 = {
                         order = 5,
                         type = "header",
@@ -417,9 +378,6 @@ addon.GetRaidFrameOptions = function(order)
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_healingtouch")) .. "Resto Druid",
                         desc = function ()
-                            local conflictDesc = HealerBuffHelperConflictDesc();
-                            if conflictDesc then return conflictDesc end
-
                             return table.concat({
                                 addon.L["Enable the helper while playing Restoration Druid."],
                                 "",
@@ -429,7 +387,6 @@ addon.GetRaidFrameOptions = function(order)
                                 "\226\128\162 " .. addon.L["Securely rendered by Blizzard's aura container."],
                             }, "\n");
                         end,
-                        disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                             SweepyBoop:RefreshHealerBuffHelper();
@@ -441,10 +398,8 @@ addon.GetRaidFrameOptions = function(order)
                         width = 1.4,
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE("Interface\\DialogFrame\\UI-Dialog-Icon-AlertNew") .. "Missing-buff warning",
-                        desc = function()
-                            return HealerBuffHelperConflictDesc() or "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.";
-                        end,
-                        disabled = function () return addon.IsConflictingHealerBuffHelperAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.druidBuffHelper ); end,
+                        desc = "For Restoration Druid only: show the warning icon when none of the Swiftmend-consumable buffs are active.",
+                        disabled = function () return not SweepyBoop.db.profile.raidFrames.druidBuffHelper; end,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                             SweepyBoop:RefreshHealerBuffHelper(); -- repaint frames so the warning icon appears/disappears immediately
@@ -464,9 +419,6 @@ addon.GetRaidFrameOptions = function(order)
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("Classicon_evoker")) .. "Preservation Evoker",
                         desc = function ()
-                            local conflictDesc = HealerBuffHelperConflictDesc();
-                            if conflictDesc then return conflictDesc end
-
                             return table.concat({
                                 addon.L["Enable the helper while playing Preservation Evoker."],
                                 "",
@@ -476,7 +428,6 @@ addon.GetRaidFrameOptions = function(order)
                                 "\226\128\162 " .. addon.L["Securely rendered by Blizzard's aura container."],
                             }, "\n");
                         end,
-                        disabled = addon.IsConflictingHealerBuffHelperAddonLoaded,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
                             SweepyBoop:RefreshHealerBuffHelper();
@@ -502,14 +453,7 @@ addon.GetRaidFrameOptions = function(order)
                         width = 0.675,
                         type = "toggle",
                         name = SpellIcon(118) .. " Enabled",
-                        desc = function()
-                            if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
-                                return "Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.";
-                            end
-
-                            return "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
-                        end,
-                        disabled = addon.IsConflictingRaidFrameDebuffAddonLoaded,
+                        desc = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.",
                         set = SetDebuffIconOptionAndRefresh,
                     },
 

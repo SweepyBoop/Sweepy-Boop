@@ -234,14 +234,7 @@ local function ApplyTranslations(locale)
     L["Spell ID"] = "ID de hechizo";
     L["Category"] = "Categoría";
     L["Raid frames"] = "Marcos de banda";
-    L["Arena party sorting"] = "Orden de grupo en arena";
-    L["Sort order"] = "Orden de clasificación";
-    L["Disabled while another frame-sorting addon is loaded to avoid conflicting Blizzard compact frame movement."] = "Desactivado mientras otro addon de ordenación de marcos esté cargado para evitar conflictos con el movimiento de los marcos compactos de Blizzard.";
-    L["Sort Blizzard compact party frames in arenas."] = "Ordena los marcos compactos de grupo de Blizzard en arenas.";
     L["Disabled"] = "Desactivado";
-    L["Player on top"] = "Jugador arriba";
-    L["Player in middle"] = "Jugador en medio";
-    L["Player on bottom"] = "Jugador abajo";
     L["PvP aggro highlight"] = "Resaltado de amenaza PvP";
     L["Arena target"] = "Arena target";
     L["Preview"] = "Preview";
@@ -305,7 +298,6 @@ local function ApplyTranslations(locale)
     L["Echo without a refresh-window glow."] = "Eco sin brillo de ventana de refresco.";
     L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Fila 2, de menor a mayor importancia: Reversión, Aliento de ensueño, Vínculo vital, Dilatación temporal.";
     L["Big Debuff Icons"] = "Iconos grandes de perjuicios";
-    L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "Desactivado mientras haya cargado un addon de perjuicios de marcos de banda en conflicto para evitar iconos de control duplicados.";
     L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Muestra perjuicios grandes de control de masas a la derecha de los marcos tipo banda de Blizzard.";
     L["Max Icons"] = "Iconos máximos";
     L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Número máximo de iconos de perjuicios de control de masas que se muestran junto a cada marco de banda.";
