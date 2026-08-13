@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local auraFilter = "HARMFUL|CROWD_CONTROL";
-local auraGroupKey = "CrowdControl";
+local auraSlotKey = "CrowdControl";
 local iconBaseSize = addon.DEFAULT_ICON_SIZE;
 local borderBaseSize = iconBaseSize * 1.25;
 local testDuration = 8;
@@ -135,12 +135,6 @@ local function EnsureLiveContainer(unit)
     -- visibility to gate dynamic events, and OnShow requests a full aura refresh.
     container:Hide();
     container:SetPoint("CENTER", root, "CENTER");
-    container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
-    container:SetFlowLayoutAnchorPoint("CENTER");
-    container:SetFlowLayoutGrowthDirection(
-        AnchorUtil.FlowDirection.Right,
-        AnchorUtil.FlowDirection.Down
-    );
     container:SetUnit(unit);
     container:SetAuraProcessingPolicy(
         CustomAuraContainerAuraProcessingPolicy.ProcessAura,
@@ -151,18 +145,14 @@ local function EnsureLiveContainer(unit)
             ignoreDispelDebuffs = false,
         }
     );
-    container:AddAuraGroup(auraGroupKey, auraFilter, {
-        maxFrameCount = 1,
+    -- Blizzard AuraSlots select one preferred aura and do not participate in
+    -- flow layout, so the returned frame must be anchored explicitly.
+    local auraButton = container:AddAuraSlot(auraSlotKey, auraFilter, {
         sortMethod = AuraContainerSortMethod.UnitFrameDebuff,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = InitializeAuraButton,
-        layout = {
-            elementSpacing = 0,
-            lineSpacing = 0,
-            elementWidth = iconBaseSize,
-            elementHeight = iconBaseSize,
-        },
     });
+    auraButton:SetPoint("CENTER", container, "CENTER");
 
     liveContainers[unit] = container;
     return container;
