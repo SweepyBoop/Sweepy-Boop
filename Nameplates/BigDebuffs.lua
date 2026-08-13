@@ -272,6 +272,9 @@ local function EnsureContainer(nameplate, railInfo, groups)
         root,
         "CustomAuraContainerTemplate"
     );
+    -- CustomAuraContainerTemplate starts enabled. Blizzard_AuraContainer.lua uses
+    -- visibility to gate dynamic events, and OnShow requests a full aura refresh.
+    container:Hide();
     container:SetPoint(railInfo.anchorPoint, root, railInfo.anchorPoint);
     container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
     container:SetFlowLayoutAnchorPoint(railInfo.anchorPoint);
@@ -279,8 +282,6 @@ local function EnsureContainer(nameplate, railInfo, groups)
         railInfo.growthDirection,
         AnchorUtil.FlowDirection.Down
     );
-    container:SetEnabled(false);
-    container:Hide();
     container:SetAuraProcessingPolicy(
         CustomAuraContainerAuraProcessingPolicy.ProcessAura,
         {
@@ -335,7 +336,6 @@ local function ActivateContainer(container, unit)
         -- Blizzard_AuraContainer.lua: AuraContainerSharedMixin:SetUnit refreshes on token changes.
         container:SetUnit(unit);
     end
-    container:SetEnabled(true);
     container:Show();
 end
 
@@ -344,7 +344,6 @@ local function HideContainers(containers, exceptContainer)
 
     for _, container in pairs(containers) do
         if container ~= exceptContainer then
-            container:SetEnabled(false);
             container:Hide();
         end
     end

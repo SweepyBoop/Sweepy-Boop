@@ -214,6 +214,9 @@ local function EnsureContainers(frame)
         helper.root,
         "CustomAuraContainerTemplate"
     );
+    -- CustomAuraContainerTemplate starts enabled. Blizzard_AuraContainer.lua uses
+    -- visibility to gate dynamic events, and OnShow requests a full aura refresh.
+    helper.primary:Hide();
     helper.primary:SetFrameLevel(helper.root:GetFrameLevel());
     helper.primary:SetPoint(
         "TOPRIGHT",
@@ -228,8 +231,6 @@ local function EnsureContainers(frame)
         AnchorUtil.FlowDirection.Left,
         AnchorUtil.FlowDirection.Down
     );
-    helper.primary:SetEnabled(false);
-    helper.primary:Hide();
     helper.primary:AddAuraGroup("Primary", "HELPFUL", {
         maxFrameCount = 1,
         candidateFilters = {
@@ -257,6 +258,7 @@ local function EnsureContainers(frame)
         helper.root,
         "CustomAuraContainerTemplate"
     );
+    helper.row2:Hide();
     helper.row2:SetFrameLevel(helper.root:GetFrameLevel());
     helper.row2:SetPoint(
         "TOPRIGHT",
@@ -271,8 +273,6 @@ local function EnsureContainers(frame)
         AnchorUtil.FlowDirection.Left,
         AnchorUtil.FlowDirection.Down
     );
-    helper.row2:SetEnabled(false);
-    helper.row2:Hide();
 
     helper.row2Warning = helper.row2:CreateTexture(nil, "BACKGROUND");
     helper.row2Warning:SetTexture(warningTexture);
@@ -360,9 +360,7 @@ local function HideHelper(frame)
     local helper = frame.healerBuffHelper;
     if ( not helper ) then return end
     helper.active = false;
-    helper.primary:SetEnabled(false);
     helper.primary:Hide();
-    helper.row2:SetEnabled(false);
     helper.row2:Hide();
     helper.classBuffAnchor:Hide();
 end
@@ -433,7 +431,6 @@ local function ActivateContainer(container, unit, forceRefresh)
         -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
-    container:SetEnabled(true);
     container:Show();
 end
 

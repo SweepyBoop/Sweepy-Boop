@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local auraFilter = "HARMFUL|CROWD_CONTROL";
-local auraGroupKey = "CrowdControl";
+local auraSlotKey = "CrowdControl";
 local iconBaseSize = addon.DEFAULT_ICON_SIZE;
 local borderBaseSize = iconBaseSize * 1.25;
 local testDuration = 8;
@@ -131,16 +131,11 @@ local function EnsureLiveContainer(unit)
         root,
         "CustomAuraContainerTemplate"
     );
-    container:SetPoint("CENTER", root, "CENTER");
-    container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
-    container:SetFlowLayoutAnchorPoint("CENTER");
-    container:SetFlowLayoutGrowthDirection(
-        AnchorUtil.FlowDirection.Right,
-        AnchorUtil.FlowDirection.Down
-    );
-    container:SetUnit(unit);
-    container:SetEnabled(false);
+    -- CustomAuraContainerTemplate starts enabled. Blizzard_AuraContainer.lua uses
+    -- visibility to gate dynamic events, and OnShow requests a full aura refresh.
     container:Hide();
+    container:SetPoint("CENTER", root, "CENTER");
+    container:SetUnit(unit);
     container:SetAuraProcessingPolicy(
         CustomAuraContainerAuraProcessingPolicy.ProcessAura,
         {
@@ -150,17 +145,16 @@ local function EnsureLiveContainer(unit)
             ignoreDispelDebuffs = false,
         }
     );
-    container:AddAuraGroup(auraGroupKey, auraFilter, {
-        maxFrameCount = 1,
+    -- Blizzard AuraSlots select one preferred aura and do not participate in
+    -- flow layout. Configure the required anchor in initializeFrame, which the
+    -- frame provider invokes before applying secret-aura access restrictions.
+    container:AddAuraSlot(auraSlotKey, auraFilter, {
         sortMethod = AuraContainerSortMethod.UnitFrameDebuff,
         sortDirection = AuraContainerSortDirection.Normal,
-        initializeFrame = InitializeAuraButton,
-        layout = {
-            elementSpacing = 0,
-            lineSpacing = 0,
-            elementWidth = iconBaseSize,
-            elementHeight = iconBaseSize,
-        },
+        initializeFrame = function(button)
+            InitializeAuraButton(button);
+            button:SetPoint("CENTER", container, "CENTER");
+        end,
     });
 
     liveContainers[unit] = container;
@@ -168,7 +162,6 @@ local function EnsureLiveContainer(unit)
 end
 
 local function HideLiveContainer(container)
-    container:SetEnabled(false);
     container:Hide();
 end
 
@@ -180,7 +173,6 @@ local function ActivateLiveContainer(container, unit, forceRefresh)
         -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
-    container:SetEnabled(true);
     container:Show();
 end
 
