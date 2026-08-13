@@ -481,6 +481,7 @@ function SweepyBoop:OnInitialize()
 
     self:SetupRaidFrameAggroHighlight();
     self:SetupHealerInCrowdControl();
+    self:SetupAlwaysShowDruidComboPoints();
 
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
@@ -496,7 +497,6 @@ function SweepyBoop:OnInitialize()
     self:SetupClassColorUnitFrames();
     self:SetupHealerIndicator();
     self:SetupHideBlizzArenaFrames();
-    self:SetupAlwaysShowDruidComboPoints();
     self:SetupRangeChecker();
     self:SetupHonorReminder();
     self:SetupMouseCursor();
@@ -519,6 +519,7 @@ function SweepyBoop:RefreshConfig()
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl();
         self:UpdateHealerInCrowdControl();
+        self:SetupAlwaysShowDruidComboPoints();
     end
 
     if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then

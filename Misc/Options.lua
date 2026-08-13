@@ -140,6 +140,21 @@ addon.GetHealerInCrowdControlOptions = function(order)
                         end,
                         hidden = IsHidden,
                     },
+                    unitFramesHeader = {
+                        order = 12,
+                        type = "header",
+                        name = L["Unit frames"],
+                    },
+                    alwaysShowDruidComboPoints = {
+                        order = 13,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_druid_mangle")) .. " " .. L["Always show Druid combo points"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:SetupAlwaysShowDruidComboPoints();
+                        end,
+                    },
                 },
             },
         },
