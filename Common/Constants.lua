@@ -90,8 +90,9 @@ addon.BIG_DEBUFFS_DEFAULTS = {
 
 addon.BIG_DEBUFFS_ICON_STYLE = {
     DEBUFF_ICON_INSET = 2,
-    DEBUFF_BORDER_TEXTURE = "Interface\\Buttons\\UI-Debuff-Overlays",
-    DEBUFF_BORDER_TEX_COORDS = { 0.296875, 0.5703125, 0, 0.515625 },
+    DEBUFF_BORDER_TEXTURE = "Interface\\AddOns\\SweepyBoop\\Art\\BigDebuffsAuraHighlightBorder",
+    DEBUFF_BORDER_TEX_COORDS = { 0, 1, 0, 1 },
+    DEBUFF_BORDER_PADDING = 7,
     HIGHLIGHT_BORDER_TEXTURE = "Interface\\AddOns\\SweepyBoop\\Art\\BigDebuffsAuraHighlightBorder",
     HIGHLIGHT_GLOW_TEXTURE = "Interface\\AddOns\\SweepyBoop\\Art\\BigDebuffsAuraHighlightGlow",
     HIGHLIGHT_BASE_SIZE = 32,
