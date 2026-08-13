@@ -131,6 +131,9 @@ local function EnsureLiveContainer(unit)
         root,
         "CustomAuraContainerTemplate"
     );
+    -- CustomAuraContainerTemplate starts enabled. Blizzard_AuraContainer.lua uses
+    -- visibility to gate dynamic events, and OnShow requests a full aura refresh.
+    container:Hide();
     container:SetPoint("CENTER", root, "CENTER");
     container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
     container:SetFlowLayoutAnchorPoint("CENTER");
@@ -139,8 +142,6 @@ local function EnsureLiveContainer(unit)
         AnchorUtil.FlowDirection.Down
     );
     container:SetUnit(unit);
-    container:SetEnabled(false);
-    container:Hide();
     container:SetAuraProcessingPolicy(
         CustomAuraContainerAuraProcessingPolicy.ProcessAura,
         {
@@ -168,7 +169,6 @@ local function EnsureLiveContainer(unit)
 end
 
 local function HideLiveContainer(container)
-    container:SetEnabled(false);
     container:Hide();
 end
 
@@ -180,7 +180,6 @@ local function ActivateLiveContainer(container, unit, forceRefresh)
         -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
-    container:SetEnabled(true);
     container:Show();
 end
 

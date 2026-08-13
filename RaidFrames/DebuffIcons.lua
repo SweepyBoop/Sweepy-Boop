@@ -240,6 +240,9 @@ local function EnsureContainer(frame)
         root,
         "CustomAuraContainerTemplate"
     );
+    -- CustomAuraContainerTemplate starts enabled. Blizzard_AuraContainer.lua uses
+    -- visibility to gate dynamic events, and OnShow requests a full aura refresh.
+    container:Hide();
     container:SetFrameLevel(frame:GetFrameLevel() + frameLevelOffset);
     container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
     container:SetFlowLayoutAnchorPoint("LEFT");
@@ -247,8 +250,6 @@ local function EnsureContainer(frame)
         AnchorUtil.FlowDirection.Right,
         AnchorUtil.FlowDirection.Down
     );
-    container:SetEnabled(false);
-    container:Hide();
     container:SetAuraProcessingPolicy(
         CustomAuraContainerAuraProcessingPolicy.ProcessAura,
         {
@@ -281,7 +282,6 @@ end
 local function HideContainer(frame)
     local container = frame.sweepyBoopDebuffAuraContainer;
     if container then
-        container:SetEnabled(false);
         container:Hide();
     end
 end
@@ -389,7 +389,6 @@ local function ActivateContainer(container, unit, forceRefresh)
         -- The same mixin exposes UpdateAllAuras for external same-token occupant changes.
         container:UpdateAllAuras();
     end
-    container:SetEnabled(true);
     container:Show();
 end
 
