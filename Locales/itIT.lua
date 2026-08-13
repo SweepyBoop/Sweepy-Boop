@@ -301,7 +301,6 @@ L["Blessing of the Bronze warning."] = "Avviso Benedizione del Bronzo.";
 L["Echo without a refresh-window glow."] = "Eco senza bagliore nella finestra di rinnovo.";
 L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Riga 2, dal meno al più importante: Reversione, Soffio del Sogno, Vincolo Vitale, Dilatazione Temporale.";
 L["Big Debuff Icons"] = "Icone debuff grandi";
-L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "Disabilitato mentre è caricato un addon debuff per riquadri incursione in conflitto, per evitare icone di controllo duplicate.";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Mostra grandi debuff di controllo a destra dei riquadri stile incursione di Blizzard.";
 L["Max Icons"] = "Icone massime";
 L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Numero massimo di icone debuff di controllo da mostrare accanto a ogni riquadro incursione.";

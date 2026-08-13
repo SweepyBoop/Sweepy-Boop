@@ -43,7 +43,7 @@ local function GetMillisecondsThreshold(config)
 end
 
 local function IsEnabled(config)
-    return config.raidFrameDebuffIconsEnabled and ( not addon.IsConflictingRaidFrameDebuffAddonLoaded() );
+    return config.raidFrameDebuffIconsEnabled;
 end
 
 local function StyleCooldown(cooldown, config)

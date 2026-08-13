@@ -301,7 +301,6 @@ L["Blessing of the Bronze warning."] = "Warnung für Segen der Bronze.";
 L["Echo without a refresh-window glow."] = "Echo ohne Leuchten im Aktualisierungsfenster.";
 L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Reihe 2, vom unwichtigsten zum wichtigsten: Umkehrung, Traumatem, Lebensbund, Zeitdilatation.";
 L["Big Debuff Icons"] = "Große Schwächungszauber-Symbole";
-L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "Deaktiviert, solange ein konkurrierendes Schlachtzugsfenster-Schwächungszauber-Addon geladen ist, um doppelte Kontrolleffekt-Symbole zu vermeiden.";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Zeigt große Kontrolleffekt-Schwächungszauber rechts neben Blizzard-Schlachtzugsfenstern an.";
 L["Max Icons"] = "Max. Symbole";
 L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Maximale Anzahl von Kontrolleffekt-Schwächungszauber-Symbolen, die neben jedem Schlachtzugsfenster angezeigt werden.";

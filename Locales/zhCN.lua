@@ -301,7 +301,6 @@ L["Blessing of the Bronze warning."] = "青铜祝福警告。";
 L["Echo without a refresh-window glow."] = "回响不显示可刷新期间发光。";
 L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "第 2 行，由低到高重要度：逆转、梦境吐息、生命缚誓、时间膨胀。";
 L["Big Debuff Icons"] = "大型减益图标";
-L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "载入冲突的团队框体减益插件时停用，以避免重复显示控制图标。";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "在暴雪团队样式框体右侧显示大型控制减益。";
 L["Max Icons"] = "最大图标数";
 L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "每个团队框体旁显示的控制减益图标最大数量。";

@@ -51,7 +51,7 @@ local function SetRaidFrameOptionAndRefresh(info, val, refreshFunc)
 end
 
 local function DebuffIconOptionsDisabled()
-    return addon.IsConflictingRaidFrameDebuffAddonLoaded() or ( not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled );
+    return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled;
 end
 
 local function HealerBuffHelperLayoutDisabled()
@@ -471,14 +471,7 @@ addon.GetRaidFrameOptions = function(order)
                         width = 0.675,
                         type = "toggle",
                         name = SpellIcon(118) .. " Enabled",
-                        desc = function()
-                            if addon.IsConflictingRaidFrameDebuffAddonLoaded() then
-                                return "Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.";
-                            end
-
-                            return "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
-                        end,
-                        disabled = addon.IsConflictingRaidFrameDebuffAddonLoaded,
+                        desc = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.",
                         set = SetDebuffIconOptionAndRefresh,
                     },
 

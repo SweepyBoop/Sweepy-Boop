@@ -310,7 +310,6 @@ L["Warn when Blessing of the Bronze is missing."] = "Warn when Blessing of the B
 L["Echo without a refresh-window glow."] = "Echo without a refresh-window glow.";
 L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation.";
 L["Big Debuff Icons"] = "Big Debuff Icons";
-L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons.";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
 L["Max Icons"] = "Max Icons";
 L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Maximum number of crowd-control debuff icons to show beside each raid frame.";

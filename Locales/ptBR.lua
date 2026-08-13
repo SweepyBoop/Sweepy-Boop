@@ -296,7 +296,6 @@ L["Blessing of the Bronze warning."] = "Aviso de Bênção do Bronze.";
 L["Echo without a refresh-window glow."] = "Eco sem brilho na janela de renovação.";
 L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Linha 2, do menos ao mais importante: Reversão, Sopro Onírico, Vínculo Vital, Dilatação Temporal.";
 L["Big Debuff Icons"] = "Ícones grandes de penalidades";
-L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "Desativado enquanto um addon conflitante de penalidades em quadros de raide estiver carregado para evitar ícones duplicados de controle.";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Mostra penalidades grandes de controle à direita dos quadros estilo raide da Blizzard.";
 L["Max Icons"] = "Máximo de ícones";
 L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Número máximo de ícones de penalidades de controle a mostrar ao lado de cada quadro de raide.";

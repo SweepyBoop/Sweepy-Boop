@@ -298,7 +298,6 @@ local function ApplyTranslations(locale)
     L["Echo without a refresh-window glow."] = "Eco sin brillo de ventana de refresco.";
     L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Fila 2, de menor a mayor importancia: Reversión, Aliento de ensueño, Vínculo vital, Dilatación temporal.";
     L["Big Debuff Icons"] = "Iconos grandes de perjuicios";
-    L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "Desactivado mientras haya cargado un addon de perjuicios de marcos de banda en conflicto para evitar iconos de control duplicados.";
     L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Muestra perjuicios grandes de control de masas a la derecha de los marcos tipo banda de Blizzard.";
     L["Max Icons"] = "Iconos máximos";
     L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Número máximo de iconos de perjuicios de control de masas que se muestran junto a cada marco de banda.";

@@ -389,10 +389,6 @@ addon.CHARGE_TEXTURE = "Crosshair_Recurring_32"; -- TODO: make it available for 
 addon.CHARGE_TEXTURE_SIZE = 16;
 
 
-addon.IsConflictingRaidFrameDebuffAddonLoaded = function()
-    return C_AddOns.IsAddOnLoaded("MiniCC");
-end
-
 addon.IsConflictingHealerBuffHelperAddonLoaded = function()
     return C_AddOns.IsAddOnLoaded("RaidFrameAuras");
 end

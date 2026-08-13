@@ -301,7 +301,6 @@ L["Blessing of the Bronze warning."] = "청동의 축복 경고.";
 L["Echo without a refresh-window glow."] = "메아리는 갱신 가능 빛남 없이 표시합니다.";
 L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "2행, 낮은 중요도부터 높은 중요도: 회귀, 꿈의 숨결, 생명 결속, 시간 팽창.";
 L["Big Debuff Icons"] = "큰 약화 효과 아이콘";
-L["Disabled while a conflicting raid-frame debuff addon is loaded to avoid duplicate crowd-control icons."] = "중복 군중 제어 아이콘을 피하기 위해 충돌하는 공격대 프레임 약화 효과 애드온이 로드되어 있으면 비활성화됩니다.";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "블리자드 공격대 스타일 프레임 오른쪽에 큰 군중 제어 약화 효과를 표시합니다.";
 L["Max Icons"] = "최대 아이콘";
 L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "각 공격대 프레임 옆에 표시할 군중 제어 약화 효과 아이콘의 최대 개수입니다.";

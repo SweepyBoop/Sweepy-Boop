@@ -192,7 +192,7 @@ local defaults = {
             healerBuffHelperOffsetY = 0,
             druidBuffHelperWarning = false,
             evokerBuffHelper = true,
-            raidFrameDebuffIconsEnabled = true,
+            raidFrameDebuffIconsEnabled = false,
             raidFrameDebuffIconCount = 2,
             raidFrameDebuffIconScale = 0.5,
             raidFrameDebuffIconDispellableScale = 0.5,
@@ -297,6 +297,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.bigDebuffsEnabled = true;
+    defaults.profile.raidFrames.raidFrameDebuffIconsEnabled = true;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSizeSecondary = 28;
