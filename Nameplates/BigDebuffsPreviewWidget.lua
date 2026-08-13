@@ -144,7 +144,7 @@ local function BuildSample(parent)
 
     local nameText = health:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmallOutline");
     nameText:SetPoint("LEFT", health, "LEFT", 8, 0);
-    nameText:SetText("Target Name");
+    nameText:SetText(addon.L["Target Name"]);
     nameText:SetTextColor(1, 0.92, 0.78, 1);
 
     local leftRail = CreateFrame("Frame", nil, sample);

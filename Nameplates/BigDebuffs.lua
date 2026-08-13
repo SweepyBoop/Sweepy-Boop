@@ -1,5 +1,7 @@
 local _, addon = ...;
 
+if not addon.PROJECT_MAINLINE then return end
+
 local AURA_KIND = addon.BIG_DEBUFFS_AURA_KIND;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local frameLevelOffset = 20;
@@ -229,6 +231,7 @@ local function ApplyRootLayout(nameplate, railInfo)
         offsetY / scale
     );
     root:SetScale(scale);
+    root.sweepyBoopAnchor = anchor;
     return root;
 end
 
@@ -298,9 +301,14 @@ end
 
 local function ApplyContainerLayout(nameplate, railInfo, container, groups)
     local config = GetConfig();
-    if container.sweepyBoopLastModified == config.lastModified then return end
+    local root = EnsureRoot(nameplate, railInfo);
+    local anchor = nameplate.UnitFrame and nameplate.UnitFrame.healthBar or nameplate;
+    if container.sweepyBoopLastModified == config.lastModified
+        and root.sweepyBoopAnchor == anchor then
+        return;
+    end
 
-    local root = ApplyRootLayout(nameplate, railInfo);
+    root = ApplyRootLayout(nameplate, railInfo);
     local spacing = GetIconSpacing(config) / root:GetScale();
     local maxIcons = GetIconCount(config);
 
