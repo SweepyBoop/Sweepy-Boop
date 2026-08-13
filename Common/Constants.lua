@@ -389,10 +389,6 @@ addon.CHARGE_TEXTURE = "Crosshair_Recurring_32"; -- TODO: make it available for 
 addon.CHARGE_TEXTURE_SIZE = 16;
 
 
-addon.IsConflictingHealerBuffHelperAddonLoaded = function()
-    return C_AddOns.IsAddOnLoaded("RaidFrameAuras");
-end
-
 addon.INTERFACE_SWEEPY = "interface/addons/SweepyBoop/";
 
 addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";

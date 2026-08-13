@@ -111,9 +111,7 @@ local function GetScale()
 end
 
 local function IsProfileEnabled(profile)
-    return profile
-        and GetConfig()[profile.enabledSetting]
-        and ( not addon.IsConflictingHealerBuffHelperAddonLoaded() );
+    return profile and GetConfig()[profile.enabledSetting];
 end
 
 local function CheckSpec()
