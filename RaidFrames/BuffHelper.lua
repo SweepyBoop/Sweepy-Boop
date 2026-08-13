@@ -359,7 +359,7 @@ ApplyLayout = function(frame, helper)
     );
 end
 
-local function HideHelper(frame)
+local function HideHelper(frame, resetContainers)
     local helper = frame.healerBuffHelper;
     if ( not helper ) then return end
     helper.active = false;
@@ -368,6 +368,11 @@ local function HideHelper(frame)
     helper.row2:SetEnabled(false);
     helper.row2:Hide();
     helper.classBuffAnchor:Hide();
+
+    if resetContainers then
+        helper.primary:SetUnit("none");
+        helper.row2:SetUnit("none");
+    end
 end
 
 local function IsGroupUnit(unit)
@@ -452,13 +457,13 @@ local function UpdateFrame(frame, forceRefresh)
         or ( not unit )
         or ( not UnitExists(unit) )
         or ( not IsGroupUnit(unit) ) then
-        HideHelper(frame);
+        HideHelper(frame, forceRefresh);
         return;
     end
 
     local canAssist = UnitCanAssist("player", unit);
     if addon.IsSecretValue(canAssist) or ( not canAssist ) then
-        HideHelper(frame);
+        HideHelper(frame, forceRefresh);
         return;
     end
 
@@ -497,7 +502,7 @@ local function TrackFrame(frame)
         UpdateFrame(frame);
     elseif cufPool[frame] then
         cufPool[frame] = nil;
-        HideHelper(frame);
+        HideHelper(frame, true);
     end
 end
 
