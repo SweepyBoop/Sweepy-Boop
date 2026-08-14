@@ -140,7 +140,9 @@ if addon.internal then
         addon.ShowNpcHighlight(
             nameplate,
             true,
-            iconTexture or addon.ICON_ID_PVP_CURSOR,
+            iconTexture or addon.GetSpellTexture(
+                addon.PROJECT_MAINLINE and 204336 or 8177
+            ),
             "debug"
         );
         print("SweepyBoop: showing animated NPC highlight on current target");
