@@ -1,19 +1,17 @@
 local _, addon = ...;
 
-local explicitFramePrefixes = {
-    "CompactPartyFrameMember",
-    "CompactArenaFrameMember",
-};
-
 local aggroHighlight = addon.RAID_FRAME_AGGRO_HIGHLIGHT;
-local TEXTURE_WHITE = aggroHighlight.TEXTURE_WHITE;
-local TEXTURE_RAID_ICONS = aggroHighlight.TEXTURE_RAID_ICONS;
-local RAID_ICON_INDICES = aggroHighlight.RAID_ICON_INDICES;
-local MAX_RAID_FRAME_INDEX = addon.MAX_ARENA_SIZE * 2; -- players plus pets
+local markerRenderer = addon.RaidFrameAggroMarkerRenderer;
 
-local trackedFrames = {};
-local targeters = {};
-local classColors = {};
+local frameRecords = setmetatable({}, { __mode = "k" });
+local enemyTargetColorsByIdentity = {};
+local partyTargetColorsByIdentity = {};
+local arenaOpponentRefreshReasons = {
+    seen = true,
+    unseen = true,
+    destroyed = true,
+    cleared = true,
+};
 local wasActive = false;
 local setupComplete = false;
 
@@ -33,17 +31,114 @@ local function GetFrameConfigValue(config, isArenaFrame, key)
     return config[GetFrameConfigPrefix(isArenaFrame) .. key];
 end
 
-local function AddTargeter(unit, isEnemy)
-    -- Arena-frame indicators should only count party-member targeters, not the player's current target.
-    if ( unit == "player" ) or ( unit == "target" ) then
+local function GetReadableUnitNameKey(unit)
+    local name, realm = UnitName(unit);
+    if addon.IsSecretValue(name) or addon.IsSecretValue(realm) then
+        return;
+    end
+    if ( not name ) or ( name == "" ) then
         return;
     end
 
-    if ( not UnitExists(unit) ) then
+    -- UnitName may return secret values when name identity is restricted.
+    -- For readable same-realm units, an omitted realm denotes the current realm.
+    if ( not realm ) or ( realm == "" ) then
+        realm = GetNormalizedRealmName();
+        if addon.IsSecretValue(realm) or ( not realm ) then
+            return;
+        end
+    end
+    return name .. "\031" .. realm;
+end
+
+local function GetFrameUnit(frame)
+    local displayedUnit = frame.displayedUnit;
+    if ( not addon.IsSecretValue(displayedUnit) ) and displayedUnit then
+        return displayedUnit;
+    end
+
+    local unit = frame.unit;
+    if addon.IsSecretValue(unit) then
+        return;
+    end
+    return unit;
+end
+
+local function GetFrameCategory(frame)
+    local groupType = frame.groupType;
+    if addon.IsSecretValue(groupType) or ( not CompactRaidGroupTypeEnum ) then
         return;
     end
 
-    local class = addon.GetUnitClass(unit);
+    if groupType == CompactRaidGroupTypeEnum.Arena then
+        return true;
+    elseif ( groupType == CompactRaidGroupTypeEnum.Party )
+        or ( groupType == CompactRaidGroupTypeEnum.Raid ) then
+
+        return false;
+    end
+end
+
+local function IsArenaUnitToken(unit)
+    if addon.IsSecretValue(unit) or ( not unit ) then
+        return false;
+    end
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if unit == "arena" .. i then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function IsTrackedUnitTarget(unit)
+    if IsArenaUnitToken(unit) then
+        return true;
+    end
+    if addon.IsSecretValue(unit) or ( not unit ) then
+        return false;
+    end
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if unit == "party" .. i then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function IsPlayerUnitToken(unit)
+    if addon.IsSecretValue(unit) or ( not unit ) then
+        return false;
+    end
+
+    return unit == "player"
+        or string.match(unit, "^party%d+$") ~= nil
+        or string.match(unit, "^raid%d+$") ~= nil
+        or string.match(unit, "^arena%d+$") ~= nil;
+end
+
+local function AddTargeter(targetColorsByIdentity, unit, isArenaUnit)
+    -- TODO: For arena units, use Blizzard's arena availability contract so an
+    -- "unseen" transition cannot retain cached unit data from UnitExists.
+    local exists = UnitExists(unit);
+    if addon.IsSecretValue(exists) or ( not exists ) then
+        return;
+    end
+
+    local class;
+    if isArenaUnit then
+        class = addon.GetClassForPlayerOrArena(unit);
+        if addon.IsSecretValue(class) then
+            return;
+        end
+        if not class then
+            class = addon.GetUnitClass(unit);
+        end
+    else
+        class = addon.GetUnitClass(unit);
+    end
     if addon.IsSecretValue(class) then
         return;
     end
@@ -53,189 +148,54 @@ local function AddTargeter(unit, isEnemy)
         return;
     end
 
-    table.insert(targeters, {
-        unit = unit,
-        target = unit .. "target",
-        color = classColor,
-        isEnemy = isEnemy,
-    });
+    local targetIdentity = GetReadableUnitNameKey(unit .. "target");
+    if not targetIdentity then
+        return;
+    end
+
+    local colors = targetColorsByIdentity[targetIdentity];
+    if not colors then
+        colors = {};
+        targetColorsByIdentity[targetIdentity] = colors;
+    end
+    colors[#colors + 1] = classColor;
 end
 
 local function BuildTargeters()
-    wipe(targeters);
-    for i = 1, addon.MAX_ARENA_SIZE do
-        AddTargeter("arena" .. i, true);
-        AddTargeter("party" .. i, false);
-    end
-end
-
-local function IsTrackedUnitTarget(unit)
-    if unit == "player" then
-        return true;
-    end
+    wipe(enemyTargetColorsByIdentity);
+    wipe(partyTargetColorsByIdentity);
 
     for i = 1, addon.MAX_ARENA_SIZE do
-        if ( unit == "arena" .. i ) or ( unit == "party" .. i ) then
-            return true;
-        end
-    end
-
-    return false;
-end
-
-local function IsArenaUnit(unit)
-    if not unit then
-        return false;
-    end
-
-    for i = 1, addon.MAX_ARENA_SIZE do
-        if ( unit == "arena" .. i ) or addon.UnitIsUnitSecretValueSafe(unit, "arena" .. i) then
-            return true;
-        end
-    end
-
-    return false;
-end
-
-local function IsArenaFrame(frame, unit)
-    if IsArenaUnit(unit) then
-        return true;
-    end
-
-    local name = frame and frame.GetName and frame:GetName();
-    return name and string.find(name, "^CompactArenaFrameMember") ~= nil;
-end
-
-local function AddTargetingClassForFrame(classColors, frameUnit, targeter)
-    if addon.UnitIsUnitSecretValueSafe(targeter.target, frameUnit) then
-        table.insert(classColors, targeter.color);
+        AddTargeter(enemyTargetColorsByIdentity, "arena" .. i, true);
+        AddTargeter(partyTargetColorsByIdentity, "party" .. i, false);
     end
 end
 
 local function GetTargetingClasses(frameUnit, isArenaFrame)
-    wipe(classColors);
-    local showEnemyTargeters = not isArenaFrame;
-
-    for i = 1, #targeters do
-        local targeter = targeters[i];
-        if targeter.isEnemy == showEnemyTargeters then
-            AddTargetingClassForFrame(classColors, frameUnit, targeter);
-        end
-    end
-
-    return classColors;
-end
-
-local function NormalizeMarkerShape(shape)
-    return RAID_ICON_INDICES[shape] and shape or "Circle";
-end
-
-local function UnmaskLayer(texture, mask)
-    if mask then
-        mask:Hide();
-        texture:RemoveMaskTexture(mask);
-    end
-end
-
-local function PaintSolidLayer(texture, r, g, b, alpha)
-    texture:SetTexture(TEXTURE_WHITE);
-    texture:SetTexCoord(0, 1, 0, 1);
-    texture:SetVertexColor(r, g, b, alpha);
-    texture:Show();
-end
-
-local function ResizeMarkerLayers(marker, width, height, borderThickness)
-    local inset = borderThickness;
-    local fillWidth = math.max(0, width - ( 2 * inset ));
-    local fillHeight = math.max(0, height - ( 2 * inset ));
-
-    marker.outline:ClearAllPoints();
-    marker.outline:SetAllPoints(marker);
-
-    marker.fill:ClearAllPoints();
-    marker.fill:SetPoint("CENTER", marker, "CENTER", 0, 0);
-    marker.fill:SetSize(fillWidth, fillHeight);
-
-    return fillWidth, fillHeight;
-end
-
-local function MoveRaidMarkerMask(mask, owner, markerIndex, width, height)
-    local column = ( markerIndex - 1 ) % 4;
-    local row = math.floor(( markerIndex - 1 ) / 4);
-
-    mask:SetTexture(TEXTURE_RAID_ICONS, "CLAMP", "CLAMP");
-    mask:SetSize(width * 4, height * 4);
-    mask:ClearAllPoints();
-    mask:SetPoint("TOPLEFT", owner, "TOPLEFT", -column * width, row * height);
-    mask:Show();
-end
-
-local function ApplyRaidMarkerMask(marker, shape, width, height, fillWidth, fillHeight)
-    -- The raid-marker atlas is used only as a silhouette mask; visible pixels come from our solid layers.
-    local markerIndex = RAID_ICON_INDICES[shape];
-    if not markerIndex then
+    local frameIdentity = GetReadableUnitNameKey(frameUnit);
+    if not frameIdentity then
         return;
     end
 
-    if not marker.outlineMask then marker.outlineMask = marker:CreateMaskTexture() end
-    if not marker.fillMask then marker.fillMask = marker:CreateMaskTexture() end
-
-    MoveRaidMarkerMask(marker.outlineMask, marker, markerIndex, width, height);
-    MoveRaidMarkerMask(marker.fillMask, marker.fill, markerIndex, fillWidth, fillHeight);
-
-    marker.outline:AddMaskTexture(marker.outlineMask);
-    marker.fill:AddMaskTexture(marker.fillMask);
+    local targetColorsByIdentity = isArenaFrame
+        and partyTargetColorsByIdentity
+        or enemyTargetColorsByIdentity;
+    return targetColorsByIdentity[frameIdentity];
 end
 
-local function DrawTargetMarker(marker, shape, color, alpha, width, height, borderThickness)
-    UnmaskLayer(marker.outline, marker.outlineMask);
-    UnmaskLayer(marker.fill, marker.fillMask);
-
-    PaintSolidLayer(marker.outline, 0, 0, 0, alpha);
-    PaintSolidLayer(marker.fill, color.r, color.g, color.b, alpha);
-
-    local fillWidth, fillHeight = ResizeMarkerLayers(marker, width, height, borderThickness);
-    ApplyRaidMarkerMask(marker, NormalizeMarkerShape(shape), width, height, fillWidth, fillHeight);
-    marker:SetAlpha(1);
-end
-
-local function EnsureTargetIcon(container, index)
-    if container.icons[index] then
-        return container.icons[index];
+local function OnFrameRecordUpdate(record, elapsed)
+    local lane = record.activeLane;
+    if ( not lane ) or ( not lane.shouldFlash ) then
+        return;
     end
 
-    local marker = CreateFrame("Frame", nil, container);
-    marker.outline = marker:CreateTexture(nil, "BACKGROUND");
-    marker.fill = marker:CreateTexture(nil, "ARTWORK");
-    marker.outline:SetBlendMode("BLEND");
-    marker.fill:SetBlendMode("BLEND");
-    container.icons[index] = marker;
-    return marker;
-end
-
-local function StopDotFlash(container)
-    if container.flashIcons then
-        for i = 1, #container.flashIcons do
-            container.flashIcons[i]:SetAlpha(1);
-        end
-        wipe(container.flashIcons);
+    record.flashElapsed = record.flashElapsed + elapsed;
+    local progress = ( record.flashElapsed % aggroHighlight.FLASH_SECONDS ) / aggroHighlight.FLASH_SECONDS;
+    local pulse = aggroHighlight.FLASH_MIN_ALPHA + ( ( 1 - aggroHighlight.FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
+    local alpha = lane.flashMaxAlpha * pulse;
+    for i = 1, #lane.icons do
+        lane.icons[i]:SetAlpha(alpha);
     end
-
-    container:SetScript("OnUpdate", nil);
-end
-
-local function StartDotFlash(container, maxAlpha)
-    container.flashElapsed = 0;
-    container.flashMaxAlpha = maxAlpha;
-    container:SetScript("OnUpdate", function(self, elapsed)
-        self.flashElapsed = self.flashElapsed + elapsed;
-        local progress = ( self.flashElapsed % aggroHighlight.FLASH_SECONDS ) / aggroHighlight.FLASH_SECONDS;
-        local pulse = aggroHighlight.FLASH_MIN_ALPHA + ( ( 1 - aggroHighlight.FLASH_MIN_ALPHA ) * ( 0.5 + ( 0.5 * math.sin(progress * math.pi * 2) ) ) );
-        local alpha = self.flashMaxAlpha * pulse;
-        for i = 1, #self.flashIcons do
-            self.flashIcons[i]:SetAlpha(alpha);
-        end
-    end);
 end
 
 local function SetTargetIconPoint(icon, container, previousIcon, index, layoutConfig)
@@ -309,16 +269,8 @@ local function ShouldFlashDots(isArenaFrame, iconCount)
         or ( isArenaFrame and ( iconCount == aggroHighlight.ARENA_FRAME_FLASH_TARGETER_COUNT ) );
 end
 
-local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
-    if not frame.customAggroHighlight then
-        local customAggroHighlight = CreateFrame("Frame", nil, frame);
-        customAggroHighlight.icons = {};
-        customAggroHighlight.flashIcons = {};
-        frame.customAggroHighlight = customAggroHighlight;
-    end
-
+local function GetLayoutConfig(isArenaFrame)
     local config = GetConfig();
-    local container = frame.customAggroHighlight;
     local layoutConfig = {
         anchor = GetFrameConfigValue(config, isArenaFrame, "Anchor"),
         relativePoint = GetFrameConfigValue(config, isArenaFrame, "RelativePoint"),
@@ -329,45 +281,113 @@ local function ShowCustomAggroHighlight(frame, classColors, isArenaFrame)
         size = GetFrameConfigValue(config, isArenaFrame, "Size"),
         borderThickness = GetFrameConfigValue(config, isArenaFrame, "BorderThickness"),
         alpha = aggroHighlight.MARKER_ALPHA,
-        shape = NormalizeMarkerShape(GetFrameConfigValue(config, isArenaFrame, "Shape")),
+        shape = markerRenderer.NormalizeShape(GetFrameConfigValue(config, isArenaFrame, "Shape")),
     };
-    container:SetFrameLevel(frame:GetFrameLevel() + aggroHighlight.OVERLAY_FRAME_LEVEL_OFFSET);
-    local iconCount = #classColors;
-    local previousIcon;
-
-    LayoutContainer(container, frame, iconCount, layoutConfig);
-    StopDotFlash(container);
-
-    for i = 1, iconCount do
-        local icon = EnsureTargetIcon(container, i);
-        local width, height = GetIconSize(layoutConfig.shape, layoutConfig);
-        icon:SetAlpha(1);
-        icon:SetSize(width, height);
-        SetTargetIconPoint(icon, container, previousIcon, i, layoutConfig);
-        DrawTargetMarker(icon, layoutConfig.shape, classColors[i], layoutConfig.alpha, width, height, layoutConfig.borderThickness);
-        icon:Show();
-        if ShouldFlashDots(isArenaFrame, iconCount) then
-            table.insert(container.flashIcons, icon);
-        end
-        previousIcon = icon;
-    end
-
-    if #container.flashIcons > 0 then
-        StartDotFlash(container, layoutConfig.alpha);
-    end
-
-    for i = iconCount + 1, #container.icons do
-        container.icons[i]:Hide();
-    end
-
-    container:Show();
+    layoutConfig.signature = table.concat({
+        layoutConfig.anchor,
+        layoutConfig.relativePoint,
+        layoutConfig.growDirection,
+        layoutConfig.offsetX,
+        layoutConfig.offsetY,
+        layoutConfig.spacing,
+        layoutConfig.size,
+        layoutConfig.borderThickness,
+        layoutConfig.shape,
+    }, "\031");
+    return layoutConfig;
 end
 
-local function HideCustomAggroHighlight(frame)
-    if frame.customAggroHighlight then
-        StopDotFlash(frame.customAggroHighlight);
-        frame.customAggroHighlight:Hide();
+local function ConfigureLane(lane, frame, iconCount, isArenaFrame, layoutConfig)
+    LayoutContainer(lane, frame, iconCount, layoutConfig);
+    lane.shouldFlash = ShouldFlashDots(isArenaFrame, iconCount);
+    lane.flashMaxAlpha = layoutConfig.alpha;
+
+    local previousIcon;
+    for i = 1, iconCount do
+        local icon = lane.icons[i] or markerRenderer.CreateMarker(lane);
+        local width, height = GetIconSize(layoutConfig.shape, layoutConfig);
+        SetTargetIconPoint(icon, lane, previousIcon, i, layoutConfig);
+        markerRenderer.ConfigureMarker(icon, layoutConfig.shape, { r = 1, g = 1, b = 1 }, layoutConfig.alpha, width, height, layoutConfig.borderThickness);
+        lane.icons[i] = icon;
+        previousIcon = icon;
     end
+end
+
+local function ConfigureFrameRecord(record, frame, isArenaFrame, layoutConfig)
+    for iconCount = 1, addon.MAX_ARENA_SIZE do
+        ConfigureLane(record.lanes[iconCount], frame, iconCount, isArenaFrame, layoutConfig);
+    end
+    record.isArenaFrame = isArenaFrame;
+    record.layoutSignature = layoutConfig.signature;
+end
+
+local function CreateFrameRecord(frame, isArenaFrame, layoutConfig)
+    if InCombatLockdown() then
+        return;
+    end
+
+    local overlay = CreateFrame("Frame", nil, frame);
+    overlay:EnableMouse(false);
+    overlay:SetFrameLevel(frame:GetFrameLevel() + aggroHighlight.OVERLAY_FRAME_LEVEL_OFFSET);
+
+    local record = {
+        overlay = overlay,
+        lanes = {},
+        flashElapsed = 0,
+    };
+    -- TODO: Attach this handler only while the active lane is flashing, and
+    -- remove it when the record is cleared or switches to a static lane.
+    overlay:SetScript("OnUpdate", function(_, elapsed)
+        OnFrameRecordUpdate(record, elapsed);
+    end);
+    for iconCount = 1, addon.MAX_ARENA_SIZE do
+        local lane = CreateFrame("Frame", nil, overlay);
+        lane.icons = {};
+        lane:SetAlpha(0);
+        lane:Show();
+        record.lanes[iconCount] = lane;
+    end
+
+    ConfigureFrameRecord(record, frame, isArenaFrame, layoutConfig);
+    overlay:Show();
+    return record;
+end
+
+local function ClearFrameRecord(record)
+    if not record then
+        return;
+    end
+
+    for _, lane in pairs(record.lanes) do
+        lane:SetAlpha(0);
+        for i = 1, #lane.icons do
+            lane.icons[i]:SetAlpha(1);
+        end
+    end
+    record.activeLane = nil;
+    record.flashElapsed = 0;
+end
+
+local function ShowCustomAggroHighlight(record, targetingClassColors)
+    local iconCount = #targetingClassColors;
+    local lane = record.lanes[iconCount];
+    if not lane then
+        ClearFrameRecord(record);
+        return;
+    end
+
+    if record.activeLane and record.activeLane ~= lane then
+        record.activeLane:SetAlpha(0);
+    end
+
+    record.flashElapsed = 0;
+    lane:SetAlpha(1);
+    for i = 1, iconCount do
+        local color = targetingClassColors[i];
+        lane.icons[i].fill:SetVertexColor(color.r, color.g, color.b, aggroHighlight.MARKER_ALPHA);
+        lane.icons[i]:SetAlpha(1);
+    end
+    record.activeLane = lane;
 end
 
 local function IsActive()
@@ -376,66 +396,98 @@ local function IsActive()
         and ( IsFrameTypeEnabled(config, false) or IsFrameTypeEnabled(config, true) );
 end
 
-local function UpdateFrame(frame)
-    if frame:IsForbidden() then
-        trackedFrames[frame] = nil;
+local function UpdateFrame(frame, record)
+    local unit = GetFrameUnit(frame);
+    if unit and IsFrameTypeEnabled(GetConfig(), record.isArenaFrame) then
+        local targetingClassColors = GetTargetingClasses(unit, record.isArenaFrame);
+        if targetingClassColors and ( #targetingClassColors > 0 ) then
+            ShowCustomAggroHighlight(record, targetingClassColors);
+            return;
+        end
+    end
+
+    ClearFrameRecord(record);
+end
+
+local function TrackFrame(frame, isArenaFrame, refreshAfterTracking)
+    if ( not frame ) or addon.IsSecretValue(frame) then
         return;
     end
 
-    local unit = frame.displayedUnit or frame.unit;
-    if unit then
-        local isArenaFrame = IsArenaFrame(frame, unit);
-        if ( not IsFrameTypeEnabled(GetConfig(), isArenaFrame) ) then
-            HideCustomAggroHighlight(frame);
+    local forbidden = frame:IsForbidden();
+    if addon.IsSecretValue(forbidden) or forbidden then
+        return;
+    end
+
+    if isArenaFrame == nil then
+        isArenaFrame = GetFrameCategory(frame);
+    end
+    if isArenaFrame == nil then
+        return;
+    end
+
+    local unit = GetFrameUnit(frame);
+    if ( not IsPlayerUnitToken(unit) ) then
+        return;
+    end
+
+    local record = frameRecords[frame];
+    if ( not record ) and ( not wasActive ) then
+        return;
+    end
+
+    local layoutConfig = GetLayoutConfig(isArenaFrame);
+    if not record then
+        record = CreateFrameRecord(frame, isArenaFrame, layoutConfig);
+        if not record then
             return;
         end
+        frameRecords[frame] = record;
+    elseif ( record.isArenaFrame ~= isArenaFrame )
+        or ( record.layoutSignature ~= layoutConfig.signature ) then
 
-        local targetingClassColors = GetTargetingClasses(unit, isArenaFrame);
-        if #targetingClassColors > 0 then
-            ShowCustomAggroHighlight(frame, targetingClassColors, isArenaFrame);
-            return;
+        if not InCombatLockdown() then
+            ClearFrameRecord(record);
+            ConfigureFrameRecord(record, frame, isArenaFrame, layoutConfig);
         end
     end
 
-    HideCustomAggroHighlight(frame);
-end
-
-local function TrackFrame(frame)
-    if frame and ( not frame:IsForbidden() ) then
-        trackedFrames[frame] = true;
-        if wasActive then
-            BuildTargeters();
-            UpdateFrame(frame);
-        end
+    if wasActive and refreshAfterTracking then
+        BuildTargeters();
+        UpdateFrame(frame, record);
     end
 end
 
 local function AddExplicitFrames()
-    for prefixIndex = 1, #explicitFramePrefixes do
-        local prefix = explicitFramePrefixes[prefixIndex];
-        for i = 1, MAX_RAID_FRAME_INDEX do
-            TrackFrame(_G[prefix .. i]);
+    if CompactPartyFrame and CompactPartyFrame.memberUnitFrames then
+        for _, frame in ipairs(CompactPartyFrame.memberUnitFrames) do
+            TrackFrame(frame, false);
         end
+    end
+
+    if CompactArenaFrame and CompactArenaFrame.memberUnitFrames then
+        for _, frame in ipairs(CompactArenaFrame.memberUnitFrames) do
+            TrackFrame(frame, true);
+        end
+    end
+
+    if CompactRaidFrameContainer and CompactRaidFrameContainer.ApplyToFrames then
+        CompactRaidFrameContainer:ApplyToFrames("all", TrackFrame);
     end
 end
 
 local function HideAllFrames()
-    AddExplicitFrames();
-    for frame in pairs(trackedFrames) do
-        if frame:IsForbidden() then
-            trackedFrames[frame] = nil;
-        else
-            HideCustomAggroHighlight(frame);
-        end
+    for _, record in pairs(frameRecords) do
+        ClearFrameRecord(record);
     end
 end
 
 local function UpdateAllFrames()
-    AddExplicitFrames();
     BuildTargeters();
+    AddExplicitFrames();
 
-    for frame in pairs(trackedFrames) do
-        UpdateFrame(frame);
+    for frame, record in pairs(frameRecords) do
+        UpdateFrame(frame, record);
     end
 end
 
@@ -453,25 +505,30 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     if setupComplete then return end
     setupComplete = true;
 
-    hooksecurefunc("CompactUnitFrame_UpdateAll", function (frame)
-        if ( not frame ) or addon.IsSecretValue(frame) or frame:IsForbidden() then return end
-        if ( not IsTrackedUnitTarget(frame.unit) ) and ( not IsTrackedUnitTarget(frame.displayedUnit) ) then return end
-
-        local name = frame.GetName and frame:GetName();
-        if name and string.find(name, "^Compact") then -- CompactPartyFrameMemberN, CompactRaidFrameN, CompactArenaFrameMemberN, ...
-            TrackFrame(frame);
-        end
-    end)
+    -- CompactUnitFrame_SetUnit is Blizzard's assignment point for protected compact frames.
+    -- The post-hook observes assignments. Marker state is stored on addon-owned child regions.
+    hooksecurefunc("CompactUnitFrame_SetUnit", function(frame)
+        TrackFrame(frame, nil, true);
+    end);
 
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    if addon.PROJECT_MAINLINE then -- Between solo shuffle rounds (retail only)
+    eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+    eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
+    if addon.PROJECT_MAINLINE then -- Refresh opponent assignments between Solo Shuffle rounds.
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
         eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
+        eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     end
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
-    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- For cases when stealthy classes appear (we need to run an update before they change target)
-    eventFrame:SetScript("OnEvent", function (_, event, unitId)
+    eventFrame:SetScript("OnEvent", function (_, event, unitId, updateReason)
+        if event == addon.ARENA_OPPONENT_UPDATE
+            and ( ( not IsArenaUnitToken(unitId) )
+                or ( not arenaOpponentRefreshReasons[updateReason] ) ) then
+
+            return;
+        end
+
         if not IsActive() then
             if wasActive then
                 HideAllFrames();

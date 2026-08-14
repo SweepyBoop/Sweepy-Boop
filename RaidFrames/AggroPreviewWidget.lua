@@ -5,9 +5,8 @@ local AceGUI = LibStub and LibStub("AceGUI-3.0", true);
 if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return end
 
 local aggroHighlight = addon.RAID_FRAME_AGGRO_HIGHLIGHT;
+local markerRenderer = addon.RaidFrameAggroMarkerRenderer;
 local TEXTURE_WHITE = aggroHighlight.TEXTURE_WHITE;
-local TEXTURE_RAID_ICONS = aggroHighlight.TEXTURE_RAID_ICONS;
-local RAID_ICON_INDICES = aggroHighlight.RAID_ICON_INDICES;
 
 local previewWidgets = setmetatable({}, { __mode = "k" });
 
@@ -21,64 +20,8 @@ local function GetConfig()
     return SweepyBoop.db.profile.raidFrames;
 end
 
-local function NormalizeShape(shape)
-    return RAID_ICON_INDICES[shape] and shape or "Circle";
-end
-
 local function ConfigValue(keyPrefix, key)
     return GetConfig()[keyPrefix .. key];
-end
-
-local function RemoveMask(texture, mask)
-    if mask then
-        mask:Hide();
-        texture:RemoveMaskTexture(mask);
-    end
-end
-
-local function PrepareLayer(texture, r, g, b, a)
-    texture:SetTexture(TEXTURE_WHITE);
-    texture:SetTexCoord(0, 1, 0, 1);
-    texture:SetVertexColor(r, g, b, a);
-    texture:Show();
-end
-
-local function MoveMask(mask, owner, iconIndex, width, height)
-    local column = ( iconIndex - 1 ) % 4;
-    local row = math.floor(( iconIndex - 1 ) / 4);
-
-    mask:SetTexture(TEXTURE_RAID_ICONS, "CLAMP", "CLAMP");
-    mask:SetSize(width * 4, height * 4);
-    mask:ClearAllPoints();
-    mask:SetPoint("TOPLEFT", owner, "TOPLEFT", -column * width, row * height);
-    mask:Show();
-end
-
-local function DrawPreviewMarker(marker, shape, color, alpha, size, borderThickness)
-    local iconIndex = RAID_ICON_INDICES[NormalizeShape(shape)];
-    local fillSize = math.max(0, size - ( 2 * borderThickness ));
-
-    RemoveMask(marker.outline, marker.outlineMask);
-    RemoveMask(marker.fill, marker.fillMask);
-
-    marker:SetSize(size, size);
-    marker.outline:ClearAllPoints();
-    marker.outline:SetAllPoints(marker);
-    marker.fill:ClearAllPoints();
-    marker.fill:SetPoint("CENTER", marker, "CENTER", 0, 0);
-    marker.fill:SetSize(fillSize, fillSize);
-
-    PrepareLayer(marker.outline, 0, 0, 0, alpha);
-    PrepareLayer(marker.fill, color.r, color.g, color.b, alpha);
-
-    if not marker.outlineMask then marker.outlineMask = marker:CreateMaskTexture() end
-    if not marker.fillMask then marker.fillMask = marker:CreateMaskTexture() end
-
-    MoveMask(marker.outlineMask, marker, iconIndex, size, size);
-    MoveMask(marker.fillMask, marker.fill, iconIndex, fillSize, fillSize);
-    marker.outline:AddMaskTexture(marker.outlineMask);
-    marker.fill:AddMaskTexture(marker.fillMask);
-    marker:Show();
 end
 
 local function EnsureMarker(parent, markers, index)
@@ -86,11 +29,7 @@ local function EnsureMarker(parent, markers, index)
         return markers[index];
     end
 
-    local marker = CreateFrame("Frame", nil, parent);
-    marker.outline = marker:CreateTexture(nil, "BACKGROUND");
-    marker.fill = marker:CreateTexture(nil, "ARTWORK");
-    marker.outline:SetBlendMode("BLEND");
-    marker.fill:SetBlendMode("BLEND");
+    local marker = markerRenderer.CreateMarker(parent);
     markers[index] = marker;
     return marker;
 end
@@ -166,13 +105,13 @@ end
 local function RenderSample(widget, sample, markerCount)
     LayoutPreviewContainer(sample.frame, sample.container, widget.keyPrefix, markerCount);
 
-    local shape = NormalizeShape(ConfigValue(widget.keyPrefix, "Shape"));
+    local shape = markerRenderer.NormalizeShape(ConfigValue(widget.keyPrefix, "Shape"));
     local markerSize = ConfigValue(widget.keyPrefix, "Size");
     local borderThickness = ConfigValue(widget.keyPrefix, "BorderThickness");
     local previousMarker;
     for i = 1, markerCount do
         local marker = EnsureMarker(sample.frame, sample.markers, i);
-        DrawPreviewMarker(marker, shape, sampleColors[i], aggroHighlight.MARKER_ALPHA, markerSize, borderThickness);
+        markerRenderer.ConfigureMarker(marker, shape, sampleColors[i], aggroHighlight.MARKER_ALPHA, markerSize, markerSize, borderThickness);
         PositionMarker(marker, sample.frame, sample.container, previousMarker, i, widget.keyPrefix);
         previousMarker = marker;
     end

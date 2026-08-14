@@ -319,9 +319,7 @@ addon.GetRaidFrameOptions = function(order)
                         max = 2.5,
                         step = 0.05,
                         name = "Icon Scale",
-                        desc = function()
-                            return HealerBuffHelperConflictDesc() or "Adjust all helper icons together from 50% to 250%.";
-                        end,
+                        desc = "Adjust all helper icons together from 50% to 250%.",
                         disabled = HealerBuffHelperLayoutDisabled,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
@@ -337,9 +335,7 @@ addon.GetRaidFrameOptions = function(order)
                         max = 80,
                         step = 1,
                         name = "Offset X",
-                        desc = function()
-                            return HealerBuffHelperConflictDesc() or "Horizontal offset from the helper's default position.";
-                        end,
+                        desc = "Horizontal offset from the helper's default position.",
                         disabled = HealerBuffHelperLayoutDisabled,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
@@ -355,9 +351,7 @@ addon.GetRaidFrameOptions = function(order)
                         max = 80,
                         step = 1,
                         name = "Offset Y",
-                        desc = function()
-                            return HealerBuffHelperConflictDesc() or "Vertical offset from the helper's default position.";
-                        end,
+                        desc = "Vertical offset from the helper's default position.",
                         disabled = HealerBuffHelperLayoutDisabled,
                         set = function(info, val)
                             SweepyBoop.db.profile.raidFrames[info[#info]] = val;
