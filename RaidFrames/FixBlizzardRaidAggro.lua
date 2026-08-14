@@ -1,14 +1,11 @@
 local _, addon = ...;
 
 local aggroHighlight = addon.RAID_FRAME_AGGRO_HIGHLIGHT;
-local TEXTURE_WHITE = aggroHighlight.TEXTURE_WHITE;
-local TEXTURE_RAID_ICONS = aggroHighlight.TEXTURE_RAID_ICONS;
-local RAID_ICON_INDICES = aggroHighlight.RAID_ICON_INDICES;
+local markerRenderer = addon.RaidFrameAggroMarkerRenderer;
 
 local frameRecords = setmetatable({}, { __mode = "k" });
 local enemyTargetColorsByIdentity = {};
 local partyTargetColorsByIdentity = {};
-local classColors = {};
 local wasActive = false;
 local setupComplete = false;
 
@@ -81,10 +78,6 @@ local function IsTrackedUnitTarget(unit)
     if addon.IsSecretValue(unit) or ( not unit ) then
         return false;
     end
-    if unit == "player" then
-        return true;
-    end
-
     for i = 1, addon.MAX_ARENA_SIZE do
         if ( unit == "arena" .. i ) or ( unit == "party" .. i ) then
             return true;
@@ -142,107 +135,15 @@ local function BuildTargeters()
 end
 
 local function GetTargetingClasses(frameUnit, isArenaFrame)
-    wipe(classColors);
-
     local frameIdentity = GetReadableUnitNameKey(frameUnit);
     if not frameIdentity then
-        return classColors;
+        return;
     end
 
     local targetColorsByIdentity = isArenaFrame
         and partyTargetColorsByIdentity
         or enemyTargetColorsByIdentity;
-    local colors = targetColorsByIdentity[frameIdentity];
-    if colors then
-        for i = 1, #colors do
-            classColors[i] = colors[i];
-        end
-    end
-
-    return classColors;
-end
-
-local function NormalizeMarkerShape(shape)
-    return RAID_ICON_INDICES[shape] and shape or "Circle";
-end
-
-local function UnmaskLayer(texture, mask)
-    if mask then
-        mask:Hide();
-        texture:RemoveMaskTexture(mask);
-    end
-end
-
-local function PaintSolidLayer(texture, r, g, b, alpha)
-    texture:SetTexture(TEXTURE_WHITE);
-    texture:SetTexCoord(0, 1, 0, 1);
-    texture:SetVertexColor(r, g, b, alpha);
-    texture:Show();
-end
-
-local function ResizeMarkerLayers(marker, width, height, borderThickness)
-    local inset = borderThickness;
-    local fillWidth = math.max(0, width - ( 2 * inset ));
-    local fillHeight = math.max(0, height - ( 2 * inset ));
-
-    marker.outline:ClearAllPoints();
-    marker.outline:SetAllPoints(marker);
-
-    marker.fill:ClearAllPoints();
-    marker.fill:SetPoint("CENTER", marker, "CENTER", 0, 0);
-    marker.fill:SetSize(fillWidth, fillHeight);
-
-    return fillWidth, fillHeight;
-end
-
-local function MoveRaidMarkerMask(mask, owner, markerIndex, width, height)
-    local column = ( markerIndex - 1 ) % 4;
-    local row = math.floor(( markerIndex - 1 ) / 4);
-
-    mask:SetTexture(TEXTURE_RAID_ICONS, "CLAMP", "CLAMP");
-    mask:SetSize(width * 4, height * 4);
-    mask:ClearAllPoints();
-    mask:SetPoint("TOPLEFT", owner, "TOPLEFT", -column * width, row * height);
-    mask:Show();
-end
-
-local function ApplyRaidMarkerMask(marker, shape, width, height, fillWidth, fillHeight)
-    -- The raid-marker atlas is used only as a silhouette mask; visible pixels come from our solid layers.
-    local markerIndex = RAID_ICON_INDICES[shape];
-    if not markerIndex then
-        return;
-    end
-
-    if not marker.outlineMask then marker.outlineMask = marker:CreateMaskTexture() end
-    if not marker.fillMask then marker.fillMask = marker:CreateMaskTexture() end
-
-    MoveRaidMarkerMask(marker.outlineMask, marker, markerIndex, width, height);
-    MoveRaidMarkerMask(marker.fillMask, marker.fill, markerIndex, fillWidth, fillHeight);
-
-    marker.outline:AddMaskTexture(marker.outlineMask);
-    marker.fill:AddMaskTexture(marker.fillMask);
-end
-
-local function DrawTargetMarker(marker, shape, color, alpha, width, height, borderThickness)
-    UnmaskLayer(marker.outline, marker.outlineMask);
-    UnmaskLayer(marker.fill, marker.fillMask);
-
-    PaintSolidLayer(marker.outline, 0, 0, 0, alpha);
-    PaintSolidLayer(marker.fill, color.r, color.g, color.b, alpha);
-
-    local fillWidth, fillHeight = ResizeMarkerLayers(marker, width, height, borderThickness);
-    ApplyRaidMarkerMask(marker, NormalizeMarkerShape(shape), width, height, fillWidth, fillHeight);
-    marker:SetAlpha(1);
-end
-
-local function CreateTargetIcon(container)
-    local marker = CreateFrame("Frame", nil, container);
-    marker.outline = marker:CreateTexture(nil, "BACKGROUND");
-    marker.fill = marker:CreateTexture(nil, "ARTWORK");
-    marker.outline:SetBlendMode("BLEND");
-    marker.fill:SetBlendMode("BLEND");
-    marker:EnableMouse(false);
-    return marker;
+    return targetColorsByIdentity[frameIdentity];
 end
 
 local function OnFrameRecordUpdate(record, elapsed)
@@ -343,7 +244,7 @@ local function GetLayoutConfig(isArenaFrame)
         size = GetFrameConfigValue(config, isArenaFrame, "Size"),
         borderThickness = GetFrameConfigValue(config, isArenaFrame, "BorderThickness"),
         alpha = aggroHighlight.MARKER_ALPHA,
-        shape = NormalizeMarkerShape(GetFrameConfigValue(config, isArenaFrame, "Shape")),
+        shape = markerRenderer.NormalizeShape(GetFrameConfigValue(config, isArenaFrame, "Shape")),
     };
     layoutConfig.signature = table.concat({
         layoutConfig.anchor,
@@ -366,11 +267,10 @@ local function ConfigureLane(lane, frame, iconCount, isArenaFrame, layoutConfig)
 
     local previousIcon;
     for i = 1, iconCount do
-        local icon = lane.icons[i] or CreateTargetIcon(lane);
+        local icon = lane.icons[i] or markerRenderer.CreateMarker(lane);
         local width, height = GetIconSize(layoutConfig.shape, layoutConfig);
-        icon:SetSize(width, height);
         SetTargetIconPoint(icon, lane, previousIcon, i, layoutConfig);
-        DrawTargetMarker(icon, layoutConfig.shape, { r = 1, g = 1, b = 1 }, layoutConfig.alpha, width, height, layoutConfig.borderThickness);
+        markerRenderer.ConfigureMarker(icon, layoutConfig.shape, { r = 1, g = 1, b = 1 }, layoutConfig.alpha, width, height, layoutConfig.borderThickness);
         lane.icons[i] = icon;
         previousIcon = icon;
     end
@@ -461,7 +361,7 @@ local function UpdateFrame(frame, record)
     local unit = GetFrameUnit(frame);
     if unit and IsFrameTypeEnabled(GetConfig(), record.isArenaFrame) then
         local targetingClassColors = GetTargetingClasses(unit, record.isArenaFrame);
-        if #targetingClassColors > 0 then
+        if targetingClassColors and ( #targetingClassColors > 0 ) then
             ShowCustomAggroHighlight(record, targetingClassColors);
             return;
         end
@@ -470,7 +370,7 @@ local function UpdateFrame(frame, record)
     ClearFrameRecord(record);
 end
 
-local function TrackFrame(frame, isArenaFrame)
+local function TrackFrame(frame, isArenaFrame, refreshAfterTracking)
     if ( not frame ) or addon.IsSecretValue(frame) then
         return;
     end
@@ -513,7 +413,8 @@ local function TrackFrame(frame, isArenaFrame)
         end
     end
 
-    if wasActive then
+    if wasActive and refreshAfterTracking then
+        BuildTargeters();
         UpdateFrame(frame, record);
     end
 end
@@ -543,8 +444,8 @@ local function HideAllFrames()
 end
 
 local function UpdateAllFrames()
-    AddExplicitFrames();
     BuildTargeters();
+    AddExplicitFrames();
 
     for frame, record in pairs(frameRecords) do
         UpdateFrame(frame, record);
@@ -568,7 +469,7 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     -- Blizzard assigns and reassigns protected compact frames through SetUnit.
     -- The post-hook only registers the frame; all mutations remain on SweepyBoop-owned children.
     hooksecurefunc("CompactUnitFrame_SetUnit", function(frame)
-        TrackFrame(frame);
+        TrackFrame(frame, nil, true);
     end);
 
     local eventFrame = CreateFrame("Frame");
