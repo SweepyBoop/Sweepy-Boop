@@ -78,7 +78,7 @@ if addon.PROJECT_MAINLINE then
         [277784]  = "incapacitate", -- Hex (Wicker Mongrel)
         [197214]  = "incapacitate", -- Sundering
         [710]     = "incapacitate", -- Banish
---      [6789]    = "incapacitate", -- Mortal Coil (has no DR)
+        [6789]    = "incapacitate", -- Mortal Coil
         [107079]  = "incapacitate", -- Quaking Palm (Racial, Pandaren)
 
         -- *** Controlled Stun Effects ***
@@ -159,6 +159,7 @@ if addon.PROJECT_MAINLINE then
         [116706]  = "root", -- Disable
         [324382]  = "root", -- Clash
         [64695]   = "root", -- Earthgrab (Totem effect)
+        [285515]  = "root", -- Surge of Power
         --[356738]  = "root", -- Earth Unleashed
         [199042]  = "root", -- Thunderstruck (Protection PvP Talent)
         --[356356]  = "root", -- Warbringer
@@ -180,7 +181,7 @@ if addon.PROJECT_MAINLINE then
         [217824]  = "silence", -- Shield of Virtue
         [15487]   = "silence", -- Silence
         [1330]    = "silence", -- Garrote
---      [196364]  = "silence", -- Unstable Affliction dispel silence (has no DR)
+        [196364]  = "silence", -- Unstable Affliction Silence Effect
 
         -- *** Disarm Weapon Effects ***
         [209749]  = "disarm", -- Faerie Swarm (Balance Honor Talent)
@@ -208,11 +209,12 @@ if addon.PROJECT_MAINLINE then
 
         -- *** Controlled Knockback Effects ***
         -- Note: not every knockback has an aura.
+        [204408]  = "knockback", -- Thunderstorm
         [108199]  = "knockback", -- Gorefiend's Grasp
         [202249]  = "knockback", -- Overrun
         [61391]   = "knockback", -- Typhoon
         [102793]  = "knockback", -- Ursol's Vortex
-        [431620]  = "knockback", -- Upheaval
+        --[431620]  = "knockback", -- Upheaval (has no DR)
         [186387]  = "knockback", -- Bursting Shot
         [236776]  = "knockback", -- Hi-Explosive Trap
         [236777]  = "knockback", -- Hi-Explosive Trap 2
@@ -603,9 +605,7 @@ for spellId, drType in pairs(addon.DRList) do
 end
 
 if addon.PROJECT_MAINLINE then
-    -- These are crowd-control effects, but they do not participate in DR.
-    addon.CrowdControlAuras[6789] = true; -- Mortal Coil
-    addon.CrowdControlAuras[196364] = true; -- Unstable Affliction dispel silence
+    -- Solar Beam is crowd control, but it does not participate in DR.
     addon.CrowdControlAuras[81261] = true; -- Solar Beam silence aura
 end
 
