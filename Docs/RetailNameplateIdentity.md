@@ -4,6 +4,149 @@ This document summarizes the Retail 12.1 investigation into reliable enemy-namep
 
 Source snapshot investigated: Retail `12.1.0.69273`.
 
+## AI Agent Handoff
+
+### Objective
+
+Improve Retail enemy-minion nameplate handling without displaying incorrect Grounding Totem, Tremor Totem, Capacitor Totem, Psyfiend, or other summon icons.
+
+The reliability requirement is strict:
+
+- A missing highlight is preferable to a wrong specific icon.
+- Unknown or secret identity must fail open by leaving the unit visible.
+- Do not introduce cast/channel/timing correlation as identity.
+- Do not infer secure aura-container occupancy through frame state.
+
+### Repository state
+
+Repository:
+
+- `c:\Users\kunhouseliu\Documents\GitHub\Sweepy-Boop`
+
+Blizzard source:
+
+- `c:\Users\kunhouseliu\Documents\GitHub\wow-ui-source`
+
+Topic branch at the time this document was written:
+
+- `nameplate-highlight-explore`
+
+The arena-player resolver work is already landed on `main`. It uses readable normalized name and realm and has passed arena and Solo Shuffle testing. Do not replace it with class/race/honor inference or `UnitIsUnit("nameplateN", "arenaN")`.
+
+### Current unresolved behavior
+
+The current Mainline classifier is in:
+
+- `c:\Users\kunhouseliu\Documents\GitHub\Sweepy-Boop\Common\NpcData.lua`
+  - `GetFirstAuraMatching`
+  - `GetPriorityAuraIcon`
+  - `ClassifyMainlineNpc`
+
+Current behavior:
+
+1. Require a readable `UnitIsMinion` result.
+2. Preserve other players' pets and known Shaman primary pets.
+3. Read the first `HELPFUL|IMPORTANT` aura.
+4. If present, return `NpcOption.Highlight` with that aura icon.
+5. Otherwise preserve the current target and hide the remaining confirmed minion.
+
+Problem:
+
+- An important helpful aura is not summon identity.
+- An unrelated important buff can produce a bogus NPC highlight icon.
+- Absence of a readable important aura does not prove that a minion is disposable.
+
+The renderer is in:
+
+- `c:\Users\kunhouseliu\Documents\GitHub\Sweepy-Boop\Nameplates\NameplateFilter.lua`
+
+The caller and nameplate lifecycle are in:
+
+- `c:\Users\kunhouseliu\Documents\GitHub\Sweepy-Boop\Nameplates\Nameplates.lua`
+
+### Verified runtime facts
+
+- `UnitName("arenaN")` and enemy-player `UnitName("nameplateN")` are readable inside arenas.
+- Grounding Totem spell ID `204336` reports `ContextuallySecret` (`2`).
+- Tremor Totem spell ID `8143` reports `ContextuallySecret` (`2`).
+- `HELPFUL|IMPORTANT` is too broad for summon identity.
+- `CustomAuraContainer` exact spell-ID filtering is not reliable for contextually secret helpful auras on hostile/non-assistable units.
+- No public hostile-totem API exists. Totem-slot APIs describe only the local player's managed totems.
+- No exact non-aura join exists between an observed enemy summon cast and the spawned `nameplateN`.
+
+### Rejected approaches
+
+Do not implement these as exact identity:
+
+- Any channel means Psyfiend.
+- Any cast means Capacitor Totem.
+- Any important helpful aura means Grounding Totem.
+- The next minion nameplate after a shaman cast is that summoned totem.
+- Unit model, health, duration, insertion order, or owner class identifies a summon.
+- A secret texture or secure button's shown state can be read back as identity.
+- `candidateFilters.includeSpellIDs` is an exact hostile-helpful whitelist for contextually secret auras.
+
+### Recommended next task
+
+Refactor Mainline NPC visibility and highlighting so aura presentation is not used as unit identity.
+
+Conservative implementation direction:
+
+1. Remove the `GetPriorityAuraIcon` decision from `ClassifyMainlineNpc`.
+2. Preserve any unit whose identity or classification is unknown or secret.
+3. Preserve confirmed other-player pets, known primary pets, valuable classifications, marked units, and readable target/focus matches.
+4. Decide whether confirmed `UnitClassification(unit) == "minus"` is narrow enough for automatic suppression.
+5. Leave other uncertain minions visible and unhighlighted.
+6. Keep exact NPC-ID rules only in environments where identity is readable.
+7. If a generic marker is retained, label it visually and semantically as a generic minion marker, never as a specific or important summon.
+
+Do not start implementation without confirming the desired visibility policy. The main product decision still open is:
+
+> Should Retail automatically hide only confirmed minus units, or should it leave every uncertain non-pet minion visible?
+
+### Acceptance criteria
+
+A proposed implementation should satisfy all of the following:
+
+- No specific summon icon is produced from a generic aura, cast, or channel.
+- Unknown and secret values never cause an important unit to be hidden.
+- Primary pets remain visible.
+- Current target remains visible when the comparison is readable.
+- Nameplate frame reuse clears all addon-owned highlight state.
+- Classic/non-Mainline exact NPC-ID behavior is unchanged.
+- Restricted PvP code never compares, concatenates, indexes, or branches on a secret value.
+- In-game tests cover arena, battleground, target changes, nameplate recycling, and at least Grounding and Tremor Totems.
+
+### Useful in-game commands
+
+Check aura secrecy metadata:
+
+```text
+/dump C_Secrets.GetSpellAuraSecrecy(204336)
+/dump C_Secrets.GetSpellAuraSecrecy(8143)
+```
+
+Check whether a targeted unit name is readable:
+
+```text
+/run local n,r=UnitName("target"); print("name secret:",issecretvalue(n),"realm secret:",issecretvalue(r))
+```
+
+Inspect readable helpful aura IDs outside restricted PvP:
+
+```text
+/run AuraUtil.ForEachAura("target","HELPFUL",nil,function(a) local s=C_Secrets.GetSpellAuraSecrecy(a.spellId) print(a.spellId,a.name,s,s==0 and "NeverSecret" or s==1 and "AlwaysSecret" or "ContextuallySecret") end)
+```
+
+### Agent reading order
+
+1. Read this handoff section.
+2. Read `Common\NpcData.lua` Mainline classifier.
+3. Read `Nameplates\NameplateFilter.lua` renderer lifecycle.
+4. Read `Nameplates\Nameplates.lua` NPC caller and nameplate add/remove paths.
+5. Consult the detailed findings below before proposing a new identity signal.
+6. Inspect Blizzard contracts directly rather than assuming an API declassifies protected data.
+
 ## Summary
 
 Retail exposes enough readable information to classify a hostile unit broadly, but not enough to identify a hostile non-player summon exactly in restricted PvP.
