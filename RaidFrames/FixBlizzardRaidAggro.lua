@@ -97,13 +97,22 @@ local function IsPlayerUnitToken(unit)
         or string.match(unit, "^arena%d+$") ~= nil;
 end
 
-local function AddTargeter(targetColorsByIdentity, unit)
+local function AddTargeter(targetColorsByIdentity, unit, isArenaUnit)
     local exists = UnitExists(unit);
     if addon.IsSecretValue(exists) or ( not exists ) then
         return;
     end
 
-    local class = addon.GetUnitClass(unit);
+    local class;
+    if isArenaUnit then
+        class = addon.GetClassForPlayerOrArena(unit);
+    else
+        class = addon.GetUnitClass(unit);
+    end
+    if addon.IsSecretValue(class) then
+        return;
+    end
+
     local classColor = class and RAID_CLASS_COLORS[class];
     if not classColor then
         return;
@@ -127,8 +136,8 @@ local function BuildTargeters()
     wipe(partyTargetColorsByIdentity);
 
     for i = 1, addon.MAX_ARENA_SIZE do
-        AddTargeter(enemyTargetColorsByIdentity, "arena" .. i);
-        AddTargeter(partyTargetColorsByIdentity, "party" .. i);
+        AddTargeter(enemyTargetColorsByIdentity, "arena" .. i, true);
+        AddTargeter(partyTargetColorsByIdentity, "party" .. i, false);
     end
 end
 
