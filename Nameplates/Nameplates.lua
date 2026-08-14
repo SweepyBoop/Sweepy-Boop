@@ -118,7 +118,8 @@ local function GetArenaNameplateNumber(frame)
     if not SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then return end
 
     if addon.PROJECT_MAINLINE then
-        -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
+        -- Retail 12.1 keeps queried player names readable in PvP even when broader
+        -- unit identity is secret, so resolve arena slots by normalized name and realm.
         if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
             return addon.GetArenaNumber(frame.unit);
         end
@@ -275,7 +276,7 @@ local function UpdateWidgets(nameplate, frame)
         if UnitIsPlayer(frame.unit) then
             -- For TBC, no spec/healer detection for enemies.
             -- For MoP Classic, use spec icons from tooltip.
-            -- For Retail, use GetArenaOpponentSpec with inferred arena numbers.
+            -- For Retail, use GetArenaOpponentSpec with name-matched arena numbers.
             local shouldShowSpecIcon;
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
             if addon.PROJECT_TBC then
@@ -351,9 +352,11 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_CHANNEL_STOP, unpack(retailNameplateUnits));
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        -- Arena slot fingerprint cache: the comp only changes on a new arena / shuffle round
-        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        -- CompactUnitFrame_UpdateName should refresh arena numbers when opponent names
+        -- become available. If numbers or spec icons still miss visibility/shuffle updates,
+        -- register ARENA_OPPONENT_UPDATE and refresh visible frames with UpdateWidgets and
+        -- UpdateArenaNameplateNumber.
+        -- eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
     else
         eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
     end
@@ -449,6 +452,8 @@ function SweepyBoop:SetupNameplateModules()
         end)
     end
 
+    -- This is the normal repaint path after an arena identity-cache reset. It updates
+    -- number text directly; spec icons are refreshed by the ordinary widget update paths.
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if IsForbiddenSafe(frame) then return end
 

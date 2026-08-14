@@ -54,167 +54,77 @@ addon.GetUnitClass = function(unitId)
     return class;
 end
 
--- Arena-safe unit resolver ----------------------------------------------------
--- On mainline, arena units are PvP-restricted: UnitGUID / UnitIsUnit can return
--- secret values. Use non-secret identity attributes instead when exact identity
--- APIs are unsafe or unavailable.
-local function GetUnitArenaFingerprint(unit)
-    if ( not UnitExists(unit) ) then return end
-
-    local class = UnitClassBase(unit);
-    local race = select(2, UnitRace(unit));
-    local sex = UnitSex(unit);
-    local honor = UnitHonorLevel(unit);
-    if addon.IsSecretValue(class)
-        or addon.IsSecretValue(race)
-        or addon.IsSecretValue(sex)
-        or addon.IsSecretValue(honor) then
-        return;
-    end
-    if ( not class ) then return end
-
-    return class, race, sex, honor; -- race file is locale-independent
-end
-
-local partySlotPrintCache = {};
-
-local function IsPartySlotUnit(unit)
-    if unit == "player" then
-        return true;
-    end
-
-    for i = 1, addon.MAX_ARENA_SIZE do
-        if unit == "party" .. i then
-            return true;
-        end
-    end
-
-    return false;
-end
-
-local function GetCachedPartySlotPrint(unit)
-    if not IsPartySlotUnit(unit) then
-        return nil;
-    end
-
-    local cached = partySlotPrintCache[unit];
-    if cached then return cached end
-
-    local class, race, sex, honor = GetUnitArenaFingerprint(unit);
-    if ( not class ) then return nil end
-
-    local fp = { class = class, race = race, sex = sex, honor = honor };
-    if race and sex and honor then
-        partySlotPrintCache[unit] = fp;
-    end
-    return fp;
-end
-
-local function GetUnitArenaFingerprintCached(unit)
-    local cached = GetCachedPartySlotPrint(unit);
-    if cached then
-        return cached.class, cached.race, cached.sex, cached.honor;
-    end
-
-    return GetUnitArenaFingerprint(unit);
-end
-
 addon.UnitIsUnitReadable = function(unitA, unitB)
     local isSameUnit = UnitIsUnit(unitA, unitB);
     if addon.IsSecretValue(isSameUnit) then return false end
     return isSameUnit;
 end
 
-addon.UnitIsUnitSecretValueSafe = function(unitA, unitB)
-    if ( not addon.PROJECT_MAINLINE ) then
-        return UnitIsUnit(unitA, unitB);
+-- UnitName uses SecretWhenUnitNameIdentityRestricted and is allowed for tainted
+-- callers. Blizzard's Retail 12.1 predicate exempts queried player units in PvP,
+-- so arena opponents can be matched by readable name and realm even though GUID
+-- identity and UnitIsUnit comparisons remain unavailable.
+local function GetReadableUnitNameKey(unit)
+    local name, realm = UnitName(unit);
+    if addon.IsSecretValue(name) or addon.IsSecretValue(realm) then
+        return;
+    end
+    if ( not name ) or ( name == "" ) then
+        return;
     end
 
-    local classA, raceA, sexA, honorA = GetUnitArenaFingerprintCached(unitA);
-    if ( not classA ) then return false end
-
-    local classB, raceB, sexB, honorB = GetUnitArenaFingerprintCached(unitB);
-    if ( not classB ) then return false end
-
-    return classA == classB
-        and raceA == raceB
-        and sexA == sexB
-        and honorA == honorB;
-end
-
--- Per-slot fingerprint cache. The arena1/2/3 -> player identity is fixed for a
--- round, so complete slot fingerprints can be cached until the comp changes.
-local arenaSlotPrintCache = {};
-
-addon.ResetUnitIdentityPrintCaches = function()
-    wipe(arenaSlotPrintCache);
-    wipe(partySlotPrintCache);
-end
-
-addon.ResetArenaSlotPrintCache = addon.ResetUnitIdentityPrintCaches;
-
-local function GetArenaSlotPrint(i)
-    local cached = arenaSlotPrintCache[i];
-    if cached then return cached end
-
-    local class, race, sex, honor = GetUnitArenaFingerprint("arena" .. i);
-    if ( not class ) then
-        -- Out of range / prep phase: UnitClassBase is nil, but arena spec gives the class.
-        local specID = GetArenaOpponentSpec(i);
-        if specID and ( specID > 0 ) then
-            class = select(6, GetSpecializationInfoByID(specID)); -- classFilename
+    -- UnitName omits the realm for same-realm players. Normalize both unit-token
+    -- families to the same full identity before comparing them.
+    if ( not realm ) or ( realm == "" ) then
+        realm = GetNormalizedRealmName();
+        if addon.IsSecretValue(realm) or ( not realm ) or ( realm == "" ) then
+            return;
         end
-        if ( not class ) then return end
     end
 
-    local fp = { class = class, race = race, sex = sex, honor = honor };
-    -- Cache only complete in-range fingerprints; class-only prints are too coarse.
-    if race and sex and honor then
-        arenaSlotPrintCache[i] = fp;
-    end
-    return fp;
+    return name .. "\031" .. realm;
 end
 
-local function SlotMatches(slot, class, race, sex, honor)
-    return class == slot.class
-        and ( slot.race == nil or race == slot.race )
-        and ( slot.sex == nil or sex == slot.sex )
-        and ( slot.honor == nil or honor == slot.honor );
+-- arenaN identities are stable for a match or shuffle round. Cache only those
+-- stable tokens; nameplateN tokens are recycled and must be read per lookup.
+local arenaNameKeyBySlot = {};
+local arenaSlotByNameKey = {};
+
+local function CacheArenaSlotIdentity(arenaSlot)
+    if arenaNameKeyBySlot[arenaSlot] then return end
+
+    local nameKey = GetReadableUnitNameKey("arena" .. arenaSlot);
+    if not nameKey then return end -- The unit may not be available yet; retry later.
+
+    arenaNameKeyBySlot[arenaSlot] = nameKey;
+    arenaSlotByNameKey[nameKey] = arenaSlot;
 end
 
 addon.GetArenaNumber = function(unit)
-    local class, race, sex, honor = GetUnitArenaFingerprint(unit);
-    local match;
-    if class then
-        for i = 1, addon.MAX_ARENA_SIZE do
-            local slot = GetArenaSlotPrint(i);
-            if slot and SlotMatches(slot, class, race, sex, honor) then
-                if match then return end -- a second match => ambiguous, leave blank
-                match = i;
-            end
-        end
-        if match then return match end
-    end
+    local unitNameKey = GetReadableUnitNameKey(unit);
+    if not unitNameKey then return end
 
-    local unitName = UnitName(unit);
-    if addon.IsSecretValue(unitName) or ( not unitName ) then return end
+    local arenaSlot = arenaSlotByNameKey[unitNameKey];
+    if arenaSlot then return arenaSlot end
 
     for i = 1, addon.MAX_ARENA_SIZE do
-        local arenaName = UnitName("arena" .. i);
-        if ( not addon.IsSecretValue(arenaName) ) and arenaName == unitName then
-            if match then return end -- duplicated names are ambiguous
-            match = i;
-        end
+        CacheArenaSlotIdentity(i);
     end
-    return match;
+    return arenaSlotByNameKey[unitNameKey];
 end
 
 if addon.PROJECT_MAINLINE then
-    local unitIdentityPrintCacheResetFrame = CreateFrame("Frame");
-    unitIdentityPrintCacheResetFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-    unitIdentityPrintCacheResetFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
-    unitIdentityPrintCacheResetFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-    unitIdentityPrintCacheResetFrame:SetScript("OnEvent", addon.ResetUnitIdentityPrintCaches);
+    local arenaIdentityCacheResetFrame = CreateFrame("Frame");
+    arenaIdentityCacheResetFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    arenaIdentityCacheResetFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+    arenaIdentityCacheResetFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    arenaIdentityCacheResetFrame:SetScript("OnEvent", function()
+        -- This only invalidates identity data; it does not repaint existing nameplates.
+        -- Blizzard name updates refresh number text, while normal widget updates refresh
+        -- spec icons. Arena and Shuffle tests confirm those refresh paths after resets.
+        wipe(arenaNameKeyBySlot);
+        wipe(arenaSlotByNameKey);
+    end);
 end
 
 local shamanPrimaryPetNpcIDs = {
