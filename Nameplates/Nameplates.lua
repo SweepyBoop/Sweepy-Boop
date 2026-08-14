@@ -339,18 +339,6 @@ local function UpdateWidgets(nameplate, frame)
     end
 end
 
-local function RefreshArenaIdentityWidgets()
-    if ( not IsActiveBattlefieldArena() ) or IsRestricted() then return end
-
-    for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
-        local frame = nameplate and nameplate.UnitFrame;
-        if frame and ( not IsForbiddenSafe(frame) ) then
-            UpdateWidgets(nameplate, frame);
-            UpdateArenaNameplateNumber(frame);
-        end
-    end
-end
-
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
@@ -364,7 +352,11 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_CHANNEL_STOP, unpack(retailNameplateUnits));
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
+        -- CompactUnitFrame_UpdateName should refresh arena numbers when opponent names
+        -- become available. If numbers or spec icons still miss visibility/shuffle updates,
+        -- register ARENA_OPPONENT_UPDATE and refresh visible frames with UpdateWidgets and
+        -- UpdateArenaNameplateNumber.
+        -- eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
     else
         eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
     end
@@ -395,8 +387,6 @@ function SweepyBoop:SetupNameplateModules()
                 end
                 HideWidgets(nameplate);
             end
-        elseif event == addon.ARENA_OPPONENT_UPDATE then
-            RefreshArenaIdentityWidgets();
         elseif event == addon.PLAYER_TARGET_CHANGED then
             SweepyBoop:RefreshAllNamePlates();
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
