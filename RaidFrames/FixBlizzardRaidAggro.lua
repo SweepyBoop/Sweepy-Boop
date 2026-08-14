@@ -120,6 +120,8 @@ local function IsPlayerUnitToken(unit)
 end
 
 local function AddTargeter(targetColorsByIdentity, unit, isArenaUnit)
+    -- TODO: For arena units, use Blizzard's arena availability contract so an
+    -- "unseen" transition cannot retain cached unit data from UnitExists.
     local exists = UnitExists(unit);
     if addon.IsSecretValue(exists) or ( not exists ) then
         return;
@@ -333,6 +335,8 @@ local function CreateFrameRecord(frame, isArenaFrame, layoutConfig)
         lanes = {},
         flashElapsed = 0,
     };
+    -- TODO: Attach this handler only while the active lane is flashing, and
+    -- remove it when the record is cleared or switches to a static lane.
     overlay:SetScript("OnUpdate", function(_, elapsed)
         OnFrameRecordUpdate(record, elapsed);
     end);
