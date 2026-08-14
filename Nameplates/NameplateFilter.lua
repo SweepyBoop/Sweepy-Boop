@@ -1,26 +1,30 @@
 local _, addon = ...;
 
-local animationScale = 1.05;
-local animationDuration = 0.25;
 local iconSize = 30;
-local offsetMultiplier = 0.41;
+local highlightHaloSize = 50;
+local highlightPulseScale = 1.07;
+local highlightPulseDuration = 0.42;
+local highlightColor = { 0.85, 0.15, 1 };
 
-local function SetupAnimation(frameWithAnimations)
-    local animationGroup = frameWithAnimations:CreateAnimationGroup();
+local function SetupAnimation(halo)
+    local animationGroup = halo:CreateAnimationGroup();
+    animationGroup:SetLooping("BOUNCE");
 
-    local grow = animationGroup:CreateAnimation("Scale");
-    grow:SetOrder(1);
-    grow:SetScale(animationScale, animationScale);
-    grow:SetDuration(animationDuration);
-
-    local shrink = animationGroup:CreateAnimation("Scale");
-    shrink:SetOrder(2);
-    shrink:SetScale(1 / animationScale, 1 / animationScale);
-    shrink:SetDuration(animationDuration);
-
-    animationGroup:SetLooping("REPEAT");
+    local pulse = animationGroup:CreateAnimation("Scale");
+    pulse:SetScale(highlightPulseScale, highlightPulseScale);
+    pulse:SetDuration(highlightPulseDuration);
+    if pulse.SetSmoothing then
+        pulse:SetSmoothing("IN_OUT");
+    end
 
     return animationGroup;
+end
+
+local function StopHighlightAnimation(highlight)
+    if highlight.animationGroup:IsPlaying() then
+        highlight.animationGroup:Stop();
+    end
+    highlight.halo:SetScale(1);
 end
 
 local function EnsureNpcHighlight(nameplate)
@@ -36,9 +40,13 @@ local function EnsureNpcHighlight(nameplate)
         nameplate.npcHighlight.customIcon = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
         nameplate.npcHighlight.customIcon:SetAllPoints(nameplate.npcHighlight);
 
-        local widthOffset = iconSize * offsetMultiplier;
-        local heightOffset = iconSize * offsetMultiplier;
-        nameplate.npcHighlight.glowTexture = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
+        nameplate.npcHighlight.halo = CreateFrame("Frame", nil, nameplate.npcHighlight);
+        nameplate.npcHighlight.halo:SetMouseClickEnabled(false);
+        nameplate.npcHighlight.halo:SetSize(highlightHaloSize, highlightHaloSize);
+        nameplate.npcHighlight.halo:SetPoint("CENTER", nameplate.npcHighlight);
+
+        nameplate.npcHighlight.glowTexture = nameplate.npcHighlight.halo:CreateTexture(nil, "OVERLAY");
+        nameplate.npcHighlight.glowTexture:SetAllPoints(nameplate.npcHighlight.halo);
         nameplate.npcHighlight.glowTexture:SetBlendMode("ADD");
         if addon.PROJECT_MAINLINE then
             nameplate.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
@@ -47,11 +55,9 @@ local function EnsureNpcHighlight(nameplate)
             nameplate.npcHighlight.glowTexture:SetScale(0.4);
         end
         nameplate.npcHighlight.glowTexture:SetDesaturated(true);
-        nameplate.npcHighlight.glowTexture:SetPoint('TOPLEFT', nameplate.npcHighlight, 'TOPLEFT', -widthOffset, heightOffset);
-        nameplate.npcHighlight.glowTexture:SetPoint('BOTTOMRIGHT', nameplate.npcHighlight, 'BOTTOMRIGHT', widthOffset, -heightOffset);
-        nameplate.npcHighlight.glowTexture:SetVertexColor(128, 0, 128); -- Purple
+        nameplate.npcHighlight.glowTexture:SetVertexColor(unpack(highlightColor));
 
-        nameplate.npcHighlight.animationGroup = SetupAnimation(nameplate.npcHighlight);
+        nameplate.npcHighlight.animationGroup = SetupAnimation(nameplate.npcHighlight.halo);
 
         nameplate.npcHighlight:Hide();
     end
@@ -94,13 +100,14 @@ addon.ShowNpcHighlight = function(nameplate, animation, iconTexture, highlightKe
     if highlight then
         highlight.customIcon:Show();
         if animation then
-            highlight.glowTexture:Show();
-            highlight.animationGroup:Play();
-        else
-            highlight.glowTexture:Hide();
-            if highlight.animationGroup:IsPlaying() then
-                highlight.animationGroup:Stop();
+            highlight.halo:Show();
+            if not highlight.animationGroup:IsPlaying() then
+                StopHighlightAnimation(highlight);
+                highlight.animationGroup:Play();
             end
+        else
+            StopHighlightAnimation(highlight);
+            highlight.halo:Hide();
         end
         highlight:Show();
     end
@@ -109,12 +116,34 @@ end
 addon.HideNpcHighlight = function(nameplate)
     local highlight = nameplate.npcHighlight;
     if highlight then
-        if highlight.animationGroup:IsPlaying() then
-            highlight.animationGroup:Stop();
-        end
-        highlight.glowTexture:Hide();
+        StopHighlightAnimation(highlight);
+        highlight.halo:Hide();
         highlight.customIcon:Hide();
         highlight:Hide();
+    end
+end
+
+if addon.internal then
+    function SweepyBoop:DebugNpcHighlight(shouldShow, iconTexture)
+        local nameplate = C_NamePlate.GetNamePlateForUnit("target");
+        if not nameplate then
+            print("SweepyBoop: current target has no visible nameplate");
+            return;
+        end
+
+        if shouldShow == false then
+            addon.HideNpcHighlight(nameplate);
+            print("SweepyBoop: NPC highlight preview hidden");
+            return;
+        end
+
+        addon.ShowNpcHighlight(
+            nameplate,
+            true,
+            iconTexture or addon.ICON_ID_PVP_CURSOR,
+            "debug"
+        );
+        print("SweepyBoop: showing animated NPC highlight on current target");
     end
 end
 
