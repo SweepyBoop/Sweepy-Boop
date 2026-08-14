@@ -13,6 +13,7 @@ if addon.PROJECT_MAINLINE then
         [353084]  = "disorient", -- Ring of Fire
         [202274]  = "disorient", -- Hot Trub
         [105421]  = "disorient", -- Blinding Light
+        [198909]  = "disorient", -- Song of Chi-Ji
         [10326]   = "disorient", -- Turn Evil
         [205364]  = "disorient", -- Dominate Mind
         [605]     = "disorient", -- Mind Control
@@ -32,7 +33,6 @@ if addon.PROJECT_MAINLINE then
         -- *** Incapacitate Effects ***
         [217832]  = "incapacitate", -- Imprison
         [221527]  = "incapacitate", -- Imprison (Honor talent)
-        [198909]  = "incapacitate", -- Song of Chi-ji
         [2637]    = "incapacitate", -- Hibernate
         [99]      = "incapacitate", -- Incapacitating Roar
         [378441]  = "incapacitate", -- Time Stop
@@ -159,6 +159,7 @@ if addon.PROJECT_MAINLINE then
         [116706]  = "root", -- Disable
         [324382]  = "root", -- Clash
         [64695]   = "root", -- Earthgrab (Totem effect)
+        [285515]  = "root", -- Surge of Power
         --[356738]  = "root", -- Earth Unleashed
         [199042]  = "root", -- Thunderstruck (Protection PvP Talent)
         --[356356]  = "root", -- Warbringer
@@ -208,11 +209,12 @@ if addon.PROJECT_MAINLINE then
 
         -- *** Controlled Knockback Effects ***
         -- Note: not every knockback has an aura.
+        [204408]  = "knockback", -- Thunderstorm
         [108199]  = "knockback", -- Gorefiend's Grasp
         [202249]  = "knockback", -- Overrun
         [61391]   = "knockback", -- Typhoon
         [102793]  = "knockback", -- Ursol's Vortex
-        [431620]  = "knockback", -- Upheaval
+        --[431620]  = "knockback", -- Upheaval (has no DR)
         [186387]  = "knockback", -- Bursting Shot
         [236776]  = "knockback", -- Hi-Explosive Trap
         [236777]  = "knockback", -- Hi-Explosive Trap 2
@@ -547,6 +549,7 @@ else
         [102051] = "silence", -- Frostjaw
         [55021]  = "silence", -- Counterspell
         [137460] = "silence", -- Ring of Peace (Silence effect)
+        [81261]  = "silence", -- Solar Beam silence aura
         [116709] = "silence", -- Spear Hand Strike
         [31935]  = "silence", -- Avenger's Shield
         [15487]  = "silence", -- Silence
@@ -594,14 +597,16 @@ else
     };
 end
 
--- Reference the list from BigDebuffs
-addon.DRList[81261]   = "silence"; -- Solar Beam
-
 addon.CrowdControlAuras = {};
 for spellId, drType in pairs(addon.DRList) do
     if ( type(drType) == "table" ) or ( drType ~= "taunt" and drType ~= "knockback" ) then
         addon.CrowdControlAuras[spellId] = true;
     end
+end
+
+if addon.PROJECT_MAINLINE then
+    -- Solar Beam is crowd control, but it does not participate in DR.
+    addon.CrowdControlAuras[81261] = true; -- Solar Beam silence aura
 end
 
 if addon.PROJECT_MAINLINE then
