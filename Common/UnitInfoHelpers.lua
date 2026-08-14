@@ -85,19 +85,43 @@ local function GetReadableUnitNameKey(unit)
     return name .. "\031" .. realm;
 end
 
+-- arenaN identities are stable for a match or shuffle round. Cache only those
+-- stable tokens; nameplateN tokens are recycled and must be read per lookup.
+local arenaNameKeyBySlot = {};
+local arenaSlotByNameKey = {};
+
+local function CacheArenaSlotIdentity(arenaSlot)
+    if arenaNameKeyBySlot[arenaSlot] then return end
+
+    local nameKey = GetReadableUnitNameKey("arena" .. arenaSlot);
+    if not nameKey then return end -- The unit may not be available yet; retry later.
+
+    arenaNameKeyBySlot[arenaSlot] = nameKey;
+    arenaSlotByNameKey[nameKey] = arenaSlot;
+end
+
 addon.GetArenaNumber = function(unit)
     local unitNameKey = GetReadableUnitNameKey(unit);
     if not unitNameKey then return end
 
-    local match;
+    local arenaSlot = arenaSlotByNameKey[unitNameKey];
+    if arenaSlot then return arenaSlot end
+
     for i = 1, addon.MAX_ARENA_SIZE do
-        local arenaNameKey = GetReadableUnitNameKey("arena" .. i);
-        if arenaNameKey and arenaNameKey == unitNameKey then
-            if match then return end -- duplicated full identities are ambiguous
-            match = i;
-        end
+        CacheArenaSlotIdentity(i);
     end
-    return match;
+    return arenaSlotByNameKey[unitNameKey];
+end
+
+if addon.PROJECT_MAINLINE then
+    local arenaIdentityCacheResetFrame = CreateFrame("Frame");
+    arenaIdentityCacheResetFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    arenaIdentityCacheResetFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+    arenaIdentityCacheResetFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    arenaIdentityCacheResetFrame:SetScript("OnEvent", function()
+        wipe(arenaNameKeyBySlot);
+        wipe(arenaSlotByNameKey);
+    end);
 end
 
 local shamanPrimaryPetNpcIDs = {
