@@ -118,7 +118,8 @@ local function GetArenaNameplateNumber(frame)
     if not SweepyBoop.db.profile.nameplatesEnemy.arenaNumbersEnabled then return end
 
     if addon.PROJECT_MAINLINE then
-        -- Arena units are secret on mainline; resolve the slot via fingerprint matching.
+        -- Retail 12.1 keeps queried player names readable in PvP even when broader
+        -- unit identity is secret, so resolve arena slots by normalized name and realm.
         if UnitIsPlayer(frame.unit) and addon.UnitIsHostile(frame.unit) then
             return addon.GetArenaNumber(frame.unit);
         end
@@ -275,7 +276,7 @@ local function UpdateWidgets(nameplate, frame)
         if UnitIsPlayer(frame.unit) then
             -- For TBC, no spec/healer detection for enemies.
             -- For MoP Classic, use spec icons from tooltip.
-            -- For Retail, use GetArenaOpponentSpec with inferred arena numbers.
+            -- For Retail, use GetArenaOpponentSpec with name-matched arena numbers.
             local shouldShowSpecIcon;
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
             if addon.PROJECT_TBC then
@@ -338,6 +339,18 @@ local function UpdateWidgets(nameplate, frame)
     end
 end
 
+local function RefreshArenaIdentityWidgets()
+    if ( not IsActiveBattlefieldArena() ) or IsRestricted() then return end
+
+    for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
+        local frame = nameplate and nameplate.UnitFrame;
+        if frame and ( not IsForbiddenSafe(frame) ) then
+            UpdateWidgets(nameplate, frame);
+            UpdateArenaNameplateNumber(frame);
+        end
+    end
+end
+
 function SweepyBoop:SetupNameplateModules()
     local eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED);
@@ -351,9 +364,7 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_CHANNEL_STOP, unpack(retailNameplateUnits));
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
-        -- Arena slot fingerprint cache: the comp only changes on a new arena / shuffle round
-        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
     else
         eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
     end
@@ -384,6 +395,8 @@ function SweepyBoop:SetupNameplateModules()
                 end
                 HideWidgets(nameplate);
             end
+        elseif event == addon.ARENA_OPPONENT_UPDATE then
+            RefreshArenaIdentityWidgets();
         elseif event == addon.PLAYER_TARGET_CHANGED then
             SweepyBoop:RefreshAllNamePlates();
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
