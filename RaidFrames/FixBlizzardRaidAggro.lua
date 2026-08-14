@@ -34,9 +34,8 @@ local function GetReadableUnitNameKey(unit)
         return;
     end
 
-    -- UnitName is governed by Blizzard's narrower name-identity restriction.
-    -- An omitted realm means the current realm; normalize it so equivalent unit
-    -- tokens share a key while equal cross-realm character names remain distinct.
+    -- UnitName may return secret values when name identity is restricted.
+    -- For readable same-realm units, an omitted realm denotes the current realm.
     if ( not realm ) or ( realm == "" ) then
         realm = GetNormalizedRealmName();
         if addon.IsSecretValue(realm) or ( not realm ) then
@@ -129,7 +128,6 @@ local function BuildTargeters()
 
     for i = 1, addon.MAX_ARENA_SIZE do
         AddTargeter(enemyTargetColorsByIdentity, "arena" .. i);
-        -- Arena-frame indicators intentionally exclude the player's current target.
         AddTargeter(partyTargetColorsByIdentity, "party" .. i);
     end
 end
@@ -466,8 +464,8 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     if setupComplete then return end
     setupComplete = true;
 
-    -- Blizzard assigns and reassigns protected compact frames through SetUnit.
-    -- The post-hook only registers the frame; all mutations remain on SweepyBoop-owned children.
+    -- CompactUnitFrame_SetUnit is Blizzard's assignment point for protected compact frames.
+    -- The post-hook observes assignments. Marker state is stored on addon-owned child regions.
     hooksecurefunc("CompactUnitFrame_SetUnit", function(frame)
         TrackFrame(frame, nil, true);
     end);
@@ -476,13 +474,13 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
-    if addon.PROJECT_MAINLINE then -- Between solo shuffle rounds (retail only)
+    if addon.PROJECT_MAINLINE then -- Refresh opponent assignments between Solo Shuffle rounds.
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
         eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
         eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     end
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
-    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- For cases when stealthy classes appear (we need to run an update before they change target)
+    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- Refresh when a stealthed opponent appears without changing target.
     eventFrame:SetScript("OnEvent", function (_, event, unitId)
         if not IsActive() then
             if wasActive then

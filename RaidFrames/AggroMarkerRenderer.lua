@@ -1,7 +1,6 @@
 local _, addon = ...;
 
--- Blizzard exposes each raid marker as an individual texture, so marker geometry
--- can use ordinary texture regions without depending on sprite-sheet layout.
+-- Blizzard publishes one texture per raid-target marker.
 local markerTextureByShape = {
     Star = "Interface\\TargetingFrame\\UI-RaidTargetingIcon_1",
     Circle = "Interface\\TargetingFrame\\UI-RaidTargetingIcon_2",
