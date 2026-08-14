@@ -6,6 +6,12 @@ local markerRenderer = addon.RaidFrameAggroMarkerRenderer;
 local frameRecords = setmetatable({}, { __mode = "k" });
 local enemyTargetColorsByIdentity = {};
 local partyTargetColorsByIdentity = {};
+local arenaOpponentRefreshReasons = {
+    seen = true,
+    unseen = true,
+    destroyed = true,
+    cleared = true,
+};
 local wasActive = false;
 local setupComplete = false;
 
@@ -73,12 +79,28 @@ local function GetFrameCategory(frame)
     end
 end
 
-local function IsTrackedUnitTarget(unit)
+local function IsArenaUnitToken(unit)
     if addon.IsSecretValue(unit) or ( not unit ) then
         return false;
     end
     for i = 1, addon.MAX_ARENA_SIZE do
-        if ( unit == "arena" .. i ) or ( unit == "party" .. i ) then
+        if unit == "arena" .. i then
+            return true;
+        end
+    end
+
+    return false;
+end
+
+local function IsTrackedUnitTarget(unit)
+    if IsArenaUnitToken(unit) then
+        return true;
+    end
+    if addon.IsSecretValue(unit) or ( not unit ) then
+        return false;
+    end
+    for i = 1, addon.MAX_ARENA_SIZE do
+        if unit == "party" .. i then
             return true;
         end
     end
@@ -106,6 +128,12 @@ local function AddTargeter(targetColorsByIdentity, unit, isArenaUnit)
     local class;
     if isArenaUnit then
         class = addon.GetClassForPlayerOrArena(unit);
+        if addon.IsSecretValue(class) then
+            return;
+        end
+        if not class then
+            class = addon.GetUnitClass(unit);
+        end
     else
         class = addon.GetUnitClass(unit);
     end
@@ -485,11 +513,18 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     if addon.PROJECT_MAINLINE then -- Refresh opponent assignments between Solo Shuffle rounds.
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+        eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
         eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     end
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
-    eventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_ADDED); -- Refresh when a stealthed opponent appears without changing target.
-    eventFrame:SetScript("OnEvent", function (_, event, unitId)
+    eventFrame:SetScript("OnEvent", function (_, event, unitId, updateReason)
+        if event == addon.ARENA_OPPONENT_UPDATE
+            and ( ( not IsArenaUnitToken(unitId) )
+                or ( not arenaOpponentRefreshReasons[updateReason] ) ) then
+
+            return;
+        end
+
         if not IsActive() then
             if wasActive then
                 HideAllFrames();
