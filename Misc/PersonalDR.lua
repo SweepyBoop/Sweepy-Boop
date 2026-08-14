@@ -49,31 +49,9 @@ local categoryConfig = {
     },
 };
 
-local locTypeToDRCategory = {
-    STUN = "incapacitate",
-    STUN_MECHANIC = "stun",
-    FEAR = "disorient",
-    FEAR_MECHANIC = "disorient",
-    CHARM = "disorient",
-    CYCLONE = "disorient",
-    POSSESS = "disorient",
-    CONFUSE = "incapacitate",
-    ROOT = "root",
-    DISARM = "disarm",
-    SILENCE = "silence",
-};
-
-local nonDrLossOfControlSpellIds = {
-    [87204] = true, -- Sin and Punishment (Vampiric Touch dispel horror)
-    [196364] = true, -- Unstable Affliction dispel silence
-    [6789] = true, -- Mortal Coil
-    [100] = true, -- Charge
-    [105771] = true, -- Charge Root
-    [78675] = true, -- Solar Beam cast
-    [157997] = true, -- Ice Nova
-    [370970] = true, -- The Hunt root
-    [45334] = true, -- Bear Charge
-};
+local PHASE_CLEAN = "clean";
+local PHASE_CONTROLLED = "controlled";
+local PHASE_RECOVERING = "recovering";
 
 local eventFrame;
 local iconGroup;
@@ -86,14 +64,28 @@ local function GetState(category)
     if state then return state end
 
     state = {
-        isActive = false,
-        auraIds = {},
-        lastSeenStartTime = 0,
-        stacks = 0,
+        phase = PHASE_CLEAN,
+        tier = 0,
+        observations = {},
+        windowStart = nil,
         expiresAt = nil,
+        transitionVersion = 0,
     };
     stateByCategory[category] = state;
     return state;
+end
+
+local function ClearObservations(state)
+    wipe(state.observations);
+end
+
+local function SetCleanState(state)
+    state.phase = PHASE_CLEAN;
+    state.tier = 0;
+    state.windowStart = nil;
+    state.expiresAt = nil;
+    state.transitionVersion = state.transitionVersion + 1;
+    ClearObservations(state);
 end
 
 local function GetConfig()
@@ -110,34 +102,18 @@ local function ShouldShowCleanStunIcon()
     return config.personalDR and config.personalDRShowCleanStun and IsCategoryTracked("stun");
 end
 
-local function AddResolvedCategory(categories, category)
-    if categoryConfig[category] then
-        categories[category] = true;
-    end
-end
-
-local function ResolveDRCategories(spellId, locType)
+local function GetTrackedCategoriesForSpell(spellId)
     local categories = {};
-    if spellId and nonDrLossOfControlSpellIds[spellId] then
-        return categories;
-    end
-
-    if spellId then
-        local drType = addon.DRList and addon.DRList[spellId];
-        if drType ~= nil then
-            if type(drType) == "table" then
-                for _, category in ipairs(drType) do
-                    AddResolvedCategory(categories, category);
-                end
-            else
-                AddResolvedCategory(categories, drType);
+    local drCategory = addon.DRList and addon.DRList[spellId];
+    if type(drCategory) == "table" then
+        for _, category in ipairs(drCategory) do
+            if categoryConfig[category] then
+                categories[#categories + 1] = category;
             end
-            return categories;
         end
+    elseif categoryConfig[drCategory] then
+        categories[1] = drCategory;
     end
-
-    AddResolvedCategory(categories, locTypeToDRCategory[locType]);
-
     return categories;
 end
 
@@ -241,16 +217,28 @@ local function HideCategoryIcon(category)
     if not icon then return end
 
     ResetIcon(icon);
-    local state = GetState(category);
-    state.stacks = 0;
-    state.expiresAt = nil;
     if ( category == "stun" ) and ShowCleanStunIcon() then
         return;
     end
     addon.IconGroup_Remove(iconGroup, icon);
 end
 
-local function ShowDRIcon(category, stacks)
+local function ShowControlledIcon(category, tier)
+    if ( not iconGroup ) or ( not IsCategoryTracked(category) ) then return end
+
+    local info = categoryConfig[category];
+    local icon = iconGroup.icons[info.priority];
+    if not icon then return end
+
+    ResetIcon(icon);
+    iconGroup:Show();
+    icon.texture:SetTexture(info.icon);
+    SetBorderColor(icon, tier);
+    icon.border:Show();
+    addon.IconGroup_Insert(iconGroup, icon, info.priority);
+end
+
+local function ShowDRIcon(category, tier, windowStart)
     if ( not iconGroup ) or ( not IsCategoryTracked(category) ) then return end
 
     local info = categoryConfig[category];
@@ -261,9 +249,36 @@ local function ShowDRIcon(category, stacks)
     icon.cleanOnly = false;
     addon.HideProcGlow(icon);
     icon.texture:SetTexture(info.icon);
-    SetBorderColor(icon, stacks);
+    SetBorderColor(icon, tier);
     icon.border:Show();
-    icon.cooldown:SetCooldown(GetTime(), drWindowDuration);
+    if isInTest then
+        icon.cooldown:SetScript("OnCooldownDone", nil);
+    else
+        local state = GetState(category);
+        local recoveryVersion = state.transitionVersion;
+        local recoveryStart = state.windowStart;
+        local function CompleteRecovery()
+            local currentState = GetState(category);
+            if ( currentState.phase ~= PHASE_RECOVERING )
+                or ( currentState.transitionVersion ~= recoveryVersion )
+                or ( currentState.windowStart ~= recoveryStart )
+                or ( not currentState.expiresAt ) then
+
+                return;
+            end
+
+            local remaining = currentState.expiresAt - GetTime();
+            if remaining > 0 then
+                C_Timer.After(remaining, CompleteRecovery);
+                return;
+            end
+
+            SetCleanState(currentState);
+            HideCategoryIcon(category);
+        end
+        icon.cooldown:SetScript("OnCooldownDone", CompleteRecovery);
+    end
+    icon.cooldown:SetCooldown(windowStart or GetTime(), drWindowDuration);
     UpdateCooldownFontSize(icon.cooldown, icon:GetWidth());
     icon.cooldown:Show();
     addon.IconGroup_Insert(iconGroup, icon, info.priority);
@@ -292,10 +307,6 @@ local function CreateDRIcon(category)
     icon.cooldown:SetAllPoints(icon);
     StyleCooldown(icon.cooldown);
     UpdateCooldownFontSize(icon.cooldown, baseIconSize);
-    icon.cooldown:SetScript("OnCooldownDone", function()
-        if isInTest then return end
-        HideCategoryIcon(category);
-    end);
     icon.cooldown:Hide();
 
     icon:Hide();
@@ -333,17 +344,8 @@ local function RefreshIconSizes()
     end
 end
 
-local function ClearAuras(state)
-    wipe(state.auraIds);
-    state.lastSeenStartTime = 0;
-end
-
 local function ResetCategoryState(category)
-    local state = GetState(category);
-    state.isActive = false;
-    state.stacks = 0;
-    state.expiresAt = nil;
-    ClearAuras(state);
+    SetCleanState(GetState(category));
 end
 
 local function ResetAllState(showCleanStun)
@@ -367,13 +369,14 @@ local function ResetAllState(showCleanStun)
     end
 end
 
-local function StartDRWindow(category, stacks)
+local function StartDRWindow(category, now)
     local state = GetState(category);
-    state.isActive = false;
-    state.stacks = stacks;
-    state.expiresAt = GetTime() + drWindowDuration;
-    ClearAuras(state);
-    ShowDRIcon(category, stacks);
+    state.phase = PHASE_RECOVERING;
+    state.windowStart = now;
+    state.expiresAt = now + drWindowDuration;
+    state.transitionVersion = state.transitionVersion + 1;
+    ClearObservations(state);
+    ShowDRIcon(category, state.tier, state.windowStart);
 end
 
 local function ExitTestMode()
@@ -383,41 +386,163 @@ local function ExitTestMode()
     ResetAllState(GetConfig().personalDR);
 end
 
-local function BuildActiveCategories()
-    local active = {};
-    local locEntries = {};
+local function HasMatchingObservation(observations, candidate)
+    for _, observation in ipairs(observations) do
+        local sameSpell = ( observation.spellId == candidate.spellId );
+        local sameStart = observation.startTime
+            and candidate.startTime
+            and observation.startTime == candidate.startTime;
+        if sameSpell and sameStart then
+            return true;
+        end
 
-    if ( not C_LossOfControl ) or ( not C_LossOfControl.GetActiveLossOfControlDataByUnit ) then
-        return active;
-    end
+        local sameAura = observation.auraInstanceID
+            and candidate.auraInstanceID
+            and observation.auraInstanceID == candidate.auraInstanceID;
+        local startUnavailable = ( not observation.startTime ) or ( not candidate.startTime );
+        if sameAura and startUnavailable then
+            return true;
+        end
+        if sameSpell and startUnavailable
+            and ( ( not observation.auraInstanceID ) or ( not candidate.auraInstanceID ) ) then
 
-    for i = 1, 10 do
-        local success, locData = pcall(C_LossOfControl.GetActiveLossOfControlDataByUnit, "player", i);
-        if success and locData then
-            locEntries[#locEntries + 1] = locData;
+            return true;
         end
     end
+    return false;
+end
 
-    for _, locData in ipairs(locEntries) do
-        local categories = ResolveDRCategories(locData.spellID, locData.lockType or locData.locType);
-        for category in pairs(categories) do
+local function AddObservation(categories, category, observation)
+    local observations = categories[category];
+    if not observations then
+        observations = {};
+        categories[category] = observations;
+    end
+
+    for _, existing in ipairs(observations) do
+        if HasMatchingObservation({ existing }, observation) then
+            existing.auraInstanceID = existing.auraInstanceID or observation.auraInstanceID;
+            existing.startTime = existing.startTime or observation.startTime;
+            return;
+        end
+    end
+    observations[#observations + 1] = observation;
+end
+
+local function NormalizeLossOfControlData(locData)
+    local spellId = locData.spellID;
+    if addon.IsSecretValue(spellId) or ( type(spellId) ~= "number" ) then
+        return nil;
+    end
+
+    local auraInstanceID = locData.auraInstanceID;
+    if addon.IsSecretValue(auraInstanceID) or ( type(auraInstanceID) ~= "number" ) then
+        auraInstanceID = nil;
+    end
+    local startTime = locData.startTime;
+    if addon.IsSecretValue(startTime) or ( type(startTime) ~= "number" ) then
+        startTime = nil;
+    end
+    return {
+        auraInstanceID = auraInstanceID,
+        spellId = spellId,
+        startTime = startTime,
+    };
+end
+
+-- Blizzard exposes a player-specific count/getter pair. Only a complete readable
+-- snapshot is authoritative enough to remove observations or start DR windows.
+local function ScanCurrentObservations()
+    if ( not C_LossOfControl )
+        or ( not C_LossOfControl.GetActiveLossOfControlDataCount )
+        or ( not C_LossOfControl.GetActiveLossOfControlData ) then
+
+        return nil;
+    end
+
+    local countSuccess, count = pcall(C_LossOfControl.GetActiveLossOfControlDataCount);
+    if ( not countSuccess )
+        or addon.IsSecretValue(count)
+        or ( type(count) ~= "number" ) then
+
+        return nil;
+    end
+
+    local categories = {};
+    for index = 1, count do
+        local dataSuccess, locData = pcall(C_LossOfControl.GetActiveLossOfControlData, index);
+        if ( not dataSuccess ) or ( not locData ) then
+            return nil;
+        end
+
+        local normalizeSuccess, observation = pcall(NormalizeLossOfControlData, locData);
+        if ( not normalizeSuccess ) or ( not observation ) then
+            return nil;
+        end
+
+        local resolvedCategories = GetTrackedCategoriesForSpell(observation.spellId);
+        for _, category in ipairs(resolvedCategories) do
             if IsCategoryTracked(category) then
-                local categoryState = active[category];
-                if not categoryState then
-                    categoryState = { auraIds = {}, startTime = 0 };
-                    active[category] = categoryState;
-                end
-                if locData.auraInstanceID then
-                    categoryState.auraIds[locData.auraInstanceID] = true;
-                end
-                if locData.startTime and locData.startTime > categoryState.startTime then
-                    categoryState.startTime = locData.startTime;
+                AddObservation(categories, category, observation);
+            end
+        end
+    end
+    return categories;
+end
+
+-- Identity quality can vary across updates, so reconciliation prefers exact
+-- spell timing, then an aura instance, and finally conservative continuity.
+local function MatchObservations(previous, current)
+    local previousMatched = {};
+    local currentMatched = {};
+
+    local function MatchPass(predicate)
+        for currentIndex, currentObservation in ipairs(current) do
+            if not currentMatched[currentIndex] then
+                for previousIndex, previousObservation in ipairs(previous) do
+                    if ( not previousMatched[previousIndex] )
+                        and predicate(previousObservation, currentObservation) then
+
+                        previousMatched[previousIndex] = true;
+                        currentMatched[currentIndex] = true;
+                        break;
+                    end
                 end
             end
         end
     end
 
-    return active;
+    MatchPass(function(previousObservation, currentObservation)
+        return previousObservation.spellId == currentObservation.spellId
+            and previousObservation.startTime
+            and currentObservation.startTime
+            and previousObservation.startTime == currentObservation.startTime;
+    end);
+    MatchPass(function(previousObservation, currentObservation)
+        return previousObservation.auraInstanceID
+            and currentObservation.auraInstanceID
+            and previousObservation.auraInstanceID == currentObservation.auraInstanceID
+            and ( ( not previousObservation.startTime ) or ( not currentObservation.startTime ) );
+    end);
+    MatchPass(function(previousObservation, currentObservation)
+        return previousObservation.spellId == currentObservation.spellId
+            and ( ( not previousObservation.auraInstanceID ) or ( not currentObservation.auraInstanceID ) )
+            and ( ( not previousObservation.startTime ) or ( not currentObservation.startTime ) );
+    end);
+
+    for currentIndex in ipairs(current) do
+        if not currentMatched[currentIndex] then
+            return true;
+        end
+    end
+    return false;
+end
+
+local function StoreObservations(state, observations)
+    ClearObservations(state);
+    for _, observation in ipairs(observations) do
+        state.observations[#state.observations + 1] = observation;
+    end
 end
 
 local function UpdateDRs()
@@ -425,69 +550,44 @@ local function UpdateDRs()
 
     ExitTestMode();
 
-    local active = BuildActiveCategories();
-    local now = GetTime();
+    local currentByCategory = ScanCurrentObservations();
+    if not currentByCategory then return end
 
+    local now = GetTime();
     for _, category in ipairs(trackedCategories) do
         local state = GetState(category);
         if not IsCategoryTracked(category) then
             ResetCategoryState(category);
-            local icon = iconGroup.icons[categoryConfig[category].priority];
-            if icon and icon:IsShown() then
-                ResetIcon(icon);
-                addon.IconGroup_Remove(iconGroup, icon);
-            end
+            HideCategoryIcon(category);
         else
-            local activeState = active[category];
-            local isActive = ( activeState ~= nil );
-            local newApplication = false;
+            if ( state.phase == PHASE_RECOVERING )
+                and state.expiresAt
+                and state.expiresAt <= now then
 
-            if isActive then
-                if not state.isActive then
-                    newApplication = true;
-                else
-                    for auraId in pairs(activeState.auraIds) do
-                        if not state.auraIds[auraId] then
-                            newApplication = true;
-                            break;
-                        end
-                    end
-                    if ( not newApplication ) and activeState.startTime > ( state.lastSeenStartTime or 0 ) + 0.05 then
-                        newApplication = true;
-                    end
-                end
-            end
-
-            if newApplication then
-                state.stacks = math.min(( state.stacks or 0 ) + 1, 2);
-                local icon = iconGroup.icons[categoryConfig[category].priority];
-                if icon then
-                    ResetIcon(icon);
-                    icon.texture:SetTexture(categoryConfig[category].icon);
-                    SetBorderColor(icon, state.stacks);
-                    icon.border:Show();
-                    addon.IconGroup_Insert(iconGroup, icon, categoryConfig[category].priority);
-                end
-            end
-
-            if state.isActive and ( not isActive ) and ( state.stacks > 0 ) then
-                StartDRWindow(category, state.stacks);
-            elseif ( not isActive ) and state.expiresAt and state.expiresAt <= now then
+                SetCleanState(state);
                 HideCategoryIcon(category);
             end
 
-            state.isActive = isActive;
-            ClearAuras(state);
-            if isActive then
-                for auraId in pairs(activeState.auraIds) do
-                    state.auraIds[auraId] = true;
+            local current = currentByCategory[category] or {};
+            local hasCurrent = ( #current > 0 );
+            if hasCurrent then
+                local hasNewApplication = MatchObservations(state.observations, current);
+                if ( state.phase ~= PHASE_CONTROLLED ) or hasNewApplication then
+                    state.tier = math.min(state.tier + 1, 2);
+                    state.transitionVersion = state.transitionVersion + 1;
                 end
-                state.lastSeenStartTime = activeState.startTime;
+                state.phase = PHASE_CONTROLLED;
+                state.windowStart = nil;
+                state.expiresAt = nil;
+                StoreObservations(state, current);
+                ShowControlledIcon(category, state.tier);
+            elseif state.phase == PHASE_CONTROLLED then
+                StartDRWindow(category, now);
             end
         end
     end
 
-    if ( not GetState("stun").isActive ) and ( not GetState("stun").expiresAt ) then
+    if GetState("stun").phase == PHASE_CLEAN then
         ShowCleanStunIcon();
     end
 end
@@ -495,7 +595,7 @@ end
 local function HasRealDRState()
     for _, category in ipairs(trackedCategories) do
         local state = GetState(category);
-        if IsCategoryTracked(category) and ( state.isActive or state.expiresAt ) then
+        if IsCategoryTracked(category) and ( state.phase ~= PHASE_CLEAN ) then
             return true;
         end
     end

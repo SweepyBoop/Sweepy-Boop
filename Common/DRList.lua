@@ -13,6 +13,7 @@ if addon.PROJECT_MAINLINE then
         [353084]  = "disorient", -- Ring of Fire
         [202274]  = "disorient", -- Hot Trub
         [105421]  = "disorient", -- Blinding Light
+        [198909]  = "disorient", -- Song of Chi-Ji
         [10326]   = "disorient", -- Turn Evil
         [205364]  = "disorient", -- Dominate Mind
         [605]     = "disorient", -- Mind Control
@@ -32,7 +33,6 @@ if addon.PROJECT_MAINLINE then
         -- *** Incapacitate Effects ***
         [217832]  = "incapacitate", -- Imprison
         [221527]  = "incapacitate", -- Imprison (Honor talent)
-        [198909]  = "incapacitate", -- Song of Chi-ji
         [2637]    = "incapacitate", -- Hibernate
         [99]      = "incapacitate", -- Incapacitating Roar
         [378441]  = "incapacitate", -- Time Stop
@@ -78,7 +78,7 @@ if addon.PROJECT_MAINLINE then
         [277784]  = "incapacitate", -- Hex (Wicker Mongrel)
         [197214]  = "incapacitate", -- Sundering
         [710]     = "incapacitate", -- Banish
-        [6789]    = "incapacitate", -- Mortal Coil
+--      [6789]    = "incapacitate", -- Mortal Coil (has no DR)
         [107079]  = "incapacitate", -- Quaking Palm (Racial, Pandaren)
 
         -- *** Controlled Stun Effects ***
@@ -180,7 +180,7 @@ if addon.PROJECT_MAINLINE then
         [217824]  = "silence", -- Shield of Virtue
         [15487]   = "silence", -- Silence
         [1330]    = "silence", -- Garrote
-        [196364]  = "silence", -- Unstable Affliction Silence Effect
+--      [196364]  = "silence", -- Unstable Affliction dispel silence (has no DR)
 
         -- *** Disarm Weapon Effects ***
         [209749]  = "disarm", -- Faerie Swarm (Balance Honor Talent)
@@ -547,6 +547,7 @@ else
         [102051] = "silence", -- Frostjaw
         [55021]  = "silence", -- Counterspell
         [137460] = "silence", -- Ring of Peace (Silence effect)
+        [81261]  = "silence", -- Solar Beam silence aura
         [116709] = "silence", -- Spear Hand Strike
         [31935]  = "silence", -- Avenger's Shield
         [15487]  = "silence", -- Silence
@@ -594,14 +595,18 @@ else
     };
 end
 
--- Reference the list from BigDebuffs
-addon.DRList[81261]   = "silence"; -- Solar Beam
-
 addon.CrowdControlAuras = {};
 for spellId, drType in pairs(addon.DRList) do
     if ( type(drType) == "table" ) or ( drType ~= "taunt" and drType ~= "knockback" ) then
         addon.CrowdControlAuras[spellId] = true;
     end
+end
+
+if addon.PROJECT_MAINLINE then
+    -- These are crowd-control effects, but they do not participate in DR.
+    addon.CrowdControlAuras[6789] = true; -- Mortal Coil
+    addon.CrowdControlAuras[196364] = true; -- Unstable Affliction dispel silence
+    addon.CrowdControlAuras[81261] = true; -- Solar Beam silence aura
 end
 
 if addon.PROJECT_MAINLINE then

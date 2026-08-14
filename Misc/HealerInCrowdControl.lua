@@ -212,7 +212,7 @@ local function RegisterAuraSounds(unit)
         return;
     end
 
-    for spellID in pairs(addon.DRList) do
+    for spellID in pairs(addon.CrowdControlAuras) do
         local isCrowdControl = C_Spell.IsSpellCrowdControl(spellID);
         if ( not addon.IsSecretValue(isCrowdControl) ) and isCrowdControl then
             local soundID = C_UnitAuras.AddAuraSound(
