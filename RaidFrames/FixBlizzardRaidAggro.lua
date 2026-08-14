@@ -476,7 +476,6 @@ function SweepyBoop:SetupRaidFrameAggroHighlight()
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     if addon.PROJECT_MAINLINE then -- Refresh opponent assignments between Solo Shuffle rounds.
         eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-        eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
         eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     end
     eventFrame:RegisterEvent(addon.UNIT_TARGET);
