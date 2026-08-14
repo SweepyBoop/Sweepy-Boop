@@ -287,11 +287,6 @@ if addon.PROJECT_MAINLINE then
         return value, true;
     end
 
-    local function HasActiveSpellSignal(getter, unitId)
-        local spellName = getter(unitId);
-        return addon.IsSecretValue(spellName) or spellName ~= nil;
-    end
-
     local function GetFirstAuraMatching(unitId, filter)
         if C_UnitAuras.GetUnitAuras then
             local auras = C_UnitAuras.GetUnitAuras(unitId, filter);
@@ -318,10 +313,6 @@ if addon.PROJECT_MAINLINE then
         return nil, false, true;
     end
 
-    local CAPACITOR_TOTEM_ICON = addon.GetSpellTexture(192058);
-    local PSYFIEND_ICON = addon.GetSpellTexture(199824);
-    local GENERIC_SUMMON_ICON = "Interface\\Icons\\Spell_shaman_totemrecall";
-
     ClassifyMainlineNpc = function(unitId)
         -- Only confirmed minions are eligible for suppression. Unknown values fail open.
         local isMinion, minionKnown = ReadUnitFlag(UnitIsMinion, unitId);
@@ -337,14 +328,6 @@ if addon.PROJECT_MAINLINE then
         local isShamanPrimaryPet = addon.IsShamanPrimaryPet(unitId);
         if isShamanPrimaryPet then
             return addon.NpcOption.Show, false;
-        end
-
-        if HasActiveSpellSignal(UnitChannelInfo, unitId) then
-            return addon.NpcOption.Highlight, false, PSYFIEND_ICON or GENERIC_SUMMON_ICON, nil;
-        end
-
-        if HasActiveSpellSignal(UnitCastingInfo, unitId) then
-            return addon.NpcOption.Highlight, false, CAPACITOR_TOTEM_ICON or GENERIC_SUMMON_ICON, nil;
         end
 
         local auraIcon, hasPriorityAura, priorityAuraKnown = GetPriorityAuraIcon(unitId);
