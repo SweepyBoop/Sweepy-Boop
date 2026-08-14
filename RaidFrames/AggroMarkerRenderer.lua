@@ -23,10 +23,10 @@ function renderer.CreateMarker(parent)
     local marker = CreateFrame("Frame", nil, parent);
     marker.outline = marker:CreateTexture(nil, "BACKGROUND");
     marker.fill = marker:CreateTexture(nil, "ARTWORK");
+    marker.fillMask = marker:CreateMaskTexture();
+    marker.fill:AddMaskTexture(marker.fillMask);
     marker.outline:SetBlendMode("BLEND");
     marker.fill:SetBlendMode("BLEND");
-    marker.outline:SetDesaturated(true);
-    marker.fill:SetDesaturated(true);
     marker:EnableMouse(false);
     return marker;
 end
@@ -44,12 +44,16 @@ function renderer.ConfigureMarker(marker, shape, color, alpha, width, height, bo
     marker.outline:SetAllPoints(marker);
     marker.outline:Show();
 
-    marker.fill:SetTexture(texture);
-    marker.fill:SetVertexColor(color.r, color.g, color.b, alpha);
+    marker.fill:SetColorTexture(color.r, color.g, color.b, alpha);
     marker.fill:ClearAllPoints();
     marker.fill:SetPoint("CENTER", marker, "CENTER", 0, 0);
     marker.fill:SetSize(fillWidth, fillHeight);
     marker.fill:Show();
+
+    marker.fillMask:SetTexture(texture, "CLAMP", "CLAMP");
+    marker.fillMask:ClearAllPoints();
+    marker.fillMask:SetAllPoints(marker.fill);
+    marker.fillMask:Show();
 
     marker:SetAlpha(1);
     marker:Show();
