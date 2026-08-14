@@ -25,7 +25,7 @@ local GCD_CAST_EVENTS = {
 };
 local RING_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/MouseCursorRing";
 local TRAIL_ATLAS = "CircleMaskScalable";
-local TRAIL_POOL_SIZE = 48;
+local TRAIL_SLOT_COUNT = 48;
 
 local cursorFrame;
 local baselineRing;
@@ -33,9 +33,9 @@ local gcdRing;
 local trailFrame;
 local trackerFrame;
 local eventFrame;
-local trailPool = {};
-local activeTrail = {};
-local trailPoolInitialized = false;
+local trailSlots = {};
+local trailSlotsInitialized = false;
+local nextTrailSlot = 1;
 local trailTimer = 0;
 local lastTrailX;
 local lastTrailY;
@@ -98,12 +98,12 @@ local function GetTrailColor(config)
 end
 
 local function ClearTrail()
-    for i = #activeTrail, 1, -1 do
-        local element = activeTrail[i];
-        element:Hide();
-        activeTrail[i] = nil;
-        trailPool[#trailPool + 1] = element;
+    for i = 1, #trailSlots do
+        local slot = trailSlots[i];
+        slot.active = false;
+        slot.texture:Hide();
     end
+    nextTrailSlot = 1;
 end
 
 local function HideGCDRing()
@@ -169,11 +169,11 @@ local function EnsureFrames()
     gcdRing:Hide();
 end
 
-local function EnsureTrailPool()
-    if trailPoolInitialized then return end
+local function EnsureTrailSlots()
+    if trailSlotsInitialized then return end
 
-    trailPoolInitialized = true;
-    for i = 1, TRAIL_POOL_SIZE do
+    trailSlotsInitialized = true;
+    for i = 1, TRAIL_SLOT_COUNT do
         local texture = trailFrame:CreateTexture(nil, "ARTWORK");
         if texture.SetAtlas then
             texture:SetAtlas(TRAIL_ATLAS);
@@ -182,7 +182,10 @@ local function EnsureTrailPool()
         end
         texture:SetBlendMode("ADD");
         texture:Hide();
-        trailPool[i] = texture;
+        trailSlots[i] = {
+            texture = texture,
+            active = false,
+        };
     end
 end
 
@@ -257,45 +260,55 @@ local function UpdateCursorPosition()
     cursorFrame:SetPoint("CENTER", UIParent, "BOTTOMLEFT", ( cursorX / uiScale ) / frameScale, ( cursorY / uiScale ) / frameScale);
 end
 
+local function AcquireTrailSlot()
+    EnsureTrailSlots();
+
+    for offset = 0, TRAIL_SLOT_COUNT - 1 do
+        local index = ( ( nextTrailSlot + offset - 1 ) % TRAIL_SLOT_COUNT ) + 1;
+        local slot = trailSlots[index];
+        if not slot.active then
+            nextTrailSlot = ( index % TRAIL_SLOT_COUNT ) + 1;
+            return slot;
+        end
+    end
+end
+
 local function SpawnTrailElement(x, y, config, r, g, b)
-    EnsureTrailPool();
-
-    local element = trailPool[#trailPool];
-    if not element then return end
-
-    trailPool[#trailPool] = nil;
-    activeTrail[#activeTrail + 1] = element;
+    local slot = AcquireTrailSlot();
+    if not slot then return end
 
     local duration = Clamp(config.trailDuration, 0.1, 0.8);
     local size = Clamp(config.trailSize, 4, 20);
+    local texture = slot.texture;
 
-    element.duration = duration;
-    element.remaining = duration;
-    element.baseSize = size;
-    element:ClearAllPoints();
-    element:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y);
-    element:SetSize(size, size);
-    element:SetVertexColor(r, g, b, Clamp(config.opacity, 0.2, 1));
-    element:SetAlpha(1);
-    element:Show();
+    slot.active = true;
+    slot.duration = duration;
+    slot.remaining = duration;
+    slot.baseSize = size;
+    texture:ClearAllPoints();
+    texture:SetPoint("CENTER", UIParent, "BOTTOMLEFT", x, y);
+    texture:SetSize(size, size);
+    texture:SetVertexColor(r, g, b, Clamp(config.opacity, 0.2, 1));
+    texture:SetAlpha(1);
+    texture:Show();
 end
 
 local function UpdateTrail(elapsed)
     local config = GetConfig();
 
-    for i = #activeTrail, 1, -1 do
-        local element = activeTrail[i];
-        element.remaining = element.remaining - elapsed;
-
-        if element.remaining <= 0 then
-            element:Hide();
-            table.remove(activeTrail, i);
-            trailPool[#trailPool + 1] = element;
-        else
-            local progress = element.remaining / element.duration;
-            local size = math.max(2, element.baseSize * progress);
-            element:SetSize(size, size);
-            element:SetAlpha(progress * Clamp(config.opacity, 0.2, 1));
+    for i = 1, #trailSlots do
+        local slot = trailSlots[i];
+        if slot.active then
+            slot.remaining = slot.remaining - elapsed;
+            if slot.remaining <= 0 then
+                slot.active = false;
+                slot.texture:Hide();
+            else
+                local progress = slot.remaining / slot.duration;
+                local size = math.max(2, slot.baseSize * progress);
+                slot.texture:SetSize(size, size);
+                slot.texture:SetAlpha(progress * Clamp(config.opacity, 0.2, 1));
+            end
         end
     end
 
