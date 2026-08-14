@@ -119,6 +119,9 @@ if addon.PROJECT_MAINLINE then
     arenaIdentityCacheResetFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     arenaIdentityCacheResetFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     arenaIdentityCacheResetFrame:SetScript("OnEvent", function()
+        -- This only invalidates identity data; it does not repaint existing nameplates.
+        -- Blizzard name updates refresh number text, while normal widget updates refresh
+        -- spec icons. Arena and Shuffle tests confirm those refresh paths after resets.
         wipe(arenaNameKeyBySlot);
         wipe(arenaSlotByNameKey);
     end);

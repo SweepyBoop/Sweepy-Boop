@@ -452,6 +452,8 @@ function SweepyBoop:SetupNameplateModules()
         end)
     end
 
+    -- This is the normal repaint path after an arena identity-cache reset. It updates
+    -- number text directly; spec icons are refreshed by the ordinary widget update paths.
     hooksecurefunc("CompactUnitFrame_UpdateName", function(frame)
         if IsForbiddenSafe(frame) then return end
 
