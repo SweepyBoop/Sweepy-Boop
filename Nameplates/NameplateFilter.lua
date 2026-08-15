@@ -108,6 +108,81 @@ local function ApplyAlphaSignal(frame, signal)
     end
 end
 
+local SHADOW_PRIEST_SPEC_ID = 258;
+local MAX_ARENA_OPPONENTS = 5;
+
+local function EnsurePsyflayPrototype(nameplate, arenaSlot)
+    local gates = nameplate.psyflayPrototypeGates;
+    if not gates then
+        gates = {};
+        nameplate.psyflayPrototypeGates = gates;
+    end
+
+    local gate = gates[arenaSlot];
+    if gate then return gate end
+
+    gate = CreateFrame("Frame", nil, nameplate);
+    gate:SetFrameStrata("HIGH");
+    gate:SetSize(iconSize, iconSize);
+
+    gate.highlight = CreateFrame("Frame", nil, gate);
+    gate.highlight:SetPoint("CENTER", gate);
+    CreatePortraitHighlight(gate.highlight);
+
+    gate:Hide();
+    gates[arenaSlot] = gate;
+    return gate;
+end
+
+local function DeactivatePsyflayPrototype(nameplate)
+    local gates = nameplate.psyflayPrototypeGates;
+    if not gates then return end
+
+    for _, gate in pairs(gates) do
+        StopHighlightAnimation(gate.highlight);
+        gate:Hide();
+    end
+end
+
+local function UpdatePsyflayPrototype(nameplate, unit, castBar)
+    -- Blizzard derives this ordinary state from the channel-start event. Do not
+    -- inspect the protected channel name, spell ID, ownership, or interrupt state.
+    if ( not IsActiveBattlefieldArena() ) or ( not castBar ) or ( not castBar.channeling ) then
+        DeactivatePsyflayPrototype(nameplate);
+        return;
+    end
+
+    local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(unit);
+    local gates = nameplate.psyflayPrototypeGates;
+
+    for arenaSlot = 1, MAX_ARENA_OPPONENTS do
+        local gate = gates and gates[arenaSlot];
+        if GetArenaOpponentSpec(arenaSlot) == SHADOW_PRIEST_SPEC_ID then
+            gate = gate or EnsurePsyflayPrototype(nameplate, arenaSlot);
+            local highlight = gate.highlight;
+            ApplyPortraitHighlightLayout(gate, nameplate);
+            SetPortraitTexture(highlight.portrait, unit);
+
+            -- These independent secret aspects multiply visually. Lua never learns
+            -- which Shadow Priest owns the minion or whether its channel is protected.
+            ApplyAlphaSignal(highlight, notInterruptible);
+            gate:SetAlphaFromBoolean(
+                UnitIsOwnerOrControllerOfUnit("arena" .. arenaSlot, unit),
+                1,
+                0
+            );
+
+            if not highlight.animationGroup:IsPlaying() then
+                highlight.animationGroup:Play();
+            end
+            gate:Show();
+        elseif gate then
+            StopHighlightAnimation(gate.highlight);
+            gate:Hide();
+        end
+    end
+end
+
 local function EnsureImportantCastPortrait(nameplate, castBar)
     local highlight = nameplate.importantNpcCastPortrait;
     if not highlight then
@@ -129,8 +204,19 @@ if addon.PROJECT_MAINLINE then
     local function ClearImportantCastPortrait(castBar)
         local highlight = castBar.sweepyBoopImportantNpcPortrait;
         if highlight then highlight:SetAlpha(0) end
+
+        local nameplate = castBar.sweepyBoopImportantNpcNameplate;
+        if nameplate then
+            DeactivatePsyflayPrototype(nameplate);
+        end
     end
 
+    hooksecurefunc(NamePlateCastingBarMixin, "OnEvent", function(castBar)
+        local nameplate = castBar.sweepyBoopImportantNpcNameplate;
+        if nameplate then
+            UpdatePsyflayPrototype(nameplate, castBar.unit, castBar);
+        end
+    end);
     hooksecurefunc(NamePlateCastingBarMixin, "SetIsHighlightedImportantCast", function(castBar, signal)
         local highlight = castBar.sweepyBoopImportantNpcPortrait;
         if highlight then
@@ -141,6 +227,19 @@ if addon.PROJECT_MAINLINE then
     -- interruption for the active cast. Raw event handlers may receive stale IDs.
     hooksecurefunc(NamePlateCastingBarMixin, "PlayFadeAnim", ClearImportantCastPortrait);
     hooksecurefunc(NamePlateCastingBarMixin, "PlayInterruptAnims", ClearImportantCastPortrait);
+
+    hooksecurefunc(NamePlateUnitFrameMixin, "OnUnitCleared", function(unitFrame)
+        local nameplate = unitFrame:GetNamePlateFrame();
+        if not nameplate then return end
+
+        DeactivatePsyflayPrototype(nameplate);
+        local castBar = nameplate.importantNpcCastBar;
+        if castBar then
+            castBar.sweepyBoopImportantNpcPortrait = nil;
+            castBar.sweepyBoopImportantNpcNameplate = nil;
+            nameplate.importantNpcCastBar = nil;
+        end
+    end);
 end
 
 addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
@@ -155,12 +254,14 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
         local previousCastBar = nameplate.importantNpcCastBar;
         if previousCastBar and previousCastBar ~= castBar then
             previousCastBar.sweepyBoopImportantNpcPortrait = nil;
+            previousCastBar.sweepyBoopImportantNpcNameplate = nil;
         end
 
         local castHighlight = EnsureImportantCastPortrait(nameplate, castBar);
         SetPortraitTexture(castHighlight.portrait, unit);
         local isNewAssociation = castBar.sweepyBoopImportantNpcPortrait ~= castHighlight;
         castBar.sweepyBoopImportantNpcPortrait = castHighlight;
+        castBar.sweepyBoopImportantNpcNameplate = nameplate;
         nameplate.importantNpcCastBar = castBar;
         if isNewAssociation then
             -- Blizzard has already computed this value in untainted execution. Forward
@@ -168,6 +269,10 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
             -- Blizzard's own SetShown call consume a secret from tainted execution.
             ApplyAlphaSignal(castHighlight, castBar:GetIsHighlightedImportantCast());
         end
+
+        UpdatePsyflayPrototype(nameplate, unit, castBar);
+    else
+        DeactivatePsyflayPrototype(nameplate);
     end
 end
 
@@ -191,8 +296,11 @@ addon.DeactivateImportantNpcPortrait = function(nameplate)
     local castBar = nameplate.importantNpcCastBar;
     if castBar then
         castBar.sweepyBoopImportantNpcPortrait = nil;
+        castBar.sweepyBoopImportantNpcNameplate = nil;
         nameplate.importantNpcCastBar = nil;
     end
+
+    DeactivatePsyflayPrototype(nameplate);
 
     local castHighlight = nameplate.importantNpcCastPortrait;
     if castHighlight then
