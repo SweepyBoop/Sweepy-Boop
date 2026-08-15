@@ -128,21 +128,6 @@ if addon.PROJECT_MAINLINE then
     end);
 end
 
-local shamanPrimaryPetNpcIDs = {
-    [61029] = true, -- Primal Fire Elemental
-    [61056] = true, -- Primal Earth Elemental
-    [77936] = true, -- Greater Storm Elemental
-    [77942] = true, -- Primal Storm Elemental
-    [95061] = true, -- Greater Fire Elemental
-    [95072] = true, -- Greater Earth Elemental
-};
-
-addon.IsShamanPrimaryPet = function (unitId)
-    local npcID = addon.GetNpcIdFromUnit(unitId);
-    if npcID == 0 then return nil end
-    return shamanPrimaryPetNpcIDs[npcID] or false;
-end
-
 local playerClass; -- This won't change for a login session so cache it
 local classesWithPets = {
     [addon.HUNTER] = true,

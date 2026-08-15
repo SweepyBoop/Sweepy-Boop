@@ -265,15 +265,10 @@ addon.GetNpcIdFromGuid = function (guid)
 end
 
 addon.GetNpcIdFromUnit = function(unitId)
-    if ( not unitId ) then return 0 end
-
-    local npcID = addon.GetNpcIdFromGuid(UnitGUID(unitId));
-    if ( npcID ~= 0 ) or ( not addon.PROJECT_MAINLINE ) then
-        return npcID;
-    end
-
-    local tooltipData = C_TooltipInfo.GetUnit(unitId);
-    return addon.GetNpcIdFromGuid(tooltipData and tooltipData.guid);
+    -- Retail unit identity may be protected. Never make Mainline behavior depend
+    -- on GUID or tooltip-derived NPC IDs; Classic keeps its readable GUID path.
+    if ( not unitId ) or addon.PROJECT_MAINLINE then return 0 end
+    return addon.GetNpcIdFromGuid(UnitGUID(unitId));
 end
 
 local ClassifyMainlineNpc;
@@ -302,22 +297,13 @@ if addon.PROJECT_MAINLINE then
             return addon.NpcOption.Show, false, nil, nil, true, true;
         end
 
-        local isShamanPrimaryPet = addon.IsShamanPrimaryPet(unitId);
-        if isShamanPrimaryPet then
-            return addon.NpcOption.Show, false, nil, nil, true, false;
-        end
-
-        -- Presentation signals never determine visibility or exact NPC identity.
-        -- Preserve Blizzard's readable pet flag even if the NPC-ID exception is unknown.
+        -- Mainline NPC identity is not a classification input. Presentation signals
+        -- never determine visibility or exact summon identity.
         local useImportantPortrait = true;
         local isOtherPlayersPet = false;
 
         local isTarget, targetKnown = ReadUnitFlag(UnitIsUnit, unitId, "target");
         if ( not targetKnown ) or isTarget then
-            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait, isOtherPlayersPet;
-        end
-
-        if isShamanPrimaryPet == nil then
             return addon.NpcOption.Show, false, nil, nil, useImportantPortrait, isOtherPlayersPet;
         end
 

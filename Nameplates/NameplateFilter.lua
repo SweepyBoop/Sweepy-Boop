@@ -179,8 +179,25 @@ local function OverrideMatchesPetState(override, isOtherPlayersPet)
     return override.primaryPet == nil or override.primaryPet == isOtherPlayersPet;
 end
 
-local function OverrideIsActive(override, castBar)
-    return castBar and castBar[override.signal];
+local function GetCastPresentationState(unit)
+    -- UnitCastingInfo and UnitChannelInfo mark return 6 (isTradeskill) as
+    -- NeverSecret and non-nilable when the corresponding result exists. Both APIs
+    -- return no tuple without an active cast/channel, as Blizzard's castbar also
+    -- assumes. This tests only that public sentinel, never protected cast details.
+    local castingPresence = select(6, UnitCastingInfo(unit));
+    local channelPresence, channelNotInterruptible =
+        select(6, UnitChannelInfo(unit));
+
+    -- UnitChannelInfo return 7 is nilable and may be secret. Never compare or
+    -- branch on it; the Shadow override forwards it only to an alpha sink.
+    return castingPresence ~= nil,
+        channelPresence ~= nil,
+        channelNotInterruptible;
+end
+
+local function OverrideIsActive(override, isCasting, isChanneling)
+    if override.signal == "casting" then return isCasting end
+    return isChanneling;
 end
 
 local function EnsureSummonPresentationGate(nameplate, override, arenaSlot)
@@ -262,18 +279,13 @@ local function UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOth
         return;
     end
 
-    local channelNotInterruptible;
-    if castBar and castBar.channeling then
-        -- Blizzard accepted a channel before setting this ordinary lifecycle state.
-        -- Its seventh UnitChannelInfo result remains protected and render-only.
-        local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(unit);
-        channelNotInterruptible = notInterruptible;
-    end
+    local isCasting, isChanneling, channelNotInterruptible =
+        GetCastPresentationState(unit);
 
     local ruleGates = nameplate.summonPresentationGates;
     for _, override in ipairs(summonPresentationOverrides) do
         local overrideActive = OverrideMatchesPetState(override, isOtherPlayersPet)
-            and OverrideIsActive(override, castBar);
+            and OverrideIsActive(override, isCasting, isChanneling);
         local gates = ruleGates and ruleGates[override.key];
 
         for arenaSlot = 1, addon.MAX_ARENA_SIZE do
@@ -344,6 +356,8 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
+    -- The hook is only an update notification after Blizzard processes the event.
+    -- Override state comes from GetCastPresentationState, never from castbar fields.
     hooksecurefunc(NamePlateCastingBarMixin, "OnEvent", function(castBar)
         local nameplate = castBar.sweepyBoopImportantNpcNameplate;
         if nameplate then
