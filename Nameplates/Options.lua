@@ -530,7 +530,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 11,
                         type = "toggle",
                         width = "full",
-                        name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Filter enemy pets and summons" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
+                        name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.GetSpellTexture(204336)) .. " Highlight important enemy minions" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
                         desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons using secret-safe aura, cast, and channel presentation\n\nRetail minion health bars remain visible because exact summon identity and importance may be protected." or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                     },
                     showCritterIcons = {
