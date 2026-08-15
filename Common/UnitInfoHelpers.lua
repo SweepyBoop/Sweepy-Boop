@@ -85,19 +85,21 @@ local function GetReadableUnitNameKey(unit)
     return name .. "\031" .. realm;
 end
 
--- arenaN identities are stable for a match or shuffle round. Cache only those
--- stable tokens; nameplateN tokens are recycled and must be read per lookup.
-local arenaNameKeyBySlot = {};
+-- arenaN identities are stable for a match or shuffle round. Cache only exact
+-- name-realm matches; nameplateN tokens are recycled and must be read per lookup.
 local arenaSlotByNameKey = {};
 
-local function CacheArenaSlotIdentity(arenaSlot)
-    if arenaNameKeyBySlot[arenaSlot] then return end
+local function CacheMatchingArenaSlotIdentity(arenaSlot, expectedNameKey)
+    -- A readable name can arrive before the slot's specialization is finalized. Cache
+    -- only a complete slot that matches the nameplate currently being resolved.
+    local specID = GetArenaOpponentSpec(arenaSlot);
+    if ( not specID ) or ( specID <= 0 ) then return end
 
     local nameKey = GetReadableUnitNameKey("arena" .. arenaSlot);
-    if not nameKey then return end -- The unit may not be available yet; retry later.
+    if nameKey ~= expectedNameKey then return end
 
-    arenaNameKeyBySlot[arenaSlot] = nameKey;
     arenaSlotByNameKey[nameKey] = arenaSlot;
+    return arenaSlot;
 end
 
 addon.GetArenaNumber = function(unit)
@@ -108,9 +110,9 @@ addon.GetArenaNumber = function(unit)
     if arenaSlot then return arenaSlot end
 
     for i = 1, addon.MAX_ARENA_SIZE do
-        CacheArenaSlotIdentity(i);
+        arenaSlot = CacheMatchingArenaSlotIdentity(i, unitNameKey);
+        if arenaSlot then return arenaSlot end
     end
-    return arenaSlotByNameKey[unitNameKey];
 end
 
 if addon.PROJECT_MAINLINE then
@@ -122,7 +124,6 @@ if addon.PROJECT_MAINLINE then
         -- This only invalidates identity data; it does not repaint existing nameplates.
         -- Blizzard name updates refresh number text, while normal widget updates refresh
         -- spec icons. Arena and Shuffle tests confirm those refresh paths after resets.
-        wipe(arenaNameKeyBySlot);
         wipe(arenaSlotByNameKey);
     end);
 end
