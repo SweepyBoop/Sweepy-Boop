@@ -283,31 +283,26 @@ if addon.PROJECT_MAINLINE then
     end
 
     ClassifyMainlineNpc = function(unitId)
-        -- Only confirmed minions are eligible for suppression. Unknown values fail open.
+        -- Retail does not expose reliable NPC identity or readable importance.
+        -- Preserve every minion's health bar and use protected presentation signals
+        -- only to add truthful unit-portrait priority markers.
         local isMinion, minionKnown = ReadUnitFlag(UnitIsMinion, unitId);
         if ( not minionKnown ) or ( not isMinion ) then
             return addon.NpcOption.Show, false;
         end
 
-        local isPrimaryPet, primaryPetKnown = ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
+        local isOtherPlayersPet, primaryPetKnown =
+            ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
         if not primaryPetKnown then
             return addon.NpcOption.Show, false;
         end
-        if isPrimaryPet then
-            return addon.NpcOption.Show, false, nil, nil, true, true;
-        end
 
-        -- Mainline NPC identity is not a classification input. Presentation signals
-        -- never determine visibility or exact summon identity.
-        local useImportantPortrait = true;
-        local isOtherPlayersPet = false;
-
-        local isTarget, targetKnown = ReadUnitFlag(UnitIsUnit, unitId, "target");
-        if ( not targetKnown ) or isTarget then
-            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait, isOtherPlayersPet;
-        end
-
-        return addon.NpcOption.Hide, false, nil, nil, useImportantPortrait, isOtherPlayersPet;
+        return addon.NpcOption.Show,
+            false,
+            nil,
+            nil,
+            true,
+            isOtherPlayersPet;
     end
 end
 

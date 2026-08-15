@@ -87,30 +87,29 @@ local function ApplyInverseAlphaSignal(frame, signal)
     end
 end
 
--- Blizzard-important aura and cast portraits are the default path. These
--- overrides add known false negatives without claiming exact summon identity.
-local summonPresentationOverrides = {
+-- Readable blacklist first, Blizzard-important aura/cast by default, then
+-- allow-list fallbacks for Blizzard false negatives. All paths show the unit portrait.
+local portraitHighlightBlacklist = {};
+local portraitHighlightAllowList = {
     {
         key = "warlockPrimaryPetCast",
         ownerClass = addon.WARLOCK,
         primaryPet = true,
         signal = "casting",
-        -- A casting Warlock primary pet is Succubus-oriented, but also includes
-        -- truthful portraits such as an Imp casting Firebolt.
+        -- Casting Warlock primary pet.
     },
     {
         key = "afflictionMinionCast",
         ownerSpec = addon.SPECID.AFFLICTION,
         primaryPet = false,
         signal = "casting",
-        -- An Affliction non-primary casting minion is Darkglare-oriented; its
-        -- primary-pet classification still requires in-game verification.
+        -- Casting Affliction non-primary minion.
     },
     {
         key = "shamanMinionCast",
         ownerClass = addon.SHAMAN,
         signal = "casting",
-        -- A casting Shaman minion is Capacitor-oriented, not exact totem identity.
+        -- Casting Shaman minion.
     },
     {
         key = "shadowMinionChannel",
@@ -118,11 +117,12 @@ local summonPresentationOverrides = {
         primaryPet = false,
         signal = "channeling",
         requireNotInterruptible = true,
-        -- A protected Shadow-owned channel is Psyfiend-oriented, not exact identity.
+        -- Protected Shadow non-primary channel.
     },
 };
 
 local importantAuraSlotKey = "ImportantMinion";
+local UpdateOverrideImportantAuraSignal;
 
 local function EnsureImportantAuraContainer(nameplate)
     local container = nameplate.importantNpcAuraContainer;
@@ -155,6 +155,7 @@ local function EnsureImportantAuraContainer(nameplate)
             -- possibly secret shown state directly to our sibling portrait's alpha.
             hooksecurefunc(button, "SetShown", function(_, shown)
                 highlight:SetAlphaFromBoolean(shown, 1, 0);
+                UpdateOverrideImportantAuraSignal(nameplate, shown);
             end);
         end,
     });
@@ -172,6 +173,13 @@ local function DeactivateImportantAuraContainer(nameplate)
     StopHighlightAnimation(container.highlight);
     container.highlight.portrait:SetTexture(nil);
     container.highlight:SetAlpha(0);
+end
+
+local function IsPortraitHighlightBlacklisted(unit)
+    for _, rule in ipairs(portraitHighlightBlacklist) do
+        if rule.matches(unit) then return true end
+    end
+    return false;
 end
 
 local function OverrideMatchesOwner(override, specID)
@@ -225,8 +233,11 @@ local function EnsureSummonPresentationGate(nameplate, override, arenaSlot)
     gate = CreateFrame("Frame", nil, nameplate);
     gate:SetFrameStrata("HIGH");
     gate:SetSize(iconSize, iconSize);
-    gate.overrideGate = CreateFrame("Frame", nil, gate);
-    gate.overrideGate:SetAllPoints(gate);
+    gate.importantAuraGate = CreateFrame("Frame", nil, gate);
+    gate.importantAuraGate:SetAllPoints(gate);
+    gate.importantAuraGate:SetAlpha(0);
+    gate.overrideGate = CreateFrame("Frame", nil, gate.importantAuraGate);
+    gate.overrideGate:SetAllPoints(gate.importantAuraGate);
     gate:Hide();
     gates[arenaSlot] = gate;
     return gate;
@@ -255,7 +266,7 @@ local function DeactivateSummonPresentationOverrides(nameplate)
     local ruleGates = nameplate.summonPresentationGates;
     if not ruleGates then return end
 
-    for _, override in ipairs(summonPresentationOverrides) do
+    for _, override in ipairs(portraitHighlightAllowList) do
         local gates = ruleGates[override.key];
         if gates then
             for _, gate in pairs(gates) do
@@ -265,11 +276,25 @@ local function DeactivateSummonPresentationOverrides(nameplate)
     end
 end
 
+UpdateOverrideImportantAuraSignal = function(nameplate, signal)
+    local ruleGates = nameplate.summonPresentationGates;
+    if not ruleGates then return end
+
+    for _, override in ipairs(portraitHighlightAllowList) do
+        local gates = ruleGates[override.key];
+        if gates then
+            for _, gate in pairs(gates) do
+                ApplyInverseAlphaSignal(gate.importantAuraGate, signal);
+            end
+        end
+    end
+end
+
 local function UpdateOverrideImportantCastSignal(nameplate, signal)
     local ruleGates = nameplate.summonPresentationGates;
     if not ruleGates then return end
 
-    for _, override in ipairs(summonPresentationOverrides) do
+    for _, override in ipairs(portraitHighlightAllowList) do
         local gates = ruleGates[override.key];
         if gates then
             for _, gate in pairs(gates) do
@@ -289,7 +314,7 @@ local function UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOth
         GetCastPresentationState(unit);
 
     local ruleGates = nameplate.summonPresentationGates;
-    for _, override in ipairs(summonPresentationOverrides) do
+    for _, override in ipairs(portraitHighlightAllowList) do
         local overrideActive = OverrideMatchesPetState(override, isOtherPlayersPet)
             and OverrideIsActive(override, isCasting, isChanneling);
         local gates = ruleGates and ruleGates[override.key];
@@ -364,16 +389,22 @@ if addon.PROJECT_MAINLINE then
 
     -- The hook is only an update notification after Blizzard processes the event.
     -- Override state comes from GetCastPresentationState, never from castbar fields.
-    hooksecurefunc(NamePlateCastingBarMixin, "OnEvent", function(castBar)
+    hooksecurefunc(NamePlateCastingBarMixin, "OnEvent", function(castBar, event)
         local nameplate = castBar.sweepyBoopImportantNpcNameplate;
-        if nameplate then
-            UpdateSummonPresentationOverrides(
-                nameplate,
-                castBar.unit,
-                castBar,
-                nameplate.importantNpcIsOtherPlayersPet
-            );
+        if not nameplate then return end
+
+        if event == addon.UNIT_SPELLCAST_STOP
+            or event == addon.UNIT_SPELLCAST_INTERRUPTED
+            or event == addon.UNIT_SPELLCAST_CHANNEL_STOP then
+            return;
         end
+
+        UpdateSummonPresentationOverrides(
+            nameplate,
+            castBar.unit,
+            castBar,
+            nameplate.importantNpcIsOtherPlayersPet
+        );
     end);
     hooksecurefunc(NamePlateCastingBarMixin, "SetIsHighlightedImportantCast", function(castBar, signal)
         local highlight = castBar.sweepyBoopImportantNpcPortrait;
@@ -402,19 +433,22 @@ if addon.PROJECT_MAINLINE then
 end
 
 addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherPlayersPet)
+    if IsPortraitHighlightBlacklisted(unit) then
+        addon.DeactivateImportantNpcPortrait(nameplate);
+        return;
+    end
+
     local container = EnsureImportantAuraContainer(nameplate);
     ApplyPortraitHighlightLayout(container, nameplate);
     SetPortraitTexture(container.highlight.portrait, unit);
     if not container.highlight.animationGroup:IsPlaying() then
         container.highlight.animationGroup:Play();
     end
-    container:SetUnit(unit);
-    container:SetEnabled(true);
-    container:Show();
-    container:UpdateAllAuras();
-
     nameplate.importantNpcIsOtherPlayersPet = isOtherPlayersPet;
     if castBar then
+        -- Create fallback gates before Blizzard publishes the current protected
+        -- important-aura state through UpdateAllAuras below.
+        UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOtherPlayersPet);
         local previousCastBar = nameplate.importantNpcCastBar;
         if previousCastBar and previousCastBar ~= castBar then
             previousCastBar.sweepyBoopImportantNpcPortrait = nil;
@@ -436,11 +470,26 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherP
         if not castHighlight.animationGroup:IsPlaying() then
             castHighlight.animationGroup:Play();
         end
-
-        UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOtherPlayersPet);
     else
+        local previousCastBar = nameplate.importantNpcCastBar;
+        if previousCastBar then
+            previousCastBar.sweepyBoopImportantNpcPortrait = nil;
+            previousCastBar.sweepyBoopImportantNpcNameplate = nil;
+            nameplate.importantNpcCastBar = nil;
+        end
+        local castHighlight = nameplate.importantNpcCastPortrait;
+        if castHighlight then
+            StopHighlightAnimation(castHighlight);
+            castHighlight.portrait:SetTexture(nil);
+            castHighlight:SetAlpha(0);
+        end
         DeactivateSummonPresentationOverrides(nameplate);
     end
+
+    container:SetUnit(unit);
+    container:SetEnabled(true);
+    container:Show();
+    container:UpdateAllAuras();
 end
 
 local debugNpcPortraitNameplate;
