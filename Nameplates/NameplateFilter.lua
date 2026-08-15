@@ -124,12 +124,9 @@ local summonPresentationOverrides = {
 
 local importantAuraSlotKey = "ImportantMinion";
 
-local function EnsureImportantAuraContainer(nameplate, unit)
+local function EnsureImportantAuraContainer(nameplate)
     local container = nameplate.importantNpcAuraContainer;
-    if container then
-        container.currentUnit = unit;
-        return container, false;
-    end
+    if container then return container end
 
     container = CreateFrame(
         "AuraContainer",
@@ -141,23 +138,29 @@ local function EnsureImportantAuraContainer(nameplate, unit)
     container:SetSize(iconSize, iconSize);
     container:SetEnabled(false);
     container:Hide();
-    container.currentUnit = unit;
-    container.portraits = {};
+
+    local highlight = CreateFrame("Frame", nil, container);
+    highlight:SetPoint("CENTER", container, "CENTER");
+    CreatePortraitHighlight(highlight);
+    highlight:SetAlpha(0);
+    container.highlight = highlight;
+
     container:AddAuraSlot(importantAuraSlotKey, "HELPFUL|IMPORTANT", {
         sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
-            CreatePortraitHighlight(button);
             button:SetPoint("CENTER", container, "CENTER");
-            -- The portrait is not registered as Blizzard's aura icon. Blizzard's
-            -- protected slot visibility instead gates this child portrait.
-            SetPortraitTexture(button.portrait, container.currentUnit);
-            table.insert(container.portraits, button.portrait);
+            -- Blizzard securely computes whether this filtered aura slot is occupied.
+            -- Install the hook before Blizzard restricts the button, then forward the
+            -- possibly secret shown state directly to our sibling portrait's alpha.
+            hooksecurefunc(button, "SetShown", function(_, shown)
+                highlight:SetAlphaFromBoolean(shown, 1, 0);
+            end);
         end,
     });
 
     nameplate.importantNpcAuraContainer = container;
-    return container, true;
+    return container;
 end
 
 local function DeactivateImportantAuraContainer(nameplate)
@@ -166,6 +169,9 @@ local function DeactivateImportantAuraContainer(nameplate)
 
     container:SetEnabled(false);
     container:Hide();
+    StopHighlightAnimation(container.highlight);
+    container.highlight.portrait:SetTexture(nil);
+    container.highlight:SetAlpha(0);
 end
 
 local function OverrideMatchesOwner(override, specID)
@@ -396,14 +402,11 @@ if addon.PROJECT_MAINLINE then
 end
 
 addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherPlayersPet)
-    local container, isNewContainer = EnsureImportantAuraContainer(nameplate, unit);
+    local container = EnsureImportantAuraContainer(nameplate);
     ApplyPortraitHighlightLayout(container, nameplate);
-    if not isNewContainer then
-        -- This unregistered child remains a prototype: verify that restricted aura
-        -- buttons permit portrait refreshes when a pooled nameplate changes units.
-        for _, portrait in ipairs(container.portraits) do
-            SetPortraitTexture(portrait, unit);
-        end
+    SetPortraitTexture(container.highlight.portrait, unit);
+    if not container.highlight.animationGroup:IsPlaying() then
+        container.highlight.animationGroup:Play();
     end
     container:SetUnit(unit);
     container:SetEnabled(true);
