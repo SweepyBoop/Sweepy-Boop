@@ -34,30 +34,25 @@ Topic branch at the time this document was written:
 
 - `nameplate-highlight-explore`
 
-The arena-player resolver work is already landed on `main`. It uses readable normalized name and realm and has passed arena and Solo Shuffle testing. Do not replace it with class/race/honor inference or `UnitIsUnit("nameplateN", "arenaN")`.
+The arena-player resolver work is already landed on `main`. It uses readable normalized name and realm and has passed arena and Solo Shuffle testing. This topic branch additionally prevents incomplete arena slots from entering that identity cache. Do not replace it with class/race/honor inference or `UnitIsUnit("nameplateN", "arenaN")`.
 
-### Current unresolved behavior
+### Current implementation
 
-The current Mainline classifier is in:
+The Mainline classifier is in:
 
 - `c:\Users\kunhouseliu\Documents\GitHub\Sweepy-Boop\Common\NpcData.lua`
-  - `GetFirstAuraMatching`
-  - `GetPriorityAuraIcon`
   - `ClassifyMainlineNpc`
 
 Current behavior:
 
 1. Require a readable `UnitIsMinion` result.
 2. Preserve other players' pets and known Shaman primary pets.
-3. Read the first `HELPFUL|IMPORTANT` aura.
-4. If present, return `NpcOption.Highlight` with that aura icon.
-5. Otherwise preserve the current target and hide the remaining confirmed minion.
+3. Mark confirmed non-primary minions as eligible for protected importance presentation.
+4. Preserve the current target and hide the remaining confirmed minion health bars.
+5. Let Blizzard's secure `HELPFUL|IMPORTANT` aura slot present the truthful aura icon.
+6. Let Blizzard's important-cast signal reveal an addon-owned unit portrait without inferring summon identity.
 
-Problem:
-
-- An important helpful aura is not summon identity.
-- An unrelated important buff can produce a bogus NPC highlight icon.
-- Absence of a readable important aura does not prove that a minion is disposable.
+The classifier does not inspect important aura data or reinterpret an aura/cast as Grounding, Tremor, Capacitor, or Psyfiend identity.
 
 The renderer is in:
 
@@ -557,13 +552,13 @@ Blizzard's native important-aura and important-cast presentation can remain visi
 
 ## Current SweepyBoop Implication
 
-The current Mainline priority-aura classifier in:
+The Mainline classifier no longer treats the first `HELPFUL|IMPORTANT` aura as summon identity. Protected importance presentation is isolated from NPC classification:
 
-- `c:\Users\kunhouseliu\Documents\GitHub\Sweepy-Boop\Common\NpcData.lua`
+- The secure aura slot displays Blizzard's truthful aura icon.
+- The important-cast path displays the unit portrait.
+- Neither path assigns a curated Grounding, Tremor, Capacitor, or Psyfiend identity.
 
-can still produce bogus summon highlights because it treats the first `HELPFUL|IMPORTANT` aura as an NPC highlight icon.
-
-The reliability-first follow-up is to remove aura-driven specific highlighting from NPC classification. Unknown minions should fail open. On Retail, exact rules should use a non-secret `UnitCreatureID` first and readable GUID parsing only as a compatibility fallback. When exact identity is protected, an addon-owned protected name label may provide truthful recognition without granting addon-readable identity.
+Unknown minions still fail open. On Retail, future exact rules should use a non-secret `UnitCreatureID` first and readable GUID parsing only as a compatibility fallback. When exact identity is protected, an addon-owned protected name label may provide truthful recognition without granting addon-readable identity.
 
 ## Decision Record
 

@@ -88,9 +88,9 @@ local function EnsureImportantAuraContainer(nameplate)
         initializeFrame = function(button)
             CreatePortraitHighlight(button);
             button:SetPoint("CENTER", container, "CENTER");
-            -- Blizzard restricts later tainted access to the aura button. Keep only the
-            -- presentation texture reference needed to refresh the unit portrait.
-            container.sweepyBoopPortrait = button.portrait;
+            -- Blizzard owns this protected texture after initialization. The aura
+            -- layer shows its truthful aura icon; cast and debug layers use portraits.
+            button:SetIcon(button.portrait);
         end,
     });
 
@@ -131,7 +131,7 @@ if addon.PROJECT_MAINLINE then
         if highlight then highlight:SetAlpha(0) end
     end
 
-    hooksecurefunc(CastingBarMixin, "SetIsHighlightedImportantCast", function(castBar, signal)
+    hooksecurefunc(NamePlateCastingBarMixin, "SetIsHighlightedImportantCast", function(castBar, signal)
         local highlight = castBar.sweepyBoopImportantNpcPortrait;
         if highlight then
             ApplyAlphaSignal(highlight, signal);
@@ -139,14 +139,13 @@ if addon.PROJECT_MAINLINE then
     end);
     -- These presentation transitions run only after Blizzard accepts the stop or
     -- interruption for the active cast. Raw event handlers may receive stale IDs.
-    hooksecurefunc(CastingBarMixin, "PlayFadeAnim", ClearImportantCastPortrait);
-    hooksecurefunc(CastingBarMixin, "PlayInterruptAnims", ClearImportantCastPortrait);
+    hooksecurefunc(NamePlateCastingBarMixin, "PlayFadeAnim", ClearImportantCastPortrait);
+    hooksecurefunc(NamePlateCastingBarMixin, "PlayInterruptAnims", ClearImportantCastPortrait);
 end
 
 addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
     local container = EnsureImportantAuraContainer(nameplate);
     ApplyPortraitHighlightLayout(container, nameplate);
-    SetPortraitTexture(container.sweepyBoopPortrait, unit);
     container:SetUnit(unit);
     container:SetEnabled(true);
     container:Show();
@@ -164,10 +163,10 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
         castBar.sweepyBoopImportantNpcPortrait = castHighlight;
         nameplate.importantNpcCastBar = castBar;
         if isNewAssociation then
-            castHighlight:SetAlpha(0);
-            -- Re-run Blizzard's final importance decision so an already-active cast
-            -- reaches the post-hook after this presentation layer is associated.
-            castBar:UpdateHighlightImportantCast();
+            -- Blizzard has already computed this value in untainted execution. Forward
+            -- it only to SweepyBoop's secret-safe alpha sink; recomputing here would make
+            -- Blizzard's own SetShown call consume a secret from tainted execution.
+            ApplyAlphaSignal(castHighlight, castBar:GetIsHighlightedImportantCast());
         end
     end
 end
