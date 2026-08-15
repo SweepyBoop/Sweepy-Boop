@@ -308,8 +308,6 @@ if addon.PROJECT_MAINLINE then
         -- The nameplate renderer consumes them without exposing either value to Lua.
         local useImportantPortrait = true;
 
-        local isTarget, targetKnown =
-
         local isTarget, targetKnown = ReadUnitFlag(UnitIsUnit, unitId, "target");
         if ( not targetKnown ) or isTarget then
             return addon.NpcOption.Show, false, nil, nil, useImportantPortrait;
