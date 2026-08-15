@@ -295,29 +295,33 @@ if addon.PROJECT_MAINLINE then
         end
 
         local isPrimaryPet, primaryPetKnown = ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
-        if ( not primaryPetKnown ) or isPrimaryPet then
+        if not primaryPetKnown then
             return addon.NpcOption.Show, false;
+        end
+        if isPrimaryPet then
+            return addon.NpcOption.Show, false, nil, nil, true, true;
         end
 
         local isShamanPrimaryPet = addon.IsShamanPrimaryPet(unitId);
         if isShamanPrimaryPet then
-            return addon.NpcOption.Show, false;
+            return addon.NpcOption.Show, false, nil, nil, true, false;
         end
 
-        -- Aura and cast importance are protected presentation signals, not NPC identity.
-        -- The nameplate renderer consumes them without exposing either value to Lua.
+        -- Presentation signals never determine visibility or exact NPC identity.
+        -- Preserve Blizzard's readable pet flag even if the NPC-ID exception is unknown.
         local useImportantPortrait = true;
+        local isOtherPlayersPet = false;
 
         local isTarget, targetKnown = ReadUnitFlag(UnitIsUnit, unitId, "target");
         if ( not targetKnown ) or isTarget then
-            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait;
+            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait, isOtherPlayersPet;
         end
 
         if isShamanPrimaryPet == nil then
-            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait;
+            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait, isOtherPlayersPet;
         end
 
-        return addon.NpcOption.Hide, false, nil, nil, useImportantPortrait;
+        return addon.NpcOption.Hide, false, nil, nil, useImportantPortrait, isOtherPlayersPet;
     end
 end
 

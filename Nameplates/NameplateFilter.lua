@@ -52,7 +52,7 @@ end
 
 local function ApplyPortraitHighlightLayout(highlight, nameplate)
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if highlight.lastModified == config.lastModified then return end
+    if highlight.layoutApplied and highlight.lastModified == config.lastModified then return end
 
     highlight:SetScale(config.npcHighlightScale);
     highlight:ClearAllPoints();
@@ -64,38 +64,7 @@ local function ApplyPortraitHighlightLayout(highlight, nameplate)
         config.npcHighlightOffset or 0
     );
     highlight.lastModified = config.lastModified;
-end
-
-local importantAuraSlotKey = "ImportantMinion";
-
-local function EnsureImportantAuraContainer(nameplate)
-    local container = nameplate.importantNpcAuraContainer;
-    if container then return container end
-
-    container = CreateFrame(
-        "AuraContainer",
-        nil,
-        nameplate,
-        "CustomAuraContainerTemplate"
-    );
-    container:SetFrameStrata("HIGH");
-    container:SetSize(iconSize, iconSize);
-    container:SetEnabled(false);
-    container:Hide();
-    container:AddAuraSlot(importantAuraSlotKey, "HELPFUL|IMPORTANT", {
-        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
-        sortDirection = AuraContainerSortDirection.Normal,
-        initializeFrame = function(button)
-            CreatePortraitHighlight(button);
-            button:SetPoint("CENTER", container, "CENTER");
-            -- Blizzard owns this protected texture after initialization. The aura
-            -- layer shows its truthful aura icon; cast and debug layers use portraits.
-            button:SetIcon(button.portrait);
-        end,
-    });
-
-    nameplate.importantNpcAuraContainer = container;
-    return container;
+    highlight.layoutApplied = true;
 end
 
 local function ApplyAlphaSignal(frame, signal)
@@ -108,11 +77,123 @@ local function ApplyAlphaSignal(frame, signal)
     end
 end
 
-local function EnsurePsyflayPrototype(nameplate, arenaSlot)
-    local gates = nameplate.psyflayPrototypeGates;
+local function ApplyInverseAlphaSignal(frame, signal)
+    if addon.IsSecretValue(signal) then
+        frame:SetAlphaFromBoolean(signal, 0, 1);
+    elseif signal then
+        frame:SetAlpha(0);
+    else
+        frame:SetAlpha(1);
+    end
+end
+
+-- Blizzard-important aura and cast portraits are the default path. These
+-- overrides add known false negatives without claiming exact summon identity.
+local summonPresentationOverrides = {
+    {
+        key = "warlockPrimaryPetCast",
+        ownerClass = addon.WARLOCK,
+        primaryPet = true,
+        signal = "casting",
+        -- A casting Warlock primary pet is Succubus-oriented, but also includes
+        -- truthful portraits such as an Imp casting Firebolt.
+    },
+    {
+        key = "afflictionMinionCast",
+        ownerSpec = addon.SPECID.AFFLICTION,
+        primaryPet = false,
+        signal = "casting",
+        -- An Affliction non-primary casting minion is Darkglare-oriented; its
+        -- primary-pet classification still requires in-game verification.
+    },
+    {
+        key = "shamanMinionCast",
+        ownerClass = addon.SHAMAN,
+        signal = "casting",
+        -- A casting Shaman minion is Capacitor-oriented, not exact totem identity.
+    },
+    {
+        key = "shadowMinionChannel",
+        ownerSpec = addon.SPECID.SHADOW,
+        primaryPet = false,
+        signal = "channeling",
+        requireNotInterruptible = true,
+        -- A protected Shadow-owned channel is Psyfiend-oriented, not exact identity.
+    },
+};
+
+local importantAuraSlotKey = "ImportantMinion";
+
+local function EnsureImportantAuraContainer(nameplate, unit)
+    local container = nameplate.importantNpcAuraContainer;
+    if container then
+        container.currentUnit = unit;
+        return container, false;
+    end
+
+    container = CreateFrame(
+        "AuraContainer",
+        nil,
+        nameplate,
+        "CustomAuraContainerTemplate"
+    );
+    container:SetFrameStrata("HIGH");
+    container:SetSize(iconSize, iconSize);
+    container:SetEnabled(false);
+    container:Hide();
+    container.currentUnit = unit;
+    container.portraits = {};
+    container:AddAuraSlot(importantAuraSlotKey, "HELPFUL|IMPORTANT", {
+        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            CreatePortraitHighlight(button);
+            button:SetPoint("CENTER", container, "CENTER");
+            -- The portrait is not registered as Blizzard's aura icon. Blizzard's
+            -- protected slot visibility instead gates this child portrait.
+            SetPortraitTexture(button.portrait, container.currentUnit);
+            table.insert(container.portraits, button.portrait);
+        end,
+    });
+
+    nameplate.importantNpcAuraContainer = container;
+    return container, true;
+end
+
+local function DeactivateImportantAuraContainer(nameplate)
+    local container = nameplate.importantNpcAuraContainer;
+    if not container then return end
+
+    container:SetEnabled(false);
+    container:Hide();
+end
+
+local function OverrideMatchesOwner(override, specID)
+    if override.ownerSpec then
+        return specID == override.ownerSpec;
+    end
+    return addon.SPECID_TO_CLASS[specID] == override.ownerClass;
+end
+
+local function OverrideMatchesPetState(override, isOtherPlayersPet)
+    return override.primaryPet == nil or override.primaryPet == isOtherPlayersPet;
+end
+
+local function OverrideIsActive(override, castBar)
+    return castBar and castBar[override.signal];
+end
+
+local function EnsureSummonPresentationGate(nameplate, override, arenaSlot)
+    local ruleGates = nameplate.summonPresentationGates;
+    if not ruleGates then
+        ruleGates = {};
+        nameplate.summonPresentationGates = ruleGates;
+    end
+
+    local gates = ruleGates[override.key];
     if not gates then
         gates = {};
-        nameplate.psyflayPrototypeGates = gates;
+        ruleGates[override.key] = gates;
     end
 
     local gate = gates[arenaSlot];
@@ -121,63 +202,112 @@ local function EnsurePsyflayPrototype(nameplate, arenaSlot)
     gate = CreateFrame("Frame", nil, nameplate);
     gate:SetFrameStrata("HIGH");
     gate:SetSize(iconSize, iconSize);
-
-    gate.highlight = CreateFrame("Frame", nil, gate);
-    gate.highlight:SetPoint("CENTER", gate);
-    CreatePortraitHighlight(gate.highlight);
-
+    gate.overrideGate = CreateFrame("Frame", nil, gate);
+    gate.overrideGate:SetAllPoints(gate);
     gate:Hide();
     gates[arenaSlot] = gate;
     return gate;
 end
 
-local function DeactivatePsyflayPrototype(nameplate)
-    local gates = nameplate.psyflayPrototypeGates;
-    if not gates then return end
+local function EnsureRulePortrait(gate)
+    if gate.highlight then return gate.highlight end
 
-    for _, gate in pairs(gates) do
+    local highlight = CreateFrame("Frame", nil, gate.overrideGate);
+    highlight:SetPoint("CENTER", gate.overrideGate);
+    CreatePortraitHighlight(highlight);
+    gate.highlight = highlight;
+    return highlight;
+end
+
+local function DeactivateSummonPresentationGate(gate)
+    if gate.highlight then
         StopHighlightAnimation(gate.highlight);
-        gate:Hide();
+        gate.highlight.portrait:SetTexture(nil);
+        gate.highlight:SetAlpha(0);
+    end
+    gate:Hide();
+end
+
+local function DeactivateSummonPresentationOverrides(nameplate)
+    local ruleGates = nameplate.summonPresentationGates;
+    if not ruleGates then return end
+
+    for _, override in ipairs(summonPresentationOverrides) do
+        local gates = ruleGates[override.key];
+        if gates then
+            for _, gate in pairs(gates) do
+                DeactivateSummonPresentationGate(gate);
+            end
+        end
     end
 end
 
-local function UpdatePsyflayPrototype(nameplate, unit, castBar)
-    -- Blizzard derives this ordinary state from the channel-start event. Do not
-    -- inspect the protected channel name, spell ID, ownership, or interrupt state.
-    if ( not IsActiveBattlefieldArena() ) or ( not castBar ) or ( not castBar.channeling ) then
-        DeactivatePsyflayPrototype(nameplate);
+local function UpdateOverrideImportantCastSignal(nameplate, signal)
+    local ruleGates = nameplate.summonPresentationGates;
+    if not ruleGates then return end
+
+    for _, override in ipairs(summonPresentationOverrides) do
+        local gates = ruleGates[override.key];
+        if gates then
+            for _, gate in pairs(gates) do
+                ApplyInverseAlphaSignal(gate.overrideGate, signal);
+            end
+        end
+    end
+end
+
+local function UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOtherPlayersPet)
+    if not IsActiveBattlefieldArena() then
+        DeactivateSummonPresentationOverrides(nameplate);
         return;
     end
 
-    -- Blizzard's cast bar has accepted this as a channel. Its seventh
-    -- UnitChannelInfo result is the protected interruptibility signal.
-    local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(unit);
-    local gates = nameplate.psyflayPrototypeGates;
+    local channelNotInterruptible;
+    if castBar and castBar.channeling then
+        -- Blizzard accepted a channel before setting this ordinary lifecycle state.
+        -- Its seventh UnitChannelInfo result remains protected and render-only.
+        local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(unit);
+        channelNotInterruptible = notInterruptible;
+    end
 
-    for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-        local gate = gates and gates[arenaSlot];
-        if GetArenaOpponentSpec(arenaSlot) == addon.SPECID.SHADOW then
-            gate = gate or EnsurePsyflayPrototype(nameplate, arenaSlot);
-            local highlight = gate.highlight;
-            ApplyPortraitHighlightLayout(gate, nameplate);
-            SetPortraitTexture(highlight.portrait, unit);
+    local ruleGates = nameplate.summonPresentationGates;
+    for _, override in ipairs(summonPresentationOverrides) do
+        local overrideActive = OverrideMatchesPetState(override, isOtherPlayersPet)
+            and OverrideIsActive(override, castBar);
+        local gates = ruleGates and ruleGates[override.key];
 
-            -- The child and parent alpha gates combine visually. Lua never learns
-            -- the protected interruptibility state or which Shadow Priest owns it.
-            ApplyAlphaSignal(highlight, notInterruptible);
-            gate:SetAlphaFromBoolean(
-                UnitIsOwnerOrControllerOfUnit("arena" .. arenaSlot, unit),
-                1,
-                0
-            );
+        for arenaSlot = 1, addon.MAX_ARENA_SIZE do
+            local gate = gates and gates[arenaSlot];
+            if overrideActive and OverrideMatchesOwner(override, GetArenaOpponentSpec(arenaSlot)) then
+                gate = gate or EnsureSummonPresentationGate(nameplate, override, arenaSlot);
+                ApplyPortraitHighlightLayout(gate, nameplate);
+                gate:SetAlphaFromBoolean(
+                    UnitIsOwnerOrControllerOfUnit("arena" .. arenaSlot, unit),
+                    1,
+                    0
+                );
+                -- Overrides are fallbacks for Blizzard false negatives. Reverse the
+                -- protected important-cast signal without exposing it to Lua.
+                ApplyInverseAlphaSignal(
+                    gate.overrideGate,
+                    castBar:GetIsHighlightedImportantCast()
+                );
 
-            if not highlight.animationGroup:IsPlaying() then
-                highlight.animationGroup:Play();
+                local highlight = EnsureRulePortrait(gate);
+                SetPortraitTexture(highlight.portrait, unit);
+                if override.requireNotInterruptible then
+                    ApplyAlphaSignal(highlight, channelNotInterruptible);
+                else
+                    highlight:SetAlpha(1);
+                end
+                if not highlight.animationGroup:IsPlaying() then
+                    highlight.animationGroup:Play();
+                end
+                highlight:Show();
+                gate:Show();
+            elseif gate then
+                DeactivateSummonPresentationGate(gate);
             end
-            gate:Show();
-        elseif gate then
-            StopHighlightAnimation(gate.highlight);
-            gate:Hide();
         end
     end
 end
@@ -202,24 +332,40 @@ end
 if addon.PROJECT_MAINLINE then
     local function ClearImportantCastPortrait(castBar)
         local highlight = castBar.sweepyBoopImportantNpcPortrait;
-        if highlight then highlight:SetAlpha(0) end
+        if highlight then
+            StopHighlightAnimation(highlight);
+            highlight.portrait:SetTexture(nil);
+            highlight:SetAlpha(0);
+        end
 
         local nameplate = castBar.sweepyBoopImportantNpcNameplate;
         if nameplate then
-            DeactivatePsyflayPrototype(nameplate);
+            DeactivateSummonPresentationOverrides(nameplate);
         end
     end
 
     hooksecurefunc(NamePlateCastingBarMixin, "OnEvent", function(castBar)
         local nameplate = castBar.sweepyBoopImportantNpcNameplate;
         if nameplate then
-            UpdatePsyflayPrototype(nameplate, castBar.unit, castBar);
+            UpdateSummonPresentationOverrides(
+                nameplate,
+                castBar.unit,
+                castBar,
+                nameplate.importantNpcIsOtherPlayersPet
+            );
         end
     end);
     hooksecurefunc(NamePlateCastingBarMixin, "SetIsHighlightedImportantCast", function(castBar, signal)
         local highlight = castBar.sweepyBoopImportantNpcPortrait;
         if highlight then
             ApplyAlphaSignal(highlight, signal);
+            if not highlight.animationGroup:IsPlaying() then
+                highlight.animationGroup:Play();
+            end
+        end
+        local nameplate = castBar.sweepyBoopImportantNpcNameplate;
+        if nameplate then
+            UpdateOverrideImportantCastSignal(nameplate, signal);
         end
     end);
     -- These presentation transitions run only after Blizzard accepts the stop or
@@ -229,26 +375,28 @@ if addon.PROJECT_MAINLINE then
 
     hooksecurefunc(NamePlateUnitFrameMixin, "OnUnitCleared", function(unitFrame)
         local nameplate = unitFrame:GetNamePlateFrame();
-        if not nameplate then return end
-
-        DeactivatePsyflayPrototype(nameplate);
-        local castBar = nameplate.importantNpcCastBar;
-        if castBar then
-            castBar.sweepyBoopImportantNpcPortrait = nil;
-            castBar.sweepyBoopImportantNpcNameplate = nil;
-            nameplate.importantNpcCastBar = nil;
+        if nameplate then
+            addon.DeactivateImportantNpcPortrait(nameplate);
         end
     end);
 end
 
-addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
-    local container = EnsureImportantAuraContainer(nameplate);
+addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherPlayersPet)
+    local container, isNewContainer = EnsureImportantAuraContainer(nameplate, unit);
     ApplyPortraitHighlightLayout(container, nameplate);
+    if not isNewContainer then
+        -- This unregistered child remains a prototype: verify that restricted aura
+        -- buttons permit portrait refreshes when a pooled nameplate changes units.
+        for _, portrait in ipairs(container.portraits) do
+            SetPortraitTexture(portrait, unit);
+        end
+    end
     container:SetUnit(unit);
     container:SetEnabled(true);
     container:Show();
     container:UpdateAllAuras();
 
+    nameplate.importantNpcIsOtherPlayersPet = isOtherPlayersPet;
     if castBar then
         local previousCastBar = nameplate.importantNpcCastBar;
         if previousCastBar and previousCastBar ~= castBar then
@@ -268,10 +416,13 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
             -- Blizzard's own SetShown call consume a secret from tainted execution.
             ApplyAlphaSignal(castHighlight, castBar:GetIsHighlightedImportantCast());
         end
+        if not castHighlight.animationGroup:IsPlaying() then
+            castHighlight.animationGroup:Play();
+        end
 
-        UpdatePsyflayPrototype(nameplate, unit, castBar);
+        UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOtherPlayersPet);
     else
-        DeactivatePsyflayPrototype(nameplate);
+        DeactivateSummonPresentationOverrides(nameplate);
     end
 end
 
@@ -279,18 +430,20 @@ local debugNpcPortraitNameplate;
 
 addon.HideDebugNpcPortrait = function(nameplate)
     local highlight = nameplate.debugNpcPortraitHighlight;
-    if highlight then highlight:Hide() end
+    if highlight then
+        StopHighlightAnimation(highlight);
+        highlight.portrait:SetTexture(nil);
+        highlight:Hide();
+    end
     if debugNpcPortraitNameplate == nameplate then
         debugNpcPortraitNameplate = nil;
     end
 end
 
 addon.DeactivateImportantNpcPortrait = function(nameplate)
-    local container = nameplate.importantNpcAuraContainer;
-    if container then
-        container:SetEnabled(false);
-        container:Hide();
-    end
+    DeactivateImportantAuraContainer(nameplate);
+    DeactivateSummonPresentationOverrides(nameplate);
+    nameplate.importantNpcIsOtherPlayersPet = nil;
 
     local castBar = nameplate.importantNpcCastBar;
     if castBar then
@@ -299,10 +452,10 @@ addon.DeactivateImportantNpcPortrait = function(nameplate)
         nameplate.importantNpcCastBar = nil;
     end
 
-    DeactivatePsyflayPrototype(nameplate);
-
     local castHighlight = nameplate.importantNpcCastPortrait;
     if castHighlight then
+        StopHighlightAnimation(castHighlight);
+        castHighlight.portrait:SetTexture(nil);
         castHighlight:SetAlpha(0);
     end
 end
@@ -433,6 +586,9 @@ if addon.internal then
             end
             ApplyPortraitHighlightLayout(highlight, nameplate);
             SetPortraitTexture(highlight.portrait, "target");
+            if not highlight.animationGroup:IsPlaying() then
+                highlight.animationGroup:Play();
+            end
             highlight:Show();
             debugNpcPortraitNameplate = nameplate;
             print("SweepyBoop: showing animated NPC portrait on current target");
