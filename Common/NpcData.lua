@@ -322,12 +322,6 @@ if addon.PROJECT_MAINLINE then
 end
 
 addon.CheckNpcWhiteList = function (unitId)
-    -- Temporarily suppress the unverified Retail summon filter/highlight. Classic
-    -- keeps its existing configurable NPC filter path below.
-    if addon.PROJECT_MAINLINE then
-        return addon.NpcOption.Show, false;
-    end
-
     if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
         return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
