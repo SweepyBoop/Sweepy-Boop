@@ -108,9 +108,6 @@ local function ApplyAlphaSignal(frame, signal)
     end
 end
 
-local SHADOW_PRIEST_SPEC_ID = 258;
-local MAX_ARENA_OPPONENTS = 5;
-
 local function EnsurePsyflayPrototype(nameplate, arenaSlot)
     local gates = nameplate.psyflayPrototypeGates;
     if not gates then
@@ -152,19 +149,21 @@ local function UpdatePsyflayPrototype(nameplate, unit, castBar)
         return;
     end
 
+    -- Blizzard's cast bar has accepted this as a channel. Its seventh
+    -- UnitChannelInfo result is the protected interruptibility signal.
     local _, _, _, _, _, _, notInterruptible = UnitChannelInfo(unit);
     local gates = nameplate.psyflayPrototypeGates;
 
-    for arenaSlot = 1, MAX_ARENA_OPPONENTS do
+    for arenaSlot = 1, addon.MAX_ARENA_SIZE do
         local gate = gates and gates[arenaSlot];
-        if GetArenaOpponentSpec(arenaSlot) == SHADOW_PRIEST_SPEC_ID then
+        if GetArenaOpponentSpec(arenaSlot) == addon.SPECID.SHADOW then
             gate = gate or EnsurePsyflayPrototype(nameplate, arenaSlot);
             local highlight = gate.highlight;
             ApplyPortraitHighlightLayout(gate, nameplate);
             SetPortraitTexture(highlight.portrait, unit);
 
-            -- These independent secret aspects multiply visually. Lua never learns
-            -- which Shadow Priest owns the minion or whether its channel is protected.
+            -- The child and parent alpha gates combine visually. Lua never learns
+            -- the protected interruptibility state or which Shadow Priest owns it.
             ApplyAlphaSignal(highlight, notInterruptible);
             gate:SetAlphaFromBoolean(
                 UnitIsOwnerOrControllerOfUnit("arena" .. arenaSlot, unit),
