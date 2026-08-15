@@ -4,6 +4,8 @@ local function HideWidgets(nameplate)
     addon.HideClassIcon(nameplate);
     addon.HidePetIcon(nameplate);
     addon.HideNpcHighlight(nameplate);
+    addon.DeactivateImportantNpcPortrait(nameplate);
+    addon.HideDebugNpcPortrait(nameplate);
     addon.HideCritterIcon(nameplate);
     addon.HideSpecIcon(nameplate);
     if addon.PROJECT_MAINLINE then
@@ -171,8 +173,9 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
         if addon.PROJECT_MAINLINE then
             local castBar = GetNameplateCastBar(frame);
             if castBar then
-                for _, region in pairs(castBar) do
-                    if ( type(region) == "table" ) and region.SetIgnoreParentAlpha then
+                for key, region in pairs(castBar) do
+                    if ( type(region) == "table" ) and region.SetIgnoreParentAlpha
+                        and key ~= "sweepyBoopImportantNpcPortrait" then
                         region:SetIgnoreParentAlpha(false);
                     end
                 end
@@ -225,6 +228,7 @@ local function UpdateWidgets(nameplate, frame)
 
     -- Possible issue: after priest mind control, party member shows both class icon and health bar
     if ( not addon.UnitIsHostile(frame.unit) ) then -- Friendly units, show class icon for friendly players and party pets
+        addon.DeactivateImportantNpcPortrait(nameplate);
         local configFriendly = SweepyBoop.db.profile.nameplatesFriendly;
         if configFriendly.classIconsEnabled then
             if UnitIsPlayer(frame.unit) then
@@ -274,6 +278,7 @@ local function UpdateWidgets(nameplate, frame)
         addon.HidePetIcon(nameplate);
 
         if UnitIsPlayer(frame.unit) then
+            addon.DeactivateImportantNpcPortrait(nameplate);
             -- For TBC, no spec/healer detection for enemies.
             -- For MoP Classic, use spec icons from tooltip.
             -- For Retail, use GetArenaOpponentSpec with name-matched arena numbers.
@@ -308,9 +313,7 @@ local function UpdateWidgets(nameplate, frame)
             addon.HideBigDebuffs(nameplate);
         end
 
-        local npcOption
-
-        local npcOption, isCritter, iconTexture, highlightKey = addon.CheckNpcWhiteList(frame.unit);
+        local npcOption, isCritter, iconTexture, highlightKey, useImportantPortrait = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
         if ( npcOption == addon.NpcOption.Highlight ) then
             addon.ShowNpcHighlight(nameplate, true, iconTexture, highlightKey);
@@ -321,6 +324,16 @@ local function UpdateWidgets(nameplate, frame)
         else
             addon.HideNpcHighlight(nameplate);
             shouldShowUnitFrame = false;
+        end
+
+        if addon.PROJECT_MAINLINE and useImportantPortrait then
+            addon.ActivateImportantNpcPortrait(
+                nameplate,
+                frame.unit,
+                GetNameplateCastBar(frame)
+            );
+        else
+            addon.DeactivateImportantNpcPortrait(nameplate);
         end
 
         -- Hide Beast Mastery Hunter secondary pets (this override the above setting)

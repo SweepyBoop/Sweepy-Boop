@@ -287,32 +287,6 @@ if addon.PROJECT_MAINLINE then
         return value, true;
     end
 
-    local function GetFirstAuraMatching(unitId, filter)
-        if C_UnitAuras.GetUnitAuras then
-            local auras = C_UnitAuras.GetUnitAuras(unitId, filter);
-            if auras and #auras > 0 then
-                return auras[1];
-            end
-        end
-
-        return C_UnitAuras.GetAuraDataByIndex(unitId, 1, filter);
-    end
-
-    local function GetPriorityAuraIcon(unitId)
-        if C_Secrets
-            and C_Secrets.ShouldAurasBeSecret
-            and C_Secrets.ShouldAurasBeSecret() then
-            return nil, false, false;
-        end
-
-        local aura = GetFirstAuraMatching(unitId, "HELPFUL|IMPORTANT");
-        if aura then
-            return aura.icon, true, true;
-        end
-
-        return nil, false, true;
-    end
-
     ClassifyMainlineNpc = function(unitId)
         -- Only confirmed minions are eligible for suppression. Unknown values fail open.
         local isMinion, minionKnown = ReadUnitFlag(UnitIsMinion, unitId);
@@ -330,23 +304,22 @@ if addon.PROJECT_MAINLINE then
             return addon.NpcOption.Show, false;
         end
 
-        local auraIcon, hasPriorityAura, priorityAuraKnown = GetPriorityAuraIcon(unitId);
-        if not priorityAuraKnown then
-            return addon.NpcOption.Show, false;
-        elseif hasPriorityAura then
-            return addon.NpcOption.Highlight, false, auraIcon, nil;
-        end
+        -- Aura and cast importance are protected presentation signals, not NPC identity.
+        -- The nameplate renderer consumes them without exposing either value to Lua.
+        local useImportantPortrait = true;
+
+        local isTarget, targetKnown =
 
         local isTarget, targetKnown = ReadUnitFlag(UnitIsUnit, unitId, "target");
         if ( not targetKnown ) or isTarget then
-            return addon.NpcOption.Show, false;
+            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait;
         end
 
         if isShamanPrimaryPet == nil then
-            return addon.NpcOption.Show, false;
+            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait;
         end
 
-        return addon.NpcOption.Hide, false;
+        return addon.NpcOption.Hide, false, nil, nil, useImportantPortrait;
     end
 end
 
