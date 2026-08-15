@@ -27,6 +27,179 @@ local function StopHighlightAnimation(highlight)
     highlight.halo:SetScale(1);
 end
 
+local function CreatePortraitHighlight(parent)
+    parent:SetSize(iconSize, iconSize);
+    parent:SetMouseClickEnabled(false);
+
+    parent.portrait = parent:CreateTexture(nil, "ARTWORK");
+    parent.portrait:SetAllPoints(parent);
+
+    parent.halo = CreateFrame("Frame", nil, parent);
+    parent.halo:SetMouseClickEnabled(false);
+    parent.halo:SetSize(highlightHaloSize, highlightHaloSize);
+    parent.halo:SetPoint("CENTER", parent);
+
+    parent.glowTexture = parent.halo:CreateTexture(nil, "OVERLAY");
+    parent.glowTexture:SetAllPoints(parent.halo);
+    parent.glowTexture:SetBlendMode("ADD");
+    parent.glowTexture:SetAtlas("clickcast-highlight-spellbook");
+    parent.glowTexture:SetDesaturated(true);
+    parent.glowTexture:SetVertexColor(unpack(highlightColor));
+
+    parent.animationGroup = SetupAnimation(parent.halo);
+    parent.animationGroup:Play();
+end
+
+local function ApplyPortraitHighlightLayout(highlight, nameplate)
+    local config = SweepyBoop.db.profile.nameplatesEnemy;
+    if highlight.lastModified == config.lastModified then return end
+
+    highlight:SetScale(config.npcHighlightScale);
+    highlight:ClearAllPoints();
+    highlight:SetPoint(
+        "BOTTOM",
+        nameplate,
+        "TOP",
+        config.npcHighlightHorizontalOffset or 0,
+        config.npcHighlightOffset or 0
+    );
+    highlight.lastModified = config.lastModified;
+end
+
+local importantAuraSlotKey = "ImportantMinion";
+
+local function EnsureImportantAuraContainer(nameplate)
+    local container = nameplate.importantNpcAuraContainer;
+    if container then return container end
+
+    container = CreateFrame(
+        "AuraContainer",
+        nil,
+        nameplate,
+        "CustomAuraContainerTemplate"
+    );
+    container:SetFrameStrata("HIGH");
+    container:SetSize(iconSize, iconSize);
+    container:SetEnabled(false);
+    container:Hide();
+    container:AddAuraSlot(importantAuraSlotKey, "HELPFUL|IMPORTANT", {
+        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            CreatePortraitHighlight(button);
+            button:SetPoint("CENTER", container, "CENTER");
+            -- Blizzard owns this protected texture after initialization. The aura
+            -- layer shows its truthful aura icon; cast and debug layers use portraits.
+            button:SetIcon(button.portrait);
+        end,
+    });
+
+    nameplate.importantNpcAuraContainer = container;
+    return container;
+end
+
+local function ApplyAlphaSignal(frame, signal)
+    if addon.IsSecretValue(signal) then
+        frame:SetAlphaFromBoolean(signal, 1, 0);
+    elseif signal then
+        frame:SetAlpha(1);
+    else
+        frame:SetAlpha(0);
+    end
+end
+
+local function EnsureImportantCastPortrait(nameplate, castBar)
+    local highlight = nameplate.importantNpcCastPortrait;
+    if not highlight then
+        highlight = CreateFrame("Frame", nil, castBar);
+        highlight:SetFrameStrata("HIGH");
+        highlight:SetIgnoreParentAlpha(true);
+        CreatePortraitHighlight(highlight);
+        highlight:Show();
+        nameplate.importantNpcCastPortrait = highlight;
+    elseif highlight:GetParent() ~= castBar then
+        highlight:SetParent(castBar);
+    end
+
+    ApplyPortraitHighlightLayout(highlight, nameplate);
+    return highlight;
+end
+
+if addon.PROJECT_MAINLINE then
+    local function ClearImportantCastPortrait(castBar)
+        local highlight = castBar.sweepyBoopImportantNpcPortrait;
+        if highlight then highlight:SetAlpha(0) end
+    end
+
+    hooksecurefunc(NamePlateCastingBarMixin, "SetIsHighlightedImportantCast", function(castBar, signal)
+        local highlight = castBar.sweepyBoopImportantNpcPortrait;
+        if highlight then
+            ApplyAlphaSignal(highlight, signal);
+        end
+    end);
+    -- These presentation transitions run only after Blizzard accepts the stop or
+    -- interruption for the active cast. Raw event handlers may receive stale IDs.
+    hooksecurefunc(NamePlateCastingBarMixin, "PlayFadeAnim", ClearImportantCastPortrait);
+    hooksecurefunc(NamePlateCastingBarMixin, "PlayInterruptAnims", ClearImportantCastPortrait);
+end
+
+addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
+    local container = EnsureImportantAuraContainer(nameplate);
+    ApplyPortraitHighlightLayout(container, nameplate);
+    container:SetUnit(unit);
+    container:SetEnabled(true);
+    container:Show();
+    container:UpdateAllAuras();
+
+    if castBar then
+        local previousCastBar = nameplate.importantNpcCastBar;
+        if previousCastBar and previousCastBar ~= castBar then
+            previousCastBar.sweepyBoopImportantNpcPortrait = nil;
+        end
+
+        local castHighlight = EnsureImportantCastPortrait(nameplate, castBar);
+        SetPortraitTexture(castHighlight.portrait, unit);
+        local isNewAssociation = castBar.sweepyBoopImportantNpcPortrait ~= castHighlight;
+        castBar.sweepyBoopImportantNpcPortrait = castHighlight;
+        nameplate.importantNpcCastBar = castBar;
+        if isNewAssociation then
+            -- Blizzard has already computed this value in untainted execution. Forward
+            -- it only to SweepyBoop's secret-safe alpha sink; recomputing here would make
+            -- Blizzard's own SetShown call consume a secret from tainted execution.
+            ApplyAlphaSignal(castHighlight, castBar:GetIsHighlightedImportantCast());
+        end
+    end
+end
+
+local debugNpcPortraitNameplate;
+
+addon.HideDebugNpcPortrait = function(nameplate)
+    local highlight = nameplate.debugNpcPortraitHighlight;
+    if highlight then highlight:Hide() end
+    if debugNpcPortraitNameplate == nameplate then
+        debugNpcPortraitNameplate = nil;
+    end
+end
+
+addon.DeactivateImportantNpcPortrait = function(nameplate)
+    local container = nameplate.importantNpcAuraContainer;
+    if container then
+        container:SetEnabled(false);
+        container:Hide();
+    end
+
+    local castBar = nameplate.importantNpcCastBar;
+    if castBar then
+        castBar.sweepyBoopImportantNpcPortrait = nil;
+        nameplate.importantNpcCastBar = nil;
+    end
+
+    local castHighlight = nameplate.importantNpcCastPortrait;
+    if castHighlight then
+        castHighlight:SetAlpha(0);
+    end
+end
+
 local function EnsureNpcHighlight(nameplate)
     local config = SweepyBoop.db.profile.nameplatesEnemy;
 
@@ -125,9 +298,37 @@ end
 
 if addon.internal then
     function SweepyBoop:DebugNpcHighlight(shouldShow, iconTexture)
+        if addon.PROJECT_MAINLINE and shouldShow == false then
+            if debugNpcPortraitNameplate then
+                addon.HideDebugNpcPortrait(debugNpcPortraitNameplate);
+            end
+            print("SweepyBoop: NPC portrait highlight preview hidden");
+            return;
+        end
+
         local nameplate = C_NamePlate.GetNamePlateForUnit("target");
         if not nameplate then
             print("SweepyBoop: current target has no visible nameplate");
+            return;
+        end
+
+        if addon.PROJECT_MAINLINE then
+            if debugNpcPortraitNameplate and debugNpcPortraitNameplate ~= nameplate then
+                addon.HideDebugNpcPortrait(debugNpcPortraitNameplate);
+            end
+
+            local highlight = nameplate.debugNpcPortraitHighlight;
+            if not highlight then
+                highlight = CreateFrame("Frame", nil, nameplate);
+                highlight:SetFrameStrata("HIGH");
+                CreatePortraitHighlight(highlight);
+                nameplate.debugNpcPortraitHighlight = highlight;
+            end
+            ApplyPortraitHighlightLayout(highlight, nameplate);
+            SetPortraitTexture(highlight.portrait, "target");
+            highlight:Show();
+            debugNpcPortraitNameplate = nameplate;
+            print("SweepyBoop: showing animated NPC portrait on current target");
             return;
         end
 
@@ -140,9 +341,7 @@ if addon.internal then
         addon.ShowNpcHighlight(
             nameplate,
             true,
-            iconTexture or addon.GetSpellTexture(
-                addon.PROJECT_MAINLINE and 204336 or 8177
-            ),
+            iconTexture or addon.GetSpellTexture(8177),
             "debug"
         );
         print("SweepyBoop: showing animated NPC highlight on current target");

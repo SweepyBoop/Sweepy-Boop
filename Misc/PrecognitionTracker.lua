@@ -2,6 +2,7 @@ local _, addon = ...;
 
 local iconSize = addon.DEFAULT_ICON_SIZE;
 local precognitionSpellID = 377362;
+local precognitionMaxDuration = 5;
 local auraSlotKey = "Precognition";
 local greenGlowColor = { 0, 1, 0, 1 };
 
@@ -123,6 +124,9 @@ local function EnsureLiveContainer()
                 includeSpellIDs = {
                     [precognitionSpellID] = true,
                 },
+                -- Blizzard skips spell-ID filters when the player is transiently
+                -- non-assistable during a layer transfer. Exclude permanent mounts.
+                maxDuration = precognitionMaxDuration,
             },
             sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
             sortDirection = AuraContainerSortDirection.Normal,
