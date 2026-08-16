@@ -2,20 +2,33 @@ local _, addon = ...;
 
 local iconSize = 30;
 local iconInset = 2;
-local highlightHaloSize = 50;
-local highlightPulseScale = 1.07;
-local highlightPulseDuration = 0.42;
+local highlightBorderSize = 42;
+local highlightRippleScale = 1.22;
+local highlightRippleDuration = 0.56;
+local highlightRippleStartAlpha = 0.82;
+local highlightRippleEndAlpha = 0.22;
 local highlightColor = { 0.85, 0.15, 1 };
+local highlightBorderTexture =
+    addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE;
 
-local function SetupAnimation(halo)
-    local animationGroup = halo:CreateAnimationGroup();
-    animationGroup:SetLooping("BOUNCE");
+local function SetupAnimation(ripple)
+    local animationGroup = ripple:CreateAnimationGroup();
+    animationGroup:SetLooping("REPEAT");
 
-    local pulse = animationGroup:CreateAnimation("Scale");
-    pulse:SetScale(highlightPulseScale, highlightPulseScale);
-    pulse:SetDuration(highlightPulseDuration);
-    if pulse.SetSmoothing then
-        pulse:SetSmoothing("IN_OUT");
+    local scale = animationGroup:CreateAnimation("Scale");
+    scale:SetScale(highlightRippleScale, highlightRippleScale);
+    scale:SetDuration(highlightRippleDuration);
+    scale:SetOrder(1);
+
+    local alpha = animationGroup:CreateAnimation("Alpha");
+    alpha:SetFromAlpha(highlightRippleStartAlpha);
+    alpha:SetToAlpha(highlightRippleEndAlpha);
+    alpha:SetDuration(highlightRippleDuration);
+    alpha:SetOrder(1);
+
+    if scale.SetSmoothing then
+        scale:SetSmoothing("IN_OUT");
+        alpha:SetSmoothing("IN_OUT");
     end
 
     return animationGroup;
@@ -25,7 +38,31 @@ local function StopHighlightAnimation(highlight)
     if highlight.animationGroup:IsPlaying() then
         highlight.animationGroup:Stop();
     end
-    highlight.halo:SetScale(1);
+    highlight.ripple:SetScale(1);
+    highlight.ripple:SetAlpha(highlightRippleStartAlpha);
+end
+
+local function CreateSquareBorders(parent)
+    parent.staticBorder = parent:CreateTexture(nil, "OVERLAY", nil, 1);
+    parent.staticBorder:SetSize(highlightBorderSize, highlightBorderSize);
+    parent.staticBorder:SetPoint("CENTER", parent);
+    parent.staticBorder:SetTexture(highlightBorderTexture);
+    parent.staticBorder:SetBlendMode("ADD");
+    parent.staticBorder:SetVertexColor(unpack(highlightColor));
+
+    parent.ripple = CreateFrame("Frame", nil, parent);
+    parent.ripple:SetMouseClickEnabled(false);
+    parent.ripple:SetSize(highlightBorderSize, highlightBorderSize);
+    parent.ripple:SetPoint("CENTER", parent);
+    parent.ripple:SetAlpha(highlightRippleStartAlpha);
+
+    parent.rippleTexture = parent.ripple:CreateTexture(nil, "OVERLAY", nil, 2);
+    parent.rippleTexture:SetAllPoints(parent.ripple);
+    parent.rippleTexture:SetTexture(highlightBorderTexture);
+    parent.rippleTexture:SetBlendMode("ADD");
+    parent.rippleTexture:SetVertexColor(unpack(highlightColor));
+
+    parent.animationGroup = SetupAnimation(parent.ripple);
 end
 
 local function CreateIconHighlight(parent)
@@ -36,25 +73,8 @@ local function CreateIconHighlight(parent)
     parent.icon:SetPoint("TOPLEFT", parent, "TOPLEFT", iconInset, -iconInset);
     parent.icon:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -iconInset, iconInset);
 
-    parent.halo = CreateFrame("Frame", nil, parent);
-    parent.halo:SetMouseClickEnabled(false);
-    parent.halo:SetSize(highlightHaloSize, highlightHaloSize);
-    parent.halo:SetPoint("CENTER", parent);
-
-    parent.glowTexture = parent.halo:CreateTexture(nil, "OVERLAY");
-    parent.glowTexture:SetAllPoints(parent.halo);
-    parent.glowTexture:SetBlendMode("ADD");
-    parent.glowTexture:SetAtlas("clickcast-highlight-spellbook");
-    parent.glowTexture:SetDesaturated(true);
-    parent.glowTexture:SetVertexColor(unpack(highlightColor));
-
-    parent.animationGroup = SetupAnimation(parent.halo);
+    CreateSquareBorders(parent);
     parent.animationGroup:Play();
-end
-
-local function CreatePortraitHighlight(parent)
-    CreateIconHighlight(parent);
-    parent.portrait = parent.icon;
 end
 
 local function ApplyHighlightLayout(highlight, nameplate)
@@ -596,28 +616,24 @@ local function EnsureNpcHighlight(nameplate)
         nameplate.npcHighlight:SetFrameStrata("HIGH");
         nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", config.npcHighlightHorizontalOffset or 0, config.npcHighlightOffset or 0);
 
-        nameplate.npcHighlight.customIcon = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
-        nameplate.npcHighlight.customIcon:SetAllPoints(nameplate.npcHighlight);
+        nameplate.npcHighlight.customIcon =
+            nameplate.npcHighlight:CreateTexture(nil, "ARTWORK");
+        nameplate.npcHighlight.customIcon:SetPoint(
+            "TOPLEFT",
+            nameplate.npcHighlight,
+            "TOPLEFT",
+            iconInset,
+            -iconInset
+        );
+        nameplate.npcHighlight.customIcon:SetPoint(
+            "BOTTOMRIGHT",
+            nameplate.npcHighlight,
+            "BOTTOMRIGHT",
+            -iconInset,
+            iconInset
+        );
 
-        nameplate.npcHighlight.halo = CreateFrame("Frame", nil, nameplate.npcHighlight);
-        nameplate.npcHighlight.halo:SetMouseClickEnabled(false);
-        nameplate.npcHighlight.halo:SetSize(highlightHaloSize, highlightHaloSize);
-        nameplate.npcHighlight.halo:SetPoint("CENTER", nameplate.npcHighlight);
-
-        nameplate.npcHighlight.glowTexture = nameplate.npcHighlight.halo:CreateTexture(nil, "OVERLAY");
-        nameplate.npcHighlight.glowTexture:SetAllPoints(nameplate.npcHighlight.halo);
-        nameplate.npcHighlight.glowTexture:SetBlendMode("ADD");
-        if addon.PROJECT_MAINLINE then
-            nameplate.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
-        else
-            nameplate.npcHighlight.glowTexture:SetAtlas("Forge-ColorSwatchSelection");
-            nameplate.npcHighlight.glowTexture:SetScale(0.4);
-        end
-        nameplate.npcHighlight.glowTexture:SetDesaturated(true);
-        nameplate.npcHighlight.glowTexture:SetVertexColor(unpack(highlightColor));
-
-        nameplate.npcHighlight.animationGroup = SetupAnimation(nameplate.npcHighlight.halo);
-
+        CreateSquareBorders(nameplate.npcHighlight);
         nameplate.npcHighlight:Hide();
     end
 
@@ -658,15 +674,16 @@ addon.ShowNpcHighlight = function(nameplate, animation, iconTexture, highlightKe
 
     if highlight then
         highlight.customIcon:Show();
+        highlight.staticBorder:Show();
         if animation then
-            highlight.halo:Show();
+            highlight.ripple:Show();
             if not highlight.animationGroup:IsPlaying() then
                 StopHighlightAnimation(highlight);
                 highlight.animationGroup:Play();
             end
         else
             StopHighlightAnimation(highlight);
-            highlight.halo:Hide();
+            highlight.ripple:Hide();
         end
         highlight:Show();
     end
@@ -676,7 +693,8 @@ addon.HideNpcHighlight = function(nameplate)
     local highlight = nameplate.npcHighlight;
     if highlight then
         StopHighlightAnimation(highlight);
-        highlight.halo:Hide();
+        highlight.ripple:Hide();
+        highlight.staticBorder:Hide();
         highlight.customIcon:Hide();
         highlight:Hide();
     end

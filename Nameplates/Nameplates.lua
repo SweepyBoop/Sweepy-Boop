@@ -175,7 +175,7 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
             if castBar then
                 for key, region in pairs(castBar) do
                     if ( type(region) == "table" ) and region.SetIgnoreParentAlpha
-                        and key ~= "sweepyBoopImportantNpcPortrait" then
+                        and key ~= "sweepyBoopImportantNpcNameplate" then
                         region:SetIgnoreParentAlpha(false);
                     end
                 end
