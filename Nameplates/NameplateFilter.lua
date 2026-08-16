@@ -769,18 +769,18 @@ end
 
 if addon.internal then
     -- Internal preview; first target a unit with a visible nameplate.
-    -- Portrait: /run SweepyBoop:DebugNpcHighlight(true, "portrait", false)
-    -- Cast: /run SweepyBoop:DebugNpcHighlight(true, "cast", true)
-    -- Aura: /run SweepyBoop:DebugNpcHighlight(true, "aura", false)
-    -- Static spell: /run SweepyBoop:DebugNpcHighlight(true, "static", 211522, true)
-    -- All layers: /run SweepyBoop:DebugNpcHighlight(true, "all", 211522, false)
-    -- Classic custom icon: /run SweepyBoop:DebugNpcHighlight(true, nil, false)
+    -- Portrait: /run SweepyBoop:DebugNpcHighlight(true, false, "portrait")
+    -- Cast: /run SweepyBoop:DebugNpcHighlight(true, true, "cast")
+    -- Aura: /run SweepyBoop:DebugNpcHighlight(true, false, "aura")
+    -- Static spell: /run SweepyBoop:DebugNpcHighlight(true, true, "static", 211522)
+    -- All layers: /run SweepyBoop:DebugNpcHighlight(true, false, "all", 211522)
+    -- Classic custom icon: /run SweepyBoop:DebugNpcHighlight(true, false)
     -- Hide: /run SweepyBoop:DebugNpcHighlight(false)
     function SweepyBoop:DebugNpcHighlight(
         shouldShow,
+        shouldAnimate,
         representation,
-        spellID,
-        shouldAnimate
+        spellID
     )
         if addon.PROJECT_MAINLINE and shouldShow == false then
             if debugNpcHighlightNameplate then
@@ -802,10 +802,6 @@ if addon.internal then
             end
 
             representation = representation or "portrait";
-            if type(spellID) == "boolean" and shouldAnimate == nil then
-                shouldAnimate = spellID;
-                spellID = nil;
-            end
             if shouldAnimate == nil then
                 shouldAnimate = true;
             end
@@ -889,9 +885,6 @@ if addon.internal then
             return;
         end
 
-        if type(spellID) == "boolean" and shouldAnimate == nil then
-            shouldAnimate = spellID;
-        end
         if shouldAnimate == nil then
             shouldAnimate = true;
         end
