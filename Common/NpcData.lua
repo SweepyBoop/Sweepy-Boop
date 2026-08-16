@@ -291,9 +291,9 @@ if addon.PROJECT_MAINLINE then
             return addon.NpcOption.Show, false;
         end
 
-        local isOtherPlayersPet, primaryPetKnown =
+        local isOtherPlayersPet, isPetKnown =
             ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
-        if not primaryPetKnown then
+        if not isPetKnown then
             -- The unit is still a confirmed minion. Enable Blizzard-backed
             -- presentation, but leave the pet subtype unknown so pet-specific
             -- allow-list rules fail closed.

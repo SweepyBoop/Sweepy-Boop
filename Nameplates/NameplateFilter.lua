@@ -197,51 +197,53 @@ end
 
 -- This is the complete Mainline presentation policy. Entries render independently.
 -- Cast/static icons render above aura icons, which render above unit portraits; any
--- overlapping additive halos intentionally become brighter. A future blacklist should
--- use only readable predicates and run
--- before this whitelist is activated; unknown/protected facts must fail open.
+-- overlapping additive halos intentionally become brighter.
 local importantMinionWhitelist = {
     {
         key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
         ownerClass = addon.SHAMAN,
-        primaryPet = false,
+        isPet = false,
         signal = "aura",
         filter = "HELPFUL|IMPORTANT",
         presentation = "auraIcon",
     },
     {
-        key = "warlockPrimaryPetCast", -- Validated through the equivalent Water Elemental primary-pet path.
+        key = "shamanMinionCast", -- Validated in-game with Capacitor Totem.
+        ownerClass = addon.SHAMAN,
+        isPet = false,
+        signal = "cast",
+        requireNotInterruptible = true,
+        presentation = "castIcon",
+    },
+
+    {
+        key = "warlockPetCast", -- Validated through the equivalent Water Elemental pet path.
         ownerClass = addon.WARLOCK,
-        primaryPet = true,
+        isPet = true,
         signal = "cast",
         presentation = "portrait",
     },
-    -- Test rule: Mage primary pets are common and make this path easy to verify.
-    -- {
-    --     key = "magePrimaryPetCast", -- Validated in-game with Water Elemental.
-    --     ownerClass = addon.MAGE,
-    --     primaryPet = true,
-    --     signal = "cast",
-    --     presentation = "portrait",
-    -- },
     {
         key = "afflictionMinionCast", -- Validated in-game with Darkglare.
         ownerSpec = addon.SPECID.AFFLICTION,
-        primaryPet = false,
+        isPet = false,
         signal = "cast",
         presentation = "portrait",
     },
-    {
-        key = "shamanMinionCast", -- Validated in-game with Capacitor Totem.
-        ownerClass = addon.SHAMAN,
-        primaryPet = false,
-        signal = "cast",
-        presentation = "castIcon",
-    },
+
+    -- Test rule: Mage pets are common and make this path easy to verify.
+    -- {
+    --     key = "magePetCast", -- Validated in-game with Water Elemental.
+    --     ownerClass = addon.MAGE,
+    --     isPet = true,
+    --     signal = "cast",
+    --     presentation = "portrait",
+    -- },
+
     {
         key = "shadowMinionChannel", -- Validated in-game with Psyfiend.
         ownerSpec = addon.SPECID.SHADOW,
-        primaryPet = false,
+        isPet = false,
         signal = "channel",
         requireNotInterruptible = true,
         presentation = "staticIcon",
@@ -259,7 +261,7 @@ local function RuleMatchesOwner(rule, specID)
 end
 
 local function RuleMatchesPetState(rule, isOtherPlayersPet)
-    return rule.primaryPet == nil or rule.primaryPet == isOtherPlayersPet;
+    return rule.isPet == nil or rule.isPet == isOtherPlayersPet;
 end
 
 local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
@@ -364,16 +366,18 @@ end
 local function GetCastPresentationState(unit)
     -- Texture returns may be protected and remain opaque. Return 6 is NeverSecret
     -- and serves only as the public tuple-presence sentinel documented by Blizzard.
-    local _, _, castingTexture, _, _, castingPresence = UnitCastingInfo(unit);
+    local _, _, castingTexture, _, _, castingPresence, _,
+        castingNotInterruptible = UnitCastingInfo(unit);
     local _, _, channelTexture, _, _, channelPresence,
         channelNotInterruptible = UnitChannelInfo(unit);
 
-    -- UnitChannelInfo return 7 may be protected. It is forwarded only to an alpha
-    -- sink for entries that explicitly require a non-interruptible channel.
+    -- Interruptibility returns may be protected. They are forwarded only to alpha
+    -- sinks for entries that explicitly require a non-interruptible action.
     return castingPresence ~= nil,
         channelPresence ~= nil,
         castingTexture,
         channelTexture,
+        castingNotInterruptible,
         channelNotInterruptible;
 end
 
@@ -406,7 +410,7 @@ local function EnsureActionRuleFrame(nameplate, rule, ownerSlot)
     frame:SetSize(iconSize, iconSize);
     frame:SetAlpha(0);
 
-    -- The nested alpha parent composes protected channel interruptibility with
+    -- The nested alpha parent composes protected action interruptibility with
     -- protected ownership without calculating their conjunction in Lua.
     frame.interruptibilityGate = CreateFrame("Frame", nil, frame);
     frame.interruptibilityGate:SetAllPoints(frame);
@@ -481,7 +485,8 @@ local function UpdateActionRules(
     isOtherPlayersPet
 )
     local isCasting, isChanneling, castingTexture, channelTexture,
-        channelNotInterruptible = GetCastPresentationState(unit);
+        castingNotInterruptible, channelNotInterruptible =
+            GetCastPresentationState(unit);
 
     PrepareActionRuleFrames(nameplate, isOtherPlayersPet);
     local ruleFrames = nameplate.importantMinionActionFrames;
@@ -513,9 +518,15 @@ local function UpdateActionRules(
                         end
 
                         if rule.requireNotInterruptible then
+                            local notInterruptible;
+                            if rule.signal == "cast" then
+                                notInterruptible = castingNotInterruptible;
+                            else
+                                notInterruptible = channelNotInterruptible;
+                            end
                             ApplyAlphaSignal(
                                 frame.interruptibilityGate,
-                                channelNotInterruptible
+                                notInterruptible
                             );
                         else
                             frame.interruptibilityGate:SetAlpha(1);
