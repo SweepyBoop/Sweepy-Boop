@@ -87,13 +87,13 @@ local function ApplyInverseAlphaSignal(frame, signal)
     end
 end
 
--- Highlight sources use explicit visual priority rather than a Lua-computed OR:
---   aura:       A
---   cast:       NOT A AND C
---   allow-list: NOT A AND NOT C AND L
--- Together these equal A OR C OR L, but only the highest active portrait is visible.
--- Protected A/C values are forwarded only to positive or inverse alpha sinks; Lua
--- never inspects them. The readable blacklist is evaluated first and its matching
+-- Blizzard's important-aura portrait is an independent, proven presentation path.
+-- Cast and allow-list sources use visual priority without a Lua-computed OR:
+--   cast:       C
+--   allow-list: NOT C AND L
+-- Together these equal C OR L, but only the higher cast portrait is visible. Protected
+-- C is forwarded only to positive or inverse alpha sinks; Lua never inspects it.
+-- The readable blacklist is evaluated first and its matching
 -- path fully deactivates all three tiers, even though the registry is currently empty.
 -- Blacklist predicates must use only readable facts; unknown/protected facts fail open.
 local portraitHighlightBlacklist = {};
@@ -129,7 +129,6 @@ local portraitHighlightAllowList = {
 };
 
 local importantAuraSlotKey = "ImportantMinion";
-local UpdateImportantAuraPriority;
 
 local function EnsureImportantAuraContainer(nameplate)
     local container = nameplate.importantNpcAuraContainer;
@@ -158,11 +157,10 @@ local function EnsureImportantAuraContainer(nameplate)
         initializeFrame = function(button)
             button:SetPoint("CENTER", container, "CENTER");
             -- Blizzard securely computes whether this filtered aura slot is occupied.
-            -- The protected result reveals this highest-priority portrait and inversely
-            -- suppresses every lower tier; Lua never reads the result.
+            -- Keep this restricted bridge to the one proven operation: forward the
+            -- protected occupancy result directly to the sibling portrait's alpha.
             hooksecurefunc(button, "SetShown", function(_, shown)
                 highlight:SetAlphaFromBoolean(shown, 1, 0);
-                UpdateImportantAuraPriority(nameplate, shown);
             end);
         end,
     });
@@ -180,24 +178,6 @@ local function DeactivateImportantAuraContainer(nameplate)
     StopHighlightAnimation(container.highlight);
     container.highlight.portrait:SetTexture(nil);
     container.highlight:SetAlpha(0);
-end
-
-UpdateImportantAuraPriority = function(nameplate, signal)
-    -- Fan out the original protected A value to independent supported sinks. We do
-    -- not read the aura portrait's alpha or compute `not A` in Lua. Swapping the two
-    -- public alpha outputs lets SetAlphaFromBoolean perform visual inversion natively.
-    local castPriorityGate = nameplate.importantNpcCastPriorityGate;
-    if castPriorityGate then
-        ApplyInverseAlphaSignal(castPriorityGate, signal);
-    end
-
-    local ruleGates = nameplate.summonPresentationGates;
-    if not ruleGates then return end
-    for _, gates in pairs(ruleGates) do
-        for _, gate in pairs(gates) do
-            ApplyInverseAlphaSignal(gate.importantAuraGate, signal);
-        end
-    end
 end
 
 local function IsPortraitHighlightBlacklisted(unit)
@@ -259,13 +239,10 @@ local function EnsureSummonPresentationGate(nameplate, override, arenaSlot)
     gate:SetFrameStrata("HIGH");
     gate:SetSize(iconSize, iconSize);
 
-    -- Parent alpha composes the protected priority conditions without exposing
-    -- them: owner AND NOT important aura AND NOT important cast.
-    gate.importantAuraGate = CreateFrame("Frame", nil, gate);
-    gate.importantAuraGate:SetAllPoints(gate);
-    gate.importantAuraGate:SetAlpha(0);
-    gate.importantCastGate = CreateFrame("Frame", nil, gate.importantAuraGate);
-    gate.importantCastGate:SetAllPoints(gate.importantAuraGate);
+    -- Parent alpha composes owner AND NOT important cast without exposing the
+    -- protected cast value to Lua.
+    gate.importantCastGate = CreateFrame("Frame", nil, gate);
+    gate.importantCastGate:SetAllPoints(gate);
     gate.importantCastGate:SetAlpha(0);
     gate:Hide();
     gates[arenaSlot] = gate;
@@ -276,8 +253,8 @@ local function EnsureEligibleSummonPresentationGates(nameplate, isOtherPlayersPe
     if not IsActiveBattlefieldArena() then return end
 
     -- Build only gates whose readable pet/owner predicates can match. This happens
-    -- before protected aura/cast signals are published, so every lower tier receives
-    -- its initial inverse priority state without caching those protected values.
+    -- before the protected cast signal is published, so every lower tier receives
+    -- its initial inverse priority state without caching that protected value.
     for _, override in ipairs(portraitHighlightAllowList) do
         if OverrideMatchesPetState(override, isOtherPlayersPet) then
             for arenaSlot = 1, addon.MAX_ARENA_SIZE do
@@ -342,7 +319,6 @@ local function ResetSummonPresentationPriority(nameplate)
     -- deactivation deliberately retains the current priority signals for the same unit.
     for _, gates in pairs(ruleGates) do
         for _, gate in pairs(gates) do
-            gate.importantAuraGate:SetAlpha(0);
             gate.importantCastGate:SetAlpha(0);
         end
     end
@@ -399,7 +375,8 @@ local function EnsureImportantCastPortrait(nameplate, castBar)
         priorityGate = CreateFrame("Frame", nil, castBar);
         priorityGate:SetFrameStrata("HIGH");
         priorityGate:SetIgnoreParentAlpha(true);
-        priorityGate:SetAlpha(0);
+        -- Aura priority is intentionally independent from this proven cast path.
+        priorityGate:SetAlpha(1);
 
         highlight = CreateFrame("Frame", nil, priorityGate);
         highlight:SetPoint("CENTER", priorityGate);
@@ -412,6 +389,7 @@ local function EnsureImportantCastPortrait(nameplate, castBar)
         priorityGate:SetParent(castBar);
     end
 
+    priorityGate:SetAlpha(1);
     ApplyPortraitHighlightLayout(priorityGate, nameplate);
     return highlight;
 end
