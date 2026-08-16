@@ -531,7 +531,18 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.GetSpellTexture(204336)) .. " Highlight important enemy minions" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
-                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons using secret-safe aura, cast, and channel presentation\n\nRetail minion health bars remain visible because exact summon identity and importance may be protected." or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
+                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons using secret-safe aura, cast, and channel presentation.\n\nThis option does not hide their health bars." or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
+                    },
+                    hideDemonologyNonPetMinions = {
+                        order = 11.5,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(104317))
+                            .. " Hide Demonology guardians and other non-pet minions in arena",
+                        desc = "Hide confirmed guardians and other non-pet minions owned by a Demonology Warlock to reduce nameplate clutter. Wild Imps are one example.\n\nDisable this to keep their health bars visible for gaining combo points or triggering effects from attacks, procs, and bleeds.",
+                        hidden = function()
+                            return not addon.PROJECT_MAINLINE;
+                        end,
                     },
                     showCritterIcons = {
                         order = 12,

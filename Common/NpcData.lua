@@ -315,18 +315,26 @@ if addon.PROJECT_MAINLINE then
 end
 
 addon.CheckNpcWhiteList = function (unitId)
-    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
+    local filterEnabled = SweepyBoop.db.profile.nameplatesEnemy.filterEnabled;
+    if addon.PROJECT_MAINLINE then
+        local npcOption, isCritter, iconTexture, highlightKey,
+            useImportantPortrait, isOtherPlayersPet = ClassifyMainlineNpc(unitId);
+        return npcOption,
+            isCritter,
+            iconTexture,
+            highlightKey,
+            filterEnabled and useImportantPortrait,
+            isOtherPlayersPet;
+    end
+
+    if not filterEnabled then
         return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
 
-    if ( not addon.PROJECT_MAINLINE ) then
-        local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
-        local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
-        local isCritter = addon.CritterNPCs[tonumber(npcID)];
-        return isWhitelisted, isCritter;
-    end
-
-    return ClassifyMainlineNpc(unitId);
+    local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
+    local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
+    local isCritter = addon.CritterNPCs[tonumber(npcID)];
+    return isWhitelisted, isCritter;
 end
 
 addon.FillDefaultToNpcOptions = function(profile)

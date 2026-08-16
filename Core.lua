@@ -116,6 +116,7 @@ local defaults = {
             npcHighlightHorizontalOffset = 0,
             npcHighlightOffset = 0,
             hideHunterSecondaryPet = true,
+            hideDemonologyNonPetMinions = true,
             filterList = {},
             debuffWhiteList = {},
             buffWhiteList = {},

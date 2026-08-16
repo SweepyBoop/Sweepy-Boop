@@ -350,7 +350,9 @@ local function UpdateWidgets(nameplate, frame)
         end
 
         UpdateUnitFrameVisibility(nameplate, frame, shouldShowUnitFrame);
-        if addon.PROJECT_MAINLINE and shouldShowUnitFrame then
+        if addon.PROJECT_MAINLINE
+            and shouldShowUnitFrame
+            and SweepyBoop.db.profile.nameplatesEnemy.hideDemonologyNonPetMinions then
             addon.ApplyMinionVisibilityBlacklist(
                 frame,
                 GetNameplateCastBar(frame),
