@@ -350,6 +350,14 @@ local function UpdateWidgets(nameplate, frame)
         end
 
         UpdateUnitFrameVisibility(nameplate, frame, shouldShowUnitFrame);
+        if addon.PROJECT_MAINLINE and shouldShowUnitFrame then
+            addon.ApplyMinionVisibilityBlacklist(
+                frame,
+                GetNameplateCastBar(frame),
+                frame.unit,
+                isOtherPlayersPet
+            );
+        end
     end
 end
 

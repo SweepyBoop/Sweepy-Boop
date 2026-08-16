@@ -284,16 +284,16 @@ if addon.PROJECT_MAINLINE then
 
     ClassifyMainlineNpc = function(unitId)
         -- Retail does not expose reliable NPC identity or readable importance.
-        -- Preserve every minion's health bar and use protected presentation signals
-        -- only to add truthful unit-portrait priority markers.
+        -- Preserve minion health bars unless a separate visibility rule can classify
+        -- the pet state and owner without exposing protected identity.
         local isMinion, minionKnown = ReadUnitFlag(UnitIsMinion, unitId);
         if ( not minionKnown ) or ( not isMinion ) then
             return addon.NpcOption.Show, false;
         end
 
-        local isOtherPlayersPet, primaryPetKnown =
+        local isOtherPlayersPet, isPetKnown =
             ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
-        if not primaryPetKnown then
+        if not isPetKnown then
             -- The unit is still a confirmed minion. Enable Blizzard-backed
             -- presentation, but leave the pet subtype unknown so pet-specific
             -- allow-list rules fail closed.
