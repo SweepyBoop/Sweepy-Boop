@@ -323,7 +323,7 @@ addon.ApplyMinionVisibilityBlacklist = function(
     end
 end
 
-local function EnsureAuraRuleGate
+local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
     local ruleGates = nameplate.importantMinionAuraGates;
     if not ruleGates then
         ruleGates = {};
