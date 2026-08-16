@@ -87,8 +87,13 @@ local function ApplyInverseAlphaSignal(frame, signal)
     end
 end
 
--- Readable blacklist first, Blizzard-important aura/cast by default, then
--- allow-list fallbacks for Blizzard false negatives. All paths show the unit portrait.
+-- Highlight sources use explicit visual priority rather than a Lua-computed OR:
+--   aura:       A
+--   cast:       NOT A AND C
+--   allow-list: NOT A AND NOT C AND L
+-- Together these equal A OR C OR L, but only the highest active portrait is visible.
+-- Protected A/C values are forwarded only to positive or inverse alpha sinks; Lua
+-- never inspects them. The readable blacklist is evaluated first and hides all tiers.
 local portraitHighlightBlacklist = {};
 local portraitHighlightAllowList = {
     {
@@ -122,7 +127,7 @@ local portraitHighlightAllowList = {
 };
 
 local importantAuraSlotKey = "ImportantMinion";
-local UpdateOverrideImportantAuraSignal;
+local UpdateImportantAuraPriority;
 
 local function EnsureImportantAuraContainer(nameplate)
     local container = nameplate.importantNpcAuraContainer;
@@ -151,11 +156,11 @@ local function EnsureImportantAuraContainer(nameplate)
         initializeFrame = function(button)
             button:SetPoint("CENTER", container, "CENTER");
             -- Blizzard securely computes whether this filtered aura slot is occupied.
-            -- Install the hook before Blizzard restricts the button, then forward the
-            -- possibly secret shown state directly to our sibling portrait's alpha.
+            -- The protected result reveals this highest-priority portrait and inversely
+            -- suppresses every lower tier; Lua never reads the result.
             hooksecurefunc(button, "SetShown", function(_, shown)
                 highlight:SetAlphaFromBoolean(shown, 1, 0);
-                UpdateOverrideImportantAuraSignal(nameplate, shown);
+                UpdateImportantAuraPriority(nameplate, shown);
             end);
         end,
     });
@@ -173,6 +178,21 @@ local function DeactivateImportantAuraContainer(nameplate)
     StopHighlightAnimation(container.highlight);
     container.highlight.portrait:SetTexture(nil);
     container.highlight:SetAlpha(0);
+end
+
+UpdateImportantAuraPriority = function(nameplate, signal)
+    local castPriorityGate = nameplate.importantNpcCastPriorityGate;
+    if castPriorityGate then
+        ApplyInverseAlphaSignal(castPriorityGate, signal);
+    end
+
+    local ruleGates = nameplate.summonPresentationGates;
+    if not ruleGates then return end
+    for _, gates in pairs(ruleGates) do
+        for _, gate in pairs(gates) do
+            ApplyInverseAlphaSignal(gate.importantAuraGate, signal);
+        end
+    end
 end
 
 local function IsPortraitHighlightBlacklisted(unit)
@@ -233,21 +253,42 @@ local function EnsureSummonPresentationGate(nameplate, override, arenaSlot)
     gate = CreateFrame("Frame", nil, nameplate);
     gate:SetFrameStrata("HIGH");
     gate:SetSize(iconSize, iconSize);
+
+    -- Parent alpha composes the protected priority conditions without exposing
+    -- them: owner AND NOT important aura AND NOT important cast.
     gate.importantAuraGate = CreateFrame("Frame", nil, gate);
     gate.importantAuraGate:SetAllPoints(gate);
     gate.importantAuraGate:SetAlpha(0);
-    gate.overrideGate = CreateFrame("Frame", nil, gate.importantAuraGate);
-    gate.overrideGate:SetAllPoints(gate.importantAuraGate);
+    gate.importantCastGate = CreateFrame("Frame", nil, gate.importantAuraGate);
+    gate.importantCastGate:SetAllPoints(gate.importantAuraGate);
+    gate.importantCastGate:SetAlpha(0);
     gate:Hide();
     gates[arenaSlot] = gate;
     return gate;
 end
 
+local function EnsureEligibleSummonPresentationGates(nameplate, isOtherPlayersPet)
+    if not IsActiveBattlefieldArena() then return end
+
+    -- Build only gates whose readable pet/owner predicates can match. This happens
+    -- before protected aura/cast signals are published, so every lower tier receives
+    -- its initial inverse priority state without caching those protected values.
+    for _, override in ipairs(portraitHighlightAllowList) do
+        if OverrideMatchesPetState(override, isOtherPlayersPet) then
+            for arenaSlot = 1, addon.MAX_ARENA_SIZE do
+                if OverrideMatchesOwner(override, GetArenaOpponentSpec(arenaSlot)) then
+                    EnsureSummonPresentationGate(nameplate, override, arenaSlot);
+                end
+            end
+        end
+    end
+end
+
 local function EnsureRulePortrait(gate)
     if gate.highlight then return gate.highlight end
 
-    local highlight = CreateFrame("Frame", nil, gate.overrideGate);
-    highlight:SetPoint("CENTER", gate.overrideGate);
+    local highlight = CreateFrame("Frame", nil, gate.importantCastGate);
+    highlight:SetPoint("CENTER", gate.importantCastGate);
     CreatePortraitHighlight(highlight);
     gate.highlight = highlight;
     return highlight;
@@ -260,6 +301,16 @@ local function DeactivateSummonPresentationGate(gate)
         gate.highlight:SetAlpha(0);
     end
     gate:Hide();
+end
+
+local function ApplyImportantCastPriority(nameplate, signal)
+    local ruleGates = nameplate.summonPresentationGates;
+    if not ruleGates then return end
+    for _, gates in pairs(ruleGates) do
+        for _, gate in pairs(gates) do
+            ApplyInverseAlphaSignal(gate.importantCastGate, signal);
+        end
+    end
 end
 
 local function DeactivateSummonPresentationOverrides(nameplate)
@@ -276,35 +327,21 @@ local function DeactivateSummonPresentationOverrides(nameplate)
     end
 end
 
-UpdateOverrideImportantAuraSignal = function(nameplate, signal)
+local function ResetSummonPresentationPriority(nameplate)
     local ruleGates = nameplate.summonPresentationGates;
     if not ruleGates then return end
 
-    for _, override in ipairs(portraitHighlightAllowList) do
-        local gates = ruleGates[override.key];
-        if gates then
-            for _, gate in pairs(gates) do
-                ApplyInverseAlphaSignal(gate.importantAuraGate, signal);
-            end
+    -- Full unit teardown must leave pooled gates fail-closed. Soft cast/rule
+    -- deactivation deliberately retains the current priority signals for the same unit.
+    for _, gates in pairs(ruleGates) do
+        for _, gate in pairs(gates) do
+            gate.importantAuraGate:SetAlpha(0);
+            gate.importantCastGate:SetAlpha(0);
         end
     end
 end
 
-local function UpdateOverrideImportantCastSignal(nameplate, signal)
-    local ruleGates = nameplate.summonPresentationGates;
-    if not ruleGates then return end
-
-    for _, override in ipairs(portraitHighlightAllowList) do
-        local gates = ruleGates[override.key];
-        if gates then
-            for _, gate in pairs(gates) do
-                ApplyInverseAlphaSignal(gate.overrideGate, signal);
-            end
-        end
-    end
-end
-
-local function UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOtherPlayersPet)
+local function UpdateSummonPresentationOverrides(nameplate, unit, isOtherPlayersPet)
     if not IsActiveBattlefieldArena() then
         DeactivateSummonPresentationOverrides(nameplate);
         return;
@@ -321,21 +358,14 @@ local function UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOth
 
         for arenaSlot = 1, addon.MAX_ARENA_SIZE do
             local gate = gates and gates[arenaSlot];
-            if overrideActive and OverrideMatchesOwner(override, GetArenaOpponentSpec(arenaSlot)) then
-                gate = gate or EnsureSummonPresentationGate(nameplate, override, arenaSlot);
+            if gate and overrideActive
+                and OverrideMatchesOwner(override, GetArenaOpponentSpec(arenaSlot)) then
                 ApplyPortraitHighlightLayout(gate, nameplate);
                 gate:SetAlphaFromBoolean(
                     UnitIsOwnerOrControllerOfUnit("arena" .. arenaSlot, unit),
                     1,
                     0
                 );
-                -- Overrides are fallbacks for Blizzard false negatives. Reverse the
-                -- protected important-cast signal without exposing it to Lua.
-                ApplyInverseAlphaSignal(
-                    gate.overrideGate,
-                    castBar:GetIsHighlightedImportantCast()
-                );
-
                 local highlight = EnsureRulePortrait(gate);
                 SetPortraitTexture(highlight.portrait, unit);
                 if override.requireNotInterruptible then
@@ -356,19 +386,26 @@ local function UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOth
 end
 
 local function EnsureImportantCastPortrait(nameplate, castBar)
+    local priorityGate = nameplate.importantNpcCastPriorityGate;
     local highlight = nameplate.importantNpcCastPortrait;
     if not highlight then
-        highlight = CreateFrame("Frame", nil, castBar);
-        highlight:SetFrameStrata("HIGH");
-        highlight:SetIgnoreParentAlpha(true);
+        priorityGate = CreateFrame("Frame", nil, castBar);
+        priorityGate:SetFrameStrata("HIGH");
+        priorityGate:SetIgnoreParentAlpha(true);
+        priorityGate:SetAlpha(0);
+
+        highlight = CreateFrame("Frame", nil, priorityGate);
+        highlight:SetPoint("CENTER", priorityGate);
         CreatePortraitHighlight(highlight);
         highlight:Show();
+
+        nameplate.importantNpcCastPriorityGate = priorityGate;
         nameplate.importantNpcCastPortrait = highlight;
-    elseif highlight:GetParent() ~= castBar then
-        highlight:SetParent(castBar);
+    elseif priorityGate:GetParent() ~= castBar then
+        priorityGate:SetParent(castBar);
     end
 
-    ApplyPortraitHighlightLayout(highlight, nameplate);
+    ApplyPortraitHighlightLayout(priorityGate, nameplate);
     return highlight;
 end
 
@@ -383,6 +420,10 @@ if addon.PROJECT_MAINLINE then
 
         local nameplate = castBar.sweepyBoopImportantNpcNameplate;
         if nameplate then
+            local priorityGate = nameplate.importantNpcCastPriorityGate;
+            if priorityGate then
+                priorityGate:SetAlpha(0);
+            end
             DeactivateSummonPresentationOverrides(nameplate);
         end
     end
@@ -402,7 +443,6 @@ if addon.PROJECT_MAINLINE then
         UpdateSummonPresentationOverrides(
             nameplate,
             castBar.unit,
-            castBar,
             nameplate.importantNpcIsOtherPlayersPet
         );
     end);
@@ -414,9 +454,10 @@ if addon.PROJECT_MAINLINE then
                 highlight.animationGroup:Play();
             end
         end
+
         local nameplate = castBar.sweepyBoopImportantNpcNameplate;
         if nameplate then
-            UpdateOverrideImportantCastSignal(nameplate, signal);
+            ApplyImportantCastPriority(nameplate, signal);
         end
     end);
     -- These presentation transitions run only after Blizzard accepts the stop or
@@ -446,9 +487,8 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherP
     end
     nameplate.importantNpcIsOtherPlayersPet = isOtherPlayersPet;
     if castBar then
-        -- Create fallback gates before Blizzard publishes the current protected
-        -- important-aura state through UpdateAllAuras below.
-        UpdateSummonPresentationOverrides(nameplate, unit, castBar, isOtherPlayersPet);
+        EnsureEligibleSummonPresentationGates(nameplate, isOtherPlayersPet);
+        UpdateSummonPresentationOverrides(nameplate, unit, isOtherPlayersPet);
         local previousCastBar = nameplate.importantNpcCastBar;
         if previousCastBar and previousCastBar ~= castBar then
             previousCastBar.sweepyBoopImportantNpcPortrait = nil;
@@ -461,12 +501,14 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherP
         castBar.sweepyBoopImportantNpcPortrait = castHighlight;
         castBar.sweepyBoopImportantNpcNameplate = nameplate;
         nameplate.importantNpcCastBar = castBar;
+        -- Blizzard has already computed this value in untainted execution. Forward
+        -- it only to secret-safe alpha sinks; recomputing here would make Blizzard's
+        -- own SetShown call consume a secret from tainted execution.
+        local importantCastSignal = castBar:GetIsHighlightedImportantCast();
         if isNewAssociation then
-            -- Blizzard has already computed this value in untainted execution. Forward
-            -- it only to SweepyBoop's secret-safe alpha sink; recomputing here would make
-            -- Blizzard's own SetShown call consume a secret from tainted execution.
-            ApplyAlphaSignal(castHighlight, castBar:GetIsHighlightedImportantCast());
+            ApplyAlphaSignal(castHighlight, importantCastSignal);
         end
+        ApplyImportantCastPriority(nameplate, importantCastSignal);
         if not castHighlight.animationGroup:IsPlaying() then
             castHighlight.animationGroup:Play();
         end
@@ -482,6 +524,10 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherP
             StopHighlightAnimation(castHighlight);
             castHighlight.portrait:SetTexture(nil);
             castHighlight:SetAlpha(0);
+        end
+        local castPriorityGate = nameplate.importantNpcCastPriorityGate;
+        if castPriorityGate then
+            castPriorityGate:SetAlpha(0);
         end
         DeactivateSummonPresentationOverrides(nameplate);
     end
@@ -509,6 +555,7 @@ end
 addon.DeactivateImportantNpcPortrait = function(nameplate)
     DeactivateImportantAuraContainer(nameplate);
     DeactivateSummonPresentationOverrides(nameplate);
+    ResetSummonPresentationPriority(nameplate);
     nameplate.importantNpcIsOtherPlayersPet = nil;
 
     local castBar = nameplate.importantNpcCastBar;
@@ -523,6 +570,10 @@ addon.DeactivateImportantNpcPortrait = function(nameplate)
         StopHighlightAnimation(castHighlight);
         castHighlight.portrait:SetTexture(nil);
         castHighlight:SetAlpha(0);
+    end
+    local castPriorityGate = nameplate.importantNpcCastPriorityGate;
+    if castPriorityGate then
+        castPriorityGate:SetAlpha(0);
     end
 end
 
