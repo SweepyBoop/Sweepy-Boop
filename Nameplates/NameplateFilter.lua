@@ -213,14 +213,14 @@ local importantMinionWhitelist = {
         signal = "cast",
         presentation = "portrait",
     },
-    {
-        key = "magePrimaryPetCast",
-        ownerClass = addon.MAGE,
-        primaryPet = true,
-        signal = "cast",
-        presentation = "portrait",
-        -- Test rule: Mage primary pets are common and make this path easy to verify.
-    },
+    -- Test rule: Mage primary pets are common and make this path easy to verify.
+    -- {
+    --     key = "magePrimaryPetCast",
+    --     ownerClass = addon.MAGE,
+    --     primaryPet = true,
+    --     signal = "cast",
+    --     presentation = "portrait",
+    -- },
     {
         key = "afflictionMinionCast",
         ownerSpec = addon.SPECID.AFFLICTION,
@@ -231,6 +231,7 @@ local importantMinionWhitelist = {
     {
         key = "shamanMinionCast",
         ownerClass = addon.SHAMAN,
+        primaryPet = false,
         signal = "cast",
         presentation = "castIcon",
     },
