@@ -209,8 +209,30 @@ local importantMinionWhitelist = {
         iconSpellID = 883, -- Call Pet 1; presentation-only.
         static = true,
     },
+    -- Test rules: Marksmanship and Survival make the pet marker easier to verify.
+    {
+        key = "marksmanshipPrimaryPetTest",
+        ownerSpec = addon.SPECID.MARKSMANSHIP,
+        isPet = true,
+        signal = "permanentAura",
+        filter = "HELPFUL",
+        presentation = "staticIcon",
+        iconSpellID = 883, -- Call Pet 1; presentation-only.
+        static = true,
+    },
+    {
+        key = "survivalPrimaryPetTest",
+        ownerSpec = addon.SPECID.SURVIVAL,
+        isPet = true,
+        signal = "permanentAura",
+        filter = "HELPFUL",
+        presentation = "staticIcon",
+        iconSpellID = 883, -- Call Pet 1; presentation-only.
+        static = true,
+    },
 
     {
+        key = "shamanImportantAura",
         key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
         ownerClass = addon.SHAMAN,
         isPet = false,
