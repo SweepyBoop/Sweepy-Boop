@@ -207,7 +207,7 @@ local importantMinionWhitelist = {
         filter = "HELPFUL",
         presentation = "staticIcon",
         iconSpellID = 883, -- Call Pet 1; presentation-only.
-        animate = false,
+        static = true,
     },
 
     {
@@ -227,6 +227,17 @@ local importantMinionWhitelist = {
         presentation = "castIcon",
     },
 
+    -- Test rule: Warlock pets make the permanent-aura path easy to verify.
+    {
+        key = "warlockPrimaryPetTest",
+        ownerClass = addon.WARLOCK,
+        isPet = true,
+        signal = "permanentAura",
+        filter = "HELPFUL",
+        presentation = "staticIcon",
+        iconSpellID = 883, -- Call Pet 1; presentation-only.
+        static = true,
+    },
     {
         key = "warlockPetCast", -- Validated through the equivalent Water Elemental pet path.
         ownerClass = addon.WARLOCK,
@@ -318,7 +329,7 @@ local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             button:SetPoint("CENTER", container, "CENTER");
-            CreateIconHighlight(button, rule.animate ~= false, true);
+            CreateIconHighlight(button, not rule.static, true);
 
             -- Blizzard securely owns both the selected aura icon and button visibility.
             -- Configure this inbound texture once, then never inspect or mutate the
@@ -366,7 +377,7 @@ local function EnsurePermanentAuraLayer(gate, rule, index)
     layer = CreateFrame("Frame", nil, gate);
     layer:SetAllPoints(gate);
     layer:SetAlpha(0);
-    CreateIconHighlight(layer, rule.animate ~= false);
+    CreateIconHighlight(layer, not rule.static);
     layer.icon:SetTexture(addon.GetSpellTexture(rule.iconSpellID));
     layer:Hide();
 
@@ -570,7 +581,7 @@ local function EnsureActionRuleFrame(nameplate, rule, ownerSlot)
 
     frame.highlight = CreateFrame("Frame", nil, frame.interruptibilityGate);
     frame.highlight:SetPoint("CENTER", frame.interruptibilityGate);
-    CreateIconHighlight(frame.highlight, rule.animate ~= false);
+    CreateIconHighlight(frame.highlight, not rule.static);
     frame:Hide();
 
     frames[ownerSlot] = frame;
@@ -694,7 +705,7 @@ local function UpdateActionRules(
                         );
                         SetHighlightAnimated(
                             frame.highlight,
-                            rule.animate ~= false
+                            not rule.static
                         );
                         frame.highlight:Show();
                         frame:Show();
