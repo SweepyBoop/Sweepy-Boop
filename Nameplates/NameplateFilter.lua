@@ -204,44 +204,44 @@ local importantMinionWhitelist = {
     {
         key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
         ownerClass = addon.SHAMAN,
-        primaryPet = false,
+        isPet = false,
         signal = "aura",
         filter = "HELPFUL|IMPORTANT",
         presentation = "auraIcon",
     },
     {
-        key = "warlockPrimaryPetCast", -- Validated through the equivalent Water Elemental primary-pet path.
+        key = "warlockPetCast", -- Validated through the equivalent Water Elemental pet path.
         ownerClass = addon.WARLOCK,
-        primaryPet = true,
+        isPet = true,
         signal = "cast",
         presentation = "portrait",
     },
     -- Test rule: Mage primary pets are common and make this path easy to verify.
     -- {
-    --     key = "magePrimaryPetCast", -- Validated in-game with Water Elemental.
+    --     key = "magePetCast", -- Validated in-game with Water Elemental.
     --     ownerClass = addon.MAGE,
-    --     primaryPet = true,
+    --     isPet = true,
     --     signal = "cast",
     --     presentation = "portrait",
     -- },
     {
         key = "afflictionMinionCast", -- Validated in-game with Darkglare.
         ownerSpec = addon.SPECID.AFFLICTION,
-        primaryPet = false,
+        isPet = false,
         signal = "cast",
         presentation = "portrait",
     },
     {
         key = "shamanMinionCast", -- Validated in-game with Capacitor Totem.
         ownerClass = addon.SHAMAN,
-        primaryPet = false,
+        isPet = false,
         signal = "cast",
         presentation = "castIcon",
     },
     {
         key = "shadowMinionChannel", -- Validated in-game with Psyfiend.
         ownerSpec = addon.SPECID.SHADOW,
-        primaryPet = false,
+        isPet = false,
         signal = "channel",
         requireNotInterruptible = true,
         presentation = "staticIcon",
@@ -259,7 +259,7 @@ local function RuleMatchesOwner(rule, specID)
 end
 
 local function RuleMatchesPetState(rule, isOtherPlayersPet)
-    return rule.primaryPet == nil or rule.primaryPet == isOtherPlayersPet;
+    return rule.isPet == nil or rule.isPet == isOtherPlayersPet;
 end
 
 local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
