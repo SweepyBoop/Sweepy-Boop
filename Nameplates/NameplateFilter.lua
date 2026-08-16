@@ -200,7 +200,7 @@ end
 -- before this whitelist is activated; unknown/protected facts must fail open.
 local importantMinionWhitelist = {
     {
-        key = "shamanImportantAura",
+        key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
         ownerClass = addon.SHAMAN,
         signal = "aura",
         filter = "HELPFUL|IMPORTANT",
@@ -229,14 +229,14 @@ local importantMinionWhitelist = {
         presentation = "portrait",
     },
     {
-        key = "shamanMinionCast",
+        key = "shamanMinionCast", -- Validated in-game with Capacitor Totem.
         ownerClass = addon.SHAMAN,
         primaryPet = false,
         signal = "cast",
         presentation = "castIcon",
     },
     {
-        key = "shadowMinionChannel",
+        key = "shadowMinionChannel", -- Validated in-game with Psyfiend.
         ownerSpec = addon.SPECID.SHADOW,
         primaryPet = false,
         signal = "channel",
