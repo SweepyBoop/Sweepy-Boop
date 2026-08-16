@@ -284,8 +284,8 @@ if addon.PROJECT_MAINLINE then
 
     ClassifyMainlineNpc = function(unitId)
         -- Retail does not expose reliable NPC identity or readable importance.
-        -- Preserve minion health bars unless a separate visibility rule can classify
-        -- the pet state and owner without exposing protected identity.
+        -- Preserve every minion's health bar and use protected presentation signals
+        -- only to add truthful unit-portrait priority markers.
         local isMinion, minionKnown = ReadUnitFlag(UnitIsMinion, unitId);
         if ( not minionKnown ) or ( not isMinion ) then
             return addon.NpcOption.Show, false;
@@ -315,26 +315,18 @@ if addon.PROJECT_MAINLINE then
 end
 
 addon.CheckNpcWhiteList = function (unitId)
-    local filterEnabled = SweepyBoop.db.profile.nameplatesEnemy.filterEnabled;
-    if addon.PROJECT_MAINLINE then
-        local npcOption, isCritter, iconTexture, highlightKey,
-            useImportantPortrait, isOtherPlayersPet = ClassifyMainlineNpc(unitId);
-        return npcOption,
-            isCritter,
-            iconTexture,
-            highlightKey,
-            filterEnabled and useImportantPortrait,
-            isOtherPlayersPet;
-    end
-
-    if not filterEnabled then
+    if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
         return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
 
-    local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
-    local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
-    local isCritter = addon.CritterNPCs[tonumber(npcID)];
-    return isWhitelisted, isCritter;
+    if ( not addon.PROJECT_MAINLINE ) then
+        local npcID = select ( 6, strsplit ( "-", UnitGUID(unitId) ) );
+        local isWhitelisted = SweepyBoop.db.profile.nameplatesEnemy.filterList[tostring(npcID)]; -- nil means Hide
+        local isCritter = addon.CritterNPCs[tonumber(npcID)];
+        return isWhitelisted, isCritter;
+    end
+
+    return ClassifyMainlineNpc(unitId);
 end
 
 addon.FillDefaultToNpcOptions = function(profile)

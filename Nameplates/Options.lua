@@ -531,18 +531,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.GetSpellTexture(204336)) .. " Highlight important enemy minions" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
-                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons using secret-safe aura, cast, and channel presentation.\n\nThis option does not hide their health bars." or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
-                    },
-                    hideDemonologyNonPetMinions = {
-                        order = 11.5,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(104317))
-                            .. " Hide unimportant enemy minions in arena",
-                        desc = "Hide confirmed unimportant enemy minions to reduce nameplate clutter. Currently, this applies to Demonology Warlock guardians and other non-pet minions, such as Wild Imps.\n\nDisable this to keep their health bars visible for gaining combo points or triggering effects from attacks, procs, and bleeds.",
-                        hidden = function()
-                            return not addon.PROJECT_MAINLINE;
-                        end,
+                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons and totems using secret-safe aura and cast detection" or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                     },
                     showCritterIcons = {
                         order = 12,

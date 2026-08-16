@@ -195,17 +195,6 @@ local function ApplyAlphaSignal(frame, signal)
     end
 end
 
--- Retail cannot identify Wild Imps exactly. This hides confirmed non-pet minions
--- owned by a uniquely identifiable Demonology opponent while preserving actual pets.
--- Unknown pet state, ownership, or ambiguous Demo ownership must fail open.
-local minionVisibilityBlacklist = {
-    {
-        key = "demonologyNonPetMinion",
-        ownerSpec = addon.SPECID.DEMONOLOGY,
-        isPet = false,
-    },
-};
-
 -- This is the complete Mainline presentation policy. Entries render independently.
 -- Cast/static icons render above aura icons, which render above unit portraits; any
 -- overlapping additive halos intentionally become brighter.
@@ -273,54 +262,6 @@ end
 
 local function RuleMatchesPetState(rule, isOtherPlayersPet)
     return rule.isPet == nil or rule.isPet == isOtherPlayersPet;
-end
-
-local function GetUniqueMatchingArenaOwnerSlot(rule)
-    if not IsActiveBattlefieldArena() then return end
-
-    local matchingSlot;
-    for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-        if RuleMatchesOwner(rule, GetArenaOpponentSpec(arenaSlot)) then
-            if matchingSlot then return end
-            matchingSlot = arenaSlot;
-        end
-    end
-
-    return matchingSlot;
-end
-
-addon.ApplyMinionVisibilityBlacklist = function(
-    frame,
-    castBar,
-    unit,
-    isOtherPlayersPet
-)
-    for _, rule in ipairs(minionVisibilityBlacklist) do
-        if RuleMatchesPetState(rule, isOtherPlayersPet) then
-            local ownerSlot = GetUniqueMatchingArenaOwnerSlot(rule);
-            if ownerSlot then
-                frame:SetAlphaFromBoolean(
-                    UnitIsOwnerOrControllerOfUnit(
-                        "arena" .. ownerSlot,
-                        unit
-                    ),
-                    0,
-                    1
-                );
-                if castBar then
-                    castBar:SetAlphaFromBoolean(
-                        UnitIsOwnerOrControllerOfUnit(
-                            "arena" .. ownerSlot,
-                            unit
-                        ),
-                        0,
-                        1
-                    );
-                end
-                return;
-            end
-        end
-    end
 end
 
 local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
