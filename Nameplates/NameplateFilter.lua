@@ -1,32 +1,33 @@
 local _, addon = ...;
 
 local iconSize = 30;
-local iconInset = 2;
 local highlightBorderSize = 42;
-local highlightRippleScale = 1.22;
+local highlightAnimationThrottle = 0.02;
+local highlightRippleScale = 0.22;
 local highlightRippleFrequency = 0.9;
 local highlightRippleDuration = 1 / ( 2 * highlightRippleFrequency );
-local highlightRippleStartAlpha = 0.82;
-local highlightRippleEndAlpha = 0.22;
+local highlightRippleMaxAlpha = 0.82;
+local highlightRippleMinAlpha = 0.22;
 local highlightColor = { 0.85, 0.15, 1 };
 local highlightBorderTexture =
     addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE;
 local highlightGlowTexture =
     addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE;
 
-local function SetupAnimation(ripple)
+local function SetupNativeAnimation(ripple)
     local animationGroup = ripple:CreateAnimationGroup();
-    -- Match the class-icon target highlight's ~1.11 second sinusoidal cycle.
+    -- Restricted aura buttons use a preconfigured native approximation of the
+    -- class-icon target highlight's ~1.11 second sinusoidal cycle.
     animationGroup:SetLooping("BOUNCE");
 
     local scale = animationGroup:CreateAnimation("Scale");
-    scale:SetScale(highlightRippleScale, highlightRippleScale);
+    scale:SetScale(1 + highlightRippleScale, 1 + highlightRippleScale);
     scale:SetDuration(highlightRippleDuration);
     scale:SetOrder(1);
 
     local alpha = animationGroup:CreateAnimation("Alpha");
-    alpha:SetFromAlpha(highlightRippleStartAlpha);
-    alpha:SetToAlpha(highlightRippleEndAlpha);
+    alpha:SetFromAlpha(highlightRippleMaxAlpha);
+    alpha:SetToAlpha(highlightRippleMinAlpha);
     alpha:SetDuration(highlightRippleDuration);
     alpha:SetOrder(1);
 
@@ -38,15 +39,64 @@ local function SetupAnimation(ripple)
     return animationGroup;
 end
 
-local function StopHighlightAnimation(highlight)
-    if highlight.animationGroup:IsPlaying() then
-        highlight.animationGroup:Stop();
-    end
-    highlight.ripple:SetScale(1);
-    highlight.ripple:SetAlpha(highlightRippleStartAlpha);
+local function SetHighlightAnimationProgress(highlight, progress)
+    local wave = 0.5 - ( 0.5 * math.cos(( progress % 1 ) * math.pi * 2) );
+    local size = highlightBorderSize * ( 1 + ( highlightRippleScale * wave ) );
+    local alpha = highlightRippleMaxAlpha
+        - ( ( highlightRippleMaxAlpha - highlightRippleMinAlpha ) * wave );
+
+    highlight.ripple:SetSize(size, size);
+    highlight.ripple:SetAlpha(alpha);
 end
 
-local function CreateSquareBorders(parent)
+local function HighlightAnimation_OnUpdate(self, elapsed)
+    local highlight = self.highlight;
+    if not highlight or not highlight.animationActive then
+        self:SetScript("OnUpdate", nil);
+        return;
+    end
+
+    highlight.animationElapsed = highlight.animationElapsed + elapsed;
+    if highlight.animationElapsed < highlightAnimationThrottle then return end
+
+    local step = highlight.animationElapsed;
+    highlight.animationElapsed = 0;
+    highlight.animationProgress =
+        ( highlight.animationProgress + ( step * highlightRippleFrequency ) ) % 1;
+    SetHighlightAnimationProgress(highlight, highlight.animationProgress);
+end
+
+local function StopHighlightAnimation(highlight)
+    highlight.animationActive = false;
+    if highlight.animationGroup and highlight.animationGroup:IsPlaying() then
+        highlight.animationGroup:Stop();
+    end
+    if highlight.animationDriver then
+        highlight.animationDriver:SetScript("OnUpdate", nil);
+    end
+
+    highlight.animationElapsed = 0;
+    highlight.animationProgress = 0;
+    highlight.ripple:SetSize(highlightBorderSize, highlightBorderSize);
+    highlight.ripple:SetScale(1);
+    highlight.ripple:SetAlpha(highlightRippleMaxAlpha);
+end
+
+local function StartHighlightAnimation(highlight)
+    if highlight.animationActive then return end
+
+    StopHighlightAnimation(highlight);
+    highlight.animationActive = true;
+    highlight.ripple:Show();
+    if highlight.animationGroup then
+        highlight.animationGroup:Play();
+    else
+        SetHighlightAnimationProgress(highlight, 0);
+        highlight.animationDriver:SetScript("OnUpdate", HighlightAnimation_OnUpdate);
+    end
+end
+
+local function CreateSquareBorders(parent, useNativeAnimation)
     parent.staticGlow = parent:CreateTexture(nil, "BORDER");
     parent.staticGlow:SetSize(highlightBorderSize, highlightBorderSize);
     parent.staticGlow:SetPoint("CENTER", parent);
@@ -70,7 +120,7 @@ local function CreateSquareBorders(parent)
     parent.ripple:SetMouseClickEnabled(false);
     parent.ripple:SetSize(highlightBorderSize, highlightBorderSize);
     parent.ripple:SetPoint("CENTER", parent);
-    parent.ripple:SetAlpha(highlightRippleStartAlpha);
+    parent.ripple:SetAlpha(highlightRippleMaxAlpha);
 
     parent.rippleTexture = parent.ripple:CreateTexture(nil, "OVERLAY", nil, 2);
     parent.rippleTexture:SetAllPoints(parent.ripple);
@@ -78,33 +128,34 @@ local function CreateSquareBorders(parent)
     parent.rippleTexture:SetBlendMode("ADD");
     parent.rippleTexture:SetVertexColor(unpack(highlightColor));
 
-    parent.animationGroup = SetupAnimation(parent.ripple);
+    if useNativeAnimation then
+        parent.animationGroup = SetupNativeAnimation(parent.ripple);
+    else
+        parent.animationDriver = CreateFrame("Frame", nil, parent);
+        parent.animationDriver:SetAllPoints(parent);
+        parent.animationDriver.highlight = parent;
+    end
 end
 
 local function SetHighlightAnimated(highlight, shouldAnimate)
     highlight.staticGlow:Show();
     highlight.staticBorder:Show();
     if shouldAnimate then
-        highlight.ripple:Show();
-        if not highlight.animationGroup:IsPlaying() then
-            StopHighlightAnimation(highlight);
-            highlight.animationGroup:Play();
-        end
+        StartHighlightAnimation(highlight);
     else
         StopHighlightAnimation(highlight);
         highlight.ripple:Hide();
     end
 end
 
-local function CreateIconHighlight(parent, shouldAnimate)
+local function CreateIconHighlight(parent, shouldAnimate, useNativeAnimation)
     parent:SetSize(iconSize, iconSize);
     parent:SetMouseClickEnabled(false);
 
     parent.icon = parent:CreateTexture(nil, "ARTWORK");
-    parent.icon:SetPoint("TOPLEFT", parent, "TOPLEFT", iconInset, -iconInset);
-    parent.icon:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -iconInset, iconInset);
+    parent.icon:SetAllPoints(parent);
 
-    CreateSquareBorders(parent);
+    CreateSquareBorders(parent, useNativeAnimation);
     SetHighlightAnimated(parent, shouldAnimate ~= false);
 end
 
@@ -239,7 +290,7 @@ local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             button:SetPoint("CENTER", container, "CENTER");
-            CreateIconHighlight(button);
+            CreateIconHighlight(button, true, true);
 
             -- Blizzard securely owns both the selected aura icon and button visibility.
             -- Configure this inbound texture once, then never inspect or mutate the
@@ -466,9 +517,7 @@ local function UpdateActionRules(
                             castingTexture,
                             channelTexture
                         );
-                        if not frame.highlight.animationGroup:IsPlaying() then
-                            frame.highlight.animationGroup:Play();
-                        end
+                        StartHighlightAnimation(frame.highlight);
                         frame.highlight:Show();
                         frame:Show();
                     else
@@ -602,7 +651,7 @@ local function EnsureDebugAuraContainer(nameplate, shouldAnimate)
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             button:SetPoint("CENTER", container, "CENTER");
-            CreateIconHighlight(button, shouldAnimate);
+            CreateIconHighlight(button, shouldAnimate, true);
             button:SetIcon(button.icon);
         end,
     });
@@ -658,20 +707,7 @@ local function EnsureNpcHighlight(nameplate)
 
         nameplate.npcHighlight.customIcon =
             nameplate.npcHighlight:CreateTexture(nil, "ARTWORK");
-        nameplate.npcHighlight.customIcon:SetPoint(
-            "TOPLEFT",
-            nameplate.npcHighlight,
-            "TOPLEFT",
-            iconInset,
-            -iconInset
-        );
-        nameplate.npcHighlight.customIcon:SetPoint(
-            "BOTTOMRIGHT",
-            nameplate.npcHighlight,
-            "BOTTOMRIGHT",
-            -iconInset,
-            iconInset
-        );
+        nameplate.npcHighlight.customIcon:SetAllPoints(nameplate.npcHighlight);
 
         CreateSquareBorders(nameplate.npcHighlight);
         nameplate.npcHighlight:Hide();
@@ -714,17 +750,7 @@ addon.ShowNpcHighlight = function(nameplate, animation, iconTexture, highlightKe
 
     if highlight then
         highlight.customIcon:Show();
-        highlight.staticBorder:Show();
-        if animation then
-            highlight.ripple:Show();
-            if not highlight.animationGroup:IsPlaying() then
-                StopHighlightAnimation(highlight);
-                highlight.animationGroup:Play();
-            end
-        else
-            StopHighlightAnimation(highlight);
-            highlight.ripple:Hide();
-        end
+        SetHighlightAnimated(highlight, animation);
         highlight:Show();
     end
 end
