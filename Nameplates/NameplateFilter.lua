@@ -204,6 +204,7 @@ local importantMinionWhitelist = {
     {
         key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
         ownerClass = addon.SHAMAN,
+        primaryPet = false,
         signal = "aura",
         filter = "HELPFUL|IMPORTANT",
         presentation = "auraIcon",
