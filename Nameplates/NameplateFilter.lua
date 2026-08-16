@@ -4,16 +4,20 @@ local iconSize = 30;
 local iconInset = 2;
 local highlightBorderSize = 42;
 local highlightRippleScale = 1.22;
-local highlightRippleDuration = 0.56;
+local highlightRippleFrequency = 0.9;
+local highlightRippleDuration = 1 / ( 2 * highlightRippleFrequency );
 local highlightRippleStartAlpha = 0.82;
 local highlightRippleEndAlpha = 0.22;
 local highlightColor = { 0.85, 0.15, 1 };
 local highlightBorderTexture =
     addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE;
+local highlightGlowTexture =
+    addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE;
 
 local function SetupAnimation(ripple)
     local animationGroup = ripple:CreateAnimationGroup();
-    animationGroup:SetLooping("REPEAT");
+    -- Match the class-icon target highlight's ~1.11 second sinusoidal cycle.
+    animationGroup:SetLooping("BOUNCE");
 
     local scale = animationGroup:CreateAnimation("Scale");
     scale:SetScale(highlightRippleScale, highlightRippleScale);
@@ -43,6 +47,18 @@ local function StopHighlightAnimation(highlight)
 end
 
 local function CreateSquareBorders(parent)
+    parent.staticGlow = parent:CreateTexture(nil, "BORDER");
+    parent.staticGlow:SetSize(highlightBorderSize, highlightBorderSize);
+    parent.staticGlow:SetPoint("CENTER", parent);
+    parent.staticGlow:SetTexture(highlightGlowTexture);
+    parent.staticGlow:SetBlendMode("ADD");
+    parent.staticGlow:SetVertexColor(
+        highlightColor[1],
+        highlightColor[2],
+        highlightColor[3],
+        0.7
+    );
+
     parent.staticBorder = parent:CreateTexture(nil, "OVERLAY", nil, 1);
     parent.staticBorder:SetSize(highlightBorderSize, highlightBorderSize);
     parent.staticBorder:SetPoint("CENTER", parent);
@@ -58,7 +74,7 @@ local function CreateSquareBorders(parent)
 
     parent.rippleTexture = parent.ripple:CreateTexture(nil, "OVERLAY", nil, 2);
     parent.rippleTexture:SetAllPoints(parent.ripple);
-    parent.rippleTexture:SetTexture(highlightBorderTexture);
+    parent.rippleTexture:SetTexture(highlightGlowTexture);
     parent.rippleTexture:SetBlendMode("ADD");
     parent.rippleTexture:SetVertexColor(unpack(highlightColor));
 
@@ -66,6 +82,7 @@ local function CreateSquareBorders(parent)
 end
 
 local function SetHighlightAnimated(highlight, shouldAnimate)
+    highlight.staticGlow:Show();
     highlight.staticBorder:Show();
     if shouldAnimate then
         highlight.ripple:Show();
@@ -717,6 +734,7 @@ addon.HideNpcHighlight = function(nameplate)
     if highlight then
         StopHighlightAnimation(highlight);
         highlight.ripple:Hide();
+        highlight.staticGlow:Hide();
         highlight.staticBorder:Hide();
         highlight.customIcon:Hide();
         highlight:Hide();
@@ -724,6 +742,14 @@ addon.HideNpcHighlight = function(nameplate)
 end
 
 if addon.internal then
+    -- Internal preview; first target a unit with a visible nameplate.
+    -- Portrait: /run SweepyBoop:DebugNpcHighlight(true, "portrait", false)
+    -- Cast: /run SweepyBoop:DebugNpcHighlight(true, "cast", true)
+    -- Aura: /run SweepyBoop:DebugNpcHighlight(true, "aura", false)
+    -- Static spell: /run SweepyBoop:DebugNpcHighlight(true, "static", 211522, true)
+    -- All layers: /run SweepyBoop:DebugNpcHighlight(true, "all", 211522, false)
+    -- Classic custom icon: /run SweepyBoop:DebugNpcHighlight(true, nil, false)
+    -- Hide: /run SweepyBoop:DebugNpcHighlight(false)
     function SweepyBoop:DebugNpcHighlight(
         shouldShow,
         representation,
