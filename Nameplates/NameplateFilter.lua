@@ -16,6 +16,8 @@ local highlightBorderTexture =
 local highlightGlowTexture =
     addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE;
 
+-- TODO: Polish the animated highlight path to make the ripple more visible without
+-- adding overlapping animation layers or regressing the validated presentation.
 local function SetupNativeAnimation(ripple)
     local animationGroup = ripple:CreateAnimationGroup();
     -- Restricted aura buttons use a preconfigured native approximation of the
