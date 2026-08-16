@@ -200,39 +200,6 @@ end
 -- overlapping additive halos intentionally become brighter.
 local importantMinionWhitelist = {
     {
-        key = "beastMasteryPrimaryPet",
-        ownerSpec = addon.SPECID.BEASTMASTERY,
-        isPet = true,
-        signal = "permanentAura",
-        filter = "HELPFUL",
-        presentation = "staticIcon",
-        iconSpellID = 883, -- Call Pet 1; presentation-only.
-        static = true,
-    },
-    -- Test rules: Marksmanship and Survival make the pet marker easier to verify.
-    {
-        key = "marksmanshipPrimaryPetTest",
-        ownerSpec = addon.SPECID.MARKSMANSHIP,
-        isPet = true,
-        signal = "permanentAura",
-        filter = "HELPFUL",
-        presentation = "staticIcon",
-        iconSpellID = 883, -- Call Pet 1; presentation-only.
-        static = true,
-    },
-    {
-        key = "survivalPrimaryPetTest",
-        ownerSpec = addon.SPECID.SURVIVAL,
-        isPet = true,
-        signal = "permanentAura",
-        filter = "HELPFUL",
-        presentation = "staticIcon",
-        iconSpellID = 883, -- Call Pet 1; presentation-only.
-        static = true,
-    },
-
-    {
-        key = "shamanImportantAura",
         key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
         ownerClass = addon.SHAMAN,
         isPet = false,
@@ -249,17 +216,6 @@ local importantMinionWhitelist = {
         presentation = "castIcon",
     },
 
-    -- Test rule: Warlock pets make the permanent-aura path easy to verify.
-    {
-        key = "warlockPrimaryPetTest",
-        ownerClass = addon.WARLOCK,
-        isPet = true,
-        signal = "permanentAura",
-        filter = "HELPFUL",
-        presentation = "staticIcon",
-        iconSpellID = 883, -- Call Pet 1; presentation-only.
-        static = true,
-    },
     {
         key = "warlockPetCast", -- Validated through the equivalent Water Elemental pet path.
         ownerClass = addon.WARLOCK,
@@ -308,10 +264,6 @@ local function RuleMatchesPetState(rule, isOtherPlayersPet)
     return rule.isPet == nil or rule.isPet == isOtherPlayersPet;
 end
 
-local function RuleUsesAuraSignal(rule)
-    return rule.signal == "aura" or rule.signal == "permanentAura";
-end
-
 local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
     local ruleGates = nameplate.importantMinionAuraGates;
     if not ruleGates then
@@ -351,7 +303,7 @@ local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             button:SetPoint("CENTER", container, "CENTER");
-            CreateIconHighlight(button, not rule.static, true);
+            CreateIconHighlight(button, true, true);
 
             -- Blizzard securely owns both the selected aura icon and button visibility.
             -- Configure this inbound texture once, then never inspect or mutate the
@@ -362,128 +314,6 @@ local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
 
     gates[arenaSlot] = gate;
     return gate;
-end
-
-local function EnsurePermanentAuraRuleGate(nameplate, rule, arenaSlot)
-    local ruleGates = nameplate.importantMinionPermanentAuraGates;
-    if not ruleGates then
-        ruleGates = {};
-        nameplate.importantMinionPermanentAuraGates = ruleGates;
-    end
-
-    local gates = ruleGates[rule.key];
-    if not gates then
-        gates = {};
-        ruleGates[rule.key] = gates;
-    end
-
-    local gate = gates[arenaSlot];
-    if gate then return gate end
-
-    gate = CreateFrame("Frame", nil, nameplate);
-    gate:SetFrameStrata("HIGH");
-    gate:SetFrameLevel(nameplate:GetFrameLevel() + 5);
-    gate:SetSize(iconSize, iconSize);
-    gate:SetAlpha(0);
-    gate.layers = {};
-    gate:Hide();
-
-    gates[arenaSlot] = gate;
-    return gate;
-end
-
-local function EnsurePermanentAuraLayer(gate, rule, index)
-    local layer = gate.layers[index];
-    if layer then return layer end
-
-    layer = CreateFrame("Frame", nil, gate);
-    layer:SetAllPoints(gate);
-    layer:SetAlpha(0);
-    CreateIconHighlight(layer, not rule.static);
-    layer.icon:SetTexture(addon.GetSpellTexture(rule.iconSpellID));
-    layer:Hide();
-
-    gate.layers[index] = layer;
-    return layer;
-end
-
-local function HidePermanentAuraLayers(gate, firstUnusedIndex)
-    for index = firstUnusedIndex, #gate.layers do
-        local layer = gate.layers[index];
-        layer:SetAlpha(0);
-        layer:Hide();
-    end
-end
-
-local function PackAuraSlotResults(...)
-    return { count = select("#", ...), ... };
-end
-
-local function GetPackedAuraSlots(unit, filter, continuationToken)
-    return PackAuraSlotResults(
-        C_UnitAuras.GetAuraSlots(unit, filter, nil, continuationToken)
-    );
-end
-
-local function GetAuraExpirationState(unit, slot)
-    local auraData = C_UnitAuras.GetAuraDataBySlot(unit, slot);
-    assert(auraData, "Aura slot no longer exists");
-
-    return C_UnitAuras.DoesAuraHaveExpirationTime(
-        unit,
-        auraData.auraInstanceID
-    );
-end
-
-local function UpdatePermanentAuraLayers(gate, unit, rule)
-    local continuationToken;
-    local layerIndex = 1;
-
-    repeat
-        local succeeded, results = pcall(
-            GetPackedAuraSlots,
-            unit,
-            rule.filter,
-            continuationToken
-        );
-        if not succeeded then
-            HidePermanentAuraLayers(gate, 1);
-            return;
-        end
-        continuationToken = results[1];
-
-        for resultIndex = 2, results.count do
-            local layer = EnsurePermanentAuraLayer(gate, rule, layerIndex);
-            local succeeded, hasExpirationTime = pcall(
-                GetAuraExpirationState,
-                unit,
-                results[resultIndex]
-            );
-            if succeeded then
-                layer:SetAlphaFromBoolean(hasExpirationTime, 0, 1);
-                layer:Show();
-            else
-                layer:SetAlpha(0);
-                layer:Hide();
-            end
-            layerIndex = layerIndex + 1;
-        end
-    until continuationToken == nil;
-
-    HidePermanentAuraLayers(gate, layerIndex);
-end
-
-local function DeactivatePermanentAuraRules(nameplate)
-    local ruleGates = nameplate.importantMinionPermanentAuraGates;
-    if not ruleGates then return end
-
-    for _, gates in pairs(ruleGates) do
-        for _, gate in pairs(gates) do
-            HidePermanentAuraLayers(gate, 1);
-            gate:SetAlpha(0);
-            gate:Hide();
-        end
-    end
 end
 
 local function DeactivateAuraRules(nameplate)
@@ -504,25 +334,15 @@ end
 
 local function ActivateAuraRules(nameplate, unit, isOtherPlayersPet)
     DeactivateAuraRules(nameplate);
-    DeactivatePermanentAuraRules(nameplate);
     if not IsActiveBattlefieldArena() then return end
 
     for _, rule in ipairs(importantMinionWhitelist) do
-        if RuleUsesAuraSignal(rule)
+        if rule.signal == "aura"
             and RuleMatchesPetState(rule, isOtherPlayersPet) then
 
             for arenaSlot = 1, addon.MAX_ARENA_SIZE do
                 if RuleMatchesOwner(rule, GetArenaOpponentSpec(arenaSlot)) then
-                    local gate;
-                    if rule.signal == "permanentAura" then
-                        gate = EnsurePermanentAuraRuleGate(
-                            nameplate,
-                            rule,
-                            arenaSlot
-                        );
-                    else
-                        gate = EnsureAuraRuleGate(nameplate, rule, arenaSlot);
-                    end
+                    local gate = EnsureAuraRuleGate(nameplate, rule, arenaSlot);
                     ApplyHighlightLayout(gate, nameplate);
                     gate:SetAlphaFromBoolean(
                         UnitIsOwnerOrControllerOfUnit(
@@ -532,15 +352,10 @@ local function ActivateAuraRules(nameplate, unit, isOtherPlayersPet)
                         1,
                         0
                     );
-
-                    if rule.signal == "permanentAura" then
-                        UpdatePermanentAuraLayers(gate, unit, rule);
-                    else
-                        gate.container:SetUnit(unit);
-                        gate.container:SetEnabled(true);
-                        gate.container:Show();
-                        gate.container:UpdateAllAuras();
-                    end
+                    gate.container:SetUnit(unit);
+                    gate.container:SetEnabled(true);
+                    gate.container:Show();
+                    gate.container:UpdateAllAuras();
                     gate:Show();
                 end
             end
@@ -603,7 +418,7 @@ local function EnsureActionRuleFrame(nameplate, rule, ownerSlot)
 
     frame.highlight = CreateFrame("Frame", nil, frame.interruptibilityGate);
     frame.highlight:SetPoint("CENTER", frame.interruptibilityGate);
-    CreateIconHighlight(frame.highlight, not rule.static);
+    CreateIconHighlight(frame.highlight);
     frame:Hide();
 
     frames[ownerSlot] = frame;
@@ -612,8 +427,7 @@ end
 
 local function PrepareActionRuleFrames(nameplate, isOtherPlayersPet)
     for _, rule in ipairs(importantMinionWhitelist) do
-        if not RuleUsesAuraSignal(rule)
-            and RuleMatchesPetState(rule, isOtherPlayersPet) then
+        if rule.signal ~= "aura" and RuleMatchesPetState(rule, isOtherPlayersPet) then
             if rule.ownerClass or rule.ownerSpec then
                 if IsActiveBattlefieldArena() then
                     for arenaSlot = 1, addon.MAX_ARENA_SIZE do
@@ -678,7 +492,7 @@ local function UpdateActionRules(
     local ruleFrames = nameplate.importantMinionActionFrames;
 
     for _, rule in ipairs(importantMinionWhitelist) do
-        if not RuleUsesAuraSignal(rule) then
+        if rule.signal ~= "aura" then
             local active = RuleMatchesPetState(rule, isOtherPlayersPet)
                 and RuleIsActive(rule, isCasting, isChanneling);
             local frames = ruleFrames and ruleFrames[rule.key];
@@ -725,10 +539,7 @@ local function UpdateActionRules(
                             castingTexture,
                             channelTexture
                         );
-                        SetHighlightAnimated(
-                            frame.highlight,
-                            not rule.static
-                        );
+                        StartHighlightAnimation(frame.highlight);
                         frame.highlight:Show();
                         frame:Show();
                     else
@@ -896,7 +707,6 @@ end
 
 addon.DeactivateImportantNpcPortrait = function(nameplate)
     DeactivateAuraRules(nameplate);
-    DeactivatePermanentAuraRules(nameplate);
     DeactivateActionRules(nameplate);
     nameplate.importantNpcIsOtherPlayersPet = nil;
 
