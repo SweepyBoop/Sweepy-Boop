@@ -503,17 +503,74 @@ addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherP
     end
 end
 
-local debugNpcPortraitNameplate;
+local debugNpcHighlightNameplate;
+
+local function EnsureDebugActionHighlight(nameplate, key, frameLevelOffset)
+    local highlights = nameplate.debugNpcHighlights;
+    if not highlights then
+        highlights = {};
+        nameplate.debugNpcHighlights = highlights;
+    end
+
+    local highlight = highlights[key];
+    if highlight then return highlight end
+
+    highlight = CreateFrame("Frame", nil, nameplate);
+    highlight:SetFrameStrata("HIGH");
+    highlight:SetFrameLevel(nameplate:GetFrameLevel() + frameLevelOffset);
+    CreateIconHighlight(highlight);
+    highlight:Hide();
+    highlights[key] = highlight;
+    return highlight;
+end
+
+local function EnsureDebugAuraContainer(nameplate)
+    local container = nameplate.debugNpcAuraContainer;
+    if container then return container end
+
+    container = CreateFrame(
+        "AuraContainer",
+        nil,
+        nameplate,
+        "CustomAuraContainerTemplate"
+    );
+    container:SetFrameStrata("HIGH");
+    container:SetFrameLevel(nameplate:GetFrameLevel() + 10);
+    container:SetSize(iconSize, iconSize);
+    container:SetEnabled(false);
+    container:Hide();
+    container:AddAuraSlot("DebugImportantAura", "HELPFUL|IMPORTANT", {
+        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            button:SetPoint("CENTER", container, "CENTER");
+            CreateIconHighlight(button);
+            button:SetIcon(button.icon);
+        end,
+    });
+
+    nameplate.debugNpcAuraContainer = container;
+    return container;
+end
 
 addon.HideDebugNpcPortrait = function(nameplate)
-    local highlight = nameplate.debugNpcPortraitHighlight;
-    if highlight then
-        StopHighlightAnimation(highlight);
-        highlight.portrait:SetTexture(nil);
-        highlight:Hide();
+    local highlights = nameplate.debugNpcHighlights;
+    if highlights then
+        for _, highlight in pairs(highlights) do
+            StopHighlightAnimation(highlight);
+            highlight.icon:SetTexture(nil);
+            highlight:Hide();
+        end
     end
-    if debugNpcPortraitNameplate == nameplate then
-        debugNpcPortraitNameplate = nil;
+
+    local container = nameplate.debugNpcAuraContainer;
+    if container then
+        container:SetEnabled(false);
+        container:Hide();
+    end
+
+    if debugNpcHighlightNameplate == nameplate then
+        debugNpcHighlightNameplate = nil;
     end
 end
 
@@ -626,12 +683,16 @@ addon.HideNpcHighlight = function(nameplate)
 end
 
 if addon.internal then
-    function SweepyBoop:DebugNpcHighlight(shouldShow, iconTexture)
+    function SweepyBoop:DebugNpcHighlight(
+        shouldShow,
+        representation,
+        spellID
+    )
         if addon.PROJECT_MAINLINE and shouldShow == false then
-            if debugNpcPortraitNameplate then
-                addon.HideDebugNpcPortrait(debugNpcPortraitNameplate);
+            if debugNpcHighlightNameplate then
+                addon.HideDebugNpcPortrait(debugNpcHighlightNameplate);
             end
-            print("SweepyBoop: NPC portrait highlight preview hidden");
+            print("SweepyBoop: NPC highlight preview hidden");
             return;
         end
 
@@ -642,25 +703,77 @@ if addon.internal then
         end
 
         if addon.PROJECT_MAINLINE then
-            if debugNpcPortraitNameplate and debugNpcPortraitNameplate ~= nameplate then
-                addon.HideDebugNpcPortrait(debugNpcPortraitNameplate);
+            if debugNpcHighlightNameplate then
+                addon.HideDebugNpcPortrait(debugNpcHighlightNameplate);
             end
 
-            local highlight = nameplate.debugNpcPortraitHighlight;
-            if not highlight then
-                highlight = CreateFrame("Frame", nil, nameplate);
-                highlight:SetFrameStrata("HIGH");
-                CreatePortraitHighlight(highlight);
-                nameplate.debugNpcPortraitHighlight = highlight;
+            representation = representation or "portrait";
+            local showAll = representation == "all";
+            local validRepresentation = showAll
+                or representation == "portrait"
+                or representation == "cast"
+                or representation == "static"
+                or representation == "aura";
+            if not validRepresentation then
+                print(
+                    "SweepyBoop: representation must be portrait, cast, static, aura, or all"
+                );
+                return;
             end
-            ApplyHighlightLayout(highlight, nameplate);
-            SetPortraitTexture(highlight.portrait, "target");
-            if not highlight.animationGroup:IsPlaying() then
+
+            if showAll or representation == "portrait" then
+                local highlight = EnsureDebugActionHighlight(nameplate, "portrait", 5);
+                ApplyHighlightLayout(highlight, nameplate);
+                SetPortraitTexture(highlight.icon, "target");
                 highlight.animationGroup:Play();
+                highlight:Show();
             end
-            highlight:Show();
-            debugNpcPortraitNameplate = nameplate;
-            print("SweepyBoop: showing animated NPC portrait on current target");
+
+            if showAll or representation == "aura" then
+                local container = EnsureDebugAuraContainer(nameplate);
+                ApplyHighlightLayout(container, nameplate);
+                container:SetUnit("target");
+                container:SetEnabled(true);
+                container:Show();
+                container:UpdateAllAuras();
+            end
+
+            if showAll or representation == "static" then
+                local highlight = EnsureDebugActionHighlight(nameplate, "static", 20);
+                ApplyHighlightLayout(highlight, nameplate);
+                highlight.icon:SetTexture(
+                    addon.GetSpellTexture(spellID or 211522)
+                );
+                highlight.animationGroup:Play();
+                highlight:Show();
+            end
+
+            if showAll or representation == "cast" then
+                local isCasting, isChanneling, castingTexture, channelTexture =
+                    GetCastPresentationState("target");
+                local highlight = EnsureDebugActionHighlight(nameplate, "cast", 20);
+                ApplyHighlightLayout(highlight, nameplate);
+                if isCasting then
+                    highlight.icon:SetTexture(castingTexture);
+                elseif isChanneling then
+                    highlight.icon:SetTexture(channelTexture);
+                else
+                    highlight.icon:SetTexture(nil);
+                    highlight:Hide();
+                    print("SweepyBoop: current target is not casting or channeling");
+                end
+                if isCasting or isChanneling then
+                    highlight.animationGroup:Play();
+                    highlight:Show();
+                end
+            end
+
+            debugNpcHighlightNameplate = nameplate;
+            print(
+                "SweepyBoop: showing "
+                    .. representation
+                    .. " NPC highlight preview on current target"
+            );
             return;
         end
 
@@ -673,7 +786,7 @@ if addon.internal then
         addon.ShowNpcHighlight(
             nameplate,
             true,
-            iconTexture or addon.GetSpellTexture(8177),
+            representation or addon.GetSpellTexture(8177),
             "debug"
         );
         print("SweepyBoop: showing animated NPC highlight on current target");
