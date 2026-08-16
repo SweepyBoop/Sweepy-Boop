@@ -776,12 +776,14 @@ end
 
 if addon.internal then
     -- Internal preview; first target a unit with a visible nameplate.
-    -- Portrait: /run SweepyBoop:DebugNpcHighlight(true, false, "portrait")
-    -- Cast: /run SweepyBoop:DebugNpcHighlight(true, true, "cast")
-    -- Aura: /run SweepyBoop:DebugNpcHighlight(true, false, "aura")
-    -- Static spell: /run SweepyBoop:DebugNpcHighlight(true, true, "static", 211522)
-    -- All layers: /run SweepyBoop:DebugNpcHighlight(true, false, "all", 211522)
-    -- Classic custom icon: /run SweepyBoop:DebugNpcHighlight(true, false)
+    -- Animated portrait: /run SweepyBoop:DebugNpcHighlight(true, true, "portrait")
+    -- Static portrait: /run SweepyBoop:DebugNpcHighlight(true, false, "portrait")
+    -- Animated cast: /run SweepyBoop:DebugNpcHighlight(true, true, "cast")
+    -- Static aura: /run SweepyBoop:DebugNpcHighlight(true, false, "aura")
+    -- Animated spell icon: /run SweepyBoop:DebugNpcHighlight(true, true, "static", 211522)
+    -- Static spell icon: /run SweepyBoop:DebugNpcHighlight(true, false, "static", 211522)
+    -- Animated layers: /run SweepyBoop:DebugNpcHighlight(true, true, "all", 211522)
+    -- Static layers: /run SweepyBoop:DebugNpcHighlight(true, false, "all", 211522)
     -- Hide: /run SweepyBoop:DebugNpcHighlight(false)
     function SweepyBoop:DebugNpcHighlight(
         shouldShow,
