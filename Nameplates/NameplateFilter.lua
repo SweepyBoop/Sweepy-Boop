@@ -93,7 +93,9 @@ end
 --   allow-list: NOT A AND NOT C AND L
 -- Together these equal A OR C OR L, but only the highest active portrait is visible.
 -- Protected A/C values are forwarded only to positive or inverse alpha sinks; Lua
--- never inspects them. The readable blacklist is evaluated first and hides all tiers.
+-- never inspects them. The readable blacklist is evaluated first and its matching
+-- path fully deactivates all three tiers, even though the registry is currently empty.
+-- Blacklist predicates must use only readable facts; unknown/protected facts fail open.
 local portraitHighlightBlacklist = {};
 local portraitHighlightAllowList = {
     {
@@ -181,6 +183,9 @@ local function DeactivateImportantAuraContainer(nameplate)
 end
 
 UpdateImportantAuraPriority = function(nameplate, signal)
+    -- Fan out the original protected A value to independent supported sinks. We do
+    -- not read the aura portrait's alpha or compute `not A` in Lua. Swapping the two
+    -- public alpha outputs lets SetAlphaFromBoolean perform visual inversion natively.
     local castPriorityGate = nameplate.importantNpcCastPriorityGate;
     if castPriorityGate then
         ApplyInverseAlphaSignal(castPriorityGate, signal);
@@ -304,6 +309,8 @@ local function DeactivateSummonPresentationGate(gate)
 end
 
 local function ApplyImportantCastPriority(nameplate, signal)
+    -- As above, each lower-tier gate receives the original protected C value with
+    -- inverse public alpha outputs; no gate state is read back into Lua.
     local ruleGates = nameplate.summonPresentationGates;
     if not ruleGates then return end
     for _, gates in pairs(ruleGates) do
@@ -474,6 +481,8 @@ if addon.PROJECT_MAINLINE then
 end
 
 addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherPlayersPet)
+    -- Readable blacklist suppression has absolute priority. Full deactivation hides
+    -- the aura root, cast root, and every allow-list root before returning.
     if IsPortraitHighlightBlacklisted(unit) then
         addon.DeactivateImportantNpcPortrait(nameplate);
         return;
