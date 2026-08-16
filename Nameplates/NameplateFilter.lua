@@ -103,6 +103,14 @@ local importantMinionWhitelist = {
         presentation = "portrait",
     },
     {
+        key = "magePrimaryPetCast",
+        ownerClass = addon.MAGE,
+        primaryPet = true,
+        signal = "cast",
+        presentation = "portrait",
+        -- Test rule: Mage primary pets are common and make this path easy to verify.
+    },
+    {
         key = "afflictionMinionCast",
         ownerSpec = addon.SPECID.AFFLICTION,
         primaryPet = false,
