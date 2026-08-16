@@ -207,7 +207,7 @@ local importantMinionWhitelist = {
         presentation = "auraIcon",
     },
     {
-        key = "warlockPrimaryPetCast",
+        key = "warlockPrimaryPetCast", -- Validated through the equivalent Water Elemental primary-pet path.
         ownerClass = addon.WARLOCK,
         primaryPet = true,
         signal = "cast",
@@ -215,14 +215,14 @@ local importantMinionWhitelist = {
     },
     -- Test rule: Mage primary pets are common and make this path easy to verify.
     -- {
-    --     key = "magePrimaryPetCast",
+    --     key = "magePrimaryPetCast", -- Validated in-game with Water Elemental.
     --     ownerClass = addon.MAGE,
     --     primaryPet = true,
     --     signal = "cast",
     --     presentation = "portrait",
     -- },
     {
-        key = "afflictionMinionCast",
+        key = "afflictionMinionCast", -- Validated in-game with Darkglare.
         ownerSpec = addon.SPECID.AFFLICTION,
         primaryPet = false,
         signal = "cast",
