@@ -1,6 +1,7 @@
 local _, addon = ...;
 
 local iconSize = 30;
+local iconInset = 2;
 local highlightHaloSize = 50;
 local highlightPulseScale = 1.07;
 local highlightPulseDuration = 0.42;
@@ -32,7 +33,8 @@ local function CreateIconHighlight(parent)
     parent:SetMouseClickEnabled(false);
 
     parent.icon = parent:CreateTexture(nil, "ARTWORK");
-    parent.icon:SetAllPoints(parent);
+    parent.icon:SetPoint("TOPLEFT", parent, "TOPLEFT", iconInset, -iconInset);
+    parent.icon:SetPoint("BOTTOMRIGHT", parent, "BOTTOMRIGHT", -iconInset, iconInset);
 
     parent.halo = CreateFrame("Frame", nil, parent);
     parent.halo:SetMouseClickEnabled(false);
