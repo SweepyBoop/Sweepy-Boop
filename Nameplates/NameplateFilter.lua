@@ -8,6 +8,8 @@ local highlightRippleFrequency = 0.9;
 local highlightRippleDuration = 1 / ( 2 * highlightRippleFrequency );
 local highlightRippleMaxAlpha = 0.82;
 local highlightRippleMinAlpha = 0.22;
+local highlightStaticGlowAlpha = 0.9;
+local highlightStaticBorderAlpha = 0.55;
 local highlightColor = { 0.85, 0.15, 1 };
 local highlightBorderTexture =
     addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE;
@@ -106,7 +108,7 @@ local function CreateSquareBorders(parent, useNativeAnimation)
         highlightColor[1],
         highlightColor[2],
         highlightColor[3],
-        0.7
+        highlightStaticGlowAlpha
     );
 
     parent.staticBorder = parent:CreateTexture(nil, "OVERLAY", nil, 1);
@@ -114,7 +116,12 @@ local function CreateSquareBorders(parent, useNativeAnimation)
     parent.staticBorder:SetPoint("CENTER", parent);
     parent.staticBorder:SetTexture(highlightBorderTexture);
     parent.staticBorder:SetBlendMode("ADD");
-    parent.staticBorder:SetVertexColor(unpack(highlightColor));
+    parent.staticBorder:SetVertexColor(
+        highlightColor[1],
+        highlightColor[2],
+        highlightColor[3],
+        highlightStaticBorderAlpha
+    );
 
     parent.ripple = CreateFrame("Frame", nil, parent);
     parent.ripple:SetMouseClickEnabled(false);
