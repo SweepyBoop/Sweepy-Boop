@@ -160,7 +160,7 @@ local function ApplyTranslations(locale)
     L["Nameplate Filters & Highlights"] = "Filtros de placas";
     L["Hide beast mastery hunter secondary pets in arena"] = "Ocultar mascotas BM";
     L["Hide the extra pet from talents\nThis feature is not available in battlegrounds due to WoW API limitations"] = "Oculta la mascota adicional de talentos\nEsta función no está disponible en campos de batalla por limitaciones de la API de WoW";
-    L["Highlight important enemy summons"] = "Invocaciones clave";
+    L["Highlight important enemy minions"] = "Invocaciones clave";
     L["Customize enemy units to hide / show / highlight"] = "Unidades enemigas";
     L["Highlight important enemy summons and totems using secret-safe aura and cast detection"] = "Resalta invocaciones y tótems enemigos importantes usando detección segura de auras y lanzamientos";
     L["Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds"] = "La placa de cada unidad puede ocultarse, mostrarse o mostrarse con un icono pulsante encima\nFunciona en arenas y campos de batalla";

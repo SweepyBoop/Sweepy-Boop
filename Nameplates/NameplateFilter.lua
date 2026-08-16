@@ -1,58 +1,174 @@
 local _, addon = ...;
 
 local iconSize = 30;
-local highlightHaloSize = 50;
-local highlightPulseScale = 1.07;
-local highlightPulseDuration = 0.42;
+local highlightBorderSize = 42;
+local highlightAnimationThrottle = 0.02;
+local highlightRippleScale = 0.22;
+local highlightRippleFrequency = 0.9;
+local highlightRippleDuration = 1 / ( 2 * highlightRippleFrequency );
+local highlightRippleMaxAlpha = 0.82;
+local highlightRippleMinAlpha = 0.22;
+local highlightStaticGlowAlpha = 0.9;
+local highlightStaticBorderAlpha = 0.55;
 local highlightColor = { 0.85, 0.15, 1 };
+local highlightBorderTexture =
+    addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE;
+local highlightGlowTexture =
+    addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE;
 
-local function SetupAnimation(halo)
-    local animationGroup = halo:CreateAnimationGroup();
+local function SetupNativeAnimation(ripple)
+    local animationGroup = ripple:CreateAnimationGroup();
+    -- Restricted aura buttons use a preconfigured native approximation of the
+    -- class-icon target highlight's ~1.11 second sinusoidal cycle.
     animationGroup:SetLooping("BOUNCE");
 
-    local pulse = animationGroup:CreateAnimation("Scale");
-    pulse:SetScale(highlightPulseScale, highlightPulseScale);
-    pulse:SetDuration(highlightPulseDuration);
-    if pulse.SetSmoothing then
-        pulse:SetSmoothing("IN_OUT");
+    local scale = animationGroup:CreateAnimation("Scale");
+    scale:SetScale(1 + highlightRippleScale, 1 + highlightRippleScale);
+    scale:SetDuration(highlightRippleDuration);
+    scale:SetOrder(1);
+
+    local alpha = animationGroup:CreateAnimation("Alpha");
+    alpha:SetFromAlpha(highlightRippleMaxAlpha);
+    alpha:SetToAlpha(highlightRippleMinAlpha);
+    alpha:SetDuration(highlightRippleDuration);
+    alpha:SetOrder(1);
+
+    if scale.SetSmoothing then
+        scale:SetSmoothing("IN_OUT");
+        alpha:SetSmoothing("IN_OUT");
     end
 
     return animationGroup;
 end
 
-local function StopHighlightAnimation(highlight)
-    if highlight.animationGroup:IsPlaying() then
-        highlight.animationGroup:Stop();
-    end
-    highlight.halo:SetScale(1);
+local function SetHighlightAnimationProgress(highlight, progress)
+    local wave = 0.5 - ( 0.5 * math.cos(( progress % 1 ) * math.pi * 2) );
+    local size = highlightBorderSize * ( 1 + ( highlightRippleScale * wave ) );
+    local alpha = highlightRippleMaxAlpha
+        - ( ( highlightRippleMaxAlpha - highlightRippleMinAlpha ) * wave );
+
+    highlight.ripple:SetSize(size, size);
+    highlight.ripple:SetAlpha(alpha);
 end
 
-local function CreatePortraitHighlight(parent)
+local function HighlightAnimation_OnUpdate(self, elapsed)
+    local highlight = self.highlight;
+    if not highlight or not highlight.animationActive then
+        self:SetScript("OnUpdate", nil);
+        return;
+    end
+
+    highlight.animationElapsed = highlight.animationElapsed + elapsed;
+    if highlight.animationElapsed < highlightAnimationThrottle then return end
+
+    local step = highlight.animationElapsed;
+    highlight.animationElapsed = 0;
+    highlight.animationProgress =
+        ( highlight.animationProgress + ( step * highlightRippleFrequency ) ) % 1;
+    SetHighlightAnimationProgress(highlight, highlight.animationProgress);
+end
+
+local function StopHighlightAnimation(highlight)
+    highlight.animationActive = false;
+    if highlight.animationGroup and highlight.animationGroup:IsPlaying() then
+        highlight.animationGroup:Stop();
+    end
+    if highlight.animationDriver then
+        highlight.animationDriver:SetScript("OnUpdate", nil);
+    end
+
+    highlight.animationElapsed = 0;
+    highlight.animationProgress = 0;
+    highlight.ripple:SetSize(highlightBorderSize, highlightBorderSize);
+    highlight.ripple:SetScale(1);
+    highlight.ripple:SetAlpha(highlightRippleMaxAlpha);
+end
+
+local function StartHighlightAnimation(highlight)
+    if highlight.animationActive then return end
+
+    StopHighlightAnimation(highlight);
+    highlight.animationActive = true;
+    highlight.ripple:Show();
+    if highlight.animationGroup then
+        highlight.animationGroup:Play();
+    else
+        SetHighlightAnimationProgress(highlight, 0);
+        highlight.animationDriver:SetScript("OnUpdate", HighlightAnimation_OnUpdate);
+    end
+end
+
+local function CreateSquareBorders(parent, useNativeAnimation)
+    parent.staticGlow = parent:CreateTexture(nil, "BORDER");
+    parent.staticGlow:SetSize(highlightBorderSize, highlightBorderSize);
+    parent.staticGlow:SetPoint("CENTER", parent);
+    parent.staticGlow:SetTexture(highlightGlowTexture);
+    parent.staticGlow:SetBlendMode("ADD");
+    parent.staticGlow:SetVertexColor(
+        highlightColor[1],
+        highlightColor[2],
+        highlightColor[3],
+        highlightStaticGlowAlpha
+    );
+
+    parent.staticBorder = parent:CreateTexture(nil, "OVERLAY", nil, 1);
+    parent.staticBorder:SetSize(highlightBorderSize, highlightBorderSize);
+    parent.staticBorder:SetPoint("CENTER", parent);
+    parent.staticBorder:SetTexture(highlightBorderTexture);
+    parent.staticBorder:SetBlendMode("ADD");
+    parent.staticBorder:SetVertexColor(
+        highlightColor[1],
+        highlightColor[2],
+        highlightColor[3],
+        highlightStaticBorderAlpha
+    );
+
+    parent.ripple = CreateFrame("Frame", nil, parent);
+    parent.ripple:SetMouseClickEnabled(false);
+    parent.ripple:SetSize(highlightBorderSize, highlightBorderSize);
+    parent.ripple:SetPoint("CENTER", parent);
+    parent.ripple:SetAlpha(highlightRippleMaxAlpha);
+
+    parent.rippleTexture = parent.ripple:CreateTexture(nil, "OVERLAY", nil, 2);
+    parent.rippleTexture:SetAllPoints(parent.ripple);
+    parent.rippleTexture:SetTexture(highlightGlowTexture);
+    parent.rippleTexture:SetBlendMode("ADD");
+    parent.rippleTexture:SetVertexColor(unpack(highlightColor));
+
+    if useNativeAnimation then
+        parent.animationGroup = SetupNativeAnimation(parent.ripple);
+    else
+        parent.animationDriver = CreateFrame("Frame", nil, parent);
+        parent.animationDriver:SetAllPoints(parent);
+        parent.animationDriver.highlight = parent;
+    end
+end
+
+local function SetHighlightAnimated(highlight, shouldAnimate)
+    highlight.staticGlow:Show();
+    highlight.staticBorder:Show();
+    if shouldAnimate then
+        StartHighlightAnimation(highlight);
+    else
+        StopHighlightAnimation(highlight);
+        highlight.ripple:Hide();
+    end
+end
+
+local function CreateIconHighlight(parent, shouldAnimate, useNativeAnimation)
     parent:SetSize(iconSize, iconSize);
     parent:SetMouseClickEnabled(false);
 
-    parent.portrait = parent:CreateTexture(nil, "ARTWORK");
-    parent.portrait:SetAllPoints(parent);
+    parent.icon = parent:CreateTexture(nil, "ARTWORK");
+    parent.icon:SetAllPoints(parent);
 
-    parent.halo = CreateFrame("Frame", nil, parent);
-    parent.halo:SetMouseClickEnabled(false);
-    parent.halo:SetSize(highlightHaloSize, highlightHaloSize);
-    parent.halo:SetPoint("CENTER", parent);
-
-    parent.glowTexture = parent.halo:CreateTexture(nil, "OVERLAY");
-    parent.glowTexture:SetAllPoints(parent.halo);
-    parent.glowTexture:SetBlendMode("ADD");
-    parent.glowTexture:SetAtlas("clickcast-highlight-spellbook");
-    parent.glowTexture:SetDesaturated(true);
-    parent.glowTexture:SetVertexColor(unpack(highlightColor));
-
-    parent.animationGroup = SetupAnimation(parent.halo);
-    parent.animationGroup:Play();
+    CreateSquareBorders(parent, useNativeAnimation);
+    SetHighlightAnimated(parent, shouldAnimate ~= false);
 end
 
-local function ApplyPortraitHighlightLayout(highlight, nameplate)
+local function ApplyHighlightLayout(highlight, nameplate)
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if highlight.lastModified == config.lastModified then return end
+    if highlight.layoutApplied and highlight.lastModified == config.lastModified then return end
 
     highlight:SetScale(config.npcHighlightScale);
     highlight:ClearAllPoints();
@@ -64,38 +180,7 @@ local function ApplyPortraitHighlightLayout(highlight, nameplate)
         config.npcHighlightOffset or 0
     );
     highlight.lastModified = config.lastModified;
-end
-
-local importantAuraSlotKey = "ImportantMinion";
-
-local function EnsureImportantAuraContainer(nameplate)
-    local container = nameplate.importantNpcAuraContainer;
-    if container then return container end
-
-    container = CreateFrame(
-        "AuraContainer",
-        nil,
-        nameplate,
-        "CustomAuraContainerTemplate"
-    );
-    container:SetFrameStrata("HIGH");
-    container:SetSize(iconSize, iconSize);
-    container:SetEnabled(false);
-    container:Hide();
-    container:AddAuraSlot(importantAuraSlotKey, "HELPFUL|IMPORTANT", {
-        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
-        sortDirection = AuraContainerSortDirection.Normal,
-        initializeFrame = function(button)
-            CreatePortraitHighlight(button);
-            button:SetPoint("CENTER", container, "CENTER");
-            -- Blizzard owns this protected texture after initialization. The aura
-            -- layer shows its truthful aura icon; cast and debug layers use portraits.
-            button:SetIcon(button.portrait);
-        end,
-    });
-
-    nameplate.importantNpcAuraContainer = container;
-    return container;
+    highlight.layoutApplied = true;
 end
 
 local function ApplyAlphaSignal(frame, signal)
@@ -108,95 +193,513 @@ local function ApplyAlphaSignal(frame, signal)
     end
 end
 
-local function EnsureImportantCastPortrait(nameplate, castBar)
-    local highlight = nameplate.importantNpcCastPortrait;
-    if not highlight then
-        highlight = CreateFrame("Frame", nil, castBar);
-        highlight:SetFrameStrata("HIGH");
-        highlight:SetIgnoreParentAlpha(true);
-        CreatePortraitHighlight(highlight);
-        highlight:Show();
-        nameplate.importantNpcCastPortrait = highlight;
-    elseif highlight:GetParent() ~= castBar then
-        highlight:SetParent(castBar);
+-- This is the complete Mainline presentation policy. Entries render independently.
+-- Cast/static icons render above aura icons, which render above unit portraits; any
+-- overlapping additive halos intentionally become brighter. A future blacklist should
+-- use only readable predicates and run
+-- before this whitelist is activated; unknown/protected facts must fail open.
+local importantMinionWhitelist = {
+    {
+        key = "shamanImportantAura",
+        ownerClass = addon.SHAMAN,
+        signal = "aura",
+        filter = "HELPFUL|IMPORTANT",
+        presentation = "auraIcon",
+    },
+    {
+        key = "warlockPrimaryPetCast",
+        ownerClass = addon.WARLOCK,
+        primaryPet = true,
+        signal = "cast",
+        presentation = "portrait",
+    },
+    -- Test rule: Mage primary pets are common and make this path easy to verify.
+    -- {
+    --     key = "magePrimaryPetCast",
+    --     ownerClass = addon.MAGE,
+    --     primaryPet = true,
+    --     signal = "cast",
+    --     presentation = "portrait",
+    -- },
+    {
+        key = "afflictionMinionCast",
+        ownerSpec = addon.SPECID.AFFLICTION,
+        primaryPet = false,
+        signal = "cast",
+        presentation = "portrait",
+    },
+    {
+        key = "shamanMinionCast",
+        ownerClass = addon.SHAMAN,
+        primaryPet = false,
+        signal = "cast",
+        presentation = "castIcon",
+    },
+    {
+        key = "shadowMinionChannel",
+        ownerSpec = addon.SPECID.SHADOW,
+        primaryPet = false,
+        signal = "channel",
+        requireNotInterruptible = true,
+        presentation = "staticIcon",
+        -- Psyfiend's canonical Retail summon spell. This is presentation-only;
+        -- the spell ID is never used to infer the minion's identity.
+        iconSpellID = 211522,
+    },
+};
+
+local function RuleMatchesOwner(rule, specID)
+    if rule.ownerSpec then
+        return specID == rule.ownerSpec;
+    end
+    return addon.SPECID_TO_CLASS[specID] == rule.ownerClass;
+end
+
+local function RuleMatchesPetState(rule, isOtherPlayersPet)
+    return rule.primaryPet == nil or rule.primaryPet == isOtherPlayersPet;
+end
+
+local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
+    local ruleGates = nameplate.importantMinionAuraGates;
+    if not ruleGates then
+        ruleGates = {};
+        nameplate.importantMinionAuraGates = ruleGates;
     end
 
-    ApplyPortraitHighlightLayout(highlight, nameplate);
-    return highlight;
+    local gates = ruleGates[rule.key];
+    if not gates then
+        gates = {};
+        ruleGates[rule.key] = gates;
+    end
+
+    local gate = gates[arenaSlot];
+    if gate then return gate end
+
+    gate = CreateFrame("Frame", nil, nameplate);
+    gate:SetFrameStrata("HIGH");
+    gate:SetFrameLevel(nameplate:GetFrameLevel() + 10);
+    gate:SetSize(iconSize, iconSize);
+    gate:SetAlpha(0);
+    gate:Hide();
+
+    local container = CreateFrame(
+        "AuraContainer",
+        nil,
+        gate,
+        "CustomAuraContainerTemplate"
+    );
+    container:SetAllPoints(gate);
+    container:SetEnabled(false);
+    container:Hide();
+    gate.container = container;
+
+    container:AddAuraSlot(rule.key, rule.filter, {
+        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            button:SetPoint("CENTER", container, "CENTER");
+            CreateIconHighlight(button, true, true);
+
+            -- Blizzard securely owns both the selected aura icon and button visibility.
+            -- Configure this inbound texture once, then never inspect or mutate the
+            -- restricted aura descendants from ordinary addon execution.
+            button:SetIcon(button.icon);
+        end,
+    });
+
+    gates[arenaSlot] = gate;
+    return gate;
+end
+
+local function DeactivateAuraRules(nameplate)
+    local ruleGates = nameplate.importantMinionAuraGates;
+    if not ruleGates then return end
+
+    for _, gates in pairs(ruleGates) do
+        for _, gate in pairs(gates) do
+            -- Hiding and disabling the root is sufficient. Its icon and halo belong
+            -- to Blizzard's restricted aura button and must not be mutated after setup.
+            gate.container:SetEnabled(false);
+            gate.container:Hide();
+            gate:SetAlpha(0);
+            gate:Hide();
+        end
+    end
+end
+
+local function ActivateAuraRules(nameplate, unit, isOtherPlayersPet)
+    DeactivateAuraRules(nameplate);
+    if not IsActiveBattlefieldArena() then return end
+
+    for _, rule in ipairs(importantMinionWhitelist) do
+        if rule.signal == "aura"
+            and RuleMatchesPetState(rule, isOtherPlayersPet) then
+
+            for arenaSlot = 1, addon.MAX_ARENA_SIZE do
+                if RuleMatchesOwner(rule, GetArenaOpponentSpec(arenaSlot)) then
+                    local gate = EnsureAuraRuleGate(nameplate, rule, arenaSlot);
+                    ApplyHighlightLayout(gate, nameplate);
+                    gate:SetAlphaFromBoolean(
+                        UnitIsOwnerOrControllerOfUnit(
+                            "arena" .. arenaSlot,
+                            unit
+                        ),
+                        1,
+                        0
+                    );
+                    gate.container:SetUnit(unit);
+                    gate.container:SetEnabled(true);
+                    gate.container:Show();
+                    gate.container:UpdateAllAuras();
+                    gate:Show();
+                end
+            end
+        end
+    end
+end
+
+local function GetCastPresentationState(unit)
+    -- Texture returns may be protected and remain opaque. Return 6 is NeverSecret
+    -- and serves only as the public tuple-presence sentinel documented by Blizzard.
+    local _, _, castingTexture, _, _, castingPresence = UnitCastingInfo(unit);
+    local _, _, channelTexture, _, _, channelPresence,
+        channelNotInterruptible = UnitChannelInfo(unit);
+
+    -- UnitChannelInfo return 7 may be protected. It is forwarded only to an alpha
+    -- sink for entries that explicitly require a non-interruptible channel.
+    return castingPresence ~= nil,
+        channelPresence ~= nil,
+        castingTexture,
+        channelTexture,
+        channelNotInterruptible;
+end
+
+local function RuleIsActive(rule, isCasting, isChanneling)
+    if rule.signal == "cast" then return isCasting end
+    if rule.signal == "channel" then return isChanneling end
+    return false;
+end
+
+local function EnsureActionRuleFrame(nameplate, rule, ownerSlot)
+    local ruleFrames = nameplate.importantMinionActionFrames;
+    if not ruleFrames then
+        ruleFrames = {};
+        nameplate.importantMinionActionFrames = ruleFrames;
+    end
+
+    local frames = ruleFrames[rule.key];
+    if not frames then
+        frames = {};
+        ruleFrames[rule.key] = frames;
+    end
+
+    local frame = frames[ownerSlot];
+    if frame then return frame end
+
+    frame = CreateFrame("Frame", nil, nameplate);
+    frame:SetFrameStrata("HIGH");
+    local frameLevelOffset = rule.presentation == "portrait" and 5 or 20;
+    frame:SetFrameLevel(nameplate:GetFrameLevel() + frameLevelOffset);
+    frame:SetSize(iconSize, iconSize);
+    frame:SetAlpha(0);
+
+    -- The nested alpha parent composes protected channel interruptibility with
+    -- protected ownership without calculating their conjunction in Lua.
+    frame.interruptibilityGate = CreateFrame("Frame", nil, frame);
+    frame.interruptibilityGate:SetAllPoints(frame);
+    frame.interruptibilityGate:SetAlpha(rule.requireNotInterruptible and 0 or 1);
+
+    frame.highlight = CreateFrame("Frame", nil, frame.interruptibilityGate);
+    frame.highlight:SetPoint("CENTER", frame.interruptibilityGate);
+    CreateIconHighlight(frame.highlight);
+    frame:Hide();
+
+    frames[ownerSlot] = frame;
+    return frame;
+end
+
+local function PrepareActionRuleFrames(nameplate, isOtherPlayersPet)
+    for _, rule in ipairs(importantMinionWhitelist) do
+        if rule.signal ~= "aura" and RuleMatchesPetState(rule, isOtherPlayersPet) then
+            if rule.ownerClass or rule.ownerSpec then
+                if IsActiveBattlefieldArena() then
+                    for arenaSlot = 1, addon.MAX_ARENA_SIZE do
+                        if RuleMatchesOwner(rule, GetArenaOpponentSpec(arenaSlot)) then
+                            EnsureActionRuleFrame(nameplate, rule, arenaSlot);
+                        end
+                    end
+                end
+            else
+                EnsureActionRuleFrame(nameplate, rule, 0);
+            end
+        end
+    end
+end
+
+local function SetActionPresentation(
+    highlight,
+    rule,
+    unit,
+    castingTexture,
+    channelTexture
+)
+    if rule.presentation == "portrait" then
+        SetPortraitTexture(highlight.icon, unit);
+    elseif rule.presentation == "staticIcon" then
+        highlight.icon:SetTexture(addon.GetSpellTexture(rule.iconSpellID));
+    elseif rule.signal == "cast" then
+        highlight.icon:SetTexture(castingTexture);
+    else
+        highlight.icon:SetTexture(channelTexture);
+    end
+end
+
+local function DeactivateActionRuleFrame(frame)
+    StopHighlightAnimation(frame.highlight);
+    frame.highlight.icon:SetTexture(nil);
+    frame:SetAlpha(0);
+    frame:Hide();
+end
+
+local function DeactivateActionRules(nameplate)
+    local ruleFrames = nameplate.importantMinionActionFrames;
+    if not ruleFrames then return end
+
+    for _, frames in pairs(ruleFrames) do
+        for _, frame in pairs(frames) do
+            DeactivateActionRuleFrame(frame);
+        end
+    end
+end
+
+local function UpdateActionRules(
+    nameplate,
+    unit,
+    isOtherPlayersPet
+)
+    local isCasting, isChanneling, castingTexture, channelTexture,
+        channelNotInterruptible = GetCastPresentationState(unit);
+
+    PrepareActionRuleFrames(nameplate, isOtherPlayersPet);
+    local ruleFrames = nameplate.importantMinionActionFrames;
+
+    for _, rule in ipairs(importantMinionWhitelist) do
+        if rule.signal ~= "aura" then
+            local active = RuleMatchesPetState(rule, isOtherPlayersPet)
+                and RuleIsActive(rule, isCasting, isChanneling);
+            local frames = ruleFrames and ruleFrames[rule.key];
+
+            if frames then
+                for ownerSlot, frame in pairs(frames) do
+                    local ownerMatches = ownerSlot == 0
+                        or RuleMatchesOwner(rule, GetArenaOpponentSpec(ownerSlot));
+
+                    if active and ownerMatches then
+                        ApplyHighlightLayout(frame, nameplate);
+                        if ownerSlot == 0 then
+                            frame:SetAlpha(1);
+                        else
+                            frame:SetAlphaFromBoolean(
+                                UnitIsOwnerOrControllerOfUnit(
+                                    "arena" .. ownerSlot,
+                                    unit
+                                ),
+                                1,
+                                0
+                            );
+                        end
+
+                        if rule.requireNotInterruptible then
+                            ApplyAlphaSignal(
+                                frame.interruptibilityGate,
+                                channelNotInterruptible
+                            );
+                        else
+                            frame.interruptibilityGate:SetAlpha(1);
+                        end
+
+                        SetActionPresentation(
+                            frame.highlight,
+                            rule,
+                            unit,
+                            castingTexture,
+                            channelTexture
+                        );
+                        StartHighlightAnimation(frame.highlight);
+                        frame.highlight:Show();
+                        frame:Show();
+                    else
+                        DeactivateActionRuleFrame(frame);
+                    end
+                end
+            end
+        end
+    end
 end
 
 if addon.PROJECT_MAINLINE then
-    local function ClearImportantCastPortrait(castBar)
-        local highlight = castBar.sweepyBoopImportantNpcPortrait;
-        if highlight then highlight:SetAlpha(0) end
+    local function IsForbiddenSafe(frame)
+        if addon.IsSecretValue(frame) then return true end
+        return frame:IsForbidden();
     end
 
-    hooksecurefunc(NamePlateCastingBarMixin, "SetIsHighlightedImportantCast", function(castBar, signal)
-        local highlight = castBar.sweepyBoopImportantNpcPortrait;
-        if highlight then
-            ApplyAlphaSignal(highlight, signal);
+    local function ClearActionRules(castBar)
+        if IsForbiddenSafe(castBar) then return end
+        local nameplate = castBar.sweepyBoopImportantNpcNameplate;
+        if nameplate then
+            DeactivateActionRules(nameplate);
+        end
+    end
+
+    -- These hooks are update notifications only. Current action state and texture
+    -- always come from UnitCastingInfo/UnitChannelInfo, never castbar lifecycle fields.
+    hooksecurefunc(NamePlateCastingBarMixin, "OnEvent", function(castBar, event)
+        if IsForbiddenSafe(castBar) then return end
+        local nameplate = castBar.sweepyBoopImportantNpcNameplate;
+        if not nameplate then return end
+
+        if event == addon.UNIT_SPELLCAST_STOP
+            or event == addon.UNIT_SPELLCAST_INTERRUPTED
+            or event == addon.UNIT_SPELLCAST_CHANNEL_STOP then
+            return;
+        end
+
+        UpdateActionRules(
+            nameplate,
+            castBar.unit,
+            nameplate.importantNpcIsOtherPlayersPet
+        );
+    end);
+    -- These transitions occur after Blizzard accepts the active cast stop or interrupt.
+    hooksecurefunc(NamePlateCastingBarMixin, "PlayFadeAnim", ClearActionRules);
+    hooksecurefunc(NamePlateCastingBarMixin, "PlayInterruptAnims", ClearActionRules);
+
+    hooksecurefunc(NamePlateUnitFrameMixin, "OnUnitCleared", function(unitFrame)
+        if IsForbiddenSafe(unitFrame) then return end
+        local nameplate = unitFrame:GetNamePlateFrame();
+        if nameplate then
+            addon.DeactivateImportantNpcPortrait(nameplate);
         end
     end);
-    -- These presentation transitions run only after Blizzard accepts the stop or
-    -- interruption for the active cast. Raw event handlers may receive stale IDs.
-    hooksecurefunc(NamePlateCastingBarMixin, "PlayFadeAnim", ClearImportantCastPortrait);
-    hooksecurefunc(NamePlateCastingBarMixin, "PlayInterruptAnims", ClearImportantCastPortrait);
 end
 
-addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar)
-    local container = EnsureImportantAuraContainer(nameplate);
-    ApplyPortraitHighlightLayout(container, nameplate);
-    container:SetUnit(unit);
-    container:SetEnabled(true);
-    container:Show();
-    container:UpdateAllAuras();
+addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherPlayersPet)
+    -- A future readable blacklist belongs here, before any whitelist entry activates.
+    -- Never use protected or unknown identity facts as blacklist predicates.
+    ActivateAuraRules(nameplate, unit, isOtherPlayersPet);
+    nameplate.importantNpcIsOtherPlayersPet = isOtherPlayersPet;
+
+    local previousCastBar = nameplate.importantNpcCastBar;
+    if previousCastBar and previousCastBar ~= castBar then
+        previousCastBar.sweepyBoopImportantNpcNameplate = nil;
+    end
 
     if castBar then
-        local previousCastBar = nameplate.importantNpcCastBar;
-        if previousCastBar and previousCastBar ~= castBar then
-            previousCastBar.sweepyBoopImportantNpcPortrait = nil;
-        end
-
-        local castHighlight = EnsureImportantCastPortrait(nameplate, castBar);
-        SetPortraitTexture(castHighlight.portrait, unit);
-        local isNewAssociation = castBar.sweepyBoopImportantNpcPortrait ~= castHighlight;
-        castBar.sweepyBoopImportantNpcPortrait = castHighlight;
+        castBar.sweepyBoopImportantNpcNameplate = nameplate;
         nameplate.importantNpcCastBar = castBar;
-        if isNewAssociation then
-            -- Blizzard has already computed this value in untainted execution. Forward
-            -- it only to SweepyBoop's secret-safe alpha sink; recomputing here would make
-            -- Blizzard's own SetShown call consume a secret from tainted execution.
-            ApplyAlphaSignal(castHighlight, castBar:GetIsHighlightedImportantCast());
+        UpdateActionRules(
+            nameplate,
+            unit,
+            isOtherPlayersPet
+        );
+    else
+        if previousCastBar then
+            previousCastBar.sweepyBoopImportantNpcNameplate = nil;
+            nameplate.importantNpcCastBar = nil;
         end
+        DeactivateActionRules(nameplate);
     end
 end
 
-local debugNpcPortraitNameplate;
+local debugNpcHighlightNameplate;
+
+local function EnsureDebugActionHighlight(nameplate, key, frameLevelOffset)
+    local highlights = nameplate.debugNpcHighlights;
+    if not highlights then
+        highlights = {};
+        nameplate.debugNpcHighlights = highlights;
+    end
+
+    local highlight = highlights[key];
+    if highlight then return highlight end
+
+    highlight = CreateFrame("Frame", nil, nameplate);
+    highlight:SetFrameStrata("HIGH");
+    highlight:SetFrameLevel(nameplate:GetFrameLevel() + frameLevelOffset);
+    CreateIconHighlight(highlight);
+    highlight:Hide();
+    highlights[key] = highlight;
+    return highlight;
+end
+
+local function EnsureDebugAuraContainer(nameplate, shouldAnimate)
+    local containers = nameplate.debugNpcAuraContainers;
+    if not containers then
+        containers = {};
+        nameplate.debugNpcAuraContainers = containers;
+    end
+
+    local key = shouldAnimate and "animated" or "static";
+    local container = containers[key];
+    if container then return container end
+
+    container = CreateFrame(
+        "AuraContainer",
+        nil,
+        nameplate,
+        "CustomAuraContainerTemplate"
+    );
+    container:SetFrameStrata("HIGH");
+    container:SetFrameLevel(nameplate:GetFrameLevel() + 10);
+    container:SetSize(iconSize, iconSize);
+    container:SetEnabled(false);
+    container:Hide();
+    container:AddAuraSlot("DebugImportantAura" .. key, "HELPFUL|IMPORTANT", {
+        sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            button:SetPoint("CENTER", container, "CENTER");
+            CreateIconHighlight(button, shouldAnimate, true);
+            button:SetIcon(button.icon);
+        end,
+    });
+
+    containers[key] = container;
+    return container;
+end
 
 addon.HideDebugNpcPortrait = function(nameplate)
-    local highlight = nameplate.debugNpcPortraitHighlight;
-    if highlight then highlight:Hide() end
-    if debugNpcPortraitNameplate == nameplate then
-        debugNpcPortraitNameplate = nil;
+    local highlights = nameplate.debugNpcHighlights;
+    if highlights then
+        for _, highlight in pairs(highlights) do
+            StopHighlightAnimation(highlight);
+            highlight.icon:SetTexture(nil);
+            highlight:Hide();
+        end
+    end
+
+    local containers = nameplate.debugNpcAuraContainers;
+    if containers then
+        for _, container in pairs(containers) do
+            container:SetEnabled(false);
+            container:Hide();
+        end
+    end
+
+    if debugNpcHighlightNameplate == nameplate then
+        debugNpcHighlightNameplate = nil;
     end
 end
 
 addon.DeactivateImportantNpcPortrait = function(nameplate)
-    local container = nameplate.importantNpcAuraContainer;
-    if container then
-        container:SetEnabled(false);
-        container:Hide();
-    end
+    DeactivateAuraRules(nameplate);
+    DeactivateActionRules(nameplate);
+    nameplate.importantNpcIsOtherPlayersPet = nil;
 
     local castBar = nameplate.importantNpcCastBar;
     if castBar then
-        castBar.sweepyBoopImportantNpcPortrait = nil;
+        castBar.sweepyBoopImportantNpcNameplate = nil;
         nameplate.importantNpcCastBar = nil;
-    end
-
-    local castHighlight = nameplate.importantNpcCastPortrait;
-    if castHighlight then
-        castHighlight:SetAlpha(0);
     end
 end
 
@@ -210,28 +713,11 @@ local function EnsureNpcHighlight(nameplate)
         nameplate.npcHighlight:SetFrameStrata("HIGH");
         nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", config.npcHighlightHorizontalOffset or 0, config.npcHighlightOffset or 0);
 
-        nameplate.npcHighlight.customIcon = nameplate.npcHighlight:CreateTexture(nil, "OVERLAY");
+        nameplate.npcHighlight.customIcon =
+            nameplate.npcHighlight:CreateTexture(nil, "ARTWORK");
         nameplate.npcHighlight.customIcon:SetAllPoints(nameplate.npcHighlight);
 
-        nameplate.npcHighlight.halo = CreateFrame("Frame", nil, nameplate.npcHighlight);
-        nameplate.npcHighlight.halo:SetMouseClickEnabled(false);
-        nameplate.npcHighlight.halo:SetSize(highlightHaloSize, highlightHaloSize);
-        nameplate.npcHighlight.halo:SetPoint("CENTER", nameplate.npcHighlight);
-
-        nameplate.npcHighlight.glowTexture = nameplate.npcHighlight.halo:CreateTexture(nil, "OVERLAY");
-        nameplate.npcHighlight.glowTexture:SetAllPoints(nameplate.npcHighlight.halo);
-        nameplate.npcHighlight.glowTexture:SetBlendMode("ADD");
-        if addon.PROJECT_MAINLINE then
-            nameplate.npcHighlight.glowTexture:SetAtlas("clickcast-highlight-spellbook");
-        else
-            nameplate.npcHighlight.glowTexture:SetAtlas("Forge-ColorSwatchSelection");
-            nameplate.npcHighlight.glowTexture:SetScale(0.4);
-        end
-        nameplate.npcHighlight.glowTexture:SetDesaturated(true);
-        nameplate.npcHighlight.glowTexture:SetVertexColor(unpack(highlightColor));
-
-        nameplate.npcHighlight.animationGroup = SetupAnimation(nameplate.npcHighlight.halo);
-
+        CreateSquareBorders(nameplate.npcHighlight);
         nameplate.npcHighlight:Hide();
     end
 
@@ -272,16 +758,7 @@ addon.ShowNpcHighlight = function(nameplate, animation, iconTexture, highlightKe
 
     if highlight then
         highlight.customIcon:Show();
-        if animation then
-            highlight.halo:Show();
-            if not highlight.animationGroup:IsPlaying() then
-                StopHighlightAnimation(highlight);
-                highlight.animationGroup:Play();
-            end
-        else
-            StopHighlightAnimation(highlight);
-            highlight.halo:Hide();
-        end
+        SetHighlightAnimated(highlight, animation);
         highlight:Show();
     end
 end
@@ -290,19 +767,36 @@ addon.HideNpcHighlight = function(nameplate)
     local highlight = nameplate.npcHighlight;
     if highlight then
         StopHighlightAnimation(highlight);
-        highlight.halo:Hide();
+        highlight.ripple:Hide();
+        highlight.staticGlow:Hide();
+        highlight.staticBorder:Hide();
         highlight.customIcon:Hide();
         highlight:Hide();
     end
 end
 
 if addon.internal then
-    function SweepyBoop:DebugNpcHighlight(shouldShow, iconTexture)
+    -- Internal preview; first target a unit with a visible nameplate.
+    -- Animated portrait: /run SweepyBoop:DebugNpcHighlight(true, true, "portrait")
+    -- Static portrait: /run SweepyBoop:DebugNpcHighlight(true, false, "portrait")
+    -- Animated cast: /run SweepyBoop:DebugNpcHighlight(true, true, "cast")
+    -- Static aura: /run SweepyBoop:DebugNpcHighlight(true, false, "aura")
+    -- Animated spell icon: /run SweepyBoop:DebugNpcHighlight(true, true, "static", 211522)
+    -- Static spell icon: /run SweepyBoop:DebugNpcHighlight(true, false, "static", 211522)
+    -- Animated layers: /run SweepyBoop:DebugNpcHighlight(true, true, "all", 211522)
+    -- Static layers: /run SweepyBoop:DebugNpcHighlight(true, false, "all", 211522)
+    -- Hide: /run SweepyBoop:DebugNpcHighlight(false)
+    function SweepyBoop:DebugNpcHighlight(
+        shouldShow,
+        shouldAnimate,
+        representation,
+        spellID
+    )
         if addon.PROJECT_MAINLINE and shouldShow == false then
-            if debugNpcPortraitNameplate then
-                addon.HideDebugNpcPortrait(debugNpcPortraitNameplate);
+            if debugNpcHighlightNameplate then
+                addon.HideDebugNpcPortrait(debugNpcHighlightNameplate);
             end
-            print("SweepyBoop: NPC portrait highlight preview hidden");
+            print("SweepyBoop: NPC highlight preview hidden");
             return;
         end
 
@@ -313,22 +807,85 @@ if addon.internal then
         end
 
         if addon.PROJECT_MAINLINE then
-            if debugNpcPortraitNameplate and debugNpcPortraitNameplate ~= nameplate then
-                addon.HideDebugNpcPortrait(debugNpcPortraitNameplate);
+            if debugNpcHighlightNameplate then
+                addon.HideDebugNpcPortrait(debugNpcHighlightNameplate);
             end
 
-            local highlight = nameplate.debugNpcPortraitHighlight;
-            if not highlight then
-                highlight = CreateFrame("Frame", nil, nameplate);
-                highlight:SetFrameStrata("HIGH");
-                CreatePortraitHighlight(highlight);
-                nameplate.debugNpcPortraitHighlight = highlight;
+            representation = representation or "portrait";
+            if shouldAnimate == nil then
+                shouldAnimate = true;
             end
-            ApplyPortraitHighlightLayout(highlight, nameplate);
-            SetPortraitTexture(highlight.portrait, "target");
-            highlight:Show();
-            debugNpcPortraitNameplate = nameplate;
-            print("SweepyBoop: showing animated NPC portrait on current target");
+
+            local showAll = representation == "all";
+            local validRepresentation = showAll
+                or representation == "portrait"
+                or representation == "cast"
+                or representation == "static"
+                or representation == "aura";
+            if not validRepresentation then
+                print(
+                    "SweepyBoop: representation must be portrait, cast, static, aura, or all"
+                );
+                return;
+            end
+
+            if showAll or representation == "portrait" then
+                local highlight = EnsureDebugActionHighlight(nameplate, "portrait", 5);
+                ApplyHighlightLayout(highlight, nameplate);
+                SetPortraitTexture(highlight.icon, "target");
+                SetHighlightAnimated(highlight, shouldAnimate);
+                highlight:Show();
+            end
+
+            if showAll or representation == "aura" then
+                local container = EnsureDebugAuraContainer(
+                    nameplate,
+                    shouldAnimate
+                );
+                ApplyHighlightLayout(container, nameplate);
+                container:SetUnit("target");
+                container:SetEnabled(true);
+                container:Show();
+                container:UpdateAllAuras();
+            end
+
+            if showAll or representation == "static" then
+                local highlight = EnsureDebugActionHighlight(nameplate, "static", 20);
+                ApplyHighlightLayout(highlight, nameplate);
+                highlight.icon:SetTexture(
+                    addon.GetSpellTexture(spellID or 211522)
+                );
+                SetHighlightAnimated(highlight, shouldAnimate);
+                highlight:Show();
+            end
+
+            if showAll or representation == "cast" then
+                local isCasting, isChanneling, castingTexture, channelTexture =
+                    GetCastPresentationState("target");
+                local highlight = EnsureDebugActionHighlight(nameplate, "cast", 20);
+                ApplyHighlightLayout(highlight, nameplate);
+                if isCasting then
+                    highlight.icon:SetTexture(castingTexture);
+                elseif isChanneling then
+                    highlight.icon:SetTexture(channelTexture);
+                else
+                    highlight.icon:SetTexture(nil);
+                    highlight:Hide();
+                    print("SweepyBoop: current target is not casting or channeling");
+                end
+                if isCasting or isChanneling then
+                    SetHighlightAnimated(highlight, shouldAnimate);
+                    highlight:Show();
+                end
+            end
+
+            debugNpcHighlightNameplate = nameplate;
+            print(
+                "SweepyBoop: showing "
+                    .. representation
+                    .. (shouldAnimate and " animated" or " static")
+                    .. " NPC highlight preview on current target"
+            );
             return;
         end
 
@@ -338,13 +895,20 @@ if addon.internal then
             return;
         end
 
+        if shouldAnimate == nil then
+            shouldAnimate = true;
+        end
         addon.ShowNpcHighlight(
             nameplate,
-            true,
-            iconTexture or addon.GetSpellTexture(8177),
+            shouldAnimate,
+            representation or addon.GetSpellTexture(8177),
             "debug"
         );
-        print("SweepyBoop: showing animated NPC highlight on current target");
+        print(
+            "SweepyBoop: showing "
+                .. (shouldAnimate and "animated" or "static")
+                .. " NPC highlight on current target"
+        );
     end
 end
 

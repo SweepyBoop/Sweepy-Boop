@@ -175,7 +175,7 @@ local function UpdateUnitFrameVisibility(nameplate, frame, show)
             if castBar then
                 for key, region in pairs(castBar) do
                     if ( type(region) == "table" ) and region.SetIgnoreParentAlpha
-                        and key ~= "sweepyBoopImportantNpcPortrait" then
+                        and key ~= "sweepyBoopImportantNpcNameplate" then
                         region:SetIgnoreParentAlpha(false);
                     end
                 end
@@ -313,7 +313,7 @@ local function UpdateWidgets(nameplate, frame)
             addon.HideBigDebuffs(nameplate);
         end
 
-        local npcOption, isCritter, iconTexture, highlightKey, useImportantPortrait = addon.CheckNpcWhiteList(frame.unit);
+        local npcOption, isCritter, iconTexture, highlightKey, useImportantPortrait, isOtherPlayersPet = addon.CheckNpcWhiteList(frame.unit);
         local shouldShowUnitFrame = true;
         if ( npcOption == addon.NpcOption.Highlight ) then
             addon.ShowNpcHighlight(nameplate, true, iconTexture, highlightKey);
@@ -330,7 +330,8 @@ local function UpdateWidgets(nameplate, frame)
             addon.ActivateImportantNpcPortrait(
                 nameplate,
                 frame.unit,
-                GetNameplateCastBar(frame)
+                GetNameplateCastBar(frame),
+                isOtherPlayersPet
             );
         else
             addon.DeactivateImportantNpcPortrait(nameplate);

@@ -514,9 +514,6 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 11,
                         type = "header",
                         name = "Nameplate Filters & Highlights",
-                        hidden = function()
-                            return addon.PROJECT_MAINLINE;
-                        end,
                     },
 
                     hideHunterSecondaryPet = {
@@ -533,11 +530,8 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 11,
                         type = "toggle",
                         width = "full",
-                        name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Filter enemy pets and summons" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
-                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons and hide other minions using secret-safe aura, cast, and channel detection\n\nPrimary Hunter, Warlock, and Shaman pets remain visible. Your current target is never hidden." or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
-                        hidden = function()
-                            return addon.PROJECT_MAINLINE;
-                        end,
+                        name = addon.PROJECT_MAINLINE and ( addon.FORMAT_TEXTURE(addon.GetSpellTexture(204336)) .. " Highlight important enemy minions" ) or ( addon.FORMAT_TEXTURE(addon.ICON_ID_PVP_CURSOR) .. " Customize enemy units to hide / show / highlight" ),
+                        desc = addon.PROJECT_MAINLINE and "Highlight important enemy summons using secret-safe aura, cast, and channel presentation\n\nRetail minion health bars remain visible because exact summon identity and importance may be protected." or "Each unit's nameplate can be hidden, shown, or shown with a pulsing icon on top\nThis works in arenas and battlegrounds",
                     },
                     showCritterIcons = {
                         order = 12,
@@ -559,7 +553,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         isPercent = true,
                         step = 1,
                         hidden = function()
-                            return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                         end,
                     },
                     npcHighlightHorizontalOffset = {
@@ -571,7 +565,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         max = 150,
                         step = 1,
                         hidden = function()
-                            return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                         end,
                     },
                     npcHighlightOffset = {
@@ -583,7 +577,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         max = 150,
                         step = 1,
                         hidden = function()
-                            return addon.PROJECT_MAINLINE or ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
+                            return ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled );
                         end,
                     },
 

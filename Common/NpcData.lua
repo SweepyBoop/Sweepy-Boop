@@ -265,15 +265,10 @@ addon.GetNpcIdFromGuid = function (guid)
 end
 
 addon.GetNpcIdFromUnit = function(unitId)
-    if ( not unitId ) then return 0 end
-
-    local npcID = addon.GetNpcIdFromGuid(UnitGUID(unitId));
-    if ( npcID ~= 0 ) or ( not addon.PROJECT_MAINLINE ) then
-        return npcID;
-    end
-
-    local tooltipData = C_TooltipInfo.GetUnit(unitId);
-    return addon.GetNpcIdFromGuid(tooltipData and tooltipData.guid);
+    -- Retail unit identity may be protected. Never make Mainline behavior depend
+    -- on GUID or tooltip-derived NPC IDs; Classic keeps its readable GUID path.
+    if ( not unitId ) or addon.PROJECT_MAINLINE then return 0 end
+    return addon.GetNpcIdFromGuid(UnitGUID(unitId));
 end
 
 local ClassifyMainlineNpc;
@@ -288,46 +283,38 @@ if addon.PROJECT_MAINLINE then
     end
 
     ClassifyMainlineNpc = function(unitId)
-        -- Only confirmed minions are eligible for suppression. Unknown values fail open.
+        -- Retail does not expose reliable NPC identity or readable importance.
+        -- Preserve every minion's health bar and use protected presentation signals
+        -- only to add truthful unit-portrait priority markers.
         local isMinion, minionKnown = ReadUnitFlag(UnitIsMinion, unitId);
         if ( not minionKnown ) or ( not isMinion ) then
             return addon.NpcOption.Show, false;
         end
 
-        local isPrimaryPet, primaryPetKnown = ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
-        if ( not primaryPetKnown ) or isPrimaryPet then
-            return addon.NpcOption.Show, false;
+        local isOtherPlayersPet, primaryPetKnown =
+            ReadUnitFlag(UnitIsOtherPlayersPet, unitId);
+        if not primaryPetKnown then
+            -- The unit is still a confirmed minion. Enable Blizzard-backed
+            -- presentation, but leave the pet subtype unknown so pet-specific
+            -- allow-list rules fail closed.
+            return addon.NpcOption.Show,
+                false,
+                nil,
+                nil,
+                true,
+                nil;
         end
 
-        local isShamanPrimaryPet = addon.IsShamanPrimaryPet(unitId);
-        if isShamanPrimaryPet then
-            return addon.NpcOption.Show, false;
-        end
-
-        -- Aura and cast importance are protected presentation signals, not NPC identity.
-        -- The nameplate renderer consumes them without exposing either value to Lua.
-        local useImportantPortrait = true;
-
-        local isTarget, targetKnown = ReadUnitFlag(UnitIsUnit, unitId, "target");
-        if ( not targetKnown ) or isTarget then
-            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait;
-        end
-
-        if isShamanPrimaryPet == nil then
-            return addon.NpcOption.Show, false, nil, nil, useImportantPortrait;
-        end
-
-        return addon.NpcOption.Hide, false, nil, nil, useImportantPortrait;
+        return addon.NpcOption.Show,
+            false,
+            nil,
+            nil,
+            true,
+            isOtherPlayersPet;
     end
 end
 
 addon.CheckNpcWhiteList = function (unitId)
-    -- Temporarily suppress the unverified Retail summon filter/highlight. Classic
-    -- keeps its existing configurable NPC filter path below.
-    if addon.PROJECT_MAINLINE then
-        return addon.NpcOption.Show, false;
-    end
-
     if ( not SweepyBoop.db.profile.nameplatesEnemy.filterEnabled ) then
         return addon.NpcOption.Show, false; -- Filter is disabled, show everything
     end
