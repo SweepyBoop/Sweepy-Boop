@@ -16,6 +16,8 @@ local highlightBorderTexture =
 local highlightGlowTexture =
     addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE;
 
+-- TODO: Polish the animated highlight path to make the ripple more visible without
+-- adding overlapping animation layers or regressing the validated presentation.
 local function SetupNativeAnimation(ripple)
     local animationGroup = ripple:CreateAnimationGroup();
     -- Restricted aura buttons use a preconfigured native approximation of the
@@ -200,14 +202,14 @@ end
 -- before this whitelist is activated; unknown/protected facts must fail open.
 local importantMinionWhitelist = {
     {
-        key = "shamanImportantAura",
+        key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
         ownerClass = addon.SHAMAN,
         signal = "aura",
         filter = "HELPFUL|IMPORTANT",
         presentation = "auraIcon",
     },
     {
-        key = "warlockPrimaryPetCast",
+        key = "warlockPrimaryPetCast", -- Validated through the equivalent Water Elemental primary-pet path.
         ownerClass = addon.WARLOCK,
         primaryPet = true,
         signal = "cast",
@@ -215,28 +217,28 @@ local importantMinionWhitelist = {
     },
     -- Test rule: Mage primary pets are common and make this path easy to verify.
     -- {
-    --     key = "magePrimaryPetCast",
+    --     key = "magePrimaryPetCast", -- Validated in-game with Water Elemental.
     --     ownerClass = addon.MAGE,
     --     primaryPet = true,
     --     signal = "cast",
     --     presentation = "portrait",
     -- },
     {
-        key = "afflictionMinionCast",
+        key = "afflictionMinionCast", -- Validated in-game with Darkglare.
         ownerSpec = addon.SPECID.AFFLICTION,
         primaryPet = false,
         signal = "cast",
         presentation = "portrait",
     },
     {
-        key = "shamanMinionCast",
+        key = "shamanMinionCast", -- Validated in-game with Capacitor Totem.
         ownerClass = addon.SHAMAN,
         primaryPet = false,
         signal = "cast",
         presentation = "castIcon",
     },
     {
-        key = "shadowMinionChannel",
+        key = "shadowMinionChannel", -- Validated in-game with Psyfiend.
         ownerSpec = addon.SPECID.SHADOW,
         primaryPet = false,
         signal = "channel",
