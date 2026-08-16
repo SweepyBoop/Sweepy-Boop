@@ -538,8 +538,8 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(104317))
-                            .. " Hide Demonology guardians and other non-pet minions in arena",
-                        desc = "Hide confirmed guardians and other non-pet minions owned by a Demonology Warlock to reduce nameplate clutter. Wild Imps are one example.\n\nDisable this to keep their health bars visible for gaining combo points or triggering effects from attacks, procs, and bleeds.",
+                            .. " Hide unimportant enemy minions in arena",
+                        desc = "Hide confirmed unimportant enemy minions to reduce nameplate clutter. Currently, this applies to Demonology Warlock guardians and other non-pet minions, such as Wild Imps.\n\nDisable this to keep their health bars visible for gaining combo points or triggering effects from attacks, procs, and bleeds.",
                         hidden = function()
                             return not addon.PROJECT_MAINLINE;
                         end,
