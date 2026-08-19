@@ -412,6 +412,7 @@ function SweepyBoop:OnInitialize()
 
     if addon.PROJECT_MAINLINE then
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
+        options.args.macros = addon.GetMacroOptions(7.5);
         if addon.MAINLINE_CORE_FEATURES_ONLY then
             options.args.misc =
                 addon.GetHealerInCrowdControlOptions(7);
@@ -420,7 +421,6 @@ function SweepyBoop:OnInitialize()
         else
             options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
             options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
-            options.args.macros = addon.GetMacroOptions(7.5);
         end
     else
         options.args.arenaFrames = addon.GetArenaFrameOptions(5);
@@ -490,6 +490,7 @@ function SweepyBoop:OnInitialize()
     self:SetupQueueReminder();
     self:SetupPrecognitionTracker();
     self:SetupPersonalDR();
+    self:SetupHealerIndicator();
 
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
@@ -500,7 +501,6 @@ function SweepyBoop:OnInitialize()
 
     self:SetupCombatIndicator();
     self:SetupClassColorUnitFrames();
-    self:SetupHealerIndicator();
     self:SetupHideBlizzArenaFrames();
     self:SetupRangeChecker();
     self:SetupHonorReminder();
