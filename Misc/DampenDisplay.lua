@@ -1,41 +1,114 @@
 local _, addon = ...;
 
-local frame = CreateFrame('Frame', nil , UIParent, "UIWidgetTemplateIconAndText");
-local widgetSetInfo = C_UIWidgetManager.GetWidgetSetInfo(C_UIWidgetManager.GetTopCenterWidgetSetID());
-frame:SetPoint(UIWidgetTopCenterContainerFrame.verticalAnchorPoint, UIWidgetTopCenterContainerFrame, UIWidgetTopCenterContainerFrame.verticalRelativePoint, 0, widgetSetInfo.verticalPadding);
-frame.Text:SetParent(frame);
-frame:SetWidth(200);
-frame.Text:SetAllPoints();
-frame.Text:SetJustifyH("CENTER");
+local DAMPENING_SPELL_ID = 110310;
+local UPDATE_INTERVAL = 1;
+local WIDGET_OFFSET_Y = -4;
 
-frame:SetScript("OnEvent", function(self, ...) 
-    if ( not SweepyBoop.db.profile.misc.showDampenPercentage ) then
-        self:Hide();
-        return;
+local frame;
+local eventFrame;
+local dampeningText;
+
+local function GetConfig()
+    return SweepyBoop.db.profile.misc;
+end
+
+local function GetDampeningText()
+    if dampeningText then return dampeningText end
+
+    if C_Spell and C_Spell.GetSpellInfo then
+        local spellInfo = C_Spell.GetSpellInfo(DAMPENING_SPELL_ID);
+        dampeningText = spellInfo and spellInfo.name;
     end
 
-    local _, instanceType = IsInInstance();
-    if instanceType == "arena" then
-        self:Show();
+    return dampeningText;
+end
+
+local function ApplyFrameLayout()
+    frame:ClearAllPoints();
+    if UIWidgetTopCenterContainerFrame then
+        frame:SetPoint(
+            "TOP",
+            UIWidgetTopCenterContainerFrame,
+            "BOTTOM",
+            0,
+            WIDGET_OFFSET_Y
+        );
     else
-        self:Hide();
+        frame:SetPoint("TOP", UIParent, "TOP", 0, -100);
     end
-end);
-frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+end
 
-local dampeningText = C_Spell.GetSpellInfo(110310).name; -- This doesn't change so set it as constant
-local updateInterval = 1; -- We don't need to update on every UNIT_AURA, just update every 1 sec via keeping track of timeSinceLastUpdate
-frame.timeSinceLastUpdate = 0;
-frame:SetScript('OnUpdate', function(self, elapsed)
-    -- This callback is not triggered whlie frame is hidden outside of arena, so no concern on perf
-    if ( not SweepyBoop.db.profile.misc.showDampenPercentage ) then
-        self:Hide(); -- Once hidden, this callback will no longer trigger
+local function UpdateDampeningText()
+    local label = GetDampeningText();
+    if ( not label )
+        or ( not C_Commentator )
+        or ( not C_Commentator.GetDampeningPercent ) then
+
+        frame.Text:SetText("");
         return;
     end
 
-    self.timeSinceLastUpdate = self.timeSinceLastUpdate + elapsed;
-    if self.timeSinceLastUpdate > updateInterval then
-        self.Text:SetText(dampeningText..': ' .. C_Commentator.GetDampeningPercent() .. '%');
-        self.timeSinceLastUpdate = 0;
+    local dampeningPercent = C_Commentator.GetDampeningPercent();
+    if addon.IsSecretValue(dampeningPercent) then
+        frame.Text:SetText(label .. ": --%");
+        return;
     end
-end)
+    if dampeningPercent == nil then
+        frame.Text:SetText("");
+        return;
+    end
+
+    frame.Text:SetFormattedText("%s: %s%%", label, dampeningPercent);
+end
+
+local function EnsureFrame()
+    if frame then return frame end
+
+    frame = CreateFrame("Frame", nil, UIParent);
+    frame:SetSize(200, 20);
+    frame:SetFrameStrata("HIGH");
+    frame.Text = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+    frame.Text:SetAllPoints();
+    frame.Text:SetJustifyH("CENTER");
+    frame.timeSinceLastUpdate = 0;
+    frame:SetScript("OnUpdate", function(self, elapsed)
+        self.timeSinceLastUpdate = self.timeSinceLastUpdate + elapsed;
+        if self.timeSinceLastUpdate >= UPDATE_INTERVAL then
+            UpdateDampeningText();
+            self.timeSinceLastUpdate = 0;
+        end
+    end);
+    frame:Hide();
+    ApplyFrameLayout();
+    return frame;
+end
+
+local function UpdateDampenDisplay()
+    local display = EnsureFrame();
+    local _, instanceType = IsInInstance();
+    if ( not GetConfig().showDampenPercentage ) or instanceType ~= "arena" then
+        display:Hide();
+        return;
+    end
+
+    ApplyFrameLayout();
+    UpdateDampeningText();
+    display.timeSinceLastUpdate = 0;
+    display:Show();
+end
+
+function SweepyBoop:SetupDampenDisplay()
+    if ( not addon.PROJECT_MAINLINE ) then return end
+
+    if ( not eventFrame ) then
+        eventFrame = CreateFrame("Frame");
+        eventFrame:SetScript("OnEvent", UpdateDampenDisplay);
+    end
+
+    eventFrame:UnregisterAllEvents();
+    if GetConfig().showDampenPercentage then
+        eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    end
+
+    UpdateDampenDisplay();
+end

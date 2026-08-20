@@ -143,7 +143,17 @@ addon.GetHealerInCrowdControlOptions = function(order)
                     queueHeader = {
                         order = 12,
                         type = "header",
-                        name = "",
+                        name = L["Arena"],
+                    },
+                    showDampenPercentage = {
+                        order = 12.1,
+                        width = "full",
+                        type = "toggle",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " " .. L["Show dampen percentage on the arena widget"],
+                        set = function(info, value)
+                            SetValue(info, value);
+                            SweepyBoop:SetupDampenDisplay();
+                        end,
                     },
                     queueReminder = {
                         order = 13,
@@ -583,6 +593,11 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         width = "full",
                         type = "toggle",
                         name = addon.FORMAT_TEXTURE(addon.ICON_PATH("achievement_bg_winsoa_underxminutes")) .. " " .. L["Show dampen percentage on the arena widget"],
+                        set = function(info, value)
+                            SweepyBoop.db.profile.misc[info[#info]] = value;
+                            SweepyBoop.db.profile.misc.lastModified = GetTime();
+                            SweepyBoop:SetupDampenDisplay();
+                        end,
                     },
 
 
