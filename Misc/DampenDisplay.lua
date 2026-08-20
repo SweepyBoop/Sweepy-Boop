@@ -48,6 +48,8 @@ local function UpdateDampeningText()
         return;
     end
 
+    -- TODO: Clear or refresh this at Solo Shuffle round transitions; the API can
+    -- return the previous round's dampening until the next round begins.
     local dampeningPercent = C_Commentator.GetDampeningPercent();
     if addon.IsSecretValue(dampeningPercent) then
         frame.Text:SetText(label .. ": --%");
