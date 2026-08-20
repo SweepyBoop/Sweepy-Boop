@@ -487,6 +487,7 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAggroHighlight();
     self:SetupHealerInCrowdControl();
     self:SetupAlwaysShowDruidComboPoints();
+    self:SetupDampenDisplay();
     self:SetupQueueReminder();
     self:SetupPrecognitionTracker();
     self:SetupPersonalDR();
@@ -524,6 +525,7 @@ function SweepyBoop:RefreshConfig()
         self:SetupHealerInCrowdControl();
         self:UpdateHealerInCrowdControl();
         self:SetupAlwaysShowDruidComboPoints();
+        self:SetupDampenDisplay();
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
     end
