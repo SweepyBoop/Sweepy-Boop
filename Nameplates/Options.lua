@@ -1,8 +1,8 @@
 local addonName, addon = ...;
 
 local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
-local friendlyPlayerNameplateCVar = addon.PROJECT_MAINLINE and "nameplateShowFriendlyPlayers" or "nameplateShowFriends";
-local friendlyPetNameplateCVar = addon.PROJECT_MAINLINE and "nameplateShowFriendlyPlayerMinions" or "nameplateShowFriendlyPets";
+local friendlyPlayerNameplateCVar = "nameplateShowFriendlyPlayers";
+local friendlyPetNameplateCVar = "nameplateShowFriendlyPlayerMinions";
 
 local function RefreshOptions()
     LibStub("AceConfigRegistry-3.0"):NotifyChange(addonName);
