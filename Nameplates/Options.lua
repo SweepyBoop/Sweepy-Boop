@@ -98,12 +98,17 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
 
-            showFriendlyPlayerNameplates = {
+            friendlyNameplateCVarHeader = {
                 order = 3,
-                width = "full",
+                type = "header",
+                name = "Toggle friendly nameplate CVars",
+            },
+            showFriendlyPlayerNameplates = {
+                order = 3.1,
+                width = 1,
                 type = "toggle",
-                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Show friendly player nameplates via CVar",
-                desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Players",
+                desc = "Toggle nameplateShowFriendlyPlayers. This is a persistent Blizzard setting and is not stored in SweepyBoop profiles.",
                 get = function()
                     return GetNameplatesShown(friendlyPlayerNameplateCVar);
                 end,
@@ -112,11 +117,11 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end,
             },
             showFriendlyPetNameplates = {
-                order = 4,
-                width = "full",
+                order = 3.2,
+                width = 1,
                 type = "toggle",
-                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Show friendly pet nameplates via CVar",
-                desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Pets / minions",
+                desc = "Toggle nameplateShowFriendlyPlayerMinions. This is a persistent Blizzard setting and is not stored in SweepyBoop profiles.",
                 get = function()
                     return GetNameplatesShown(friendlyPetNameplateCVar);
                 end,
