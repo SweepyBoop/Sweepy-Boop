@@ -101,7 +101,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             friendlyNameplateCVarHeader = {
                 order = 3,
                 type = "header",
-                name = "Toggle friendly nameplate CVars",
+                name = "Toggle friendly nameplate CVars (required for class/pet icons)",
             },
             showFriendlyPlayerNameplates = {
                 order = 3.1,
