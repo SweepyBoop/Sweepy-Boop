@@ -1,6 +1,46 @@
-local _, addon = ...;
+local addonName, addon = ...;
 
 local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
+local friendlyPlayerNameplateCVar = "nameplateShowFriendlyPlayers";
+local friendlyPetNameplateCVar = "nameplateShowFriendlyPlayerMinions";
+
+local function RefreshOptions()
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(addonName);
+end
+
+local function GetNameplatesShown(cvarName)
+    return tostring(GetCVar(cvarName)) == "1";
+end
+
+local function SetNameplatesShown(cvarName, shown)
+    local desired = shown and "1" or "0";
+    local callSucceeded, setSucceeded = pcall(SetCVar, cvarName, desired);
+    if ( not callSucceeded )
+            or ( setSucceeded == false )
+            or ( tostring(GetCVar(cvarName)) ~= desired ) then
+        print(
+            addon.addonTitle
+                .. ": "
+                .. format(
+                    addon.L["Could not change %s."],
+                    cvarName
+                )
+        );
+    end
+    RefreshOptions();
+end
+
+local nameplateCVarEventFrame = CreateFrame("Frame");
+nameplateCVarEventFrame:RegisterEvent("CVAR_UPDATE");
+nameplateCVarEventFrame:SetScript("OnEvent", function(_, _, cvarName)
+    if not cvarName then return end
+
+    local normalizedCVarName = string.lower(cvarName);
+    if normalizedCVarName == string.lower(friendlyPlayerNameplateCVar)
+            or normalizedCVarName == string.lower(friendlyPetNameplateCVar) then
+        RefreshOptions();
+    end
+end);
 
 local bigDebuffsIconStyleSorting = {
     addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
@@ -37,7 +77,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             classIconsEnabled = {
                 order = 1,
                 type = "toggle",
-                name = addon.FORMAT_ATLAS(wowLogoAtlas, 40) .. " Enabled",
+                name = addon.FORMAT_ATLAS(wowLogoAtlas, 20) .. " Enabled",
                 desc = "Show class/pet icons on friendly players/pets",
                 set = function(info, val)
                     SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled = val;
@@ -58,26 +98,36 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
 
-            description1 = {
+            friendlyNameplateCVarHeader = {
                 order = 3,
-                width = "full",
-                type = "description",
-                --name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
-                name = addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons",
-                hidden = function ()
-                    -- TODO: fix this condition
-                    return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
-                end
+                type = "header",
+                name = "Toggle friendly nameplate CVars (required for class/pet icons)",
             },
-            description2 = {
-                order = 4,
-                width = "full",
-                type = "description",
-                name = addon.EXCLAMATION .. " Enable \"Minions\" in Interface - Nameplates for pet icons",
-                hidden = function ()
-                    -- TODO: fix this condition
-                    return ( C_CVar.GetCVar("nameplateShowFriendlyPets") == "1" );
-                end
+            showFriendlyPlayerNameplates = {
+                order = 3.1,
+                width = 1,
+                type = "toggle",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Players",
+                desc = "Required to show class icons on friendly players.",
+                get = function()
+                    return GetNameplatesShown(friendlyPlayerNameplateCVar);
+                end,
+                set = function(_, shown)
+                    SetNameplatesShown(friendlyPlayerNameplateCVar, shown);
+                end,
+            },
+            showFriendlyPetNameplates = {
+                order = 3.2,
+                width = 1,
+                type = "toggle",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Pets / minions",
+                desc = "Required to show pet icons on friendly pets and minions.",
+                get = function()
+                    return GetNameplatesShown(friendlyPetNameplateCVar);
+                end,
+                set = function(_, shown)
+                    SetNameplatesShown(friendlyPetNameplateCVar, shown);
+                end,
             },
 
             newline1 = {
@@ -104,18 +154,6 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = "Icon style",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-
-            partyMarkerDesc = {
-                order = 7,
-                type = "description",
-                name = addon.EXCLAMATION .. " Class-colored party arrows and pins only show on party members in PvP instances",
-                hidden = function()
-                    local config = SweepyBoop.db.profile.nameplatesFriendly;
-                    local style = config.classIconStyle;
-                    return ( not config.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE )
-                        or ( ( style ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) and ( style ~= addon.CLASS_ICON_STYLE.ICON_AND_PIN ) );
                 end
             },
 

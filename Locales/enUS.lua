@@ -111,6 +111,11 @@ L["Create the macro yourself and use @focus as the default target.\n\nAdd SBM on
 
 L["Friendly class icons"] = "Friendly class icons";
 L["Show class/pet icons on friendly players/pets"] = "Show class/pet icons on friendly players/pets";
+L["Toggle friendly nameplate CVars (required for class/pet icons)"] = "Toggle friendly nameplate CVars (required for class/pet icons)";
+L["Players"] = "Players";
+L["Required to show class icons on friendly players."] = "Required to show class icons on friendly players.";
+L["Pets / minions"] = "Pets / minions";
+L["Required to show pet icons on friendly pets and minions."] = "Required to show pet icons on friendly pets and minions.";
 L["Show spec icons in PvP instances"] = "Show spec icons in PvP instances";
 L["Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r"] = "Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r";
 L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons"] = "Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons";
@@ -121,7 +126,6 @@ L["Class color pins"] = "Class color pins";
 L["Icon + party arrow"] = "Icon + party arrow";
 L["Icon + party pin"] = "Icon + party pin";
 L["Icon style"] = "Icon style";
-L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Class-colored party arrows and pins only show on party members in PvP instances";
 L["Visibility"] = "Visibility";
 L["Hide in World"] = "Hide in World";
 L["Hide in Battlegrounds"] = "Hide in Battlegrounds";
