@@ -107,6 +107,11 @@ local function ApplyTranslations(locale)
     L["Tracked spells"] = "Hechizos rastreados";
     L["Friendly class icons"] = "Iconos aliados";
     L["Show class/pet icons on friendly players/pets"] = "Iconos aliados";
+    L["Toggle friendly nameplate CVars (required for class/pet icons)"] = "CVars de placas aliadas (para iconos de clase/mascota)";
+    L["Players"] = "Jugadores";
+    L["Required to show class icons on friendly players."] = "Necesario para mostrar iconos de clase en aliados.";
+    L["Pets / minions"] = "Mascotas / esbirros";
+    L["Required to show pet icons on friendly pets and minions."] = "Necesario para mostrar iconos de mascota en mascotas y esbirros aliados.";
     L["Show spec icons in PvP instances"] = "Especialización PvP";
     L["Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r"] = "Mostrar iconos de especialización en lugar de iconos de clase para jugadores aliados en instancias PvP\n\n|cFFFF0000Nota: puede que las especializaciones no siempre sean detectables por restricciones de la API de Blizzard en PvP puntuado|r";
     L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons"] = "Activa placas aliadas";

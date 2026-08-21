@@ -107,6 +107,11 @@ L["Tracked spells"] = "Sorts suivis";
 
 L["Friendly class icons"] = "Icônes de classe alliées";
 L["Show class/pet icons on friendly players/pets"] = "Afficher icônes classe/familier";
+L["Toggle friendly nameplate CVars (required for class/pet icons)"] = "CVars des barres alliées (pour icônes classe/familier)";
+L["Players"] = "Joueurs";
+L["Required to show class icons on friendly players."] = "Requis pour les icônes de classe des joueurs alliés.";
+L["Pets / minions"] = "Familiers / serviteurs";
+L["Required to show pet icons on friendly pets and minions."] = "Requis pour les icônes des familiers et serviteurs alliés.";
 L["Show spec icons in PvP instances"] = "Afficher icônes spé en PvP";
 L["Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r"] = "Afficher les icônes de spécialisation au lieu des icônes de classe pour les joueurs alliés dans les instances PvP\n\n|cFFFF0000Note : les spécialisations peuvent ne pas toujours être détectables en raison des restrictions de l'API Blizzard en PvP coté|r";
 L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons"] = "Activez \"Barres d'info des joueurs alliés\" dans Interface - Barres d'info pour les icônes de familiers";

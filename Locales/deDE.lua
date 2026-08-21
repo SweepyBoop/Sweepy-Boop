@@ -107,6 +107,11 @@ L["Tracked spells"] = "Verfolgte Zauber";
 
 L["Friendly class icons"] = "Freundliche Klassensymbole";
 L["Show class/pet icons on friendly players/pets"] = "Klassen-/Begleitersymbole anzeigen";
+L["Toggle friendly nameplate CVars (required for class/pet icons)"] = "Namensplaketten-CVars (für Klassen-/Begleitersymbole)";
+L["Players"] = "Spieler";
+L["Required to show class icons on friendly players."] = "Für Klassensymbole auf freundlichen Spielern erforderlich.";
+L["Pets / minions"] = "Begleiter / Diener";
+L["Required to show pet icons on friendly pets and minions."] = "Für Begleitersymbole auf freundlichen Begleitern und Dienern erforderlich.";
 L["Show spec icons in PvP instances"] = "Spezialisierungssymbole in PvP-Instanzen anzeigen";
 L["Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r"] = "Spezialisierungssymbole statt Klassensymbolen für freundliche Spieler in PvP-Instanzen anzeigen\n\n|cFFFF0000Hinweis: Spezialisierungen sind aufgrund von Blizzard-API-Einschränkungen im gewerteten PvP möglicherweise nicht immer erkennbar|r";
 L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons"] = "Aktiviere \"Freundliche Spielernamensplaketten\" unter Interface - Namensplaketten für Begleitersymbole";

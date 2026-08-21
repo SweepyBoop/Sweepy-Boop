@@ -107,6 +107,11 @@ L["Tracked spells"] = "추적할 주문";
 
 L["Friendly class icons"] = "아군 직업 아이콘";
 L["Show class/pet icons on friendly players/pets"] = "아군 플레이어/소환수에 직업/소환수 아이콘 표시";
+L["Toggle friendly nameplate CVars (required for class/pet icons)"] = "아군 이름표 CVar (직업/소환수 아이콘에 필요)";
+L["Players"] = "플레이어";
+L["Required to show class icons on friendly players."] = "아군 플레이어의 직업 아이콘 표시에 필요합니다.";
+L["Pets / minions"] = "소환수 / 하수인";
+L["Required to show pet icons on friendly pets and minions."] = "아군 소환수와 하수인 아이콘 표시에 필요합니다.";
 L["Show spec icons in PvP instances"] = "PvP 인스턴스에서 전문화 아이콘 표시";
 L["Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r"] = "PvP 인스턴스에서 아군 플레이어의 직업 아이콘 대신 전문화 아이콘을 표시합니다\n\n|cFFFF0000참고: 평점제 PvP에서는 블리자드 API 제한으로 전문화를 항상 감지하지 못할 수 있습니다|r";
 L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons"] = "소환수 아이콘을 표시하려면 인터페이스 - 이름표에서 \"아군 플레이어 이름표\"를 활성화하세요";

@@ -107,6 +107,11 @@ L["Tracked spells"] = "追蹤的法術";
 
 L["Friendly class icons"] = "友方職業圖示";
 L["Show class/pet icons on friendly players/pets"] = "在友方玩家／寵物上顯示職業／寵物圖示";
+L["Toggle friendly nameplate CVars (required for class/pet icons)"] = "友方名條 CVar（職業／寵物圖示必需）";
+L["Players"] = "玩家";
+L["Required to show class icons on friendly players."] = "顯示友方玩家職業圖示所必需。";
+L["Pets / minions"] = "寵物／僕從";
+L["Required to show pet icons on friendly pets and minions."] = "顯示友方寵物和僕從圖示所必需。";
 L["Show spec icons in PvP instances"] = "在 PvP 副本中顯示專精圖示";
 L["Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r"] = "在 PvP 副本中，以專精圖示取代友方玩家的職業圖示\n\n|cFFFF0000注意：由於暴雪 API 在積分 PvP 中的限制，專精不一定總是能偵測到|r";
 L["Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons"] = "請在介面 - 名條中啟用「友方玩家名條」，以顯示寵物圖示";
