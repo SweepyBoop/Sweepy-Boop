@@ -122,7 +122,6 @@ L["Class color pins"] = "職業顏色標記";
 L["Icon + party arrow"] = "圖示 + 隊伍箭頭";
 L["Icon + party pin"] = "圖示 + 隊伍標記";
 L["Icon style"] = "圖示樣式";
-L["Class-colored party arrows and pins only show on party members in PvP instances"] = "職業顏色隊伍箭頭和標記只會在 PvP 副本中的隊伍成員上顯示";
 L["Visibility"] = "可見性";
 L["Hide in World"] = "在野外隱藏";
 L["Hide in Battlegrounds"] = "在戰場中隱藏";

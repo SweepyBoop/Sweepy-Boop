@@ -122,7 +122,6 @@ L["Class color pins"] = "Метки цвета класса";
 L["Icon + party arrow"] = "Значок + стрелка группы";
 L["Icon + party pin"] = "Значок + метка группы";
 L["Icon style"] = "Стиль значка";
-L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Стрелки и метки группы цвета класса показываются только на участниках группы в PvP-зонах";
 L["Visibility"] = "Видимость";
 L["Hide in World"] = "Скрывать в открытом мире";
 L["Hide in Battlegrounds"] = "Скрывать на полях боя";

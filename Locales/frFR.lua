@@ -122,7 +122,6 @@ L["Class color pins"] = "Épingles aux couleurs de classe";
 L["Icon + party arrow"] = "Icône + flèche de groupe";
 L["Icon + party pin"] = "Icône + épingle de groupe";
 L["Icon style"] = "Style d'icône";
-L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Les flèches et épingles de groupe aux couleurs de classe ne s'affichent que sur les membres du groupe dans les instances JcJ";
 L["Visibility"] = "Visibilité";
 L["Hide in World"] = "Masquer en extérieur";
 L["Hide in Battlegrounds"] = "Masquer dans les champs de bataille";

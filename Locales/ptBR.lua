@@ -120,7 +120,6 @@ L["Class color pins"] = "Pins com cor de classe";
 L["Icon + party arrow"] = "Ícone + seta do grupo";
 L["Icon + party pin"] = "Ícone + pin do grupo";
 L["Icon style"] = "Estilo do ícone";
-L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Setas e pins do grupo com cor de classe só aparecem em membros do grupo em instâncias JxJ";
 L["Visibility"] = "Visibilidade";
 L["Hide in World"] = "Ocultar no mundo";
 L["Hide in Battlegrounds"] = "Ocultar em campos de batalha";

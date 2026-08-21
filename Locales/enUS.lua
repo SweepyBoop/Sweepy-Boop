@@ -126,7 +126,6 @@ L["Class color pins"] = "Class color pins";
 L["Icon + party arrow"] = "Icon + party arrow";
 L["Icon + party pin"] = "Icon + party pin";
 L["Icon style"] = "Icon style";
-L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Class-colored party arrows and pins only show on party members in PvP instances";
 L["Visibility"] = "Visibility";
 L["Hide in World"] = "Hide in World";
 L["Hide in Battlegrounds"] = "Hide in Battlegrounds";

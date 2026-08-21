@@ -122,7 +122,6 @@ L["Class color pins"] = "Pin con colore di classe";
 L["Icon + party arrow"] = "Icona + freccia gruppo";
 L["Icon + party pin"] = "Icona + pin gruppo";
 L["Icon style"] = "Stile icona";
-L["Class-colored party arrows and pins only show on party members in PvP instances"] = "Le frecce e i pin del gruppo con colore di classe appaiono solo sui membri del gruppo nelle istanze PvP";
 L["Visibility"] = "Visibilità";
 L["Hide in World"] = "Nascondi nel mondo";
 L["Hide in Battlegrounds"] = "Nascondi nei campi di battaglia";

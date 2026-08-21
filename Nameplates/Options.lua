@@ -157,18 +157,6 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
 
-            partyMarkerDesc = {
-                order = 7,
-                type = "description",
-                name = addon.EXCLAMATION .. " Class-colored party arrows and pins only show on party members in PvP instances",
-                hidden = function()
-                    local config = SweepyBoop.db.profile.nameplatesFriendly;
-                    local style = config.classIconStyle;
-                    return ( not config.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE )
-                        or ( ( style ~= addon.CLASS_ICON_STYLE.ICON_AND_ARROW ) and ( style ~= addon.CLASS_ICON_STYLE.ICON_AND_PIN ) );
-                end
-            },
-
             newline2 = {
                 order = 8,
                 type = "description",
