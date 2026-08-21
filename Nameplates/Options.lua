@@ -1,6 +1,46 @@
-local _, addon = ...;
+local addonName, addon = ...;
 
 local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
+local friendlyPlayerNameplateCVar = addon.PROJECT_MAINLINE and "nameplateShowFriendlyPlayers" or "nameplateShowFriends";
+local friendlyPetNameplateCVar = addon.PROJECT_MAINLINE and "nameplateShowFriendlyPlayerMinions" or "nameplateShowFriendlyPets";
+
+local function RefreshOptions()
+    LibStub("AceConfigRegistry-3.0"):NotifyChange(addonName);
+end
+
+local function GetNameplatesShown(cvarName)
+    return tostring(GetCVar(cvarName)) == "1";
+end
+
+local function SetNameplatesShown(cvarName, shown)
+    local desired = shown and "1" or "0";
+    local callSucceeded, setSucceeded = pcall(SetCVar, cvarName, desired);
+    if ( not callSucceeded )
+            or ( setSucceeded == false )
+            or ( tostring(GetCVar(cvarName)) ~= desired ) then
+        print(
+            addon.addonTitle
+                .. ": "
+                .. format(
+                    addon.L["Could not change %s."],
+                    cvarName
+                )
+        );
+    end
+    RefreshOptions();
+end
+
+local nameplateCVarEventFrame = CreateFrame("Frame");
+nameplateCVarEventFrame:RegisterEvent("CVAR_UPDATE");
+nameplateCVarEventFrame:SetScript("OnEvent", function(_, _, cvarName)
+    if not cvarName then return end
+
+    local normalizedCVarName = string.lower(cvarName);
+    if normalizedCVarName == string.lower(friendlyPlayerNameplateCVar)
+            or normalizedCVarName == string.lower(friendlyPetNameplateCVar) then
+        RefreshOptions();
+    end
+end);
 
 local bigDebuffsIconStyleSorting = {
     addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
@@ -58,26 +98,31 @@ addon.GetFriendlyNameplateOptions = function(order)
                 end
             },
 
-            description1 = {
+            showFriendlyPlayerNameplates = {
                 order = 3,
                 width = "full",
-                type = "description",
-                --name = "|cFFFF0000" .. addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for class icons|r",
-                name = addon.EXCLAMATION .. " Enable \"Friendly Player Nameplates\" in Interface - Nameplates for pet icons",
-                hidden = function ()
-                    -- TODO: fix this condition
-                    return ( C_CVar.GetCVar("nameplateShowFriends") == "1" );
-                end
+                type = "toggle",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Show friendly player nameplates via CVar",
+                desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
+                get = function()
+                    return GetNameplatesShown(friendlyPlayerNameplateCVar);
+                end,
+                set = function(_, shown)
+                    SetNameplatesShown(friendlyPlayerNameplateCVar, shown);
+                end,
             },
-            description2 = {
+            showFriendlyPetNameplates = {
                 order = 4,
                 width = "full",
-                type = "description",
-                name = addon.EXCLAMATION .. " Enable \"Minions\" in Interface - Nameplates for pet icons",
-                hidden = function ()
-                    -- TODO: fix this condition
-                    return ( C_CVar.GetCVar("nameplateShowFriendlyPets") == "1" );
-                end
+                type = "toggle",
+                name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Show friendly pet nameplates via CVar",
+                desc = "Persistent Blizzard setting. SweepyBoop does not change it automatically or store it in profiles.",
+                get = function()
+                    return GetNameplatesShown(friendlyPetNameplateCVar);
+                end,
+                set = function(_, shown)
+                    SetNameplatesShown(friendlyPetNameplateCVar, shown);
+                end,
             },
 
             newline1 = {
