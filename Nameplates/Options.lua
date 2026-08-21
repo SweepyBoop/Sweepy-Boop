@@ -108,7 +108,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 width = 1,
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Players",
-                desc = "Toggle nameplateShowFriendlyPlayers. This is a persistent Blizzard setting and is not stored in SweepyBoop profiles.",
+                desc = "Required to show class icons on friendly players.",
                 get = function()
                     return GetNameplatesShown(friendlyPlayerNameplateCVar);
                 end,
@@ -121,7 +121,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 width = 1,
                 type = "toggle",
                 name = addon.FORMAT_ATLAS("gmchat-icon-blizz") .. " Pets / minions",
-                desc = "Toggle nameplateShowFriendlyPlayerMinions. This is a persistent Blizzard setting and is not stored in SweepyBoop profiles.",
+                desc = "Required to show pet icons on friendly pets and minions.",
                 get = function()
                     return GetNameplatesShown(friendlyPetNameplateCVar);
                 end,
