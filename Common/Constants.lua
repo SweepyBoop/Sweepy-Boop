@@ -503,6 +503,38 @@ addon.CLASS_ICON_STYLE = {
     ICON_AND_PIN = 4,
 };
 
+addon.CLASS_ICON_BORDER_STYLE = {
+    METALLIC = "metallic",
+    CLASS_COLORED = "classColored",
+};
+
+addon.TARGET_HIGHLIGHT_STYLE = {
+    NONE = "none",
+    STATIC = "static",
+    ANIMATED = "animated",
+};
+
+addon.GetClassIconBorderStyle = function(config)
+    local style = config and config.classIconBorderStyle;
+    if style == addon.CLASS_ICON_BORDER_STYLE.METALLIC
+            or style == addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED then
+        return style;
+    end
+
+    return addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED;
+end
+
+addon.GetTargetHighlightStyle = function(config)
+    local style = config and config.targetHighlightStyle;
+    if style == addon.TARGET_HIGHLIGHT_STYLE.NONE
+            or style == addon.TARGET_HIGHLIGHT_STYLE.STATIC
+            or style == addon.TARGET_HIGHLIGHT_STYLE.ANIMATED then
+        return style;
+    end
+
+    return addon.TARGET_HIGHLIGHT_STYLE.ANIMATED;
+end
+
 
 addon.GetSpellTexture = function(spellId)
     local _, originalIconID = C_Spell.GetSpellTexture(spellId);

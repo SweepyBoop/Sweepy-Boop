@@ -54,6 +54,17 @@ local classIconStyleSorting = {
     addon.CLASS_ICON_STYLE.ICON_AND_PIN,
 };
 
+local classIconBorderStyleSorting = {
+    addon.CLASS_ICON_BORDER_STYLE.METALLIC,
+    addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED,
+};
+
+local targetHighlightStyleSorting = {
+    addon.TARGET_HIGHLIGHT_STYLE.NONE,
+    addon.TARGET_HIGHLIGHT_STYLE.STATIC,
+    addon.TARGET_HIGHLIGHT_STYLE.ANIMATED,
+};
+
 local function GetBigDebuffsIconStyleValues()
     return {
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
@@ -238,35 +249,39 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
                 end
             },
-            classIconClassColoredBorder = {
+            classIconBorderStyle = {
                 order = 17,
-                type = "toggle",
-                width = "full",
-                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
-                desc = "Tint the icon border with the class color. Disable to show the default border colors.",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-            targetHighlight = {
-                order = 18,
-                type = "toggle",
+                type = "select",
                 width = 1.25,
-                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-            animatedTargetHighlight = {
-                order = 19,
-                type = "toggle",
-                width = 1.25,
-                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Animated highlight",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                name = "Border style",
+                values = {
+                    [addon.CLASS_ICON_BORDER_STYLE.METALLIC] = "Metallic",
+                    [addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED] = "Class-colored",
+                },
+                sorting = classIconBorderStyleSorting,
+                get = function()
+                    return addon.GetClassIconBorderStyle(SweepyBoop.db.profile.nameplatesFriendly);
                 end,
-                disabled = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.targetHighlight );
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            targetHighlightStyle = {
+                order = 18,
+                type = "select",
+                width = 1.25,
+                name = "Target highlight",
+                values = {
+                    [addon.TARGET_HIGHLIGHT_STYLE.NONE] = "None",
+                    [addon.TARGET_HIGHLIGHT_STYLE.STATIC] = "Static",
+                    [addon.TARGET_HIGHLIGHT_STYLE.ANIMATED] = "Animated",
+                },
+                sorting = targetHighlightStyleSorting,
+                get = function()
+                    return addon.GetTargetHighlightStyle(SweepyBoop.db.profile.nameplatesFriendly);
+                end,
+                hidden = function()
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
             targetHighlightLineBreak = {
