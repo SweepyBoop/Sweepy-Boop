@@ -269,7 +269,7 @@ end
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local isTarget = addon.UnitIsUnitReadable(frame.unit, "target");
     local config = SweepyBoop.db.profile.nameplatesFriendly;
-    local highlightStyle = addon.GetTargetHighlightStyle(config);
+    local highlightStyle = config.targetHighlightStyle;
     local featureEnabled = ( highlightStyle ~= addon.TARGET_HIGHLIGHT_STYLE.NONE ) and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
@@ -582,7 +582,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
             if iconFrame.maskCC then
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
-            local borderStyle = addon.GetClassIconBorderStyle(config);
+            local borderStyle = config.classIconBorderStyle;
             iconFrame.border:SetDesaturated(false);
             if borderStyle == addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED and classColor then
                 iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);

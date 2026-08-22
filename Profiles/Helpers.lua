@@ -2,41 +2,9 @@ local _, addon = ...;
 local AceGUI = LibStub("AceGUI-3.0");
 
 function addon.RemoveObsoleteProfileSettings(profile)
-    if type(profile) ~= "table" then
-        return;
-    end
-
-    if type(profile.raidFrames) == "table" then
+    if type(profile) == "table" and type(profile.raidFrames) == "table" then
         profile.raidFrames.arenaRaidFrameSortOrder = nil;
     end
-
-    local config = rawget(profile, "nameplatesFriendly");
-    if type(config) ~= "table" then
-        return;
-    end
-
-    if rawget(config, "classIconBorderStyle") == nil then
-        local legacyClassColored = rawget(config, "classIconClassColoredBorder");
-        config.classIconBorderStyle = legacyClassColored == false
-            and addon.CLASS_ICON_BORDER_STYLE.METALLIC
-            or addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED;
-    end
-
-    if rawget(config, "targetHighlightStyle") == nil then
-        local legacyTargetHighlight = rawget(config, "targetHighlight");
-        local legacyAnimatedHighlight = rawget(config, "animatedTargetHighlight");
-        if legacyTargetHighlight == false then
-            config.targetHighlightStyle = addon.TARGET_HIGHLIGHT_STYLE.NONE;
-        elseif legacyAnimatedHighlight == false then
-            config.targetHighlightStyle = addon.TARGET_HIGHLIGHT_STYLE.STATIC;
-        else
-            config.targetHighlightStyle = addon.TARGET_HIGHLIGHT_STYLE.ANIMATED;
-        end
-    end
-
-    rawset(config, "classIconClassColoredBorder", nil);
-    rawset(config, "targetHighlight", nil);
-    rawset(config, "animatedTargetHighlight", nil);
 end
 
 function SweepyBoop:Decode(encoded, module)

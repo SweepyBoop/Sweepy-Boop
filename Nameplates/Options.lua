@@ -259,9 +259,6 @@ addon.GetFriendlyNameplateOptions = function(order)
                     [addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED] = "Class-colored",
                 },
                 sorting = classIconBorderStyleSorting,
-                get = function()
-                    return addon.GetClassIconBorderStyle(SweepyBoop.db.profile.nameplatesFriendly);
-                end,
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
@@ -277,9 +274,6 @@ addon.GetFriendlyNameplateOptions = function(order)
                     [addon.TARGET_HIGHLIGHT_STYLE.ANIMATED] = "Animated",
                 },
                 sorting = targetHighlightStyleSorting,
-                get = function()
-                    return addon.GetTargetHighlightStyle(SweepyBoop.db.profile.nameplatesFriendly);
-                end,
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
