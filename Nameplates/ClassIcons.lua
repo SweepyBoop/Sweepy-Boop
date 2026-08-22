@@ -269,12 +269,14 @@ end
 addon.UpdateClassIconTargetHighlight = function (nameplate, frame)
     local isTarget = addon.UnitIsUnitReadable(frame.unit, "target");
     local config = SweepyBoop.db.profile.nameplatesFriendly;
-    local featureEnabled = config.targetHighlight and ( not hasConflict );
+    local highlightStyle = config.targetHighlightStyle;
+    local featureEnabled = ( highlightStyle ~= addon.TARGET_HIGHLIGHT_STYLE.NONE ) and ( not hasConflict );
     if nameplate.classIconContainer then
         if nameplate.classIconContainer.FriendlyClassIcon then
             local iconFrame = nameplate.classIconContainer.FriendlyClassIcon;
             local iconVisible = iconFrame:IsShown() and ( iconFrame.icon:GetAlpha() > 0 );
-            addon.SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and iconVisible, config.animatedTargetHighlight);
+            local shouldAnimate = highlightStyle == addon.TARGET_HIGHLIGHT_STYLE.ANIMATED;
+            addon.SetTargetHighlightShown(iconFrame, isTarget and featureEnabled and iconVisible, shouldAnimate);
         end
     end
 end
@@ -580,8 +582,9 @@ addon.UpdateClassIcon = function(nameplate, frame)
             if iconFrame.maskCC then
                 iconFrame.maskCC:SetSize(iconMaskSize, iconMaskSize);
             end
+            local borderStyle = config.classIconBorderStyle;
             iconFrame.border:SetDesaturated(false);
-            if config.classIconClassColoredBorder and classColor then
+            if borderStyle == addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED and classColor then
                 iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
             else
                 iconFrame.border:SetVertexColor(unpack(metallicBorderColor));
@@ -643,7 +646,7 @@ addon.UpdateClassIcon = function(nameplate, frame)
         end
 
         if iconFrame.icon:GetAlpha() == 0 then
-            addon.SetTargetHighlightShown(iconFrame, false, config.animatedTargetHighlight);
+            addon.SetTargetHighlightShown(iconFrame, false, false);
         end
 
         classIconContainer.isSpecialIcon = isSpecialIcon;

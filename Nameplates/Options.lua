@@ -1,6 +1,5 @@
 local addonName, addon = ...;
 
-local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
 local friendlyPlayerNameplateCVar = "nameplateShowFriendlyPlayers";
 local friendlyPetNameplateCVar = "nameplateShowFriendlyPlayerMinions";
 
@@ -55,6 +54,17 @@ local classIconStyleSorting = {
     addon.CLASS_ICON_STYLE.ICON_AND_PIN,
 };
 
+local classIconBorderStyleSorting = {
+    addon.CLASS_ICON_BORDER_STYLE.METALLIC,
+    addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED,
+};
+
+local targetHighlightStyleSorting = {
+    addon.TARGET_HIGHLIGHT_STYLE.NONE,
+    addon.TARGET_HIGHLIGHT_STYLE.STATIC,
+    addon.TARGET_HIGHLIGHT_STYLE.ANIMATED,
+};
+
 local function GetBigDebuffsIconStyleValues()
     return {
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
@@ -77,7 +87,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             classIconsEnabled = {
                 order = 1,
                 type = "toggle",
-                name = addon.FORMAT_ATLAS(wowLogoAtlas, 20) .. " Enabled",
+                name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassIcons/DRUID") .. " Enabled",
                 desc = "Show class/pet icons on friendly players/pets",
                 set = function(info, val)
                     SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled = val;
@@ -89,7 +99,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 2,
                 width = 1.5,
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons in PvP instances",
+                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) .. " Show spec icons in PvP instances",
                 desc = "Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r",
                 hidden = function()
                     local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
@@ -239,35 +249,33 @@ addon.GetFriendlyNameplateOptions = function(order)
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( not addon.PROJECT_MAINLINE );
                 end
             },
-            classIconClassColoredBorder = {
+            classIconBorderStyle = {
                 order = 17,
-                type = "toggle",
-                width = "full",
-                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Class-colored borders",
-                desc = "Tint the icon border with the class color. Disable to show the default border colors.",
+                type = "select",
+                width = 1.25,
+                name = "Border style",
+                values = {
+                    [addon.CLASS_ICON_BORDER_STYLE.METALLIC] = "Metallic",
+                    [addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED] = "Class-colored",
+                },
+                sorting = classIconBorderStyleSorting,
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
-            targetHighlight = {
+            targetHighlightStyle = {
                 order = 18,
-                type = "toggle",
+                type = "select",
                 width = 1.25,
-                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Show target highlight",
+                name = "Target highlight",
+                values = {
+                    [addon.TARGET_HIGHLIGHT_STYLE.NONE] = "None",
+                    [addon.TARGET_HIGHLIGHT_STYLE.STATIC] = "Static",
+                    [addon.TARGET_HIGHLIGHT_STYLE.ANIMATED] = "Animated",
+                },
+                sorting = targetHighlightStyleSorting,
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-            animatedTargetHighlight = {
-                order = 19,
-                type = "toggle",
-                width = 1.25,
-                name = addon.FORMAT_ATLAS("charactercreate-ring-select") .. " Animated highlight",
-                hidden = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end,
-                disabled = function()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.targetHighlight );
                 end
             },
             targetHighlightLineBreak = {

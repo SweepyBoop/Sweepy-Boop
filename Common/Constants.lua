@@ -503,6 +503,17 @@ addon.CLASS_ICON_STYLE = {
     ICON_AND_PIN = 4,
 };
 
+addon.CLASS_ICON_BORDER_STYLE = {
+    METALLIC = "metallic",
+    CLASS_COLORED = "classColored",
+};
+
+addon.TARGET_HIGHLIGHT_STYLE = {
+    NONE = "none",
+    STATIC = "static",
+    ANIMATED = "animated",
+};
+
 
 addon.GetSpellTexture = function(spellId)
     local _, originalIconID = C_Spell.GetSpellTexture(spellId);

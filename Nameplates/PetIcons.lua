@@ -15,11 +15,13 @@ addon.UpdatePetIconTargetHighlight = function (nameplate, frame)
     if ( not iconFrame ) then return end
 
     local config = SweepyBoop.db.profile.nameplatesFriendly;
-    local featureEnabled = config.targetHighlight and ( not C_AddOns.IsAddOnLoaded("NeatPlates") );
+    local highlightStyle = config.targetHighlightStyle;
+    local featureEnabled = ( highlightStyle ~= addon.TARGET_HIGHLIGHT_STYLE.NONE ) and ( not C_AddOns.IsAddOnLoaded("NeatPlates") );
     local iconVisible = iconFrame:IsShown() and ( iconFrame.icon:GetAlpha() > 0 );
     local shouldShow = addon.UnitIsUnitReadable(frame.unit, "target") and featureEnabled and iconVisible;
     if addon.SetTargetHighlightShown then
-        addon.SetTargetHighlightShown(iconFrame, shouldShow, config.animatedTargetHighlight);
+        local shouldAnimate = highlightStyle == addon.TARGET_HIGHLIGHT_STYLE.ANIMATED;
+        addon.SetTargetHighlightShown(iconFrame, shouldShow, shouldAnimate);
     else
         iconFrame.targetHighlight:SetShown(shouldShow);
     end
