@@ -1,6 +1,5 @@
 local addonName, addon = ...;
 
-local wowLogoAtlas = addon.PROJECT_MAINLINE and "logo-wow-retail" or "logo-wow-classic";
 local friendlyPlayerNameplateCVar = "nameplateShowFriendlyPlayers";
 local friendlyPetNameplateCVar = "nameplateShowFriendlyPlayerMinions";
 
@@ -77,7 +76,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             classIconsEnabled = {
                 order = 1,
                 type = "toggle",
-                name = addon.FORMAT_ATLAS(wowLogoAtlas, 20) .. " Enabled",
+                name = addon.FORMAT_TEXTURE(addon.INTERFACE_SWEEPY .. "Art/ClassIcons/DRUID") .. " Enabled",
                 desc = "Show class/pet icons on friendly players/pets",
                 set = function(info, val)
                     SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled = val;
@@ -89,7 +88,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 2,
                 width = 1.5,
                 type = "toggle",
-                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons in PvP instances",
+                name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) .. " Show spec icons in PvP instances",
                 desc = "Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r",
                 hidden = function()
                     local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
