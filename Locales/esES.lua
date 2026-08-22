@@ -132,6 +132,12 @@ local function ApplyTranslations(locale)
     L["Hide class icons of other players' pets\nThis option is not available in arenas"] = "Ocultar iconos de clase de las mascotas de otros jugadores\nEsta opción no está disponible en arenas";
     L["Show flag carrier icons in battlegrounds"] = "Portador de bandera";
     L["Use special icons for friendly flag carriers\nThis overwrites the healer icon"] = "Usar iconos especiales para portadores de bandera aliados\nEsto sobrescribe el icono de sanador";
+    L["Metallic"] = "Metálico";
+    L["Class-colored"] = "Con color de clase";
+    L["Target highlight"] = "Resaltado del objetivo";
+    L["None"] = "Ninguno";
+    L["Static"] = "Estático";
+    L["Animated"] = "Animado";
     L["Class-colored borders"] = "Bordes de clase";
     L["Tint the icon border with the class color. Disable to show the default border colors."] = "Tiñe el borde del icono con el color de clase. Desactívalo para mostrar los colores predeterminados del borde.";
     L["Show target highlight"] = "Mostrar resaltado del objetivo";
