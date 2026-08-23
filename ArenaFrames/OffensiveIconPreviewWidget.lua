@@ -13,7 +13,7 @@ local previewHeight = 116;
 local baseIconSize = addon.DEFAULT_ICON_SIZE;
 local sampleCooldownDuration = 18;
 local sampleCooldownInitialElapsed = 4;
-local highlightColor = { 1, 0, 0, 1 };
+local highlightColor = { 0.15, 0.85, 1, 1 };
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;

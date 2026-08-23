@@ -8,7 +8,7 @@ local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
 local testDuration = 12;
-local previewHighlightColor = { 1, 0, 0, 1 };
+local importantBuffHighlightColor = { 0.15, 0.85, 1, 1 };
 local liveOverlays = {};
 local previewOverlays = {};
 local eventFrame;
@@ -89,13 +89,14 @@ local function CreateHighlightTexture(frame, texturePath, layer, alpha)
 end
 
 local function GetHighlightColorMap()
+    local red, green, blue = unpack(importantBuffHighlightColor);
     return {
-        Magic = CreateColor(1, 1, 1),
-        Curse = CreateColor(1, 1, 1),
-        Disease = CreateColor(1, 1, 1),
-        Poison = CreateColor(1, 1, 1),
-        Enrage = CreateColor(1, 1, 1),
-        None = CreateColor(1, 0, 0),
+        Magic = CreateColor(red, green, blue),
+        Curse = CreateColor(red, green, blue),
+        Disease = CreateColor(red, green, blue),
+        Poison = CreateColor(red, green, blue),
+        Enrage = CreateColor(red, green, blue),
+        None = CreateColor(red, green, blue),
     };
 end
 
@@ -346,8 +347,8 @@ local function EnsurePreviewOverlay(index)
         "OVERLAY",
         1
     );
-    icon.highlightGlow:SetVertexColor(unpack(previewHighlightColor));
-    icon.highlightBorder:SetVertexColor(unpack(previewHighlightColor));
+    icon.highlightGlow:SetVertexColor(unpack(importantBuffHighlightColor));
+    icon.highlightBorder:SetVertexColor(unpack(importantBuffHighlightColor));
 
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
