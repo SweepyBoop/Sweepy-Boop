@@ -8,7 +8,7 @@ local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
 local testDuration = 12;
-local procGlowColor = { 1, 0.82, 0, 1 };
+local previewHighlightColor = { 1, 0, 0, 1 };
 local liveOverlays = {};
 local previewOverlays = {};
 local eventFrame;
@@ -66,19 +66,47 @@ local function UpdateCountdownFontSize(cooldown)
     end
 end
 
-local function CreateAlertTexture(button, texturePath, layer, alpha)
-    local texture = button:CreateTexture(nil, layer);
+local function CreateHighlightTexture(frame, texturePath, layer, alpha)
+    local texture = frame:CreateTexture(nil, layer);
     texture:SetTexture(texturePath);
     texture:SetBlendMode("ADD");
-    texture:SetPoint("TOPLEFT", button, "TOPLEFT", -7, 7);
-    texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 7, -7);
-    texture:SetVertexColor(
-        procGlowColor[1],
-        procGlowColor[2],
-        procGlowColor[3],
-        alpha
+    texture:SetPoint(
+        "TOPLEFT",
+        frame,
+        "TOPLEFT",
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
     );
+    texture:SetPoint(
+        "BOTTOMRIGHT",
+        frame,
+        "BOTTOMRIGHT",
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    );
+    texture:SetAlpha(alpha);
     return texture;
+end
+
+local function GetHighlightColorMap()
+    return {
+        Magic = CreateColor(1, 1, 1),
+        Curse = CreateColor(1, 1, 1),
+        Disease = CreateColor(1, 1, 1),
+        Poison = CreateColor(1, 1, 1),
+        Enrage = CreateColor(1, 1, 1),
+        None = CreateColor(1, 0, 0),
+    };
+end
+
+local function AddSecureHighlightTexture(button, texturePath, layer, alpha)
+    local texture = CreateHighlightTexture(button, texturePath, layer, alpha);
+    button:AddDispelTypeTexture(texture, {
+        style = Enum.CustomAuraButtonDispelTypeTextureStyle.PreserveAsset,
+        showWhenHelpful = true,
+        showWithoutDispelType = true,
+        customDispelColorMap = GetHighlightColorMap(),
+    });
 end
 
 local function InitializeLiveAuraButton(button, container)
@@ -92,7 +120,10 @@ local function InitializeLiveAuraButton(button, container)
     backdrop:SetColorTexture(0, 0, 0, 1);
 
     local icon = button:CreateTexture(nil, "ARTWORK");
-    icon:SetAllPoints(button);
+    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    icon:SetPoint("TOPLEFT", button, "TOPLEFT", inset, -inset);
+    icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -inset, inset);
+    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
     button:SetIcon(icon);
 
     local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
@@ -101,15 +132,13 @@ local function InitializeLiveAuraButton(button, container)
     UpdateCountdownFontSize(cooldown);
     button:SetDurationCooldown(cooldown);
 
-    -- Static children inherit the secure aura button's visibility without requiring
-    -- addon code to touch restricted descendants after initialization.
-    CreateAlertTexture(
+    AddSecureHighlightTexture(
         button,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
         "BORDER",
         0.9
     );
-    CreateAlertTexture(
+    AddSecureHighlightTexture(
         button,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
         "OVERLAY",
@@ -279,7 +308,6 @@ local function ClearPreviewIcon(icon)
     if not icon then return end
 
     ResetPreviewCooldown(icon.cooldown);
-    addon.HideProcGlow(icon);
     icon:Hide();
 end
 
@@ -297,8 +325,30 @@ local function EnsurePreviewOverlay(index)
     icon:SetMouseClickEnabled(false);
     icon:SetSize(baseIconSize, baseIconSize);
     icon:SetPoint("LEFT", group, "LEFT");
-    icon.texture = icon:CreateTexture(nil, "BORDER");
-    icon.texture:SetAllPoints(icon);
+    local backdrop = icon:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(icon);
+    backdrop:SetColorTexture(0, 0, 0, 1);
+
+    icon.texture = icon:CreateTexture(nil, "ARTWORK");
+    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
+    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
+    icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+    icon.highlightGlow = CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        0.9
+    );
+    icon.highlightBorder = CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        1
+    );
+    icon.highlightGlow:SetVertexColor(unpack(previewHighlightColor));
+    icon.highlightBorder:SetVertexColor(unpack(previewHighlightColor));
+
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     ConfigureCooldownSwipe(icon.cooldown);
@@ -391,7 +441,6 @@ local function PreviewArenaOverlays(showWarning)
             icon.texture:SetTexture(addon.GetSpellTexture(testSpells[i] or testSpells[1]));
             icon.cooldown:SetCooldown(GetTime() - i, testDuration + i);
             icon.cooldown:Show();
-            addon.ShowProcGlow(icon, procGlowColor);
             icon:Show();
             preview.group:Show();
         end

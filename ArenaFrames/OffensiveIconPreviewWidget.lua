@@ -13,7 +13,7 @@ local previewHeight = 116;
 local baseIconSize = addon.DEFAULT_ICON_SIZE;
 local sampleCooldownDuration = 18;
 local sampleCooldownInitialElapsed = 4;
-local procGlowColor = { 1, 0.82, 0, 1 };
+local highlightColor = { 1, 0, 0, 1 };
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;
@@ -57,9 +57,30 @@ local function CleanupPreview(widget)
         return;
     end
 
-    local icon = widget.sample.icon;
-    ClearIconCooldown(icon);
-    addon.HideProcGlow(icon);
+    ClearIconCooldown(widget.sample.icon);
+end
+
+local function CreateHighlightTexture(frame, texturePath, layer, alpha)
+    local texture = frame:CreateTexture(nil, layer);
+    texture:SetTexture(texturePath);
+    texture:SetBlendMode("ADD");
+    texture:SetPoint(
+        "TOPLEFT",
+        frame,
+        "TOPLEFT",
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    );
+    texture:SetPoint(
+        "BOTTOMRIGHT",
+        frame,
+        "BOTTOMRIGHT",
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    );
+    texture:SetVertexColor(unpack(highlightColor));
+    texture:SetAlpha(alpha);
+    return texture;
 end
 
 local function BuildSample(parent)
@@ -85,8 +106,28 @@ local function BuildSample(parent)
     );
 
     local icon = CreateFrame("Frame", nil, previewFrame);
-    icon.texture = icon:CreateTexture(nil, "BORDER");
-    icon.texture:SetAllPoints(icon);
+    local iconBackdrop = icon:CreateTexture(nil, "BACKGROUND");
+    iconBackdrop:SetAllPoints(icon);
+    iconBackdrop:SetColorTexture(0, 0, 0, 1);
+
+    icon.texture = icon:CreateTexture(nil, "ARTWORK");
+    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
+    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
+    icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+    CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        0.9
+    );
+    CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        1
+    );
+
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     ConfigureCooldownSwipe(icon.cooldown);
@@ -149,7 +190,6 @@ local methods = {
         icon.previewActive = self.frame:IsShown();
         icon:SetSize(baseIconSize, baseIconSize);
         icon:SetScale(scale);
-        addon.ShowProcGlow(icon, procGlowColor);
         icon:ClearAllPoints();
         icon:SetPoint(
             "LEFT",
