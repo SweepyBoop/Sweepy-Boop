@@ -9,6 +9,9 @@ local offensiveAuraSlotKey = "Offensive";
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
 local testDuration = 12;
 local importantBuffHighlightColor = { 0.15, 0.85, 1, 1 };
+local offensiveIconShadowTexture = addon.INTERFACE_SWEEPY .. "Art/OffensiveIconShadow";
+local offensiveIconShadowScale = 1.6;
+local offensiveIconShadowOffsetY = -1;
 local liveOverlays = {};
 local previewOverlays = {};
 local eventFrame;
@@ -66,6 +69,17 @@ local function UpdateCountdownFontSize(cooldown)
     end
 end
 
+local function CreateOffensiveIconShadow(frame)
+    local shadow = frame:CreateTexture(nil, "BACKGROUND", nil, -1);
+    shadow:SetTexture(offensiveIconShadowTexture);
+    shadow:SetSize(
+        baseIconSize * offensiveIconShadowScale,
+        baseIconSize * offensiveIconShadowScale
+    );
+    shadow:SetPoint("CENTER", frame, "CENTER", 0, offensiveIconShadowOffsetY);
+    return shadow;
+end
+
 local function CreateHighlightTexture(frame, texturePath, layer, alpha)
     local texture = frame:CreateTexture(nil, layer);
     texture:SetTexture(texturePath);
@@ -115,6 +129,8 @@ local function InitializeLiveAuraButton(button, container)
     button:SetMouseMotionEnabled(false);
     button:ClearAllPoints();
     button:SetPoint("LEFT", container, "LEFT");
+
+    CreateOffensiveIconShadow(button);
 
     local backdrop = button:CreateTexture(nil, "BACKGROUND");
     backdrop:SetAllPoints(button);
@@ -326,6 +342,8 @@ local function EnsurePreviewOverlay(index)
     icon:SetMouseClickEnabled(false);
     icon:SetSize(baseIconSize, baseIconSize);
     icon:SetPoint("LEFT", group, "LEFT");
+    CreateOffensiveIconShadow(icon);
+
     local backdrop = icon:CreateTexture(nil, "BACKGROUND");
     backdrop:SetAllPoints(icon);
     backdrop:SetColorTexture(0, 0, 0, 1);
