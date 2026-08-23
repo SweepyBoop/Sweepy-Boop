@@ -55,18 +55,22 @@ local profiles = {
         },
         row2Priority = {
             366155, -- Reversion
+            367364, -- Echo Reversion
             355941, -- Dream Breath
+            376788, -- Echo Dream Breath
             373267, -- Lifebind
             357170, -- Time Dilation
         },
         row2Auras = {
-            [366155] = 366155,
-            [1256577] = 366155,
-            [355936] = 355941,
-            [355941] = 355941,
-            [373267] = 373267,
-            [373270] = 373267,
-            [357170] = 357170,
+            [366155]  = 366155,   -- Reversion
+            [1256577] = 366155,   -- Reversion (variant)
+            [367364]  = 367364,   -- Echo Reversion
+            [355936]  = 355941,   -- Dream Breath (cast) -> HoT
+            [355941]  = 355941,   -- Dream Breath
+            [376788]  = 376788,   -- Echo Dream Breath
+            [373267]  = 373267,   -- Lifebind
+            [373270]  = 373267,   -- Lifebind (partner)
+            [357170]  = 357170,   -- Time Dilation
         },
     },
 };
