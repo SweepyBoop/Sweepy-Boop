@@ -15,7 +15,8 @@ local sampleCooldownDuration = 18;
 local sampleCooldownInitialElapsed = 4;
 local highlightColor = { 0.15, 0.85, 1, 1 };
 local offensiveIconShadowTexture = addon.INTERFACE_SWEEPY .. "Art/OffensiveIconShadow";
-local offensiveIconShadowScale = 1.6;
+local offensiveIconShadowScale = 1.35;
+local offensiveIconShadowAlpha = 0.55;
 local offensiveIconShadowOffsetY = -1;
 
 local function GetConfig()
@@ -111,6 +112,7 @@ local function BuildSample(parent)
     local icon = CreateFrame("Frame", nil, previewFrame);
     local shadow = icon:CreateTexture(nil, "BACKGROUND", nil, -1);
     shadow:SetTexture(offensiveIconShadowTexture);
+    shadow:SetAlpha(offensiveIconShadowAlpha);
     shadow:SetSize(
         baseIconSize * offensiveIconShadowScale,
         baseIconSize * offensiveIconShadowScale

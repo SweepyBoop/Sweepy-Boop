@@ -10,7 +10,8 @@ local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Sha
 local testDuration = 12;
 local importantBuffHighlightColor = { 0.15, 0.85, 1, 1 };
 local offensiveIconShadowTexture = addon.INTERFACE_SWEEPY .. "Art/OffensiveIconShadow";
-local offensiveIconShadowScale = 1.6;
+local offensiveIconShadowScale = 1.35;
+local offensiveIconShadowAlpha = 0.55;
 local offensiveIconShadowOffsetY = -1;
 local liveOverlays = {};
 local previewOverlays = {};
@@ -72,6 +73,7 @@ end
 local function CreateOffensiveIconShadow(frame)
     local shadow = frame:CreateTexture(nil, "BACKGROUND", nil, -1);
     shadow:SetTexture(offensiveIconShadowTexture);
+    shadow:SetAlpha(offensiveIconShadowAlpha);
     shadow:SetSize(
         baseIconSize * offensiveIconShadowScale,
         baseIconSize * offensiveIconShadowScale
