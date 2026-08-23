@@ -4,7 +4,7 @@ if not addon.PROJECT_MAINLINE then return end
 
 local baseIconSize = addon.DEFAULT_ICON_SIZE;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
-local offensiveAuraFilter = "HELPFUL|IMPORTANT|!BIG_DEFENSIVE|!EXTERNAL_DEFENSIVE";
+local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
 local testDuration = 12;

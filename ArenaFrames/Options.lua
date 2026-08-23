@@ -119,7 +119,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show big offensive icons on Blizzard arena frames",
-                        desc = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Big and external defensive buffs are excluded.",
+                        desc = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.",
                         set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                     },
                     preview = {
