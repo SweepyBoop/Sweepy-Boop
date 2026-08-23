@@ -7,6 +7,7 @@ local function SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val, call
     if callback then
         callback();
     end
+    SweepyBoop:UpdateArenaOffensiveIcons();
     if addon.RefreshArenaOffensiveIconPreviewWidgets then
         addon.RefreshArenaOffensiveIconPreviewWidgets();
     end
@@ -105,9 +106,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
         handler = SweepyBoop,
         get = function(info) return SweepyBoop.db.profile.arenaFrames[info[#info]] end,
         set = function(info, val)
-            SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
-            SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-            SweepyBoop:UpdateArenaOffensiveIcons();
+            SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val);
         end,
         args = {
             offensiveIcons = {
@@ -120,12 +119,8 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show big offensive icons on Blizzard arena frames",
-                        desc = "Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered.",
-                        set = function(info, val)
-                            SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val, function()
-                                SweepyBoop:SetupArenaOffensiveIcons();
-                            end);
-                        end,
+                        desc = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Big and external defensive buffs are excluded.",
+                        set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                     },
                     preview = {
                         order = 1,

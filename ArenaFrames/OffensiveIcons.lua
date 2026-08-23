@@ -1,98 +1,25 @@
 local _, addon = ...;
 
+if not addon.PROJECT_MAINLINE then return end
+
 local baseIconSize = addon.DEFAULT_ICON_SIZE;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
-local maxAurasToScan = 255;
+local offensiveAuraFilter = "HELPFUL|IMPORTANT|!BIG_DEFENSIVE|!EXTERNAL_DEFENSIVE";
+local offensiveAuraSlotKey = "Offensive";
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
-local maxOverlayLayers = 12;
+local testDuration = 12;
 local procGlowColor = { 1, 0.82, 0, 1 };
-local burstAuraSpellIDs;
-local arenaOverlayEventFrame;
-local arenaOverlays = {};
+local liveOverlays = {};
+local previewOverlays = {};
+local eventFrame;
+local previewTimer;
+local setupComplete = false;
 local isInTest = false;
+local reconcilePending = false;
+local previewCleanupPending = false;
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;
-end
-
-local function GetBurstAuraSpellSet()
-    if burstAuraSpellIDs then return burstAuraSpellIDs end
-
-    burstAuraSpellIDs = {};
-    for spellID, spell in pairs(addon.SpellData) do
-        local parentSpellID = spell.parent or spellID;
-        local parent = addon.SpellData[parentSpellID] or spell;
-        if parent.category == addon.SPELLCATEGORY.BURST then
-            burstAuraSpellIDs[spellID] = true;
-            burstAuraSpellIDs[parentSpellID] = true;
-        end
-    end
-
-    return burstAuraSpellIDs;
-end
-
-local function CanUseSpellID(spellID)
-    return spellID and ( not addon.IsSecretValue(spellID) );
-end
-
-local function GetBurstLookupSpellID(spellID)
-    if not CanUseSpellID(spellID) then return end
-
-    return ( addon.AuraParent and addon.AuraParent[spellID] ) or spellID;
-end
-
-local function AuraPassesFilter(unit, auraInstanceID, filter)
-    if ( not C_UnitAuras ) or ( not C_UnitAuras.IsAuraFilteredOutByInstanceID ) then
-        return false;
-    end
-
-    local filteredOut = C_UnitAuras.IsAuraFilteredOutByInstanceID(unit, auraInstanceID, filter);
-    if addon.IsSecretValue(filteredOut) then
-        return false;
-    end
-
-    return ( not filteredOut );
-end
-
-local function IsExcludedDefensiveAura(unit, auraInstanceID)
-    return AuraPassesFilter(unit, auraInstanceID, "HELPFUL|BIG_DEFENSIVE")
-        or AuraPassesFilter(unit, auraInstanceID, "HELPFUL|EXTERNAL_DEFENSIVE");
-end
-
-local function BuildBurstOverlaySignal(unit, auraData)
-    if ( not auraData ) or ( not auraData.icon ) or ( not auraData.auraInstanceID ) then
-        return false;
-    end
-
-    local spellID = GetBurstLookupSpellID(auraData.spellId);
-    if spellID then
-        return GetBurstAuraSpellSet()[spellID] and true or false, spellID;
-    end
-
-    if IsExcludedDefensiveAura(unit, auraData.auraInstanceID) then
-        return false;
-    end
-
-    if addon.PROJECT_MAINLINE and auraData.spellId and C_Spell and C_Spell.IsSpellImportant then
-        return C_Spell.IsSpellImportant(auraData.spellId);
-    end
-
-    return false;
-end
-
-local function CompareBurstOverlays(a, b)
-    local aSpellID = a.burstSpellID;
-    local bSpellID = b.burstSpellID;
-    local aSpell = aSpellID and addon.SpellData[aSpellID];
-    local bSpell = bSpellID and addon.SpellData[bSpellID];
-    local aPriority = ( aSpell and aSpell.index ) or addon.SPELLPRIORITY.DEFAULT;
-    local bPriority = ( bSpell and bSpell.index ) or addon.SPELLPRIORITY.DEFAULT;
-
-    if aPriority ~= bPriority then
-        return aPriority < bPriority;
-    end
-
-    return ( a.aura.auraInstanceID or 0 ) < ( b.aura.auraInstanceID or 0 );
 end
 
 local function ConfigureCooldownSwipe(cooldown)
@@ -100,6 +27,7 @@ local function ConfigureCooldownSwipe(cooldown)
     cooldown:SetDrawSwipe(true);
     cooldown:SetDrawEdge(true);
     cooldown:SetReverse(true);
+    cooldown:SetHideCountdownNumbers(false);
     if cooldown.SetSwipeColor then
         cooldown:SetSwipeColor(0, 0, 0, 0.55);
     end
@@ -129,12 +57,217 @@ local function UpdateCountdownFontSize(cooldown)
     if region then
         local font, _, flags = region:GetFont();
         if font then
-            region:SetFont(font, math.floor(baseIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT), flags);
+            region:SetFont(
+                font,
+                math.floor(baseIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT),
+                flags
+            );
         end
     end
 end
 
-local function ResetCooldownSwipe(cooldown)
+local function CreateAlertTexture(button, texturePath, layer, alpha)
+    local texture = button:CreateTexture(nil, layer);
+    texture:SetTexture(texturePath);
+    texture:SetBlendMode("ADD");
+    texture:SetPoint("TOPLEFT", button, "TOPLEFT", -7, 7);
+    texture:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", 7, -7);
+    texture:SetVertexColor(
+        procGlowColor[1],
+        procGlowColor[2],
+        procGlowColor[3],
+        alpha
+    );
+    return texture;
+end
+
+local function InitializeLiveAuraButton(button, container)
+    button:SetSize(baseIconSize, baseIconSize);
+    button:SetMouseMotionEnabled(false);
+    button:ClearAllPoints();
+    button:SetPoint("LEFT", container, "LEFT");
+
+    local backdrop = button:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(button);
+    backdrop:SetColorTexture(0, 0, 0, 1);
+
+    local icon = button:CreateTexture(nil, "ARTWORK");
+    icon:SetAllPoints(button);
+    button:SetIcon(icon);
+
+    local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
+    cooldown:SetAllPoints(icon);
+    ConfigureCooldownSwipe(cooldown);
+    UpdateCountdownFontSize(cooldown);
+    button:SetDurationCooldown(cooldown);
+
+    -- Static children inherit the secure aura button's visibility without requiring
+    -- addon code to touch restricted descendants after initialization.
+    CreateAlertTexture(
+        button,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        0.9
+    );
+    CreateAlertTexture(
+        button,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        1
+    );
+end
+
+local function EnsureLiveOverlay(index)
+    local overlay = liveOverlays[index];
+    if overlay then return overlay end
+
+    local arenaFrame = _G[blizzardArenaFramePrefix .. index];
+    if ( not arenaFrame ) or InCombatLockdown() then
+        reconcilePending = true;
+        return;
+    end
+
+    local root = CreateFrame("Frame", nil, arenaFrame);
+    root:SetMouseClickEnabled(false);
+    root:SetSize(baseIconSize, baseIconSize);
+    root:Hide();
+
+    local container = CreateFrame(
+        "AuraContainer",
+        nil,
+        root,
+        "CustomAuraContainerTemplate"
+    );
+    container:Hide();
+    container:SetAllPoints(root);
+    container:SetAuraProcessingPolicy(
+        CustomAuraContainerAuraProcessingPolicy.ProcessAura,
+        {
+            displayOnlyDispellableDebuffs = false,
+            ignoreBuffs = false,
+            ignoreDebuffs = true,
+            ignoreDispelDebuffs = true,
+        }
+    );
+    container:AddAuraSlot(offensiveAuraSlotKey, offensiveAuraFilter, {
+        sortMethod = AuraContainerSortMethod.ImportantOnly,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            InitializeLiveAuraButton(button, container);
+        end,
+    });
+    container:SetUnit("arena" .. index);
+
+    overlay = {
+        root = root,
+        container = container,
+        index = index,
+        unit = "arena" .. index,
+    };
+    liveOverlays[index] = overlay;
+    return overlay;
+end
+
+local function ApplyLiveOverlayLayout(overlay)
+    local arenaFrame = _G[blizzardArenaFramePrefix .. overlay.index];
+    if ( not arenaFrame ) or overlay.root:GetParent() ~= arenaFrame then
+        return false;
+    end
+
+    local config = GetConfig();
+    local size = config.arenaOffensiveIconSize or 32;
+    local offsetX = config.arenaOffensiveIconOffsetX or 0;
+    local offsetY = config.arenaOffensiveIconOffsetY or 0;
+    local frameStrata = arenaFrame:GetFrameStrata();
+    local frameLevel = arenaFrame:GetFrameLevel() + 20;
+    if overlay.size == size
+        and overlay.offsetX == offsetX
+        and overlay.offsetY == offsetY
+        and overlay.frameStrata == frameStrata
+        and overlay.frameLevel == frameLevel then
+
+        return true;
+    end
+
+    if InCombatLockdown() then
+        reconcilePending = true;
+        return overlay.layoutApplied == true;
+    end
+
+    local scale = size / baseIconSize;
+    overlay.root:SetFrameStrata(frameStrata);
+    overlay.root:SetFrameLevel(frameLevel);
+    overlay.root:SetScale(scale);
+    overlay.root:ClearAllPoints();
+    overlay.root:SetPoint(
+        "LEFT",
+        arenaFrame,
+        "LEFT",
+        offsetX / scale,
+        offsetY / scale
+    );
+    overlay.size = size;
+    overlay.offsetX = offsetX;
+    overlay.offsetY = offsetY;
+    overlay.frameStrata = frameStrata;
+    overlay.frameLevel = frameLevel;
+    overlay.layoutApplied = true;
+    return true;
+end
+
+local function SetLiveOverlayShown(overlay, shown)
+    if overlay.shown == shown then return true end
+    if InCombatLockdown() then
+        reconcilePending = true;
+        return false;
+    end
+
+    overlay.shown = shown;
+    if shown then
+        overlay.root:Show();
+        overlay.container:Show();
+    else
+        overlay.container:Hide();
+        overlay.root:Hide();
+    end
+    return true;
+end
+
+local function UpdateLiveOverlay(index, forceRefresh)
+    local overlay = EnsureLiveOverlay(index);
+    if not overlay then return end
+
+    local config = GetConfig();
+    if isInTest
+        or ( not config.arenaOffensiveIconsEnabled )
+        or ( not addon.IsUsingRealAuraData() )
+        or ( not ApplyLiveOverlayLayout(overlay) ) then
+
+        SetLiveOverlayShown(overlay, false);
+        return;
+    end
+
+    if overlay.container:GetUnit() ~= overlay.unit then
+        if InCombatLockdown() then
+            reconcilePending = true;
+            return;
+        end
+        overlay.container:SetUnit(overlay.unit);
+    elseif forceRefresh then
+        overlay.container:UpdateAllAuras();
+    end
+    SetLiveOverlayShown(overlay, true);
+end
+
+local function UpdateLiveOverlays(forceRefresh)
+    if not SweepyBoop.db then return end
+
+    for i = 1, addon.MAX_ARENA_SIZE do
+        UpdateLiveOverlay(i, forceRefresh);
+    end
+end
+
+local function ResetPreviewCooldown(cooldown)
     if cooldown.Clear then
         cooldown:Clear();
     else
@@ -142,269 +275,137 @@ local function ResetCooldownSwipe(cooldown)
     end
 end
 
-local function ClearOverlayLayer(icon)
+local function ClearPreviewIcon(icon)
     if not icon then return end
 
-    ResetCooldownSwipe(icon.cooldown);
+    ResetPreviewCooldown(icon.cooldown);
     addon.HideProcGlow(icon);
-    icon:SetAlpha(1);
     icon:Hide();
 end
 
-local function CreateOverlayLayer(parent)
-    local icon = CreateFrame("Frame", nil, parent);
+local function EnsurePreviewOverlay(index)
+    local preview = previewOverlays[index];
+    if preview then return preview end
+
+    local group = CreateFrame("Frame", nil, UIParent);
+    group:SetMouseClickEnabled(false);
+    group:SetSize(baseIconSize, baseIconSize);
+    group.index = index;
+    group:Hide();
+
+    local icon = CreateFrame("Frame", nil, group);
     icon:SetMouseClickEnabled(false);
     icon:SetSize(baseIconSize, baseIconSize);
-
+    icon:SetPoint("LEFT", group, "LEFT");
     icon.texture = icon:CreateTexture(nil, "BORDER");
     icon.texture:SetAllPoints(icon);
-
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
     ConfigureCooldownSwipe(icon.cooldown);
     UpdateCountdownFontSize(icon.cooldown);
-    icon.cooldown:SetScript("OnCooldownDone", function()
-        if icon.isTestPreview then
-            icon.isTestPreview = nil;
-            ClearOverlayLayer(icon);
-        end
-    end);
-
     icon:Hide();
-    return icon;
+
+    preview = {
+        group = group,
+        icon = icon,
+        index = index,
+    };
+    previewOverlays[index] = preview;
+    return preview;
 end
 
-local function EnsureArenaOverlay(index)
-    local group = arenaOverlays[index];
-    if group then return group end
+local function ClearPreviewOverlay(preview)
+    if not preview then return end
 
-    group = CreateFrame("Frame", nil, UIParent);
-    group:SetMouseClickEnabled(false);
-    group:SetFrameStrata("HIGH");
-    group:SetSize(baseIconSize, baseIconSize);
-    group.icons = {};
-    group.index = index;
-    group.unit = "arena" .. index;
-    group:Hide();
-    arenaOverlays[index] = group;
-    return group;
+    ClearPreviewIcon(preview.icon);
+    preview.group:Hide();
 end
 
-local function EnsureOverlayLayer(group, index)
-    local icon = group.icons[index];
-    if icon then return icon end
-
-    icon = CreateOverlayLayer(group);
-    group.icons[index] = icon;
-    return icon;
-end
-
-local function ClearArenaOverlay(group)
-    if not group then return end
-
-    for _, icon in ipairs(group.icons) do
-        icon.isTestPreview = nil;
-        ClearOverlayLayer(icon);
+local function ClearAllPreviewOverlays()
+    if not isInTest then return true end
+    if InCombatLockdown() then
+        previewCleanupPending = true;
+        reconcilePending = true;
+        return false;
     end
-    group:Hide();
-end
 
-local function ClearAllArenaOverlays()
-    for _, group in pairs(arenaOverlays) do
-        ClearArenaOverlay(group);
+    previewCleanupPending = false;
+    if previewTimer then
+        previewTimer:Cancel();
+        previewTimer = nil;
+    end
+    for _, preview in pairs(previewOverlays) do
+        ClearPreviewOverlay(preview);
     end
     isInTest = false;
+    return true;
 end
 
-local function AnchorArenaOverlay(group)
-    local config = GetConfig();
-    local arenaFrame = _G[blizzardArenaFramePrefix .. group.index];
+local function ApplyPreviewLayout(preview)
+    local arenaFrame = _G[blizzardArenaFramePrefix .. preview.index];
     if not arenaFrame then
-        ClearArenaOverlay(group);
+        ClearPreviewOverlay(preview);
         return false;
     end
 
     local shown = arenaFrame:IsShown();
     local visible = arenaFrame:IsVisible();
     if addon.IsSecretValue(shown) or addon.IsSecretValue(visible) or ( not shown ) or ( not visible ) then
-        ClearArenaOverlay(group);
+        ClearPreviewOverlay(preview);
         return false;
     end
 
-    group:SetParent(arenaFrame);
-    group:SetFrameStrata(arenaFrame:GetFrameStrata());
-    group:SetFrameLevel(arenaFrame:GetFrameLevel() + 20);
-
-    local scale = ( config.arenaOffensiveIconSize or 42 ) / baseIconSize;
-    group:SetScale(scale);
-    group:ClearAllPoints();
-    group:SetPoint(
+    local config = GetConfig();
+    local scale = ( config.arenaOffensiveIconSize or 32 ) / baseIconSize;
+    preview.group:SetParent(arenaFrame);
+    preview.group:SetFrameStrata(arenaFrame:GetFrameStrata());
+    preview.group:SetFrameLevel(arenaFrame:GetFrameLevel() + 20);
+    preview.group:SetScale(scale);
+    preview.group:ClearAllPoints();
+    preview.group:SetPoint(
         "LEFT",
         arenaFrame,
         "LEFT",
         ( config.arenaOffensiveIconOffsetX or 0 ) / scale,
         ( config.arenaOffensiveIconOffsetY or 0 ) / scale
     );
-    group.lastModified = config.lastModified;
     return true;
-end
-
-local function AnchorOverlayLayer(group, icon)
-    icon:ClearAllPoints();
-    icon:SetPoint("LEFT", group, "LEFT", 0, 0);
-end
-
-local function ApplyAlphaSignal(frame, alphaSignal)
-    if addon.IsSecretValue(alphaSignal) then
-        frame:SetAlphaFromBoolean(alphaSignal);
-    elseif alphaSignal then
-        frame:SetAlpha(1);
-    else
-        frame:SetAlpha(0);
-    end
-end
-
-local function PaintOverlayLayer(icon, overlaySignal, durationObject, startTime, duration)
-    local auraData = overlaySignal.aura;
-    icon.texture:SetTexture(auraData.icon);
-
-    if durationObject and icon.cooldown.SetCooldownFromDurationObject then
-        icon.cooldown:SetCooldownFromDurationObject(durationObject);
-        icon.cooldown:Show();
-    elseif startTime and duration then
-        icon.cooldown:SetCooldown(startTime, duration);
-        icon.cooldown:Show();
-    else
-        ResetCooldownSwipe(icon.cooldown);
-        icon.cooldown:Hide();
-    end
-
-    UpdateCountdownFontSize(icon.cooldown);
-    ApplyAlphaSignal(icon, overlaySignal.alphaSignal);
-    addon.ShowProcGlow(icon, procGlowColor);
-    icon:Show();
-end
-
-local function ClearOverlayLayersAfter(group, firstUnusedIndex)
-    for i = firstUnusedIndex, #group.icons do
-        group.icons[i].isTestPreview = nil;
-        ClearOverlayLayer(group.icons[i]);
-    end
-end
-
-local function GatherBurstOverlaySignals(unit)
-    local results = {};
-    if ( not UnitExists(unit) ) or ( not C_UnitAuras ) then return results end
-
-    if C_UnitAuras.GetUnitAuras then
-        local auras = C_UnitAuras.GetUnitAuras(unit, "HELPFUL");
-        if auras then
-            for _, auraData in ipairs(auras) do
-                local alphaSignal, burstSpellID = BuildBurstOverlaySignal(unit, auraData);
-                if addon.IsSecretValue(alphaSignal) or alphaSignal then
-                    table.insert(results, { aura = auraData, alphaSignal = alphaSignal, burstSpellID = burstSpellID });
-                end
-            end
-        end
-    else
-        for i = 1, maxAurasToScan do
-            local auraData = C_UnitAuras.GetAuraDataByIndex(unit, i, "HELPFUL");
-            if ( not auraData ) or ( not auraData.name ) then break end
-            local alphaSignal, burstSpellID = BuildBurstOverlaySignal(unit, auraData);
-            if addon.IsSecretValue(alphaSignal) or alphaSignal then
-                table.insert(results, { aura = auraData, alphaSignal = alphaSignal, burstSpellID = burstSpellID });
-            end
-        end
-    end
-
-    table.sort(results, CompareBurstOverlays);
-    return results;
-end
-
-local function RefreshArenaOverlay(index)
-    local config = GetConfig();
-    local group = EnsureArenaOverlay(index);
-
-    if ( not config.arenaOffensiveIconsEnabled ) or ( not AnchorArenaOverlay(group) ) then
-        return;
-    end
-
-    local unit = group.unit;
-    local overlaySignals = GatherBurstOverlaySignals(unit);
-    if #overlaySignals == 0 then
-        ClearOverlayLayersAfter(group, 1);
-        group:Hide();
-        return;
-    end
-
-    local usedCount = math.min(#overlaySignals, maxOverlayLayers);
-    for i = 1, usedCount do
-        local overlaySignal = overlaySignals[i];
-        local auraData = overlaySignal.aura;
-        local icon = EnsureOverlayLayer(group, i);
-        AnchorOverlayLayer(group, icon);
-        icon:SetFrameLevel(group:GetFrameLevel() + maxOverlayLayers - i);
-
-        local durationObject = C_UnitAuras and C_UnitAuras.GetAuraDuration and C_UnitAuras.GetAuraDuration(unit, auraData.auraInstanceID);
-        local startTime, duration;
-        if ( not durationObject ) and auraData.duration and auraData.expirationTime
-            and ( not addon.IsSecretValue(auraData.duration) ) and ( not addon.IsSecretValue(auraData.expirationTime) ) then
-            startTime = auraData.expirationTime - auraData.duration;
-            duration = auraData.duration;
-        end
-
-        PaintOverlayLayer(icon, overlaySignal, durationObject, startTime, duration);
-    end
-
-    ClearOverlayLayersAfter(group, usedCount + 1);
-    group:Show();
-end
-
-local function RefreshArenaOverlays()
-    if ( not SweepyBoop.db ) then return end
-
-    local config = GetConfig();
-    if not config.arenaOffensiveIconsEnabled then
-        ClearAllArenaOverlays();
-        return;
-    end
-
-    for i = 1, addon.MAX_ARENA_SIZE do
-        RefreshArenaOverlay(i);
-    end
 end
 
 local function PreviewArenaOverlays(showWarning)
     if IsInInstance() then
-        ClearAllArenaOverlays();
+        ClearAllPreviewOverlays();
+        UpdateLiveOverlays();
         if showWarning then
             addon.PRINT("Test mode can only be used outside instances");
         end
         return;
     end
 
+    isInTest = true;
+    UpdateLiveOverlays();
     for i = 1, addon.MAX_ARENA_SIZE do
-        local group = EnsureArenaOverlay(i);
-        if AnchorArenaOverlay(group) then
-            local spellID = testSpells[i] or testSpells[1];
-            local icon = EnsureOverlayLayer(group, 1);
-            local overlaySignal = {
-                aura = {
-                    icon = addon.GetSpellTexture(spellID),
-                    auraInstanceID = i,
-                    spellId = spellID,
-                },
-                alphaSignal = true,
-                burstSpellID = spellID,
-            };
-            AnchorOverlayLayer(group, icon);
-            icon.isTestPreview = true;
-            PaintOverlayLayer(icon, overlaySignal, nil, GetTime() - i, 12 + i);
-            ClearOverlayLayersAfter(group, 2);
-            group:Show();
+        local preview = EnsurePreviewOverlay(i);
+        if ApplyPreviewLayout(preview) then
+            local icon = preview.icon;
+            icon.texture:SetTexture(addon.GetSpellTexture(testSpells[i] or testSpells[1]));
+            icon.cooldown:SetCooldown(GetTime() - i, testDuration + i);
+            icon.cooldown:Show();
+            addon.ShowProcGlow(icon, procGlowColor);
+            icon:Show();
+            preview.group:Show();
         end
     end
-    isInTest = true;
+
+    if previewTimer then
+        previewTimer:Cancel();
+    end
+    previewTimer = C_Timer.NewTimer(testDuration, function()
+        previewTimer = nil;
+        if isInTest then
+            SweepyBoop:HideTestArenaOffensiveIcons();
+        end
+    end);
 end
 
 local function ShowBlizzardArenaFramesForPreview()
@@ -424,59 +425,72 @@ function SweepyBoop:TestArenaOffensiveIcons()
         PreviewArenaOverlays(true);
         return;
     end
+    if InCombatLockdown() then
+        addon.PRINT("Test mode cannot be started during combat");
+        return;
+    end
 
     ShowBlizzardArenaFramesForPreview();
     PreviewArenaOverlays(false);
 end
 
 function SweepyBoop:HideTestArenaOffensiveIcons()
-    ClearAllArenaOverlays();
+    if ClearAllPreviewOverlays() then
+        UpdateLiveOverlays();
+    end
 end
 
 function SweepyBoop:UpdateArenaOffensiveIcons()
     if isInTest then
+        if InCombatLockdown() then
+            reconcilePending = true;
+            return;
+        end
         PreviewArenaOverlays(false);
         return;
     end
 
-    RefreshArenaOverlays();
+    UpdateLiveOverlays();
 end
 
 function SweepyBoop:SetupArenaOffensiveIcons()
-    if not arenaOverlayEventFrame then
-        arenaOverlayEventFrame = CreateFrame("Frame");
-        arenaOverlayEventFrame:SetScript("OnEvent", function(_, event, unit)
-            if event == addon.UNIT_AURA then
-                if unit and unit:match("^arena%d+$") then
-                    local index = tonumber(unit:match("^arena(%d+)$"));
-                    if index then
-                        RefreshArenaOverlay(index);
-                    end
-                end
-                return;
-            end
+    if setupComplete then
+        UpdateLiveOverlays();
+        return;
+    end
+    setupComplete = true;
 
-            isInTest = false;
-            if event == addon.PLAYER_ENTERING_WORLD or event == "PVP_MATCH_COMPLETE" then
-                ClearAllArenaOverlays();
-            end
-            RefreshArenaOverlays();
-        end);
+    for i = 1, addon.MAX_ARENA_SIZE do
+        EnsureLiveOverlay(i);
     end
 
-    arenaOverlayEventFrame:UnregisterAllEvents();
-    if GetConfig().arenaOffensiveIconsEnabled then
-        arenaOverlayEventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-        arenaOverlayEventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-        arenaOverlayEventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
-        arenaOverlayEventFrame:RegisterEvent(addon.UNIT_AURA);
-        if addon.PROJECT_MAINLINE then
-            arenaOverlayEventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
-            arenaOverlayEventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
-            arenaOverlayEventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
+    eventFrame = CreateFrame("Frame");
+    eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    eventFrame:RegisterEvent(addon.ARENA_OPPONENT_UPDATE);
+    eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
+    eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
+    eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
+    eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
+    eventFrame:SetScript("OnEvent", function(_, event)
+        if event == addon.PLAYER_ENTERING_WORLD or event == "PVP_MATCH_COMPLETE" then
+            ClearAllPreviewOverlays();
         end
-        RefreshArenaOverlays();
-    else
-        ClearAllArenaOverlays();
-    end
+        if event == addon.PLAYER_REGEN_ENABLED then
+            if ( not reconcilePending ) and ( not previewCleanupPending ) then return end
+            reconcilePending = false;
+            if previewCleanupPending then
+                ClearAllPreviewOverlays();
+            end
+            UpdateLiveOverlays(true);
+            return;
+        end
+        UpdateLiveOverlays(true);
+    end);
+
+    addon.RegisterAuraDataProviderListener("ArenaOffensiveIcons", function()
+        UpdateLiveOverlays(true);
+    end);
+
+    UpdateLiveOverlays();
 end

@@ -410,6 +410,7 @@ function SweepyBoop:OnInitialize()
     options.args.nameplatesEnemy = addon.GetEnemyNameplateOptions(4);
 
     if addon.PROJECT_MAINLINE then
+        options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.macros = addon.GetMacroOptions(7.5);
         if addon.MAINLINE_CORE_FEATURES_ONLY then
@@ -418,7 +419,6 @@ function SweepyBoop:OnInitialize()
             options.args.misc.args.personalDR =
                 addon.GetMiscOptions(7, icon, SweepyBoopLDB).args.personalDR;
         else
-            options.args.arenaFrames = addon.GetMainlineArenaFrameOptions(5);
             options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
         end
     else
@@ -482,6 +482,7 @@ function SweepyBoop:OnInitialize()
     -- Recovered modules run independently of the temporary Mainline gate.
     self:SetupRaidFrameAuraModule();
     self:SetupRaidFrameDebuffIcons();
+    self:SetupArenaOffensiveIcons();
 
     self:SetupRaidFrameAggroHighlight();
     self:SetupHealerInCrowdControl();
@@ -496,8 +497,6 @@ function SweepyBoop:OnInitialize()
         self:SetupMouseCursor();
         return;
     end
-
-    self:SetupArenaOffensiveIcons();
 
     self:SetupCombatIndicator();
     self:SetupClassColorUnitFrames();
@@ -519,6 +518,7 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:RefreshHealerBuffHelper();
         self:RefreshRaidFrameDebuffIcons();
+        self:UpdateArenaOffensiveIcons();
         self:RefreshRaidFrameAggroHighlight();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl();
@@ -530,7 +530,6 @@ function SweepyBoop:RefreshConfig()
     end
 
     if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
-        self:SetupArenaOffensiveIcons();
         self:SetupCombatIndicator();
         self:SetupClassColorUnitFrames();
         self:RefreshHonorReminder();
