@@ -361,7 +361,7 @@ local function EnsurePreviewOverlay(index)
         "BORDER",
         style.HIGHLIGHT_GLOW_ALPHA
     );
-    icon.highlightBorder
+    icon.highlightBorder = CreateHighlightTexture(
         icon,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
         "OVERLAY",

@@ -193,9 +193,9 @@ L["Nameplate + icon"] = "Barre d'info + icône";
 L["Nameplate + pulsing icon"] = "Barre d'info + icône pulsante";
 
 L["Arena frames"] = "Cadres d'arène";
-L["Offensive alerts"] = "Alertes offensives";
-L["Show big offensive icons on Blizzard arena frames"] = "Afficher de grandes icônes offensives sur les cadres d'arène Blizzard";
-L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "Affiche l'amélioration offensive active ennemie la plus prioritaire à l'intérieur du côté gauche de chaque cadre d'arène Blizzard intégré, centrée verticalement.";
+L["Important buff alerts"] = "Alertes d'améliorations importantes";
+L["Show important buff icons on Blizzard arena frames"] = "Afficher les icônes d'améliorations importantes sur les cadres d'arène Blizzard";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "Affiche une amélioration ennemie active que Blizzard considère comme importante sur le côté gauche de chaque cadre d'arène Blizzard intégré. Blizzard détermine quelle amélioration importante est prioritaire.";
 L["Position"] = "Position";
 L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "Ces icônes s'attachent uniquement au côté gauche à l'intérieur des cadres d'arène Blizzard. Elles se masquent si les cadres d'arène Blizzard sont masqués par un autre addon de cadres d'arène.";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "Les icônes de test affichent uniquement l'arène 1, les arènes 2 et 3 seront configurées automatiquement";

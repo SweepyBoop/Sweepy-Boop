@@ -193,9 +193,9 @@ L["Nameplate + icon"] = "Индикатор + значок";
 L["Nameplate + pulsing icon"] = "Индикатор + пульсирующий значок";
 
 L["Arena frames"] = "Рамки арены";
-L["Offensive alerts"] = "Атакующие предупреждения";
-L["Show big offensive icons on Blizzard arena frames"] = "Показывать большие атакующие значки на рамках арены Blizzard";
-L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "Показывает активный вражеский атакующий эффект перезарядки с наивысшим приоритетом внутри левой части каждой встроенной рамки арены Blizzard, с выравниванием по центру вертикали.";
+L["Important buff alerts"] = "Оповещения о важных эффектах";
+L["Show important buff icons on Blizzard arena frames"] = "Показывать значки важных эффектов на рамках арены Blizzard";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "Показывает один активный вражеский эффект, который Blizzard классифицирует как важный, в левой части каждой встроенной рамки арены Blizzard. Blizzard определяет, какой важный эффект имеет приоритет.";
 L["Position"] = "Позиция";
 L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "Эти значки прикрепляются только к левой стороне внутри рамок арены Blizzard. Они скрываются, если рамки арены Blizzard скрыты другим аддоном рамок арены.";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "Тестовые значки показывают только arena 1, arena 2 и 3 будут настроены автоматически";

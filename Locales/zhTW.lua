@@ -193,9 +193,9 @@ L["Nameplate + icon"] = "名條 + 圖示";
 L["Nameplate + pulsing icon"] = "名條 + 脈衝圖示";
 
 L["Arena frames"] = "競技場框架";
-L["Offensive alerts"] = "進攻提醒";
-L["Show big offensive icons on Blizzard arena frames"] = "在暴雪競技場框架上顯示大型進攻圖示";
-L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "在每個內建暴雪競技場框架左側內部置中顯示最高優先度的敵方進攻冷卻增益。";
+L["Important buff alerts"] = "重要增益提醒";
+L["Show important buff icons on Blizzard arena frames"] = "在暴雪競技場框架上顯示重要增益圖示";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "在每個內建暴雪競技場框架左側顯示一個被暴雪歸類為重要的敵方啟用增益。由暴雪決定優先顯示哪個重要增益。";
 L["Position"] = "位置";
 L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "這些圖示只會附著在暴雪競技場框架內側左邊。若暴雪競技場框架被其他競技場框架插件隱藏，這些圖示也會隱藏。";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "測試圖示只會顯示競技場 1，競技場 2 和 3 會自動設定";

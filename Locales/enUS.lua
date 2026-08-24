@@ -193,9 +193,9 @@ L["Nameplate + icon"] = "Nameplate + icon";
 L["Nameplate + pulsing icon"] = "Nameplate + pulsing icon";
 
 L["Arena frames"] = "Arena frames";
-L["Offensive alerts"] = "Offensive alerts";
-L["Show big offensive icons on Blizzard arena frames"] = "Show big offensive icons on Blizzard arena frames";
-L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered.";
+L["Important buff alerts"] = "Important buff alerts";
+L["Show important buff icons on Blizzard arena frames"] = "Show important buff icons on Blizzard arena frames";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.";
 L["Position"] = "Position";
 L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "Test icons showing arena 1 only, arena 2 & 3 will be automatically set up";

@@ -112,13 +112,13 @@ addon.GetMainlineArenaFrameOptions = function(order)
             offensiveIcons = {
                 order = 1,
                 type = "group",
-                name = "Offensive alerts",
+                name = "Important buff alerts",
                 args = {
                     arenaOffensiveIconsEnabled = {
                         order = 2,
                         type = "toggle",
                         width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show big offensive icons on Blizzard arena frames",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show important buff icons on Blizzard arena frames",
                         desc = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.",
                         set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                     },

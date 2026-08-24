@@ -193,9 +193,9 @@ L["Nameplate + icon"] = "Barra del nome + icona";
 L["Nameplate + pulsing icon"] = "Barra del nome + icona pulsante";
 
 L["Arena frames"] = "Riquadri arena";
-L["Offensive alerts"] = "Avvisi offensivi";
-L["Show big offensive icons on Blizzard arena frames"] = "Mostra grandi icone offensive sui riquadri arena di Blizzard";
-L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "Mostra il buff offensivo nemico attivo con priorità più alta all'interno del lato sinistro di ogni riquadro arena Blizzard integrato, centrato verticalmente.";
+L["Important buff alerts"] = "Avvisi per buff importanti";
+L["Show important buff icons on Blizzard arena frames"] = "Mostra le icone dei buff importanti sui riquadri arena di Blizzard";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "Mostra un buff nemico attivo che Blizzard classifica come importante sul lato sinistro di ogni riquadro arena Blizzard integrato. Blizzard decide quale buff importante ha la priorità.";
 L["Position"] = "Posizione";
 L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "Queste icone si agganciano solo al lato sinistro all'interno dei riquadri arena di Blizzard. Si nascondono se i riquadri arena di Blizzard sono nascosti da un altro addon per riquadri arena.";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "Le icone di prova mostrano solo arena 1; arena 2 e 3 verranno configurate automaticamente";

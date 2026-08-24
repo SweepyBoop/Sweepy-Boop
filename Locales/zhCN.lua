@@ -193,9 +193,9 @@ L["Nameplate + icon"] = "姓名板 + 图标";
 L["Nameplate + pulsing icon"] = "姓名板 + 脉冲图标";
 
 L["Arena frames"] = "竞技场框体";
-L["Offensive alerts"] = "进攻提醒";
-L["Show big offensive icons on Blizzard arena frames"] = "在暴雪竞技场框体上显示大型进攻图标";
-L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "在每个内置暴雪竞技场框体左侧内部居中显示最高优先级的敌方进攻冷却增益。";
+L["Important buff alerts"] = "重要增益提醒";
+L["Show important buff icons on Blizzard arena frames"] = "在暴雪竞技场框体上显示重要增益图标";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "在每个内置暴雪竞技场框体左侧显示一个被暴雪归类为重要的敌方激活增益。由暴雪决定优先显示哪个重要增益。";
 L["Position"] = "位置";
 L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "这些图标只会附着在暴雪竞技场框体内侧左边。若暴雪竞技场框体被其他竞技场框体插件隐藏，这些图标也会隐藏。";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "测试图标只会显示竞技场 1，竞技场 2 和 3 会自动设置";
