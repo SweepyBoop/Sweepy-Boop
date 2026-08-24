@@ -414,10 +414,11 @@ function SweepyBoop:OnInitialize()
         options.args.raidFrames = addon.GetRaidFrameOptions(6);
         options.args.macros = addon.GetMacroOptions(7.5);
         if addon.MAINLINE_CORE_FEATURES_ONLY then
+            local miscOptions = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
             options.args.misc =
                 addon.GetHealerInCrowdControlOptions(7);
-            options.args.misc.args.personalDR =
-                addon.GetMiscOptions(7, icon, SweepyBoopLDB).args.personalDR;
+            options.args.misc.args.personalDR = miscOptions.args.personalDR;
+            options.args.misc.args.gismo = miscOptions.args.gismo;
         else
             options.args.misc = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
         end
@@ -492,6 +493,7 @@ function SweepyBoop:OnInitialize()
     self:SetupPrecognitionTracker();
     self:SetupPersonalDR();
     self:SetupHealerIndicator();
+    self:SetupRangeChecker();
 
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
@@ -501,7 +503,6 @@ function SweepyBoop:OnInitialize()
     self:SetupCombatIndicator();
     self:SetupClassColorUnitFrames();
     self:SetupHideBlizzArenaFrames();
-    self:SetupRangeChecker();
     self:SetupHonorReminder();
     self:SetupMouseCursor();
     self:UpdateSBMMacros();
@@ -527,6 +528,7 @@ function SweepyBoop:RefreshConfig()
         self:SetupDampenDisplay();
         self:SetupPrecognitionTracker();
         self:SetupPersonalDR();
+        self:SetupRangeChecker();
     end
 
     if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
