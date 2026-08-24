@@ -2,18 +2,13 @@ local _, addon = ...;
 
 if not addon.PROJECT_MAINLINE then return end
 
-local baseIconSize = addon.DEFAULT_ICON_SIZE;
+local style = addon.ARENA_OFFENSIVE_ICON_STYLE;
+local baseIconSize = style.BASE_SIZE;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
 local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
 local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
 local testDuration = 12;
-local importantBuffHighlightColor = { 1, 0.85, 0.29, 1 };
-local offensiveIconShadowTexture = addon.INTERFACE_SWEEPY .. "Art/OffensiveIconShadow";
-local offensiveIconShadowScale = 1.35;
-local offensiveIconShadowAlpha = 1;
-local offensiveIconShadowOffsetY = 0;
-local offensiveIconInset = 1;
 local liveOverlays = {};
 local previewOverlays = {};
 local eventFrame;
@@ -34,10 +29,10 @@ local function ConfigureCooldownSwipe(cooldown)
     cooldown:SetReverse(true);
     cooldown:SetHideCountdownNumbers(false);
     if cooldown.SetSwipeColor then
-        cooldown:SetSwipeColor(0, 0, 0, 0.55);
+        cooldown:SetSwipeColor(0, 0, 0, style.COOLDOWN_SWIPE_ALPHA);
     end
     if cooldown.SetEdgeTexture then
-        cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
+        cooldown:SetEdgeTexture(style.COOLDOWN_EDGE_TEXTURE);
     end
     if cooldown.SetCountdownMillisecondsThreshold then
         cooldown:SetCountdownMillisecondsThreshold(0);
@@ -73,16 +68,19 @@ end
 
 local function CreateOffensiveIconShadow(frame)
     local shadow = frame:CreateTexture(nil, "OVERLAY", nil, 2);
-    shadow:SetTexture(offensiveIconShadowTexture);
-    shadow:SetTexCoord(0.01, 0.99, 0.01, 0.99);
+    shadow:SetTexture(style.SHADOW_TEXTURE);
+    shadow:SetTexCoord(unpack(style.SHADOW_TEX_COORDS));
     shadow:SetHorizTile(false);
     shadow:SetVertTile(false);
-    shadow:SetAlpha(offensiveIconShadowAlpha);
-    shadow:SetSize(
-        baseIconSize * offensiveIconShadowScale,
-        baseIconSize * offensiveIconShadowScale
+    shadow:SetAlpha(style.SHADOW_ALPHA);
+    shadow:SetSize(style.SHADOW_SIZE, style.SHADOW_SIZE);
+    shadow:SetPoint(
+        "CENTER",
+        frame,
+        "CENTER",
+        style.SHADOW_OFFSET_X,
+        style.SHADOW_OFFSET_Y
     );
-    shadow:SetPoint("CENTER", frame, "CENTER", 0, offensiveIconShadowOffsetY);
     return shadow;
 end
 
@@ -109,7 +107,7 @@ local function CreateHighlightTexture(frame, texturePath, layer, alpha)
 end
 
 local function GetHighlightColorMap()
-    local red, green, blue = unpack(importantBuffHighlightColor);
+    local red, green, blue = unpack(style.HIGHLIGHT_COLOR);
     return {
         Magic = CreateColor(red, green, blue),
         Curse = CreateColor(red, green, blue),
@@ -140,13 +138,12 @@ local function InitializeLiveAuraButton(button, container)
 
     local backdrop = button:CreateTexture(nil, "BACKGROUND");
     backdrop:SetAllPoints(button);
-    backdrop:SetColorTexture(0, 0, 0, 1);
+    backdrop:SetColorTexture(unpack(style.BACKDROP_COLOR));
 
     local icon = button:CreateTexture(nil, "ARTWORK");
-    local inset = offensiveIconInset;
-    icon:SetPoint("TOPLEFT", button, "TOPLEFT", inset, -inset);
-    icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -inset, inset);
-    icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+    icon:SetPoint("TOPLEFT", button, "TOPLEFT", style.ICON_INSET, -style.ICON_INSET);
+    icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -style.ICON_INSET, style.ICON_INSET);
+    icon:SetTexCoord(unpack(style.ICON_TEX_COORDS));
     button:SetIcon(icon);
 
     local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
@@ -159,13 +156,13 @@ local function InitializeLiveAuraButton(button, container)
         button,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
         "BORDER",
-        0.9
+        style.HIGHLIGHT_GLOW_ALPHA
     );
     AddSecureHighlightTexture(
         button,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
         "OVERLAY",
-        1
+        style.HIGHLIGHT_BORDER_ALPHA
     );
 end
 
@@ -227,7 +224,7 @@ local function ApplyLiveOverlayLayout(overlay)
     end
 
     local config = GetConfig();
-    local size = config.arenaOffensiveIconSize or 32;
+    local size = config.arenaOffensiveIconSize or style.DEFAULT_DISPLAY_SIZE;
     local offsetX = config.arenaOffensiveIconOffsetX or 0;
     local offsetY = config.arenaOffensiveIconOffsetY or 0;
     local frameStrata = arenaFrame:GetFrameStrata();
@@ -352,27 +349,26 @@ local function EnsurePreviewOverlay(index)
 
     local backdrop = icon:CreateTexture(nil, "BACKGROUND");
     backdrop:SetAllPoints(icon);
-    backdrop:SetColorTexture(0, 0, 0, 1);
+    backdrop:SetColorTexture(unpack(style.BACKDROP_COLOR));
 
     icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    local inset = offensiveIconInset;
-    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
-    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
-    icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", style.ICON_INSET, -style.ICON_INSET);
+    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -style.ICON_INSET, style.ICON_INSET);
+    icon.texture:SetTexCoord(unpack(style.ICON_TEX_COORDS));
     icon.highlightGlow = CreateHighlightTexture(
         icon,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
         "BORDER",
-        0.9
+        style.HIGHLIGHT_GLOW_ALPHA
     );
-    icon.highlightBorder = CreateHighlightTexture(
+    icon.highlightBorder
         icon,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
         "OVERLAY",
-        1
+        style.HIGHLIGHT_BORDER_ALPHA
     );
-    icon.highlightGlow:SetVertexColor(unpack(importantBuffHighlightColor));
-    icon.highlightBorder:SetVertexColor(unpack(importantBuffHighlightColor));
+    icon.highlightGlow:SetVertexColor(unpack(style.HIGHLIGHT_COLOR));
+    icon.highlightBorder:SetVertexColor(unpack(style.HIGHLIGHT_COLOR));
 
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon);
@@ -431,7 +427,7 @@ local function ApplyPreviewLayout(preview)
     end
 
     local config = GetConfig();
-    local scale = ( config.arenaOffensiveIconSize or 32 ) / baseIconSize;
+    local scale = ( config.arenaOffensiveIconSize or style.DEFAULT_DISPLAY_SIZE ) / baseIconSize;
     preview.group:SetParent(arenaFrame);
     preview.group:SetFrameStrata(arenaFrame:GetFrameStrata());
     preview.group:SetFrameLevel(arenaFrame:GetFrameLevel() + 20);

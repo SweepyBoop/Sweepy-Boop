@@ -139,7 +139,7 @@ local defaults = {
             arenaCooldownTrackerGlowSecondary = true,
 
             arenaOffensiveIconsEnabled = false,
-            arenaOffensiveIconSize = 32,
+            arenaOffensiveIconSize = addon.ARENA_OFFENSIVE_ICON_STYLE.DEFAULT_DISPLAY_SIZE,
             arenaOffensiveIconOffsetX = 0,
             arenaOffensiveIconOffsetY = 0,
 

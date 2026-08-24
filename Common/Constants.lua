@@ -100,6 +100,26 @@ addon.BIG_DEBUFFS_ICON_STYLE = {
     GLOW_COOLDOWN_EDGE_TEXTURE = "Interface\\Cooldown\\UI-HUD-ActionBar-LoC",
 };
 
+-- All dimensions are base-space values. Scale only the owning icon frame.
+addon.ARENA_OFFENSIVE_ICON_STYLE = {
+    BASE_SIZE = addon.DEFAULT_ICON_SIZE,
+    DEFAULT_DISPLAY_SIZE = 32,
+    ICON_INSET = 1,
+    ICON_TEX_COORDS = { 0.08, 0.92, 0.08, 0.92 },
+    BACKDROP_COLOR = { 0, 0, 0, 1 },
+    HIGHLIGHT_COLOR = { 1, 0.85, 0.29, 1 },
+    HIGHLIGHT_GLOW_ALPHA = 0.9,
+    HIGHLIGHT_BORDER_ALPHA = 1,
+    SHADOW_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/OffensiveIconShadow",
+    SHADOW_SIZE = addon.DEFAULT_ICON_SIZE * 1.35,
+    SHADOW_ALPHA = 1,
+    SHADOW_OFFSET_X = 0,
+    SHADOW_OFFSET_Y = 0,
+    SHADOW_TEX_COORDS = { 0.01, 0.99, 0.01, 0.99 },
+    COOLDOWN_SWIPE_ALPHA = 0.55,
+    COOLDOWN_EDGE_TEXTURE = addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE,
+};
+
 addon.GetBigDebuffsIconStyle = function(config)
     local iconStyle = config.bigDebuffsIconStyle;
     if iconStyle == "auraHighlight" or iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW then
