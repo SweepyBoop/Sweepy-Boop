@@ -193,9 +193,9 @@ L["Nameplate + icon"] = "이름표 + 아이콘";
 L["Nameplate + pulsing icon"] = "이름표 + 깜박이는 아이콘";
 
 L["Arena frames"] = "투기장 프레임";
-L["Offensive alerts"] = "공격 알림";
-L["Show big offensive icons on Blizzard arena frames"] = "블리자드 투기장 프레임에 큰 공격 아이콘 표시";
-L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "각 기본 블리자드 투기장 프레임의 왼쪽 안쪽에 가장 우선순위가 높은 활성 적 공격 재사용 대기시간 강화 효과를 세로 중앙에 표시합니다.";
+L["Important buff alerts"] = "중요 강화 효과 알림";
+L["Show important buff icons on Blizzard arena frames"] = "블리자드 투기장 프레임에 중요 강화 효과 아이콘 표시";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "블리자드가 중요하다고 분류한 활성 적 강화 효과 하나를 각 기본 블리자드 투기장 프레임의 왼쪽 안쪽에 표시합니다. 어떤 중요 강화 효과를 우선 표시할지는 블리자드가 결정합니다.";
 L["Position"] = "위치";
 L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "이 아이콘은 블리자드 투기장 프레임 안쪽 왼쪽에만 붙습니다. 다른 투기장 프레임 애드온이 블리자드 투기장 프레임을 숨기면 함께 숨겨집니다.";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "테스트 아이콘은 투기장 1만 표시하며, 투기장 2와 3은 자동으로 설정됩니다";

@@ -5,15 +5,15 @@ local AceGUI = LibStub and LibStub("AceGUI-3.0", true);
 if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return end
 
 local previewWidgets = setmetatable({}, { __mode = "k" });
+local style = addon.ARENA_OFFENSIVE_ICON_STYLE;
 local TEXTURE_WHITE = "Interface\\BUTTONS\\WHITE8X8";
 local sampleSpellID = 12472; -- Icy Veins
 local previewFrameWidth = 144;
 local previewFrameHeight = 72;
 local previewHeight = 116;
-local baseIconSize = addon.DEFAULT_ICON_SIZE;
+local baseIconSize = style.BASE_SIZE;
 local sampleCooldownDuration = 18;
 local sampleCooldownInitialElapsed = 4;
-local procGlowColor = { 1, 0.82, 0, 1 };
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;
@@ -25,10 +25,10 @@ local function ConfigureCooldownSwipe(cooldown)
     cooldown:SetDrawEdge(true);
     cooldown:SetReverse(true);
     if cooldown.SetSwipeColor then
-        cooldown:SetSwipeColor(0, 0, 0, 0.55);
+        cooldown:SetSwipeColor(0, 0, 0, style.COOLDOWN_SWIPE_ALPHA);
     end
     if cooldown.SetEdgeTexture then
-        cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
+        cooldown:SetEdgeTexture(style.COOLDOWN_EDGE_TEXTURE);
     end
     if cooldown.SetCountdownMillisecondsThreshold then
         cooldown:SetCountdownMillisecondsThreshold(0);
@@ -57,9 +57,30 @@ local function CleanupPreview(widget)
         return;
     end
 
-    local icon = widget.sample.icon;
-    ClearIconCooldown(icon);
-    addon.HideProcGlow(icon);
+    ClearIconCooldown(widget.sample.icon);
+end
+
+local function CreateHighlightTexture(frame, texturePath, layer, alpha)
+    local texture = frame:CreateTexture(nil, layer);
+    texture:SetTexture(texturePath);
+    texture:SetBlendMode("ADD");
+    texture:SetPoint(
+        "TOPLEFT",
+        frame,
+        "TOPLEFT",
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    );
+    texture:SetPoint(
+        "BOTTOMRIGHT",
+        frame,
+        "BOTTOMRIGHT",
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING,
+        -addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    );
+    texture:SetVertexColor(unpack(style.HIGHLIGHT_COLOR));
+    texture:SetAlpha(alpha);
+    return texture;
 end
 
 local function BuildSample(parent)
@@ -67,14 +88,8 @@ local function BuildSample(parent)
     previewFrame:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, -28);
     previewFrame:SetSize(previewFrameWidth, previewFrameHeight);
 
-    local border = previewFrame:CreateTexture(nil, "BACKGROUND");
-    border:SetAllPoints(previewFrame);
-    border:SetTexture(TEXTURE_WHITE);
-    border:SetVertexColor(0, 0, 0, 1);
-
-    local background = previewFrame:CreateTexture(nil, "BORDER");
-    background:SetPoint("TOPLEFT", previewFrame, "TOPLEFT", 1, -1);
-    background:SetPoint("BOTTOMRIGHT", previewFrame, "BOTTOMRIGHT", -1, 1);
+    local background = previewFrame:CreateTexture(nil, "BACKGROUND");
+    background:SetAllPoints(previewFrame);
     background:SetTexture(TEXTURE_WHITE);
     local mageColor = RAID_CLASS_COLORS and RAID_CLASS_COLORS.MAGE;
     background:SetVertexColor(
@@ -84,11 +99,57 @@ local function BuildSample(parent)
         1
     );
 
+    local function CreateBorderEdge(point, relativePoint, width, height)
+        local edge = previewFrame:CreateTexture(nil, "OVERLAY");
+        edge:SetColorTexture(0, 0, 0, 1);
+        edge:SetPoint(point, previewFrame, relativePoint);
+        edge:SetSize(width, height);
+    end
+
+    CreateBorderEdge("TOPLEFT", "TOPLEFT", previewFrameWidth, 1);
+    CreateBorderEdge("BOTTOMLEFT", "BOTTOMLEFT", previewFrameWidth, 1);
+    CreateBorderEdge("TOPLEFT", "TOPLEFT", 1, previewFrameHeight);
+    CreateBorderEdge("TOPRIGHT", "TOPRIGHT", 1, previewFrameHeight);
+
     local icon = CreateFrame("Frame", nil, previewFrame);
-    icon.texture = icon:CreateTexture(nil, "BORDER");
-    icon.texture:SetAllPoints(icon);
+    local shadow = icon:CreateTexture(nil, "OVERLAY", nil, 2);
+    shadow:SetTexture(style.SHADOW_TEXTURE);
+    shadow:SetTexCoord(unpack(style.SHADOW_TEX_COORDS));
+    shadow:SetHorizTile(false);
+    shadow:SetVertTile(false);
+    shadow:SetAlpha(style.SHADOW_ALPHA);
+    shadow:SetSize(style.SHADOW_SIZE, style.SHADOW_SIZE);
+    shadow:SetPoint(
+        "CENTER",
+        icon,
+        "CENTER",
+        style.SHADOW_OFFSET_X,
+        style.SHADOW_OFFSET_Y
+    );
+
+    local iconBackdrop = icon:CreateTexture(nil, "BACKGROUND");
+    iconBackdrop:SetAllPoints(icon);
+    iconBackdrop:SetColorTexture(unpack(style.BACKDROP_COLOR));
+
+    icon.texture = icon:CreateTexture(nil, "ARTWORK");
+    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", style.ICON_INSET, -style.ICON_INSET);
+    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -style.ICON_INSET, style.ICON_INSET);
+    icon.texture:SetTexCoord(unpack(style.ICON_TEX_COORDS));
+    CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        "BORDER",
+        style.HIGHLIGHT_GLOW_ALPHA
+    );
+    CreateHighlightTexture(
+        icon,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        "OVERLAY",
+        style.HIGHLIGHT_BORDER_ALPHA
+    );
+
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
-    icon.cooldown:SetAllPoints(icon);
+    icon.cooldown:SetAllPoints(icon.texture);
     ConfigureCooldownSwipe(icon.cooldown);
     icon.cooldown:SetScript("OnCooldownDone", function()
         RestartIconCooldown(icon);
@@ -143,13 +204,12 @@ local methods = {
 
         local config = GetConfig();
         local enabled = config.arenaOffensiveIconsEnabled;
-        local scale = ( config.arenaOffensiveIconSize or baseIconSize ) / baseIconSize;
+        local scale = ( config.arenaOffensiveIconSize or style.DEFAULT_DISPLAY_SIZE ) / baseIconSize;
         local icon = self.sample.icon;
 
         icon.previewActive = self.frame:IsShown();
         icon:SetSize(baseIconSize, baseIconSize);
         icon:SetScale(scale);
-        addon.ShowProcGlow(icon, procGlowColor);
         icon:ClearAllPoints();
         icon:SetPoint(
             "LEFT",

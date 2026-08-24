@@ -191,9 +191,9 @@ local function ApplyTranslations(locale)
     L["Nameplate + icon"] = "Placa + icono";
     L["Nameplate + pulsing icon"] = "Placa + icono pulsante";
     L["Arena frames"] = "Marcos de arena";
-    L["Offensive alerts"] = "Alertas ofensivas";
-    L["Show big offensive icons on Blizzard arena frames"] = "Mostrar iconos ofensivos grandes en marcos de arena de Blizzard";
-    L["Shows the highest-priority active enemy offensive cooldown buff inside the left side of each built-in Blizzard arena frame, vertically centered."] = "Muestra el beneficio ofensivo activo enemigo de mayor prioridad dentro del lado izquierdo de cada marco de arena integrado de Blizzard, centrado verticalmente.";
+    L["Important buff alerts"] = "Alertas de beneficios importantes";
+    L["Show important buff icons on Blizzard arena frames"] = "Mostrar iconos de beneficios importantes en los marcos de arena de Blizzard";
+    L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "Muestra un beneficio enemigo activo que Blizzard clasifica como importante en el lado izquierdo de cada marco de arena integrado de Blizzard. Blizzard decide qué beneficio importante tiene prioridad.";
     L["Position"] = "Posición";
     L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "Estos iconos se fijan solo al lado izquierdo dentro de los marcos de arena de Blizzard. Se ocultan si otro addon de marcos de arena oculta los marcos de Blizzard.";
     L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "Los iconos de prueba muestran solo arena 1; arena 2 y 3 se configurarán automáticamente";
