@@ -11,8 +11,9 @@ local testDuration = 12;
 local importantBuffHighlightColor = { 0.15, 0.85, 1, 1 };
 local offensiveIconShadowTexture = addon.INTERFACE_SWEEPY .. "Art/OffensiveIconShadow";
 local offensiveIconShadowScale = 1.35;
-local offensiveIconShadowAlpha = 0.55;
-local offensiveIconShadowOffsetY = -1;
+local offensiveIconShadowAlpha = 1;
+local offensiveIconShadowOffsetY = 0;
+local offensiveIconInset = 1;
 local liveOverlays = {};
 local previewOverlays = {};
 local eventFrame;
@@ -71,8 +72,11 @@ local function UpdateCountdownFontSize(cooldown)
 end
 
 local function CreateOffensiveIconShadow(frame)
-    local shadow = frame:CreateTexture(nil, "BACKGROUND", nil, -1);
+    local shadow = frame:CreateTexture(nil, "OVERLAY", nil, 2);
     shadow:SetTexture(offensiveIconShadowTexture);
+    shadow:SetTexCoord(0.01, 0.99, 0.01, 0.99);
+    shadow:SetHorizTile(false);
+    shadow:SetVertTile(false);
     shadow:SetAlpha(offensiveIconShadowAlpha);
     shadow:SetSize(
         baseIconSize * offensiveIconShadowScale,
@@ -139,7 +143,7 @@ local function InitializeLiveAuraButton(button, container)
     backdrop:SetColorTexture(0, 0, 0, 1);
 
     local icon = button:CreateTexture(nil, "ARTWORK");
-    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    local inset = offensiveIconInset;
     icon:SetPoint("TOPLEFT", button, "TOPLEFT", inset, -inset);
     icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -inset, inset);
     icon:SetTexCoord(0.08, 0.92, 0.08, 0.92);
@@ -351,7 +355,7 @@ local function EnsurePreviewOverlay(index)
     backdrop:SetColorTexture(0, 0, 0, 1);
 
     icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    local inset = offensiveIconInset;
     icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
     icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
     icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);

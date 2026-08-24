@@ -16,8 +16,9 @@ local sampleCooldownInitialElapsed = 4;
 local highlightColor = { 0.15, 0.85, 1, 1 };
 local offensiveIconShadowTexture = addon.INTERFACE_SWEEPY .. "Art/OffensiveIconShadow";
 local offensiveIconShadowScale = 1.35;
-local offensiveIconShadowAlpha = 0.55;
-local offensiveIconShadowOffsetY = -1;
+local offensiveIconShadowAlpha = 1;
+local offensiveIconShadowOffsetY = 0;
+local offensiveIconInset = 1;
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;
@@ -92,14 +93,8 @@ local function BuildSample(parent)
     previewFrame:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, -28);
     previewFrame:SetSize(previewFrameWidth, previewFrameHeight);
 
-    local border = previewFrame:CreateTexture(nil, "BACKGROUND");
-    border:SetAllPoints(previewFrame);
-    border:SetTexture(TEXTURE_WHITE);
-    border:SetVertexColor(0, 0, 0, 1);
-
-    local background = previewFrame:CreateTexture(nil, "BORDER");
-    background:SetPoint("TOPLEFT", previewFrame, "TOPLEFT", 1, -1);
-    background:SetPoint("BOTTOMRIGHT", previewFrame, "BOTTOMRIGHT", -1, 1);
+    local background = previewFrame:CreateTexture(nil, "BACKGROUND");
+    background:SetAllPoints(previewFrame);
     background:SetTexture(TEXTURE_WHITE);
     local mageColor = RAID_CLASS_COLORS and RAID_CLASS_COLORS.MAGE;
     background:SetVertexColor(
@@ -109,9 +104,24 @@ local function BuildSample(parent)
         1
     );
 
+    local function CreateBorderEdge(point, relativePoint, width, height)
+        local edge = previewFrame:CreateTexture(nil, "OVERLAY");
+        edge:SetColorTexture(0, 0, 0, 1);
+        edge:SetPoint(point, previewFrame, relativePoint);
+        edge:SetSize(width, height);
+    end
+
+    CreateBorderEdge("TOPLEFT", "TOPLEFT", previewFrameWidth, 1);
+    CreateBorderEdge("BOTTOMLEFT", "BOTTOMLEFT", previewFrameWidth, 1);
+    CreateBorderEdge("TOPLEFT", "TOPLEFT", 1, previewFrameHeight);
+    CreateBorderEdge("TOPRIGHT", "TOPRIGHT", 1, previewFrameHeight);
+
     local icon = CreateFrame("Frame", nil, previewFrame);
-    local shadow = icon:CreateTexture(nil, "BACKGROUND", nil, -1);
+    local shadow = icon:CreateTexture(nil, "OVERLAY", nil, 2);
     shadow:SetTexture(offensiveIconShadowTexture);
+    shadow:SetTexCoord(0.01, 0.99, 0.01, 0.99);
+    shadow:SetHorizTile(false);
+    shadow:SetVertTile(false);
     shadow:SetAlpha(offensiveIconShadowAlpha);
     shadow:SetSize(
         baseIconSize * offensiveIconShadowScale,
@@ -124,7 +134,7 @@ local function BuildSample(parent)
     iconBackdrop:SetColorTexture(0, 0, 0, 1);
 
     icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
+    local inset = offensiveIconInset;
     icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
     icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
     icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
