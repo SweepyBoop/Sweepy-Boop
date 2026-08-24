@@ -7,16 +7,10 @@ local baseIconSize = style.BASE_SIZE;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
 local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
-local testSpells = { 190319, 31884, 185313 }; -- Combustion, Avenging Wrath, Shadow Dance
-local testDuration = 12;
 local liveOverlays = {};
-local previewOverlays = {};
 local eventFrame;
-local previewTimer;
 local setupComplete = false;
-local isInTest = false;
 local reconcilePending = false;
-local previewCleanupPending = false;
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;
@@ -130,6 +124,7 @@ end
 
 local function InitializeLiveAuraButton(button, container)
     button:SetSize(baseIconSize, baseIconSize);
+    button:SetMouseClickEnabled(false);
     button:SetMouseMotionEnabled(false);
     button:ClearAllPoints();
     button:SetPoint("LEFT", container, "LEFT");
@@ -287,8 +282,7 @@ local function UpdateLiveOverlay(index, forceRefresh)
     if not overlay then return end
 
     local config = GetConfig();
-    if isInTest
-        or ( not config.arenaOffensiveIconsEnabled )
+    if ( not config.arenaOffensiveIconsEnabled )
         or ( not addon.IsUsingRealAuraData() )
         or ( not ApplyLiveOverlayLayout(overlay) ) then
 
@@ -316,210 +310,7 @@ local function UpdateLiveOverlays(forceRefresh)
     end
 end
 
-local function ResetPreviewCooldown(cooldown)
-    if cooldown.Clear then
-        cooldown:Clear();
-    else
-        cooldown:SetCooldown(0, 0);
-    end
-end
-
-local function ClearPreviewIcon(icon)
-    if not icon then return end
-
-    ResetPreviewCooldown(icon.cooldown);
-    icon:Hide();
-end
-
-local function EnsurePreviewOverlay(index)
-    local preview = previewOverlays[index];
-    if preview then return preview end
-
-    local group = CreateFrame("Frame", nil, UIParent);
-    group:SetMouseClickEnabled(false);
-    group:SetSize(baseIconSize, baseIconSize);
-    group.index = index;
-    group:Hide();
-
-    local icon = CreateFrame("Frame", nil, group);
-    icon:SetMouseClickEnabled(false);
-    icon:SetSize(baseIconSize, baseIconSize);
-    icon:SetPoint("LEFT", group, "LEFT");
-    CreateOffensiveIconShadow(icon);
-
-    local backdrop = icon:CreateTexture(nil, "BACKGROUND");
-    backdrop:SetAllPoints(icon);
-    backdrop:SetColorTexture(unpack(style.BACKDROP_COLOR));
-
-    icon.texture = icon:CreateTexture(nil, "ARTWORK");
-    icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", style.ICON_INSET, -style.ICON_INSET);
-    icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -style.ICON_INSET, style.ICON_INSET);
-    icon.texture:SetTexCoord(unpack(style.ICON_TEX_COORDS));
-    icon.highlightGlow = CreateHighlightTexture(
-        icon,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
-        "BORDER",
-        style.HIGHLIGHT_GLOW_ALPHA
-    );
-    icon.highlightBorder = CreateHighlightTexture(
-        icon,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
-        "OVERLAY",
-        style.HIGHLIGHT_BORDER_ALPHA
-    );
-    icon.highlightGlow:SetVertexColor(unpack(style.HIGHLIGHT_COLOR));
-    icon.highlightBorder:SetVertexColor(unpack(style.HIGHLIGHT_COLOR));
-
-    icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
-    icon.cooldown:SetAllPoints(icon);
-    ConfigureCooldownSwipe(icon.cooldown);
-    UpdateCountdownFontSize(icon.cooldown);
-    icon:Hide();
-
-    preview = {
-        group = group,
-        icon = icon,
-        index = index,
-    };
-    previewOverlays[index] = preview;
-    return preview;
-end
-
-local function ClearPreviewOverlay(preview)
-    if not preview then return end
-
-    ClearPreviewIcon(preview.icon);
-    preview.group:Hide();
-end
-
-local function ClearAllPreviewOverlays()
-    if not isInTest then return true end
-    if InCombatLockdown() then
-        previewCleanupPending = true;
-        reconcilePending = true;
-        return false;
-    end
-
-    previewCleanupPending = false;
-    if previewTimer then
-        previewTimer:Cancel();
-        previewTimer = nil;
-    end
-    for _, preview in pairs(previewOverlays) do
-        ClearPreviewOverlay(preview);
-    end
-    isInTest = false;
-    return true;
-end
-
-local function ApplyPreviewLayout(preview)
-    local arenaFrame = _G[blizzardArenaFramePrefix .. preview.index];
-    if not arenaFrame then
-        ClearPreviewOverlay(preview);
-        return false;
-    end
-
-    local shown = arenaFrame:IsShown();
-    local visible = arenaFrame:IsVisible();
-    if addon.IsSecretValue(shown) or addon.IsSecretValue(visible) or ( not shown ) or ( not visible ) then
-        ClearPreviewOverlay(preview);
-        return false;
-    end
-
-    local config = GetConfig();
-    local scale = ( config.arenaOffensiveIconSize or style.DEFAULT_DISPLAY_SIZE ) / baseIconSize;
-    preview.group:SetParent(arenaFrame);
-    preview.group:SetFrameStrata(arenaFrame:GetFrameStrata());
-    preview.group:SetFrameLevel(arenaFrame:GetFrameLevel() + 20);
-    preview.group:SetScale(scale);
-    preview.group:ClearAllPoints();
-    preview.group:SetPoint(
-        "LEFT",
-        arenaFrame,
-        "LEFT",
-        ( config.arenaOffensiveIconOffsetX or 0 ) / scale,
-        ( config.arenaOffensiveIconOffsetY or 0 ) / scale
-    );
-    return true;
-end
-
-local function PreviewArenaOverlays(showWarning)
-    if IsInInstance() then
-        ClearAllPreviewOverlays();
-        UpdateLiveOverlays();
-        if showWarning then
-            addon.PRINT("Test mode can only be used outside instances");
-        end
-        return;
-    end
-
-    isInTest = true;
-    UpdateLiveOverlays();
-    for i = 1, addon.MAX_ARENA_SIZE do
-        local preview = EnsurePreviewOverlay(i);
-        if ApplyPreviewLayout(preview) then
-            local icon = preview.icon;
-            icon.texture:SetTexture(addon.GetSpellTexture(testSpells[i] or testSpells[1]));
-            icon.cooldown:SetCooldown(GetTime() - i, testDuration + i);
-            icon.cooldown:Show();
-            icon:Show();
-            preview.group:Show();
-        end
-    end
-
-    if previewTimer then
-        previewTimer:Cancel();
-    end
-    previewTimer = C_Timer.NewTimer(testDuration, function()
-        previewTimer = nil;
-        if isInTest then
-            SweepyBoop:HideTestArenaOffensiveIcons();
-        end
-    end);
-end
-
-local function ShowBlizzardArenaFramesForPreview()
-    if not CompactArenaFrame then return end
-
-    CompactArenaFrame:Show();
-    for i = 1, addon.MAX_ARENA_SIZE do
-        local frame = _G[blizzardArenaFramePrefix .. i];
-        if frame then
-            frame:Show();
-        end
-    end
-end
-
-function SweepyBoop:TestArenaOffensiveIcons()
-    if IsInInstance() then
-        PreviewArenaOverlays(true);
-        return;
-    end
-    if InCombatLockdown() then
-        addon.PRINT("Test mode cannot be started during combat");
-        return;
-    end
-
-    ShowBlizzardArenaFramesForPreview();
-    PreviewArenaOverlays(false);
-end
-
-function SweepyBoop:HideTestArenaOffensiveIcons()
-    if ClearAllPreviewOverlays() then
-        UpdateLiveOverlays();
-    end
-end
-
 function SweepyBoop:UpdateArenaOffensiveIcons()
-    if isInTest then
-        if InCombatLockdown() then
-            reconcilePending = true;
-            return;
-        end
-        PreviewArenaOverlays(false);
-        return;
-    end
-
     UpdateLiveOverlays();
 end
 
@@ -543,15 +334,9 @@ function SweepyBoop:SetupArenaOffensiveIcons()
     eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
     eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
     eventFrame:SetScript("OnEvent", function(_, event)
-        if event == addon.PLAYER_ENTERING_WORLD or event == "PVP_MATCH_COMPLETE" then
-            ClearAllPreviewOverlays();
-        end
         if event == addon.PLAYER_REGEN_ENABLED then
-            if ( not reconcilePending ) and ( not previewCleanupPending ) then return end
+            if not reconcilePending then return end
             reconcilePending = false;
-            if previewCleanupPending then
-                ClearAllPreviewOverlays();
-            end
             UpdateLiveOverlays(true);
             return;
         end

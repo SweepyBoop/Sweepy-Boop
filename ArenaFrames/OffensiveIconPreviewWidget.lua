@@ -149,7 +149,7 @@ local function BuildSample(parent)
     );
 
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
-    icon.cooldown:SetAllPoints(icon);
+    icon.cooldown:SetAllPoints(icon.texture);
     ConfigureCooldownSwipe(icon.cooldown);
     icon.cooldown:SetScript("OnCooldownDone", function()
         RestartIconCooldown(icon);
