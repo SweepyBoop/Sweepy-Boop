@@ -7,6 +7,8 @@ local baseIconSize = style.BASE_SIZE;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
 local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
+local defaultArenaFrameStrata = "LOW";
+local defaultArenaFrameLevel = 2;
 local liveOverlays = {};
 local eventFrame;
 local setupComplete = false;
@@ -224,16 +226,14 @@ local function ApplyLiveOverlayLayout(overlay)
     local offsetY = config.arenaOffensiveIconOffsetY or 0;
     local frameStrata = arenaFrame:GetFrameStrata();
     if addon.IsSecretValue(frameStrata) then
-        frameStrata = overlay.frameStrata or "MEDIUM";
+        frameStrata = defaultArenaFrameStrata;
     end
 
     local arenaFrameLevel = arenaFrame:GetFrameLevel();
-    local frameLevel;
     if addon.IsSecretValue(arenaFrameLevel) then
-        frameLevel = overlay.frameLevel or 20;
-    else
-        frameLevel = arenaFrameLevel + 20;
+        arenaFrameLevel = defaultArenaFrameLevel;
     end
+    local frameLevel = arenaFrameLevel + 20;
     if overlay.size == size
         and overlay.offsetX == offsetX
         and overlay.offsetY == offsetY
