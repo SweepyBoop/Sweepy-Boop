@@ -223,7 +223,17 @@ local function ApplyLiveOverlayLayout(overlay)
     local offsetX = config.arenaOffensiveIconOffsetX or 0;
     local offsetY = config.arenaOffensiveIconOffsetY or 0;
     local frameStrata = arenaFrame:GetFrameStrata();
-    local frameLevel = arenaFrame:GetFrameLevel() + 20;
+    if addon.IsSecretValue(frameStrata) then
+        frameStrata = overlay.frameStrata or "MEDIUM";
+    end
+
+    local arenaFrameLevel = arenaFrame:GetFrameLevel();
+    local frameLevel;
+    if addon.IsSecretValue(arenaFrameLevel) then
+        frameLevel = overlay.frameLevel or 20;
+    else
+        frameLevel = arenaFrameLevel + 20;
+    end
     if overlay.size == size
         and overlay.offsetX == offsetX
         and overlay.offsetY == offsetY
