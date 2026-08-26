@@ -149,7 +149,8 @@ local function EnsureLiveContainer(unit)
     -- flow layout. Configure the required anchor in initializeFrame, which the
     -- frame provider invokes before applying secret-aura access restrictions.
     container:AddAuraSlot(auraSlotKey, auraFilter, {
-        sortMethod = AuraContainerSortMethod.UnitFrameDebuff,
+        -- TODO: Restore UnitFrameDebuff when Blizzard's comparator handles nil debuffType values.
+        sortMethod = AuraContainerSortMethod.Default,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             InitializeAuraButton(button);
