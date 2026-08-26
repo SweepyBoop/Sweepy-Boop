@@ -239,7 +239,8 @@ end
 local function AddAuraGroup(container, group, iconStyle)
     container:AddAuraGroup(group.key, group.filter, {
         maxFrameCount = GetIconCount(GetConfig()),
-        sortMethod = AuraContainerSortMethod.UnitFrameDebuff,
+        -- TODO: Restore UnitFrameDebuff when Blizzard's comparator handles nil debuffType values.
+        sortMethod = AuraContainerSortMethod.Default,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             InitializeAuraButton(button, group.auraKind, iconStyle);
