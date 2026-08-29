@@ -420,6 +420,8 @@ function SweepyBoop:OnInitialize()
                 addon.GetHealerInCrowdControlOptions(7);
             options.args.misc.args.general.args.showMinimapIcon =
                 miscOptions.args.general.args.showMinimapIcon;
+            options.args.misc.args.general.args.combatIndicator =
+                miscOptions.args.general.args.combatIndicator;
             options.args.misc.args.honorReminder = miscOptions.args.honorReminder;
             options.args.misc.args.personalDR = miscOptions.args.personalDR;
             options.args.misc.args.gismo = miscOptions.args.gismo;
@@ -500,12 +502,13 @@ function SweepyBoop:OnInitialize()
     self:SetupHealerIndicator();
     self:SetupRangeChecker();
 
+    self:SetupCombatIndicator();
+
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
         return;
     end
 
-    self:SetupCombatIndicator();
     self:SetupClassColorUnitFrames();
     self:SetupHideBlizzArenaFrames();
     self:SetupMouseCursor();
@@ -536,8 +539,11 @@ function SweepyBoop:RefreshConfig()
         self:SetupRangeChecker();
     end
 
-    if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
+    if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
+    end
+
+    if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
         self:SetupClassColorUnitFrames();
     end
 
