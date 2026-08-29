@@ -417,6 +417,8 @@ function SweepyBoop:OnInitialize()
             local miscOptions = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
             options.args.misc =
                 addon.GetHealerInCrowdControlOptions(7);
+            options.args.misc.args.general.args.showMinimapIcon =
+                miscOptions.args.general.args.showMinimapIcon;
             options.args.misc.args.personalDR = miscOptions.args.personalDR;
             options.args.misc.args.gismo = miscOptions.args.gismo;
         else
