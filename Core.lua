@@ -422,6 +422,8 @@ function SweepyBoop:OnInitialize()
                 miscOptions.args.general.args.showMinimapIcon;
             options.args.misc.args.general.args.combatIndicator =
                 miscOptions.args.general.args.combatIndicator;
+            options.args.misc.args.general.args.classColorUnitFrames =
+                miscOptions.args.general.args.classColorUnitFrames;
             options.args.misc.args.honorReminder = miscOptions.args.honorReminder;
             options.args.misc.args.personalDR = miscOptions.args.personalDR;
             options.args.misc.args.gismo = miscOptions.args.gismo;
@@ -503,13 +505,13 @@ function SweepyBoop:OnInitialize()
     self:SetupRangeChecker();
 
     self:SetupCombatIndicator();
+    self:SetupClassColorUnitFrames();
 
     if addon.MAINLINE_CORE_FEATURES_ONLY then
         self:SetupMouseCursor();
         return;
     end
 
-    self:SetupClassColorUnitFrames();
     self:SetupHideBlizzArenaFrames();
     self:SetupMouseCursor();
     self:UpdateSBMMacros();
@@ -541,9 +543,6 @@ function SweepyBoop:RefreshConfig()
 
     if addon.PROJECT_MAINLINE then
         self:SetupCombatIndicator();
-    end
-
-    if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
         self:SetupClassColorUnitFrames();
     end
 
