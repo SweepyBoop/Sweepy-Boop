@@ -1926,6 +1926,14 @@ addon.SpellData = {
             -- Do NOT share icon with Spell Lock
         },
     -- Demonology
+    -- Carrion Swarm
+    [103967] = {
+        class = addon.WARLOCK,
+        spec = { specID.DEMONOLOGY },
+        category = category.INTERRUPT,
+        cooldown = 12,
+        baseline = true,
+    },
     -- Dark Soul: Knowledge
     [113861] = {
         class = addon.WARLOCK,
