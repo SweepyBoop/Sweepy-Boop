@@ -329,7 +329,7 @@ local function EnsureContainers(frame)
         "RIGHT",
         helper.root,
         "CENTER",
-        -PRIMARY_BUFF_SIZE - PRIMARY_BUFF_SPACING,
+        -( 2 * PRIMARY_BUFF_SIZE ) - ( 2 * PRIMARY_BUFF_SPACING ),
         ( PRIMARY_BUFF_SIZE / 2 ) + ( ROW_SPACING / 2 )
     );
     helper.classBuffAnchor:Hide();
@@ -426,58 +426,6 @@ local function ReadClassBuffState(unit)
     return false;
 end
 
-local function ReadPrimarySlotCount(unit)
-    if ( not C_UnitAuras.GetAuraDataBySpellName )
-        or ( not C_Secrets )
-        or ( not C_Secrets.ShouldSpellAuraBeSecret ) then
-        return;
-    end
-
-    local activeSlotCount = 0;
-    for _, primarySlot in ipairs(playerProfile.primarySlots) do
-        local slotActive = false;
-        for spellID in pairs(primarySlot.auraSpellIDs) do
-            if C_Secrets.ShouldSpellAuraBeSecret(spellID) then return end
-
-            local spellName = C_Spell.GetSpellName(spellID);
-            if not spellName then return end
-
-            local auraData = C_UnitAuras.GetAuraDataBySpellName(unit, spellName, "HELPFUL|PLAYER");
-            if auraData then
-                if addon.IsSecretValue(auraData.spellId)
-                    or addon.IsSecretValue(auraData.isFromPlayerOrPlayerPet) then
-                    return;
-                end
-                if primarySlot.auraSpellIDs[auraData.spellId]
-                    and auraData.isFromPlayerOrPlayerPet then
-                    slotActive = true;
-                    break;
-                end
-            end
-        end
-        if slotActive then
-            activeSlotCount = activeSlotCount + 1;
-        end
-    end
-
-    return activeSlotCount;
-end
-
-local function LayoutClassBuffAnchor(helper, primarySlotCount)
-    local occupiedSlotCount = math.max(1, primarySlotCount);
-    local primaryRowWidth = ( occupiedSlotCount * PRIMARY_BUFF_SIZE )
-        + ( ( occupiedSlotCount - 1 ) * PRIMARY_BUFF_SPACING );
-
-    helper.classBuffAnchor:ClearAllPoints();
-    helper.classBuffAnchor:SetPoint(
-        "RIGHT",
-        helper.root,
-        "CENTER",
-        -primaryRowWidth - PRIMARY_BUFF_SPACING,
-        ( PRIMARY_BUFF_SIZE / 2 ) + ( ROW_SPACING / 2 )
-    );
-end
-
 local function UpdateClassBuffWarning(helper, unit)
     helper.classBuffWarning:Hide();
     helper.classBuffAnchor:Hide();
@@ -485,14 +433,10 @@ local function UpdateClassBuffWarning(helper, unit)
     if IsPetUnit(unit) then return end
 
     local ok, hasClassBuff = pcall(ReadClassBuffState, unit);
-    if ( not ok ) or hasClassBuff == nil or hasClassBuff then return end
+    if ( not ok ) or hasClassBuff == nil then return end
 
-    local countOK, primarySlotCount = pcall(ReadPrimarySlotCount, unit);
-    if ( not countOK ) or primarySlotCount == nil then return end
-
-    LayoutClassBuffAnchor(helper, primarySlotCount);
     helper.classBuffAnchor:Show();
-    helper.classBuffWarning:Show();
+    helper.classBuffWarning:SetShown(not hasClassBuff);
 end
 
 local function ShouldTrackFrameName(name)
