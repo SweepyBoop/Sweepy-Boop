@@ -305,8 +305,8 @@ local function ApplyTranslations(locale)
     L["Preservation Evoker"] = "Evocador preservación";
     L["Enable the helper while playing Preservation Evoker."] = "Activa el ayudante al jugar Evocador Preservación.";
     L["Blessing of the Bronze warning."] = "Aviso de Bendición del Bronce.";
-    L["Echo without a refresh-window glow."] = "Eco sin brillo de ventana de refresco.";
-    L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Fila 2, de menor a mayor importancia: Reversión, Aliento de ensueño, Vínculo vital, Dilatación temporal.";
+    L["Top row: Echo, Dream Breath."] = "Fila superior: Eco, Aliento de ensueño.";
+    L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."] = "Fila 2, de menor a mayor importancia: Reversión, Vínculo vital, Dilatación temporal.";
     L["Big Debuff Icons"] = "Iconos grandes de perjuicios";
     L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Muestra perjuicios grandes de control de masas a la derecha de los marcos tipo banda de Blizzard.";
     L["Max Icons"] = "Iconos máximos";

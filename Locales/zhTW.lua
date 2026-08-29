@@ -308,8 +308,8 @@ L["For Restoration Druid only: show the warning icon when none of the Swiftmend-
 L["Preservation Evoker"] = "護存喚能師";
 L["Enable the helper while playing Preservation Evoker."] = "遊玩護存喚能師時啟用助手。";
 L["Blessing of the Bronze warning."] = "青銅祝福警告。";
-L["Echo without a refresh-window glow."] = "迴響不顯示可刷新期間發光。";
-L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "第 2 列，由低到高重要度：逆轉、夢息、生命綁定、時間膨脹。";
+L["Top row: Echo, Dream Breath."] = "頂列：迴響、夢息。";
+L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."] = "第 2 列，由低到高重要度：逆轉、生命綁定、時間膨脹。";
 L["Big Debuff Icons"] = "大型減益圖示";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "在暴雪團隊樣式框架右側顯示大型控場減益。";
 L["Max Icons"] = "最大圖示數";
