@@ -313,8 +313,8 @@ L["For Restoration Druid only: show the warning icon when none of the Swiftmend-
 L["Preservation Evoker"] = "Preservation Evoker";
 L["Enable the helper while playing Preservation Evoker."] = "Enable the helper while playing Preservation Evoker.";
 L["Warn when Blessing of the Bronze is missing."] = "Warn when Blessing of the Bronze is missing.";
-L["Echo without a refresh-window glow."] = "Echo without a refresh-window glow.";
-L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation.";
+L["Top row: Echo, Dream Breath."] = "Top row: Echo, Dream Breath.";
+L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."] = "Row 2, least-to-most important: Reversion, Lifebind, Time Dilation.";
 L["Big Debuff Icons"] = "Big Debuff Icons";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Show large crowd-control debuffs to the right of Blizzard raid-style frames.";
 L["Max Icons"] = "Max Icons";

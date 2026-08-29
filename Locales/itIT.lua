@@ -308,8 +308,8 @@ L["For Restoration Druid only: show the warning icon when none of the Swiftmend-
 L["Preservation Evoker"] = "Evocatore Preservazione";
 L["Enable the helper while playing Preservation Evoker."] = "Abilita l'assistente mentre giochi Evocatore Preservazione.";
 L["Blessing of the Bronze warning."] = "Avviso Benedizione del Bronzo.";
-L["Echo without a refresh-window glow."] = "Eco senza bagliore nella finestra di rinnovo.";
-L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "Riga 2, dal meno al più importante: Reversione, Soffio del Sogno, Vincolo Vitale, Dilatazione Temporale.";
+L["Top row: Echo, Dream Breath."] = "Riga superiore: Eco, Soffio del Sogno.";
+L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."] = "Riga 2, dal meno al più importante: Reversione, Vincolo Vitale, Dilatazione Temporale.";
 L["Big Debuff Icons"] = "Icone debuff grandi";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Mostra grandi debuff di controllo a destra dei riquadri stile incursione di Blizzard.";
 L["Max Icons"] = "Icone massime";

@@ -23,14 +23,19 @@ local profiles = {
         class = addon.DRUID,
         enabledSetting = "druidBuffHelper",
         row2WarningSetting = "druidBuffHelperWarning",
-        primaryPandemicGlow = true,
         classBuff = markOfTheWild,
         classBuffAuras = {
             [markOfTheWild] = true,
         },
-        primaryBuffs = {
-            [33763] = true,  -- Lifebloom
-            [290754] = true, -- Lifebloom (Early Spring)
+        primarySlots = {
+            {
+                spellID = 33763, -- Lifebloom
+                auraSpellIDs = {
+                    [33763] = true,
+                    [290754] = true, -- Lifebloom (Early Spring)
+                },
+                pandemicGlow = true,
+            },
         },
         row2Priority = {
             8936,   -- Regrowth
@@ -50,14 +55,25 @@ local profiles = {
         enabledSetting = "evokerBuffHelper",
         classBuff = blessingOfTheBronze,
         classBuffAuras = blessingOfTheBronzeAuras,
-        primaryBuffs = {
-            [364343] = true, -- Echo
+        primarySlots = {
+            {
+                spellID = 364343, -- Echo
+                auraSpellIDs = {
+                    [364343] = true,
+                },
+            },
+            {
+                spellID = 355941, -- Dream Breath
+                auraSpellIDs = {
+                    [355936] = true, -- Dream Breath (cast) -> HoT
+                    [355941] = true, -- Dream Breath
+                    [376788] = true, -- Echo Dream Breath
+                },
+            },
         },
         row2Priority = {
             366155, -- Reversion
             367364, -- Echo Reversion
-            355941, -- Dream Breath
-            376788, -- Echo Dream Breath
             373267, -- Lifebind
             357170, -- Time Dilation
         },
@@ -65,9 +81,6 @@ local profiles = {
             [366155]  = 366155,   -- Reversion
             [1256577] = 366155,   -- Reversion (variant)
             [367364]  = 367364,   -- Echo Reversion
-            [355936]  = 355941,   -- Dream Breath (cast) -> HoT
-            [355941]  = 355941,   -- Dream Breath
-            [376788]  = 376788,   -- Echo Dream Breath
             [373267]  = 373267,   -- Lifebind
             [373270]  = 373267,   -- Lifebind (partner)
             [357170]  = 357170,   -- Time Dilation
@@ -81,6 +94,7 @@ local supportedClasses = {
 };
 
 local PRIMARY_BUFF_SIZE = 20;
+local PRIMARY_BUFF_SPACING = 1;
 local ROW2_BUFF_SIZE = 16;
 local ROW2_BUFF_SPACING = 1;
 local ROW_SPACING = 2;
@@ -235,26 +249,30 @@ local function EnsureContainers(frame)
         AnchorUtil.FlowDirection.Left,
         AnchorUtil.FlowDirection.Down
     );
-    helper.primary:AddAuraGroup("Primary", "HELPFUL", {
-        maxFrameCount = 1,
-        candidateFilters = {
-            includeSpellIDs = playerProfile.primaryBuffs,
-            isFromPlayerOrPlayerPet = true,
-        },
-        sortMethod = AuraContainerSortMethod.Expiration,
-        sortDirection = AuraContainerSortDirection.Normal,
-        initializeFrame = function(button)
-            InitializeAuraButton(button, PRIMARY_BUFF_SIZE);
+    for i = #playerProfile.primarySlots, 1, -1 do
+        local primarySlot = playerProfile.primarySlots[i];
+        helper.primary:AddAuraGroup("Primary-" .. primarySlot.spellID, "HELPFUL", {
+            maxFrameCount = 1,
+            candidateFilters = {
+                includeSpellIDs = primarySlot.auraSpellIDs,
+                isFromPlayerOrPlayerPet = true,
+            },
+            sortMethod = AuraContainerSortMethod.Expiration,
+            sortDirection = AuraContainerSortDirection.Normal,
+            initializeFrame = function(button)
+                InitializeAuraButton(button, PRIMARY_BUFF_SIZE);
 
-            if playerProfile.primaryPandemicGlow then
-                AddLifebloomPandemicBorder(button);
-            end
-        end,
-        layout = {
-            elementWidth = PRIMARY_BUFF_SIZE,
-            elementHeight = PRIMARY_BUFF_SIZE,
-        },
-    });
+                if primarySlot.pandemicGlow then
+                    AddLifebloomPandemicBorder(button);
+                end
+            end,
+            layout = {
+                groupSpacing = PRIMARY_BUFF_SPACING,
+                elementWidth = PRIMARY_BUFF_SIZE,
+                elementHeight = PRIMARY_BUFF_SIZE,
+            },
+        });
+    end
 
     helper.row2 = CreateFrame(
         "AuraContainer",
@@ -311,7 +329,7 @@ local function EnsureContainers(frame)
         "RIGHT",
         helper.root,
         "CENTER",
-        -PRIMARY_BUFF_SIZE - ROW2_BUFF_SPACING,
+        -PRIMARY_BUFF_SIZE - PRIMARY_BUFF_SPACING,
         ( PRIMARY_BUFF_SIZE / 2 ) + ( ROW_SPACING / 2 )
     );
     helper.classBuffAnchor:Hide();
@@ -408,6 +426,58 @@ local function ReadClassBuffState(unit)
     return false;
 end
 
+local function ReadPrimarySlotCount(unit)
+    if ( not C_UnitAuras.GetAuraDataBySpellName )
+        or ( not C_Secrets )
+        or ( not C_Secrets.ShouldSpellAuraBeSecret ) then
+        return;
+    end
+
+    local activeSlotCount = 0;
+    for _, primarySlot in ipairs(playerProfile.primarySlots) do
+        local slotActive = false;
+        for spellID in pairs(primarySlot.auraSpellIDs) do
+            if C_Secrets.ShouldSpellAuraBeSecret(spellID) then return end
+
+            local spellName = C_Spell.GetSpellName(spellID);
+            if not spellName then return end
+
+            local auraData = C_UnitAuras.GetAuraDataBySpellName(unit, spellName, "HELPFUL|PLAYER");
+            if auraData then
+                if addon.IsSecretValue(auraData.spellId)
+                    or addon.IsSecretValue(auraData.isFromPlayerOrPlayerPet) then
+                    return;
+                end
+                if primarySlot.auraSpellIDs[auraData.spellId]
+                    and auraData.isFromPlayerOrPlayerPet then
+                    slotActive = true;
+                    break;
+                end
+            end
+        end
+        if slotActive then
+            activeSlotCount = activeSlotCount + 1;
+        end
+    end
+
+    return activeSlotCount;
+end
+
+local function LayoutClassBuffAnchor(helper, primarySlotCount)
+    local occupiedSlotCount = math.max(1, primarySlotCount);
+    local primaryRowWidth = ( occupiedSlotCount * PRIMARY_BUFF_SIZE )
+        + ( ( occupiedSlotCount - 1 ) * PRIMARY_BUFF_SPACING );
+
+    helper.classBuffAnchor:ClearAllPoints();
+    helper.classBuffAnchor:SetPoint(
+        "RIGHT",
+        helper.root,
+        "CENTER",
+        -primaryRowWidth - PRIMARY_BUFF_SPACING,
+        ( PRIMARY_BUFF_SIZE / 2 ) + ( ROW_SPACING / 2 )
+    );
+end
+
 local function UpdateClassBuffWarning(helper, unit)
     helper.classBuffWarning:Hide();
     helper.classBuffAnchor:Hide();
@@ -415,10 +485,14 @@ local function UpdateClassBuffWarning(helper, unit)
     if IsPetUnit(unit) then return end
 
     local ok, hasClassBuff = pcall(ReadClassBuffState, unit);
-    if ( not ok ) or hasClassBuff == nil then return end
+    if ( not ok ) or hasClassBuff == nil or hasClassBuff then return end
 
+    local countOK, primarySlotCount = pcall(ReadPrimarySlotCount, unit);
+    if ( not countOK ) or primarySlotCount == nil then return end
+
+    LayoutClassBuffAnchor(helper, primarySlotCount);
     helper.classBuffAnchor:Show();
-    helper.classBuffWarning:SetShown(not hasClassBuff);
+    helper.classBuffWarning:Show();
 end
 
 local function ShouldTrackFrameName(name)

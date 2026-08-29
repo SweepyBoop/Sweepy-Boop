@@ -416,8 +416,8 @@ addon.GetRaidFrameOptions = function(order)
                             return table.concat({
                                 addon.L["Enable the helper while playing Preservation Evoker."],
                                 "",
-                                "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Echo without a refresh-window glow."],
-                                "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."],
+                                "\226\128\162 " .. SpellIcon(364343) .. " " .. addon.L["Top row: Echo, Dream Breath."],
+                                "\226\128\162 " .. addon.L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."],
                                 "\226\128\162 " .. addon.L["Warn when Blessing of the Bronze is missing."],
                                 "\226\128\162 " .. addon.L["Securely rendered by Blizzard's aura container."],
                             }, "\n");

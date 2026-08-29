@@ -308,8 +308,8 @@ L["For Restoration Druid only: show the warning icon when none of the Swiftmend-
 L["Preservation Evoker"] = "보존 기원사";
 L["Enable the helper while playing Preservation Evoker."] = "보존 기원사 플레이 중 도우미를 활성화합니다.";
 L["Blessing of the Bronze warning."] = "청동의 축복 경고.";
-L["Echo without a refresh-window glow."] = "메아리는 갱신 가능 빛남 없이 표시합니다.";
-L["Row 2, least-to-most important: Reversion, Dream Breath, Lifebind, Time Dilation."] = "2행, 낮은 중요도부터 높은 중요도: 회귀, 꿈의 숨결, 생명 결속, 시간 팽창.";
+L["Top row: Echo, Dream Breath."] = "상단 행: 메아리, 꿈의 숨결.";
+L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."] = "2행, 낮은 중요도부터 높은 중요도: 회귀, 생명 결속, 시간 팽창.";
 L["Big Debuff Icons"] = "큰 약화 효과 아이콘";
 L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "블리자드 공격대 스타일 프레임 오른쪽에 큰 군중 제어 약화 효과를 표시합니다.";
 L["Max Icons"] = "최대 아이콘";
