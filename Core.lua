@@ -225,7 +225,7 @@ local defaults = {
             personalDRTrackRoot = false,
             personalDRTrackSilence = false,
             personalDRTrackDisarm = false,
-            honorReminder = true,
+            honorReminder = false,
             honorReminderThreshold = 10000,
             honorReminderFontSize = 16,
             honorReminderIconSize = 16,
@@ -310,6 +310,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.arenaFrames.unusedIconAlpha = 1;
     defaults.profile.arenaFrames.usedIconAlpha = 0.5;
     defaults.profile.misc.healerInCrowdControl = true;
+    defaults.profile.misc.honorReminder = true;
     defaults.profile.misc.personalDR = true;
     defaults.profile.misc.personalDRTrackIncapacitate = false;
     defaults.profile.misc.personalDRTrackDisorient = false;
@@ -417,6 +418,9 @@ function SweepyBoop:OnInitialize()
             local miscOptions = addon.GetMiscOptions(7, icon, SweepyBoopLDB);
             options.args.misc =
                 addon.GetHealerInCrowdControlOptions(7);
+            options.args.misc.args.general.args.showMinimapIcon =
+                miscOptions.args.general.args.showMinimapIcon;
+            options.args.misc.args.honorReminder = miscOptions.args.honorReminder;
             options.args.misc.args.personalDR = miscOptions.args.personalDR;
             options.args.misc.args.gismo = miscOptions.args.gismo;
         else
@@ -487,6 +491,7 @@ function SweepyBoop:OnInitialize()
 
     self:SetupRaidFrameAggroHighlight();
     self:SetupHealerInCrowdControl();
+    self:SetupHonorReminder();
     self:SetupAlwaysShowDruidComboPoints();
     self:SetupDampenDisplay();
     self:SetupQueueReminder();
@@ -503,7 +508,6 @@ function SweepyBoop:OnInitialize()
     self:SetupCombatIndicator();
     self:SetupClassColorUnitFrames();
     self:SetupHideBlizzArenaFrames();
-    self:SetupHonorReminder();
     self:SetupMouseCursor();
     self:UpdateSBMMacros();
 end
@@ -524,6 +528,7 @@ function SweepyBoop:RefreshConfig()
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl();
         self:UpdateHealerInCrowdControl();
+        self:RefreshHonorReminder();
         self:SetupAlwaysShowDruidComboPoints();
         self:SetupDampenDisplay();
         self:SetupPrecognitionTracker();
@@ -534,7 +539,6 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE and ( not addon.MAINLINE_CORE_FEATURES_ONLY ) then
         self:SetupCombatIndicator();
         self:SetupClassColorUnitFrames();
-        self:RefreshHonorReminder();
     end
 
     local currentTime = GetTime();
