@@ -1930,7 +1930,7 @@ addon.SpellData = {
     [103967] = {
         class = addon.WARLOCK,
         spec = { specID.DEMONOLOGY },
-        category = category.KNOCKBACK,
+        category = category.INTERRUPT,
         cooldown = 12,
         baseline = true,
     },
