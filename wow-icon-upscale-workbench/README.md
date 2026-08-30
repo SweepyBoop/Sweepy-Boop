@@ -7,7 +7,7 @@ This directory documents the reproducible workflow for experimenting with AI-ups
 - Keep durable instructions and small automation files in this directory.
 - Put downloaded applications, model weights, copied inputs, generated outputs, and comparison images under `scratch/`.
 - `scratch/` is intentionally ignored by Git because the downloaded tools and model files exceed GitHub's file-size limits.
-- Do not place workbench files in the addon package. `AddonUpdate.ps1` and `AddonPublish.ps1` exclude the top-level `wow-icon-upscale-workbench` directory.
+- Do not place workbench files in the addon package. `Update.ps1` and `Publish.ps1` exclude the top-level `wow-icon-upscale-workbench` directory.
 - Do not overwrite addon art during exploration. Copy an approved final asset into `../Art/` only after a human reviews it.
 
 ## Current local layout
@@ -190,7 +190,7 @@ Before presenting or promoting results:
 3. Open representative icons with metal edges, soft glow, organic texture, and transparency.
 4. Generate the overview comparison sheet.
 5. Confirm `git status` does not list anything under `scratch/`.
-6. Confirm `AddonPublish.ps1` stages neither `Tools` nor `wow-icon-upscale-workbench`.
+6. Confirm `Publish.ps1` stages neither `Tools` nor `wow-icon-upscale-workbench`.
 7. Copy only human-approved final assets into the addon's tracked art directories.
 
 Useful checks:
