@@ -80,9 +80,9 @@ Important: to use friendly icons, <span style="color:#36f"><strong>enable the fo
 ![Nameplate options](https://github.com/user-attachments/assets/2f5f7a9b-43d3-432a-8f11-5f2acbf8cc7b)
 
 
-There are two styles of friendly icons: in-game class icons and class color arrows:
+Friendly player nameplates can show a class icon, a marker, or both. Marker style selects a double arrow or pin. For the combined style, marker visibility can be set to always show or party members only; the latter keeps the class icon visible and limits the marker to party members in PvP:
 
-- Current friendly target will be highlighted with a border (for both styles)
+- Current friendly target will be highlighted with a border when using a class icon
 - <span style="color:#36f"><strong>Option to use a special icon for healers</strong></span> in your group! No more "where is my healer" panic :)
 - You can also <span style="color:#36f"><strong>customize to show your healer only</strong></span>, a great option for DPS players.
 

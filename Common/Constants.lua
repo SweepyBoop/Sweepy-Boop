@@ -515,13 +515,62 @@ addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
 
 addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
 
+-- IDs 0 through 6 are legacy persisted values and must remain stable.
 addon.CLASS_ICON_STYLE = {
     ICON = 0,
     ARROW = 1,
-    ICON_AND_ARROW = 2,
+    ICON_AND_ARROW_PARTY_ONLY = 2,
     PIN = 3,
-    ICON_AND_PIN = 4,
+    ICON_AND_PIN_PARTY_ONLY = 4,
+    ICON_AND_ARROW = 5,
+    ICON_AND_PIN = 6,
+    CLASS_ICON = 7,
+    MARKER = 8,
+    CLASS_ICON_AND_MARKER = 9,
 };
+
+addon.CLASS_ICON_MARKER_STYLE = {
+    DOUBLE_ARROW = 0,
+    PIN = 1,
+};
+
+addon.CLASS_ICON_MARKER_VISIBILITY = {
+    ALWAYS_SHOW = 0,
+    PARTY_MEMBERS_ONLY = 1,
+};
+
+addon.GetClassIconStyleSettings = function(config)
+    local style = config.classIconStyle;
+    local markerStyle = config.classIconMarkerStyle or addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW;
+    local markerVisibility = config.classIconMarkerVisibility or addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+
+    if style == addon.CLASS_ICON_STYLE.ICON then
+        return addon.CLASS_ICON_STYLE.CLASS_ICON, addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW, addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+    elseif style == addon.CLASS_ICON_STYLE.ARROW then
+        return addon.CLASS_ICON_STYLE.MARKER, addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW, addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+    elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW_PARTY_ONLY then
+        return addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER, addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW, addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY;
+    elseif style == addon.CLASS_ICON_STYLE.PIN then
+        return addon.CLASS_ICON_STYLE.MARKER, addon.CLASS_ICON_MARKER_STYLE.PIN, addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+    elseif style == addon.CLASS_ICON_STYLE.ICON_AND_PIN_PARTY_ONLY then
+        return addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER, addon.CLASS_ICON_MARKER_STYLE.PIN, addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY;
+    elseif style == addon.CLASS_ICON_STYLE.ICON_AND_ARROW then
+        return addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER, addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW, addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+    elseif style == addon.CLASS_ICON_STYLE.ICON_AND_PIN then
+        return addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER, addon.CLASS_ICON_MARKER_STYLE.PIN, addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+    end
+
+    if style ~= addon.CLASS_ICON_STYLE.MARKER and style ~= addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER then
+        style = addon.CLASS_ICON_STYLE.CLASS_ICON;
+    end
+    if markerStyle ~= addon.CLASS_ICON_MARKER_STYLE.PIN then
+        markerStyle = addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW;
+    end
+    if markerVisibility ~= addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY then
+        markerVisibility = addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+    end
+    return style, markerStyle, markerVisibility;
+end
 
 addon.CLASS_ICON_BORDER_STYLE = {
     METALLIC = "metallic",

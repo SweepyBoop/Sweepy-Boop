@@ -70,7 +70,9 @@ local defaults = {
     profile = {
         nameplatesFriendly = {
             classIconsEnabled = true,
-            classIconStyle = addon.CLASS_ICON_STYLE.ICON,
+            classIconStyle = addon.CLASS_ICON_STYLE.CLASS_ICON,
+            classIconMarkerStyle = addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW,
+            classIconMarkerVisibility = addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW,
             showSpecIcons = true,
             hideOutsidePvP = false,
             hideInBattlegrounds = false;
@@ -288,7 +290,8 @@ local defaults = {
 };
 
 if addon.internal then -- Set default for internal version
-    defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.ICON_AND_ARROW;
+    defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER;
+    defaults.profile.nameplatesFriendly.classIconMarkerVisibility = addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY;
     defaults.profile.nameplatesFriendly.classIconSize = 1.5;
     defaults.profile.nameplatesFriendly.healerIconSize = 1.5;
     defaults.profile.nameplatesFriendly.flagCarrierIconSize = 1.5;

@@ -47,11 +47,19 @@ local bigDebuffsIconStyleSorting = {
 };
 
 local classIconStyleSorting = {
-    addon.CLASS_ICON_STYLE.ICON,
-    addon.CLASS_ICON_STYLE.ARROW,
-    addon.CLASS_ICON_STYLE.PIN,
-    addon.CLASS_ICON_STYLE.ICON_AND_ARROW,
-    addon.CLASS_ICON_STYLE.ICON_AND_PIN,
+    addon.CLASS_ICON_STYLE.CLASS_ICON,
+    addon.CLASS_ICON_STYLE.MARKER,
+    addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER,
+};
+
+local classIconMarkerStyleSorting = {
+    addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW,
+    addon.CLASS_ICON_MARKER_STYLE.PIN,
+};
+
+local classIconMarkerVisibilitySorting = {
+    addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW,
+    addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY,
 };
 
 local classIconBorderStyleSorting = {
@@ -70,6 +78,20 @@ local function GetBigDebuffsIconStyleValues()
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT] = addon.L["Highlight"],
     };
+end
+
+local function GetFriendlyClassIconStyleSettings()
+    return addon.GetClassIconStyleSettings(SweepyBoop.db.profile.nameplatesFriendly);
+end
+
+local function SetFriendlyClassIconStyleSettings(style, markerStyle, markerVisibility)
+    local config = SweepyBoop.db.profile.nameplatesFriendly;
+    config.classIconStyle = style;
+    config.classIconMarkerStyle = markerStyle;
+    config.classIconMarkerVisibility = markerVisibility;
+    config.lastModified = GetTime();
+    SweepyBoop:RefreshAllNamePlates();
+    RefreshOptions();
 end
 
 addon.GetFriendlyNameplateOptions = function(order)
@@ -102,9 +124,9 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) .. " Show spec icons in PvP instances",
                 desc = "Show spec icons instead of class icons for friendly players in PvP instances\n\n|cFFFF0000Note: Specs may not always be detectable due to Blizzard API restrictions in rated PvP|r",
                 hidden = function()
-                    local style = SweepyBoop.db.profile.nameplatesFriendly.classIconStyle;
+                    local style = GetFriendlyClassIconStyleSettings();
                     return ( not addon.PROJECT_MAINLINE ) or
-                        ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( style == addon.CLASS_ICON_STYLE.ARROW ) or ( style == addon.CLASS_ICON_STYLE.PIN );
+                        ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled ) or ( style == addon.CLASS_ICON_STYLE.MARKER );
                 end
             },
 
@@ -154,16 +176,69 @@ addon.GetFriendlyNameplateOptions = function(order)
                 type = "select",
                 width = 1.25,
                 values = {
-                    [addon.CLASS_ICON_STYLE.ICON] = "WoW class icons",
-                    [addon.CLASS_ICON_STYLE.ARROW] = "Class color arrows",
-                    [addon.CLASS_ICON_STYLE.PIN] = "Class color pins",
-                    [addon.CLASS_ICON_STYLE.ICON_AND_ARROW] = "Icon + party arrow",
-                    [addon.CLASS_ICON_STYLE.ICON_AND_PIN] = "Icon + party pin",
+                    [addon.CLASS_ICON_STYLE.CLASS_ICON] = "Class icon",
+                    [addon.CLASS_ICON_STYLE.MARKER] = "Marker",
+                    [addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER] = "Class icon + Marker",
                 },
                 sorting = classIconStyleSorting,
                 name = "Icon style",
+                get = function()
+                    return GetFriendlyClassIconStyleSettings();
+                end,
+                set = function(_, style)
+                    local _, markerStyle, markerVisibility = GetFriendlyClassIconStyleSettings();
+                    SetFriendlyClassIconStyleSettings(style, markerStyle, markerVisibility);
+                end,
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            classIconMarkerStyle = {
+                order = 6.1,
+                type = "select",
+                width = 1.25,
+                values = {
+                    [addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW] = "Double arrow",
+                    [addon.CLASS_ICON_MARKER_STYLE.PIN] = "Pin",
+                },
+                sorting = classIconMarkerStyleSorting,
+                name = "Marker style",
+                get = function()
+                    local _, markerStyle = GetFriendlyClassIconStyleSettings();
+                    return markerStyle;
+                end,
+                set = function(_, markerStyle)
+                    local style, _, markerVisibility = GetFriendlyClassIconStyleSettings();
+                    SetFriendlyClassIconStyleSettings(style, markerStyle, markerVisibility);
+                end,
+                hidden = function()
+                    local style = GetFriendlyClassIconStyleSettings();
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled )
+                        or style == addon.CLASS_ICON_STYLE.CLASS_ICON;
+                end
+            },
+            classIconMarkerVisibility = {
+                order = 6.2,
+                type = "select",
+                width = 1.25,
+                values = {
+                    [addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW] = "Always show",
+                    [addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY] = "Party members only",
+                },
+                sorting = classIconMarkerVisibilitySorting,
+                name = "Marker visibility",
+                get = function()
+                    local _, _, markerVisibility = GetFriendlyClassIconStyleSettings();
+                    return markerVisibility;
+                end,
+                set = function(_, markerVisibility)
+                    local style, markerStyle = GetFriendlyClassIconStyleSettings();
+                    SetFriendlyClassIconStyleSettings(style, markerStyle, markerVisibility);
+                end,
+                hidden = function()
+                    local style = GetFriendlyClassIconStyleSettings();
+                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled )
+                        or style ~= addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER;
                 end
             },
 
@@ -416,7 +491,8 @@ addon.GetFriendlyNameplateOptions = function(order)
                 hidden = function()
                     local config = SweepyBoop.db.profile.nameplatesFriendly;
                     if ( not config.classIconsEnabled ) then return true end
-                    if ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.ARROW ) and ( config.classIconStyle ~= addon.CLASS_ICON_STYLE.PIN ) then return false end
+                    local style = addon.GetClassIconStyleSettings(config);
+                    if style ~= addon.CLASS_ICON_STYLE.MARKER then return false end
                     if ( ( not addon.PROJECT_TBC ) and config.useHealerIcon ) then return false end
                     if ( addon.PROJECT_MAINLINE and config.useFlagCarrierIcon ) then return false end
                     return true;
