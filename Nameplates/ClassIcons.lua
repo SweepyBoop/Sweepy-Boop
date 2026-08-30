@@ -14,6 +14,8 @@ local iconAndPinIconOffsetY = -1;
 local debugShowIconAndPartyMarker = false;
 
 local function ShouldShowIconAndPartyMarker(unit)
+    -- TODO: Refresh visible nameplates on GROUP_ROSTER_UPDATE so party-only markers
+    -- and combined Pin anchors cannot retain stale state after roster changes.
     return debugShowIconAndPartyMarker or ( ( UnitInBattleground("player") ~= nil ) and UnitInParty(unit) );
 end
 
