@@ -516,12 +516,37 @@ addon.HELAER_LOGO = addon.FORMAT_ATLAS("UI-LFG-RoleIcon-Healer");
 addon.ICON_COORDS_HEALER = {0.005, 0.116, 0.76, 0.87};
 
 addon.CLASS_ICON_STYLE = {
-    ICON = 0,
-    ARROW = 1,
-    ICON_AND_ARROW = 2,
-    PIN = 3,
-    ICON_AND_PIN = 4,
+    CLASS_ICON = 0,
+    MARKER = 1,
+    CLASS_ICON_AND_MARKER = 2,
 };
+
+addon.CLASS_ICON_MARKER_STYLE = {
+    DOUBLE_ARROW = 0,
+    PIN = 1,
+};
+
+addon.CLASS_ICON_MARKER_VISIBILITY = {
+    ALWAYS_SHOW = 0,
+    PARTY_MEMBERS_ONLY = 1,
+};
+
+addon.GetClassIconStyleSettings = function(config)
+    local style = config.classIconStyle;
+    local markerStyle = config.classIconMarkerStyle;
+    local markerVisibility = config.classIconMarkerVisibility;
+
+    if style ~= addon.CLASS_ICON_STYLE.MARKER and style ~= addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER then
+        style = addon.CLASS_ICON_STYLE.CLASS_ICON;
+    end
+    if markerStyle ~= addon.CLASS_ICON_MARKER_STYLE.PIN then
+        markerStyle = addon.CLASS_ICON_MARKER_STYLE.DOUBLE_ARROW;
+    end
+    if markerVisibility ~= addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY then
+        markerVisibility = addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
+    end
+    return style, markerStyle, markerVisibility;
+end
 
 addon.CLASS_ICON_BORDER_STYLE = {
     METALLIC = "metallic",
