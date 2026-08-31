@@ -75,8 +75,8 @@ local targetHighlightStyleSorting = {
 
 local classIconCrowdControlDisplaySorting = {
     addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.NONE,
-    addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.SWIPE_ONLY,
     addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.FULL,
+    addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.SWIPE_ONLY,
 };
 
 local function GetBigDebuffsIconStyleValues()
