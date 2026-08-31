@@ -363,7 +363,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 order = 19,
                 type = "select",
                 width = 1.2,
-                name = "Crowd control",
+                name = "Party crowd control",
                 desc = function()
                     return addon.L["Show crowd control icons instead of class icons during crowd control effects"]
                         .. "\n\n"
