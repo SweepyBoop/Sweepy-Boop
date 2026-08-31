@@ -158,7 +158,6 @@ L["Class-colored names"] = "Class-colored names";
 L["Show class-colored names under class icons"] = "Show class-colored names under class icons";
 L["Keep Blizzard health bar"] = "Keep Blizzard health bar";
 L["Keep Blizzard health bars while showing class icons"] = "Keep Blizzard health bars while showing class icons";
-L["Show crowd controls on party members"] = "Show crowd controls on party members";
 L["Party crowd control"] = "Party crowd control";
 L["Show crowd control icons instead of class icons during crowd control effects"] = "Show crowd control icons instead of class icons during crowd control effects";
 L["Swipe only shows the cooldown swipe. Full also shows a countdown."] = "Swipe only shows the cooldown swipe. Full also shows a countdown.";

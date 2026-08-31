@@ -156,7 +156,6 @@ L["Class-colored names"] = "Nomes de classe";
 L["Show class-colored names under class icons"] = "Mostrar nomes com cor de classe abaixo dos ícones de classe";
 L["Keep Blizzard health bar"] = "Barra Blizzard";
 L["Keep Blizzard health bars while showing class icons"] = "Manter barras de vida da Blizzard ao mostrar ícones de classe";
-L["Show crowd controls on party members"] = "CC no grupo";
 L["Party crowd control"] = "CC do grupo";
 L["Show crowd control icons instead of class icons during crowd control effects"] = "Mostrar ícones de controle de grupo em vez de ícones de classe durante efeitos de controle";
 L["Swipe only shows the cooldown swipe. Full also shows a countdown."] = "Somente varredura mostra a varredura da recarga. Completo também mostra uma contagem regressiva.";

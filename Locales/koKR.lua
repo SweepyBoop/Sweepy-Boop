@@ -158,7 +158,6 @@ L["Class-colored names"] = "직업 색상 이름";
 L["Show class-colored names under class icons"] = "직업 아이콘 아래에 직업 색상 이름 표시";
 L["Keep Blizzard health bar"] = "블리자드 생명력 바 유지";
 L["Keep Blizzard health bars while showing class icons"] = "직업 아이콘을 표시하는 동안 블리자드 생명력 바를 유지합니다";
-L["Show crowd controls on party members"] = "파티원에게 군중 제어 표시";
 L["Party crowd control"] = "파티 군중 제어";
 L["Show crowd control icons instead of class icons during crowd control effects"] = "군중 제어 효과 중에는 직업 아이콘 대신 군중 제어 아이콘을 표시합니다";
 L["Swipe only shows the cooldown swipe. Full also shows a countdown."] = "회전 표시만은 재사용 대기시간 회전만 표시합니다. 전체는 남은 시간도 표시합니다.";
