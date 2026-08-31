@@ -327,7 +327,50 @@ addon.UpdatePlayerName = function (nameplate, frame)
     end
 end
 
-local function InitializeMainlineCrowdControlAura(auraFrame, iconFrame)
+local function IsCrowdControlDisplayEnabled(displayMode)
+    return displayMode == addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.SWIPE_ONLY
+        or displayMode == addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.FULL;
+end
+
+local function UpdateCrowdControlCountdownFontSize(cooldown)
+    if not cooldown then return end
+
+    if not cooldown.sweepyBoopCountdownFontString then
+        local numRegions = cooldown:GetNumRegions();
+        for i = 1, numRegions do
+            local region = select(i, cooldown:GetRegions());
+            if region and ( region:GetObjectType() == "FontString" ) then
+                cooldown.sweepyBoopCountdownFontString = region;
+                break;
+            end
+        end
+    end
+
+    local region = cooldown.sweepyBoopCountdownFontString;
+    if region then
+        local font, _, flags = region:GetFont();
+        if font then
+            region:SetFont(
+                font,
+                math.floor(classIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT),
+                flags
+            );
+        end
+    end
+end
+
+local function ConfigureCrowdControlCooldown(cooldown, displayMode)
+    if not cooldown then return end
+
+    cooldown:SetHideCountdownNumbers(displayMode ~= addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.FULL);
+    cooldown.noCooldownCount = true;
+    if cooldown.SetCountdownMillisecondsThreshold then
+        cooldown:SetCountdownMillisecondsThreshold(0);
+    end
+    UpdateCrowdControlCountdownFontSize(cooldown);
+end
+
+local function InitializeMainlineCrowdControlAura(auraFrame, iconFrame, displayMode)
     auraFrame:SetSize(classIconSize, classIconSize);
     auraFrame:SetPoint("CENTER", iconFrame);
     auraFrame:SetMouseMotionEnabled(false);
@@ -349,17 +392,16 @@ local function InitializeMainlineCrowdControlAura(auraFrame, iconFrame)
     cooldown:SetReverse(true);
     cooldown:SetSwipeTexture("Interface/Masks/CircleMaskScalable");
     cooldown:SetSwipeColor(0, 0, 0, 0.5);
-    cooldown:SetHideCountdownNumbers(true);
-    cooldown.noCooldownCount = true;
+    ConfigureCrowdControlCooldown(cooldown, displayMode);
     auraFrame:SetDurationCooldown(cooldown);
 end
 
-local function EnsureMainlineCrowdControlContainer(iconFrame)
-    if iconFrame.sweepyBoopCrowdControlContainer then
-        return iconFrame.sweepyBoopCrowdControlContainer;
-    end
+local function EnsureMainlineCrowdControlContainer(iconFrame, displayMode)
+    iconFrame.sweepyBoopCrowdControlContainers = iconFrame.sweepyBoopCrowdControlContainers or {};
+    local container = iconFrame.sweepyBoopCrowdControlContainers[displayMode];
+    if container then return container end
 
-    local container = CreateFrame("AuraContainer", nil, iconFrame, "CustomAuraContainerTemplate");
+    container = CreateFrame("AuraContainer", nil, iconFrame, "CustomAuraContainerTemplate");
     container:SetAllPoints(iconFrame);
     container:SetFrameStrata("HIGH");
     container:SetFrameLevel(iconFrame:GetFrameLevel() + 1);
@@ -369,20 +411,28 @@ local function EnsureMainlineCrowdControlContainer(iconFrame)
         sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
         sortDirection = AuraContainerSortDirection.Reverse,
         initializeFrame = function(auraFrame)
-            InitializeMainlineCrowdControlAura(auraFrame, iconFrame);
+            InitializeMainlineCrowdControlAura(auraFrame, iconFrame, displayMode);
         end,
     });
-    iconFrame.sweepyBoopCrowdControlContainer = container;
+    iconFrame.sweepyBoopCrowdControlContainers[displayMode] = container;
     return container;
+end
+
+local function HideMainlineCrowdControlContainers(iconFrame, exceptContainer)
+    if not iconFrame.sweepyBoopCrowdControlContainers then return end
+
+    for _, container in pairs(iconFrame.sweepyBoopCrowdControlContainers) do
+        if container ~= exceptContainer then
+            container:SetEnabled(false);
+            container:Hide();
+        end
+    end
 end
 
 local function HideClassIconCrowdControl(iconFrame)
     if not iconFrame then return end
 
-    if iconFrame.sweepyBoopCrowdControlContainer then
-        iconFrame.sweepyBoopCrowdControlContainer:SetEnabled(false);
-        iconFrame.sweepyBoopCrowdControlContainer:Hide();
-    end
+    HideMainlineCrowdControlContainers(iconFrame);
 
     iconFrame.sweepyBoopShownCCAuraID = nil;
     if iconFrame.cooldownCC then
@@ -404,18 +454,26 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame, unitAuraUpdateInf
     local iconCC = iconFrame.iconCC;
     local cooldownCC = iconFrame.cooldownCC;
 
+    local displayMode = SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl;
+    local displayEnabled = IsCrowdControlDisplayEnabled(displayMode);
+    ConfigureCrowdControlCooldown(cooldownCC, displayMode);
+
     if addon.PROJECT_MAINLINE then
-        local container = EnsureMainlineCrowdControlContainer(iconFrame);
-        if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl
+        local shouldShow = displayEnabled
             and UnitInParty(frame.unit)
             and UnitIsPlayer(frame.unit)
-            and UnitIsFriend("player", frame.unit) then
+            and UnitIsFriend("player", frame.unit);
+        local container = shouldShow and EnsureMainlineCrowdControlContainer(iconFrame, displayMode);
+        HideMainlineCrowdControlContainers(iconFrame, container);
+        if container then
             container:SetUnit(frame.unit);
             container:SetEnabled(true);
             container:Show();
-        else
-            container:SetEnabled(false);
-            container:Hide();
+        elseif iconFrame.debugCrowdControlExpiresAt then
+            iconFrame.debugCrowdControlExpiresAt = nil;
+            iconFrame.cooldownCC:SetCooldown(0, 0);
+            iconFrame.cooldownCC:Hide();
+            iconFrame.iconCC:Hide();
         end
         return;
     end
@@ -425,7 +483,7 @@ addon.UpdateClassIconCrowdControl = function(nameplate, frame, unitAuraUpdateInf
     local duration;
     local expirationTime;
 
-    if SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl and UnitInParty(frame.unit) then
+    if displayEnabled and UnitInParty(frame.unit) then
         for i = 1, 40 do
             local auraData = C_UnitAuras.GetDebuffDataByIndex(frame.unit, i);
             if ( not auraData ) or ( not auraData.spellId ) then break end -- No more auras
@@ -469,7 +527,8 @@ end
 
 if addon.internal then
     function SweepyBoop:DebugClassIconCrowdControl(duration, spellID)
-        if ( not SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl ) then
+        local displayMode = SweepyBoop.db.profile.nameplatesFriendly.showCrowdControl;
+        if ( not IsCrowdControlDisplayEnabled(displayMode) ) then
             for _, nameplate in ipairs(C_NamePlate.GetNamePlates()) do
                 local classIconContainer = nameplate.classIconContainer;
                 local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
@@ -495,6 +554,7 @@ if addon.internal then
             local iconFrame = classIconContainer and classIconContainer.FriendlyClassIcon;
             if iconFrame and iconFrame:IsShown() and iconFrame.iconCC and iconFrame.cooldownCC then
                 iconFrame.debugCrowdControlExpiresAt = expiresAt;
+                ConfigureCrowdControlCooldown(iconFrame.cooldownCC, displayMode);
                 iconFrame.iconCC:SetTexture(iconTexture);
                 iconFrame.iconCC:Show();
                 iconFrame.cooldownCC:SetCooldown(GetTime(), duration);

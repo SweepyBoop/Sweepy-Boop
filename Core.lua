@@ -88,7 +88,7 @@ local defaults = {
             useFlagCarrierIcon = true,
             targetHighlightStyle = addon.TARGET_HIGHLIGHT_STYLE.ANIMATED,
             showPlayerName = false,
-            showCrowdControl = true,
+            showCrowdControl = addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.SWIPE_ONLY,
         },
         nameplatesEnemy = {
             arenaNumbersEnabled = true,

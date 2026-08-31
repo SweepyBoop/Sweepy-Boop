@@ -73,6 +73,12 @@ local targetHighlightStyleSorting = {
     addon.TARGET_HIGHLIGHT_STYLE.ANIMATED,
 };
 
+local classIconCrowdControlDisplaySorting = {
+    addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.NONE,
+    addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.SWIPE_ONLY,
+    addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.FULL,
+};
+
 local function GetBigDebuffsIconStyleValues()
     return {
         [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
@@ -327,7 +333,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             classIconBorderStyle = {
                 order = 17,
                 type = "select",
-                width = 1.25,
+                width = 0.85,
                 name = "Border style",
                 values = {
                     [addon.CLASS_ICON_BORDER_STYLE.METALLIC] = "Metallic",
@@ -341,7 +347,7 @@ addon.GetFriendlyNameplateOptions = function(order)
             targetHighlightStyle = {
                 order = 18,
                 type = "select",
-                width = 1.25,
+                width = 0.95,
                 name = "Target highlight",
                 values = {
                     [addon.TARGET_HIGHLIGHT_STYLE.NONE] = "None",
@@ -351,6 +357,32 @@ addon.GetFriendlyNameplateOptions = function(order)
                 sorting = targetHighlightStyleSorting,
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                end
+            },
+            showCrowdControl = {
+                order = 19,
+                type = "select",
+                width = 1.2,
+                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",
+                desc = function()
+                    return addon.L["Show crowd control icons instead of class icons during crowd control effects"]
+                        .. "\n\n"
+                        .. addon.L["Swipe only shows the cooldown swipe. Full also shows a countdown."];
+                end,
+                values = {
+                    [addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.NONE] = "None",
+                    [addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.SWIPE_ONLY] = "Swipe only",
+                    [addon.CLASS_ICON_CROWD_CONTROL_DISPLAY.FULL] = "Full",
+                },
+                sorting = classIconCrowdControlDisplaySorting,
+                hidden = function()
+                    local config = SweepyBoop.db.profile.nameplatesFriendly;
+                    if ( not config.classIconsEnabled ) then return true end
+                    local style = addon.GetClassIconStyleSettings(config);
+                    if style ~= addon.CLASS_ICON_STYLE.MARKER then return false end
+                    if ( ( not addon.PROJECT_TBC ) and config.useHealerIcon ) then return false end
+                    if ( addon.PROJECT_MAINLINE and config.useFlagCarrierIcon ) then return false end
+                    return true;
                 end
             },
             targetHighlightLineBreak = {
@@ -479,23 +511,6 @@ addon.GetFriendlyNameplateOptions = function(order)
                 desc = "Keep Blizzard health bars while showing class icons",
                 hidden = function()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
-                end
-            },
-
-            showCrowdControl = {
-                order = 30,
-                type = "toggle",
-                width = "full",
-                name = addon.FORMAT_TEXTURE(addon.ICON_PATH("spell_nature_polymorph")) .. " Show crowd controls on party members",
-                desc = "Show crowd control icons instead of class icons during crowd control effects",
-                hidden = function()
-                    local config = SweepyBoop.db.profile.nameplatesFriendly;
-                    if ( not config.classIconsEnabled ) then return true end
-                    local style = addon.GetClassIconStyleSettings(config);
-                    if style ~= addon.CLASS_ICON_STYLE.MARKER then return false end
-                    if ( ( not addon.PROJECT_TBC ) and config.useHealerIcon ) then return false end
-                    if ( addon.PROJECT_MAINLINE and config.useFlagCarrierIcon ) then return false end
-                    return true;
                 end
             },
         }
