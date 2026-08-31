@@ -559,6 +559,12 @@ addon.TARGET_HIGHLIGHT_STYLE = {
     ANIMATED = "animated",
 };
 
+addon.CLASS_ICON_CROWD_CONTROL_DISPLAY = {
+    NONE = "none",
+    SWIPE_ONLY = "swipeOnly",
+    FULL = "full",
+};
+
 
 addon.GetSpellTexture = function(spellId)
     local _, originalIconID = C_Spell.GetSpellTexture(spellId);

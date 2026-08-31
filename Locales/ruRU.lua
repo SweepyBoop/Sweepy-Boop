@@ -158,8 +158,11 @@ L["Class-colored names"] = "Имена цвета класса";
 L["Show class-colored names under class icons"] = "Показывать имена цвета класса под значками классов";
 L["Keep Blizzard health bar"] = "Оставлять полосу здоровья Blizzard";
 L["Keep Blizzard health bars while showing class icons"] = "Оставлять полосы здоровья Blizzard при показе значков классов";
-L["Show crowd controls on party members"] = "Показывать контроль на участниках группы";
+L["Party crowd control"] = "Контроль группы";
 L["Show crowd control icons instead of class icons during crowd control effects"] = "Показывать значки контроля вместо значков классов во время эффектов контроля";
+L["Swipe only shows the cooldown swipe. Full also shows a countdown."] = "Только анимация показывает анимацию времени действия. Полный режим также показывает обратный отсчёт.";
+L["Swipe only"] = "Только анимация";
+L["Full"] = "Полный";
 
 L["Enemy nameplates"] = "Индикаторы врагов";
 L["Arena enemy player nameplate numbers"] = "Номера индикаторов врагов на арене";

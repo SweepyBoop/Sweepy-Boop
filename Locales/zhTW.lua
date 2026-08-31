@@ -158,8 +158,11 @@ L["Class-colored names"] = "職業顏色姓名";
 L["Show class-colored names under class icons"] = "在職業圖示下方顯示職業顏色姓名";
 L["Keep Blizzard health bar"] = "保留暴雪血條";
 L["Keep Blizzard health bars while showing class icons"] = "顯示職業圖示時保留暴雪血條";
-L["Show crowd controls on party members"] = "在隊伍成員上顯示控場";
+L["Party crowd control"] = "隊伍控場效果";
 L["Show crowd control icons instead of class icons during crowd control effects"] = "受到控場效果時，以控場圖示取代職業圖示";
+L["Swipe only shows the cooldown swipe. Full also shows a countdown."] = "僅轉圈顯示冷卻轉圈效果。完整模式還會顯示倒數。";
+L["Swipe only"] = "僅轉圈";
+L["Full"] = "完整";
 
 L["Enemy nameplates"] = "敵方名條";
 L["Arena enemy player nameplate numbers"] = "競技場敵方玩家名條編號";

@@ -158,8 +158,11 @@ L["Class-colored names"] = "Namen in Klassenfarbe";
 L["Show class-colored names under class icons"] = "Namen in Klassenfarbe unter Klassensymbolen anzeigen";
 L["Keep Blizzard health bar"] = "Blizzard-Gesundheitsleiste beibehalten";
 L["Keep Blizzard health bars while showing class icons"] = "Blizzard-Gesundheitsleisten behalten";
-L["Show crowd controls on party members"] = "Kontrolleffekte auf Gruppenmitgliedern anzeigen";
+L["Party crowd control"] = "Gruppen-Kontrolleffekte";
 L["Show crowd control icons instead of class icons during crowd control effects"] = "Während Kontrolleffekten Kontrolleffekt-Symbole statt Klassensymbolen anzeigen";
+L["Swipe only shows the cooldown swipe. Full also shows a countdown."] = "Nur Ablauf zeigt die Abklingzeit-Animation. Vollständig zeigt zusätzlich einen Countdown.";
+L["Swipe only"] = "Nur Ablauf";
+L["Full"] = "Vollständig";
 
 L["Enemy nameplates"] = "Feindliche Namensplaketten";
 L["Arena enemy player nameplate numbers"] = "Nummern auf feindlichen Arena-Spieler-Namensplaketten";

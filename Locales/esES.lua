@@ -158,8 +158,11 @@ local function ApplyTranslations(locale)
     L["Show class-colored names under class icons"] = "Mostrar nombres con color de clase debajo de los iconos de clase";
     L["Keep Blizzard health bar"] = "Barra Blizzard";
     L["Keep Blizzard health bars while showing class icons"] = "Mantener las barras de salud de Blizzard al mostrar iconos de clase";
-    L["Show crowd controls on party members"] = "CC en grupo";
+    L["Party crowd control"] = "CC del grupo";
     L["Show crowd control icons instead of class icons during crowd control effects"] = "Mostrar iconos de control de masas en lugar de iconos de clase durante efectos de control";
+    L["Swipe only shows the cooldown swipe. Full also shows a countdown."] = "Solo barrido muestra el barrido de reutilización. Completo también muestra una cuenta atrás.";
+    L["Swipe only"] = "Solo barrido";
+    L["Full"] = "Completo";
     L["Enemy nameplates"] = "Placas de enemigos";
     L["Arena enemy player nameplate numbers"] = "Números de arena";
     L["Places arena numbers over enemy players' nameplates, e.g., 1 for arena1, and so on"] = "Coloca números de arena sobre las placas de jugadores enemigos, p. ej. 1 para arena1, y así sucesivamente";
