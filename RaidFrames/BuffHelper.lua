@@ -251,7 +251,7 @@ local function EnsureContainers(frame)
     );
     for i = #playerProfile.primarySlots, 1, -1 do
         local primarySlot = playerProfile.primarySlots[i];
-        helper.primary:AddAuraGroup("Primary-" .. primarySlot.spellID, "HELPFUL", {
+        helper.primary:AddAuraGroup("Primary-" .. primarySlot.spellID, "HELPFUL|PLAYER", {
             maxFrameCount = 1,
             candidateFilters = {
                 includeSpellIDs = primarySlot.auraSpellIDs,
@@ -303,7 +303,7 @@ local function EnsureContainers(frame)
 
     for i = #playerProfile.row2Priority, 1, -1 do
         local spellID = playerProfile.row2Priority[i];
-        helper.row2:AddAuraGroup("Row2-" .. spellID, "HELPFUL", {
+        helper.row2:AddAuraGroup("Row2-" .. spellID, "HELPFUL|PLAYER", {
             maxFrameCount = 1,
             candidateFilters = {
                 includeSpellIDs = BuildRow2SpellMap(playerProfile, spellID),
