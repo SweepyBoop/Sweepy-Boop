@@ -1,0 +1,4 @@
+# World of Warcraft installation roots.
+# Keep one entry per platform. Paths may contain spaces and should not be quoted.
+WINDOWS_WOW_PATH=C:\Program Files (x86)\World of Warcraft
+MAC_WOW_PATH=/Applications/World of Warcraft

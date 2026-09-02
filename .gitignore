@@ -3,3 +3,8 @@
 *VSCode*
 SweepyBoop/
 /wow-icon-upscale-workbench/scratch/
+
+# Local icon comparison work files
+/Docs/IconUpscaleBackup/comparisons/build-*.swift
+/Docs/IconUpscaleBackup/comparisons/pr-*/
+/Docs/IconUpscaleBackup/comparisons/pr-*-vs-generated-*.png

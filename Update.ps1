@@ -1,5 +1,9 @@
 $workDir = $PSScriptRoot
-$gameDir = "C:\Program Files (x86)\World of Warcraft"
+Import-Module (Join-Path $PSScriptRoot "ScriptHelpers.psm1") -Force
+$gameDir = Get-WowInstallPath
+if (-not (Test-Path -LiteralPath $gameDir -PathType Container)) {
+    throw "World of Warcraft installation was not found: $gameDir. Update $(Join-Path $PSScriptRoot 'WoWInstallPaths.txt') after installing it."
+}
 $extensions = @("*.lua", "*.toc", "*.xml")
 $excludePatterns = @("*.git*", "*Docs*")
 $excludedDirectoryNames = @("Tools", "wow-icon-upscale-workbench")

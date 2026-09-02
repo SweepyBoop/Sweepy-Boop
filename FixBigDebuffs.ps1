@@ -1,5 +1,11 @@
+Import-Module (Join-Path $PSScriptRoot "ScriptHelpers.psm1") -Force
+$gameDir = Get-WowInstallPath
+if (-not (Test-Path -LiteralPath $gameDir -PathType Container)) {
+    throw "World of Warcraft installation was not found: $gameDir. Update $(Join-Path $PSScriptRoot 'WoWInstallPaths.txt') after installing it."
+}
+
 $overrideFile = Join-Path -Path $PSScriptRoot -ChildPath "Internal\BigDebuffsOverride.lua"
-$addonDir = "D:\World of Warcraft\_retail_\Interface\Addons\BigDebuffs"
+$addonDir = Join-Path $gameDir "_retail_\Interface\AddOns\BigDebuffs"
 $spellFile = Join-Path -Path $addonDir -ChildPath "BigDebuffs_Mainline.lua"
 $spellFileCata = Join-Path -Path $addonDir -ChildPath "BigDebuffs_Cata.lua"
 
