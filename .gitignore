@@ -4,6 +4,9 @@
 SweepyBoop/
 /wow-icon-upscale-workbench/scratch/
 
+# macOS Finder metadata
+.DS_Store
+
 # Local icon comparison work files
 /Docs/IconUpscaleBackup/comparisons/build-*.swift
 /Docs/IconUpscaleBackup/comparisons/pr-*/
