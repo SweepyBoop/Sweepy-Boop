@@ -561,6 +561,7 @@ addon.GetMiscOptions = function (order, icon, SweepyBoopLDB)
                         order = 23.5,
                         type = "toggle",
                         width = "full",
+                        hidden = addon.MAINLINE_CORE_FEATURES_ONLY,
                         name = addon.FORMAT_ATLAS("UI-HUD-UnitFrame-Player-PortraitOn-Bar-Health") .. " " .. L["Class color unit frame health bars"],
                         desc = L["Color Player / Target / Focus health bars by class color"],
                         set = function(info, val)

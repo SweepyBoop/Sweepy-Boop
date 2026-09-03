@@ -91,7 +91,7 @@ eventFrame:SetScript("OnEvent", function(_, event)
 end);
 
 function SweepyBoop:SetupClassColorUnitFrames()
-    enabled = SweepyBoop.db.profile.misc.classColorUnitFrames;
+    enabled = ( not addon.MAINLINE_CORE_FEATURES_ONLY ) and SweepyBoop.db.profile.misc.classColorUnitFrames;
 
     eventFrame:UnregisterAllEvents();
     if enabled then
