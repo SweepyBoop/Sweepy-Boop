@@ -2,8 +2,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd -P)"
-# shellcheck source=ScriptHelpers.sh
-source "${SCRIPT_DIR}/ScriptHelpers.sh"
+# shellcheck source=scriptHelpers.sh
+source "${SCRIPT_DIR}/scriptHelpers.sh"
 
 usage() {
     printf 'Usage: %s [--off]\n' "$(basename -- "$0")"

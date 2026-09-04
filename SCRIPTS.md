@@ -30,7 +30,7 @@ The scripts resolve paths relative to themselves, so they can be run from any wo
 Deploy the development copy to every installed WoW client under `MAC_WOW_PATH`:
 
 ```bash
-./Update.sh
+./update.sh
 ```
 
 Missing client flavors are skipped. Each deployed copy includes `Internal/` and receives `addon.internal = true;` in `Common/Constants.lua`.
@@ -40,13 +40,13 @@ Missing client flavors are skipped. Each deployed copy includes `Internal/` and 
 Enable test mode in every installed SweepyBoop copy:
 
 ```bash
-./Test.sh
+./test.sh
 ```
 
 Disable it:
 
 ```bash
-./Test.sh --off
+./test.sh --off
 ```
 
 ## Create the publish ZIP
@@ -54,7 +54,7 @@ Disable it:
 Create a clean staging folder and a publish-ready archive:
 
 ```bash
-./Publish.sh
+./publish.sh
 ```
 
 The script creates:
@@ -83,13 +83,13 @@ You can upload `SweepyBoop.zip` directly to the add-on hosting site. The archive
 Regenerate crowd-control aura data from an installed BigDebuffs copy:
 
 ```bash
-./FixBigDebuffs.sh
+./fixBigDebuffs.sh
 ```
 
 Delete all local Git branches except `main` after a confirmation prompt:
 
 ```bash
-./CleanupBranches.sh
+./cleanupBranches.sh
 ```
 
-Skip the prompt with `./CleanupBranches.sh --force`. This operation force-deletes local branches and refuses to run with uncommitted changes.
+Skip the prompt with `./cleanupBranches.sh --force`. This operation force-deletes local branches and refuses to run with uncommitted changes.
