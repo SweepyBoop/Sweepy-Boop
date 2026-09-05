@@ -133,14 +133,18 @@ local function CreateHighlightTexture(frame, texturePath, layer, color, alpha)
     return texture;
 end
 
-local function ConfigureCooldown(cooldown, useGlowStyle, config)
+local function ConfigureCountdown(cooldown, config)
     local hideCountdown = config.bigDebuffsShowCountdown == false;
+    cooldown:SetHideCountdownNumbers(hideCountdown);
+    cooldown.noCooldownCount = hideCountdown;
+end
+
+local function ConfigureCooldown(cooldown, useGlowStyle, config)
     cooldown:SetDrawBling(false);
     cooldown:SetDrawSwipe(true);
     cooldown:SetDrawEdge(true);
     cooldown:SetReverse(true);
-    cooldown:SetHideCountdownNumbers(hideCountdown);
-    cooldown.noCooldownCount = hideCountdown;
+    ConfigureCountdown(cooldown, config);
     cooldown:SetSwipeColor(0, 0, 0, useGlowStyle and 0.5 or 0.55);
     if cooldown.SetEdgeTexture then
         cooldown:SetEdgeTexture(addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE);
@@ -209,6 +213,7 @@ local function InitializeAuraButton(button, auraKind, iconStyle, container)
     ConfigureCooldown(cooldown, useGlowStyle, GetConfig());
     button:SetDurationCooldown(cooldown);
     container.sweepyBoopAuraButtons[#container.sweepyBoopAuraButtons + 1] = button;
+    container.sweepyBoopCooldowns[#container.sweepyBoopCooldowns + 1] = cooldown;
 end
 
 local function EnsureRoot(nameplate, railInfo)
@@ -303,6 +308,7 @@ local function EnsureContainer(nameplate, railInfo, groups)
         }
     );
     container.sweepyBoopAuraButtons = {};
+    container.sweepyBoopCooldowns = {};
     container.sweepyBoopIconStyle = iconStyle;
     container.sweepyBoopShowCountdown = GetConfig().bigDebuffsShowCountdown ~= false;
 
@@ -316,23 +322,34 @@ end
 
 local function ApplyCountdownStyle(container, config)
     local showCountdown = config.bigDebuffsShowCountdown ~= false;
-    if container.sweepyBoopShowCountdown == showCountdown then return end
+    local countdownChanged = container.sweepyBoopShowCountdown ~= showCountdown;
+    local rebindPending = container.sweepyBoopCountdownRebindPending;
+    if ( not countdownChanged ) and ( not rebindPending ) then return end
+
+    if countdownChanged then
+        -- Cooldown presentation remains writable while aura data is secret, so profile
+        -- resets can update Blizzard text immediately without touching an AuraButton.
+        for _, cooldown in ipairs(container.sweepyBoopCooldowns or {}) do
+            ConfigureCountdown(cooldown, config);
+        end
+        container.sweepyBoopShowCountdown = showCountdown;
+    end
+
     if not CanStyleAuraButtons() then
+        container.sweepyBoopCountdownRebindPending = true;
         restylePending = true;
         return;
     end
 
-    local useGlowStyle = IsGlowStyle(container.sweepyBoopIconStyle);
-    for _, button in ipairs(container.sweepyBoopAuraButtons or {}) do
-        local cooldown = button:GetDurationCooldown();
+    for index, button in ipairs(container.sweepyBoopAuraButtons or {}) do
+        local cooldown = container.sweepyBoopCooldowns[index];
         if cooldown then
-            ConfigureCooldown(cooldown, useGlowStyle, config);
             -- Reapply Blizzard's opaque duration so cooldown-text addons such as
             -- OmniCC reevaluate noCooldownCount for an already-running aura.
             button:SetDurationCooldown(cooldown);
         end
     end
-    container.sweepyBoopShowCountdown = showCountdown;
+    container.sweepyBoopCountdownRebindPending = false;
     restylePending = false;
 end
 
