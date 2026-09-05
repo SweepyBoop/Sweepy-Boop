@@ -87,27 +87,30 @@ local function UpdateCooldownFontSize(cooldown)
     end
 end
 
-local function ConfigureCountdown(cooldown, config)
-    local hideCountdown = config.raidFrameDebuffIconShowCountdown == false;
-    cooldown:SetHideCountdownNumbers(hideCountdown);
-    cooldown.noCooldownCount = hideCountdown;
+local function ConfigureCountdown(cooldown, showCountdown)
+    cooldown:SetHideCountdownNumbers(not showCountdown);
+    cooldown.noCooldownCount = not showCountdown;
 end
 
-local function StyleCooldown(cooldown, config)
+local function StyleCooldown(cooldown, config, showCountdown)
+    if showCountdown == nil then
+        showCountdown = config.raidFrameDebuffIconShowCountdown ~= false;
+    end
+
     cooldown:SetDrawBling(false);
     cooldown:SetReverse(true);
     cooldown:SetDrawSwipe(true);
     cooldown:SetSwipeColor(0, 0, 0, 0.5);
     cooldown:SetDrawEdge(true);
     cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC", 1, 1, 1, 1);
-    ConfigureCountdown(cooldown, config);
+    ConfigureCountdown(cooldown, showCountdown);
     if cooldown.SetCountdownMillisecondsThreshold then
         cooldown:SetCountdownMillisecondsThreshold(GetMillisecondsThreshold(config));
     end
     UpdateCooldownFontSize(cooldown);
 end
 
-local function CreateDebuffVisual(frame)
+local function CreateDebuffVisual(frame, showCountdown)
     local backdrop = frame:CreateTexture(nil, "BACKGROUND");
     backdrop:SetAllPoints(frame);
     backdrop:SetColorTexture(0, 0, 0, 1);
@@ -120,7 +123,7 @@ local function CreateDebuffVisual(frame)
 
     local cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     cooldown:SetAllPoints(icon);
-    StyleCooldown(cooldown, GetConfig());
+    StyleCooldown(cooldown, GetConfig(), showCountdown);
     return icon, cooldown;
 end
 
@@ -155,18 +158,14 @@ local function AddSecureHighlightTexture(button, texturePath, layer, alpha)
     });
 end
 
-local function InitializeAuraButton(button, frame)
-    frame.sweepyBoopDebuffAuraButtons = frame.sweepyBoopDebuffAuraButtons or {};
-    frame.sweepyBoopDebuffCooldowns = frame.sweepyBoopDebuffCooldowns or {};
-
+local function InitializeAuraButton(button, container, showCountdown)
     button:SetSize(iconBaseSize, iconBaseSize);
     button:SetMouseMotionEnabled(false);
 
-    local icon, cooldown = CreateDebuffVisual(button);
+    local icon, cooldown = CreateDebuffVisual(button, showCountdown);
     button:SetIcon(icon);
     button:SetDurationCooldown(cooldown);
-    frame.sweepyBoopDebuffAuraButtons[#frame.sweepyBoopDebuffAuraButtons + 1] = button;
-    frame.sweepyBoopDebuffCooldowns[#frame.sweepyBoopDebuffCooldowns + 1] = cooldown;
+    container.sweepyBoopAuraButtons[#container.sweepyBoopAuraButtons + 1] = button;
 
     AddSecureHighlightTexture(
         button,
@@ -221,45 +220,28 @@ end
 local function RestyleContainer(frame, container)
     ApplyVisualRootLayout(frame);
 
-    local config = GetConfig();
-    local showCountdown = config.raidFrameDebuffIconShowCountdown ~= false;
-    local countdownChanged = frame.sweepyBoopDebuffShowCountdown ~= showCountdown;
-    local rebindPending = frame.sweepyBoopDebuffCountdownRebindPending;
-    if countdownChanged then
-        -- Cooldown presentation remains writable while aura data is secret, so profile
-        -- resets can update Blizzard text immediately without touching an AuraButton.
-        for _, cooldown in ipairs(frame.sweepyBoopDebuffCooldowns or {}) do
-            ConfigureCountdown(cooldown, config);
-        end
-        frame.sweepyBoopDebuffShowCountdown = showCountdown;
-    end
-
     if ( not CanStyleAuraButtons() ) then
-        if countdownChanged then
-            frame.sweepyBoopDebuffCountdownRebindPending = true;
-        end
         restylePending = true;
         return;
     end
 
     restylePending = false;
     ApplyContainerLayout(frame, container);
-    for index, button in ipairs(frame.sweepyBoopDebuffAuraButtons or {}) do
-        local cooldown = frame.sweepyBoopDebuffCooldowns[index];
+    local config = GetConfig();
+    for _, button in ipairs(container.sweepyBoopAuraButtons or {}) do
+        local cooldown = button:GetDurationCooldown();
         if cooldown then
-            StyleCooldown(cooldown, config);
-            if countdownChanged or rebindPending then
-                -- Reapply Blizzard's opaque duration so cooldown-text addons such as
-                -- OmniCC reevaluate noCooldownCount for an already-running aura.
-                button:SetDurationCooldown(cooldown);
-            end
+            StyleCooldown(cooldown, config, container.sweepyBoopShowCountdown);
         end
     end
-    frame.sweepyBoopDebuffCountdownRebindPending = false;
 end
 
 local function EnsureContainer(frame)
-    local container = frame.sweepyBoopDebuffAuraContainer;
+    local showCountdown = GetConfig().raidFrameDebuffIconShowCountdown ~= false;
+    -- Cooldowns become forbidden after SetDurationCooldown, so cache an immutable
+    -- container variant for each countdown state instead of restyling them later.
+    frame.sweepyBoopDebuffAuraContainers = frame.sweepyBoopDebuffAuraContainers or {};
+    local container = frame.sweepyBoopDebuffAuraContainers[showCountdown];
     if container then return container end
 
     local root = EnsureVisualRoot(frame);
@@ -288,13 +270,15 @@ local function EnsureContainer(frame)
             ignoreDispelDebuffs = false,
         }
     );
+    container.sweepyBoopAuraButtons = {};
+    container.sweepyBoopShowCountdown = showCountdown;
     container:AddAuraGroup(auraGroupKey, auraFilter, {
         maxFrameCount = GetIconCount(GetConfig()),
         -- TODO: Restore UnitFrameDebuff when Blizzard's comparator handles nil debuffType values.
         sortMethod = AuraContainerSortMethod.Default,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
-            InitializeAuraButton(button, frame);
+            InitializeAuraButton(button, container, showCountdown);
         end,
         layout = {
             elementSpacing = iconSpacing,
@@ -304,15 +288,16 @@ local function EnsureContainer(frame)
         },
     });
 
-    frame.sweepyBoopDebuffAuraContainer = container;
+    frame.sweepyBoopDebuffAuraContainers[showCountdown] = container;
     ApplyContainerLayout(frame, container);
     return container;
 end
 
-local function HideContainer(frame)
-    local container = frame.sweepyBoopDebuffAuraContainer;
-    if container then
-        container:Hide();
+local function HideContainers(frame, exceptContainer)
+    for _, container in pairs(frame.sweepyBoopDebuffAuraContainers or {}) do
+        if container ~= exceptContainer then
+            container:Hide();
+        end
     end
 end
 
@@ -379,7 +364,7 @@ local function ShowTestFrame(frame)
         return;
     end
 
-    HideContainer(frame);
+    HideContainers(frame);
     ClearTestIcons(frame);
 
     local config = GetConfig();
@@ -439,11 +424,12 @@ local function UpdateFrame(frame, forceRefresh)
         or ( not unit )
         or ( not UnitExists(unit) )
         or ( not IsGroupUnit(unit) ) then
-        HideContainer(frame);
+        HideContainers(frame);
         return;
     end
 
     local container = EnsureContainer(frame);
+    HideContainers(frame, container);
     RestyleContainer(frame, container);
     ActivateContainer(container, unit, forceRefresh);
 end
@@ -470,7 +456,7 @@ local function TrackFrame(frame)
         UpdateFrame(frame);
     elseif cufPool[frame] then
         cufPool[frame] = nil;
-        HideContainer(frame);
+        HideContainers(frame);
         ClearTestIcons(frame);
     end
 end

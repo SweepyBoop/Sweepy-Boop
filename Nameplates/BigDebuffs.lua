@@ -5,7 +5,6 @@ if not addon.PROJECT_MAINLINE then return end
 local AURA_KIND = addon.BIG_DEBUFFS_AURA_KIND;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local frameLevelOffset = 20;
-local restylePending = false;
 
 local RAIL = {
     LEFT = {
@@ -97,12 +96,6 @@ local function GetIconSpacing(config)
     );
 end
 
-local function CanStyleAuraButtons()
-    return ( not C_Secrets )
-        or ( not C_Secrets.ShouldAurasBeSecret )
-        or ( not C_Secrets.ShouldAurasBeSecret() );
-end
-
 local function IsHighlightStyle(iconStyle)
     return iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
 end
@@ -133,25 +126,24 @@ local function CreateHighlightTexture(frame, texturePath, layer, color, alpha)
     return texture;
 end
 
-local function ConfigureCountdown(cooldown, config)
-    local hideCountdown = config.bigDebuffsShowCountdown == false;
-    cooldown:SetHideCountdownNumbers(hideCountdown);
-    cooldown.noCooldownCount = hideCountdown;
+local function ConfigureCountdown(cooldown, showCountdown)
+    cooldown:SetHideCountdownNumbers(not showCountdown);
+    cooldown.noCooldownCount = not showCountdown;
 end
 
-local function ConfigureCooldown(cooldown, useGlowStyle, config)
+local function ConfigureCooldown(cooldown, useGlowStyle, showCountdown)
     cooldown:SetDrawBling(false);
     cooldown:SetDrawSwipe(true);
     cooldown:SetDrawEdge(true);
     cooldown:SetReverse(true);
-    ConfigureCountdown(cooldown, config);
+    ConfigureCountdown(cooldown, showCountdown);
     cooldown:SetSwipeColor(0, 0, 0, useGlowStyle and 0.5 or 0.55);
     if cooldown.SetEdgeTexture then
         cooldown:SetEdgeTexture(addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE);
     end
 end
 
-local function InitializeAuraButton(button, auraKind, iconStyle, container)
+local function InitializeAuraButton(button, auraKind, iconStyle, showCountdown)
     local useHighlightStyle = IsHighlightStyle(iconStyle);
     local useGlowStyle = IsGlowStyle(iconStyle);
     local color = addon.GetBigDebuffsAuraTint(auraKind, iconStyle);
@@ -210,10 +202,8 @@ local function InitializeAuraButton(button, auraKind, iconStyle, container)
 
     local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
     cooldown:SetAllPoints(icon);
-    ConfigureCooldown(cooldown, useGlowStyle, GetConfig());
+    ConfigureCooldown(cooldown, useGlowStyle, showCountdown);
     button:SetDurationCooldown(cooldown);
-    container.sweepyBoopAuraButtons[#container.sweepyBoopAuraButtons + 1] = button;
-    container.sweepyBoopCooldowns[#container.sweepyBoopCooldowns + 1] = cooldown;
 end
 
 local function EnsureRoot(nameplate, railInfo)
@@ -251,14 +241,14 @@ local function ApplyRootLayout(nameplate, railInfo)
     return root;
 end
 
-local function AddAuraGroup(container, group, iconStyle)
+local function AddAuraGroup(container, group, iconStyle, showCountdown)
     container:AddAuraGroup(group.key, group.filter, {
         maxFrameCount = GetIconCount(GetConfig()),
         -- TODO: Restore UnitFrameDebuff when Blizzard's comparator handles nil debuffType values.
         sortMethod = AuraContainerSortMethod.Default,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
-            InitializeAuraButton(button, group.auraKind, iconStyle, container);
+            InitializeAuraButton(button, group.auraKind, iconStyle, showCountdown);
         end,
         layout = {
             elementSpacing = GetIconSpacing(GetConfig()) * iconBaseSize / GetIconSize(GetConfig()),
@@ -271,14 +261,19 @@ local function AddAuraGroup(container, group, iconStyle)
 end
 
 local function EnsureContainer(nameplate, railInfo, groups)
-    local iconStyle = addon.GetBigDebuffsIconStyle(GetConfig());
+    local config = GetConfig();
+    local iconStyle = addon.GetBigDebuffsIconStyle(config);
+    local showCountdown = config.bigDebuffsShowCountdown ~= false;
+    -- Cooldowns become forbidden after SetDurationCooldown, so cache an immutable
+    -- container variant for each countdown state instead of restyling them later.
+    local containerKey = iconStyle .. ( showCountdown and ":countdown" or ":noCountdown" );
     local containers = nameplate[railInfo.containersKey];
     if not containers then
         containers = {};
         nameplate[railInfo.containersKey] = containers;
     end
 
-    local container = containers[iconStyle];
+    local container = containers[containerKey];
     if container then return container end
 
     local root = EnsureRoot(nameplate, railInfo);
@@ -307,57 +302,18 @@ local function EnsureContainer(nameplate, railInfo, groups)
             ignoreDispelDebuffs = false,
         }
     );
-    container.sweepyBoopAuraButtons = {};
-    container.sweepyBoopCooldowns = {};
-    container.sweepyBoopIconStyle = iconStyle;
-    container.sweepyBoopShowCountdown = GetConfig().bigDebuffsShowCountdown ~= false;
-
     for _, group in ipairs(groups) do
-        AddAuraGroup(container, group, iconStyle);
+        AddAuraGroup(container, group, iconStyle, showCountdown);
     end
 
-    containers[iconStyle] = container;
+    containers[containerKey] = container;
     return container;
-end
-
-local function ApplyCountdownStyle(container, config)
-    local showCountdown = config.bigDebuffsShowCountdown ~= false;
-    local countdownChanged = container.sweepyBoopShowCountdown ~= showCountdown;
-    local rebindPending = container.sweepyBoopCountdownRebindPending;
-    if ( not countdownChanged ) and ( not rebindPending ) then return end
-
-    if countdownChanged then
-        -- Cooldown presentation remains writable while aura data is secret, so profile
-        -- resets can update Blizzard text immediately without touching an AuraButton.
-        for _, cooldown in ipairs(container.sweepyBoopCooldowns or {}) do
-            ConfigureCountdown(cooldown, config);
-        end
-        container.sweepyBoopShowCountdown = showCountdown;
-    end
-
-    if not CanStyleAuraButtons() then
-        container.sweepyBoopCountdownRebindPending = true;
-        restylePending = true;
-        return;
-    end
-
-    for index, button in ipairs(container.sweepyBoopAuraButtons or {}) do
-        local cooldown = container.sweepyBoopCooldowns[index];
-        if cooldown then
-            -- Reapply Blizzard's opaque duration so cooldown-text addons such as
-            -- OmniCC reevaluate noCooldownCount for an already-running aura.
-            button:SetDurationCooldown(cooldown);
-        end
-    end
-    container.sweepyBoopCountdownRebindPending = false;
-    restylePending = false;
 end
 
 local function ApplyContainerLayout(nameplate, railInfo, container, groups)
     local config = GetConfig();
     local root = EnsureRoot(nameplate, railInfo);
     local anchor = nameplate.UnitFrame and nameplate.UnitFrame.healthBar or nameplate;
-    ApplyCountdownStyle(container, config);
     if container.sweepyBoopLastModified == config.lastModified
         and root.sweepyBoopAnchor == anchor then
         return;
@@ -431,12 +387,3 @@ addon.HideBigDebuffs = function(nameplate)
     HideContainers(nameplate[RAIL.LEFT.containersKey]);
     HideContainers(nameplate[RAIL.RIGHT.containersKey]);
 end
-
-local function ReconcilePendingRestyle()
-    if ( not restylePending ) or ( not CanStyleAuraButtons() ) then return end
-
-    restylePending = false;
-    SweepyBoop:RefreshAllNamePlates();
-end
-
-addon.RegisterAuraRestrictionListener("NameplateBigDebuffs", ReconcilePendingRestyle);
