@@ -47,13 +47,15 @@ local function IsEnabled(config)
 end
 
 local function StyleCooldown(cooldown, config)
+    local hideCountdown = config.raidFrameDebuffIconShowCountdown == false;
     cooldown:SetDrawBling(false);
     cooldown:SetReverse(true);
     cooldown:SetDrawSwipe(true);
     cooldown:SetSwipeColor(0, 0, 0, 0.5);
     cooldown:SetDrawEdge(true);
     cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC");
-    cooldown:SetHideCountdownNumbers(false);
+    cooldown:SetHideCountdownNumbers(hideCountdown);
+    cooldown.noCooldownCount = hideCountdown;
     if cooldown.SetCountdownMillisecondsThreshold then
         cooldown:SetCountdownMillisecondsThreshold(GetMillisecondsThreshold(config));
     end

@@ -419,6 +419,8 @@ local function ApplyTranslations(locale)
     L["Show crowd control"] = "Mostrar control de masas";
     L["Show defensives"] = "Mostrar defensivos";
     L["Show important buffs"] = "Mostrar beneficios importantes";
+    L["Show countdown"] = "Mostrar cuenta atrás";
+    L["Show remaining time as countdown text on icons."] = "Muestra el tiempo restante como texto de cuenta atrás en los iconos.";
     L["Uses Blizzard's nameplate-important buff list instead of a custom spell list."] = "Usa la lista de beneficios importantes para placas de nombre de Blizzard en lugar de una lista de hechizos personalizada.";
     L["Border style"] = "Estilo del borde";
     L["Plain"] = "Simple";

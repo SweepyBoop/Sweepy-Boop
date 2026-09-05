@@ -54,6 +54,12 @@ local function DebuffIconOptionsDisabled()
     return not SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconsEnabled;
 end
 
+local function DebuffIconCountdownOptionsDisabled()
+    local config = SweepyBoop.db.profile.raidFrames;
+    return ( not config.raidFrameDebuffIconsEnabled )
+        or config.raidFrameDebuffIconShowCountdown == false;
+end
+
 local function HealerBuffHelperLayoutDisabled()
     local raidFrames = SweepyBoop.db.profile.raidFrames;
     return ( not raidFrames.druidBuffHelper ) and ( not raidFrames.evokerBuffHelper );
@@ -478,6 +484,19 @@ addon.GetRaidFrameOptions = function(order)
                         width = "full",
                     },
 
+                    raidFrameDebuffIconShowCountdown = {
+                        order = 19.5,
+                        width = 1,
+                        type = "toggle",
+                        name = addon.L["Show countdown"],
+                        desc = addon.L["Show remaining time as countdown text on icons."],
+                        get = function()
+                            return SweepyBoop.db.profile.raidFrames.raidFrameDebuffIconShowCountdown ~= false;
+                        end,
+                        disabled = DebuffIconOptionsDisabled,
+                        set = SetDebuffIconOptionAndRefresh,
+                    },
+
                     raidFrameDebuffIconMillisecondsThreshold = {
                         order = 20,
                         width = 0.8,
@@ -487,7 +506,7 @@ addon.GetRaidFrameOptions = function(order)
                         step = 1,
                         name = "Decimal Threshold",
                         desc = "Show decimal countdowns below this many seconds.",
-                        disabled = DebuffIconOptionsDisabled,
+                        disabled = DebuffIconCountdownOptionsDisabled,
                         set = SetDebuffIconOptionAndRefresh,
                     },
 

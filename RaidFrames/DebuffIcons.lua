@@ -88,13 +88,15 @@ local function UpdateCooldownFontSize(cooldown)
 end
 
 local function StyleCooldown(cooldown, config)
+    local hideCountdown = config.raidFrameDebuffIconShowCountdown == false;
     cooldown:SetDrawBling(false);
     cooldown:SetReverse(true);
     cooldown:SetDrawSwipe(true);
     cooldown:SetSwipeColor(0, 0, 0, 0.5);
     cooldown:SetDrawEdge(true);
     cooldown:SetEdgeTexture("Interface\\Cooldown\\UI-HUD-ActionBar-LoC", 1, 1, 1, 1);
-    cooldown:SetHideCountdownNumbers(false);
+    cooldown:SetHideCountdownNumbers(hideCountdown);
+    cooldown.noCooldownCount = hideCountdown;
     if cooldown.SetCountdownMillisecondsThreshold then
         cooldown:SetCountdownMillisecondsThreshold(GetMillisecondsThreshold(config));
     end
@@ -221,12 +223,20 @@ local function RestyleContainer(frame, container)
     restylePending = false;
     ApplyContainerLayout(frame, container);
     local config = GetConfig();
+    local showCountdown = config.raidFrameDebuffIconShowCountdown ~= false;
+    local countdownChanged = frame.sweepyBoopDebuffShowCountdown ~= showCountdown;
     for _, button in ipairs(frame.sweepyBoopDebuffAuraButtons or {}) do
         local cooldown = button:GetDurationCooldown();
         if cooldown then
             StyleCooldown(cooldown, config);
+            if countdownChanged then
+                -- Reapply Blizzard's opaque duration so cooldown-text addons such as
+                -- OmniCC reevaluate noCooldownCount for an already-running aura.
+                button:SetDurationCooldown(cooldown);
+            end
         end
     end
+    frame.sweepyBoopDebuffShowCountdown = showCountdown;
 end
 
 local function EnsureContainer(frame)

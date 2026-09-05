@@ -279,9 +279,12 @@ end
 
 local function ConfigureSlotCooldown(slot, config)
     local useGlowStyle = addon.GetBigDebuffsIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.GLOW;
+    local hideCountdown = config.bigDebuffsShowCountdown == false;
 
     slot.cooldown:SetDrawEdge(true);
     slot.cooldown:SetReverse(true);
+    slot.cooldown:SetHideCountdownNumbers(hideCountdown);
+    slot.cooldown.noCooldownCount = hideCountdown;
     if slot.cooldown.SetSwipeColor then
         slot.cooldown:SetSwipeColor(0, 0, 0, useGlowStyle and 0.5 or 0.55);
     end
