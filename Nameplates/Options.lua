@@ -807,6 +807,19 @@ addon.GetEnemyNameplateOptions = function(order)
                             return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
                         end,
                     },
+                    bigDebuffsShowCountdown = {
+                        order = 5.5,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " " .. addon.L["Show countdown"],
+                        desc = addon.L["Show remaining time as countdown text on icons."],
+                        get = function()
+                            return SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsShowCountdown ~= false;
+                        end,
+                        hidden = function()
+                            return not SweepyBoop.db.profile.nameplatesEnemy.bigDebuffsEnabled;
+                        end,
+                    },
                     bigDebuffsIconStyle = {
                         order = 6,
                         type = "select",
