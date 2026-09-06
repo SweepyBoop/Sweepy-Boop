@@ -240,6 +240,7 @@ local function EnsureContainer(frame)
     local showCountdown = GetConfig().raidFrameDebuffIconShowCountdown ~= false;
     -- Cooldowns become forbidden after SetDurationCooldown, so cache an immutable
     -- container variant for each countdown state instead of restyling them later.
+    -- Hidden variants unregister dynamic aura events and do no steady-state update work.
     frame.sweepyBoopDebuffAuraContainers = frame.sweepyBoopDebuffAuraContainers or {};
     local container = frame.sweepyBoopDebuffAuraContainers[showCountdown];
     if container then return container end

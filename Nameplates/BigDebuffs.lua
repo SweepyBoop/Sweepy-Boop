@@ -266,6 +266,7 @@ local function EnsureContainer(nameplate, railInfo, groups)
     local showCountdown = config.bigDebuffsShowCountdown ~= false;
     -- Cooldowns become forbidden after SetDurationCooldown, so cache an immutable
     -- container variant for each countdown state instead of restyling them later.
+    -- Hidden variants unregister dynamic aura events and do no steady-state update work.
     local containerKey = iconStyle .. ( showCountdown and ":countdown" or ":noCountdown" );
     local containers = nameplate[railInfo.containersKey];
     if not containers then
