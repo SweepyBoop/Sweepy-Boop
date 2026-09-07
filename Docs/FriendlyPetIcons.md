@@ -258,6 +258,7 @@ Neither option should imply that SweepyBoop can distinguish another player's pri
 - The tested `nameplate1` and `partypet1` pair was incomparable during an active arena round and was also marked secret.
 - `UnitIsOtherPlayersPet` returned `true` for both BM Hunter pets and cannot distinguish the primary pet by itself.
 - Other-player pets are now routed through per-party protected ownership gates after readable `UnitIsOtherPlayersPet` classification; ownership results are used only by `SetAlphaFromBoolean` and are never inspected.
+- During direct runtime testing, a Destruction Warlock teammate's pet displayed the icon, confirming the implemented non-Hunter remote-pet path in that scenario.
 - Blizzard's custom aura container supports exact spell-ID presentation for helpful auras on assistable friendly units without exposing aura presence as an ordinary Lua Boolean.
 - Candidate permanent Hunter pet-family aura IDs and their primary-versus-secondary behavior remain unverified.
 - `UnitCreatureFamily` returned a family for at least Hunter and Warlock pets outside restricted PvP.
