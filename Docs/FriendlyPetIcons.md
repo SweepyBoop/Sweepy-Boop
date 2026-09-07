@@ -18,23 +18,30 @@ Improve friendly pet icons so that:
 - **Special icon for my pet** controls presentation independently from **Show my pet only**, which controls visibility.
 - Secondary pets and temporary summons are not described as primary pets without a supported signal.
 
-No implementation decision has been finalized.
+A Retail visibility implementation is now present for in-game validation. It preserves the fixed mend-pet artwork; portrait and family-specific artwork remain future work.
 
 ## Current SweepyBoop Behavior
 
-The renderer in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/PetIcons.lua` always assigns the fixed mend-pet texture:
+The renderer in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/PetIcons.lua` continues to assign the fixed mend-pet texture:
 
 ```lua
-nameplate.FriendlyPetIcon.icon:SetTexture(addon.ICON_ID_PET);
+iconFrame.icon:SetTexture(addon.ICON_ID_PET);
 ```
 
-Pet eligibility is decided earlier in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/Nameplates.lua`:
+Retail pet eligibility is decided in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/Nameplates.lua` using two separate readable classifications:
 
 ```lua
-addon.UnitIsUnitReadable(frame.unit, "pet")
-    or addon.UnitIsUnitReadable(frame.unit, "partypet1")
-    or addon.UnitIsUnitReadable(frame.unit, "partypet2")
+local isMyPet = addon.UnitIsUnitReadable(frame.unit, "pet");
+local isOtherPlayersPet = UnitIsOtherPlayersPet(frame.unit);
 ```
+
+The local-pet path deliberately retains the direct `"pet"` comparison. It does not use `UnitIsOwnerOrControllerOfUnit("player", frame.unit)`, because ownership includes guardians and other controlled units in addition to the player's pet.
+
+An other-player unit is considered for a pet icon only after `UnitIsOtherPlayersPet` returns true. SweepyBoop then creates overlapping presentation gates for `party1` through `party4`, reads each party member's class, and forwards `UnitIsOwnerOrControllerOfUnit(partyN, frame.unit)` directly to that gate's `SetAlphaFromBoolean`. The ownership result is never inspected by addon Lua. Non-Hunter owner gates contain the ordinary mend-pet icon. Hunter owner gates contain Blizzard's custom aura presentations described below.
+
+Ownership is not used as the pet classifier. Because the outer `UnitIsOtherPlayersPet` check has already established that the remote unit is a pet, guardians and other controlled units do not enter these owner-class routing gates.
+
+Classic clients retain the previous `pet`, `partypet1`, and `partypet2` comparison path.
 
 `addon.UnitIsUnitReadable` is defined in `/Users/kunhouseliu/wow/sweepy-boop/Common/UnitInfoHelpers.lua`:
 
@@ -46,12 +53,9 @@ addon.UnitIsUnitReadable = function(unitA, unitB)
 end
 ```
 
-The helper prevents callers from branching on a secret Boolean. It cannot make an incomparable token pair comparable or make a secret result readable. A `nil` or secret result is false in the current eligibility condition, so the pet icon is not shown.
+The helper prevents callers from branching on a secret Boolean. It cannot make an incomparable token pair comparable or make a secret result readable.
 
-Two additional limitations are visible in the current code:
-
-- Only `partypet1` and `partypet2` are checked. `partypet3` and `partypet4` are omitted.
-- **Show my pet only** still evaluates a comparison with `"pet"` in arenas even though its tooltip says that the option is unavailable there. If that comparison is unavailable, the option hides the icon.
+**Show my pet only** now suppresses the `UnitIsOtherPlayersPet` branch while leaving the direct local-pet branch eligible. Party roster changes and `UNIT_PET` notifications trigger a hide-first nameplate refresh so reused party indices and pet swaps cannot retain stale presentation.
 
 ## Blizzard `UnitIsUnit` Contract
 
@@ -128,6 +132,51 @@ Neither declaration has an identity-secrecy or comparison-secrecy annotation. Bo
 
 The APIs include players as well as pets. SweepyBoop already distinguishes players before entering the pet path, but the contract does not state whether BM secondary pets are included. That behavior requires an in-game test.
 
+## Permanent Hunter Pet-Family Auras
+
+A Hunter primary pet was observed with a permanent helpful pet-family aura. If that aura is absent from a Beast Mastery secondary pet, its presence could be a stronger primary-pet signal than broad predicates or pet-name matching. This is currently an observation and hypothesis, not a confirmed classifier.
+
+Candidate spell IDs collected for runtime verification are:
+
+```text
+264662
+264656
+264663
+284301
+```
+
+The current Blizzard UI source does not contain spell-data records that establish the names, scope, or completeness of these IDs. None should be used until the game client confirms the spell name and the aura's presence on primary and secondary pets.
+
+### Direct aura access
+
+The generated contracts in `/Users/kunhouseliu/wow/wow-ui-source/Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitAuraDocumentation.lua` annotate ordinary unit-aura queries with `RequiresUnitAuraAccess`, and relevant results with `SecretWhenUnitAuraRestricted`. Addon Lua therefore cannot assume that directly enumerating a friendly pet's auras will produce readable data during an active PvP round.
+
+### Blizzard custom aura presentation
+
+Blizzard provides a security-partitioned presentation path in `/Users/kunhouseliu/wow/wow-ui-source/Interface/AddOns/Blizzard_AuraContainer`:
+
+- `CustomAuraContainerTemplate` delegates its public interface into Blizzard's forbidden partition.
+- An aura slot owns one `CustomAuraButtonTemplate` and is documented as suitable for indicators for specific spell IDs.
+- `candidateFilters.includeSpellIDs` accepts an exact spell-ID set.
+- `AuraContainerUtil.CanApplyIdentityCandidateFilters` explicitly permits identity filters for helpful auras on the active player, group members, or their pets.
+- `CustomAuraButtonPrivateMixin:ApplyVisibility` applies aura presence through `secretwrap(auraData ~= nil)`.
+- Aura-derived icon textures are also assigned through `secretwrap`.
+- Generated buttons receive `DenyTaintedAccessWhenAurasAreSecret` after their initialization callback runs.
+
+The current Retail implementation uses separate custom aura slots for the existing fixed mend-pet artwork and its target ring without exposing aura presence to ordinary addon logic. Both visuals are created during `initializeFrame`, before Blizzard applies access restrictions. Each button remains a presentation boundary: SweepyBoop does not inspect its visibility, selected aura, texture, frame occupancy, or other restricted state to derive a readable primary-pet value.
+
+The implementation keeps each ordinary parent transparent across a full update turn after rebinding its aura container. Blizzard processes a full aura rebuild on the container's next visible update, so revealing on the following update prevents a recycled slot from briefly presenting its previous assignment. The arming callbacks validate only ordinary assignment-generation state and never inspect the aura buttons.
+
+This mechanism still depends on all of the following runtime facts:
+
+- The complete current spell-ID set is known.
+- Every intended Hunter primary pet has one of the filtered auras.
+- A BM secondary pet does not have the same filtered aura.
+- Exact filtering and presentation work on a friendly pet's `nameplateN` token during an active Shuffle round.
+- The fixed mend-pet icon and target-ring children remain correctly controlled by their secure aura buttons in active Shuffle.
+
+Even if confirmed, the signal is Hunter-specific unless an equivalent supported marker is found and verified for other pet classes. Other classes' pets currently remain visible through their protected party-owner gates.
+
 ## Creature Family
 
 `UnitCreatureFamily(unit)` is declared in `/Users/kunhouseliu/wow/wow-ui-source/Interface/AddOns/Blizzard_APIDocumentationGenerated/UnitDocumentation.lua`. It returns a localized family name and numeric family ID and is guarded by:
@@ -203,10 +252,14 @@ Neither option should imply that SweepyBoop can distinguish another player's pri
 
 ## Confirmed Findings
 
-- Pet rendering is not the cause of the missing friendly party-pet icon; current eligibility fails before rendering.
+- The previous missing friendly party-pet icon occurred because eligibility failed before rendering.
+- Retail eligibility no longer depends on comparing `nameplateN` with `partypetN`.
 - `UnitIsUnitReadable` is a safety wrapper, not a secrecy or token-comparability bypass.
 - The tested `nameplate1` and `partypet1` pair was incomparable during an active arena round and was also marked secret.
-- `UnitIsOtherPlayersPet` returned `true` for both BM Hunter pets and cannot distinguish the primary pet.
+- `UnitIsOtherPlayersPet` returned `true` for both BM Hunter pets and cannot distinguish the primary pet by itself.
+- Other-player pets are now routed through per-party protected ownership gates after readable `UnitIsOtherPlayersPet` classification; ownership results are used only by `SetAlphaFromBoolean` and are never inspected.
+- Blizzard's custom aura container supports exact spell-ID presentation for helpful auras on assistable friendly units without exposing aura presence as an ordinary Lua Boolean.
+- Candidate permanent Hunter pet-family aura IDs and their primary-versus-secondary behavior remain unverified.
 - `UnitCreatureFamily` returned a family for at least Hunter and Warlock pets outside restricted PvP.
 - `UnitCreatureFamily("target")` returned secret values for a friendly Hunter pet during an active arena round.
 - `C_CreatureInfo.GetCreatureFamilyInfo` may omit `iconFile`.
@@ -214,20 +267,27 @@ Neither option should imply that SweepyBoop can distinguish another player's pri
 
 ## Open Questions
 
-- Does `UnitPlayerOrPetInParty("target")` return `true` for both BM Hunter pets during an active Shuffle round?
+- Which permanent helpful aura IDs are present on a Hunter primary pet, and which of those are absent from a BM secondary pet?
+- What does `C_Secrets.GetSpellAuraSecrecy(spellID)` report for each confirmed candidate?
+- Can the custom aura slot filter and present the confirmed aura on a friendly pet's `nameplateN` token during an active Shuffle round?
+- Do the `party1` through `party4` protected ownership gates associate both BM Hunter pets with the correct Hunter owner during an active Shuffle round?
 - Does any documented, non-secret API distinguish another player's primary pet from their secondary pets during an active Shuffle round?
 - Does `SetPortraitTexture` render correctly and distinctly for friendly primary and secondary pets during an active Shuffle round?
 - Is `UnitIsUnit(nameplateN, "pet")` comparable and readable for the player's own pet during an active round? Only the `partypet1` pair has been tested so far.
 
 ## Next Runtime Tests
 
-Target each BM Hunter pet during an active Shuffle round and run:
+Outside restricted PvP, target the Hunter primary pet and enumerate its permanent helpful auras. Repeat without changing the owner or specialization while targeting the BM secondary pet. Record spell IDs only when their values are readable, and identify candidates present only on the primary pet.
+
+For each confirmed candidate, resolve its current client name and aura secrecy:
 
 ```text
-/dump UnitPlayerOrPetInParty("target")
+/dump C_Spell.GetSpellName(spellID), C_Secrets.GetSpellAuraSecrecy(spellID)
 ```
 
-If both return `true`, this API is also a broad membership predicate and cannot identify the primary pet.
+Then prototype one `CustomAuraContainerTemplate` aura slot with an exact `includeSpellIDs` set. During an active Shuffle round, confirm only the securely driven visual result; do not query the button's visibility, texture, aura instance, or assignment state from addon Lua.
+
+Target each BM Hunter pet during an active Shuffle round and visually verify that the protected owner gate routes both pets through the Hunter path. Do not print, store, compare, or otherwise inspect `UnitIsOwnerOrControllerOfUnit` results. The secure family-aura slots are responsible for visually distinguishing the primary pet.
 
 Target the player's own pet during an active round and test the local-pet token pair separately:
 
@@ -244,6 +304,7 @@ Until Blizzard exposes or testing confirms a supported primary-pet signal:
 - Do not interpret `UnitIsOtherPlayersPet` as primary-pet identity.
 - Do not infer primary status from NPC ID, creature family, name, model, portrait, health, creation order, or proximity.
 - Do not inspect or branch on secret values.
+- Do not read restricted custom-aura button state back into ordinary Lua as an identity signal.
 - Do not use rendered portrait state as an identity signal.
 - Prefer broad but truthful pet presentation over labeling a secondary pet as primary.
 - Keep pet eligibility, owner filtering, primary-pet classification, and icon presentation as separate concerns.

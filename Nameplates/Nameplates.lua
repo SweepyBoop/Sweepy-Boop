@@ -232,38 +232,51 @@ local function UpdateWidgets(nameplate, frame)
         local configFriendly = SweepyBoop.db.profile.nameplatesFriendly;
         if configFriendly.classIconsEnabled then
             if UnitIsPlayer(frame.unit) then
-                -- Issue: a pet that's not one of the above 3 showed an icon
-                -- Maybe it was partypet2 and later someone else joined so this pet became partypet3
                 addon.ShowClassIcon(nameplate, frame);
                 addon.HidePetIcon(nameplate);
-            elseif addon.UnitIsUnitReadable(frame.unit, "pet")
-                or addon.UnitIsUnitReadable(frame.unit, "partypet1")
-                or addon.UnitIsUnitReadable(frame.unit, "partypet2") then
-                local shouldShow = true;
-                local isArena = IsActiveBattlefieldArena();
-                local isBattleground = ( UnitInBattleground("player") ~= nil );
-                if configFriendly.hideOutsidePvP and ( not isArena ) and ( not isBattleground ) then
-                    shouldShow = false;
-                elseif configFriendly.hideInBattlegrounds and isBattleground and ( not isArena ) then
-                    shouldShow = false;
-                elseif configFriendly.showMyPetOnly and ( not addon.UnitIsUnitReadable(frame.unit, "pet") ) then
-                    shouldShow = false;
-                end
+            else
+                local isMyPet = addon.UnitIsUnitReadable(frame.unit, "pet");
+                local isOtherPlayersPet = addon.PROJECT_MAINLINE
+                    and UnitIsOtherPlayersPet(frame.unit);
+                local isPet = isMyPet
+                    or isOtherPlayersPet
+                    or ( ( not addon.PROJECT_MAINLINE )
+                        and (
+                            addon.UnitIsUnitReadable(frame.unit, "partypet1")
+                            or addon.UnitIsUnitReadable(frame.unit, "partypet2")
+                        )
+                    );
 
-                addon.HideClassIcon(nameplate);
-                if shouldShow then
-                    addon.ShowPetIcon(nameplate, frame);
+                if isPet then
+                    local shouldShow = true;
+                    local isArena = IsActiveBattlefieldArena();
+                    local isBattleground = ( UnitInBattleground("player") ~= nil );
+                    if configFriendly.hideOutsidePvP and ( not isArena ) and ( not isBattleground ) then
+                        shouldShow = false;
+                    elseif configFriendly.hideInBattlegrounds and isBattleground and ( not isArena ) then
+                        shouldShow = false;
+                    elseif configFriendly.showMyPetOnly and ( not isMyPet ) then
+                        shouldShow = false;
+                    end
+
+                    addon.HideClassIcon(nameplate);
+                    if not shouldShow then
+                        addon.HidePetIcon(nameplate);
+                    elseif addon.PROJECT_MAINLINE and isOtherPlayersPet then
+                        addon.ShowOtherPlayerPetIcon(nameplate, frame);
+                    else
+                        addon.ShowPetIcon(nameplate, frame);
+                    end
                 else
+                    addon.HideClassIcon(nameplate);
                     addon.HidePetIcon(nameplate);
                 end
-            else
-                addon.HideClassIcon(nameplate);
-                addon.HidePetIcon(nameplate);
             end
 
             UpdateUnitFrameVisibility(nameplate, frame, configFriendly.keepHealthBar);
         else
             addon.HideClassIcon(nameplate);
+            addon.HidePetIcon(nameplate);
             UpdateUnitFrameVisibility(nameplate, frame, true); -- Will be overriden by nameplate filter later
         end
 
@@ -365,6 +378,8 @@ function SweepyBoop:SetupNameplateModules()
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_CHANNEL_START, unpack(retailNameplateUnits));
         eventFrame:RegisterUnitEvent(addon.UNIT_SPELLCAST_CHANNEL_STOP, unpack(retailNameplateUnits));
         eventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
+        eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+        eventFrame:RegisterEvent(addon.UNIT_PET);
         eventFrame:RegisterEvent(addon.UPDATE_BATTLEFIELD_SCORE);
         -- CompactUnitFrame_UpdateName should refresh arena numbers when opponent names
         -- become available. If numbers or spec icons still miss visibility/shuffle updates,
@@ -403,7 +418,10 @@ function SweepyBoop:SetupNameplateModules()
             end
         elseif event == addon.PLAYER_TARGET_CHANGED then
             SweepyBoop:RefreshAllNamePlates();
-        elseif event == addon.UPDATE_BATTLEFIELD_SCORE then -- This cannot be triggered in restricted areas
+        elseif event == addon.GROUP_ROSTER_UPDATE
+                or event == addon.UNIT_PET then
+            SweepyBoop:RefreshAllNamePlates(true);
+        elseif event == addon.UPDATE_BATTLEFIELD_SCORE then
             if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
             local nameplates = C_NamePlate.GetNamePlates();
             for i = 1, #(nameplates) do
