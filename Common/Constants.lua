@@ -250,6 +250,8 @@ addon.UNIT_POWER_UPDATE = "UNIT_POWER_UPDATE";
 addon.UNIT_POWER_FREQUENT = "UNIT_POWER_FREQUENT";
 addon.UNIT_MAXPOWER = "UNIT_MAXPOWER";
 addon.UNIT_PET = "UNIT_PET";
+addon.UNIT_PORTRAIT_UPDATE = "UNIT_PORTRAIT_UPDATE";
+addon.PORTRAITS_UPDATED = "PORTRAITS_UPDATED";
 addon.UNIT_FLAGS = "UNIT_FLAGS";
 addon.UPDATE_SHAPESHIFT_FORM = "UPDATE_SHAPESHIFT_FORM";
 addon.COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
@@ -570,6 +572,13 @@ addon.CLASS_ICON_CROWD_CONTROL_DISPLAY = {
 addon.GetSpellTexture = function(spellId)
     local _, originalIconID = C_Spell.GetSpellTexture(spellId);
     return originalIconID;
+end
+
+if addon.PROJECT_MAINLINE then
+    addon.ICON_ID_HUNTER_PET = addon.GetSpellTexture(883)
+        or addon.ICON_PATH("ability_hunter_beastcall");
+else
+    addon.ICON_ID_HUNTER_PET = addon.ICON_ID_PET;
 end
 
 -- Helper function for secret value check (only exists in retail)

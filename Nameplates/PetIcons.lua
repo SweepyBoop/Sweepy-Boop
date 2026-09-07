@@ -21,7 +21,6 @@ local PET_ICON_MODE_OTHER = "other";
 local function EnsureIcon(nameplate)
     if ( not nameplate.FriendlyPetIcon ) then
         nameplate.FriendlyPetIcon = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "BOTTOM", true);
-        nameplate.FriendlyPetIcon.icon:SetTexture(addon.ICON_ID_PET);
         nameplate.FriendlyPetIcon:Hide();
     end
 
@@ -35,6 +34,15 @@ local function HideTargetHighlight(iconFrame)
         addon.SetTargetHighlightShown(iconFrame, false, false);
     elseif iconFrame.targetHighlight then
         iconFrame.targetHighlight:Hide();
+    end
+end
+
+local function ApplyPetTexture(iconFrame, unit, useSpecialIcon)
+    iconFrame.icon:SetTexture(nil);
+    if useSpecialIcon then
+        iconFrame.icon:SetTexture(addon.ICON_ID_PET);
+    else
+        SetPortraitTexture(iconFrame.icon, unit);
     end
 end
 
@@ -60,7 +68,6 @@ local function CreateGatedPetIcon(parent)
     -- The parent carries protected ownership. Unlike ordinary nameplate icons,
     -- this descendant must inherit its parent's alpha gate.
     iconFrame:SetIgnoreParentAlpha(false);
-    iconFrame.icon:SetTexture(addon.ICON_ID_PET);
     iconFrame:Hide();
     return iconFrame;
 end
@@ -72,7 +79,7 @@ local function CreateHunterPetIcon(button)
 
     local icon = iconFrame:CreateTexture(nil, "BORDER");
     icon:SetAllPoints(iconFrame);
-    icon:SetTexture(addon.ICON_ID_PET);
+    icon:SetTexture(addon.ICON_ID_HUNTER_PET);
 
     local mask = iconFrame:CreateMaskTexture();
     mask:SetAllPoints(icon);
@@ -234,6 +241,7 @@ local function DeactivateOwnerGate(ownerGate)
 
     if ownerGate.petIcon then
         HideTargetHighlight(ownerGate.petIcon);
+        ownerGate.petIcon.icon:SetTexture(nil);
         ownerGate.petIcon:Hide();
     end
     if ownerGate.hunterPetAuraRoot then
@@ -342,7 +350,9 @@ local function ActivateNonHunterPetGate(ownerGate, ownerUnit, petUnit)
         DeactivateHunterAuraRoot(ownerGate.hunterPetTargetRoot, true);
     end
 
-    EnsureNonHunterPetIcon(ownerGate):Show();
+    local iconFrame = EnsureNonHunterPetIcon(ownerGate);
+    ApplyPetTexture(iconFrame, petUnit, false);
+    iconFrame:Show();
     ownerGate:SetAlphaFromBoolean(
         UnitIsOwnerOrControllerOfUnit(ownerUnit, petUnit),
         1,
@@ -487,13 +497,15 @@ addon.UpdatePetIcon = function(nameplate, frame)
     end
 end
 
-addon.ShowPetIcon = function (nameplate, frame)
+addon.ShowPetIcon = function (nameplate, frame, useSpecialIcon)
     HideOtherPlayerPetIcons(nameplate);
     nameplate.FriendlyPetIconMode = PET_ICON_MODE_LOCAL;
     nameplate.FriendlyPetIconUnit = frame.unit;
+    nameplate.FriendlyPetUsesSpecialIcon = useSpecialIcon;
 
     local iconFrame = EnsureIcon(nameplate);
     addon.UpdatePetIcon(nameplate, frame);
+    ApplyPetTexture(iconFrame, frame.unit, useSpecialIcon);
     iconFrame:Show();
     addon.UpdatePetIconTargetHighlight(nameplate, frame);
 end
@@ -501,6 +513,7 @@ end
 addon.ShowOtherPlayerPetIcon = function(nameplate, frame)
     if nameplate.FriendlyPetIcon then
         HideTargetHighlight(nameplate.FriendlyPetIcon);
+        nameplate.FriendlyPetIcon.icon:SetTexture(nil);
         nameplate.FriendlyPetIcon:Hide();
     end
 
@@ -511,9 +524,11 @@ end
 addon.HidePetIcon = function(nameplate)
     nameplate.FriendlyPetIconMode = nil;
     nameplate.FriendlyPetIconUnit = nil;
+    nameplate.FriendlyPetUsesSpecialIcon = nil;
 
     if nameplate.FriendlyPetIcon then
         HideTargetHighlight(nameplate.FriendlyPetIcon);
+        nameplate.FriendlyPetIcon.icon:SetTexture(nil);
         nameplate.FriendlyPetIcon:Hide();
     end
 

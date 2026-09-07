@@ -85,6 +85,7 @@ local defaults = {
             classIconBorderStyle = addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED,
             useHealerIcon = true,
             showHealerOnly = false,
+            usePetIcon = true,
             useFlagCarrierIcon = true,
             targetHighlightStyle = addon.TARGET_HIGHLIGHT_STYLE.ANIMATED,
             showPlayerName = false,

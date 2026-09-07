@@ -18,15 +18,15 @@ Improve friendly pet icons so that:
 - **Special icon for my pet** controls presentation independently from **Show my pet only**, which controls visibility.
 - Secondary pets and temporary summons are not described as primary pets without a supported signal.
 
-A Retail visibility implementation is now present for in-game validation. It preserves the fixed mend-pet artwork; portrait and family-specific artwork remain future work.
+A Retail visibility and presentation implementation is now present for in-game validation. It keeps Hunter primary-pet filtering separate from the repaintable portrait paths.
 
 ## Current SweepyBoop Behavior
 
-The renderer in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/PetIcons.lua` continues to assign the fixed mend-pet texture:
+The renderer in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/PetIcons.lua` uses three presentations:
 
-```lua
-iconFrame.icon:SetTexture(addon.ICON_ID_PET);
-```
+- The player's pet uses the Mend Pet icon when **Special icon for my pet** is enabled and its portrait when disabled.
+- Other players' non-Hunter pets use repaintable portraits.
+- Other players' Hunter primary pets use a static Call Pet icon inside the secure family-aura gate.
 
 Retail pet eligibility is decided in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/Nameplates.lua` using two separate readable classifications:
 
@@ -37,7 +37,7 @@ local isOtherPlayersPet = UnitIsOtherPlayersPet(frame.unit);
 
 The local-pet path deliberately retains the direct `"pet"` comparison. It does not use `UnitIsOwnerOrControllerOfUnit("player", frame.unit)`, because ownership includes guardians and other controlled units in addition to the player's pet.
 
-An other-player unit is considered for a pet icon only after `UnitIsOtherPlayersPet` returns true. SweepyBoop then creates overlapping presentation gates for `party1` through `party4`, reads each party member's class, and forwards `UnitIsOwnerOrControllerOfUnit(partyN, frame.unit)` directly to that gate's `SetAlphaFromBoolean`. The ownership result is never inspected by addon Lua. Non-Hunter owner gates contain the ordinary mend-pet icon. Hunter owner gates contain Blizzard's custom aura presentations described below.
+An other-player unit is considered for a pet icon only after `UnitIsOtherPlayersPet` returns true. SweepyBoop then creates overlapping presentation gates for `party1` through `party4`, reads each party member's class, and forwards `UnitIsOwnerOrControllerOfUnit(partyN, frame.unit)` directly to that gate's `SetAlphaFromBoolean`. The ownership result is never inspected by addon Lua. Non-Hunter owner gates contain an ordinary repaintable portrait. Hunter owner gates contain Blizzard's custom aura presentations described below.
 
 Ownership is not used as the pet classifier. Because the outer `UnitIsOtherPlayersPet` check has already established that the remote unit is a pet, guardians and other controlled units do not enter these owner-class routing gates.
 
@@ -55,7 +55,7 @@ end
 
 The helper prevents callers from branching on a secret Boolean. It cannot make an incomparable token pair comparable or make a secret result readable.
 
-**Show my pet only** now suppresses the `UnitIsOtherPlayersPet` branch while leaving the direct local-pet branch eligible. Party roster changes and `UNIT_PET` notifications trigger a hide-first nameplate refresh so reused party indices and pet swaps cannot retain stale presentation.
+**Show my pet only** suppresses the `UnitIsOtherPlayersPet` branch while leaving the direct local-pet branch eligible. **Special icon for my pet** independently selects Mend Pet versus portrait presentation for that local branch. Party roster, pet, and portrait updates trigger a hide-first nameplate refresh so reused party indices, pet swaps, and portrait changes cannot retain stale presentation.
 
 ## Blizzard `UnitIsUnit` Contract
 
@@ -163,7 +163,7 @@ Blizzard provides a security-partitioned presentation path in `/Users/kunhouseli
 - Aura-derived icon textures are also assigned through `secretwrap`.
 - Generated buttons receive `DenyTaintedAccessWhenAurasAreSecret` after their initialization callback runs.
 
-The current Retail implementation uses separate custom aura slots for the existing fixed mend-pet artwork and its target ring without exposing aura presence to ordinary addon logic. Both visuals are created during `initializeFrame`, before Blizzard applies access restrictions. Each button remains a presentation boundary: SweepyBoop does not inspect its visibility, selected aura, texture, frame occupancy, or other restricted state to derive a readable primary-pet value.
+The current Retail implementation uses separate custom aura slots for the fixed Call Pet artwork and its target ring without exposing aura presence to ordinary addon logic. Both visuals are created during `initializeFrame`, before Blizzard applies access restrictions. Each button remains a presentation boundary: SweepyBoop does not inspect its visibility, selected aura, texture, frame occupancy, or other restricted state to derive a readable primary-pet value.
 
 The implementation keeps each ordinary parent transparent across a full update turn after rebinding its aura container. Blizzard processes a full aura rebuild on the container's next visible update, so revealing on the following update prevents a recycled slot from briefly presenting its previous assignment. The arming callbacks validate only ordinary assignment-generation state and never inspect the aura buttons.
 
@@ -241,12 +241,12 @@ Portrait rendering can differentiate appearances after a unit has been accepted 
 
 ## Option Semantics Under Investigation
 
-The proposed options represent separate decisions:
+The implemented options represent separate decisions:
 
 - **Special icon for my pet** controls whether the player's pet uses the existing mend-pet icon instead of the ordinary pet presentation.
 - **Show my pet only** controls whether icons for other players' pets are hidden.
 
-The special icon could default to enabled to preserve the current appearance. Final defaults and arena behavior have not been decided.
+The special icon defaults to enabled to preserve the player's current Mend Pet appearance. Disabling it uses the local pet portrait. Other players' non-Hunter pets always use portraits, while Hunter primary pets use a static Call Pet icon so their secure aura filtering remains valid.
 
 Neither option should imply that SweepyBoop can distinguish another player's primary pet from secondary pets unless Blizzard exposes a confirmed signal.
 

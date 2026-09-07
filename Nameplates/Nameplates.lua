@@ -265,7 +265,11 @@ local function UpdateWidgets(nameplate, frame)
                     elseif addon.PROJECT_MAINLINE and isOtherPlayersPet then
                         addon.ShowOtherPlayerPetIcon(nameplate, frame);
                     else
-                        addon.ShowPetIcon(nameplate, frame);
+                        addon.ShowPetIcon(
+                            nameplate,
+                            frame,
+                            isMyPet and configFriendly.usePetIcon
+                        );
                     end
                 else
                     addon.HideClassIcon(nameplate);
@@ -389,6 +393,8 @@ function SweepyBoop:SetupNameplateModules()
     else
         eventFrame:RegisterEvent(addon.UNIT_AURA); -- Secret values in Retail
     end
+    eventFrame:RegisterEvent(addon.UNIT_PORTRAIT_UPDATE);
+    eventFrame:RegisterEvent(addon.PORTRAITS_UPDATED);
     eventFrame:RegisterEvent(addon.UNIT_FACTION);
 
     eventFrame:SetScript("OnEvent", function (_, event, unitId, ...)
@@ -419,7 +425,9 @@ function SweepyBoop:SetupNameplateModules()
         elseif event == addon.PLAYER_TARGET_CHANGED then
             SweepyBoop:RefreshAllNamePlates();
         elseif event == addon.GROUP_ROSTER_UPDATE
-                or event == addon.UNIT_PET then
+                or event == addon.UNIT_PET
+                or event == addon.UNIT_PORTRAIT_UPDATE
+                or event == addon.PORTRAITS_UPDATED then
             SweepyBoop:RefreshAllNamePlates(true);
         elseif event == addon.UPDATE_BATTLEFIELD_SCORE then
             if ( UnitInBattleground("player") == nil ) then return end -- Only needed in battlegrounds for updating visible spec icons
