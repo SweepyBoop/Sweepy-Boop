@@ -24,7 +24,7 @@ A Retail visibility and presentation implementation is now present for in-game v
 
 The renderer in `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/PetIcons.lua` uses three presentations:
 
-- The player's pet uses the Mend Pet icon when **Special icon for my pet** is enabled and its portrait when disabled.
+- The player's pet uses the Mend Pet icon when **Special icon for my pet** is enabled. When disabled, a Hunter pet uses Call Pet and other classes' pets use portraits.
 - Other players' non-Hunter pets use repaintable portraits.
 - Other players' Hunter primary pets use a static Call Pet icon inside the secure family-aura gate.
 
@@ -55,7 +55,7 @@ end
 
 The helper prevents callers from branching on a secret Boolean. It cannot make an incomparable token pair comparable or make a secret result readable.
 
-**Show my pet only** suppresses the `UnitIsOtherPlayersPet` branch while leaving the direct local-pet branch eligible. **Special icon for my pet** independently selects Mend Pet versus portrait presentation for that local branch. Party roster, pet, and portrait updates trigger a hide-first nameplate refresh so reused party indices, pet swaps, and portrait changes cannot retain stale presentation.
+**Show my pet only** suppresses the `UnitIsOtherPlayersPet` branch while leaving the direct local-pet branch eligible. **Special icon for my pet** independently selects Mend Pet versus the class-appropriate default presentation for that local branch. Party roster, pet, and portrait updates trigger a hide-first nameplate refresh so reused party indices, pet swaps, and portrait changes cannot retain stale presentation.
 
 ## Blizzard `UnitIsUnit` Contract
 
@@ -246,7 +246,7 @@ The implemented options represent separate decisions:
 - **Special icon for my pet** controls whether the player's pet uses the existing mend-pet icon instead of the ordinary pet presentation.
 - **Show my pet only** controls whether icons for other players' pets are hidden.
 
-The special icon defaults to enabled to preserve the player's current Mend Pet appearance. Disabling it uses the local pet portrait. Other players' non-Hunter pets always use portraits, while Hunter primary pets use a static Call Pet icon so their secure aura filtering remains valid.
+The special icon defaults to enabled to preserve the player's current Mend Pet appearance. Disabling it uses Call Pet for a Hunter's local pet and a portrait for other classes' local pets. Other players' non-Hunter pets always use portraits, while Hunter primary pets use the same static Call Pet icon so their secure aura filtering remains valid.
 
 Neither option should imply that SweepyBoop can distinguish another player's primary pet from secondary pets unless Blizzard exposes a confirmed signal.
 

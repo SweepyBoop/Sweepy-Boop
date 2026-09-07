@@ -315,7 +315,7 @@ addon.GetFriendlyNameplateOptions = function(order)
                 width = 1.35,
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_ID_PET) .. " Special icon for my pet",
-                desc = "Use the Mend Pet icon instead of your pet's portrait",
+                desc = "Use the Mend Pet icon instead of your pet's default presentation",
                 hidden = function ()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end

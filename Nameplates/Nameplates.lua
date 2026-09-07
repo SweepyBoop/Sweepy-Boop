@@ -268,7 +268,8 @@ local function UpdateWidgets(nameplate, frame)
                         addon.ShowPetIcon(
                             nameplate,
                             frame,
-                            isMyPet and configFriendly.usePetIcon
+                            isMyPet and configFriendly.usePetIcon,
+                            isMyPet
                         );
                     end
                 else

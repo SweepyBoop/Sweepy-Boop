@@ -18,6 +18,8 @@ local hunterPetFamilyAuras = {
 local PET_ICON_MODE_LOCAL = "local";
 local PET_ICON_MODE_OTHER = "other";
 
+local playerClass;
+
 local function EnsureIcon(nameplate)
     if ( not nameplate.FriendlyPetIcon ) then
         nameplate.FriendlyPetIcon = addon.CreateClassOrSpecIcon(nameplate, "BOTTOM", "BOTTOM", true);
@@ -37,10 +39,17 @@ local function HideTargetHighlight(iconFrame)
     end
 end
 
-local function ApplyPetTexture(iconFrame, unit, useSpecialIcon)
+local function ApplyPetTexture(iconFrame, unit, useSpecialIcon, isMyPet)
     iconFrame.icon:SetTexture(nil);
     if useSpecialIcon then
         iconFrame.icon:SetTexture(addon.ICON_ID_PET);
+    elseif isMyPet then
+        playerClass = playerClass or addon.GetUnitClass("player");
+        if playerClass == addon.HUNTER then
+            iconFrame.icon:SetTexture(addon.ICON_ID_HUNTER_PET);
+        else
+            SetPortraitTexture(iconFrame.icon, unit);
+        end
     else
         SetPortraitTexture(iconFrame.icon, unit);
     end
@@ -497,7 +506,7 @@ addon.UpdatePetIcon = function(nameplate, frame)
     end
 end
 
-addon.ShowPetIcon = function (nameplate, frame, useSpecialIcon)
+addon.ShowPetIcon = function (nameplate, frame, useSpecialIcon, isMyPet)
     HideOtherPlayerPetIcons(nameplate);
     nameplate.FriendlyPetIconMode = PET_ICON_MODE_LOCAL;
     nameplate.FriendlyPetIconUnit = frame.unit;
@@ -505,7 +514,7 @@ addon.ShowPetIcon = function (nameplate, frame, useSpecialIcon)
 
     local iconFrame = EnsureIcon(nameplate);
     addon.UpdatePetIcon(nameplate, frame);
-    ApplyPetTexture(iconFrame, frame.unit, useSpecialIcon);
+    ApplyPetTexture(iconFrame, frame.unit, useSpecialIcon, isMyPet);
     iconFrame:Show();
     addon.UpdatePetIconTargetHighlight(nameplate, frame);
 end
