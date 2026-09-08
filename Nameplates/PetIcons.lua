@@ -70,6 +70,7 @@ local targetHighlightPulseScale = 0.22;
 local targetHighlightPulseMaxAlpha = 0.82;
 local targetHighlightPulseMinAlpha = 0.22;
 local targetHighlightAnimationFrequency = 0.9;
+local metallicBorderColor = { 0.62, 0.64, 0.67 };
 local hunterPetFamilyAuras = {
     [264662] = true,
     [264656] = true,
@@ -134,7 +135,6 @@ local function ApplyPetIconLayout(iconFrame, nameplate, config)
     end
 end
 
--- TODO: Tint remote pet icon borders using the owner's class color when Border style is set to class-colored.
 local function CreateGatedPetIcon(parent)
     local iconFrame = addon.CreateClassOrSpecIcon(parent, "CENTER", "CENTER", true);
     -- The parent carries protected ownership. Unlike ordinary nameplate icons,
@@ -159,11 +159,25 @@ local function CreateHunterPetIcon(button)
     icon:AddMaskTexture(mask);
 end
 
-local function CreateHunterPetBorder(button)
+local function CreateHunterPetBorder(button, color)
     local border = button:CreateTexture(nil, "OVERLAY");
     border:SetPoint("CENTER", button);
     border:SetSize(petIconBorderSize, petIconBorderSize);
     border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/ClassIconBorder");
+    border:SetDesaturated(false);
+    border:SetVertexColor(color.r, color.g, color.b);
+end
+
+local function CreateHunterPetMetallicBorder(button)
+    CreateHunterPetBorder(button, {
+        r = metallicBorderColor[1],
+        g = metallicBorderColor[2],
+        b = metallicBorderColor[3],
+    });
+end
+
+local function CreateHunterPetClassColoredBorder(button)
+    CreateHunterPetBorder(button, RAID_CLASS_COLORS[addon.HUNTER]);
 end
 
 local function CreateHunterPetTargetHighlight(button)
@@ -260,10 +274,18 @@ local function EnsureHunterPetAuraRoots(ownerGate)
             CreateHunterPetIcon,
             1
         );
-        ownerGate.hunterPetBorderRoot = CreateHunterAuraRoot(
+        -- Aura-button descendants become restricted after initialization, so
+        -- each immutable border style needs its own presentation.
+        ownerGate.hunterPetMetallicBorderRoot = CreateHunterAuraRoot(
             ownerGate,
-            "HunterPetFamilyBorder",
-            CreateHunterPetBorder,
+            "HunterPetFamilyMetallicBorder",
+            CreateHunterPetMetallicBorder,
+            2
+        );
+        ownerGate.hunterPetClassColoredBorderRoot = CreateHunterAuraRoot(
+            ownerGate,
+            "HunterPetFamilyClassColoredBorder",
+            CreateHunterPetClassColoredBorder,
             2
         );
         ownerGate.hunterPetTargetRoot = CreateHunterAuraRoot(
@@ -278,13 +300,15 @@ local function EnsureHunterPetAuraRoots(ownerGate)
             CreateHunterPetTargetPulse,
             4
         );
-        ownerGate.hunterPetBorderRoot.presentation:SetAlpha(0);
+        ownerGate.hunterPetMetallicBorderRoot.presentation:SetAlpha(0);
+        ownerGate.hunterPetClassColoredBorderRoot.presentation:SetAlpha(0);
         ownerGate.hunterPetTargetRoot.presentation:SetAlpha(0);
         ownerGate.hunterPetTargetPulseRoot.presentation:SetAlpha(0);
     end
 
     return ownerGate.hunterPetAuraRoot,
-        ownerGate.hunterPetBorderRoot,
+        ownerGate.hunterPetMetallicBorderRoot,
+        ownerGate.hunterPetClassColoredBorderRoot,
         ownerGate.hunterPetTargetRoot,
         ownerGate.hunterPetTargetPulseRoot;
 end
@@ -293,6 +317,17 @@ local function ApplyHunterPetBorder(root)
     if not root.isArmed then return end
 
     root.presentation:SetAlpha(root.targetHighlightShown and 0 or 1);
+end
+
+local function ApplyPetBorderColor(iconFrame, ownerClass, borderStyle)
+    local classColor = RAID_CLASS_COLORS[ownerClass];
+    iconFrame.border:SetDesaturated(false);
+    if borderStyle == addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED
+            and classColor then
+        iconFrame.border:SetVertexColor(classColor.r, classColor.g, classColor.b);
+    else
+        iconFrame.border:SetVertexColor(unpack(metallicBorderColor));
+    end
 end
 
 local function ApplyHunterPetTargetHighlight(root)
@@ -358,6 +393,7 @@ end
 local function DeactivateOwnerGate(ownerGate)
     ownerGate.ownerClass = nil;
     ownerGate.activeUnit = nil;
+    ownerGate.borderStyle = nil;
     ownerGate:SetAlpha(0);
     ownerGate:Hide();
 
@@ -368,7 +404,8 @@ local function DeactivateOwnerGate(ownerGate)
     end
     if ownerGate.hunterPetAuraRoot then
         DeactivateHunterAuraRoot(ownerGate.hunterPetAuraRoot, false);
-        DeactivateHunterAuraRoot(ownerGate.hunterPetBorderRoot, false);
+        DeactivateHunterAuraRoot(ownerGate.hunterPetMetallicBorderRoot, false);
+        DeactivateHunterAuraRoot(ownerGate.hunterPetClassColoredBorderRoot, false);
         DeactivateHunterAuraRoot(ownerGate.hunterPetTargetRoot, false);
         DeactivateHunterAuraRoot(ownerGate.hunterPetTargetPulseRoot, true);
     end
@@ -439,14 +476,30 @@ local function ActivateHunterAuraRoot(
     ArmHunterAuraRoot(root, nameplate, ownerGate, unit, onArmed);
 end
 
-local function ActivateHunterPetGate(ownerGate, nameplate, ownerUnit, petUnit)
+local function ActivateHunterPetGate(
+    ownerGate,
+    nameplate,
+    ownerUnit,
+    petUnit,
+    borderStyle
+)
     if ownerGate.petIcon then
         HideTargetHighlight(ownerGate.petIcon);
         ownerGate.petIcon:Hide();
     end
 
-    local iconRoot, borderRoot, targetRoot, targetPulseRoot =
-        EnsureHunterPetAuraRoots(ownerGate);
+    local iconRoot, metallicBorderRoot, classColoredBorderRoot,
+        targetRoot, targetPulseRoot = EnsureHunterPetAuraRoots(ownerGate);
+    local useClassColoredBorder =
+        borderStyle == addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED;
+    local borderRoot = useClassColoredBorder
+        and classColoredBorderRoot
+        or metallicBorderRoot;
+    local inactiveBorderRoot = useClassColoredBorder
+        and metallicBorderRoot
+        or classColoredBorderRoot;
+    DeactivateHunterAuraRoot(inactiveBorderRoot, false);
+
     ActivateHunterAuraRoot(
         iconRoot,
         nameplate,
@@ -483,16 +536,24 @@ local function ActivateHunterPetGate(ownerGate, nameplate, ownerUnit, petUnit)
     ownerGate:Show();
 end
 
-local function ActivateNonHunterPetGate(ownerGate, ownerUnit, petUnit)
+local function ActivateNonHunterPetGate(
+    ownerGate,
+    ownerUnit,
+    ownerClass,
+    petUnit,
+    borderStyle
+)
     if ownerGate.hunterPetAuraRoot then
         DeactivateHunterAuraRoot(ownerGate.hunterPetAuraRoot, false);
-        DeactivateHunterAuraRoot(ownerGate.hunterPetBorderRoot, false);
+        DeactivateHunterAuraRoot(ownerGate.hunterPetMetallicBorderRoot, false);
+        DeactivateHunterAuraRoot(ownerGate.hunterPetClassColoredBorderRoot, false);
         DeactivateHunterAuraRoot(ownerGate.hunterPetTargetRoot, false);
         DeactivateHunterAuraRoot(ownerGate.hunterPetTargetPulseRoot, true);
     end
 
     local iconFrame = EnsureNonHunterPetIcon(ownerGate);
     ApplyPetTexture(iconFrame, petUnit, false);
+    ApplyPetBorderColor(iconFrame, ownerClass, borderStyle);
     iconFrame:Show();
     ownerGate:SetAlphaFromBoolean(
         UnitIsOwnerOrControllerOfUnit(ownerUnit, petUnit),
@@ -520,9 +581,11 @@ local function UpdateOtherPlayerPetIcons(nameplate, frame)
 
         local ownerUnit = "party" .. partyIndex;
         local ownerClass = addon.GetUnitClass(ownerUnit);
+        local borderStyle = config.classIconBorderStyle;
         local gateChanged = assignmentChanged
             or ownerClass ~= ownerGate.ownerClass
-            or ownerGate.activeUnit ~= frame.unit;
+            or ownerGate.activeUnit ~= frame.unit
+            or ownerGate.borderStyle ~= borderStyle;
 
         if not ownerClass then
             DeactivateOwnerGate(ownerGate);
@@ -531,12 +594,14 @@ local function UpdateOtherPlayerPetIcons(nameplate, frame)
                 DeactivateOwnerGate(ownerGate);
                 ownerGate.ownerClass = ownerClass;
                 ownerGate.activeUnit = frame.unit;
+                ownerGate.borderStyle = borderStyle;
                 if addon.IsUsingRealAuraData() then
                     ActivateHunterPetGate(
                         ownerGate,
                         nameplate,
                         ownerUnit,
-                        frame.unit
+                        frame.unit,
+                        borderStyle
                     );
                 end
             else
@@ -551,10 +616,13 @@ local function UpdateOtherPlayerPetIcons(nameplate, frame)
                 DeactivateOwnerGate(ownerGate);
                 ownerGate.ownerClass = ownerClass;
                 ownerGate.activeUnit = frame.unit;
+                ownerGate.borderStyle = borderStyle;
                 ActivateNonHunterPetGate(
                     ownerGate,
                     ownerUnit,
-                    frame.unit
+                    ownerClass,
+                    frame.unit,
+                    borderStyle
                 );
             else
                 ownerGate:SetAlphaFromBoolean(
@@ -575,9 +643,13 @@ local function SetHunterPetTargetHighlight(
     local targetRoot = ownerGate.hunterPetTargetRoot;
     if not targetRoot then return end
 
-    local borderRoot = ownerGate.hunterPetBorderRoot;
-    borderRoot.targetHighlightShown = shouldShow;
-    ApplyHunterPetBorder(borderRoot);
+    local metallicBorderRoot = ownerGate.hunterPetMetallicBorderRoot;
+    metallicBorderRoot.targetHighlightShown = shouldShow;
+    ApplyHunterPetBorder(metallicBorderRoot);
+
+    local classColoredBorderRoot = ownerGate.hunterPetClassColoredBorderRoot;
+    classColoredBorderRoot.targetHighlightShown = shouldShow;
+    ApplyHunterPetBorder(classColoredBorderRoot);
 
     targetRoot.targetHighlightShown = shouldShow;
     ApplyHunterPetTargetHighlight(targetRoot);
