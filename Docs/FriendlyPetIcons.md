@@ -260,7 +260,7 @@ Neither option should imply that SweepyBoop can distinguish another player's pri
 - Other-player pets are now routed through per-party protected ownership gates after readable `UnitIsOtherPlayersPet` classification; ownership results are used only by `SetAlphaFromBoolean` and are never inspected.
 - During direct runtime testing, a Destruction Warlock teammate's pet displayed the icon, confirming the implemented non-Hunter remote-pet path in that scenario.
 - Blizzard's custom aura container supports exact spell-ID presentation for helpful auras on assistable friendly units without exposing aura presence as an ordinary Lua Boolean.
-- Candidate permanent Hunter pet-family aura IDs and their primary-versus-secondary behavior remain unverified.
+- During direct active-arena testing with a `party1` BM Hunter, the current candidate aura set displayed the Call Pet marker on the primary pet and no marker on the secondary pet. This confirms the combined filter for that observed case, not the completeness or individual contribution of every candidate ID.
 - `UnitCreatureFamily` returned a family for at least Hunter and Warlock pets outside restricted PvP.
 - `UnitCreatureFamily("target")` returned secret values for a friendly Hunter pet during an active arena round.
 - `C_CreatureInfo.GetCreatureFamilyInfo` may omit `iconFile`.
@@ -270,8 +270,8 @@ Neither option should imply that SweepyBoop can distinguish another player's pri
 
 - Which permanent helpful aura IDs are present on a Hunter primary pet, and which of those are absent from a BM secondary pet?
 - What does `C_Secrets.GetSpellAuraSecrecy(spellID)` report for each confirmed candidate?
-- Can the custom aura slot filter and present the confirmed aura on a friendly pet's `nameplateN` token during an active Shuffle round?
-- Do the `party1` through `party4` protected ownership gates associate both BM Hunter pets with the correct Hunter owner during an active Shuffle round?
+- Does the current custom aura filter continue to select only the primary pet across other Hunter pet families and Hunter specializations?
+- Do the `party2` through `party4` protected ownership gates associate BM Hunter pets with the correct Hunter owner during an active Shuffle round?
 - Does any documented, non-secret API distinguish another player's primary pet from their secondary pets during an active Shuffle round?
 - Does `SetPortraitTexture` render correctly and distinctly for friendly primary and secondary pets during an active Shuffle round?
 - Is `UnitIsUnit(nameplateN, "pet")` comparable and readable for the player's own pet during an active round? Only the `partypet1` pair has been tested so far.
@@ -286,9 +286,9 @@ For each confirmed candidate, resolve its current client name and aura secrecy:
 /dump C_Spell.GetSpellName(spellID), C_Secrets.GetSpellAuraSecrecy(spellID)
 ```
 
-Then prototype one `CustomAuraContainerTemplate` aura slot with an exact `includeSpellIDs` set. During an active Shuffle round, confirm only the securely driven visual result; do not query the button's visibility, texture, aura instance, or assignment state from addon Lua.
+Continue testing the existing exact-ID `CustomAuraContainerTemplate` filter across Hunter pet families and specializations. During active Shuffle rounds, confirm only the securely driven visual result; do not query the button's visibility, texture, aura instance, or assignment state from addon Lua.
 
-Target each BM Hunter pet during an active Shuffle round and visually verify that the protected owner gate routes both pets through the Hunter path. Do not print, store, compare, or otherwise inspect `UnitIsOwnerOrControllerOfUnit` results. The secure family-aura slots are responsible for visually distinguishing the primary pet.
+Repeat the BM primary-versus-secondary visual check for `party2` through `party4`. Do not print, store, compare, or otherwise inspect `UnitIsOwnerOrControllerOfUnit` results. The secure family-aura slots are responsible for visually distinguishing the primary pet.
 
 Target the player's own pet during an active round and test the local-pet token pair separately:
 
