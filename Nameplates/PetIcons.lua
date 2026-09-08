@@ -727,6 +727,12 @@ addon.ShowPetIcon = function (nameplate, frame, useSpecialIcon, isMyPet)
     local iconFrame = EnsureIcon(nameplate);
     addon.UpdatePetIcon(nameplate, frame);
     ApplyPetTexture(iconFrame, frame.unit, useSpecialIcon, isMyPet);
+    playerClass = playerClass or addon.GetUnitClass("player");
+    ApplyPetBorderColor(
+        iconFrame,
+        playerClass,
+        SweepyBoop.db.profile.nameplatesFriendly.classIconBorderStyle
+    );
     iconFrame:Show();
     addon.UpdatePetIconTargetHighlight(nameplate, frame);
 end
