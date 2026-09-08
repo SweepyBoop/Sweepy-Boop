@@ -85,6 +85,7 @@ local defaults = {
             classIconBorderStyle = addon.CLASS_ICON_BORDER_STYLE.CLASS_COLORED,
             useHealerIcon = true,
             showHealerOnly = false,
+            usePetIcon = addon.PROJECT_MAINLINE and true or nil,
             useFlagCarrierIcon = true,
             targetHighlightStyle = addon.TARGET_HIGHLIGHT_STYLE.ANIMATED,
             showPlayerName = false,
@@ -297,7 +298,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconSize = 1.5;
     defaults.profile.nameplatesFriendly.healerIconSize = 1.5;
     defaults.profile.nameplatesFriendly.flagCarrierIconSize = 1.5;
-    defaults.profile.nameplatesFriendly.petIconSize = 1.5;
+    defaults.profile.nameplatesFriendly.petIconSize = addon.PROJECT_MAINLINE and 1.25 or 1.5;
     defaults.profile.nameplatesEnemy.arenaSpecIconOthers = true;
     defaults.profile.nameplatesEnemy.auraFilterEnabled = true;
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
