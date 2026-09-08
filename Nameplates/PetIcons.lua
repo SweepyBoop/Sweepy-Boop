@@ -67,8 +67,6 @@ local petIconSize = 40;
 local petIconBorderSize = 64;
 local targetHighlightSize = 55;
 local targetHighlightPulseScale = 0.22;
-local targetHighlightPulseMaxAlpha = 0.82;
-local targetHighlightPulseMinAlpha = 0.22;
 local targetHighlightAnimationFrequency = 0.9;
 local hunterPetFamilyAuras = {
     [264662] = true,
@@ -157,8 +155,11 @@ local function CreateHunterPetIcon(button)
     mask:SetTexture("Interface/Masks/CircleMaskScalable");
     icon:AddMaskTexture(mask);
 
-    local border = iconFrame:CreateTexture(nil, "OVERLAY");
-    border:SetPoint("CENTER", iconFrame);
+end
+
+local function CreateHunterPetBorder(button)
+    local border = button:CreateTexture(nil, "OVERLAY");
+    border:SetPoint("CENTER", button);
     border:SetSize(petIconBorderSize, petIconBorderSize);
     border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/ClassIconBorder");
 end
@@ -171,9 +172,15 @@ local function CreateHunterPetTargetHighlight(button)
     highlight:SetVertexColor(1, 0.88, 0);
 end
 
-local function CreateHunterAuraRoot(ownerGate, slotKey, initializeFrame)
+local function CreateHunterAuraRoot(
+    ownerGate,
+    slotKey,
+    initializeFrame,
+    frameLevelOffset
+)
     local root = CreateFrame("Frame", nil, ownerGate);
     root:SetAllPoints(ownerGate);
+    root:SetFrameLevel(ownerGate:GetFrameLevel() + frameLevelOffset);
     root:SetMouseClickEnabled(false);
     root:SetIgnoreParentAlpha(false);
     root:SetAlpha(0);
@@ -237,42 +244,61 @@ local function EnsureHunterPetAuraRoots(ownerGate)
         ownerGate.hunterPetAuraRoot = CreateHunterAuraRoot(
             ownerGate,
             "HunterPetFamilyIcon",
-            CreateHunterPetIcon
+            CreateHunterPetIcon,
+            1
+        );
+        ownerGate.hunterPetBorderRoot = CreateHunterAuraRoot(
+            ownerGate,
+            "HunterPetFamilyBorder",
+            CreateHunterPetBorder,
+            2
         );
         ownerGate.hunterPetTargetRoot = CreateHunterAuraRoot(
             ownerGate,
             "HunterPetFamilyTarget",
-            CreateHunterPetTargetHighlight
+            CreateHunterPetTargetHighlight,
+            3
         );
+        ownerGate.hunterPetBorderRoot.presentation:SetAlpha(0);
         ownerGate.hunterPetTargetRoot.presentation:SetAlpha(0);
     end
 
-    return ownerGate.hunterPetAuraRoot, ownerGate.hunterPetTargetRoot;
+    return ownerGate.hunterPetAuraRoot,
+        ownerGate.hunterPetBorderRoot,
+        ownerGate.hunterPetTargetRoot;
+end
+
+local function ApplyHunterPetBorder(root)
+    if not root.isArmed then return end
+
+    root.presentation:SetAlpha(root.targetHighlightShown and 0 or 1);
 end
 
 local function StopHunterPetTargetAnimation(root)
+    root.targetHighlightAnimatedShown = false;
     root:SetScript("OnUpdate", nil);
     root.targetAnimationProgress = 0;
-    root.presentation:SetAlpha(0);
     root.presentation:SetScale(1);
 end
 
 local function ApplyHunterPetTargetHighlight(root)
     if not root.isArmed then return end
 
-    root:SetScript("OnUpdate", nil);
-    root.presentation:SetScale(1);
     if not root.targetHighlightShown then
+        StopHunterPetTargetAnimation(root);
         root.presentation:SetAlpha(0);
         return;
     end
 
+    root.presentation:SetAlpha(1);
     if not root.targetHighlightAnimated then
-        root.presentation:SetAlpha(1);
+        StopHunterPetTargetAnimation(root);
         return;
     end
+    if root.targetHighlightAnimatedShown then return end
 
-    root.targetAnimationProgress = root.targetAnimationProgress or 0;
+    root.targetHighlightAnimatedShown = true;
+    root.targetAnimationProgress = 0;
     root:SetScript("OnUpdate", function(self, elapsed)
         self.targetAnimationProgress =
             ( self.targetAnimationProgress
@@ -280,11 +306,6 @@ local function ApplyHunterPetTargetHighlight(root)
         local wave =
             ( math.sin(self.targetAnimationProgress * math.pi * 2) + 1 ) / 2;
         self.presentation:SetScale(1 + ( targetHighlightPulseScale * wave ));
-        self.presentation:SetAlpha(
-            targetHighlightPulseMaxAlpha
-                - ( ( targetHighlightPulseMaxAlpha
-                    - targetHighlightPulseMinAlpha ) * wave )
-        );
     end);
 end
 
@@ -317,6 +338,7 @@ local function DeactivateOwnerGate(ownerGate)
     end
     if ownerGate.hunterPetAuraRoot then
         DeactivateHunterAuraRoot(ownerGate.hunterPetAuraRoot, false);
+        DeactivateHunterAuraRoot(ownerGate.hunterPetBorderRoot, false);
         DeactivateHunterAuraRoot(ownerGate.hunterPetTargetRoot, true);
     end
 end
@@ -392,12 +414,19 @@ local function ActivateHunterPetGate(ownerGate, nameplate, ownerUnit, petUnit)
         ownerGate.petIcon:Hide();
     end
 
-    local iconRoot, targetRoot = EnsureHunterPetAuraRoots(ownerGate);
+    local iconRoot, borderRoot, targetRoot = EnsureHunterPetAuraRoots(ownerGate);
     ActivateHunterAuraRoot(
         iconRoot,
         nameplate,
         ownerGate,
         petUnit
+    );
+    ActivateHunterAuraRoot(
+        borderRoot,
+        nameplate,
+        ownerGate,
+        petUnit,
+        ApplyHunterPetBorder
     );
     ActivateHunterAuraRoot(
         targetRoot,
@@ -418,6 +447,7 @@ end
 local function ActivateNonHunterPetGate(ownerGate, ownerUnit, petUnit)
     if ownerGate.hunterPetAuraRoot then
         DeactivateHunterAuraRoot(ownerGate.hunterPetAuraRoot, false);
+        DeactivateHunterAuraRoot(ownerGate.hunterPetBorderRoot, false);
         DeactivateHunterAuraRoot(ownerGate.hunterPetTargetRoot, true);
     end
 
@@ -502,12 +532,16 @@ local function SetHunterPetTargetHighlight(
     shouldShow,
     shouldAnimate
 )
-    local root = ownerGate.hunterPetTargetRoot;
-    if not root then return end
+    local targetRoot = ownerGate.hunterPetTargetRoot;
+    if not targetRoot then return end
 
-    root.targetHighlightShown = shouldShow;
-    root.targetHighlightAnimated = shouldAnimate;
-    ApplyHunterPetTargetHighlight(root);
+    local borderRoot = ownerGate.hunterPetBorderRoot;
+    borderRoot.targetHighlightShown = shouldShow;
+    ApplyHunterPetBorder(borderRoot);
+
+    targetRoot.targetHighlightShown = shouldShow;
+    targetRoot.targetHighlightAnimated = shouldAnimate;
+    ApplyHunterPetTargetHighlight(targetRoot);
 end
 
 addon.UpdatePetIconTargetHighlight = function (nameplate, frame)

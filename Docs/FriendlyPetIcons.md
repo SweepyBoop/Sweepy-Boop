@@ -35,13 +35,13 @@ local isMyPet = addon.UnitIsUnitReadable(frame.unit, "pet");
 local isOtherPlayersPet = UnitIsOtherPlayersPet(frame.unit);
 ```
 
-The local-pet path deliberately retains the direct `"pet"` comparison instead of broadening local classification through the owner-or-controller predicate.
+The local-pet path uses a direct comparison with the `"pet"` token. It does not use the owner-or-controller predicate for local classification.
 
 An other-player unit is considered for a pet icon only after `UnitIsOtherPlayersPet` returns true. SweepyBoop then creates overlapping presentation gates for `party1` through `party4`, reads each party member's class, and forwards `UnitIsOwnerOrControllerOfUnit(partyN, frame.unit)` directly to that gate's `SetAlphaFromBoolean`. The ownership result is never inspected by addon Lua. Non-Hunter owner gates contain an ordinary repaintable portrait. Hunter owner gates contain Blizzard's custom aura presentations described below.
 
 Ownership is not used as the pet classifier. The remote routing gates are entered only after `UnitIsOtherPlayersPet` classifies the unit as another player's pet.
 
-Classic clients retain the previous `pet`, `partypet1`, and `partypet2` comparison path.
+Classic clients use the `pet`, `partypet1`, and `partypet2` comparison path.
 
 `addon.UnitIsUnitReadable` is defined in `/Users/kunhouseliu/wow/sweepy-boop/Common/UnitInfoHelpers.lua`:
 
@@ -102,7 +102,7 @@ For the tested pair:
 
 The failed comparability precondition is sufficient to rule out `UnitIsUnit(nameplateN, partypetN)` as an association mechanism for this case. The comparison cannot establish equality even before considering secrecy.
 
-This explained the previously observed missing party-pet icon: the former Retail eligibility condition received no positive `partypetN` match, so `/Users/kunhouseliu/wow/sweepy-boop/Nameplates/PetIcons.lua` was never asked to show the icon.
+For the tested token pair, a `partypetN` comparison could not produce a positive match. This result established that the comparison was unsuitable for associating that friendly pet nameplate with its party owner.
 
 ## Blizzard Pet Predicates
 
@@ -154,11 +154,11 @@ Blizzard provides a security-partitioned presentation path in `/Users/kunhouseli
 - Aura-derived icon textures are also assigned through `secretwrap`.
 - Generated buttons receive `DenyTaintedAccessWhenAurasAreSecret` after their initialization callback runs.
 
-The current Retail implementation uses separate custom aura slots for the fixed Call Pet artwork and its target ring without exposing aura presence to ordinary addon logic. Both visuals are created during `initializeFrame`, before Blizzard applies access restrictions. Each button remains a presentation boundary: SweepyBoop does not inspect its visibility, selected aura, texture, frame occupancy, or other restricted state to derive a readable classification value.
+The current Retail implementation uses separate custom aura slots for the fixed Call Pet artwork, its border, and its target ring without exposing aura presence to ordinary addon logic. All three visuals are created during `initializeFrame`, before Blizzard applies access restrictions. Each button remains a presentation boundary: SweepyBoop does not inspect its visibility, selected aura, texture, frame occupancy, or other restricted state to derive a readable classification value.
 
 The implementation keeps each ordinary parent transparent across a full update turn after rebinding its aura container. Blizzard processes dirty container state on a deferred visible update; the additional transparent update turn mitigates a recycled slot briefly presenting its previous assignment. The arming callbacks validate only ordinary assignment-generation state and never inspect the aura buttons.
 
-The active-arena `party1` BM test confirms the combined filter for that one observed primary/secondary pair. Broader reliability still depends on the allowlist covering intended Hunter pets without matching secondary pets across other families and specializations. The fixed Call Pet icon and target-ring children also require continued validation across those cases.
+The active-arena `party1` BM test confirms the combined filter for that one observed primary/secondary pair. Broader reliability still depends on the allowlist covering intended Hunter pets without matching secondary pets across other families and specializations. The fixed Call Pet icon, border, and target-ring presentations also require continued validation across those cases.
 
 Even if confirmed, the signal is Hunter-specific unless an equivalent supported marker is found and verified for other pet classes. Other classes' pets currently remain visible through their protected party-owner gates.
 
@@ -201,7 +201,7 @@ Blizzard family metadata can therefore provide some family icons but cannot guar
 
 During an active arena or Shuffle round, `UnitCreatureFamily("target")` was tested on a friendly Hunter pet. Both the family name and family ID were secret.
 
-That result rules out selecting a family icon from the tested `"target"` token during the active round. Querying a stable token such as `"pet"` may behave differently, but data from `pet` or `partypetN` still cannot be attached to a particular `nameplateN` through the tested incomparable token pair.
+That result rules out selecting a family icon from the tested `"target"` token during the active round. Querying a stable token may behave differently, but data from the tested `partypet1` token could not be attached to `nameplate1` through that incomparable token pair.
 
 ## Portrait Rendering
 
@@ -216,11 +216,11 @@ SweepyBoop already calls `SetPortraitTexture` in `/Users/kunhouseliu/wow/sweepy-
 
 The current implementation uses portraits because `SetPortraitTexture` does not require addon-readable family, GUID, NPC ID, or name data. Its behavior on these addon-owned textures still needs direct validation during an active Shuffle round. The rendered texture must not be inspected as an identity side channel.
 
-If used for recycled nameplate frames, the implementation must:
+For recycled nameplate frames, the current implementation:
 
-- Bind the portrait to the current nameplate unit.
-- Refresh it on relevant portrait events.
-- Clear the texture when the nameplate is removed or reassigned.
+- Binds the portrait to the current nameplate unit.
+- Refreshes it on relevant portrait events.
+- Clears the texture when the nameplate is removed or reassigned.
 
 Portrait rendering can differentiate appearances after a unit has been accepted as a pet. It does not determine whether that pet is primary or secondary.
 
@@ -231,13 +231,12 @@ The implemented options represent separate decisions:
 - **Special icon for my pet** controls whether the player's pet uses the existing Mend Pet icon instead of the ordinary pet presentation.
 - **Show my pet only** controls whether icons for other players' pets are hidden.
 
-The special icon defaults to enabled to preserve the player's current Mend Pet appearance. Disabling it uses Call Pet for a Hunter's local pet and a portrait for other classes' local pets. Other players' non-Hunter pets use portraits, while remote Hunter pets that pass the exact-aura filter use the same static Call Pet icon.
+The special icon defaults to enabled, which displays Mend Pet for the player's pet. Disabling it uses Call Pet for a Hunter's local pet and a portrait for other classes' local pets. Other players' non-Hunter pets use portraits, while remote Hunter pets that pass the exact-aura filter use the same static Call Pet icon.
 
 Neither option by itself distinguishes another player's primary pet from secondary pets. The remote Hunter result depends on the separate exact-aura filter and has been directly confirmed only for the recorded `party1` BM case.
 
 ## Confirmed Findings
 
-- The previously observed missing friendly party-pet icon was diagnosed as eligibility failing before rendering.
 - Retail eligibility no longer depends on comparing `nameplateN` with `partypetN`.
 - `UnitIsUnitReadable` is a safety wrapper, not a secrecy or token-comparability bypass.
 - The tested `nameplate1` and `partypet1` pair was incomparable during an active arena round and was also marked secret.
@@ -246,7 +245,7 @@ Neither option by itself distinguishes another player's primary pet from seconda
 - During direct runtime testing, a Destruction Warlock teammate's pet displayed the icon, confirming the implemented non-Hunter remote-pet path in that scenario.
 - Blizzard's custom aura container supports exact spell-ID presentation for helpful auras on the active player, group members, or their pets without exposing aura presence as an ordinary Lua Boolean.
 - During direct active-arena testing with a `party1` BM Hunter, the current candidate aura set displayed the Call Pet marker on the primary pet and no marker on the secondary pet. This confirms the combined filter for that observed case, not the completeness or individual contribution of every candidate ID.
-- `UnitCreatureFamily` returned a family for at least Hunter and Warlock pets outside restricted PvP.
+- `UnitCreatureFamily` returned a family for a Warlock Felguard outside restricted PvP.
 - `UnitCreatureFamily("target")` returned secret values for a friendly Hunter pet during an active arena round.
 - `C_CreatureInfo.GetCreatureFamilyInfo` may omit `iconFile`.
 - `SetPortraitTexture` avoids the need to read family identity, but its active-arena behavior still requires testing.
