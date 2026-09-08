@@ -317,14 +317,18 @@ addon.GetFriendlyNameplateOptions = function(order)
                 name = addon.FORMAT_TEXTURE(addon.ICON_ID_PET) .. " Special icon for my pet",
                 desc = "Use the Mend Pet icon instead of your pet's default presentation",
                 hidden = function ()
-                    return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
+                    return ( not addon.PROJECT_MAINLINE )
+                        or ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
             },
             showMyPetOnly = {
-                order = 15.1,
+                order = addon.PROJECT_MAINLINE and 15.1 or 15,
+                width = addon.PROJECT_MAINLINE and 1 or "full",
                 type = "toggle",
                 name = addon.FORMAT_TEXTURE(addon.ICON_ID_PET) .. " Show my pet only",
-                desc = "Hide icons for other players' pets",
+                desc = addon.PROJECT_MAINLINE
+                    and "Hide icons for other players' pets"
+                    or "Hide class icons of other players' pets\nThis option is not available in arenas",
                 hidden = function ()
                     return ( not SweepyBoop.db.profile.nameplatesFriendly.classIconsEnabled );
                 end
