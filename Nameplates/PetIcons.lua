@@ -606,10 +606,164 @@ addon.HidePetIcon = function(nameplate)
     HideOtherPlayerPetIcons(nameplate);
 end
 
-if addon.PROJECT_MAINLINE then
-    addon.RegisterAuraDataProviderListener("FriendlyPetIcons", function()
-        if SweepyBoop and SweepyBoop.RefreshAllNamePlates then
-            SweepyBoop:RefreshAllNamePlates(true);
+if addon.internal then
+    local debugHunterPetPreview;
+    local debugHunterPetPreviewUnit;
+    local debugEventFrame = CreateFrame("Frame");
+
+    local function HideHunterPetDebugPreview()
+        debugEventFrame:UnregisterAllEvents();
+        debugHunterPetPreviewUnit = nil;
+        if not debugHunterPetPreview then return end
+
+        debugHunterPetPreview:SetScript("OnUpdate", nil);
+        debugHunterPetPreview:Hide();
+    end
+
+    debugEventFrame:SetScript("OnEvent", function(_, event, unit)
+        if event ~= addon.NAME_PLATE_UNIT_REMOVED
+                or unit == debugHunterPetPreviewUnit then
+            HideHunterPetDebugPreview();
         end
     end);
+
+    local function EnsureHunterPetDebugPreview(nameplate)
+        if debugHunterPetPreview then
+            debugHunterPetPreview:SetParent(nameplate);
+            return debugHunterPetPreview;
+        end
+
+        local preview = CreateFrame("Frame", nil, nameplate);
+        preview:SetMouseClickEnabled(false);
+        preview:SetIgnoreParentAlpha(true);
+        preview:SetSize(petIconSize, petIconSize);
+        preview:SetFrameStrata("HIGH");
+
+        preview.iconRoot = CreateFrame("Frame", nil, preview);
+        preview.iconRoot:SetAllPoints(preview);
+        preview.iconRoot:SetFrameLevel(preview:GetFrameLevel() + 1);
+        local icon = preview.iconRoot:CreateTexture(nil, "BORDER");
+        icon:SetAllPoints(preview.iconRoot);
+        icon:SetTexture(addon.ICON_ID_HUNTER_PET);
+        local mask = preview.iconRoot:CreateMaskTexture();
+        mask:SetAllPoints(icon);
+        mask:SetTexture("Interface/Masks/CircleMaskScalable");
+        icon:AddMaskTexture(mask);
+
+        preview.borderRoot = CreateFrame("Frame", nil, preview);
+        preview.borderRoot:SetAllPoints(preview);
+        preview.borderRoot:SetFrameLevel(preview:GetFrameLevel() + 2);
+        local border = preview.borderRoot:CreateTexture(nil, "OVERLAY");
+        border:SetPoint("CENTER", preview.borderRoot);
+        border:SetSize(petIconBorderSize, petIconBorderSize);
+        border:SetTexture(addon.INTERFACE_SWEEPY .. "Art/ClassIconBorder");
+
+        preview.targetRoot = CreateFrame("Frame", nil, preview);
+        preview.targetRoot:SetAllPoints(preview);
+        preview.targetRoot:SetFrameLevel(preview:GetFrameLevel() + 3);
+        local highlight = preview.targetRoot:CreateTexture(nil, "OVERLAY");
+        highlight:SetPoint("CENTER", preview.targetRoot);
+        highlight:SetSize(targetHighlightSize, targetHighlightSize);
+        highlight:SetAtlas("charactercreate-ring-select");
+        highlight:SetVertexColor(1, 0.88, 0);
+
+        preview.targetPulseRoot = CreateFrame("Frame", nil, preview);
+        preview.targetPulseRoot:SetAllPoints(preview);
+        preview.targetPulseRoot:SetFrameLevel(preview:GetFrameLevel() + 4);
+        local pulse = preview.targetPulseRoot:CreateTexture(nil, "OVERLAY");
+        pulse:SetPoint("CENTER", preview.targetPulseRoot);
+        pulse:SetSize(targetHighlightSize, targetHighlightSize);
+        pulse:SetAtlas("charactercreate-ring-select");
+        pulse:SetVertexColor(1, 0.88, 0);
+        pulse:SetBlendMode("ADD");
+
+        debugHunterPetPreview = preview;
+        return preview;
+    end
+
+    local function SetHunterPetDebugPulse(preview, progress)
+        local wave = ( math.sin(( progress % 1 ) * math.pi * 2) + 1 ) / 2;
+        preview.targetPulseRoot:SetScale(
+            1 + ( targetHighlightPulseScale * wave )
+        );
+        preview.targetPulseRoot:SetAlpha(
+            targetHighlightPulseMaxAlpha
+                - ( ( targetHighlightPulseMaxAlpha
+                    - targetHighlightPulseMinAlpha ) * wave )
+        );
+    end
+
+    -- Visual-only preview; it does not use or modify production pet frames.
+    -- Animated: /run SweepyBoop:TestOtherHunterPetIcon()
+    -- Static: /run SweepyBoop:TestOtherHunterPetIcon(true, false)
+    -- Icon only: /run SweepyBoop:TestOtherHunterPetIcon(true, false, false)
+    -- Hide: /run SweepyBoop:TestOtherHunterPetIcon(false)
+    function SweepyBoop:TestOtherHunterPetIcon(
+        shouldShow,
+        shouldAnimate,
+        shouldShowTarget,
+        horizontalOffset
+    )
+        HideHunterPetDebugPreview();
+        if shouldShow == false then
+            print("SweepyBoop: other Hunter pet icon preview hidden");
+            return;
+        end
+
+        local nameplate = C_NamePlate.GetNamePlateForUnit("target");
+        local frame = nameplate and nameplate.UnitFrame;
+        local unit = frame and frame.unit;
+        if not nameplate or not unit then
+            print("SweepyBoop: current target has no visible nameplate");
+            return;
+        end
+
+        local preview = EnsureHunterPetDebugPreview(nameplate);
+        local config = SweepyBoop.db.profile.nameplatesFriendly;
+        preview:SetScale(config.petIconSize);
+        preview:ClearAllPoints();
+        preview:SetPoint(
+            "BOTTOM",
+            nameplate,
+            "BOTTOM",
+            ( config.classIconHorizontalOffset or 0 )
+                + ( horizontalOffset or 60 ),
+            config.classIconOffset or 0
+        );
+
+        shouldAnimate = shouldAnimate ~= false;
+        shouldShowTarget = shouldShowTarget ~= false;
+        preview.borderRoot:SetShown(not shouldShowTarget);
+        preview.targetRoot:SetShown(shouldShowTarget);
+        preview.targetRoot:SetAlpha(1);
+        preview.targetRoot:SetScale(1);
+        preview.targetPulseRoot:SetShown(
+            shouldShowTarget and shouldAnimate
+        );
+        preview.targetAnimationProgress = 0;
+        if shouldShowTarget and shouldAnimate then
+            SetHunterPetDebugPulse(preview, 0);
+            preview:SetScript("OnUpdate", function(self, elapsed)
+                self.targetAnimationProgress =
+                    ( self.targetAnimationProgress
+                        + ( elapsed * targetHighlightAnimationFrequency ) ) % 1;
+                SetHunterPetDebugPulse(
+                    self,
+                    self.targetAnimationProgress
+                );
+            end);
+        end
+
+        debugHunterPetPreviewUnit = unit;
+        debugEventFrame:RegisterEvent(addon.PLAYER_TARGET_CHANGED);
+        debugEventFrame:RegisterEvent(addon.NAME_PLATE_UNIT_REMOVED);
+        preview:Show();
+        print("SweepyBoop: previewing recovered Hunter pet target treatment");
+    end
 end
+
+addon.RegisterAuraDataProviderListener("FriendlyPetIcons", function()
+    if SweepyBoop and SweepyBoop.RefreshAllNamePlates then
+        SweepyBoop:RefreshAllNamePlates(true);
+    end
+end);
