@@ -215,6 +215,8 @@ local function CreateHunterAuraRoot(
         sortMethod = AuraContainerSortMethod.AuraInstanceIDOnly,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
+            button:SetMouseClickEnabled(false);
+            button:SetMouseMotionEnabled(false);
             button:SetAllPoints(container);
             initializeFrame(button);
         end,
