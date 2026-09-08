@@ -134,6 +134,7 @@ local function ApplyPetIconLayout(iconFrame, nameplate, config)
     end
 end
 
+-- TODO: Tint remote pet icon borders using the owner's class color when Border style is set to class-colored.
 local function CreateGatedPetIcon(parent)
     local iconFrame = addon.CreateClassOrSpecIcon(parent, "CENTER", "CENTER", true);
     -- The parent carries protected ownership. Unlike ordinary nameplate icons,
