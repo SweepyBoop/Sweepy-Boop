@@ -55,7 +55,7 @@ end
 
 The helper prevents callers from branching on a secret Boolean. It cannot make an incomparable token pair comparable or make a secret result readable.
 
-**Show my pet only** suppresses the `UnitIsOtherPlayersPet` branch while leaving the direct local-pet branch eligible. **Special icon for my pet** independently selects Mend Pet versus the class-appropriate default presentation for that local branch. Party roster, pet, and portrait updates trigger a hide-first nameplate refresh so reused party indices, pet swaps, and portrait changes cannot retain stale presentation.
+**Show my pet only** suppresses the `UnitIsOtherPlayersPet` branch while leaving the direct local-pet branch eligible. **Special icon for my pet** independently selects Mend Pet versus the class-appropriate default presentation for that local branch. When **Border style** is class-colored, local and remote pet borders use the owning player's class color. Party roster, pet, and portrait updates trigger a hide-first nameplate refresh so reused party indices, pet swaps, and portrait changes cannot retain stale presentation.
 
 ## Blizzard `UnitIsUnit` Contract
 
@@ -154,11 +154,11 @@ Blizzard provides a security-partitioned presentation path in `/Users/kunhouseli
 - Aura-derived icon textures are also assigned through `secretwrap`.
 - Generated buttons receive `DenyTaintedAccessWhenAurasAreSecret` after their initialization callback runs.
 
-The current Retail implementation uses separate custom aura slots for the fixed Call Pet icon, its independently suppressible border, the stable target ring, and the animated target pulse, without exposing aura presence to ordinary addon logic. All four presentations are created during `initializeFrame`, before Blizzard applies access restrictions. Each button remains a presentation boundary: SweepyBoop does not inspect its visibility, selected aura, texture, frame occupancy, or other restricted state to derive a readable classification value.
+The current Retail implementation uses separate custom aura slots for the fixed Call Pet icon, immutable metallic and Hunter-colored border variants, the stable target ring, and the animated target pulse, without exposing aura presence to ordinary addon logic. All five presentations are created during `initializeFrame`, before Blizzard applies access restrictions; only the border variant selected by **Border style** is enabled. Each button remains a presentation boundary: SweepyBoop does not inspect its visibility, selected aura, texture, frame occupancy, or other restricted state to derive a readable classification value.
 
 The implementation keeps each ordinary parent transparent across a full update turn after rebinding its aura container. Blizzard processes dirty container state on a deferred visible update; the additional transparent update turn mitigates a recycled slot briefly presenting its previous assignment. The arming callbacks validate only ordinary assignment-generation state and never inspect the aura buttons.
 
-The active-arena `party1` BM test confirms the combined filter for that one observed primary/secondary pair. Broader reliability still depends on the allowlist covering intended Hunter pets without matching secondary pets across other families and specializations. The fixed Call Pet icon, border, stable target ring, and animated pulse presentations also require continued validation across those cases.
+The active-arena `party1` BM test confirms the combined filter for that one observed primary/secondary pair. Broader reliability still depends on the allowlist covering intended Hunter pets without matching secondary pets across other families and specializations. The fixed Call Pet icon, selected border variant, stable target ring, and animated pulse presentations also require continued validation across those cases.
 
 Even if confirmed, the signal is Hunter-specific unless an equivalent supported marker is found and verified for other pet classes. Other classes' pets currently remain visible through their protected party-owner gates.
 
