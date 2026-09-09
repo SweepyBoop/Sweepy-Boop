@@ -294,7 +294,8 @@ local defaults = {
 
 if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesFriendly.classIconStyle = addon.CLASS_ICON_STYLE.CLASS_ICON_AND_MARKER;
-    defaults.profile.nameplatesFriendly.classIconMarkerVisibility = addon.CLASS_ICON_MARKER_VISIBILITY.PARTY_MEMBERS_ONLY;
+    defaults.profile.nameplatesFriendly.classIconMarkerStyle = addon.CLASS_ICON_MARKER_STYLE.PIN;
+    defaults.profile.nameplatesFriendly.classIconMarkerVisibility = addon.CLASS_ICON_MARKER_VISIBILITY.ALWAYS_SHOW;
     defaults.profile.nameplatesFriendly.classIconSize = 1.5;
     defaults.profile.nameplatesFriendly.healerIconSize = 1.5;
     defaults.profile.nameplatesFriendly.flagCarrierIconSize = 1.5;
