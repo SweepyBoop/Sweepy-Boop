@@ -106,7 +106,7 @@ addon.UpdateSpecIcon = function (nameplate)
     end
 
     local config = SweepyBoop.db.profile.nameplatesEnemy;
-    if ( iconFrame.lastModified ~= config.lastModified ) or ( iconFrame.isHealer ~= isHealer ) then
+    if ( not iconFrame.specLayoutApplied ) or ( iconFrame.lastModified ~= config.lastModified ) or ( iconFrame.isHealer ~= isHealer ) then
         local scale = SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100 * builtInScaleFactor;
         if isHealer then
             scale = scale * 1.25;
@@ -122,6 +122,7 @@ addon.UpdateSpecIcon = function (nameplate)
 
         iconFrame.lastModified = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
         iconFrame.isHealer = isHealer;
+        iconFrame.specLayoutApplied = true;
     end
 end
 

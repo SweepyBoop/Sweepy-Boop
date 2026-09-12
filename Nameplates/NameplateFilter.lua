@@ -735,10 +735,12 @@ local function EnsureNpcHighlight(nameplate)
         nameplate.npcHighlight:Hide();
     end
 
-    if ( nameplate.npcHighlight.lastModified ~= config.lastModified ) then
+    if ( not nameplate.npcHighlight.layoutApplied ) or ( nameplate.npcHighlight.lastModified ~= config.lastModified ) then
         nameplate.npcHighlight:SetScale(config.npcHighlightScale);
+        nameplate.npcHighlight:ClearAllPoints();
         nameplate.npcHighlight:SetPoint("BOTTOM", nameplate, "TOP", config.npcHighlightHorizontalOffset or 0, config.npcHighlightOffset or 0);
         nameplate.npcHighlight.lastModified = config.lastModified;
+        nameplate.npcHighlight.layoutApplied = true;
     end
 
     return nameplate.npcHighlight;
@@ -941,10 +943,12 @@ end
 addon.UpdateCritterIcon = function(nameplate)
     -- Only update if config changes (we have separated out pet icon from class / healer / flag carrier icons, and pet icon has fixed texture)
     local iconFrame = EnsureIcon(nameplate);
-    local lastModifiedEnemy = SweepyBoop.db.profile.nameplatesEnemy.lastModified;
-    if ( iconFrame.lastModifiedEnemy ~= lastModifiedEnemy ) then
-        iconFrame:SetScale(SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconScale / 100 * scaleFactor);
+    local config = SweepyBoop.db.profile.nameplatesEnemy;
+    local lastModifiedEnemy = config.lastModified;
+    if ( not iconFrame.layoutApplied ) or ( iconFrame.lastModifiedEnemy ~= lastModifiedEnemy ) then
+        iconFrame:SetScale(config.arenaSpecIconScale / 100 * scaleFactor);
         iconFrame.lastModifiedEnemy = lastModifiedEnemy;
+        iconFrame.layoutApplied = true;
     end
 end
 
