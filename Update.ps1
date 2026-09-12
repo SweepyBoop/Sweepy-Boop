@@ -50,12 +50,21 @@ function Deploy-Addon {
 }
 
 # --- Deployment ---
-$addonDir   = Join-Path $gameDir "_retail_\Interface\AddOns\SweepyBoop"
-$ptrDir     = Join-Path $gameDir "_ptr_\Interface\AddOns\SweepyBoop"
-$classicDir = Join-Path $gameDir "_classic_\Interface\AddOns\SweepyBoop"
-$mopDir     = Join-Path $gameDir "_classic_ptr_\Interface\AddOns\SweepyBoop"
-$tbcDir     = Join-Path $gameDir "_anniversary_\Interface\AddOns\SweepyBoop"
+$clients = @("_retail_", "_ptr_", "_classic_", "_classic_ptr_", "_anniversary_")
+$deployed = 0
 
-foreach ($dir in @($addonDir, $ptrDir, $classicDir, $mopDir, $tbcDir)) {
-    Deploy-Addon -sourceDir $workDir -destDir $dir
+foreach ($client in $clients) {
+    $clientDir = Join-Path $gameDir $client
+    if (-not (Test-Path -LiteralPath $clientDir -PathType Container)) {
+        Write-Output "Skipping client that is not installed: $clientDir"
+        continue
+    }
+
+    $addonDir = Join-Path $clientDir "Interface\AddOns\SweepyBoop"
+    Deploy-Addon -sourceDir $workDir -destDir $addonDir
+    $deployed++
+}
+
+if ($deployed -eq 0) {
+    throw "No supported WoW client directories were found under $gameDir"
 }
