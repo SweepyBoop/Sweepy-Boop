@@ -33,10 +33,12 @@ if not addon.PROJECT_MAINLINE then
         local iconFrame = EnsureIcon(nameplate);
         local config = SweepyBoop.db.profile.nameplatesFriendly;
         local lastModifiedFriendly = config.lastModified;
-        if ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
+        if ( not iconFrame.petIconLayoutApplied ) or ( iconFrame.lastModifiedFriendly ~= lastModifiedFriendly ) then
             iconFrame:SetScale(config.petIconSize);
+            iconFrame:ClearAllPoints();
             iconFrame:SetPoint("BOTTOM", nameplate, "BOTTOM", config.classIconHorizontalOffset or 0, config.classIconOffset or 0);
             iconFrame.lastModifiedFriendly = lastModifiedFriendly;
+            iconFrame.petIconLayoutApplied = true;
         end
     end
 
