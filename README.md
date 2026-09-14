@@ -1,6 +1,6 @@
 # SweepyBoop's PvP Helper
 
-A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to-set-up</strong></span> addon to enhance arena gameplay with <span style="color:#36f; font-style:italic"><strong>minimal changes to original WoW UI</strong></span>, with over **17M downloads**.
+A <span style="color:#36f; font-style:italic"><strong>super lightweight, easy-to-set-up</strong></span> addon to enhance arena gameplay, with over **17M downloads**.
 
 <span style="color:#36f; font-style:italic"><strong>Join [Discord](https://discord.gg/SMRxeZzVwc) for support and discussion on PvP addon / UI</strong></span>.
 
