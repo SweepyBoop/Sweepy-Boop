@@ -1,7 +1,7 @@
 local _, addon = ...;
 
 local baseIconSize = addon.DEFAULT_ICON_SIZE or 32;
-local drWindowDuration = 16;
+local drWindowDuration = 20;
 local iconPadding = 3;
 local cleanStunGlowColor = { 1, 0.82, 0, 1 };
 local testCooldownBaseDuration = 5;
