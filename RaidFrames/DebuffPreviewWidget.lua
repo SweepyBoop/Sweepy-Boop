@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local Type, Version = "RaidFrameDebuffIconPreview-SweepyBoop", 2;
+local Type, Version = "RaidFrameDebuffIconPreview-SweepyBoop", 3;
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true);
 if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return end
 
@@ -30,6 +30,17 @@ end
 
 local function GetIconCount(config)
     return Clamp(config.raidFrameDebuffIconCount, 1, 5);
+end
+
+local function GetIconStyle(config)
+    local iconStyle = config.raidFrameDebuffIconStyle;
+    if iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER
+        or iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT then
+
+        return iconStyle;
+    end
+
+    return addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
 end
 
 local function GetIconScale(config)
@@ -101,6 +112,7 @@ local function ClearIcon(icon)
         icon.cooldown:SetCooldown(0, 0);
     end
     icon.cooldown:Hide();
+    icon.plainBorder:Hide();
     icon.highlightGlow:Hide();
     icon.highlightBorder:Hide();
     icon:Hide();
@@ -129,6 +141,13 @@ local function CreateDebuffIcon(parent)
     icon.texture:SetPoint("TOPLEFT", icon, "TOPLEFT", inset, -inset);
     icon.texture:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", -inset, inset);
     icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
+
+    local plainPadding = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING;
+    icon.plainBorder = icon:CreateTexture(nil, "OVERLAY");
+    icon.plainBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+    icon.plainBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+    icon.plainBorder:SetPoint("TOPLEFT", icon, "TOPLEFT", -plainPadding, plainPadding);
+    icon.plainBorder:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", plainPadding, -plainPadding);
 
     local highlightPadding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING;
     icon.highlightGlow = icon:CreateTexture(nil, "BORDER");
@@ -193,6 +212,7 @@ local function RenderSample(widget)
     local config = GetConfig();
     local enabled = IsEnabled(config);
     local iconCount = GetIconCount(config);
+    local useHighlightStyle = GetIconStyle(config) == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
     local frameHeight = previewFrameHeight;
     local iconScale = GetIconScale(config);
     local shownIconSize = frameHeight * iconScale;
@@ -228,17 +248,17 @@ local function RenderSample(widget)
 
         if i <= shownIconCount then
             icon.previewActive = widget.frame:IsShown();
-            if i == 1 then
-                icon.texture:SetTexture(addon.GetSpellTexture(psychicScream));
-                icon.highlightGlow:SetVertexColor(1, 1, 1, 1);
-                icon.highlightBorder:SetVertexColor(1, 1, 1, 1);
-            else
-                icon.texture:SetTexture(addon.GetSpellTexture(kidneyShot));
-                icon.highlightGlow:SetVertexColor(unpack(redGlowColor));
-                icon.highlightBorder:SetVertexColor(unpack(redGlowColor));
-            end
-            icon.highlightGlow:Show();
-            icon.highlightBorder:Show();
+            local color = i == 1 and nil or redGlowColor;
+            local red = color and color[1] or 1;
+            local green = color and color[2] or 1;
+            local blue = color and color[3] or 1;
+            icon.texture:SetTexture(addon.GetSpellTexture(i == 1 and psychicScream or kidneyShot));
+            icon.plainBorder:SetVertexColor(red, green, blue, 1);
+            icon.highlightGlow:SetVertexColor(red, green, blue, 1);
+            icon.highlightBorder:SetVertexColor(red, green, blue, 1);
+            icon.plainBorder:SetShown(not useHighlightStyle);
+            icon.highlightGlow:SetShown(useHighlightStyle);
+            icon.highlightBorder:SetShown(useHighlightStyle);
             RestartIconCooldown(icon, testInitialElapsed);
             icon:SetAlpha(enabled and 1 or 0.35);
             icon:Show();

@@ -85,6 +85,18 @@ local function SetDebuffIconOptionAndRefresh(info, val)
     SetRaidFrameOptionAndRefresh(info, val, RefreshRaidFrameDebuffIconsAndPreview);
 end
 
+local debuffIconStyleSorting = {
+    addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
+    addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT,
+};
+
+local function GetDebuffIconStyleValues()
+    return {
+        [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = addon.L["Plain"],
+        [addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT] = addon.L["Highlight"],
+    };
+end
+
 local aggroHighlightShapeOrder = {
     "Disabled",
     "Star",
@@ -473,6 +485,17 @@ addon.GetRaidFrameOptions = function(order)
                         step = 1,
                         name = "Max Icons",
                         desc = "Maximum number of crowd-control debuff icons to show beside each raid frame.",
+                        disabled = DebuffIconOptionsDisabled,
+                        set = SetDebuffIconOptionAndRefresh,
+                    },
+
+                    raidFrameDebuffIconStyle = {
+                        order = 16.5,
+                        width = 1.2,
+                        type = "select",
+                        name = addon.L["Border style"],
+                        values = GetDebuffIconStyleValues,
+                        sorting = debuffIconStyleSorting,
                         disabled = DebuffIconOptionsDisabled,
                         set = SetDebuffIconOptionAndRefresh,
                     },
