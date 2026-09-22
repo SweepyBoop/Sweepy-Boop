@@ -33,6 +33,17 @@ local function GetIconCount(config)
     return Clamp(config.raidFrameDebuffIconCount, minIconCount, maxIconCount);
 end
 
+local function GetIconStyle(config)
+    local iconStyle = config.raidFrameDebuffIconStyle;
+    if iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER
+        or iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT then
+
+        return iconStyle;
+    end
+
+    return addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE;
+end
+
 local function GetFrameHeight(frame)
     local height = frame:GetHeight();
     if ( not height ) or ( height <= 0 ) then
@@ -148,8 +159,7 @@ local function GetHighlightColorMap()
     };
 end
 
-local function AddSecureHighlightTexture(button, texturePath, layer, alpha)
-    local texture = CreateHighlightTexture(button, texturePath, layer, alpha);
+local function AddSecureDispelTypeTexture(button, texture)
     button:AddDispelTypeTexture(texture, {
         style = Enum.CustomAuraButtonDispelTypeTextureStyle.PreserveAsset,
         showWhenHarmful = true,
@@ -158,7 +168,22 @@ local function AddSecureHighlightTexture(button, texturePath, layer, alpha)
     });
 end
 
-local function InitializeAuraButton(button, container, showCountdown)
+local function AddSecureHighlightTexture(button, texturePath, layer, alpha)
+    local texture = CreateHighlightTexture(button, texturePath, layer, alpha);
+    AddSecureDispelTypeTexture(button, texture);
+end
+
+local function AddSecurePlainBorder(button)
+    local border = button:CreateTexture(nil, "OVERLAY");
+    local padding = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING;
+    border:SetPoint("TOPLEFT", button, "TOPLEFT", -padding, padding);
+    border:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", padding, -padding);
+    border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+    border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+    AddSecureDispelTypeTexture(button, border);
+end
+
+local function InitializeAuraButton(button, container, iconStyle, showCountdown)
     button:SetSize(iconBaseSize, iconBaseSize);
     button:SetMouseMotionEnabled(false);
 
@@ -167,18 +192,22 @@ local function InitializeAuraButton(button, container, showCountdown)
     button:SetDurationCooldown(cooldown);
     container.sweepyBoopAuraButtons[#container.sweepyBoopAuraButtons + 1] = button;
 
-    AddSecureHighlightTexture(
-        button,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
-        "BORDER",
-        0.9
-    );
-    AddSecureHighlightTexture(
-        button,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
-        "OVERLAY",
-        1
-    );
+    if iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT then
+        AddSecureHighlightTexture(
+            button,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+            "BORDER",
+            0.9
+        );
+        AddSecureHighlightTexture(
+            button,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+            "OVERLAY",
+            1
+        );
+    else
+        AddSecurePlainBorder(button);
+    end
 end
 
 local function EnsureVisualRoot(frame)
@@ -237,12 +266,15 @@ local function RestyleContainer(frame, container)
 end
 
 local function EnsureContainer(frame)
-    local showCountdown = GetConfig().raidFrameDebuffIconShowCountdown ~= false;
-    -- Cooldowns become forbidden after SetDurationCooldown, so cache an immutable
-    -- container variant for each countdown state instead of restyling them later.
+    local config = GetConfig();
+    local iconStyle = GetIconStyle(config);
+    local showCountdown = config.raidFrameDebuffIconShowCountdown ~= false;
+    -- Cooldowns and aura textures become forbidden after button initialization, so cache
+    -- an immutable container variant for each border style and countdown state.
     -- Hidden variants unregister dynamic aura events and do no steady-state update work.
     frame.sweepyBoopDebuffAuraContainers = frame.sweepyBoopDebuffAuraContainers or {};
-    local container = frame.sweepyBoopDebuffAuraContainers[showCountdown];
+    local containerKey = iconStyle .. ( showCountdown and ":countdown" or ":noCountdown" );
+    local container = frame.sweepyBoopDebuffAuraContainers[containerKey];
     if container then return container end
 
     local root = EnsureVisualRoot(frame);
@@ -279,7 +311,7 @@ local function EnsureContainer(frame)
         sortMethod = AuraContainerSortMethod.Default,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
-            InitializeAuraButton(button, container, showCountdown);
+            InitializeAuraButton(button, container, iconStyle, showCountdown);
         end,
         layout = {
             elementSpacing = iconSpacing,
@@ -289,7 +321,7 @@ local function EnsureContainer(frame)
         },
     });
 
-    frame.sweepyBoopDebuffAuraContainers[showCountdown] = container;
+    frame.sweepyBoopDebuffAuraContainers[containerKey] = container;
     ApplyContainerLayout(frame, container);
     return container;
 end
@@ -327,6 +359,7 @@ local function ClearTestIcons(frame)
     local icons = frame.sweepyBoopDebuffTestIcons;
     if ( not icons ) then return end
     for i = 1, #icons do
+        icons[i].plainBorder:Hide();
         icons[i].highlightGlow:Hide();
         icons[i].highlightBorder:Hide();
         icons[i]:Hide();
@@ -343,6 +376,12 @@ local function EnsureTestIcon(frame, index)
     icon:SetFrameLevel(frame:GetFrameLevel() + frameLevelOffset + index);
     icon:SetSize(iconBaseSize, iconBaseSize);
     icon.texture, icon.cooldown = CreateDebuffVisual(icon);
+    icon.plainBorder = icon:CreateTexture(nil, "OVERLAY");
+    local plainPadding = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING;
+    icon.plainBorder:SetPoint("TOPLEFT", icon, "TOPLEFT", -plainPadding, plainPadding);
+    icon.plainBorder:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", plainPadding, -plainPadding);
+    icon.plainBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+    icon.plainBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
     icon.highlightGlow = CreateHighlightTexture(
         icon,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
@@ -369,6 +408,8 @@ local function ShowTestFrame(frame)
     ClearTestIcons(frame);
 
     local config = GetConfig();
+    local iconStyle = GetIconStyle(config);
+    local useHighlightStyle = iconStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
     local root = ApplyVisualRootLayout(frame);
     local count = math.min(GetIconCount(config), 2);
     local previous;
@@ -388,10 +429,12 @@ local function ShowTestFrame(frame)
         local red = color and color[1] or 1;
         local green = color and color[2] or 1;
         local blue = color and color[3] or 1;
+        icon.plainBorder:SetVertexColor(red, green, blue, 1);
         icon.highlightGlow:SetVertexColor(red, green, blue, 1);
         icon.highlightBorder:SetVertexColor(red, green, blue, 1);
-        icon.highlightGlow:Show();
-        icon.highlightBorder:Show();
+        icon.plainBorder:SetShown(not useHighlightStyle);
+        icon.highlightGlow:SetShown(useHighlightStyle);
+        icon.highlightBorder:SetShown(useHighlightStyle);
         icon:Show();
         previous = icon;
     end

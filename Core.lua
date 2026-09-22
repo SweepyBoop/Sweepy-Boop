@@ -197,6 +197,7 @@ local defaults = {
             evokerBuffHelper = true,
             raidFrameDebuffIconsEnabled = false,
             raidFrameDebuffIconCount = 2,
+            raidFrameDebuffIconStyle = addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE,
             raidFrameDebuffIconScale = 0.5,
             raidFrameDebuffIconDispellableScale = 0.5,
             raidFrameDebuffIconShowCountdown = true,
