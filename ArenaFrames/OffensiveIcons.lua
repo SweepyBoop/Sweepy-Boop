@@ -689,7 +689,7 @@ local function CreateStandaloneContainer(holder, index)
             minStandaloneIcons,
             maxStandaloneIcons
         ),
-        sortMethod = AuraContainerSortMethod.ImportantOnly,
+        sortMethod = AuraContainerSortMethod.Default,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
             InitializeStandaloneAuraButton(button, container, index);
@@ -797,10 +797,17 @@ local function SetStandaloneRootShown(root, shown)
         return false;
     end
 
-    for _, holder in ipairs(root.holders) do
-        holder.container:SetShown(shown);
+    if shown then
+        root:Show();
+        for _, holder in ipairs(root.holders) do
+            holder.container:Show();
+        end
+    else
+        for _, holder in ipairs(root.holders) do
+            holder.container:Hide();
+        end
+        root:Hide();
     end
-    root:SetShown(shown);
     root.sweepyBoopShown = shown;
     return true;
 end
