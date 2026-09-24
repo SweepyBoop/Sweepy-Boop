@@ -148,7 +148,9 @@ local defaults = {
             arenaOffensiveIconOffsetY = 0,
 
             arenaStandaloneOffensiveIconsEnabled = false,
+            arenaStandaloneOffensiveIconMaxIcons = 2,
             arenaStandaloneOffensiveIconIdentifier = addon.ARENA_OFFENSIVE_ICON_IDENTIFIER.ARENA_NUMBER,
+            arenaStandaloneOffensiveIconBorderStyle = addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE,
             arenaStandaloneOffensiveIconSize = addon.ARENA_OFFENSIVE_ICON_STYLE.DEFAULT_DISPLAY_SIZE,
             arenaStandaloneOffensiveIconPadding = 2,
             arenaStandaloneOffensiveIconGrowDirection = addon.STANDALONE_GROW_DIRECTION.CENTER,
