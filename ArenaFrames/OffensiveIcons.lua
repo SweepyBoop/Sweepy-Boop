@@ -4,15 +4,40 @@ if not addon.PROJECT_MAINLINE then return end
 
 local style = addon.ARENA_OFFENSIVE_ICON_STYLE;
 local baseIconSize = style.BASE_SIZE;
+local identifierBaseSize = math.floor(baseIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT);
+local standaloneHolderHeight = baseIconSize + identifierBaseSize + 2;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
 local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
 local defaultArenaFrameStrata = "LOW";
 local defaultArenaFrameLevel = 2;
 local liveOverlays = {};
+local standaloneGroup;
+local standaloneTestGroup;
 local eventFrame;
 local setupComplete = false;
 local reconcilePending = false;
+
+local standaloneGrowOptions = {
+    [addon.STANDALONE_GROW_DIRECTION.CENTER] = {
+        direction = "CENTER",
+        anchor = "CENTER",
+    },
+    [addon.STANDALONE_GROW_DIRECTION.LEFT] = {
+        direction = "LEFT",
+        anchor = "RIGHT",
+    },
+    [addon.STANDALONE_GROW_DIRECTION.RIGHT] = {
+        direction = "RIGHT",
+        anchor = "LEFT",
+    },
+};
+
+local testSamples = {
+    { spellID = 190319, name = "Pyra", class = addon.MAGE },
+    { spellID = 10060, name = "Solace", class = addon.PRIEST },
+    { spellID = 107574, name = "Bulwark", class = addon.WARRIOR },
+};
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;
@@ -124,43 +149,123 @@ local function AddSecureHighlightTexture(button, texturePath, layer, alpha)
     });
 end
 
-local function InitializeLiveAuraButton(button, container)
-    button:SetSize(baseIconSize, baseIconSize);
-    button:SetMouseClickEnabled(false);
-    button:SetMouseMotionEnabled(false);
-    button:ClearAllPoints();
-    button:SetPoint("LEFT", container, "LEFT");
+local function InitializeOffensiveIcon(frame, secureAuraButton)
+    frame:SetSize(baseIconSize, baseIconSize);
+    frame:SetMouseClickEnabled(false);
+    frame:SetMouseMotionEnabled(false);
 
-    CreateOffensiveIconShadow(button);
+    CreateOffensiveIconShadow(frame);
 
-    local backdrop = button:CreateTexture(nil, "BACKGROUND");
-    backdrop:SetAllPoints(button);
+    local backdrop = frame:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(frame);
     backdrop:SetColorTexture(unpack(style.BACKDROP_COLOR));
 
-    local icon = button:CreateTexture(nil, "ARTWORK");
-    icon:SetPoint("TOPLEFT", button, "TOPLEFT", style.ICON_INSET, -style.ICON_INSET);
-    icon:SetPoint("BOTTOMRIGHT", button, "BOTTOMRIGHT", -style.ICON_INSET, style.ICON_INSET);
+    local icon = frame:CreateTexture(nil, "ARTWORK");
+    icon:SetPoint("TOPLEFT", frame, "TOPLEFT", style.ICON_INSET, -style.ICON_INSET);
+    icon:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -style.ICON_INSET, style.ICON_INSET);
     icon:SetTexCoord(unpack(style.ICON_TEX_COORDS));
-    button:SetIcon(icon);
 
-    local cooldown = CreateFrame("Cooldown", nil, button, "CooldownFrameTemplate");
+    local cooldown = CreateFrame("Cooldown", nil, frame, "CooldownFrameTemplate");
     cooldown:SetAllPoints(icon);
     ConfigureCooldownSwipe(cooldown);
     UpdateCountdownFontSize(cooldown);
-    button:SetDurationCooldown(cooldown);
 
-    AddSecureHighlightTexture(
-        button,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
-        "BORDER",
-        style.HIGHLIGHT_GLOW_ALPHA
-    );
-    AddSecureHighlightTexture(
-        button,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
-        "OVERLAY",
-        style.HIGHLIGHT_BORDER_ALPHA
-    );
+    if secureAuraButton then
+        frame:SetIcon(icon);
+        frame:SetDurationCooldown(cooldown);
+        AddSecureHighlightTexture(
+            frame,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+            "BORDER",
+            style.HIGHLIGHT_GLOW_ALPHA
+        );
+        AddSecureHighlightTexture(
+            frame,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+            "OVERLAY",
+            style.HIGHLIGHT_BORDER_ALPHA
+        );
+    else
+        local glow = CreateHighlightTexture(
+            frame,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+            "BORDER",
+            style.HIGHLIGHT_GLOW_ALPHA
+        );
+        local border = CreateHighlightTexture(
+            frame,
+            addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+            "OVERLAY",
+            style.HIGHLIGHT_BORDER_ALPHA
+        );
+        glow:SetVertexColor(unpack(style.HIGHLIGHT_COLOR));
+        border:SetVertexColor(unpack(style.HIGHLIGHT_COLOR));
+        frame.icon = icon;
+        frame.cooldown = cooldown;
+    end
+end
+
+local function InitializeLiveAuraButton(button, container)
+    InitializeOffensiveIcon(button, true);
+    button:ClearAllPoints();
+    button:SetPoint("LEFT", container, "LEFT");
+end
+
+local function CreateIdentifier(holder)
+    local identifier = holder:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+    local font, _, flags = identifier:GetFont();
+    if font then
+        identifier:SetFont(font, identifierBaseSize, flags);
+    end
+    identifier:SetPoint("TOP", holder, "TOP", 0, -baseIconSize - 2);
+    identifier:SetWidth(baseIconSize * 2);
+    identifier:SetJustifyH("CENTER");
+    identifier:SetWordWrap(false);
+    holder.identifier = identifier;
+    return identifier;
+end
+
+local function GetIdentifierColor(index, classOverride)
+    local class = classOverride;
+    if not class then
+        class = addon.GetClassForPlayerOrArena("arena" .. index);
+    end
+    if addon.IsSecretValue(class) then
+        class = nil;
+    end
+
+    local color = class and RAID_CLASS_COLORS and RAID_CLASS_COLORS[class];
+    if color then
+        return color.r, color.g, color.b;
+    end
+    return 1, 1, 1;
+end
+
+local function UpdateIdentifier(holder, index, nameOverride, classOverride)
+    local identifier = holder.identifier or CreateIdentifier(holder);
+    local identifierMode = GetConfig().arenaStandaloneOffensiveIconIdentifier;
+    local identifierText;
+
+    if identifierMode == addon.ARENA_OFFENSIVE_ICON_IDENTIFIER.NONE then
+        identifier:Hide();
+        return;
+    elseif identifierMode == addon.ARENA_OFFENSIVE_ICON_IDENTIFIER.NAME then
+        if nameOverride ~= nil then
+            identifierText = nameOverride;
+        else
+            identifierText = UnitName("arena" .. index);
+        end
+        if addon.IsSecretValue(identifierText) then
+            identifier:Hide();
+            return;
+        end
+    else
+        identifierText = tostring(index);
+    end
+
+    identifier:SetText(identifierText);
+    identifier:SetTextColor(GetIdentifierColor(index, classOverride));
+    identifier:Show();
 end
 
 local function EnsureLiveOverlay(index)
@@ -320,13 +425,252 @@ local function UpdateLiveOverlays(forceRefresh)
     end
 end
 
+local function GetStandaloneLayoutOptions()
+    local config = GetConfig();
+    local size = config.arenaStandaloneOffensiveIconSize or style.DEFAULT_DISPLAY_SIZE;
+    local scale = size / baseIconSize;
+    local growDirection = config.arenaStandaloneOffensiveIconGrowDirection
+        or addon.STANDALONE_GROW_DIRECTION.CENTER;
+    local sourceGrowOptions = standaloneGrowOptions[growDirection]
+        or standaloneGrowOptions[addon.STANDALONE_GROW_DIRECTION.CENTER];
+
+    return scale, {
+        point = "CENTER",
+        relativeTo = "UIParent",
+        relativePoint = "CENTER",
+        offsetX = ( config.arenaStandaloneOffensiveIconOffsetX or 0 ) / scale,
+        offsetY = ( config.arenaStandaloneOffensiveIconOffsetY or 0 ) / scale,
+    }, {
+        direction = sourceGrowOptions.direction,
+        anchor = sourceGrowOptions.anchor,
+        margin = ( config.arenaStandaloneOffensiveIconPadding or 0 ) / scale,
+        columns = config.arenaStandaloneOffensiveIconColumns or addon.MAX_ARENA_SIZE,
+        growUpward = config.arenaStandaloneOffensiveIconGrowUpward,
+    };
+end
+
+local function ApplyStandaloneGroupLayout(group)
+    local scale, setPointOptions, growOptions = GetStandaloneLayoutOptions();
+    if InCombatLockdown() and group.isSecure then
+        reconcilePending = true;
+        return group.layoutApplied == true;
+    end
+
+    addon.UpdateIconGroupSetPointOptions(group, setPointOptions, growOptions);
+    group:SetScale(scale);
+    addon.IconGroup_Position(group);
+    group.layoutApplied = true;
+    return true;
+end
+
+local function RefreshStandaloneIdentifiers(group)
+    if not group then return end
+    if group.isSecure and InCombatLockdown() then
+        reconcilePending = true;
+        return;
+    end
+
+    for i = 1, addon.MAX_ARENA_SIZE do
+        local holder = group.active[i];
+        if holder then
+            local sample = holder.testButton and testSamples[i];
+            UpdateIdentifier(
+                holder,
+                i,
+                sample and sample.name,
+                sample and sample.class
+            );
+        end
+    end
+end
+
+local function InitializeStandaloneAuraButton(button, holder)
+    InitializeOffensiveIcon(button, true);
+    button:ClearAllPoints();
+    button:SetPoint("TOP", holder.container, "TOP");
+end
+
+local function CreateStandaloneLiveHolder(group, index)
+    local holder = CreateFrame("Frame", nil, group);
+    holder:SetSize(baseIconSize, standaloneHolderHeight);
+    holder.index = index;
+    CreateIdentifier(holder);
+
+    local container = CreateFrame(
+        "AuraContainer",
+        nil,
+        holder,
+        "CustomAuraContainerTemplate"
+    );
+    holder.container = container;
+    container:Hide();
+    container:SetSize(baseIconSize, baseIconSize);
+    container:SetPoint("TOP", holder, "TOP");
+    container:SetAuraProcessingPolicy(
+        CustomAuraContainerAuraProcessingPolicy.ProcessAura,
+        {
+            displayOnlyDispellableDebuffs = false,
+            ignoreBuffs = false,
+            ignoreDebuffs = true,
+            ignoreDispelDebuffs = true,
+        }
+    );
+    container:AddAuraSlot(offensiveAuraSlotKey .. index, offensiveAuraFilter, {
+        sortMethod = AuraContainerSortMethod.ImportantOnly,
+        sortDirection = AuraContainerSortDirection.Normal,
+        initializeFrame = function(button)
+            InitializeStandaloneAuraButton(button, holder);
+        end,
+    });
+    container:SetUnit("arena" .. index);
+
+    group.active[index] = holder;
+end
+
+local function EnsureStandaloneGroup()
+    if standaloneGroup then return standaloneGroup end
+    if InCombatLockdown() then
+        reconcilePending = true;
+        return;
+    end
+
+    local _, setPointOptions, growOptions = GetStandaloneLayoutOptions();
+    standaloneGroup = addon.CreateIconGroup(setPointOptions, growOptions);
+    standaloneGroup.isSecure = true;
+    standaloneGroup:Hide();
+    -- Keep secure aura occupancy from changing opponent order or group geometry.
+    for i = 1, addon.MAX_ARENA_SIZE do
+        CreateStandaloneLiveHolder(standaloneGroup, i);
+    end
+    ApplyStandaloneGroupLayout(standaloneGroup);
+    return standaloneGroup;
+end
+
+local function SetStandaloneGroupShown(group, shown)
+    if group.shown == shown then return true end
+    if InCombatLockdown() then
+        reconcilePending = true;
+        return false;
+    end
+
+    group.shown = shown;
+    for i = 1, addon.MAX_ARENA_SIZE do
+        group.active[i].container:SetShown(shown);
+    end
+    group:SetShown(shown);
+    return true;
+end
+
+local function UpdateStandaloneGroup(forceRefresh)
+    if not SweepyBoop.db then return end
+
+    local group = EnsureStandaloneGroup();
+    if not group then return end
+
+    local config = GetConfig();
+    if ( not config.arenaStandaloneOffensiveIconsEnabled )
+        or ( not addon.IsUsingRealAuraData() ) then
+
+        SetStandaloneGroupShown(group, false);
+        return;
+    end
+
+    if not ApplyStandaloneGroupLayout(group) then
+        SetStandaloneGroupShown(group, false);
+        return;
+    end
+
+    RefreshStandaloneIdentifiers(group);
+    if forceRefresh then
+        for i = 1, addon.MAX_ARENA_SIZE do
+            group.active[i].container:UpdateAllAuras();
+        end
+    end
+    SetStandaloneGroupShown(group, true);
+end
+
+local function RestartTestCooldown(button, elapsed)
+    if not standaloneTestGroup or not standaloneTestGroup:IsShown() then return end
+    button.cooldown:SetCooldown(GetTime() - ( elapsed or 0 ), 18);
+end
+
+local function CreateStandaloneTestHolder(group, index)
+    local sample = testSamples[index];
+    local holder = CreateFrame("Frame", nil, group);
+    holder:SetSize(baseIconSize, standaloneHolderHeight);
+    holder.index = index;
+
+    local button = CreateFrame("Frame", nil, holder);
+    button:SetPoint("TOP", holder, "TOP");
+    InitializeOffensiveIcon(button, false);
+    button.icon:SetTexture(addon.GetSpellTexture(sample.spellID));
+    CreateIdentifier(holder);
+    UpdateIdentifier(holder, index, sample.name, sample.class);
+    button.cooldown:SetScript("OnCooldownDone", function()
+        RestartTestCooldown(button);
+    end);
+
+    holder.testButton = button;
+    group.active[index] = holder;
+end
+
+local function EnsureStandaloneTestGroup()
+    if standaloneTestGroup then return standaloneTestGroup end
+
+    local _, setPointOptions, growOptions = GetStandaloneLayoutOptions();
+    standaloneTestGroup = addon.CreateIconGroup(setPointOptions, growOptions);
+    standaloneTestGroup:Hide();
+    for i = 1, addon.MAX_ARENA_SIZE do
+        CreateStandaloneTestHolder(standaloneTestGroup, i);
+    end
+    ApplyStandaloneGroupLayout(standaloneTestGroup);
+    return standaloneTestGroup;
+end
+
+local function RefreshStandaloneTestGroup()
+    if not standaloneTestGroup or not standaloneTestGroup:IsShown() then return end
+
+    if not GetConfig().arenaStandaloneOffensiveIconsEnabled then
+        standaloneTestGroup:Hide();
+        return;
+    end
+
+    ApplyStandaloneGroupLayout(standaloneTestGroup);
+    RefreshStandaloneIdentifiers(standaloneTestGroup);
+end
+
+function SweepyBoop:TestArenaStandaloneOffensiveIcons()
+    if IsInInstance() then
+        addon.PRINT(addon.L["Test mode can only be used outside instances"]);
+        return;
+    end
+    if not GetConfig().arenaStandaloneOffensiveIconsEnabled then return end
+
+    local group = EnsureStandaloneTestGroup();
+    ApplyStandaloneGroupLayout(group);
+    RefreshStandaloneIdentifiers(group);
+    group:Show();
+    for i = 1, addon.MAX_ARENA_SIZE do
+        RestartTestCooldown(group.active[i].testButton, i * 3);
+    end
+end
+
+function SweepyBoop:HideTestArenaStandaloneOffensiveIcons()
+    if standaloneTestGroup then
+        standaloneTestGroup:Hide();
+    end
+end
+
 function SweepyBoop:UpdateArenaOffensiveIcons()
     UpdateLiveOverlays();
+    UpdateStandaloneGroup();
+    RefreshStandaloneTestGroup();
 end
 
 function SweepyBoop:SetupArenaOffensiveIcons()
     if setupComplete then
         UpdateLiveOverlays();
+        UpdateStandaloneGroup();
         return;
     end
     setupComplete = true;
@@ -334,6 +678,7 @@ function SweepyBoop:SetupArenaOffensiveIcons()
     for i = 1, addon.MAX_ARENA_SIZE do
         EnsureLiveOverlay(i);
     end
+    EnsureStandaloneGroup();
 
     eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
@@ -343,19 +688,33 @@ function SweepyBoop:SetupArenaOffensiveIcons()
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
     eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
-    eventFrame:SetScript("OnEvent", function(_, event)
+    eventFrame:RegisterEvent("UNIT_NAME_UPDATE");
+    eventFrame:SetScript("OnEvent", function(_, event, unit)
+        if event == addon.PLAYER_ENTERING_WORLD and standaloneTestGroup then
+            standaloneTestGroup:Hide();
+        end
         if event == addon.PLAYER_REGEN_ENABLED then
             if not reconcilePending then return end
             reconcilePending = false;
             UpdateLiveOverlays(true);
+            UpdateStandaloneGroup(true);
             return;
         end
+        if event == "UNIT_NAME_UPDATE" then
+            if unit ~= "arena1" and unit ~= "arena2" and unit ~= "arena3" then return end
+            RefreshStandaloneIdentifiers(standaloneGroup);
+            return;
+        end
+
         UpdateLiveOverlays(true);
+        UpdateStandaloneGroup(true);
     end);
 
     addon.RegisterAuraDataProviderListener("ArenaOffensiveIcons", function()
         UpdateLiveOverlays(true);
+        UpdateStandaloneGroup(true);
     end);
 
     UpdateLiveOverlays();
+    UpdateStandaloneGroup();
 end

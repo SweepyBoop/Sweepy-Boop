@@ -128,6 +128,12 @@ addon.STANDALONE_GROW_DIRECTION = {
     RIGHT = 3,
 };
 
+addon.ARENA_OFFENSIVE_ICON_IDENTIFIER = {
+    NONE = "none",
+    NAME = "name",
+    ARENA_NUMBER = "arenaNumber",
+};
+
 addon.ICON_SET_ID = {
     ARENA_MAIN = "Arena",
     ARENA_SECONDARY = "ArenaSecondary",

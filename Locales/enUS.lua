@@ -201,10 +201,13 @@ L["Nameplate + pulsing icon"] = "Nameplate + pulsing icon";
 
 L["Arena frames"] = "Arena frames";
 L["Important buff alerts"] = "Important buff alerts";
+L["Standalone"] = "Standalone";
 L["Show important buff icons on Blizzard arena frames"] = "Show important buff icons on Blizzard arena frames";
-L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.";
-L["Position"] = "Position";
-L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.";
+L["Show standalone important buff icons"] = "Show standalone important buff icons";
+L["Shows one important enemy buff per arena opponent in a free-standing group."] = "Shows one important enemy buff per arena opponent in a free-standing group.";
+L["Identifier"] = "Identifier";
+L["Arena number"] = "Arena number";
+L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.\n\nThese icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."] = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.\n\nThese icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.";
 L["Test icons showing arena 1 only, arena 2 & 3 will be automatically set up"] = "Test icons showing arena 1 only, arena 2 & 3 will be automatically set up";
 L["Arena cooldowns"] = "Arena cooldowns";
 L["Import"] = "Import";
