@@ -593,12 +593,24 @@ local function CreateStandaloneLabelHost(parent, relativeFrame)
 
     return {
         host = host,
+        relativeFrame = relativeFrame,
         number = number,
         spec = spec,
         name = name,
         numberHeight = numberHeight,
         standardHeight = standardHeight,
+        iconsGrowUpward = true,
     };
+end
+
+local function ApplyStandaloneLabelLayout(label, iconsGrowUpward)
+    label.iconsGrowUpward = iconsGrowUpward;
+    label.host:ClearAllPoints();
+    if iconsGrowUpward then
+        label.host:SetPoint("TOP", label.relativeFrame, "BOTTOM", 0, -2);
+    else
+        label.host:SetPoint("BOTTOM", label.relativeFrame, "TOP", 0, 2);
+    end
 end
 
 local function ClearStandaloneLabelLine(line)
@@ -651,10 +663,12 @@ local function ApplyStandaloneLabel(label, numberText, specText, nameText, color
 
     local offsetY = 0;
     local red, green, blue = color[1], color[2], color[3];
+    local anchor = label.iconsGrowUpward and "TOP" or "BOTTOM";
+    local offsetDirection = label.iconsGrowUpward and -1 or 1;
     for _, lineInfo in ipairs(lines) do
         local line = lineInfo.fontString;
         line:ClearAllPoints();
-        line:SetPoint("TOP", label.host, "TOP", 0, -offsetY);
+        line:SetPoint(anchor, label.host, anchor, 0, offsetY * offsetDirection);
         line:SetText(lineInfo.text);
         line:SetTextColor(red, green, blue);
         line:Show();
@@ -935,6 +949,10 @@ local function ApplyStandaloneRootLayout(root, layout, isTest)
         layout.offsetX,
         layout.offsetY
     );
+
+    for _, entry in ipairs(root.entries) do
+        ApplyStandaloneLabelLayout(entry.label, layout.growUpward);
+    end
 
     if not isTest then
         for _, entry in ipairs(root.entries) do
