@@ -409,11 +409,8 @@ local function GetStandaloneLayout()
         maxStandaloneColumns
     );
     local effectiveColumns = math.min(columns, maxIcons);
-    local rows = math.ceil(maxIcons / effectiveColumns);
-    local holderWidth = effectiveColumns * baseIconSize
+    local maxLineWidth = effectiveColumns * baseIconSize
         + ( effectiveColumns - 1 ) * spacing;
-    local holderHeight = rows * standaloneHolderHeight
-        + ( rows - 1 ) * spacing;
     local growDirection = config.arenaStandaloneOffensiveIconGrowDirection;
     if growDirection ~= addon.STANDALONE_GROW_DIRECTION.LEFT
         and growDirection ~= addon.STANDALONE_GROW_DIRECTION.RIGHT then
@@ -429,19 +426,6 @@ local function GetStandaloneLayout()
         and AnchorUtil.FlowDirection.Up
         or AnchorUtil.FlowDirection.Down;
     local verticalAnchor = growUpward and "BOTTOM" or "TOP";
-    local horizontalAnchor;
-    if growDirection == addon.STANDALONE_GROW_DIRECTION.LEFT then
-        horizontalAnchor = "RIGHT";
-    elseif growDirection == addon.STANDALONE_GROW_DIRECTION.RIGHT then
-        horizontalAnchor = "LEFT";
-    else
-        horizontalAnchor = "";
-    end
-
-    local containerPoint = verticalAnchor .. horizontalAnchor;
-    if horizontalAnchor == "" then
-        containerPoint = verticalAnchor;
-    end
     local flowAnchorPoint = verticalAnchor
         .. ( horizontalFlowDirection == AnchorUtil.FlowDirection.Left and "RIGHT" or "LEFT" );
 
@@ -450,18 +434,12 @@ local function GetStandaloneLayout()
         spacing = spacing,
         maxIcons = maxIcons,
         effectiveColumns = effectiveColumns,
-        rows = rows,
-        holderWidth = holderWidth,
-        holderHeight = holderHeight,
-        rootWidth = addon.MAX_ARENA_SIZE * holderWidth
-            + ( addon.MAX_ARENA_SIZE - 1 ) * spacing,
-        rootHeight = holderHeight,
-        rowWidth = holderWidth,
+        maxLineWidth = maxLineWidth,
         growDirection = growDirection,
         growUpward = growUpward,
         horizontalFlowDirection = horizontalFlowDirection,
         verticalFlowDirection = verticalFlowDirection,
-        containerPoint = containerPoint,
+        verticalAnchor = verticalAnchor,
         flowAnchorPoint = flowAnchorPoint,
         offsetX = ( tonumber(config.arenaStandaloneOffensiveIconOffsetX) or 0 ) / scale,
         offsetY = ( tonumber(config.arenaStandaloneOffensiveIconOffsetY) or 0 ) / scale,
@@ -635,14 +613,14 @@ local function RefreshStandaloneIdentities(root, samples)
     end
 
     local refreshed = true;
-    for index, holder in ipairs(root.holders) do
+    for index, entry in ipairs(root.entries) do
         local sample = samples and samples[index];
         if samples then
-            for _, decoration in ipairs(holder.testDecorations) do
+            for _, decoration in ipairs(entry.testDecorations) do
                 ApplyStandaloneDecorationIdentity(decoration, index, sample);
             end
         else
-            for _, decoration in ipairs(holder.container.sweepyBoopIdentityDecorations) do
+            for _, decoration in ipairs(entry.container.sweepyBoopIdentityDecorations) do
                 if not ApplyStandaloneDecorationIdentity(decoration, index) then
                     refreshed = false;
                 end
@@ -665,11 +643,11 @@ local function InitializeStandaloneAuraButton(button, container, index)
     ApplyStandaloneDecorationIdentity(decoration, index);
 end
 
-local function CreateStandaloneContainer(holder, index)
+local function CreateStandaloneContainer(parent, index)
     local container = CreateFrame(
         "AuraContainer",
         nil,
-        holder,
+        parent,
         "CustomAuraContainerTemplate"
     );
     container:Hide();
@@ -705,16 +683,14 @@ local function CreateStandaloneContainer(holder, index)
     return container;
 end
 
-local function ApplyStandaloneContainerLayout(holder, container, layout)
-    container:ClearAllPoints();
-    container:SetPoint(layout.containerPoint, holder, layout.containerPoint);
+local function ApplyStandaloneContainerLayout(container, layout)
     container:SetFlowLayoutAxis(AnchorUtil.FlowLayoutAxis.Horizontal);
     container:SetFlowLayoutAnchorPoint(layout.flowAnchorPoint);
     container:SetFlowLayoutGrowthDirection(
         layout.horizontalFlowDirection,
         layout.verticalFlowDirection
     );
-    container:SetFlowLayoutMaximumLineSize(layout.rowWidth + flowLayoutTolerance);
+    container:SetFlowLayoutMaximumLineSize(layout.maxLineWidth + flowLayoutTolerance);
     container:SetAuraGroupMaxFrameCount(offensiveAuraGroupKey, layout.maxIcons);
     container:SetAuraGroupLayout(offensiveAuraGroupKey, {
         elementSpacing = layout.spacing,
@@ -722,6 +698,53 @@ local function ApplyStandaloneContainerLayout(holder, container, layout)
         elementWidth = baseIconSize,
         elementHeight = standaloneHolderHeight,
     });
+end
+
+local function AnchorStandaloneGroups(root, entries, layout)
+    for _, entry in ipairs(entries) do
+        entry.frame:ClearAllPoints();
+    end
+
+    local verticalAnchor = layout.verticalAnchor;
+    if layout.growDirection == addon.STANDALONE_GROW_DIRECTION.RIGHT then
+        entries[1].frame:SetPoint(verticalAnchor .. "LEFT", root, verticalAnchor);
+        for index = 2, #entries do
+            entries[index].frame:SetPoint(
+                verticalAnchor .. "LEFT",
+                entries[index - 1].frame,
+                verticalAnchor .. "RIGHT",
+                layout.spacing,
+                0
+            );
+        end
+    elseif layout.growDirection == addon.STANDALONE_GROW_DIRECTION.LEFT then
+        entries[1].frame:SetPoint(verticalAnchor .. "RIGHT", root, verticalAnchor);
+        for index = 2, #entries do
+            entries[index].frame:SetPoint(
+                verticalAnchor .. "RIGHT",
+                entries[index - 1].frame,
+                verticalAnchor .. "LEFT",
+                -layout.spacing,
+                0
+            );
+        end
+    else
+        entries[2].frame:SetPoint(verticalAnchor, root, verticalAnchor);
+        entries[1].frame:SetPoint(
+            verticalAnchor .. "RIGHT",
+            entries[2].frame,
+            verticalAnchor .. "LEFT",
+            -layout.spacing,
+            0
+        );
+        entries[3].frame:SetPoint(
+            verticalAnchor .. "LEFT",
+            entries[2].frame,
+            verticalAnchor .. "RIGHT",
+            layout.spacing,
+            0
+        );
+    end
 end
 
 local function ApplyStandaloneRootLayout(root, layout, isTest)
@@ -735,7 +758,6 @@ local function ApplyStandaloneRootLayout(root, layout, isTest)
     end
 
     root:SetScale(layout.scale);
-    root:SetSize(layout.rootWidth, layout.rootHeight);
     root:ClearAllPoints();
     root:SetPoint(
         "CENTER",
@@ -745,19 +767,11 @@ local function ApplyStandaloneRootLayout(root, layout, isTest)
         layout.offsetY
     );
 
-    for index, holder in ipairs(root.holders) do
-        holder:SetSize(layout.holderWidth, layout.holderHeight);
-        holder:ClearAllPoints();
-        holder:SetPoint(
-            "TOPLEFT",
-            root,
-            "TOPLEFT",
-            ( index - 1 ) * ( layout.holderWidth + layout.spacing ),
-            0
-        );
-        if not isTest then
-            ApplyStandaloneContainerLayout(holder, holder.container, layout);
+    if not isTest then
+        for _, entry in ipairs(root.entries) do
+            ApplyStandaloneContainerLayout(entry.container, layout);
         end
+        AnchorStandaloneGroups(root, root.entries, layout);
     end
 
     root.sweepyBoopLayoutSignature = signature;
@@ -775,13 +789,15 @@ local function EnsureStandaloneRoot()
     root:SetMouseClickEnabled(false);
     root:SetSize(1, 1);
     root:Hide();
-    root.holders = {};
+    root.entries = {};
 
     for index = 1, addon.MAX_ARENA_SIZE do
-        local holder = CreateFrame("Frame", nil, root);
-        holder.index = index;
-        holder.container = CreateStandaloneContainer(holder, index);
-        root.holders[index] = holder;
+        local container = CreateStandaloneContainer(root, index);
+        root.entries[index] = {
+            container = container,
+            frame = container,
+            index = index,
+        };
     end
 
     standaloneRoot = root;
@@ -799,12 +815,12 @@ local function SetStandaloneRootShown(root, shown)
 
     if shown then
         root:Show();
-        for _, holder in ipairs(root.holders) do
-            holder.container:Show();
+        for _, entry in ipairs(root.entries) do
+            entry.container:Show();
         end
     else
-        for _, holder in ipairs(root.holders) do
-            holder.container:Hide();
+        for _, entry in ipairs(root.entries) do
+            entry.container:Hide();
         end
         root:Hide();
     end
@@ -832,8 +848,8 @@ local function UpdateStandaloneRoot(forceRefresh)
     end
 
     RefreshStandaloneIdentities(root);
-    for index, holder in ipairs(root.holders) do
-        local container = holder.container;
+    for index, entry in ipairs(root.entries) do
+        local container = entry.container;
         local unit = "arena" .. index;
         if container:GetUnit() ~= unit then
             if InCombatLockdown() then
@@ -877,7 +893,7 @@ local function EnsureStandaloneTestRoot()
     root:SetMouseClickEnabled(false);
     root:SetSize(1, 1);
     root:Hide();
-    root.holders = {};
+    root.entries = {};
 
     for index = 1, addon.MAX_ARENA_SIZE do
         local holder = CreateFrame("Frame", nil, root);
@@ -887,22 +903,42 @@ local function EnsureStandaloneTestRoot()
         for buttonIndex = 1, maxStandaloneIcons do
             CreateStandaloneTestButton(holder, index, buttonIndex);
         end
-        root.holders[index] = holder;
+        root.entries[index] = {
+            frame = holder,
+            index = index,
+            testButtons = holder.testButtons,
+            testDecorations = holder.testDecorations,
+        };
     end
 
     standaloneTestRoot = root;
     return root;
 end
 
+local function GetStandaloneTestSampleCount(layout, index)
+    if index == 1 then return layout.maxIcons end
+    if index == 2 then return 1 end
+    return math.max(1, layout.maxIcons - 2);
+end
+
 local function ApplyStandaloneTestLayout(root, layout)
     ApplyStandaloneRootLayout(root, layout, true);
 
-    for _, holder in ipairs(root.holders) do
-        for buttonIndex, button in ipairs(holder.testButtons) do
+    for index, entry in ipairs(root.entries) do
+        local holder = entry.frame;
+        local sampleCount = GetStandaloneTestSampleCount(layout, index);
+        local sampleColumns = math.min(layout.effectiveColumns, sampleCount);
+        local sampleRows = math.ceil(sampleCount / sampleColumns);
+        holder:SetSize(
+            sampleColumns * baseIconSize + ( sampleColumns - 1 ) * layout.spacing,
+            sampleRows * standaloneHolderHeight + ( sampleRows - 1 ) * layout.spacing
+        );
+
+        for buttonIndex, button in ipairs(entry.testButtons) do
             button:ClearAllPoints();
-            if buttonIndex <= layout.maxIcons then
-                local column = ( buttonIndex - 1 ) % layout.effectiveColumns;
-                local row = math.floor(( buttonIndex - 1 ) / layout.effectiveColumns);
+            if buttonIndex <= sampleCount then
+                local column = ( buttonIndex - 1 ) % sampleColumns;
+                local row = math.floor(( buttonIndex - 1 ) / sampleColumns);
                 local x = column * ( baseIconSize + layout.spacing );
                 local y = row * ( standaloneHolderHeight + layout.spacing );
                 local point;
@@ -922,6 +958,8 @@ local function ApplyStandaloneTestLayout(root, layout)
             end
         end
     end
+
+    AnchorStandaloneGroups(root, root.entries, layout);
 end
 
 local function RefreshStandaloneTestRoot()
@@ -934,9 +972,10 @@ local function RefreshStandaloneTestRoot()
     local layout = GetStandaloneLayout();
     ApplyStandaloneTestLayout(standaloneTestRoot, layout);
     RefreshStandaloneIdentities(standaloneTestRoot, testSamples);
-    for _, holder in ipairs(standaloneTestRoot.holders) do
-        for buttonIndex = 1, layout.maxIcons do
-            RestartTestCooldown(holder.testButtons[buttonIndex], buttonIndex * 2);
+    for index, entry in ipairs(standaloneTestRoot.entries) do
+        local sampleCount = GetStandaloneTestSampleCount(layout, index);
+        for buttonIndex = 1, sampleCount do
+            RestartTestCooldown(entry.testButtons[buttonIndex], buttonIndex * 2);
         end
     end
 end
