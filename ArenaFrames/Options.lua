@@ -1,13 +1,14 @@
 local _, addon = ...;
 local yellowColor = "cFFFFFF00";
 
-local function SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val, callback)
+local function SetArenaFrameOption(info, val)
     SweepyBoop.db.profile.arenaFrames[info[#info]] = val;
     SweepyBoop.db.profile.arenaFrames.lastModified = GetTime();
-    if callback then
-        callback();
-    end
     SweepyBoop:UpdateArenaOffensiveIcons();
+end
+
+local function SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val)
+    SetArenaFrameOption(info, val);
     if addon.RefreshArenaOffensiveIconPreviewWidgets then
         addon.RefreshArenaOffensiveIconPreviewWidgets();
     end
@@ -114,31 +115,30 @@ addon.GetMainlineArenaFrameOptions = function(order)
                 type = "group",
                 name = "Important buff alerts",
                 args = {
-                    arenaOffensiveIconsEnabled = {
-                        order = 2,
-                        type = "toggle",
-                        width = "full",
-                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show important buff icons on Blizzard arena frames",
-                        desc = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.",
-                        set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
+                    arenaFramesHeader = {
+                        order = 1,
+                        type = "header",
+                        name = "Arena frames",
                     },
                     preview = {
-                        order = 1,
+                        order = 2,
                         type = "description",
                         width = "full",
                         name = "Preview",
                         dialogControl = "ArenaOffensiveIconPreview-SweepyBoop",
                     },
-                    positionHeader = {
-                        order = 4,
-                        type = "header",
-                        name = "Position",
-                        hidden = function()
-                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
+                    arenaOffensiveIconsEnabled = {
+                        order = 3,
+                        type = "toggle",
+                        width = "full",
+                        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show important buff icons on Blizzard arena frames",
+                        desc = function()
+                            return addon.L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] .. "\n\n" .. addon.L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."];
                         end,
+                        set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                     },
                     arenaOffensiveIconSize = {
-                        order = 5,
+                        order = 4,
                         type = "range",
                         width = 0.8,
                         min = 24,
@@ -151,7 +151,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         end,
                     },
                     arenaOffensiveIconOffsetX = {
-                        order = 6,
+                        order = 5,
                         type = "range",
                         width = 0.8,
                         min = -200,
@@ -164,7 +164,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         end,
                     },
                     arenaOffensiveIconOffsetY = {
-                        order = 7,
+                        order = 6,
                         type = "range",
                         width = 0.8,
                         min = -150,
@@ -176,14 +176,182 @@ addon.GetMainlineArenaFrameOptions = function(order)
                             return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
                         end,
                     },
-                    note = {
-                        order = 8,
-                        type = "description",
-                        width = "full",
-                        name = addon.EXCLAMATION .. " These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.",
-                        hidden = function()
-                            return ( not SweepyBoop.db.profile.arenaFrames.arenaOffensiveIconsEnabled );
-                        end,
+                    standaloneHeader = {
+                        order = 10,
+                        type = "header",
+                        name = "Standalone",
+                    },
+                    arenaStandaloneOffensiveIconsEnabled = {
+                        order = 11,
+                        type = "toggle",
+                        width = "relative",
+                        relWidth = 0.22,
+                        name = "Enabled",
+                        desc = "Shows up to the configured number of important buffs for each arena opponent in three fixed enemy groups.",
+                        set = SetArenaFrameOption,
+                    },
+                    testStandalone = {
+                        order = 11.2,
+                        type = "execute",
+                        width = "relative",
+                        relWidth = 0.25,
+                        name = "Test",
+                        func = "TestArenaStandaloneOffensiveIcons",
+                    },
+                    hideStandaloneTest = {
+                        order = 11.3,
+                        type = "execute",
+                        width = "relative",
+                        relWidth = 0.25,
+                        name = "Hide",
+                        func = "HideTestArenaStandaloneOffensiveIcons",
+                    },
+                    arenaStandaloneOffensiveIconMaxIcons = {
+                        order = 12,
+                        type = "range",
+                        width = "relative",
+                        relWidth = 0.24,
+                        min = 1,
+                        max = 6,
+                        step = 1,
+                        name = "Max icons / enemy",
+                        desc = "Maximum number of important buff icons to show for each arena opponent.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconColumns = {
+                        order = 12.1,
+                        type = "range",
+                        width = "relative",
+                        relWidth = 0.24,
+                        min = 1,
+                        max = 6,
+                        step = 1,
+                        name = "Columns",
+                        desc = "Maximum icons per row within each enemy group. Values above Max icons per enemy have no additional effect.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconGrowDirection = {
+                        order = 12.2,
+                        type = "select",
+                        width = "relative",
+                        relWidth = 0.27,
+                        name = "Grow direction",
+                        desc = "Direction icons grow within each enemy group.",
+                        values = {
+                            [addon.STANDALONE_GROW_DIRECTION.CENTER] = "Center",
+                            [addon.STANDALONE_GROW_DIRECTION.LEFT] = "Left",
+                            [addon.STANDALONE_GROW_DIRECTION.RIGHT] = "Right",
+                        },
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconGrowUpward = {
+                        order = 12.3,
+                        type = "toggle",
+                        width = "relative",
+                        relWidth = 0.24,
+                        name = "Grow upward",
+                        desc = "Wrap additional rows upward instead of downward within each enemy group.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconShowArenaNumber = {
+                        order = 13,
+                        type = "toggle",
+                        width = "relative",
+                        relWidth = 0.33,
+                        name = "Show arena number",
+                        desc = "Show the arena enemy number in the group label.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconShowName = {
+                        order = 13.2,
+                        type = "toggle",
+                        width = "relative",
+                        relWidth = 0.33,
+                        name = "Show name",
+                        desc = "Show the arena enemy name in the group label.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconShowSpec = {
+                        order = 13.1,
+                        type = "toggle",
+                        width = "relative",
+                        relWidth = 0.33,
+                        name = "Show spec",
+                        desc = "Show the arena enemy specialization in the group label.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconBorderStyle = {
+                        order = 11.1,
+                        type = "select",
+                        width = "relative",
+                        relWidth = 0.25,
+                        name = "Border style",
+                        values = {
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER] = "Plain",
+                            [addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT] = "Highlight",
+                        },
+                        sorting = {
+                            addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
+                            addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT,
+                        },
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconSize = {
+                        order = 14,
+                        type = "range",
+                        width = "relative",
+                        relWidth = 0.33,
+                        min = 16,
+                        max = 100,
+                        step = 1,
+                        name = "Icon size",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconPadding = {
+                        order = 14.1,
+                        type = "range",
+                        width = "relative",
+                        relWidth = 0.33,
+                        min = 0,
+                        max = 10,
+                        step = 1,
+                        name = "Icon spacing",
+                        desc = "Space between icons within each enemy group.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconGroupSpacing = {
+                        order = 14.2,
+                        type = "range",
+                        width = "relative",
+                        relWidth = 0.33,
+                        min = 0,
+                        max = 100,
+                        step = 1,
+                        name = "Group spacing",
+                        desc = "Space between arena enemy groups.",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconOffsetX = {
+                        order = 15,
+                        type = "range",
+                        width = "relative",
+                        relWidth = 0.45,
+                        min = -2500,
+                        max = 2500,
+                        bigStep = 5,
+                        name = "X offset",
+                        set = SetArenaFrameOption,
+                    },
+                    arenaStandaloneOffensiveIconOffsetY = {
+                        order = 15.1,
+                        type = "range",
+                        width = "relative",
+                        relWidth = 0.45,
+                        min = -1500,
+                        max = 1500,
+                        bigStep = 3,
+                        name = "Y offset",
+                        set = SetArenaFrameOption,
                     },
                 },
             },

@@ -147,6 +147,21 @@ local defaults = {
             arenaOffensiveIconOffsetX = 0,
             arenaOffensiveIconOffsetY = 0,
 
+            arenaStandaloneOffensiveIconsEnabled = false,
+            arenaStandaloneOffensiveIconMaxIcons = 2,
+            arenaStandaloneOffensiveIconShowArenaNumber = true,
+            arenaStandaloneOffensiveIconShowName = false,
+            arenaStandaloneOffensiveIconShowSpec = true,
+            arenaStandaloneOffensiveIconBorderStyle = addon.BIG_DEBUFFS_DEFAULTS.ICON_STYLE,
+            arenaStandaloneOffensiveIconSize = addon.ARENA_OFFENSIVE_ICON_STYLE.DEFAULT_DISPLAY_SIZE,
+            arenaStandaloneOffensiveIconPadding = 5,
+            arenaStandaloneOffensiveIconGroupSpacing = 20,
+            arenaStandaloneOffensiveIconGrowDirection = addon.STANDALONE_GROW_DIRECTION.CENTER,
+            arenaStandaloneOffensiveIconColumns = 3,
+            arenaStandaloneOffensiveIconGrowUpward = true,
+            arenaStandaloneOffensiveIconOffsetX = 0,
+            arenaStandaloneOffensiveIconOffsetY = 150,
+
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
             showUnusedIcons = false,
@@ -486,6 +501,7 @@ function SweepyBoop:OnInitialize()
 
     -- Register callback (https://www.wowace.com/projects/ace3/pages/ace-db-3-0-tutorial)
     self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig");
+    self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig");
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig");
     self:SetupNameplateModules();
 
@@ -536,6 +552,7 @@ function SweepyBoop:RefreshConfig()
     if addon.PROJECT_MAINLINE then
         self:RefreshHealerBuffHelper();
         self:RefreshRaidFrameDebuffIcons();
+        self:HideTestArenaStandaloneOffensiveIcons();
         self:UpdateArenaOffensiveIcons();
         self:RefreshRaidFrameAggroHighlight();
         self:HideTestHealerInCrowdControl();
