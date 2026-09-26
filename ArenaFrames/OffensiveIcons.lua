@@ -819,11 +819,7 @@ end
 local function InitializeStandaloneAuraButton(button, container)
     local decoration = CreateStandaloneDecoration(button, true);
     container.sweepyBoopDecorations[#container.sweepyBoopDecorations + 1] = decoration;
-    if CanAccessStandaloneDecorations() then
-        ApplyStandaloneDecorationStyle(decoration, container.sweepyBoopClassColor);
-    else
-        standaloneDecorationRefreshPending = true;
-    end
+    ApplyStandaloneDecorationStyle(decoration, container.sweepyBoopClassColor);
 end
 
 local function CreateStandaloneContainer(parent)
