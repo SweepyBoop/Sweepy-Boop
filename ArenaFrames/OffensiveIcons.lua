@@ -18,7 +18,9 @@ local standaloneTestRoot;
 local eventFrame;
 local setupComplete = false;
 local reconcilePending = false;
+local roundResetPending = false;
 local standalonePresentationRefreshPending = false;
+local standalonePresentationInvalidated = false;
 local standaloneEventsRegistered = false;
 local standaloneRestrictionListenerRegistered = false;
 local ReconcileStandaloneAuraRestrictions;
@@ -809,6 +811,7 @@ local function RefreshStandalonePresentation(root, samples)
     RefreshStandaloneDecorationStyles(root);
     if not unrestricted then
         standalonePresentationRefreshPending = false;
+        standalonePresentationInvalidated = false;
     end
     return true;
 end
@@ -1098,7 +1101,12 @@ local function UpdateStandaloneRoot(forceRefresh)
         return;
     end
 
-    RefreshStandalonePresentation(root);
+    local presentationReady = RefreshStandalonePresentation(root);
+    if ( not presentationReady ) and standalonePresentationInvalidated then
+        reconcilePending = true;
+        SetStandaloneRootShown(root, false);
+        return;
+    end
     for index, entry in ipairs(root.entries) do
         local container = entry.container;
         local unit = "arena" .. index;
@@ -1113,6 +1121,62 @@ local function UpdateStandaloneRoot(forceRefresh)
         end
     end
     SetStandaloneRootShown(root, true);
+end
+
+local function InvalidateStandalonePresentation(root)
+    standalonePresentationRefreshPending = true;
+    standalonePresentationInvalidated = true;
+    if ( not root ) or ( not CanAccessStandaloneDecorations() ) then
+        reconcilePending = true;
+        return;
+    end
+
+    for _, entry in ipairs(root.entries) do
+        entry.classColor = nil;
+        entry.container.sweepyBoopClassColor = nil;
+        ClearStandaloneLabel(entry.label);
+        for _, decoration in ipairs(entry.decorations) do
+            ApplyStandaloneDecorationStyle(decoration);
+        end
+    end
+end
+
+local function ForceRebindAuraContainer(container, unit)
+    container:SetEnabled(false);
+    container:SetUnit("none");
+    container:SetUnit(unit);
+    container:SetEnabled(true);
+    container:UpdateAllAuras();
+end
+
+local function ResetArenaOpponentAuraContainers()
+    if InCombatLockdown() then
+        roundResetPending = true;
+        standalonePresentationRefreshPending = true;
+        standalonePresentationInvalidated = true;
+        return;
+    end
+    roundResetPending = false;
+
+    for _, overlay in pairs(liveOverlays) do
+        SetLiveOverlayShown(overlay, false);
+    end
+    if standaloneRoot then
+        SetStandaloneRootShown(standaloneRoot, false);
+        InvalidateStandalonePresentation(standaloneRoot);
+    end
+
+    for _, overlay in pairs(liveOverlays) do
+        ForceRebindAuraContainer(overlay.container, overlay.unit);
+    end
+    if standaloneRoot then
+        for index, entry in ipairs(standaloneRoot.entries) do
+            ForceRebindAuraContainer(entry.container, "arena" .. index);
+        end
+    end
+
+    UpdateLiveOverlays(true);
+    UpdateStandaloneRoot(true);
 end
 
 local function RestartTestCooldown(button, elapsed)
@@ -1304,12 +1368,19 @@ function SweepyBoop:SetupArenaOffensiveIcons()
             standaloneTestRoot:Hide();
         end
         if event == addon.PLAYER_REGEN_ENABLED then
+            if roundResetPending then
+                ResetArenaOpponentAuraContainers();
+            end
             if ( not reconcilePending ) and ( not standalonePresentationRefreshPending ) then
                 return;
             end
             reconcilePending = false;
             UpdateLiveOverlays(true);
             UpdateStandaloneRoot(true);
+            return;
+        end
+        if event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
+            ResetArenaOpponentAuraContainers();
             return;
         end
         if event == "UNIT_NAME_UPDATE" then
