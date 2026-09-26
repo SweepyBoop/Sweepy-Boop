@@ -132,7 +132,9 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         type = "toggle",
                         width = "full",
                         name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(190319)) .. " Show important buff icons on Blizzard arena frames",
-                        desc = "Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority.\n\nThese icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon.",
+                        desc = function()
+                            return addon.L["Shows one active enemy buff that Blizzard classifies as important inside the left side of each built-in Blizzard arena frame. Blizzard decides which important buff takes priority."] .. "\n\n" .. addon.L["These icons attach to the left side inside Blizzard arena frames only. They hide if Blizzard arena frames are hidden by another arena-frame addon."];
+                        end,
                         set = SetArenaFrameOptionAndRefreshOffensiveIconPreview,
                     },
                     arenaOffensiveIconSize = {
