@@ -19,6 +19,8 @@ local eventFrame;
 local setupComplete = false;
 local reconcilePending = false;
 local standaloneDecorationRefreshPending = false;
+local standaloneRebindPending = false;
+local standaloneRefreshGeneration = 0;
 
 local minStandaloneIcons = 1;
 local maxStandaloneIcons = 6;
@@ -377,6 +379,43 @@ end
 local function IsStandaloneArenaDisplayActive()
     return ( not IsActiveBattlefieldArena() )
         or C_PvP.GetActiveMatchState() == Enum.PvPMatchState.Engaged;
+end
+
+local function RefreshStandaloneUnitsAfterRosterChange()
+    if InCombatLockdown() then
+        standaloneRebindPending = true;
+        return false;
+    end
+    if not standaloneRoot then return true end
+
+    standaloneRebindPending = false;
+    standaloneRefreshGeneration = standaloneRefreshGeneration + 1;
+    local refreshGeneration = standaloneRefreshGeneration;
+    local root = standaloneRoot;
+
+    for index, entry in ipairs(root.entries) do
+        -- AuraContainerSharedMixin:SetUnit only refreshes when the token string changes.
+        entry.container:SetUnit("none");
+        entry.container:SetUnit("arena" .. index);
+    end
+
+    C_Timer.After(0, function()
+        if refreshGeneration ~= standaloneRefreshGeneration then return end
+        if InCombatLockdown() then
+            standaloneRebindPending = true;
+            return;
+        end
+
+        for _, entry in ipairs(root.entries) do
+            local container = entry.container;
+            if container:IsShown() then
+                -- AuraContainerPrivateMixin:OnShow_Intrinsic requests a full aura refresh.
+                container:Hide();
+                container:Show();
+            end
+        end
+    end);
+    return true;
 end
 
 local function GetStandaloneBorderStyle(config)
@@ -1263,11 +1302,23 @@ function SweepyBoop:SetupArenaOffensiveIcons()
     eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
     eventFrame:RegisterEvent("UNIT_NAME_UPDATE");
     eventFrame:SetScript("OnEvent", function(_, event, unit)
-        if event == addon.PLAYER_ENTERING_WORLD and standaloneTestRoot then
-            standaloneTestRoot:Hide();
+        if event == addon.PLAYER_ENTERING_WORLD then
+            RefreshStandaloneUnitsAfterRosterChange();
+            if standaloneTestRoot then
+                standaloneTestRoot:Hide();
+            end
+        elseif event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
+            RefreshStandaloneUnitsAfterRosterChange();
         end
         if event == addon.PLAYER_REGEN_ENABLED then
-            if ( not reconcilePending ) and ( not standaloneDecorationRefreshPending ) then
+            local rebindPending = standaloneRebindPending;
+            if rebindPending then
+                RefreshStandaloneUnitsAfterRosterChange();
+            end
+            if ( not rebindPending )
+                and ( not reconcilePending )
+                and ( not standaloneDecorationRefreshPending ) then
+
                 return;
             end
             reconcilePending = false;
