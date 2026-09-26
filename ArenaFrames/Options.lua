@@ -207,7 +207,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         func = "HideTestArenaStandaloneOffensiveIcons",
                     },
                     arenaStandaloneOffensiveIconMaxIcons = {
-                        order = 12,
+                        order = 12.2,
                         type = "range",
                         width = "relative",
                         relWidth = 0.24,
@@ -219,7 +219,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         set = SetArenaFrameOption,
                     },
                     arenaStandaloneOffensiveIconColumns = {
-                        order = 12.1,
+                        order = 12.3,
                         type = "range",
                         width = "relative",
                         relWidth = 0.24,
@@ -231,7 +231,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         set = SetArenaFrameOption,
                     },
                     arenaStandaloneOffensiveIconGrowDirection = {
-                        order = 12.2,
+                        order = 12,
                         type = "select",
                         width = "relative",
                         relWidth = 0.27,
@@ -245,7 +245,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         set = SetArenaFrameOption,
                     },
                     arenaStandaloneOffensiveIconGrowUpward = {
-                        order = 12.3,
+                        order = 12.1,
                         type = "toggle",
                         width = "relative",
                         relWidth = 0.24,
