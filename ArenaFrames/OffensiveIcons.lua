@@ -3,6 +3,7 @@ local _, addon = ...;
 if not addon.PROJECT_MAINLINE then return end
 
 local style = addon.ARENA_OFFENSIVE_ICON_STYLE;
+local standaloneBorderStyle = addon.ARENA_STANDALONE_OFFENSIVE_BORDER_STYLE;
 local baseIconSize = style.BASE_SIZE;
 local standaloneLabelLineSpacing = 2;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
@@ -464,14 +465,23 @@ local function GetStandaloneLayoutSignature(layout)
     }, ":");
 end
 
-local function CreatePlainBorder(frame)
-    local border = frame:CreateTexture(nil, "OVERLAY");
-    local padding = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING;
-    border:SetPoint("TOPLEFT", frame, "TOPLEFT", -padding, padding);
-    border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", padding, -padding);
-    border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
-    border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
-    return border;
+local function CreateStandaloneBorderTexture(
+    frame,
+    texturePath,
+    padding,
+    layer,
+    sublevel,
+    blendMode,
+    alpha
+)
+    local texture = frame:CreateTexture(nil, layer, nil, sublevel);
+    texture:SetTexture(texturePath, "CLAMP", "CLAMP");
+    texture:SetPoint("TOPLEFT", frame, "TOPLEFT", -padding, padding);
+    texture:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", padding, -padding);
+    texture:SetTexCoord(0, 1, 0, 1);
+    texture:SetBlendMode(blendMode);
+    texture:SetAlpha(alpha);
+    return texture;
 end
 
 local function CreateStandaloneBaseVisual(button, secureAuraButton)
@@ -482,7 +492,6 @@ local function CreateStandaloneBaseVisual(button, secureAuraButton)
     local visual = CreateFrame("Frame", nil, button);
     visual:SetSize(baseIconSize, baseIconSize);
     visual:SetPoint("TOP", button, "TOP");
-    CreateOffensiveIconShadow(visual);
 
     local backdrop = visual:CreateTexture(nil, "BACKGROUND");
     backdrop:SetAllPoints(visual);
@@ -512,20 +521,34 @@ end
 local function CreateStandaloneDecoration(button, secureAuraButton)
     local visual = CreateStandaloneBaseVisual(button, secureAuraButton);
     local decoration = {
-        plainBorder = CreatePlainBorder(visual),
+        plainBorder = CreateStandaloneBorderTexture(
+            visual,
+            standaloneBorderStyle.PLAIN_BORDER_TEXTURE,
+            standaloneBorderStyle.PLAIN_BORDER_PADDING,
+            "OVERLAY",
+            1,
+            "BLEND",
+            1
+        ),
         tintTextures = {},
     };
-    decoration.highlightGlow = CreateHighlightTexture(
+    decoration.highlightGlow = CreateStandaloneBorderTexture(
         visual,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE,
+        standaloneBorderStyle.HIGHLIGHT_GLOW_TEXTURE,
+        standaloneBorderStyle.HIGHLIGHT_GLOW_PADDING,
         "BORDER",
-        style.HIGHLIGHT_GLOW_ALPHA
+        0,
+        "ADD",
+        standaloneBorderStyle.HIGHLIGHT_GLOW_ALPHA
     );
-    decoration.highlightBorder = CreateHighlightTexture(
+    decoration.highlightBorder = CreateStandaloneBorderTexture(
         visual,
-        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BORDER_TEXTURE,
+        standaloneBorderStyle.HIGHLIGHT_BORDER_TEXTURE,
+        standaloneBorderStyle.HIGHLIGHT_BORDER_PADDING,
         "OVERLAY",
-        style.HIGHLIGHT_BORDER_ALPHA
+        2,
+        "BLEND",
+        1
     );
     decoration.plainBorder:Hide();
     decoration.highlightGlow:Hide();

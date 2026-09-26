@@ -416,6 +416,16 @@ addon.ARENA_OFFENSIVE_ICON_STYLE = {
     COOLDOWN_EDGE_TEXTURE = addon.BIG_DEBUFFS_ICON_STYLE.GLOW_COOLDOWN_EDGE_TEXTURE,
 };
 
+addon.ARENA_STANDALONE_OFFENSIVE_BORDER_STYLE = {
+    PLAIN_BORDER_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/ArenaStandalonePlainBorder",
+    PLAIN_BORDER_PADDING = 7,
+    HIGHLIGHT_BORDER_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/ArenaStandaloneHighlightBorder",
+    HIGHLIGHT_BORDER_PADDING = 7,
+    HIGHLIGHT_GLOW_TEXTURE = addon.INTERFACE_SWEEPY .. "Art/ArenaStandaloneHighlightGlow",
+    HIGHLIGHT_GLOW_PADDING = 7,
+    HIGHLIGHT_GLOW_ALPHA = 0.65,
+};
+
 addon.FLAG_CARRIER_HORDE_LOGO = "interface/icons/inv_bannerpvp_01";
 addon.FLAG_CARRIER_ALLIANCE_LOGO = "interface/icons/inv_bannerpvp_02";
 
