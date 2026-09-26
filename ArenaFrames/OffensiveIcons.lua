@@ -18,12 +18,7 @@ local standaloneTestRoot;
 local eventFrame;
 local setupComplete = false;
 local reconcilePending = false;
-local roundResetPending = false;
-local standalonePresentationRefreshPending = false;
-local standalonePresentationInvalidated = false;
-local standaloneEventsRegistered = false;
-local standaloneRestrictionListenerRegistered = false;
-local ReconcileStandaloneAuraRestrictions;
+local standaloneDecorationRefreshPending = false;
 
 local minStandaloneIcons = 1;
 local maxStandaloneIcons = 6;
@@ -755,10 +750,6 @@ end
 
 local function RefreshStandaloneGroupLabels(root, samples)
     if not root then return false end
-    if ( not samples ) and ( not CanAccessStandaloneDecorations() ) then
-        standalonePresentationRefreshPending = true;
-        return false;
-    end
 
     local config = GetConfig();
     local showAnyLabel = config.arenaStandaloneOffensiveIconShowArenaNumber
@@ -787,33 +778,28 @@ local function RefreshStandaloneGroupLabels(root, samples)
     return true;
 end
 
-local function RefreshStandaloneDecorationStyles(root)
+local function RefreshStandaloneDecorationStyles(root, unrestricted)
     if not root then return false end
+    if ( not unrestricted ) and ( not CanAccessStandaloneDecorations() ) then
+        standaloneDecorationRefreshPending = true;
+        return false;
+    end
 
     for _, entry in ipairs(root.entries) do
         for _, decoration in ipairs(entry.decorations) do
             ApplyStandaloneDecorationStyle(decoration, entry.classColor);
         end
     end
+
+    if not unrestricted then
+        standaloneDecorationRefreshPending = false;
+    end
     return true;
 end
 
 local function RefreshStandalonePresentation(root, samples)
-    if not root then return false end
-
-    local unrestricted = samples ~= nil;
-    if ( not unrestricted ) and ( not CanAccessStandaloneDecorations() ) then
-        standalonePresentationRefreshPending = true;
-        return false;
-    end
-
     RefreshStandaloneGroupLabels(root, samples);
-    RefreshStandaloneDecorationStyles(root);
-    if not unrestricted then
-        standalonePresentationRefreshPending = false;
-        standalonePresentationInvalidated = false;
-    end
-    return true;
+    return RefreshStandaloneDecorationStyles(root, samples ~= nil);
 end
 
 local function InitializeStandaloneAuraButton(button, container)
@@ -822,32 +808,11 @@ local function InitializeStandaloneAuraButton(button, container)
     if CanAccessStandaloneDecorations() then
         ApplyStandaloneDecorationStyle(decoration, container.sweepyBoopClassColor);
     else
-        standalonePresentationRefreshPending = true;
+        standaloneDecorationRefreshPending = true;
     end
 end
 
-local function InitializeStandaloneLabelSlot(button, container, index)
-    button:SetSize(1, 1);
-    button:SetMouseClickEnabled(false);
-    button:SetMouseMotionEnabled(false);
-    local label = CreateStandaloneLabelHost(button, container);
-    container.sweepyBoopLabel = label;
-
-    if CanAccessStandaloneDecorations() then
-        local numberText, specText, nameText, color =
-            GetSafeStandaloneIdentity(index);
-        container.sweepyBoopClassColor = color;
-        if color then
-            ApplyStandaloneLabel(label, numberText, specText, nameText, color);
-        else
-            ClearStandaloneLabel(label);
-        end
-    else
-        standalonePresentationRefreshPending = true;
-    end
-end
-
-local function CreateStandaloneContainer(parent, index)
+local function CreateStandaloneContainer(parent)
     local container = CreateFrame(
         "AuraContainer",
         nil,
@@ -883,18 +848,6 @@ local function CreateStandaloneContainer(parent, index)
             elementHeight = baseIconSize,
         },
     });
-    -- Aura slots are intentionally omitted from CustomAuraContainer flow groups.
-    container.sweepyBoopLabelSlot = container:AddAuraSlot(
-        offensiveAuraSlotKey,
-        offensiveAuraFilter,
-        {
-            sortMethod = AuraContainerSortMethod.ImportantOnly,
-            sortDirection = AuraContainerSortDirection.Normal,
-            initializeFrame = function(button)
-                InitializeStandaloneLabelSlot(button, container, index);
-            end,
-        }
-    );
     return container;
 end
 
@@ -1007,14 +960,15 @@ local function EnsureStandaloneRoot()
     root.entries = {};
 
     for index = 1, addon.MAX_ARENA_SIZE do
-        local container = CreateStandaloneContainer(root, index);
+        local container = CreateStandaloneContainer(root);
+        local label = CreateStandaloneLabelHost(root, container);
         container:SetUnit("arena" .. index);
         root.entries[index] = {
             container = container,
             frame = container,
             index = index,
             decorations = container.sweepyBoopDecorations,
-            label = container.sweepyBoopLabel,
+            label = label,
         };
     end
 
@@ -1046,67 +1000,26 @@ local function SetStandaloneRootShown(root, shown)
     return true;
 end
 
-local function SetStandaloneEventsRegistered(registered)
-    if ( not eventFrame ) or standaloneEventsRegistered == registered then return end
-
-    if registered then
-        eventFrame:RegisterEvent("UNIT_NAME_UPDATE");
-    else
-        eventFrame:UnregisterEvent("UNIT_NAME_UPDATE");
-    end
-    standaloneEventsRegistered = registered;
-end
-
-local function EnsureStandaloneRestrictionListener()
-    if standaloneRestrictionListenerRegistered then return end
-
-    addon.RegisterAuraRestrictionListener(
-        "ArenaOffensiveIcons",
-        ReconcileStandaloneAuraRestrictions
-    );
-    standaloneRestrictionListenerRegistered = true;
-end
-
 local function UpdateStandaloneRoot(forceRefresh)
     if not SweepyBoop.db then return end
 
-    local config = GetConfig();
-    if not config.arenaStandaloneOffensiveIconsEnabled then
-        SetStandaloneEventsRegistered(false);
-        standalonePresentationRefreshPending = false;
-        if standaloneTestRoot then
-            standaloneTestRoot:Hide();
-        end
-        if standaloneRoot then
-            SetStandaloneRootShown(standaloneRoot, false);
-        end
-        return;
-    end
-
-    SetStandaloneEventsRegistered(true);
-    EnsureStandaloneRestrictionListener();
-    if not addon.IsUsingRealAuraData() then
-        standalonePresentationRefreshPending = false;
-        if standaloneRoot then
-            SetStandaloneRootShown(standaloneRoot, false);
-        end
-        return;
-    end
-
     local root = EnsureStandaloneRoot();
     if not root then return end
+
+    local config = GetConfig();
+    if ( not config.arenaStandaloneOffensiveIconsEnabled )
+        or ( not addon.IsUsingRealAuraData() ) then
+
+        SetStandaloneRootShown(root, false);
+        return;
+    end
 
     local layout = GetStandaloneLayout();
     if not ApplyStandaloneRootLayout(root, layout, false) then
         return;
     end
 
-    local presentationReady = RefreshStandalonePresentation(root);
-    if ( not presentationReady ) and standalonePresentationInvalidated then
-        reconcilePending = true;
-        SetStandaloneRootShown(root, false);
-        return;
-    end
+    RefreshStandalonePresentation(root);
     for index, entry in ipairs(root.entries) do
         local container = entry.container;
         local unit = "arena" .. index;
@@ -1121,64 +1034,6 @@ local function UpdateStandaloneRoot(forceRefresh)
         end
     end
     SetStandaloneRootShown(root, true);
-end
-
-local function InvalidateStandalonePresentation(root)
-    standalonePresentationRefreshPending = true;
-    standalonePresentationInvalidated = true;
-    if ( not root ) or ( not CanAccessStandaloneDecorations() ) then
-        reconcilePending = true;
-        return;
-    end
-
-    for _, entry in ipairs(root.entries) do
-        entry.classColor = nil;
-        entry.container.sweepyBoopClassColor = nil;
-        ClearStandaloneLabel(entry.label);
-        for _, decoration in ipairs(entry.decorations) do
-            ApplyStandaloneDecorationStyle(decoration);
-        end
-    end
-end
-
--- Blizzard reuses arenaN tokens for different players between Shuffle rounds, so force
--- a real unit-token transition to discard the previous occupant's cached aura assignments.
-local function ForceRebindAuraContainer(container, unit)
-    container:SetEnabled(false);
-    container:SetUnit("none");
-    container:SetUnit(unit);
-    container:SetEnabled(true);
-    container:UpdateAllAuras();
-end
-
-local function ResetArenaOpponentAuraContainers()
-    if InCombatLockdown() then
-        roundResetPending = true;
-        standalonePresentationRefreshPending = true;
-        standalonePresentationInvalidated = true;
-        return;
-    end
-    roundResetPending = false;
-
-    for _, overlay in pairs(liveOverlays) do
-        SetLiveOverlayShown(overlay, false);
-    end
-    if standaloneRoot then
-        SetStandaloneRootShown(standaloneRoot, false);
-        InvalidateStandalonePresentation(standaloneRoot);
-    end
-
-    for _, overlay in pairs(liveOverlays) do
-        ForceRebindAuraContainer(overlay.container, overlay.unit);
-    end
-    if standaloneRoot then
-        for index, entry in ipairs(standaloneRoot.entries) do
-            ForceRebindAuraContainer(entry.container, "arena" .. index);
-        end
-    end
-
-    UpdateLiveOverlays(true);
-    UpdateStandaloneRoot(true);
 end
 
 local function RestartTestCooldown(button, elapsed)
@@ -1299,20 +1154,15 @@ local function RefreshStandaloneTestRoot()
     end
 end
 
-ReconcileStandaloneAuraRestrictions = function()
-    if not SweepyBoop.db then return end
-
-    local config = GetConfig();
-    if ( not config.arenaStandaloneOffensiveIconsEnabled ) or ( not standaloneRoot ) then
-        return;
-    end
+local function ReconcileStandaloneAuraRestrictions()
     if not CanAccessStandaloneDecorations() then
-        standalonePresentationRefreshPending = true;
+        standaloneDecorationRefreshPending = true;
         return;
     end
 
-    if standalonePresentationRefreshPending then
-        RefreshStandalonePresentation(standaloneRoot);
+    if standaloneDecorationRefreshPending then
+        RefreshStandaloneGroupLabels(standaloneRoot);
+        RefreshStandaloneDecorationStyles(standaloneRoot, false);
     end
     if reconcilePending and ( not InCombatLockdown() ) then
         reconcilePending = false;
@@ -1356,6 +1206,7 @@ function SweepyBoop:SetupArenaOffensiveIcons()
     for i = 1, addon.MAX_ARENA_SIZE do
         EnsureLiveOverlay(i);
     end
+    EnsureStandaloneRoot();
 
     eventFrame = CreateFrame("Frame");
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
@@ -1365,19 +1216,13 @@ function SweepyBoop:SetupArenaOffensiveIcons()
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
     eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
+    eventFrame:RegisterEvent("UNIT_NAME_UPDATE");
     eventFrame:SetScript("OnEvent", function(_, event, unit)
-        if event == addon.PLAYER_ENTERING_WORLD then
-            if standaloneTestRoot then
-                standaloneTestRoot:Hide();
-            end
-            ResetArenaOpponentAuraContainers();
-            return;
+        if event == addon.PLAYER_ENTERING_WORLD and standaloneTestRoot then
+            standaloneTestRoot:Hide();
         end
         if event == addon.PLAYER_REGEN_ENABLED then
-            if roundResetPending then
-                ResetArenaOpponentAuraContainers();
-            end
-            if ( not reconcilePending ) and ( not standalonePresentationRefreshPending ) then
+            if ( not reconcilePending ) and ( not standaloneDecorationRefreshPending ) then
                 return;
             end
             reconcilePending = false;
@@ -1385,13 +1230,9 @@ function SweepyBoop:SetupArenaOffensiveIcons()
             UpdateStandaloneRoot(true);
             return;
         end
-        if event == addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS then
-            ResetArenaOpponentAuraContainers();
-            return;
-        end
         if event == "UNIT_NAME_UPDATE" then
             if unit ~= "arena1" and unit ~= "arena2" and unit ~= "arena3" then return end
-            RefreshStandalonePresentation(standaloneRoot);
+            RefreshStandaloneGroupLabels(standaloneRoot);
             return;
         end
 
@@ -1403,6 +1244,10 @@ function SweepyBoop:SetupArenaOffensiveIcons()
         UpdateLiveOverlays(true);
         UpdateStandaloneRoot(true);
     end);
+    addon.RegisterAuraRestrictionListener(
+        "ArenaOffensiveIcons",
+        ReconcileStandaloneAuraRestrictions
+    );
 
     UpdateLiveOverlays();
     UpdateStandaloneRoot();
