@@ -374,6 +374,11 @@ local function CanAccessStandaloneDecorations()
         or ( not C_Secrets.ShouldAurasBeSecret() );
 end
 
+local function IsStandaloneArenaDisplayActive()
+    return ( not IsActiveBattlefieldArena() )
+        or C_PvP.GetActiveMatchState() == Enum.PvPMatchState.Engaged;
+end
+
 local function GetStandaloneBorderStyle(config)
     local borderStyle = config.arenaStandaloneOffensiveIconBorderStyle;
     if borderStyle == addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER
@@ -626,6 +631,7 @@ local function ClearStandaloneLabel(label)
     ClearStandaloneLabelLine(label.number);
     ClearStandaloneLabelLine(label.spec);
     ClearStandaloneLabelLine(label.name);
+    label.width = baseIconSize;
     label.host:Hide();
 end
 
@@ -662,6 +668,7 @@ local function ApplyStandaloneLabel(label, numberText, specText, nameText, color
     label.host:SetHeight(height);
 
     local offsetY = 0;
+    local width = baseIconSize;
     local red, green, blue = color[1], color[2], color[3];
     local anchor = label.iconsGrowUpward and "TOP" or "BOTTOM";
     local offsetDirection = label.iconsGrowUpward and -1 or 1;
@@ -672,8 +679,14 @@ local function ApplyStandaloneLabel(label, numberText, specText, nameText, color
         line:SetText(lineInfo.text);
         line:SetTextColor(red, green, blue);
         line:Show();
+        local measuredWidth = line:GetUnboundedStringWidth();
+        if addon.IsSecretValue(measuredWidth) then
+            measuredWidth = #lineInfo.text * lineInfo.height * 0.6;
+        end
+        width = math.max(width, measuredWidth);
         offsetY = offsetY + lineInfo.height + standaloneLabelLineSpacing;
     end
+    label.width = width;
     label.host:Show();
 end
 
@@ -749,7 +762,7 @@ local function ApplyStandaloneDecorationStyle(decoration, color)
     decoration.plainBorder:Hide();
     decoration.highlightGlow:Hide();
     decoration.highlightBorder:Hide();
-    if not color then return end
+    color = color or style.HIGHLIGHT_COLOR;
 
     for _, texture in ipairs(decoration.tintTextures) do
         texture:SetVertexColor(color[1], color[2], color[3], 1);
@@ -879,6 +892,22 @@ local function ApplyStandaloneContainerLayout(container, layout)
     });
 end
 
+local function GetStandaloneGroupWidth(entry)
+    local frameWidth = entry.frame:GetWidth();
+    if addon.IsSecretValue(frameWidth) or type(frameWidth) ~= "number" then
+        frameWidth = entry.lastSafeFrameWidth or baseIconSize;
+    else
+        entry.lastSafeFrameWidth = frameWidth;
+    end
+
+    local labelWidth = entry.label.width;
+    if addon.IsSecretValue(labelWidth) or type(labelWidth) ~= "number" then
+        labelWidth = baseIconSize;
+    end
+
+    return math.max(baseIconSize, frameWidth, labelWidth);
+end
+
 local function AnchorStandaloneGroups(root, entries, layout)
     for _, entry in ipairs(entries) do
         entry.frame:ClearAllPoints();
@@ -886,41 +915,36 @@ local function AnchorStandaloneGroups(root, entries, layout)
 
     local verticalAnchor = layout.verticalAnchor;
     if layout.growDirection == addon.STANDALONE_GROW_DIRECTION.RIGHT then
-        entries[1].frame:SetPoint(verticalAnchor .. "LEFT", root, verticalAnchor);
-        for index = 2, #entries do
-            entries[index].frame:SetPoint(
-                verticalAnchor .. "LEFT",
-                entries[index - 1].frame,
-                verticalAnchor .. "RIGHT",
-                layout.groupSpacing,
-                0
-            );
+        local offsetX = 0;
+        for _, entry in ipairs(entries) do
+            local width = GetStandaloneGroupWidth(entry);
+            entry.frame:SetPoint(verticalAnchor, root, verticalAnchor, offsetX + width / 2, 0);
+            offsetX = offsetX + width + layout.groupSpacing;
         end
     elseif layout.growDirection == addon.STANDALONE_GROW_DIRECTION.LEFT then
-        entries[1].frame:SetPoint(verticalAnchor .. "RIGHT", root, verticalAnchor);
-        for index = 2, #entries do
-            entries[index].frame:SetPoint(
-                verticalAnchor .. "RIGHT",
-                entries[index - 1].frame,
-                verticalAnchor .. "LEFT",
-                -layout.groupSpacing,
-                0
-            );
+        local offsetX = 0;
+        for _, entry in ipairs(entries) do
+            local width = GetStandaloneGroupWidth(entry);
+            entry.frame:SetPoint(verticalAnchor, root, verticalAnchor, offsetX - width / 2, 0);
+            offsetX = offsetX - width - layout.groupSpacing;
         end
     else
+        local centerWidth = GetStandaloneGroupWidth(entries[2]);
+        local leftWidth = GetStandaloneGroupWidth(entries[1]);
+        local rightWidth = GetStandaloneGroupWidth(entries[3]);
         entries[2].frame:SetPoint(verticalAnchor, root, verticalAnchor);
         entries[1].frame:SetPoint(
-            verticalAnchor .. "RIGHT",
-            entries[2].frame,
-            verticalAnchor .. "LEFT",
-            -layout.groupSpacing,
+            verticalAnchor,
+            root,
+            verticalAnchor,
+            -( centerWidth + leftWidth ) / 2 - layout.groupSpacing,
             0
         );
         entries[3].frame:SetPoint(
-            verticalAnchor .. "LEFT",
-            entries[2].frame,
-            verticalAnchor .. "RIGHT",
-            layout.groupSpacing,
+            verticalAnchor,
+            root,
+            verticalAnchor,
+            ( centerWidth + rightWidth ) / 2 + layout.groupSpacing,
             0
         );
     end
@@ -1029,12 +1053,17 @@ local function UpdateStandaloneRoot(forceRefresh)
         return;
     end
 
+    root:SetAlpha(IsStandaloneArenaDisplayActive() and 1 or 0);
+
     local layout = GetStandaloneLayout();
     if not ApplyStandaloneRootLayout(root, layout, false) then
         return;
     end
 
-    RefreshStandalonePresentation(root);
+    local presentationReady = RefreshStandalonePresentation(root);
+    if presentationReady and ( not InCombatLockdown() ) then
+        AnchorStandaloneGroups(root, root.entries, layout);
+    end
     for index, entry in ipairs(root.entries) do
         local container = entry.container;
         local unit = "arena" .. index;
@@ -1161,6 +1190,7 @@ local function RefreshStandaloneTestRoot()
     local layout = GetStandaloneLayout();
     ApplyStandaloneTestLayout(standaloneTestRoot, layout);
     RefreshStandalonePresentation(standaloneTestRoot, testSamples);
+    AnchorStandaloneGroups(standaloneTestRoot, standaloneTestRoot.entries, layout);
     for index, entry in ipairs(standaloneTestRoot.entries) do
         local sampleCount = GetStandaloneTestSampleCount(layout, index);
         for buttonIndex = 1, sampleCount do
@@ -1247,7 +1277,9 @@ function SweepyBoop:SetupArenaOffensiveIcons()
         end
         if event == "UNIT_NAME_UPDATE" then
             if unit ~= "arena1" and unit ~= "arena2" and unit ~= "arena3" then return end
-            RefreshStandaloneGroupLabels(standaloneRoot);
+            if RefreshStandaloneGroupLabels(standaloneRoot) and ( not InCombatLockdown() ) then
+                AnchorStandaloneGroups(standaloneRoot, standaloneRoot.entries, GetStandaloneLayout());
+            end
             return;
         end
 
