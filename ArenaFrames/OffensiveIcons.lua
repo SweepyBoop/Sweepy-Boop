@@ -4,9 +4,7 @@ if not addon.PROJECT_MAINLINE then return end
 
 local style = addon.ARENA_OFFENSIVE_ICON_STYLE;
 local baseIconSize = style.BASE_SIZE;
-local standaloneLabelFontSize = math.floor(baseIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT);
 local standaloneLabelLineSpacing = 2;
-local standaloneLabelHeight = standaloneLabelFontSize * 2 + standaloneLabelLineSpacing;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
 local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
@@ -547,15 +545,11 @@ local function CreateStandaloneLabelHost(parent, relativeFrame)
     );
     host:SetMouseClickEnabled(false);
     host:SetMouseMotionEnabled(false);
-    host:SetSize(1, standaloneLabelHeight);
+    host:SetSize(1, 1);
     host:SetPoint("TOP", relativeFrame, "BOTTOM", 0, -2);
     host:Hide();
 
     local top = host:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-    local font, _, flags = top:GetFont();
-    if font then
-        top:SetFont(font, standaloneLabelFontSize, flags);
-    end
     top:SetJustifyH("CENTER");
     top:SetWordWrap(false);
     if top.SetMaxLines then
@@ -563,15 +557,14 @@ local function CreateStandaloneLabelHost(parent, relativeFrame)
     end
 
     local bottom = host:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-    font, _, flags = bottom:GetFont();
-    if font then
-        bottom:SetFont(font, standaloneLabelFontSize, flags);
-    end
     bottom:SetJustifyH("CENTER");
     bottom:SetWordWrap(false);
     if bottom.SetMaxLines then
         bottom:SetMaxLines(1);
     end
+
+    local _, fontSize = top:GetFont();
+    host:SetHeight(( fontSize or 12 ) * 2 + standaloneLabelLineSpacing);
 
     return {
         host = host,
@@ -691,7 +684,7 @@ local function GetSafeStandaloneIdentity(index, sample)
         or nil;
     local topText;
     if arenaNumber and specName then
-        topText = arenaNumber .. " - " .. specName;
+        topText = arenaNumber .. " " .. specName;
     else
         topText = arenaNumber or specName;
     end
