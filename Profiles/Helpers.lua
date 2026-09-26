@@ -2,8 +2,58 @@ local _, addon = ...;
 local AceGUI = LibStub("AceGUI-3.0");
 
 function addon.RemoveObsoleteProfileSettings(profile)
-    if type(profile) == "table" and type(profile.raidFrames) == "table" then
-        profile.raidFrames.arenaRaidFrameSortOrder = nil;
+    if type(profile) ~= "table" then return end
+
+    local raidFrames = rawget(profile, "raidFrames");
+    if type(raidFrames) == "table" then
+        raidFrames.arenaRaidFrameSortOrder = nil;
+    end
+
+    local arenaFrames = rawget(profile, "arenaFrames");
+    if type(arenaFrames) ~= "table" then return end
+
+    local oldIdentifier = rawget(
+        arenaFrames,
+        "arenaStandaloneOffensiveIconIdentifier"
+    );
+    if oldIdentifier ~= nil then
+        local hasNewLabelSetting = rawget(
+            arenaFrames,
+            "arenaStandaloneOffensiveIconShowArenaNumber"
+        ) ~= nil or rawget(
+            arenaFrames,
+            "arenaStandaloneOffensiveIconShowName"
+        ) ~= nil or rawget(
+            arenaFrames,
+            "arenaStandaloneOffensiveIconShowSpec"
+        ) ~= nil;
+        if not hasNewLabelSetting then
+            if oldIdentifier == "none" then
+                arenaFrames.arenaStandaloneOffensiveIconShowArenaNumber = false;
+                arenaFrames.arenaStandaloneOffensiveIconShowName = false;
+                arenaFrames.arenaStandaloneOffensiveIconShowSpec = false;
+            elseif oldIdentifier == "name" then
+                arenaFrames.arenaStandaloneOffensiveIconShowArenaNumber = false;
+                arenaFrames.arenaStandaloneOffensiveIconShowName = true;
+                arenaFrames.arenaStandaloneOffensiveIconShowSpec = false;
+            elseif oldIdentifier == "arenaNumber" then
+                arenaFrames.arenaStandaloneOffensiveIconShowArenaNumber = true;
+                arenaFrames.arenaStandaloneOffensiveIconShowName = false;
+                arenaFrames.arenaStandaloneOffensiveIconShowSpec = false;
+            end
+        end
+        arenaFrames.arenaStandaloneOffensiveIconIdentifier = nil;
+    end
+
+    local oldPadding = rawget(
+        arenaFrames,
+        "arenaStandaloneOffensiveIconPadding"
+    );
+    if oldPadding ~= nil and rawget(
+        arenaFrames,
+        "arenaStandaloneOffensiveIconGroupSpacing"
+    ) == nil then
+        arenaFrames.arenaStandaloneOffensiveIconGroupSpacing = oldPadding;
     end
 end
 

@@ -4,8 +4,9 @@ if not addon.PROJECT_MAINLINE then return end
 
 local style = addon.ARENA_OFFENSIVE_ICON_STYLE;
 local baseIconSize = style.BASE_SIZE;
-local identifierBaseSize = math.floor(baseIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT);
-local standaloneHolderHeight = baseIconSize + identifierBaseSize + 2;
+local standaloneLabelFontSize = math.floor(baseIconSize * addon.COUNTDOWN_FONT_SIZE_COEFFICIENT);
+local standaloneLabelLineSpacing = 2;
+local standaloneLabelHeight = standaloneLabelFontSize * 2 + standaloneLabelLineSpacing;
 local blizzardArenaFramePrefix = "CompactArenaFrameMember";
 local offensiveAuraFilter = "HELPFUL|IMPORTANT";
 local offensiveAuraSlotKey = "Offensive";
@@ -18,7 +19,7 @@ local standaloneTestRoot;
 local eventFrame;
 local setupComplete = false;
 local reconcilePending = false;
-local standaloneIdentityRefreshPending = false;
+local standaloneDecorationRefreshPending = false;
 
 local minStandaloneIcons = 1;
 local maxStandaloneIcons = 6;
@@ -27,9 +28,9 @@ local maxStandaloneColumns = 16;
 local flowLayoutTolerance = 0.01;
 
 local testSamples = {
-    { spellID = 190319, name = "Pyra", class = addon.MAGE },
-    { spellID = 10060, name = "Solace", class = addon.PRIEST },
-    { spellID = 107574, name = "Bulwark", class = addon.WARRIOR },
+    { spellID = 190319, name = "Pyra", class = addon.MAGE, specID = addon.SPECID.FIRE },
+    { spellID = 10060, name = "Solace", class = addon.PRIEST, specID = addon.SPECID.DISCIPLINE },
+    { spellID = 107574, name = "Bulwark", class = addon.WARRIOR, specID = addon.SPECID.ARMS },
 };
 
 local function GetConfig()
@@ -394,9 +395,13 @@ local function GetStandaloneLayout()
     end
 
     local scale = size / baseIconSize;
-    local spacing = math.max(
+    local iconSpacing = math.max(
         0,
         tonumber(config.arenaStandaloneOffensiveIconPadding) or 0
+    ) / scale;
+    local groupSpacing = math.max(
+        0,
+        tonumber(config.arenaStandaloneOffensiveIconGroupSpacing) or 0
     ) / scale;
     local maxIcons = Clamp(
         config.arenaStandaloneOffensiveIconMaxIcons,
@@ -410,7 +415,7 @@ local function GetStandaloneLayout()
     );
     local effectiveColumns = math.min(columns, maxIcons);
     local maxLineWidth = effectiveColumns * baseIconSize
-        + ( effectiveColumns - 1 ) * spacing;
+        + ( effectiveColumns - 1 ) * iconSpacing;
     local growDirection = config.arenaStandaloneOffensiveIconGrowDirection;
     if growDirection ~= addon.STANDALONE_GROW_DIRECTION.LEFT
         and growDirection ~= addon.STANDALONE_GROW_DIRECTION.RIGHT then
@@ -431,7 +436,8 @@ local function GetStandaloneLayout()
 
     return {
         scale = scale,
-        spacing = spacing,
+        iconSpacing = iconSpacing,
+        groupSpacing = groupSpacing,
         maxIcons = maxIcons,
         effectiveColumns = effectiveColumns,
         maxLineWidth = maxLineWidth,
@@ -449,7 +455,8 @@ end
 local function GetStandaloneLayoutSignature(layout)
     return table.concat({
         layout.scale,
-        layout.spacing,
+        layout.iconSpacing,
+        layout.groupSpacing,
         layout.maxIcons,
         layout.effectiveColumns,
         layout.growDirection,
@@ -457,19 +464,6 @@ local function GetStandaloneLayoutSignature(layout)
         layout.offsetX,
         layout.offsetY,
     }, ":");
-end
-
-local function CreateStandaloneIdentifier(button)
-    local identifier = button:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-    local font, _, flags = identifier:GetFont();
-    if font then
-        identifier:SetFont(font, identifierBaseSize, flags);
-    end
-    identifier:SetPoint("TOP", button, "TOP", 0, -baseIconSize - 2);
-    identifier:SetWidth(baseIconSize);
-    identifier:SetJustifyH("CENTER");
-    identifier:SetWordWrap(false);
-    return identifier;
 end
 
 local function CreatePlainBorder(frame)
@@ -483,7 +477,7 @@ local function CreatePlainBorder(frame)
 end
 
 local function CreateStandaloneBaseVisual(button, secureAuraButton)
-    button:SetSize(baseIconSize, standaloneHolderHeight);
+    button:SetSize(baseIconSize, baseIconSize);
     button:SetMouseClickEnabled(false);
     button:SetMouseMotionEnabled(false);
 
@@ -520,7 +514,6 @@ end
 local function CreateStandaloneDecoration(button, secureAuraButton)
     local visual = CreateStandaloneBaseVisual(button, secureAuraButton);
     local decoration = {
-        identifier = CreateStandaloneIdentifier(button),
         plainBorder = CreatePlainBorder(visual),
         tintTextures = {},
     };
@@ -545,105 +538,242 @@ local function CreateStandaloneDecoration(button, secureAuraButton)
     return decoration;
 end
 
-local function GetStandaloneIdentity(index, sample)
-    local name = sample and sample.name or UnitName("arena" .. index);
-    local class = sample and sample.class or addon.GetClassForPlayerOrArena("arena" .. index);
-    if addon.IsSecretValue(name) then
-        name = nil;
+local function CreateStandaloneLabelHost(parent, relativeFrame)
+    local host = CreateFrame(
+        "Frame",
+        nil,
+        parent,
+        "DisableUntrustedLayoutScriptsTemplate"
+    );
+    host:SetMouseClickEnabled(false);
+    host:SetMouseMotionEnabled(false);
+    host:SetSize(1, standaloneLabelHeight);
+    host:SetPoint("TOP", relativeFrame, "BOTTOM", 0, -2);
+    host:Hide();
+
+    local top = host:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+    local font, _, flags = top:GetFont();
+    if font then
+        top:SetFont(font, standaloneLabelFontSize, flags);
     end
-    if addon.IsSecretValue(class) then
-        class = nil;
+    top:SetJustifyH("CENTER");
+    top:SetWordWrap(false);
+    if top.SetMaxLines then
+        top:SetMaxLines(1);
     end
-    return name, class;
+
+    local bottom = host:CreateFontString(nil, "OVERLAY", "GameFontNormal");
+    font, _, flags = bottom:GetFont();
+    if font then
+        bottom:SetFont(font, standaloneLabelFontSize, flags);
+    end
+    bottom:SetJustifyH("CENTER");
+    bottom:SetWordWrap(false);
+    if bottom.SetMaxLines then
+        bottom:SetMaxLines(1);
+    end
+
+    return {
+        host = host,
+        top = top,
+        bottom = bottom,
+    };
 end
 
-local function ApplyStandaloneDecorationIdentity(decoration, index, sample)
-    if ( not sample ) and ( not CanAccessStandaloneDecorations() ) then
-        standaloneIdentityRefreshPending = true;
-        return false;
-    end
-
-    local config = GetConfig();
-    local name, class = GetStandaloneIdentity(index, sample);
-    local color = class and RAID_CLASS_COLORS and RAID_CLASS_COLORS[class];
-    local red = color and color.r or 1;
-    local green = color and color.g or 1;
-    local blue = color and color.b or 1;
-
-    for _, texture in ipairs(decoration.tintTextures) do
-        texture:SetVertexColor(red, green, blue, 1);
-    end
-
-    local useHighlight = GetStandaloneBorderStyle(config)
-        == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
-    decoration.plainBorder:SetShown(not useHighlight);
-    decoration.highlightGlow:SetShown(useHighlight);
-    decoration.highlightBorder:SetShown(useHighlight);
-
-    local identifier = decoration.identifier;
-    local identifierMode = config.arenaStandaloneOffensiveIconIdentifier;
-    if identifierMode == addon.ARENA_OFFENSIVE_ICON_IDENTIFIER.NONE then
-        identifier:Hide();
-        return true;
-    end
-
-    local identifierText;
-    if identifierMode == addon.ARENA_OFFENSIVE_ICON_IDENTIFIER.NAME then
-        identifierText = name;
+local function ClearStandaloneLabel(label)
+    if label.top.ClearText then
+        label.top:ClearText();
     else
-        identifierText = tostring(index);
+        label.top:SetText("");
     end
-
-    if addon.IsSecretValue(identifierText) or identifierText == nil then
-        identifier:Hide();
-        return true;
+    label.top:Hide();
+    if label.bottom.ClearText then
+        label.bottom:ClearText();
+    else
+        label.bottom:SetText("");
     end
-
-    identifier:SetText(identifierText);
-    identifier:SetTextColor(red, green, blue);
-    identifier:Show();
-    return true;
+    label.bottom:Hide();
+    label.host:Hide();
 end
 
-local function RefreshStandaloneIdentities(root, samples)
-    if not root then return false end
-    if ( not samples ) and ( not CanAccessStandaloneDecorations() ) then
-        standaloneIdentityRefreshPending = true;
-        return false;
+local function ApplyStandaloneLabel(label, topText, bottomText, color)
+    ClearStandaloneLabel(label);
+    if ( not topText ) and ( not bottomText ) then return end
+
+    local red, green, blue = color[1], color[2], color[3];
+    if topText then
+        label.top:SetText(topText);
+        label.top:SetTextColor(red, green, blue);
+        label.top:Show();
+    end
+    if bottomText then
+        label.bottom:SetText(bottomText);
+        label.bottom:SetTextColor(red, green, blue);
+        label.bottom:Show();
     end
 
-    local refreshed = true;
-    for index, entry in ipairs(root.entries) do
-        local sample = samples and samples[index];
-        if samples then
-            for _, decoration in ipairs(entry.testDecorations) do
-                ApplyStandaloneDecorationIdentity(decoration, index, sample);
-            end
+    label.top:ClearAllPoints();
+    label.bottom:ClearAllPoints();
+    if topText and bottomText then
+        label.top:SetPoint("BOTTOM", label.host, "CENTER", 0, standaloneLabelLineSpacing / 2);
+        label.bottom:SetPoint("TOP", label.host, "CENTER", 0, -standaloneLabelLineSpacing / 2);
+    elseif topText then
+        label.top:SetPoint("CENTER", label.host, "CENTER");
+    else
+        label.bottom:SetPoint("CENTER", label.host, "CENTER");
+    end
+    label.host:Show();
+end
+
+local function GetSafeStandaloneIdentity(index, sample)
+    local config = GetConfig();
+    local unit = "arena" .. index;
+    local class;
+    if sample then
+        class = sample.class;
+    else
+        class = addon.GetClassForPlayerOrArena(unit);
+    end
+    if addon.IsSecretValue(class) then return end
+    if type(class) ~= "string" then return end
+
+    local colorMap = RAID_CLASS_COLORS;
+    if not colorMap then return end
+    local classColor = colorMap[class];
+    if addon.IsSecretValue(classColor) then return end
+    if classColor == nil then return end
+
+    local red = classColor.r;
+    if addon.IsSecretValue(red) then return end
+    local green = classColor.g;
+    if addon.IsSecretValue(green) then return end
+    local blue = classColor.b;
+    if addon.IsSecretValue(blue) then return end
+    if red == nil or green == nil or blue == nil then return end
+
+    local name;
+    if config.arenaStandaloneOffensiveIconShowName then
+        local candidateName;
+        if sample then
+            candidateName = sample.name;
         else
-            for _, decoration in ipairs(entry.container.sweepyBoopIdentityDecorations) do
-                if not ApplyStandaloneDecorationIdentity(decoration, index) then
-                    refreshed = false;
-                end
+            candidateName = UnitName(unit);
+        end
+        if not addon.IsSecretValue(candidateName)
+            and type(candidateName) == "string"
+            and candidateName ~= "" then
+
+            name = candidateName;
+        end
+    end
+
+    local specName;
+    if config.arenaStandaloneOffensiveIconShowSpec then
+        local specID;
+        if sample then
+            specID = sample.specID;
+        else
+            specID = addon.GetSpecForPlayerOrArena(unit);
+        end
+        if not addon.IsSecretValue(specID) and type(specID) == "number" and specID > 0 then
+            local candidateSpecName = select(2, GetSpecializationInfoByID(specID));
+            if not addon.IsSecretValue(candidateSpecName)
+                and type(candidateSpecName) == "string"
+                and candidateSpecName ~= "" then
+
+                specName = candidateSpecName;
             end
         end
     end
 
-    if not samples then
-        standaloneIdentityRefreshPending = not refreshed;
+    local arenaNumber = config.arenaStandaloneOffensiveIconShowArenaNumber
+        and tostring(index)
+        or nil;
+    local topText;
+    if arenaNumber and specName then
+        topText = arenaNumber .. " - " .. specName;
+    else
+        topText = arenaNumber or specName;
     end
-    return refreshed;
+
+    return topText, name, { red, green, blue };
 end
 
-local function InitializeStandaloneAuraButton(button, container, index)
+local function ApplyStandaloneDecorationStyle(decoration, color)
+    decoration.plainBorder:Hide();
+    decoration.highlightGlow:Hide();
+    decoration.highlightBorder:Hide();
+    if not color then return end
+
+    for _, texture in ipairs(decoration.tintTextures) do
+        texture:SetVertexColor(color[1], color[2], color[3], 1);
+    end
+
+    local useHighlight = GetStandaloneBorderStyle(GetConfig())
+        == addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT;
+    decoration.plainBorder:SetShown(not useHighlight);
+    decoration.highlightGlow:SetShown(useHighlight);
+    decoration.highlightBorder:SetShown(useHighlight);
+end
+
+local function RefreshStandaloneGroupLabels(root, samples)
+    if not root then return false end
+
+    local config = GetConfig();
+    local showAnyLabel = config.arenaStandaloneOffensiveIconShowArenaNumber
+        or config.arenaStandaloneOffensiveIconShowName
+        or config.arenaStandaloneOffensiveIconShowSpec;
+    for index, entry in ipairs(root.entries) do
+        local sample = samples and samples[index];
+        local topText, bottomText, color = GetSafeStandaloneIdentity(index, sample);
+        entry.classColor = color;
+        if entry.container then
+            entry.container.sweepyBoopClassColor = color;
+        end
+        if showAnyLabel and color then
+            ApplyStandaloneLabel(entry.label, topText, bottomText, color);
+        else
+            ClearStandaloneLabel(entry.label);
+        end
+    end
+    return true;
+end
+
+local function RefreshStandaloneDecorationStyles(root, unrestricted)
+    if not root then return false end
+    if ( not unrestricted ) and ( not CanAccessStandaloneDecorations() ) then
+        standaloneDecorationRefreshPending = true;
+        return false;
+    end
+
+    for _, entry in ipairs(root.entries) do
+        for _, decoration in ipairs(entry.decorations) do
+            ApplyStandaloneDecorationStyle(decoration, entry.classColor);
+        end
+    end
+
+    if not unrestricted then
+        standaloneDecorationRefreshPending = false;
+    end
+    return true;
+end
+
+local function RefreshStandalonePresentation(root, samples)
+    RefreshStandaloneGroupLabels(root, samples);
+    return RefreshStandaloneDecorationStyles(root, samples ~= nil);
+end
+
+local function InitializeStandaloneAuraButton(button, container)
     local decoration = CreateStandaloneDecoration(button, true);
-    container.sweepyBoopIdentityDecorations[
-        #container.sweepyBoopIdentityDecorations + 1
-    ] = decoration;
-
-    ApplyStandaloneDecorationIdentity(decoration, index);
+    container.sweepyBoopDecorations[#container.sweepyBoopDecorations + 1] = decoration;
+    if CanAccessStandaloneDecorations() then
+        ApplyStandaloneDecorationStyle(decoration, container.sweepyBoopClassColor);
+    else
+        standaloneDecorationRefreshPending = true;
+    end
 end
 
-local function CreateStandaloneContainer(parent, index)
+local function CreateStandaloneContainer(parent)
     local container = CreateFrame(
         "AuraContainer",
         nil,
@@ -660,7 +790,7 @@ local function CreateStandaloneContainer(parent, index)
             ignoreDispelDebuffs = true,
         }
     );
-    container.sweepyBoopIdentityDecorations = {};
+    container.sweepyBoopDecorations = {};
     container:AddAuraGroup(offensiveAuraGroupKey, offensiveAuraFilter, {
         maxFrameCount = Clamp(
             GetConfig().arenaStandaloneOffensiveIconMaxIcons,
@@ -670,16 +800,15 @@ local function CreateStandaloneContainer(parent, index)
         sortMethod = AuraContainerSortMethod.Default,
         sortDirection = AuraContainerSortDirection.Normal,
         initializeFrame = function(button)
-            InitializeStandaloneAuraButton(button, container, index);
+            InitializeStandaloneAuraButton(button, container);
         end,
         layout = {
             elementSpacing = 0,
             lineSpacing = 0,
             elementWidth = baseIconSize,
-            elementHeight = standaloneHolderHeight,
+            elementHeight = baseIconSize,
         },
     });
-    container:SetUnit("arena" .. index);
     return container;
 end
 
@@ -693,10 +822,10 @@ local function ApplyStandaloneContainerLayout(container, layout)
     container:SetFlowLayoutMaximumLineSize(layout.maxLineWidth + flowLayoutTolerance);
     container:SetAuraGroupMaxFrameCount(offensiveAuraGroupKey, layout.maxIcons);
     container:SetAuraGroupLayout(offensiveAuraGroupKey, {
-        elementSpacing = layout.spacing,
-        lineSpacing = layout.spacing,
+        elementSpacing = layout.iconSpacing,
+        lineSpacing = layout.iconSpacing,
         elementWidth = baseIconSize,
-        elementHeight = standaloneHolderHeight,
+        elementHeight = baseIconSize,
     });
 end
 
@@ -713,7 +842,7 @@ local function AnchorStandaloneGroups(root, entries, layout)
                 verticalAnchor .. "LEFT",
                 entries[index - 1].frame,
                 verticalAnchor .. "RIGHT",
-                layout.spacing,
+                layout.groupSpacing,
                 0
             );
         end
@@ -724,7 +853,7 @@ local function AnchorStandaloneGroups(root, entries, layout)
                 verticalAnchor .. "RIGHT",
                 entries[index - 1].frame,
                 verticalAnchor .. "LEFT",
-                -layout.spacing,
+                -layout.groupSpacing,
                 0
             );
         end
@@ -734,14 +863,14 @@ local function AnchorStandaloneGroups(root, entries, layout)
             verticalAnchor .. "RIGHT",
             entries[2].frame,
             verticalAnchor .. "LEFT",
-            -layout.spacing,
+            -layout.groupSpacing,
             0
         );
         entries[3].frame:SetPoint(
             verticalAnchor .. "LEFT",
             entries[2].frame,
             verticalAnchor .. "RIGHT",
-            layout.spacing,
+            layout.groupSpacing,
             0
         );
     end
@@ -780,7 +909,7 @@ end
 
 local function EnsureStandaloneRoot()
     if standaloneRoot then return standaloneRoot end
-    if InCombatLockdown() or ( not CanAccessStandaloneDecorations() ) then
+    if InCombatLockdown() then
         reconcilePending = true;
         return;
     end
@@ -792,17 +921,21 @@ local function EnsureStandaloneRoot()
     root.entries = {};
 
     for index = 1, addon.MAX_ARENA_SIZE do
-        local container = CreateStandaloneContainer(root, index);
+        local container = CreateStandaloneContainer(root);
+        local label = CreateStandaloneLabelHost(root, container);
+        container:SetUnit("arena" .. index);
         root.entries[index] = {
             container = container,
             frame = container,
             index = index,
+            decorations = container.sweepyBoopDecorations,
+            label = label,
         };
     end
 
     standaloneRoot = root;
     ApplyStandaloneRootLayout(root, GetStandaloneLayout(), false);
-    RefreshStandaloneIdentities(root);
+    RefreshStandalonePresentation(root);
     return root;
 end
 
@@ -847,7 +980,7 @@ local function UpdateStandaloneRoot(forceRefresh)
         return;
     end
 
-    RefreshStandaloneIdentities(root);
+    RefreshStandalonePresentation(root);
     for index, entry in ipairs(root.entries) do
         local container = entry.container;
         local unit = "arena" .. index;
@@ -903,11 +1036,13 @@ local function EnsureStandaloneTestRoot()
         for buttonIndex = 1, maxStandaloneIcons do
             CreateStandaloneTestButton(holder, index, buttonIndex);
         end
+        local label = CreateStandaloneLabelHost(root, holder);
         root.entries[index] = {
             frame = holder,
             index = index,
             testButtons = holder.testButtons,
-            testDecorations = holder.testDecorations,
+            decorations = holder.testDecorations,
+            label = label,
         };
     end
 
@@ -930,8 +1065,8 @@ local function ApplyStandaloneTestLayout(root, layout)
         local sampleColumns = math.min(layout.effectiveColumns, sampleCount);
         local sampleRows = math.ceil(sampleCount / sampleColumns);
         holder:SetSize(
-            sampleColumns * baseIconSize + ( sampleColumns - 1 ) * layout.spacing,
-            sampleRows * standaloneHolderHeight + ( sampleRows - 1 ) * layout.spacing
+            sampleColumns * baseIconSize + ( sampleColumns - 1 ) * layout.iconSpacing,
+            sampleRows * baseIconSize + ( sampleRows - 1 ) * layout.iconSpacing
         );
 
         for buttonIndex, button in ipairs(entry.testButtons) do
@@ -939,8 +1074,8 @@ local function ApplyStandaloneTestLayout(root, layout)
             if buttonIndex <= sampleCount then
                 local column = ( buttonIndex - 1 ) % sampleColumns;
                 local row = math.floor(( buttonIndex - 1 ) / sampleColumns);
-                local x = column * ( baseIconSize + layout.spacing );
-                local y = row * ( standaloneHolderHeight + layout.spacing );
+                local x = column * ( baseIconSize + layout.iconSpacing );
+                local y = row * ( baseIconSize + layout.iconSpacing );
                 local point;
                 if layout.growDirection == addon.STANDALONE_GROW_DIRECTION.LEFT then
                     point = layout.growUpward and "BOTTOMRIGHT" or "TOPRIGHT";
@@ -971,7 +1106,7 @@ local function RefreshStandaloneTestRoot()
 
     local layout = GetStandaloneLayout();
     ApplyStandaloneTestLayout(standaloneTestRoot, layout);
-    RefreshStandaloneIdentities(standaloneTestRoot, testSamples);
+    RefreshStandalonePresentation(standaloneTestRoot, testSamples);
     for index, entry in ipairs(standaloneTestRoot.entries) do
         local sampleCount = GetStandaloneTestSampleCount(layout, index);
         for buttonIndex = 1, sampleCount do
@@ -982,12 +1117,13 @@ end
 
 local function ReconcileStandaloneAuraRestrictions()
     if not CanAccessStandaloneDecorations() then
-        standaloneIdentityRefreshPending = true;
+        standaloneDecorationRefreshPending = true;
         return;
     end
 
-    if standaloneIdentityRefreshPending then
-        RefreshStandaloneIdentities(standaloneRoot);
+    if standaloneDecorationRefreshPending then
+        RefreshStandaloneGroupLabels(standaloneRoot);
+        RefreshStandaloneDecorationStyles(standaloneRoot, false);
     end
     if reconcilePending and ( not InCombatLockdown() ) then
         reconcilePending = false;
@@ -1047,18 +1183,17 @@ function SweepyBoop:SetupArenaOffensiveIcons()
             standaloneTestRoot:Hide();
         end
         if event == addon.PLAYER_REGEN_ENABLED then
-            if ( not reconcilePending ) and ( not standaloneIdentityRefreshPending ) then
+            if ( not reconcilePending ) and ( not standaloneDecorationRefreshPending ) then
                 return;
             end
             reconcilePending = false;
             UpdateLiveOverlays(true);
             UpdateStandaloneRoot(true);
-            RefreshStandaloneIdentities(standaloneRoot);
             return;
         end
         if event == "UNIT_NAME_UPDATE" then
             if unit ~= "arena1" and unit ~= "arena2" and unit ~= "arena3" then return end
-            RefreshStandaloneIdentities(standaloneRoot);
+            RefreshStandaloneGroupLabels(standaloneRoot);
             return;
         end
 
