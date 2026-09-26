@@ -820,6 +820,7 @@ local function CreateStandaloneContainer(parent)
         "CustomAuraContainerTemplate"
     );
     container:Hide();
+    container:SetResizeBounds(baseIconSize, baseIconSize);
     container:SetAuraProcessingPolicy(
         CustomAuraContainerAuraProcessingPolicy.ProcessAura,
         {
