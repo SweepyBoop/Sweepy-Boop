@@ -32,9 +32,9 @@ local maxStandaloneColumns = 16;
 local flowLayoutTolerance = 0.01;
 
 local testSamples = {
-    { spellID = 190319, name = "Pyra", class = addon.MAGE, specID = addon.SPECID.FIRE },
-    { spellID = 10060, name = "Solace", class = addon.PRIEST, specID = addon.SPECID.DISCIPLINE },
-    { spellID = 107574, name = "Bulwark", class = addon.WARRIOR, specID = addon.SPECID.ARMS },
+    { spellID = 19574, name = "Takhsick", class = addon.HUNTER, specID = addon.SPECID.BEASTMASTERY },
+    { spellID = 10060, name = "SweepyBoop", class = addon.PRIEST, specID = addon.SPECID.DISCIPLINE },
+    { spellID = 107574, name = "Smexxin", class = addon.WARRIOR, specID = addon.SPECID.ARMS },
 };
 
 local function GetConfig()
@@ -1141,6 +1141,8 @@ local function InvalidateStandalonePresentation(root)
     end
 end
 
+-- Blizzard reuses arenaN tokens for different players between Shuffle rounds, so force
+-- a real unit-token transition to discard the previous occupant's cached aura assignments.
 local function ForceRebindAuraContainer(container, unit)
     container:SetEnabled(false);
     container:SetUnit("none");
