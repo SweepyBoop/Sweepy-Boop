@@ -1364,8 +1364,12 @@ function SweepyBoop:SetupArenaOffensiveIcons()
     eventFrame:RegisterEvent("PVP_MATCH_ACTIVE");
     eventFrame:RegisterEvent("PVP_MATCH_COMPLETE");
     eventFrame:SetScript("OnEvent", function(_, event, unit)
-        if event == addon.PLAYER_ENTERING_WORLD and standaloneTestRoot then
-            standaloneTestRoot:Hide();
+        if event == addon.PLAYER_ENTERING_WORLD then
+            if standaloneTestRoot then
+                standaloneTestRoot:Hide();
+            end
+            ResetArenaOpponentAuraContainers();
+            return;
         end
         if event == addon.PLAYER_REGEN_ENABLED then
             if roundResetPending then
