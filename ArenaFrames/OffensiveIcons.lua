@@ -536,6 +536,19 @@ local function CreateStandaloneDecoration(button, secureAuraButton)
     return decoration;
 end
 
+local function CreateStandaloneLabelLine(host, fontObject)
+    local line = host:CreateFontString(nil, "OVERLAY", fontObject);
+    line:SetJustifyH("CENTER");
+    line:SetJustifyV("MIDDLE");
+    line:SetWordWrap(false);
+    if line.SetMaxLines then
+        line:SetMaxLines(1);
+    end
+    local _, fontSize = line:GetFont();
+    line:SetHeight(fontSize or 12);
+    return line, fontSize or 12;
+end
+
 local function CreateStandaloneLabelHost(parent, relativeFrame)
     local host = CreateFrame(
         "Frame",
@@ -549,71 +562,80 @@ local function CreateStandaloneLabelHost(parent, relativeFrame)
     host:SetPoint("TOP", relativeFrame, "BOTTOM", 0, -2);
     host:Hide();
 
-    local top = host:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-    top:SetJustifyH("CENTER");
-    top:SetWordWrap(false);
-    if top.SetMaxLines then
-        top:SetMaxLines(1);
-    end
-
-    local bottom = host:CreateFontString(nil, "OVERLAY", "GameFontNormal");
-    bottom:SetJustifyH("CENTER");
-    bottom:SetWordWrap(false);
-    if bottom.SetMaxLines then
-        bottom:SetMaxLines(1);
-    end
-
-    local _, fontSize = top:GetFont();
-    host:SetHeight(( fontSize or 12 ) * 2 + standaloneLabelLineSpacing);
+    local number, numberHeight =
+        CreateStandaloneLabelLine(host, "GameFontNormalLarge");
+    local spec, standardHeight =
+        CreateStandaloneLabelLine(host, "GameFontNormal");
+    local name = CreateStandaloneLabelLine(host, "GameFontNormal");
 
     return {
         host = host,
-        top = top,
-        bottom = bottom,
+        number = number,
+        spec = spec,
+        name = name,
+        numberHeight = numberHeight,
+        standardHeight = standardHeight,
     };
 end
 
+local function ClearStandaloneLabelLine(line)
+    if line.ClearText then
+        line:ClearText();
+    else
+        line:SetText("");
+    end
+    line:Hide();
+end
+
 local function ClearStandaloneLabel(label)
-    if label.top.ClearText then
-        label.top:ClearText();
-    else
-        label.top:SetText("");
-    end
-    label.top:Hide();
-    if label.bottom.ClearText then
-        label.bottom:ClearText();
-    else
-        label.bottom:SetText("");
-    end
-    label.bottom:Hide();
+    ClearStandaloneLabelLine(label.number);
+    ClearStandaloneLabelLine(label.spec);
+    ClearStandaloneLabelLine(label.name);
     label.host:Hide();
 end
 
-local function ApplyStandaloneLabel(label, topText, bottomText, color)
+local function ApplyStandaloneLabel(label, numberText, specText, nameText, color)
     ClearStandaloneLabel(label);
-    if ( not topText ) and ( not bottomText ) then return end
+    local lines = {};
+    if numberText then
+        lines[#lines + 1] = {
+            fontString = label.number,
+            height = label.numberHeight,
+            text = numberText,
+        };
+    end
+    if specText then
+        lines[#lines + 1] = {
+            fontString = label.spec,
+            height = label.standardHeight,
+            text = specText,
+        };
+    end
+    if nameText then
+        lines[#lines + 1] = {
+            fontString = label.name,
+            height = label.standardHeight,
+            text = nameText,
+        };
+    end
+    if #lines == 0 then return end
 
+    local height = standaloneLabelLineSpacing * ( #lines - 1 );
+    for _, lineInfo in ipairs(lines) do
+        height = height + lineInfo.height;
+    end
+    label.host:SetHeight(height);
+
+    local offsetY = 0;
     local red, green, blue = color[1], color[2], color[3];
-    if topText then
-        label.top:SetText(topText);
-        label.top:SetTextColor(red, green, blue);
-        label.top:Show();
-    end
-    if bottomText then
-        label.bottom:SetText(bottomText);
-        label.bottom:SetTextColor(red, green, blue);
-        label.bottom:Show();
-    end
-
-    label.top:ClearAllPoints();
-    label.bottom:ClearAllPoints();
-    if topText and bottomText then
-        label.top:SetPoint("BOTTOM", label.host, "CENTER", 0, standaloneLabelLineSpacing / 2);
-        label.bottom:SetPoint("TOP", label.host, "CENTER", 0, -standaloneLabelLineSpacing / 2);
-    elseif topText then
-        label.top:SetPoint("CENTER", label.host, "CENTER");
-    else
-        label.bottom:SetPoint("CENTER", label.host, "CENTER");
+    for _, lineInfo in ipairs(lines) do
+        local line = lineInfo.fontString;
+        line:ClearAllPoints();
+        line:SetPoint("TOP", label.host, "TOP", 0, -offsetY);
+        line:SetText(lineInfo.text);
+        line:SetTextColor(red, green, blue);
+        line:Show();
+        offsetY = offsetY + lineInfo.height + standaloneLabelLineSpacing;
     end
     label.host:Show();
 end
@@ -682,14 +704,8 @@ local function GetSafeStandaloneIdentity(index, sample)
     local arenaNumber = config.arenaStandaloneOffensiveIconShowArenaNumber
         and tostring(index)
         or nil;
-    local topText;
-    if arenaNumber and specName then
-        topText = arenaNumber .. " " .. specName;
-    else
-        topText = arenaNumber or specName;
-    end
 
-    return topText, name, { red, green, blue };
+    return arenaNumber, specName, name, { red, green, blue };
 end
 
 local function ApplyStandaloneDecorationStyle(decoration, color)
@@ -718,13 +734,20 @@ local function RefreshStandaloneGroupLabels(root, samples)
         or config.arenaStandaloneOffensiveIconShowSpec;
     for index, entry in ipairs(root.entries) do
         local sample = samples and samples[index];
-        local topText, bottomText, color = GetSafeStandaloneIdentity(index, sample);
+        local numberText, specText, nameText, color =
+            GetSafeStandaloneIdentity(index, sample);
         entry.classColor = color;
         if entry.container then
             entry.container.sweepyBoopClassColor = color;
         end
         if showAnyLabel and color then
-            ApplyStandaloneLabel(entry.label, topText, bottomText, color);
+            ApplyStandaloneLabel(
+                entry.label,
+                numberText,
+                specText,
+                nameText,
+                color
+            );
         else
             ClearStandaloneLabel(entry.label);
         end
