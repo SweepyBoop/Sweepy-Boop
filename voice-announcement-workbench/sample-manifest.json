@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "model": {
+    "repository": "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
+    "revision": "0c0e3051f131929182e2c023b9537f8b1c68adfe",
+    "dtype": "bfloat16",
+    "attentionImplementation": "sdpa"
+  },
+  "locale": "enUS",
+  "language": "English",
+  "instruction": "",
+  "seed": 20260928,
+  "mastering": {
+    "integratedLufs": -16.0,
+    "loudnessRange": 7.0,
+    "truePeakDb": -1.5,
+    "vorbisQuality": 5,
+    "tempo": 1.2,
+    "silenceThresholdDb": -50.0,
+    "leadingSilenceSeconds": 0.02,
+    "trailingSilenceSeconds": 0.08
+  },
+  "speakers": [
+    {
+      "id": "ryan",
+      "qwenName": "Ryan",
+      "description": "Dynamic native-English male voice with strong rhythmic drive."
+    },
+    {
+      "id": "aiden",
+      "qwenName": "Aiden",
+      "description": "Sunny native-English male voice with a clear midrange."
+    }
+  ],
+  "phrases": [
+    {
+      "id": "avenging-wrath",
+      "displayText": "Avenging Wrath",
+      "spokenText": "Wings"
+    },
+    {
+      "id": "combustion",
+      "displayText": "Combustion",
+      "spokenText": "Combustion"
+    },
+    {
+      "id": "chi-ji",
+      "displayText": "Chi-Ji",
+      "spokenText": "Chee Jee"
+    },
+    {
+      "id": "nullifying-shroud",
+      "displayText": "Nullifying Shroud",
+      "spokenText": "Null Shroud"
+    },
+    {
+      "id": "trueshot",
+      "displayText": "Trueshot",
+      "spokenText": "Trueshot"
+    }
+  ]
+}

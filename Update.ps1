@@ -6,7 +6,7 @@ if (-not (Test-Path -LiteralPath $gameDir -PathType Container)) {
 }
 $extensions = @("*.lua", "*.toc", "*.xml")
 $excludePatterns = @("*.git*", "*Docs*")
-$excludedDirectoryNames = @("Tools", "wow-icon-upscale-workbench")
+$excludedDirectoryNames = @("Tools", "wow-icon-upscale-workbench", "voice-announcement-workbench")
 
 function Deploy-Addon {
     param (

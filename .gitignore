@@ -3,6 +3,8 @@
 *VSCode*
 SweepyBoop/
 /wow-icon-upscale-workbench/scratch/
+/voice-announcement-workbench/scratch/
+/voice-announcement-workbench/__pycache__/
 
 # macOS Finder metadata
 .DS_Store

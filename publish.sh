@@ -7,7 +7,7 @@ ARCHIVE_PATH="${SCRIPT_DIR}/SweepyBoop.zip"
 
 should_exclude_directory() {
     case "$1" in
-        .git*|.vscode|.VSCode|*Docs*|*Internal*|*VSCode*|Tools|wow-icon-upscale-workbench|SweepyBoop)
+        .git*|.vscode|.VSCode|*Docs*|*Internal*|*VSCode*|Tools|wow-icon-upscale-workbench|voice-announcement-workbench|SweepyBoop)
             return 0
             ;;
         *)
@@ -35,7 +35,7 @@ done < <(find "${SCRIPT_DIR}" -mindepth 1 -maxdepth 1 -type d -print0)
 
 find "${PUBLISH_DIR}" -type f -name '.DS_Store' -delete
 
-for excluded_name in Tools wow-icon-upscale-workbench Internal; do
+for excluded_name in Tools wow-icon-upscale-workbench voice-announcement-workbench Internal; do
     if [[ -e "${PUBLISH_DIR}/${excluded_name}" ]]; then
         printf 'Excluded directory entered the publication tree: %s\n' "${PUBLISH_DIR}/${excluded_name}" >&2
         exit 1
