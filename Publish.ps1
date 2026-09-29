@@ -9,7 +9,7 @@ if (Test-Path -Path $publishDir) {
 Remove-Item "${workDir}\SweepyBoop.zip" -ErrorAction SilentlyContinue
 
 $excludePatterns = @("*.git*", "*Docs*", "*Internal*", "*VSCode*")
-$excludedDirectoryNames = @("Tools", "wow-icon-upscale-workbench")
+$excludedDirectoryNames = @("Tools", "wow-icon-upscale-workbench", "voice-announcement-workbench")
 $dirsToCopy = Get-ChildItem -Path $workDir -Directory -Exclude $excludePatterns |
     Where-Object { $_.Name -notin $excludedDirectoryNames }
 New-Item -ItemType Directory -Path $publishDir # Get dirsToCopy to avoid including the publishDir (i.e., infinite loop)

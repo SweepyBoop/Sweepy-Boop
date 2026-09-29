@@ -14,7 +14,7 @@ DEPLOYED=0
 
 should_exclude_directory() {
     case "$1" in
-        .git*|*Docs*|Tools|wow-icon-upscale-workbench|SweepyBoop)
+        .git*|*Docs*|Tools|wow-icon-upscale-workbench|voice-announcement-workbench|SweepyBoop)
             return 0
             ;;
         *)
