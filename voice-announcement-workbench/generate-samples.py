@@ -49,6 +49,12 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         help="Shared model-cache directory; defaults to <scratch>/models.",
     )
+    parser.add_argument(
+        "--device",
+        choices=("auto", "cuda", "mps", "cpu"),
+        default="auto",
+        help="Inference device. Auto prefers CUDA, then Apple Metal, then CPU.",
+    )
     parser.add_argument("--speaker", help="Generate one speaker by manifest id or Qwen name.")
     parser.add_argument("--phrase", help="Generate one phrase by manifest id.")
     parser.add_argument("--force", action="store_true", help="Regenerate existing WAV and OGG files.")
@@ -73,7 +79,24 @@ def run(command: list[str], *, capture: bool = False) -> subprocess.CompletedPro
     )
 
 
-def environment_details(scratch: Path) -> dict[str, Any]:
+def resolve_execution_device(torch: Any, requested: str) -> tuple[str, Any]:
+    mps_available = bool(
+        hasattr(torch.backends, "mps") and torch.backends.mps.is_available()
+    )
+    if requested == "cuda" and not torch.cuda.is_available():
+        raise RuntimeError("CUDA was requested but is not available.")
+    if requested == "mps" and not mps_available:
+        raise RuntimeError("Apple Metal (MPS) was requested but is not available.")
+
+    if requested == "auto":
+        device = "cuda:0" if torch.cuda.is_available() else "mps" if mps_available else "cpu"
+    else:
+        device = "cuda:0" if requested == "cuda" else requested
+    dtype = torch.bfloat16 if device.startswith("cuda") else torch.float32
+    return device, dtype
+
+
+def environment_details(scratch: Path, requested_device: str) -> dict[str, Any]:
     import imageio_ffmpeg
     import torch
 
@@ -91,6 +114,10 @@ def environment_details(scratch: Path) -> dict[str, Any]:
         raise RuntimeError(f"Bundled ffmpeg does not provide the libvorbis encoder: {ffmpeg}")
 
     cuda_available = torch.cuda.is_available()
+    mps_available = bool(
+        hasattr(torch.backends, "mps") and torch.backends.mps.is_available()
+    )
+    execution_device, execution_dtype = resolve_execution_device(torch, requested_device)
     details: dict[str, Any] = {
         "createdUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "python": sys.version,
@@ -109,9 +136,18 @@ def environment_details(scratch: Path) -> dict[str, Any]:
             "version": ffmpeg_version,
             "libvorbis": True,
         },
+        "execution": {
+            "requestedDevice": requested_device,
+            "device": execution_device,
+            "dtype": str(execution_dtype).removeprefix("torch."),
+        },
         "cuda": {
             "available": cuda_available,
             "torchCudaVersion": torch.version.cuda,
+        },
+        "mps": {
+            "available": mps_available,
+            "built": bool(hasattr(torch.backends, "mps") and torch.backends.mps.is_built()),
         },
     }
 
@@ -129,9 +165,6 @@ def environment_details(scratch: Path) -> dict[str, Any]:
     reports.mkdir(parents=True, exist_ok=True)
     report_path = reports / "environment.json"
     report_path.write_text(json.dumps(details, indent=2) + "\n", encoding="utf-8")
-
-    if not cuda_available:
-        raise RuntimeError("CUDA is not available in the isolated PyTorch environment.")
 
     return details
 
@@ -388,6 +421,8 @@ def generate_raw_samples(
     manifest: dict[str, Any],
     model_cache: Path,
     force: bool,
+    device: str,
+    dtype_name: str,
 ) -> dict[str, float]:
     pending = [job for job in jobs if force or not (raw_directory / f"{job.output_key}.wav").is_file()]
     if not pending:
@@ -399,20 +434,18 @@ def generate_raw_samples(
     import torch
     from qwen_tts import Qwen3TTSModel
 
-    if not torch.cuda.is_available():
-        raise RuntimeError("CUDA is required for the 1.7B sample generation run.")
-
     os.environ["HF_HOME"] = str(model_cache)
     os.environ["HF_HUB_CACHE"] = str(model_cache / "hub")
 
     model_spec = manifest["model"]
+    dtype = getattr(torch, dtype_name)
     snapshot_directory = download_model_snapshot(manifest, model_cache)
     print(f"Loading pinned model from {snapshot_directory}...")
     model = Qwen3TTSModel.from_pretrained(
         str(snapshot_directory),
         local_files_only=True,
-        device_map="cuda:0",
-        dtype=torch.bfloat16,
+        device_map=device,
+        dtype=dtype,
         attn_implementation=model_spec["attentionImplementation"],
     )
 
@@ -425,7 +458,8 @@ def generate_raw_samples(
     timings: dict[str, float] = {}
     for job in pending:
         torch.manual_seed(job.seed)
-        torch.cuda.manual_seed_all(job.seed)
+        if device.startswith("cuda"):
+            torch.cuda.manual_seed_all(job.seed)
         started = time.perf_counter()
         print(f"Generating {job.output_key}: {job.spoken_text!r}")
         generation_arguments = {
@@ -436,7 +470,10 @@ def generate_raw_samples(
         if manifest["instruction"]:
             generation_arguments["instruct"] = manifest["instruction"]
         wavs, sample_rate = model.generate_custom_voice(**generation_arguments)
-        torch.cuda.synchronize()
+        if device.startswith("cuda"):
+            torch.cuda.synchronize()
+        elif device == "mps":
+            torch.mps.synchronize()
         elapsed = time.perf_counter() - started
         waveform = wavs[0]
         if hasattr(waveform, "detach"):
@@ -566,8 +603,12 @@ def main() -> int:
     os.environ.setdefault("HF_HOME", str(model_cache))
     os.environ.setdefault("HF_HUB_CACHE", str(model_cache / "hub"))
 
-    details = environment_details(scratch)
-    print(f"CUDA device: {details['cuda']['device']}")
+    os.environ.setdefault("PYTORCH_ENABLE_MPS_FALLBACK", "1")
+    details = environment_details(scratch, args.device)
+    print(
+        f"Execution device: {details['execution']['device']} "
+        f"({details['execution']['dtype']})"
+    )
     print(f"Bundled ffmpeg: {details['ffmpeg']['path']}")
     if args.verify_only:
         print(f"Environment report: {scratch / 'reports' / 'environment.json'}")
@@ -578,7 +619,15 @@ def main() -> int:
     raw_directory = scratch / "raw-wav"
     ogg_directory = scratch / "ogg"
     reports_directory = scratch / "reports"
-    timings = generate_raw_samples(jobs, raw_directory, manifest, model_cache, args.force)
+    timings = generate_raw_samples(
+        jobs,
+        raw_directory,
+        manifest,
+        model_cache,
+        args.force,
+        str(details["execution"]["device"]),
+        str(details["execution"]["dtype"]),
+    )
 
     ffmpeg = Path(details["ffmpeg"]["path"])
     samples: list[dict[str, Any]] = []

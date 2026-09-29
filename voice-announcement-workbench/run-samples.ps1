@@ -5,7 +5,9 @@ param(
     [string]$Speaker,
     [string]$Phrase,
     [string]$ManifestPath,
-    [string]$ScratchPath
+    [string]$ScratchPath,
+    [ValidateSet('auto', 'cuda', 'mps', 'cpu')]
+    [string]$Device = 'cuda'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -37,7 +39,8 @@ $arguments = @(
     $generator,
     '--manifest', $manifest,
     '--scratch', $scratch,
-    '--model-cache', $modelCache
+    '--model-cache', $modelCache,
+    '--device', $Device
 )
 if ($Force) {
     $arguments += '--force'

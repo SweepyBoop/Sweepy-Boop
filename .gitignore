@@ -1,5 +1,6 @@
 # This is for publishing addon
 *.zip
+!/Docs/VoiceAnnouncementReview-KeyAbilities/*.zip
 *VSCode*
 SweepyBoop/
 /wow-icon-upscale-workbench/scratch/

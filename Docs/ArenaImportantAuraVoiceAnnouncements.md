@@ -2,7 +2,9 @@
 
 ## Status
 
-Proposal only. No runtime or asset-generation implementation has been started.
+The offline audio prototype is complete. The tracked workbench contains a pinned Aiden and Sohee key-ability manifest, Windows and macOS generation entry points, coverage validation, mastering, provenance reporting, and review packaging. A portable copy of the current 148 mastered clips is available under `Docs/VoiceAnnouncementReview-KeyAbilities`; setup and regeneration instructions are in `voice-announcement-workbench/README.md`.
+
+The addon runtime integration has not started. The review assets are not shipped sounds and are not registered with Blizzard APIs.
 
 ## Objective
 
