@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "pack": {
+    "id": "arena-faction-voice-study-enUS",
+    "description": "Original Alliance and Horde commander voice study for short arena callouts. These voices are not intended to imitate any Warcraft character or performer."
+  },
+  "voiceDesignModel": {
+    "repository": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
+    "revision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
+    "dtype": "bfloat16",
+    "attentionImplementation": "sdpa"
+  },
+  "cloneModel": {
+    "repository": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+    "revision": "fd4b254389122332181a7c3db7f27e918eec64e3",
+    "dtype": "bfloat16",
+    "attentionImplementation": "sdpa"
+  },
+  "locale": "enUS",
+  "language": "English",
+  "seed": 20260929,
+  "mastering": {
+    "integratedLufs": -16.0,
+    "loudnessRange": 7.0,
+    "truePeakDb": -1.5,
+    "vorbisQuality": 5,
+    "tempo": 1.0,
+    "silenceThresholdDb": -50.0,
+    "leadingSilenceSeconds": 0.02,
+    "trailingSilenceSeconds": 0.08
+  },
+  "speakers": [
+    {
+      "id": "alliance-commander",
+      "displayName": "Alliance Commander",
+      "description": "Original female battlefield-commander archetype with a clear, polished midrange.",
+      "designInstruction": "A mature female battlefield commander with a clear, polished midrange, precise consonants, calm authority, restrained urgency, and a lightly formal cadence. Bright enough to remain intelligible over dense combat audio. Natural and human, with no breathiness, theatrical flourishes, exaggerated accent, or resemblance to a known character or performer.",
+      "referenceText": "Hold the line and watch the eastern ridge. When the signal comes, strike quickly, guard your allies, and report every change with calm precision.",
+      "designSeed": 20260929,
+      "cloneSeedOffset": 0
+    },
+    {
+      "id": "horde-commander",
+      "displayName": "Horde Commander",
+      "description": "Original male battlefield-commander archetype with a resonant, warm baritone.",
+      "designInstruction": "A mature male battlefield commander with a resonant warm baritone, firm consonants, controlled power, and measured urgency. Slightly rugged while remaining clean and intelligible over dense combat audio. Natural and human, without growling, excessive gravel, theatrical shouting, exaggerated accent, or resemblance to a known character or performer.",
+      "referenceText": "Hold the line and watch the eastern ridge. When the signal comes, strike quickly, guard your allies, and report every change with calm precision.",
+      "designSeed": 20261929,
+      "cloneSeedOffset": 1000
+    }
+  ],
+  "phrases": [
+    { "id": "avenging-wrath", "displayText": "Avenging Wrath / Crusade", "spokenText": "Wings" },
+    { "id": "combustion", "displayText": "Combustion", "spokenText": "Combustion" },
+    { "id": "invoke-chi-ji", "displayText": "Invoke Chi-Ji, the Red Crane", "spokenText": "Chee Jee" },
+    { "id": "metamorphosis", "displayText": "Metamorphosis", "spokenText": "Meta" },
+    { "id": "nullifying-shroud", "displayText": "Nullifying Shroud", "spokenText": "Null Shroud" },
+    { "id": "bestial-wrath", "displayText": "Bestial Wrath", "spokenText": "Bestial Wrath" },
+    { "id": "coordinated-assault", "displayText": "Coordinated Assault", "spokenText": "Coordinated Assault" },
+    { "id": "touch-of-the-magi", "displayText": "Touch of the Magi", "spokenText": "Touch of the Magi" },
+    { "id": "apotheosis", "displayText": "Apotheosis", "spokenText": "Apotheosis" },
+    { "id": "spell-reflection", "displayText": "Spell Reflection", "spokenText": "Reflection" }
+  ]
+}

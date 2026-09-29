@@ -2,14 +2,15 @@
 
 ## Decision status
 
-Qwen3-TTS Aiden and Sohee remain the reproducible, free local baseline. Before promoting audio into the addon, run a small blind comparison against paid providers that offer stronger voice identity, pronunciation controls, and short-phrase consistency.
+Qwen3-TTS Aiden and Sohee remain the reproducible preset-voice baseline. The preferred custom-voice experiment now uses the Apache-licensed Qwen VoiceDesign model to create original Alliance and Horde commander archetypes, then freezes those references and renders callouts with the Qwen Base clone model. This provides a distinct identity without duplicating MiniCC's ElevenLabs dependency or cloning a real performer.
 
 Recommended evaluation order:
 
-1. ElevenLabs as the primary quality-first candidate.
-2. Cartesia as a crisp tactical-callout alternative.
-3. Resemble AI if consent, provenance, and commercial voice governance are the deciding factors.
-4. PlayHT as an additional library and cloning comparison.
+1. Qwen VoiceDesign plus Qwen Base cloning as the primary original-voice candidate.
+2. Kokoro as a fast stock-voice comparison, with special scrutiny because its model card identifies short utterances as a weakness.
+3. Chatterbox Turbo only with a clearly documented built-in voice provenance or an owned reference recording.
+4. CosyVoice 3 if multilingual pronunciation control warrants its additional setup complexity.
+5. Cartesia or ElevenLabs only as optional hosted quality ceilings after local candidates are reviewed.
 
 Provider model names, prices, quotas, and commercial terms change frequently. Record the exact values visible in the account at generation time rather than treating this document as a pricing source.
 
@@ -17,12 +18,13 @@ Provider model names, prices, quotas, and commercial terms change frequently. Re
 
 | Provider | Primary advantage | Main concern | Recommended role |
 | --- | --- | --- | --- |
-| ElevenLabs | Strong naturalness, cloning quality, voice library, pronunciation dictionaries, and mature API | Paid-tier rights and custom-voice eligibility must be checked; public-figure impersonation may be restricted | First paid bake-off |
-| Cartesia | Crisp low-latency speech with useful pacing and emotion control | Voice-library and commercial terms must be checked for redistribution | Tactical-callout comparison |
-| Resemble AI | Custom voices with stronger consent and enterprise provenance workflows | More setup and potentially higher cost | Governed custom voice |
-| PlayHT | Broad voice selection and cloning options | Short-word consistency and current redistribution rights require testing | Optional fourth comparison |
-| Azure Custom Neural Voice | Formal consent and deployment controls | Approval process and integration overhead are high | Future licensed production voice |
-| Fish Speech, F5-TTS, or CosyVoice | More local customization without per-generation API charges | More engineering, hardware, model-license, and voice-rights work | Research path, not the first paid test |
+| Qwen VoiceDesign + Base | Original voice design, strong multilingual support, local generation, and Apache 2.0 model terms | Requires two model snapshots and a frozen reference workflow | Primary custom-voice bake-off |
+| Kokoro | Tiny, fast, Apache 2.0, and many built-in voices | Its model card warns that utterances below 10-20 tokens may be weak | Fast stock-voice comparison |
+| Chatterbox Turbo | Strong naturalness, expressive control, local inference, and MIT model terms | Custom identity depends on reference-audio rights; built-in voice provenance needs confirmation | Licensed-reference comparison |
+| CosyVoice 3 | Multilingual cloning and direct pronunciation controls | More setup and reference-voice governance work | Localization research path |
+| ElevenLabs | Strong naturalness, cloning quality, voice library, and mature API | Duplicates MiniCC's provider choice; paid-tier rights and voice eligibility must be checked | Optional hosted ceiling only |
+| Cartesia | Crisp low-latency speech with useful pacing and emotion control | Voice-library and commercial terms must be checked for redistribution | Optional tactical hosted ceiling |
+| Fish Speech or F5-TTS | Capable local customization | Current pretrained-weight terms are non-commercial or research-restricted | Do not use for distributed addon audio |
 
 Do not select a provider only from long-form demos. Arena callouts expose different failure modes: one-word duration, incorrect stress, clipped consonants, invented syllables, and inconsistent delivery across consecutive alerts.
 
@@ -69,16 +71,18 @@ The catalog contains little text, so evaluation should consume only a few thousa
 
 ## Recommended comparison matrix
 
-Evaluate at least these four rows:
+Evaluate at least these six rows in two manageable rounds:
 
 | Candidate | Source | Purpose |
 | --- | --- | --- |
-| Aiden | Pinned local Qwen baseline | Male free baseline |
-| Sohee | Pinned local Qwen baseline | Female free baseline |
-| Paid voice A | ElevenLabs current highest-quality eligible model | Quality ceiling |
-| Paid voice B | Cartesia current production model | Crisp tactical alternative |
+| Aiden | Pinned Qwen CustomVoice baseline | Male preset baseline |
+| Sohee | Pinned Qwen CustomVoice baseline | Female preset baseline |
+| Alliance Commander | Pinned Qwen VoiceDesign reference and Base clone | Original female candidate |
+| Horde Commander | Pinned Qwen VoiceDesign reference and Base clone | Original male candidate |
+| Heart | Pinned Kokoro stock voice | Fast female comparison |
+| Fenrir | Pinned Kokoro stock voice | Fast male comparison |
 
-Add Resemble or PlayHT only if neither paid candidate is clearly better than the Qwen baseline or if their licensing workflow provides a material advantage.
+Test a hosted provider only if none of the local candidates is release quality or an external ceiling is needed to calibrate the review.
 
 ## Provenance requirements
 
@@ -100,11 +104,11 @@ API keys, billing data, private consent documents, and proprietary reference rec
 
 1. Review the committed Qwen baseline at `Docs/VoiceAnnouncementReview-KeyAbilities/listening/index.html`.
 2. Read `voice-announcement-workbench/README.md` for the local mastering environment.
-3. Choose one eligible ElevenLabs voice and one eligible Cartesia voice.
-4. Save API keys only in local environment variables or an ignored secrets file.
-5. Generate the ten-phrase bake-off under an ignored directory such as `voice-announcement-workbench/scratch/paid-evaluation`.
-6. Master every candidate with the same settings as the Qwen baseline.
-7. Build a blind listening page and collect feedback before generating all 74 callouts.
-8. Document the winning provider, model, voice rights, settings, cost, and review result before promoting any assets.
+3. Generate the two designed faction references and ten-phrase clone set with `run-faction-voices.sh` or `run-faction-voices.ps1`.
+4. Compare the designed voices with the Qwen preset baseline and the ignored Kokoro experiment.
+5. Master every candidate with the same settings as the Qwen baseline.
+6. Collect feedback before generating all 74 callouts.
+7. If a hosted comparison is still needed, save API keys only in local environment variables and record the exact commercial terms.
+8. Document the winning model, reference provenance, settings, and review result before promoting any assets.
 
-No paid provider has been selected yet. Qwen remains the fallback until the blind test demonstrates a clear quality improvement with acceptable rights and redistribution terms.
+No paid provider has been selected. The Qwen VoiceDesign-to-Base workflow is the preferred custom-voice path unless listening review shows a clear quality problem.

@@ -6,6 +6,7 @@ scratch="$workbench/scratch"
 python_dir="$scratch/python"
 python="$python_dir/bin/python"
 reports="$scratch/reports"
+faction_generator="$workbench/generate-faction-voices.py"
 recreate=false
 
 if [[ "${1:-}" == "--recreate" ]]; then
@@ -44,5 +45,6 @@ fi
 
 "$python" -m pip freeze > "$reports/pip-freeze.txt"
 "$python" "$workbench/generate-samples.py" --device auto --verify-only
+"$python" "$faction_generator" --device auto --verify-only
 
 echo "Voice generation environment is ready: $python"

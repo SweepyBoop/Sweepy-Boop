@@ -17,7 +17,43 @@ The selected key-ability pack uses:
 
 The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review every Aiden and Sohee clip without installing Python or downloading the model.
 
-For the next quality comparison, see `PAID_VOICE_OPTIONS.md`. It documents ElevenLabs, Cartesia, Resemble AI, PlayHT, public-figure voice restrictions, provenance requirements, and the recommended ten-phrase blind bake-off.
+The next quality comparison uses two original faction-flavored voices created with Qwen VoiceDesign and then held consistent with Qwen Base voice cloning. See `faction-voice-manifest.json` and the workflow below. `PAID_VOICE_OPTIONS.md` remains a record of external and alternative models, but ElevenLabs is not the preferred path because MiniCC already uses it.
+
+## Faction voice study
+
+The tracked faction-voice experiment defines two original archetypes rather than imitating named Warcraft characters or performers:
+
+- `Alliance Commander`: a mature female battlefield commander with a clear, polished midrange, precise consonants, calm authority, and restrained urgency.
+- `Horde Commander`: a mature male battlefield commander with a resonant warm baritone, firm consonants, controlled power, and measured urgency.
+
+`Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` creates one reference WAV for each archetype. `Qwen/Qwen3-TTS-12Hz-1.7B-Base` then creates a reusable clone prompt from that frozen reference and renders the ten difficult comparison callouts. Existing references are never replaced unless `--redesign` is passed; changing a reference also forces regeneration of its selected callouts.
+
+Validate and generate the complete comparison on macOS:
+
+```bash
+voice-announcement-workbench/scratch/python/bin/python \
+  voice-announcement-workbench/validate-faction-voices.py
+bash voice-announcement-workbench/run-faction-voices.sh
+```
+
+Useful focused runs:
+
+```bash
+# Design or inspect references without loading the clone model.
+bash voice-announcement-workbench/run-faction-voices.sh --design-only
+
+# Generate one voice or one phrase.
+bash voice-announcement-workbench/run-faction-voices.sh --speaker alliance-commander
+bash voice-announcement-workbench/run-faction-voices.sh --phrase combustion
+
+# Explicitly replace a selected reference, or remaster without synthesizing again.
+bash voice-announcement-workbench/run-faction-voices.sh --speaker alliance-commander --redesign
+bash voice-announcement-workbench/run-faction-voices.sh --remaster
+```
+
+Generated references, cloned WAVs, mastered OGG files, reports, model snapshots, and the listening page remain under `voice-announcement-workbench/scratch/`. The manifest records reproducible inputs, while the run report records the exact generated reference and output hashes. Because synthesis may vary across devices, an approved reference WAV must eventually be exported with the release provenance rather than recreated from its seed alone.
+
+The initial 2026-09-29 Apple Metal run produced two references and 20 mastered comparison clips. Its Alliance reference SHA-256 is `6DEAF7B768C5C14DCA9FC827D917ABDCB5EDEA0152D411C979DCD399BDC71071`; its Horde reference SHA-256 is `B93F1AE406841BDDB80E65DAC2B39CF3CAE57653569ECE1A8443ABD0FCC598C7`. These identify the current local listening run but do not promote either voice into shipped assets.
 
 ## Repository contract
 
@@ -82,7 +118,7 @@ Otherwise, set up the isolated environment with:
 bash voice-announcement-workbench/setup-environment.sh
 ```
 
-This creates `voice-announcement-workbench/scratch/python`, installs the pinned Python dependencies, and verifies the detected device and bundled ffmpeg. The first generation downloads and validates the complete pinned model under `voice-announcement-workbench/scratch/models`. Allow at least 12 GB of free disk space for the environment, model, caches, and generated working files.
+This creates `voice-announcement-workbench/scratch/python`, installs the pinned Python dependencies, and verifies the detected device and bundled ffmpeg. The first generation downloads and validates the complete pinned model under `voice-announcement-workbench/scratch/models`. Allow at least 12 GB of free disk space for the preset-voice workflow. The faction-voice workflow pins separate VoiceDesign and Base snapshots; allow at least 24 GB for both models, the environment, caches, and generated working files.
 
 To recreate only the ignored Python environment:
 
@@ -196,6 +232,12 @@ voice-announcement-workbench/scratch/
 |   |-- ogg/                        # mastered Aiden and Sohee clips
 |   |-- listening/index.html        # local comparison page
 |   `-- reports/                    # environment, coverage, and run provenance
+|-- faction-voices/
+|   |-- references/                 # frozen VoiceDesign reference WAVs
+|   |-- raw-wav/                    # untouched Base-cloned callouts
+|   |-- ogg/                        # mastered faction-voice callouts
+|   |-- listening/index.html        # two-voice comparison page
+|   `-- reports/                    # environment, reference, run, and validation data
 `-- raw-wav, ogg, listening, reports # original five-phrase experiment
 ```
 
@@ -206,6 +248,8 @@ Mastered clips preserve natural 1.0x tempo, target `-16 LUFS` integrated loudnes
 The manifest fixes the model revision, voices, spoken text, seeds, and mastering settings. `seedOverrides` records scoped retries for a single voice and phrase without changing other clips. The generated report records the final WAV and OGG SHA-256 hashes.
 
 Generated speech is not guaranteed to be bit-for-bit identical across CUDA, Apple Metal, and CPU or across dependency builds. Treat the committed files under `Docs/VoiceAnnouncementReview-KeyAbilities` as the review baseline. A newly generated Mac pack should be reviewed rather than assumed equivalent because it used the same seed.
+
+For designed voices, the reference WAV is part of the voice identity. Reuse the frozen file under `scratch/faction-voices/references` for every comparison run and use `--redesign` only when intentionally evaluating a new identity. The run report records the exact reference SHA-256 used by each cloned sample.
 
 The generator uses `bfloat16` on CUDA and conservative `float32` on Apple Metal or CPU. `PYTORCH_ENABLE_MPS_FALLBACK=1` allows unsupported Metal operations to fall back to CPU. If MPS generation fails or produces invalid audio, rerun the selected phrase with `--device cpu`.
 

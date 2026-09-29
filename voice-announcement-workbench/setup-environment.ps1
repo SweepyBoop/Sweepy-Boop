@@ -10,6 +10,7 @@ $pythonDirectory = Join-Path $scratch 'python'
 $python = Join-Path $pythonDirectory 'Scripts\python.exe'
 $reports = Join-Path $scratch 'reports'
 $generator = Join-Path $workbench 'generate-samples.py'
+$factionGenerator = Join-Path $workbench 'generate-faction-voices.py'
 
 if ($Recreate -and (Test-Path -LiteralPath $pythonDirectory)) {
     Remove-Item -LiteralPath $pythonDirectory -Recurse -Force
@@ -50,7 +51,12 @@ if ($LASTEXITCODE -ne 0) {
 
 & $python $generator --verify-only
 if ($LASTEXITCODE -ne 0) {
-    throw 'The isolated voice generation environment failed verification.'
+    throw 'The isolated voice generation environment failed preset-voice verification.'
+}
+
+& $python $factionGenerator --verify-only
+if ($LASTEXITCODE -ne 0) {
+    throw 'The isolated voice generation environment failed faction-voice verification.'
 }
 
 Write-Host "Voice generation environment is ready: $python"

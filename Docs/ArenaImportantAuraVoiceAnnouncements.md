@@ -2,7 +2,7 @@
 
 ## Status
 
-The offline audio prototype is complete. The tracked workbench contains a pinned Aiden and Sohee key-ability manifest, Windows and macOS generation entry points, coverage validation, mastering, provenance reporting, and review packaging. A portable copy of the current 148 mastered clips is available under `Docs/VoiceAnnouncementReview-KeyAbilities`; setup and regeneration instructions are in `voice-announcement-workbench/README.md`.
+The offline audio prototype is complete. The tracked workbench contains a pinned Aiden and Sohee key-ability manifest, Windows and macOS generation entry points, coverage validation, mastering, provenance reporting, and review packaging. A portable copy of the current 148 mastered clips is available under `Docs/VoiceAnnouncementReview-KeyAbilities`; setup and regeneration instructions are in `voice-announcement-workbench/README.md`. The workbench also contains a pinned VoiceDesign-to-Base experiment for original Alliance and Horde commander archetypes; its first two-reference, 20-callout run remains under ignored `scratch/` pending listening approval.
 
 The addon runtime integration has not started. The review assets are not shipped sounds and are not registered with Blizzard APIs.
 
@@ -90,32 +90,32 @@ The important-aura voice feature should preserve those lifecycle principles. Sha
 
 ## Audio Generation Choice
 
-Use pinned Qwen3-TTS output as the free, reproducible baseline. Before choosing release audio, compare it against a small paid-provider bake-off; paying a modest amount is acceptable when it produces a clear improvement in pronunciation, consistency, and voice identity with documented redistribution rights.
+Use pinned Qwen3-TTS output as the free, reproducible baseline. The preferred custom-voice workflow uses `Qwen3-TTS-12Hz-1.7B-VoiceDesign` to create an original reference voice, then freezes that reference and renders every callout with `Qwen3-TTS-12Hz-1.7B-Base`. This avoids both preset-only identity and dependence on a real person's cloned voice.
 
-Preferred release-quality model:
+Current preset baseline:
 
 ```text
 Qwen3-TTS-12Hz-1.7B-CustomVoice
 ```
 
-Fallback for lower-memory development machines:
+Preferred custom-voice workflow:
 
 ```text
-Qwen3-TTS-12Hz-0.6B-CustomVoice
+Qwen3-TTS-12Hz-1.7B-VoiceDesign -> frozen reference -> Qwen3-TTS-12Hz-1.7B-Base
 ```
 
 Reasons:
 
 - Runs locally with no synthesis API charges.
-- Model and repository are published under Apache 2.0.
+- Models and repository are published under Apache 2.0.
 - Supports Chinese, English, Japanese, Korean, German, French, Russian, Portuguese, Spanish, and Italian.
-- Supports controlled delivery suitable for short tactical announcements.
+- Natural-language voice design permits an original identity without a real-person recording.
+- A frozen reference and Base clone prompt keep identity more consistent than designing every short phrase independently.
 - Generation is an offline release task, so model size does not affect addon runtime performance.
-- Built-in or synthetically designed voices avoid dependence on a real person's cloned voice.
 
-The exact model repository, revision, tokenizer revision, generation parameters, voice choice, and license snapshot must be recorded in the generated asset manifest. Model updates must be explicit rather than silently following a moving latest revision.
+The exact model repositories, revisions, tokenizer revisions, generation parameters, voice-design instructions, reference transcript and hash, seeds, and license snapshot must be recorded in the generated asset manifest or run report. Model updates and reference replacement must be explicit rather than silently following a moving latest revision.
 
-The paid shortlist and evaluation protocol are documented in `voice-announcement-workbench/PAID_VOICE_OPTIONS.md`. ElevenLabs is the first quality-first candidate, Cartesia is the preferred tactical alternative, and Resemble AI or PlayHT may be added if needed. Qwen remains the fallback until a blind ten-phrase comparison demonstrates a clear improvement with acceptable consent, commercial-use, and redistribution terms.
+The alternative-model shortlist and evaluation protocol are documented in `voice-announcement-workbench/PAID_VOICE_OPTIONS.md`. Qwen VoiceDesign plus Base cloning is the first custom-voice candidate. Kokoro is the fast local comparison, while Chatterbox and CosyVoice remain reference-based research options. ElevenLabs is only an optional hosted quality ceiling because MiniCC already uses it.
 
 ## Voice Direction
 
@@ -399,8 +399,8 @@ Verify that:
 
 - Create a small English manifest with approximately ten representative important auras.
 - Build a local Qwen3-TTS generation prototype.
-- Compare the 1.7B and 0.6B models for clarity, consistency, generation time, and hardware requirements.
-- Select and document the voice direction.
+- Compare the preset baseline with frozen VoiceDesign-to-Base clones and a lightweight Kokoro reference.
+- Select and document the voice direction and approved frozen references.
 - Produce normalized OGG files and test them with `PlaySoundFile`.
 - Register the prototype against one arena token through `C_UnitAuras.AddAuraSound`.
 
@@ -437,7 +437,7 @@ Exit criteria: one non-English locale demonstrates the complete translation, gen
 Resolve these during the prototype:
 
 - Exact Qwen model variant and pinned revision.
-- Built-in voice versus a synthetically designed reference voice.
+- Which synthetically designed Alliance and Horde reference voices pass listening review.
 - Target loudness, true-peak ceiling, sample rate, and maximum clip duration.
 - Whether `enGB` should share `enUS` assets.
 - Whether unavailable locales should expose an opt-in English fallback.

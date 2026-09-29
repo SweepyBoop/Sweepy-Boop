@@ -4,11 +4,13 @@ set -euo pipefail
 workbench="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 workbench_scratch="$workbench/scratch"
 python="$workbench_scratch/python/bin/python"
-generator="$workbench/generate-samples.py"
-manifest="$workbench/sample-manifest.json"
-scratch="$workbench_scratch"
+generator="$workbench/generate-faction-voices.py"
+validator="$workbench/validate-faction-voices.py"
+manifest="$workbench/faction-voice-manifest.json"
+scratch="$workbench_scratch/faction-voices"
 device="auto"
 open_page=true
+design_only=false
 arguments=()
 
 usage() {
@@ -16,13 +18,12 @@ usage() {
 Usage: bash $0 [options]
 
 Options:
-  --key-abilities       Generate the Aiden/Sohee key-ability pack.
-  --manifest PATH       Use a specific manifest.
-  --scratch PATH        Use a specific output directory.
   --device DEVICE       auto, cuda, mps, or cpu (default: auto).
-  --speaker ID          Generate one speaker.
+  --speaker ID          Generate one voice.
   --phrase ID           Generate one phrase.
-  --force               Regenerate selected WAV and OGG files.
+  --design-only         Create or reuse references without cloning callouts.
+  --redesign            Replace selected references and regenerate their callouts.
+  --force               Regenerate selected cloned WAV and OGG files.
   --remaster            Rebuild selected OGG files from existing WAVs.
   --no-open             Do not open the listening page.
   -h, --help            Show this help.
@@ -31,19 +32,6 @@ EOF
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --key-abilities)
-      manifest="$workbench/key-abilities-manifest.json"
-      scratch="$workbench_scratch/key-abilities"
-      shift
-      ;;
-    --manifest)
-      manifest="${2:?--manifest requires a path}"
-      shift 2
-      ;;
-    --scratch)
-      scratch="${2:?--scratch requires a path}"
-      shift 2
-      ;;
     --device)
       device="${2:?--device requires auto, cuda, mps, or cpu}"
       shift 2
@@ -52,7 +40,12 @@ while [[ $# -gt 0 ]]; do
       arguments+=("$1" "${2:?$1 requires a value}")
       shift 2
       ;;
-    --force|--remaster)
+    --design-only)
+      design_only=true
+      arguments+=("$1")
+      shift
+      ;;
+    --redesign|--force|--remaster)
       arguments+=("$1")
       shift
       ;;
@@ -72,13 +65,14 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-for required_path in "$python" "$generator" "$manifest"; do
+for required_path in "$python" "$generator" "$validator" "$manifest"; do
   if [[ ! -f "$required_path" ]]; then
     echo "Required workbench file is missing: $required_path" >&2
     exit 1
   fi
 done
 
+"$python" "$validator" --manifest "$manifest"
 export PYTORCH_ENABLE_MPS_FALLBACK=1
 base_arguments=(
   --manifest "$manifest"
@@ -90,6 +84,10 @@ if [[ ${#arguments[@]} -gt 0 ]]; then
   "$python" "$generator" "${base_arguments[@]}" "${arguments[@]}"
 else
   "$python" "$generator" "${base_arguments[@]}"
+fi
+
+if $design_only; then
+  exit 0
 fi
 
 listening_page="$scratch/listening/index.html"
