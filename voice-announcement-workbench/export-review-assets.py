@@ -112,12 +112,16 @@ def write_archive(staging: Path) -> tuple[Path, str]:
 def validate_staging(staging: Path, portable_report: dict[str, Any]) -> None:
     ogg_files = sorted((staging / "ogg").glob("*.ogg"))
     reference_files = sorted((staging / "references").glob("*.wav"))
-    if len(ogg_files) != 20:
-        raise ValueError(f"Expected 20 staged OGG files, found {len(ogg_files)}")
-    if len(reference_files) != 2:
-        raise ValueError(f"Expected 2 staged references, found {len(reference_files)}")
-    if len(portable_report.get("samples", [])) != 20:
-        raise ValueError("Portable report must contain exactly 20 samples")
+    expected_count = len(portable_report.get("samples", []))
+    if len(ogg_files) != expected_count:
+        raise ValueError(
+            f"Expected {expected_count} staged OGG files, found {len(ogg_files)}"
+        )
+    if len(reference_files) != len(EXPECTED_REFERENCES):
+        raise ValueError(
+            f"Expected {len(EXPECTED_REFERENCES)} staged references, "
+            f"found {len(reference_files)}"
+        )
 
     for sample in portable_report["samples"]:
         path = staging / sample["ogg"]["path"]
@@ -176,9 +180,11 @@ def build_staging(
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     run_report = json.loads(run_report_path.read_text(encoding="utf-8"))
     samples = run_report.get("samples", [])
-    expected_count = len(manifest["speakers"]) * len(manifest["phrases"])
-    if expected_count != 20 or len(samples) != expected_count:
-        raise ValueError(f"Expected 20 samples, found {len(samples)}")
+    voice_count = len(manifest["speakers"])
+    phrase_count = len(manifest["phrases"])
+    expected_count = voice_count * phrase_count
+    if len(samples) != expected_count:
+        raise ValueError(f"Expected {expected_count} samples, found {len(samples)}")
 
     ogg_destination = staging / "ogg"
     reference_destination = staging / "references"
@@ -292,9 +298,9 @@ def build_staging(
         "# Faction Voice Review Validation",
         "",
         "- Validation: PASS",
-        "- Voices: 2",
-        "- Callouts per voice: 10",
-        "- Mastered OGG files: 20",
+        f"- Voices: {voice_count}",
+        f"- Callouts per voice: {phrase_count}",
+        f"- Mastered OGG files: {expected_count}",
         "- Maximum mastered duration: 1.0 seconds",
         "- Generation: frozen VoiceDesign references with Base speaker embeddings",
         "- Onset handling: disposable `Ready.` prefix removed at a validated silence boundary",
@@ -336,8 +342,9 @@ def build_staging(
             [
                 "# Alliance and Horde Commander Voice Review",
                 "",
-                "This portable review pack contains 10 arena callouts for each of two original",
-                "faction-flavored voices, for 20 mastered OGG files total.",
+                f"This portable review pack contains {phrase_count} arena callouts for each of",
+                f"{voice_count} original faction-flavored voices, for {expected_count} mastered",
+                "OGG files total.",
                 "",
                 "Open `listening/index.html` in a browser to compare both voices by ability.",
                 "No Python environment or model download is required for listening.",
@@ -364,8 +371,13 @@ def build_staging(
 
     archive_path, checksum = write_archive(staging)
     validate_staging(staging, portable_report)
-    if len([path for path in staging.rglob("*") if path.is_file()]) != 29:
-        raise ValueError("Staged review pack must contain exactly 29 files")
+    staged_file_count = len([path for path in staging.rglob("*") if path.is_file()])
+    expected_staged_count = expected_count + 9
+    if staged_file_count != expected_staged_count:
+        raise ValueError(
+            f"Staged review pack must contain exactly {expected_staged_count} files; "
+            f"found {staged_file_count}"
+        )
     return len(portable_samples), archive_path, checksum
 
 

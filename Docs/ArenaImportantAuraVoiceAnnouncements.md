@@ -2,7 +2,7 @@
 
 ## Status
 
-The offline audio prototype is complete. The tracked workbench contains pinned VoiceDesign-to-Base generation for original Alliance and Horde commander archetypes, Windows and macOS entry points, validation, deterministic onset removal, mastering, provenance reporting, and guarded review export. The approved portable review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 10 callouts per voice, 20 mastered OGG files total, and the two exact frozen reference WAVs. Setup and regeneration instructions are in `voice-announcement-workbench/README.md`. The previous Aiden and Sohee review pack has been replaced, while its preset-voice generator remains available for historical comparison.
+The offline audio prototype is complete. The tracked workbench contains pinned VoiceDesign-to-Base generation for original Alliance and Horde commander archetypes, Windows and macOS entry points, validation, deterministic onset removal, mastering, provenance reporting, and guarded review export. The approved portable review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 74 callouts per voice, 148 mastered OGG files total, and the two exact frozen reference WAVs. Setup and regeneration instructions are in `voice-announcement-workbench/README.md`. The previous Aiden and Sohee review pack has been replaced, while its preset-voice generator remains available for historical comparison.
 
 The addon runtime integration has not started. The review assets are not shipped sounds and are not registered with Blizzard APIs.
 
@@ -112,7 +112,7 @@ Reasons:
 - Natural-language voice design permits an original identity without a real-person recording.
 - A frozen reference and Base speaker embedding keep identity more consistent than designing every short phrase independently.
 - Speaker-embedding-only cloning avoids the breaths, vocalizations, and exaggerated pre-roll pauses observed with full in-context continuation on one-word callouts.
-- A disposable spoken prefix is generated before each callout and removed at a detected silence boundary, preventing model onset artifacts from entering the shipped phrase.
+- A disposable spoken prefix is separated from each callout by a hard line break and removed at a detected silence boundary, preventing model onset artifacts from entering the shipped phrase.
 - Generation is an offline release task, so model size does not affect addon runtime performance.
 
 The exact model repositories, revisions, tokenizer revisions, generation parameters, voice-design instructions, reference transcript and hash, seeds, and license snapshot must be recorded in the generated asset manifest or run report. Model updates and reference replacement must be explicit rather than silently following a moving latest revision.

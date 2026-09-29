@@ -1,7 +1,8 @@
 # Alliance and Horde Commander Voice Review
 
-This portable review pack contains 10 arena callouts for each of two original
-faction-flavored voices, for 20 mastered OGG files total.
+This portable review pack contains 74 arena callouts for each of
+2 original faction-flavored voices, for 148 mastered
+OGG files total.
 
 Open `listening/index.html` in a browser to compare both voices by ability.
 No Python environment or model download is required for listening.

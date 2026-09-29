@@ -11,21 +11,26 @@ from typing import Any
 
 WORKBENCH = Path(__file__).resolve().parent
 DEFAULT_MANIFEST = WORKBENCH / "faction-voice-manifest.json"
+KEY_MANIFEST = WORKBENCH / "key-abilities-manifest.json"
 DEFAULT_OUTPUT = WORKBENCH / "scratch" / "faction-voices" / "reports" / "validation.json"
 VOICE_DESIGN_REVISION = "5ecdb67327fd37bb2e042aab12ff7391903235d3"
 CLONE_REVISION = "fd4b254389122332181a7c3db7f27e918eec64e3"
 EXPECTED_VOICES = {"alliance-commander", "horde-commander"}
-EXPECTED_PHRASES = {
-    "avenging-wrath": "Wings",
-    "combustion": "Combustion",
+APPROVED_FIRST_PHRASES = (
+    "avenging-wrath",
+    "combustion",
+    "invoke-chi-ji",
+    "metamorphosis",
+    "nullifying-shroud",
+    "bestial-wrath",
+    "coordinated-assault",
+    "touch-of-the-magi",
+    "apotheosis",
+    "spell-reflection",
+)
+SPOKEN_TEXT_OVERRIDES = {
     "invoke-chi-ji": "Cheejee",
     "metamorphosis": "Metamorphosis",
-    "nullifying-shroud": "Null Shroud",
-    "bestial-wrath": "Bestial Wrath",
-    "coordinated-assault": "Coordinated Assault",
-    "touch-of-the-magi": "Touch of the Magi",
-    "apotheosis": "Apotheosis",
-    "spell-reflection": "Reflection",
 }
 PROHIBITED_INSTRUCTION_TERMS = {
     "anduin",
@@ -52,13 +57,14 @@ EXPECTED_GENERATION = {
     "designMaxNewTokens": 512,
     "cloneMaxNewTokens": 96,
     "prefixText": "Ready.",
+    "prefixJoiner": "\n",
     "separatorMinimumSeconds": 0.12,
     "separatorSearchStartSeconds": 0.25,
     "separatorSearchEndRatio": 0.85,
     "separatorThresholdDb": -48.0,
     "separatorRelativeThreshold": 0.06,
     "preservedLeadingSilenceSeconds": 0.02,
-    "maximumCalloutSeconds": 3.0,
+    "maximumCalloutSeconds": 1.75,
     "maximumAttempts": 6,
     "retrySeedStep": 1,
 }
@@ -89,8 +95,30 @@ def require_string(value: Any, field: str, errors: list[str]) -> None:
         errors.append(f"{field} must be a non-empty string")
 
 
+def expected_catalog() -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    key_manifest = json.loads(KEY_MANIFEST.read_text(encoding="utf-8"))
+    key_phrases = key_manifest["phrases"]
+    by_id = {phrase["id"]: phrase for phrase in key_phrases}
+    if not set(APPROVED_FIRST_PHRASES) <= set(by_id):
+        raise ValueError("The key-ability catalog is missing an approved faction phrase")
+    ordered_ids = list(APPROVED_FIRST_PHRASES) + [
+        phrase["id"]
+        for phrase in key_phrases
+        if phrase["id"] not in APPROVED_FIRST_PHRASES
+    ]
+    expected: list[dict[str, Any]] = []
+    for phrase_id in ordered_ids:
+        phrase = dict(by_id[phrase_id])
+        if phrase_id in SPOKEN_TEXT_OVERRIDES:
+            phrase["spokenText"] = SPOKEN_TEXT_OVERRIDES[phrase_id]
+        expected.append(phrase)
+    return key_manifest, expected
+
+
 def validate_manifest(manifest: dict[str, Any]) -> list[str]:
     errors: list[str] = []
+    key_manifest, expected_phrases = expected_catalog()
+    expected_phrase_ids = {phrase["id"] for phrase in expected_phrases}
     if manifest.get("schemaVersion") != 1:
         errors.append("schemaVersion must be 1")
     expected_models = {
@@ -150,14 +178,19 @@ def validate_manifest(manifest: dict[str, Any]) -> list[str]:
             errors.append(f"{prefix}.seedOverrides must be an object")
         else:
             for phrase_id, seed in seed_overrides.items():
-                if phrase_id not in EXPECTED_PHRASES or not isinstance(seed, int):
+                if phrase_id not in expected_phrase_ids or not isinstance(seed, int):
                     errors.append(f"{prefix}.seedOverrides contains invalid entry {phrase_id!r}")
+
+    if manifest.get("specs") != key_manifest.get("specs"):
+        errors.append("specs must match the curated key-ability catalog")
+    if manifest.get("requiredUtilitySpellIds") != key_manifest.get("requiredUtilitySpellIds"):
+        errors.append("requiredUtilitySpellIds must match the curated key-ability catalog")
 
     phrases = manifest.get("phrases")
     if not isinstance(phrases, list):
         errors.append("phrases must be an array")
         phrases = []
-    actual_phrases: dict[str, str] = {}
+    seen_phrase_ids: set[str] = set()
     for index, phrase in enumerate(phrases):
         prefix = f"phrases[{index}]"
         if not isinstance(phrase, dict):
@@ -166,11 +199,13 @@ def validate_manifest(manifest: dict[str, Any]) -> list[str]:
         for field in ("id", "displayText", "spokenText"):
             require_string(phrase.get(field), f"{prefix}.{field}", errors)
         phrase_id = str(phrase.get("id") or "")
-        if phrase_id in actual_phrases:
+        if phrase_id in seen_phrase_ids:
             errors.append(f"duplicate phrase id: {phrase_id}")
-        actual_phrases[phrase_id] = str(phrase.get("spokenText") or "")
-    if actual_phrases != EXPECTED_PHRASES:
-        errors.append("phrases must match the established ten-callout evaluation set")
+        seen_phrase_ids.add(phrase_id)
+    if phrases != expected_phrases:
+        errors.append(
+            "phrases must match the full key-ability catalog, approved order, metadata, and wording"
+        )
     return errors
 
 
@@ -284,7 +319,12 @@ def main() -> int:
             print(f"ERROR: {error}")
         return 1
     scope = "manifest and generated run" if run_report is not None else "manifest"
-    print(f"Validated faction voice {scope}: 2 voices, 10 phrases, 20 expected clips.")
+    voice_count = len(manifest.get("speakers", []))
+    phrase_count = len(manifest.get("phrases", []))
+    print(
+        f"Validated faction voice {scope}: {voice_count} voices, "
+        f"{phrase_count} phrases, {voice_count * phrase_count} expected clips."
+    )
     print(f"Validation report: {output}")
     return 0
 

@@ -500,7 +500,10 @@ def generate_clones(
         for attempt in range(int(settings["maximumAttempts"])):
             seed = job.seed + attempt * int(settings["retrySeedStep"])
             set_seed(torch, seed, device)
-            generated_text = f"{prefix} {synthesis_text(manifest, job.spoken_text)}"
+            generated_text = (
+                f"{prefix}{settings['prefixJoiner']}"
+                f"{synthesis_text(manifest, job.spoken_text)}"
+            )
             print(
                 f"Cloning {job.output_key} with seed {seed}: {generated_text!r}",
                 flush=True,
