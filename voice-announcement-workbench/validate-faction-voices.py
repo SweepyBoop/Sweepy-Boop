@@ -19,7 +19,7 @@ EXPECTED_PHRASES = {
     "avenging-wrath": "Wings",
     "combustion": "Combustion",
     "invoke-chi-ji": "Cheejee",
-    "metamorphosis": "Meta",
+    "metamorphosis": "Metamorphosis",
     "nullifying-shroud": "Null Shroud",
     "bestial-wrath": "Bestial Wrath",
     "coordinated-assault": "Coordinated Assault",
@@ -62,12 +62,14 @@ EXPECTED_GENERATION = {
     "maximumAttempts": 6,
     "retrySeedStep": 1,
 }
+EXPECTED_TEMPO_OVERRIDES = {"coordinated-assault": 1.12}
 EXPECTED_MASTERING = {
     "integratedLufs": -16.0,
     "loudnessRange": 7.0,
     "truePeakDb": -1.5,
     "vorbisQuality": 5,
     "tempo": 1.0,
+    "maximumDurationSeconds": 1.0,
     "silenceThresholdDb": -50.0,
     "leadingSilenceSeconds": 0.02,
     "trailingSilenceSeconds": 0.08,
@@ -111,6 +113,8 @@ def validate_manifest(manifest: dict[str, Any]) -> list[str]:
         errors.append("generation settings must match the pinned plain-delivery baseline")
     if manifest.get("mastering") != EXPECTED_MASTERING:
         errors.append("mastering settings must match the established workbench baseline")
+    if manifest.get("tempoOverrides") != EXPECTED_TEMPO_OVERRIDES:
+        errors.append("tempoOverrides must match the reviewed phrase-specific settings")
 
     speakers = manifest.get("speakers")
     if not isinstance(speakers, list):
@@ -177,6 +181,8 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
             errors.append(f"run {model_key} does not match the manifest")
     if report.get("generation") != manifest.get("generation"):
         errors.append("run generation settings do not match the manifest")
+    if report.get("tempoOverrides") != manifest.get("tempoOverrides"):
+        errors.append("run tempo overrides do not match the manifest")
     references = report.get("references") or []
     samples = report.get("samples") or []
     if len(references) != len(manifest["speakers"]):
@@ -213,6 +219,23 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
                 errors.append(f"sample {key} must be mono")
             if not audio.get("sha256"):
                 errors.append(f"sample {key} is missing {field} sha256")
+        minimum_tempo = float(
+            manifest.get("tempoOverrides", {}).get(
+                sample.get("phraseId"),
+                manifest["mastering"]["tempo"],
+            )
+        )
+        effective_tempo = float(sample.get("tempo", 0))
+        if effective_tempo < minimum_tempo:
+            errors.append(
+                f"sample {key} tempo {effective_tempo} is below its minimum {minimum_tempo}"
+            )
+        mastered_duration = float((sample.get("ogg") or {}).get("durationSeconds", 0))
+        maximum_duration = float(manifest["mastering"]["maximumDurationSeconds"])
+        if mastered_duration <= 0 or mastered_duration > maximum_duration:
+            errors.append(
+                f"sample {key} duration {mastered_duration} exceeds {maximum_duration}s"
+            )
         preprocessing = sample.get("preprocessing")
         if not isinstance(preprocessing, dict):
             errors.append(f"sample {key} is missing prefix-crop provenance")

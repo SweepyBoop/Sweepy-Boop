@@ -2,7 +2,7 @@
 
 ## Decision status
 
-Qwen3-TTS Aiden and Sohee remain the reproducible preset-voice baseline. The preferred custom-voice experiment now uses the Apache-licensed Qwen VoiceDesign model to create original Alliance and Horde commander archetypes, then freezes those references and renders callouts with the Qwen Base clone model. This provides a distinct identity without duplicating MiniCC's ElevenLabs dependency or cloning a real performer.
+The Alliance Commander and Horde Commander voices are the selected and promoted review baseline. They use the Apache-licensed Qwen VoiceDesign model to create original archetypes, freeze those exact references, and render callouts with the Qwen Base clone model. This provides a distinct identity without duplicating MiniCC's ElevenLabs dependency or cloning a real performer. Aiden and Sohee remain reproducible historical preset-voice comparisons but are no longer in the committed review pack.
 
 Recommended evaluation order:
 
@@ -47,8 +47,8 @@ Use ten difficult, representative callouts before paying to render the complete 
 
 1. Wings
 2. Combustion
-3. Chee Jee
-4. Meta
+3. Cheejee
+4. Metamorphosis
 5. Null Shroud
 6. Bestial Wrath
 7. Coordinated Assault
@@ -60,7 +60,7 @@ For each candidate voice:
 
 1. Generate all ten phrases with neutral, plain delivery.
 2. Keep provider-side speed at natural pace unless the provider's normal output is unusably slow.
-3. Apply the same local silence trimming, 1.0x tempo, `-16 LUFS`, and `-1.5 dBTP` mastering used by the Qwen baseline.
+3. Apply the same onset removal, `-16 LUFS`, `-1.5 dBTP`, and at-most-1.0-second mastering contract used by the selected Qwen faction pack.
 4. Preserve the unmastered provider response separately from the mastered OGG.
 5. Randomize voice/provider labels in the listening page.
 6. Compare over representative arena combat audio, not only through headphones in silence.
@@ -102,13 +102,11 @@ API keys, billing data, private consent documents, and proprietary reference rec
 
 ## MacBook pickup workflow
 
-1. Review the committed Qwen baseline at `Docs/VoiceAnnouncementReview-KeyAbilities/listening/index.html`.
-2. Read `voice-announcement-workbench/README.md` for the local mastering environment.
-3. Generate the two designed faction references and ten-phrase clone set with `run-faction-voices.sh` or `run-faction-voices.ps1`.
-4. Compare the designed voices with the Qwen preset baseline and the ignored Kokoro experiment.
-5. Master every candidate with the same settings as the Qwen baseline.
-6. Collect feedback before generating all 74 callouts.
-7. If a hosted comparison is still needed, save API keys only in local environment variables and record the exact commercial terms.
-8. Document the winning model, reference provenance, settings, and review result before promoting any assets.
+1. Review the promoted faction pack at `Docs/VoiceAnnouncementReview-KeyAbilities/listening/index.html`.
+2. Read `voice-announcement-workbench/README.md` for the local generation and mastering environment.
+3. Regenerate the faction set with `run-faction-voices.sh` or `run-faction-voices.ps1` only when intentionally changing a prompt, reference, phrase, or mastering rule.
+4. Compare material changes against the committed pack and the historical preset/Kokoro experiments.
+5. Export an approved run with `export-review-assets.py`, which preserves the exact references and sanitized provenance.
+6. If a hosted comparison is still needed, save API keys only in local environment variables and record the exact commercial terms.
 
-No paid provider has been selected. The Qwen VoiceDesign-to-Base workflow is the preferred custom-voice path unless listening review shows a clear quality problem.
+No paid provider has been selected. The Qwen VoiceDesign-to-Base faction workflow is the selected review path.

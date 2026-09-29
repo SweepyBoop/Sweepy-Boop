@@ -2,7 +2,7 @@
 
 ## Status
 
-The offline audio prototype is complete. The tracked workbench contains a pinned Aiden and Sohee key-ability manifest, Windows and macOS generation entry points, coverage validation, mastering, provenance reporting, and review packaging. A portable copy of the current 148 mastered clips is available under `Docs/VoiceAnnouncementReview-KeyAbilities`; setup and regeneration instructions are in `voice-announcement-workbench/README.md`. The workbench also contains a pinned VoiceDesign-to-Base experiment for original Alliance and Horde commander archetypes; its first two-reference, 20-callout run remains under ignored `scratch/` pending listening approval.
+The offline audio prototype is complete. The tracked workbench contains pinned VoiceDesign-to-Base generation for original Alliance and Horde commander archetypes, Windows and macOS entry points, validation, deterministic onset removal, mastering, provenance reporting, and guarded review export. The approved portable review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 10 callouts per voice, 20 mastered OGG files total, and the two exact frozen reference WAVs. Setup and regeneration instructions are in `voice-announcement-workbench/README.md`. The previous Aiden and Sohee review pack has been replaced, while its preset-voice generator remains available for historical comparison.
 
 The addon runtime integration has not started. The review assets are not shipped sounds and are not registered with Blizzard APIs.
 

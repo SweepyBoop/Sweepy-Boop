@@ -4,20 +4,19 @@ This directory contains the reproducible, local-only Qwen3-TTS workbench for Swe
 
 ## Current results
 
-The selected key-ability pack uses:
+The selected review pack uses:
 
-- Model: `Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice`
-- Revision: `0c0e3051f131929182e2c023b9537f8b1c68adfe`
-- Voices: Aiden and Sohee
+- Models: `Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` and `Qwen/Qwen3-TTS-12Hz-1.7B-Base`
+- Voices: Alliance Commander and Horde Commander
 - Language: English
-- Delivery: plain, with no instruction prompt
-- Tempo: natural 1.0x
-- Scope: 74 curated callouts covering all 33 retail DPS and healer specs
-- Output: 148 mono 24 kHz OGG Vorbis files
+- Delivery: plain studio callouts with deterministic onset removal
+- Duration: every mastered clip is at most 1.0 seconds
+- Scope: 10 difficult representative callouts per voice
+- Output: 20 mono 24 kHz OGG Vorbis files plus the two frozen reference WAVs
 
-The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review every Aiden and Sohee clip without installing Python or downloading the model.
+The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both faction voices without installing Python or downloading the models. The previous Aiden/Sohee review pack has been replaced; its generator remains available as a historical preset-voice baseline.
 
-The next quality comparison uses two original faction-flavored voices created with Qwen VoiceDesign and then held consistent with Qwen Base voice cloning. See `faction-voice-manifest.json` and the workflow below. `PAID_VOICE_OPTIONS.md` remains a record of external and alternative models, but ElevenLabs is not the preferred path because MiniCC already uses it.
+`PAID_VOICE_OPTIONS.md` remains a record of external and alternative models, but ElevenLabs is not the preferred path because MiniCC already uses it.
 
 ## Faction voice study
 
@@ -26,7 +25,7 @@ The tracked faction-voice experiment defines two original archetypes rather than
 - `Alliance Commander`: a clear adult female studio voice with a polished midrange, even pace, precise consonants, and quiet authority.
 - `Horde Commander`: a clear adult male studio voice with a warm baritone, even pace, firm consonants, and quiet authority.
 
-Both descriptions explicitly request plain delivery with minimal emotion and exclude dramatic emphasis, character acting, accent imitation, and incidental vocalizations. The manifest also pins conservative sampling settings, bounded output lengths, terminal punctuation, and reviewed phrase-specific seed overrides. `Cheejee` is synthesized as one token with fixed seeds to avoid an exaggerated internal pause.
+Both descriptions explicitly request plain delivery with minimal emotion and exclude dramatic emphasis, character acting, accent imitation, and incidental vocalizations. The manifest also pins conservative sampling settings, bounded output lengths, terminal punctuation, reviewed phrase-specific seed overrides, and a `1.12x` minimum mastering tempo for Coordinated Assault. Every clip is capped at `1.0s`; only clips exceeding that limit receive the minimum additional tempo increase needed to fit. `Cheejee` is synthesized as one token with fixed seeds to avoid an exaggerated internal pause.
 
 `Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` creates one reference WAV for each archetype. `Qwen/Qwen3-TTS-12Hz-1.7B-Base` then extracts the speaker embedding from that frozen reference and renders the ten difficult comparison callouts. Speaker-embedding-only cloning is intentional: full in-context continuation produced breaths, vocalizations, and exaggerated pauses before very short phrases. Each synthesis request starts with a disposable `Ready.` utterance; the generator detects the following silence boundary, preserves 20 ms of clean lead-in, and masters only the callout. Failed boundary detection triggers a bounded deterministic seed retry instead of accepting or hanging on malformed audio. Existing references are never replaced unless `--redesign` is passed; changing a reference also forces regeneration of its selected callouts.
 
@@ -53,9 +52,9 @@ bash voice-announcement-workbench/run-faction-voices.sh --speaker alliance-comma
 bash voice-announcement-workbench/run-faction-voices.sh --remaster
 ```
 
-Generated references, cloned WAVs, mastered OGG files, reports, model snapshots, and the listening page remain under `voice-announcement-workbench/scratch/`. The manifest records reproducible inputs, while the run report records the exact generated reference and output hashes. Because synthesis may vary across devices, an approved reference WAV must eventually be exported with the release provenance rather than recreated from its seed alone.
+Generated working files, reports, model snapshots, and the listening page remain under `voice-announcement-workbench/scratch/`. The manifest records reproducible inputs, while the run report records the exact generated reference and output hashes. Because synthesis may vary across devices, the approved reference WAVs are also committed in the portable review pack rather than recreated from their seeds alone.
 
-The revised 2026-09-29 Apple Metal run produced two references and 20 mastered comparison clips. The current Alliance reference SHA-256 is `DCB7499F00A62577615FBB2DE32DC156BFCC56A13ECF1B5068BFC6F56C316519`; the current Horde reference SHA-256 is `50E52EB550990CAA497B2DF10C040297989F6990C2A5BE8143973DE733C886FB`. Superseded references are preserved under `scratch/faction-voices/references/archive/`. These local artifacts do not promote either voice into shipped assets.
+The promoted 2026-09-29 Apple Metal run contains two references and 20 mastered clips. The Alliance reference SHA-256 is `DCB7499F00A62577615FBB2DE32DC156BFCC56A13ECF1B5068BFC6F56C316519`; the Horde reference SHA-256 is `50E52EB550990CAA497B2DF10C040297989F6990C2A5BE8143973DE733C886FB`. Superseded references remain only under ignored `scratch/faction-voices/references/archive/`. The committed files are review assets and are not shipped by the addon.
 
 ## Repository contract
 
@@ -189,7 +188,7 @@ On Windows:
   .\voice-announcement-workbench\export-review-assets.py
 ```
 
-This replaces only `Docs/VoiceAnnouncementReview-KeyAbilities`, copies all 148 mastered OGG files and the listening page, removes machine-specific paths from the review report, and creates a portable ZIP plus its SHA-256 file. Review the resulting changes before committing them.
+This replaces only `Docs/VoiceAnnouncementReview-KeyAbilities`, copies the 20 approved mastered OGG files, two frozen reference WAVs, listening page, manifest, and sanitized provenance, and creates `alliance-horde-faction-voices-1.0s.zip` plus its SHA-256 file. The exporter builds and validates a staging tree before replacing the prior review pack. Review the resulting changes before committing them.
 
 ## Generate on Windows
 

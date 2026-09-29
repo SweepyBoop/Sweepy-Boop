@@ -292,6 +292,19 @@ def synthesis_text(manifest: dict[str, Any], text: str) -> str:
     return text
 
 
+def mastering_manifest(manifest: dict[str, Any], phrase_id: str) -> dict[str, Any]:
+    tempo = float(
+        (manifest.get("tempoOverrides") or {}).get(
+            phrase_id,
+            manifest["mastering"]["tempo"],
+        )
+    )
+    return {
+        **manifest,
+        "mastering": {**manifest["mastering"], "tempo": tempo},
+    }
+
+
 def extract_prefixed_callout(
     waveform: Any,
     sample_rate: int,
@@ -527,6 +540,18 @@ def generate_clones(
                 "attempt": attempt + 1,
                 "generatedText": generated_text,
             }
+            sidecar = {
+                "outputKey": job.output_key,
+                "seed": seed,
+                "generationSeconds": timings[job.output_key],
+                "paddedWavSha256": sha256(padded_path),
+                "rawWavSha256": sha256(raw_path),
+                "preprocessing": preprocessing[job.output_key],
+            }
+            (padded_dir / f"{job.output_key}.json").write_text(
+                json.dumps(sidecar, indent=2) + "\n",
+                encoding="utf-8",
+            )
             break
         else:
             raise RuntimeError(
@@ -618,6 +643,20 @@ def main() -> int:
         dtype_name,
         force_clones,
     )
+    for job in jobs:
+        sidecar_path = padded_dir / f"{job.output_key}.json"
+        if job.output_key in preprocessing or not sidecar_path.is_file():
+            continue
+        sidecar = json.loads(sidecar_path.read_text(encoding="utf-8"))
+        padded_path = padded_dir / f"{job.output_key}.wav"
+        raw_path = raw_dir / f"{job.output_key}.wav"
+        if (
+            sidecar.get("paddedWavSha256") == sha256(padded_path)
+            and sidecar.get("rawWavSha256") == sha256(raw_path)
+        ):
+            timings[job.output_key] = sidecar.get("generationSeconds")
+            selected_seeds[job.output_key] = int(sidecar["seed"])
+            preprocessing[job.output_key] = sidecar["preprocessing"]
 
     import imageio_ffmpeg
 
@@ -634,24 +673,57 @@ def main() -> int:
             raise RuntimeError(f"Expected prefixed sample is missing: {padded_path}")
         if not raw_path.is_file():
             raise RuntimeError(f"Expected cropped sample is missing: {raw_path}")
+        sample_manifest = mastering_manifest(manifest, job.phrase_id)
+        effective_tempo = float(sample_manifest["mastering"]["tempo"])
         mastering = None
         if force_clones or args.remaster or not ogg_path.is_file():
-            print(f"Mastering {job.output_key}...")
-            mastering = master_audio(ffmpeg, raw_path, ogg_path, manifest)
+            print(f"Mastering {job.output_key} at {effective_tempo}x...")
+            mastering = master_audio(ffmpeg, raw_path, ogg_path, sample_manifest)
+        padded_info = inspect_audio(padded_path)
         raw_info = inspect_audio(raw_path)
         ogg_info = inspect_audio(ogg_path)
+        maximum_duration = float(manifest["mastering"]["maximumDurationSeconds"])
+        if mastering is not None:
+            for _ in range(3):
+                if ogg_info["durationSeconds"] <= maximum_duration:
+                    break
+                effective_tempo = round(
+                    effective_tempo
+                    * ogg_info["durationSeconds"]
+                    / (maximum_duration * 0.98),
+                    6,
+                )
+                sample_manifest["mastering"]["tempo"] = effective_tempo
+                print(
+                    f"Remastering {job.output_key} at {effective_tempo}x "
+                    f"to satisfy the {maximum_duration}s cap..."
+                )
+                mastering = master_audio(ffmpeg, raw_path, ogg_path, sample_manifest)
+                ogg_info = inspect_audio(ogg_path)
         previous = previous_samples.get(job.output_key)
-        if previous and previous.get("ogg", {}).get("sha256") == ogg_info["sha256"]:
-            if mastering is None:
-                mastering = previous.get("mastering")
+        same_generation = bool(
+            previous
+            and previous.get("paddedWav", {}).get("sha256") == padded_info["sha256"]
+            and previous.get("rawWav", {}).get("sha256") == raw_info["sha256"]
+        )
+        if same_generation:
             if job.output_key not in timings:
                 timings[job.output_key] = previous.get("generationSeconds")
             if job.output_key not in selected_seeds:
                 selected_seeds[job.output_key] = int(previous.get("seed", job.seed))
             if job.output_key not in preprocessing and previous.get("preprocessing"):
                 preprocessing[job.output_key] = previous["preprocessing"]
+        if previous and previous.get("ogg", {}).get("sha256") == ogg_info["sha256"]:
+            if mastering is None:
+                mastering = previous.get("mastering")
+                effective_tempo = float(previous.get("tempo", effective_tempo))
         if ogg_info["channels"] != 1 or ogg_info["durationSeconds"] <= 0:
             raise RuntimeError(f"Invalid mastered audio properties: {ogg_path}")
+        if ogg_info["durationSeconds"] > maximum_duration:
+            raise RuntimeError(
+                f"Mastered audio exceeds {maximum_duration}s for {ogg_path}: "
+                f"{ogg_info['durationSeconds']}s"
+            )
         if mastering:
             output_tp = float(mastering["finalPass"]["output_tp"])
             if output_tp > float(manifest["mastering"]["truePeakDb"]) + 0.1:
@@ -673,10 +745,11 @@ def main() -> int:
                     for item in references
                     if item["speakerId"] == job.speaker_id
                 ),
-                "paddedWav": inspect_audio(padded_path),
+                "paddedWav": padded_info,
                 "rawWav": raw_info,
                 "ogg": ogg_info,
                 "preprocessing": preprocessing.get(job.output_key),
+                "tempo": effective_tempo,
                 "mastering": mastering,
             }
         )
@@ -692,6 +765,7 @@ def main() -> int:
         "language": manifest["language"],
         "generation": manifest["generation"],
         "mastering": manifest["mastering"],
+        "tempoOverrides": manifest.get("tempoOverrides", {}),
         "environment": details,
         "references": references,
         "samples": samples,
