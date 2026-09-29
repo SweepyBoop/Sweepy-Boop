@@ -15,21 +15,26 @@
     "loudnessRange": 7.0,
     "truePeakDb": -1.5,
     "vorbisQuality": 5,
-    "tempo": 1.2,
+    "tempo": 1.0,
     "silenceThresholdDb": -50.0,
     "leadingSilenceSeconds": 0.02,
     "trailingSilenceSeconds": 0.08
   },
   "speakers": [
     {
-      "id": "ryan",
-      "qwenName": "Ryan",
-      "description": "Dynamic native-English male voice with strong rhythmic drive."
-    },
-    {
       "id": "aiden",
       "qwenName": "Aiden",
       "description": "Sunny native-English male voice with a clear midrange."
+    },
+    {
+      "id": "vivian",
+      "qwenName": "Vivian",
+      "description": "Bright, slightly edgy young female voice; native Chinese."
+    },
+    {
+      "id": "serena",
+      "qwenName": "Serena",
+      "description": "Warm, gentle young female voice; native Chinese."
     }
   ],
   "phrases": [

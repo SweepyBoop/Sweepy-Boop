@@ -33,6 +33,9 @@ class SampleJob:
     phrase_id: str
     display_text: str
     spoken_text: str
+    category: str | None
+    spell_ids: tuple[int, ...]
+    spec_ids: tuple[int, ...]
     output_key: str
     seed: int
 
@@ -41,6 +44,11 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--scratch", type=Path, default=DEFAULT_SCRATCH)
+    parser.add_argument(
+        "--model-cache",
+        type=Path,
+        help="Shared model-cache directory; defaults to <scratch>/models.",
+    )
     parser.add_argument("--speaker", help="Generate one speaker by manifest id or Qwen name.")
     parser.add_argument("--phrase", help="Generate one phrase by manifest id.")
     parser.add_argument("--force", action="store_true", help="Regenerate existing WAV and OGG files.")
@@ -166,6 +174,13 @@ def build_jobs(manifest: dict[str, Any], speaker_filter: str | None, phrase_filt
         if normalized_speaker_filter not in (None, speaker_id.casefold(), speaker_name.casefold()):
             continue
 
+        spoken_text_overrides = speaker.get("spokenTextOverrides") or {}
+        if not isinstance(spoken_text_overrides, dict):
+            raise ValueError(f"Speaker {speaker_id} spokenTextOverrides must be an object.")
+        seed_overrides = speaker.get("seedOverrides") or {}
+        if not isinstance(seed_overrides, dict):
+            raise ValueError(f"Speaker {speaker_id} seedOverrides must be an object.")
+
         for phrase_index, phrase in enumerate(manifest["phrases"]):
             phrase_id = str(phrase["id"])
             if normalized_phrase_filter not in (None, phrase_id.casefold()):
@@ -182,9 +197,21 @@ def build_jobs(manifest: dict[str, Any], speaker_filter: str | None, phrase_filt
                     speaker_description=str(speaker.get("description") or ""),
                     phrase_id=phrase_id,
                     display_text=str(phrase["displayText"]),
-                    spoken_text=str(phrase.get("spokenText") or phrase["displayText"]),
+                    spoken_text=str(
+                        spoken_text_overrides.get(phrase_id)
+                        or phrase.get("spokenText")
+                        or phrase["displayText"]
+                    ),
+                    category=str(phrase["category"]) if phrase.get("category") else None,
+                    spell_ids=tuple(int(spell_id) for spell_id in phrase.get("spellIds", [])),
+                    spec_ids=tuple(int(spec_id) for spec_id in phrase.get("specIds", [])),
                     output_key=output_key,
-                    seed=base_seed + speaker_index * 1000 + phrase_index,
+                    seed=int(
+                        seed_overrides.get(
+                            phrase_id,
+                            base_seed + speaker_index * 1000 + phrase_index,
+                        )
+                    ),
                 )
             )
 
@@ -320,11 +347,11 @@ def master_audio(ffmpeg: Path, raw_path: Path, ogg_path: Path, manifest: dict[st
     }
 
 
-def download_model_snapshot(manifest: dict[str, Any], scratch: Path) -> Path:
+def download_model_snapshot(manifest: dict[str, Any], model_cache: Path) -> Path:
     from huggingface_hub import snapshot_download
 
     model_spec = manifest["model"]
-    snapshot_directory = scratch / "models" / (
+    snapshot_directory = model_cache / (
         "qwen3-tts-1.7b-customvoice-" + model_spec["revision"][:12]
     )
     os.environ.setdefault("HF_XET_HIGH_PERFORMANCE", "1")
@@ -359,7 +386,7 @@ def generate_raw_samples(
     jobs: list[SampleJob],
     raw_directory: Path,
     manifest: dict[str, Any],
-    scratch: Path,
+    model_cache: Path,
     force: bool,
 ) -> dict[str, float]:
     pending = [job for job in jobs if force or not (raw_directory / f"{job.output_key}.wav").is_file()]
@@ -375,11 +402,11 @@ def generate_raw_samples(
     if not torch.cuda.is_available():
         raise RuntimeError("CUDA is required for the 1.7B sample generation run.")
 
-    os.environ["HF_HOME"] = str(scratch / "models")
-    os.environ["HF_HUB_CACHE"] = str(scratch / "models" / "hub")
+    os.environ["HF_HOME"] = str(model_cache)
+    os.environ["HF_HUB_CACHE"] = str(model_cache / "hub")
 
     model_spec = manifest["model"]
-    snapshot_directory = download_model_snapshot(manifest, scratch)
+    snapshot_directory = download_model_snapshot(manifest, model_cache)
     print(f"Loading pinned model from {snapshot_directory}...")
     model = Qwen3TTSModel.from_pretrained(
         str(snapshot_directory),
@@ -430,11 +457,25 @@ def write_listening_page(samples: list[dict[str, Any]], output_path: Path, manif
 
     speaker_ids = [speaker["id"] for speaker in manifest["speakers"]]
     speaker_names = {speaker["id"]: speaker["qwenName"] for speaker in manifest["speakers"]}
-    phrase_names = {phrase["id"]: phrase["displayText"] for phrase in manifest["phrases"]}
+    spec_names = {int(spec["id"]): spec["name"] for spec in manifest.get("specs", [])}
 
     rows: list[str] = []
     for phrase in manifest["phrases"]:
         phrase_id = phrase["id"]
+        details: list[str] = []
+        if phrase.get("category"):
+            details.append(str(phrase["category"]).title())
+        if phrase.get("spellIds"):
+            details.append("Spell IDs " + ", ".join(str(value) for value in phrase["spellIds"]))
+        if phrase.get("specIds"):
+            details.append(
+                "Specs "
+                + ", ".join(
+                    html.escape(spec_names.get(int(spec_id), str(spec_id)))
+                    for spec_id in phrase["specIds"]
+                )
+            )
+        detail_html = f'<p class="phrase-details">{" | ".join(details)}</p>' if details else ""
         cells: list[str] = []
         for speaker_id in speaker_ids:
             sample = by_phrase.get(phrase_id, {}).get(speaker_id)
@@ -453,7 +494,8 @@ def write_listening_page(samples: list[dict[str, Any]], output_path: Path, manif
             )
         rows.append(
             '<section class="phrase">'
-            f'<h2>{html.escape(phrase_names[phrase_id])}</h2>'
+            f'<h2>{html.escape(str(phrase["displayText"]))}</h2>'
+            f'{detail_html}'
             '<div class="comparison">'
             + ''.join(
                 f'<article><h3>{html.escape(speaker_names[speaker_id])}</h3>{cells[index]}</article>'
@@ -464,6 +506,12 @@ def write_listening_page(samples: list[dict[str, Any]], output_path: Path, manif
 
     model = html.escape(manifest["model"]["repository"])
     revision = html.escape(manifest["model"]["revision"][:12])
+    speaker_summary = html.escape(
+        ", ".join(str(speaker["qwenName"]) for speaker in manifest["speakers"])
+    )
+    pack_description = html.escape(
+        str((manifest.get("pack") or {}).get("description") or "Arena callout voice comparison.")
+    )
     document = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -479,7 +527,8 @@ header {{ padding: 30px 34px 24px; border-bottom: 1px solid var(--line); }}
 h1 {{ margin: 0 0 8px; font: 700 34px/1.1 "Palatino Linotype", Georgia, serif; }}
 header p {{ margin: 0; color: var(--muted); line-height: 1.5; }}
 .phrase {{ padding: 24px 34px 28px; border-bottom: 1px solid var(--line); }}
-h2 {{ margin: 0 0 16px; font-size: 20px; }}
+h2 {{ margin: 0 0 6px; font-size: 20px; }}
+.phrase-details {{ margin: 0 0 16px; color: var(--muted); font-size: 12px; line-height: 1.45; }}
 .comparison {{ display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; }}
 article {{ min-width: 0; }}
 h3 {{ margin: 0 0 8px; color: var(--accent); font-size: 14px; text-transform: uppercase; }}
@@ -495,7 +544,8 @@ footer {{ padding: 20px 34px; color: var(--muted); font-size: 12px; line-height:
 <main>
 <header>
 <h1>Arena Callout Voice Study</h1>
-<p>Compare Ryan and Aiden using mastered OGG files. Raw model WAV files remain linked below each sample.</p>
+<p>{pack_description}</p>
+<p>Compare {speaker_summary} using mastered OGG files. Raw model WAV files remain linked below each sample.</p>
 </header>
 {''.join(rows)}
 <footer>Model: {model}<br>Revision: {revision}<br>Mastering target: -16 LUFS, -1.5 dBTP, mono OGG Vorbis.</footer>
@@ -510,9 +560,11 @@ footer {{ padding: 20px 34px; color: var(--muted); font-size: 12px; line-height:
 def main() -> int:
     args = parse_args()
     scratch = args.scratch.resolve()
+    model_cache = (args.model_cache or scratch / "models").resolve()
     scratch.mkdir(parents=True, exist_ok=True)
-    os.environ.setdefault("HF_HOME", str(scratch / "models"))
-    os.environ.setdefault("HF_HUB_CACHE", str(scratch / "models" / "hub"))
+    model_cache.mkdir(parents=True, exist_ok=True)
+    os.environ.setdefault("HF_HOME", str(model_cache))
+    os.environ.setdefault("HF_HUB_CACHE", str(model_cache / "hub"))
 
     details = environment_details(scratch)
     print(f"CUDA device: {details['cuda']['device']}")
@@ -526,7 +578,7 @@ def main() -> int:
     raw_directory = scratch / "raw-wav"
     ogg_directory = scratch / "ogg"
     reports_directory = scratch / "reports"
-    timings = generate_raw_samples(jobs, raw_directory, manifest, scratch, args.force)
+    timings = generate_raw_samples(jobs, raw_directory, manifest, model_cache, args.force)
 
     ffmpeg = Path(details["ffmpeg"]["path"])
     samples: list[dict[str, Any]] = []
@@ -561,6 +613,9 @@ def main() -> int:
                 "phraseId": job.phrase_id,
                 "displayText": job.display_text,
                 "spokenText": job.spoken_text,
+                "category": job.category,
+                "spellIds": list(job.spell_ids),
+                "specIds": list(job.spec_ids),
                 "seed": job.seed,
                 "generationSeconds": timings.get(job.output_key),
                 "rawWav": raw_info,
@@ -572,6 +627,9 @@ def main() -> int:
     report = {
         "createdUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "manifest": str(args.manifest.resolve()),
+        "modelCache": str(model_cache),
+        "pack": manifest.get("pack"),
+        "specs": manifest.get("specs", []),
         "model": manifest["model"],
         "locale": manifest["locale"],
         "language": manifest["language"],
