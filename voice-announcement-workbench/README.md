@@ -23,10 +23,12 @@ The next quality comparison uses two original faction-flavored voices created wi
 
 The tracked faction-voice experiment defines two original archetypes rather than imitating named Warcraft characters or performers:
 
-- `Alliance Commander`: a mature female battlefield commander with a clear, polished midrange, precise consonants, calm authority, and restrained urgency.
-- `Horde Commander`: a mature male battlefield commander with a resonant warm baritone, firm consonants, controlled power, and measured urgency.
+- `Alliance Commander`: a clear adult female studio voice with a polished midrange, even pace, precise consonants, and quiet authority.
+- `Horde Commander`: a clear adult male studio voice with a warm baritone, even pace, firm consonants, and quiet authority.
 
-`Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` creates one reference WAV for each archetype. `Qwen/Qwen3-TTS-12Hz-1.7B-Base` then creates a reusable clone prompt from that frozen reference and renders the ten difficult comparison callouts. Existing references are never replaced unless `--redesign` is passed; changing a reference also forces regeneration of its selected callouts.
+Both descriptions explicitly request plain delivery with minimal emotion and exclude dramatic emphasis, character acting, accent imitation, and incidental vocalizations. The manifest also pins conservative sampling settings, bounded output lengths, terminal punctuation, and reviewed phrase-specific seed overrides. `Cheejee` is synthesized as one token with fixed seeds to avoid an exaggerated internal pause.
+
+`Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` creates one reference WAV for each archetype. `Qwen/Qwen3-TTS-12Hz-1.7B-Base` then extracts the speaker embedding from that frozen reference and renders the ten difficult comparison callouts. Speaker-embedding-only cloning is intentional: full in-context continuation produced breaths, vocalizations, and exaggerated pauses before very short phrases. Existing references are never replaced unless `--redesign` is passed; changing a reference also forces regeneration of its selected callouts.
 
 Validate and generate the complete comparison on macOS:
 
@@ -53,7 +55,7 @@ bash voice-announcement-workbench/run-faction-voices.sh --remaster
 
 Generated references, cloned WAVs, mastered OGG files, reports, model snapshots, and the listening page remain under `voice-announcement-workbench/scratch/`. The manifest records reproducible inputs, while the run report records the exact generated reference and output hashes. Because synthesis may vary across devices, an approved reference WAV must eventually be exported with the release provenance rather than recreated from its seed alone.
 
-The initial 2026-09-29 Apple Metal run produced two references and 20 mastered comparison clips. Its Alliance reference SHA-256 is `6DEAF7B768C5C14DCA9FC827D917ABDCB5EDEA0152D411C979DCD399BDC71071`; its Horde reference SHA-256 is `B93F1AE406841BDDB80E65DAC2B39CF3CAE57653569ECE1A8443ABD0FCC598C7`. These identify the current local listening run but do not promote either voice into shipped assets.
+The revised 2026-09-29 Apple Metal run produced two references and 20 mastered comparison clips. The current Alliance reference SHA-256 is `DCB7499F00A62577615FBB2DE32DC156BFCC56A13ECF1B5068BFC6F56C316519`; the current Horde reference SHA-256 is `50E52EB550990CAA497B2DF10C040297989F6990C2A5BE8143973DE733C886FB`. Superseded references are preserved under `scratch/faction-voices/references/archive/`. These local artifacts do not promote either voice into shipped assets.
 
 ## Repository contract
 

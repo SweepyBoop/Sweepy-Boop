@@ -19,6 +19,22 @@
   "locale": "enUS",
   "language": "English",
   "seed": 20260929,
+  "generation": {
+    "doSample": true,
+    "temperature": 0.6,
+    "topP": 0.8,
+    "topK": 20,
+    "repetitionPenalty": 1.05,
+    "subtalkerDoSample": true,
+    "subtalkerTemperature": 0.6,
+    "subtalkerTopP": 0.8,
+    "subtalkerTopK": 20,
+    "nonStreamingMode": true,
+    "cloneMode": "x-vector-only",
+    "appendTerminalPunctuation": true,
+    "designMaxNewTokens": 512,
+    "cloneMaxNewTokens": 96
+  },
   "mastering": {
     "integratedLufs": -16.0,
     "loudnessRange": 7.0,
@@ -33,26 +49,32 @@
     {
       "id": "alliance-commander",
       "displayName": "Alliance Commander",
-      "description": "Original female battlefield-commander archetype with a clear, polished midrange.",
-      "designInstruction": "A mature female battlefield commander with a clear, polished midrange, precise consonants, calm authority, restrained urgency, and a lightly formal cadence. Bright enough to remain intelligible over dense combat audio. Natural and human, with no breathiness, theatrical flourishes, exaggerated accent, or resemblance to a known character or performer.",
-      "referenceText": "Hold the line and watch the eastern ridge. When the signal comes, strike quickly, guard your allies, and report every change with calm precision.",
+      "description": "Original female announcer archetype with a clear, polished midrange and quiet authority.",
+      "designInstruction": "A clear adult female voice in a neutral studio recording. Plain, steady, and concise delivery with a polished midrange, even pace, precise consonants, and quiet authority. Minimal emotion and no dramatic emphasis, breathiness, theatrical flourishes, character acting, accent imitation, or resemblance to a known character or performer.",
+      "referenceText": "Today we are checking a clear and steady voice. Each short phrase should begin promptly, remain even in tone, and end without extra sound.",
       "designSeed": 20260929,
-      "cloneSeedOffset": 0
+      "cloneSeedOffset": 0,
+      "seedOverrides": {
+        "invoke-chi-ji": 20260930
+      }
     },
     {
       "id": "horde-commander",
       "displayName": "Horde Commander",
-      "description": "Original male battlefield-commander archetype with a resonant, warm baritone.",
-      "designInstruction": "A mature male battlefield commander with a resonant warm baritone, firm consonants, controlled power, and measured urgency. Slightly rugged while remaining clean and intelligible over dense combat audio. Natural and human, without growling, excessive gravel, theatrical shouting, exaggerated accent, or resemblance to a known character or performer.",
-      "referenceText": "Hold the line and watch the eastern ridge. When the signal comes, strike quickly, guard your allies, and report every change with calm precision.",
+      "description": "Original male announcer archetype with a clear, warm baritone and quiet authority.",
+      "designInstruction": "A clear adult male voice in a neutral studio recording. Plain, steady, and concise delivery with a warm baritone, even pace, firm consonants, and quiet authority. Minimal emotion and no dramatic emphasis, growling, gravel, vocalizations, character acting, accent imitation, or resemblance to a known character or performer.",
+      "referenceText": "Today we are checking a clear and steady voice. Each short phrase should begin promptly, remain even in tone, and end without extra sound.",
       "designSeed": 20261929,
-      "cloneSeedOffset": 1000
+      "cloneSeedOffset": 1000,
+      "seedOverrides": {
+        "invoke-chi-ji": 20261930
+      }
     }
   ],
   "phrases": [
     { "id": "avenging-wrath", "displayText": "Avenging Wrath / Crusade", "spokenText": "Wings" },
     { "id": "combustion", "displayText": "Combustion", "spokenText": "Combustion" },
-    { "id": "invoke-chi-ji", "displayText": "Invoke Chi-Ji, the Red Crane", "spokenText": "Chee Jee" },
+    { "id": "invoke-chi-ji", "displayText": "Invoke Chi-Ji, the Red Crane", "spokenText": "Cheejee" },
     { "id": "metamorphosis", "displayText": "Metamorphosis", "spokenText": "Meta" },
     { "id": "nullifying-shroud", "displayText": "Nullifying Shroud", "spokenText": "Null Shroud" },
     { "id": "bestial-wrath", "displayText": "Bestial Wrath", "spokenText": "Bestial Wrath" },

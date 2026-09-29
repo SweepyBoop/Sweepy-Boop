@@ -10,13 +10,14 @@ import importlib.metadata
 import json
 import os
 import platform
+import shutil
 import sys
 import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from audio_workbench import inspect_audio, master_audio, run, write_listening_page
+from audio_workbench import inspect_audio, master_audio, run, sha256, write_listening_page
 
 
 WORKBENCH = Path(__file__).resolve().parent
@@ -211,7 +212,12 @@ def build_jobs(
                     display_text=str(phrase["displayText"]),
                     spoken_text=str(phrase["spokenText"]),
                     output_key=f"{speaker_id}-{phrase_id}",
-                    seed=base_seed + int(speaker["cloneSeedOffset"]) + phrase_index,
+                    seed=int(
+                        (speaker.get("seedOverrides") or {}).get(
+                            phrase_id,
+                            base_seed + int(speaker["cloneSeedOffset"]) + phrase_index,
+                        )
+                    ),
                 )
             )
     return jobs
@@ -263,6 +269,29 @@ def text_sha256(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest().upper()
 
 
+def generation_arguments(manifest: dict[str, Any], max_tokens_key: str) -> dict[str, Any]:
+    settings = manifest["generation"]
+    return {
+        "do_sample": bool(settings["doSample"]),
+        "temperature": float(settings["temperature"]),
+        "top_p": float(settings["topP"]),
+        "top_k": int(settings["topK"]),
+        "repetition_penalty": float(settings["repetitionPenalty"]),
+        "subtalker_dosample": bool(settings["subtalkerDoSample"]),
+        "subtalker_temperature": float(settings["subtalkerTemperature"]),
+        "subtalker_top_p": float(settings["subtalkerTopP"]),
+        "subtalker_top_k": int(settings["subtalkerTopK"]),
+        "non_streaming_mode": bool(settings["nonStreamingMode"]),
+        "max_new_tokens": int(settings[max_tokens_key]),
+    }
+
+
+def synthesis_text(manifest: dict[str, Any], text: str) -> str:
+    if manifest["generation"].get("appendTerminalPunctuation") and text[-1:] not in ".!?":
+        return text + "."
+    return text
+
+
 def ensure_references(
     manifest: dict[str, Any],
     speakers: list[dict[str, Any]],
@@ -298,17 +327,25 @@ def ensure_references(
             seed = int(speaker["designSeed"])
             set_seed(torch, seed, device)
             started = time.perf_counter()
-            print(f"Designing {speaker['id']} reference...")
+            print(f"Designing {speaker['id']} reference...", flush=True)
             wavs, sample_rate = model.generate_voice_design(
                 text=str(speaker["referenceText"]),
                 language=manifest["language"],
                 instruct=str(speaker["designInstruction"]),
+                **generation_arguments(manifest, "designMaxNewTokens"),
             )
             if device.startswith("cuda"):
                 torch.cuda.synchronize()
             elif device == "mps":
                 torch.mps.synchronize()
             path = reference_dir / f"{speaker['id']}.wav"
+            if path.is_file():
+                archive_dir = reference_dir / "archive"
+                archive_dir.mkdir(parents=True, exist_ok=True)
+                archived_path = archive_dir / f"{speaker['id']}-{sha256(path)[:12]}.wav"
+                if not archived_path.exists():
+                    shutil.copy2(path, archived_path)
+                    print(f"Archived previous reference at {archived_path}")
             sf.write(path, wavs[0], sample_rate, subtype="PCM_24")
             timings[str(speaker["id"])] = round(time.perf_counter() - started, 3)
         del model
@@ -367,11 +404,12 @@ def generate_clones(
         attn_implementation=model_spec["attentionImplementation"],
     )
     speaker_by_id = {str(speaker["id"]): speaker for speaker in speakers}
+    x_vector_only = manifest["generation"]["cloneMode"] == "x-vector-only"
     prompts = {
         speaker_id: model.create_voice_clone_prompt(
             ref_audio=str(reference_dir / f"{speaker_id}.wav"),
-            ref_text=str(speaker["referenceText"]),
-            x_vector_only_mode=False,
+            ref_text=None if x_vector_only else str(speaker["referenceText"]),
+            x_vector_only_mode=x_vector_only,
         )
         for speaker_id, speaker in speaker_by_id.items()
     }
@@ -381,11 +419,12 @@ def generate_clones(
     for job in pending:
         set_seed(torch, job.seed, device)
         started = time.perf_counter()
-        print(f"Cloning {job.output_key}: {job.spoken_text!r}")
+        print(f"Cloning {job.output_key}: {job.spoken_text!r}", flush=True)
         wavs, sample_rate = model.generate_voice_clone(
-            text=job.spoken_text,
+            text=synthesis_text(manifest, job.spoken_text),
             language=manifest["language"],
             voice_clone_prompt=prompts[job.speaker_id],
+            **generation_arguments(manifest, "cloneMaxNewTokens"),
         )
         if device.startswith("cuda"):
             torch.cuda.synchronize()
@@ -459,6 +498,7 @@ def main() -> int:
             "createdUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
             "manifest": str(args.manifest.resolve()),
             "voiceDesignModel": manifest["voiceDesignModel"],
+            "generation": manifest["generation"],
             "environment": details,
             "references": references,
         }
@@ -519,6 +559,7 @@ def main() -> int:
                 "phraseId": job.phrase_id,
                 "displayText": job.display_text,
                 "spokenText": job.spoken_text,
+                "synthesisText": synthesis_text(manifest, job.spoken_text),
                 "seed": job.seed,
                 "generationSeconds": timings.get(job.output_key),
                 "referenceSha256": next(
@@ -541,6 +582,7 @@ def main() -> int:
         "cloneModel": manifest["cloneModel"],
         "locale": manifest["locale"],
         "language": manifest["language"],
+        "generation": manifest["generation"],
         "mastering": manifest["mastering"],
         "environment": details,
         "references": references,

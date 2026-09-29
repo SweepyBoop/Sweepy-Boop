@@ -18,7 +18,7 @@ EXPECTED_VOICES = {"alliance-commander", "horde-commander"}
 EXPECTED_PHRASES = {
     "avenging-wrath": "Wings",
     "combustion": "Combustion",
-    "invoke-chi-ji": "Chee Jee",
+    "invoke-chi-ji": "Cheejee",
     "metamorphosis": "Meta",
     "nullifying-shroud": "Null Shroud",
     "bestial-wrath": "Bestial Wrath",
@@ -35,6 +35,22 @@ PROHIBITED_INSTRUCTION_TERMS = {
     "thrall",
     "varian",
     "warcraft",
+}
+EXPECTED_GENERATION = {
+    "doSample": True,
+    "temperature": 0.6,
+    "topP": 0.8,
+    "topK": 20,
+    "repetitionPenalty": 1.05,
+    "subtalkerDoSample": True,
+    "subtalkerTemperature": 0.6,
+    "subtalkerTopP": 0.8,
+    "subtalkerTopK": 20,
+    "nonStreamingMode": True,
+    "cloneMode": "x-vector-only",
+    "appendTerminalPunctuation": True,
+    "designMaxNewTokens": 512,
+    "cloneMaxNewTokens": 96,
 }
 EXPECTED_MASTERING = {
     "integratedLufs": -16.0,
@@ -81,6 +97,8 @@ def validate_manifest(manifest: dict[str, Any]) -> list[str]:
         if model.get("attentionImplementation") != "sdpa":
             errors.append(f"{field}.attentionImplementation must be sdpa")
 
+    if manifest.get("generation") != EXPECTED_GENERATION:
+        errors.append("generation settings must match the pinned plain-delivery baseline")
     if manifest.get("mastering") != EXPECTED_MASTERING:
         errors.append("mastering settings must match the established workbench baseline")
 
@@ -113,6 +131,13 @@ def validate_manifest(manifest: dict[str, Any]) -> list[str]:
             design_seeds.add(design_seed)
         except (KeyError, TypeError, ValueError):
             errors.append(f"{prefix} must have integer designSeed and cloneSeedOffset")
+        seed_overrides = speaker.get("seedOverrides") or {}
+        if not isinstance(seed_overrides, dict):
+            errors.append(f"{prefix}.seedOverrides must be an object")
+        else:
+            for phrase_id, seed in seed_overrides.items():
+                if phrase_id not in EXPECTED_PHRASES or not isinstance(seed, int):
+                    errors.append(f"{prefix}.seedOverrides contains invalid entry {phrase_id!r}")
 
     phrases = manifest.get("phrases")
     if not isinstance(phrases, list):
@@ -140,6 +165,8 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
     for model_key in ("voiceDesignModel", "cloneModel"):
         if report.get(model_key) != manifest.get(model_key):
             errors.append(f"run {model_key} does not match the manifest")
+    if report.get("generation") != manifest.get("generation"):
+        errors.append("run generation settings do not match the manifest")
     references = report.get("references") or []
     samples = report.get("samples") or []
     if len(references) != len(manifest["speakers"]):
