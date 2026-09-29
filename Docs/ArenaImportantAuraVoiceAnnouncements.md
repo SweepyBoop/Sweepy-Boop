@@ -90,7 +90,7 @@ The important-aura voice feature should preserve those lifecycle principles. Sha
 
 ## Audio Generation Choice
 
-Use Qwen3-TTS as the default offline generator.
+Use pinned Qwen3-TTS output as the free, reproducible baseline. Before choosing release audio, compare it against a small paid-provider bake-off; paying a modest amount is acceptable when it produces a clear improvement in pronunciation, consistency, and voice identity with documented redistribution rights.
 
 Preferred release-quality model:
 
@@ -114,6 +114,8 @@ Reasons:
 - Built-in or synthetically designed voices avoid dependence on a real person's cloned voice.
 
 The exact model repository, revision, tokenizer revision, generation parameters, voice choice, and license snapshot must be recorded in the generated asset manifest. Model updates must be explicit rather than silently following a moving latest revision.
+
+The paid shortlist and evaluation protocol are documented in `voice-announcement-workbench/PAID_VOICE_OPTIONS.md`. ElevenLabs is the first quality-first candidate, Cartesia is the preferred tactical alternative, and Resemble AI or PlayHT may be added if needed. Qwen remains the fallback until a blind ten-phrase comparison demonstrates a clear improvement with acceptable consent, commercial-use, and redistribution terms.
 
 ## Voice Direction
 

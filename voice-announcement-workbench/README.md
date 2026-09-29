@@ -17,6 +17,8 @@ The selected key-ability pack uses:
 
 The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review every Aiden and Sohee clip without installing Python or downloading the model.
 
+For the next quality comparison, see `PAID_VOICE_OPTIONS.md`. It documents ElevenLabs, Cartesia, Resemble AI, PlayHT, public-figure voice restrictions, provenance requirements, and the recommended ten-phrase blind bake-off.
+
 ## Repository contract
 
 - Keep durable documentation, manifests, and automation in this directory.
