@@ -51,6 +51,16 @@ EXPECTED_GENERATION = {
     "appendTerminalPunctuation": True,
     "designMaxNewTokens": 512,
     "cloneMaxNewTokens": 96,
+    "prefixText": "Ready.",
+    "separatorMinimumSeconds": 0.12,
+    "separatorSearchStartSeconds": 0.25,
+    "separatorSearchEndRatio": 0.85,
+    "separatorThresholdDb": -48.0,
+    "separatorRelativeThreshold": 0.06,
+    "preservedLeadingSilenceSeconds": 0.02,
+    "maximumCalloutSeconds": 3.0,
+    "maximumAttempts": 6,
+    "retrySeedStep": 1,
 }
 EXPECTED_MASTERING = {
     "integratedLufs": -16.0,
@@ -194,7 +204,7 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
         speaker_id = str(sample.get("speakerId") or "")
         if sample.get("referenceSha256") != reference_hashes.get(speaker_id):
             errors.append(f"sample {key} does not reference the frozen voice hash")
-        for field in ("rawWav", "ogg"):
+        for field in ("paddedWav", "rawWav", "ogg"):
             audio = sample.get(field) or {}
             path = Path(str(audio.get("path") or ""))
             if not path.is_file():
@@ -203,6 +213,15 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
                 errors.append(f"sample {key} must be mono")
             if not audio.get("sha256"):
                 errors.append(f"sample {key} is missing {field} sha256")
+        preprocessing = sample.get("preprocessing")
+        if not isinstance(preprocessing, dict):
+            errors.append(f"sample {key} is missing prefix-crop provenance")
+        else:
+            duration = float(preprocessing.get("croppedDurationSeconds", 0))
+            if duration <= 0 or duration > float(manifest["generation"]["maximumCalloutSeconds"]):
+                errors.append(f"sample {key} has invalid cropped duration {duration}")
+            if int(preprocessing.get("attempt", 0)) < 1:
+                errors.append(f"sample {key} has invalid generation attempt")
         mastering = sample.get("mastering")
         if not isinstance(mastering, dict):
             errors.append(f"sample {key} is missing mastering provenance")

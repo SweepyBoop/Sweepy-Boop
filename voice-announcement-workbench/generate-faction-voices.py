@@ -292,6 +292,58 @@ def synthesis_text(manifest: dict[str, Any], text: str) -> str:
     return text
 
 
+def extract_prefixed_callout(
+    waveform: Any,
+    sample_rate: int,
+    settings: dict[str, Any],
+) -> tuple[Any, dict[str, Any]]:
+    import numpy as np
+
+    samples = np.asarray(waveform, dtype=np.float32).squeeze()
+    frame_samples = max(1, int(sample_rate * 0.01))
+    rms = np.sqrt(
+        np.convolve(samples * samples, np.ones(frame_samples) / frame_samples, mode="same")
+    )
+    peak_rms = float(np.max(rms)) if rms.size else 0.0
+    threshold = max(
+        peak_rms * float(settings["separatorRelativeThreshold"]),
+        10 ** (float(settings["separatorThresholdDb"]) / 20),
+    )
+    silent = rms < threshold
+    minimum_samples = int(sample_rate * float(settings["separatorMinimumSeconds"]))
+    search_start = int(sample_rate * float(settings["separatorSearchStartSeconds"]))
+    search_end = int(len(samples) * float(settings["separatorSearchEndRatio"]))
+
+    separator: tuple[int, int] | None = None
+    start: int | None = None
+    for index, is_silent in enumerate(silent):
+        if is_silent and start is None:
+            start = index
+        elif not is_silent and start is not None:
+            if start >= search_start and index <= search_end and index - start >= minimum_samples:
+                separator = (start, index)
+                break
+            start = None
+    if separator is None:
+        raise ValueError("generated audio did not contain the required prefix separator")
+
+    preserved = int(sample_rate * float(settings["preservedLeadingSilenceSeconds"]))
+    crop_start = max(0, separator[1] - preserved)
+    callout = samples[crop_start:]
+    duration = len(callout) / sample_rate
+    if duration <= 0 or duration > float(settings["maximumCalloutSeconds"]):
+        raise ValueError(f"cropped callout duration {duration:.3f}s is outside the allowed range")
+    return callout, {
+        "prefixText": settings["prefixText"],
+        "separatorStartSeconds": round(separator[0] / sample_rate, 6),
+        "separatorEndSeconds": round(separator[1] / sample_rate, 6),
+        "separatorDurationSeconds": round((separator[1] - separator[0]) / sample_rate, 6),
+        "cropStartSeconds": round(crop_start / sample_rate, 6),
+        "croppedDurationSeconds": round(duration, 6),
+        "thresholdRms": round(threshold, 8),
+    }
+
+
 def ensure_references(
     manifest: dict[str, Any],
     speakers: list[dict[str, Any]],
@@ -378,20 +430,28 @@ def generate_clones(
     speakers: list[dict[str, Any]],
     jobs: list[CloneJob],
     reference_dir: Path,
+    padded_dir: Path,
     raw_dir: Path,
     model_cache: Path,
     device: str,
     dtype_name: str,
     force: bool,
-) -> dict[str, float]:
+) -> tuple[dict[str, float], dict[str, int], dict[str, dict[str, Any]]]:
+    import numpy as np
     import soundfile as sf
     import torch
     from qwen_tts import Qwen3TTSModel
 
-    pending = [job for job in jobs if force or not (raw_dir / f"{job.output_key}.wav").is_file()]
+    pending = [
+        job
+        for job in jobs
+        if force
+        or not (raw_dir / f"{job.output_key}.wav").is_file()
+        or not (padded_dir / f"{job.output_key}.wav").is_file()
+    ]
     if not pending:
         print("All selected cloned WAV files already exist; synthesis is not needed.")
-        return {}
+        return {}, {}, {}
 
     model_spec = manifest["cloneModel"]
     model_path = snapshot_directory(model_spec, model_cache, "base")
@@ -415,31 +475,67 @@ def generate_clones(
     }
 
     raw_dir.mkdir(parents=True, exist_ok=True)
+    padded_dir.mkdir(parents=True, exist_ok=True)
+    rejected_dir = padded_dir / "rejected"
     timings: dict[str, float] = {}
+    selected_seeds: dict[str, int] = {}
+    preprocessing: dict[str, dict[str, Any]] = {}
+    settings = manifest["generation"]
+    prefix = str(settings["prefixText"]).strip()
     for job in pending:
-        set_seed(torch, job.seed, device)
         started = time.perf_counter()
-        print(f"Cloning {job.output_key}: {job.spoken_text!r}", flush=True)
-        wavs, sample_rate = model.generate_voice_clone(
-            text=synthesis_text(manifest, job.spoken_text),
-            language=manifest["language"],
-            voice_clone_prompt=prompts[job.speaker_id],
-            **generation_arguments(manifest, "cloneMaxNewTokens"),
-        )
-        if device.startswith("cuda"):
-            torch.cuda.synchronize()
-        elif device == "mps":
-            torch.mps.synchronize()
-        sf.write(
-            raw_dir / f"{job.output_key}.wav",
-            wavs[0],
-            sample_rate,
-            subtype="PCM_24",
-        )
-        timings[job.output_key] = round(time.perf_counter() - started, 3)
+        for attempt in range(int(settings["maximumAttempts"])):
+            seed = job.seed + attempt * int(settings["retrySeedStep"])
+            set_seed(torch, seed, device)
+            generated_text = f"{prefix} {synthesis_text(manifest, job.spoken_text)}"
+            print(
+                f"Cloning {job.output_key} with seed {seed}: {generated_text!r}",
+                flush=True,
+            )
+            wavs, sample_rate = model.generate_voice_clone(
+                text=generated_text,
+                language=manifest["language"],
+                voice_clone_prompt=prompts[job.speaker_id],
+                **generation_arguments(manifest, "cloneMaxNewTokens"),
+            )
+            if device.startswith("cuda"):
+                torch.cuda.synchronize()
+            elif device == "mps":
+                torch.mps.synchronize()
+            padded_waveform = np.asarray(wavs[0], dtype=np.float32).squeeze()
+            try:
+                callout, crop = extract_prefixed_callout(
+                    padded_waveform,
+                    sample_rate,
+                    settings,
+                )
+            except ValueError as error:
+                rejected_dir.mkdir(parents=True, exist_ok=True)
+                rejected_path = rejected_dir / f"{job.output_key}-seed-{seed}.wav"
+                sf.write(rejected_path, padded_waveform, sample_rate, subtype="PCM_24")
+                print(f"Rejected seed {seed} for {job.output_key}: {error}", flush=True)
+                continue
+
+            padded_path = padded_dir / f"{job.output_key}.wav"
+            raw_path = raw_dir / f"{job.output_key}.wav"
+            sf.write(padded_path, padded_waveform, sample_rate, subtype="PCM_24")
+            sf.write(raw_path, callout, sample_rate, subtype="PCM_24")
+            timings[job.output_key] = round(time.perf_counter() - started, 3)
+            selected_seeds[job.output_key] = seed
+            preprocessing[job.output_key] = {
+                **crop,
+                "attempt": attempt + 1,
+                "generatedText": generated_text,
+            }
+            break
+        else:
+            raise RuntimeError(
+                f"Could not isolate a clean prefixed callout for {job.output_key} "
+                f"after {settings['maximumAttempts']} attempts."
+            )
     del model
     release_device_memory(torch, device)
-    return timings
+    return timings, selected_seeds, preprocessing
 
 
 def main() -> int:
@@ -462,6 +558,7 @@ def main() -> int:
     speakers = select_speakers(manifest, args.speaker)
     jobs = build_jobs(manifest, speakers, args.phrase)
     reference_dir = scratch / "references"
+    padded_dir = scratch / "padded-wav"
     raw_dir = scratch / "raw-wav"
     ogg_dir = scratch / "ogg"
     reports_dir = scratch / "reports"
@@ -509,11 +606,12 @@ def main() -> int:
         return 0
 
     force_clones = args.force or args.redesign
-    timings = generate_clones(
+    timings, selected_seeds, preprocessing = generate_clones(
         manifest,
         speakers,
         jobs,
         reference_dir,
+        padded_dir,
         raw_dir,
         model_cache,
         device,
@@ -529,10 +627,13 @@ def main() -> int:
     }
     samples: list[dict[str, Any]] = []
     for job in jobs:
+        padded_path = padded_dir / f"{job.output_key}.wav"
         raw_path = raw_dir / f"{job.output_key}.wav"
         ogg_path = ogg_dir / f"{job.output_key}.ogg"
+        if not padded_path.is_file():
+            raise RuntimeError(f"Expected prefixed sample is missing: {padded_path}")
         if not raw_path.is_file():
-            raise RuntimeError(f"Expected cloned sample is missing: {raw_path}")
+            raise RuntimeError(f"Expected cropped sample is missing: {raw_path}")
         mastering = None
         if force_clones or args.remaster or not ogg_path.is_file():
             print(f"Mastering {job.output_key}...")
@@ -545,6 +646,10 @@ def main() -> int:
                 mastering = previous.get("mastering")
             if job.output_key not in timings:
                 timings[job.output_key] = previous.get("generationSeconds")
+            if job.output_key not in selected_seeds:
+                selected_seeds[job.output_key] = int(previous.get("seed", job.seed))
+            if job.output_key not in preprocessing and previous.get("preprocessing"):
+                preprocessing[job.output_key] = previous["preprocessing"]
         if ogg_info["channels"] != 1 or ogg_info["durationSeconds"] <= 0:
             raise RuntimeError(f"Invalid mastered audio properties: {ogg_path}")
         if mastering:
@@ -560,15 +665,18 @@ def main() -> int:
                 "displayText": job.display_text,
                 "spokenText": job.spoken_text,
                 "synthesisText": synthesis_text(manifest, job.spoken_text),
-                "seed": job.seed,
+                "generatedText": preprocessing.get(job.output_key, {}).get("generatedText"),
+                "seed": selected_seeds.get(job.output_key, job.seed),
                 "generationSeconds": timings.get(job.output_key),
                 "referenceSha256": next(
                     item["audio"]["sha256"]
                     for item in references
                     if item["speakerId"] == job.speaker_id
                 ),
+                "paddedWav": inspect_audio(padded_path),
                 "rawWav": raw_info,
                 "ogg": ogg_info,
+                "preprocessing": preprocessing.get(job.output_key),
                 "mastering": mastering,
             }
         )

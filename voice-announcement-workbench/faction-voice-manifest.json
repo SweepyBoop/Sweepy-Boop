@@ -33,7 +33,17 @@
     "cloneMode": "x-vector-only",
     "appendTerminalPunctuation": true,
     "designMaxNewTokens": 512,
-    "cloneMaxNewTokens": 96
+    "cloneMaxNewTokens": 96,
+    "prefixText": "Ready.",
+    "separatorMinimumSeconds": 0.12,
+    "separatorSearchStartSeconds": 0.25,
+    "separatorSearchEndRatio": 0.85,
+    "separatorThresholdDb": -48.0,
+    "separatorRelativeThreshold": 0.06,
+    "preservedLeadingSilenceSeconds": 0.02,
+    "maximumCalloutSeconds": 3.0,
+    "maximumAttempts": 6,
+    "retrySeedStep": 1
   },
   "mastering": {
     "integratedLufs": -16.0,
@@ -55,7 +65,9 @@
       "designSeed": 20260929,
       "cloneSeedOffset": 0,
       "seedOverrides": {
-        "invoke-chi-ji": 20260930
+        "avenging-wrath": 20261129,
+        "invoke-chi-ji": 20261131,
+        "metamorphosis": 20261130
       }
     },
     {
@@ -67,7 +79,9 @@
       "designSeed": 20261929,
       "cloneSeedOffset": 1000,
       "seedOverrides": {
-        "invoke-chi-ji": 20261930
+        "avenging-wrath": 20262130,
+        "invoke-chi-ji": 20262131,
+        "metamorphosis": 20262130
       }
     }
   ],

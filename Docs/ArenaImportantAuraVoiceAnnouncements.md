@@ -112,6 +112,7 @@ Reasons:
 - Natural-language voice design permits an original identity without a real-person recording.
 - A frozen reference and Base speaker embedding keep identity more consistent than designing every short phrase independently.
 - Speaker-embedding-only cloning avoids the breaths, vocalizations, and exaggerated pre-roll pauses observed with full in-context continuation on one-word callouts.
+- A disposable spoken prefix is generated before each callout and removed at a detected silence boundary, preventing model onset artifacts from entering the shipped phrase.
 - Generation is an offline release task, so model size does not affect addon runtime performance.
 
 The exact model repositories, revisions, tokenizer revisions, generation parameters, voice-design instructions, reference transcript and hash, seeds, and license snapshot must be recorded in the generated asset manifest or run report. Model updates and reference replacement must be explicit rather than silently following a moving latest revision.

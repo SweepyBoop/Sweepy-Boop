@@ -28,7 +28,7 @@ The tracked faction-voice experiment defines two original archetypes rather than
 
 Both descriptions explicitly request plain delivery with minimal emotion and exclude dramatic emphasis, character acting, accent imitation, and incidental vocalizations. The manifest also pins conservative sampling settings, bounded output lengths, terminal punctuation, and reviewed phrase-specific seed overrides. `Cheejee` is synthesized as one token with fixed seeds to avoid an exaggerated internal pause.
 
-`Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` creates one reference WAV for each archetype. `Qwen/Qwen3-TTS-12Hz-1.7B-Base` then extracts the speaker embedding from that frozen reference and renders the ten difficult comparison callouts. Speaker-embedding-only cloning is intentional: full in-context continuation produced breaths, vocalizations, and exaggerated pauses before very short phrases. Existing references are never replaced unless `--redesign` is passed; changing a reference also forces regeneration of its selected callouts.
+`Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` creates one reference WAV for each archetype. `Qwen/Qwen3-TTS-12Hz-1.7B-Base` then extracts the speaker embedding from that frozen reference and renders the ten difficult comparison callouts. Speaker-embedding-only cloning is intentional: full in-context continuation produced breaths, vocalizations, and exaggerated pauses before very short phrases. Each synthesis request starts with a disposable `Ready.` utterance; the generator detects the following silence boundary, preserves 20 ms of clean lead-in, and masters only the callout. Failed boundary detection triggers a bounded deterministic seed retry instead of accepting or hanging on malformed audio. Existing references are never replaced unless `--redesign` is passed; changing a reference also forces regeneration of its selected callouts.
 
 Validate and generate the complete comparison on macOS:
 
@@ -236,7 +236,8 @@ voice-announcement-workbench/scratch/
 |   `-- reports/                    # environment, coverage, and run provenance
 |-- faction-voices/
 |   |-- references/                 # frozen VoiceDesign reference WAVs
-|   |-- raw-wav/                    # untouched Base-cloned callouts
+|   |-- padded-wav/                 # untouched `Ready.` plus callout generations
+|   |-- raw-wav/                    # deterministically cropped callouts
 |   |-- ogg/                        # mastered faction-voice callouts
 |   |-- listening/index.html        # two-voice comparison page
 |   `-- reports/                    # environment, reference, run, and validation data
