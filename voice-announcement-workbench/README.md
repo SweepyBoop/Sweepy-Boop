@@ -2,9 +2,9 @@
 
 This directory contains the reproducible, local-only Qwen3-TTS workbench for SweepyBoop arena important-aura announcements. It does not change addon runtime code or promote experimental files into the addon's shipped sound directories.
 
-## Current results
+## Current Qwen prototype
 
-The selected review pack uses:
+The committed historical review pack uses:
 
 - Models: `Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` and `Qwen/Qwen3-TTS-12Hz-1.7B-Base`
 - Voices: Alliance Commander and Horde Commander
@@ -14,11 +14,25 @@ The selected review pack uses:
 - Scope: 74 curated arena callouts per voice, covering all 33 retail DPS and healer specs
 - Output: 148 mono 24 kHz OGG Vorbis files plus the two frozen reference WAVs
 
-The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both faction voices without installing Python or downloading the models. The previous Aiden/Sohee review pack has been replaced; its generator remains available as a historical preset-voice baseline.
+The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both faction voices without installing Python or downloading the models. This pack documents the Qwen experiment but is not the recommended production source because short-callout generation required fragile onset removal and alignment. The previous Aiden/Sohee pack remains reproducible through its generator as a historical preset-voice baseline.
 
-`PAID_VOICE_OPTIONS.md` remains a record of external and alternative models, but ElevenLabs is not the preferred path because MiniCC already uses it.
+`PAID_VOICE_OPTIONS.md` records the evaluated alternatives and next-step rationale. ElevenLabs is not preferred because MiniCC already uses it.
 
-## Faction voice study
+## Next model: CosyVoice 3
+
+The next prototype should use pinned `FunAudioLLM/Fun-CosyVoice3-0.5B-2512` with the existing synthetic Alliance and Horde references. Start with zero-shot cloning and the same ten difficult phrases, generating each phrase multiple times to measure failure rate rather than selecting only the best take.
+
+Acceptance criteria:
+
+- Clean word onsets without sacrificial prefixes, semantic cropping, or manual repair.
+- Stable speaker identity and cadence across repeated generations.
+- Correct game-term pronunciation, using English phoneme inpainting where needed.
+- Natural mastered duration at or below 1.0 seconds.
+- Apache 2.0 model and dependency provenance captured before promotion.
+
+If zero-shot cloning is not stable enough, build a reviewed sentence-length synthetic corpus for each voice and evaluate CosyVoice speaker adaptation or fine-tuning. Chatterbox Turbo is the secondary local candidate; Cartesia is the preferred hosted fallback.
+
+## Historical Qwen faction voice study
 
 The tracked faction-voice experiment defines two original archetypes rather than imitating named Warcraft characters or performers:
 

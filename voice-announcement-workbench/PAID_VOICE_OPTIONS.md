@@ -2,15 +2,16 @@
 
 ## Decision status
 
-The Alliance Commander and Horde Commander voices are the selected and promoted review baseline. They use the Apache-licensed Qwen VoiceDesign model to create original archetypes, freeze those exact references, and render callouts with the Qwen Base clone model. This provides a distinct identity without duplicating MiniCC's ElevenLabs dependency or cloning a real performer. Aiden and Sohee remain reproducible historical preset-voice comparisons but are no longer in the committed review pack.
+The Alliance Commander and Horde Commander Qwen pack is retained as the historical custom-voice baseline, but it is not the production recommendation. Repeated short-utterance onset artifacts and fragile alignment made Qwen Base cloning too costly to stabilize. The next evaluation will use the Apache-licensed CosyVoice 3 model with the same synthetic references.
 
 Recommended evaluation order:
 
-1. Qwen VoiceDesign plus Qwen Base cloning as the primary original-voice candidate.
-2. Kokoro as a fast stock-voice comparison, with special scrutiny because its model card identifies short utterances as a weakness.
-3. Chatterbox Turbo only with a clearly documented built-in voice provenance or an owned reference recording.
-4. CosyVoice 3 if multilingual pronunciation control warrants its additional setup complexity.
-5. Cartesia or ElevenLabs only as optional hosted quality ceilings after local candidates are reviewed.
+1. CosyVoice 3 zero-shot cloning as the primary local candidate.
+2. CosyVoice 3 speaker adaptation or fine-tuning if zero-shot identity is not stable enough.
+3. Cartesia as the preferred hosted fallback for crisp short-form speech.
+4. Chatterbox Turbo as a secondary local comparison.
+5. Qwen and Kokoro as historical baselines only.
+6. ElevenLabs only as an optional quality ceiling because MiniCC already uses it.
 
 Provider model names, prices, quotas, and commercial terms change frequently. Record the exact values visible in the account at generation time rather than treating this document as a pricing source.
 
@@ -18,12 +19,12 @@ Provider model names, prices, quotas, and commercial terms change frequently. Re
 
 | Provider | Primary advantage | Main concern | Recommended role |
 | --- | --- | --- | --- |
-| Qwen VoiceDesign + Base | Original voice design, strong multilingual support, local generation, and Apache 2.0 model terms | Requires two model snapshots and a frozen reference workflow | Primary custom-voice bake-off |
-| Kokoro | Tiny, fast, Apache 2.0, and many built-in voices | Its model card warns that utterances below 10-20 tokens may be weak | Fast stock-voice comparison |
-| Chatterbox Turbo | Strong naturalness, expressive control, local inference, and MIT model terms | Custom identity depends on reference-audio rights; built-in voice provenance needs confirmation | Licensed-reference comparison |
-| CosyVoice 3 | Multilingual cloning and direct pronunciation controls | More setup and reference-voice governance work | Localization research path |
+| CosyVoice 3 | Apache 2.0, multilingual cloning, speaker adaptation, and English phoneme controls | More setup and training workflow work | Primary production candidate |
+| Cartesia | Crisp low-latency speech with useful pacing and emotion control | Hosted service; redistribution rights must be confirmed | Preferred hosted fallback |
+| Chatterbox Turbo | Strong naturalness, expressive control, local inference, and MIT model terms | Short-callout stability still requires measurement | Secondary local comparison |
+| Qwen VoiceDesign + Base | Original local voice design and Apache 2.0 model terms | Short utterances required fragile prefix generation and alignment | Historical custom-voice baseline |
+| Kokoro | Tiny, fast, Apache 2.0, and many built-in voices | Its model card warns that utterances below 10-20 tokens may be weak | Historical stock-voice baseline |
 | ElevenLabs | Strong naturalness, cloning quality, voice library, and mature API | Duplicates MiniCC's provider choice; paid-tier rights and voice eligibility must be checked | Optional hosted ceiling only |
-| Cartesia | Crisp low-latency speech with useful pacing and emotion control | Voice-library and commercial terms must be checked for redistribution | Optional tactical hosted ceiling |
 | Fish Speech or F5-TTS | Capable local customization | Current pretrained-weight terms are non-commercial or research-restricted | Do not use for distributed addon audio |
 
 Do not select a provider only from long-form demos. Arena callouts expose different failure modes: one-word duration, incorrect stress, clipped consonants, invented syllables, and inconsistent delivery across consecutive alerts.
@@ -60,7 +61,7 @@ For each candidate voice:
 
 1. Generate all ten phrases with neutral, plain delivery.
 2. Keep provider-side speed at natural pace unless the provider's normal output is unusably slow.
-3. Apply the same onset removal, `-16 LUFS`, `-1.5 dBTP`, and at-most-1.0-second mastering contract used by the selected Qwen faction pack.
+3. Apply the same `-16 LUFS`, `-1.5 dBTP`, and at-most-1.0-second mastering contract used by the historical Qwen faction pack, but reject any model that requires semantic onset cropping.
 4. Preserve the unmastered provider response separately from the mastered OGG.
 5. Randomize voice/provider labels in the listening page.
 6. Compare over representative arena combat audio, not only through headphones in silence.
@@ -71,18 +72,16 @@ The catalog contains little text, so evaluation should consume only a few thousa
 
 ## Recommended comparison matrix
 
-Evaluate at least these six rows in two manageable rounds:
+Evaluate at least these four rows first:
 
 | Candidate | Source | Purpose |
 | --- | --- | --- |
-| Aiden | Pinned Qwen CustomVoice baseline | Male preset baseline |
-| Sohee | Pinned Qwen CustomVoice baseline | Female preset baseline |
-| Alliance Commander | Pinned Qwen VoiceDesign reference and Base clone | Original female candidate |
-| Horde Commander | Pinned Qwen VoiceDesign reference and Base clone | Original male candidate |
-| Heart | Pinned Kokoro stock voice | Fast female comparison |
-| Fenrir | Pinned Kokoro stock voice | Fast male comparison |
+| Alliance Commander | CosyVoice 3 with the approved synthetic reference | Primary female candidate |
+| Horde Commander | CosyVoice 3 with the approved synthetic reference | Primary male candidate |
+| Alliance Commander | Historical Qwen VoiceDesign/Base pack | Failure-rate and identity baseline |
+| Horde Commander | Historical Qwen VoiceDesign/Base pack | Failure-rate and identity baseline |
 
-Test a hosted provider only if none of the local candidates is release quality or an external ceiling is needed to calibrate the review.
+Generate each test phrase multiple times and compare failure rate, not only the best take. Test Cartesia next if CosyVoice zero-shot or adapted output is not release quality.
 
 ## Provenance requirements
 
@@ -109,4 +108,4 @@ API keys, billing data, private consent documents, and proprietary reference rec
 5. Export an approved run with `export-review-assets.py`, which preserves the exact references and sanitized provenance.
 6. If a hosted comparison is still needed, save API keys only in local environment variables and record the exact commercial terms.
 
-No paid provider has been selected. The Qwen VoiceDesign-to-Base faction workflow is the selected review path.
+No paid provider has been selected. CosyVoice 3 is the selected next evaluation path; the Qwen VoiceDesign-to-Base pack remains historical comparison material.
