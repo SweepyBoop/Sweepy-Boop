@@ -19,6 +19,23 @@ court. Today we are checking a clear and steady voice...
 
 The Horde reference transcribes correctly, but its downstream short-callout pronunciation remains inconsistent. This means reference quality is a likely contributor, but not necessarily the only source of errors.
 
+## Mirrored female reference experiment
+
+A new experimental Alliance reference was created with CosyVoice voice conversion:
+
+- Source content/cadence: the clean Horde reference.
+- Target timbre: the Alliance reference after removing the leading `court.` segment at `1.314s`.
+- Converted reference: `scratch/cosyvoice3-vc-references/alliance-vc-from-horde-v1.wav`
+- Converted SHA-256: `A0E6C113E480BE5EBE9B2C5DF5E7DA76806B2EE0D36F9529EAB2A58AEFF2A6E5`
+
+The converted reference is exactly 10 seconds and transcribes to the same complete sentence as Horde. Four Instruct2 Take 1 samples were generated directly and transcribe as Adrenaline, Turtle, Fort Brew, and Tyrant. Compare the current Alliance, converted Alliance, and Horde references/callouts at:
+
+```text
+scratch/cosyvoice3-vc-alliance-test/listening/three-way.html
+```
+
+Human review must confirm that the conversion sounds clearly female, retains the desired Horde cadence, and improves the callouts before this reference replaces anything.
+
 ## Options for the next session
 
 ### 1. Replace both references with clean licensed recordings (recommended)
