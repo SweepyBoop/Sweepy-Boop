@@ -1,6 +1,6 @@
 # Voice Announcement Workbench
 
-This directory contains the reproducible, local-only Qwen3-TTS workbench for SweepyBoop arena important-aura announcements. It does not change addon runtime code or promote experimental files into the addon's shipped sound directories.
+This directory contains reproducible, local-only TTS experiments for SweepyBoop arena important-aura announcements. It does not change addon runtime code or promote experimental files into the addon's shipped sound directories.
 
 ## Current Qwen prototype
 
@@ -20,7 +20,9 @@ The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. 
 
 ## Next model: CosyVoice 3
 
-The next prototype should use pinned `FunAudioLLM/Fun-CosyVoice3-0.5B-2512` with the existing synthetic Alliance and Horde references. Start with zero-shot cloning and the same ten difficult phrases, generating each phrase multiple times to measure failure rate rather than selecting only the best take.
+See `COSYVOICE_NEXT_STEPS.md` for the current findings, reference-audio options, and the recommended next experiment.
+
+The next prototype uses pinned `FunAudioLLM/Fun-CosyVoice3-0.5B-2512` with the existing synthetic Alliance and Horde references. The first bake-off covers four phrases that exposed Qwen failures, two prompt-audio modes, and two takes per mode, for 32 samples that measure repeatability rather than selecting only the best take.
 
 Acceptance criteria:
 
@@ -31,6 +33,34 @@ Acceptance criteria:
 - Apache 2.0 model and dependency provenance captured before promotion.
 
 If zero-shot cloning is not stable enough, build a reviewed sentence-length synthetic corpus for each voice and evaluate CosyVoice speaker adaptation or fine-tuning. Chatterbox Turbo is the secondary local candidate; Cartesia is the preferred hosted fallback.
+
+Set up the isolated CPU environment and run the comparison on macOS:
+
+```bash
+bash voice-announcement-workbench/setup-cosyvoice3-environment.sh
+bash voice-announcement-workbench/run-cosyvoice3-samples.sh
+```
+
+A smaller smoke test can select one voice, phrase, mode, or take:
+
+```bash
+bash voice-announcement-workbench/run-cosyvoice3-samples.sh \
+  --speaker alliance-commander \
+  --phrase adrenaline-rush \
+  --take 1
+```
+
+CosyVoice currently uses CPU rather than Apple Metal on macOS. The setup script installs a pinned local Python 3.10 runtime when one is not already available. Its source checkout, environment, model snapshot, generated WAV/OGG files, reports, and listening page remain under ignored `voice-announcement-workbench/scratch/cosyvoice3-*` paths.
+
+The first 32-sample run completed successfully. All 16 Instruct2 samples were naturally below one second (`0.29-0.72s`), while 9 of 16 cross-lingual samples exceeded one second and several exhibited repetition or incorrect content. Instruct2 Take 1 is the selected mode because listening review found more clipped initial syllables in Take 2. Regenerating Take 1 with the same seeds produced identical raw WAV hashes on the same machine; OGG container hashes may still change when remastered. Review the original bake-off at `scratch/cosyvoice3-zero-shot/listening/index.html`.
+
+The full 74-callout-per-voice Instruct2 Take 1 candidate is generated under `scratch/cosyvoice3-instruct2/`. Run or resume it with:
+
+```bash
+bash voice-announcement-workbench/run-cosyvoice3-samples.sh --full
+```
+
+The full-pack manifest enforces the one-second mastered duration cap. Review all 148 candidates at `scratch/cosyvoice3-instruct2/listening/index.html`. Automated Whisper transcription triage flagged 45 clips below the conservative similarity threshold, including several likely repetition or pronunciation failures; this is a review queue rather than an automatic rejection because very short game terms are difficult for ASR. No CosyVoice output has been promoted.
 
 ## Historical Qwen faction voice study
 

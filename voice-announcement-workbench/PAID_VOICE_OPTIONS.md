@@ -2,7 +2,7 @@
 
 ## Decision status
 
-The Alliance Commander and Horde Commander Qwen pack is retained as the historical custom-voice baseline, but it is not the production recommendation. Repeated short-utterance onset artifacts and fragile alignment made Qwen Base cloning too costly to stabilize. The next evaluation will use the Apache-licensed CosyVoice 3 model with the same synthetic references.
+The Alliance Commander and Horde Commander Qwen pack is retained as the historical custom-voice baseline, but it is not the production recommendation. Repeated short-utterance onset artifacts and fragile alignment made Qwen Base cloning too costly to stabilize. The next evaluation uses the Apache-licensed CosyVoice 3 model with the same synthetic references. Its initial 32-sample bake-off found that Instruct2 produced all 16 samples below one second, while cross-lingual mode failed the duration target in 9 of 16 cases and exhibited repetition or content errors. Listening review selected Instruct2 Take 1 because Take 2 clipped some initial syllables; a same-seed rerun reproduced identical raw Take 1 WAV hashes on the same machine. A full 148-clip Instruct2 Take 1 candidate is available under ignored scratch for complete listening review before promotion.
 
 Recommended evaluation order:
 

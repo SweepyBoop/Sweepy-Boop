@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "scope": "comparison",
+  "model": {
+    "repository": "FunAudioLLM/Fun-CosyVoice3-0.5B-2512",
+    "revision": "29e01c4e8d000f4bcd70751be16fa94bf3d85a18",
+    "license": "apache-2.0"
+  },
+  "source": {
+    "repository": "https://github.com/QwenAudio/CosyVoice.git",
+    "revision": "074ca6dc9e80a2f424f1f74b48bdd7d3fea531cc",
+    "license": "apache-2.0"
+  },
+  "locale": "enUS",
+  "language": "English",
+  "seed": 20260930,
+  "takesPerMode": 2,
+  "enforceMaximumDuration": false,
+  "modes": [
+    {
+      "id": "cross-lingual",
+      "displayName": "Cross-lingual",
+      "seedOffset": 0,
+      "textPrefix": "You are a helpful assistant.<|endofprompt|><|en|>"
+    },
+    {
+      "id": "instruct2",
+      "displayName": "Instruct2",
+      "seedOffset": 100,
+      "instruction": "You are a helpful assistant. Speak plainly at a steady pace as a concise competitive arena announcement. Do not add breaths, filler sounds, or extra words.<|endofprompt|>"
+    }
+  ],
+  "mastering": {
+    "integratedLufs": -16.0,
+    "loudnessRange": 7.0,
+    "truePeakDb": -1.5,
+    "vorbisQuality": 5,
+    "tempo": 1.0,
+    "maximumDurationSeconds": 1.0,
+    "silenceThresholdDb": -50.0,
+    "leadingSilenceSeconds": 0.02,
+    "trailingSilenceSeconds": 0.08
+  },
+  "speakers": [
+    {
+      "id": "alliance-commander",
+      "displayName": "Alliance Commander",
+      "referencePath": "scratch/faction-voices/references/alliance-commander.wav",
+      "referenceSha256": "DCB7499F00A62577615FBB2DE32DC156BFCC56A13ECF1B5068BFC6F56C316519"
+    },
+    {
+      "id": "horde-commander",
+      "displayName": "Horde Commander",
+      "referencePath": "scratch/faction-voices/references/horde-commander.wav",
+      "referenceSha256": "50E52EB550990CAA497B2DF10C040297989F6990C2A5BE8143973DE733C886FB"
+    }
+  ],
+  "phrases": [
+    {
+      "id": "adrenaline-rush",
+      "displayText": "Adrenaline Rush",
+      "spokenText": "Adrenaline"
+    },
+    {
+      "id": "aspect-of-the-turtle",
+      "displayText": "Aspect of the Turtle",
+      "spokenText": "Turtle"
+    },
+    {
+      "id": "fortifying-brew",
+      "displayText": "Fortifying Brew",
+      "spokenText": "Fort Brew"
+    },
+    {
+      "id": "summon-demonic-tyrant",
+      "displayText": "Summon Demonic Tyrant",
+      "spokenText": "Tyrant"
+    }
+  ]
+}
