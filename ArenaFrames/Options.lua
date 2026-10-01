@@ -53,6 +53,28 @@ local function ResetArenaImportantAuraVoiceDefaults()
     SweepyBoop:RefreshArenaImportantAuraVoiceAnnouncements();
 end
 
+local function AppendArenaImportantAuraVoiceCalloutOption(classGroup, callout, order)
+    local spellID = callout.iconSpellID;
+    local spellName = C_Spell.GetSpellName(spellID) or callout.displayText;
+    local spellIDText = table.concat(callout.spellIDs, ", ");
+    local spell = Spell:CreateFromSpellID(spellID);
+    spell:ContinueOnSpellLoad(function()
+        addon.SPELL_DESCRIPTION[spellID] = spell:GetSpellDescription();
+    end)
+
+    classGroup.args[callout.id] = {
+        order = order,
+        type = "toggle",
+        width = "full",
+        name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(spellID)) .. " " .. spellName,
+        desc = function()
+            local description = addon.SPELL_DESCRIPTION[spellID] or "";
+            local auraSpellIDs = string.format(addon.L["Aura spell IDs: %s"], spellIDText);
+            return description .. "\n\n|" .. yellowColor .. auraSpellIDs .. "|r";
+        end,
+    };
+end
+
 function SweepyBoop:TestArena()
     if IsInInstance() then
         addon.PRINT(addon.L["Test mode can only be used outside instances"]);
@@ -512,20 +534,11 @@ addon.GetMainlineArenaFrameOptions = function(order)
                 calloutOrderByClass[callout.classFile] = 1;
             end
 
-            local spellIDText = table.concat(callout.spellIDs, ", ");
-            local spellName = C_Spell.GetSpellName(callout.iconSpellID) or callout.displayText;
-            local description = string.format(
-                addon.L["Announces \"%s\" when this aura is added."],
-                callout.spokenText
-            ) .. "\n\n" .. string.format(addon.L["Aura spell IDs: %s"], spellIDText);
-            classGroup.args[callout.id] = {
-                order = calloutOrderByClass[callout.classFile],
-                type = "toggle",
-                width = "full",
-                name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(callout.iconSpellID))
-                    .. " " .. spellName,
-                desc = description,
-            };
+            AppendArenaImportantAuraVoiceCalloutOption(
+                classGroup,
+                callout,
+                calloutOrderByClass[callout.classFile]
+            );
             calloutOrderByClass[callout.classFile] = calloutOrderByClass[callout.classFile] + 1;
         end
     end

@@ -206,7 +206,6 @@ L["Select all"] = "Selecionar tudo";
 L["Clear all"] = "Desmarcar tudo";
 L["Callouts"] = "Chamadas";
 L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat."] = "Anuncia auras importantes selecionadas de arena pelo canal Principal. Alterações feitas em combate são aplicadas após o combate.";
-L["Announces \"%s\" when this aura is added."] = "Anuncia \"%s\" quando esta aura é aplicada.";
 L["Aura spell IDs: %s"] = "IDs de feitiço da aura: %s";
 L["Standalone"] = "Independente";
 L["Show important buff icons on Blizzard arena frames"] = "Mostrar ícones de bônus importantes nos quadros de arena da Blizzard";

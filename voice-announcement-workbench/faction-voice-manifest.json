@@ -1010,6 +1010,18 @@
       "category": "defensive"
     },
     {
+      "id": "blessing-of-sanctuary",
+      "displayText": "Blessing of Sanctuary",
+      "spokenText": "Sanctuary",
+      "spellIds": [
+        210256
+      ],
+      "specIds": [
+        70
+      ],
+      "category": "defensive"
+    },
+    {
       "id": "pain-suppression",
       "displayText": "Pain Suppression",
       "spokenText": "Pain Suppression",

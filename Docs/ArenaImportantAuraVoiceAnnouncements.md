@@ -4,7 +4,7 @@
 
 The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 148 Cartesia `sonic-3.6` stock-voice clips: Gemma for Alliance and Archie for Horde, with 74 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
-The Mainline runtime integration is implemented on the current branch and pending in-game validation. It ships validated copies under `Sounds/ArenaImportantAuras`, is disabled by default, exposes voice-pack and per-callout controls, and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
+The Mainline runtime integration is implemented on the current branch and pending in-game validation. Phase one exposes 61 callout toggles with 66 verified buff aura IDs that appear on `arena1-3`; Grounding Totem is included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Incoming debuffs, pet/summon abilities, and other unverified totem/ground scopes are omitted from UI and registration while their sound files remain packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
 
 ## Objective
 
@@ -392,10 +392,10 @@ Exit criteria met: the selected English audio passed listening and static valida
 
 ### Phase 2: English Runtime (implementation complete, in-game validation pending)
 
-- Package 148 validated OGGs under `Sounds/ArenaImportantAuras`.
-- Generate static runtime data for 74 callout groups and 84 unique aura spell IDs.
+- Package all 148 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later friendly-debuff, pet, summon, and totem scopes.
+- Generate phase-one runtime data for 61 arena-opponent buff toggles and 66 aura spell IDs.
 - Implement the combat-deferred arena sound controller and handle cleanup.
-- Add master enable, Alliance/Horde voice selection, and 74 grouped callout toggles.
+- Add master enable, Alliance/Horde voice selection, and 61 grouped opponent-buff toggles, including separate Ascendance controls by specialization.
 - Use the Master output channel for phase 1 runtime behavior.
 - Test normal arenas and multi-round Solo Shuffle.
 

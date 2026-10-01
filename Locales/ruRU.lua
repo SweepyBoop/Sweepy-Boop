@@ -210,7 +210,6 @@ L["Select all"] = "Выбрать все";
 L["Clear all"] = "Снять все";
 L["Callouts"] = "Объявления";
 L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat."] = "Объявляет выбранные важные эффекты арены через основной канал. Изменения, сделанные в бою, применяются после боя.";
-L["Announces \"%s\" when this aura is added."] = "Произносит «%s» при наложении этой ауры.";
 L["Aura spell IDs: %s"] = "ID заклинаний ауры: %s";
 L["Standalone"] = "Отдельно";
 L["Show important buff icons on Blizzard arena frames"] = "Показывать значки важных эффектов на рамках арены Blizzard";

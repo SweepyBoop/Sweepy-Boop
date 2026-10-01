@@ -210,7 +210,6 @@ L["Select all"] = "全部選取";
 L["Clear all"] = "全部取消";
 L["Callouts"] = "播報項目";
 L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat."] = "透過主聲道播報選定的重要競技場光環。戰鬥中所做的變更將在戰鬥結束後生效。";
-L["Announces \"%s\" when this aura is added."] = "施加此光環時播報「%s」。";
 L["Aura spell IDs: %s"] = "光環法術 ID：%s";
 L["Standalone"] = "獨立顯示";
 L["Shows up to the configured number of important buffs for each arena opponent in three fixed enemy groups."] = "在三個固定的敵方群組中，為每名競技場對手顯示最多至設定數量的重要增益。";

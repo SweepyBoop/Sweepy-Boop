@@ -19,9 +19,39 @@ REPOSITORY = WORKBENCH.parent
 DEFAULT_SOURCE = REPOSITORY / "Docs" / "VoiceAnnouncementReview-KeyAbilities"
 DEFAULT_SOUNDS = REPOSITORY / "Sounds" / "ArenaImportantAuras"
 DEFAULT_DATA = REPOSITORY / "Common" / "ArenaImportantAuraVoiceData.lua"
-EXPECTED_CALLOUTS = 74
-EXPECTED_SPELL_IDS = 84
+SOURCE_CALLOUTS = 74
+SOURCE_SPELL_IDS = 84
+RUNTIME_CALLOUTS = 61
+RUNTIME_SPELL_IDS = 66
 EXPECTED_OGGS = 148
+# Audited opponent-unit buff auras. Target debuffs, pet/summon auras, totem/ground
+# effects, and unverified variants remain packaged but are not exposed at runtime yet.
+ARENA_OPPONENT_BUFF_SPELL_IDS = {
+    642, 1022, 1719, 5277, 12472, 13750, 19574, 22812, 23920, 31224,
+    31884, 33206, 45438, 47585, 47788, 48707, 48792, 51271, 61336, 97463,
+    102342, 102543, 102560, 104773, 106951, 107574, 108271, 108416,
+    114051, 114052, 116849, 117679, 118038, 120954, 121471, 125174,
+    184364, 185422, 186265, 187827, 190319, 191634, 194223, 194249,
+    196718, 200183, 204018, 209426, 212295, 212800, 264735, 288613,
+    8178, 114050, 342246, 343818, 357170, 363534, 363916, 365362, 375087,
+    378464, 410358, 454351, 466772, 1219480,
+}
+ASCENDANCE_SPLITS = (
+    {
+        "id": "ascendance-elemental",
+        "displayText": "Ascendance (Elemental)",
+        "spellIds": [114050, 1219480],
+        "specIds": [262],
+        "soundFileName": "ascendance.ogg",
+    },
+    {
+        "id": "ascendance-enhancement",
+        "displayText": "Ascendance (Enhancement)",
+        "spellIds": [114051],
+        "specIds": [263],
+        "soundFileName": "ascendance.ogg",
+    },
+)
 VOICE_SOURCES = {
     "alliance": {
         "displayName": "Alliance - Gemma",
@@ -90,8 +120,8 @@ def load_inputs(source: Path) -> tuple[dict[str, Any], dict[str, Any]]:
         raise ValueError("Promoted Cartesia manifest must use full scope")
     if manifest.get("model", {}).get("id") != "sonic-3.6":
         raise ValueError("Promoted Cartesia manifest must pin sonic-3.6")
-    if len(manifest.get("phrases", [])) != EXPECTED_CALLOUTS:
-        raise ValueError(f"Expected {EXPECTED_CALLOUTS} callouts")
+    if len(manifest.get("phrases", [])) != SOURCE_CALLOUTS:
+        raise ValueError(f"Expected {SOURCE_CALLOUTS} source callouts")
     if len(report.get("samples", [])) != EXPECTED_OGGS:
         raise ValueError(f"Expected {EXPECTED_OGGS} promoted samples")
     return manifest, report
@@ -126,10 +156,46 @@ def validate_catalog(manifest: dict[str, Any]) -> None:
             raise ValueError(
                 f"Callout {callout_id} must map to exactly one known class: {spec_ids}"
             )
-    if len(ids) != EXPECTED_CALLOUTS:
-        raise ValueError(f"Expected {EXPECTED_CALLOUTS} unique callout IDs")
-    if len(spell_owners) != EXPECTED_SPELL_IDS:
-        raise ValueError(f"Expected {EXPECTED_SPELL_IDS} unique aura spell IDs")
+    if len(ids) != SOURCE_CALLOUTS:
+        raise ValueError(f"Expected {SOURCE_CALLOUTS} unique source callout IDs")
+    if len(spell_owners) != SOURCE_SPELL_IDS:
+        raise ValueError(f"Expected {SOURCE_SPELL_IDS} unique source aura spell IDs")
+
+
+def runtime_callouts(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    result: list[dict[str, Any]] = []
+    used_spell_ids: set[int] = set()
+    for source_callout in manifest["phrases"]:
+        if source_callout["id"] == "ascendance":
+            source_spell_ids = {int(value) for value in source_callout["spellIds"]}
+            for split in ASCENDANCE_SPLITS:
+                split_spell_ids = [int(value) for value in split["spellIds"]]
+                if not set(split_spell_ids).issubset(source_spell_ids):
+                    raise ValueError("Ascendance split contains an unknown source spell ID")
+                callout = dict(source_callout)
+                callout.update(split)
+                result.append(callout)
+                used_spell_ids.update(split_spell_ids)
+            continue
+
+        verified_spell_ids = [
+            int(spell_id)
+            for spell_id in source_callout["spellIds"]
+            if int(spell_id) in ARENA_OPPONENT_BUFF_SPELL_IDS
+        ]
+        if not verified_spell_ids:
+            continue
+        callout = dict(source_callout)
+        callout["spellIds"] = verified_spell_ids
+        result.append(callout)
+        used_spell_ids.update(verified_spell_ids)
+    if len(result) != RUNTIME_CALLOUTS:
+        raise ValueError(f"Expected {RUNTIME_CALLOUTS} runtime buff callouts")
+    if used_spell_ids != ARENA_OPPONENT_BUFF_SPELL_IDS:
+        raise ValueError(
+            "Runtime opponent-buff allowlist does not match the promoted manifest"
+        )
+    return result
 
 
 def expected_source_files(
@@ -186,13 +252,14 @@ def class_file(callout: dict[str, Any]) -> str:
     return next(iter(classes))
 
 
-def generate_lua(manifest: dict[str, Any], manifest_hash: str) -> str:
+def generate_lua(callouts: list[dict[str, Any]], manifest_hash: str) -> str:
     lines = [
         "local _, addon = ...;",
         "",
         "-- Generated by voice-announcement-workbench/export-addon-cartesia-assets.py.",
         f"-- Source manifest SHA-256: {manifest_hash}",
-        f"-- Callouts: {EXPECTED_CALLOUTS}; aura spell IDs: {EXPECTED_SPELL_IDS}; OGG files: {EXPECTED_OGGS}.",
+        f"-- Runtime opponent-buff callouts: {RUNTIME_CALLOUTS}; aura spell IDs: {RUNTIME_SPELL_IDS}.",
+        f"-- Packaged OGG files retained for future scopes: {EXPECTED_OGGS}.",
         "",
         "addon.ARENA_IMPORTANT_AURA_VOICE_PACKS = {",
     ]
@@ -209,8 +276,11 @@ def generate_lua(manifest: dict[str, Any], manifest_hash: str) -> str:
             ]
         )
     lines.extend(["};", "", "addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS = {"])
-    for callout in manifest["phrases"]:
+    for callout in callouts:
         spell_ids = ", ".join(str(int(value)) for value in callout["spellIds"])
+        sound_file_name = str(
+            callout.get("soundFileName") or (str(callout["id"]) + ".ogg")
+        )
         lines.extend(
             [
                 "    {",
@@ -220,7 +290,7 @@ def generate_lua(manifest: dict[str, Any], manifest_hash: str) -> str:
                 f"        category = {lua_string(str(callout['category']))},",
                 f"        classFile = {lua_string(class_file(callout))},",
                 f"        iconSpellID = {int(callout['spellIds'][0])},",
-                f"        soundFileName = {lua_string(str(callout['id']) + '.ogg')},",
+                f"        soundFileName = {lua_string(sound_file_name)},",
                 f"        spellIDs = {{ {spell_ids} }},",
                 "    },",
             ]
@@ -260,7 +330,7 @@ def validate_export(
     text = data_path.read_text(encoding="utf-8")
     if "/Users/" in text or "CARTESIA_API_KEY" in text or "sk_car_" in text:
         raise ValueError("Generated runtime data contains local/provider secret material")
-    if len(manifest["phrases"]) != EXPECTED_CALLOUTS:
+    if len(manifest["phrases"]) != SOURCE_CALLOUTS:
         raise ValueError("Generated runtime data source count changed unexpectedly")
 
 
@@ -309,15 +379,16 @@ def main() -> int:
     manifest_path = require_file(source / "cartesia-pack-manifest.json")
     manifest, report = load_inputs(source)
     validate_catalog(manifest)
+    callouts = runtime_callouts(manifest)
     sources = expected_source_files(source, manifest)
     validate_audio(sources, report_hashes(report))
-    lua_text = generate_lua(manifest, sha256(manifest_path))
+    lua_text = generate_lua(callouts, sha256(manifest_path))
 
     if args.check:
         validate_export(sounds, data_path, manifest, sources, lua_text)
-        print(f"Validated packaged callouts: {EXPECTED_CALLOUTS}")
-        print(f"Validated packaged aura spell IDs: {EXPECTED_SPELL_IDS}")
-        print(f"Validated packaged OGG files: {EXPECTED_OGGS}")
+        print(f"Validated runtime opponent-buff callouts: {RUNTIME_CALLOUTS}")
+        print(f"Validated runtime opponent-buff aura IDs: {RUNTIME_SPELL_IDS}")
+        print(f"Validated retained packaged OGG files: {EXPECTED_OGGS}")
         return 0
 
     sounds.parent.mkdir(parents=True, exist_ok=True)
@@ -341,9 +412,9 @@ def main() -> int:
         raise
 
     validate_export(sounds, data_path, manifest, sources, lua_text)
-    print(f"Exported callouts: {EXPECTED_CALLOUTS}")
-    print(f"Exported aura spell IDs: {EXPECTED_SPELL_IDS}")
-    print(f"Exported OGG files: {EXPECTED_OGGS}")
+    print(f"Exported runtime opponent-buff callouts: {RUNTIME_CALLOUTS}")
+    print(f"Exported runtime opponent-buff aura IDs: {RUNTIME_SPELL_IDS}")
+    print(f"Retained packaged OGG files: {EXPECTED_OGGS}")
     print(f"Sounds directory: {sounds}")
     print(f"Runtime data: {data_path}")
     return 0

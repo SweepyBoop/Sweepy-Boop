@@ -51,6 +51,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--shortlist-only", action="store_true")
     parser.add_argument("--speaker")
     parser.add_argument("--phrase")
+    parser.add_argument("--phrases-file", type=Path)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--remaster", action="store_true")
     parser.add_argument("--verify-only", action="store_true")
@@ -75,6 +76,21 @@ def load_manifest(path: Path) -> dict[str, Any]:
     if manifest["scope"] == "full" and len(manifest.get("voices", [])) != 2:
         raise ValueError("The full Cartesia manifest must pin exactly two voices")
     return manifest
+
+
+def requested_phrase_ids(args: argparse.Namespace) -> set[str] | None:
+    values: list[str] = []
+    if args.phrase:
+        values.append(str(args.phrase).strip())
+    if args.phrases_file:
+        path = args.phrases_file.resolve()
+        if not path.is_file():
+            raise FileNotFoundError(f"Cartesia phrase selection file is missing: {path}")
+        for line in path.read_text(encoding="utf-8").splitlines():
+            value = line.split("#", 1)[0].strip()
+            if value:
+                values.append(value)
+    return set(values) if values else None
 
 
 def api_key() -> str:
@@ -521,17 +537,27 @@ def main() -> int:
             print(f"Selected voices: {selected_path}")
             return 0
 
+    all_selected = list(selected)
     if args.speaker:
         selected = [
             choice
             for choice in selected
             if args.speaker in {choice.gender, choice.blind_id}
         ]
+    requested_ids = requested_phrase_ids(args)
+    available_ids = {str(phrase["id"]) for phrase in manifest["phrases"]}
+    if requested_ids:
+        unknown_ids = requested_ids - available_ids
+        if unknown_ids:
+            raise ValueError(
+                f"Unknown Cartesia phrase IDs: {', '.join(sorted(unknown_ids))}"
+            )
     phrases = [
         phrase
         for phrase in manifest["phrases"]
-        if not args.phrase or args.phrase.casefold() == str(phrase["id"]).casefold()
+        if requested_ids is None or str(phrase["id"]) in requested_ids
     ]
+    selection_active = bool(args.speaker or requested_ids)
     if not selected or not phrases:
         raise ValueError("The selected Cartesia filters produced no jobs")
 
@@ -657,6 +683,15 @@ def main() -> int:
                 }
             )
 
+    if selection_active and prior_report.get("samples"):
+        merged_samples = {
+            str(sample["outputKey"]): sample
+            for sample in prior_report["samples"]
+        }
+        for sample in samples:
+            merged_samples[str(sample["outputKey"])] = sample
+        samples = sorted(merged_samples.values(), key=lambda item: item["outputKey"])
+
     report = {
         "createdUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "provider": "Cartesia",
@@ -671,7 +706,7 @@ def main() -> int:
         "mastering": manifest["mastering"],
         "accountTier": None,
         "termsVerifiedUtc": None,
-        "selectedVoices": [choice.__dict__ for choice in selected],
+        "selectedVoices": [choice.__dict__ for choice in all_selected],
         "samples": samples,
     }
     prior_report_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
@@ -679,7 +714,7 @@ def main() -> int:
     write_listening_page(
         samples,
         listening_page,
-        review_manifest(manifest, selected),
+        review_manifest(manifest, all_selected),
         model_label=(
             f"Cartesia/{manifest['model']['id']} "
             f"{'full stock voice candidate' if manifest['scope'] == 'full' else 'stock voice comparison'}"

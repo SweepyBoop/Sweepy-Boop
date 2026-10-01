@@ -210,7 +210,6 @@ L["Select all"] = "Select all";
 L["Clear all"] = "Clear all";
 L["Callouts"] = "Callouts";
 L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat."] = "Announce curated important arena auras over the Master channel. Changes made during combat apply after combat.";
-L["Announces \"%s\" when this aura is added."] = "Announces \"%s\" when this aura is added.";
 L["Aura spell IDs: %s"] = "Aura spell IDs: %s";
 L["Standalone"] = "Standalone";
 L["Show important buff icons on Blizzard arena frames"] = "Show important buff icons on Blizzard arena frames";

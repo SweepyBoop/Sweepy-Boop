@@ -208,7 +208,6 @@ local function ApplyTranslations(locale)
     L["Clear all"] = "Desmarcar todo";
     L["Callouts"] = "Avisos";
     L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat."] = "Anuncia auras importantes seleccionadas de arena por el canal Maestro. Los cambios realizados durante el combate se aplican después del combate.";
-    L["Announces \"%s\" when this aura is added."] = "Anuncia «%s» cuando se aplica esta aura.";
     L["Aura spell IDs: %s"] = "ID de hechizos de aura: %s";
     L["Standalone"] = "Independiente";
     L["Show important buff icons on Blizzard arena frames"] = "Mostrar iconos de beneficios importantes en los marcos de arena de Blizzard";

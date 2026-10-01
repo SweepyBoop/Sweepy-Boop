@@ -210,7 +210,6 @@ L["Select all"] = "모두 선택";
 L["Clear all"] = "모두 해제";
 L["Callouts"] = "호출";
 L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat."] = "선별된 중요 투기장 오라를 주 음향 채널로 알립니다. 전투 중 변경 사항은 전투 종료 후 적용됩니다.";
-L["Announces \"%s\" when this aura is added."] = "이 오라가 적용되면 \"%s\" 음성을 재생합니다.";
 L["Aura spell IDs: %s"] = "오라 주문 ID: %s";
 L["Standalone"] = "독립형";
 L["Shows up to the configured number of important buffs for each arena opponent in three fixed enemy groups."] = "각 투기장 상대의 중요 강화 효과를 설정된 개수까지 세 개의 고정된 적 그룹에 표시합니다.";

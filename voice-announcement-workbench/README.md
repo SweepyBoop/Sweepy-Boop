@@ -65,6 +65,15 @@ The approved sample voices are Gemma for Alliance and Archie for Horde. Generate
 bash voice-announcement-workbench/run-cartesia-samples.sh --full
 ```
 
+To generate only selected additions, create a local text file containing one manifest phrase ID per line. Blank lines and text after `#` are ignored. The selected results are merged into the existing full report instead of replacing it:
+
+```bash
+bash voice-announcement-workbench/run-cartesia-samples.sh --full \
+  --phrases-file voice-announcement-workbench/scratch/cartesia-full-pack/selected-phrases.txt
+```
+
+Full-pack provider WAVs
+
 Full-pack provider WAVs, mastered OGGs, reports, and the listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-full-pack/`. The approved pack was promoted to `Docs/VoiceAnnouncementReview-KeyAbilities` on 2026-10-01 after the user confirmed their Cartesia tier permits committing and redistributing the generated OGG files.
 
 ## Next model: CosyVoice 3

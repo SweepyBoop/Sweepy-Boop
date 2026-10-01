@@ -210,7 +210,6 @@ L["Select all"] = "Tout sélectionner";
 L["Clear all"] = "Tout désélectionner";
 L["Callouts"] = "Annonces";
 L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat."] = "Annonce les auras importantes sélectionnées d'arène sur le canal Principal. Les modifications effectuées en combat sont appliquées après le combat.";
-L["Announces \"%s\" when this aura is added."] = "Annonce « %s » lorsque cette aura est appliquée.";
 L["Aura spell IDs: %s"] = "ID de sorts d'aura : %s";
 L["Standalone"] = "Autonome";
 L["Shows up to the configured number of important buffs for each arena opponent in three fixed enemy groups."] = "Affiche jusqu'au nombre configuré d'améliorations importantes pour chaque adversaire d'arène, réparties en trois groupes ennemis fixes.";

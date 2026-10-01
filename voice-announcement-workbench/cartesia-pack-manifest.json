@@ -785,6 +785,18 @@
       "category": "defensive"
     },
     {
+      "id": "blessing-of-sanctuary",
+      "displayText": "Blessing of Sanctuary",
+      "spokenText": "Sanctuary",
+      "spellIds": [
+        210256
+      ],
+      "specIds": [
+        70
+      ],
+      "category": "defensive"
+    },
+    {
       "id": "pain-suppression",
       "displayText": "Pain Suppression",
       "spokenText": "Pain Suppression",
@@ -1045,6 +1057,6 @@
   ],
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 74-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 75-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   }
 }

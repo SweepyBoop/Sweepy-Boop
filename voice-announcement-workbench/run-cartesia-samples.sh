@@ -21,6 +21,8 @@ Options:
   --shortlist-only      Fetch/filter voices without generating speech.
   --speaker VALUE       masculine, feminine, voice-a, or voice-b.
   --phrase ID           Generate one phrase.
+  --phrases-file PATH   Generate phrase IDs listed one per line in a local file.
+  --force
   --force               Refresh catalog/selection and regenerate selected audio.
   --remaster            Rebuild OGG files from cached provider WAVs.
   --verify-only         Check manifest and credential without network access.
@@ -35,7 +37,7 @@ while [[ $# -gt 0 ]]; do
       full_pack=true
       shift
       ;;
-    --speaker|--phrase)
+    --speaker|--phrase|--phrases-file)
       arguments+=("$1" "${2:?$1 requires a value}")
       shift 2
       ;;
