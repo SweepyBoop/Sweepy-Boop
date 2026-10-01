@@ -8,6 +8,8 @@ local previewWidgets = setmetatable({}, { __mode = "k" });
 local textureWhite = "Interface\\BUTTONS\\WHITE8X8";
 local trinketSpellID = 336126;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+local cooldownBorderColor = { 1, 0.45, 0.1, 1 };
+local cooldownIconBrightness = 0.45;
 local previewFrameWidth = 144;
 local previewFrameHeight = 72;
 local previewHeight = 116;
@@ -76,9 +78,22 @@ local function StyleCooldown(cooldown, config)
     UpdateCooldownFontSize(cooldown);
 end
 
+local function SetCooldownVisual(icon)
+    icon.texture:SetDesaturated(true);
+    icon.texture:SetVertexColor(
+        cooldownIconBrightness,
+        cooldownIconBrightness,
+        cooldownIconBrightness,
+        1
+    );
+    icon.border:SetVertexColor(unpack(cooldownBorderColor));
+    icon.readyGlow:Hide();
+end
+
 local function StartPreviewCooldown(icon)
     if not icon.previewActive then return end
 
+    SetCooldownVisual(icon);
     if C_DurationUtil and C_DurationUtil.CreateDuration
         and icon.cooldown.SetCooldownFromDurationObject then
 
@@ -122,12 +137,20 @@ local function CreateSample(parent)
     icon.texture:SetTexCoord(0.08, 0.92, 0.08, 0.92);
     icon.texture:SetTexture(addon.GetSpellTexture(trinketSpellID));
 
-    local iconBorder = icon:CreateTexture(nil, "OVERLAY");
+    local glowPadding = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING;
+    icon.readyGlow = icon:CreateTexture(nil, "BORDER");
+    icon.readyGlow:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_GLOW_TEXTURE);
+    icon.readyGlow:SetBlendMode("ADD");
+    icon.readyGlow:SetPoint("TOPLEFT", icon, "TOPLEFT", -glowPadding, glowPadding);
+    icon.readyGlow:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", glowPadding, -glowPadding);
+    icon.readyGlow:SetAlpha(0.9);
+
+    icon.border = icon:CreateTexture(nil, "OVERLAY");
     local padding = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING;
-    iconBorder:SetPoint("TOPLEFT", icon, "TOPLEFT", -padding, padding);
-    iconBorder:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", padding, -padding);
-    iconBorder:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
-    iconBorder:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
+    icon.border:SetPoint("TOPLEFT", icon, "TOPLEFT", -padding, padding);
+    icon.border:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", padding, -padding);
+    icon.border:SetTexture(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEXTURE);
+    icon.border:SetTexCoord(unpack(addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_TEX_COORDS));
 
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon.texture);

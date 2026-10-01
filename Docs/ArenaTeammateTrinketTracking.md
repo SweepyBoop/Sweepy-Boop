@@ -4,7 +4,7 @@
 
 SweepyBoop's teammate trinket tracker is a Retail-only, arena-only display for Blizzard CompactParty and CompactRaid frames. It shows one generic PvP trinket icon for each teammate, excludes the player, and defaults to the left side of the teammate frame.
 
-The feature is disabled by default.
+The feature is disabled by default. Ready trinkets use a full-color icon with a fixed green glow; trinkets on cooldown use a desaturated, darkened icon with an orange border and full-contrast countdown text.
 
 ## Blizzard API Contract
 
@@ -28,9 +28,9 @@ The argument must be untainted. SweepyBoop passes the teammate frame's readable 
 Cooldown:SetCooldownFromDurationObject(duration, clearIfZero)
 ```
 
-SweepyBoop passes the returned duration object directly to this method. Production code does not read start time, end time, elapsed time, remaining time, total duration, or modification rate.
+SweepyBoop passes the returned duration object directly to this method. Production code does not read start time, end time, elapsed time, remaining time, total duration, or modification rate. It uses only the documented boolean `IsActive()` state to choose between ready and on-cooldown styling.
 
-`Blizzard_APIDocumentationGenerated/LuaDurationObjectAPIDocumentation.lua` documents those numeric methods and their restricted argument behavior. Keeping the object opaque avoids deriving or branching on restricted cooldown values.
+`Blizzard_APIDocumentationGenerated/LuaDurationObjectAPIDocumentation.lua` documents those numeric methods and their restricted argument behavior. Keeping numeric duration data opaque avoids deriving or branching on restricted cooldown values.
 
 ### Refresh events
 
