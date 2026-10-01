@@ -162,6 +162,10 @@ local defaults = {
             arenaStandaloneOffensiveIconOffsetX = 0,
             arenaStandaloneOffensiveIconOffsetY = 150,
 
+            arenaImportantAuraVoiceEnabled = false,
+            arenaImportantAuraVoicePack = "alliance",
+            arenaImportantAuraVoiceCallouts = {},
+
             unusedIconAlpha = 0.5,
             usedIconAlpha = 1,
             showUnusedIcons = false,
@@ -342,6 +346,20 @@ if addon.internal then -- Set default for internal version
     defaults.profile.misc.rangeCheckerEnabled = true;
 end
 
+addon.FillArenaImportantAuraVoiceCalloutDefaults = function(profile, overwrite)
+    if not addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS then return end
+
+    if not addon.ARENA_IMPORTANT_AURA_VOICE_PACKS[profile.arenaImportantAuraVoicePack] then
+        profile.arenaImportantAuraVoicePack = "alliance";
+    end
+    profile.arenaImportantAuraVoiceCallouts = profile.arenaImportantAuraVoiceCallouts or {};
+    for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
+        if overwrite or profile.arenaImportantAuraVoiceCallouts[callout.id] == nil then
+            profile.arenaImportantAuraVoiceCallouts[callout.id] = true;
+        end
+    end
+end
+
 local function FillDefaults()
     addon.FillDefaultToNpcOptions(defaults.profile.nameplatesEnemy.filterList);
     addon.FillDefaultToAuraOptions(defaults.profile.nameplatesEnemy.debuffWhiteList, addon.DebuffList);
@@ -371,6 +389,7 @@ local function FillDefaults()
     end
 
     addon.SetupAllSpells(defaults.profile.arenaFrames.spellList, addon.SpellData);
+    addon.FillArenaImportantAuraVoiceCalloutDefaults(defaults.profile.arenaFrames, true);
     addon.SetupInterrupts(defaults.profile.arenaFrames.standaloneBars["Bar 1"].spellList, addon.SpellData);
 end
 
@@ -428,6 +447,8 @@ function SweepyBoop:OnInitialize()
     end
     self.db = LibStub("AceDB-3.0"):New("SweepyBoopDB", defaults, true);
     for _, profile in pairs(self.db.profiles) do
+        profile.arenaFrames = profile.arenaFrames or {};
+        addon.FillArenaImportantAuraVoiceCalloutDefaults(profile.arenaFrames);
         addon.RemoveObsoleteProfileSettings(profile);
     end
 
@@ -517,6 +538,7 @@ function SweepyBoop:OnInitialize()
     self:SetupRaidFrameAuraModule();
     self:SetupRaidFrameDebuffIcons();
     self:SetupArenaOffensiveIcons();
+    self:SetupArenaImportantAuraVoiceAnnouncements();
 
     self:SetupRaidFrameAggroHighlight();
     self:SetupHealerInCrowdControl();
@@ -551,10 +573,12 @@ function SweepyBoop:RefreshConfig()
     self:RefreshMouseCursor();
 
     if addon.PROJECT_MAINLINE then
+        addon.FillArenaImportantAuraVoiceCalloutDefaults(self.db.profile.arenaFrames);
         self:RefreshHealerBuffHelper();
         self:RefreshRaidFrameDebuffIcons();
         self:HideTestArenaStandaloneOffensiveIcons();
         self:UpdateArenaOffensiveIcons();
+        self:RefreshArenaImportantAuraVoiceAnnouncements();
         self:RefreshRaidFrameAggroHighlight();
         self:HideTestHealerInCrowdControl();
         self:SetupHealerInCrowdControl();

@@ -118,6 +118,9 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
     expected_count = len(manifest.get("phrases", [])) * 2
     if len(samples) != expected_count:
         errors.append(f"run must contain exactly {expected_count} samples")
+    expected_phrases = {
+        str(phrase["id"]): phrase for phrase in manifest.get("phrases", [])
+    }
     seen: set[str] = set()
     fingerprints: dict[str, set[str]] = {}
     for sample in samples:
@@ -127,7 +130,16 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
         seen.add(key)
         if sample.get("stockVoice") is not True:
             errors.append(f"sample {key} is not marked as a stock voice")
-        fingerprints.setdefault(str(sample.get("phraseId")), set()).add(
+        phrase_id = str(sample.get("phraseId") or "")
+        expected_phrase = expected_phrases.get(phrase_id)
+        if expected_phrase is None:
+            errors.append(f"sample {key} uses an unknown phrase ID")
+        else:
+            if sample.get("spokenText") != expected_phrase.get("spokenText"):
+                errors.append(f"sample {key} spoken text does not match the manifest")
+            if sample.get("displayText") != expected_phrase.get("displayText"):
+                errors.append(f"sample {key} display text does not match the manifest")
+        fingerprints.setdefault(phrase_id, set()).add(
             str(sample.get("requestFingerprint") or "")
         )
         for field in ("providerOriginal", "ogg"):

@@ -32,6 +32,7 @@ Common\UnitInfoHelpers.lua
 Common\NpcData.lua
 Common\AuraData.lua
 Common\DRList.lua
+Common\ArenaImportantAuraVoiceData.lua
 Common\MasqueHelper.lua
 Common\IconHelpers.lua
 Common\AceGUIWidget-InlineLink.lua
@@ -72,6 +73,7 @@ ArenaFrames\OffensiveIcons.lua
 ArenaFrames\OffensiveIconPreviewWidget.lua
 ArenaFrames\HealerIndicator.lua
 ArenaFrames\RangeIndicators.lua
+ArenaFrames\ArenaImportantAuraVoiceAnnouncements.lua
 ArenaFrames\Options.lua
 
 RaidFrames\BuffHelper.lua

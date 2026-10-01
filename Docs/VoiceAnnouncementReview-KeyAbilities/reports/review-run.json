@@ -1,9 +1,9 @@
 {
-  "createdUtc": "2026-10-01T01:42:13Z",
+  "createdUtc": "2026-10-01T17:51:28Z",
   "sourceManifest": "cartesia-pack-manifest.json",
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 74-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 75-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   },
   "provider": "Cartesia",
   "scope": "full",
@@ -1193,6 +1193,85 @@
           "output_thresh": "-27.93",
           "normalization_type": "linear",
           "target_offset": "1.93"
+        }
+      }
+    },
+    {
+      "outputKey": "alliance-commander-blessing-of-sanctuary-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "blessing-of-sanctuary",
+      "displayText": "Blessing of Sanctuary",
+      "spokenText": "Sanctuary",
+      "generationSeconds": 0.618,
+      "generationUtc": "2026-10-01T03:19:01Z",
+      "requestFingerprint": "C72FF3085F6B0095F3D5EAC7833D87499AFC2C2AAB183D2502345CCF94831635",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sanctuary.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "4BEF778CB79F664FC4A1FBAFBD57B6A5748829678EE5E0FB1E204E67A1EDAF5D",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 49392,
+        "durationSeconds": 1.12,
+        "samplePeakDbfs": -1.5772,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "51B926F63E5A54DBFD4C484AEF908049FCC5D2D5467B0BC1AB4A1661A179E763",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 35064,
+        "durationSeconds": 0.795102,
+        "samplePeakDbfs": -1.6332,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-blessing-of-sanctuary.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-17.97",
+          "input_tp": "-1.55",
+          "input_lra": "0.00",
+          "input_thresh": "-27.97",
+          "output_i": "-17.92",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.92",
+          "normalization_type": "linear",
+          "target_offset": "1.92"
+        },
+        "finalPass": {
+          "input_i": "-17.97",
+          "input_tp": "-1.55",
+          "input_lra": "0.00",
+          "input_thresh": "-27.97",
+          "output_i": "-17.92",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.92",
+          "normalization_type": "linear",
+          "target_offset": "1.92"
         }
       }
     },
@@ -3181,13 +3260,13 @@
       "stockVoice": true,
       "phraseId": "incarnation-avatar-of-ashamane",
       "displayText": "Incarnation: Avatar of Ashamane",
-      "spokenText": "Incarn",
-      "generationSeconds": 0.3,
-      "generationUtc": "2026-10-01T01:41:17Z",
-      "requestFingerprint": "99432D343273C25814C0F868FFFA44F148FC8CF1B58A4875D8292FF1F776DDE0",
+      "spokenText": "Incarnation",
+      "generationSeconds": 0.41,
+      "generationUtc": "2026-10-01T17:51:27Z",
+      "requestFingerprint": "CB2CCC55483AA43FBA1D3C5B3FE6869C0BC51A6276F492690C97331B66B34007",
       "requestBodyVoiceIndependent": {
         "model_id": "sonic-3.6",
-        "transcript": "Incarn.",
+        "transcript": "Incarnation.",
         "output_format": {
           "container": "wav",
           "encoding": "pcm_s16le",
@@ -3201,23 +3280,23 @@
       },
       "responseRequestId": null,
       "providerOriginal": {
-        "sha256": "289177BC19285A44047A3F594207A8BF189A981B39D78BAD1AF6C347E553577B",
+        "sha256": "5C239274F007003904B86B036FCA87EAAF7DBFBC3C1308EC17EDD57B13D21874",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 42336,
-        "durationSeconds": 0.96,
-        "samplePeakDbfs": -4.1236,
+        "frames": 59976,
+        "durationSeconds": 1.36,
+        "samplePeakDbfs": -2.5559,
         "format": "WAV",
         "subtype": "PCM_16"
       },
       "tempo": 1.0,
       "ogg": {
-        "sha256": "BC716C7658195F314E9966FBF2473A949F3C20EB9B1EF7CF818E09842DDD8962",
+        "sha256": "D69315B56CC889945B56B434D9C3A3ACA7C25EA1057077BD05A576B093733E98",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 24523,
-        "durationSeconds": 0.556077,
-        "samplePeakDbfs": -1.9635,
+        "frames": 42568,
+        "durationSeconds": 0.965261,
+        "samplePeakDbfs": -3.3243,
         "format": "OGG",
         "subtype": "VORBIS",
         "path": "ogg/alliance-commander-incarnation-avatar-of-ashamane.ogg"
@@ -3225,28 +3304,28 @@
       "mastering": {
         "mode": "two-pass",
         "firstPass": {
-          "input_i": "-20.04",
-          "input_tp": "-4.58",
+          "input_i": "-15.33",
+          "input_tp": "-2.55",
           "input_lra": "0.00",
-          "input_thresh": "-30.04",
-          "output_i": "-16.94",
-          "output_tp": "-1.50",
+          "input_thresh": "-25.33",
+          "output_i": "-16.03",
+          "output_tp": "-3.22",
           "output_lra": "0.00",
-          "output_thresh": "-26.94",
+          "output_thresh": "-26.03",
           "normalization_type": "linear",
-          "target_offset": "0.94"
+          "target_offset": "0.03"
         },
         "finalPass": {
-          "input_i": "-20.04",
-          "input_tp": "-4.58",
+          "input_i": "-15.33",
+          "input_tp": "-2.55",
           "input_lra": "0.00",
-          "input_thresh": "-30.04",
-          "output_i": "-16.94",
-          "output_tp": "-1.50",
+          "input_thresh": "-25.33",
+          "output_i": "-16.03",
+          "output_tp": "-3.22",
           "output_lra": "0.00",
-          "output_thresh": "-26.94",
+          "output_thresh": "-26.03",
           "normalization_type": "linear",
-          "target_offset": "0.94"
+          "target_offset": "0.03"
         }
       }
     },
@@ -3260,13 +3339,13 @@
       "stockVoice": true,
       "phraseId": "incarnation-chosen-of-elune",
       "displayText": "Incarnation: Chosen of Elune",
-      "spokenText": "Incarn",
-      "generationSeconds": 0.3,
-      "generationUtc": "2026-10-01T01:41:16Z",
-      "requestFingerprint": "99432D343273C25814C0F868FFFA44F148FC8CF1B58A4875D8292FF1F776DDE0",
+      "spokenText": "Incarnation",
+      "generationSeconds": 0.863,
+      "generationUtc": "2026-10-01T17:51:26Z",
+      "requestFingerprint": "CB2CCC55483AA43FBA1D3C5B3FE6869C0BC51A6276F492690C97331B66B34007",
       "requestBodyVoiceIndependent": {
         "model_id": "sonic-3.6",
-        "transcript": "Incarn.",
+        "transcript": "Incarnation.",
         "output_format": {
           "container": "wav",
           "encoding": "pcm_s16le",
@@ -3280,23 +3359,23 @@
       },
       "responseRequestId": null,
       "providerOriginal": {
-        "sha256": "05F6B45D5A5B84077CD93B428145D768A0B2F10D1CDC89B49DBB91AFBBF49C59",
+        "sha256": "F75DE624F808976075C98FE59D65B111226D10CA50F53478B9E191BA70A94295",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 42336,
-        "durationSeconds": 0.96,
-        "samplePeakDbfs": -6.5767,
+        "frames": 59976,
+        "durationSeconds": 1.36,
+        "samplePeakDbfs": -2.3422,
         "format": "WAV",
         "subtype": "PCM_16"
       },
       "tempo": 1.0,
       "ogg": {
-        "sha256": "AE830B5646C0329CCDF231F19D4CB4CFB139C541CAA418DBAA1F485C6D59A1C2",
+        "sha256": "9DB245C144227D35D4D0D63EB1CD70A935DFD15F21CDAE9A52D037C6E87B4E6C",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 21803,
-        "durationSeconds": 0.494399,
-        "samplePeakDbfs": -3.0312,
+        "frames": 41803,
+        "durationSeconds": 0.947914,
+        "samplePeakDbfs": -2.1251,
         "format": "OGG",
         "subtype": "VORBIS",
         "path": "ogg/alliance-commander-incarnation-chosen-of-elune.ogg"
@@ -3304,28 +3383,28 @@
       "mastering": {
         "mode": "two-pass",
         "firstPass": {
-          "input_i": "-19.55",
-          "input_tp": "-6.45",
+          "input_i": "-16.14",
+          "input_tp": "-2.29",
           "input_lra": "0.00",
-          "input_thresh": "-29.55",
-          "output_i": "-15.95",
-          "output_tp": "-2.90",
+          "input_thresh": "-26.14",
+          "output_i": "-15.99",
+          "output_tp": "-2.15",
           "output_lra": "0.00",
-          "output_thresh": "-25.95",
+          "output_thresh": "-25.99",
           "normalization_type": "linear",
-          "target_offset": "-0.05"
+          "target_offset": "-0.01"
         },
         "finalPass": {
-          "input_i": "-19.55",
-          "input_tp": "-6.45",
+          "input_i": "-16.14",
+          "input_tp": "-2.29",
           "input_lra": "0.00",
-          "input_thresh": "-29.55",
-          "output_i": "-15.95",
-          "output_tp": "-2.90",
+          "input_thresh": "-26.14",
+          "output_i": "-15.99",
+          "output_tp": "-2.15",
           "output_lra": "0.00",
-          "output_thresh": "-25.95",
+          "output_thresh": "-25.99",
           "normalization_type": "linear",
-          "target_offset": "-0.05"
+          "target_offset": "-0.01"
         }
       }
     },
@@ -7043,6 +7122,85 @@
       }
     },
     {
+      "outputKey": "horde-commander-blessing-of-sanctuary-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "blessing-of-sanctuary",
+      "displayText": "Blessing of Sanctuary",
+      "spokenText": "Sanctuary",
+      "generationSeconds": 0.366,
+      "generationUtc": "2026-10-01T03:19:01Z",
+      "requestFingerprint": "C72FF3085F6B0095F3D5EAC7833D87499AFC2C2AAB183D2502345CCF94831635",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sanctuary.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "70F4245B5F96E52979F2C39162317F09354E9A2B3EF2F4BFFB82DE220B8E1829",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 56448,
+        "durationSeconds": 1.28,
+        "samplePeakDbfs": -5.6394,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "10D9E3E0194A7CCF2B274AEE26B1AE26B4A36FC778047C2A35C50CC84027F0BD",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 31183,
+        "durationSeconds": 0.707098,
+        "samplePeakDbfs": -1.6892,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-blessing-of-sanctuary.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-20.56",
+          "input_tp": "-5.58",
+          "input_lra": "0.00",
+          "input_thresh": "-30.56",
+          "output_i": "-16.46",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.46",
+          "normalization_type": "linear",
+          "target_offset": "0.46"
+        },
+        "finalPass": {
+          "input_i": "-20.56",
+          "input_tp": "-5.58",
+          "input_lra": "0.00",
+          "input_thresh": "-30.56",
+          "output_i": "-16.46",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.46",
+          "normalization_type": "linear",
+          "target_offset": "0.46"
+        }
+      }
+    },
+    {
       "outputKey": "horde-commander-blur-take-1",
       "speakerId": "horde-commander",
       "speakerName": "Horde Commander (Archie)",
@@ -9027,13 +9185,13 @@
       "stockVoice": true,
       "phraseId": "incarnation-avatar-of-ashamane",
       "displayText": "Incarnation: Avatar of Ashamane",
-      "spokenText": "Incarn",
-      "generationSeconds": 0.297,
-      "generationUtc": "2026-10-01T01:41:47Z",
-      "requestFingerprint": "99432D343273C25814C0F868FFFA44F148FC8CF1B58A4875D8292FF1F776DDE0",
+      "spokenText": "Incarnation",
+      "generationSeconds": 0.4,
+      "generationUtc": "2026-10-01T17:51:28Z",
+      "requestFingerprint": "CB2CCC55483AA43FBA1D3C5B3FE6869C0BC51A6276F492690C97331B66B34007",
       "requestBodyVoiceIndependent": {
         "model_id": "sonic-3.6",
-        "transcript": "Incarn.",
+        "transcript": "Incarnation.",
         "output_format": {
           "container": "wav",
           "encoding": "pcm_s16le",
@@ -9047,23 +9205,23 @@
       },
       "responseRequestId": null,
       "providerOriginal": {
-        "sha256": "46EC5B410115B28D20624CFD9CDB71F38E4DBD95BBEFD17D5377901610BDE42B",
+        "sha256": "134692BEF12A6F9082E2FAD2B2CB1FC08622E0EFC48BFF06A17E3B1ABDF9EAAC",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 38808,
-        "durationSeconds": 0.88,
-        "samplePeakDbfs": -5.305,
+        "frames": 52920,
+        "durationSeconds": 1.2,
+        "samplePeakDbfs": -6.0418,
         "format": "WAV",
         "subtype": "PCM_16"
       },
       "tempo": 1.0,
       "ogg": {
-        "sha256": "EAA3C52F961C59877C5CE9F1BD29210640BE3CFE9CBFE543BA97D20C28E7D202",
+        "sha256": "E47E781A62D1060B02A8EF93052F359B0C0DC2A51C9248EFC8A96A7A8AE890DD",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 22694,
-        "durationSeconds": 0.514603,
-        "samplePeakDbfs": -1.7351,
+        "frames": 35379,
+        "durationSeconds": 0.802245,
+        "samplePeakDbfs": -2.1749,
         "format": "OGG",
         "subtype": "VORBIS",
         "path": "ogg/horde-commander-incarnation-avatar-of-ashamane.ogg"
@@ -9071,28 +9229,28 @@
       "mastering": {
         "mode": "two-pass",
         "firstPass": {
-          "input_i": "-23.55",
-          "input_tp": "-5.28",
+          "input_i": "-19.92",
+          "input_tp": "-6.04",
           "input_lra": "0.00",
-          "input_thresh": "-33.55",
-          "output_i": "-19.75",
-          "output_tp": "-1.50",
+          "input_thresh": "-29.92",
+          "output_i": "-15.97",
+          "output_tp": "-2.12",
           "output_lra": "0.00",
-          "output_thresh": "-29.75",
+          "output_thresh": "-25.97",
           "normalization_type": "linear",
-          "target_offset": "3.75"
+          "target_offset": "-0.03"
         },
         "finalPass": {
-          "input_i": "-23.55",
-          "input_tp": "-5.28",
+          "input_i": "-19.92",
+          "input_tp": "-6.04",
           "input_lra": "0.00",
-          "input_thresh": "-33.55",
-          "output_i": "-19.75",
-          "output_tp": "-1.50",
+          "input_thresh": "-29.92",
+          "output_i": "-15.97",
+          "output_tp": "-2.12",
           "output_lra": "0.00",
-          "output_thresh": "-29.75",
+          "output_thresh": "-25.97",
           "normalization_type": "linear",
-          "target_offset": "3.75"
+          "target_offset": "-0.03"
         }
       }
     },
@@ -9106,13 +9264,13 @@
       "stockVoice": true,
       "phraseId": "incarnation-chosen-of-elune",
       "displayText": "Incarnation: Chosen of Elune",
-      "spokenText": "Incarn",
-      "generationSeconds": 0.347,
-      "generationUtc": "2026-10-01T01:41:46Z",
-      "requestFingerprint": "99432D343273C25814C0F868FFFA44F148FC8CF1B58A4875D8292FF1F776DDE0",
+      "spokenText": "Incarnation",
+      "generationSeconds": 0.451,
+      "generationUtc": "2026-10-01T17:51:27Z",
+      "requestFingerprint": "CB2CCC55483AA43FBA1D3C5B3FE6869C0BC51A6276F492690C97331B66B34007",
       "requestBodyVoiceIndependent": {
         "model_id": "sonic-3.6",
-        "transcript": "Incarn.",
+        "transcript": "Incarnation.",
         "output_format": {
           "container": "wav",
           "encoding": "pcm_s16le",
@@ -9126,23 +9284,23 @@
       },
       "responseRequestId": null,
       "providerOriginal": {
-        "sha256": "341C4C442919F2FCDE8557A46C0E55A5ABDE3F7B8087F67586C9BE0373B10BC7",
+        "sha256": "48B99953EA74D7BD019A912310304F0C1A5F97BDFB40119DC27D776456765B6C",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 38808,
-        "durationSeconds": 0.88,
-        "samplePeakDbfs": -6.0042,
+        "frames": 52920,
+        "durationSeconds": 1.2,
+        "samplePeakDbfs": -4.7894,
         "format": "WAV",
         "subtype": "PCM_16"
       },
       "tempo": 1.0,
       "ogg": {
-        "sha256": "4CFCC7BB48746664BC6DF599AC7E4C8587643701BAB9F3C624D01F7E8D4545D5",
+        "sha256": "3E92E4728242005C76763EC631B311C7DBDE34E5FC39C8949586A29329D72D1E",
         "sampleRate": 44100,
         "channels": 1,
-        "frames": 21084,
-        "durationSeconds": 0.478095,
-        "samplePeakDbfs": -1.5255,
+        "frames": 34867,
+        "durationSeconds": 0.790635,
+        "samplePeakDbfs": -2.6162,
         "format": "OGG",
         "subtype": "VORBIS",
         "path": "ogg/horde-commander-incarnation-chosen-of-elune.ogg"
@@ -9150,28 +9308,28 @@
       "mastering": {
         "mode": "two-pass",
         "firstPass": {
-          "input_i": "-22.15",
-          "input_tp": "-6.01",
+          "input_i": "-18.35",
+          "input_tp": "-4.70",
           "input_lra": "0.00",
-          "input_thresh": "-32.15",
-          "output_i": "-17.65",
-          "output_tp": "-1.50",
+          "input_thresh": "-28.35",
+          "output_i": "-16.00",
+          "output_tp": "-2.35",
           "output_lra": "0.00",
-          "output_thresh": "-27.65",
+          "output_thresh": "-26.00",
           "normalization_type": "linear",
-          "target_offset": "1.65"
+          "target_offset": "-0.00"
         },
         "finalPass": {
-          "input_i": "-22.15",
-          "input_tp": "-6.01",
+          "input_i": "-18.35",
+          "input_tp": "-4.70",
           "input_lra": "0.00",
-          "input_thresh": "-32.15",
-          "output_i": "-17.65",
-          "output_tp": "-1.50",
+          "input_thresh": "-28.35",
+          "output_i": "-16.00",
+          "output_tp": "-2.35",
           "output_lra": "0.00",
-          "output_thresh": "-27.65",
+          "output_thresh": "-26.00",
           "normalization_type": "linear",
-          "target_offset": "1.65"
+          "target_offset": "-0.00"
         }
       }
     },

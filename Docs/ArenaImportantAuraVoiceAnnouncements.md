@@ -2,9 +2,9 @@
 
 ## Status
 
-The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 148 Cartesia `sonic-3.6` stock-voice clips: Gemma for Alliance and Archie for Horde, with 74 callouts per voice and every mastered OGG capped at one second. The pack is review-only and is not shipped or registered at runtime. Qwen and CosyVoice remain historical workbench experiments.
+The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 150 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 75 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
-The addon runtime integration has not started. The review assets are not shipped sounds and are not registered with Blizzard APIs.
+The Mainline runtime integration is implemented on the current branch and pending in-game validation. Phase one exposes 62 callout toggles with 67 verified buff aura IDs that appear on `arena1-3`; Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Incoming debuffs, pet/summon abilities, and other unverified totem/ground scopes are omitted from UI and registration while their sound files remain packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
 
 ## Objective
 
@@ -97,7 +97,7 @@ Reasons:
 - Stock voices remove the prompt/seed-voice quality problem entirely.
 - Short tactical phrases remained intelligible without sacrificial prefixes, semantic cropping, phoneme overrides, or seed selection.
 - Male/female delivery stays consistent because request settings are identical except for voice ID.
-- The full pack passed human listening review across 148 clips.
+- The full pack passed human listening review across 150 clips.
 - Every mastered clip is capped at one second; clips already within the cap remain at natural tempo.
 - Provider WAVs, request fingerprints, selected voice IDs, API/model versions, mastering measurements, and hashes are recorded in the workbench report.
 
@@ -307,7 +307,7 @@ The catalog should be reviewed each major patch. Unknown Blizzard-important aura
 
 ## Packaging and Addon Metadata
 
-The final OGG files must be included in release packaging and available at fixed paths when WoW starts. A newly added sound file generally requires a complete client restart before it can be played reliably; `/reload` may not be sufficient.
+The final OGG files must be included in release packaging and available at fixed addon paths.
 
 If companion voice packs are introduced later, define a narrow registration contract containing:
 
@@ -381,26 +381,25 @@ Verify that:
 
 ## Implementation Phases
 
-### Phase 1: Prototype
+### Phase 1: Audio Selection (complete)
 
-- Create a small English manifest with approximately ten representative important auras.
 - Retain the completed Qwen and CosyVoice prototypes as historical comparison material.
 - Use the promoted Cartesia Gemma/Archie review pack as the selected audio source.
 - Preserve the pinned provider model/API version, stock voice IDs, request fingerprints, and redistribution verification.
-- Produce normalized OGG files and test them with `PlaySoundFile`.
-- Register the prototype against one arena token through `C_UnitAuras.AddAuraSound`.
+- Validate the complete 74-callout-per-voice catalog and one-second mastered cap.
 
-Exit criteria: audio quality is acceptable, Blizzard plays packaged files reliably, and registration works without reading aura data.
+Exit criteria met: the selected English audio passed listening and static validation.
 
-### Phase 2: English Runtime
+### Phase 2: English Runtime (implementation complete, in-game validation pending)
 
-- Finalize the English important-aura catalog.
-- Add generated runtime data and packaged assets.
-- Implement the arena sound controller and handle cleanup.
-- Add enable, channel, preview, and per-spell mute options.
+- Package all 150 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later friendly-debuff, pet, summon, and totem scopes.
+- Generate phase-one runtime data for 61 arena-opponent buff toggles and 66 aura spell IDs.
+- Implement the combat-deferred arena sound controller and handle cleanup.
+- Add master enable, Female/Male voice selection, and 62 grouped opponent-buff toggles, including separate Ascendance controls by specialization.
+- Use the Master output channel for phase 1 runtime behavior.
 - Test normal arenas and multi-round Solo Shuffle.
 
-Exit criteria: the English feature passes static, listening, and in-game validation and remains disabled by default.
+Exit criteria: the English feature passes in-game validation and remains disabled by default.
 
 ### Phase 3: Localization Pipeline
 
