@@ -1,24 +1,117 @@
 # Voice Announcement Workbench
 
-This directory contains the reproducible, local-only Qwen3-TTS workbench for SweepyBoop arena important-aura announcements. It does not change addon runtime code or promote experimental files into the addon's shipped sound directories.
+This directory contains reproducible, local-only TTS experiments for SweepyBoop arena important-aura announcements. It does not change addon runtime code or promote experimental files into the addon's shipped sound directories.
 
-## Current results
+## Current promoted Cartesia review pack
 
-The selected review pack uses:
+The committed review pack uses:
 
-- Models: `Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` and `Qwen/Qwen3-TTS-12Hz-1.7B-Base`
-- Voices: Alliance Commander and Horde Commander
-- Language: English
-- Delivery: plain studio callouts with deterministic onset removal
+- Provider/model: Cartesia `sonic-3.6`, API version `2026-08-14`
+- Voices: Gemma for Alliance and Archie for Horde
+- Language/locale: English, `en-US`
+- Delivery: plain stock-voice callouts with identical speed/volume settings
 - Duration: every mastered clip is at most 1.0 seconds
 - Scope: 74 curated arena callouts per voice, covering all 33 retail DPS and healer specs
-- Output: 148 mono 24 kHz OGG Vorbis files plus the two frozen reference WAVs
+- Output: 148 mono OGG Vorbis review files
 
-The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both faction voices without installing Python or downloading the models. The previous Aiden/Sohee review pack has been replaced; its generator remains available as a historical preset-voice baseline.
+The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both voices without an API key or local environment. The pack is review-only and is not wired into addon runtime behavior or the published addon archive.
 
-`PAID_VOICE_OPTIONS.md` remains a record of external and alternative models, but ElevenLabs is not the preferred path because MiniCC already uses it.
+The Qwen VoiceDesign/Base, CosyVoice, and Aiden/Sohee experiments remain reproducible historical baselines in this workbench and version control.
 
-## Faction voice study
+`PAID_VOICE_OPTIONS.md` records the evaluated alternatives and next-step rationale. ElevenLabs is not preferred because MiniCC already uses it.
+
+## Cartesia stock voice workflow
+
+Cartesia is the preferred no-seed hosted evaluation. The workbench queries the authenticated stock catalog, selects one neutral English masculine voice and one neutral English feminine voice, and generates Adrenaline, Turtle, Fort Brew, and Tyrant with identical `sonic-3.6` settings except for voice ID.
+
+Set up the API key from a terminal opened at the repository root:
+
+1. Open [Cartesia API Keys](https://play.cartesia.ai/keys), create a key, and copy the secret when it is displayed. Never paste the key into chat or commit it to the repository.
+2. Create the isolated local environment:
+
+```bash
+bash voice-announcement-workbench/setup-cartesia-environment.sh
+```
+
+3. Enter the key without displaying it or adding it to shell history:
+
+```bash
+unset CARTESIA_API_KEY
+read -s "CARTESIA_API_KEY?Paste Cartesia API key: "
+echo
+export CARTESIA_API_KEY
+printf 'Cartesia API key loaded: %d characters\n' "${#CARTESIA_API_KEY}"
+```
+
+4. Verify catalog access without generating billable audio:
+
+```bash
+bash voice-announcement-workbench/run-cartesia-samples.sh --discover-only
+```
+
+5. Generate and validate the four-phrase comparison:
+
+```bash
+bash voice-announcement-workbench/run-cartesia-samples.sh
+```
+
+The export applies only to the current terminal session. Repeat step 3 after opening a new terminal or restarting the shell.
+
+The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`.
+
+The approved sample voices are Gemma for Alliance and Archie for Horde. Generate or resume the full 74-callout-per-voice candidate with:
+
+```bash
+bash voice-announcement-workbench/run-cartesia-samples.sh --full
+```
+
+Full-pack provider WAVs, mastered OGGs, reports, and the listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-full-pack/`. The approved pack was promoted to `Docs/VoiceAnnouncementReview-KeyAbilities` on 2026-10-01 after the user confirmed their Cartesia tier permits committing and redistributing the generated OGG files.
+
+## Next model: CosyVoice 3
+
+See `COSYVOICE_NEXT_STEPS.md` for the current findings, reference-audio options, and the recommended next experiment.
+
+The next prototype uses pinned `FunAudioLLM/Fun-CosyVoice3-0.5B-2512` with the existing synthetic Alliance and Horde references. The first bake-off covers four phrases that exposed Qwen failures, two prompt-audio modes, and two takes per mode, for 32 samples that measure repeatability rather than selecting only the best take.
+
+Acceptance criteria:
+
+- Clean word onsets without sacrificial prefixes, semantic cropping, or manual repair.
+- Stable speaker identity and cadence across repeated generations.
+- Correct game-term pronunciation, using English phoneme inpainting where needed.
+- Natural mastered duration at or below 1.0 seconds.
+- Apache 2.0 model and dependency provenance captured before promotion.
+
+If zero-shot cloning is not stable enough, build a reviewed sentence-length synthetic corpus for each voice and evaluate CosyVoice speaker adaptation or fine-tuning. Chatterbox Turbo is the secondary local candidate; Cartesia is the preferred hosted fallback.
+
+Set up the isolated CPU environment and run the comparison on macOS:
+
+```bash
+bash voice-announcement-workbench/setup-cosyvoice3-environment.sh
+bash voice-announcement-workbench/run-cosyvoice3-samples.sh
+```
+
+A smaller smoke test can select one voice, phrase, mode, or take:
+
+```bash
+bash voice-announcement-workbench/run-cosyvoice3-samples.sh \
+  --speaker alliance-commander \
+  --phrase adrenaline-rush \
+  --take 1
+```
+
+CosyVoice currently uses CPU rather than Apple Metal on macOS. The setup script installs a pinned local Python 3.10 runtime when one is not already available. Its source checkout, environment, model snapshot, generated WAV/OGG files, reports, and listening page remain under ignored `voice-announcement-workbench/scratch/cosyvoice3-*` paths.
+
+The first 32-sample run completed successfully. All 16 Instruct2 samples were naturally below one second (`0.29-0.72s`), while 9 of 16 cross-lingual samples exceeded one second and several exhibited repetition or incorrect content. Instruct2 Take 1 is the selected mode because listening review found more clipped initial syllables in Take 2. Regenerating Take 1 with the same seeds produced identical raw WAV hashes on the same machine; OGG container hashes may still change when remastered. Review the original bake-off at `scratch/cosyvoice3-zero-shot/listening/index.html`.
+
+The full 74-callout-per-voice Instruct2 Take 1 candidate is generated under `scratch/cosyvoice3-instruct2/`. Run or resume it with:
+
+```bash
+bash voice-announcement-workbench/run-cosyvoice3-samples.sh --full
+```
+
+The full-pack manifest enforces the one-second mastered duration cap. Review all 148 candidates at `scratch/cosyvoice3-instruct2/listening/index.html`. Automated Whisper transcription triage flagged 45 clips below the conservative similarity threshold, including several likely repetition or pronunciation failures; this is a review queue rather than an automatic rejection because very short game terms are difficult for ASR. No CosyVoice output has been promoted.
+
+## Historical Qwen faction voice study
 
 The tracked faction-voice experiment defines two original archetypes rather than imitating named Warcraft characters or performers:
 

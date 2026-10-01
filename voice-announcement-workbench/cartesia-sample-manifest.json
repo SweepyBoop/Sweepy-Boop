@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "scope": "comparison",
+  "api": {
+    "baseUrl": "https://api.cartesia.ai",
+    "voicesPath": "/voices",
+    "ttsPath": "/tts/bytes",
+    "version": "2026-08-14",
+    "authenticationOrder": [
+      "bearer"
+    ]
+  },
+  "model": {
+    "id": "sonic-3.6",
+    "provider": "Cartesia"
+  },
+  "language": "en",
+  "locale": "en-US",
+  "takesPerVoice": 1,
+  "enforceMaximumDuration": false,
+  "generationConfig": {
+    "speed": 1.0,
+    "volume": 1.0
+  },
+  "outputFormat": {
+    "container": "wav",
+    "encoding": "pcm_s16le",
+    "sample_rate": 44100
+  },
+  "selection": {
+    "requiredGenders": [
+      "masculine",
+      "feminine"
+    ],
+    "preferredTerms": [
+      "neutral",
+      "clear",
+      "professional",
+      "narration",
+      "narrator",
+      "conversational",
+      "calm"
+    ],
+    "blockedTerms": [
+      "child",
+      "kid",
+      "celebrity",
+      "character",
+      "cartoon",
+      "pirate",
+      "whisper",
+      "breathy",
+      "seductive",
+      "shouting",
+      "screaming",
+      "news",
+      "anchor",
+      "clone",
+      "cloned",
+      "custom"
+    ]
+  },
+  "mastering": {
+    "integratedLufs": -16.0,
+    "loudnessRange": 7.0,
+    "truePeakDb": -1.5,
+    "vorbisQuality": 5,
+    "tempo": 1.0,
+    "maximumDurationSeconds": 1.0,
+    "silenceThresholdDb": -50.0,
+    "leadingSilenceSeconds": 0.02,
+    "trailingSilenceSeconds": 0.08
+  },
+  "phrases": [
+    {
+      "id": "adrenaline-rush",
+      "displayText": "Adrenaline Rush",
+      "spokenText": "Adrenaline"
+    },
+    {
+      "id": "aspect-of-the-turtle",
+      "displayText": "Aspect of the Turtle",
+      "spokenText": "Turtle"
+    },
+    {
+      "id": "fortifying-brew",
+      "displayText": "Fortifying Brew",
+      "spokenText": "Fort Brew"
+    },
+    {
+      "id": "summon-demonic-tyrant",
+      "displayText": "Summon Demonic Tyrant",
+      "spokenText": "Tyrant"
+    }
+  ]
+}

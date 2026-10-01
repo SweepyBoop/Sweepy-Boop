@@ -1,50 +1,63 @@
 {
   "schemaVersion": 1,
-  "pack": {
-    "id": "arena-faction-voice-study-enUS",
-    "description": "Original Alliance and Horde commander voice study for short arena callouts. These voices are not intended to imitate any Warcraft character or performer."
+  "scope": "full",
+  "api": {
+    "baseUrl": "https://api.cartesia.ai",
+    "voicesPath": "/voices",
+    "ttsPath": "/tts/bytes",
+    "version": "2026-08-14",
+    "authenticationOrder": [
+      "bearer"
+    ]
   },
-  "voiceDesignModel": {
-    "repository": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign",
-    "revision": "5ecdb67327fd37bb2e042aab12ff7391903235d3",
-    "dtype": "bfloat16",
-    "attentionImplementation": "sdpa"
+  "model": {
+    "id": "sonic-3.6",
+    "provider": "Cartesia"
   },
-  "cloneModel": {
-    "repository": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
-    "revision": "fd4b254389122332181a7c3db7f27e918eec64e3",
-    "dtype": "bfloat16",
-    "attentionImplementation": "sdpa"
+  "language": "en",
+  "locale": "en-US",
+  "takesPerVoice": 1,
+  "generationConfig": {
+    "speed": 1.0,
+    "volume": 1.0
   },
-  "locale": "enUS",
-  "language": "English",
-  "seed": 20260929,
-  "generation": {
-    "doSample": true,
-    "temperature": 0.6,
-    "topP": 0.8,
-    "topK": 20,
-    "repetitionPenalty": 1.05,
-    "subtalkerDoSample": true,
-    "subtalkerTemperature": 0.6,
-    "subtalkerTopP": 0.8,
-    "subtalkerTopK": 20,
-    "nonStreamingMode": true,
-    "cloneMode": "x-vector-only",
-    "appendTerminalPunctuation": true,
-    "designMaxNewTokens": 512,
-    "cloneMaxNewTokens": 96,
-    "prefixText": "Ready.",
-    "prefixJoiner": "\n",
-    "separatorMinimumSeconds": 0.12,
-    "separatorSearchStartSeconds": 0.25,
-    "separatorSearchEndRatio": 0.85,
-    "separatorThresholdDb": -48.0,
-    "separatorRelativeThreshold": 0.06,
-    "preservedLeadingSilenceSeconds": 0.02,
-    "maximumCalloutSeconds": 1.75,
-    "maximumAttempts": 6,
-    "retrySeedStep": 1
+  "outputFormat": {
+    "container": "wav",
+    "encoding": "pcm_s16le",
+    "sample_rate": 44100
+  },
+  "selection": {
+    "requiredGenders": [
+      "masculine",
+      "feminine"
+    ],
+    "preferredTerms": [
+      "neutral",
+      "clear",
+      "professional",
+      "narration",
+      "narrator",
+      "conversational",
+      "calm"
+    ],
+    "blockedTerms": [
+      "child",
+      "kid",
+      "celebrity",
+      "character",
+      "cartoon",
+      "pirate",
+      "whisper",
+      "breathy",
+      "seductive",
+      "shouting",
+      "screaming",
+      "news",
+      "anchor",
+      "clone",
+      "cloned",
+      "custom"
+    ]
   },
   "mastering": {
     "integratedLufs": -16.0,
@@ -57,244 +70,6 @@
     "leadingSilenceSeconds": 0.02,
     "trailingSilenceSeconds": 0.08
   },
-  "tempoOverrides": {
-    "coordinated-assault": 1.12
-  },
-  "speakers": [
-    {
-      "id": "alliance-commander",
-      "displayName": "Alliance Commander",
-      "description": "Original female announcer archetype with a clear, polished midrange and quiet authority.",
-      "designInstruction": "A clear adult female voice in a neutral studio recording. Plain, steady, and concise delivery with a polished midrange, even pace, precise consonants, and quiet authority. Minimal emotion and no dramatic emphasis, breathiness, theatrical flourishes, character acting, accent imitation, or resemblance to a known character or performer.",
-      "referenceText": "Today we are checking a clear and steady voice. Each short phrase should begin promptly, remain even in tone, and end without extra sound.",
-      "designSeed": 20260929,
-      "cloneSeedOffset": 0,
-      "seedOverrides": {
-        "avenging-wrath": 20261129,
-        "invoke-chi-ji": 20261131,
-        "metamorphosis": 20261130
-      }
-    },
-    {
-      "id": "horde-commander",
-      "displayName": "Horde Commander",
-      "description": "Original male announcer archetype with a clear, warm baritone and quiet authority.",
-      "designInstruction": "A clear adult male voice in a neutral studio recording. Plain, steady, and concise delivery with a warm baritone, even pace, firm consonants, and quiet authority. Minimal emotion and no dramatic emphasis, growling, gravel, vocalizations, character acting, accent imitation, or resemblance to a known character or performer.",
-      "referenceText": "Today we are checking a clear and steady voice. Each short phrase should begin promptly, remain even in tone, and end without extra sound.",
-      "designSeed": 20261929,
-      "cloneSeedOffset": 1000,
-      "seedOverrides": {
-        "avenging-wrath": 20262130,
-        "invoke-chi-ji": 20262131,
-        "metamorphosis": 20262130
-      }
-    }
-  ],
-  "specs": [
-    {
-      "id": 251,
-      "name": "Frost Death Knight",
-      "class": "DEATHKNIGHT",
-      "role": "dps"
-    },
-    {
-      "id": 252,
-      "name": "Unholy Death Knight",
-      "class": "DEATHKNIGHT",
-      "role": "dps"
-    },
-    {
-      "id": 577,
-      "name": "Havoc Demon Hunter",
-      "class": "DEMONHUNTER",
-      "role": "dps"
-    },
-    {
-      "id": 102,
-      "name": "Balance Druid",
-      "class": "DRUID",
-      "role": "dps"
-    },
-    {
-      "id": 103,
-      "name": "Feral Druid",
-      "class": "DRUID",
-      "role": "dps"
-    },
-    {
-      "id": 105,
-      "name": "Restoration Druid",
-      "class": "DRUID",
-      "role": "healer"
-    },
-    {
-      "id": 1467,
-      "name": "Devastation Evoker",
-      "class": "EVOKER",
-      "role": "dps"
-    },
-    {
-      "id": 1468,
-      "name": "Preservation Evoker",
-      "class": "EVOKER",
-      "role": "healer"
-    },
-    {
-      "id": 1473,
-      "name": "Augmentation Evoker",
-      "class": "EVOKER",
-      "role": "dps"
-    },
-    {
-      "id": 253,
-      "name": "Beast Mastery Hunter",
-      "class": "HUNTER",
-      "role": "dps"
-    },
-    {
-      "id": 254,
-      "name": "Marksmanship Hunter",
-      "class": "HUNTER",
-      "role": "dps"
-    },
-    {
-      "id": 255,
-      "name": "Survival Hunter",
-      "class": "HUNTER",
-      "role": "dps"
-    },
-    {
-      "id": 62,
-      "name": "Arcane Mage",
-      "class": "MAGE",
-      "role": "dps"
-    },
-    {
-      "id": 63,
-      "name": "Fire Mage",
-      "class": "MAGE",
-      "role": "dps"
-    },
-    {
-      "id": 64,
-      "name": "Frost Mage",
-      "class": "MAGE",
-      "role": "dps"
-    },
-    {
-      "id": 270,
-      "name": "Mistweaver Monk",
-      "class": "MONK",
-      "role": "healer"
-    },
-    {
-      "id": 269,
-      "name": "Windwalker Monk",
-      "class": "MONK",
-      "role": "dps"
-    },
-    {
-      "id": 65,
-      "name": "Holy Paladin",
-      "class": "PALADIN",
-      "role": "healer"
-    },
-    {
-      "id": 70,
-      "name": "Retribution Paladin",
-      "class": "PALADIN",
-      "role": "dps"
-    },
-    {
-      "id": 256,
-      "name": "Discipline Priest",
-      "class": "PRIEST",
-      "role": "healer"
-    },
-    {
-      "id": 257,
-      "name": "Holy Priest",
-      "class": "PRIEST",
-      "role": "healer"
-    },
-    {
-      "id": 258,
-      "name": "Shadow Priest",
-      "class": "PRIEST",
-      "role": "dps"
-    },
-    {
-      "id": 259,
-      "name": "Assassination Rogue",
-      "class": "ROGUE",
-      "role": "dps"
-    },
-    {
-      "id": 260,
-      "name": "Outlaw Rogue",
-      "class": "ROGUE",
-      "role": "dps"
-    },
-    {
-      "id": 261,
-      "name": "Subtlety Rogue",
-      "class": "ROGUE",
-      "role": "dps"
-    },
-    {
-      "id": 262,
-      "name": "Elemental Shaman",
-      "class": "SHAMAN",
-      "role": "dps"
-    },
-    {
-      "id": 263,
-      "name": "Enhancement Shaman",
-      "class": "SHAMAN",
-      "role": "dps"
-    },
-    {
-      "id": 264,
-      "name": "Restoration Shaman",
-      "class": "SHAMAN",
-      "role": "healer"
-    },
-    {
-      "id": 265,
-      "name": "Affliction Warlock",
-      "class": "WARLOCK",
-      "role": "dps"
-    },
-    {
-      "id": 266,
-      "name": "Demonology Warlock",
-      "class": "WARLOCK",
-      "role": "dps"
-    },
-    {
-      "id": 267,
-      "name": "Destruction Warlock",
-      "class": "WARLOCK",
-      "role": "dps"
-    },
-    {
-      "id": 71,
-      "name": "Arms Warrior",
-      "class": "WARRIOR",
-      "role": "dps"
-    },
-    {
-      "id": 72,
-      "name": "Fury Warrior",
-      "class": "WARRIOR",
-      "role": "dps"
-    }
-  ],
-  "requiredUtilitySpellIds": [
-    23920,
-    8178,
-    212295
-  ],
   "phrases": [
     {
       "id": "avenging-wrath",
@@ -1230,5 +1005,46 @@
       ],
       "category": "utility"
     }
-  ]
+  ],
+  "enforceMaximumDuration": true,
+  "voices": [
+    {
+      "id": "alliance-commander",
+      "displayName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "providerName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "catalogMetadata": {
+        "id": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+        "name": "Gemma",
+        "description": "Confident, emotive British female for professional assistance",
+        "gender": "feminine",
+        "language": "en",
+        "is_owner": false,
+        "created_at": "2026-02-13T20:16:28.980Z"
+      }
+    },
+    {
+      "id": "horde-commander",
+      "displayName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "providerName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "catalogMetadata": {
+        "id": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+        "name": "Archie",
+        "description": "Warm, conversational British male for casual and engaging dialogue.",
+        "gender": "masculine",
+        "language": "en",
+        "is_owner": false,
+        "created_at": "2026-05-11T10:17:04.846Z"
+      }
+    }
+  ],
+  "pack": {
+    "id": "arena-faction-voices-cartesia-enUS",
+    "description": "Full 74-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+  }
 }

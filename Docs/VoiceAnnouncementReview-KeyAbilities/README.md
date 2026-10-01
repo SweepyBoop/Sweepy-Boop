@@ -1,22 +1,25 @@
-# Alliance and Horde Commander Voice Review
+# Alliance and Horde Cartesia Voice Review
 
-This portable review pack contains 74 arena callouts for each of
-2 original faction-flavored voices, for 148 mastered
-OGG files total.
+This portable review pack contains 74 arena callouts for each of two
+faction-flavored stock voices, for 148 mastered OGG files total.
+
+- Alliance: Gemma, Cartesia stock feminine voice
+- Horde: Archie, Cartesia stock masculine voice
+- Model: Cartesia `sonic-3.6`, API version `2026-08-14`
 
 Open `listening/index.html` in a browser to compare both voices by ability.
-No Python environment or model download is required for listening.
+No API key, Python environment, or provider access is required for listening.
 
-The exact frozen VoiceDesign inputs used by the Base clone model are under
-`references/`. Keep them with the provenance report; regenerating from a seed
-alone is not guaranteed to preserve voice identity across devices.
+Every mastered clip is at most 1.0 seconds. Clips already within one second
+remain at natural speed; only longer clips receive the minimum tempo increase
+required to satisfy the cap.
 
-Every mastered clip is at most 1.0 seconds. Generation uses a disposable spoken
-prefix that is removed at a validated silence boundary before mastering.
+The generated OGG files were committed on 2026-10-01 under a user-confirmed
+eligible Cartesia tier; the exact tier name was not recorded.
 
 The files under `ogg/` are review assets only. They are not wired into the addon
 runtime or included in the published addon package.
 
 See `reports/validation-summary.md` for human-readable hashes and durations, and
-`reports/review-run.json` for portable model, reference, generation, crop, seed,
-tempo, and mastering provenance.
+`reports/review-run.json` for portable provider, voice, request, tempo, and
+mastering provenance.
