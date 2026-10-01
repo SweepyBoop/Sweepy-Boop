@@ -410,15 +410,13 @@ addon.GetMainlineArenaFrameOptions = function(order)
                     arenaImportantAuraVoiceEnabled = {
                         order = 2,
                         type = "toggle",
-                        width = "relative",
-                        relWidth = 0.25,
+                        width = 0.75,
                         name = addon.FORMAT_ATLAS("chatframe-button-icon-voicechat") .. " Enabled",
                     },
                     arenaImportantAuraVoicePack = {
                         order = 2.1,
                         type = "select",
-                        width = "relative",
-                        relWidth = 0.65,
+                        width = 1.1,
                         name = "Voice",
                         values = {
                             alliance = "Alliance - Gemma",
