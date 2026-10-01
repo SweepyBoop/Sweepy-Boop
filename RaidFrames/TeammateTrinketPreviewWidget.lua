@@ -11,6 +11,7 @@ local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local previewFrameWidth = 144;
 local previewFrameHeight = 72;
 local previewHeight = 116;
+local previewMargin = 16;
 local previewDuration = 120;
 local previewElapsed = 35;
 
@@ -147,7 +148,9 @@ local function RenderSample(widget)
     local shownIconSize = previewFrameHeight * GetIconScale(config);
     local offsetX = config.raidFrameTeammateTrinketOffsetX or 0;
     local offsetY = config.raidFrameTeammateTrinketOffsetY or 0;
-    local leftExtent = math.max(0, shownIconSize - offsetX);
+    local iconScale = shownIconSize / iconBaseSize;
+    local borderExtent = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING * iconScale;
+    local leftExtent = math.max(0, shownIconSize - offsetX + borderExtent);
     local icon = widget.sample.icon;
 
     widget.sample.frame:ClearAllPoints();
@@ -155,7 +158,7 @@ local function RenderSample(widget)
         "TOPLEFT",
         widget.frame,
         "TOPLEFT",
-        8 + leftExtent,
+        previewMargin + leftExtent,
         -28
     );
     icon:ClearAllPoints();
