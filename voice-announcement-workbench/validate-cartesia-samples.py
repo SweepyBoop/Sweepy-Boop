@@ -12,6 +12,7 @@ from typing import Any
 
 WORKBENCH = Path(__file__).resolve().parent
 DEFAULT_MANIFEST = WORKBENCH / "cartesia-sample-manifest.json"
+FACTION_MANIFEST = WORKBENCH / "faction-voice-manifest.json"
 EXPECTED_PHRASES = {
     "adrenaline-rush": "Adrenaline",
     "aspect-of-the-turtle": "Turtle",
@@ -30,28 +31,48 @@ def parse_args() -> argparse.Namespace:
 
 def validate_manifest(manifest: dict[str, Any]) -> list[str]:
     errors: list[str] = []
-    if manifest.get("schemaVersion") != 1 or manifest.get("scope") != "comparison":
-        errors.append("manifest must use schemaVersion 1 and comparison scope")
+    scope = manifest.get("scope")
+    if manifest.get("schemaVersion") != 1 or scope not in {"comparison", "full"}:
+        errors.append("manifest must use schemaVersion 1 and comparison/full scope")
     if manifest.get("api", {}).get("baseUrl") != "https://api.cartesia.ai":
         errors.append("api.baseUrl must be https://api.cartesia.ai")
     if manifest.get("api", {}).get("version") != "2026-08-14":
         errors.append("api.version must be pinned to 2026-08-14")
+    if manifest.get("api", {}).get("authenticationOrder") != ["bearer"]:
+        errors.append("Cartesia SDK 4.2.0 requires bearer API-key authentication")
     if manifest.get("model", {}).get("id") != "sonic-3.6":
         errors.append("model.id must be sonic-3.6")
-    phrases = {
-        phrase.get("id"): phrase.get("spokenText")
-        for phrase in manifest.get("phrases", [])
-        if isinstance(phrase, dict)
-    }
-    if phrases != EXPECTED_PHRASES:
-        errors.append("phrases must match the four short-callout probes")
     if set(manifest.get("selection", {}).get("requiredGenders", [])) != {
         "masculine",
         "feminine",
     }:
         errors.append("selection must require masculine and feminine voices")
     if float(manifest.get("mastering", {}).get("tempo", 0)) != 1.0:
-        errors.append("mastering tempo must be 1.0")
+        errors.append("base mastering tempo must be 1.0")
+    if scope == "comparison":
+        phrases = {
+            phrase.get("id"): phrase.get("spokenText")
+            for phrase in manifest.get("phrases", [])
+            if isinstance(phrase, dict)
+        }
+        if phrases != EXPECTED_PHRASES:
+            errors.append("comparison phrases must match the four short-callout probes")
+        if manifest.get("enforceMaximumDuration") is not False:
+            errors.append("comparison must report rather than enforce maximum duration")
+    elif scope == "full":
+        faction = json.loads(FACTION_MANIFEST.read_text(encoding="utf-8"))
+        if manifest.get("phrases") != faction.get("phrases"):
+            errors.append("full-pack phrases must match the faction catalog")
+        voices = manifest.get("voices") or []
+        if len(voices) != 2 or {voice.get("gender") for voice in voices} != {
+            "masculine",
+            "feminine",
+        }:
+            errors.append("full pack must pin one masculine and one feminine voice")
+        if any(voice.get("stockVoice") is not True for voice in voices):
+            errors.append("full pack must use stock voices")
+        if manifest.get("enforceMaximumDuration") is not True:
+            errors.append("full pack must enforce maximum duration")
     return errors
 
 
@@ -71,6 +92,10 @@ def find_secret_field(value: Any, path: str = "root") -> list[str]:
 
 def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
     errors: list[str] = []
+    if report.get("scope") != manifest.get("scope"):
+        errors.append("run scope does not match the manifest")
+    if report.get("enforceMaximumDuration") != manifest.get("enforceMaximumDuration"):
+        errors.append("run duration enforcement does not match the manifest")
     if report.get("api") != manifest.get("api"):
         errors.append("run API settings do not match the manifest")
     if report.get("model") != manifest.get("model"):
@@ -85,9 +110,14 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
         errors.append("run must contain one masculine and one feminine voice")
     if any(not voice.get("voice_id") for voice in voices):
         errors.append("every selected voice must have a voice ID")
+    if manifest.get("scope") == "full":
+        expected_voice_ids = {voice["voiceId"] for voice in manifest["voices"]}
+        if {voice.get("voice_id") for voice in voices} != expected_voice_ids:
+            errors.append("run voice IDs do not match the full-pack manifest")
     samples = report.get("samples") or []
-    if len(samples) != 8:
-        errors.append("run must contain exactly eight samples")
+    expected_count = len(manifest.get("phrases", [])) * 2
+    if len(samples) != expected_count:
+        errors.append(f"run must contain exactly {expected_count} samples")
     seen: set[str] = set()
     fingerprints: dict[str, set[str]] = {}
     for sample in samples:
@@ -107,8 +137,16 @@ def validate_run(manifest: dict[str, Any], report: dict[str, Any]) -> list[str]:
                 errors.append(f"sample {key} has invalid {field} provenance")
         if sample.get("ogg", {}).get("channels") != 1:
             errors.append(f"sample {key} must be mono")
-        if float(sample.get("tempo", 0)) != 1.0:
-            errors.append(f"sample {key} must use natural tempo")
+        tempo = float(sample.get("tempo", 0))
+        if manifest.get("scope") == "comparison" and tempo != 1.0:
+            errors.append(f"comparison sample {key} must use natural tempo")
+        if manifest.get("scope") == "full" and tempo < 1.0:
+            errors.append(f"full-pack sample {key} has invalid tempo")
+        duration = float(sample.get("ogg", {}).get("durationSeconds", 0))
+        if manifest.get("enforceMaximumDuration") and duration > float(
+            manifest["mastering"]["maximumDurationSeconds"]
+        ):
+            errors.append(f"sample {key} exceeds the duration cap")
         mastering = sample.get("mastering")
         if not isinstance(mastering, dict):
             errors.append(f"sample {key} is missing mastering data")
@@ -137,7 +175,8 @@ def main() -> int:
         for error in errors:
             print(f"ERROR: {error}")
         return 1
-    print("Validated Cartesia stock-voice comparison manifest and run." if args.run_report else "Validated Cartesia stock-voice comparison manifest.")
+    label = f"Cartesia stock-voice {manifest['scope']}"
+    print(f"Validated {label} manifest and run." if args.run_report else f"Validated {label} manifest.")
     return 0
 
 

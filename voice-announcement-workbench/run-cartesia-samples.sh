@@ -8,6 +8,7 @@ generator="$workbench/generate-cartesia-samples.py"
 validator="$workbench/validate-cartesia-samples.py"
 scratch="$workbench/scratch/cartesia-bakeoff"
 open_page=true
+full_pack=false
 arguments=()
 
 usage() {
@@ -15,6 +16,7 @@ usage() {
 Usage: bash $0 [options]
 
 Options:
+  --full                Generate the full approved Archie/Gemma catalog.
   --discover-only       Fetch and sanitize the Cartesia voice catalog only.
   --shortlist-only      Fetch/filter voices without generating speech.
   --speaker VALUE       masculine, feminine, voice-a, or voice-b.
@@ -29,6 +31,10 @@ EOF
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --full)
+      full_pack=true
+      shift
+      ;;
     --speaker|--phrase)
       arguments+=("$1" "${2:?$1 requires a value}")
       shift 2
@@ -52,6 +58,11 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
+
+if $full_pack; then
+  manifest="$workbench/cartesia-pack-manifest.json"
+  scratch="$workbench/scratch/cartesia-full-pack"
+fi
 
 for required in "$python" "$manifest" "$generator" "$validator"; do
   if [[ ! -e "$required" ]]; then

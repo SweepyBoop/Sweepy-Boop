@@ -28,7 +28,15 @@ export CARTESIA_API_KEY='...'
 bash voice-announcement-workbench/run-cartesia-samples.sh
 ```
 
-The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`. Confirm current Cartesia generated-audio redistribution terms before any full-catalog generation or promotion.
+The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`.
+
+The approved sample voices are Gemma for Alliance and Archie for Horde. Generate or resume the full 74-callout-per-voice candidate with:
+
+```bash
+bash voice-announcement-workbench/run-cartesia-samples.sh --full
+```
+
+Full-pack provider WAVs, mastered OGGs, reports, and the listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-full-pack/`. Confirm current Cartesia generated-audio redistribution terms before any full-catalog generation or promotion.
 
 ## Next model: CosyVoice 3
 

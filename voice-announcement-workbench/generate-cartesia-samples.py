@@ -49,7 +49,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--scratch", type=Path, default=DEFAULT_SCRATCH)
     parser.add_argument("--discover-only", action="store_true")
     parser.add_argument("--shortlist-only", action="store_true")
-    parser.add_argument("--speaker", choices=("masculine", "feminine", "voice-a", "voice-b"))
+    parser.add_argument("--speaker")
     parser.add_argument("--phrase")
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--remaster", action="store_true")
@@ -59,17 +59,21 @@ def parse_args() -> argparse.Namespace:
 
 def load_manifest(path: Path) -> dict[str, Any]:
     manifest = json.loads(path.read_text(encoding="utf-8"))
-    if manifest.get("schemaVersion") != 1 or manifest.get("scope") != "comparison":
-        raise ValueError("Cartesia manifest must use schemaVersion 1 and comparison scope")
+    if manifest.get("schemaVersion") != 1:
+        raise ValueError("Cartesia manifest must use schemaVersion 1")
+    if manifest.get("scope") not in {"comparison", "full"}:
+        raise ValueError("Cartesia manifest scope must be comparison or full")
     if manifest.get("model", {}).get("id") != "sonic-3.6":
-        raise ValueError("Cartesia comparison must pin sonic-3.6")
-    if len(manifest.get("phrases", [])) != 4:
-        raise ValueError("Cartesia comparison requires four phrases")
+        raise ValueError("Cartesia manifests must pin sonic-3.6")
+    if not manifest.get("phrases"):
+        raise ValueError("Cartesia manifests require at least one phrase")
     if set(manifest.get("selection", {}).get("requiredGenders", [])) != {
         "masculine",
         "feminine",
     }:
-        raise ValueError("Cartesia comparison requires masculine and feminine voices")
+        raise ValueError("Cartesia manifests require masculine and feminine voices")
+    if manifest["scope"] == "full" and len(manifest.get("voices", [])) != 2:
+        raise ValueError("The full Cartesia manifest must pin exactly two voices")
     return manifest
 
 
@@ -383,6 +387,21 @@ def load_selected(reports: Path) -> list[VoiceChoice]:
     return [VoiceChoice(**item) for item in payload["voices"]]
 
 
+def pinned_choices(manifest: dict[str, Any]) -> list[VoiceChoice]:
+    return [
+        VoiceChoice(
+            blind_id=str(voice["id"]),
+            blind_name=str(voice["displayName"]),
+            voice_id=str(voice["voiceId"]),
+            name=str(voice["providerName"]),
+            gender=str(voice["gender"]),
+            score=0,
+            metadata=dict(voice["catalogMetadata"]),
+        )
+        for voice in manifest.get("voices", [])
+    ]
+
+
 def canonical_fingerprint(body: dict[str, Any]) -> str:
     comparable = {key: value for key, value in body.items() if key != "voice"}
     encoded = json.dumps(comparable, sort_keys=True, separators=(",", ":")).encode()
@@ -465,24 +484,42 @@ def main() -> int:
         print("Cartesia credential is available; no network request was made.")
         return 0
 
-    catalog_path = reports / "voices-catalog-sanitized.json"
-    if args.force or not catalog_path.is_file():
-        voices = discover(manifest, reports)
-    else:
-        voices = json.loads(catalog_path.read_text(encoding="utf-8"))["voices"]
-    if args.discover_only:
-        print(f"Catalog report: {catalog_path}")
-        return 0
-
     selected_path = reports / "selected-voices.json"
-    if args.force or not selected_path.is_file():
-        selected = shortlist(manifest, reports, voices)
+    if manifest["scope"] == "full":
+        selected = pinned_choices(manifest)
+        selected_path.write_text(
+            json.dumps(
+                {
+                    "createdUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                    "source": "pinned full-pack manifest",
+                    "voices": [choice.__dict__ for choice in selected],
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        if args.discover_only or args.shortlist_only:
+            print("The full Cartesia manifest already pins the approved voices.")
+            print(f"Selected voices: {selected_path}")
+            return 0
     else:
-        selected = load_selected(reports)
-    if args.shortlist_only:
-        print(f"Shortlist report: {reports / 'voices-shortlist.json'}")
-        print(f"Selected voices: {selected_path}")
-        return 0
+        catalog_path = reports / "voices-catalog-sanitized.json"
+        if args.force or not catalog_path.is_file():
+            voices = discover(manifest, reports)
+        else:
+            voices = json.loads(catalog_path.read_text(encoding="utf-8"))["voices"]
+        if args.discover_only:
+            print(f"Catalog report: {catalog_path}")
+            return 0
+        if args.force or not selected_path.is_file():
+            selected = shortlist(manifest, reports, voices)
+        else:
+            selected = load_selected(reports)
+        if args.shortlist_only:
+            print(f"Shortlist report: {reports / 'voices-shortlist.json'}")
+            print(f"Selected voices: {selected_path}")
+            return 0
 
     if args.speaker:
         selected = [
@@ -515,7 +552,20 @@ def main() -> int:
         for phrase in phrases:
             output_key = f"{voice.blind_id}-{phrase['id']}-take-1"
             provider_path = provider_dir / f"{output_key}.wav"
-            generation: dict[str, Any] = {}
+            transcript = str(phrase["spokenText"])
+            if transcript[-1:] not in ".!?":
+                transcript += "."
+            request_body = tts_body(manifest, transcript, voice.voice_id)
+            generation: dict[str, Any] = {
+                "generationSeconds": None,
+                "generationUtc": None,
+                "authenticationScheme": manifest["api"]["authenticationOrder"][0],
+                "requestFingerprint": canonical_fingerprint(request_body),
+                "requestBodyWithoutVoice": {
+                    key: value for key, value in request_body.items() if key != "voice"
+                },
+                "responseRequestId": None,
+            }
             if args.force or not provider_path.is_file():
                 print(f"Generating {output_key}: {phrase['spokenText']!r}", flush=True)
                 generation = generate_provider_audio(
@@ -526,30 +576,61 @@ def main() -> int:
                 )
             raw_info = inspect_audio(provider_path)
             ogg_path = ogg_dir / f"{output_key}.ogg"
+            sample_manifest = {**manifest, "mastering": dict(manifest["mastering"])}
+            effective_tempo = float(sample_manifest["mastering"]["tempo"])
             mastering = None
-            if args.force or args.remaster or not ogg_path.is_file():
-                print(f"Mastering {output_key}...", flush=True)
-                mastering = master_audio(ffmpeg, provider_path, ogg_path, manifest)
-            ogg_info = inspect_audio(ogg_path)
             previous = prior_samples.get(output_key)
+            should_master = (
+                args.force
+                or args.remaster
+                or not ogg_path.is_file()
+                or (manifest["scope"] == "full" and previous is None)
+            )
+            if should_master:
+                print(f"Mastering {output_key} at {effective_tempo}x...", flush=True)
+                mastering = master_audio(ffmpeg, provider_path, ogg_path, sample_manifest)
+            ogg_info = inspect_audio(ogg_path)
+            maximum_duration = float(manifest["mastering"]["maximumDurationSeconds"])
+            if manifest.get("enforceMaximumDuration") and mastering is not None:
+                for _ in range(3):
+                    if ogg_info["durationSeconds"] <= maximum_duration:
+                        break
+                    effective_tempo = round(
+                        effective_tempo
+                        * ogg_info["durationSeconds"]
+                        / (maximum_duration * 0.98),
+                        6,
+                    )
+                    sample_manifest["mastering"]["tempo"] = effective_tempo
+                    print(
+                        f"Remastering {output_key} at {effective_tempo}x "
+                        f"to satisfy the {maximum_duration}s cap...",
+                        flush=True,
+                    )
+                    mastering = master_audio(ffmpeg, provider_path, ogg_path, sample_manifest)
+                    ogg_info = inspect_audio(ogg_path)
             if previous and previous.get("providerOriginal", {}).get("sha256") == raw_info["sha256"]:
-                if not generation:
-                    generation = {
-                        key: previous.get(key)
-                        for key in (
-                            "generationSeconds",
-                            "generationUtc",
-                            "authenticationScheme",
-                            "requestFingerprint",
-                            "requestBodyWithoutVoice",
-                            "responseRequestId",
-                        )
-                    }
+                for field in (
+                    "generationSeconds",
+                    "generationUtc",
+                    "authenticationScheme",
+                    "requestFingerprint",
+                    "requestBodyWithoutVoice",
+                    "responseRequestId",
+                ):
+                    if previous.get(field) is not None:
+                        generation[field] = previous[field]
             if previous and previous.get("ogg", {}).get("sha256") == ogg_info["sha256"]:
                 if mastering is None:
                     mastering = previous.get("mastering")
+                    effective_tempo = float(previous.get("tempo", effective_tempo))
             if ogg_info["channels"] != 1 or ogg_info["durationSeconds"] <= 0:
                 raise RuntimeError(f"Invalid mastered Cartesia audio: {ogg_path}")
+            if manifest.get("enforceMaximumDuration") and ogg_info["durationSeconds"] > maximum_duration:
+                raise RuntimeError(
+                    f"Mastered audio exceeds {maximum_duration}s for {ogg_path}: "
+                    f"{ogg_info['durationSeconds']}s"
+                )
             if mastering and float(mastering["finalPass"]["output_tp"]) > float(
                 manifest["mastering"]["truePeakDb"]
             ) + 0.1:
@@ -570,17 +651,17 @@ def main() -> int:
                     **generation,
                     "providerOriginal": raw_info,
                     "ogg": ogg_info,
-                    "tempo": 1.0,
+                    "tempo": effective_tempo,
                     "mastering": mastering,
-                    "meetsDurationTarget": ogg_info["durationSeconds"] <= float(
-                        manifest["mastering"]["maximumDurationSeconds"]
-                    ),
+                    "meetsDurationTarget": ogg_info["durationSeconds"] <= maximum_duration,
                 }
             )
 
     report = {
         "createdUtc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "provider": "Cartesia",
+        "scope": manifest["scope"],
+        "enforceMaximumDuration": manifest.get("enforceMaximumDuration", False),
         "api": manifest["api"],
         "model": manifest["model"],
         "language": manifest["language"],
@@ -599,7 +680,10 @@ def main() -> int:
         samples,
         listening_page,
         review_manifest(manifest, selected),
-        model_label=f"Cartesia/{manifest['model']['id']} stock voice comparison",
+        model_label=(
+            f"Cartesia/{manifest['model']['id']} "
+            f"{'full stock voice candidate' if manifest['scope'] == 'full' else 'stock voice comparison'}"
+        ),
     )
     print(f"Run report: {prior_report_path}")
     print(f"Listening page: {listening_page}")

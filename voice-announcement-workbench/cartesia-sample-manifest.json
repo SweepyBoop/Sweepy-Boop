@@ -17,6 +17,7 @@
   "language": "en",
   "locale": "en-US",
   "takesPerVoice": 1,
+  "enforceMaximumDuration": false,
   "generationConfig": {
     "speed": 1.0,
     "volume": 1.0
