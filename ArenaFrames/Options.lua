@@ -441,8 +441,8 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         width = 1.1,
                         name = "Voice",
                         values = {
-                            alliance = "Alliance - Gemma",
-                            horde = "Horde - Archie",
+                            alliance = addon.ARENA_IMPORTANT_AURA_VOICE_PACKS.alliance.displayName,
+                            horde = addon.ARENA_IMPORTANT_AURA_VOICE_PACKS.horde.displayName,
                         },
                         sorting = { "alliance", "horde" },
                         disabled = function()

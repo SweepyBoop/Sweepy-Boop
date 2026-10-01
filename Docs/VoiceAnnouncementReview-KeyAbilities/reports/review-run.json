@@ -1,9 +1,9 @@
 {
-  "createdUtc": "2026-10-01T01:42:13Z",
+  "createdUtc": "2026-10-01T03:19:01Z",
   "sourceManifest": "cartesia-pack-manifest.json",
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 74-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 75-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   },
   "provider": "Cartesia",
   "scope": "full",
@@ -1193,6 +1193,85 @@
           "output_thresh": "-27.93",
           "normalization_type": "linear",
           "target_offset": "1.93"
+        }
+      }
+    },
+    {
+      "outputKey": "alliance-commander-blessing-of-sanctuary-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "blessing-of-sanctuary",
+      "displayText": "Blessing of Sanctuary",
+      "spokenText": "Sanctuary",
+      "generationSeconds": 0.618,
+      "generationUtc": "2026-10-01T03:19:01Z",
+      "requestFingerprint": "C72FF3085F6B0095F3D5EAC7833D87499AFC2C2AAB183D2502345CCF94831635",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sanctuary.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "4BEF778CB79F664FC4A1FBAFBD57B6A5748829678EE5E0FB1E204E67A1EDAF5D",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 49392,
+        "durationSeconds": 1.12,
+        "samplePeakDbfs": -1.5772,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "51B926F63E5A54DBFD4C484AEF908049FCC5D2D5467B0BC1AB4A1661A179E763",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 35064,
+        "durationSeconds": 0.795102,
+        "samplePeakDbfs": -1.6332,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-blessing-of-sanctuary.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-17.97",
+          "input_tp": "-1.55",
+          "input_lra": "0.00",
+          "input_thresh": "-27.97",
+          "output_i": "-17.92",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.92",
+          "normalization_type": "linear",
+          "target_offset": "1.92"
+        },
+        "finalPass": {
+          "input_i": "-17.97",
+          "input_tp": "-1.55",
+          "input_lra": "0.00",
+          "input_thresh": "-27.97",
+          "output_i": "-17.92",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.92",
+          "normalization_type": "linear",
+          "target_offset": "1.92"
         }
       }
     },
@@ -7039,6 +7118,85 @@
           "output_thresh": "-28.75",
           "normalization_type": "linear",
           "target_offset": "2.75"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-blessing-of-sanctuary-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "blessing-of-sanctuary",
+      "displayText": "Blessing of Sanctuary",
+      "spokenText": "Sanctuary",
+      "generationSeconds": 0.366,
+      "generationUtc": "2026-10-01T03:19:01Z",
+      "requestFingerprint": "C72FF3085F6B0095F3D5EAC7833D87499AFC2C2AAB183D2502345CCF94831635",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sanctuary.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "70F4245B5F96E52979F2C39162317F09354E9A2B3EF2F4BFFB82DE220B8E1829",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 56448,
+        "durationSeconds": 1.28,
+        "samplePeakDbfs": -5.6394,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "10D9E3E0194A7CCF2B274AEE26B1AE26B4A36FC778047C2A35C50CC84027F0BD",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 31183,
+        "durationSeconds": 0.707098,
+        "samplePeakDbfs": -1.6892,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-blessing-of-sanctuary.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-20.56",
+          "input_tp": "-5.58",
+          "input_lra": "0.00",
+          "input_thresh": "-30.56",
+          "output_i": "-16.46",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.46",
+          "normalization_type": "linear",
+          "target_offset": "0.46"
+        },
+        "finalPass": {
+          "input_i": "-20.56",
+          "input_tp": "-5.58",
+          "input_lra": "0.00",
+          "input_thresh": "-30.56",
+          "output_i": "-16.46",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.46",
+          "normalization_type": "linear",
+          "target_offset": "0.46"
         }
       }
     },

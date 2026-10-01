@@ -202,8 +202,8 @@ local function ApplyTranslations(locale)
     L["Important buff alerts"] = "Alertas de beneficios importantes";
     L["Voice announcements"] = "Anuncios de voz";
     L["Voice"] = "Voz";
-    L["Alliance - Gemma"] = "Alianza - Gemma";
-    L["Horde - Archie"] = "Horda - Archie";
+    L["Female - Gemma"] = "Femenina - Gemma";
+    L["Male - Archie"] = "Masculina - Archie";
     L["Select all"] = "Seleccionar todo";
     L["Clear all"] = "Desmarcar todo";
     L["Callouts"] = "Avisos";

@@ -19,11 +19,11 @@ REPOSITORY = WORKBENCH.parent
 DEFAULT_SOURCE = REPOSITORY / "Docs" / "VoiceAnnouncementReview-KeyAbilities"
 DEFAULT_SOUNDS = REPOSITORY / "Sounds" / "ArenaImportantAuras"
 DEFAULT_DATA = REPOSITORY / "Common" / "ArenaImportantAuraVoiceData.lua"
-SOURCE_CALLOUTS = 74
-SOURCE_SPELL_IDS = 84
-RUNTIME_CALLOUTS = 61
-RUNTIME_SPELL_IDS = 66
-EXPECTED_OGGS = 148
+SOURCE_CALLOUTS = 75
+SOURCE_SPELL_IDS = 85
+RUNTIME_CALLOUTS = 62
+RUNTIME_SPELL_IDS = 67
+EXPECTED_OGGS = 150
 # Audited opponent-unit buff auras. Target debuffs, pet/summon auras, totem/ground
 # effects, and unverified variants remain packaged but are not exposed at runtime yet.
 ARENA_OPPONENT_BUFF_SPELL_IDS = {
@@ -32,7 +32,7 @@ ARENA_OPPONENT_BUFF_SPELL_IDS = {
     102342, 102543, 102560, 104773, 106951, 107574, 108271, 108416,
     114051, 114052, 116849, 117679, 118038, 120954, 121471, 125174,
     184364, 185422, 186265, 187827, 190319, 191634, 194223, 194249,
-    196718, 200183, 204018, 209426, 212295, 212800, 264735, 288613,
+    196718, 200183, 204018, 209426, 210256, 212295, 212800, 264735, 288613,
     8178, 114050, 342246, 343818, 357170, 363534, 363916, 365362, 375087,
     378464, 410358, 454351, 466772, 1219480,
 }
@@ -54,13 +54,13 @@ ASCENDANCE_SPLITS = (
 )
 VOICE_SOURCES = {
     "alliance": {
-        "displayName": "Alliance - Gemma",
+        "displayName": "Female - Gemma",
         "providerName": "Gemma",
         "sourcePrefix": "alliance-commander-",
         "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
     },
     "horde": {
-        "displayName": "Horde - Archie",
+        "displayName": "Male - Archie",
         "providerName": "Archie",
         "sourcePrefix": "horde-commander-",
         "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
