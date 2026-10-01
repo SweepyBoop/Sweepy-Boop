@@ -201,6 +201,14 @@ L["Nameplate + pulsing icon"] = "Nameplate + pulsing icon";
 
 L["Arena frames"] = "Arena frames";
 L["Important buff alerts"] = "Important buff alerts";
+L["Voice announcements"] = "Voice announcements";
+L["Voice"] = "Voice";
+L["Alliance - Gemma"] = "Alliance - Gemma";
+L["Horde - Archie"] = "Horde - Archie";
+L["Select all"] = "Select all";
+L["Clear all"] = "Clear all";
+L["Callouts"] = "Callouts";
+L["Announce curated important arena auras over the Master channel. Changes made during combat apply after combat. Newly added sound files require a full client restart; /reload is not sufficient."] = "Announce curated important arena auras over the Master channel. Changes made during combat apply after combat. Newly added sound files require a full client restart; /reload is not sufficient.";
 L["Standalone"] = "Standalone";
 L["Show important buff icons on Blizzard arena frames"] = "Show important buff icons on Blizzard arena frames";
 L["Shows up to the configured number of important buffs for each arena opponent in three fixed enemy groups."] = "Shows up to the configured number of important buffs for each arena opponent in three fixed enemy groups.";

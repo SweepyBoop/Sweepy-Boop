@@ -14,6 +14,45 @@ local function SetArenaFrameOptionAndRefreshOffensiveIconPreview(info, val)
     end
 end
 
+local function GetArenaImportantAuraVoiceOption(info)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local key = info[#info];
+    if addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUT_BY_ID[key] then
+        return config.arenaImportantAuraVoiceCallouts[key] ~= false;
+    end
+
+    return config[key];
+end
+
+local function SetArenaImportantAuraVoiceOption(info, val)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    local key = info[#info];
+    if addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUT_BY_ID[key] then
+        config.arenaImportantAuraVoiceCallouts[key] = val;
+    else
+        config[key] = val;
+    end
+    config.lastModified = GetTime();
+    SweepyBoop:RefreshArenaImportantAuraVoiceAnnouncements();
+end
+
+local function SetAllArenaImportantAuraVoiceCallouts(enabled)
+    local config = SweepyBoop.db.profile.arenaFrames;
+    for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
+        config.arenaImportantAuraVoiceCallouts[callout.id] = enabled;
+    end
+    config.lastModified = GetTime();
+    SweepyBoop:RefreshArenaImportantAuraVoiceAnnouncements();
+end
+
+local function ResetArenaImportantAuraVoiceDefaults()
+    local config = SweepyBoop.db.profile.arenaFrames;
+    config.arenaImportantAuraVoicePack = "alliance";
+    addon.FillArenaImportantAuraVoiceCalloutDefaults(config, true);
+    config.lastModified = GetTime();
+    SweepyBoop:RefreshArenaImportantAuraVoiceAnnouncements();
+end
+
 function SweepyBoop:TestArena()
     if IsInInstance() then
         addon.PRINT(addon.L["Test mode can only be used outside instances"]);
@@ -355,8 +394,126 @@ addon.GetMainlineArenaFrameOptions = function(order)
                     },
                 },
             },
+            voiceAnnouncements = {
+                order = 2,
+                type = "group",
+                name = "Voice announcements",
+                get = GetArenaImportantAuraVoiceOption,
+                set = SetArenaImportantAuraVoiceOption,
+                args = {
+                    description = {
+                        order = 1,
+                        type = "description",
+                        width = "full",
+                        name = "Announce curated important arena auras over the Master channel. Changes made during combat apply after combat. Newly added sound files require a full client restart; /reload is not sufficient.",
+                    },
+                    arenaImportantAuraVoiceEnabled = {
+                        order = 2,
+                        type = "toggle",
+                        width = "full",
+                        name = "Enabled",
+                    },
+                    arenaImportantAuraVoicePack = {
+                        order = 3,
+                        type = "select",
+                        width = "full",
+                        name = "Voice",
+                        values = {
+                            alliance = "Alliance - Gemma",
+                            horde = "Horde - Archie",
+                        },
+                        sorting = { "alliance", "horde" },
+                        disabled = function()
+                            return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;
+                        end,
+                    },
+                    selectAll = {
+                        order = 4,
+                        type = "execute",
+                        name = "Select all",
+                        func = function()
+                            SetAllArenaImportantAuraVoiceCallouts(true);
+                        end,
+                        disabled = function()
+                            return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;
+                        end,
+                    },
+                    clearAll = {
+                        order = 5,
+                        type = "execute",
+                        name = "Clear all",
+                        func = function()
+                            SetAllArenaImportantAuraVoiceCallouts(false);
+                        end,
+                        disabled = function()
+                            return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;
+                        end,
+                    },
+                    resetDefaults = {
+                        order = 6,
+                        type = "execute",
+                        name = "Reset to default",
+                        func = ResetArenaImportantAuraVoiceDefaults,
+                        disabled = function()
+                            return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;
+                        end,
+                    },
+                    calloutsHeader = {
+                        order = 10,
+                        type = "header",
+                        name = "Callouts",
+                    },
+                },
+            },
         },
     };
+
+    local classInfoByFile = {};
+    local classOrder = {};
+    for index, classID in ipairs(addon.CLASSORDER) do
+        local classInfo = C_CreatureInfo.GetClassInfo(classID);
+        if classInfo then
+            classInfoByFile[classInfo.classFile] = classInfo;
+            classOrder[classInfo.classFile] = index;
+        end
+    end
+
+    local calloutOrderByClass = {};
+    for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
+        local classInfo = classInfoByFile[callout.classFile];
+        if classInfo then
+            local groupKey = "voice" .. callout.classFile;
+            local classGroup = optionGroup.args.voiceAnnouncements.args[groupKey];
+            if not classGroup then
+                classGroup = {
+                    order = 20 + (classOrder[callout.classFile] or 100),
+                    type = "group",
+                    inline = true,
+                    icon = addon.ICON_ID_CLASSES,
+                    iconCoords = CLASS_ICON_TCOORDS[callout.classFile],
+                    name = classInfo.className,
+                    disabled = function()
+                        return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;
+                    end,
+                    args = {},
+                };
+                optionGroup.args.voiceAnnouncements.args[groupKey] = classGroup;
+                calloutOrderByClass[callout.classFile] = 1;
+            end
+
+            local spellIDText = table.concat(callout.spellIDs, ", ");
+            classGroup.args[callout.id] = {
+                order = calloutOrderByClass[callout.classFile],
+                type = "toggle",
+                width = "full",
+                name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(callout.iconSpellID))
+                    .. " " .. callout.displayText,
+                desc = "Announces \"" .. callout.spokenText .. "\" when this aura is added."
+                    .. "\n\nAura spell IDs: " .. spellIDText,
+            };
+            calloutOrderByClass[callout.classFile] = calloutOrderByClass[callout.classFile] + 1;
+        end
+    end
 
     return addon.LocalizeOptions(optionGroup);
 end

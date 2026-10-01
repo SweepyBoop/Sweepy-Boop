@@ -2,9 +2,9 @@
 
 ## Status
 
-The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 148 Cartesia `sonic-3.6` stock-voice clips: Gemma for Alliance and Archie for Horde, with 74 callouts per voice and every mastered OGG capped at one second. The pack is review-only and is not shipped or registered at runtime. Qwen and CosyVoice remain historical workbench experiments.
+The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 148 Cartesia `sonic-3.6` stock-voice clips: Gemma for Alliance and Archie for Horde, with 74 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
-The addon runtime integration has not started. The review assets are not shipped sounds and are not registered with Blizzard APIs.
+The Mainline runtime integration is implemented on the current branch and pending in-game validation. It ships validated copies under `Sounds/ArenaImportantAuras`, is disabled by default, exposes voice-pack and per-callout controls, and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
 
 ## Objective
 
@@ -381,26 +381,25 @@ Verify that:
 
 ## Implementation Phases
 
-### Phase 1: Prototype
+### Phase 1: Audio Selection (complete)
 
-- Create a small English manifest with approximately ten representative important auras.
 - Retain the completed Qwen and CosyVoice prototypes as historical comparison material.
 - Use the promoted Cartesia Gemma/Archie review pack as the selected audio source.
 - Preserve the pinned provider model/API version, stock voice IDs, request fingerprints, and redistribution verification.
-- Produce normalized OGG files and test them with `PlaySoundFile`.
-- Register the prototype against one arena token through `C_UnitAuras.AddAuraSound`.
+- Validate the complete 74-callout-per-voice catalog and one-second mastered cap.
 
-Exit criteria: audio quality is acceptable, Blizzard plays packaged files reliably, and registration works without reading aura data.
+Exit criteria met: the selected English audio passed listening and static validation.
 
-### Phase 2: English Runtime
+### Phase 2: English Runtime (implementation complete, in-game validation pending)
 
-- Finalize the English important-aura catalog.
-- Add generated runtime data and packaged assets.
-- Implement the arena sound controller and handle cleanup.
-- Add enable, channel, preview, and per-spell mute options.
+- Package 148 validated OGGs under `Sounds/ArenaImportantAuras`.
+- Generate static runtime data for 74 callout groups and 84 unique aura spell IDs.
+- Implement the combat-deferred arena sound controller and handle cleanup.
+- Add master enable, Alliance/Horde voice selection, and 74 grouped callout toggles.
+- Use the Master output channel for phase 1 runtime behavior.
 - Test normal arenas and multi-round Solo Shuffle.
 
-Exit criteria: the English feature passes static, listening, and in-game validation and remains disabled by default.
+Exit criteria: the English feature passes in-game validation and remains disabled by default.
 
 ### Phase 3: Localization Pipeline
 
