@@ -75,6 +75,7 @@ if [[ -z "${CARTESIA_API_KEY:-}" ]]; then
   echo "CARTESIA_API_KEY is not set in this process." >&2
   exit 1
 fi
+echo "Cartesia API key loaded: ${#CARTESIA_API_KEY} characters."
 
 "$python" "$validator" --manifest "$manifest"
 base_arguments=(--manifest "$manifest" --scratch "$scratch")

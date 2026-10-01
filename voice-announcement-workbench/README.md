@@ -22,11 +22,38 @@ The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. 
 
 Cartesia is the preferred no-seed hosted evaluation. The workbench queries the authenticated stock catalog, selects one neutral English masculine voice and one neutral English feminine voice, and generates Adrenaline, Turtle, Fort Brew, and Tyrant with identical `sonic-3.6` settings except for voice ID.
 
+Set up the API key from a terminal opened at the repository root:
+
+1. Open [Cartesia API Keys](https://play.cartesia.ai/keys), create a key, and copy the secret when it is displayed. Never paste the key into chat or commit it to the repository.
+2. Create the isolated local environment:
+
 ```bash
 bash voice-announcement-workbench/setup-cartesia-environment.sh
-export CARTESIA_API_KEY='...'
+```
+
+3. Enter the key without displaying it or adding it to shell history:
+
+```bash
+unset CARTESIA_API_KEY
+read -s "CARTESIA_API_KEY?Paste Cartesia API key: "
+echo
+export CARTESIA_API_KEY
+printf 'Cartesia API key loaded: %d characters\n' "${#CARTESIA_API_KEY}"
+```
+
+4. Verify catalog access without generating billable audio:
+
+```bash
+bash voice-announcement-workbench/run-cartesia-samples.sh --discover-only
+```
+
+5. Generate and validate the four-phrase comparison:
+
+```bash
 bash voice-announcement-workbench/run-cartesia-samples.sh
 ```
+
+The export applies only to the current terminal session. Repeat step 3 after opening a new terminal or restarting the shell.
 
 The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`.
 
