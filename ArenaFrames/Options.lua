@@ -410,13 +410,15 @@ addon.GetMainlineArenaFrameOptions = function(order)
                     arenaImportantAuraVoiceEnabled = {
                         order = 2,
                         type = "toggle",
-                        width = "full",
-                        name = "Enabled",
+                        width = "relative",
+                        relWidth = 0.25,
+                        name = addon.FORMAT_ATLAS("chatframe-button-icon-voicechat") .. " Enabled",
                     },
                     arenaImportantAuraVoicePack = {
-                        order = 3,
+                        order = 2.1,
                         type = "select",
-                        width = 0.75,
+                        width = "relative",
+                        relWidth = 0.65,
                         name = "Voice",
                         values = {
                             alliance = "Alliance - Gemma",
@@ -427,9 +429,16 @@ addon.GetMainlineArenaFrameOptions = function(order)
                             return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;
                         end,
                     },
+                    controlRowBreak = {
+                        order = 2.2,
+                        type = "header",
+                        name = "",
+                    },
                     selectAll = {
-                        order = 4,
+                        order = 3,
                         type = "execute",
+                        width = "relative",
+                        relWidth = 0.25,
                         name = "Select all",
                         func = function()
                             SetAllArenaImportantAuraVoiceCallouts(true);
@@ -439,8 +448,10 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         end,
                     },
                     clearAll = {
-                        order = 5,
+                        order = 3.1,
                         type = "execute",
+                        width = "relative",
+                        relWidth = 0.25,
                         name = "Clear all",
                         func = function()
                             SetAllArenaImportantAuraVoiceCallouts(false);
@@ -450,9 +461,11 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         end,
                     },
                     resetDefaults = {
-                        order = 6,
+                        order = 3.2,
                         type = "execute",
-                        name = "Reset to default",
+                        width = "relative",
+                        relWidth = 0.35,
+                        name = "Reset to defaults",
                         func = ResetArenaImportantAuraVoiceDefaults,
                         disabled = function()
                             return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;
@@ -502,14 +515,18 @@ addon.GetMainlineArenaFrameOptions = function(order)
             end
 
             local spellIDText = table.concat(callout.spellIDs, ", ");
+            local spellName = C_Spell.GetSpellName(callout.iconSpellID) or callout.displayText;
+            local description = string.format(
+                addon.L["Announces \"%s\" when this aura is added."],
+                callout.spokenText
+            ) .. "\n\n" .. string.format(addon.L["Aura spell IDs: %s"], spellIDText);
             classGroup.args[callout.id] = {
                 order = calloutOrderByClass[callout.classFile],
                 type = "toggle",
                 width = "full",
                 name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(callout.iconSpellID))
-                    .. " " .. callout.displayText,
-                desc = "Announces \"" .. callout.spokenText .. "\" when this aura is added."
-                    .. "\n\nAura spell IDs: " .. spellIDText,
+                    .. " " .. spellName,
+                desc = description,
             };
             calloutOrderByClass[callout.classFile] = calloutOrderByClass[callout.classFile] + 1;
         end
