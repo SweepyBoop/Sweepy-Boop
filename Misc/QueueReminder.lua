@@ -130,7 +130,6 @@ SweepyBoop.SetupQueueReminder = function ()
                         end
 
                         queues[i] = nil;
-                        addon.PRINT(message);
                     end
 
                     if PVPReadyDialog.labelOverride then
