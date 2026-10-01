@@ -331,6 +331,7 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.bigDebuffsEnabled = true;
     defaults.profile.raidFrames.raidFrameDebuffIconsEnabled = true;
+    defaults.profile.raidFrames.raidFrameTeammateTrinketEnabled = true;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSizeSecondary = 28;
