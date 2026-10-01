@@ -85,6 +85,27 @@ local function SetDebuffIconOptionAndRefresh(info, val)
     SetRaidFrameOptionAndRefresh(info, val, RefreshRaidFrameDebuffIconsAndPreview);
 end
 
+local function TeammateTrinketOptionsDisabled()
+    return not SweepyBoop.db.profile.raidFrames.raidFrameTeammateTrinketEnabled;
+end
+
+local function TeammateTrinketCountdownOptionsDisabled()
+    local config = SweepyBoop.db.profile.raidFrames;
+    return ( not config.raidFrameTeammateTrinketEnabled )
+        or config.raidFrameTeammateTrinketShowCountdown == false;
+end
+
+local function RefreshRaidFrameTeammateTrinketsAndPreview()
+    SweepyBoop:RefreshRaidFrameTeammateTrinkets();
+    if addon.RefreshRaidFrameTeammateTrinketPreviewWidgets then
+        addon.RefreshRaidFrameTeammateTrinketPreviewWidgets();
+    end
+end
+
+local function SetTeammateTrinketOptionAndRefresh(info, val)
+    SetRaidFrameOptionAndRefresh(info, val, RefreshRaidFrameTeammateTrinketsAndPreview);
+end
+
 local debuffIconStyleSorting = {
     addon.BIG_DEBUFFS_ICON_STYLE_ID.DEBUFF_BORDER,
     addon.BIG_DEBUFFS_ICON_STYLE_ID.HIGHLIGHT,
@@ -587,11 +608,108 @@ addon.GetRaidFrameOptions = function(order)
                         disabled = DebuffIconOptionsDisabled,
                         set = SetDebuffIconOptionAndRefresh,
                     },
+
+                },
+            },
+
+            teammateTrinkets = {
+                order = 2,
+                type = "group",
+                name = "Teammate Trinkets",
+                args = {
+                    preview = {
+                        order = 1,
+                        type = "description",
+                        width = "full",
+                        name = "Preview",
+                        dialogControl = "RaidFrameTeammateTrinketPreview-SweepyBoop",
+                    },
+                    raidFrameTeammateTrinketEnabled = {
+                        order = 2,
+                        width = 0.8,
+                        type = "toggle",
+                        name = SpellIcon(336126) .. " Enabled",
+                        desc = "Show arena teammate PvP trinket cooldowns to the left of Blizzard raid-style frames. The player is excluded.",
+                        set = SetTeammateTrinketOptionAndRefresh,
+                    },
+                    layoutBreak1 = {
+                        order = 3,
+                        type = "description",
+                        name = "",
+                        width = "full",
+                    },
+                    raidFrameTeammateTrinketShowCountdown = {
+                        order = 4,
+                        width = 1,
+                        type = "toggle",
+                        name = addon.FORMAT_TEXTURE(addon.ICON_PATH("ability_racial_timeismoney")) .. " " .. addon.L["Show countdown"],
+                        desc = addon.L["Show remaining time as countdown text on icons."],
+                        get = function()
+                            return SweepyBoop.db.profile.raidFrames.raidFrameTeammateTrinketShowCountdown ~= false;
+                        end,
+                        disabled = TeammateTrinketOptionsDisabled,
+                        set = SetTeammateTrinketOptionAndRefresh,
+                    },
+                    raidFrameTeammateTrinketMillisecondsThreshold = {
+                        order = 5,
+                        width = 0.8,
+                        type = "range",
+                        min = 1,
+                        max = 6,
+                        step = 1,
+                        name = "Decimal Threshold",
+                        desc = "Show decimal countdowns below this many seconds.",
+                        disabled = TeammateTrinketCountdownOptionsDisabled,
+                        set = SetTeammateTrinketOptionAndRefresh,
+                    },
+                    layoutBreak2 = {
+                        order = 5.5,
+                        type = "description",
+                        name = "",
+                        width = "full",
+                    },
+                    raidFrameTeammateTrinketScale = {
+                        order = 6,
+                        width = 0.8,
+                        type = "range",
+                        isPercent = true,
+                        min = 0.25,
+                        max = 1.5,
+                        step = 0.05,
+                        name = "Trinket Scale",
+                        desc = "Size of teammate trinket icons as a percentage of the raid-frame height.",
+                        disabled = TeammateTrinketOptionsDisabled,
+                        set = SetTeammateTrinketOptionAndRefresh,
+                    },
+                    raidFrameTeammateTrinketOffsetX = {
+                        order = 7,
+                        width = 0.8,
+                        type = "range",
+                        min = -80,
+                        max = 20,
+                        step = 1,
+                        name = "Offset X",
+                        desc = "Horizontal offset from the left edge of the raid frame.",
+                        disabled = TeammateTrinketOptionsDisabled,
+                        set = SetTeammateTrinketOptionAndRefresh,
+                    },
+                    raidFrameTeammateTrinketOffsetY = {
+                        order = 8,
+                        width = 0.8,
+                        type = "range",
+                        min = -80,
+                        max = 80,
+                        step = 1,
+                        name = "Offset Y",
+                        desc = "Vertical offset from the center of the raid frame.",
+                        disabled = TeammateTrinketOptionsDisabled,
+                        set = SetTeammateTrinketOptionAndRefresh,
+                    },
                 },
             },
 
             aggroHighlight = {
-                order = 2,
+                order = 3,
                 type = "group",
                 name = "Arena target",
                 args = (function ()

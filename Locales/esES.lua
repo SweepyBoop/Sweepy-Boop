@@ -340,6 +340,11 @@ local function ApplyTranslations(locale)
     L["Top row: Echo, Dream Breath."] = "Fila superior: Eco, Aliento de ensueño.";
     L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."] = "Fila 2, de menor a mayor importancia: Reversión, Vínculo vital, Dilatación temporal.";
     L["Big Debuff Icons"] = "Iconos grandes de perjuicios";
+    L["Teammate Trinkets"] = "Abalorios de compañeros";
+    L["Show arena teammate PvP trinket cooldowns to the left of Blizzard raid-style frames. The player is excluded."] = "Muestra los tiempos de reutilización de los abalorios JcJ de los compañeros de arena a la izquierda de los marcos de banda de Blizzard. El jugador queda excluido.";
+    L["Trinket Scale"] = "Escala de abalorio";
+    L["Size of teammate trinket icons as a percentage of the raid-frame height."] = "Tamaño de los iconos de abalorio de los compañeros como porcentaje de la altura del marco de banda.";
+    L["Horizontal offset from the left edge of the raid frame."] = "Desplazamiento horizontal desde el borde izquierdo del marco de banda.";
     L["Show large crowd-control debuffs to the right of Blizzard raid-style frames."] = "Muestra perjuicios grandes de control de masas a la derecha de los marcos tipo banda de Blizzard.";
     L["Max Icons"] = "Iconos máximos";
     L["Maximum number of crowd-control debuff icons to show beside each raid frame."] = "Número máximo de iconos de perjuicios de control de masas que se muestran junto a cada marco de banda.";

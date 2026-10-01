@@ -223,6 +223,12 @@ local defaults = {
             raidFrameDebuffIconMillisecondsThreshold = 3,
             raidFrameDebuffIconOffsetX = 2,
             raidFrameDebuffIconOffsetY = 0,
+            raidFrameTeammateTrinketEnabled = false,
+            raidFrameTeammateTrinketScale = 0.5,
+            raidFrameTeammateTrinketShowCountdown = true,
+            raidFrameTeammateTrinketMillisecondsThreshold = 3,
+            raidFrameTeammateTrinketOffsetX = -2,
+            raidFrameTeammateTrinketOffsetY = 0,
         },
         misc = {
             healerInCrowdControl = false,
@@ -537,6 +543,7 @@ function SweepyBoop:OnInitialize()
     -- Recovered modules run independently of the temporary Mainline gate.
     self:SetupRaidFrameAuraModule();
     self:SetupRaidFrameDebuffIcons();
+    self:SetupRaidFrameTeammateTrinkets();
     self:SetupArenaOffensiveIcons();
     self:SetupArenaImportantAuraVoiceAnnouncements();
 
@@ -576,6 +583,7 @@ function SweepyBoop:RefreshConfig()
         addon.FillArenaImportantAuraVoiceCalloutDefaults(self.db.profile.arenaFrames);
         self:RefreshHealerBuffHelper();
         self:RefreshRaidFrameDebuffIcons();
+        self:RefreshRaidFrameTeammateTrinkets();
         self:HideTestArenaStandaloneOffensiveIcons();
         self:UpdateArenaOffensiveIcons();
         self:RefreshArenaImportantAuraVoiceAnnouncements();
