@@ -68,7 +68,7 @@ bash voice-announcement-workbench/run-cartesia-samples.sh --full
 To generate only selected additions, create a local text file containing one manifest phrase ID per line. Blank lines and text after `#` are ignored. The selected results are merged into the existing full report instead of replacing it:
 
 ```bash
-bash voice-announcement-workbench/run-cartesia-samples.sh --full \
+bash voice-announcement-workbench/run-cartesia-samples.sh \
   --phrases-file voice-announcement-workbench/scratch/cartesia-full-pack/selected-phrases.txt
 ```
 

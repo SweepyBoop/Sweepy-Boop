@@ -448,7 +448,7 @@
     {
       "id": "incarnation-chosen-of-elune",
       "displayText": "Incarnation: Chosen of Elune",
-      "spokenText": "Incarn",
+      "spokenText": "Incarnation",
       "spellIds": [
         102560,
         390414
@@ -486,7 +486,7 @@
     {
       "id": "incarnation-avatar-of-ashamane",
       "displayText": "Incarnation: Avatar of Ashamane",
-      "spokenText": "Incarn",
+      "spokenText": "Incarnation",
       "spellIds": [
         102543
       ],

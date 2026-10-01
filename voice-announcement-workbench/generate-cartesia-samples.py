@@ -582,17 +582,28 @@ def main() -> int:
             if transcript[-1:] not in ".!?":
                 transcript += "."
             request_body = tts_body(manifest, transcript, voice.voice_id)
+            request_fingerprint = canonical_fingerprint(request_body)
+            previous = prior_samples.get(output_key)
             generation: dict[str, Any] = {
                 "generationSeconds": None,
                 "generationUtc": None,
                 "authenticationScheme": manifest["api"]["authenticationOrder"][0],
-                "requestFingerprint": canonical_fingerprint(request_body),
+                "requestFingerprint": request_fingerprint,
                 "requestBodyWithoutVoice": {
                     key: value for key, value in request_body.items() if key != "voice"
                 },
                 "responseRequestId": None,
             }
-            if args.force or not provider_path.is_file():
+            cached_request_matches = (
+                previous is None
+                or previous.get("requestFingerprint") == request_fingerprint
+            )
+            generated_provider = (
+                args.force
+                or not provider_path.is_file()
+                or not cached_request_matches
+            )
+            if generated_provider:
                 print(f"Generating {output_key}: {phrase['spokenText']!r}", flush=True)
                 generation = generate_provider_audio(
                     manifest,
@@ -605,9 +616,8 @@ def main() -> int:
             sample_manifest = {**manifest, "mastering": dict(manifest["mastering"])}
             effective_tempo = float(sample_manifest["mastering"]["tempo"])
             mastering = None
-            previous = prior_samples.get(output_key)
             should_master = (
-                args.force
+                generated_provider
                 or args.remaster
                 or not ogg_path.is_file()
                 or (manifest["scope"] == "full" and previous is None)
