@@ -2,7 +2,7 @@
 
 ## Status
 
-The Qwen VoiceDesign-to-Base prototype and its portable 148-clip review pack are complete, but repeated short-utterance onset artifacts and fragile post-generation cropping make that workflow unsuitable as the production source. The review assets under `Docs/VoiceAnnouncementReview-KeyAbilities` remain as historical evaluation evidence and are not shipped sounds. The next audio-quality phase will evaluate CosyVoice 3 before addon runtime integration begins.
+The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 148 Cartesia `sonic-3.6` stock-voice clips: Gemma for Alliance and Archie for Horde, with 74 callouts per voice and every mastered OGG capped at one second. The pack is review-only and is not shipped or registered at runtime. Qwen and CosyVoice remain historical workbench experiments.
 
 The addon runtime integration has not started. The review assets are not shipped sounds and are not registered with Blizzard APIs.
 
@@ -15,7 +15,7 @@ The feature should:
 - Work with Retail's restricted aura model without reading secret aura data in addon Lua.
 - Announce a curated set of important enemy aura applications.
 - Support localized phrases and locale-specific voices.
-- Generate all audio offline with free, open-weight tooling.
+- Generate all audio ahead of release with documented redistribution rights and no runtime provider dependency.
 - Avoid any cloud API or per-generation service cost.
 - Keep model runtimes and model weights out of the shipped addon.
 - Keep the runtime small, event-driven, and consistent with existing SweepyBoop patterns.
@@ -90,27 +90,18 @@ The important-aura voice feature should preserve those lifecycle principles. Sha
 
 ## Audio Generation Choice
 
-Treat the pinned Qwen3-TTS outputs as a historical, reproducible baseline rather than the production recommendation. The preferred next custom-voice model is:
-
-```text
-FunAudioLLM/Fun-CosyVoice3-0.5B-2512
-```
-
-Start with CosyVoice 3 zero-shot cloning from the existing synthetic Alliance and Horde references. Evaluate its direct short-phrase output without sacrificial prefixes or word-boundary cropping. If zero-shot identity or cadence is inconsistent, create a reviewed sentence-length synthetic corpus for each voice and use CosyVoice's adaptation or fine-tuning workflow before generating the final callouts.
+The selected review source is Cartesia `sonic-3.6` using stock voices Gemma (Alliance) and Archie (Horde). Both voices use identical `en-US`, speed, volume, output-format, and mastering settings; voice ID is the only provider-request difference for a given phrase. Provider WAVs are generated offline during the asset build, converted to mono OGG Vorbis, and never requested by the addon at runtime.
 
 Reasons:
 
-- Runs locally without per-generation API charges.
-- The repository and published model are Apache 2.0.
-- Supports English plus Chinese, Japanese, Korean, German, Spanish, French, Italian, and Russian.
-- Provides explicit pronunciation controls, including English phoneme inpainting.
-- Supports zero-shot cloning now and a deeper speaker-adaptation path if additional consistency is required.
-- Better pronunciation control should reduce dependence on destructive post-generation cropping for very short tactical phrases.
-- Generation remains an offline release task, so model size does not affect addon runtime performance.
+- Stock voices remove the prompt/seed-voice quality problem entirely.
+- Short tactical phrases remained intelligible without sacrificial prefixes, semantic cropping, phoneme overrides, or seed selection.
+- Male/female delivery stays consistent because request settings are identical except for voice ID.
+- The full pack passed human listening review across 148 clips.
+- Every mastered clip is capped at one second; clips already within the cap remain at natural tempo.
+- Provider WAVs, request fingerprints, selected voice IDs, API/model versions, mastering measurements, and hashes are recorded in the workbench report.
 
-The exact model repository, revision, dependencies, generation parameters, reference hashes, pronunciation controls, seeds, and license snapshot must be recorded in the generated asset manifest or run report. Model updates and reference replacement must be explicit rather than silently following a moving latest revision.
-
-The initial CosyVoice comparison generated 32 direct samples across four difficult phrases, two voices, two modes, and two takes. Instruct2 produced all 16 samples below one second, while cross-lingual mode exceeded one second in 9 of 16 cases and showed repetition or content errors. Listening review selected Instruct2 Take 1 because Take 2 clipped some initial syllables; rerunning Take 1 with the same seeds reproduced identical raw WAV hashes on the same machine. A complete 148-clip Instruct2 Take 1 candidate has been generated under ignored scratch for full listening review and has not been promoted. Automated transcription triage flagged 45 clips for manual review, including several likely pronunciation or repetition failures; short game terms also produce false positives, so human listening remains authoritative. The alternative-model shortlist and evaluation protocol are documented in `voice-announcement-workbench/PAID_VOICE_OPTIONS.md`. Chatterbox Turbo is the secondary local candidate, Cartesia is the preferred hosted fallback, and ElevenLabs remains only an optional quality ceiling because MiniCC already uses it.
+The promoted portable review pack records Cartesia API version `2026-08-14`, model `sonic-3.6`, both stock voice IDs, voice-independent request fingerprints, provider-original hashes, mastered hashes/durations/tempos, and the user's 2026-10-01 redistribution-rights confirmation. Qwen and CosyVoice results remain historical baselines in version control and the workbench.
 
 ## Voice Direction
 
@@ -393,11 +384,9 @@ Verify that:
 ### Phase 1: Prototype
 
 - Create a small English manifest with approximately ten representative important auras.
-- Retain the completed Qwen prototype as historical comparison material.
-- Build a local CosyVoice 3 zero-shot generation prototype using the approved synthetic references.
-- Compare repeated generations for short-word stability, pronunciation, voice identity, and absence of added onset sounds.
-- If needed, evaluate CosyVoice speaker adaptation with a reviewed synthetic training corpus.
-- Select and document the voice direction and approved frozen references.
+- Retain the completed Qwen and CosyVoice prototypes as historical comparison material.
+- Use the promoted Cartesia Gemma/Archie review pack as the selected audio source.
+- Preserve the pinned provider model/API version, stock voice IDs, request fingerprints, and redistribution verification.
 - Produce normalized OGG files and test them with `PlaySoundFile`.
 - Register the prototype against one arena token through `C_UnitAuras.AddAuraSound`.
 

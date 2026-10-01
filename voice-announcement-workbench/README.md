@@ -2,23 +2,25 @@
 
 This directory contains reproducible, local-only TTS experiments for SweepyBoop arena important-aura announcements. It does not change addon runtime code or promote experimental files into the addon's shipped sound directories.
 
-## Current Qwen prototype
+## Current promoted Cartesia review pack
 
-The committed historical review pack uses:
+The committed review pack uses:
 
-- Models: `Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign` and `Qwen/Qwen3-TTS-12Hz-1.7B-Base`
-- Voices: Alliance Commander and Horde Commander
-- Language: English
-- Delivery: plain studio callouts with deterministic onset removal
+- Provider/model: Cartesia `sonic-3.6`, API version `2026-08-14`
+- Voices: Gemma for Alliance and Archie for Horde
+- Language/locale: English, `en-US`
+- Delivery: plain stock-voice callouts with identical speed/volume settings
 - Duration: every mastered clip is at most 1.0 seconds
 - Scope: 74 curated arena callouts per voice, covering all 33 retail DPS and healer specs
-- Output: 148 mono 24 kHz OGG Vorbis files plus the two frozen reference WAVs
+- Output: 148 mono OGG Vorbis review files
 
-The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both faction voices without installing Python or downloading the models. This pack documents the Qwen experiment but is not the recommended production source because short-callout generation required fragile onset removal and alignment. The previous Aiden/Sohee pack remains reproducible through its generator as a historical preset-voice baseline.
+The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both voices without an API key or local environment. The pack is review-only and is not wired into addon runtime behavior or the published addon archive.
+
+The Qwen VoiceDesign/Base, CosyVoice, and Aiden/Sohee experiments remain reproducible historical baselines in this workbench and version control.
 
 `PAID_VOICE_OPTIONS.md` records the evaluated alternatives and next-step rationale. ElevenLabs is not preferred because MiniCC already uses it.
 
-## Cartesia stock voice bake-off
+## Cartesia stock voice workflow
 
 Cartesia is the preferred no-seed hosted evaluation. The workbench queries the authenticated stock catalog, selects one neutral English masculine voice and one neutral English feminine voice, and generates Adrenaline, Turtle, Fort Brew, and Tyrant with identical `sonic-3.6` settings except for voice ID.
 
@@ -63,7 +65,7 @@ The approved sample voices are Gemma for Alliance and Archie for Horde. Generate
 bash voice-announcement-workbench/run-cartesia-samples.sh --full
 ```
 
-Full-pack provider WAVs, mastered OGGs, reports, and the listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-full-pack/`. Confirm current Cartesia generated-audio redistribution terms before any full-catalog generation or promotion.
+Full-pack provider WAVs, mastered OGGs, reports, and the listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-full-pack/`. The approved pack was promoted to `Docs/VoiceAnnouncementReview-KeyAbilities` on 2026-10-01 after the user confirmed their Cartesia tier permits committing and redistributing the generated OGG files.
 
 ## Next model: CosyVoice 3
 

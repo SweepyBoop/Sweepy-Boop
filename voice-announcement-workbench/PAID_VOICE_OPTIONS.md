@@ -2,12 +2,12 @@
 
 ## Decision status
 
-The Alliance Commander and Horde Commander Qwen pack is retained as the historical custom-voice baseline, but it is not the production recommendation. Repeated short-utterance onset artifacts and fragile alignment made Qwen Base cloning too costly to stabilize. CosyVoice 3 removed the prefix/cropping workflow, but its zero-shot checkpoint has no built-in speakers and inherited pronunciation problems from the Qwen-derived prompt voices. The next evaluation therefore uses Cartesia `sonic-3.6` stock voices to remove seed audio entirely: one neutral English masculine voice and one neutral English feminine voice with identical settings.
+Cartesia `sonic-3.6` stock voices are the promoted review source: Gemma for Alliance and Archie for Horde, with identical `en-US`, speed, volume, and mastering settings. The validated pack contains 148 OGGs capped at one second and is committed under `Docs/VoiceAnnouncementReview-KeyAbilities`. The user confirmed their Cartesia tier permits committing and redistributing the generated OGG files on 2026-10-01; the exact tier name was not recorded. The Qwen and CosyVoice packs remain historical reproducible comparisons rather than production recommendations.
 
 Recommended evaluation order:
 
-1. Cartesia stock voices as the primary no-seed quality candidate.
-2. Clean licensed recordings with CosyVoice 3 if custom faction identity is still required.
+1. Cartesia stock voices as the selected no-seed review source.
+2. Clean licensed recordings with CosyVoice 3 only if custom faction identity is still required.
 3. CosyVoice 3 speaker adaptation or fine-tuning only after clean reference acquisition.
 4. Chatterbox Turbo as a secondary local comparison.
 5. Qwen, the current CosyVoice prompt experiment, and Kokoro as historical baselines only.
@@ -19,8 +19,8 @@ Provider model names, prices, quotas, and commercial terms change frequently. Re
 
 | Provider | Primary advantage | Main concern | Recommended role |
 | --- | --- | --- | --- |
-| CosyVoice 3 | Apache 2.0, multilingual cloning, speaker adaptation, and English phoneme controls | More setup and training workflow work | Primary production candidate |
-| Cartesia | Crisp low-latency speech with useful pacing and emotion control | Hosted service; redistribution rights must be confirmed | Preferred hosted fallback |
+| CosyVoice 3 | Apache 2.0, multilingual cloning, speaker adaptation, and English phoneme controls | Requires clean licensed references; current Qwen-derived prompts were unstable | Future custom-identity option only |
+| Cartesia | Crisp short-form stock voices with no seed/reference workflow | Hosted service and build-time API cost | Selected review source (Gemma/Archie) |
 | Chatterbox Turbo | Strong naturalness, expressive control, local inference, and MIT model terms | Short-callout stability still requires measurement | Secondary local comparison |
 | Qwen VoiceDesign + Base | Original local voice design and Apache 2.0 model terms | Short utterances required fragile prefix generation and alignment | Historical custom-voice baseline |
 | Kokoro | Tiny, fast, Apache 2.0, and many built-in voices | Its model card warns that utterances below 10-20 tokens may be weak | Historical stock-voice baseline |
