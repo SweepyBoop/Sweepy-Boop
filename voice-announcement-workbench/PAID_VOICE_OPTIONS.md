@@ -2,15 +2,15 @@
 
 ## Decision status
 
-The Alliance Commander and Horde Commander Qwen pack is retained as the historical custom-voice baseline, but it is not the production recommendation. Repeated short-utterance onset artifacts and fragile alignment made Qwen Base cloning too costly to stabilize. The next evaluation uses the Apache-licensed CosyVoice 3 model with the same synthetic references. Its initial 32-sample bake-off found that Instruct2 produced all 16 samples below one second, while cross-lingual mode failed the duration target in 9 of 16 cases and exhibited repetition or content errors. Listening review selected Instruct2 Take 1 because Take 2 clipped some initial syllables; a same-seed rerun reproduced identical raw Take 1 WAV hashes on the same machine. A full 148-clip Instruct2 Take 1 candidate is available under ignored scratch for complete listening review before promotion.
+The Alliance Commander and Horde Commander Qwen pack is retained as the historical custom-voice baseline, but it is not the production recommendation. Repeated short-utterance onset artifacts and fragile alignment made Qwen Base cloning too costly to stabilize. CosyVoice 3 removed the prefix/cropping workflow, but its zero-shot checkpoint has no built-in speakers and inherited pronunciation problems from the Qwen-derived prompt voices. The next evaluation therefore uses Cartesia `sonic-3.6` stock voices to remove seed audio entirely: one neutral English masculine voice and one neutral English feminine voice with identical settings.
 
 Recommended evaluation order:
 
-1. CosyVoice 3 zero-shot cloning as the primary local candidate.
-2. CosyVoice 3 speaker adaptation or fine-tuning if zero-shot identity is not stable enough.
-3. Cartesia as the preferred hosted fallback for crisp short-form speech.
+1. Cartesia stock voices as the primary no-seed quality candidate.
+2. Clean licensed recordings with CosyVoice 3 if custom faction identity is still required.
+3. CosyVoice 3 speaker adaptation or fine-tuning only after clean reference acquisition.
 4. Chatterbox Turbo as a secondary local comparison.
-5. Qwen and Kokoro as historical baselines only.
+5. Qwen, the current CosyVoice prompt experiment, and Kokoro as historical baselines only.
 6. ElevenLabs only as an optional quality ceiling because MiniCC already uses it.
 
 Provider model names, prices, quotas, and commercial terms change frequently. Record the exact values visible in the account at generation time rather than treating this document as a pricing source.

@@ -18,6 +18,18 @@ The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. 
 
 `PAID_VOICE_OPTIONS.md` records the evaluated alternatives and next-step rationale. ElevenLabs is not preferred because MiniCC already uses it.
 
+## Cartesia stock voice bake-off
+
+Cartesia is the preferred no-seed hosted evaluation. The workbench queries the authenticated stock catalog, selects one neutral English masculine voice and one neutral English feminine voice, and generates Adrenaline, Turtle, Fort Brew, and Tyrant with identical `sonic-3.6` settings except for voice ID.
+
+```bash
+bash voice-announcement-workbench/setup-cartesia-environment.sh
+export CARTESIA_API_KEY='...'
+bash voice-announcement-workbench/run-cartesia-samples.sh
+```
+
+The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`. Confirm current Cartesia generated-audio redistribution terms before any full-catalog generation or promotion.
+
 ## Next model: CosyVoice 3
 
 See `COSYVOICE_NEXT_STEPS.md` for the current findings, reference-audio options, and the recommended next experiment.
