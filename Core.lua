@@ -227,7 +227,7 @@ local defaults = {
             raidFrameTeammateTrinketScale = 0.5,
             raidFrameTeammateTrinketShowCountdown = true,
             raidFrameTeammateTrinketMillisecondsThreshold = 3,
-            raidFrameTeammateTrinketOffsetX = -2,
+            raidFrameTeammateTrinketOffsetX = 0,
             raidFrameTeammateTrinketOffsetY = 0,
         },
         misc = {

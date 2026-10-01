@@ -145,7 +145,7 @@ local function RenderSample(widget)
     local config = GetConfig();
     local enabled = config.raidFrameTeammateTrinketEnabled;
     local shownIconSize = previewFrameHeight * GetIconScale(config);
-    local offsetX = config.raidFrameTeammateTrinketOffsetX or -2;
+    local offsetX = config.raidFrameTeammateTrinketOffsetX or 0;
     local offsetY = config.raidFrameTeammateTrinketOffsetY or 0;
     local leftExtent = math.max(0, shownIconSize - offsetX);
     local icon = widget.sample.icon;

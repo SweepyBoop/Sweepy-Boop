@@ -192,7 +192,7 @@ local function ApplyLayout(frame, icon)
         "RIGHT",
         frame,
         "LEFT",
-        config.raidFrameTeammateTrinketOffsetX or -2,
+        config.raidFrameTeammateTrinketOffsetX or 0,
         config.raidFrameTeammateTrinketOffsetY or 0
     );
     icon:SetScale(GetIconSize(frame, config) / iconBaseSize);
