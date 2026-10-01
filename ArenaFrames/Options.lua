@@ -405,7 +405,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                         order = 1,
                         type = "description",
                         width = "full",
-                        name = "Announce curated important arena auras over the Master channel. Changes made during combat apply after combat. Newly added sound files require a full client restart; /reload is not sufficient.",
+                        name = "Announce curated important arena auras over the Master channel. Changes made during combat apply after combat.",
                     },
                     arenaImportantAuraVoiceEnabled = {
                         order = 2,
@@ -416,7 +416,7 @@ addon.GetMainlineArenaFrameOptions = function(order)
                     arenaImportantAuraVoicePack = {
                         order = 3,
                         type = "select",
-                        width = "full",
+                        width = 0.75,
                         name = "Voice",
                         values = {
                             alliance = "Alliance - Gemma",

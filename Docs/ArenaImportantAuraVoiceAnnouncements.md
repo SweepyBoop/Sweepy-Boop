@@ -307,7 +307,7 @@ The catalog should be reviewed each major patch. Unknown Blizzard-important aura
 
 ## Packaging and Addon Metadata
 
-The final OGG files must be included in release packaging and available at fixed paths when WoW starts. A newly added sound file generally requires a complete client restart before it can be played reliably; `/reload` may not be sufficient.
+The final OGG files must be included in release packaging and available at fixed addon paths.
 
 If companion voice packs are introduced later, define a narrow registration contract containing:
 
