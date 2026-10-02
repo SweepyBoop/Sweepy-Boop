@@ -223,6 +223,12 @@ local defaults = {
             raidFrameDebuffIconMillisecondsThreshold = 3,
             raidFrameDebuffIconOffsetX = 2,
             raidFrameDebuffIconOffsetY = 0,
+            raidFrameTeammateTrinketEnabled = false,
+            raidFrameTeammateTrinketScale = 0.5,
+            raidFrameTeammateTrinketShowCountdown = true,
+            raidFrameTeammateTrinketMillisecondsThreshold = 3,
+            raidFrameTeammateTrinketOffsetX = 0,
+            raidFrameTeammateTrinketOffsetY = 0,
         },
         misc = {
             healerInCrowdControl = false,
@@ -325,6 +331,8 @@ if addon.internal then -- Set default for internal version
     defaults.profile.nameplatesEnemy.showBuffsOnEnemy = true;
     defaults.profile.nameplatesEnemy.bigDebuffsEnabled = true;
     defaults.profile.raidFrames.raidFrameDebuffIconsEnabled = true;
+    defaults.profile.raidFrames.raidFrameTeammateTrinketEnabled = true;
+    defaults.profile.arenaFrames.arenaImportantAuraVoiceEnabled = true;
     defaults.profile.arenaFrames.arenaCooldownSecondaryBar = true;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSize = 28;
     defaults.profile.arenaFrames.arenaCooldownTrackerIconSizeSecondary = 28;
@@ -537,6 +545,7 @@ function SweepyBoop:OnInitialize()
     -- Recovered modules run independently of the temporary Mainline gate.
     self:SetupRaidFrameAuraModule();
     self:SetupRaidFrameDebuffIcons();
+    self:SetupRaidFrameTeammateTrinkets();
     self:SetupArenaOffensiveIcons();
     self:SetupArenaImportantAuraVoiceAnnouncements();
 
@@ -576,6 +585,7 @@ function SweepyBoop:RefreshConfig()
         addon.FillArenaImportantAuraVoiceCalloutDefaults(self.db.profile.arenaFrames);
         self:RefreshHealerBuffHelper();
         self:RefreshRaidFrameDebuffIcons();
+        self:RefreshRaidFrameTeammateTrinkets();
         self:HideTestArenaStandaloneOffensiveIcons();
         self:UpdateArenaOffensiveIcons();
         self:RefreshArenaImportantAuraVoiceAnnouncements();
