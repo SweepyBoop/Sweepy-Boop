@@ -8,8 +8,9 @@ local previewWidgets = setmetatable({}, { __mode = "k" });
 local textureWhite = "Interface\\BUTTONS\\WHITE8X8";
 local trinketSpellID = 336126;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+local visualEdgePadding = 2;
 local readyGlowColor = { 0.1, 1, 0.45, 1 };
-local cooldownBorderColor = { 1, 0.45, 0.1, 1 };
+local cooldownBorderColor = { 1, 0, 0, 1 };
 local cooldownIconBrightness = 0.45;
 local previewFrameWidth = 144;
 local previewFrameHeight = 72;
@@ -219,13 +220,18 @@ local function RenderSample(widget)
     local enabled = config.raidFrameTeammateTrinketEnabled;
     local shownIconSize = previewFrameHeight * GetIconScale(config);
     local iconScale = shownIconSize / iconBaseSize;
-    local offsetX = config.raidFrameTeammateTrinketOffsetX or 0;
+    local configuredOffsetX = config.raidFrameTeammateTrinketOffsetX or 0;
     local offsetY = config.raidFrameTeammateTrinketOffsetY or 0;
     local visualPadding = math.max(
         addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING,
         addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
     ) * iconScale;
-    local leftExtent = math.max(0, shownIconSize - offsetX + visualPadding);
+    local positioningPadding = visualEdgePadding * iconScale;
+    local effectiveOffsetX = configuredOffsetX - positioningPadding;
+    local leftExtent = math.max(
+        0,
+        shownIconSize + visualPadding + positioningPadding - configuredOffsetX
+    );
     local visualHalfHeight = ( shownIconSize / 2 ) + visualPadding;
     local topExtent = math.max(0, offsetY + visualHalfHeight - ( previewFrameHeight / 2 ));
     local bottomExtent = math.max(0, -offsetY + visualHalfHeight - ( previewFrameHeight / 2 ));
@@ -247,7 +253,7 @@ local function RenderSample(widget)
         frameX,
         firstFrameY,
         iconScale,
-        offsetX,
+        effectiveOffsetX,
         offsetY
     );
     PositionRow(
@@ -257,7 +263,7 @@ local function RenderSample(widget)
         0,
         -previewRowGap,
         iconScale,
-        offsetX,
+        effectiveOffsetX,
         offsetY
     );
 

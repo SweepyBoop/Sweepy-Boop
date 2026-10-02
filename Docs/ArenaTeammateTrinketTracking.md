@@ -4,7 +4,7 @@
 
 SweepyBoop's teammate trinket tracker is a Retail-only, arena-only display for Blizzard CompactParty and CompactRaid frames. It shows one generic PvP trinket icon for each teammate, excludes the player, and defaults to the left side of the teammate frame.
 
-The feature is disabled by default. Ready trinkets use a full-color icon with a fixed green glow; trinkets on cooldown use a desaturated, darkened icon with an orange border and full-contrast countdown text.
+The feature is disabled by default. Ready trinkets use a full-color icon with a fixed green glow; trinkets on cooldown use a desaturated, darkened icon with a red border and full-contrast countdown text.
 
 ## Blizzard API Contract
 

@@ -18,8 +18,9 @@ if ( not addon.PROJECT_MAINLINE ) then return end
 local trinketSpellID = 336126;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local frameLevelOffset = 20;
+local visualEdgePadding = 2;
 local readyGlowColor = { 0.1, 1, 0.45, 1 };
-local cooldownBorderColor = { 1, 0.45, 0.1, 1 };
+local cooldownBorderColor = { 1, 0, 0, 1 };
 local cooldownIconBrightness = 0.45;
 local cufPool = {};
 local setupComplete = false;
@@ -235,15 +236,19 @@ local function ApplyLayout(frame, icon)
     end
 
     local config = GetConfig();
+    local iconScale = GetIconSize(frame, config) / iconBaseSize;
+    local positioningPadding = visualEdgePadding * iconScale;
+    local offsetX = ( config.raidFrameTeammateTrinketOffsetX or 0 ) - positioningPadding;
+
     icon:ClearAllPoints();
+    icon:SetScale(iconScale);
     icon:SetPoint(
         "RIGHT",
         frame,
         "LEFT",
-        config.raidFrameTeammateTrinketOffsetX or 0,
+        offsetX,
         config.raidFrameTeammateTrinketOffsetY or 0
     );
-    icon:SetScale(GetIconSize(frame, config) / iconBaseSize);
     StyleCooldown(icon.cooldown, config);
 end
 
