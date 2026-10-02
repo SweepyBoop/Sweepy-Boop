@@ -10,7 +10,11 @@ if ( not addon.PROJECT_MAINLINE ) then return end
 -- FrameAPICooldownDocumentation.lua documents
 -- Cooldown:SetCooldownFromDurationObject(duration, clearIfZero).
 -- LuaDurationObjectAPIDocumentation.lua exposes restricted numeric accessors; this
--- module intentionally keeps the object opaque and passes it directly to Cooldown.
+-- module keeps numeric duration data opaque and only requests the boolean IsActive state.
+-- SimpleRegionAPIDocumentation.lua documents SetVertexColorFromBoolean and
+-- SetAlphaFromBoolean, while CurveUtilDocumentation.lua documents secret-safe boolean
+-- color evaluation. These APIs apply a potentially-secret IsActive value without addon
+-- code inspecting or branching on it.
 -- CompactArenaFrame.lua demonstrates the related opponent-only arenaN flow. Blizzard
 -- does not demonstrate partyN/raidN support; this module treats teammate tokens as an
 -- experimental capability and hides the icon when the duration API returns no data.
@@ -19,9 +23,19 @@ local trinketSpellID = 336126;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
 local frameLevelOffset = 20;
 local visualEdgePadding = 2;
+local visualUpdateInterval = 0.2;
 local readyGlowColor = { 0.1, 1, 0.45, 1 };
 local cooldownBorderColor = { 1, 0, 0, 1 };
 local cooldownIconBrightness = 0.45;
+local readyColorObject = CreateColor(unpack(readyGlowColor));
+local readyTextureColorObject = CreateColor(1, 1, 1, 1);
+local cooldownBorderColorObject = CreateColor(unpack(cooldownBorderColor));
+local cooldownTextureColorObject = CreateColor(
+    cooldownIconBrightness,
+    cooldownIconBrightness,
+    cooldownIconBrightness,
+    1
+);
 local cufPool = {};
 local setupComplete = false;
 local refreshScheduled = false;
@@ -141,6 +155,7 @@ local function SetReadyVisual(icon)
     icon.texture:SetVertexColor(1, 1, 1, 1);
     icon.border:SetVertexColor(unpack(readyGlowColor));
     icon.readyGlow:SetVertexColor(unpack(readyGlowColor));
+    icon.readyGlow:SetAlpha(0.9);
     icon.readyGlow:Show();
 end
 
@@ -156,23 +171,53 @@ local function SetCooldownVisual(icon)
     icon.readyGlow:Hide();
 end
 
-local function IsDurationReady(duration)
-    if not duration.IsActive then return end
+local function ApplyDurationVisual(icon)
+    local duration = icon.duration;
+    if ( not duration ) or ( not duration.IsActive ) then return false end
 
     local succeeded, isActive = pcall(duration.IsActive, duration);
-    if ( not succeeded )
-        or addon.IsSecretValue(isActive)
-        or type(isActive) ~= "boolean" then
+    if not succeeded then return false end
 
-        return;
+    local supportsSecretBooleanStyling = icon.texture.SetVertexColorFromBoolean
+        and icon.border.SetVertexColorFromBoolean
+        and icon.readyGlow.SetAlphaFromBoolean
+        and icon.texture.SetDesaturation
+        and C_CurveUtil
+        and C_CurveUtil.EvaluateColorValueFromBoolean;
+    if supportsSecretBooleanStyling then
+        icon.texture:SetVertexColorFromBoolean(
+            isActive,
+            cooldownTextureColorObject,
+            readyTextureColorObject
+        );
+        icon.border:SetVertexColorFromBoolean(
+            isActive,
+            cooldownBorderColorObject,
+            readyColorObject
+        );
+        icon.readyGlow:SetVertexColor(unpack(readyGlowColor));
+        icon.readyGlow:Show();
+        icon.readyGlow:SetAlphaFromBoolean(isActive, 0, 0.9);
+        local desaturation = C_CurveUtil.EvaluateColorValueFromBoolean(isActive, 1, 0);
+        icon.texture:SetDesaturation(desaturation);
+        return true;
     end
-    return not isActive;
+
+    if addon.IsSecretValue(isActive) or type(isActive) ~= "boolean" then return false end
+    if isActive then
+        SetCooldownVisual(icon);
+    else
+        SetReadyVisual(icon);
+    end
+    return true;
 end
 
 local function HideIcon(frame)
     local icon = frame and frame.sweepyBoopTeammateTrinketIcon;
     if not icon then return end
 
+    icon.duration = nil;
+    icon.visualUpdateElapsed = 0;
     if icon.cooldown.Clear then
         icon.cooldown:Clear();
     end
@@ -220,10 +265,18 @@ local function EnsureIcon(frame)
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon.texture);
     icon.cooldown:SetScript("OnCooldownDone", function()
-        SetReadyVisual(icon);
+        ApplyDurationVisual(icon);
     end);
     StyleCooldown(icon.cooldown, GetConfig());
     SetCooldownVisual(icon);
+    icon.visualUpdateElapsed = 0;
+    icon:SetScript("OnUpdate", function(self, elapsed)
+        if not self.duration then return end
+        self.visualUpdateElapsed = self.visualUpdateElapsed + elapsed;
+        if self.visualUpdateElapsed < visualUpdateInterval then return end
+        self.visualUpdateElapsed = 0;
+        ApplyDurationVisual(self);
+    end);
     icon:Hide();
     frame.sweepyBoopTeammateTrinketIcon = icon;
     return icon;
@@ -285,10 +338,10 @@ local function UpdateFrame(frame)
         return;
     end
 
+    icon.duration = duration;
+    icon.visualUpdateElapsed = visualUpdateInterval;
     icon.cooldown:SetCooldownFromDurationObject(duration, true);
-    if IsDurationReady(duration) then
-        SetReadyVisual(icon);
-    else
+    if not ApplyDurationVisual(icon) then
         SetCooldownVisual(icon);
     end
     icon:Show();

@@ -28,9 +28,9 @@ The argument must be untainted. SweepyBoop passes the teammate frame's readable 
 Cooldown:SetCooldownFromDurationObject(duration, clearIfZero)
 ```
 
-SweepyBoop passes the returned duration object directly to this method. Production code does not read start time, end time, elapsed time, remaining time, total duration, or modification rate. It uses only the documented boolean `IsActive()` state to choose between ready and on-cooldown styling.
+SweepyBoop passes the returned duration object directly to this method. Production code does not read start time, end time, elapsed time, remaining time, total duration, or modification rate. It polls only the documented boolean `IsActive()` state and never inspects or branches on that potentially-secret value.
 
-`Blizzard_APIDocumentationGenerated/LuaDurationObjectAPIDocumentation.lua` documents those numeric methods and their restricted argument behavior. Keeping numeric duration data opaque avoids deriving or branching on restricted cooldown values.
+`Blizzard_APIDocumentationGenerated/SimpleRegionAPIDocumentation.lua` documents `SetVertexColorFromBoolean` and `SetAlphaFromBoolean`. `Blizzard_APIDocumentationGenerated/CurveUtilDocumentation.lua` documents `EvaluateColorValueFromBoolean`. SweepyBoop passes the potentially-secret `IsActive()` result directly through those APIs to select ready or on-cooldown colors, glow alpha, and desaturation. Keeping both numeric duration data and the boolean state opaque avoids tainted access while allowing visuals to change during a round.
 
 ### Refresh events
 
