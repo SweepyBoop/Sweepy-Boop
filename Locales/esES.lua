@@ -341,6 +341,8 @@ local function ApplyTranslations(locale)
     L["Row 2, least-to-most important: Reversion, Lifebind, Time Dilation."] = "Fila 2, de menor a mayor importancia: Reversión, Vínculo vital, Dilatación temporal.";
     L["Big Debuff Icons"] = "Iconos grandes de perjuicios";
     L["Teammate Trinkets"] = "Abalorios de compañeros";
+    L["Ready"] = "Listo";
+    L["On cooldown"] = "En reutilización";
     L["Show arena teammate PvP trinket cooldowns to the left of Blizzard raid-style frames. The player is excluded."] = "Muestra los tiempos de reutilización de los abalorios JcJ de los compañeros de arena a la izquierda de los marcos de banda de Blizzard. El jugador queda excluido.";
     L["Trinket Scale"] = "Escala de abalorio";
     L["Size of teammate trinket icons as a percentage of the raid-frame height."] = "Tamaño de los iconos de abalorio de los compañeros como porcentaje de la altura del marco de banda.";

@@ -1,6 +1,6 @@
 local _, addon = ...;
 
-local Type, Version = "RaidFrameTeammateTrinketPreview-SweepyBoop", 1;
+local Type, Version = "RaidFrameTeammateTrinketPreview-SweepyBoop", 2;
 local AceGUI = LibStub and LibStub("AceGUI-3.0", true);
 if not AceGUI or ( AceGUI:GetWidgetVersion(Type) or 0 ) >= Version then return end
 
@@ -8,12 +8,15 @@ local previewWidgets = setmetatable({}, { __mode = "k" });
 local textureWhite = "Interface\\BUTTONS\\WHITE8X8";
 local trinketSpellID = 336126;
 local iconBaseSize = addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_BASE_SIZE;
+local readyGlowColor = { 0.1, 1, 0.45, 1 };
 local cooldownBorderColor = { 1, 0.45, 0.1, 1 };
 local cooldownIconBrightness = 0.45;
 local previewFrameWidth = 144;
 local previewFrameHeight = 72;
-local previewHeight = 116;
+local previewTop = 28;
 local previewMargin = 16;
+local previewRowGap = 18;
+local previewFooterHeight = 30;
 local previewDuration = 120;
 local previewElapsed = 35;
 
@@ -78,6 +81,14 @@ local function StyleCooldown(cooldown, config)
     UpdateCooldownFontSize(cooldown);
 end
 
+local function SetReadyVisual(icon)
+    icon.texture:SetDesaturated(false);
+    icon.texture:SetVertexColor(1, 1, 1, 1);
+    icon.border:SetVertexColor(unpack(readyGlowColor));
+    icon.readyGlow:SetVertexColor(unpack(readyGlowColor));
+    icon.readyGlow:Show();
+end
+
 local function SetCooldownVisual(icon)
     icon.texture:SetDesaturated(true);
     icon.texture:SetVertexColor(
@@ -107,28 +118,13 @@ local function StartPreviewCooldown(icon)
     icon.cooldown:Show();
 end
 
-local function CreateSample(parent)
-    local sampleFrame = CreateFrame("Frame", nil, parent);
-    sampleFrame:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, -28);
-    sampleFrame:SetSize(previewFrameWidth, previewFrameHeight);
-
-    local border = sampleFrame:CreateTexture(nil, "BACKGROUND");
-    border:SetAllPoints(sampleFrame);
-    border:SetTexture(textureWhite);
-    border:SetVertexColor(0, 0, 0, 1);
-
-    local background = sampleFrame:CreateTexture(nil, "BORDER");
-    background:SetPoint("TOPLEFT", sampleFrame, "TOPLEFT", 1, -1);
-    background:SetPoint("BOTTOMRIGHT", sampleFrame, "BOTTOMRIGHT", -1, 1);
-    background:SetTexture(textureWhite);
-    background:SetVertexColor(1, 0.45, 0, 1);
-
-    local icon = CreateFrame("Frame", nil, sampleFrame);
+local function CreateTrinketIcon(parent, restartCooldown)
+    local icon = CreateFrame("Frame", nil, parent);
     icon:SetSize(iconBaseSize, iconBaseSize);
 
-    local iconBackdrop = icon:CreateTexture(nil, "BACKGROUND");
-    iconBackdrop:SetAllPoints(icon);
-    iconBackdrop:SetColorTexture(0, 0, 0, 1);
+    local backdrop = icon:CreateTexture(nil, "BACKGROUND");
+    backdrop:SetAllPoints(icon);
+    backdrop:SetColorTexture(0, 0, 0, 1);
 
     icon.texture = icon:CreateTexture(nil, "ARTWORK");
     local inset = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_ICON_INSET;
@@ -154,59 +150,46 @@ local function CreateSample(parent)
 
     icon.cooldown = CreateFrame("Cooldown", nil, icon, "CooldownFrameTemplate");
     icon.cooldown:SetAllPoints(icon.texture);
-    icon.cooldown:SetScript("OnCooldownDone", function()
-        StartPreviewCooldown(icon);
-    end);
+    if restartCooldown then
+        icon.cooldown:SetScript("OnCooldownDone", function()
+            StartPreviewCooldown(icon);
+        end);
+    end
     icon:Hide();
+    return icon;
+end
 
+local function CreatePreviewRow(parent, labelText, restartCooldown)
+    local row = CreateFrame("Frame", nil, parent);
+    row:SetSize(previewFrameWidth, previewFrameHeight);
+
+    local border = row:CreateTexture(nil, "BACKGROUND");
+    border:SetAllPoints(row);
+    border:SetTexture(textureWhite);
+    border:SetVertexColor(0, 0, 0, 1);
+
+    local background = row:CreateTexture(nil, "BORDER");
+    background:SetPoint("TOPLEFT", row, "TOPLEFT", 1, -1);
+    background:SetPoint("BOTTOMRIGHT", row, "BOTTOMRIGHT", -1, 1);
+    background:SetTexture(textureWhite);
+    background:SetVertexColor(1, 0.45, 0, 1);
+
+    row.label = row:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmallOutline");
+    row.label:SetPoint("CENTER", row, "CENTER");
+    row.label:SetText(labelText);
+
+    row.icon = CreateTrinketIcon(row, restartCooldown);
+    return row;
+end
+
+local function BuildSample(parent)
     return {
-        frame = sampleFrame,
-        icon = icon,
+        ready = CreatePreviewRow(parent, addon.L["Ready"], false),
+        cooldown = CreatePreviewRow(parent, addon.L["On cooldown"], true),
     };
 end
 
-local function RenderSample(widget)
-    local config = GetConfig();
-    local enabled = config.raidFrameTeammateTrinketEnabled;
-    local shownIconSize = previewFrameHeight * GetIconScale(config);
-    local offsetX = config.raidFrameTeammateTrinketOffsetX or 0;
-    local offsetY = config.raidFrameTeammateTrinketOffsetY or 0;
-    local iconScale = shownIconSize / iconBaseSize;
-    local borderExtent = addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING * iconScale;
-    local leftExtent = math.max(0, shownIconSize - offsetX + borderExtent);
-    local icon = widget.sample.icon;
-
-    widget.sample.frame:ClearAllPoints();
-    widget.sample.frame:SetPoint(
-        "TOPLEFT",
-        widget.frame,
-        "TOPLEFT",
-        previewMargin + leftExtent,
-        -28
-    );
-    icon:ClearAllPoints();
-    icon:SetPoint(
-        "RIGHT",
-        widget.sample.frame,
-        "LEFT",
-        offsetX,
-        offsetY
-    );
-    icon:SetScale(shownIconSize / iconBaseSize);
-    StyleCooldown(icon.cooldown, config);
-    icon.previewActive = widget.frame:IsShown();
-    icon:SetAlpha(enabled and 1 or 0.35);
-    icon:Show();
-    StartPreviewCooldown(icon);
-
-    widget.sample.frame:SetAlpha(enabled and 1 or 0.45);
-    widget.disabledText:SetShown(not enabled);
-end
-
-local function CleanupPreview(widget)
-    local icon = widget and widget.sample and widget.sample.icon;
-    if not icon then return end
-
+local function ClearIcon(icon)
     icon.previewActive = false;
     if icon.cooldown.Clear then
         icon.cooldown:Clear();
@@ -217,11 +200,101 @@ local function CleanupPreview(widget)
     icon:Hide();
 end
 
+local function CleanupPreview(widget)
+    if not widget or not widget.sample then return end
+    ClearIcon(widget.sample.ready.icon);
+    ClearIcon(widget.sample.cooldown.icon);
+end
+
+local function PositionRow(row, relativeFrame, relativePoint, x, y, iconScale, offsetX, offsetY)
+    row:ClearAllPoints();
+    row:SetPoint("TOPLEFT", relativeFrame, relativePoint, x, y);
+    row.icon:ClearAllPoints();
+    row.icon:SetPoint("RIGHT", row, "LEFT", offsetX, offsetY);
+    row.icon:SetScale(iconScale);
+end
+
+local function RenderSample(widget)
+    local config = GetConfig();
+    local enabled = config.raidFrameTeammateTrinketEnabled;
+    local shownIconSize = previewFrameHeight * GetIconScale(config);
+    local iconScale = shownIconSize / iconBaseSize;
+    local offsetX = config.raidFrameTeammateTrinketOffsetX or 0;
+    local offsetY = config.raidFrameTeammateTrinketOffsetY or 0;
+    local visualPadding = math.max(
+        addon.BIG_DEBUFFS_ICON_STYLE.DEBUFF_BORDER_PADDING,
+        addon.BIG_DEBUFFS_ICON_STYLE.HIGHLIGHT_PADDING
+    ) * iconScale;
+    local leftExtent = math.max(0, shownIconSize - offsetX + visualPadding);
+    local visualHalfHeight = ( shownIconSize / 2 ) + visualPadding;
+    local topExtent = math.max(0, offsetY + visualHalfHeight - ( previewFrameHeight / 2 ));
+    local bottomExtent = math.max(0, -offsetY + visualHalfHeight - ( previewFrameHeight / 2 ));
+    local frameX = previewMargin + leftExtent;
+    local firstFrameY = -( previewTop + topExtent );
+    local totalHeight = previewTop
+        + topExtent
+        + ( previewFrameHeight * 2 )
+        + previewRowGap
+        + bottomExtent
+        + previewFooterHeight;
+
+    widget:SetHeight(totalHeight);
+    widget.frame:SetHeight(totalHeight);
+    PositionRow(
+        widget.sample.ready,
+        widget.frame,
+        "TOPLEFT",
+        frameX,
+        firstFrameY,
+        iconScale,
+        offsetX,
+        offsetY
+    );
+    PositionRow(
+        widget.sample.cooldown,
+        widget.sample.ready,
+        "BOTTOMLEFT",
+        0,
+        -previewRowGap,
+        iconScale,
+        offsetX,
+        offsetY
+    );
+
+    local readyIcon = widget.sample.ready.icon;
+    StyleCooldown(readyIcon.cooldown, config);
+    readyIcon.previewActive = widget.frame:IsShown();
+    if readyIcon.cooldown.Clear then
+        readyIcon.cooldown:Clear();
+    end
+    readyIcon.cooldown:Hide();
+    SetReadyVisual(readyIcon);
+    readyIcon:SetAlpha(enabled and 1 or 0.35);
+    readyIcon:Show();
+
+    local cooldownIcon = widget.sample.cooldown.icon;
+    StyleCooldown(cooldownIcon.cooldown, config);
+    cooldownIcon.previewActive = widget.frame:IsShown();
+    cooldownIcon:SetAlpha(enabled and 1 or 0.35);
+    cooldownIcon:Show();
+    StartPreviewCooldown(cooldownIcon);
+
+    widget.sample.ready:SetAlpha(enabled and 1 or 0.45);
+    widget.sample.cooldown:SetAlpha(enabled and 1 or 0.45);
+    widget.disabledText:ClearAllPoints();
+    widget.disabledText:SetPoint(
+        "TOPLEFT",
+        widget.sample.cooldown,
+        "BOTTOMLEFT",
+        0,
+        -( 6 + bottomExtent )
+    );
+    widget.disabledText:SetShown(not enabled);
+end
+
 local methods = {
     ["OnAcquire"] = function(self)
         self:SetFullWidth(true);
-        self:SetHeight(previewHeight);
-        self.frame:SetHeight(previewHeight);
         previewWidgets[self] = true;
         self:Refresh();
     end,
@@ -268,16 +341,14 @@ end
 local function Constructor()
     local frame = CreateFrame("Frame", nil, UIParent);
     frame:Hide();
-    frame:SetHeight(previewHeight);
 
     local label = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal");
     label:SetPoint("TOPLEFT", frame, "TOPLEFT", 0, -4);
     label:SetTextColor(1, 0.82, 0, 1);
 
-    local sample = CreateSample(frame);
+    local sample = BuildSample(frame);
 
     local disabledText = frame:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall");
-    disabledText:SetPoint("TOPLEFT", sample.frame, "BOTTOMLEFT", 0, -6);
     disabledText:SetText(addon.L["Disabled"]);
 
     local widget = {
