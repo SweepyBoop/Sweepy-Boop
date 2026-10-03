@@ -1016,6 +1016,17 @@
         267
       ],
       "category": "utility"
+    },
+    {
+      "id": "trinket",
+      "displayText": "Gladiator's Medallion",
+      "spokenText": "Trinket",
+      "spellIds": [
+        336126
+      ],
+      "specIds": [],
+      "category": "utility",
+      "trigger": "enemy-spell-cast-success"
     }
   ],
   "enforceMaximumDuration": true,
@@ -1057,6 +1068,6 @@
   ],
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 75-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 76-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   }
 }

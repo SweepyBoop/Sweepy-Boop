@@ -7,6 +7,7 @@ local refreshScheduled
 local setupComplete = false;
 local arenaUnits = { "arena1", "arena2", "arena3" };
 local soundRoot = "Interface\\AddOns\\SweepyBoop\\Sounds\\ArenaImportantAuras\\enUS\\";
+local trinketSoundThrottleByGUID = {};
 
 local function GetConfig()
     return SweepyBoop.db.profile.arenaFrames;
@@ -38,6 +39,55 @@ local function IsCalloutEnabled(config, calloutID)
     return callouts[calloutID] ~= false;
 end
 
+local function GetVoiceRoot(config)
+    local voicePackID = config.arenaImportantAuraVoicePack or "alliance";
+    local voicePack = addon.ARENA_IMPORTANT_AURA_VOICE_PACKS[voicePackID]
+        or addon.ARENA_IMPORTANT_AURA_VOICE_PACKS.alliance;
+    return soundRoot .. voicePack.directory .. "\\";
+end
+
+local function IsArenaUnitGUID(guid)
+    if not guid then return false end
+
+    for _, unit in ipairs(arenaUnits) do
+        if UnitGUID(unit) == guid then
+            return true;
+        end
+    end
+    return false;
+end
+
+local function HandleTrinketCombatLogEvent()
+    local callout = addon.ARENA_IMPORTANT_AURA_TRINKET_VOICE_CALLOUT;
+    if not callout then return end
+
+    local config = GetConfig();
+    if ( not config.arenaImportantAuraVoiceEnabled ) or ( not IsInArenaInstance() ) then
+        return;
+    end
+
+    local _, subEvent, _, sourceGUID, _, _, _, _, _, _, _, spellID =
+        CombatLogGetCurrentEventInfo();
+    if subEvent ~= addon.SPELL_CAST_SUCCESS or ( not IsArenaUnitGUID(sourceGUID) ) then
+        return;
+    end
+
+    local matchesTrinket = false;
+    for _, trinketSpellID in ipairs(callout.spellIDs) do
+        if spellID == trinketSpellID then
+            matchesTrinket = true;
+            break;
+        end
+    end
+    if not matchesTrinket then return end
+
+    local now = GetTime();
+    local lastPlayed = trinketSoundThrottleByGUID[sourceGUID];
+    if lastPlayed and ( now - lastPlayed ) < 1 then return end
+    trinketSoundThrottleByGUID[sourceGUID] = now;
+    PlaySoundFile(GetVoiceRoot(config) .. callout.soundFileName, "Master");
+end
+
 local function RegisterAuraSounds()
     local config = GetConfig();
     if ( not config.arenaImportantAuraVoiceEnabled )
@@ -48,15 +98,13 @@ local function RegisterAuraSounds()
         return;
     end
 
-    local voicePackID = config.arenaImportantAuraVoicePack or "alliance";
-    local voicePack = addon.ARENA_IMPORTANT_AURA_VOICE_PACKS[voicePackID]
-        or addon.ARENA_IMPORTANT_AURA_VOICE_PACKS.alliance;
-    local voiceRoot = soundRoot .. voicePack.directory .. "\\";
+    local voiceRoot = GetVoiceRoot(config);
 
-    for _, unit in ipairs(arenaUnits) do
-        for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
-            if IsCalloutEnabled(config, callout.id) then
-                local soundFileName = voiceRoot .. callout.soundFileName;
+    for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
+        if IsCalloutEnabled(config, callout.id) then
+            local soundFileName = voiceRoot .. callout.soundFileName;
+            local unitTokens = callout.unitTokens or arenaUnits;
+            for _, unit in ipairs(unitTokens) do
                 for _, spellID in ipairs(callout.spellIDs) do
                     local handle = C_UnitAuras.AddAuraSound(
                         Enum.UnitAuraSoundTrigger.Added,
@@ -104,8 +152,17 @@ function SweepyBoop:SetupArenaImportantAuraVoiceAnnouncements()
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
+    if addon.ARENA_IMPORTANT_AURA_TRINKET_VOICE_CALLOUT then
+        eventFrame:RegisterEvent(addon.COMBAT_LOG_EVENT_UNFILTERED);
+    end
     eventFrame:SetScript("OnEvent", function(_, event)
+        if event == addon.COMBAT_LOG_EVENT_UNFILTERED then
+            HandleTrinketCombatLogEvent();
+            return;
+        end
+
         if event == addon.PLAYER_REGEN_ENABLED then
+            wipe(trinketSoundThrottleByGUID);
             self:RefreshArenaImportantAuraVoiceAnnouncements();
             return;
         end

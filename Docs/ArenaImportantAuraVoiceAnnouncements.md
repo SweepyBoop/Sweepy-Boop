@@ -4,7 +4,7 @@
 
 The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 150 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 75 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
-The Mainline runtime integration is implemented on the current branch and pending in-game validation. Phase one exposes 62 callout toggles with 67 verified buff aura IDs that appear on `arena1-3`; Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Incoming debuffs, pet/summon abilities, and other unverified totem/ground scopes are omitted from UI and registration while their sound files remain packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
+The Mainline runtime integration is implemented on the current branch and pending in-game validation. It exposes 66 callout toggles with 71 verified aura IDs: opponent buffs appear on `arena1-3`, while Touch of the Magi, Breath of Eons, Deathmark, and Colossus Smash/Warbreaker are registered on `player`, `party1`, and `party2`. Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Pet/summon abilities and other unverified totem/ground scopes remain omitted from UI and registration while their sound files stay packaged for later iterations. The feature is disabled by default and registers auras only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
 
 ## Objective
 
@@ -248,6 +248,8 @@ Responsibilities:
 
 The sound controller should not require the standalone visual bars to be visible. The two features may share the semantic spell catalog, but visual presentation and voice playback have separate enable settings and lifecycles.
 
+Enemy Gladiator's Medallion use is a combat-log event rather than an aura trigger. The controller contains a `SPELL_CAST_SUCCESS` path that verifies the source GUID against `arena1-3` and plays the selected pack's `trinket.ogg`. That listener is registered only when the generated catalog contains the optional trinket event callout; the phrase is staged in the workbench manifest, but runtime metadata remains absent until reviewed Gemma and Archie clips are promoted.
+
 Registration failures should be contained:
 
 - A failed registration must not prevent remaining spells or units from registering.
@@ -392,10 +394,11 @@ Exit criteria met: the selected English audio passed listening and static valida
 
 ### Phase 2: English Runtime (implementation complete, in-game validation pending)
 
-- Package all 150 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later friendly-debuff, pet, summon, and totem scopes.
-- Generate phase-one runtime data for 61 arena-opponent buff toggles and 66 aura spell IDs.
+- Package all 150 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later pet, summon, and totem scopes.
+- Generate runtime data for 66 aura toggles and 71 aura spell IDs across arena-opponent buffs and friendly-target debuffs.
+- Stage the universal `trinket` phrase for a future 152-file promoted pack; enable the existing combat-log path automatically when that metadata is generated.
 - Implement the combat-deferred arena sound controller and handle cleanup.
-- Add master enable, Female/Male voice selection, and 62 grouped opponent-buff toggles, including separate Ascendance controls by specialization.
+- Add master enable, Female/Male voice selection, and 66 grouped aura toggles, including separate Ascendance controls by specialization.
 - Use the Master output channel for phase 1 runtime behavior.
 - Test normal arenas and multi-round Solo Shuffle.
 
