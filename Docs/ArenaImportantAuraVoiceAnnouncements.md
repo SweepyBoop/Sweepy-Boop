@@ -2,7 +2,7 @@
 
 ## Status
 
-The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 150 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 75 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
+The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 154 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 77 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
 The Mainline runtime integration is implemented on the current branch and pending in-game validation. Phase one exposes 62 callout toggles with 67 verified buff aura IDs that appear on `arena1-3`; Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Incoming debuffs, pet/summon abilities, and other unverified totem/ground scopes are omitted from UI and registration while their sound files remain packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
 
@@ -97,7 +97,7 @@ Reasons:
 - Stock voices remove the prompt/seed-voice quality problem entirely.
 - Short tactical phrases remained intelligible without sacrificial prefixes, semantic cropping, phoneme overrides, or seed selection.
 - Male/female delivery stays consistent because request settings are identical except for voice ID.
-- The full pack passed human listening review across 150 clips.
+- The full pack passed human listening review across 154 clips.
 - Every mastered clip is capped at one second; clips already within the cap remain at natural tempo.
 - Provider WAVs, request fingerprints, selected voice IDs, API/model versions, mastering measurements, and hashes are recorded in the workbench report.
 
@@ -392,7 +392,7 @@ Exit criteria met: the selected English audio passed listening and static valida
 
 ### Phase 2: English Runtime (implementation complete, in-game validation pending)
 
-- Package all 150 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later friendly-debuff, pet, summon, and totem scopes.
+- Package all 154 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later friendly-debuff, pet, summon, totem, and special arena-cooldown scopes.
 - Generate phase-one runtime data for 61 arena-opponent buff toggles and 66 aura spell IDs.
 - Implement the combat-deferred arena sound controller and handle cleanup.
 - Add master enable, Female/Male voice selection, and 62 grouped opponent-buff toggles, including separate Ascendance controls by specialization.

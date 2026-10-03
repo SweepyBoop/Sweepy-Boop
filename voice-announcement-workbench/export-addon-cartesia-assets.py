@@ -19,11 +19,11 @@ REPOSITORY = WORKBENCH.parent
 DEFAULT_SOURCE = REPOSITORY / "Docs" / "VoiceAnnouncementReview-KeyAbilities"
 DEFAULT_SOUNDS = REPOSITORY / "Sounds" / "ArenaImportantAuras"
 DEFAULT_DATA = REPOSITORY / "Common" / "ArenaImportantAuraVoiceData.lua"
-SOURCE_CALLOUTS = 75
-SOURCE_SPELL_IDS = 85
+SOURCE_CALLOUTS = 77
+SOURCE_SPELL_IDS = 87
 RUNTIME_CALLOUTS = 62
 RUNTIME_SPELL_IDS = 67
-EXPECTED_OGGS = 150
+EXPECTED_OGGS = 154
 # Audited opponent-unit buff auras. Target debuffs, pet/summon auras, totem/ground
 # effects, and unverified variants remain packaged but are not exposed at runtime yet.
 ARENA_OPPONENT_BUFF_SPELL_IDS = {
@@ -151,11 +151,18 @@ def validate_catalog(manifest: dict[str, Any]) -> None:
                 )
             spell_owners[spell_id] = callout_id
         spec_ids = [int(value) for value in callout.get("specIds", [])]
-        classes = {SPEC_CLASS.get(spec_id) for spec_id in spec_ids}
-        if None in classes or len(classes) != 1:
-            raise ValueError(
-                f"Callout {callout_id} must map to exactly one known class: {spec_ids}"
-            )
+        declared_class = callout.get("classFile")
+        if declared_class == "GENERAL":
+            if spec_ids:
+                raise ValueError(
+                    f"General callout {callout_id} must not declare specialization IDs"
+                )
+        else:
+            classes = {SPEC_CLASS.get(spec_id) for spec_id in spec_ids}
+            if None in classes or len(classes) != 1:
+                raise ValueError(
+                    f"Callout {callout_id} must map to exactly one known class: {spec_ids}"
+                )
     if len(ids) != SOURCE_CALLOUTS:
         raise ValueError(f"Expected {SOURCE_CALLOUTS} unique source callout IDs")
     if len(spell_owners) != SOURCE_SPELL_IDS:

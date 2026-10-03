@@ -1,9 +1,9 @@
 {
-  "createdUtc": "2026-10-01T17:51:28Z",
+  "createdUtc": "2026-10-03T22:47:43Z",
   "sourceManifest": "cartesia-pack-manifest.json",
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 75-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 77-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   },
   "provider": "Cartesia",
   "scope": "full",
@@ -4278,6 +4278,85 @@
       }
     },
     {
+      "outputKey": "alliance-commander-pvp-trinket-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "pvp-trinket",
+      "displayText": "PvP Trinket",
+      "spokenText": "Trinket",
+      "generationSeconds": 0.795,
+      "generationUtc": "2026-10-03T22:47:42Z",
+      "requestFingerprint": "85158BACDC741B43871E80CDF7FAA891574EB2DA087B3DC65B1D4AF187820FF6",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Trinket.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "7D355CD157C5FEC1C8876E07183B71D1FBFE70D35FDF9B4E85FB877B64A1C4F0",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 38808,
+        "durationSeconds": 0.88,
+        "samplePeakDbfs": -3.75,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "F828CF21D9A734F5C60C1454F24ADFBEF05422072452E9559D3BA7E046E9D2A7",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 24241,
+        "durationSeconds": 0.549683,
+        "samplePeakDbfs": -1.8443,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-pvp-trinket.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-18.68",
+          "input_tp": "-3.72",
+          "input_lra": "0.00",
+          "input_thresh": "-28.68",
+          "output_i": "-16.43",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.43",
+          "normalization_type": "linear",
+          "target_offset": "0.43"
+        },
+        "finalPass": {
+          "input_i": "-18.68",
+          "input_tp": "-3.72",
+          "input_lra": "0.00",
+          "input_thresh": "-28.68",
+          "output_i": "-16.43",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.43",
+          "normalization_type": "linear",
+          "target_offset": "0.43"
+        }
+      }
+    },
+    {
       "outputKey": "alliance-commander-rallying-cry-take-1",
       "speakerId": "alliance-commander",
       "speakerName": "Alliance Commander (Gemma)",
@@ -6012,6 +6091,85 @@
           "output_thresh": "-26.02",
           "normalization_type": "linear",
           "target_offset": "0.02"
+        }
+      }
+    },
+    {
+      "outputKey": "alliance-commander-zenith-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "zenith",
+      "displayText": "Zenith",
+      "spokenText": "Zenith",
+      "generationSeconds": 0.197,
+      "generationUtc": "2026-10-03T22:47:43Z",
+      "requestFingerprint": "50DCC1838226603AEA58638286BB5715A0CE97E62D057B87BBA621FAFFC06BE9",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Zenith.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "F1AFF109F1AF3125E48C9878B3A82877643A346C59C08767DA8B271248CEC6DE",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 42336,
+        "durationSeconds": 0.96,
+        "samplePeakDbfs": -2.2924,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "5B38E915FA1AFC235FCDB921244964FF72A628069B9BBA1078985FC3F0BF75CE",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 23770,
+        "durationSeconds": 0.539002,
+        "samplePeakDbfs": -1.8008,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-zenith.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-17.09",
+          "input_tp": "-2.27",
+          "input_lra": "0.00",
+          "input_thresh": "-27.09",
+          "output_i": "-16.29",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.29",
+          "normalization_type": "linear",
+          "target_offset": "0.29"
+        },
+        "finalPass": {
+          "input_i": "-17.09",
+          "input_tp": "-2.27",
+          "input_lra": "0.00",
+          "input_thresh": "-27.09",
+          "output_i": "-16.29",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.29",
+          "normalization_type": "linear",
+          "target_offset": "0.29"
         }
       }
     },
@@ -10203,6 +10361,85 @@
       }
     },
     {
+      "outputKey": "horde-commander-pvp-trinket-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "pvp-trinket",
+      "displayText": "PvP Trinket",
+      "spokenText": "Trinket",
+      "generationSeconds": 0.233,
+      "generationUtc": "2026-10-03T22:47:43Z",
+      "requestFingerprint": "85158BACDC741B43871E80CDF7FAA891574EB2DA087B3DC65B1D4AF187820FF6",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Trinket.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "BEA7AB31C0944A105DDFD0E2A8EA3E525909C06B4E4D1907DB013A20AFBA2B10",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 38808,
+        "durationSeconds": 0.88,
+        "samplePeakDbfs": -7.0649,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "69DAD47A7A05DB4C42776BDEC63D56C627F755476D57FBDC96BA8CBFA038B789",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 20312,
+        "durationSeconds": 0.46059,
+        "samplePeakDbfs": -1.8093,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-pvp-trinket.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-25.05",
+          "input_tp": "-7.06",
+          "input_lra": "0.00",
+          "input_thresh": "-35.05",
+          "output_i": "-19.45",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-29.45",
+          "normalization_type": "linear",
+          "target_offset": "3.45"
+        },
+        "finalPass": {
+          "input_i": "-25.05",
+          "input_tp": "-7.06",
+          "input_lra": "0.00",
+          "input_thresh": "-35.05",
+          "output_i": "-19.45",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-29.45",
+          "normalization_type": "linear",
+          "target_offset": "3.45"
+        }
+      }
+    },
+    {
       "outputKey": "horde-commander-rallying-cry-take-1",
       "speakerId": "horde-commander",
       "speakerName": "Horde Commander (Archie)",
@@ -11937,6 +12174,85 @@
           "output_thresh": "-27.49",
           "normalization_type": "linear",
           "target_offset": "1.49"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-zenith-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "zenith",
+      "displayText": "Zenith",
+      "spokenText": "Zenith",
+      "generationSeconds": 0.207,
+      "generationUtc": "2026-10-03T22:47:43Z",
+      "requestFingerprint": "50DCC1838226603AEA58638286BB5715A0CE97E62D057B87BBA621FAFFC06BE9",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Zenith.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "3ED2BEA0DEBD33AFD331C9EADC5D1D144CC4C06E595C017980827F7AF38DCCBF",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 42336,
+        "durationSeconds": 0.96,
+        "samplePeakDbfs": -11.9316,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "DBF9E6EE3194A0DD85F43FBE3F68A9E7313606CF0A39D58E9387F8022E74AF15",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 20183,
+        "durationSeconds": 0.457664,
+        "samplePeakDbfs": -2.453,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-zenith.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-25.85",
+          "input_tp": "-11.89",
+          "input_lra": "0.00",
+          "input_thresh": "-35.85",
+          "output_i": "-16.05",
+          "output_tp": "-2.04",
+          "output_lra": "0.00",
+          "output_thresh": "-26.05",
+          "normalization_type": "linear",
+          "target_offset": "0.05"
+        },
+        "finalPass": {
+          "input_i": "-25.85",
+          "input_tp": "-11.89",
+          "input_lra": "0.00",
+          "input_thresh": "-35.85",
+          "output_i": "-16.05",
+          "output_tp": "-2.04",
+          "output_lra": "0.00",
+          "output_thresh": "-26.05",
+          "normalization_type": "linear",
+          "target_offset": "0.05"
         }
       }
     }
