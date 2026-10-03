@@ -1241,6 +1241,29 @@
         267
       ],
       "category": "utility"
+    },
+    {
+      "id": "pvp-trinket",
+      "displayText": "PvP Trinket",
+      "spokenText": "Trinket",
+      "spellIds": [
+        42292
+      ],
+      "specIds": [],
+      "classFile": "GENERAL",
+      "category": "utility"
+    },
+    {
+      "id": "zenith",
+      "displayText": "Zenith",
+      "spokenText": "Zenith",
+      "spellIds": [
+        1249625
+      ],
+      "specIds": [
+        269
+      ],
+      "category": "offensive"
     }
   ]
 }
