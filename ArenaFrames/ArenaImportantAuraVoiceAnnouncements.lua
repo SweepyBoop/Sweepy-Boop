@@ -53,10 +53,11 @@ local function RegisterAuraSounds()
         or addon.ARENA_IMPORTANT_AURA_VOICE_PACKS.alliance;
     local voiceRoot = soundRoot .. voicePack.directory .. "\\";
 
-    for _, unit in ipairs(arenaUnits) do
-        for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
-            if IsCalloutEnabled(config, callout.id) then
-                local soundFileName = voiceRoot .. callout.soundFileName;
+    for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
+        if IsCalloutEnabled(config, callout.id) then
+            local soundFileName = voiceRoot .. callout.soundFileName;
+            local unitTokens = callout.unitTokens or arenaUnits;
+            for _, unit in ipairs(unitTokens) do
                 for _, spellID in ipairs(callout.spellIDs) do
                     local handle = C_UnitAuras.AddAuraSound(
                         Enum.UnitAuraSoundTrigger.Added,
@@ -104,6 +105,8 @@ function SweepyBoop:SetupArenaImportantAuraVoiceAnnouncements()
     eventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
     eventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
+    eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
+    eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     eventFrame:SetScript("OnEvent", function(_, event)
         if event == addon.PLAYER_REGEN_ENABLED then
             self:RefreshArenaImportantAuraVoiceAnnouncements();
