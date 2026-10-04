@@ -69,8 +69,13 @@ local function AppendArenaImportantAuraVoiceCalloutOption(classGroup, callout, o
         name = addon.FORMAT_TEXTURE(addon.GetSpellTexture(spellID)) .. " " .. spellName,
         desc = function()
             local description = addon.SPELL_DESCRIPTION[spellID] or "";
-            local auraSpellIDs = string.format(addon.L["Aura spell IDs: %s"], spellIDText);
-            return description .. "\n\n|" .. yellowColor .. auraSpellIDs .. "|r";
+            local spellIDsDescription;
+            if callout.trigger then
+                spellIDsDescription = addon.L["Spell ID"] .. ": " .. spellIDText;
+            else
+                spellIDsDescription = string.format(addon.L["Aura spell IDs: %s"], spellIDText);
+            end
+            return description .. "\n\n|" .. yellowColor .. spellIDsDescription .. "|r";
         end,
     };
 end
@@ -511,6 +516,12 @@ addon.GetMainlineArenaFrameOptions = function(order)
         end
     end
 
+    classInfoByFile.GENERAL = {
+        classFile = "GENERAL",
+        className = addon.L["General"],
+    };
+    classOrder.GENERAL = 0;
+
     local calloutOrderByClass = {};
     for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
         local classInfo = classInfoByFile[callout.classFile];
@@ -518,12 +529,13 @@ addon.GetMainlineArenaFrameOptions = function(order)
             local groupKey = "voice" .. callout.classFile;
             local classGroup = optionGroup.args.voiceAnnouncements.args[groupKey];
             if not classGroup then
+                local isGeneral = callout.classFile == "GENERAL";
                 classGroup = {
                     order = 20 + (classOrder[callout.classFile] or 100),
                     type = "group",
                     inline = true,
-                    icon = addon.ICON_ID_CLASSES,
-                    iconCoords = CLASS_ICON_TCOORDS[callout.classFile],
+                    icon = not isGeneral and addon.ICON_ID_CLASSES or nil,
+                    iconCoords = not isGeneral and CLASS_ICON_TCOORDS[callout.classFile] or nil,
                     name = classInfo.className,
                     disabled = function()
                         return not SweepyBoop.db.profile.arenaFrames.arenaImportantAuraVoiceEnabled;

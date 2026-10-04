@@ -6,6 +6,14 @@ local auraSoundHandles = {};
 local refreshScheduled
 local setupComplete = false;
 local arenaUnits = { "arena1", "arena2", "arena3" };
+-- Blizzard_UnitFrame/Mainline/CompactArenaFrame.lua binds each opponent CC-remover
+-- widget to an arenaN token. Keep an exact allowlist so party updates never announce.
+local arenaUnitSet = {
+    arena1 = true,
+    arena2 = true,
+    arena3 = true,
+};
+local trinketCalloutID = "pvp-trinket";
 local soundRoot = "Interface\\AddOns\\SweepyBoop\\Sounds\\ArenaImportantAuras\\enUS\\";
 
 local function GetConfig()
@@ -38,6 +46,35 @@ local function IsCalloutEnabled(config, calloutID)
     return callouts[calloutID] ~= false;
 end
 
+local function GetVoiceRoot(config)
+    local voicePackID = config.arenaImportantAuraVoicePack or "alliance";
+    local voicePack = addon.ARENA_IMPORTANT_AURA_VOICE_PACKS[voicePackID]
+        or addon.ARENA_IMPORTANT_AURA_VOICE_PACKS.alliance;
+    return soundRoot .. voicePack.directory .. "\\";
+end
+
+local function PlayArenaOpponentTrinketCallout(unitTarget)
+    if type(unitTarget) ~= "string" or not arenaUnitSet[unitTarget] then return end
+
+    -- CompactArenaFrame.lua handles ARENA_COOLDOWNS_UPDATE by querying
+    -- C_PvP.GetArenaCrowdControlInfo for its arena unit. PvpInfoDocumentation.lua
+    -- marks those raw cooldown values secret when loss-of-control data is restricted.
+    -- Voice playback therefore uses only the event's unit token and never reads,
+    -- compares, or infers any protected cooldown value.
+    local callout = addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUT_BY_ID[trinketCalloutID];
+    local config = GetConfig();
+    if ( not callout )
+        or callout.trigger ~= "arenaCooldownUpdate"
+        or ( not config.arenaImportantAuraVoiceEnabled )
+        or ( not IsCalloutEnabled(config, trinketCalloutID) )
+        or ( not IsInArenaInstance() ) then
+
+        return;
+    end
+
+    PlaySoundFile(GetVoiceRoot(config) .. callout.soundFileName, "Master");
+end
+
 local function RegisterAuraSounds()
     local config = GetConfig();
     if ( not config.arenaImportantAuraVoiceEnabled )
@@ -48,13 +85,10 @@ local function RegisterAuraSounds()
         return;
     end
 
-    local voicePackID = config.arenaImportantAuraVoicePack or "alliance";
-    local voicePack = addon.ARENA_IMPORTANT_AURA_VOICE_PACKS[voicePackID]
-        or addon.ARENA_IMPORTANT_AURA_VOICE_PACKS.alliance;
-    local voiceRoot = soundRoot .. voicePack.directory .. "\\";
+    local voiceRoot = GetVoiceRoot(config);
 
     for _, callout in ipairs(addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUTS) do
-        if IsCalloutEnabled(config, callout.id) then
+        if ( not callout.trigger ) and IsCalloutEnabled(config, callout.id) then
             local soundFileName = voiceRoot .. callout.soundFileName;
             local unitTokens = callout.unitTokens or arenaUnits;
             for _, unit in ipairs(unitTokens) do
@@ -107,7 +141,16 @@ function SweepyBoop:SetupArenaImportantAuraVoiceAnnouncements()
     eventFrame:RegisterEvent(addon.PLAYER_REGEN_ENABLED);
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
-    eventFrame:SetScript("OnEvent", function(_, event)
+    -- UnitDocumentation.lua declares this as Blizzard's synchronous arena cooldown
+    -- event. Retail supplies the affected unitTarget token at runtime even though
+    -- the generated 12.1 metadata snapshot omits that payload declaration.
+    eventFrame:RegisterEvent("ARENA_COOLDOWNS_UPDATE");
+    eventFrame:SetScript("OnEvent", function(_, event, unitTarget)
+        if event == "ARENA_COOLDOWNS_UPDATE" then
+            PlayArenaOpponentTrinketCallout(unitTarget);
+            return;
+        end
+
         if event == addon.PLAYER_REGEN_ENABLED then
             self:RefreshArenaImportantAuraVoiceAnnouncements();
             return;
