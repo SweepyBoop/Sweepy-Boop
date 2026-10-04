@@ -69,6 +69,7 @@ local function LogArenaCooldownUpdate(unitTarget)
     if ( not addon.internal ) or ( not IsArenaMatchEngaged() ) then return end
 
     local isSecret = addon.IsSecretValue(unitTarget);
+    if ( not isSecret ) and unitTarget == nil then return end
     local unitType = type(unitTarget);
     local unitText = "<nil>";
     local isAcceptedUpdate = IsArenaOpponentCooldownUpdate(unitTarget);
