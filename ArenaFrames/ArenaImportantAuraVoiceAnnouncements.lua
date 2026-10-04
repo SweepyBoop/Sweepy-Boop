@@ -142,8 +142,9 @@ function SweepyBoop:SetupArenaImportantAuraVoiceAnnouncements()
     eventFrame:RegisterEvent(addon.GROUP_ROSTER_UPDATE);
     eventFrame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
     -- UnitDocumentation.lua declares this as Blizzard's synchronous arena cooldown
-    -- event. Retail supplies the affected unitTarget token at runtime even though
-    -- the generated 12.1 metadata snapshot omits that payload declaration.
+    -- event, but the generated 12.1 metadata snapshot omits its runtime payload.
+    -- Warcraft Wiki documents the affected unitTarget token explicitly:
+    -- https://warcraft.wiki.gg/wiki/Event:ARENA_COOLDOWNS_UPDATE
     eventFrame:RegisterEvent("ARENA_COOLDOWNS_UPDATE");
     eventFrame:SetScript("OnEvent", function(_, event, unitTarget)
         if event == "ARENA_COOLDOWNS_UPDATE" then
