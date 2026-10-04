@@ -29,7 +29,7 @@ DEFAULT_DESTINATION = REPOSITORY / "Docs" / "VoiceAnnouncementReview-KeyAbilitie
 EXPECTED_DESTINATION_NAME = "VoiceAnnouncementReview-KeyAbilities"
 MANIFEST_NAME = "cartesia-pack-manifest.json"
 ARCHIVE_NAME = "alliance-horde-cartesia-voices-1.0s.zip"
-EXPECTED_SAMPLE_COUNT = 150
+EXPECTED_SAMPLE_COUNT = 154
 EXPECTED_ACCELERATED_COUNT = 30
 TERMS_VERIFIED_DATE = "2026-10-01"
 ACCOUNT_TIER_DESCRIPTION = "user-confirmed eligible tier; exact tier not recorded"
@@ -267,7 +267,7 @@ def write_validation_summary(
         "- Model: `sonic-3.6`",
         "- API version: `2026-08-14`",
         "- Voices: 2",
-        "- Callouts per voice: 75",
+        "- Callouts per voice: 77",
         f"- Mastered OGG files: {len(samples)}",
         f"- Maximum mastered duration: {maximum_duration:.6f} seconds",
         f"- Accelerated clips: {len(accelerated)}",
@@ -313,8 +313,8 @@ def write_readme(destination: Path) -> None:
             [
                 "# Alliance and Horde Cartesia Voice Review",
                 "",
-                "This portable review pack contains 75 arena callouts for each of two",
-                "faction-flavored stock voices, for 150 mastered OGG files total.",
+                "This portable review pack contains 77 arena callouts for each of two",
+                "faction-flavored stock voices, for 154 mastered OGG files total.",
                 "",
                 "- Alliance: Gemma, Cartesia stock feminine voice",
                 "- Horde: Archie, Cartesia stock masculine voice",

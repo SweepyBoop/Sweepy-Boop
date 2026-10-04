@@ -1016,6 +1016,29 @@
         267
       ],
       "category": "utility"
+    },
+    {
+      "id": "pvp-trinket",
+      "displayText": "PvP Trinket",
+      "spokenText": "Trinket",
+      "spellIds": [
+        42292
+      ],
+      "specIds": [],
+      "classFile": "GENERAL",
+      "category": "utility"
+    },
+    {
+      "id": "zenith",
+      "displayText": "Zenith",
+      "spokenText": "Zenith",
+      "spellIds": [
+        1249625
+      ],
+      "specIds": [
+        269
+      ],
+      "category": "offensive"
     }
   ],
   "enforceMaximumDuration": true,
@@ -1057,6 +1080,6 @@
   ],
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 75-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 77-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   }
 }

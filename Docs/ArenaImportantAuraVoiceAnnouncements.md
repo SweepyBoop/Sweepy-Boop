@@ -2,9 +2,9 @@
 
 ## Status
 
-The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 150 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 75 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
+The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 154 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 77 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
-The Mainline runtime integration is implemented on the current branch and pending in-game validation. Phase one exposes 62 callout toggles with 67 verified buff aura IDs that appear on `arena1-3`; Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Incoming debuffs, pet/summon abilities, and other unverified totem/ground scopes are omitted from UI and registration while their sound files remain packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
+The Mainline runtime integration is implemented on the current branch and pending in-game validation. It exposes 67 callout toggles with 72 verified aura IDs: opponent buffs, including Windwalker Zenith, register on `arena1-3`, while Touch of the Magi, Breath of Eons, Deathmark, and Colossus Smash/Warbreaker register on `player`, `party1`, and `party2`. Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Pet/summon abilities, other unverified totem/ground scopes, and Trinket remain omitted from runtime detection while their sound files stay packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
 
 ## Objective
 
@@ -72,7 +72,7 @@ Relevant Blizzard source contracts:
 
 `AddAuraSound` is restricted and only accepts untainted arguments. The addon must construct registrations from ordinary configuration, static spell IDs, static paths, and fixed unit tokens. It must not derive registration arguments from secret aura values.
 
-Blizzard performs the aura match and audio playback internally. This is the essential privacy boundary: SweepyBoop registers known `(unit token, spell ID, sound)` tuples but does not learn which registered aura triggered playback.
+Blizzard performs the aura match and audio playback internally. This is the essential privacy boundary: SweepyBoop registers known `(unit token, spell ID, sound)` tuples but does not learn which registered aura triggered playback. Generated callouts default to `arena1-3`; hostile debuffs that land on the friendly team explicitly override that scope with `player`, `party1`, and `party2`.
 
 Blizzard also exposes `C_VoiceChat.SpeakText`, but that API only speaks text immediately. It does not create reusable audio files and cannot replace `AddAuraSound` when the triggering aura is secret. Offline audio assets are therefore required.
 
@@ -97,7 +97,7 @@ Reasons:
 - Stock voices remove the prompt/seed-voice quality problem entirely.
 - Short tactical phrases remained intelligible without sacrificial prefixes, semantic cropping, phoneme overrides, or seed selection.
 - Male/female delivery stays consistent because request settings are identical except for voice ID.
-- The full pack passed human listening review across 150 clips.
+- The full pack passed human listening review across 154 clips.
 - Every mastered clip is capped at one second; clips already within the cap remain at natural tempo.
 - Provider WAVs, request fingerprints, selected voice IDs, API/model versions, mastering measurements, and hashes are recorded in the workbench report.
 
@@ -386,16 +386,16 @@ Verify that:
 - Retain the completed Qwen and CosyVoice prototypes as historical comparison material.
 - Use the promoted Cartesia Gemma/Archie review pack as the selected audio source.
 - Preserve the pinned provider model/API version, stock voice IDs, request fingerprints, and redistribution verification.
-- Validate the complete 74-callout-per-voice catalog and one-second mastered cap.
+- Validate the complete 77-callout-per-voice catalog and one-second mastered cap.
 
 Exit criteria met: the selected English audio passed listening and static validation.
 
 ### Phase 2: English Runtime (implementation complete, in-game validation pending)
 
-- Package all 150 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later friendly-debuff, pet, summon, and totem scopes.
-- Generate phase-one runtime data for 61 arena-opponent buff toggles and 66 aura spell IDs.
+- Package all 154 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later pet, summon, totem, special arena-cooldown, and additional unit scopes.
+- Generate runtime data for 67 aura toggles and 72 aura spell IDs across opponent-buff and friendly-debuff scopes.
 - Implement the combat-deferred arena sound controller and handle cleanup.
-- Add master enable, Female/Male voice selection, and 62 grouped opponent-buff toggles, including separate Ascendance controls by specialization.
+- Add master enable, Female/Male voice selection, and 67 grouped aura toggles, including separate Ascendance controls, Zenith, and four friendly-team debuff callouts.
 - Use the Master output channel for phase 1 runtime behavior.
 - Test normal arenas and multi-round Solo Shuffle.
 

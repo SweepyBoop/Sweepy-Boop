@@ -2,7 +2,7 @@
 
 ## Decision status
 
-Cartesia `sonic-3.6` stock voices are the promoted review source: Female - Gemma and Male - Archie, with identical `en-US`, speed, volume, and mastering settings. The validated pack contains 150 OGGs capped at one second and is committed under `Docs/VoiceAnnouncementReview-KeyAbilities`. The user confirmed their Cartesia tier permits committing and redistributing the generated OGG files on 2026-10-01; the exact tier name was not recorded. The Qwen and CosyVoice packs remain historical reproducible comparisons rather than production recommendations.
+Cartesia `sonic-3.6` stock voices are the promoted review source: Female - Gemma and Male - Archie, with identical `en-US`, speed, volume, and mastering settings. The validated pack contains 154 OGGs capped at one second and is committed under `Docs/VoiceAnnouncementReview-KeyAbilities`. The user confirmed their Cartesia tier permits committing and redistributing the generated OGG files on 2026-10-01; the exact tier name was not recorded. The Qwen and CosyVoice packs remain historical reproducible comparisons rather than production recommendations.
 
 Recommended evaluation order:
 
