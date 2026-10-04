@@ -54,7 +54,7 @@ local function GetVoiceRoot(config)
 end
 
 local function LogArenaCooldownUpdate(unitTarget)
-    if not addon.internal then return end
+    if ( not addon.internal ) or ( not IsActiveBattleGroundArena() ) then return end
 
     local isSecret = addon.IsSecretValue(unitTarget);
     local unitType = type(unitTarget);
