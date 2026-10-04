@@ -59,7 +59,6 @@ local function IsArenaMatchEngaged()
 end
 
 local function IsArenaOpponentCooldownUpdate(unitTarget)
-    if unitTarget == nil then return true end
     if addon.IsSecretValue(unitTarget) then return false end
 
     return type(unitTarget) == "string" and arenaUnitSet[unitTarget] == true;
@@ -102,9 +101,9 @@ local function PlayArenaOpponentTrinketCallout(unitTarget)
     end
 
     -- CompactArenaFrame.lua treats ARENA_COOLDOWNS_UPDATE as a global signal and
-    -- refreshes every opponent CC-remover widget. Retail 12.1 likewise supplies no
-    -- unitTarget despite the Warcraft Wiki documenting one, so nil is accepted only
-    -- during an engaged arena match. A supplied token must still match arena1-3.
+    -- refreshes every opponent CC-remover widget. Retail 12.1 supplies no unitTarget
+    -- despite the Warcraft Wiki documenting one. A payload-less update cannot be
+    -- attributed to an enemy, so SweepyBoop announces only explicit arena1-3 tokens.
     -- PvpInfoDocumentation.lua marks the underlying cooldown values secret; SweepyBoop
     -- never reads, compares, or infers those protected values.
     local callout = addon.ARENA_IMPORTANT_AURA_VOICE_CALLOUT_BY_ID[trinketCalloutID];
