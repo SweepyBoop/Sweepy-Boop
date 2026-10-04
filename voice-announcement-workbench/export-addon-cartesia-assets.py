@@ -44,8 +44,13 @@ FRIENDLY_TARGET_DEBUFF_SPELL_IDS = {
 RUNTIME_AURA_SPELL_IDS = (
     ARENA_OPPONENT_BUFF_SPELL_IDS | FRIENDLY_TARGET_DEBUFF_SPELL_IDS
 )
-RUNTIME_EVENT_CALLOUT_TRIGGERS = {
-    "pvp-trinket": "arenaCooldownUpdate",
+RUNTIME_EVENT_CALLOUT_METADATA = {
+    "pvp-trinket": {
+        "trigger": "arenaCooldownUpdate",
+        # Blizzard's generic medallion spell supplies the same artwork used by
+        # SweepyBoop's teammate-trinket UI; 42292 remains the reference spell.
+        "iconSpellID": 336126,
+    },
 }
 FRIENDLY_TARGET_UNIT_TOKENS = ("player", "party1", "party2")
 ASCENDANCE_SPLITS = (
@@ -185,10 +190,10 @@ def runtime_callouts(manifest: dict[str, Any]) -> list[dict[str, Any]]:
     result: list[dict[str, Any]] = []
     used_spell_ids: set[int] = set()
     for source_callout in manifest["phrases"]:
-        event_trigger = RUNTIME_EVENT_CALLOUT_TRIGGERS.get(source_callout["id"])
-        if event_trigger:
+        event_metadata = RUNTIME_EVENT_CALLOUT_METADATA.get(source_callout["id"])
+        if event_metadata:
             callout = dict(source_callout)
-            callout["trigger"] = event_trigger
+            callout.update(event_metadata)
             result.append(callout)
             continue
 
@@ -319,7 +324,7 @@ def generate_lua(callouts: list[dict[str, Any]], manifest_hash: str) -> str:
                 f"        spokenText = {lua_string(str(callout['spokenText']))},",
                 f"        category = {lua_string(str(callout['category']))},",
                 f"        classFile = {lua_string(class_file(callout))},",
-                f"        iconSpellID = {int(callout['spellIds'][0])},",
+                f"        iconSpellID = {int(callout.get('iconSpellID', callout['spellIds'][0]))},",
                 f"        soundFileName = {lua_string(sound_file_name)},",
                 f"        spellIDs = {{ {spell_ids} }},",
             ]
