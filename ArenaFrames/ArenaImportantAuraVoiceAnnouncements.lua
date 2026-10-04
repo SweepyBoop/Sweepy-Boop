@@ -53,6 +53,35 @@ local function GetVoiceRoot(config)
     return soundRoot .. voicePack.directory .. "\\";
 end
 
+local function LogArenaCooldownUpdate(unitTarget)
+    if not addon.internal then return end
+
+    local isSecret = addon.IsSecretValue(unitTarget);
+    local unitType = type(unitTarget);
+    local unitText = "<nil>";
+    local isArenaOpponent = false;
+    if isSecret then
+        unitText = "<secret>";
+    elseif unitType == "string" then
+        unitText = unitTarget;
+        isArenaOpponent = arenaUnitSet[unitTarget] == true;
+    elseif unitTarget ~= nil then
+        unitText = tostring(unitTarget);
+    end
+
+    local config = GetConfig();
+    addon.PRINT(string.format(
+        "ARENA_COOLDOWNS_UPDATE unitTarget=%s type=%s secret=%s opponent=%s enabled=%s trinket=%s inArena=%s",
+        unitText,
+        unitType,
+        tostring(isSecret),
+        tostring(isArenaOpponent),
+        tostring(config.arenaImportantAuraVoiceEnabled == true),
+        tostring(IsCalloutEnabled(config, trinketCalloutID)),
+        tostring(IsInArenaInstance())
+    ));
+end
+
 local function PlayArenaOpponentTrinketCallout(unitTarget)
     if type(unitTarget) ~= "string" or not arenaUnitSet[unitTarget] then return end
 
@@ -148,6 +177,7 @@ function SweepyBoop:SetupArenaImportantAuraVoiceAnnouncements()
     eventFrame:RegisterEvent("ARENA_COOLDOWNS_UPDATE");
     eventFrame:SetScript("OnEvent", function(_, event, unitTarget)
         if event == "ARENA_COOLDOWNS_UPDATE" then
+            LogArenaCooldownUpdate(unitTarget);
             PlayArenaOpponentTrinketCallout(unitTarget);
             return;
         end
