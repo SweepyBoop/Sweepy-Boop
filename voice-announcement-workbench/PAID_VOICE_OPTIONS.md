@@ -11,7 +11,6 @@ Recommended evaluation order:
 3. CosyVoice 3 speaker adaptation or fine-tuning only after clean reference acquisition.
 4. Chatterbox Turbo as a secondary local comparison.
 5. Qwen, the current CosyVoice prompt experiment, and Kokoro as historical baselines only.
-6. ElevenLabs only as an optional quality ceiling because MiniCC already uses it.
 
 Provider model names, prices, quotas, and commercial terms change frequently. Record the exact values visible in the account at generation time rather than treating this document as a pricing source.
 
@@ -24,7 +23,7 @@ Provider model names, prices, quotas, and commercial terms change frequently. Re
 | Chatterbox Turbo | Strong naturalness, expressive control, local inference, and MIT model terms | Short-callout stability still requires measurement | Secondary local comparison |
 | Qwen VoiceDesign + Base | Original local voice design and Apache 2.0 model terms | Short utterances required fragile prefix generation and alignment | Historical custom-voice baseline |
 | Kokoro | Tiny, fast, Apache 2.0, and many built-in voices | Its model card warns that utterances below 10-20 tokens may be weak | Historical stock-voice baseline |
-| ElevenLabs | Strong naturalness, cloning quality, voice library, and mature API | Duplicates MiniCC's provider choice; paid-tier rights and voice eligibility must be checked | Optional hosted ceiling only |
+| ElevenLabs | Strong naturalness, cloning quality, voice library, and mature API | paid-tier rights and voice eligibility must be checked | Optional hosted ceiling only |
 | Fish Speech or F5-TTS | Capable local customization | Current pretrained-weight terms are non-commercial or research-restricted | Do not use for distributed addon audio |
 
 Do not select a provider only from long-form demos. Arena callouts expose different failure modes: one-word duration, incorrect stress, clipped consonants, invented syllables, and inconsistent delivery across consecutive alerts.

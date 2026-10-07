@@ -18,8 +18,6 @@ The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. 
 
 The Qwen VoiceDesign/Base, CosyVoice, and Aiden/Sohee experiments remain reproducible historical baselines in this workbench and version control.
 
-`PAID_VOICE_OPTIONS.md` records the evaluated alternatives and next-step rationale. ElevenLabs is not preferred because MiniCC already uses it.
-
 ## Cartesia stock voice workflow
 
 Cartesia is the preferred no-seed hosted evaluation. The workbench queries the authenticated stock catalog, selects one neutral English masculine voice and one neutral English feminine voice, and generates Adrenaline, Turtle, Fort Brew, and Tyrant with identical `sonic-3.6` settings except for voice ID.
