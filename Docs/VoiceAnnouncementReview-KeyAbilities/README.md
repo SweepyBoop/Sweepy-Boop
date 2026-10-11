@@ -1,7 +1,7 @@
 # Alliance and Horde Cartesia Voice Review
 
-This portable review pack contains 77 arena callouts for each of two
-faction-flavored stock voices, for 154 mastered OGG files total.
+This portable review pack contains 78 arena callouts for each of two
+faction-flavored stock voices, for 156 mastered OGG files total.
 
 - Alliance: Gemma, Cartesia stock feminine voice
 - Horde: Archie, Cartesia stock masculine voice

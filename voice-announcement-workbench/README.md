@@ -11,8 +11,8 @@ The committed review pack uses:
 - Language/locale: English, `en-US`
 - Delivery: plain stock-voice callouts with identical speed/volume settings
 - Duration: every mastered clip is at most 1.0 seconds
-- Scope: 77 curated arena callouts per voice, including cross-class trinket and all 33 retail DPS/healer specs
-- Output: 154 mono OGG Vorbis review files
+- Scope: 78 curated arena callouts per voice, including cross-class trinket and all 33 retail DPS/healer specs
+- Output: 156 mono OGG Vorbis review files
 
 The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both voices without an API key or local environment. The pack is review-only and is not wired into addon runtime behavior or the published addon archive.
 
@@ -57,7 +57,7 @@ The export applies only to the current terminal session. Repeat step 3 after ope
 
 The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`.
 
-The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 77-callout-per-voice candidate with:
+The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 78-callout-per-voice candidate with:
 
 ```bash
 bash voice-announcement-workbench/run-cartesia-samples.sh --full
