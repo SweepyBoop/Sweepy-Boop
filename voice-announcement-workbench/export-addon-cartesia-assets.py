@@ -19,11 +19,11 @@ REPOSITORY = WORKBENCH.parent
 DEFAULT_SOURCE = REPOSITORY / "Docs" / "VoiceAnnouncementReview-KeyAbilities"
 DEFAULT_SOUNDS = REPOSITORY / "Sounds" / "ArenaImportantAuras"
 DEFAULT_DATA = REPOSITORY / "Common" / "ArenaImportantAuraVoiceData.lua"
-SOURCE_CALLOUTS = 77
-SOURCE_SPELL_IDS = 87
-RUNTIME_CALLOUTS = 67
-RUNTIME_SPELL_IDS = 72
-EXPECTED_OGGS = 154
+SOURCE_CALLOUTS = 78
+SOURCE_SPELL_IDS = 88
+RUNTIME_CALLOUTS = 68
+RUNTIME_SPELL_IDS = 73
+EXPECTED_OGGS = 156
 # Audited opponent-unit buff auras and hostile debuffs applied to friendly arena
 # units. Pet/summon auras, other totem/ground effects, Trinket, and unverified
 # variants remain packaged but are not exposed at runtime yet.
@@ -38,7 +38,7 @@ ARENA_OPPONENT_BUFF_SPELL_IDS = {
     378464, 410358, 454351, 466772, 1219480, 1249625,
 }
 FRIENDLY_TARGET_DEBUFF_SPELL_IDS = {
-    208086, 321507, 360194, 403631,
+    208086, 321507, 360194, 385627, 403631,
 }
 RUNTIME_AURA_SPELL_IDS = (
     ARENA_OPPONENT_BUFF_SPELL_IDS | FRIENDLY_TARGET_DEBUFF_SPELL_IDS

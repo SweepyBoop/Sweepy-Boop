@@ -1,9 +1,9 @@
 {
-  "createdUtc": "2026-10-03T22:47:43Z",
+  "createdUtc": "2026-10-11T16:52:48Z",
   "sourceManifest": "cartesia-pack-manifest.json",
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 77-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 78-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   },
   "provider": "Cartesia",
   "scope": "full",
@@ -78,8 +78,8 @@
     "trailingSilenceSeconds": 0.08
   },
   "environment": {
-    "platform": "macOS-26.7.1-arm64-arm-64bit",
-    "python": "3.12.14+meta (3.12:2abcf90, Aug 12 2026, 13:57:39) [Clang 21.1.6 (https://git.internal.tfbnw.net/repos/git/rw/osmeta/external/llvm-",
+    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "python": "3.12.15+meta (3.12:e848e4b, Sep 30 2026, 22:04:05) [Clang 21.1.6 (https://git.internal.tfbnw.net/repos/git/rw/osmeta/external/llvm-",
     "packages": {
       "cartesia": "4.2.0",
       "certifi": "2026.7.22",
@@ -3642,6 +3642,85 @@
           "output_thresh": "-29.89",
           "normalization_type": "linear",
           "target_offset": "3.89"
+        }
+      }
+    },
+    {
+      "outputKey": "alliance-commander-kingsbane-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "kingsbane",
+      "displayText": "Kingsbane",
+      "spokenText": "Kingsbane",
+      "generationSeconds": 0.786,
+      "generationUtc": "2026-10-11T16:52:47Z",
+      "requestFingerprint": "4739322216388347272DBFDB0CF48987C3541199BF83E3F3C8533FD256EC2209",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Kingsbane.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "7D172705315326267459F7981E0AE4F3A9EB9A1B78C1B2E0BA8D700697BD43EA",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 49392,
+        "durationSeconds": 1.12,
+        "samplePeakDbfs": -2.9876,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "C4457B673EA97767E618B7E9996F2D3024404775212FF49994B27DFF1D9A9F55",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 29481,
+        "durationSeconds": 0.668503,
+        "samplePeakDbfs": -1.7037,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-kingsbane.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-17.59",
+          "input_tp": "-2.98",
+          "input_lra": "0.00",
+          "input_thresh": "-27.59",
+          "output_i": "-16.09",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.09",
+          "normalization_type": "linear",
+          "target_offset": "0.09"
+        },
+        "finalPass": {
+          "input_i": "-17.59",
+          "input_tp": "-2.98",
+          "input_lra": "0.00",
+          "input_thresh": "-27.59",
+          "output_i": "-16.09",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.09",
+          "normalization_type": "linear",
+          "target_offset": "0.09"
         }
       }
     },
@@ -9725,6 +9804,85 @@
           "output_thresh": "-25.99",
           "normalization_type": "linear",
           "target_offset": "-0.01"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-kingsbane-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "kingsbane",
+      "displayText": "Kingsbane",
+      "spokenText": "Kingsbane",
+      "generationSeconds": 0.189,
+      "generationUtc": "2026-10-11T16:52:48Z",
+      "requestFingerprint": "4739322216388347272DBFDB0CF48987C3541199BF83E3F3C8533FD256EC2209",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Kingsbane.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "4C97E82A3DE0AB9A9FC8A16639FC2954ECC617053836920E86B47C67F6D805BB",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 49392,
+        "durationSeconds": 1.12,
+        "samplePeakDbfs": -7.2388,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "179015CD5909B646CCF4531C032383E67B1E92A32D0B4F81A51E0FF8F9A833E5",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 29724,
+        "durationSeconds": 0.674014,
+        "samplePeakDbfs": -2.7246,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-kingsbane.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-20.47",
+          "input_tp": "-7.16",
+          "input_lra": "0.00",
+          "input_thresh": "-30.47",
+          "output_i": "-16.05",
+          "output_tp": "-2.69",
+          "output_lra": "0.00",
+          "output_thresh": "-26.05",
+          "normalization_type": "linear",
+          "target_offset": "0.05"
+        },
+        "finalPass": {
+          "input_i": "-20.47",
+          "input_tp": "-7.16",
+          "input_lra": "0.00",
+          "input_thresh": "-30.47",
+          "output_i": "-16.05",
+          "output_tp": "-2.69",
+          "output_lra": "0.00",
+          "output_thresh": "-26.05",
+          "normalization_type": "linear",
+          "target_offset": "0.05"
         }
       }
     },

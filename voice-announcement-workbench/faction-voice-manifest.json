@@ -1243,6 +1243,18 @@
       "category": "utility"
     },
     {
+      "id": "kingsbane",
+      "displayText": "Kingsbane",
+      "spokenText": "Kingsbane",
+      "spellIds": [
+        385627
+      ],
+      "specIds": [
+        259
+      ],
+      "category": "offensive"
+    },
+    {
       "id": "pvp-trinket",
       "displayText": "PvP Trinket",
       "spokenText": "Trinket",
