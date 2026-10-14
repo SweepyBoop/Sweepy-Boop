@@ -49,7 +49,9 @@ local function EnsureSpecIcon(nameplate)
     if addon.PROJECT_MAINLINE then
         -- Configure protected descendants before forwarding secret display values.
         iconFrame.healerIcon = iconFrame:CreateTexture(nil, "ARTWORK");
-        iconFrame.healerIcon:SetSize(healerOverlaySize, healerOverlaySize);
+        -- Blizzard's secure updater normalizes role icons to 12x12.
+        iconFrame.healerIcon:SetSize(12, 12);
+        iconFrame.healerIcon:SetScale(healerOverlaySize / 12);
         iconFrame.healerIcon:SetPoint("CENTER", iconFrame);
         iconFrame.healerIcon:SetAlpha(0);
 
@@ -102,8 +104,8 @@ local function UpdateMainlineSpecIcon(nameplate, iconFrame, config)
     end
 
     local arenaNumber = addon.GetArenaNumber(unitId);
-    local getDisplayInfo = UnitFrameUtil and UnitFrameUtil.GetArenaOpponentSpecDisplayInfo;
-    if ( not arenaNumber ) or ( not getDisplayInfo ) then
+    local updateDisplay = UnitFrameUtil and UnitFrameUtil.UpdateArenaOpponentSpecDisplay;
+    if ( not arenaNumber ) or ( not updateDisplay ) then
         iconFrame.icon:SetAlpha(0);
         iconFrame.healerIcon:SetAlpha(0);
         iconFrame.border:SetAlpha(0);
@@ -111,31 +113,14 @@ local function UpdateMainlineSpecIcon(nameplate, iconFrame, config)
         return;
     end
 
-    local info = getDisplayInfo(arenaNumber, addon.ARENA_SPEC_ROLE_TEXTURES_NAMEPLATE);
-    if ( not info ) then
-        iconFrame.icon:SetAlpha(0);
-        iconFrame.healerIcon:SetAlpha(0);
-        iconFrame.border:SetAlpha(0);
-        iconFrame:Hide();
-        return;
-    end
+    iconFrame.icon:SetAlpha(config.arenaSpecIconOthers and 1 or 0);
+    iconFrame.border:SetAlpha(config.arenaSpecIconOthers and 1 or 0);
+    iconFrame.healerIcon:SetAlpha(config.arenaSpecIconHealer and 1 or 0);
 
-    iconFrame.icon:SetTexture(info.specIcon);
-    iconFrame.healerIcon:SetTexture(info.roleIconTexture);
-
-    if config.arenaSpecIconOthers then
-        iconFrame.icon:SetAlphaFromBoolean(info.hasSpec, 1, 0);
-        iconFrame.border:SetAlphaFromBoolean(info.hasSpec, 1, 0);
-    else
-        iconFrame.icon:SetAlpha(0);
-        iconFrame.border:SetAlpha(0);
-    end
-
-    if config.arenaSpecIconHealer then
-        iconFrame.healerIcon:SetAlphaFromBoolean(info.showRoleIcon, 1, 0);
-    else
-        iconFrame.healerIcon:SetAlpha(0);
-    end
+    updateDisplay({
+        specPortrait = iconFrame.icon,
+        roleIcon = iconFrame.healerIcon,
+    }, arenaNumber, addon.ARENA_SPEC_ROLE_TEXTURES_NAMEPLATE);
 
     iconFrame:Show();
 end

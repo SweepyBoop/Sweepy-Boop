@@ -73,7 +73,8 @@ local function EnsureHealerIndicator(arenaIndex)
     indicator:SetFrameLevel(9999);
     indicator:SetMouseClickEnabled(false);
     indicator.icon = indicator:CreateTexture(nil, "OVERLAY");
-    indicator.icon:SetAllPoints(indicator);
+    indicator.icon:SetSize(12, 12);
+    indicator.icon:SetPoint("CENTER", indicator);
     indicator.icon:SetAlpha(0);
     indicator:Hide();
     healerIndicators[arenaIndex] = indicator;
@@ -86,7 +87,7 @@ local function HideHealerIndicators()
     end
 end
 
-local function UpdateHealerIndicatorForSlot(arenaIndex, getDisplayInfo)
+local function UpdateHealerIndicatorForSlot(arenaIndex, updateDisplay)
     local frame = GetArenaFrame(arenaIndex);
     local anchorFrame = GetAnchorFrame(frame, arenaIndex);
     local size = GetIndicatorSize(anchorFrame);
@@ -100,8 +101,8 @@ local function UpdateHealerIndicatorForSlot(arenaIndex, getDisplayInfo)
 
     local indicator = EnsureHealerIndicator(arenaIndex);
     indicator:ClearAllPoints();
-    indicator:SetSize(size, size);
-    indicator:SetScale(GetIndicatorScale(frame));
+    indicator:SetSize(12, 12);
+    indicator:SetScale(GetIndicatorScale(frame) * size / 12);
     indicator:SetPoint("CENTER", anchorFrame, "RIGHT");
 
     if addon.TEST_MODE then
@@ -115,14 +116,8 @@ local function UpdateHealerIndicatorForSlot(arenaIndex, getDisplayInfo)
         return;
     end
 
-    local info = getDisplayInfo(arenaIndex, addon.ARENA_SPEC_ROLE_TEXTURES_FRAME);
-    if ( not info ) then
-        indicator:Hide();
-        return;
-    end
-
-    indicator.icon:SetTexture(info.roleIconTexture);
-    indicator.icon:SetAlphaFromBoolean(info.showRoleIcon, 1, 0);
+    indicator.icon:SetAlpha(1);
+    updateDisplay({ roleIcon = indicator.icon }, arenaIndex, addon.ARENA_SPEC_ROLE_TEXTURES_FRAME);
     indicator:Show();
 end
 
@@ -133,14 +128,14 @@ local function UpdateHealerIndicators()
         return;
     end
 
-    local getDisplayInfo = UnitFrameUtil and UnitFrameUtil.GetArenaOpponentSpecDisplayInfo;
-    if ( not addon.TEST_MODE ) and ( not getDisplayInfo ) then
+    local updateDisplay = UnitFrameUtil and UnitFrameUtil.UpdateArenaOpponentSpecDisplay;
+    if ( not addon.TEST_MODE ) and ( not updateDisplay ) then
         HideHealerIndicators();
         return;
     end
 
     for arenaIndex = 1, addon.MAX_ARENA_SIZE do
-        UpdateHealerIndicatorForSlot(arenaIndex, getDisplayInfo);
+        UpdateHealerIndicatorForSlot(arenaIndex, updateDisplay);
     end
 end
 
