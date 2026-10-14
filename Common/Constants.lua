@@ -513,6 +513,16 @@ addon.ICON_ID_HEALER = "interface/lfgframe/uilfgprompts";
 if addon.PROJECT_MAINLINE then
     addon.ICON_ID_HEALER_ENEMY = "Healing_Red";
     addon.SPEC_ICON_ENEMY_HEALER_LOGO = addon.FORMAT_ATLAS(addon.ICON_ID_HEALER_ENEMY);
+    addon.ARENA_SPEC_ROLE_TEXTURES_NAMEPLATE = {
+        HEALER = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/Healing_Red",
+        TANK = "",
+        DAMAGER = "",
+    };
+    addon.ARENA_SPEC_ROLE_TEXTURES_FRAME = {
+        HEALER = addon.INTERFACE_SWEEPY .. "Art/AuxiliaryIcons/HealerArenaFrame",
+        TANK = "",
+        DAMAGER = "",
+    };
 else
     addon.ICON_ID_HEALER_ENEMY = "GreenCross";
     addon.SPEC_ICON_ENEMY_HEALER_LOGO = format("|A:%s:20:20:0:0:255:0:0|a", addon.ICON_ID_HEALER_ENEMY);

@@ -341,7 +341,7 @@ local function ActivateAuraRules(nameplate, unit, isOtherPlayersPet)
             and RuleMatchesPetState(rule, isOtherPlayersPet) then
 
             for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-                if RuleMatchesOwner(rule, GetArenaOpponentSpec(arenaSlot)) then
+                if RuleMatchesOwner(rule, addon.GetReadableArenaOpponentSpec(arenaSlot)) then
                     local gate = EnsureAuraRuleGate(nameplate, rule, arenaSlot);
                     ApplyHighlightLayout(gate, nameplate);
                     gate:SetAlphaFromBoolean(
@@ -431,7 +431,7 @@ local function PrepareActionRuleFrames(nameplate, isOtherPlayersPet)
             if rule.ownerClass or rule.ownerSpec then
                 if IsActiveBattlefieldArena() then
                     for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-                        if RuleMatchesOwner(rule, GetArenaOpponentSpec(arenaSlot)) then
+                        if RuleMatchesOwner(rule, addon.GetReadableArenaOpponentSpec(arenaSlot)) then
                             EnsureActionRuleFrame(nameplate, rule, arenaSlot);
                         end
                     end
@@ -500,7 +500,7 @@ local function UpdateActionRules(
             if frames then
                 for ownerSlot, frame in pairs(frames) do
                     local ownerMatches = ownerSlot == 0
-                        or RuleMatchesOwner(rule, GetArenaOpponentSpec(ownerSlot));
+                        or RuleMatchesOwner(rule, addon.GetReadableArenaOpponentSpec(ownerSlot));
 
                     if active and ownerMatches then
                         ApplyHighlightLayout(frame, nameplate);

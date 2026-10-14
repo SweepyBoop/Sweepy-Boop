@@ -318,7 +318,7 @@ local function UpdateWidgets(nameplate, frame)
             addon.DeactivateImportantNpcPortrait(nameplate);
             -- For TBC, no spec/healer detection for enemies.
             -- For MoP Classic, use spec icons from tooltip.
-            -- For Retail, use GetArenaOpponentSpec with name-matched arena numbers.
+            -- For Retail, securely render spec display info for name-matched arena numbers.
             local shouldShowSpecIcon;
             local configEnemy = SweepyBoop.db.profile.nameplatesEnemy;
             if addon.PROJECT_TBC then

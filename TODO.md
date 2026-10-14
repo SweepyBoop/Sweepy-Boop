@@ -17,3 +17,10 @@ Tasks:
 - [ ] TBC Classic is missing the option to turn off minimap icon
 - [ ] Re-generate HD icons from extracted in-game art (instead of from the wow-ui-texture repo which is a few years behind)
 - [ ] Enemy nameplate highlight clearly showing bogus icons
+
+Retail 12.1 secret-value follow-ups:
+- [ ] Restore automatic enemy-healer macro targeting if Blizzard exposes a supported selector; `UnitGroupRolesAssigned("arenaN")` and `GetArenaOpponentSpec()` are currently secret for all arena slots, so managed macros fall back to `@focus`
+- [ ] Restore the exact enemy nameplate role filters (healer spec portrait only and non-healer spec portraits only); the secure display delegate currently supports a healer marker plus optional spec portraits for all enemies without exposing the role to Lua
+- [ ] Restore arena specialization labels in standalone offensive-icon displays without reading the secret specialization ID
+- [ ] Rework important-minion owner class/spec gates so Shaman, Warlock, and Affliction-specific nameplate rules do not depend on a readable arena specialization ID
+- [ ] Restore a protected-data-safe class fallback for class-colored arena target indicators when `UnitClass("arenaN")` is unavailable
