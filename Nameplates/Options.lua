@@ -579,8 +579,12 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 5,
                         width = "full",
                         type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) ..  " Show spec icon for healers",
-                        desc = "Show spec icons on top of the nameplates of enemy healers",
+                        name = addon.PROJECT_MAINLINE
+                            and ( addon.SPEC_ICON_ENEMY_HEALER_LOGO .. " Show healer marker" )
+                            or ( addon.FORMAT_TEXTURE(addon.SPEC_ICON_HEALER_LOGO) .. " Show spec icon for healers" ),
+                        desc = addon.PROJECT_MAINLINE
+                            and "Show a protected healer marker on enemy arena nameplates"
+                            or "Show spec icons on top of the nameplates of enemy healers",
                         hidden = function()
                             return addon.PROJECT_TBC;
                         end,
@@ -591,7 +595,7 @@ addon.GetEnemyNameplateOptions = function(order)
                         type = "toggle",
                         name = addon.SPEC_ICON_ENEMY_HEALER_LOGO .. " Show healer icon instead of spec icon for healers",
                         hidden = function ()
-                            if addon.PROJECT_TBC then return true end
+                            if addon.PROJECT_MAINLINE or addon.PROJECT_TBC then return true end
                             return ( not SweepyBoop.db.profile.nameplatesEnemy.arenaSpecIconHealer );
                         end
                     },
@@ -599,8 +603,12 @@ addon.GetEnemyNameplateOptions = function(order)
                         order = 7,
                         width = "full",
                         type = "toggle",
-                        name = addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers",
-                        desc = "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
+                        name = addon.PROJECT_MAINLINE
+                            and ( addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icons for all enemies" )
+                            or ( addon.FORMAT_TEXTURE(addon.SPEC_ICON_OTHERS_LOGO) .. " Show spec icon for non-healers" ),
+                        desc = addon.PROJECT_MAINLINE
+                            and "Show protected spec portraits for every enemy player inside arenas"
+                            or "Show a spec icon on top of the nameplate for enemy players that are not healers inside arenas",
                         hidden = function()
                             return addon.PROJECT_TBC;
                         end,
