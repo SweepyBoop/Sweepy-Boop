@@ -26,8 +26,8 @@ local function GetMainlineArenaSpecInfo(unitId)
     local arenaNumber = addon.GetArenaNumber(unitId);
     if ( not arenaNumber ) then return end
 
-    local specID = GetArenaOpponentSpec(arenaNumber);
-    if ( not specID ) or ( specID <= 0 ) then return end
+    local specID = addon.GetReadableArenaOpponentSpec(arenaNumber);
+    if ( not specID ) then return end
 
     return select(4, GetSpecializationInfoByID(specID)); -- iconID, role
 end

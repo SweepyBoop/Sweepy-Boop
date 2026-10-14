@@ -9,6 +9,16 @@ end
 local UnitAura = C_UnitAuras.GetAuraDataByIndex;
 local maxAuras = 255;
 
+-- Retail 12.1 always returns a secret specialization ID. Keep raw values behind
+-- one guard so callers never compare, index by, or pass them to another API.
+addon.GetReadableArenaOpponentSpec = function(arenaIndex)
+    local specID = GetArenaOpponentSpec(arenaIndex);
+    if addon.IsSecretValue(specID) or type(specID) ~= "number" or specID <= 0 then
+        return;
+    end
+    return specID;
+end
+
 addon.Util_GetUnitAura = function(unit, spell, filter)
     if filter and not filter:upper():find("FUL") then
         filter = filter.."|HELPFUL";
@@ -90,11 +100,6 @@ end
 local arenaSlotByNameKey = {};
 
 local function CacheMatchingArenaSlotIdentity(arenaSlot, expectedNameKey)
-    -- A readable name can arrive before the slot's specialization is finalized. Cache
-    -- only a complete slot that matches the nameplate currently being resolved.
-    local specID = GetArenaOpponentSpec(arenaSlot);
-    if ( not specID ) or ( specID <= 0 ) then return end
-
     local nameKey = GetReadableUnitNameKey("arena" .. arenaSlot);
     if nameKey ~= expectedNameKey then return end
 
@@ -194,7 +199,7 @@ addon.GetSpecForPlayerOrArena = function(unit)
         end
     else
         local arenaIndex = string.sub(unit, -1, -1);
-        return GetArenaOpponentSpec(arenaIndex);
+        return addon.GetReadableArenaOpponentSpec(arenaIndex);
     end
 end
 
@@ -207,10 +212,13 @@ addon.GetClassForPlayerOrArena = function (unitId)
             return addon.GetUnitClass(unitId);
         end
 
-        -- UnitClass returns nil unless unit is in range, but arena spec is available in prep phase.
+        local class = addon.GetUnitClass(unitId);
+        if class then return class end
+
+        -- Classic clients expose a readable arena spec during prep when UnitClass is nil.
         local index = string.sub(unitId, -1, -1);
-        local specID = GetArenaOpponentSpec(index);
-        if specID and ( specID > 0 ) then
+        local specID = addon.GetReadableArenaOpponentSpec(index);
+        if specID then
             return select(6, GetSpecializationInfoByID(specID));
         end
     end
