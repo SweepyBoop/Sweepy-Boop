@@ -128,22 +128,27 @@ local function AddTargeter(targetColorsByIdentity, unit, isArenaUnit)
     end
 
     local class;
-    if isArenaUnit then
+    if addon.PROJECT_MAINLINE then
+        -- UnitClassBase may be secret for arena opponents in Retail 12.1. Keep it
+        -- opaque and pass it through Blizzard's secret-aware class-color API.
+        class = UnitClassBase(unit);
+    elseif isArenaUnit then
         class = addon.GetClassForPlayerOrArena(unit);
-        if addon.IsSecretValue(class) then
-            return;
-        end
         if not class then
             class = addon.GetUnitClass(unit);
         end
     else
         class = addon.GetUnitClass(unit);
     end
-    if addon.IsSecretValue(class) then
-        return;
-    end
 
-    local classColor = class and RAID_CLASS_COLORS[class];
+    local classColor;
+    if class then
+        if addon.PROJECT_MAINLINE then
+            classColor = C_ClassColor.GetClassColor(class);
+        else
+            classColor = RAID_CLASS_COLORS[class];
+        end
+    end
     if not classColor then
         return;
     end
