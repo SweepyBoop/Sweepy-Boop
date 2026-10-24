@@ -294,15 +294,20 @@ local function EnsureContainer(nameplate, railInfo, groups)
         railInfo.growthDirection,
         AnchorUtil.FlowDirection.Down
     );
-    container:SetAuraProcessingPolicy(
-        CustomAuraContainerAuraProcessingPolicy.ProcessAura,
-        {
-            displayOnlyDispellableDebuffs = false,
-            ignoreBuffs = false,
-            ignoreDebuffs = false,
-            ignoreDispelDebuffs = false,
-        }
-    );
+    if railInfo == RAIL.LEFT then
+        -- Raid-frame classification rejects enemy buffs as None in 12.1.5.
+        container:SetAuraProcessingPolicy(CustomAuraContainerAuraProcessingPolicy.None);
+    else
+        container:SetAuraProcessingPolicy(
+            CustomAuraContainerAuraProcessingPolicy.ProcessAura,
+            {
+                displayOnlyDispellableDebuffs = false,
+                ignoreBuffs = false,
+                ignoreDebuffs = false,
+                ignoreDispelDebuffs = false,
+            }
+        );
+    end
     for _, group in ipairs(groups) do
         AddAuraGroup(container, group, iconStyle, showCountdown);
     end
