@@ -198,6 +198,7 @@ end
 -- This is the complete Mainline presentation policy. Entries render independently.
 -- Cast/static icons render above aura icons, which render above unit portraits; any
 -- overlapping additive halos intentionally become brighter.
+-- Owner rules use class only; specialization IDs are secret on current Retail.
 local importantMinionWhitelist = {
     {
         key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
@@ -224,8 +225,8 @@ local importantMinionWhitelist = {
         presentation = "portrait",
     },
     {
-        key = "afflictionMinionCast", -- Validated in-game with Darkglare.
-        ownerSpec = addon.SPECID.AFFLICTION,
+        key = "warlockMinionCast", -- Includes Darkglare; no specialization check.
+        ownerClass = addon.WARLOCK,
         isPet = false,
         signal = "cast",
         presentation = "portrait",
@@ -241,8 +242,8 @@ local importantMinionWhitelist = {
     -- },
 
     {
-        key = "shadowMinionChannel", -- Validated in-game with Psyfiend.
-        ownerSpec = addon.SPECID.SHADOW,
+        key = "priestMinionChannel", -- Includes Psyfiend; no specialization check.
+        ownerClass = addon.PRIEST,
         isPet = false,
         signal = "channel",
         requireNotInterruptible = true,
@@ -253,11 +254,9 @@ local importantMinionWhitelist = {
     },
 };
 
-local function RuleMatchesOwner(rule, specID)
-    if rule.ownerSpec then
-        return specID == rule.ownerSpec;
-    end
-    return addon.SPECID_TO_CLASS[specID] == rule.ownerClass;
+local function RuleMatchesOwner(rule, arenaSlot)
+    local ownerClass = addon.GetUnitClass("arena" .. arenaSlot);
+    return ownerClass ~= nil and ownerClass == rule.ownerClass;
 end
 
 local function RuleMatchesPetState(rule, isOtherPlayersPet)
@@ -341,7 +340,7 @@ local function ActivateAuraRules(nameplate, unit, isOtherPlayersPet)
             and RuleMatchesPetState(rule, isOtherPlayersPet) then
 
             for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-                if RuleMatchesOwner(rule, addon.GetReadableArenaOpponentSpec(arenaSlot)) then
+                if RuleMatchesOwner(rule, arenaSlot) then
                     local gate = EnsureAuraRuleGate(nameplate, rule, arenaSlot);
                     ApplyHighlightLayout(gate, nameplate);
                     gate:SetAlphaFromBoolean(
@@ -428,10 +427,10 @@ end
 local function PrepareActionRuleFrames(nameplate, isOtherPlayersPet)
     for _, rule in ipairs(importantMinionWhitelist) do
         if rule.signal ~= "aura" and RuleMatchesPetState(rule, isOtherPlayersPet) then
-            if rule.ownerClass or rule.ownerSpec then
+            if rule.ownerClass then
                 if IsActiveBattlefieldArena() then
                     for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-                        if RuleMatchesOwner(rule, addon.GetReadableArenaOpponentSpec(arenaSlot)) then
+                        if RuleMatchesOwner(rule, arenaSlot) then
                             EnsureActionRuleFrame(nameplate, rule, arenaSlot);
                         end
                     end
@@ -500,7 +499,7 @@ local function UpdateActionRules(
             if frames then
                 for ownerSlot, frame in pairs(frames) do
                     local ownerMatches = ownerSlot == 0
-                        or RuleMatchesOwner(rule, addon.GetReadableArenaOpponentSpec(ownerSlot));
+                        or RuleMatchesOwner(rule, ownerSlot);
 
                     if active and ownerMatches then
                         ApplyHighlightLayout(frame, nameplate);
