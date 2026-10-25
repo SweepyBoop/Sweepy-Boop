@@ -195,69 +195,34 @@ local function ApplyAlphaSignal(frame, signal)
     end
 end
 
--- This is the complete Mainline presentation policy. Entries render independently.
--- Cast/static icons render above aura icons, which render above unit portraits; any
--- overlapping additive halos intentionally become brighter.
--- Owner rules use class only; specialization IDs are secret on current Retail.
+-- CustomAuraContainerTemplate handles restricted aura selection and display.
+-- UnitCastingInfo/UnitChannelInfo may return secret textures and interruptibility;
+-- those values are forwarded to UI setters rather than used for Lua decisions.
 local importantMinionWhitelist = {
     {
-        key = "shamanImportantAura", -- Validated in-game with Grounding Totem.
-        ownerClass = addon.SHAMAN,
+        key = "importantMinionAura",
         isPet = false,
         signal = "aura",
         filter = "HELPFUL|IMPORTANT",
         presentation = "auraIcon",
     },
     {
-        key = "shamanMinionCast", -- Validated in-game with Capacitor Totem.
-        ownerClass = addon.SHAMAN,
-        isPet = false,
+        key = "importantMinionCast",
         signal = "cast",
-        requireNotInterruptible = true,
+        requireNotInterruptibleOrImportant = true,
         presentation = "castIcon",
     },
-
     {
-        key = "warlockPetCast", -- Validated through the equivalent Water Elemental pet path.
-        ownerClass = addon.WARLOCK,
-        isPet = true,
-        signal = "cast",
-        presentation = "portrait",
-    },
-    {
-        key = "warlockMinionCast", -- Includes Darkglare; no specialization check.
-        ownerClass = addon.WARLOCK,
-        isPet = false,
-        signal = "cast",
-        presentation = "portrait",
-    },
-
-    -- Test rule: Mage pets are common and make this path easy to verify.
-    -- {
-    --     key = "magePetCast", -- Validated in-game with Water Elemental.
-    --     ownerClass = addon.MAGE,
-    --     isPet = true,
-    --     signal = "cast",
-    --     presentation = "portrait",
-    -- },
-
-    {
-        key = "priestMinionChannel", -- Includes Psyfiend; no specialization check.
-        ownerClass = addon.PRIEST,
+        key = "minionChannel",
         isPet = false,
         signal = "channel",
         requireNotInterruptible = true,
         presentation = "staticIcon",
-        -- Psyfiend's canonical Retail summon spell. This is presentation-only;
-        -- the spell ID is never used to infer the minion's identity.
+        -- UnitChannelInfo does not identify the summon. This icon is a presentation
+        -- choice for non-interruptible minion channels, not confirmed Psyfiend identity.
         iconSpellID = 211522,
     },
 };
-
-local function RuleMatchesOwner(rule, arenaSlot)
-    local ownerClass = addon.GetUnitClass("arena" .. arenaSlot);
-    return ownerClass ~= nil and ownerClass == rule.ownerClass;
-end
 
 local function RuleMatchesPetState(rule, isOtherPlayersPet)
     return rule.isPet == nil or rule.isPet == isOtherPlayersPet;
@@ -304,9 +269,9 @@ local function EnsureAuraRuleGate(nameplate, rule, arenaSlot)
             button:SetPoint("CENTER", container, "CENTER");
             CreateIconHighlight(button, true, true);
 
-            -- Blizzard securely owns both the selected aura icon and button visibility.
-            -- Configure this inbound texture once, then never inspect or mutate the
-            -- restricted aura descendants from ordinary addon execution.
+            -- AddAuraSlot initializes the button before restricted aura updates.
+            -- SetIcon registers the texture that the container will populate; aura
+            -- selection and button visibility remain under the container's control.
             button:SetIcon(button.icon);
         end,
     });
@@ -321,8 +286,7 @@ local function DeactivateAuraRules(nameplate)
 
     for _, gates in pairs(ruleGates) do
         for _, gate in pairs(gates) do
-            -- Hiding and disabling the root is sufficient. Its icon and halo belong
-            -- to Blizzard's restricted aura button and must not be mutated after setup.
+            -- Disable the container without accessing its restricted aura buttons.
             gate.container:SetEnabled(false);
             gate.container:Hide();
             gate:SetAlpha(0);
@@ -339,45 +303,41 @@ local function ActivateAuraRules(nameplate, unit, isOtherPlayersPet)
         if rule.signal == "aura"
             and RuleMatchesPetState(rule, isOtherPlayersPet) then
 
-            for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-                if RuleMatchesOwner(rule, arenaSlot) then
-                    local gate = EnsureAuraRuleGate(nameplate, rule, arenaSlot);
-                    ApplyHighlightLayout(gate, nameplate);
-                    gate:SetAlphaFromBoolean(
-                        UnitIsOwnerOrControllerOfUnit(
-                            "arena" .. arenaSlot,
-                            unit
-                        ),
-                        1,
-                        0
-                    );
-                    gate.container:SetUnit(unit);
-                    gate.container:SetEnabled(true);
-                    gate.container:Show();
-                    gate.container:UpdateAllAuras();
-                    gate:Show();
-                end
-            end
+            local gate = EnsureAuraRuleGate(nameplate, rule, 0);
+            ApplyHighlightLayout(gate, nameplate);
+            gate:SetAlpha(1);
+            gate.container:SetUnit(unit);
+            gate.container:SetEnabled(true);
+            gate.container:Show();
+            gate.container:UpdateAllAuras();
+            gate:Show();
         end
     end
 end
 
 local function GetCastPresentationState(unit)
-    -- Texture returns may be protected and remain opaque. Return 6 is NeverSecret
-    -- and serves only as the public tuple-presence sentinel documented by Blizzard.
+    -- Both APIs declare return 6 (isTradeskill) NeverSecret. Its nil/non-nil
+    -- presence distinguishes an absent tuple without reading secret cast fields.
     local _, _, castingTexture, _, _, castingPresence, _,
-        castingNotInterruptible = UnitCastingInfo(unit);
+        castingNotInterruptible, castingSpellID = UnitCastingInfo(unit);
     local _, _, channelTexture, _, _, channelPresence,
         channelNotInterruptible = UnitChannelInfo(unit);
 
-    -- Interruptibility returns may be protected. They are forwarded only to alpha
-    -- sinks for entries that explicitly require a non-interruptible action.
+    local castingImportant = false;
+    if castingPresence ~= nil then
+        -- C_Spell.IsSpellImportant allows secret spell identifiers from tainted code.
+        -- Forward the result to alpha APIs without assuming it is readable.
+        castingImportant = C_Spell.IsSpellImportant(castingSpellID);
+    end
+
+    -- Secret textures go to SetTexture; secret predicates go to alpha setters.
     return castingPresence ~= nil,
         channelPresence ~= nil,
         castingTexture,
         channelTexture,
         castingNotInterruptible,
-        channelNotInterruptible;
+        channelNotInterruptible,
+        castingImportant;
 end
 
 local function RuleIsActive(rule, isCasting, isChanneling)
@@ -409,11 +369,12 @@ local function EnsureActionRuleFrame(nameplate, rule, ownerSlot)
     frame:SetSize(iconSize, iconSize);
     frame:SetAlpha(0);
 
-    -- The nested alpha parent composes protected action interruptibility with
-    -- protected ownership without calculating their conjunction in Lua.
+    -- SetAlphaFromBoolean accepts secret arguments and restricts the alpha aspect.
     frame.interruptibilityGate = CreateFrame("Frame", nil, frame);
     frame.interruptibilityGate:SetAllPoints(frame);
-    frame.interruptibilityGate:SetAlpha(rule.requireNotInterruptible and 0 or 1);
+    frame.interruptibilityGate:SetAlpha(
+        (rule.requireNotInterruptible or rule.requireNotInterruptibleOrImportant) and 0 or 1
+    );
 
     frame.highlight = CreateFrame("Frame", nil, frame.interruptibilityGate);
     frame.highlight:SetPoint("CENTER", frame.interruptibilityGate);
@@ -425,19 +386,10 @@ local function EnsureActionRuleFrame(nameplate, rule, ownerSlot)
 end
 
 local function PrepareActionRuleFrames(nameplate, isOtherPlayersPet)
+    if not IsActiveBattlefieldArena() then return end
     for _, rule in ipairs(importantMinionWhitelist) do
         if rule.signal ~= "aura" and RuleMatchesPetState(rule, isOtherPlayersPet) then
-            if rule.ownerClass then
-                if IsActiveBattlefieldArena() then
-                    for arenaSlot = 1, addon.MAX_ARENA_SIZE do
-                        if RuleMatchesOwner(rule, arenaSlot) then
-                            EnsureActionRuleFrame(nameplate, rule, arenaSlot);
-                        end
-                    end
-                end
-            else
-                EnsureActionRuleFrame(nameplate, rule, 0);
-            end
+            EnsureActionRuleFrame(nameplate, rule, 0);
         end
     end
 end
@@ -484,7 +436,7 @@ local function UpdateActionRules(
     isOtherPlayersPet
 )
     local isCasting, isChanneling, castingTexture, channelTexture,
-        castingNotInterruptible, channelNotInterruptible =
+        castingNotInterruptible, channelNotInterruptible, castingImportant =
             GetCastPresentationState(unit);
 
     PrepareActionRuleFrames(nameplate, isOtherPlayersPet);
@@ -492,31 +444,33 @@ local function UpdateActionRules(
 
     for _, rule in ipairs(importantMinionWhitelist) do
         if rule.signal ~= "aura" then
-            local active = RuleMatchesPetState(rule, isOtherPlayersPet)
+            local active = IsActiveBattlefieldArena()
+                and RuleMatchesPetState(rule, isOtherPlayersPet)
                 and RuleIsActive(rule, isCasting, isChanneling);
             local frames = ruleFrames and ruleFrames[rule.key];
 
             if frames then
-                for ownerSlot, frame in pairs(frames) do
-                    local ownerMatches = ownerSlot == 0
-                        or RuleMatchesOwner(rule, ownerSlot);
-
-                    if active and ownerMatches then
+                for _, frame in pairs(frames) do
+                    if active then
                         ApplyHighlightLayout(frame, nameplate);
-                        if ownerSlot == 0 then
-                            frame:SetAlpha(1);
-                        else
-                            frame:SetAlphaFromBoolean(
-                                UnitIsOwnerOrControllerOfUnit(
-                                    "arena" .. ownerSlot,
-                                    unit
-                                ),
-                                1,
-                                0
-                            );
-                        end
+                        frame:SetAlpha(1);
 
-                        if rule.requireNotInterruptible then
+                        if rule.requireNotInterruptibleOrImportant then
+                            -- EvaluateColorValueFromBoolean accepts secret booleans.
+                            -- SetAlphaFromBoolean also accepts a secret fallback alpha,
+                            -- expressing the OR without inspecting either predicate.
+                            local importantAlpha = C_CurveUtil.EvaluateColorValueFromBoolean(
+                                castingImportant, 1, 0
+                            );
+                            local notInterruptible = castingNotInterruptible;
+                            if not addon.IsSecretValue(notInterruptible)
+                                and notInterruptible == nil then
+                                notInterruptible = false;
+                            end
+                            frame.interruptibilityGate:SetAlphaFromBoolean(
+                                notInterruptible, 1, importantAlpha
+                            );
+                        elseif rule.requireNotInterruptible then
                             local notInterruptible;
                             if rule.signal == "cast" then
                                 notInterruptible = castingNotInterruptible;
@@ -564,8 +518,8 @@ if addon.PROJECT_MAINLINE then
         end
     end
 
-    -- These hooks are update notifications only. Current action state and texture
-    -- always come from UnitCastingInfo/UnitChannelInfo, never castbar lifecycle fields.
+    -- hooksecurefunc observes the castbar after Blizzard's handler. Query the unit
+    -- APIs for cast data instead of reading potentially restricted castbar fields.
     hooksecurefunc(NamePlateCastingBarMixin, "OnEvent", function(castBar, event)
         if IsForbiddenSafe(castBar) then return end
         local nameplate = castBar.sweepyBoopImportantNpcNameplate;
@@ -583,7 +537,7 @@ if addon.PROJECT_MAINLINE then
             nameplate.importantNpcIsOtherPlayersPet
         );
     end);
-    -- These transitions occur after Blizzard accepts the active cast stop or interrupt.
+    -- These post-hooks clear presentation after the castbar begins its stop animation.
     hooksecurefunc(NamePlateCastingBarMixin, "PlayFadeAnim", ClearActionRules);
     hooksecurefunc(NamePlateCastingBarMixin, "PlayInterruptAnims", ClearActionRules);
 
@@ -597,8 +551,8 @@ if addon.PROJECT_MAINLINE then
 end
 
 addon.ActivateImportantNpcPortrait = function(nameplate, unit, castBar, isOtherPlayersPet)
-    -- A future readable blacklist belongs here, before any whitelist entry activates.
-    -- Never use protected or unknown identity facts as blacklist predicates.
+    -- Unit identity APIs may return secret values in restricted PvP; these rules
+    -- do not require an owner class, specialization, or readable ownership result.
     ActivateAuraRules(nameplate, unit, isOtherPlayersPet);
     nameplate.importantNpcIsOtherPlayersPet = isOtherPlayersPet;
 
