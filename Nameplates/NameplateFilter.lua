@@ -295,9 +295,13 @@ local function DeactivateAuraRules(nameplate)
     end
 end
 
+local function IsInInstancedPvP()
+    return IsActiveBattlefieldArena() or UnitInBattleground("player") ~= nil;
+end
+
 local function ActivateAuraRules(nameplate, unit, isOtherPlayersPet)
     DeactivateAuraRules(nameplate);
-    if not IsActiveBattlefieldArena() then return end
+    if not IsInInstancedPvP() then return end
 
     for _, rule in ipairs(importantMinionWhitelist) do
         if rule.signal == "aura"
@@ -386,7 +390,7 @@ local function EnsureActionRuleFrame(nameplate, rule, ownerSlot)
 end
 
 local function PrepareActionRuleFrames(nameplate, isOtherPlayersPet)
-    if not IsActiveBattlefieldArena() then return end
+    if not IsInInstancedPvP() then return end
     for _, rule in ipairs(importantMinionWhitelist) do
         if rule.signal ~= "aura" and RuleMatchesPetState(rule, isOtherPlayersPet) then
             EnsureActionRuleFrame(nameplate, rule, 0);
@@ -444,7 +448,7 @@ local function UpdateActionRules(
 
     for _, rule in ipairs(importantMinionWhitelist) do
         if rule.signal ~= "aura" then
-            local active = IsActiveBattlefieldArena()
+            local active = IsInInstancedPvP()
                 and RuleMatchesPetState(rule, isOtherPlayersPet)
                 and RuleIsActive(rule, isCasting, isChanneling);
             local frames = ruleFrames and ruleFrames[rule.key];
