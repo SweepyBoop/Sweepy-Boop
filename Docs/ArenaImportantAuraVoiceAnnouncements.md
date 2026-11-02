@@ -12,7 +12,7 @@ The user approved both Spectral Sight clips on 2026-11-02. Spectral Sight (`1885
 
 ### Sting Addition
 
-The user approved both Sting clips on 2026-11-02. Chimaeral Sting is spoken as `Sting` when the initial Scorpid Venom debuff (`356723`) is added to `player`, `party1`, or `party2`, giving warning before the silence. This matches the enemy-debuff announcement mapping in `/Users/kunhouseliu/wow/minicc/src/Core/Auras/AuraTtsSounds.lua`. The cast ID (`356719`) remains generation metadata; neither it nor the later silence (`356727`) is registered. Both Gemma and Archie clips were promoted with provenance, and all 158 previously shipped clips remain unchanged. Existing options expose Chimaeral Sting under Hunter. In-game playback still needs validation.
+The user approved both Sting clips on 2026-11-02. Chimaeral Sting is spoken as `Sting` when the initial Scorpid Venom debuff (`356723`) is added to `player`, `party1`, or `party2`, giving warning before the silence. The cast ID (`356719`) remains generation metadata; neither it nor the later silence (`356727`) is registered. Both Gemma and Archie clips were promoted with provenance, and all 158 previously shipped clips remain unchanged. Existing options expose Chimaeral Sting under Hunter. In-game playback still needs validation.
 
 ## Objective
 
