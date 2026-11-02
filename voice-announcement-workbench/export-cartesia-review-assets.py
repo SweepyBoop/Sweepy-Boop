@@ -29,8 +29,8 @@ DEFAULT_DESTINATION = REPOSITORY / "Docs" / "VoiceAnnouncementReview-KeyAbilitie
 EXPECTED_DESTINATION_NAME = "VoiceAnnouncementReview-KeyAbilities"
 MANIFEST_NAME = "cartesia-pack-manifest.json"
 ARCHIVE_NAME = "alliance-horde-cartesia-voices-1.0s.zip"
-EXPECTED_SAMPLE_COUNT = 156
-EXPECTED_ACCELERATED_COUNT = 30
+EXPECTED_SAMPLE_COUNT = 158
+EXPECTED_BASELINE_ACCELERATED_COUNT = 30
 TERMS_VERIFIED_DATE = "2026-10-01"
 ACCOUNT_TIER_DESCRIPTION = "user-confirmed eligible tier; exact tier not recorded"
 TEXT_SUFFIXES = {".md", ".json", ".html", ".sha256"}
@@ -267,7 +267,7 @@ def write_validation_summary(
         "- Model: `sonic-3.6`",
         "- API version: `2026-08-14`",
         "- Voices: 2",
-        "- Callouts per voice: 78",
+        "- Callouts per voice: 79",
         f"- Mastered OGG files: {len(samples)}",
         f"- Maximum mastered duration: {maximum_duration:.6f} seconds",
         f"- Accelerated clips: {len(accelerated)}",
@@ -313,8 +313,8 @@ def write_readme(destination: Path) -> None:
             [
                 "# Alliance and Horde Cartesia Voice Review",
                 "",
-                "This portable review pack contains 78 arena callouts for each of two",
-                "faction-flavored stock voices, for 156 mastered OGG files total.",
+                "This portable review pack contains 79 arena callouts for each of two",
+                "faction-flavored stock voices, for 158 mastered OGG files total.",
                 "",
                 "- Alliance: Gemma, Cartesia stock feminine voice",
                 "- Horde: Archie, Cartesia stock masculine voice",
@@ -327,8 +327,9 @@ def write_readme(destination: Path) -> None:
                 "remain at natural speed; only longer clips receive the minimum tempo increase",
                 "required to satisfy the cap.",
                 "",
-                "The generated OGG files were committed on 2026-10-01 under a user-confirmed",
+                "The original 156 OGG files were committed on 2026-10-01 under a user-confirmed",
                 "eligible Cartesia tier; the exact tier name was not recorded.",
+                "The two Spectral Sight clips passed user listening review on 2026-11-02.",
                 "",
                 "The files under `ogg/` are review assets only. They are not wired into the addon",
                 "runtime or included in the published addon package.",
@@ -398,15 +399,17 @@ def validate_staging(staging: Path, portable_report: dict[str, Any]) -> None:
         if tempo < 1.0:
             raise ValueError(f"Staged OGG has invalid tempo: {path}")
         if tempo > 1.0:
-            accelerated += 1
+            if sample["phraseId"] != "spectral-sight":
+                accelerated += 1
             if float(sample["providerOriginal"]["durationSeconds"]) <= 1.0:
                 raise ValueError(f"Short provider clip was unnecessarily accelerated: {path}")
         fingerprints.setdefault(str(sample["phraseId"]), set()).add(
             str(sample["requestFingerprint"])
         )
-    if accelerated != EXPECTED_ACCELERATED_COUNT:
+    if accelerated != EXPECTED_BASELINE_ACCELERATED_COUNT:
         raise ValueError(
-            f"Expected {EXPECTED_ACCELERATED_COUNT} accelerated clips, found {accelerated}"
+            f"Expected {EXPECTED_BASELINE_ACCELERATED_COUNT} accelerated baseline clips, "
+            f"found {accelerated}"
         )
     for phrase_id, values in fingerprints.items():
         if len(values) != 1 or "" in values:

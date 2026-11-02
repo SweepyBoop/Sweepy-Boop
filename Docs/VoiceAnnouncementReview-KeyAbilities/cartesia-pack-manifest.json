@@ -1041,6 +1041,19 @@
       "category": "utility"
     },
     {
+      "id": "spectral-sight",
+      "displayText": "Spectral Sight",
+      "spokenText": "Spectral Sight",
+      "spellIds": [
+        188501
+      ],
+      "specIds": [
+        577,
+        581
+      ],
+      "category": "utility"
+    },
+    {
       "id": "zenith",
       "displayText": "Zenith",
       "spokenText": "Zenith",
@@ -1092,6 +1105,6 @@
   ],
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 78-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 79-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   }
 }

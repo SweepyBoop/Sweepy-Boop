@@ -11,12 +11,25 @@ The committed review pack uses:
 - Language/locale: English, `en-US`
 - Delivery: plain stock-voice callouts with identical speed/volume settings
 - Duration: every mastered clip is at most 1.0 seconds
-- Scope: 78 curated arena callouts per voice, including cross-class trinket and all 33 retail DPS/healer specs
-- Output: 156 mono OGG Vorbis review files
+- Scope: 79 curated arena callouts per voice, including Spectral Sight, cross-class trinket, and all 33 retail DPS/healer specs
+- Output: 158 mono OGG Vorbis review files
 
 The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both voices without an API key or local environment. The pack is review-only and is not wired into addon runtime behavior or the published addon archive.
 
 The Qwen VoiceDesign/Base, CosyVoice, and Aiden/Sohee experiments remain reproducible historical baselines in this workbench and version control.
+
+## Spectral Sight addition (approved and integrated)
+
+The user approved both Spectral Sight clips on 2026-11-02. The production Cartesia manifest includes `spectral-sight` (Demon Hunter buff aura `188501`) with the spoken text `Spectral Sight` for Gemma and Archie. The historical faction catalog is unchanged. The promoted pack contains 79 callouts per voice and 158 packaged OGGs, with 69 runtime callouts covering 74 aura IDs. All 156 previously shipped clips remain unchanged.
+
+With `CARTESIA_API_KEY` loaded locally, generate only the two new clips:
+
+```bash
+bash /Users/kunhouseliu/wow/sweepy-boop/voice-announcement-workbench/run-cartesia-samples.sh \
+  --full --phrase spectral-sight --no-open
+```
+
+Future regenerated clips must pass listening review before running the review and addon exporters. Spectral Sight is included in the Demon Hunter voice-announcement options and registers on `arena1-3` when announcements are enabled.
 
 ## Cartesia stock voice workflow
 
@@ -57,7 +70,7 @@ The export applies only to the current terminal session. Repeat step 3 after ope
 
 The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`.
 
-The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 78-callout-per-voice candidate with:
+The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 79-callout-per-voice candidate with:
 
 ```bash
 bash voice-announcement-workbench/run-cartesia-samples.sh --full

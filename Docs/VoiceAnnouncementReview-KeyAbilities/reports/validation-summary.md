@@ -5,10 +5,10 @@
 - Model: `sonic-3.6`
 - API version: `2026-08-14`
 - Voices: 2
-- Callouts per voice: 78
-- Mastered OGG files: 156
+- Callouts per voice: 79
+- Mastered OGG files: 158
 - Maximum mastered duration: 0.999841 seconds
-- Accelerated clips: 30
+- Accelerated clips: 31
 - Maximum mastering tempo: 1.545977x
 - Duration policy: clips already within one second remain at natural tempo
 - Redistribution terms verified by user: 2026-10-01
@@ -85,6 +85,7 @@
 | Alliance Commander (Gemma) | Rewind | 0.864s | 1x | `01A8FFFA72670FB141EB3038101446DCE3C335F7130FB27B6F4B75BFB9847B33` |
 | Alliance Commander (Gemma) | Shadow Blades | 0.944s | 1x | `27519FA97D20992BBD8E7185713991212AB92D633377EB40C1912351ECC3C6A2` |
 | Alliance Commander (Gemma) | Shadow Dance | 0.971s | 1x | `C1F5329BF9F1A4ACABFF17C191AEA235B6F308F868EC992E97F21C6F4F7516DD` |
+| Alliance Commander (Gemma) | Spectral Sight | 0.994s | 1.17685x | `7EA988EACD08E0448838199871A7EDB5E3E77C19A9206327B7ED87C9C67EAFC5` |
 | Alliance Commander (Gemma) | Spell Reflection | 0.697s | 1x | `2CAE5B5F60071914180C69985B9D25CA340334BB12DDE9AF0ABAC0909245B698` |
 | Alliance Commander (Gemma) | Spirit Link Totem | 0.805s | 1x | `71735024FB8DB675331A43DF0E5EC1A63E2A4FC59E0781B29365DD3CC1E61477` |
 | Alliance Commander (Gemma) | Storm, Earth, and Fire | 0.987s | 1.37676x | `5483D5E6D2E23E87E15866462D29598E7C44ED4F607FCF803CED44AE60DA99A5` |
@@ -163,6 +164,7 @@
 | Horde Commander (Archie) | Rewind | 0.792s | 1x | `975D1A9EE34B83DADC8C70A9D69193390EBBF713BD209FC22277DAEF60D53EF9` |
 | Horde Commander (Archie) | Shadow Blades | 0.992s | 1.06294x | `ECF09EE147D363D4E901CF83E2D3D656B929B8381C6B4B1EA511F30F5DC1ADF6` |
 | Horde Commander (Archie) | Shadow Dance | 0.949s | 1x | `488547E3B9A662B316AEEE4E5F97F9826E35D0E5DE12F43D3D8539A663F18058` |
+| Horde Commander (Archie) | Spectral Sight | 0.932s | 1x | `DC500994629F949164EBFFFAF025847C8B3522CA614AFB015AD5ACE86C76BF41` |
 | Horde Commander (Archie) | Spell Reflection | 0.561s | 1x | `309BB6BEFC33B8AD2AD4808900265A360B5FAE7283C54A78FD0A2BC5852F0E7A` |
 | Horde Commander (Archie) | Spirit Link Totem | 0.660s | 1x | `C2CEF647AC47AD015F0D326064F45993CC48B0CBF34071A9EF85F866ADEEE17A` |
 | Horde Commander (Archie) | Storm, Earth, and Fire | 0.981s | 1.34561x | `341E7120295E8D4EEB3E31210F1895FACF5556BF5F722ECB576662F051ACBEDE` |
