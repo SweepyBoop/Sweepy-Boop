@@ -2,9 +2,17 @@
 
 ## Status
 
-The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 156 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 78 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
+The promoted review pack under `/Users/kunhouseliu/wow/sweepy-boop/Docs/VoiceAnnouncementReview-KeyAbilities` contains 160 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 80 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
-The Mainline runtime integration is implemented on the current branch and pending in-game validation. It exposes 68 callout toggles with 73 verified aura IDs: opponent buffs, including Windwalker Zenith, register on `arena1-3`, while Touch of the Magi, Breath of Eons, Deathmark, Kingsbane, and Colossus Smash/Warbreaker register on `player`, `party1`, and `party2`. Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Pet/summon abilities, other unverified totem/ground scopes, and Trinket remain omitted from runtime detection while their sound files stay packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
+The Mainline runtime integration is implemented on the current branch and pending in-game validation. It exposes 70 callout toggles with 75 verified aura IDs: opponent buffs, including Windwalker Zenith and Demon Hunter Spectral Sight, register on `arena1-3`, while Touch of the Magi, Breath of Eons, Deathmark, Kingsbane, Colossus Smash/Warbreaker, and Chimaeral Sting register on `player`, `party1`, and `party2`. Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Pet/summon abilities, other unverified totem/ground scopes, and Trinket remain omitted from runtime detection while their sound files stay packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
+
+### Spectral Sight Addition
+
+The user approved both Spectral Sight clips on 2026-11-02. Spectral Sight (`188501`) is integrated as a Demon Hunter utility buff announced on `arena1-3` using the existing Gemma and Archie voices. Both clips passed static validation and were promoted with their provenance; all 156 previously shipped clips remain unchanged. Existing options automatically expose Spectral Sight under Demon Hunter, enabled when voice announcements are enabled unless its individual toggle is muted. In-game playback still needs validation.
+
+### Sting Addition
+
+The user approved both Sting clips on 2026-11-02. Chimaeral Sting is spoken as `Sting` when the initial Scorpid Venom debuff (`356723`) is added to `player`, `party1`, or `party2`, giving warning before the silence. This matches the enemy-debuff announcement mapping in `/Users/kunhouseliu/wow/minicc/src/Core/Auras/AuraTtsSounds.lua`. The cast ID (`356719`) remains generation metadata; neither it nor the later silence (`356727`) is registered. Both Gemma and Archie clips were promoted with provenance, and all 158 previously shipped clips remain unchanged. Existing options expose Chimaeral Sting under Hunter. In-game playback still needs validation.
 
 ## Objective
 
@@ -97,7 +105,7 @@ Reasons:
 - Stock voices remove the prompt/seed-voice quality problem entirely.
 - Short tactical phrases remained intelligible without sacrificial prefixes, semantic cropping, phoneme overrides, or seed selection.
 - Male/female delivery stays consistent because request settings are identical except for voice ID.
-- The full pack passed human listening review across 156 clips.
+- The original 156 clips passed human listening review; the two Spectral Sight clips and two Sting clips were approved on 2026-11-02.
 - Every mastered clip is capped at one second; clips already within the cap remain at natural tempo.
 - Provider WAVs, request fingerprints, selected voice IDs, API/model versions, mastering measurements, and hashes are recorded in the workbench report.
 
@@ -386,16 +394,16 @@ Verify that:
 - Retain the completed Qwen and CosyVoice prototypes as historical comparison material.
 - Use the promoted Cartesia Gemma/Archie review pack as the selected audio source.
 - Preserve the pinned provider model/API version, stock voice IDs, request fingerprints, and redistribution verification.
-- Validate the complete 78-callout-per-voice catalog and one-second mastered cap.
+- Validate the complete 80-callout-per-voice catalog and one-second mastered cap.
 
 Exit criteria met: the selected English audio passed listening and static validation.
 
 ### Phase 2: English Runtime (implementation complete, in-game validation pending)
 
-- Package all 156 validated OGGs under `Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later pet, summon, totem, special arena-cooldown, and additional unit scopes.
-- Generate runtime data for 68 aura toggles and 73 aura spell IDs across opponent-buff and friendly-debuff scopes.
+- Package all 160 validated OGGs under `/Users/kunhouseliu/wow/sweepy-boop/Sounds/ArenaImportantAuras`; retain currently unsupported callouts for later pet, summon, totem, special arena-cooldown, and additional unit scopes.
+- Generate runtime data for 70 aura toggles and 75 aura spell IDs across opponent-buff and friendly-debuff scopes.
 - Implement the combat-deferred arena sound controller and handle cleanup.
-- Add master enable, Female/Male voice selection, and 68 grouped aura toggles, including separate Ascendance controls, Zenith, and five friendly-team debuff callouts.
+- Add master enable, Female/Male voice selection, and 70 grouped aura toggles, including separate Ascendance controls, Zenith, Spectral Sight, and six friendly-team debuff callouts including Sting.
 - Use the Master output channel for phase 1 runtime behavior.
 - Test normal arenas and multi-round Solo Shuffle.
 

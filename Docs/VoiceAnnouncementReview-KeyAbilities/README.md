@@ -1,7 +1,7 @@
 # Alliance and Horde Cartesia Voice Review
 
-This portable review pack contains 78 arena callouts for each of two
-faction-flavored stock voices, for 156 mastered OGG files total.
+This portable review pack contains 80 arena callouts for each of two
+faction-flavored stock voices, for 160 mastered OGG files total.
 
 - Alliance: Gemma, Cartesia stock feminine voice
 - Horde: Archie, Cartesia stock masculine voice
@@ -14,8 +14,10 @@ Every mastered clip is at most 1.0 seconds. Clips already within one second
 remain at natural speed; only longer clips receive the minimum tempo increase
 required to satisfy the cap.
 
-The generated OGG files were committed on 2026-10-01 under a user-confirmed
+The original 156 OGG files were committed on 2026-10-01 under a user-confirmed
 eligible Cartesia tier; the exact tier name was not recorded.
+The two Spectral Sight clips passed user listening review on 2026-11-02.
+The two Sting clips passed user listening review on 2026-11-02.
 
 The files under `ogg/` are review assets only. They are not wired into the addon
 runtime or included in the published addon package.

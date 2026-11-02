@@ -1,9 +1,9 @@
 {
-  "createdUtc": "2026-10-11T16:52:48Z",
+  "createdUtc": "2026-11-02T03:26:29Z",
   "sourceManifest": "cartesia-pack-manifest.json",
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 78-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 80-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   },
   "provider": "Cartesia",
   "scope": "full",
@@ -79,7 +79,7 @@
   },
   "environment": {
     "platform": "macOS-27.0.1-arm64-arm-64bit",
-    "python": "3.12.15+meta (3.12:e848e4b, Sep 30 2026, 22:04:05) [Clang 21.1.6 (https://git.internal.tfbnw.net/repos/git/rw/osmeta/external/llvm-",
+    "python": "3.12.16+meta (3.12:2c2462a, Oct 25 2026, 18:24:17) [Clang 21.1.6 (https://git.internal.tfbnw.net/repos/git/rw/osmeta/external/llvm-",
     "packages": {
       "cartesia": "4.2.0",
       "certifi": "2026.7.22",
@@ -1509,6 +1509,85 @@
           "output_thresh": "-27.30",
           "normalization_type": "linear",
           "target_offset": "1.30"
+        }
+      }
+    },
+    {
+      "outputKey": "alliance-commander-chimaeral-sting-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "chimaeral-sting",
+      "displayText": "Chimaeral Sting",
+      "spokenText": "Sting",
+      "generationSeconds": 3.228,
+      "generationUtc": "2026-11-02T03:26:28Z",
+      "requestFingerprint": "94F761BD047AF55B50A149035482062F1C122C71B2BC77A2BA2F2A5286BB8C62",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sting.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "B3269BDC772854FA6FCA43A5299AACDD59CD574720FFE386EC51070AFAE9D10F",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 42336,
+        "durationSeconds": 0.96,
+        "samplePeakDbfs": -4.3446,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "E5EF15AF8A12EF65BF0C44F6B3441A2570B8F5945226B76584B3D673691DD149",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 25606,
+        "durationSeconds": 0.580635,
+        "samplePeakDbfs": -3.1801,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-chimaeral-sting.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-17.45",
+          "input_tp": "-4.46",
+          "input_lra": "0.00",
+          "input_thresh": "-27.45",
+          "output_i": "-16.00",
+          "output_tp": "-3.01",
+          "output_lra": "0.00",
+          "output_thresh": "-26.00",
+          "normalization_type": "linear",
+          "target_offset": "-0.00"
+        },
+        "finalPass": {
+          "input_i": "-17.45",
+          "input_tp": "-4.46",
+          "input_lra": "0.00",
+          "input_thresh": "-27.45",
+          "output_i": "-16.00",
+          "output_tp": "-3.01",
+          "output_lra": "0.00",
+          "output_thresh": "-26.00",
+          "normalization_type": "linear",
+          "target_offset": "-0.00"
         }
       }
     },
@@ -4910,6 +4989,85 @@
       }
     },
     {
+      "outputKey": "alliance-commander-spectral-sight-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "spectral-sight",
+      "displayText": "Spectral Sight",
+      "spokenText": "Spectral Sight",
+      "generationSeconds": 0.944,
+      "generationUtc": "2026-11-02T02:47:34Z",
+      "requestFingerprint": "3828860CF9CE85B97FDBBC19BA16046DFE536FF247543EFD25B957B060D1FD41",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Spectral Sight.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "5AF104251E7A3D548C8A8089D910FDB1C3C3EC80D2F87B8FE04F23A376D8573E",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 67032,
+        "durationSeconds": 1.52,
+        "samplePeakDbfs": -2.8747,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.176848,
+      "ogg": {
+        "sha256": "7EA988EACD08E0448838199871A7EDB5E3E77C19A9206327B7ED87C9C67EAFC5",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 43831,
+        "durationSeconds": 0.9939,
+        "samplePeakDbfs": -1.4679,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-spectral-sight.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-18.66",
+          "input_tp": "-2.88",
+          "input_lra": "0.00",
+          "input_thresh": "-28.66",
+          "output_i": "-17.26",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.26",
+          "normalization_type": "linear",
+          "target_offset": "1.26"
+        },
+        "finalPass": {
+          "input_i": "-18.66",
+          "input_tp": "-2.88",
+          "input_lra": "0.00",
+          "input_thresh": "-28.66",
+          "output_i": "-17.26",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.26",
+          "normalization_type": "linear",
+          "target_offset": "1.26"
+        }
+      }
+    },
+    {
       "outputKey": "alliance-commander-spell-reflection-take-1",
       "speakerId": "alliance-commander",
       "speakerName": "Alliance Commander (Gemma)",
@@ -7671,6 +7829,85 @@
           "output_thresh": "-26.54",
           "normalization_type": "linear",
           "target_offset": "0.54"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-chimaeral-sting-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "chimaeral-sting",
+      "displayText": "Chimaeral Sting",
+      "spokenText": "Sting",
+      "generationSeconds": 0.165,
+      "generationUtc": "2026-11-02T03:26:29Z",
+      "requestFingerprint": "94F761BD047AF55B50A149035482062F1C122C71B2BC77A2BA2F2A5286BB8C62",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sting.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "B2BA19F6EF311CCB86B81E49E29B1A88BBADADE8243CF3E9D8F394AE14772336",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 42336,
+        "durationSeconds": 0.96,
+        "samplePeakDbfs": -7.7929,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "BE323CCF38ABDB9ADEF9147CBDE9DDE6E09B8E9E6C55F5F382952F7DA6DE0DC0",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 21614,
+        "durationSeconds": 0.490113,
+        "samplePeakDbfs": -1.9904,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-chimaeral-sting.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-23.05",
+          "input_tp": "-7.75",
+          "input_lra": "0.00",
+          "input_thresh": "-33.05",
+          "output_i": "-16.85",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.85",
+          "normalization_type": "linear",
+          "target_offset": "0.85"
+        },
+        "finalPass": {
+          "input_i": "-23.05",
+          "input_tp": "-7.75",
+          "input_lra": "0.00",
+          "input_thresh": "-33.05",
+          "output_i": "-16.85",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.85",
+          "normalization_type": "linear",
+          "target_offset": "0.85"
         }
       }
     },
@@ -11068,6 +11305,85 @@
           "output_thresh": "-31.41",
           "normalization_type": "linear",
           "target_offset": "5.41"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-spectral-sight-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "spectral-sight",
+      "displayText": "Spectral Sight",
+      "spokenText": "Spectral Sight",
+      "generationSeconds": 0.91,
+      "generationUtc": "2026-11-02T02:47:36Z",
+      "requestFingerprint": "3828860CF9CE85B97FDBBC19BA16046DFE536FF247543EFD25B957B060D1FD41",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Spectral Sight.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "7D6382FD71C5C29CD71461131FDF6C3A506DF8253B47975247C71A40E9E329C5",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 63504,
+        "durationSeconds": 1.44,
+        "samplePeakDbfs": -6.4376,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "DC500994629F949164EBFFFAF025847C8B3522CA614AFB015AD5ACE86C76BF41",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 41115,
+        "durationSeconds": 0.932313,
+        "samplePeakDbfs": -1.6428,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-spectral-sight.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-22.42",
+          "input_tp": "-6.43",
+          "input_lra": "0.00",
+          "input_thresh": "-32.42",
+          "output_i": "-17.51",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.51",
+          "normalization_type": "linear",
+          "target_offset": "1.51"
+        },
+        "finalPass": {
+          "input_i": "-22.42",
+          "input_tp": "-6.43",
+          "input_lra": "0.00",
+          "input_thresh": "-32.42",
+          "output_i": "-17.51",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-27.51",
+          "normalization_type": "linear",
+          "target_offset": "1.51"
         }
       }
     },
