@@ -1054,6 +1054,23 @@
       "category": "utility"
     },
     {
+      "id": "chimaeral-sting",
+      "displayText": "Chimaeral Sting",
+      "spokenText": "Sting",
+      "spellIds": [
+        356723
+      ],
+      "castSpellIds": [
+        356719
+      ],
+      "specIds": [
+        253,
+        254,
+        255
+      ],
+      "category": "utility"
+    },
+    {
       "id": "zenith",
       "displayText": "Zenith",
       "spokenText": "Zenith",
@@ -1105,6 +1122,6 @@
   ],
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 79-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 80-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   }
 }

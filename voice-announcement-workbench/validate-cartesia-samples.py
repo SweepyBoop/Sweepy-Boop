@@ -27,6 +27,15 @@ SPECTRAL_SIGHT_PHRASE = {
     "specIds": [577, 581],
     "category": "utility",
 }
+CHIMAERAL_STING_PHRASE = {
+    "id": "chimaeral-sting",
+    "displayText": "Chimaeral Sting",
+    "spokenText": "Sting",
+    "spellIds": [356723],
+    "castSpellIds": [356719],
+    "specIds": [253, 254, 255],
+    "category": "utility",
+}
 SECRET_FIELDS = {"api_key", "apikey", "x-api-key", "authorization", "secret", "token"}
 
 
@@ -69,12 +78,12 @@ def validate_manifest(manifest: dict[str, Any]) -> list[str]:
             errors.append("comparison must report rather than enforce maximum duration")
     elif scope == "full":
         faction = json.loads(FACTION_MANIFEST.read_text(encoding="utf-8"))
-        # Preserve the historical catalog while allowing this production addition.
+        # Preserve the historical catalog while adding the production callouts.
         expected_phrases = list(faction["phrases"])
-        expected_phrases.insert(len(expected_phrases) - 1, SPECTRAL_SIGHT_PHRASE)
+        expected_phrases[-1:-1] = [SPECTRAL_SIGHT_PHRASE, CHIMAERAL_STING_PHRASE]
         if manifest.get("phrases") != expected_phrases:
             errors.append(
-                "full-pack phrases must match the faction catalog plus Spectral Sight"
+                "full-pack phrases must match the faction catalog plus Spectral Sight and Sting"
             )
         voices = manifest.get("voices") or []
         if len(voices) != 2 or {voice.get("gender") for voice in voices} != {

@@ -1,9 +1,9 @@
 {
-  "createdUtc": "2026-11-02T02:47:36Z",
+  "createdUtc": "2026-11-02T03:26:29Z",
   "sourceManifest": "cartesia-pack-manifest.json",
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
-    "description": "Full 79-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
+    "description": "Full 80-callout Cartesia Sonic 3.6 stock-voice candidate using Gemma and Archie."
   },
   "provider": "Cartesia",
   "scope": "full",
@@ -1509,6 +1509,85 @@
           "output_thresh": "-27.30",
           "normalization_type": "linear",
           "target_offset": "1.30"
+        }
+      }
+    },
+    {
+      "outputKey": "alliance-commander-chimaeral-sting-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "chimaeral-sting",
+      "displayText": "Chimaeral Sting",
+      "spokenText": "Sting",
+      "generationSeconds": 3.228,
+      "generationUtc": "2026-11-02T03:26:28Z",
+      "requestFingerprint": "94F761BD047AF55B50A149035482062F1C122C71B2BC77A2BA2F2A5286BB8C62",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sting.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "B3269BDC772854FA6FCA43A5299AACDD59CD574720FFE386EC51070AFAE9D10F",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 42336,
+        "durationSeconds": 0.96,
+        "samplePeakDbfs": -4.3446,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "E5EF15AF8A12EF65BF0C44F6B3441A2570B8F5945226B76584B3D673691DD149",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 25606,
+        "durationSeconds": 0.580635,
+        "samplePeakDbfs": -3.1801,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-chimaeral-sting.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-17.45",
+          "input_tp": "-4.46",
+          "input_lra": "0.00",
+          "input_thresh": "-27.45",
+          "output_i": "-16.00",
+          "output_tp": "-3.01",
+          "output_lra": "0.00",
+          "output_thresh": "-26.00",
+          "normalization_type": "linear",
+          "target_offset": "-0.00"
+        },
+        "finalPass": {
+          "input_i": "-17.45",
+          "input_tp": "-4.46",
+          "input_lra": "0.00",
+          "input_thresh": "-27.45",
+          "output_i": "-16.00",
+          "output_tp": "-3.01",
+          "output_lra": "0.00",
+          "output_thresh": "-26.00",
+          "normalization_type": "linear",
+          "target_offset": "-0.00"
         }
       }
     },
@@ -7750,6 +7829,85 @@
           "output_thresh": "-26.54",
           "normalization_type": "linear",
           "target_offset": "0.54"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-chimaeral-sting-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "chimaeral-sting",
+      "displayText": "Chimaeral Sting",
+      "spokenText": "Sting",
+      "generationSeconds": 0.165,
+      "generationUtc": "2026-11-02T03:26:29Z",
+      "requestFingerprint": "94F761BD047AF55B50A149035482062F1C122C71B2BC77A2BA2F2A5286BB8C62",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Sting.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "B2BA19F6EF311CCB86B81E49E29B1A88BBADADE8243CF3E9D8F394AE14772336",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 42336,
+        "durationSeconds": 0.96,
+        "samplePeakDbfs": -7.7929,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "BE323CCF38ABDB9ADEF9147CBDE9DDE6E09B8E9E6C55F5F382952F7DA6DE0DC0",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 21614,
+        "durationSeconds": 0.490113,
+        "samplePeakDbfs": -1.9904,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-chimaeral-sting.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-23.05",
+          "input_tp": "-7.75",
+          "input_lra": "0.00",
+          "input_thresh": "-33.05",
+          "output_i": "-16.85",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.85",
+          "normalization_type": "linear",
+          "target_offset": "0.85"
+        },
+        "finalPass": {
+          "input_i": "-23.05",
+          "input_tp": "-7.75",
+          "input_lra": "0.00",
+          "input_thresh": "-33.05",
+          "output_i": "-16.85",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.85",
+          "normalization_type": "linear",
+          "target_offset": "0.85"
         }
       }
     },

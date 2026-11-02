@@ -11,8 +11,8 @@ The committed review pack uses:
 - Language/locale: English, `en-US`
 - Delivery: plain stock-voice callouts with identical speed/volume settings
 - Duration: every mastered clip is at most 1.0 seconds
-- Scope: 79 curated arena callouts per voice, including Spectral Sight, cross-class trinket, and all 33 retail DPS/healer specs
-- Output: 158 mono OGG Vorbis review files
+- Scope: 80 curated arena callouts per voice, including Spectral Sight, Chimaeral Sting, cross-class trinket, and all 33 retail DPS/healer specs
+- Output: 160 mono OGG Vorbis review files
 
 The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both voices without an API key or local environment. The pack is review-only and is not wired into addon runtime behavior or the published addon archive.
 
@@ -20,7 +20,7 @@ The Qwen VoiceDesign/Base, CosyVoice, and Aiden/Sohee experiments remain reprodu
 
 ## Spectral Sight addition (approved and integrated)
 
-The user approved both Spectral Sight clips on 2026-11-02. The production Cartesia manifest includes `spectral-sight` (Demon Hunter buff aura `188501`) with the spoken text `Spectral Sight` for Gemma and Archie. The historical faction catalog is unchanged. The promoted pack contains 79 callouts per voice and 158 packaged OGGs, with 69 runtime callouts covering 74 aura IDs. All 156 previously shipped clips remain unchanged.
+The user approved both Spectral Sight clips on 2026-11-02. The production Cartesia manifest includes `spectral-sight` (Demon Hunter buff aura `188501`) with the spoken text `Spectral Sight` for Gemma and Archie. The historical faction catalog is unchanged. Spectral Sight promotion expanded the pack to 79 callouts per voice and 158 packaged OGGs, with 69 runtime callouts covering 74 aura IDs. All 156 previously shipped clips remained unchanged.
 
 With `CARTESIA_API_KEY` loaded locally, generate only the two new clips:
 
@@ -30,6 +30,19 @@ bash /Users/kunhouseliu/wow/sweepy-boop/voice-announcement-workbench/run-cartesi
 ```
 
 Future regenerated clips must pass listening review before running the review and addon exporters. Spectral Sight is included in the Demon Hunter voice-announcement options and registers on `arena1-3` when announcements are enabled.
+
+## Sting addition (approved and integrated)
+
+The production manifest adds `chimaeral-sting`, spoken as `Sting`, for Gemma and Archie. It maps the initial Scorpid Venom debuff (`356723`) to `player`, `party1`, and `party2`, giving warning before Spider Venom silences the target. `356719` is retained as cast metadata, not a runtime aura trigger. The initial aura mapping is supported by `/Users/kunhouseliu/wow/sarena/Data/Auras/AuraList_Midnight.lua`; in-game playback still needs validation.
+
+Generate only the two new clips with a locally loaded `CARTESIA_API_KEY`:
+
+```bash
+bash /Users/kunhouseliu/wow/sweepy-boop/voice-announcement-workbench/run-cartesia-samples.sh \
+  --full --phrase chimaeral-sting --no-open
+```
+
+The user approved both Sting clips on 2026-11-02. They are promoted and integrated under the Hunter voice-announcement options. The pack contains 80 callouts per voice, 160 OGGs, and 70 runtime callouts covering 75 aura IDs. All 158 previously shipped clips remain unchanged. Future regenerated audio must pass listening review before promotion.
 
 ## Cartesia stock voice workflow
 
@@ -70,7 +83,7 @@ The export applies only to the current terminal session. Repeat step 3 after ope
 
 The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`.
 
-The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 79-callout-per-voice candidate with:
+The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 80-callout-per-voice candidate with:
 
 ```bash
 bash voice-announcement-workbench/run-cartesia-samples.sh --full
