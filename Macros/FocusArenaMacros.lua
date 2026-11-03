@@ -30,8 +30,13 @@ local function ReplaceManagedTargets(body, targetUnit)
     return body:gsub(ARENA_TARGET_PATTERN, target);
 end
 
+local manuallySelectedTargetUnit;
+addon.GetManagedMacroTargetUnit = function()
+    return manuallySelectedTargetUnit or addon.GetArenaHealerUnit();
+end
+
 local function UpdateSBMMacros(targetUnit)
-    targetUnit = targetUnit or addon.GetArenaHealerUnit();
+    targetUnit = targetUnit or addon.GetManagedMacroTargetUnit();
 
     for i = 1, MAX_MACRO_SLOTS do
         local name, icon, body = GetMacroInfo(i);
@@ -66,6 +71,7 @@ function SweepyBoop:UpdateSBMMacros(targetUnit)
 end
 
 local function SetManagedMacroTarget(targetUnit)
+    manuallySelectedTargetUnit = targetUnit;
     local applied = SweepyBoop:UpdateSBMMacros(targetUnit);
     local timing = applied and "now target" or "will target after combat";
     print(string.format("SweepyBoop: SBM macros %s @%s.", timing, targetUnit));
@@ -130,6 +136,19 @@ end
 local frame = CreateFrame("Frame");
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-frame:SetScript("OnEvent", function()
+frame:RegisterEvent(addon.PVP_MATCH_STATE_CHANGED);
+frame:SetScript("OnEvent", function(_, event)
+    if event == addon.PLAYER_ENTERING_WORLD then
+        manuallySelectedTargetUnit = nil;
+    elseif event == addon.PVP_MATCH_STATE_CHANGED then
+        local state = C_PvP.GetActiveMatchState();
+        if state == Enum.PvPMatchState.PostRound
+            or state == Enum.PvPMatchState.Complete
+            or state == Enum.PvPMatchState.Inactive then
+            manuallySelectedTargetUnit = nil;
+        end
+        return;
+    end
+
     SweepyBoop:UpdateSBMMacros();
 end);

@@ -85,7 +85,7 @@ local function TryUpdateMacros()
         -- Combat locked, wait for 6s to drop combat
         C_Timer.After(3, TryUpdateMacros);
     else
-        local focusName = addon.GetArenaHealerUnit();
+        local focusName = addon.GetManagedMacroTargetUnit();
         updateMacros(focusName);
     end
 end
