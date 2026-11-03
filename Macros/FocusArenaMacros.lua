@@ -1,11 +1,23 @@
 local _, addon = ...;
 
 local SBM_MACRO_NAME_MARKER = "SBM";
+local INTERNAL_FOCUS_MACRO_NAME_PREFIX = "Focus";
 local TARGET_TOKEN_SUFFIX_PATTERN = "%f[^%w]";
 local ARENA_TARGET_PATTERN = "@arena[1-5]" .. TARGET_TOKEN_SUFFIX_PATTERN;
 local TARGET_FOCUS = "@focus";
 local FOCUS_TARGET_PATTERN = TARGET_FOCUS .. TARGET_TOKEN_SUFFIX_PATTERN;
-local MAX_MACRO_SLOTS = (MAX_ACCOUNT_MACROS or 120) + (MAX_CHARACTER_MACROS or 18);
+local MAX_ACCOUNT_MACRO_SLOTS = MAX_ACCOUNT_MACROS or 120;
+local MAX_MACRO_SLOTS = MAX_ACCOUNT_MACRO_SLOTS + (MAX_CHARACTER_MACROS or 18);
+
+local function IsManagedMacro(macroIndex, name)
+    if name:find(SBM_MACRO_NAME_MARKER, 1, true) then
+        return true;
+    end
+
+    return addon.internal
+        and macroIndex > MAX_ACCOUNT_MACRO_SLOTS
+        and name:find(INTERNAL_FOCUS_MACRO_NAME_PREFIX, 1, true) == 1;
+end
 
 local function ReplaceManagedTargets(body, targetUnit)
     local target = "@" .. targetUnit;
@@ -23,7 +35,7 @@ local function UpdateSBMMacros(targetUnit)
 
     for i = 1, MAX_MACRO_SLOTS do
         local name, icon, body = GetMacroInfo(i);
-        if name and body and name:find(SBM_MACRO_NAME_MARKER, 1, true) then
+        if name and body and IsManagedMacro(i, name) then
             local newBody = ReplaceManagedTargets(body, targetUnit);
             if ( newBody ~= body ) then
                 EditMacro(i, name, icon, newBody);
