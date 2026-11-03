@@ -21,7 +21,7 @@ addon.GetMacroOptions = function(order)
                 order = 2.5,
                 type = "description",
                 fontSize = "medium",
-                name = "On Blizzard arena frames, Shift-right-click an opponent during arena preparation to pin managed macros to that arena slot. Use /sbm to return them to @focus.",
+                name = "On Blizzard arena frames, Shift-right-click an opponent during arena preparation to pin managed macros to that arena slot.",
             },
             healerIndicator = {
                 order = 3,

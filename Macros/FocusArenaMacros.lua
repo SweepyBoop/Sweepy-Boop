@@ -71,23 +71,6 @@ local function SetManagedMacroTarget(targetUnit)
     print(string.format("SweepyBoop: SBM macros %s @%s.", timing, targetUnit));
 end
 
-SLASH_SWEEPYBOOPMACROS1 = "/sbm";
-SlashCmdList.SWEEPYBOOPMACROS = function(message)
-    local argument = strtrim(message or "");
-    local targetUnit = "focus";
-
-    if argument ~= "" then
-        local arenaIndex = tonumber(argument);
-        if ( not arenaIndex ) or ( arenaIndex % 1 ~= 0 ) or ( arenaIndex < 1 ) or ( arenaIndex > addon.MAX_ARENA_SIZE ) then
-            print(string.format("SweepyBoop: use /sbm or /sbm <1-%d>.", addon.MAX_ARENA_SIZE));
-            return;
-        end
-        targetUnit = "arena" .. arenaIndex;
-    end
-
-    SetManagedMacroTarget(targetUnit);
-end
-
 if addon.PROJECT_MAINLINE then
     local preMatchClickOverlays = {};
 
