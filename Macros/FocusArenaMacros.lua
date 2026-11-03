@@ -89,26 +89,59 @@ SlashCmdList.SWEEPYBOOPMACROS = function(message)
 end
 
 if addon.PROJECT_MAINLINE then
-    hooksecurefunc("FocusUnit", function(unit)
-        if InCombatLockdown()
-            or ( not IsShiftKeyDown() )
-            or ( not IsActiveBattlefieldArena() )
-            or addon.IsSecretValue(unit)
-            or type(unit) ~= "string" then
-            return;
+    local preMatchClickOverlays = {};
+
+    local function SetPreMatchOverlaysEnabled(enabled)
+        if InCombatLockdown() then return end
+
+        for _, overlay in pairs(preMatchClickOverlays) do
+            overlay:SetMouseClickEnabled(enabled);
         end
+    end
 
-        local arenaIndex = tonumber(unit:match("^arena([1-5])$"));
-        if ( not arenaIndex ) or ( arenaIndex > addon.MAX_ARENA_SIZE ) then return end
+    local function SetupPreMatchClickOverlays()
+        if InCombatLockdown() then return end
 
-        local arenaFrame = _G["CompactArenaFrameMember" .. arenaIndex];
-        if ( not arenaFrame ) then return end
+        local preMatchFrames = CompactArenaFrame
+            and CompactArenaFrame.PreMatchFramesContainer
+            and CompactArenaFrame.PreMatchFramesContainer.preMatchUnitFrames;
+        if ( not preMatchFrames ) then return end
 
-        local isMouseOver = arenaFrame:IsMouseOver();
-        if addon.IsSecretValue(isMouseOver) or ( not isMouseOver ) then return end
+        for arenaIndex = 1, addon.MAX_ARENA_SIZE do
+            local preMatchFrame = preMatchFrames[arenaIndex];
+            if preMatchFrame and ( not preMatchClickOverlays[arenaIndex] ) then
+                local targetUnit = "arena" .. arenaIndex;
+                local overlay = CreateFrame("Button", nil, preMatchFrame);
+                overlay:SetAllPoints(preMatchFrame);
+                overlay:RegisterForClicks("RightButtonUp");
+                overlay:SetMouseClickEnabled(IsShiftKeyDown());
+                overlay:SetScript("OnClick", function()
+                    if ( not InCombatLockdown() )
+                        and IsShiftKeyDown()
+                        and C_PvP.IsMatchConsideredArena() then
+                        SetManagedMacroTarget(targetUnit);
+                    end
+                end);
+                preMatchClickOverlays[arenaIndex] = overlay;
+            end
+        end
+    end
 
-        SetManagedMacroTarget(unit);
+    local overlayEventFrame = CreateFrame("Frame");
+    overlayEventFrame:RegisterEvent("MODIFIER_STATE_CHANGED");
+    overlayEventFrame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
+    overlayEventFrame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+    overlayEventFrame:SetScript("OnEvent", function(_, event)
+        if event ~= "MODIFIER_STATE_CHANGED" then
+            SetupPreMatchClickOverlays();
+        end
+        SetPreMatchOverlaysEnabled(IsShiftKeyDown());
     end);
+
+    if CompactArenaFrame_Generate then
+        hooksecurefunc("CompactArenaFrame_Generate", SetupPreMatchClickOverlays);
+    end
+    SetupPreMatchClickOverlays();
 end
 
 local frame = CreateFrame("Frame");
