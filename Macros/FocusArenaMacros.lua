@@ -65,6 +65,12 @@ function SweepyBoop:UpdateSBMMacros(targetUnit)
     return true;
 end
 
+local function SetManagedMacroTarget(targetUnit)
+    local applied = SweepyBoop:UpdateSBMMacros(targetUnit);
+    local timing = applied and "now target" or "will target after combat";
+    print(string.format("SweepyBoop: SBM macros %s @%s.", timing, targetUnit));
+end
+
 SLASH_SWEEPYBOOPMACROS1 = "/sbm";
 SlashCmdList.SWEEPYBOOPMACROS = function(message)
     local argument = strtrim(message or "");
@@ -79,9 +85,30 @@ SlashCmdList.SWEEPYBOOPMACROS = function(message)
         targetUnit = "arena" .. arenaIndex;
     end
 
-    local applied = SweepyBoop:UpdateSBMMacros(targetUnit);
-    local timing = applied and "now target" or "will target after combat";
-    print(string.format("SweepyBoop: SBM macros %s @%s.", timing, targetUnit));
+    SetManagedMacroTarget(targetUnit);
+end
+
+if addon.PROJECT_MAINLINE then
+    hooksecurefunc("FocusUnit", function(unit)
+        if InCombatLockdown()
+            or ( not IsShiftKeyDown() )
+            or ( not IsActiveBattlefieldArena() )
+            or addon.IsSecretValue(unit)
+            or type(unit) ~= "string" then
+            return;
+        end
+
+        local arenaIndex = tonumber(unit:match("^arena([1-5])$"));
+        if ( not arenaIndex ) or ( arenaIndex > addon.MAX_ARENA_SIZE ) then return end
+
+        local arenaFrame = _G["CompactArenaFrameMember" .. arenaIndex];
+        if ( not arenaFrame ) then return end
+
+        local isMouseOver = arenaFrame:IsMouseOver();
+        if addon.IsSecretValue(isMouseOver) or ( not isMouseOver ) then return end
+
+        SetManagedMacroTarget(unit);
+    end);
 end
 
 local frame = CreateFrame("Frame");

@@ -17,6 +17,12 @@ addon.GetMacroOptions = function(order)
                 fontSize = "medium",
                 name = "Add SBM to a macro name to let SweepyBoop retarget its @focus casts to the enemy healer in arena.\n\nWhen a healer is detected, @focus becomes @arena1, @arena2, or @arena3. Outside arena, or if no healer is found, it changes back to @focus.",
             },
+            manualTargeting = {
+                order = 2.5,
+                type = "description",
+                fontSize = "medium",
+                name = "On Blizzard arena frames, Shift-right-click an opponent during arena preparation to pin managed macros to that arena slot. Use /sbm to return them to @focus.",
+            },
             healerIndicator = {
                 order = 3,
                 type = "toggle",
