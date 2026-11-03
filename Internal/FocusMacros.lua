@@ -85,18 +85,16 @@ local function TryUpdateMacros()
         -- Combat locked, wait for 6s to drop combat
         C_Timer.After(3, TryUpdateMacros);
     else
-        local focusName = addon.GetManagedMacroTargetUnit();
+        local focusName = addon.GetArenaHealerUnit();
         updateMacros(focusName);
     end
 end
 
 local frame = CreateFrame("Frame");
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
-if addon.PROJECT_MAINLINE then
-    frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
-else
-    frame:RegisterEvent("ARENA_OPPONENT_UPDATE");
-end
+-- Retail 12.1 marks GetArenaOpponentSpec as SecretReturns and enemy arena roles as
+-- SecretWhenUnitIdentityRestricted, so this event cannot resolve the healer anymore.
+-- frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
 frame:SetScript("OnEvent", function ()
     TryUpdateMacros();
 end)
