@@ -93,8 +93,12 @@ end
 local frame = CreateFrame("Frame");
 frame:RegisterEvent(addon.PLAYER_ENTERING_WORLD);
 -- Retail 12.1 marks GetArenaOpponentSpec as SecretReturns and enemy arena roles as
--- SecretWhenUnitIdentityRestricted, so this event cannot resolve the healer anymore.
--- frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+-- SecretWhenUnitIdentityRestricted, so these events cannot resolve the healer anymore.
+-- if addon.PROJECT_MAINLINE then
+--     frame:RegisterEvent(addon.ARENA_PREP_OPPONENT_SPECIALIZATIONS);
+-- else
+--     frame:RegisterEvent("ARENA_OPPONENT_UPDATE");
+-- end
 frame:SetScript("OnEvent", function ()
     TryUpdateMacros();
 end)
