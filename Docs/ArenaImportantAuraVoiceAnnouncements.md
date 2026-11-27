@@ -2,7 +2,7 @@
 
 ## Status
 
-The promoted review pack under `/Users/kunhouseliu/wow/sweepy-boop/Docs/VoiceAnnouncementReview-KeyAbilities` contains 160 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 80 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
+The promoted review pack under `Docs/VoiceAnnouncementReview-KeyAbilities` contains 164 Cartesia `sonic-3.6` stock-voice clips: Gemma (female) and Archie (male), with 82 callouts per voice and every mastered OGG capped at one second. Qwen and CosyVoice remain historical workbench experiments.
 
 The Mainline runtime integration is implemented on the current branch and pending in-game validation. It exposes 70 callout toggles with 75 verified aura IDs: opponent buffs, including Windwalker Zenith and Demon Hunter Spectral Sight, register on `arena1-3`, while Touch of the Magi, Breath of Eons, Deathmark, Kingsbane, Colossus Smash/Warbreaker, and Chimaeral Sting register on `player`, `party1`, and `party2`. Grounding Totem and Blessing of Sanctuary are included, and Ascendance is split into Elemental, Enhancement, and Restoration controls. Pet/summon abilities, other unverified totem/ground scopes, and Trinket remain omitted from runtime detection while their sound files stay packaged for later iterations. The feature is disabled by default and registers only through Blizzard's restricted `C_UnitAuras` sound API at safe lifecycle boundaries. The Docs pack itself remains excluded from publication.
 

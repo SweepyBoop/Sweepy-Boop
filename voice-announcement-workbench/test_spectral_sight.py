@@ -33,13 +33,15 @@ class SpectralSightTests(unittest.TestCase):
     def test_full_catalog_is_valid(self):
         self.assertEqual(validator.validate_manifest(self.manifest), [])
         exporter.validate_catalog(self.manifest)
-        self.assertEqual(len(self.manifest["phrases"]), 80)
+        self.assertEqual(len(self.manifest["phrases"]), 82)
 
     def test_existing_phrase_metadata_is_unchanged(self):
         faction = json.loads(validator.FACTION_MANIFEST.read_text(encoding="utf-8"))
         baseline = [
             phrase for phrase in self.manifest["phrases"]
-            if phrase["id"] not in {"spectral-sight", "chimaeral-sting"}
+            if phrase["id"] not in {
+                "spectral-sight", "chimaeral-sting", "power-infusion", "aura-mastery",
+            }
         ]
         self.assertEqual(baseline, faction["phrases"])
 
@@ -72,14 +74,26 @@ class SpectralSightTests(unittest.TestCase):
 
     def test_runtime_maps_to_demon_hunter_opponents(self):
         callouts = exporter.runtime_callouts(self.manifest)
-        self.assertEqual(len(callouts), 70)
+        self.assertEqual(len(callouts), 72)
         spectral = next(item for item in callouts if item["id"] == "spectral-sight")
         self.assertEqual(spectral, validator.SPECTRAL_SIGHT_PHRASE)
         self.assertEqual(exporter.class_file(spectral), "DEMONHUNTER")
         self.assertNotIn("unitTokens", spectral)
         self.assertIn(188501, exporter.ARENA_OPPONENT_BUFF_SPELL_IDS)
         self.assertNotIn(188501, exporter.FRIENDLY_TARGET_DEBUFF_SPELL_IDS)
-        self.assertEqual(len(exporter.RUNTIME_AURA_SPELL_IDS), 75)
+        self.assertEqual(len(exporter.RUNTIME_AURA_SPELL_IDS), 77)
+
+    def test_new_callouts_watch_opponents(self):
+        callouts = {item["id"]: item for item in exporter.runtime_callouts(self.manifest)}
+        for callout_id, spell_id, class_file in (
+            ("power-infusion", 10060, "PRIEST"),
+            ("aura-mastery", 31821, "PALADIN"),
+        ):
+            with self.subTest(callout_id=callout_id):
+                callout = callouts[callout_id]
+                self.assertEqual(callout["spellIds"], [spell_id])
+                self.assertEqual(exporter.class_file(callout), class_file)
+                self.assertNotIn("unitTokens", callout)
 
     def test_promoted_pack_matches_runtime_export(self):
         source = exporter.DEFAULT_SOURCE
@@ -152,7 +166,7 @@ class SpectralSightTests(unittest.TestCase):
         self.assertIn("iconSpellID = 188501", entry)
         self.assertIn("spellIDs = { 188501 }", entry)
         self.assertNotIn("unitTokens", entry)
-        self.assertEqual(exporter.EXPECTED_OGGS, 160)
+        self.assertEqual(exporter.EXPECTED_OGGS, 164)
         self.assertEqual(set(exporter.VOICE_SOURCES), {"alliance", "horde"})
 
 

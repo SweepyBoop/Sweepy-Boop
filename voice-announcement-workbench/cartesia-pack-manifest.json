@@ -1071,6 +1071,32 @@
       "category": "utility"
     },
     {
+      "id": "power-infusion",
+      "displayText": "Power Infusion",
+      "spokenText": "Power Infusion",
+      "spellIds": [
+        10060
+      ],
+      "specIds": [
+        256,
+        257,
+        258
+      ],
+      "category": "offensive"
+    },
+    {
+      "id": "aura-mastery",
+      "displayText": "Aura Mastery",
+      "spokenText": "Aura Mastery",
+      "spellIds": [
+        31821
+      ],
+      "specIds": [
+        65
+      ],
+      "category": "defensive"
+    },
+    {
       "id": "zenith",
       "displayText": "Zenith",
       "spokenText": "Zenith",

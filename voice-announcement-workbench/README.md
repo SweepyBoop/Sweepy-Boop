@@ -11,8 +11,8 @@ The committed review pack uses:
 - Language/locale: English, `en-US`
 - Delivery: plain stock-voice callouts with identical speed/volume settings
 - Duration: every mastered clip is at most 1.0 seconds
-- Scope: 80 curated arena callouts per voice, including Spectral Sight, Chimaeral Sting, cross-class trinket, and all 33 retail DPS/healer specs
-- Output: 160 mono OGG Vorbis review files
+- Scope: 82 arena callouts per voice, including Power Infusion, Aura Mastery, Spectral Sight, Chimaeral Sting, and the cross-class trinket
+- Output: 164 mono OGG Vorbis review files
 
 The committed review copy is under `Docs/VoiceAnnouncementReview-KeyAbilities`. Open its `listening/index.html` file to review both voices without an API key or local environment. The pack is review-only and is not wired into addon runtime behavior or the published addon archive.
 
@@ -42,7 +42,7 @@ bash /Users/kunhouseliu/wow/sweepy-boop/voice-announcement-workbench/run-cartesi
   --full --phrase chimaeral-sting --no-open
 ```
 
-The user approved both Sting clips on 2026-11-02. They are promoted and integrated under the Hunter voice-announcement options. The pack contains 80 callouts per voice, 160 OGGs, and 70 runtime callouts covering 75 aura IDs. All 158 previously shipped clips remain unchanged. Future regenerated audio must pass listening review before promotion.
+The user approved both Sting clips on 2026-11-02. The addition brought the pack to 80 callouts per voice, 160 OGGs, and 70 runtime callouts covering 75 aura IDs. All 158 previously shipped clips remained unchanged. Future regenerated audio must pass listening review before promotion.
 
 ## Cartesia stock voice workflow
 
@@ -83,7 +83,7 @@ The export applies only to the current terminal session. Repeat step 3 after ope
 
 The key is read only from the process environment and is never stored in manifests or reports. Provider WAVs, catalog metadata, mastered OGGs, provenance, and the blind listening page remain under ignored `voice-announcement-workbench/scratch/cartesia-bakeoff/`.
 
-The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 80-callout-per-voice candidate with:
+The approved sample voices are Female - Gemma and Male - Archie. Generate or resume the full 82-callout-per-voice candidate with:
 
 ```bash
 bash voice-announcement-workbench/run-cartesia-samples.sh --full
