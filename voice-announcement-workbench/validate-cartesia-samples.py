@@ -36,6 +36,22 @@ CHIMAERAL_STING_PHRASE = {
     "specIds": [253, 254, 255],
     "category": "utility",
 }
+POWER_INFUSION_PHRASE = {
+    "id": "power-infusion",
+    "displayText": "Power Infusion",
+    "spokenText": "Power Infusion",
+    "spellIds": [10060],
+    "specIds": [256, 257, 258],
+    "category": "offensive",
+}
+AURA_MASTERY_PHRASE = {
+    "id": "aura-mastery",
+    "displayText": "Aura Mastery",
+    "spokenText": "Aura Mastery",
+    "spellIds": [31821],
+    "specIds": [65],
+    "category": "defensive",
+}
 SECRET_FIELDS = {"api_key", "apikey", "x-api-key", "authorization", "secret", "token"}
 
 
@@ -80,11 +96,12 @@ def validate_manifest(manifest: dict[str, Any]) -> list[str]:
         faction = json.loads(FACTION_MANIFEST.read_text(encoding="utf-8"))
         # Preserve the historical catalog while adding the production callouts.
         expected_phrases = list(faction["phrases"])
-        expected_phrases[-1:-1] = [SPECTRAL_SIGHT_PHRASE, CHIMAERAL_STING_PHRASE]
+        expected_phrases[-1:-1] = [
+            SPECTRAL_SIGHT_PHRASE, CHIMAERAL_STING_PHRASE,
+            POWER_INFUSION_PHRASE, AURA_MASTERY_PHRASE,
+        ]
         if manifest.get("phrases") != expected_phrases:
-            errors.append(
-                "full-pack phrases must match the faction catalog plus Spectral Sight and Sting"
-            )
+            errors.append("full-pack phrases must match the production Cartesia catalog")
         voices = manifest.get("voices") or []
         if len(voices) != 2 or {voice.get("gender") for voice in voices} != {
             "masculine",

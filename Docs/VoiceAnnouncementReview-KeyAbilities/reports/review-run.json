@@ -1,5 +1,5 @@
 {
-  "createdUtc": "2026-11-02T03:26:29Z",
+  "createdUtc": "2026-11-27T23:30:07Z",
   "sourceManifest": "cartesia-pack-manifest.json",
   "pack": {
     "id": "arena-faction-voices-cartesia-enUS",
@@ -78,7 +78,7 @@
     "trailingSilenceSeconds": 0.08
   },
   "environment": {
-    "platform": "macOS-27.0.1-arm64-arm-64bit",
+    "platform": "macOS-27.2.1-arm64-arm-64bit",
     "python": "3.12.16+meta (3.12:2c2462a, Oct 25 2026, 18:24:17) [Clang 21.1.6 (https://git.internal.tfbnw.net/repos/git/rw/osmeta/external/llvm-",
     "packages": {
       "cartesia": "4.2.0",
@@ -719,6 +719,85 @@
           "output_thresh": "-30.06",
           "normalization_type": "linear",
           "target_offset": "4.06"
+        }
+      }
+    },
+    {
+      "outputKey": "alliance-commander-aura-mastery-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "aura-mastery",
+      "displayText": "Aura Mastery",
+      "spokenText": "Aura Mastery",
+      "generationSeconds": 0.227,
+      "generationUtc": "2026-11-27T23:30:06Z",
+      "requestFingerprint": "FC4946F16F7EC27DDB889095A34DD43067DBC3B4724FFC99893625CE2D663815",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Aura Mastery.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "ABA266815FD38D2ABB9AFD4DC5F5E4A1351694346F8BCA39AD5703E10B67B42B",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 63504,
+        "durationSeconds": 1.44,
+        "samplePeakDbfs": -2.1174,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "1FCB63C7C545236E6345B5A64C337B9A0DED8B57D060D12D78CFA3A9EB7BCFB1",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 43643,
+        "durationSeconds": 0.989637,
+        "samplePeakDbfs": -1.6541,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-aura-mastery.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-16.59",
+          "input_tp": "-2.12",
+          "input_lra": "0.00",
+          "input_thresh": "-26.59",
+          "output_i": "-15.99",
+          "output_tp": "-1.53",
+          "output_lra": "0.00",
+          "output_thresh": "-25.99",
+          "normalization_type": "linear",
+          "target_offset": "-0.01"
+        },
+        "finalPass": {
+          "input_i": "-16.59",
+          "input_tp": "-2.12",
+          "input_lra": "0.00",
+          "input_thresh": "-26.59",
+          "output_i": "-15.99",
+          "output_tp": "-1.53",
+          "output_lra": "0.00",
+          "output_thresh": "-25.99",
+          "normalization_type": "linear",
+          "target_offset": "-0.01"
         }
       }
     },
@@ -4357,6 +4436,85 @@
       }
     },
     {
+      "outputKey": "alliance-commander-power-infusion-take-1",
+      "speakerId": "alliance-commander",
+      "speakerName": "Alliance Commander (Gemma)",
+      "voiceId": "62ae83ad-4f6a-430b-af41-a9bede9286ca",
+      "voiceDisplayName": "Gemma",
+      "gender": "feminine",
+      "stockVoice": true,
+      "phraseId": "power-infusion",
+      "displayText": "Power Infusion",
+      "spokenText": "Power Infusion",
+      "generationSeconds": 0.673,
+      "generationUtc": "2026-11-27T23:30:05Z",
+      "requestFingerprint": "9E6F1F7F6114B8A9F34B9C1C26FE00F7843AC558A2BDD686CC452E3BEF8B1C1F",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Power Infusion.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "8DA46AD2EBD4EE75848D360A32EDD3C739B368B874874664E341212E51D8EBF3",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 67032,
+        "durationSeconds": 1.52,
+        "samplePeakDbfs": -3.2858,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.11044,
+      "ogg": {
+        "sha256": "76471AEF06070BCF9399A3FC41570851A7A00D06A1EF6F6BB5CDFE891DBE7CED",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 43468,
+        "durationSeconds": 0.985669,
+        "samplePeakDbfs": -1.5136,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/alliance-commander-power-infusion.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-18.69",
+          "input_tp": "-3.35",
+          "input_lra": "0.00",
+          "input_thresh": "-28.69",
+          "output_i": "-16.83",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.83",
+          "normalization_type": "linear",
+          "target_offset": "0.83"
+        },
+        "finalPass": {
+          "input_i": "-18.69",
+          "input_tp": "-3.35",
+          "input_lra": "0.00",
+          "input_thresh": "-28.69",
+          "output_i": "-16.83",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.83",
+          "normalization_type": "linear",
+          "target_offset": "0.83"
+        }
+      }
+    },
+    {
       "outputKey": "alliance-commander-power-word-barrier-take-1",
       "speakerId": "alliance-commander",
       "speakerName": "Alliance Commander (Gemma)",
@@ -7039,6 +7197,85 @@
           "output_thresh": "-31.60",
           "normalization_type": "linear",
           "target_offset": "5.60"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-aura-mastery-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "aura-mastery",
+      "displayText": "Aura Mastery",
+      "spokenText": "Aura Mastery",
+      "generationSeconds": 0.193,
+      "generationUtc": "2026-11-27T23:30:07Z",
+      "requestFingerprint": "FC4946F16F7EC27DDB889095A34DD43067DBC3B4724FFC99893625CE2D663815",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Aura Mastery.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "B3BB55009E6796E90EF494EA8EB00E4929AD9E1336FA6C797E53BD4A83597FD7",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 63504,
+        "durationSeconds": 1.44,
+        "samplePeakDbfs": -4.8708,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.0,
+      "ogg": {
+        "sha256": "E1D7DEE340046DA6C593B53854C95079C84DEABC645716BDB674EDB6C652537E",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 40352,
+        "durationSeconds": 0.915011,
+        "samplePeakDbfs": -1.4672,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-aura-mastery.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-19.99",
+          "input_tp": "-4.87",
+          "input_lra": "0.00",
+          "input_thresh": "-29.99",
+          "output_i": "-16.59",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.59",
+          "normalization_type": "linear",
+          "target_offset": "0.59"
+        },
+        "finalPass": {
+          "input_i": "-19.99",
+          "input_tp": "-4.87",
+          "input_lra": "0.00",
+          "input_thresh": "-29.99",
+          "output_i": "-16.59",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-26.59",
+          "normalization_type": "linear",
+          "target_offset": "0.59"
         }
       }
     },
@@ -10673,6 +10910,85 @@
           "output_thresh": "-70.00",
           "normalization_type": "linear",
           "target_offset": "inf"
+        }
+      }
+    },
+    {
+      "outputKey": "horde-commander-power-infusion-take-1",
+      "speakerId": "horde-commander",
+      "speakerName": "Horde Commander (Archie)",
+      "voiceId": "ef191366-f52f-447a-a398-ed8c0f2943a1",
+      "voiceDisplayName": "Archie",
+      "gender": "masculine",
+      "stockVoice": true,
+      "phraseId": "power-infusion",
+      "displayText": "Power Infusion",
+      "spokenText": "Power Infusion",
+      "generationSeconds": 0.19,
+      "generationUtc": "2026-11-27T23:30:06Z",
+      "requestFingerprint": "9E6F1F7F6114B8A9F34B9C1C26FE00F7843AC558A2BDD686CC452E3BEF8B1C1F",
+      "requestBodyVoiceIndependent": {
+        "model_id": "sonic-3.6",
+        "transcript": "Power Infusion.",
+        "output_format": {
+          "container": "wav",
+          "encoding": "pcm_s16le",
+          "sample_rate": 44100
+        },
+        "locale": "en-US",
+        "generation_config": {
+          "speed": 1.0,
+          "volume": 1.0
+        }
+      },
+      "responseRequestId": null,
+      "providerOriginal": {
+        "sha256": "B30D2792F2F8D429DF5DBC55B037206E50A0B9CDC03C72BFE4D0242DF1B809BA",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 63504,
+        "durationSeconds": 1.44,
+        "samplePeakDbfs": -4.8263,
+        "format": "WAV",
+        "subtype": "PCM_16"
+      },
+      "tempo": 1.041488,
+      "ogg": {
+        "sha256": "6A25B21B1492B0F2D2A9FD25E5393F3CCE8BC6D594ED643D47DC8C3A2D02E75F",
+        "sampleRate": 44100,
+        "channels": 1,
+        "frames": 43383,
+        "durationSeconds": 0.983741,
+        "samplePeakDbfs": -1.6344,
+        "format": "OGG",
+        "subtype": "VORBIS",
+        "path": "ogg/horde-commander-power-infusion.ogg"
+      },
+      "mastering": {
+        "mode": "two-pass",
+        "firstPass": {
+          "input_i": "-22.08",
+          "input_tp": "-4.82",
+          "input_lra": "0.00",
+          "input_thresh": "-32.08",
+          "output_i": "-18.78",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-28.78",
+          "normalization_type": "linear",
+          "target_offset": "2.78"
+        },
+        "finalPass": {
+          "input_i": "-22.08",
+          "input_tp": "-4.82",
+          "input_lra": "0.00",
+          "input_thresh": "-32.08",
+          "output_i": "-18.78",
+          "output_tp": "-1.50",
+          "output_lra": "0.00",
+          "output_thresh": "-28.78",
+          "normalization_type": "linear",
+          "target_offset": "2.78"
         }
       }
     },

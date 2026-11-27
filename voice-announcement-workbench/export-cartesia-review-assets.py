@@ -29,7 +29,7 @@ DEFAULT_DESTINATION = REPOSITORY / "Docs" / "VoiceAnnouncementReview-KeyAbilitie
 EXPECTED_DESTINATION_NAME = "VoiceAnnouncementReview-KeyAbilities"
 MANIFEST_NAME = "cartesia-pack-manifest.json"
 ARCHIVE_NAME = "alliance-horde-cartesia-voices-1.0s.zip"
-EXPECTED_SAMPLE_COUNT = 160
+EXPECTED_SAMPLE_COUNT = 164
 EXPECTED_BASELINE_ACCELERATED_COUNT = 30
 TERMS_VERIFIED_DATE = "2026-10-01"
 ACCOUNT_TIER_DESCRIPTION = "user-confirmed eligible tier; exact tier not recorded"
@@ -267,7 +267,7 @@ def write_validation_summary(
         "- Model: `sonic-3.6`",
         "- API version: `2026-08-14`",
         "- Voices: 2",
-        "- Callouts per voice: 80",
+        f"- Callouts per voice: {len(samples) // 2}",
         f"- Mastered OGG files: {len(samples)}",
         f"- Maximum mastered duration: {maximum_duration:.6f} seconds",
         f"- Accelerated clips: {len(accelerated)}",
@@ -313,8 +313,8 @@ def write_readme(destination: Path) -> None:
             [
                 "# Alliance and Horde Cartesia Voice Review",
                 "",
-                "This portable review pack contains 80 arena callouts for each of two",
-                "faction-flavored stock voices, for 160 mastered OGG files total.",
+                f"This portable review pack contains {EXPECTED_SAMPLE_COUNT // 2} arena callouts for each of two",
+                f"faction-flavored stock voices, for {EXPECTED_SAMPLE_COUNT} mastered OGG files total.",
                 "",
                 "- Alliance: Gemma, Cartesia stock feminine voice",
                 "- Horde: Archie, Cartesia stock masculine voice",
@@ -400,7 +400,9 @@ def validate_staging(staging: Path, portable_report: dict[str, Any]) -> None:
         if tempo < 1.0:
             raise ValueError(f"Staged OGG has invalid tempo: {path}")
         if tempo > 1.0:
-            if sample["phraseId"] not in {"spectral-sight", "chimaeral-sting"}:
+            if sample["phraseId"] not in {
+                "spectral-sight", "chimaeral-sting", "power-infusion", "aura-mastery",
+            }:
                 accelerated += 1
             if float(sample["providerOriginal"]["durationSeconds"]) <= 1.0:
                 raise ValueError(f"Short provider clip was unnecessarily accelerated: {path}")
